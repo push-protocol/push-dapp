@@ -1,3 +1,7 @@
+# epns-dapp
+The dApp that powers EPNS
+
+# Additional Info
 This project was bootstrapped with [Create Eth App](https://github.com/paulrberg/create-eth-app).
 
 ## Project Structure

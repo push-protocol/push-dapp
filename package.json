@@ -16,7 +16,9 @@
     "subgraph:auth": "yarn workspace @project/subgraph auth",
     "subgraph:codegen": "yarn workspace @project/subgraph codegen",
     "subgraph:build": "yarn workspace @project/subgraph build",
-    "subgraph:deploy": "yarn workspace @project/subgraph deploy"
+    "subgraph:deploy": "yarn workspace @project/subgraph deploy",
+    "predeploy": "yarn workspace @project/react-app run build",
+    "deploy": "yarn workspace @project/react-app gh-pages -b gh-pages -d build"
   },
   "workspaces": {
     "packages": [

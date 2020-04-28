@@ -54,7 +54,7 @@ function App() {
           rel="noopener noreferrer"
           style={{ marginTop: "0px" }}
         >
-          Learn Ethereum
+          EPNS
         </a>
         <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
           Learn React
