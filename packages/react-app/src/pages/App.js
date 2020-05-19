@@ -1,5 +1,4 @@
 import React from "react";
-import logo from "assets/ui/ethereumLogo.png";
 import { addresses, abis } from "@project/contracts";
 import { gql } from "apollo-boost";
 
@@ -7,7 +6,9 @@ import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { ethers } from "ethers";
 
 import { useQuery } from "@apollo/react-hooks";
-import "./App.css";
+import logo from "assets/ui/ethereumLogo.png";
+
+import styled from 'styled-components';
 
 const GET_TRANSFERS = gql`
   {
@@ -49,7 +50,7 @@ function App() {
   return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="react-logo" />
+          <AppLogo src={logo} className="App-logo" alt="react-logo" />
           <p>
             Edit <code>packages/react-app/src/App.js</code> and save to reload.
           </p>
@@ -65,16 +66,28 @@ function App() {
           >
             EPNS
           </a>
-          <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
+          <AppLink className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
             Learn React
-          </a>
-          <a className="App-link" href="https://thegraph.com/docs/quick-start" target="_blank" rel="noopener noreferrer">
+          </AppLink>
+           <AppLink href="https://thegraph.com/docs/quick-start" target="_blank" rel="noopener noreferrer">
             Learn The Graph
-          </a>
+          </AppLink>
         </header>
       </div>
 
   );
 }
+
+// CSS STYLES
+const AppLogo = styled.img`
+  height: 40vmin;
+  margin-bottom: 16px;
+  pointer-events: none;
+`
+
+const AppLink = styled.a`
+  height: 40px;
+`
+
 
 export default App;
