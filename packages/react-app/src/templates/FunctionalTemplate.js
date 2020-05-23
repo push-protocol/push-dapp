@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const App = () => {
+const App = ({ active }) => {
   const initialCount = +localStorage.getItem('storageCount') || 0;
   const [count, setCount] = useState(initialCount);
 

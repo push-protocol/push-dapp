@@ -1,9 +1,4 @@
 import React from "react";
-import { addresses, abis } from "@project/contracts";
-
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import { ethers } from "ethers";
-
 import styled from 'styled-components';
 
 // async function readOnchainBalance() {
@@ -18,19 +13,20 @@ import styled from 'styled-components';
 // }
 
 
-function Home({ active, library, readonly }) {
+function Error() {
   React.useEffect(() => {
 
   });
 
   return (
-    <div>Hello EPNS</div>
+    <div>Error</div>
   );
 }
 
 // CSS STYLES
 const AppLogo = styled.img`
   height: 40vmin;
+  margin-bottom: 16px;
   pointer-events: none;
 `
 
@@ -39,4 +35,4 @@ const AppLink = styled.a`
 `
 
 
-export default Home;
+export default Error;

@@ -1,9 +1,4 @@
 import React from "react";
-import { addresses, abis } from "@project/contracts";
-
-import { ethers } from "ethers";
-
-import styled from 'styled-components';
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -19,7 +14,14 @@ import {
   network,
   portis
 } from 'connectors'
-import { Spinner } from '../components/Spinner'
+import { Spinner } from 'components/Spinner';
+import { ethers } from "ethers";
+
+import Home from 'pages/Home';
+import Header from 'segments/Header';
+
+import styled from 'styled-components';
+
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
   Injected: injected,
@@ -190,16 +192,16 @@ function Balance() {
   )
 }
 
-function Header() {
+function HeaderOld() {
   const { active, error } = useWeb3React()
 
   return (
     <>
-      <h1 style={{ margin: '1rem', textAlign: 'right' }}>{active ? '🟢' : error ? '🔴' : '🟠'}</h1>
-      <h3
+
+      <h5
         style={{
           display: 'grid',
-          gridGap: '1rem',
+          gridGap: '0rem',
           gridTemplateColumns: '1fr min-content 1fr',
           maxWidth: '20rem',
           lineHeight: '2rem',
@@ -210,7 +212,7 @@ function Header() {
         <BlockNumber />
         <Account />
         <Balance />
-      </h3>
+      </h5>
     </>
   )
 }
@@ -235,7 +237,10 @@ function App() {
 
   return (
       <>
-        <Header />
+        <HeaderContainer>
+          <Header />
+        </HeaderContainer>
+        <HeaderOld />
         <hr style={{ margin: '2rem' }} />
         <div
           style={{
@@ -293,6 +298,26 @@ function App() {
           })}
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {(active) && (
+            <Home
+              active={active}
+              library={library}
+              readonly={!!(library && account)}
+            />
+          )}
+        </div>
+
+        <hr style={{ margin: '2rem' }} />
+
+        <div
+          style={{
+            display: 'grid',
+            gridGap: '1rem',
+            gridTemplateColumns: 'fit-content',
+            maxWidth: '20rem',
+            margin: 'auto'
+          }}
+        >
           {(active || error) && (
             <button
               style={{
@@ -311,19 +336,7 @@ function App() {
           )}
 
           {!!error && <h4 style={{ marginTop: '1rem', marginBottom: '0' }}>{getErrorMessage(error)}</h4>}
-        </div>
 
-        <hr style={{ margin: '2rem' }} />
-
-        <div
-          style={{
-            display: 'grid',
-            gridGap: '1rem',
-            gridTemplateColumns: 'fit-content',
-            maxWidth: '20rem',
-            margin: 'auto'
-          }}
-        >
           {!!(library && account) && (
             <button
               style={{
@@ -354,7 +367,7 @@ function App() {
                 cursor: 'pointer'
               }}
               onClick={() => {
-                ;(connector as any).changeChainId(chainId === 1 ? 4 : 1)
+                ;(connector as any).changeChainId(chainId === 1 ? 3 : 1)
               }}
             >
               Switch Networks
@@ -397,9 +410,12 @@ function App() {
 
 
 // CSS STYLES
-const Text = styled.div`
-  height: 40vmin;
-  margin-bottom: 16px;
-  pointer-events: none;
-  font-size: 15px;
+const HeaderContainer = styled.div`
+  height: 55px;
+  left: 0;
+  right: 0;
+`
+
+const AppLink = styled.a`
+  height: 40px;
 `
