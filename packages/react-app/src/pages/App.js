@@ -1,25 +1,12 @@
 import React from "react";
 import { addresses, abis } from "@project/contracts";
-import { gql } from "apollo-boost";
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import { ethers } from "ethers";
 
-import { useQuery } from "@apollo/react-hooks";
-import logo from "assets/ui/ethereumLogo.png";
-
 import styled from 'styled-components';
 
-const GET_TRANSFERS = gql`
-  {
-    transfers(first: 10) {
-      id
-      from
-      to
-      value
-    }
-  }
-`;
+import Home from 'pages/Home';
 
 async function readOnchainBalance() {
   // Should replace with the end-user wallet, e.g. Metamask
@@ -34,47 +21,13 @@ async function readOnchainBalance() {
 
 
 function App() {
-  const { loading, error, data } = useQuery(GET_TRANSFERS);
-
-
-      const { err } = useWeb3React()
-      const isUnsupportedChainIdError = err instanceof UnsupportedChainIdError
-      console.log(isUnsupportedChainIdError);
-
   React.useEffect(() => {
-    if (!loading && !error && data && data.transfers) {
-      console.log({ transfers: data.transfers });
-    }
-  }, [loading, error, data]);
+
+  });
 
   return (
-      <div className="App">
-        <header className="App-header">
-          <AppLogo src={logo} className="App-logo" alt="react-logo" />
-          <p>
-            Edit <code>packages/react-app/src/App.js</code> and save to reload.
-          </p>
-          <button onClick={() => readOnchainBalance()} style={{ display: "none" }}>
-            Read On-Chain Balance
-          </button>
-          <a
-            className="App-link"
-            href="https://ethereum.org/developers/#getting-started"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ marginTop: "0px" }}
-          >
-            EPNS
-          </a>
-          <AppLink className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-            Learn React
-          </AppLink>
-           <AppLink href="https://thegraph.com/docs/quick-start" target="_blank" rel="noopener noreferrer">
-            Learn The Graph
-          </AppLink>
-        </header>
-      </div>
 
+    <Home />
   );
 }
 
