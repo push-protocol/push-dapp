@@ -34,6 +34,6 @@ const Button = styled.button`
   margin-bottom: 16px;
   pointer-events: none;
   font-size: 15px;
-
+`
 
 export default App;

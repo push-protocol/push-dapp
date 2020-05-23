@@ -9,6 +9,8 @@ import * as serviceWorker from "./serviceWorker";
 import { Web3ReactProvider } from '@web3-react/core'
 import { ethers } from "ethers";
 
+require('dotenv').config();
+
 // You should replace this uri with your own and put it into a .env file
 const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
