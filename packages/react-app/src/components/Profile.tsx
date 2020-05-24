@@ -1,5 +1,5 @@
 import React from "react";
-import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
 import styled, { css } from 'styled-components';
 
@@ -62,7 +62,7 @@ function Profile() {
           <>{ens}</>
         }
         {ensFetched && !ens &&
-          <>{account}</>
+          <>{account.substring(0, 6)}.....{account.substring(account.length - 6)}</>
         }
         </Wallet>
       </Container>
@@ -78,7 +78,8 @@ const Container = styled.button`
   background: none;
   border: 0;
   outline: 0;
-  justify-content: center;
+  justify-content: flex-start;
+  flex: 1,
   flex-direction: row;
   align-items: center;
   display: flex;

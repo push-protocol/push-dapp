@@ -8,10 +8,11 @@ import {
 import styled, { css } from 'styled-components';
 
 import Profile from 'components/Profile';
+import Bell from 'components/Bell';
 
 
 // Create Header
-function Header() {
+function Header({ badgeCount, bellPressedCB }) {
   const { active, error, account, chainId } = useWeb3React();
   const randseed = new Array(4);
 
@@ -40,15 +41,30 @@ function Header() {
 
   return (
     <HeaderStyle>
+      <ProfileContainer>
       {active && !error &&
         <Profile />
       }
+      {!active &&
+        <Logo src="epns.png" />
+      }
+      </ProfileContainer>
       <UserControls>
-
+        {active && !error &&
+          <Bell
+            badgeCount={badgeCount}
+            bellPressedCB={bellPressedCB}
+            width={40}
+            height={40}
+          />
+        }
       </UserControls>
       <NetworkDisplayer>
         {!!error &&
           <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>
+        }
+        {!active && !error &&
+          <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>
         }
         <Connection phase={active ? 'active' : error ? 'error' : 'waiting'} />
       </NetworkDisplayer>
@@ -60,14 +76,21 @@ function Header() {
 // CSS Styles
 const HeaderStyle = styled.div`
   height: 100%;
-  border-color: rgba(240,240,240,1);
-  border-style: solid;
-  border-width: 0 0 1px 0;
   padding: 5px 15px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+`
+
+const ProfileContainer = styled.div`
+  display: flex;
+  flex: 1;
+  justfy-content: flex-start;
+`
+
+const Logo = styled.img`
+  height: 45px;
 `
 
 const UserControls = styled.div`
@@ -76,13 +99,17 @@ const UserControls = styled.div`
   align-items: center;
 `
 
+const ImageButton = styled.button`
+
+`
+
 const NetworkDisplayer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 `
 
-const PrimaryTheme = styled.span`
+const Notice = styled.span`
   border: 0;
   outline: 0;
   display: flex;
@@ -90,10 +117,17 @@ const PrimaryTheme = styled.span`
   justify-content: center;
   padding: 8px 15px;
   margin: 10px;
-  background: #e20880;
   color: #fff;
   border-radius: 20px;
   font-size: 14px;
+`
+
+const PrimaryTheme = styled(Notice)`
+  background: #e20880;
+`
+
+const ThirdTheme = styled(Notice)`
+  background: #674c9f;
 `
 
 const Connection = styled.span`

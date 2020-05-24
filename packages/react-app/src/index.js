@@ -18,10 +18,6 @@ const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
 });
 
-function getLibrary(provider, connector) {
-  return new ethers.providers.Web3Provider(provider); // this will vary according to whether you use e.g. ethers or web3.js
-}
-
 ReactDOM.render(
 
     <ApolloProvider client={client}>

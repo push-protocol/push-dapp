@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
 // Create Header
-function Templater() {
+function Settings() {
   const [openFlag, setOpenFlag] = React.useState(false);
 
   React.useEffect(() => {
@@ -26,4 +26,4 @@ const Container = styled.div`
 `
 
 // Export Default
-export default Templater;
+export default Settings;

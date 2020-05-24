@@ -221,6 +221,9 @@ function App() {
   const context = useWeb3React<Web3Provider>()
   const { connector, library, chainId, account, activate, deactivate, active, error } = context
 
+  const [ badgeCount, setBadgeCount ] = React.useState(0);
+  const [ bellPressed, setBellPressed ] = React.useState(0);
+
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>()
   React.useEffect(() => {
@@ -238,9 +241,24 @@ function App() {
   return (
       <>
         <HeaderContainer>
-          <Header />
+          <Header
+            badgeCount={badgeCount}
+            bellPressedCB={() => {setBellPressed(bellPressed + 1)}}
+          />
         </HeaderContainer>
-        <HeaderOld />
+
+        <ParentContainer>
+        {(active) && !error && (
+          <HomeContainer>
+            <Home
+              setBadgeCount={setBadgeCount}
+              bellPressed={bellPressed}
+            />
+          </HomeContainer>
+
+        )}
+
+
         <hr style={{ margin: '2rem' }} />
         <div
           style={{
@@ -297,15 +315,7 @@ function App() {
             )
           })}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {(active) && (
-            <Home
-              active={active}
-              library={library}
-              readonly={!!(library && account)}
-            />
-          )}
-        </div>
+
 
         <hr style={{ margin: '2rem' }} />
 
@@ -334,8 +344,6 @@ function App() {
               Deactivate
             </button>
           )}
-
-          {!!error && <h4 style={{ marginTop: '1rem', marginBottom: '0' }}>{getErrorMessage(error)}</h4>}
 
           {!!(library && account) && (
             <button
@@ -404,6 +412,9 @@ function App() {
             </>
           )}
         </div>
+        </ParentContainer>
+
+
       </>
   );
 }
@@ -414,6 +425,27 @@ const HeaderContainer = styled.div`
   height: 55px;
   left: 0;
   right: 0;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  background: #fff;
+`
+
+const ParentContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 80px 20px 20px 20px;
+  flex: 1;
+`
+
+const HomeContainer = styled.div`
+  display: flex;
+  flex: 1;
+  align-self: center;
+  width: 100%;
+  max-width: 940px;
 `
 
 const AppLink = styled.a`
