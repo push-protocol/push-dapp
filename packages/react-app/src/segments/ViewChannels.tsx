@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
 // Create Header
-function CreateChannel() {
+function ViewChannel() {
   React.useEffect(() => {
 
   });
@@ -13,7 +13,7 @@ function CreateChannel() {
 
   return (
     <Container>
-      I am Create Channel
+      I am View Channels
     </Container>
   );
 }
@@ -24,4 +24,4 @@ const Container = styled.div`
 `
 
 // Export Default
-export default CreateChannel;
+export default ViewChannel;

@@ -256,6 +256,7 @@ function App() {
               setBadgeCount={setBadgeCount}
               bellPressed={bellPressed}
               epnscore={'0x42d10cdd9cdc4ae284e4bec54e204dbdc44adf9a'}
+              dai={'0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108'}
             />
           </HomeContainer>
 
@@ -418,7 +419,6 @@ const HeaderContainer = styled.div`
   position: fixed;
   top: 0;
   z-index: 999;
-  background: #fff;
 `
 
 const ParentContainer = styled.div`

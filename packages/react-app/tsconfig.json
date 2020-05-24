@@ -19,7 +19,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "baseUrl": "src",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "checkJs": false
   },
   "include": [
     "next-env.d.ts",

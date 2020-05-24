@@ -3,34 +3,36 @@ import styled, { css } from 'styled-components';
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
-import ChannelPreview from 'components/ChannelPreview';
 import Loader from 'react-loader-spinner'
+
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+
+import ChannelDashboard from 'segments/ChannelDashboard';
+import CreateChannel from 'segments/CreateChannel';
+import Feedbox from 'segments/Feedbox';
+import ViewChannels from 'segments/ViewChannels';
 
 import { addresses, abis } from "@project/contracts";
 const ethers = require('ethers');
 
 // Create Header
-function Home({ setBadgeCount, bellPressed, epnscore }) {
+function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
   const { active, error, account, library, chainId } = useWeb3React();
 
   const [controlAt, setControlAt] = React.useState(0);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
+  const [channelJson, setChannelJson] = React.useState([]);
 
   React.useEffect(() => {
     // Reset when account refreshes
     setChannelAdmin(false);
     setAdminStatusLoaded(false);
     userClickedAt(0);
+    setChannelJson([]);
 
-    // Check if account is admin or not and handle accordingly
-    let contract = new ethers.Contract(epnscore, abis.epnscore, library);
-    contract.users(account).then(response => {
-       console.log(response);
-    })
-    .catch({
-
-    });
+    // Call Admin Chcek
+    checkUserForChannelRights();
 
   }, [account]);
 
@@ -44,6 +46,45 @@ function Home({ setBadgeCount, bellPressed, epnscore }) {
     setControlAt(controlIndex);
   }
 
+  //Start Listening...
+  const listenerForChannelRights = async () => {
+    let contract = new ethers.Contract(epnscore, abis.epnscore, library)
+    let topic = ethers.utils.id("AddChannel(address,string)");
+
+    let filter = {
+        address: epnscore,
+        topics: [ topic ]
+    }
+
+    library.on(filter, (result) => {
+      checkUserForChannelRights();
+      console.log(result);
+    });
+  }
+
+  // Check if a user is a channel or not
+  const checkUserForChannelRights = async () => {
+
+    // Check if account is admin or not and handle accordingly
+    let contract = new ethers.Contract(epnscore, abis.epnscore, library);
+    let channelInfo;
+    EPNSCoreHelper.getChannelJsonFromUserAddress(account, contract)
+      .then(response => {
+        console.log(response);
+        setChannelJson(response);
+        setChannelAdmin(true);
+        setAdminStatusLoaded(true);
+      })
+      .catch(e => {
+        setChannelAdmin(false);
+        setAdminStatusLoaded(true);
+      });
+
+    // Start listening
+    listenerForChannelRights();
+  }
+
+  // Render
   return (
     <Container>
       <Controls>
@@ -81,7 +122,10 @@ function Home({ setBadgeCount, bellPressed, epnscore }) {
             />
           }
           {channelAdmin && adminStatusLoaded &&
-            <ChannelPreview />
+            <ControlChannelContainer>
+              <ControlChannelImage src={`${channelJson.icon}`} active={controlAt == 2 ? 1 : 0}/>
+              <ControlChannelText active={controlAt == 2 ? 1 : 0}>{channelJson.name}</ControlChannelText>
+            </ControlChannelContainer>
           }
           {!channelAdmin && adminStatusLoaded &&
             <>
@@ -92,6 +136,23 @@ function Home({ setBadgeCount, bellPressed, epnscore }) {
         </ControlButton>
       </Controls>
       <Interface>
+        {controlAt == 0 &&
+          <Feedbox />
+        }
+        {controlAt == 1 &&
+          <ViewChannels />
+        }
+        {controlAt == 2 && !channelAdmin && adminStatusLoaded &&
+          <CreateChannel
+            epnscore={epnscore}
+            dai={dai}
+          />
+        }
+        {controlAt == 2 && channelAdmin && adminStatusLoaded &&
+          <ChannelDashboard
+            epnscore={epnscore}
+          />
+        }
       </Interface>
     </Container>
   );
@@ -170,6 +231,39 @@ const ControlText = styled.label`
   `};
 `
 
+const ControlChannelContainer = styled.div`
+  margin: 0px 20px;
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+`
+
+const ControlChannelImage = styled.img`
+    width: 20%;
+    margin-bottom: 10px;
+    transition: transform .2s ease-out;
+    ${ props => props.active && css`
+      transform: scale(3.5) translate(-40px, 5px);
+      opacity: 0.2;
+      z-index: 1;
+    `};
+`
+
+const ControlChannelText = styled.label`
+  font-size: 16px;
+  font-weight: 300;
+  opacity: ${(props) => props.active ? "1" : "0.75"};
+  transition: transform .2s ease-out;
+  background: -webkit-linear-gradient(#db268a, #34c6f3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  z-index: 2;
+  ${ props => props.active && css`
+    transform: scale(1.1) translate(0px, -20px);
+  `};
+
+`
+
 const Interface = styled.div`
   flex: 1;
   display: flex;
@@ -179,6 +273,7 @@ const Interface = styled.div`
   border: 1px solid rgb(225,225,225);
 
   margin: 15px;
+  padding: 20px;
   overflow: hidden;
 `
 

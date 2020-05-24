@@ -352,3 +352,12 @@ template {
 * {
   font-family: 'Open Sans', sans-serif;
 }
+
+b {
+  color: #e20880;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #BBB;
+  opacity: 1; /* Firefox */
+}

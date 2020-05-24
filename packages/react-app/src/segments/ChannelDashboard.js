@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
 // Create Header
-function ChannelCenter() {
+function ChannelDashboard({ epnscore }) {
   React.useEffect(() => {
 
   });
@@ -13,7 +13,7 @@ function ChannelCenter() {
 
   return (
     <Container>
-      I am List of Channels
+      I am Channels Dashboard
     </Container>
   );
 }
@@ -24,4 +24,4 @@ const Container = styled.div`
 `
 
 // Export Default
-export default ChannelCenter;
+export default ChannelDashboard;

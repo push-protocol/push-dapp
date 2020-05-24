@@ -24,16 +24,16 @@ function Header({ badgeCount, bellPressedCB }) {
 
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
-      return 'No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.'
+      return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
     } else if (error instanceof UnsupportedChainIdError) {
       return "Unsupported Network, please connect to Ropsten"
     } else if (
       error instanceof UserRejectedRequestErrorInjected
     ) {
-      return 'Please authorize this website to access your Ethereum account.'
+      return 'Please authorize this website to access the dApp'
     } else {
       console.error(error)
-      return 'An unknown error occurred. Check the console for more details.'
+      return 'An unknown error occurred. Check the console for more details'
     }
   }
 
@@ -76,8 +76,9 @@ function Header({ badgeCount, bellPressedCB }) {
 // CSS Styles
 const HeaderStyle = styled.div`
   height: 100%;
-  padding: 5px 15px;
-  background: #fff;
+  padding: 10px 15px;
+  background: rgb(255,255,255);
+  background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 21%);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -135,6 +136,7 @@ const Connection = styled.span`
   height: 10px;
   width: 10px;
   border-radius: 100%;
+  flex-shrink: 0;
 
   ${props => props.phase === 'active' && css`
     background: #77DD77;
