@@ -13,14 +13,21 @@ function Feedbox() {
 
   return (
     <Container>
-      I am Feedbox
+      Coming in Version 0.2!
     </Container>
   );
 }
 
 // css styles
 const Container = styled.div`
-
+  font-size: 32px;
+  color: #DDD;
+  display: flex;
+  font-weight: 200;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `
 
 // Export Default

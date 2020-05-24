@@ -90,7 +90,40 @@ const EPNSCoreHelper = {
         .then(response => resolve(response))
         .catch(err => reject(err));
     });
-  }
+  },
+  // To retrieve a channel's Info
+  getPublicKey: async (address, contract) => {
+    return new Promise ((resolve, reject) => {
+      // To get channel ipfs hash from channel info
+      let filteredResponse;
+      contract.queryFilter('PublicKeyRegistered')
+        .then(response => {
+
+          response.forEach(function (item) {
+            if (item.args[0] == address) {
+              filteredResponse = item;
+            }
+          });
+
+          console.log("Full Response: ");
+          console.log(response);
+          console.log("Filtered Response: ");
+          console.log(filteredResponse);
+
+          if (filteredResponse.length == 0) {
+            reject()
+          }
+          else {
+            resolve(filteredResponse.args[1]);
+          }
+
+        })
+        .catch((err) => {
+          console.log(err);
+          reject(err);
+        });
+    })
+  },
 }
 
 export default EPNSCoreHelper;

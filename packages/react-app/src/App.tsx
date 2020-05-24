@@ -262,131 +262,82 @@ function App() {
 
         )}
 
+        {!active &&
+          <ProviderUpperContainer>
+            <ProviderLogo src="./epnsbell.png" />
+            <ProviderContainer>
+              {Object.keys(connectorsByName).map(name => {
+                const currentConnector = connectorsByName[name]
+                const activating = currentConnector === activatingConnector
+                const connected = currentConnector === connector
+                const disabled = !triedEager || !!activatingConnector || connected || !!error
+                const image = name === 'Injected' ? './metamask.png' : name === 'Portis' ? './portis.png' : './ninja.png';
 
-        <ProviderUpperContainer>
-          <ProviderLogo src="./epnsbell.png" />
-          <ProviderContainer>
-            {Object.keys(connectorsByName).map(name => {
-              const currentConnector = connectorsByName[name]
-              const activating = currentConnector === activatingConnector
-              const connected = currentConnector === connector
-              const disabled = !triedEager || !!activatingConnector || connected || !!error
-              const image = name === 'Injected' ? './metamask.png' : name === 'Portis' ? './portis.png' : './ninja.png';
+                return (
+                  <ProviderButton
+                    disabled={disabled}
+                    key={name}
+                    onClick={() => {
+                      setActivatingConnector(currentConnector)
+                      activate(connectorsByName[name])
+                    }}
+                    border={name === 'Injected' ? '#e20880' : name === 'Portis' ? '#35c5f3' : '#674c9f'}
+                  >
+                    <ProviderImage src={image} />
 
-              return (
-                <ProviderButton
-                  disabled={disabled}
-                  key={name}
-                  onClick={() => {
-                    setActivatingConnector(currentConnector)
-                    activate(connectorsByName[name])
-                  }}
-                  border={name === 'Injected' ? '#e20880' : name === 'Portis' ? '#35c5f3' : '#674c9f'}
-                >
-                  <ProviderImage src={image} />
+                    <ProviderLabel>
+                      {activating &&
+                        <Loader
+                           type="Oval"
+                           color="#35c5f3"
+                           height={20}
+                           width={20}
+                        />
+                      }
+                      {!activating &&
+                        <>
+                        {name === 'Injected' ? 'Connect with MetaMask' : name === 'Portis' ? 'Connect with Portis' : 'Login as Ninja'}
+                        </>
+                      }
 
-                  <ProviderLabel>
-                    {activating &&
-                      <Loader
-                         type="Oval"
-                         color="#35c5f3"
-                         height={20}
-                         width={20}
-                      />
-                    }
-                    {!activating &&
-                      <>
-                      {name === 'Injected' ? 'Connect with MetaMask' : name === 'Portis' ? 'Connect with Portis' : 'Login as Ninja'}
-                      </>
-                    }
+                    </ProviderLabel>
 
-                  </ProviderLabel>
+                  </ProviderButton>
+                )
+              })}
+            </ProviderContainer>
+          </ProviderUpperContainer>
+        }
 
-                </ProviderButton>
-              )
-            })}
-          </ProviderContainer>
-        </ProviderUpperContainer>
+        {active &&
+          <div
+            style={{
+              display: 'grid',
+              gridGap: '1rem',
+              gridTemplateColumns: 'fit-content',
+              maxWidth: '20rem',
+              margin: 'auto',
+              marginTop: '1200px'
+            }}
+          >
+            {(active || error) && (
+              <button
+                style={{
+                  height: '3rem',
+                  marginTop: '2rem',
+                  borderRadius: '1rem',
+                  borderColor: 'red',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  deactivate()
+                }}
+              >
+                Deactivate
+              </button>
+            )}
 
-
-        <div
-          style={{
-            display: 'grid',
-            gridGap: '1rem',
-            gridTemplateColumns: 'fit-content',
-            maxWidth: '20rem',
-            margin: 'auto'
-          }}
-        >
-          {(active || error) && (
-            <button
-              style={{
-                height: '3rem',
-                marginTop: '2rem',
-                borderRadius: '1rem',
-                borderColor: 'red',
-                cursor: 'pointer'
-              }}
-              onClick={() => {
-                deactivate()
-              }}
-            >
-              Deactivate
-            </button>
-          )}
-
-          {!!(library && account) && (
-            <button
-              style={{
-                height: '3rem',
-                borderRadius: '1rem',
-                cursor: 'pointer'
-              }}
-              onClick={() => {
-                library
-                  .getSigner(account)
-                  .signMessage('👋')
-                  .then((signature: any) => {
-                    window.alert(`Success!\n\n${signature}`)
-                  })
-                  .catch((error: any) => {
-                    window.alert('Failure!' + (error && error.message ? `\n\n${error.message}` : ''))
-                  })
-              }}
-            >
-              Sign Message
-            </button>
-          )}
-          {!!(connector === network && chainId) && (
-            <button
-              style={{
-                height: '3rem',
-                borderRadius: '1rem',
-                cursor: 'pointer'
-              }}
-              onClick={() => {
-                ;(connector as any).changeChainId(chainId === 1 ? 3 : 1)
-              }}
-            >
-              Switch Networks
-            </button>
-          )}
-          {connector === portis && (
-            <>
-              {chainId !== undefined && (
-                <button
-                  style={{
-                    height: '3rem',
-                    borderRadius: '1rem',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => {
-                    ;(connector as any).changeNetwork(chainId === 1 ? 100 : 1)
-                  }}
-                >
-                  Switch Networks
-                </button>
-              )}
+            {!!(library && account) && (
               <button
                 style={{
                   height: '3rem',
@@ -394,14 +345,66 @@ function App() {
                   cursor: 'pointer'
                 }}
                 onClick={() => {
-                  ;(connector as any).close()
+                  library
+                    .getSigner(account)
+                    .signMessage('👋')
+                    .then((signature: any) => {
+                      window.alert(`Success!\n\n${signature}`)
+                    })
+                    .catch((error: any) => {
+                      window.alert('Failure!' + (error && error.message ? `\n\n${error.message}` : ''))
+                    })
                 }}
               >
-                Kill Portis Session
+                Sign Message
               </button>
-            </>
-          )}
-        </div>
+            )}
+            {!!(connector === network && chainId) && (
+              <button
+                style={{
+                  height: '3rem',
+                  borderRadius: '1rem',
+                  cursor: 'pointer'
+                }}
+                onClick={() => {
+                  ;(connector as any).changeChainId(chainId === 1 ? 3 : 1)
+                }}
+              >
+                Switch Networks
+              </button>
+            )}
+            {connector === portis && (
+              <>
+                {chainId !== undefined && (
+                  <button
+                    style={{
+                      height: '3rem',
+                      borderRadius: '1rem',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      ;(connector as any).changeNetwork(chainId === 1 ? 100 : 1)
+                    }}
+                  >
+                    Switch Networks
+                  </button>
+                )}
+                <button
+                  style={{
+                    height: '3rem',
+                    borderRadius: '1rem',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => {
+                    ;(connector as any).close()
+                  }}
+                >
+                  Kill Portis Session
+                </button>
+              </>
+            )}
+          </div>
+        }
         </ParentContainer>
 
 
