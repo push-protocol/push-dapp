@@ -11,10 +11,10 @@ import { Web3Provider } from 'ethers/providers'
 import { useEagerConnect, useInactiveListener } from 'hooks'
 import {
   injected,
-  network,
-  portis
+  portis,
+  network
 } from 'connectors'
-import { Spinner } from 'components/Spinner';
+import Loader from 'react-loader-spinner'
 import { ethers } from "ethers";
 
 import Home from 'pages/Home';
@@ -22,6 +22,8 @@ import Header from 'segments/Header';
 
 import styled from 'styled-components';
 
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const connectorsByName: { [name: string]: AbstractConnector } = {
   Injected: injected,
@@ -253,71 +255,58 @@ function App() {
             <Home
               setBadgeCount={setBadgeCount}
               bellPressed={bellPressed}
+              epnscore={'0x42d10cdd9cdc4ae284e4bec54e204dbdc44adf9a'}
             />
           </HomeContainer>
 
         )}
 
 
-        <hr style={{ margin: '2rem' }} />
-        <div
-          style={{
-            display: 'grid',
-            gridGap: '1rem',
-            gridTemplateColumns: '1fr 1fr',
-            maxWidth: '20rem',
-            margin: 'auto'
-          }}
-        >
-          {Object.keys(connectorsByName).map(name => {
-            const currentConnector = connectorsByName[name]
-            const activating = currentConnector === activatingConnector
-            const connected = currentConnector === connector
-            const disabled = !triedEager || !!activatingConnector || connected || !!error
+        <ProviderUpperContainer>
+          <ProviderLogo src="./epnsbell.png" />
+          <ProviderContainer>
+            {Object.keys(connectorsByName).map(name => {
+              const currentConnector = connectorsByName[name]
+              const activating = currentConnector === activatingConnector
+              const connected = currentConnector === connector
+              const disabled = !triedEager || !!activatingConnector || connected || !!error
+              const image = name === 'Injected' ? './metamask.png' : name === 'Portis' ? './portis.png' : './ninja.png';
 
-            return (
-              <button
-                style={{
-                  height: '3rem',
-                  borderRadius: '1rem',
-                  borderColor: activating ? 'orange' : connected ? 'green' : 'unset',
-                  cursor: disabled ? 'unset' : 'pointer',
-                  position: 'relative'
-                }}
-                disabled={disabled}
-                key={name}
-                onClick={() => {
-                  setActivatingConnector(currentConnector)
-                  activate(connectorsByName[name])
-                }}
-              >
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '0',
-                    left: '0',
-                    height: '100%',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'black',
-                    margin: '0 0 0 1rem'
+              return (
+                <ProviderButton
+                  disabled={disabled}
+                  key={name}
+                  onClick={() => {
+                    setActivatingConnector(currentConnector)
+                    activate(connectorsByName[name])
                   }}
+                  border={name === 'Injected' ? '#e20880' : name === 'Portis' ? '#35c5f3' : '#674c9f'}
                 >
-                  {activating && <Spinner color={'black'} style={{ height: '25%', marginLeft: '-1rem' }} />}
-                  {connected && (
-                    <span role="img" aria-label="check">
-                      ✅
-                    </span>
-                  )}
-                </div>
-                {name}
-              </button>
-            )
-          })}
-        </div>
+                  <ProviderImage src={image} />
 
+                  <ProviderLabel>
+                    {activating &&
+                      <Loader
+                         type="Oval"
+                         color="#35c5f3"
+                         height={20}
+                         width={20}
+                      />
+                    }
+                    {!activating &&
+                      <>
+                      {name === 'Injected' ? 'Connect with MetaMask' : name === 'Portis' ? 'Connect with Portis' : 'Login as Ninja'}
+                      </>
+                    }
 
-        <hr style={{ margin: '2rem' }} />
+                  </ProviderLabel>
+
+                </ProviderButton>
+              )
+            })}
+          </ProviderContainer>
+        </ProviderUpperContainer>
+
 
         <div
           style={{
@@ -433,6 +422,7 @@ const HeaderContainer = styled.div`
 `
 
 const ParentContainer = styled.div`
+  flex-wrap: wrap;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -448,6 +438,70 @@ const HomeContainer = styled.div`
   max-width: 940px;
 `
 
-const AppLink = styled.a`
-  height: 40px;
+const ProviderUpperContainer = styled.div`
+  display: flex;
+  flex: 1,
+  align-self: center;
+  flex-direction: column;
+`
+
+const ProviderLogo = styled.img`
+  width: 15vw;
+  align-self: center;
+  display: flex;
+  margin: 20px;
+  min-width: 200px;
+`
+
+const ProviderContainer = styled.div`
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const ProviderButton = styled.button`
+  flex: 1 1 0;
+  min-width: 200px;
+  background: #fff;
+  outline: 0;
+  max-width: 200px;
+
+  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  border: 1px solid rgb(225,225,225);
+
+  margin: 20px;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  &:hover {
+    opacity: 0.9;
+    cursor: pointer;
+    pointer: hand;
+    border: 1px solid ${props => props.border}
+  }
+  &:active {
+    opacity: 0.75;
+    cursor: pointer;
+    pointer: hand;
+    border: 1px solid ${props => props.border}
+  }
+`
+
+const ProviderImage = styled.img`
+  height: 60px;
+  padding: 10px;
+`
+
+const ProviderLabel = styled.span`
+  font-size: 12px;
+  margin: 5px;
 `

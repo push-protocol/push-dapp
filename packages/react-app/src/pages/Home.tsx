@@ -4,20 +4,33 @@ import styled, { css } from 'styled-components';
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
 import ChannelPreview from 'components/ChannelPreview';
+import Loader from 'react-loader-spinner'
+
+import { addresses, abis } from "@project/contracts";
+const ethers = require('ethers');
 
 // Create Header
-function Home({ setBadgeCount, bellPressed }) {
+function Home({ setBadgeCount, bellPressed, epnscore }) {
   const { active, error, account, library, chainId } = useWeb3React();
 
   const [controlAt, setControlAt] = React.useState(0);
+  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
 
   React.useEffect(() => {
     // Reset when account refreshes
     setChannelAdmin(false);
+    setAdminStatusLoaded(false);
     userClickedAt(0);
 
-    // Other stuff as well
+    // Check if account is admin or not and handle accordingly
+    let contract = new ethers.Contract(epnscore, abis.epnscore, library);
+    contract.users(account).then(response => {
+       console.log(response);
+    })
+    .catch({
+
+    });
 
   }, [account]);
 
@@ -52,14 +65,25 @@ function Home({ setBadgeCount, bellPressed }) {
         </ControlButton>
 
         <ControlButton index={2} active={controlAt == 2 ? 1 : 0} border="#674c9f"
+          disabled={!adminStatusLoaded}
           onClick={() => {
-            userClickedAt(2)
+            if (adminStatusLoaded) {
+              userClickedAt(2)
+            }
           }}
         >
-          {channelAdmin &&
+          {!adminStatusLoaded &&
+            <Loader
+               type="Oval"
+               color="#674c9f"
+               height={32}
+               width={32}
+            />
+          }
+          {channelAdmin && adminStatusLoaded &&
             <ChannelPreview />
           }
-          {!channelAdmin &&
+          {!channelAdmin && adminStatusLoaded &&
             <>
               <ControlImage src="./svg/channeladmin.svg" active={controlAt == 2 ? 1 : 0}/>
               <ControlText active={controlAt == 2 ? 1 : 0}>Create Your Channel</ControlText>

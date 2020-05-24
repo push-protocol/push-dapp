@@ -77,6 +77,7 @@ function Header({ badgeCount, bellPressedCB }) {
 const HeaderStyle = styled.div`
   height: 100%;
   padding: 5px 15px;
+  background: #fff;
   display: flex;
   flex-direction: row;
   align-items: center;
