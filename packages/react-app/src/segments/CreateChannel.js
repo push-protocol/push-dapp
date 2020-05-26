@@ -93,7 +93,7 @@ function CreateChannel({ epnscore, dai }) {
     var signer = library.getSigner(account);
 
     let daiContract = new ethers.Contract(dai, abis.erc20, signer);
-    var sendTransactionPromise = daiContract.approve(epnscore, bigNumberify('50000000000000000000000001'));
+    var sendTransactionPromise = daiContract.approve(epnscore, bigNumberify('500000000000000000000001'));
     const tx = await sendTransactionPromise;
 
     console.log(tx);

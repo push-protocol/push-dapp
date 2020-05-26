@@ -19,10 +19,26 @@ const ethers = require('ethers');
 function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
   const { active, error, account, library, chainId } = useWeb3React();
 
+  const [epnsReadProvider, setEpnsReadProvider] = React.useState(null);
+  const [epnsWriteProvider, setEpnsWriteProvider] = React.useState(null);
+
   const [controlAt, setControlAt] = React.useState(0);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState([]);
+
+  React.useEffect(() => {
+    const contractInstance = new ethers.Contract(epnscore, abis.epnscore, library);
+    setEpnsReadProvider(contractInstance);
+
+    if (!!(library && account)) {
+      let signer = library.getSigner(account);
+      const signerInstance = new ethers.Contract(epnscore, abis.epnscore, signer);
+      setEpnsWriteProvider(signerInstance);
+    }
+
+
+  }, [account]);
 
   React.useEffect(() => {
     // Reset when account refreshes
@@ -31,10 +47,12 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
     userClickedAt(0);
     setChannelJson([]);
 
-    // Call Admin Chcek
-    checkUserForChannelRights();
+    // Call Channel Check
+    if (epnsReadProvider != null) {
+      checkUserForChannelRights();
+    }
 
-  }, [account]);
+  }, [epnsReadProvider]);
 
   // Revert to Feedbox on bell pressed
   React.useEffect(() => {
@@ -48,7 +66,6 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
 
   //Start Listening...
   const listenerForChannelRights = async () => {
-    let contract = new ethers.Contract(epnscore, abis.epnscore, library)
     let topic = ethers.utils.id("AddChannel(address,string)");
 
     let filter = {
@@ -68,7 +85,7 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
     // Check if account is admin or not and handle accordingly
     let contract = new ethers.Contract(epnscore, abis.epnscore, library);
     let channelInfo;
-    EPNSCoreHelper.getChannelJsonFromUserAddress(account, contract)
+    EPNSCoreHelper.getChannelJsonFromUserAddress(account, epnsReadProvider)
       .then(response => {
         console.log(response);
         setChannelJson(response);
@@ -140,7 +157,10 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
           <Feedbox />
         }
         {controlAt == 1 &&
-          <ViewChannels />
+          <ViewChannels
+            epnsReadProvider={epnsReadProvider}
+            epnsWriteProvide={epnsWriteProvider}
+          />
         }
         {controlAt == 2 && !channelAdmin && adminStatusLoaded &&
           <CreateChannel

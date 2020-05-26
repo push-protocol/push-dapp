@@ -1,5 +1,8 @@
 import React from "react";
 
+import Loader from 'react-loader-spinner'
+import styled from 'styled-components';
+
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import {
@@ -14,13 +17,11 @@ import {
   portis,
   network
 } from 'connectors'
-import Loader from 'react-loader-spinner'
+import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 
 import Home from 'pages/Home';
 import Header from 'segments/Header';
-
-import styled from 'styled-components';
 
 import * as dotenv from "dotenv";
 dotenv.config();
