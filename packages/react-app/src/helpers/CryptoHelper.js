@@ -1,6 +1,6 @@
 import EthCrypto from 'eth-crypto';
 import {encrypt, decrypt} from 'eccrypto';
-import { publicKeyConvert, publicKeyVerify } from 'secp256k1';
+import { publicKeyConvert, publicKeyVerify } from 'secp256k1-v4';
 
 var CryptoJS = require("crypto-js");
 

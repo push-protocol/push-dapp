@@ -1,4 +1,5 @@
 import React from "react";
+import ReactGA from 'react-ga';
 
 import Loader from 'react-loader-spinner'
 import styled from 'styled-components';
@@ -220,12 +221,21 @@ function HeaderOld() {
   )
 }
 
+function initializeGA() {
+  ReactGA.initialize('231212683');
+  ReactGA.pageview('/homepage');
+}
+
 function App() {
   const context = useWeb3React<Web3Provider>()
   const { connector, library, chainId, account, activate, deactivate, active, error } = context
 
   const [ badgeCount, setBadgeCount ] = React.useState(0);
   const [ bellPressed, setBellPressed ] = React.useState(0);
+
+  // Initialize GA
+  ReactGA.initialize('UA-165415629-1');
+  ReactGA.pageview('/login');
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>()

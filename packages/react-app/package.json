@@ -48,10 +48,11 @@
     "react-animations": "1.0.0",
     "react-dom": "16.12.0",
     "react-dropzone-uploader": "2.11.0",
+    "react-ga": "2.7.0",
     "react-loader-spinner": "3.1.14",
     "react-scripts": "^3.3.1",
     "react-spinners": "0.8.3",
-    "secp256k1": "^4.0.1",
+    "secp256k1-v4": "https://github.com/HarshRajat/secp256k1-node",
     "styled-components": "5.1.0",
     "typescript": "^3.7.5"
   },

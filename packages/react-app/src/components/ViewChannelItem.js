@@ -16,7 +16,7 @@ function ViewChannelItem({ channelObject, epnsReadProvider, epnsWriteProvide }) 
 
   return (
     <Container>
-      <ChannelLogo src={}>
+      
 
     </Container>
   );

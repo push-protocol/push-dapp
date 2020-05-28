@@ -1,4 +1,6 @@
 import React from "react";
+import ReactGA from 'react-ga';
+
 import styled, { css } from 'styled-components';
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -17,6 +19,8 @@ const ethers = require('ethers');
 
 // Create Header
 function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
+  ReactGA.pageview('/home');
+
   const { active, error, account, library, chainId } = useWeb3React();
 
   const [epnsReadProvider, setEpnsReadProvider] = React.useState(null);
