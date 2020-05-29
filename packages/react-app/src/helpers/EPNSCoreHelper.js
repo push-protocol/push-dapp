@@ -4,8 +4,6 @@ import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 import { bigNumber } from 'ethers/utils'
 
-import { Q } from "q";
-
 // FeedDB Helper Function
 const EPNSCoreHelper = {
   // To get if user is a channel
@@ -106,7 +104,7 @@ const EPNSCoreHelper = {
     })
   },
   // Get channels address given number of channels, , atIndex: -1 is start from latest, numChannels: -1 is return all
-  getChannelsInfoLatestToOldest: async (atIndex, numChannels, contract) => {
+  getChannelsMetaLatestToOldest: async (atIndex, numChannels, contract) => {
     return new Promise ((resolve, reject) => {
       EPNSCoreHelper.getTotalNumberOfChannels(contract)
         .then(async (response) => {
@@ -122,21 +120,20 @@ const EPNSCoreHelper = {
           }
 
           // Get channels
-          let channelID = atIndex;
           let channelArrays = [];
 
           // prefil and then refil
           let count = 0;
-          for (let i = channelsCount - 1; i >= 0; i--) {
-            channelArrays[count] = i;
-            count = count + 1;
+          for (let i = numChannels - 1; i >= 0; i--) {
+            const assignedChannelID = atIndex - i;
+            channelArrays.push(assignedChannelID);
           }
 
-          const promises = channelArrays.map(async () => {
+          const promises = channelArrays.map(async (channelID) => {
             await EPNSCoreHelper.getChannelAddressFromID(channelID, contract)
               .then(response => EPNSCoreHelper.getChannelInfo(response, contract))
               .then(response => {
-                //console.log("getChannelsInfoLatestToOldest(%d, %d) --> %o", channelID, numChannels, channelsInfo);
+                // console.log("getChannelsMetaLatestToOldest(%d, %d) --> %o", channelID, numChannels, channelsInfo);
                 channelsInfo = [response, ...channelsInfo];
               })
               .catch(err => console.log("Error in channel: %d | skipping...", channelID))
@@ -145,11 +142,23 @@ const EPNSCoreHelper = {
           // wait until all promises are resolved
           await Promise.all(promises);
 
-          console.log("getChannelsInfoLatestToOldest(%d, %d) --> %o", atIndex, numChannels, channelsInfo);
+          console.log("getChannelsMetaLatestToOldest(Index: %d, Number: %d) --> %o", atIndex, numChannels, channelsInfo);
           resolve(channelsInfo);
         })
-        .catch(err => { console.log("!!!Error, getChannelsInfoLatestToOldest() --> %o", err); reject(err); })
+        .catch(err => { console.log("!!!Error, getChannelsMetaLatestToOldest() --> %o", err); reject(err); })
     });
+  },
+  // Get Total Number of Users
+  getTotalNumberOfUsers: async (contract) => {
+    return new Promise ((resolve, reject) => {
+      // Get User Info from EPNS Core
+      contract.usersCount()
+        .then(response => {
+          console.log("getTotalNumberOfUsers() --> %o", response.toNumber());
+          resolve(response.toNumber());
+        })
+        .catch(err => { console.log("!!!Error, getTotalNumberOfUsers() --> %o", err); reject(err); });
+    })
   },
   // To retrieve public key of a user
   getPublicKey: async (address, contract) => {
@@ -182,6 +191,18 @@ const EPNSCoreHelper = {
           console.log(err);
           reject(err);
         });
+    })
+  },
+  // Get User
+  getTotalSubscribedChannels: async (user, contract) => {
+    return new Promise ((resolve, reject) => {
+      // Get User Info from EPNS Core
+      contract.usersCount()
+        .then(response => {
+          console.log("getTotalNumberOfUsers() --> %o", response.toNumber());
+          resolve(response.toNumber());
+        })
+        .catch(err => { console.log("!!!Error, getTotalNumberOfUsers() --> %o", err); reject(err); });
     })
   },
 }

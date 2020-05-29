@@ -3,7 +3,7 @@ import ReactGA from 'react-ga';
 
 import styled, { css } from 'styled-components';
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 
 import Loader from 'react-loader-spinner'
 
@@ -15,10 +15,13 @@ import Feedbox from 'segments/Feedbox';
 import ViewChannels from 'segments/ViewChannels';
 
 import { addresses, abis } from "@project/contracts";
-const ethers = require('ethers');
+import { ethers } from "ethers";
+
+import ChannelsDataStore, { channel_events } from "singletons/ChannelsDataStore";
+import UsersDataStore, { user_events } from "singletons/UsersDataStore";
 
 // Create Header
-function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
+function Home({ setBadgeCount, bellPressed }) {
   ReactGA.pageview('/home');
 
   const { active, error, account, library, chainId } = useWeb3React();
@@ -32,15 +35,14 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
   const [channelJson, setChannelJson] = React.useState([]);
 
   React.useEffect(() => {
-    const contractInstance = new ethers.Contract(epnscore, abis.epnscore, library);
+    const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
     setEpnsReadProvider(contractInstance);
 
     if (!!(library && account)) {
       let signer = library.getSigner(account);
-      const signerInstance = new ethers.Contract(epnscore, abis.epnscore, signer);
+      const signerInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
       setEpnsWriteProvider(signerInstance);
     }
-
 
   }, [account]);
 
@@ -51,8 +53,11 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
     userClickedAt(0);
     setChannelJson([]);
 
-    // Call Channel Check
+    // EPNS Read Provider Set
     if (epnsReadProvider != null) {
+      // Instantiate Data Stores
+      ChannelsDataStore.instance.init(account, epnsReadProvider);
+
       checkUserForChannelRights();
     }
 
@@ -70,25 +75,18 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
 
   //Start Listening...
   const listenerForChannelRights = async () => {
-    let topic = ethers.utils.id("AddChannel(address,string)");
-
-    let filter = {
-        address: epnscore,
-        topics: [ topic ]
-    }
-
-    library.on(filter, (result) => {
-      checkUserForChannelRights();
-      console.log(result);
-    });
+    ChannelsDataStore.instance.addCallbacks(
+      channel_events.ADD_CHANNEL_SELF,
+      "CreateChannelButton",
+      () => {
+        checkUserForChannelRights();
+      }
+    );
   }
 
   // Check if a user is a channel or not
   const checkUserForChannelRights = async () => {
-
     // Check if account is admin or not and handle accordingly
-    let contract = new ethers.Contract(epnscore, abis.epnscore, library);
-    let channelInfo;
     EPNSCoreHelper.getChannelJsonFromUserAddress(account, epnsReadProvider)
       .then(response => {
         console.log(response);
@@ -167,22 +165,17 @@ function Home({ setBadgeCount, bellPressed, epnscore, dai }) {
           />
         }
         {controlAt == 2 && !channelAdmin && adminStatusLoaded &&
-          <CreateChannel
-            epnscore={epnscore}
-            dai={dai}
-          />
+          <CreateChannel />
         }
         {controlAt == 2 && channelAdmin && adminStatusLoaded &&
-          <ChannelDashboard
-            epnscore={epnscore}
-          />
+          <ChannelDashboard />
         }
       </Interface>
     </Container>
   );
 }
 
-// css styles
+// css style
 const Container = styled.div`
   flex: 1;
   display: flex;

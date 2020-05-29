@@ -10,6 +10,9 @@ import { ethers } from "ethers";
 import DisplayNotice from "components/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
 
+import ChannelsDataStore, { channel_events } from "singletons/ChannelsDataStore";
+import UsersDataStore, { user_events } from "singletons/UsersDataStore";
+
 // Create Header
 function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   const { account, library } = useWeb3React();
@@ -23,7 +26,8 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
   // to fetch channels
   const fetchChannels = async () => {
-    const channesInfo = await EPNSCoreHelper.getChannelsInfoLatestToOldest(-1, -1, epnsReadProvider);
+    // const channesInfo = await EPNSCoreHelper.getChannelsMetaLatestToOldest(-1, -1, epnsReadProvider);
+    const channesInfo = await ChannelsDataStore.instance.getChannelsMetaAsync(-1, -1);
 
     setChannels(channesInfo);
     setLoading(false);

@@ -15,7 +15,7 @@ const ethers = require('ethers');
 const ipfs = require('ipfs-api')()
 
 // Create Header
-function CreateChannel({ epnscore, dai }) {
+function CreateChannel() {
   const { active, error, account, library, chainId } = useWeb3React();
 
   const [processing, setProcessing] = React.useState(false);
@@ -92,15 +92,15 @@ function CreateChannel({ epnscore, dai }) {
     // First Approve DAI
     var signer = library.getSigner(account);
 
-    let daiContract = new ethers.Contract(dai, abis.erc20, signer);
-    var sendTransactionPromise = daiContract.approve(epnscore, bigNumberify('500000000000000000000001'));
+    let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
+    var sendTransactionPromise = daiContract.approve(addresses.epnscore, bigNumberify('500000000000000000000001'));
     const tx = await sendTransactionPromise;
 
     console.log(tx);
     console.log("waiting for tx to finish");
     await library.waitForTransaction(tx.hash);
 
-    let contract = new ethers.Contract(epnscore, abis.epnscore, signer);
+    let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
     var anotherSendTxPromise = contract.createChannelWithFees(cid);
 
     anotherSendTxPromise.then(function(tx) {
