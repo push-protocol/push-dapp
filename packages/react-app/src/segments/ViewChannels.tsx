@@ -26,38 +26,43 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
   // to fetch channels
   const fetchChannels = async () => {
-    // const channesInfo = await EPNSCoreHelper.getChannelsMetaLatestToOldest(-1, -1, epnsReadProvider);
-    const channesInfo = await ChannelsDataStore.instance.getChannelsMetaAsync(-1, -1);
+    // const channelsMeta = await EPNSCoreHelper.getChannelsMetaLatestToOldest(-1, -1, epnsReadProvider);
+    const channelsMeta = await ChannelsDataStore.instance.getChannelsMetaAsync(-1, -1);
 
-    setChannels(channesInfo);
+    setChannels(channelsMeta);
     setLoading(false);
   }
 
   return (
     <Container>
       {loading &&
-        <Loader
-         type="Oval"
-         color="#35c5f3"
-         height={40}
-         width={40}
-        />
+        <ContainerInfo>
+          <Loader
+           type="Oval"
+           color="#35c5f3"
+           height={40}
+           width={40}
+          />
+        </ContainerInfo>
       }
 
       {!loading && channels.length == 0 &&
-        <DisplayNotice
-          title="That's weird, No Channels in EPNS... world is ending... right?"
-          theme="primary"
-        />
+        <ContainerInfo>
+          <DisplayNotice
+            title="That's weird, No Channels in EPNS... world is ending... right?"
+            theme="primary"
+          />
+        </ContainerInfo>
       }
 
       {!loading && channels.length != 0 &&
-        <Items>
-          {channels.map(channelObject => {
+        <Items id="scrollstyle-secondary">
+          {Object.keys(channels).map(index => {
 
             return (
               <ViewChannelItem
-                channelObject={channelObject}
+                key={channels[index].addr}
+                channelObject={channels[index]}
                 epnsReadProvider={epnsReadProvider}
                 epnsWriteProvide={epnsWriteProvide}
               />
@@ -74,15 +79,29 @@ const Container = styled.div`
   font-size: 32px;
   color: #DDD;
   display: flex;
+  flex: 1;
+  flex-direction: column;
+
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
-  width: 100%;
+
+  max-height: 80vh;
+`
+
+const ContainerInfo = styled.div`
+  padding: 20px;
 `
 
 const Items = styled.div`
-
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-self: stretch;
+  padding: 10px 20px;
+  overflow-y: scroll;
+  background: #fafafa;
 `
 
 // Export Default

@@ -348,6 +348,9 @@ template {
   display: none;
 }
 
+/**
+ * Custom CSS
+ */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
 * {
   font-family: 'Open Sans', sans-serif;
@@ -360,4 +363,28 @@ b {
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #BBB;
   opacity: 1; /* Firefox */
+}
+
+/*
+ *  SCROLL STYLES - https://codepen.io/GhostRider/pen/GHaFw
+ */
+/* Secondary */
+#scrollstyle-secondary::-webkit-scrollbar-track {
+	background-color: #EEE;
+	border-radius: 10px;
+}
+
+#scrollstyle-secondary::-webkit-scrollbar {
+	width: 6px;
+	background-color: #EEE;
+}
+
+#scrollstyle-secondary::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-image: -webkit-gradient(linear,
+									   left top,
+									   left bottom,
+									   color-stop(0.44, #35c5f3),
+									   color-stop(0.72, #35b0f3),
+									   color-stop(0.86, #35a1f3));
 }

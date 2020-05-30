@@ -20,7 +20,8 @@ function Feedbox() {
 
 // css styles
 const Container = styled.div`
-  font-size: 32px;
+  padding: 20px;
+  font-size: 4vh;
   color: #DDD;
   display: flex;
   font-weight: 200;

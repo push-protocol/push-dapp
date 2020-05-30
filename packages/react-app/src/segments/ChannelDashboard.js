@@ -184,6 +184,7 @@ function ChannelDashboard({ epnscore }) {
 const Container = styled.div`
   flex: 1;
   display: flex;
+  padding: 20px;
   width: '100%';
 `
 

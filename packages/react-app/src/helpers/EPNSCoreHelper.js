@@ -32,7 +32,14 @@ const EPNSCoreHelper = {
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
       contract.channels(channel)
-        .then(response => { console.log("getChannelInfo() --> %o", response); resolve(response); })
+        .then(response => {
+          // Add an extra field for future info
+          const mappings = { ...response };
+          mappings.addr = channel;
+
+          console.log("getChannelInfo() --> %o", mappings);
+          resolve(mappings);
+        })
         .catch(err => { console.log("!!!Error, getChannelInfo() --> %o", err); reject(err); });
     })
   },

@@ -179,8 +179,8 @@ function Home({ setBadgeCount, bellPressed }) {
 const Container = styled.div`
   flex: 1;
   display: flex;
-  min-height: 80vh;
   flex-direction: column;
+  min-height: calc(100vh - 100px);
 `
 
 const Controls = styled.div`
@@ -290,7 +290,6 @@ const Interface = styled.div`
   border: 1px solid rgb(225,225,225);
 
   margin: 15px;
-  padding: 20px;
   overflow: hidden;
 `
 
