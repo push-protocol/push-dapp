@@ -1,6 +1,10 @@
 # epns-dapp
 The dApp that powers EPNS
 
+# Contract Address
+0x428c7640d77d8bb2dacbbd2c409c064936a3a895
+0x42d10cdd9cdc4ae284e4bec54e204dbdc44adf9a
+
 # Additional Info
 This project was bootstrapped with [Create Eth App](https://github.com/paulrberg/create-eth-app).
 
