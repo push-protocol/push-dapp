@@ -47,11 +47,11 @@ const Notice = styled.span`
     background: #e20880;
   `};
 
-  ${props => props.phase === 'secondary' && css`
+  ${props => props.theme === 'secondary' && css`
     background: #35c5f3;
   `};
 
-  ${props => props.phase === 'third' && css`
+  ${props => props.theme === 'third' && css`
     background: #674c9f;
   `};
 `

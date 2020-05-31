@@ -239,13 +239,33 @@ const EPNSCoreHelper = {
         .catch(err => { console.log("!!!Error, getTotalSubscribedChannels() --> %o", err); reject(err); });
     })
   },
+  // Get Fair Share
+  getFairShareOfUserAtBlock: async(user, block, contract) => {
+    return new Promise ((resolve, reject) => {
+      // Get User Info from EPNS Core
+      contract.calcAllChannelsRatio(user, block)
+        .then(response => {
+          console.log("calcAllChannelsRatio() --> %o", response);
+          resolve(response);
+        })
+        .catch(err => { console.log("!!!Error, calcAllChannelsRatio() --> %o", err); reject(err); });
+    })
+  },
+  // Get Pool Funds
+  getPoolFunds: async(contract) => {
+    return new Promise ((resolve, reject) => {
+      contract.poolFunds()
+        .then(response => { console.log("getPoolFunds() --> %o", response); resolve(response); })
+        .catch(err => { console.log("!!!Error, getPoolFunds() --> %o", err); reject(err); });
+    })
+  },
   // Helper Functions
   // To format Big Number
   formatBigNumberToMetric: (bignumber, convertToCurrency) => {
     try {
       if (convertToCurrency) {
-        bignumber = bignumber.div(1000000000000000);
-        bignumber = bignumber.div(100);
+        bignumber = bignumber.div(100000000000000);
+        bignumber = bignumber.div(10000);
       }
       bignumber = bignumber.toNumber();
       return EPNSCoreHelper.metricFormatter(bignumber, 2);

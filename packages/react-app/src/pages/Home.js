@@ -156,7 +156,9 @@ function Home({ setBadgeCount, bellPressed }) {
       </Controls>
       <Interface>
         {controlAt == 0 &&
-          <Feedbox />
+          <Feedbox
+            epnsReadProvider={epnsReadProvider}
+           />
         }
         {controlAt == 1 &&
           <ViewChannels

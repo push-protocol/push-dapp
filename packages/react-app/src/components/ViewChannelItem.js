@@ -89,7 +89,7 @@ function ViewChannelItem({ channelObject, isOwner, epnsReadProvider, epnsWritePr
   const subscribe = async () => {
     // Check if public key is broadcasted or not
     const userMeta = await UsersDataStore.instance.getUserMetaAsync();
-    if (!userMeta.PublicKeyRegistered) {
+    if (!userMeta.publicKeyRegistered) {
       const msg = "Sign to enable Secrets! (Encrypted Messages)\n Read more: https://epns.io/secret-messages";
 
       // Sign a message and extract public key
