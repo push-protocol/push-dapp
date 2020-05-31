@@ -80,8 +80,10 @@ export default class ChannelsDataStore {
         await this.incrementChannelsCountAsync(1);
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY])) {
-          if (callback) { callback(channel, ipfs); }
+        if (this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY])) {
+            if (callback) { callback(channel, ipfs); }
+          }
         }
       });
     }
@@ -96,8 +98,10 @@ export default class ChannelsDataStore {
         // Nothing to do, just do callback
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF])) {
-          if (callback) { callback(channel, ipfs); }
+        if (this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF])) {
+            if (callback) { callback(channel, ipfs); }
+          }
         }
       });
     }
@@ -109,8 +113,10 @@ export default class ChannelsDataStore {
 
       contract.on(filter, async (channel, ipfs) => {
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY])) {
-          if (callback) { callback(channel, ipfs); }
+        if (this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY])) {
+            if (callback) { callback(channel, ipfs); }
+          }
         }
       });
     }
@@ -122,8 +128,10 @@ export default class ChannelsDataStore {
 
       contract.on(filter, async (channel, ipfs) => {
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF])) {
-          if (callback) { callback(channel, ipfs); }
+        if (this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF])) {
+            if (callback) { callback(channel, ipfs); }
+          }
         }
       });
     }
@@ -137,14 +145,16 @@ export default class ChannelsDataStore {
         // Do own stuff
         if (this.state.channelsMeta[channel]) {
           const channelID = this.state.channelsMeta[channel];
-          const count = this.state.channelsMeta[channelID].memberCount.toNumber();
+          let count = this.state.channelsMeta[channelID].memberCount.toNumber();
           count = count + 1;
-          this.state.channelsMeta[channelID].memberCount = count.bigNumberify();
+          this.state.channelsMeta[channelID].memberCount = bigNumberify(count);
         }
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL])) {
-          if (callback) { callback(channel, user); }
+        if (this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL])) {
+            if (callback) { callback(channel, user); }
+          }
         }
       });
     }
@@ -155,9 +165,11 @@ export default class ChannelsDataStore {
       let filter = contract.filters.Subscribe(this.state.account, null);
 
       contract.on(filter, async (channel, user) => {
-        // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_SELF_CHANNEL])) {
-          if (callback) { callback(channel, user); }
+        // then perform callbacks
+        if (this.state.callbacks[ChannelEvents.SUBSCRIBER_SELF_CHANNEL]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_SELF_CHANNEL])) {
+            if (callback) { callback(channel, user); }
+          }
         }
       });
     }
@@ -171,14 +183,16 @@ export default class ChannelsDataStore {
         // Do own stuff
         if (this.state.channelsMeta[channel]) {
           const channelID = this.state.channelsMeta[channel];
-          const count = this.state.channelsMeta[channelID].memberCount.toNumber();
+          let count = this.state.channelsMeta[channelID].memberCount.toNumber();
           count = count - 1;
-          this.state.channelsMeta[channelID].memberCount = count.bigNumberify();
+          this.state.channelsMeta[channelID].memberCount = bigNumberify(count);
         }
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UNSUBSCRIBER_ANY_CHANNEL])) {
-          if (callback) { callback(channel, user); }
+        if (this.state.callbacks[ChannelEvents.UNSUBSCRIBER_ANY_CHANNEL]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UNSUBSCRIBER_ANY_CHANNEL])) {
+            if (callback) { callback(channel, user); }
+          }
         }
       });
     }
@@ -189,9 +203,11 @@ export default class ChannelsDataStore {
       let filter = contract.filters.Unsubscribe(this.state.account, null);
 
       contract.on(filter, async (channel, user) => {
-        // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UNSUBSCRIBER_SELF_CHANNEL])) {
-          if (callback) { callback(channel, user); }
+        // then perform callbacks
+        if (this.state.callbacks[ChannelEvents.UNSUBSCRIBER_SELF_CHANNEL]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UNSUBSCRIBER_SELF_CHANNEL])) {
+            if (callback) { callback(channel, user); }
+          }
         }
       });
     }

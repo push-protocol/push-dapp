@@ -3,6 +3,8 @@ import ReactGA from 'react-ga';
 
 import Loader from 'react-loader-spinner'
 import styled from 'styled-components';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { Web3ReactProvider, useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -416,7 +418,15 @@ function App() {
         }
         </ParentContainer>
 
-
+        <ToastContainer
+          position="bottom-right"
+          autoClose={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+        />
       </>
   );
 }
@@ -517,3 +527,17 @@ const ProviderLabel = styled.span`
   font-size: 12px;
   margin: 5px;
 `
+
+const StyledContainer = styled(ToastContainer).attrs({
+  // custom props
+})`
+  .Toastify__toast-container {}
+  .Toastify__toast {}
+  .Toastify__toast--error {}
+  .Toastify__toast--warning {}
+  .Toastify__toast--success {}
+  .Toastify__toast-body {
+    font-size: 12px;
+  }
+  .Toastify__progress-bar {}
+`;

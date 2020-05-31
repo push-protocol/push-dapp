@@ -219,7 +219,7 @@ const EPNSCoreHelper = {
   getSubscribedStatus: async (user, channel, contract) => {
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
-      contract.channels[channel].memberExists[user]
+      contract.memberExists(user, channel)
         .then(response => {
           console.log("getSubscribedStatus() --> %o", response);
           resolve(response);

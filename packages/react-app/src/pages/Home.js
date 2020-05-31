@@ -3,7 +3,9 @@ import ReactGA from 'react-ga';
 
 import styled, { css } from 'styled-components';
 
+import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core'
+import { ethers } from "ethers";
 
 import Loader from 'react-loader-spinner'
 
@@ -13,9 +15,6 @@ import ChannelDashboard from 'segments/ChannelDashboard';
 import CreateChannel from 'segments/CreateChannel';
 import Feedbox from 'segments/Feedbox';
 import ViewChannels from 'segments/ViewChannels';
-
-import { addresses, abis } from "@project/contracts";
-import { ethers } from "ethers";
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
@@ -78,7 +77,7 @@ function Home({ setBadgeCount, bellPressed }) {
   const listenerForChannelRights = async () => {
     ChannelsDataStore.instance.addCallbacks(
       ChannelEvents.ADD_CHANNEL_SELF,
-      "CreateChannelButton",
+      "FromCreateChannel",
       () => {
         checkUserForChannelRights();
       }

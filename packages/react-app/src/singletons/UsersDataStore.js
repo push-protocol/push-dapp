@@ -51,25 +51,39 @@ export default class UsersDataStore {
         this.state.epnsReadProvider.removeAllListeners("Unsubscribe");
         this.state.epnsReadProvider.removeAllListeners("PublicKeyRegistered");
         this.state.epnsReadProvider.removeAllListeners("AddChannel");
-        //this.state.epnsReadProvider.removeAllListeners("DeactivateChannel");
+        this.state.epnsReadProvider.removeAllListeners("DeactivateChannel");
       }
+
+      // reset user meta as well
+      this.state.userMeta = null;
     }
 
     // init LISTENERS
     initUsersListenersAsync = async () => {
       // Add Listeners
       await this.listenForSubscribedAsync();
+      await this.listenForUnsubscribedAsync();
+
+      if (!this.state.userMeta || (this.state.userMeta && !this.state.userMeta.publicKeyRegistered)) {
+        await this.listenForPublicKeyBroadcastAsync();
+      }
     }
 
     // 1. Listen for Subscribe Async
     listenForSubscribedAsync = async () => {
       const contract = this.state.epnsReadProvider;
-      let filter = contract.filters.Subscribe(null, null); //this.state.account change to this after redploy contract
+      let filter = contract.filters.Subscribe(null, this.state.account);
+
+      if (this.state.userMeta) {
+        this.state.userMeta.subscribedCount = this.state.userMeta.subscribedCount.add(1);
+      }
 
       contract.on(filter, async (channel, user) => {
-        // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.SUBSCRIBED])) {
-          if (callback) { callback(channel, user); }
+        // then perform callbacks
+        if (this.state.callbacks[UserEvents.SUBSCRIBED]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.SUBSCRIBED])) {
+            if (callback) { callback(channel, user); }
+          }
         }
       });
     }
@@ -77,12 +91,37 @@ export default class UsersDataStore {
     // 2. Listen for Unsubscribe Async
     listenForUnsubscribedAsync = async () => {
       const contract = this.state.epnsReadProvider;
-      let filter = contract.filters.Unsubscribe(null, null); //this.state.account change to this after redploy contract
+      let filter = contract.filters.Unsubscribe(null, this.state.account);
+
+      if (this.state.userMeta) {
+        this.state.userMeta.subscribedCount = this.state.userMeta.subscribedCount.sub(1);
+      }
 
       contract.on(filter, async (channel, user) => {
-        // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.UNSUBSCRIBED])) {
-          if (callback) { callback(channel, user); }
+        // then perform callbacks
+        if (this.state.callbacks[UserEvents.UNSUBSCRIBED]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.UNSUBSCRIBED])) {
+            if (callback) { callback(channel, user); }
+          }
+        }
+      });
+    }
+
+    // 3. Listen For Public Key Broadcast
+    listenForPublicKeyBroadcastAsync = async () => {
+      const contract = this.state.epnsReadProvider;
+      let filter = contract.filters.PublicKeyRegistered(this.state.account, null);
+
+      if (this.state.userMeta) {
+        this.state.userMeta.publicKeyRegistered = true;
+      }
+
+      contract.once(filter, async (channel, user) => {
+        // then perform callbacks
+        if (this.state.callbacks[UserEvents.UNSUBSCRIBED]) {
+          for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.UNSUBSCRIBED])) {
+            if (callback) { callback(channel, user); }
+          }
         }
       });
     }
@@ -167,7 +206,7 @@ export default class UsersDataStore {
           EPNSCoreHelper.getUserInfo(this.state.account, this.state.epnsReadProvider)
             .then(response => {
               this.state.userMeta = response;
-              console.log("getUserMetaAsync() --> %d", this.state.userMeta);
+              console.log("getUserMetaAsync() --> %o", this.state.userMeta);
               resolve(this.state.userMeta);
             })
             .catch(err => { console.log("!!!Error, getUserMetaAsync() --> %o", err); reject(err); });

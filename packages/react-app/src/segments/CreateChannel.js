@@ -4,8 +4,8 @@ import styled, { css } from 'styled-components';
 import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 
-import Loader from 'react-loader-spinner'
-import { bigNumberify } from 'ethers/utils'
+import Loader from 'react-loader-spinner';
+import { bigNumberify, parseUnits } from 'ethers/utils'
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
@@ -93,7 +93,12 @@ function CreateChannel() {
     var signer = library.getSigner(account);
 
     let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
-    var sendTransactionPromise = daiContract.approve(addresses.epnscore, bigNumberify('500000000000000000000001'));
+
+    // Pick between 50 DAI AND 25K DAI
+    let randomNumber = Math.ceil(Math.random() * 24949) + 50;
+    const fees = parseUnits(randomNumber.toString(), 18);
+
+    var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
     const tx = await sendTransactionPromise;
 
     console.log(tx);

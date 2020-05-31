@@ -2,11 +2,17 @@ import React from "react";
 import styled, { css } from 'styled-components';
 import { Device } from 'assets/Device';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import Loader from 'react-loader-spinner';
+
 import Skeleton from '@yisheng90/react-loading';
 import { IoMdPeople } from 'react-icons/io';
 import { GiTwoCoins } from 'react-icons/gi';
 
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
+import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
@@ -20,19 +26,231 @@ function ViewChannelItem({ channelObject, isOwner, epnsReadProvider, epnsWritePr
   const [ subscribed, setSubscribed ] = React.useState(false);
   const [ loading, setLoading ] = React.useState(true);
 
+  const [ txInProgress, setTxInProgress ] = React.useState(false);
+
 
   React.useEffect(() => {
     fetchChannelJson();
+    registerCallbacks();
   }, [account, channelObject]);
 
   // to fetch channels
   const fetchChannelJson = async () => {
     const channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(channelObject.addr);
-    const subscribed = await EPNSCoreHelper.getSubscribedStatus(account, channelObject.addr, epnsReadProvider);
+    const subs = await EPNSCoreHelper.getSubscribedStatus(account, channelObject.addr, epnsReadProvider);
+    setSubscribed(subs);
 
     setChannelJson(channelJson);
     setLoading(false);
   }
+
+  // to register callbacks
+  const registerCallbacks = () => {
+    UsersDataStore.instance.addCallbacks(
+      UserEvents.SUBSCRIBED,
+      "FromViewChannelItem",
+      () => {
+        setSubscribed(true);
+        channelObject.memberCount = channelObject.memberCount.add(1);
+      }
+    );
+
+    UsersDataStore.instance.addCallbacks(
+      UserEvents.UNSUBSCRIBED,
+      "FromViewChannelItem",
+      () => {
+        setSubscribed(false);
+        channelObject.memberCount = channelObject.memberCount.sub(1);
+      }
+    );
+
+    ChannelsDataStore.instance.addCallbacks(
+      ChannelEvents.SUBSCRIBER_ANY_CHANNEL,
+      "FromViewChannelItem",
+      (channel, user) => {
+        if (channel === channelObject.addr) {
+          channelObject.memberCount = channelObject.memberCount.add(1);
+        }
+      }
+    );
+
+    ChannelsDataStore.instance.addCallbacks(
+      ChannelEvents.UNSUBSCRIBER_ANY_CHANNEL,
+      "FromViewChannelItem",
+      (channel, user) => {
+        if (channel === channelObject.addr) {
+          channelObject.memberCount = channelObject.memberCount.sub(1);
+        }
+      }
+    );
+  }
+
+  // to subscribe
+  const subscribe = async () => {
+    // Check if public key is broadcasted or not
+    const userMeta = await UsersDataStore.instance.getUserMetaAsync();
+    if (!userMeta.PublicKeyRegistered) {
+      const msg = "Sign to enable Secrets! (Encrypted Messages)\n Read more: https://epns.io/secret-messages";
+
+      // Sign a message and extract public key
+      library
+        .getSigner(account)
+        .signMessage(msg)
+        .then(async signature => {
+          const publicKey = recoverPublicKey(arrayify(hashMessage(msg)), signature);
+          const formattedPubKey = publicKey.slice(0, 2) + publicKey.slice(4);
+
+          subscribeAction(formattedPubKey);
+        })
+        .catch(error => {
+          // Show toast as well
+          toast.dark('Skipped for now... Encrypted messages will require this!', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          });
+
+          subscribeAction(false);
+        })
+    }
+    else {
+      subscribeAction(false);
+    }
+  }
+
+  const subscribeAction = async (withPublicKey) => {
+    setTxInProgress(true);
+
+    let sendWithTxPromise;
+
+    if (withPublicKey) {
+      sendWithTxPromise = epnsWriteProvide.subscribeWithPublicKey(channelObject.addr, withPublicKey);
+    }
+    else {
+      sendWithTxPromise = epnsWriteProvide.subscribe(channelObject.addr);
+    }
+
+    sendWithTxPromise
+      .then(async tx => {
+
+        let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3"/>, {
+          position: "bottom-right",
+          autoClose: false,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        try {
+          await library.waitForTransaction(tx.hash);
+
+          toast.update(txToast, {
+            render: "Transaction Completed!",
+            type: toast.TYPE.SUCCESS,
+            autoClose: 5000
+          });
+
+          setTxInProgress(false);
+        }
+        catch(e) {
+          toast.update(txToast, {
+            render: "Transaction Failed! (" + e.name + ")",
+            type: toast.TYPE.ERROR,
+            autoClose: 5000
+          });
+
+          setTxInProgress(false);
+        }
+      })
+      .catch(err => {
+        toast.dark('Transaction Cancelled!', {
+          position: "bottom-right",
+          type: toast.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        setTxInProgress(false);
+      })
+  }
+
+  const unsubscribeAction = async () => {
+    setTxInProgress(true);
+
+    let sendWithTxPromise = epnsWriteProvide.unsubscribe(channelObject.addr);
+
+    sendWithTxPromise
+      .then(async tx => {
+
+        let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3"/>, {
+          position: "bottom-right",
+          autoClose: false,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        try {
+          await library.waitForTransaction(tx.hash);
+
+          toast.update(txToast, {
+            render: "Transaction Completed!",
+            type: toast.TYPE.SUCCESS,
+            autoClose: 5000
+          });
+
+          setTxInProgress(false);
+        }
+        catch(e) {
+          toast.update(txToast, {
+            render: "Transaction Failed! (" + e.name + ")",
+            type: toast.TYPE.ERROR,
+            autoClose: 5000
+          });
+
+          setTxInProgress(false);
+        }
+      })
+      .catch(err => {
+        toast.dark('Transaction Cancelled!', {
+          position: "bottom-right",
+          type: toast.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+
+        setTxInProgress(false);
+      })
+  }
+
+  // toast customize
+  const LoaderToast = ({ msg, color }) => (
+    <Toaster>
+      <Loader
+       type="Oval"
+       color={color}
+       height={30}
+       width={30}
+      />
+      <ToasterMsg>{msg}</ToasterMsg>
+    </Toaster>
+  )
 
   // render
   return (
@@ -111,16 +329,45 @@ function ViewChannelItem({ channelObject, isOwner, epnsReadProvider, epnsWritePr
         <>
           <LineBreak />
           <ChannelActions>
+            {loading &&
+              <SkeletonButton>
+                <Skeleton />
+              </SkeletonButton>
+            }
             {!loading && !subscribed &&
-              <SubscribeButton></SubscribeButton>
+              <SubscribeButton onClick={subscribe} disabled={txInProgress}>
+                {txInProgress &&
+                  <ActionLoader>
+                    <Loader
+                     type="Oval"
+                     color="#FFF"
+                     height={16}
+                     width={16}
+                    />
+                  </ActionLoader>
+                }
+                <ActionTitle hideit={txInProgress}>Subscribe</ActionTitle>
+              </SubscribeButton>
             }
             {!loading && subscribed &&
               <>
               {isOwner &&
-                <OwnerButton></OwnerButton>
+                <OwnerButton disabled>Owner</OwnerButton>
               }
               {!isOwner &&
-                <UnsubscribeButton></UnsubscribeButton>
+                <UnsubscribeButton onClick={unsubscribeAction} disabled={txInProgress}>
+                  {txInProgress &&
+                    <ActionLoader>
+                      <Loader
+                       type="Oval"
+                       color="#FFF"
+                       height={16}
+                       width={16}
+                      />
+                    </ActionLoader>
+                  }
+                  <ActionTitle hideit={txInProgress}>Unsubscribe</ActionTitle>
+                </UnsubscribeButton>
               }
               </>
             }
@@ -156,7 +403,7 @@ const SkeletonWrapper = styled.div`
 `
 
 const ChannelLogo = styled.div`
-  max-width: 80px;
+  max-width: 100px;
   min-width: 32px;
   flex: 1;
   margin: 5px;
@@ -283,22 +530,98 @@ const ChannelActions = styled.div`
   margin: 5px;
   flex-grow: 1;
   max-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const ChannelActionButton = styled.button`
+  border: 0;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  margin: 10px;
+  color: #fff;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 400;
+  position: relative;
+  &:hover {
+    opacity: 0.9;
+    cursor: pointer;
+    pointer: hand;
+  }
+  &:active {
+    opacity: 0.75;
+    cursor: pointer;
+    pointer: hand;
+  }
+  ${ props => props.disabled && css`
+    &:hover {
+      opacity: 1;
+      cursor: default;
+      pointer: default;
+    }
+    &:active {
+      opacity: 1;
+      cursor: default;
+      pointer: default;
+    }
+  `}
+`
 
+const ActionTitle = styled.span`
+  ${ props => props.hideit && css`
+    visibility: hidden;
+  `};
+`
+
+const ActionLoader = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const SkeletonButton = styled.div`
+  border: 0;
+  outline: 0;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  border-radius: 5px;
+  flex: 1;
 `
 
 const SubscribeButton = styled(ChannelActionButton)`
-
+  background: #e20880;
 `
 
 const UnsubscribeButton = styled(ChannelActionButton)`
-
+  background: #674c9f;
 `
 
 const OwnerButton = styled(ChannelActionButton)`
+  background: #35c5f3;
+`
 
+const Toaster = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px 10px;
+`
+
+const ToasterMsg = styled.div`
+  margin: 0px 10px;
 `
 
 // Export Default

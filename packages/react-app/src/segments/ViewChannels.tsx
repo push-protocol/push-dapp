@@ -19,8 +19,8 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
   const [loading, setLoading] = React.useState(true);
   const [channels, setChannels] = React.useState([]);
-  const [user, setUser] = React.useState({});
-  const [owner, setOwner] = React.useState({});
+  const [user, setUser] = React.useState(null);
+  const [owner, setOwner] = React.useState(null);
 
   React.useEffect(() => {
     fetchChannels();
@@ -29,11 +29,11 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   // to fetch channels
   const fetchChannels = async () => {
     // get and set user and owner first
-    const user = await UsersDataStore.instance.getUserMetaAsync();
-    setUser(user);
+    const userMeta = await UsersDataStore.instance.getUserMetaAsync();
+    setUser(userMeta);
 
-    const owner = await UsersDataStore.instance.getOwnerMetaAsync();
-    setOwner(owner);
+    const ownerAddr = await UsersDataStore.instance.getOwnerMetaAsync();
+    setOwner(ownerAddr);
 
     // const channelsMeta = await EPNSCoreHelper.getChannelsMetaLatestToOldest(-1, -1, epnsReadProvider);
     const channelsMeta = await ChannelsDataStore.instance.getChannelsMetaAsync(-1, -1);
@@ -82,15 +82,31 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
               (account === owner && channels[index].addr === "0x0000000000000000000000000000000000000000")
             );
 
-            return (
-              <ViewChannelItem
-                key={channels[index].addr}
-                channelObject={channels[index]}
-                isOwner={isOwner}
-                epnsReadProvider={epnsReadProvider}
-                epnsWriteProvide={epnsWriteProvide}
-              />
-            );
+            if (channels[index].addr !== "0x0000000000000000000000000000000000000000") {
+              return (
+                <ViewChannelItem
+                  key={channels[index].addr}
+                  channelObject={channels[index]}
+                  isOwner={isOwner}
+                  epnsReadProvider={epnsReadProvider}
+                  epnsWriteProvide={epnsWriteProvide}
+                />
+              );
+            }
+            else if (channels[index].addr === "0x0000000000000000000000000000000000000000" && user.channellized) {
+              return (
+                <ViewChannelItem
+                  key={channels[index].addr}
+                  channelObject={channels[index]}
+                  isOwner={isOwner}
+                  epnsReadProvider={epnsReadProvider}
+                  epnsWriteProvide={epnsWriteProvide}
+                />
+              );
+            }
+            else {
+              return null;
+            }
           })}
         </Items>
       }

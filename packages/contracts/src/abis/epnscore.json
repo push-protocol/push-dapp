@@ -77,6 +77,25 @@
 			{
 				"indexed": true,
 				"internalType": "address",
+				"name": "user",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "InterestClaimed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
 				"name": "previousOwner",
 				"type": "address"
 			},
@@ -386,7 +405,13 @@
 	{
 		"inputs": [],
 		"name": "claimFairShare",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "ratio",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
@@ -741,6 +766,19 @@
 				"internalType": "address",
 				"name": "_channel",
 				"type": "address"
+			}
+		],
+		"name": "subscribe",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_channel",
+				"type": "address"
 			},
 			{
 				"internalType": "address",
@@ -749,6 +787,24 @@
 			}
 		],
 		"name": "subscribeDelegated",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_channel",
+				"type": "address"
+			},
+			{
+				"internalType": "bytes",
+				"name": "_publicKey",
+				"type": "bytes"
+			}
+		],
+		"name": "subscribeWithPublicKey",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -780,37 +836,6 @@
 		"inputs": [
 			{
 				"internalType": "address",
-				"name": "_channel",
-				"type": "address"
-			},
-			{
-				"internalType": "bytes",
-				"name": "_publicKey",
-				"type": "bytes"
-			}
-		],
-		"name": "subscriberWithPublicKey",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_channel",
-				"type": "address"
-			}
-		],
-		"name": "subsribe",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
 				"name": "newOwner",
 				"type": "address"
 			}
@@ -829,7 +854,13 @@
 			}
 		],
 		"name": "unsubscribe",
-		"outputs": [],
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "ratio",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
