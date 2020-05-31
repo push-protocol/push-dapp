@@ -40,7 +40,7 @@ function Feedbox({ epnsReadProvider }) {
     // get all details
     const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
 
-    const divisor = 10000000;
+    const divisor = 1000000;
     const ratio = await EPNSCoreHelper.getFairShareOfUserAtBlock(account, blockNumber, contractInstance);
     const poolFunds = await EPNSCoreHelper.getPoolFunds(contractInstance);
     const userInfo = await EPNSCoreHelper.getUserInfo(account, contractInstance);
