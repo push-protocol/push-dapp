@@ -21,7 +21,7 @@ function Feedbox() {
 // css styles
 const Container = styled.div`
   padding: 20px;
-  font-size: 4vh;
+  font-size: 16px;
   color: #DDD;
   display: flex;
   font-weight: 200;
@@ -29,6 +29,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-height: 40vh;
 `
 
 // Export Default

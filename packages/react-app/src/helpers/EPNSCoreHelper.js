@@ -2,16 +2,31 @@ import React from "react";
 
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-import { bigNumber } from 'ethers/utils'
+import { parseEther, bigNumber } from 'ethers/utils'
 
 // FeedDB Helper Function
 const EPNSCoreHelper = {
-  // To get if user is a channel
+  // To get owner info
+  getOwnerInfo: async (contract) => {
+    return new Promise ((resolve, reject) => {
+      // Get User Info from EPNS Core
+      contract.owner()
+        .then(response => { console.log("getOwnerInfo() --> %o", response); resolve(response); })
+        .catch(err => { console.log("!!!Error, getOwnerInfo() --> %o", err); reject(err); });
+    })
+  },
+  // To get user info
   getUserInfo: async (user, contract) => {
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
       contract.users(user)
-        .then(response => { console.log("getUserInfo() --> %o", response); resolve(response); })
+        .then(response => {
+          const mappings = { ...response };
+          mappings.addr = user;
+
+          console.log("getUserInfo() --> %o", mappings);
+          resolve(mappings);
+        })
         .catch(err => { console.log("!!!Error, getUserInfo() --> %o", err); reject(err); });
     })
   },
@@ -200,18 +215,67 @@ const EPNSCoreHelper = {
         });
     })
   },
-  // Get User
+  // Get Total Subsbribed Channels
+  getSubscribedStatus: async (user, channel, contract) => {
+    return new Promise ((resolve, reject) => {
+      // Get User Info from EPNS Core
+      contract.channels[channel].memberExists[user]
+        .then(response => {
+          console.log("getSubscribedStatus() --> %o", response);
+          resolve(response);
+        })
+        .catch(err => { console.log("!!!Error, getSubscribedStatus() --> %o", err); reject(err); });
+    })
+  },
+  // Get Total Subsbribed Channels
   getTotalSubscribedChannels: async (user, contract) => {
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
-      contract.usersCount()
+      contract.users[user].subscribedCount()
         .then(response => {
-          console.log("getTotalNumberOfUsers() --> %o", response.toNumber());
+          console.log("getTotalSubscribedChannels() --> %o", response.toNumber());
           resolve(response.toNumber());
         })
-        .catch(err => { console.log("!!!Error, getTotalNumberOfUsers() --> %o", err); reject(err); });
+        .catch(err => { console.log("!!!Error, getTotalSubscribedChannels() --> %o", err); reject(err); });
     })
   },
+  // Helper Functions
+  // To format Big Number
+  formatBigNumberToMetric: (bignumber, convertToCurrency) => {
+    try {
+      if (convertToCurrency) {
+        bignumber = bignumber.div(1000000000000000);
+        bignumber = bignumber.div(100);
+      }
+      bignumber = bignumber.toNumber();
+      return EPNSCoreHelper.metricFormatter(bignumber, 2);
+    }
+    catch (e) {
+      console.log(e);
+      return "---";
+    }
+  },
+  // Metric Formatter, thanks: https://stackoverflow.com/questions/9461621/format-a-number-as-2-5k-if-a-thousand-or-more-otherwise-900
+  metricFormatter: (num, digits) => {
+    var si = [
+      { value: 1, symbol: "" },
+      { value: 1E3, symbol: "k" },
+      { value: 1E6, symbol: "M" },
+      { value: 1E9, symbol: "G" },
+      { value: 1E12, symbol: "T" },
+      { value: 1E15, symbol: "P" },
+      { value: 1E18, symbol: "E" }
+    ];
+    var rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+    var i;
+    for (i = si.length - 1; i > 0; i--) {
+      if (num >= si[i].value) {
+        break;
+      }
+    }
+    return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
+  },
+
 }
 
 export default EPNSCoreHelper;

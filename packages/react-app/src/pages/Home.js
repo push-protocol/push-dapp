@@ -17,8 +17,8 @@ import ViewChannels from 'segments/ViewChannels';
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 
-import ChannelsDataStore, { channel_events } from "singletons/ChannelsDataStore";
-import UsersDataStore, { user_events } from "singletons/UsersDataStore";
+import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
+import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
 
 // Create Header
 function Home({ setBadgeCount, bellPressed }) {
@@ -56,6 +56,7 @@ function Home({ setBadgeCount, bellPressed }) {
     // EPNS Read Provider Set
     if (epnsReadProvider != null) {
       // Instantiate Data Stores
+      UsersDataStore.instance.init(account, epnsReadProvider);
       ChannelsDataStore.instance.init(account, epnsReadProvider);
 
       checkUserForChannelRights();
@@ -76,7 +77,7 @@ function Home({ setBadgeCount, bellPressed }) {
   //Start Listening...
   const listenerForChannelRights = async () => {
     ChannelsDataStore.instance.addCallbacks(
-      channel_events.ADD_CHANNEL_SELF,
+      ChannelEvents.ADD_CHANNEL_SELF,
       "CreateChannelButton",
       () => {
         checkUserForChannelRights();
@@ -178,7 +179,7 @@ function Home({ setBadgeCount, bellPressed }) {
 // css style
 const Container = styled.div`
   flex: 1;
-  display: flex;
+  display: block;
   flex-direction: column;
   min-height: calc(100vh - 100px);
 `

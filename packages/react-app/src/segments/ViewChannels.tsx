@@ -10,8 +10,8 @@ import { ethers } from "ethers";
 import DisplayNotice from "components/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
 
-import ChannelsDataStore, { channel_events } from "singletons/ChannelsDataStore";
-import UsersDataStore, { user_events } from "singletons/UsersDataStore";
+import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
+import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
 
 // Create Header
 function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
@@ -19,6 +19,8 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
   const [loading, setLoading] = React.useState(true);
   const [channels, setChannels] = React.useState([]);
+  const [user, setUser] = React.useState({});
+  const [owner, setOwner] = React.useState({});
 
   React.useEffect(() => {
     fetchChannels();
@@ -26,8 +28,24 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
   // to fetch channels
   const fetchChannels = async () => {
+    // get and set user and owner first
+    const user = await UsersDataStore.instance.getUserMetaAsync();
+    setUser(user);
+
+    const owner = await UsersDataStore.instance.getOwnerMetaAsync();
+    setOwner(owner);
+
     // const channelsMeta = await EPNSCoreHelper.getChannelsMetaLatestToOldest(-1, -1, epnsReadProvider);
     const channelsMeta = await ChannelsDataStore.instance.getChannelsMetaAsync(-1, -1);
+
+    // sort this again, this time with subscriber count
+    // channelsMeta.sort((a, b) => {
+    //   if (a.memberCount.toNumber() < b.memberCount.toNumber()) return -1;
+    //   if (a.memberCount.toNumber() > b.memberCount.toNumber()) return 1;
+    //   return 0;
+    // });
+
+    // Filter out channel
 
     setChannels(channelsMeta);
     setLoading(false);
@@ -57,12 +75,18 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
       {!loading && channels.length != 0 &&
         <Items id="scrollstyle-secondary">
+
           {Object.keys(channels).map(index => {
+            const isOwner = (
+              channels[index].addr === account ||
+              (account === owner && channels[index].addr === "0x0000000000000000000000000000000000000000")
+            );
 
             return (
               <ViewChannelItem
                 key={channels[index].addr}
                 channelObject={channels[index]}
+                isOwner={isOwner}
                 epnsReadProvider={epnsReadProvider}
                 epnsWriteProvide={epnsWriteProvide}
               />
@@ -76,8 +100,6 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
 // css styles
 const Container = styled.div`
-  font-size: 32px;
-  color: #DDD;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -95,9 +117,7 @@ const ContainerInfo = styled.div`
 `
 
 const Items = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  display: block;
   align-self: stretch;
   padding: 10px 20px;
   overflow-y: scroll;

@@ -5,7 +5,7 @@ import { bigNumber } from 'ethers/utils'
 import { addresses, abis } from "@project/contracts";
 
 // STATIC SINGLETON
-export const user_events = {
+export const UserEvents = {
     SUBSCRIBED: "Subscribed",
     UNSUBSCRIBED: "Unsubscribed",
     PUBLIC_KEY_BROADCASTED: "PublicKeyBroadcasted",
@@ -18,8 +18,8 @@ export default class UsersDataStore {
 
     state = {
       usersCount: -1,
-      subscribedCount: -1,
-      userMeta: {},
+      userMeta: null,
+      ownerMeta: null,
 
       callbacks: [],
 
@@ -37,8 +37,10 @@ export default class UsersDataStore {
       this.state.epnsReadProvider = epnsReadProvider;
       this.initUsersListenersAsync();
 
-      // next get store channels count
-      this.getChannelsCountAsync();
+      // next get store user count & user meta
+      this.getOwnerMetaAsync();
+      this.getUsersCountAsync();
+      this.getUserMetaAsync();
     }
 
     // RESET LISTENERS
@@ -49,7 +51,7 @@ export default class UsersDataStore {
         this.state.epnsReadProvider.removeAllListeners("Unsubscribe");
         this.state.epnsReadProvider.removeAllListeners("PublicKeyRegistered");
         this.state.epnsReadProvider.removeAllListeners("AddChannel");
-        this.state.epnsReadProvider.removeAllListeners("DeactivateChannel");
+        //this.state.epnsReadProvider.removeAllListeners("DeactivateChannel");
       }
     }
 
@@ -59,14 +61,27 @@ export default class UsersDataStore {
       await this.listenForSubscribedAsync();
     }
 
-    // 1. Add Any Channel Listeners
+    // 1. Listen for Subscribe Async
     listenForSubscribedAsync = async () => {
       const contract = this.state.epnsReadProvider;
-      let filter = contract.filters.Subscribe(null, this.state.account);
+      let filter = contract.filters.Subscribe(null, null); //this.state.account change to this after redploy contract
 
       contract.on(filter, async (channel, user) => {
         // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[user_events.SUBSCRIBER_SELF_CHANNEL])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.SUBSCRIBED])) {
+          if (callback) { callback(channel, user); }
+        }
+      });
+    }
+
+    // 2. Listen for Unsubscribe Async
+    listenForUnsubscribedAsync = async () => {
+      const contract = this.state.epnsReadProvider;
+      let filter = contract.filters.Unsubscribe(null, null); //this.state.account change to this after redploy contract
+
+      contract.on(filter, async (channel, user) => {
+        // Nothing to do so perform callbacks
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[UserEvents.UNSUBSCRIBED])) {
           if (callback) { callback(channel, user); }
         }
       });
@@ -91,6 +106,25 @@ export default class UsersDataStore {
       }
     }
 
+    // GET OWNER META
+    getOwnerMetaAsync = async () => {
+      return new Promise ((resolve, reject) => {
+        if (this.state.ownerMeta) {
+          console.log("getOwnerMetaAsync() [CACHED] --> %o", this.state.ownerMeta);
+          resolve(this.state.ownerMeta);
+        }
+        else {
+          EPNSCoreHelper.getOwnerInfo(this.state.epnsReadProvider)
+            .then(response => {
+              this.state.ownerMeta = response;
+              console.log("getOwnerMetaAsync() --> %o", response);
+              resolve(this.state.ownerMeta);
+            })
+            .catch(err => { console.log("!!!Error, getOwnerMetaAsync() --> %o", err); reject(err); });
+        }
+      });
+    }
+
     // USERS COUNT
     getUsersCountAsync = async () => {
       return new Promise (async (resolve, reject) => {
@@ -99,9 +133,10 @@ export default class UsersDataStore {
           const count = EPNSCoreHelper.getTotalNumberOfUsers(this.state.epnsReadProvider)
             .then(response => {
               this.state.usersCount = response;
+              console.log("getUsersCountAsync() --> %o", response);
               resolve(this.state.usersCount)
             })
-            .catch(err => reject(err));
+            .catch(err => { console.log("!!!Error, getUsersCountAsync() --> %o", err); reject(err); });
         }
         else {
           resolve(this.state.usersCount);
@@ -112,129 +147,30 @@ export default class UsersDataStore {
     incrementUsersCountAsync = async (incrementCount) => {
       return new Promise ((resolve, reject) => {
         this.getUsersCountAsync()
-          .then(response => resolve(this.state.usersCount = response + incrementCount))
-          .catch(err => reject(err));
+          .then(response => {
+            this.state.usersCount = response + incrementCount;
+            console.log("incrementChannelsCountAsync() --> %d", this.state.usersCount);
+            resolve(this.state.usersCount);
+          })
+          .catch(err => { console.log("!!!Error, getUsersCountAsync() --> %o", err); reject(err); });
       });
     }
 
-    // SUBSCRIBED COUNT
-
-
-    // CHANNELS META FUNCTIONS
-    // To get channels meta
-    getChannelsMetaAsync = async (atIndex, numChannels) => {
-      return new Promise (async (resolve, reject) => {
-        // get total number of channels
-        const channelsCount = await this.getChannelsCountAsync();
-
-        if (atIndex == -1) {
-          atIndex = channelsCount - 1;
-        }
-
-        if (numChannels == -1) {
-          numChannels = channelsCount;
-        }
-
-        // Get channels
-        let channelsMeta = [];
-        let channelsDummy = [];
-
-        // prefil and then refil
-        let count = 0;
-        for (let i = numChannels - 1; i >= 0; i--) {
-          const assignedChannelID = atIndex - i;
-          channelsDummy[count] = assignedChannelID;
-          count = count + 1;
-        }
-
-        const promises = channelsDummy.map(async (channelID) => {
-          // Match the cache
-          await this.getChannelMetaAsync(channelID)
-            .then(response => {
-              channelsMeta = [response, ...channelsMeta];
-            })
-            .catch(err => console.log("!!!Error (but skipping), getChannelMetaAsync() --> %o", err))
-        });
-
-        // wait until all promises are resolved
-        await Promise.all(promises);
-
-        // return channels meta
-        console.log("getChannelsMetaAsync(From %d to %d) --> %o", atIndex - numChannels + 1, atIndex, channelsMeta);
-        resolve(channelsMeta);
-      });
-    }
-
-    // To get a single channel meta via id
-    getChannelMetaAsync = async (channelID) => {
-      return new Promise (async (resolve, reject) => {
-        if (this.state.channelsMeta[channelID]) {
-          console.log("getChannelMetaAsync() [CACHED] --> %o", this.state.channelsMeta[channelID]);
-          resolve(this.state.channelsMeta[channelID]);
+    // GET USER META
+    getUserMetaAsync = async () => {
+      return new Promise ((resolve, reject) => {
+        if (this.state.userMeta) {
+          console.log("getUserMetaAsync() [CACHED] --> %o", this.state.userMeta);
+          resolve(this.state.userMeta);
         }
         else {
-          let channelAddress;
-
-          await EPNSCoreHelper.getChannelAddressFromID(channelID, this.state.epnsReadProvider)
-            .then(async response => {
-              channelAddress = response;
-              await this.getChannelMetaViaAddressAsync(channelAddress)
-                .then(response => {
-                  // update the channel cache before resolving
-                  this.state.channelsMeta[channelID] = response;
-                  this.state.channelsMeta[channelAddress] = channelID;
-
-                  // resolve
-                  console.log("getChannelMetaAsync() [Address: %s] --> %o", channelAddress, response);
-                  resolve(response);
-                })
-            })
-            .catch(err => { console.log("!!!Error, getChannelMetaAsync() --> %o", err); reject(err); })
-        }
-      });
-    }
-
-    // To get a single channel meta via address
-    getChannelMetaViaAddressAsync = async (channelAddress) => {
-      return new Promise (async (resolve, reject) => {
-        if (this.state.channelsMeta[channelAddress]) {
-          const channelID = this.state.channelsMeta[channelAddress];
-
-          console.log("getChannelMetaViaAddressAsync() [CACHED] --> %o", this.state.channelsMeta[channelID]);
-          resolve(this.state.channelsMeta[channelID]);
-        }
-        else {
-          // Can't cache this :(, no way to know channel id
-          await EPNSCoreHelper.getChannelInfo(channelAddress, this.state.epnsReadProvider)
+          EPNSCoreHelper.getUserInfo(this.state.account, this.state.epnsReadProvider)
             .then(response => {
-              // resolve
-              console.log("getChannelMetaViaAddressAsync() [Address: %s] --> %o", channelAddress, response);
-              resolve(response);
+              this.state.userMeta = response;
+              console.log("getUserMetaAsync() --> %d", this.state.userMeta);
+              resolve(this.state.userMeta);
             })
-            .catch(err => { console.log("!!!Error, getChannelMetaViaAddressAsync() --> %o", err); reject(err); })
-        }
-      });
-    }
-
-    // CHANNELS INFO FUNCTIONS
-    // To get a single channel meta via id
-    getChannelJsonAsync = async (channelAddress) => {
-      return new Promise (async (resolve, reject) => {
-        if (this.state.channelsJson[channelAddress]) {
-          console.log("getChannelJsonAsync() [CACHED] --> %o", this.state.channelsJson[channelAddress]);
-          resolve(this.state.channelsJson[channelAddress]);
-        }
-        else {
-          await EPNSCoreHelper.getChannelJsonFromChannelAddress(channelAddress, this.state.epnsReadProvider)
-            .then(response => {
-              // First set the cache
-              this.state.channelsJson[channelAddress] = response;
-
-              // resolve
-              console.log("getChannelJsonAsync() [Address: %s] --> %o", channelAddress, response);
-              resolve(response);
-            })
-            .catch(err => { console.log("!!!Error, getChannelJsonAsync() --> %o", err); reject(err); })
+            .catch(err => { console.log("!!!Error, getUserMetaAsync() --> %o", err); reject(err); });
         }
       });
     }

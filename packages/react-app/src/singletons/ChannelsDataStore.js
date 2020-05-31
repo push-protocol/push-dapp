@@ -5,7 +5,7 @@ import { bigNumber, bigNumberify } from 'ethers/utils'
 import { addresses, abis } from "@project/contracts";
 
 // STATIC SINGLETON
-export const channel_events = {
+export const ChannelEvents = {
     ADD_CHANNEL_ANY: "AddChannelAny",
     ADD_CHANNEL_SELF: "AddChannelSelf",
     UPDATE_CHANNEL_ANY: "UpdateChannelAny",
@@ -80,7 +80,7 @@ export default class ChannelsDataStore {
         await this.incrementChannelsCountAsync(1);
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.ADD_CHANNEL_ANY])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_ANY])) {
           if (callback) { callback(channel, ipfs); }
         }
       });
@@ -96,7 +96,7 @@ export default class ChannelsDataStore {
         // Nothing to do, just do callback
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.ADD_CHANNEL_SELF])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.ADD_CHANNEL_SELF])) {
           if (callback) { callback(channel, ipfs); }
         }
       });
@@ -105,11 +105,11 @@ export default class ChannelsDataStore {
     // 3. Update Any Channel Listener
     listenForUpdateChannelAnyAsync = async () => {
       const contract = this.state.epnsReadProvider;
-      let filter = contract.filters.AddChannel(this.state.account, null);
+      let filter = contract.filters.UpdateChannel(null, null);
 
       contract.on(filter, async (channel, ipfs) => {
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.ADD_CHANNEL_SELF])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_ANY])) {
           if (callback) { callback(channel, ipfs); }
         }
       });
@@ -118,11 +118,11 @@ export default class ChannelsDataStore {
     // 4. Update Self Channel Listener
     listenForUpdateChannelSelfAsync = async () => {
       const contract = this.state.epnsReadProvider;
-      let filter = contract.filters.AddChannel(this.state.account, null);
+      let filter = contract.filters.UpdateChannel(this.state.account, null);
 
       contract.on(filter, async (channel, ipfs) => {
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.ADD_CHANNEL_SELF])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UPDATE_CHANNEL_SELF])) {
           if (callback) { callback(channel, ipfs); }
         }
       });
@@ -143,7 +143,7 @@ export default class ChannelsDataStore {
         }
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.SUBSCRIBER_ANY_CHANNEL])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_ANY_CHANNEL])) {
           if (callback) { callback(channel, user); }
         }
       });
@@ -156,7 +156,7 @@ export default class ChannelsDataStore {
 
       contract.on(filter, async (channel, user) => {
         // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.SUBSCRIBER_SELF_CHANNEL])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.SUBSCRIBER_SELF_CHANNEL])) {
           if (callback) { callback(channel, user); }
         }
       });
@@ -177,7 +177,7 @@ export default class ChannelsDataStore {
         }
 
         // then perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.UNSUBSCRIBER_ANY_CHANNEL])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UNSUBSCRIBER_ANY_CHANNEL])) {
           if (callback) { callback(channel, user); }
         }
       });
@@ -190,7 +190,7 @@ export default class ChannelsDataStore {
 
       contract.on(filter, async (channel, user) => {
         // Nothing to do so perform callbacks
-        for (let [callbackID, callback] of Object.entries(this.state.callbacks[channel_events.UNSUBSCRIBER_SELF_CHANNEL])) {
+        for (let [callbackID, callback] of Object.entries(this.state.callbacks[ChannelEvents.UNSUBSCRIBER_SELF_CHANNEL])) {
           if (callback) { callback(channel, user); }
         }
       });
@@ -223,9 +223,10 @@ export default class ChannelsDataStore {
           const count = EPNSCoreHelper.getTotalNumberOfChannels(this.state.epnsReadProvider)
             .then(response => {
               this.state.channelsCount = response;
+              console.log("getChannelsCountAsync() --> %o", response);
               resolve(this.state.channelsCount)
             })
-            .catch(err => reject(err));
+            .catch(err => { console.log("!!!Error, getChannelsCountAsync() --> %o", err); reject(err); });
         }
         else {
           resolve(this.state.channelsCount);
@@ -236,8 +237,12 @@ export default class ChannelsDataStore {
     incrementChannelsCountAsync = async (incrementCount) => {
       return new Promise ((resolve, reject) => {
         this.getChannelsCountAsync()
-          .then(response => resolve(this.state.channelsCount = response + incrementCount))
-          .catch(err => reject(err));
+          .then(response => {
+            this.state.channelsCount = response + incrementCount;
+            console.log("incrementChannelsCountAsync() --> %d", this.state.channelsCount);
+            resolve(this.state.channelsCount)
+          })
+          .catch(err => { console.log("!!!Error, incrementChannelsCountAsync() --> %o", err); reject(err); });
       });
 
     }
@@ -263,7 +268,7 @@ export default class ChannelsDataStore {
 
         // prefil and then refil
         let count = 0;
-        for (let i = numChannels - 1; i >= 0; i--) {
+        for (let i = 0; i < numChannels; i++) {
           const assignedChannelID = atIndex - i;
           channelsDummy[count] = assignedChannelID;
           count = count + 1;
@@ -273,13 +278,22 @@ export default class ChannelsDataStore {
           // Match the cache
           await this.getChannelMetaAsync(channelID)
             .then(response => {
-              channelsMeta = [response, ...channelsMeta];
+              const mappings = { ...response };
+              mappings.id = channelID;
+
+              channelsMeta = [mappings, ...channelsMeta];
             })
             .catch(err => console.log("!!!Error (but skipping), getChannelMetaAsync() --> %o", err))
         });
 
         // wait until all promises are resolved
         await Promise.all(promises);
+
+        channelsMeta.sort((a, b) => {
+          if (a.id < b.id) return -1;
+          if (a.id > b.id) return 1;
+          return 0;
+        });
 
         // return channels meta
         console.log("getChannelsMetaAsync(From %d to %d) --> %o", atIndex - numChannels + 1, atIndex, channelsMeta);
