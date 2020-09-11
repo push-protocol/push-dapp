@@ -52,12 +52,12 @@ function Feedbox({ epnsReadProvider }) {
     const totalProfit = availableFunds.sub(poolFunds);
     const userProfit = (ratio.mul(totalProfit)).div(divisor);
 
-    console.log(ratio.toNumber() / divisor);
-    console.log(formatEther(poolFunds));
-    console.log(formatEther(availableFunds));
-    console.log(formatEther(totalProfit));
-    console.log(formatEther(userProfit));
-    console.log(formatEther(interestClaimed));
+    // console.log(ratio.toNumber() / divisor);
+    // console.log(formatEther(poolFunds));
+    // console.log(formatEther(availableFunds));
+    // console.log(formatEther(totalProfit));
+    // console.log(formatEther(userProfit));
+    // console.log(formatEther(interestClaimed));
 
     const obj = {
       block: blockNumber,

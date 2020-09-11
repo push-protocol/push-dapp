@@ -15,7 +15,7 @@ const ethers = require('ethers');
 const ipfs = require('ipfs-api')()
 
 // Create Header
-function ChannelDashboard({ epnscore }) {
+function ChannelDashboard() {
   const { active, error, account, library, chainId } = useWeb3React();
 
   const [processing, setProcessing] = React.useState(false);
@@ -38,16 +38,16 @@ function ChannelDashboard({ epnscore }) {
     setProcessing(true);
 
     var signer = library.getSigner(account);
-    let contract = new ethers.Contract(epnscore, abis.epnscore, signer);
+    let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
     let nsub = sub;
     let nmsg = msg;
     let secretEncrypted;
 
-    let esub;
-    let emsg;
-    let ecta;
-    let eimg;
+    let esub = sub;
+    let emsg = msg;
+    let ecta = cta;
+    let eimg = img;
 
     if (type === "2" || parseInt(type) == 2) {
       // Create secret
