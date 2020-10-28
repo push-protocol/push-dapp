@@ -457,7 +457,7 @@ const HomeContainer = styled.div`
   flex: 1;
   align-self: center;
   width: 100%;
-  max-width: 940px;
+  max-width: 1100px;
 `
 
 const ProviderUpperContainer = styled.div`

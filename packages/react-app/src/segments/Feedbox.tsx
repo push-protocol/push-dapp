@@ -66,7 +66,7 @@ function Feedbox({ epnsReadProvider }) {
       profit: Number(formatEther(totalProfit)).toFixed(8),
       ratio: ((ratio.toNumber() / divisor) * 100).toFixed(8),
       userProfit: Number(formatEther(userProfit)).toFixed(8),
-      interestClaimed: Number(formatEther(interestClaimed)).toFixed(8)
+      interestClaimed: interestClaimed ? Number(formatEther(interestClaimed)).toFixed(8) + " DAI" : "User Not Registerd / No Earnings"
     }
 
     setUserInterestInfo(obj);
@@ -93,17 +93,21 @@ function Feedbox({ epnsReadProvider }) {
             <Title>Entire Pool Profit:</Title>
             <Msg theme="primary">{userInterestInfo.profit} DAI</Msg>
           </InterestRow>
-          <InterestRow>
-            <Title>User Fair Share Percentage:</Title>
-            <Msg theme="secondary">{userInterestInfo.ratio}%</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>User Profit:</Title>
-            <Msg theme="secondary">{userInterestInfo.userProfit} DAI</Msg>
-          </InterestRow>
+          { userInterestInfo.ratio !=0 &&
+            <>
+              <InterestRow>
+                <Title>User Fair Share Percentage:</Title>
+                <Msg theme="secondary">{userInterestInfo.ratio}%</Msg>
+              </InterestRow>
+              <InterestRow>
+                <Title>User Profit:</Title>
+                <Msg theme="secondary">{userInterestInfo.userProfit} DAI</Msg>
+              </InterestRow>
+            </>
+          }
           <InterestRow>
             <Title>Interest Claimed:</Title>
-            <Msg theme="third">{userInterestInfo.interestClaimed} DAI</Msg>
+            <Msg theme="third">{userInterestInfo.interestClaimed}</Msg>
           </InterestRow>
         </InterestInfo>
       }

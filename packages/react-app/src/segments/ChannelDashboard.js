@@ -1,8 +1,14 @@
 import React from "react";
+
 import styled, { css } from 'styled-components';
+import {Section, Content, Item, ItemH, ItemBreak, WaveOuter, WaveInner, Arc, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField, HideAt} from 'components/SharedStyling';
+
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 import Loader from 'react-loader-spinner'
 import Switch from 'components/Switch'
+
 import { bigNumberify } from 'ethers/utils'
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -13,6 +19,13 @@ import CryptoHelper from 'helpers/CryptoHelper';
 const ethers = require('ethers');
 
 const ipfs = require('ipfs-api')()
+
+// Set Message Type
+const contactFormTopics = [
+  { value: 0, label: 'Broadcast' },
+  { value: 1, label: 'Secret' },
+  { value: 2, label: 'Targetted' },
+];
 
 // Create Header
 function ChannelDashboard() {
@@ -27,6 +40,15 @@ function ChannelDashboard() {
   const [msg, setMsg] = React.useState('');
   const [cta, setCTA] = React.useState('');
   const [img, setImg] = React.useState('');
+
+  // For the contact form
+  const [contactFormProcessing, setContactFormProcessing] = React.useState(0);
+  const [contactFormName, setContactFormName] = React.useState('');
+  const [contactFormEmail, setContactFormEmail] = React.useState('');
+  const [contactFormTopic, setContactFormTopic] = React.useState(contactFormTopics[0]);
+  const [contactFormSub, setContactFormSub] = React.useState('');
+  const [contactFormMsg, setContactFormMsg] = React.useState('');
+  const [contactFormError, setContactFormError] = React.useState('');
 
   React.useEffect(() => {
 
@@ -61,7 +83,7 @@ function ChannelDashboard() {
       let k = await EPNSCoreHelper.getPublicKey(recipient, contract);
 
       let publickey = k.toString().substring(2);
-      console.log("This is public Key: " + publickey);
+      //console.log("This is public Key: " + publickey);
 
       secretEncrypted = await CryptoHelper.encryptWithECIES(secret, publickey);
       esub = CryptoHelper.encryptWithAES(sub, secret);
@@ -95,7 +117,7 @@ function ChannelDashboard() {
 
     // Send Transaction
     // First Approve DAI
-    var anotherSendTxPromise = contract.sendMessage(recipient, type, cid, 1);
+    var anotherSendTxPromise = contract.sendNotification(recipient, type + "+" + cid);
 
     anotherSendTxPromise.then(function(tx) {
       console.log(tx);
@@ -105,45 +127,74 @@ function ChannelDashboard() {
   }
 
   return (
-    <Container>
-      <Channel>
-        <Notice>
-          <Title>Send Message!</Title>
-          <Info>EPNS supports three types of messages (for now!). <b>Groups</b>, <b>Secrets</b> and <b>Targetted</b>.</Info>
-          <Info>Group messages go to all people subscribed in the group. Secrets are encrypted and go to a specific subscriber (no one else can view it, thanks crypto!), Targetted are non-encrypted secrets mostly sent from the EPNS group to channel owners.</Info>
-        </Notice>
+    <>
+      <Section>
+        <Content className="contentBox">
+          <Item>
+            <H2 textTransform="uppercase" spacing="0.1em">
+              <Span weight="200">Send </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Notification</Span>
+            </H2>
+            <H3>EPNS supports three types of messages (for now!). <b>Groups</b>, <b>Secrets</b> and <b>Targetted</b>.</H3>
+            <Span>Group messages go to all people subscribed in the group. Secrets are encrypted and go to a specific subscriber (no one else can view it, thanks crypto!), Targetted are non-encrypted secrets mostly sent from the EPNS group to channel owners.</Span>
+          </Item>
+        </Content>
+      </Section>
 
-        <FormSubmision>
-          <Row>
-            <Header>Message Type</Header>
-            <Input placeholder=" (1 for Normal, 2 for Secret)" value={type} onChange={(e) => {setType(e.target.value)}} />
-          </Row>
+        <ItemH>
+          <FormSubmision
+            flex="1"
+            direction="row"
+            margin="20px 0px"
+            justify="center"
+            size="1.1rem"
+            onSubmit={handleSendMessage}
+          >
+            <ItemH>
+              <Header>Message Type</Header>
+              <Item flex="5" justify="flex-start" align="stretch" minWidth="280px" margin="15px">
+                <DropdownStyled options={contactFormTopics} onChange={(option) => {setType(option.value); console.log(option)}} value={contactFormTopic} placeholder="Select an option" />
+              </Item>
+              <Input placeholder=" (1 for Normal, 2 for Secret)" value={type} onChange={(e) => {setType(e.target.value)}} />
+                <Span
+                                    padding="4px 10px"
+                                    right="0px"
+                                    top="0px"
+                                    pos="absolute"
+                                    color="#fff"
+                                    bg="#000"
+                                    size="0.7rem"
+                                    z="1"
+                                  >
+                                    Name
+                                  </Span>
+            </ItemH>
 
-          <Row>
-            <Header>Recipient</Header>
-            <Input placeholder="Channel Address for msg type 1, recipient for 2" value={recipient} onChange={(e) => {setRecipient(e.target.value)}} />
-          </Row>
+            <Row>
+              <Header>Recipient</Header>
+              <Input placeholder="Channel Address for msg type 1, recipient for 2" value={recipient} onChange={(e) => {setRecipient(e.target.value)}} />
+            </Row>
 
-          <Row>
-            <Header>Subject</Header>
-            <Input placeholder="The subject of the topic" value={sub} onChange={(e) => {setSub(e.target.value)}} />
-          </Row>
+            <Row>
+              <Header>Subject</Header>
+              <Input placeholder="The subject of the topic" value={sub} onChange={(e) => {setSub(e.target.value)}} />
+            </Row>
 
-          <Row>
-            <Header>Message</Header>
-            <ShortInfo placeholder="The message to deliver" maxlength = "500" value={msg} onChange={(e) => {setMsg(e.target.value)}}/>
-          </Row>
+            <Row>
+              <Header>Message</Header>
+              <ShortInfo placeholder="The message to deliver" maxlength = "500" value={msg} onChange={(e) => {setMsg(e.target.value)}}/>
+            </Row>
 
-          <Row>
-            <Header>Call to Action</Header>
-            <Input placeholder="Call to action url if any" maxlength = "200" value={cta} onChange={(e) => {setCTA(e.target.value)}} />
-          </Row>
+            <Row>
+              <Header>Call to Action</Header>
+              <Input placeholder="Call to action url if any" maxlength = "200" value={cta} onChange={(e) => {setCTA(e.target.value)}} />
+            </Row>
 
-          <Row>
-            <Header>Image url</Header>
-            <Input placeholder="Image url if any" maxlength = "200" value={img} onChange={(e) => {setImg(e.target.value)}} />
-          </Row>
-        </FormSubmision>
+            <Row>
+              <Header>Image url</Header>
+              <Input placeholder="Image url if any" maxlength = "200" value={img} onChange={(e) => {setImg(e.target.value)}} />
+            </Row>
+          </FormSubmision>
+        </ItemH>
 
         <Buttons>
           <Continue theme='#674c9f' disabled={processing} onClick={handleSendMessage}>
@@ -173,26 +224,11 @@ function ChannelDashboard() {
             }
           </Continue>
         </Buttons>
-
-
-      </Channel>
-    </Container>
+    </>
   );
 }
 
 // css styles
-const Container = styled.div`
-  flex: 1;
-  display: flex;
-  padding: 20px;
-  width: '100%';
-`
-
-const Channel = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`
 
 const Notice = styled.div`
   margin-top: 10px;
@@ -217,20 +253,6 @@ const Info = styled.label`
 const Buttons = styled(Info)`
   display: flex;
     justify-content: space-around;
-`
-
-const FormSubmision = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const Input = styled.input`
-  border: 0px;
-  outline: 0px;
-  border-bottom: 1px solid #ddd;
-  margin: 25px 10px;
-  padding: 5px;
-  flex: 1;
 `
 
 const Name = styled(Input)`
@@ -291,6 +313,54 @@ const Continue = styled.button`
   font-weight: 400;
   flex: 1;
   margin: 10px 20px;
+`
+
+const DropdownStyled = styled(Dropdown)`
+  .Dropdown-control {
+    background-color: #000;
+    color: #fff;
+    padding: 12px 52px 12px 10px;
+    border: 1px solid #000;
+    border-radius: 4px;
+  }
+
+  .Dropdown-placeholder {
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    font-size: 0.8em;
+  }
+
+  .Dropdown-arrow {
+    top: 18px;
+    bottom: 0;
+    border-color: #fff transparent transparent;
+  }
+
+  .Dropdown-menu {
+    border: 1px solid #000;
+    box-shadow: none;
+    background-color: #000;
+    border-radius: 0px;
+    margin-top: -3px;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .Dropdown-option {
+    background-color: rgb(35 35 35);
+    color: #ffffff99;
+
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.7em;
+    padding: 15px 20px;
+  }
+
+  .Dropdown-option:hover {
+    background-color: #000000;
+    color: #fff;
+  }
 `
 
 
