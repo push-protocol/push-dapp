@@ -86,20 +86,20 @@ const EPNSCoreHelper = {
       let filter = contract.filters.AddChannel(channel);
       let block = startBlock;
       if (startBlock != updateBlock) {
-        filter = contract.filters.EditChannel(channel);
+        filter = contract.filters.UpdateChannel(channel);
         block = updateBlock;
       }
 
-      contract.queryFilter(filter)
+      contract.queryFilter(filter, block, block)
         .then(response => {
           let filteredResponse;
 
           if (enableLogs) console.log("getChannelEvent() --> Finding: %s in | %o |", channel, response );
 
           response.forEach(function (item) {
-            if (item.args.channel === channel) {
-              filteredResponse = ethers.utils.toUtf8String(item.args[2]);
+            if (item.args.channel.toString() == channel.toString()) {
               if (enableLogs) console.log("getChannelEvent() --> Selected Channel %o: ", item);
+              filteredResponse = ethers.utils.toUtf8String(item.args.identity);
             }
           });
 
@@ -170,7 +170,7 @@ const EPNSCoreHelper = {
           resolve(response);
         })
         .catch(err => {
-          console.log("!!!Error, getChannelJsonFromUserAddress() --> %o", err); 
+          console.log("!!!Error, getChannelJsonFromUserAddress() --> %o", err);
           reject(err);
         });
     });
@@ -256,6 +256,8 @@ const EPNSCoreHelper = {
   },
   // To retrieve public key of a user
   getPublicKey: async (address, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // To get channel ipfs hash from channel info
       let filteredResponse;
@@ -268,13 +270,11 @@ const EPNSCoreHelper = {
             }
           });
 
-          console.log("Full Response: ");
-          console.log(response);
-          console.log("Filtered Response: ");
-          console.log(filteredResponse);
+          if (enableLogs) console.log("Public Key Registry Response: " + response);
+          if (enableLogs) console.log("Public Key Registry Filtered: " + filteredResponse);
 
-          if (filteredResponse.length == 0) {
-            reject()
+          if (!filteredResponse || filteredResponse.length == 0) {
+            resolve(null)
           }
           else {
             resolve(filteredResponse.args[1]);

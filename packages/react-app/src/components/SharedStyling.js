@@ -5,7 +5,7 @@ export const Section = styled.section`
   align-self: stretch;
   justify-content: center;
   align-items: ${props => props.align || 'initial'};
-  flex-direction: ${props => props.flexDirection || 'column'};
+  flex-direction: ${props => props.direction || 'column'};
   background: ${props => props.theme || 'transparent'};
   background: ${props => props.gradient || 'undefined'};
   margin: ${props => props.margin || '0px'};
@@ -33,7 +33,7 @@ export const SectionHero = styled(Section)`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${props => props.padding || "40px 0px"};
+  padding: ${props => props.padding || "0px"};
   position: relative;
 `
 
@@ -211,6 +211,9 @@ export const Span = styled.span`
   left: ${props => props.left || 'auto'};
   bottom: ${props => props.bottom || 'auto'};
   top: ${props => props.top || 'auto'};
+
+  border-radius: ${props => props.radius || "0px"};
+  overflow: ${props => props.overflow || "hidden"};
 
   z-index: ${props => props.z || 'auto'};
 `
@@ -392,9 +395,11 @@ export const Showoff = styled.div`
 
 export const FormSubmision = styled.form`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: ${props => props.wrap || 'wrap'};
 
   flex: ${props => props.flex || 'initial'};
+  flex-direction: ${props => props.direction || 'column'};
+
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
@@ -411,7 +416,7 @@ export const FormSubmision = styled.form`
 `
 
 export const Input = styled.input`
-  display: flex;
+  display: ${props => props.display || 'flex'};
   flex: ${props => props.flex || 'initial'};
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
@@ -425,6 +430,7 @@ export const Input = styled.input`
   padding: ${props => props.padding || "0px"};
   letter-spacing: ${props => props.spacing || "inherit"};
   border: ${props => props.border || "none"};
+  border-bottom: ${props => props.borderBottom || "inital"};
   border-radius: ${props => props.radius || "0px"};
   outline: ${props => props.outline || "none"};
   overflow: ${props => props.overflow || "hidden"};
