@@ -49,7 +49,7 @@ function Home({ setBadgeCount, bellPressed }) {
     // Reset when account refreshes
     setChannelAdmin(false);
     setAdminStatusLoaded(false);
-    userClickedAt(2);
+    userClickedAt(1);
     setChannelJson([]);
 
     // EPNS Read Provider Set
