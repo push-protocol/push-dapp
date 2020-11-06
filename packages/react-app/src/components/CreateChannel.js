@@ -63,32 +63,87 @@ function CreateChannel() {
 
   // receives array of files that are done uploading when submit button is clicked
   const handleLogoSubmit = (files, allFiles) => {
-    setStepFlow(2);
-    setUploadDone(true);
-
-    console.log(files.map(f => f.meta))
+    // console.log(files.map(f => f.meta))
     allFiles.forEach(f => {
       var file = f.file;
       var reader = new FileReader();
       reader.readAsDataURL(file);
-      console.log(f.file);
+      // console.log(f.file);
+
       reader.onloadend = function (e) {
-        console.log(reader.result);
-        setChannelFile(reader.result);
+        // console.log(reader.result);
+        const response = handleLogoSizeLimitation(reader.result);
+        if (response.success) {
+          setStepFlow(2);
+          setProcessing(0);
+          setUploadDone(true);
+          setChannelFile(reader.result);
+        }
+        else {
+          setProcessing(3);
+          setProcessingInfo(response.info);
+        }
       }
     })
   }
 
-  const handleCreateChannel = async () => {
+  const handleLogoSizeLimitation = (base64) => {
+      // Setup Error on higher size of 128px
+      var sizeOf = require('image-size');
+      var base64Data = base64.split(';base64,').pop();
+      var img = Buffer.from(base64Data, 'base64');
+      var dimensions = sizeOf(img);
+
+      // Only proceed if image is equal to or less than 128
+      if (dimensions.width > 128 || dimensions.height > 128) {
+        console.log("Image size check failed... returning");
+        return {
+          success: 0,
+          info: "Image size check failed, Image should be 128X128PX"
+        };
+      }
+
+      // only proceed if png or jpg
+      // This is brilliant: https://stackoverflow.com/questions/27886677/javascript-get-extension-from-base64-image
+      // char(0) => '/' : jpg
+      // char(0) => 'i' : png
+      let fileext;
+      console.log(base64Data.charAt(0));
+      if (base64Data.charAt(0) == '/') {
+        return {
+          success: 1,
+          info: "Image checks passed"
+        };
+      }
+      else if (base64Data.charAt(0) == 'i') {
+        return {
+          success: 1,
+          info: "Image checks passed"
+        };
+      }
+      else {
+        return {
+          success: 0,
+          info: "Image extension should be jpg or png"
+        };
+      }
+  }
+
+  const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
+    e.preventDefault();
+
+    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || isEmpty(channelFile)) {
+      setProcessing(3);
+      setProcessingInfo("Channel Fields are Empty! Please retry!");
+
+      return false;
+    }
+
+    // Check complete, start logic
     setChannelInfoDone(true);
     setProcessing(1);
-
-    console.log(channelFile);
-    console.log(channelName);
-    console.log(channelInfo);
-    console.log(channelURL);
 
     const input = JSON.stringify(
       {
@@ -146,6 +201,14 @@ function CreateChannel() {
         setProcessing(3);
         setProcessingInfo("!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet");
       });
+  }
+
+  const isEmpty = (field) => {
+    if (field.trim().length == 0) {
+      return true;
+    }
+
+    return false;
   }
 
   return (
@@ -356,9 +419,9 @@ function CreateChannel() {
       }
 
       {/* Channel Setup Progress */}
-      {uploadDone && stakeFeesChoosen && channelInfoDone && (processing == 1 || processing == 3) &&
+      {(processing == 1 || processing == 3) &&
         <Section>
-          <Content padding="50px 0px 0px 0px">
+          <Content padding="0px 0px 0px 0px">
             {processing == 1 &&
               <Item margin="20px 0px 10px 0px">
                 <Loader
