@@ -66,7 +66,7 @@ function Feedbox({ epnsReadProvider }) {
       profit: Number(formatEther(totalProfit)).toFixed(8),
       ratio: ((ratio.toNumber() / divisor) * 100).toFixed(8),
       userProfit: Number(formatEther(userProfit)).toFixed(8),
-      interestClaimed: interestClaimed ? Number(formatEther(interestClaimed)).toFixed(8) + " DAI" : "User Not Registerd / No Earnings"
+      interestClaimed: interestClaimed ? Number(formatEther(interestClaimed)).toFixed(8) + " DAI" : "---"
     }
 
     setUserInterestInfo(obj);
