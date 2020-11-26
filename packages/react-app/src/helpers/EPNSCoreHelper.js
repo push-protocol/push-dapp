@@ -8,15 +8,25 @@ import { parseEther, bigNumber } from 'ethers/utils'
 const EPNSCoreHelper = {
   // To get owner info
   getOwnerInfo: async (contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
-      contract.owner()
-        .then(response => { console.log("getOwnerInfo() --> %o", response); resolve(response); })
-        .catch(err => { console.log("!!!Error, getOwnerInfo() --> %o", err); reject(err); });
+      contract.governance()
+        .then(response => {
+          if (enableLogs) console.log("getOwnerInfo() --> %o", response);
+          resolve(response);
+        })
+        .catch(err => {
+          console.log("!!!Error, getOwnerInfo() --> %o", err);
+          reject(err);
+        });
     })
   },
   // To get user info
   getUserInfo: async (user, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
       contract.users(user)
@@ -24,10 +34,13 @@ const EPNSCoreHelper = {
           const mappings = { ...response };
           mappings.addr = user;
 
-          console.log("getUserInfo() --> %o", mappings);
+          if (enableLogs) console.log("getUserInfo() --> %o", mappings);
           resolve(mappings);
         })
-        .catch(err => { console.log("!!!Error, getUserInfo() --> %o", err); reject(err); });
+        .catch(err => {
+          console.log("!!!Error, getUserInfo() --> %o", err);
+          reject(err);
+        });
     })
   },
   // To retrieve a channel address from it's id
@@ -44,6 +57,8 @@ const EPNSCoreHelper = {
   },
   // To retrieve a channel's Info from channel address
   getChannelInfo: async (channel, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
       contract.channels(channel)
@@ -52,81 +67,135 @@ const EPNSCoreHelper = {
           const mappings = { ...response };
           mappings.addr = channel;
 
-          console.log("getChannelInfo() --> %o", mappings);
+          if (enableLogs) console.log("getChannelInfo() --> %o", mappings);
           resolve(mappings);
         })
-        .catch(err => { console.log("!!!Error, getChannelInfo() --> %o", err); reject(err); });
+        .catch(err => {
+          console.log("!!!Error, getChannelInfo() --> %o", err);
+          reject(err);
+        });
     })
   },
   // To retrieve a channel's AddChannel event
-  getChannelAddEvent: async (channel, startBlock, endBlock, contract) => {
-    return new Promise ((resolve, reject) => {
-      // To get channel ipfs hash from channel info
-      contract.queryFilter('AddChannel', startBlock, endBlock)
-        .then(response => {
+  getChannelEvent: async (channel, startBlock, updateBlock, contract) => {
+    const enableLogs = 0;
 
+    return new Promise ((resolve, reject) => {
+
+      // To get channel ipfs hash from channel info
+      let filter = contract.filters.AddChannel(channel);
+      let block = startBlock;
+      if (startBlock != updateBlock) {
+        filter = contract.filters.UpdateChannel(channel);
+        block = updateBlock;
+      }
+
+      contract.queryFilter(filter, block, block)
+        .then(response => {
           let filteredResponse;
+
+          if (enableLogs) console.log("getChannelEvent() --> Finding: %s in | %o |", channel, response );
+
           response.forEach(function (item) {
-            if (item.args[0] == channel) {
-              filteredResponse = item;
+            if (item.args.channel.toString() == channel.toString()) {
+              if (enableLogs) console.log("getChannelEvent() --> Selected Channel %o: ", item);
+              filteredResponse = ethers.utils.toUtf8String(item.args.identity);
             }
           });
 
-          console.log("getChannelAddEvent() --> %o", filteredResponse);
+          if (enableLogs) console.log("getChannelEvent() --> Filtered Channel: %o", filteredResponse);
           resolve(filteredResponse);
         })
-        .catch(err => { console.log("!!!Error, getChannelAddEvent() --> %o", err); reject(err); });
+        .catch(err => {
+          console.log("!!!Error, getChannelEvent() --> %o", err);
+          reject(err);
+        });
     })
   },
   // Retrive IPFS File from ipfshash
-  getJsonFileFromIPFSHash: async(ipfs) => {
+  getJsonFileFromIdentity: async(identity) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
-      // Form Gateway URL
-      const url = "https://ipfs.io/ipfs/" + ipfs;
-      fetch(url)
-        .then(response => response.json())
-        .then(response => {
-          console.log("getJsonFileFromIPFSHash() --> %o", response);
-          resolve(response);
-        })
-        .catch(err => { console.log("!!!Error, getJsonFileFromIPFSHash() --> %o", err); reject(err); });
+      // Split Channel Identity, delimeter of identity is "+"
+      const ids = identity.split("+"); // First segment is storage type, second is the pointer to it
+
+      if (ids[0] == 1) {
+        // IPFS HASH
+        // Form Gateway URL
+        const url = "https://ipfs.io/ipfs/" + ids[1];
+        fetch(url)
+          .then(response => response.json())
+          .then(response => {
+            if (enableLogs) console.log("getJsonFileFromIdentity() --> %o", response);
+            resolve(response);
+          })
+          .catch(err => {
+            console.log("!!!Error, getJsonFileFromIdentity() --> %o", err);
+            reject(err);
+          });
+      }
+
     });
   },
   // Helper to get Channel from Channel's address
   getChannelJsonFromChannelAddress: async (channel, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
       EPNSCoreHelper.getChannelInfo(channel, contract)
-        .then(response => EPNSCoreHelper.getChannelAddEvent(channel, response.channelStartBlock.toNumber(), response.channelStartBlock.toNumber(), contract))
-        .then(response => EPNSCoreHelper.getJsonFileFromIPFSHash(response.args[1]))
-        .then(response => {console.log("getChannelJsonFromChannelAddress() --> %o", response); resolve(response);})
-        .catch(err => {console.log("!!!Error, getChannelJsonFromChannelAddress() --> %o", err); reject(err);});
+        .then(response => EPNSCoreHelper.getChannelEvent(channel, response.channelStartBlock.toNumber(), response.channelUpdateBlock.toNumber(), contract))
+        .then(response => EPNSCoreHelper.getJsonFileFromIdentity(response))
+        .then(response => {
+          if (enableLogs) console.log("getChannelJsonFromChannelAddress() --> %o", response);
+          resolve(response);
+        })
+        .catch(err => {
+          console.log("!!!Error, getChannelJsonFromChannelAddress() --> %o", err);
+          reject(err);
+        });
     });
   },
   // Helper to get Channel from User's address
   getChannelJsonFromUserAddress: async (user, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
       EPNSCoreHelper.getUserInfo(user, contract)
         .then(response => EPNSCoreHelper.getChannelJsonFromChannelAddress(user, contract))
-        .then(response => {console.log("getChannelJsonFromUserAddress() --> %o", response); resolve(response);})
-        .catch(err => {console.log("!!!Error, getChannelJsonFromUserAddress() --> %o", err); reject(err);});
+        .then(response => {
+          if (enableLogs) console.log("getChannelJsonFromUserAddress() --> %o", response);
+          resolve(response);
+        })
+        .catch(err => {
+          console.log("!!!Error, getChannelJsonFromUserAddress() --> %o", err);
+          reject(err);
+        });
     });
   },
   // Get Total Number of Channels
   getTotalNumberOfChannels: async (contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
       contract.channelsCount()
         .then(response => {
-          console.log("getTotalNumberOfChannels() --> %o", response.toNumber());
+          if (enableLogs) console.log("getTotalNumberOfChannels() --> %o", response.toNumber());
           resolve(response.toNumber());
         })
-        .catch(err => { console.log("!!!Error, getTotalNumberOfChannels() --> %o", err); reject(err); });
+        .catch(err => {
+          console.log("!!!Error, getTotalNumberOfChannels() --> %o", err);
+          reject(err);
+        });
     })
   },
   // Get channels address given number of channels, , atIndex: -1 is start from latest, numChannels: -1 is return all
   getChannelsMetaLatestToOldest: async (atIndex, numChannels, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       EPNSCoreHelper.getTotalNumberOfChannels(contract)
         .then(async (response) => {
@@ -155,7 +224,7 @@ const EPNSCoreHelper = {
             await EPNSCoreHelper.getChannelAddressFromID(channelID, contract)
               .then(response => EPNSCoreHelper.getChannelInfo(response, contract))
               .then(response => {
-                // console.log("getChannelsMetaLatestToOldest(%d, %d) --> %o", channelID, numChannels, channelsInfo);
+                if (enableLogs) console.log("getChannelsMetaLatestToOldest(%d, %d) --> %o", channelID, numChannels, channelsInfo);
                 channelsInfo = [response, ...channelsInfo];
               })
               .catch(err => console.log("Error in channel: %d | skipping...", channelID))
@@ -164,10 +233,13 @@ const EPNSCoreHelper = {
           // wait until all promises are resolved
           await Promise.all(promises);
 
-          console.log("getChannelsMetaLatestToOldest(Index: %d, Number: %d) --> %o", atIndex, numChannels, channelsInfo);
+          if (enableLogs) console.log("getChannelsMetaLatestToOldest(Index: %d, Number: %d) --> %o", atIndex, numChannels, channelsInfo);
           resolve(channelsInfo);
         })
-        .catch(err => { console.log("!!!Error, getChannelsMetaLatestToOldest() --> %o", err); reject(err); })
+        .catch(err => {
+          console.log("!!!Error, getChannelsMetaLatestToOldest() --> %o", err);
+          reject(err);
+        })
     });
   },
   // Get Total Number of Users
@@ -184,6 +256,8 @@ const EPNSCoreHelper = {
   },
   // To retrieve public key of a user
   getPublicKey: async (address, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // To get channel ipfs hash from channel info
       let filteredResponse;
@@ -196,13 +270,11 @@ const EPNSCoreHelper = {
             }
           });
 
-          console.log("Full Response: ");
-          console.log(response);
-          console.log("Filtered Response: ");
-          console.log(filteredResponse);
+          if (enableLogs) console.log("Public Key Registry Response: " + response);
+          if (enableLogs) console.log("Public Key Registry Filtered: " + filteredResponse);
 
-          if (filteredResponse.length == 0) {
-            reject()
+          if (!filteredResponse || filteredResponse.length == 0) {
+            resolve(null)
           }
           else {
             resolve(filteredResponse.args[1]);
@@ -241,22 +313,48 @@ const EPNSCoreHelper = {
   },
   // Get Fair Share
   getFairShareOfUserAtBlock: async(user, block, contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
-      contract.calcAllChannelsRatio(user, block)
-        .then(response => {
-          console.log("calcAllChannelsRatio() --> %o", response);
-          resolve(response);
+      contract.users(user)
+        .then((response) => {
+          if (response.userActivated) {
+            contract.calcAllChannelsRatio(user, block)
+              .then(response => {
+                if (enableLogs) console.log("calcAllChannelsRatio() --> %o", response);
+                resolve(response);
+              })
+              .catch(err => {
+                console.log("!!!Error, calcAllChannelsRatio() --> %o", err);
+                reject(err);
+              });
+          }
+          else {
+            if (enableLogs) console.log("!!!Warning, calcAllChannelsRatio() --> User not activated");
+            reject("User not activated");
+          }
         })
-        .catch(err => { console.log("!!!Error, calcAllChannelsRatio() --> %o", err); reject(err); });
+        .catch(err => {
+          console.log("!!!Error, calcAllChannelsRatio() --> %o", err);
+          reject(err);
+        });
     })
   },
   // Get Pool Funds
   getPoolFunds: async(contract) => {
+    const enableLogs = 0;
+
     return new Promise ((resolve, reject) => {
       contract.poolFunds()
-        .then(response => { console.log("getPoolFunds() --> %o", response); resolve(response); })
-        .catch(err => { console.log("!!!Error, getPoolFunds() --> %o", err); reject(err); });
+        .then(response => {
+          if (enableLogs) console.log("getPoolFunds() --> %o", response);
+          resolve(response);
+        })
+        .catch(err => {
+          console.log("!!!Error, getPoolFunds() --> %o", err);
+          reject(err);
+        });
     })
   },
   // Helper Functions

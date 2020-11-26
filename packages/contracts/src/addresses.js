@@ -2,7 +2,7 @@
 // Goerli, Kovan, Rinkeby and Ropsten. Replace it with your smart contracts.
 const addresses = {
   ceaErc20: "0xc1C0472c0C80bCcDC7F5D01A376Bd97a734B8815",
-  epnscore: "0xaf65ed42c0b6d5f8029e58729997df9f45895df7",
+  epnscore: "0xc882dA9660d29c084345083922F8a9292E58787D",
   dai: "0xf80A32A835F79D7787E8a8ee5721D0fEaFd78108",
   aDai: "0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201",
 };

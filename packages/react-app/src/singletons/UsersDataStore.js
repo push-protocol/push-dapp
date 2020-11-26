@@ -147,19 +147,25 @@ export default class UsersDataStore {
 
     // GET OWNER META
     getOwnerMetaAsync = async () => {
+      const enableLogs = 0;
+
       return new Promise ((resolve, reject) => {
         if (this.state.ownerMeta) {
-          console.log("getOwnerMetaAsync() [CACHED] --> %o", this.state.ownerMeta);
+          if (enableLogs) console.log("getOwnerMetaAsync() [CACHED] --> %o", this.state.ownerMeta);
           resolve(this.state.ownerMeta);
         }
         else {
           EPNSCoreHelper.getOwnerInfo(this.state.epnsReadProvider)
             .then(response => {
               this.state.ownerMeta = response;
-              console.log("getOwnerMetaAsync() --> %o", response);
+
+              if (enableLogs) console.log("getOwnerMetaAsync() --> %o", response);
               resolve(this.state.ownerMeta);
             })
-            .catch(err => { console.log("!!!Error, getOwnerMetaAsync() --> %o", err); reject(err); });
+            .catch(err => {
+              console.log("!!!Error, getOwnerMetaAsync() --> %o", err);
+              reject(err);
+            });
         }
       });
     }
@@ -197,19 +203,25 @@ export default class UsersDataStore {
 
     // GET USER META
     getUserMetaAsync = async () => {
+      const enableLogs = 0;
+
       return new Promise ((resolve, reject) => {
         if (this.state.userMeta) {
-          console.log("getUserMetaAsync() [CACHED] --> %o", this.state.userMeta);
+          if (enableLogs) console.log("getUserMetaAsync() [CACHED] --> %o", this.state.userMeta);
           resolve(this.state.userMeta);
         }
         else {
           EPNSCoreHelper.getUserInfo(this.state.account, this.state.epnsReadProvider)
             .then(response => {
               this.state.userMeta = response;
-              console.log("getUserMetaAsync() --> %o", this.state.userMeta);
+
+              if (enableLogs) console.log("getUserMetaAsync() --> %o", this.state.userMeta);
               resolve(this.state.userMeta);
             })
-            .catch(err => { console.log("!!!Error, getUserMetaAsync() --> %o", err); reject(err); });
+            .catch(err => {
+              console.log("!!!Error, getUserMetaAsync() --> %o", err);
+              reject(err);
+          });
         }
       });
     }

@@ -233,16 +233,22 @@ export default class ChannelsDataStore {
 
     // CHANNELS COUNT
     getChannelsCountAsync = async () => {
+      const enableLogs = 0;
+
       return new Promise (async (resolve, reject) => {
         if (this.state.channelsCount == -1) {
           // Count not set, get and set it first
           const count = EPNSCoreHelper.getTotalNumberOfChannels(this.state.epnsReadProvider)
             .then(response => {
               this.state.channelsCount = response;
-              console.log("getChannelsCountAsync() --> %o", response);
+
+              if (enableLogs) console.log("getChannelsCountAsync() --> %o", response);
               resolve(this.state.channelsCount)
             })
-            .catch(err => { console.log("!!!Error, getChannelsCountAsync() --> %o", err); reject(err); });
+            .catch(err => {
+              console.log("!!!Error, getChannelsCountAsync() --> %o", err);
+              reject(err);
+            });
         }
         else {
           resolve(this.state.channelsCount);

@@ -11,10 +11,10 @@ import Loader from 'react-loader-spinner'
 
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
-import ChannelDashboard from 'segments/ChannelDashboard';
-import CreateChannel from 'segments/CreateChannel';
 import Feedbox from 'segments/Feedbox';
 import ViewChannels from 'segments/ViewChannels';
+import ChannelOwnerDashboard from 'segments/ChannelOwnerDashboard';
+import ChannelCreationDashboard from 'segments/ChannelCreationDashboard';
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
@@ -49,7 +49,7 @@ function Home({ setBadgeCount, bellPressed }) {
     // Reset when account refreshes
     setChannelAdmin(false);
     setAdminStatusLoaded(false);
-    userClickedAt(0);
+    userClickedAt(1);
     setChannelJson([]);
 
     // EPNS Read Provider Set
@@ -167,10 +167,10 @@ function Home({ setBadgeCount, bellPressed }) {
           />
         }
         {controlAt == 2 && !channelAdmin && adminStatusLoaded &&
-          <CreateChannel />
+          <ChannelCreationDashboard />
         }
         {controlAt == 2 && channelAdmin && adminStatusLoaded &&
-          <ChannelDashboard />
+          <ChannelOwnerDashboard />
         }
       </Interface>
     </Container>

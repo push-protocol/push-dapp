@@ -401,19 +401,41 @@ template {
 /**
  * Custom CSS
  */
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap');
-* {
-  font-family: 'Open Sans', sans-serif;
+ @import url('https://fonts.googleapis.com/css2?family=Open+Sans+Pro:wght@200;300;400;600&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+ span, p, label, div {
+  font-family: 'Source Sans Pro', Arial, sans-serif;
 }
 
-b {
-  color: #e20880;
+button, a, a:before, a:after {
+  font-family: 'Source Sans Pro', Arial, sans-serif;
+  border: 0;
+  outline: 0;
+
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
-::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-  color: #BBB;
-  opacity: 1; /* Firefox */
-}
+
+ h1 {
+   font-family: 'Monstrat', Helvetica, sans-serif;
+   font-weight: 700;
+   line-height: 1.25em;
+   color: #fff;
+   text-transform: uppercase;
+   font-size: 2.25rem;
+   text-shadow: 0 0 20px rgb(255 255 255 / 60%);
+   letter-spacing: 0.1em;
+ }
+
+ h2, h3, h4, h5, h6 {
+   font-family: 'Monstrat', Helvetica, sans-serif;
+   font-weight: 700;
+   line-height: 1.25em;
+ }
 
 /*
  *  SCROLL STYLES - https://codepen.io/GhostRider/pen/GHaFw
