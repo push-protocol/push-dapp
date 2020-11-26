@@ -275,7 +275,7 @@ function App() {
 
         {!active &&
           <ProviderUpperContainer>
-            <ProviderLogo src="./epnsbell.png" />
+            <ProviderLogo src="./epnshomelogo.png" srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"} />
             <ProviderContainer>
               {Object.keys(connectorsByName).map(name => {
                 const currentConnector = connectorsByName[name]
