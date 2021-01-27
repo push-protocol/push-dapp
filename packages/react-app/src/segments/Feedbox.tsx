@@ -6,120 +6,152 @@ import { addresses, abis } from "@project/contracts";
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { ethers } from "ethers";
 import { BigNumber, bigNumberify, formatEther } from 'ethers/utils'
+import ViewNotificationItem from "components/ViewNotificationItem";
+import { subscribe } from "graphql";
+
+const gr = require('graphql-request')
+const { request, gql } = gr;
+
+const ipfs = require('ipfs-api')()
 
 // Create Header
 function Feedbox({ epnsReadProvider }) {
+  
   const { account, library } = useWeb3React();
-
+  const [contract, setContract] = React.useState({});
+  
+  
+  const [notifications, setNotifications] = React.useState([]);
   const [userInterestInfo, setUserInterestInfo] = React.useState(null);
 
   React.useEffect(() => {
-
+    console.log("🚀 ~ file: Feedbox.tsx ~ line 20 ~ Feedbox ~ epnsReadProvider", epnsReadProvider)
+    // const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
+    // console.log("🚀 ~ file: Feedbox.tsx ~ line 28 ~ React.useEffect ~ contractInstance", contractInstance)
+    // setContract(contractInstance);
+    // console.log("🚀 ~ file: Feedbox.tsx ~ line 22 ~ Feedbox ~ contract", contract)
+    getNotifications();
     if (!!account && !!library) {
-      initUserInterest();
     }
-
+    return subscribe()
   }, [account, library]);
 
-  // Create Interest Calculation
-  const attachInterestCalculation = () => {
-    library.on('block', (blockNumber) => {
-      calculateUserInterest(blockNumber);
-    });
-  }
-
-  const initUserInterest = () => {
-    library.getBlockNumber().then((blockNumber) => {
-      calculateUserInterest(blockNumber);
-
-      attachInterestCalculation();
-    });
-  }
-
-  const calculateUserInterest = async (blockNumber) => {
-    // get all details
-    const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
-
-    const divisor = 10000000;
-    const ratio = await EPNSCoreHelper.getFairShareOfUserAtBlock(account, blockNumber, contractInstance);
-    const poolFunds = await EPNSCoreHelper.getPoolFunds(contractInstance);
-    const userInfo = await EPNSCoreHelper.getUserInfo(account, contractInstance);
-    const interestClaimed = userInfo.interestClaimed;
-
-    const adaiERC20 = new ethers.Contract(addresses.aDai, abis.erc20, library);
-    const availableFunds = await adaiERC20.balanceOf(addresses.epnscore);
-
-    const totalProfit = availableFunds.sub(poolFunds);
-    const userProfit = (ratio.mul(totalProfit)).div(divisor);
-
-    // console.log(ratio.toNumber() / divisor);
-    // console.log(formatEther(poolFunds));
-    // console.log(formatEther(availableFunds));
-    // console.log(formatEther(totalProfit));
-    // console.log(formatEther(userProfit));
-    // console.log(formatEther(interestClaimed));
-
-    const obj = {
-      block: blockNumber,
-      pool: Number(formatEther(poolFunds)).toFixed(8),
-      available: Number(formatEther(availableFunds)).toFixed(8),
-      profit: Number(formatEther(totalProfit)).toFixed(8),
-      ratio: ((ratio.toNumber() / divisor) * 100).toFixed(8),
-      userProfit: Number(formatEther(userProfit)).toFixed(8),
-      interestClaimed: interestClaimed ? Number(formatEther(interestClaimed)).toFixed(8) + " DAI" : "---"
+  const subscribe = () => {
+    if (account) {
+      return newNotification(onReceive);
     }
+  };
 
-    setUserInterestInfo(obj);
+  const onReceive = async notification => {
+    // showToast(notification);
+    setNotifications(notifications => [notification].concat(notifications));
+  };
 
+  const newNotification = (fn) => {
+    const event = 'SendNotification'
+    console.log("🚀 ~ file: Feedbox.tsx ~ line 22 ~ Feedbox ~ contract", contract)
+
+
+
+    const cb = async (
+      eventChannelAddress: string,
+      eventUserAddress: string,
+      identityHex: string
+    ) => {
+      const userAddress = account
+      const identity = identityHex
+      // const identity = hex2ascii(identityHex)
+      const notificationId = identity
+        .concat('+')
+        .concat(eventChannelAddress)
+        .concat('+')
+        .concat(eventUserAddress)
+        .toLocaleLowerCase()
+      const ipfsId = identity.split('+')[1]
+      const ipfsNotification = JSON.parse(await ipfs.cat(ipfsId))
+      const notification = {
+        id: notificationId,
+        userAddress: eventUserAddress,
+        channelAddress: eventChannelAddress,
+        indexTimestamp: Date.now() / 1000, // todo
+        ...ipfsNotification.notification,
+        ...ipfsNotification.data,
+      }
+      if (ipfsNotification.data.type === '1') {
+        // broadcast
+        // if (userAddress === eventUserAddress) return; // do not notify sender?
+        const isSubscribed = await epnsReadProvider.memberExists(
+          userAddress,
+          eventChannelAddress
+        )
+        if (isSubscribed) {
+          fn(notification)
+        }
+      } else if (userAddress === eventUserAddress) {
+        fn(notification)
+      }
+    }
+    epnsReadProvider.on(event, cb)
+    return epnsReadProvider.off.bind(epnsReadProvider, event, cb)
+  }
+
+  const getNotifications = async() => {
+    const subGraphUrl = "https://api.thegraph.com/subgraphs/name/aiswaryawalter/epns-proxy"
+    console.log("🚀 ~ file: Feedbox.tsx ~ line 18 ~ Feedbox ~ account", account)
+
+
+    const query = gql`{
+      notifications(where:{userAddress:"${account}"}, orderBy: indexBlock, orderDirection: desc)
+      {
+        id
+        userAddress
+        channelAddress
+        notificationTitle
+        notificationBody
+        dataType
+        dataSecret
+        dataASub
+        dataAMsg
+        dataACta
+        dataAImg
+        dataATime
+        indexTimestamp
+        indexBlock
+      }
+    }`
+
+    request(subGraphUrl, query)
+      .then(async (datas) => {
+        console.log("🚀 ~ file: Feedbox.tsx ~ line 112 ~ .then ~ datas", datas)
+        setNotifications(datas.notifications);
+      })
   }
 
   // Render
   return (
-    <Container>
-      {userInterestInfo &&
-        <InterestInfo>
-          <InterestRow>
-            <Msg theme="block">Block Number: {userInterestInfo.block}</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>Interest Pool:</Title>
-            <Msg theme="primary">{userInterestInfo.pool} DAI</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>Pool + Interest Generated:</Title>
-            <Msg theme="primary">{userInterestInfo.available} DAI</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>Entire Pool Profit:</Title>
-            <Msg theme="primary">{userInterestInfo.profit} DAI</Msg>
-          </InterestRow>
-          { userInterestInfo.ratio !=0 &&
-            <>
-              <InterestRow>
-                <Title>User Fair Share Percentage:</Title>
-                <Msg theme="secondary">{userInterestInfo.ratio}%</Msg>
-              </InterestRow>
-              <InterestRow>
-                <Title>User Profit:</Title>
-                <Msg theme="secondary">{userInterestInfo.userProfit} DAI</Msg>
-              </InterestRow>
-            </>
-          }
-          <InterestRow>
-            <Title>Interest Claimed:</Title>
-            <Msg theme="third">{userInterestInfo.interestClaimed}</Msg>
-          </InterestRow>
-        </InterestInfo>
-      }
-      {!userInterestInfo &&
-      <>
-        Loading Interest Stats...
-      </>
-      }
+    <Container>{
+    <Items id="scrollstyle-secondary">
+        {Object.keys(notifications).map(index => {
+          return (
+          <ViewNotificationItem
+            key={notifications[index].id}
+            notificationObject={notifications[index]}
+          />)
+        })
+        }
+    </Items>}
     </Container>
   );
 }
 
+
+const Items = styled.div`
+  display: block;
+  align-self: stretch;
+  padding: 10px 20px;
+  overflow-y: scroll;
+  background: #fafafa;
+`
 // css styles
 const Container = styled.div`
   padding: 20px;
