@@ -198,31 +198,6 @@ function Balance() {
   )
 }
 
-function HeaderOld() {
-  const { active, error } = useWeb3React()
-
-  return (
-    <>
-
-      <h5
-        style={{
-          display: 'grid',
-          gridGap: '0rem',
-          gridTemplateColumns: '1fr min-content 1fr',
-          maxWidth: '20rem',
-          lineHeight: '2rem',
-          margin: 'auto'
-        }}
-      >
-        <ChainId />
-        <BlockNumber />
-        <Account />
-        <Balance />
-      </h5>
-    </>
-  )
-}
-
 function initializeGA() {
   ReactGA.initialize('231212683');
   ReactGA.pageview('/homepage');

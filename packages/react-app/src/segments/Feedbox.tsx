@@ -16,25 +16,32 @@ const ipfs = require('ipfs-api')()
 
 // Create Header
 function Feedbox({ epnsReadProvider }) {
-  
+
   const { account, library } = useWeb3React();
   const [contract, setContract] = React.useState({});
-  
-  
+
+
   const [notifications, setNotifications] = React.useState([]);
   const [userInterestInfo, setUserInterestInfo] = React.useState(null);
 
   React.useEffect(() => {
-    console.log("🚀 ~ file: Feedbox.tsx ~ line 20 ~ Feedbox ~ epnsReadProvider", epnsReadProvider)
-    // const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
-    // console.log("🚀 ~ file: Feedbox.tsx ~ line 28 ~ React.useEffect ~ contractInstance", contractInstance)
-    // setContract(contractInstance);
-    // console.log("🚀 ~ file: Feedbox.tsx ~ line 22 ~ Feedbox ~ contract", contract)
-    getNotifications();
     if (!!account && !!library) {
     }
-    return subscribe()
   }, [account, library]);
+
+  React.useEffect(() => {
+    if (epnsReadProvider) {
+      console.log("🚀 ~ file: Feedbox.tsx ~ line 20 ~ Feedbox ~ epnsReadProvider", epnsReadProvider)
+      // const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
+      // console.log("🚀 ~ file: Feedbox.tsx ~ line 28 ~ React.useEffect ~ contractInstance", contractInstance)
+      // setContract(contractInstance);
+      // console.log("🚀 ~ file: Feedbox.tsx ~ line 22 ~ Feedbox ~ contract", contract)
+      getNotifications();
+
+      return subscribe()
+    }
+
+  }, [epnsReadProvider]);
 
   const subscribe = () => {
     if (account) {

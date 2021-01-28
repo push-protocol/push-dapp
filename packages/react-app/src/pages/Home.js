@@ -65,7 +65,7 @@ function Home({ setBadgeCount, bellPressed }) {
     console.log("🚀 ~ file: Home.js ~ line 65 ~ Home ~ epnsReadProvider", epnsReadProvider)
 
   }, [epnsReadProvider]);
-  
+
 
   // Revert to Feedbox on bell pressed
   React.useEffect(() => {
@@ -162,7 +162,7 @@ function Home({ setBadgeCount, bellPressed }) {
         {controlAt == 0 &&
           <Feedbox
             epnsReadProvider={epnsReadProvider}
-           />
+          />
         }
         {controlAt == 1 &&
           <ViewChannels
