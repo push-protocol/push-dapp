@@ -19,6 +19,7 @@ import ChannelCreationDashboard from 'segments/ChannelCreationDashboard';
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
 
+
 // Create Header
 function Home({ setBadgeCount, bellPressed }) {
   ReactGA.pageview('/home');
@@ -33,9 +34,10 @@ function Home({ setBadgeCount, bellPressed }) {
   const [channelAdmin, setChannelAdmin] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState([]);
 
+  
+
   React.useEffect(() => {
     const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
-    console.log("🚀 ~ file: Home.js ~ line 38 ~ React.useEffect ~ contractInstance", contractInstance)
     setEpnsReadProvider(contractInstance);
 
     if (!!(library && account)) {
@@ -55,14 +57,12 @@ function Home({ setBadgeCount, bellPressed }) {
 
     // EPNS Read Provider Set
     if (epnsReadProvider != null) {
-      console.log("🚀 ~ file: Home.js ~ line 58 ~ React.useEffect ~ epnsReadProvider", epnsReadProvider)
       // Instantiate Data Stores
       UsersDataStore.instance.init(account, epnsReadProvider);
       ChannelsDataStore.instance.init(account, epnsReadProvider);
 
       checkUserForChannelRights();
     }
-    console.log("🚀 ~ file: Home.js ~ line 65 ~ Home ~ epnsReadProvider", epnsReadProvider)
 
   }, [epnsReadProvider]);
 
