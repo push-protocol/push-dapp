@@ -211,6 +211,21 @@ function CreateChannel() {
     return false;
   }
 
+  //mind Dai
+  const mintDai = async() => {
+    var signer = library.getSigner(account);
+    let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
+
+    let daiAmount = 1000
+    const amount = parseUnits(daiAmount.toString(), 18);
+    var mintTransactionPromise = daiContract.mint(amount);
+    const tx = await mintTransactionPromise;
+    console.log(tx)
+    await library.waitForTransaction(tx.hash);
+    setProcessingInfo("1000 Dai minted successfully!");
+    console.log("Transaction Completed")
+  }
+
   return (
     <>
       <Section>
@@ -253,6 +268,19 @@ function CreateChannel() {
                 accept="image/jpeg,image/png"
               />
             </Item>
+            <Item>
+              <Minter onClick = {() => {
+                mintDai()
+              }}>
+                <Pool>
+                  <br></br>
+                  <PoolShare>
+                    Dai Minter
+                  </PoolShare>
+                </Pool>
+              </Minter>
+            </Item>
+            
           </Content>
         </Section>
       }
@@ -549,6 +577,32 @@ const Continue = styled.button`
   padding: 16px;
   font-size: 16px;
   font-weight: 400;
+`
+const Minter = styled.div`
+  display: flex;
+  flex-direction: row;
+  font-size: 13px;
+`
+
+const ChannelMetaBox = styled.label`
+  margin: 0px 5px;
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 15px;
+  // font-size: 11px;
+`
+const Pool = styled.div`
+  margin: 0px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`
+
+const PoolShare = styled(ChannelMetaBox)`
+  background: #e20880;
+  // background: #674c9f;
 `
 
 
