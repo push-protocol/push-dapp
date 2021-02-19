@@ -24,36 +24,31 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   const [user, setUser] = React.useState(null);
   const [owner, setOwner] = React.useState(null);
 
+  const [page, setPage] = React.useState(0);
+  const [paginatedChannels, setPaginatedChannels] = React.useState([]);
+
+  const channelsPerPage = 5;
+  const channelsVisited = page * channelsPerPage;
+
   React.useEffect(() => {
+    
     fetchChannels();
+    setLoading(false);
   }, [account]);
 
+  React.useEffect(() => {
+    if(channels){
+      setLoading(true)
+      setPaginatedChannels(prev => [...prev, ...channels.slice(channelsVisited, channelsVisited + channelsPerPage)])
+      console.log("🚀 ~ file: ViewChannels.tsx ~ line 31 ~ ViewChannels ~ paginatedChannels", paginatedChannels)
+      setLoading(false)
+    }
+  }, [channels, page]);
+ 
   // handle user action at control center
   const userClickedAt = (controlIndex) => {
     setControlAt(controlIndex);
   }
-
-  //ROPSTEN ETHER FAUCET API IMPLEMENTATION
-  //not feasible at the moment
-  
-  // const requestEther = () => {
-
-  //   fetch('https://faucet.ropsten.be/donate/0x276B820E8382f17ECB9FA77B0952ca4E67287601')
-  //   .then(async response => {
-  //     const data = await response.json();
-  //     console.log("🚀 ~ file: ViewChannels.tsx ~ line 40 ~ requestEther ~ data", data)
-
-  //     // check for error response
-  //     if (!response.ok) {
-  //         // get error message from body or default to response statusText
-  //         const error = (data && data.message) || response.statusText;
-  //         console.log(error);
-  //     }
-  // })
-  // .catch(error => {
-  //     console.error('There was an error!', error);
-  // });
-  // }
 
   // to fetch channels
   const fetchChannels = async () => {
@@ -74,11 +69,17 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
     //   return 0;
     // });
 
-    // Filter out channel
-
     setChannels(channelsMeta);
-    setLoading(false);
   }
+
+  //function to handle infinity scroll
+  const handleScroll = (event) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+
+    if (scrollHeight - scrollTop === clientHeight) {
+      setPage(prev => prev + 1);
+    }
+  };
 
   return (
     <>
@@ -102,38 +103,55 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
       {!loading && controlAt == 0 && channels.length == 0 &&
         <ContainerInfo>
-          <DisplayNotice
+          {/* <DisplayNotice
             title="That's weird, No Channels in EPNS... world is ending... right?"
             theme="primary"
+          /> */}
+          <Loader
+           type="Oval"
+           color="#35c5f3"
+           height={40}
+           width={40}
           />
         </ContainerInfo>
       }
 
-      {!loading && controlAt == 0 && channels.length != 0 &&
-        <Items id="scrollstyle-secondary">
+      {!loading && controlAt == 0 && channels.length != 0 && paginatedChannels.length == 0 &&
+        <ContainerInfo>
+          <Loader
+           type="Oval"
+           color="#35c5f3"
+           height={40}
+           width={40}
+          />
+        </ContainerInfo>
+      }
+      {!loading && controlAt == 0 && paginatedChannels.length != 0 &&
+        <Items id="scrollstyle-secondary" onScroll = {handleScroll}>
+          
 
-          {Object.keys(channels).map(index => {
+          {Object.keys(paginatedChannels).map(index => {
             const isOwner = (
-              channels[index].addr === account ||
-              (account === owner && channels[index].addr === "0x0000000000000000000000000000000000000000")
+              paginatedChannels[index].addr === account ||
+              (account === owner && paginatedChannels[index].addr === "0x0000000000000000000000000000000000000000")
             );
 
-            if (channels[index].addr !== "0x0000000000000000000000000000000000000000") {
+            if (paginatedChannels[index].addr !== "0x0000000000000000000000000000000000000000") {
               return (
                 <ViewChannelItem
-                  key={channels[index].addr}
-                  channelObject={channels[index]}
+                  key={paginatedChannels[index].addr}
+                  channelObject={paginatedChannels[index]}
                   isOwner={isOwner}
                   epnsReadProvider={epnsReadProvider}
                   epnsWriteProvide={epnsWriteProvide}
                 />
               );
             }
-            else if (channels[index].addr === "0x0000000000000000000000000000000000000000" && user.channellized) {
+            else if (paginatedChannels[index].addr === "0x0000000000000000000000000000000000000000" && user.channellized) {
               return (
                 <ViewChannelItem
-                  key={channels[index].addr}
-                  channelObject={channels[index]}
+                  key={paginatedChannels[index].addr}
+                  channelObject={paginatedChannels[index]}
                   isOwner={isOwner}
                   epnsReadProvider={epnsReadProvider}
                   epnsWriteProvide={epnsWriteProvide}
@@ -162,7 +180,8 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  max-height: 80vh;
+  max-height: 100vh;
+  // max-height: 80vh;
 `
 
 const ContainerInfo = styled.div`
