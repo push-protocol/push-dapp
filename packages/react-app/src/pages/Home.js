@@ -35,7 +35,7 @@ function Home({ setBadgeCount, bellPressed }) {
   const [channelAdmin, setChannelAdmin] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState([]);
 
-  
+
 
   React.useEffect(() => {
     const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
@@ -120,7 +120,7 @@ function Home({ setBadgeCount, bellPressed }) {
           <ControlImage src="./svg/feedbox.svg" active={controlAt == 0 ? 1 : 0} />
           <ControlText active={controlAt == 0 ? 1 : 0}>Feedbox</ControlText>
         </ControlButton>
-        
+
         <ControlButton index={1} active={controlAt == 1 ? 1 : 0} border="#35c5f3"
           onClick={() => {
             userClickedAt(1)
@@ -165,8 +165,8 @@ function Home({ setBadgeCount, bellPressed }) {
             userClickedAt(3)
           }}
         >
-          <ControlImage src="./svg/feedbox.svg" active={controlAt == 3 ? 1 : 0} />
-          <ControlText active={controlAt == 3 ? 1 : 0}>Other Information</ControlText>
+          <ControlImage src="./svg/share.svg" active={controlAt == 3 ? 1 : 0} />
+          <ControlText active={controlAt == 3 ? 1 : 0}>Receive Notifs</ControlText>
         </ControlButton>
       </Controls>
       <Interface>

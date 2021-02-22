@@ -10,7 +10,7 @@ import { useWeb3React } from '@web3-react/core';
 
 // Other Information URLs
 function ViewInfoItem() {
-  
+
   const [ loading, setLoading ] = React.useState(false);
 
   // render
@@ -21,16 +21,28 @@ function ViewInfoItem() {
         <ChannelTitle>
           {!loading &&
           <>
-          <AppLinkText>Download our app ( 
+          <AppLinkText>
             <AppLink href={process.env.REACT_APP_IOS_STAGING_DAPP_URL} target="_blank" rel="nofollow">
-            iOS
-          </AppLink>
-          /
-          <AppLink href={process.env.REACT_APP_ANDROID_STAGING_DAPP_URL} target="_blank" rel="nofollow">
-          Android
-        </AppLink>
-          )
-        </AppLinkText>
+              Download EPNS App (iOS)
+            </AppLink>
+          </AppLinkText>
+           For iOS Users
+          </>
+          }
+        </ChannelTitle>
+      </ChannelInfo>
+    </Container>
+    <Container >
+      <ChannelInfo>
+        <ChannelTitle>
+          {!loading &&
+          <>
+          <AppLinkText>
+            <AppLink href={process.env.REACT_APP_ANDROID_STAGING_DAPP_URL} target="_blank" rel="nofollow">
+              Download EPNS App (Android)
+            </AppLink>
+          </AppLinkText>
+           For Android Users
           </>
           }
         </ChannelTitle>
