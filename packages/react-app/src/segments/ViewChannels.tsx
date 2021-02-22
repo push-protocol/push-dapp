@@ -35,7 +35,7 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
   //ROPSTEN ETHER FAUCET API IMPLEMENTATION
   //not feasible at the moment
-  
+
   // const requestEther = () => {
 
   //   fetch('https://faucet.ropsten.be/donate/0x276B820E8382f17ECB9FA77B0952ca4E67287601')
@@ -83,12 +83,6 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   return (
     <>
     <Container>
-      {!loading && controlAt == 0  &&
-        <FaucetInfo>
-          <Faucets/>
-        </FaucetInfo>
-      }
-      
       {loading &&
         <ContainerInfo>
           <Loader
@@ -111,6 +105,7 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
 
       {!loading && controlAt == 0 && channels.length != 0 &&
         <Items id="scrollstyle-secondary">
+          <Faucets/>
 
           {Object.keys(channels).map(index => {
             const isOwner = (
@@ -169,11 +164,6 @@ const ContainerInfo = styled.div`
   padding: 20px;
 `
 
-const FaucetInfo = styled.div`
-  padding: 5px;
-  display: block;
-  align-self: stretch;
-`
 const Items = styled.div`
   display: block;
   align-self: stretch;
