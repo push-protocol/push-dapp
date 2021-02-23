@@ -1,186 +1,239 @@
 import React from "react";
 import styled, { css } from 'styled-components';
+import Loader from 'react-loader-spinner'
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { ethers } from "ethers";
 import { BigNumber, bigNumberify, formatEther } from 'ethers/utils'
+import { useQuery, gql } from '@apollo/client';
+
+import ViewNotificationItem from "components/ViewNotificationItem";
+import NotificationToast from "components/NotificationToast";
+import hex2ascii from 'hex2ascii'
 
 // Create Header
 function Feedbox({ epnsReadProvider }) {
+
   const { account, library } = useWeb3React();
 
-  const [userInterestInfo, setUserInterestInfo] = React.useState(null);
+  const [notifications, setNotifications] = React.useState([]);
+
+  const [toast, showToast] = React.useState(null);
+
+  const [page, setPage] = React.useState(0);
+  const [paginatedNotifications, setPaginatedNotifications] = React.useState([]);
+
+  const notificationsPerPage = 20;
+  const notificationsVisited = page * notificationsPerPage;
+
+  //define query
+  const GET_NOTIFICATIONS = gql`
+  {
+    notifications(where:{userAddress:"${account}"}, orderBy: indexBlock, orderDirection: desc)
+    {
+        id
+        userAddress
+        channelAddress
+        notificationTitle
+        notificationBody
+        dataType
+        dataSecret
+        dataASub
+        dataAMsg
+        dataACta
+        dataAImg
+        dataATime
+        indexTimestamp
+        indexBlock
+    }
+  }
+`;
+
+  //useQuery react hook exposed by Apollo fetches query results and stores in data
+  const { loading, error, data } = useQuery(GET_NOTIFICATIONS);
+
+  const clearToast = () => showToast(null);
+
+  //set notitifications
+  React.useEffect(() => {
+    if (!loading && !error && data && data.notifications) {
+      setNotifications(data.notifications);
+    }
+  }, [loading, error, data, epnsReadProvider]);
 
   React.useEffect(() => {
-
-    if (!!account && !!library) {
-      initUserInterest();
+    if (epnsReadProvider) {
+      return subscribe()
     }
+  }, [epnsReadProvider]);
 
-  }, [account, library]);
-
-  // Create Interest Calculation
-  const attachInterestCalculation = () => {
-    library.on('block', (blockNumber) => {
-      calculateUserInterest(blockNumber);
-    });
-  }
-
-  const initUserInterest = () => {
-    library.getBlockNumber().then((blockNumber) => {
-      calculateUserInterest(blockNumber);
-
-      attachInterestCalculation();
-    });
-  }
-
-  const calculateUserInterest = async (blockNumber) => {
-    // get all details
-    const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
-
-    const divisor = 10000000;
-    const ratio = await EPNSCoreHelper.getFairShareOfUserAtBlock(account, blockNumber, contractInstance);
-    const poolFunds = await EPNSCoreHelper.getPoolFunds(contractInstance);
-    const userInfo = await EPNSCoreHelper.getUserInfo(account, contractInstance);
-    const interestClaimed = userInfo.interestClaimed;
-
-    const adaiERC20 = new ethers.Contract(addresses.aDai, abis.erc20, library);
-    const availableFunds = await adaiERC20.balanceOf(addresses.epnscore);
-
-    const totalProfit = availableFunds.sub(poolFunds);
-    const userProfit = (ratio.mul(totalProfit)).div(divisor);
-
-    // console.log(ratio.toNumber() / divisor);
-    // console.log(formatEther(poolFunds));
-    // console.log(formatEther(availableFunds));
-    // console.log(formatEther(totalProfit));
-    // console.log(formatEther(userProfit));
-    // console.log(formatEther(interestClaimed));
-
-    const obj = {
-      block: blockNumber,
-      pool: Number(formatEther(poolFunds)).toFixed(8),
-      available: Number(formatEther(availableFunds)).toFixed(8),
-      profit: Number(formatEther(totalProfit)).toFixed(8),
-      ratio: ((ratio.toNumber() / divisor) * 100).toFixed(8),
-      userProfit: Number(formatEther(userProfit)).toFixed(8),
-      interestClaimed: interestClaimed ? Number(formatEther(interestClaimed)).toFixed(8) + " DAI" : "---"
+  //clear toast variable after it is shown
+  React.useEffect(() => {
+    if (toast) {
+      clearToast()
     }
+  }, [toast]);
 
-    setUserInterestInfo(obj);
+  //update paginatedNotifications array when scrolled till the end
+  React.useEffect(() => {
+    if(notifications){
+      setPaginatedNotifications(prev => [...prev, ...notifications.slice(notificationsVisited, notificationsVisited + notificationsPerPage)])
+      console.log("🚀 ~ file: Feedbox.tsx ~ line 31 ~ Feedbox ~ paginatedNotifications", paginatedNotifications)
+    }
+  }, [notifications, page]);
 
+  //function to handle infinity scroll
+  const handleScroll = (event) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      setPage(prev => prev + 1);
+    }
+  };
+  
+  const subscribe = () => {
+    if (account) {
+      return newNotification(onReceive);
+    }
+  };
+
+  //handle new notification
+  const onReceive = async notification => {
+    showToast(notification);
+    setNotifications(notifications => [notification].concat(notifications));
+  };
+
+  //subscribe to SendNotification
+  const newNotification = (fn) => {
+    const event = 'SendNotification'
+
+    //callback function for listener
+    const cb = async (
+      eventChannelAddress: string,
+      eventUserAddress: string,
+      identityHex: string
+    ) => {
+      const userAddress = account
+      const identity = hex2ascii(identityHex)
+      const notificationId = identity
+        .concat('+')
+        .concat(eventChannelAddress)
+        .concat('+')
+        .concat(eventUserAddress)
+        .toLocaleLowerCase()
+      const ipfsId = identity.split('+')[1]
+
+      // Form Gateway URL
+      const url = "https://ipfs.io/ipfs/" + ipfsId;
+      fetch(url)
+        .then(result => result.json())
+        .then(result => {
+      const ipfsNotification = result
+      const notification = {
+        id: notificationId,
+        userAddress: eventUserAddress,
+        channelAddress: eventChannelAddress,
+        indexTimestamp: Date.now() / 1000, // todo
+        notificationTitle: ipfsNotification.notification.title,
+        notificationBody: ipfsNotification.notification.body,
+        ...ipfsNotification.data,
+      }
+      if (ipfsNotification.data.type === '1') {
+        const isSubscribed = 
+        epnsReadProvider.memberExists(
+          userAddress,
+          eventChannelAddress
+        )
+        .then(isSubscribed => {
+          if (isSubscribed) {
+            fn(notification)
+          }
+        })
+      } else if (userAddress === eventUserAddress) {
+        fn(notification)
+      }
+      })
+      .catch(err => {
+        console.log("!!!Error, getting new notification data from ipfs --> %o", err);
+      });
+    }
+    epnsReadProvider.on(event, cb)
+    return epnsReadProvider.off.bind(epnsReadProvider, event, cb)
   }
 
   // Render
   return (
+    <>
     <Container>
-      {userInterestInfo &&
-        <InterestInfo>
-          <InterestRow>
-            <Msg theme="block">Block Number: {userInterestInfo.block}</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>Interest Pool:</Title>
-            <Msg theme="primary">{userInterestInfo.pool} DAI</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>Pool + Interest Generated:</Title>
-            <Msg theme="primary">{userInterestInfo.available} DAI</Msg>
-          </InterestRow>
-          <InterestRow>
-            <Title>Entire Pool Profit:</Title>
-            <Msg theme="primary">{userInterestInfo.profit} DAI</Msg>
-          </InterestRow>
-          { userInterestInfo.ratio !=0 &&
-            <>
-              <InterestRow>
-                <Title>User Fair Share Percentage:</Title>
-                <Msg theme="secondary">{userInterestInfo.ratio}%</Msg>
-              </InterestRow>
-              <InterestRow>
-                <Title>User Profit:</Title>
-                <Msg theme="secondary">{userInterestInfo.userProfit} DAI</Msg>
-              </InterestRow>
-            </>
+    {loading &&
+        <ContainerInfo>
+          <Loader
+           type="Oval"
+           color="#35c5f3"
+           height={40}
+           width={40}
+          />
+        </ContainerInfo>
+      }
+      {!loading &&
+      <Items id="scrollstyle-secondary" onScroll = {handleScroll}>
+          {Object.keys(paginatedNotifications).map(index => {  
+            return (
+            <ViewNotificationItem
+              key={paginatedNotifications[index].id}
+              notificationObject={paginatedNotifications[index]}
+            />)
+            })
           }
-          <InterestRow>
-            <Title>Interest Claimed:</Title>
-            <Msg theme="third">{userInterestInfo.interestClaimed}</Msg>
-          </InterestRow>
-        </InterestInfo>
+        </Items>
       }
-      {!userInterestInfo &&
-      <>
-        Loading Interest Stats...
-      </>
-      }
+    {
+     toast && 
+     <NotificationToast
+       notification={toast}
+       clearToast = {clearToast}
+      />
+    }
     </Container>
+    </>
   );
 }
 
+
+const Items = styled.div`
+  display: block;
+  align-self: stretch;
+  padding: 10px 20px;
+  overflow-y: scroll;
+  background: #fafafa;
+`
 // css styles
 const Container = styled.div`
-  padding: 20px;
-  font-size: 16px;
-  display: flex;
+display: flex;
+  flex: 1;
+  flex-direction: column;
+
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 40vh;
+  max-height: 100vh;
+
+  // padding: 20px;
+  // font-size: 16px;
+  // display: flex;
+  // font-weight: 200;
+  // align-content: center;
+  // align-items: center;
+  // justify-content: center;
+  // width: 100%;
+  // min-height: 40vh;
 `
 
-const InterestInfo = styled.div`
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 10px;
+const ContainerInfo = styled.div`
+  padding: 20px;
 `
-
-const InterestRow = styled.div`
-  margin: 5px;
-  padding: 5px;
-  border-bottom: 1px solid #eee;
-  font-weight: 400;
-  font-size: 14px;
-  display: flex;
-  justify-content: space-between;
-`
-
-const Title = styled.span`
-  font-weight: 600;
-`
-
-const Msg = styled.span`
-  padding: 2px 10px;
-  margin: 0px 10px;
-  font-size: 12px;
-  border-radius: 10px;
-  color: #000;
-
-  ${props => props.theme === 'block' && css`
-    background: #e20880;
-    color: #FFF;
-    font-size: 14px;
-    margin: 10px 0px;
-    font-weight: 600;
-  `};
-
-  ${props => props.theme === 'primary' && css`
-    background: #e2088011;
-  `};
-
-  ${props => props.theme === 'secondary' && css`
-    background: #35c5f311;
-  `};
-
-  ${props => props.theme === 'third' && css`
-    background: #674c9f11;
-  `};
-`
-
 
 // Export Default
 export default Feedbox;
