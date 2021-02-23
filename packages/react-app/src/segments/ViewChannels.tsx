@@ -9,6 +9,7 @@ import { ethers } from "ethers";
 
 import DisplayNotice from "components/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
+import Faucets from "components/Faucets";
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
@@ -17,6 +18,7 @@ import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
 function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   const { account, library } = useWeb3React();
 
+  const [controlAt, setControlAt] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [channels, setChannels] = React.useState([]);
   const [user, setUser] = React.useState(null);
@@ -25,6 +27,33 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   React.useEffect(() => {
     fetchChannels();
   }, [account]);
+
+  // handle user action at control center
+  const userClickedAt = (controlIndex) => {
+    setControlAt(controlIndex);
+  }
+
+  //ROPSTEN ETHER FAUCET API IMPLEMENTATION
+  //not feasible at the moment
+
+  // const requestEther = () => {
+
+  //   fetch('https://faucet.ropsten.be/donate/0x276B820E8382f17ECB9FA77B0952ca4E67287601')
+  //   .then(async response => {
+  //     const data = await response.json();
+  //     console.log("🚀 ~ file: ViewChannels.tsx ~ line 40 ~ requestEther ~ data", data)
+
+  //     // check for error response
+  //     if (!response.ok) {
+  //         // get error message from body or default to response statusText
+  //         const error = (data && data.message) || response.statusText;
+  //         console.log(error);
+  //     }
+  // })
+  // .catch(error => {
+  //     console.error('There was an error!', error);
+  // });
+  // }
 
   // to fetch channels
   const fetchChannels = async () => {
@@ -52,6 +81,7 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
   }
 
   return (
+    <>
     <Container>
       {loading &&
         <ContainerInfo>
@@ -64,7 +94,7 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
         </ContainerInfo>
       }
 
-      {!loading && channels.length == 0 &&
+      {!loading && controlAt == 0 && channels.length == 0 &&
         <ContainerInfo>
           <DisplayNotice
             title="That's weird, No Channels in EPNS... world is ending... right?"
@@ -73,8 +103,9 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
         </ContainerInfo>
       }
 
-      {!loading && channels.length != 0 &&
+      {!loading && controlAt == 0 && channels.length != 0 &&
         <Items id="scrollstyle-secondary">
+          <Faucets/>
 
           {Object.keys(channels).map(index => {
             const isOwner = (
@@ -111,6 +142,7 @@ function ViewChannels({ epnsReadProvider, epnsWriteProvide }) {
         </Items>
       }
     </Container>
+    </>
   );
 }
 

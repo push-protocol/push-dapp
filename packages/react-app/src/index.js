@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ApolloClient from "apollo-boost";
-import { ApolloProvider } from "@apollo/react-hooks";
+import {ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
 
 import './index.css';
 
@@ -16,7 +15,8 @@ dotenv.config();
 
 // You should replace this uri with your own and put it into a .env file
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/paulrberg/create-eth-app",
+  uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsprod",
+  cache: new InMemoryCache()
 });
 
 ReactDOM.render(

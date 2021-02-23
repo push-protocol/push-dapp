@@ -13,11 +13,13 @@ import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 import Feedbox from 'segments/Feedbox';
 import ViewChannels from 'segments/ViewChannels';
+import Info from "segments/Info";
 import ChannelOwnerDashboard from 'segments/ChannelOwnerDashboard';
 import ChannelCreationDashboard from 'segments/ChannelCreationDashboard';
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
+
 
 // Create Header
 function Home({ setBadgeCount, bellPressed }) {
@@ -32,6 +34,8 @@ function Home({ setBadgeCount, bellPressed }) {
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState([]);
+
+
 
   React.useEffect(() => {
     const contractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, library);
@@ -62,6 +66,7 @@ function Home({ setBadgeCount, bellPressed }) {
     }
 
   }, [epnsReadProvider]);
+
 
   // Revert to Feedbox on bell pressed
   React.useEffect(() => {
@@ -115,6 +120,7 @@ function Home({ setBadgeCount, bellPressed }) {
           <ControlImage src="./svg/feedbox.svg" active={controlAt == 0 ? 1 : 0} />
           <ControlText active={controlAt == 0 ? 1 : 0}>Feedbox</ControlText>
         </ControlButton>
+
         <ControlButton index={1} active={controlAt == 1 ? 1 : 0} border="#35c5f3"
           onClick={() => {
             userClickedAt(1)
@@ -153,12 +159,21 @@ function Home({ setBadgeCount, bellPressed }) {
             </>
           }
         </ControlButton>
+
+        <ControlButton index={3} active={controlAt == 3 ? 1 : 0} border="#e20880"
+          onClick={() => {
+            userClickedAt(3)
+          }}
+        >
+          <ControlImage src="./svg/share.svg" active={controlAt == 3 ? 1 : 0} />
+          <ControlText active={controlAt == 3 ? 1 : 0}>Receive Notifs</ControlText>
+        </ControlButton>
       </Controls>
       <Interface>
         {controlAt == 0 &&
           <Feedbox
             epnsReadProvider={epnsReadProvider}
-           />
+          />
         }
         {controlAt == 1 &&
           <ViewChannels
@@ -171,6 +186,9 @@ function Home({ setBadgeCount, bellPressed }) {
         }
         {controlAt == 2 && channelAdmin && adminStatusLoaded &&
           <ChannelOwnerDashboard />
+        }
+        {controlAt == 3 &&
+          <Info/>
         }
       </Interface>
     </Container>
@@ -195,9 +213,9 @@ const Controls = styled.div`
 `
 
 const ControlButton = styled.div`
-  flex: 1 1 25%;
+  flex: 1 1 21%;
   height: 120px;
-  min-width: 240px;
+  min-width: 200px;
   background: #fff;
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
@@ -246,7 +264,7 @@ const ControlText = styled.label`
 
   transition: transform .2s ease-out;
   ${ props => props.active && css`
-    transform: scale(1.5) translate(-10px, 0px);
+    transform: scale(1.3) translate(-10px, 0px);
   `};
 `
 
