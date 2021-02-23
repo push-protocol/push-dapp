@@ -10,52 +10,43 @@ import { useWeb3React } from '@web3-react/core';
 
 // Other Information URLs
 function ViewInfoItem() {
-
-  const [ loading, setLoading ] = React.useState(false);
-
   // render
   return (
     <>
     <Container >
       <ChannelInfo>
         <ChannelTitle>
-          {!loading &&
           <>
           <AppLinkText>
-            <AppLink href={process.env.REACT_APP_IOS_STAGING_DAPP_URL} target="_blank" rel="nofollow">
+            <AppLink href={`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`} target="_blank" rel="nofollow">
               Download EPNS App (iOS)
             </AppLink>
           </AppLinkText>
            For iOS Users
           </>
-          }
         </ChannelTitle>
       </ChannelInfo>
     </Container>
     <Container >
       <ChannelInfo>
         <ChannelTitle>
-          {!loading &&
           <>
           <AppLinkText>
-            <AppLink href={process.env.REACT_APP_ANDROID_STAGING_DAPP_URL} target="_blank" rel="nofollow">
+            <AppLink href={`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`} target="_blank" rel="nofollow">
               Download EPNS App (Android)
             </AppLink>
           </AppLinkText>
            For Android Users
           </>
-          }
         </ChannelTitle>
       </ChannelInfo>
     </Container>
     <Container >
       <ChannelInfo>
         <ChannelTitle>
-          {!loading &&
-            <ChannelTitleLink href= "#" target="_blank" rel="nofollow">
+          <ChannelTitleLink href= "#" target="_blank" rel="nofollow">
             Click here for our How to Guides
           </ChannelTitleLink>
-          }
         </ChannelTitle>
       </ChannelInfo>
     </Container>

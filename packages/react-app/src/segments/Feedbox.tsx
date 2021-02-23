@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from 'styled-components';
+import Loader from 'react-loader-spinner'
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
@@ -20,6 +21,12 @@ function Feedbox({ epnsReadProvider }) {
   const [notifications, setNotifications] = React.useState([]);
 
   const [toast, showToast] = React.useState(null);
+
+  const [page, setPage] = React.useState(0);
+  const [paginatedNotifications, setPaginatedNotifications] = React.useState([]);
+
+  const notificationsPerPage = 20;
+  const notificationsVisited = page * notificationsPerPage;
 
   //define query
   const GET_NOTIFICATIONS = gql`
@@ -44,7 +51,7 @@ function Feedbox({ epnsReadProvider }) {
   }
 `;
 
-  //useQuery react hook exposed by Apollo fetches query results and store in data
+  //useQuery react hook exposed by Apollo fetches query results and stores in data
   const { loading, error, data } = useQuery(GET_NOTIFICATIONS);
 
   const clearToast = () => showToast(null);
@@ -69,6 +76,21 @@ function Feedbox({ epnsReadProvider }) {
     }
   }, [toast]);
 
+  //update paginatedNotifications array when scrolled till the end
+  React.useEffect(() => {
+    if(notifications){
+      setPaginatedNotifications(prev => [...prev, ...notifications.slice(notificationsVisited, notificationsVisited + notificationsPerPage)])
+      console.log("🚀 ~ file: Feedbox.tsx ~ line 31 ~ Feedbox ~ paginatedNotifications", paginatedNotifications)
+    }
+  }, [notifications, page]);
+
+  //function to handle infinity scroll
+  const handleScroll = (event) => {
+    const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
+    if (scrollHeight - scrollTop === clientHeight) {
+      setPage(prev => prev + 1);
+    }
+  };
   
   const subscribe = () => {
     if (account) {
@@ -142,14 +164,25 @@ function Feedbox({ epnsReadProvider }) {
 
   // Render
   return (
+    <>
     <Container>
-      {
-      <Items id="scrollstyle-secondary">
-          {Object.keys(notifications).map(index => {  
+    {loading &&
+        <ContainerInfo>
+          <Loader
+           type="Oval"
+           color="#35c5f3"
+           height={40}
+           width={40}
+          />
+        </ContainerInfo>
+      }
+      {!loading &&
+      <Items id="scrollstyle-secondary" onScroll = {handleScroll}>
+          {Object.keys(paginatedNotifications).map(index => {  
             return (
             <ViewNotificationItem
-              key={notifications[index].id}
-              notificationObject={notifications[index]}
+              key={paginatedNotifications[index].id}
+              notificationObject={paginatedNotifications[index]}
             />)
             })
           }
@@ -163,6 +196,7 @@ function Feedbox({ epnsReadProvider }) {
       />
     }
     </Container>
+    </>
   );
 }
 
@@ -176,15 +210,29 @@ const Items = styled.div`
 `
 // css styles
 const Container = styled.div`
-  padding: 20px;
-  font-size: 16px;
-  display: flex;
+display: flex;
+  flex: 1;
+  flex-direction: column;
+
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  min-height: 40vh;
+  max-height: 100vh;
+
+  // padding: 20px;
+  // font-size: 16px;
+  // display: flex;
+  // font-weight: 200;
+  // align-content: center;
+  // align-items: center;
+  // justify-content: center;
+  // width: 100%;
+  // min-height: 40vh;
+`
+
+const ContainerInfo = styled.div`
+  padding: 20px;
 `
 
 // Export Default
