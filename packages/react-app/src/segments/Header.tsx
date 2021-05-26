@@ -1,11 +1,14 @@
 import React from "react";
+
+import styled, { css } from "styled-components";
+import {Section, Content, Item, ItemH, Button} from 'components/SharedStyling';
+
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from '@web3-react/injected-connector'
-
-import styled, { css } from 'styled-components';
+import { Web3Provider } from 'ethers/providers'
 
 import Profile from 'components/Profile';
 import Bell from 'components/Bell';
@@ -13,14 +16,12 @@ import Bell from 'components/Bell';
 
 // Create Header
 function Header({ badgeCount, bellPressedCB }) {
+  const context = useWeb3React<Web3Provider>()
+
   const { active, error, account, chainId } = useWeb3React();
-  const randseed = new Array(4);
+  const { deactivate } = context
 
-  React.useEffect(() => {
-    if (account && account != '') {
-
-    }
-  }, [account]);
+  const [showLoginControls, setShowLoginControls] = React.useState(false);
 
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
@@ -37,78 +38,88 @@ function Header({ badgeCount, bellPressedCB }) {
     }
   }
 
-  // to create blockies
+  const bellPressed = () => {
+    setShowLoginControls(!showLoginControls);
+  }
+
+  const disconnect = () => {
+    setShowLoginControls(false);
+    deactivate();
+  }
 
   return (
-    <HeaderStyle>
-      <ProfileContainer>
-      {active && !error &&
-        <Profile />
-      }
-      {!active &&
-        <Logo src="epns.png" />
-      }
-      </ProfileContainer>
-      <UserControls>
+    <HeaderContainer
+      direction="row"
+      padding="10px 15px"
+    >
+      <ItemH
+        justify="flex-start"
+        flex="0"
+      >
+        {active && !error &&
+          <Profile />
+        }
+        {!active &&
+          <Logo src="epns.png" />
+        }
+      </ItemH>
+
+      <ItemH
+        justify="flex-end"
+      >
         {active && !error &&
           <Bell
             badgeCount={badgeCount}
-            bellPressedCB={bellPressedCB}
-            width={40}
-            height={40}
+            bellPressedCB={bellPressed}
+            width={32}
+            height={32}
           />
         }
-      </UserControls>
-      <NetworkDisplayer>
-        {!!error &&
-          <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>
-        }
-        {!active && !error &&
-          <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>
-        }
-        <Connection phase={active ? 'active' : error ? 'error' : 'waiting'} />
-      </NetworkDisplayer>
 
-    </HeaderStyle>
+        {showLoginControls &&
+          <Item
+            position="absolute"
+          >
+            <Button
+              bg="#000"
+              size="12px"
+              spacing="0.2em"
+              textTransform="uppercase"
+              weight="600"
+              radius="20px"
+              onClick={() => disconnect()}
+            >
+              Disconnect
+            </Button>
+          </Item>
+        }
+
+        <ItemH
+          justify="flex-end"
+          flex="initial"
+        >
+          {!!error &&
+            <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>
+          }
+          {!active && !error &&
+            <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>
+          }
+          <Connection phase={active ? 'active' : error ? 'error' : 'waiting'} />
+        </ItemH>
+      </ItemH>
+    </HeaderContainer>
   );
 }
 
 // CSS Styles
-const HeaderStyle = styled.div`
-  height: 100%;
-  padding: 10px 15px;
-  background: rgb(255,255,255);
-  background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 21%);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-`
-
-const ProfileContainer = styled.div`
-  display: flex;
-  flex: 1;
-  justfy-content: flex-start;
+const HeaderContainer = styled(Section)`
+  @media (max-width: 1440px) {
+    background: rgb(255,255,255);
+  }
 `
 
 const Logo = styled.img`
-  height: 45px;
-`
-
-const UserControls = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const ImageButton = styled.button`
-
-`
-
-const NetworkDisplayer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 40px;
 `
 
 const Notice = styled.span`

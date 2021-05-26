@@ -33,7 +33,9 @@ export const SectionHero = styled(Section)`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${props => props.padding || "0px"};
+  padding: ${props => props.padding || "40px 0px"};
+  background: ${props => props.theme || 'transparent'};
+  background: ${props => props.gradient || 'undefined'};
   position: relative;
 `
 
@@ -45,7 +47,7 @@ export const Item = styled.div`
   display: flex;
   flex-direction: column;
   flex-wrap: ${props => props.wrap || 'wrap'};
-  position: relative;
+  position: ${props => props.position || 'relative'};
   justify-content: center;
   background: ${props => props.bg || 'transparent'};
   flex: ${props => props.flex || '1'};
@@ -65,8 +67,9 @@ export const Item = styled.div`
   height: ${props => props.height || "auto" };
 
   border: ${props => props.border || "none"};
+
   border-radius: ${props => props.radius || "0px"};
-  overflow: ${props => props.overflow || "inital"};
+  overflow: ${props => props.overflow || "initial"};
 
   &:hover & {
     filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : "none")) || "none"};
@@ -182,7 +185,7 @@ export const P = styled.p`
   margin: ${props => props.margin || "20px 0px"};
   padding: ${props => props.padding || "0px"};
   letter-spacing: ${props => props.spacing || "inherit"};
-  text-align: ${props => props.textAlign || "inital"};
+  text-align: ${props => props.textAlign || "initial"};
 `
 
 export const Para = styled(P)`
@@ -204,16 +207,13 @@ export const Span = styled.span`
   margin: ${props => props.margin || "0px"};
   padding: ${props => props.padding || "0px"};
   letter-spacing: ${props => props.spacing || "inherit"};
-  text-align: ${props => props.textAlign || "inital"};
+  text-align: ${props => props.textAlign || "initial"};
 
   position: ${props => props.pos || 'initial'};
   right: ${props => props.right || 'auto'};
   left: ${props => props.left || 'auto'};
   bottom: ${props => props.bottom || 'auto'};
   top: ${props => props.top || 'auto'};
-
-  border-radius: ${props => props.radius || "0px"};
-  overflow: ${props => props.overflow || "hidden"};
 
   z-index: ${props => props.z || 'auto'};
 `
@@ -247,6 +247,7 @@ export const Anchor = styled.a`
   letter-spacing: ${props => props.spacing || "0.2em"};
   border: ${props => props.border || "none"};
   border-radius: ${props => props.radius || "0px"};
+  width: ${props => props.width || "initial" };
 
   position: relative;
   text-decoration: none;
@@ -319,8 +320,10 @@ export const Button = styled.button`
   background: ${props => props.bg || "tranparent"};
   margin: ${props => props.margin || "0"};
   padding: ${props => props.padding || "10px 15px"};
+  letter-spacing: ${props => props.spacing || "initial"};
   border: ${props => props.border || "none"};
   border-radius: ${props => props.radius || "0px"};
+  text-transform: ${props => props.textTransform || "initial"};
 
   position: relative;
   text-decoration: none;
@@ -395,11 +398,9 @@ export const Showoff = styled.div`
 
 export const FormSubmision = styled.form`
   display: flex;
-  flex-wrap: ${props => props.wrap || 'wrap'};
+  flex-wrap: wrap;
 
   flex: ${props => props.flex || 'initial'};
-  flex-direction: ${props => props.direction || 'column'};
-
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
@@ -430,7 +431,6 @@ export const Input = styled.input`
   padding: ${props => props.padding || "0px"};
   letter-spacing: ${props => props.spacing || "inherit"};
   border: ${props => props.border || "none"};
-  border-bottom: ${props => props.borderBottom || "inital"};
   border-radius: ${props => props.radius || "0px"};
   outline: ${props => props.outline || "none"};
   overflow: ${props => props.overflow || "hidden"};

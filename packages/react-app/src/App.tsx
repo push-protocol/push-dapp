@@ -1,8 +1,11 @@
 import React from "react";
 import ReactGA from 'react-ga';
 
-import Loader from 'react-loader-spinner'
 import styled from 'styled-components';
+import {Section, Content, Item, ItemH, Span, H2, H3, B, A} from 'components/SharedStyling';
+
+import Loader from 'react-loader-spinner'
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -17,8 +20,10 @@ import { Web3Provider } from 'ethers/providers'
 import { useEagerConnect, useInactiveListener } from 'hooks'
 import {
   injected,
+  walletconnect,
   portis,
-  network
+  trezor,
+  ledger
 } from 'connectors'
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
@@ -29,10 +34,12 @@ import Header from 'segments/Header';
 import * as dotenv from "dotenv";
 dotenv.config();
 
-const connectorsByName: { [name: string]: AbstractConnector } = {
-  Injected: injected,
-  Network: network,
-  Portis: portis
+const web3Connectors = {
+  Injected: {obj: injected, logo: './svg/login/metamask.svg', title: 'MetaMask'},
+  WalletConnect: {obj: walletconnect, logo: './svg/login/walletconnect.svg', title: 'Wallet Connect'},
+  // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
+  Ledger: {obj: ledger, logo: './svg/login/ledger.svg', title: 'Ledger'},
+  Portis: {obj: portis, logo: './svg/login/portis.svg', title: 'Portis'},
 }
 
 function getErrorMessage(error: Error) {
@@ -76,132 +83,6 @@ function ChainId() {
   )
 }
 
-function BlockNumber() {
-  const { chainId, library } = useWeb3React()
-
-  const [blockNumber, setBlockNumber] = React.useState<number>()
-  React.useEffect((): any => {
-    if (!!library) {
-      let stale = false
-
-      library
-        .getBlockNumber()
-        .then((blockNumber: number) => {
-          if (!stale) {
-            setBlockNumber(blockNumber)
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBlockNumber(null)
-          }
-        })
-
-      const updateBlockNumber = (blockNumber: number) => {
-        setBlockNumber(blockNumber)
-      }
-      library.on('block', updateBlockNumber)
-
-      return () => {
-        stale = true
-        library.removeListener('block', updateBlockNumber)
-        setBlockNumber(undefined)
-      }
-    }
-  }, [library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
-
-  return (
-    <>
-      <span>Block Number</span>
-      <span role="img" aria-label="numbers">
-        🔢
-      </span>
-      <span>
-        {Number.isInteger(blockNumber)
-          ? blockNumber.toLocaleString()
-          : blockNumber === null
-          ? 'Error'
-          : !!library
-          ? '...'
-          : ''}
-      </span>
-    </>
-  )
-}
-
-function Account() {
-  const { account } = useWeb3React()
-
-  return (
-    <>
-      <span>Account</span>
-      <span role="img" aria-label="robot">
-        🤖
-      </span>
-      <span>
-        {account === undefined
-          ? ''
-          : account === null
-          ? '-'
-          : `${account.substring(0, 6)}...${account.substring(account.length - 4)}`}
-      </span>
-    </>
-  )
-}
-
-function Balance() {
-  const { account, library, chainId } = useWeb3React()
-
-  const [balance, setBalance] = React.useState()
-  React.useEffect((): any => {
-    if (!!account && !!library) {
-      let stale = false
-
-      library
-        .getBalance(account)
-        .then((balance: any) => {
-          if (!stale) {
-            setBalance(balance)
-          }
-        })
-        .catch(() => {
-          if (!stale) {
-            setBalance(null)
-          }
-        })
-
-      return () => {
-        stale = true
-        setBalance(undefined)
-      }
-    }
-  }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
-
-  return (
-    <>
-      <span>Balance</span>
-      <span role="img" aria-label="gold">
-        💰
-      </span>
-      <span>
-        {!!balance
-          ? `Ξ${parseFloat(balance).toPrecision(4)}`
-          : balance === null
-          ? 'Error'
-          : account === null
-          ? '-'
-          : !!account && !!library
-          ? '...'
-          : ''}
-      </span>
-    </>
-  )
-}
-
-function initializeGA() {
-  ReactGA.initialize('231212683');
-  ReactGA.pageview('/homepage');
-}
 
 function App() {
   const context = useWeb3React<Web3Provider>()
@@ -211,7 +92,7 @@ function App() {
   const [ bellPressed, setBellPressed ] = React.useState(0);
 
   // Initialize GA
-  ReactGA.initialize('UA-165415629-1');
+  ReactGA.initialize('UA-165415629-5');
   ReactGA.pageview('/login');
 
   // handle logic to recognize the connector currently being activated
@@ -249,147 +130,61 @@ function App() {
         )}
 
         {!active &&
-          <ProviderUpperContainer>
+          <Item>
             <ProviderLogo src="./epnshomelogo.png" srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"} />
-            <ProviderContainer>
-              {Object.keys(connectorsByName).map(name => {
-                const currentConnector = connectorsByName[name]
-                const activating = currentConnector === activatingConnector
-                const connected = currentConnector === connector
-                const disabled = !triedEager || !!activatingConnector || connected || !!error
-                const image = name === 'Injected' ? './metamask.png' : name === 'Portis' ? './portis.png' : './ninja.png';
+            <Item
+              bg="#fafafa"
+              border="1px solid #ddd"
+              padding="15px"
+              radius="12px"
+            >
+              <H2 textTransform="uppercase" spacing="0.1em">
+                <Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">Connect</Span><Span weight="200"> Your Wallet</Span>
+              </H2>
 
-                return (
-                  <ProviderButton
-                    disabled={disabled}
-                    key={name}
-                    onClick={() => {
-                      setActivatingConnector(currentConnector)
-                      activate(connectorsByName[name])
-                    }}
-                    border={name === 'Injected' ? '#e20880' : name === 'Portis' ? '#35c5f3' : '#674c9f'}
-                  >
-                    <ProviderImage src={image} />
-
-                    <ProviderLabel>
-                      {activating &&
-                        <Loader
-                           type="Oval"
-                           color="#35c5f3"
-                           height={20}
-                           width={20}
-                        />
-                      }
-                      {!activating &&
-                        <>
-                        {name === 'Injected' ? 'Connect with MetaMask' : name === 'Portis' ? 'Connect with Portis' : 'Login as Ninja'}
-                        </>
-                      }
-
-                    </ProviderLabel>
-
-                  </ProviderButton>
-                )
-              })}
-            </ProviderContainer>
-          </ProviderUpperContainer>
-        }
-
-        {active &&
-          <div
-            style={{
-              display: 'grid',
-              gridGap: '1rem',
-              gridTemplateColumns: 'fit-content',
-              maxWidth: '20rem',
-              margin: 'auto',
-              marginTop: '1200px'
-            }}
-          >
-            {(active || error) && (
-              <button
-                style={{
-                  height: '3rem',
-                  marginTop: '2rem',
-                  borderRadius: '1rem',
-                  borderColor: 'red',
-                  cursor: 'pointer'
-                }}
-                onClick={() => {
-                  deactivate()
-                }}
+              <ItemH
+                maxWidth="800px"
+                align="stretch"
               >
-                Deactivate
-              </button>
-            )}
+                {Object.keys(web3Connectors).map(name => {
+                  const currentConnector = web3Connectors[name].obj
+                  const activating = currentConnector === activatingConnector
+                  const connected = currentConnector === connector
+                  const disabled = !triedEager || !!activatingConnector || connected || !!error
+                  const image = web3Connectors[name].logo
+                  const title = web3Connectors[name].title
 
-            {!!(library && account) && (
-              <button
-                style={{
-                  height: '3rem',
-                  borderRadius: '1rem',
-                  cursor: 'pointer'
-                }}
-                onClick={() => {
-                  library
-                    .getSigner(account)
-                    .signMessage('👋')
-                    .then((signature: any) => {
-                      window.alert(`Success!\n\n${signature}`)
-                    })
-                    .catch((error: any) => {
-                      window.alert('Failure!' + (error && error.message ? `\n\n${error.message}` : ''))
-                    })
-                }}
-              >
-                Sign Message
-              </button>
-            )}
-            {!!(connector === network && chainId) && (
-              <button
-                style={{
-                  height: '3rem',
-                  borderRadius: '1rem',
-                  cursor: 'pointer'
-                }}
-                onClick={() => {
-                  ;(connector as any).changeChainId(chainId === 1 ? 3 : 1)
-                }}
-              >
-                Switch Networks
-              </button>
-            )}
-            {connector === portis && (
-              <>
-                {chainId !== undefined && (
-                  <button
-                    style={{
-                      height: '3rem',
-                      borderRadius: '1rem',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => {
-                      ;(connector as any).changeNetwork(chainId === 1 ? 100 : 1)
-                    }}
-                  >
-                    Switch Networks
-                  </button>
-                )}
-                <button
-                  style={{
-                    height: '3rem',
-                    borderRadius: '1rem',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => {
-                    ;(connector as any).close()
-                  }}
-                >
-                  Kill Portis Session
-                </button>
-              </>
-            )}
-          </div>
+                  return (
+                    <ProviderButton
+                      disabled={disabled}
+                      key={name}
+                      onClick={() => {
+                        setActivatingConnector(currentConnector)
+                        activate(currentConnector)
+                      }}
+                      border="#35c5f3"
+                    >
+                      <ProviderImage src={image} />
+
+                      <Span
+                        spacing="0.1em"
+                        textTransform="uppercase"
+                        size="12px"
+                        weight="600"
+                        padding="10px"
+                      >
+                        {title}
+                      </Span>
+                    </ProviderButton>
+                  )
+                })}
+              </ItemH>
+            </Item>
+
+            <Span margin="10px" size="14px">
+              By unlocking your wallet, <B>You agree</B> to our <A href="https://epns.io/tos" target="_blank">Terms of Service</A> and our <A href="https://epns.io/privacy" target="_blank">Privacy Policy</A>.
+            </Span>
+          </Item>
         }
         </ParentContainer>
 
@@ -408,8 +203,7 @@ function App() {
 
 
 // CSS STYLES
-const HeaderContainer = styled.div`
-  height: 55px;
+const HeaderContainer = styled.header`
   left: 0;
   right: 0;
   width: 100%;
@@ -423,7 +217,7 @@ const ParentContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 80px 20px 20px 20px;
+  margin: 80px 20px 50px 20px;
   flex: 1;
 `
 
@@ -435,34 +229,19 @@ const HomeContainer = styled.div`
   max-width: 1100px;
 `
 
-const ProviderUpperContainer = styled.div`
-  display: flex;
-  flex: 1,
-  align-self: center;
-  flex-direction: column;
-`
-
 const ProviderLogo = styled.img`
   width: 15vw;
   align-self: center;
   display: flex;
-  margin: 20px;
+  margin: 10px 20px 20px 20px;
   min-width: 200px;
-`
-
-const ProviderContainer = styled.div`
-  flex-wrap: wrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 const ProviderButton = styled.button`
   flex: 1 1 0;
-  min-width: 200px;
+  min-width: 280px;
   background: #fff;
   outline: 0;
-  max-width: 200px;
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
@@ -476,7 +255,7 @@ const ProviderButton = styled.button`
   justify-content: center;
 
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: 10px;
 
   &:hover {
@@ -494,7 +273,8 @@ const ProviderButton = styled.button`
 `
 
 const ProviderImage = styled.img`
-  height: 60px;
+  width: 32px;
+  max-height: 32px;
   padding: 10px;
 `
 
