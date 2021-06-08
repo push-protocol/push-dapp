@@ -401,6 +401,7 @@ export const FormSubmision = styled.form`
   flex-wrap: wrap;
 
   flex: ${props => props.flex || 'initial'};
+  flex-direction: ${props => props.direction || 'column'};
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};

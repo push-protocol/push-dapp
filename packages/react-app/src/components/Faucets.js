@@ -36,7 +36,7 @@ function Faucets() {
           <Item margin="5px">
             <Anchor
               direction="column"
-              href="https://faucet.metamask.com/"
+              href="https://faucet.metamask.io/"
               target="_blank"
               rel="nofollow"
             >
