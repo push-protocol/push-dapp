@@ -346,7 +346,7 @@ function ViewChannelItem({ channelObject, isOwner, epnsReadProvider, epnsWritePr
                     />
                   </ActionLoader>
                 }
-                <ActionTitle hideit={txInProgress}>Subscribe</ActionTitle>
+                <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
               </SubscribeButton>
             }
             {!loading && subscribed &&
@@ -366,7 +366,7 @@ function ViewChannelItem({ channelObject, isOwner, epnsReadProvider, epnsWritePr
                       />
                     </ActionLoader>
                   }
-                  <ActionTitle hideit={txInProgress}>Unsubscribe</ActionTitle>
+                  <ActionTitle hideit={txInProgress}>Opt-Out</ActionTitle>
                 </UnsubscribeButton>
               }
               </>
