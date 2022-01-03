@@ -204,9 +204,12 @@ function CreateChannel() {
     var signer = library.getSigner(account);
 
     let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
+    console.log('\n\n\n\n');
     console.log({
-      daiContract
-    })
+      daiContract,
+      da: addresses.dai,
+    });
+    console.log('\n\n\n\n');
 
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
@@ -225,6 +228,12 @@ function CreateChannel() {
       abis.epnscore,
       signer
     );
+    console.log('\n\n\n\n');
+    console.log({
+      contract,
+      ca: addresses.epnscore,
+    });
+    console.log('\n\n\n\n');
 
     const channelType = 2; // Open Channel
     const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
