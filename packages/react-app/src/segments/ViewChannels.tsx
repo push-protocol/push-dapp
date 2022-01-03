@@ -21,8 +21,7 @@ const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for th
 function ViewChannels() {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
-  const { channels, page } = useSelector((state: any) => state.channels);
-  const { ZERO_ADDRESS } = useSelector((state: any) => state.contracts);
+  const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
 
   const [loading, setLoading] = React.useState(false);
   const [moreLoading, setMoreLoading] = React.useState(false);
@@ -75,7 +74,7 @@ function ViewChannels() {
   // conditionally display the waymore bar which loads more information
   // load more channels when we are at the bottom of the page
   const showWayPoint = (index: any) => {
-    return Number(index) === channels.length - 1 && !search;
+    return Number(index) === channels.length - 1;
   };
 
   // Search Channels Feature
@@ -84,9 +83,9 @@ function ViewChannels() {
     setChannelToShow(channels);
   }, [channels]);
 
-  console.log('\n\n')
-  console.log('\n\n')
-  console.log({channels});
+  console.log("\n\n");
+  console.log("\n\n");
+  console.log({ channels });
 
   function searchForChannel() {
     if (loadingChannel) return; //if we are already loading, do nothing
@@ -121,7 +120,6 @@ function ViewChannels() {
   React.useEffect(() => {
     // debounce request
     // this is done so that we only make a request after the user stops typing
-    console.log({ channelToShow });
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
     return () => {
       clearTimeout(timeout);
@@ -130,7 +128,7 @@ function ViewChannels() {
 
   return (
     <>
-      <Container >
+      <Container>
         {!loading && channels.length == 0 ? (
           <ContainerInfo>
             <DisplayNotice
@@ -139,9 +137,12 @@ function ViewChannels() {
             />
           </ContainerInfo>
         ) : (
-          <Items id="scrollstyle-secondary" style={{position:"relative",padding:"0 1rem"}}>
+          <Items
+            id="scrollstyle-secondary"
+            style={{ position: "relative", padding: "0 1rem" }}
+          >
             {!loading && (
-              <Header style={{minHeight: "150px"}}>
+              <Header style={{ minHeight: "140px" }}>
                 <InputWrapper>
                   <SearchBar
                     type="text"
@@ -156,18 +157,20 @@ function ViewChannels() {
             )}
 
             {/* render all channels depending on if we are searching or not */}
-            {(search ? channelToShow : channels)
-              .filter((channel: any) => channel && channel.addr !== ZERO_ADDRESS)
-              .map((channel: any, index: any) => (
-                <>
-                  <div key={channel.addr}>
-                    <ViewChannelItem channelObjectProp={channel} />
-                  </div>
-                  {showWayPoint(index) && (
-                    <Waypoint onEnter={updateCurrentPage} />
-                  )}
-                </>
-              ))}
+            {(search ? channelToShow : channels).map(
+              (channel: any, index: any) =>
+                channel &&
+                channel.addr !== ZERO_ADDRESS && (
+                  <>
+                    <div key={channel.addr}>
+                      <ViewChannelItem channelObjectProp={channel} />
+                    </div>
+                    {showWayPoint(index) && (
+                      <Waypoint onEnter={updateCurrentPage} />
+                    )}
+                  </>
+                )
+            )}
             {/* render all channels depending on if we are searching or not */}
 
             {/* if we are in search mode and there are no channels then display error message */}
@@ -199,23 +202,23 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position:-webkit-sticky; 
-  position:sticky;
-  top:0px;
-  z-index:2;
-  background:#fafafa;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+  background: #fafafa;
 
-  @media(max-width:600px){
-    flex-direction:column;
-}
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 const InputWrapper = styled.div`
   width: 50%;
-  position:relative;
+  position: relative;
 
-  @media(max-width:600px){
-    width:100%;
-    margin:2rem 0;
+  @media (max-width: 600px) {
+    width: 100%;
+    margin: 2rem 0;
   }
 `;
 
@@ -224,19 +227,19 @@ const SearchBar = styled.input`
   padding-right: 50px;
   height: 60px;
   padding-left: 40px;
- 
-  background: rgb(255,255,255);
+
+  background: rgb(255, 255, 255);
   border: 1px solid rgba(169, 169, 169, 0.5);
   box-sizing: border-box;
   border-radius: 10px;
   transition: 500ms;
   text-transform: capitalize;
   font-size: 16px;
- 
+
   input[type="reset"] {
     display: none;
   }
-  &::placeholder{
+  &::placeholder {
     letter-spacing: 0.15em;
   }
   &:hover,
@@ -245,7 +248,7 @@ const SearchBar = styled.input`
     outline: none;
   }
   &:focus {
-    border: 1px solid #EC008C;
+    border: 1px solid #ec008c;
   }
 `;
 const Container = styled.div`
@@ -284,7 +287,6 @@ const Items = styled.div`
   overflow-y: scroll;
   background: #fafafa;
 `;
-
 
 const SearchIconImage = styled.img`
   position: absolute;
