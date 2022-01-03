@@ -191,6 +191,8 @@ function CreateChannel() {
       address: address,
     });
 
+    console.log({input})
+
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
@@ -208,6 +210,7 @@ function CreateChannel() {
     console.log({
       daiContract,
       da: addresses.dai,
+      fn: addresses.epnscore
     });
     console.log('\n\n\n\n');
 
@@ -232,6 +235,7 @@ function CreateChannel() {
     console.log({
       contract,
       ca: addresses.epnscore,
+      fn: contract.createChannelWithFees
     });
     console.log('\n\n\n\n');
 
