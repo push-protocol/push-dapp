@@ -6,6 +6,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  
   ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
   epnsReadProvider: null, // the core contract reader
   epnsWriteProvider: null, // the core contract with signer

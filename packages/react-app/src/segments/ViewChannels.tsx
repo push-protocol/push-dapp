@@ -21,9 +21,10 @@ const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for th
 function ViewChannels() {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
-  const { channels, page, ZERO_ADDRESS } = useSelector(
+  const { channels, page } = useSelector(
     (state: any) => state.channels
   );
+  const { ZERO_ADDRESS } = useSelector((state:any) => state.contracts);
 
   const [loading, setLoading] = React.useState(false);
   const [moreLoading, setMoreLoading] = React.useState(false);
@@ -166,7 +167,7 @@ function ViewChannels() {
             {(search ? channelToShow : channels).map(
               (channel: any, index: any) =>
                 channel &&
-                channel.addr !== ZERO_ADDRESS && (
+                channel.addr != ZERO_ADDRESS && (
                   <>
                     <div key={channel.addr}>
                       <ViewChannelItem channelObjectProp={channel} />
