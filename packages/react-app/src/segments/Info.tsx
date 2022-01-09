@@ -10,7 +10,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Other Information section
-function Info() {
+function  Info() {
   const { account, library } = useWeb3React();
 
   const [controlAt, setControlAt] = React.useState(0);
@@ -66,4 +66,4 @@ const InfoBox = styled.div`
 
 
 // Export Default
-export default Info;
+export default  Info;

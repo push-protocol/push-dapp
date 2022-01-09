@@ -18,6 +18,20 @@ function ViewInfoItem() {
         <ChannelTitle>
           <>
           <AppLinkText>
+            <AppLink href={`${process.env.REACT_APP_BROWSER_EXTENSION_URL}`} target="_blank" rel="nofollow">
+              Download EPNS Browser Extension
+            </AppLink>
+          </AppLinkText>
+          
+          </>
+        </ChannelTitle>
+      </ChannelInfo>
+    </Container>
+    <Container >
+      <ChannelInfo>
+        <ChannelTitle>
+          <>
+          <AppLinkText>
             <AppLink href={`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`} target="_blank" rel="nofollow">
               Download EPNS App (iOS)
             </AppLink>
