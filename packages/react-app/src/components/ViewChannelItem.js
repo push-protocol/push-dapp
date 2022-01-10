@@ -142,8 +142,9 @@ function ViewChannelItem({ channelObjectProp }) {
       setSubscribed(subscribed);
       setIsVerified(
         Boolean(
-          channelObject.verifiedBy !== ZERO_ADDRESS ||
-            channelObject.addr === pushAdminAddress
+          channelObject && channelObject.verifiedBy &&
+            (channelObject.verifiedBy !== ZERO_ADDRESS ||
+              channelObject.addr === pushAdminAddress)
         )
       );
       setCanUnverify(channelObject.verifiedBy == account);
@@ -485,7 +486,7 @@ function ViewChannelItem({ channelObjectProp }) {
             </>
           ) : (
             <ColumnFlex>
-              <FlexBox style={{marginBottom: "5px"}}>
+              <FlexBox style={{ marginBottom: "5px" }}>
                 <Subscribers>
                   <IoMdPeople size={20} color="#ccc" />
                   <SubscribersCount>{memberCount}</SubscribersCount>
