@@ -1,4 +1,4 @@
-const countdownEpoch = 1641898816; //1678914000; // https://www.epochconverter.com/
+const countdownEpoch = 1641822400; //1678914000; // https://www.epochconverter.com/
 
 const countdown = {
   title: "Road to Mainnet",
@@ -6,7 +6,8 @@ const countdown = {
   countdownEpoch: countdownEpoch,
   button: true,
   buttonTitle: "Are you ready for Governance",
-  buttonText: "Hold a Bit!",
+  buttonText: "EPNS Governance is LIVE!",
   hide: false,
 }
 
+export default countdown;

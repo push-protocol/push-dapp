@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactGA from 'react-ga';
 
 import styled from 'styled-components';
@@ -91,6 +91,21 @@ function App() {
   const [ badgeCount, setBadgeCount ] = React.useState(0);
   const [ bellPressed, setBellPressed ] = React.useState(0);
 
+  const [currentTime,setcurrentTime]=React.useState(0);
+  let time=1641820362;
+  // React.useEffect(()=>{
+  //   const currtime= Date.now();
+  //    time=currtime;
+  //     setcurrentTime(prev=>{
+  //       if(currentTime)return currentTime;
+  //     });
+  //     alert(time);
+  // },[])
+  React.useEffect(() => {
+      const now = Date.now() / 1000; // Unix timestamp in milliseconds to seconds
+      time=(now);
+      setcurrentTime(now);
+  }, []);
   // Initialize GA
   ReactGA.initialize('UA-165415629-5');
   ReactGA.pageview('/login');
@@ -111,7 +126,23 @@ function App() {
 
 
   // Timer component
-  // return <div> <TimerComponent/> 
+  const Wrapper=styled.div`
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    background:url("/DOWNTIME.png") content-box;
+    background-repeat:no-repeat;
+    background-size:100%;
+  `;
+  
+  if(currentTime<1641822400)
+  return (
+      <Wrapper>  
+          <TimerComponent/>
+      </Wrapper>
+  )
+  else
   return (
       <>
         <HeaderContainer>
