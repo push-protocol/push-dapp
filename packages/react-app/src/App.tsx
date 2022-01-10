@@ -42,10 +42,10 @@ export default function App() {
   const [currentTime,setcurrentTime]=React.useState(0);
   
 
-  React.useEffect(()=>{
-    const now = Date.now()/ 1000;
-    setcurrentTime(now)
-  })
+  // React.useEffect(()=>{
+  //   const now = Date.now()/ 1000;
+  //   setcurrentTime(now)
+  // })
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -61,7 +61,8 @@ export default function App() {
   ReactGA.pageview("/login");
   // Initialize GA
   // return ;
-  if(currentTime<countdown.countdownEpoch)
+  // if(currentTime<countdown.countdownEpoch)
+  if(false)
   return (
     <div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100vh"}}>
       <TimerComponent/>

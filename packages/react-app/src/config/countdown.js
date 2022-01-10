@@ -1,4 +1,4 @@
-const countdownEpoch = 1641866400; //1678914000; // https://www.epochconverter.com/
+const countdownEpoch = 1641916800; //1678914000; // https://www.epochconverter.com/
 
 const countdown = {
   title: "Road to Mainnet",

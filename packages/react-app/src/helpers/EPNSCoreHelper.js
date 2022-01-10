@@ -4,6 +4,10 @@ import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 //import { parseEther, bigNumber } from 'ethers/utils'
 
+const COINDESK_CHANNEL_ADDR = "0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF";
+const COINDESK_HASH = "1+bafkreif643vf3cteadznccivnsk5uj26e3ls7onbshnldb3aej3omrxsau"
+const ENS_CHANNEL_ADDR = "0x983110309620D911731Ac0932219af06091b6744";
+const ENS_HASH = "1+bafkreiekigkyezwrspignt7l7vsrjefjmogwmigy4eqtts277cu2p23ilm";
 // FeedDB Helper Function
 const EPNSCoreHelper = {
   // To get owner info
@@ -151,7 +155,7 @@ const EPNSCoreHelper = {
         .then(response => EPNSCoreHelper.getChannelEvent(channel, response.channelStartBlock.toNumber(), response.channelUpdateBlock.toNumber(), contract))
         .then(response => {
           // add little hack for now to change coindesk's descriptioon
-          const hash = channel === "0x8C28Cf33d9Fd3D0293f963b1cd27e3FF422B425c" ? "1+bafkreif643vf3cteadznccivnsk5uj26e3ls7onbshnldb3aej3omrxsau" : response
+          const hash = channel === COINDESK_CHANNEL_ADDR ? COINDESK_HASH  : (channel === ENS_CHANNEL_ADDR ? ENS_HASH : response);
           return EPNSCoreHelper.getJsonFileFromIdentity(hash, channel)
           // return EPNSCoreHelper.getJsonFileFromIdentity(response, channel)
         })
