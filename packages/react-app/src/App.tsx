@@ -12,7 +12,7 @@ import styled from "styled-components";
 import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 import UnderProgressModal from './components/UnderProgressModal';
 import "react-toastify/dist/ReactToastify.min.css";
-
+import TimerComponent from './segments/TimerComponent';
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -53,7 +53,12 @@ export default function App() {
   ReactGA.initialize("UA-165415629-5");
   ReactGA.pageview("/login");
   // Initialize GA
-
+  // return ;
+  return (
+    <div style={{display:"flex",justifyContent:"center",alignItems:"center",height:"100vh"}}>
+      <TimerComponent/>
+    </div>
+  )
   return (
     <>
     
@@ -72,7 +77,7 @@ export default function App() {
 
         {!active && (
           <Item>
-            <UnderProgressModal/>
+            {/* <UnderProgressModal/> */}
 
             <ProviderLogo
               src="./epnshomelogo.png"
