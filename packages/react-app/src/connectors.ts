@@ -1,4 +1,5 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { envConfig } from "@project/contracts";
 import { PortisConnector } from '@web3-react/portis-connector'
 // import { NetworkConnector } from '@web3-react/network-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -12,22 +13,20 @@ import { TrezorConnector } from '@web3-react/trezor-connector'
 // import { TorusConnector } from '@web3-react/torus-connector'
 
 require('dotenv').config();
+const SUPPORTED_CHAIN_IDS = [...envConfig.allowedNetworks];
+const POLLING_INTERVAL = 12000;
+const CORE_CHAIN_ID = envConfig.coreContractChain;
+const CORE_RPC = envConfig.coreRPC;
 
-const POLLING_INTERVAL = 12000
 const RPC_URLS: { [chainId: number]: string } = {
-  3: process.env.REACT_APP_RPC_URL_3 as string
+  [CORE_CHAIN_ID]: envConfig.coreRPC
 }
 
-export const injected = new InjectedConnector({ supportedChainIds: [3] })
+export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS })
 
-// export const network = new NetworkConnector({
-//   urls: { 3: RPC_URLS[3] },
-//   defaultChainId: 3,
-//   pollingInterval: POLLING_INTERVAL
-// })
 
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 3: RPC_URLS[3] },
+  rpc: { ...RPC_URLS },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   pollingInterval: POLLING_INTERVAL
@@ -38,14 +37,14 @@ export const walletconnect = new WalletConnectConnector({
 //   appName: 'web3-react example'
 // })
 //
-export const ledger = new LedgerConnector({ chainId: 3, url: RPC_URLS[3], pollingInterval: POLLING_INTERVAL })
+export const ledger = new LedgerConnector({ chainId: CORE_CHAIN_ID, url: CORE_RPC, pollingInterval: POLLING_INTERVAL })
 
 export const trezor = new TrezorConnector({
-  chainId: 3,
-  url: RPC_URLS[3],
+  chainId: CORE_CHAIN_ID,
+  url: CORE_RPC,
   pollingInterval: POLLING_INTERVAL,
   manifestEmail: 'support@epns.io',
-  manifestAppUrl: 'https://app.epns.io'
+  manifestAppUrl: 'https://staging-app.epns.io'
 })
 
 //
@@ -55,7 +54,7 @@ export const trezor = new TrezorConnector({
 //
 // export const fortmatic = new FortmaticConnector({ apiKey: process.env.FORTMATIC_API_KEY as string, chainId: 4 })
 
-export const portis = new PortisConnector({ dAppId: 'cfefa032-9afd-4833-bfb4-2b0cb7ec3413' as string, networks: [3, 100] })
+export const portis = new PortisConnector({ dAppId: 'cfefa032-9afd-4833-bfb4-2b0cb7ec3413' as string, networks: [CORE_CHAIN_ID] })
 
 // export const squarelink = new SquarelinkConnector({
 //   clientId: process.env.SQUARELINK_CLIENT_ID as string,

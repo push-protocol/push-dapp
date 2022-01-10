@@ -1,19 +1,11 @@
 import React from "react";
-import styled, { css } from 'styled-components';
-import { Device } from 'assets/Device';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
-import Loader from 'react-loader-spinner';
+import styled from 'styled-components';
 
 import Skeleton from '@yisheng90/react-loading';
 
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
-import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 import moment from 'moment';
 
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 function ViewNotificationItem({ notificationObject }) {
   const { account, library } = useWeb3React();
@@ -37,35 +29,37 @@ function ViewNotificationItem({ notificationObject }) {
   // render
   return (
     <Container key={notificationObject.id}>
-        <ChannelTitle>
-          {loading &&
-            <Skeleton color="#eee" width="50%" height={24} />
-          }
-          {!loading &&
-            <ChannelTitleLink>{notification.notificationTitle}</ChannelTitleLink>
-          }
-        </ChannelTitle>
-        <ChannelDesc>
-          {loading &&
-            <>
-              <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color="#eee" width="100%" height={5} />
-              </SkeletonWrapper>
+      <ChannelDetailsWrapper>
+          <ChannelTitle>
+            {loading &&
+              <Skeleton color="#eee" width="50%" height={24} />
+            }
+            {!loading &&
+              <ChannelTitleLink>{notification.notificationTitle}</ChannelTitleLink>
+            }
+          </ChannelTitle>
+          <ChannelDesc>
+            {loading &&
+              <>
+                <SkeletonWrapper atH={5} atW={100}>
+                  <Skeleton color="#eee" width="100%" height={5} />
+                </SkeletonWrapper>
 
-              <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color="#eee" width="100%" height={5} />
-              </SkeletonWrapper>
+                <SkeletonWrapper atH={5} atW={100}>
+                  <Skeleton color="#eee" width="100%" height={5} />
+                </SkeletonWrapper>
 
-              <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color="#eee" width="40%" height={5} />
-              </SkeletonWrapper>
-            </>
-          }
-          {!loading &&
-          
-            <ChannelDescLabel>{notification.notificationBody}</ChannelDescLabel>
-          }
-        </ChannelDesc>
+                <SkeletonWrapper atH={5} atW={100}>
+                  <Skeleton color="#eee" width="40%" height={5} />
+                </SkeletonWrapper>
+              </>
+            }
+            {!loading &&
+
+              <ChannelDescLabel>{notification.notificationBody}</ChannelDescLabel>
+            }
+          </ChannelDesc>
+        </ChannelDetailsWrapper>
 
         <ChannelMeta>
           {!loading &&
@@ -73,10 +67,10 @@ function ViewNotificationItem({ notificationObject }) {
               <Pool>
                 <br></br>
                 <PoolShare>
-                  {moment
-                  .unix(notification.indexTimestamp)
-                  .local()
-                  .format('YYYY-MM-DD h:mm:ss a')}
+                { notification.indexTimeStamp? moment
+												.utc(parseInt(notification.indexTimeStamp) * 1000)
+												.local()
+												.format("DD MMM YYYY | hh:mm A"): "N/A"}
                 </PoolShare>
               </Pool>
             </>
@@ -87,6 +81,12 @@ function ViewNotificationItem({ notificationObject }) {
 }
 
 // css styles
+const ChannelDetailsWrapper = styled.div`
+  align-self: center;
+  max-width: 80%;
+`;
+
+
 const Container = styled.div`
   flex: 1;
   display: flex;
@@ -98,7 +98,9 @@ const Container = styled.div`
 
   margin: 15px 0px;
   justify-content: center;
-  padding: 10px;
+  padding: 30px 20px;
+
+  justify-content: space-between;
 `
 
 const SkeletonWrapper = styled.div`
@@ -111,7 +113,8 @@ const SkeletonWrapper = styled.div`
 `
 
 const ChannelTitle = styled.div`
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  margin-left: 4px;
 `
 
 const ChannelTitleLink = styled.a`
@@ -145,9 +148,11 @@ const ChannelMetaBox = styled.label`
   margin: 0px 5px;
   color: #fff;
   font-weight: 600;
-  padding: 2px 8px;
+  // padding: 2px 8px;
+  padding: 10px;
   border-radius: 10px;
   font-size: 11px;
+  align-self: flex-end;
 `
 
 const Pool = styled.div`

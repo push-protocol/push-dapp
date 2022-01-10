@@ -399,9 +399,9 @@ export const Showoff = styled.div`
 export const FormSubmision = styled.form`
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
 
   flex: ${props => props.flex || 'initial'};
-  flex-direction: ${props => props.direction || 'column'};
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};

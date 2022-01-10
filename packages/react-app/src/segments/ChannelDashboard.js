@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 
 import Loader from 'react-loader-spinner'
 import Switch from 'components/Switch'
-import { bigNumberify } from 'ethers/utils'
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 

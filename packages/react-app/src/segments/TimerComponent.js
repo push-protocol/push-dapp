@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 
 const TimerComponent=()=>{
-    return( 
+    return(
         <Wrapper>
         <TimerItem/>
         </Wrapper>
@@ -15,7 +15,6 @@ const Wrapper=styled.div`
     display:flex;
     height:100vh;
     width:100%;
-    background: red;
     background:url("/DOWNTIME2.png") content-box;
     background-repeat:no-repeat;
     background-size:100%;

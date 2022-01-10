@@ -2,7 +2,7 @@ import React from "react";
 
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-import { parseEther, bigNumber } from 'ethers/utils'
+//import { parseEther, bigNumber } from 'ethers/utils'
 
 // FeedDB Helper Function
 const EPNSCoreHelper = {
@@ -47,9 +47,9 @@ const EPNSCoreHelper = {
   getChannelAddressFromID: async (channelID, contract) => {
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
-      contract.mapAddressChannels(channelID)
+      contract.channelById(channelID)
         .then(response => {
-          console.log("getChannelAddressFromID() --> %o", response.toString());
+          // console.log("getChannelAddressFromID() --> %o", response.toString());
           resolve(response.toString());
         })
         .catch(err => { console.log("!!!Error, getChannelAddressFromID() --> %o", err); reject(err); });
@@ -58,7 +58,6 @@ const EPNSCoreHelper = {
   // To retrieve a channel's Info from channel address
   getChannelInfo: async (channel, contract) => {
     const enableLogs = 0;
-
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
       contract.channels(channel)
@@ -113,12 +112,16 @@ const EPNSCoreHelper = {
     })
   },
   // Retrive IPFS File from ipfshash
-  getJsonFileFromIdentity: async(identity) => {
+  getJsonFileFromIdentity: async(identity, channel) => {
     const enableLogs = 0;
+
 
     return new Promise ((resolve, reject) => {
       // Split Channel Identity, delimeter of identity is "+"
-      const ids = identity.split("+"); // First segment is storage type, second is the pointer to it
+      if(!identity){
+        reject("There is no identity file for channel:",channel);
+      }
+      const ids = identity?.split("+") || []; // First segment is storage type, second is the pointer to it
 
       if (ids[0] == 1) {
         // IPFS HASH
@@ -146,7 +149,7 @@ const EPNSCoreHelper = {
       // To get channel info from a channel address
       EPNSCoreHelper.getChannelInfo(channel, contract)
         .then(response => EPNSCoreHelper.getChannelEvent(channel, response.channelStartBlock.toNumber(), response.channelUpdateBlock.toNumber(), contract))
-        .then(response => EPNSCoreHelper.getJsonFileFromIdentity(response))
+        .then(response => EPNSCoreHelper.getJsonFileFromIdentity(response, channel))
         .then(response => {
           if (enableLogs) console.log("getChannelJsonFromChannelAddress() --> %o", response);
           resolve(response);
@@ -163,8 +166,9 @@ const EPNSCoreHelper = {
 
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
-      EPNSCoreHelper.getUserInfo(user, contract)
-        .then(response => EPNSCoreHelper.getChannelJsonFromChannelAddress(user, contract))
+      // EPNSCoreHelper.getUserInfo(user, contract)
+      //   .then(response => EPNSCoreHelper.getChannelJsonFromChannelAddress(user, contract))
+        EPNSCoreHelper.getChannelJsonFromChannelAddress(user, contract)
         .then(response => {
           if (enableLogs) console.log("getChannelJsonFromUserAddress() --> %o", response);
           resolve(response);
@@ -289,11 +293,12 @@ const EPNSCoreHelper = {
   },
   // Get Total Subsbribed Channels
   getSubscribedStatus: async (user, channel, contract) => {
+
     return new Promise ((resolve, reject) => {
       // Get User Info from EPNS Core
-      contract.memberExists(user, channel)
+      contract.isUserSubscribed(channel, user)
         .then(response => {
-          console.log("getSubscribedStatus() --> %o", response);
+          // console.log("getSubscribedStatus() --> %o", {response, user, channel});
           resolve(response);
         })
         .catch(err => { console.log("!!!Error, getSubscribedStatus() --> %o", err); reject(err); });

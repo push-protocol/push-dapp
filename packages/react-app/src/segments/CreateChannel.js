@@ -5,7 +5,6 @@ import 'react-dropzone-uploader/dist/styles.css'
 import Dropzone from 'react-dropzone-uploader'
 
 import Loader from 'react-loader-spinner';
-import { bigNumberify, parseUnits } from 'ethers/utils'
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 

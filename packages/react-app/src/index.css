@@ -460,3 +460,24 @@ button, a, a:before, a:after {
 									   color-stop(0.72, #35b0f3),
 									   color-stop(0.86, #35a1f3));
 }
+
+/* style modification for react select */
+.select__control{
+  height: 100% !important;
+  border-radius: 0 !important;
+  border: 1px solid black !important;
+
+  box-shadow: unset !important;
+}
+.select__control:hover{
+  border-color: black !important;
+}
+
+.basic-single{
+  position: absolute !important;
+  width: 20% !important;
+  min-width: 200px !important;
+  z-index: 1 !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+}

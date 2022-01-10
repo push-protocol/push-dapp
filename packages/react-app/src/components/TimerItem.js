@@ -79,7 +79,7 @@ function TimerItem() {
           <Span textAlign="center" textTransform="uppercase" size="0.8em" spacing="0.2em" color="#fff" flex="inherit">{countdown.title}</Span>
         </Item>
 
-        {/* {timeRemaining > 0 && */}
+        {timeRemaining > 0 &&
           <ItemH size="3em">
             <Span color={hhTheme} weight="700" family="'Monstrat', Helvetica, sans-serif" margin="0px 5px">{time.hours}</Span>
             <Span color="#fff" weight="200">:</Span>
@@ -87,13 +87,13 @@ function TimerItem() {
             <Span color="#fff" weight="200">:</Span>
             <Span color={ssTheme} weight="700" family="'Monstrat', Helvetica, sans-serif" margin="0px 5px">{time.secs}</Span>
           </ItemH>
-        {/* } */}
+        }
 
         {countdown.showListing &&
           <></>
         }
 
-        {/* {countdown.button == true && */}
+        {countdown.button == true &&
           <>
             <Anchor
               href={`${countdown.href}`}
@@ -104,12 +104,15 @@ function TimerItem() {
               margin="10px -15px -15px -15px"
               self="stretch"
             >
-           We are going live on mainnet on 11th jan
+            We are going live on mainnet on 11th jan
             </Anchor>
           </>
-        {/* } */}
+        }
       </Item>
 
+      {/* <Item  > */}
+          {/* <Text>Hi I am waiting</Text> */}
+      {/* </Item> */}
     </Item>
   );
 }

@@ -30,7 +30,7 @@ function Faucets() {
             size="12px"
             weight="600"
           >
-            Get Free Ropsten Ether
+            Get Free Kovan Ether
           </Span>
 
           <Item margin="5px">
@@ -60,7 +60,7 @@ function Faucets() {
           <Item margin="5px">
             <Anchor
               direction="column"
-              href="https://faucet.ropsten.be/"
+              href="https://gitter.im/kovan-testnet/faucet"
               target="_blank"
               rel="nofollow"
             >
@@ -77,7 +77,7 @@ function Faucets() {
                 textTransform="uppercase"
                 radius="8px"
               >
-                Faucet Ropsten
+                Faucet Kovan
               </Span>
             </Anchor>
           </Item>
