@@ -34,8 +34,6 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${props => props.padding || "40px 0px"};
-  background: ${props => props.theme || 'transparent'};
-  background: ${props => props.gradient || 'undefined'};
   position: relative;
 `
 
@@ -48,7 +46,6 @@ export const Item = styled.div`
   flex-direction: column;
   flex-wrap: ${props => props.wrap || 'wrap'};
   position: ${props => props.position || 'relative'};
-  justify-content: center;
   background: ${props => props.bg || 'transparent'};
   flex: ${props => props.flex || '1'};
   flex-direction: ${props => props.direction || 'column'};
@@ -63,11 +60,17 @@ export const Item = styled.div`
   text-align: ${props => props.textAlign || "inherit"};
   filter: ${props => props.filter || "none"};
 
+  right: ${props => props.right || 'auto'};
+  left: ${props => props.left || 'auto'};
+  bottom: ${props => props.bottom || 'auto'};
+  top: ${props => props.top || 'auto'};
+
   width: ${props => props.width || "auto" };
   height: ${props => props.height || "auto" };
 
   border: ${props => props.border || "none"};
-
+  border-bottom: ${props => props.borderBottom || "none"};
+  
   border-radius: ${props => props.radius || "0px"};
   overflow: ${props => props.overflow || "initial"};
 
@@ -88,7 +91,7 @@ export const Item = styled.div`
 export const ItemH = styled(Item)`
   flex-direction: row;
   flex: ${props => props.flex || '1'};
-
+  
   ${ItemBreak} {
     width: auto;
     height: 0;
@@ -227,6 +230,9 @@ export const UL = styled.ul`
 
 `
 
+export const OL = styled.ol`
+`
+
 export const LI = styled.li`
   margin: 10px 0px;
 `
@@ -314,16 +320,16 @@ export const Button = styled.button`
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
+  text-transform: ${props => props.textTransform || 'normal'};
+  letter-spacing: ${props => props.spacing || 'normal'};
   font-weight: ${props => props.weight || 400};
   font-size: ${props => props.size || "inherit"};
   color: ${props => props.color || "#fff"};
   background: ${props => props.bg || "tranparent"};
   margin: ${props => props.margin || "0"};
   padding: ${props => props.padding || "10px 15px"};
-  letter-spacing: ${props => props.spacing || "initial"};
   border: ${props => props.border || "none"};
   border-radius: ${props => props.radius || "0px"};
-  text-transform: ${props => props.textTransform || "initial"};
 
   position: relative;
   text-decoration: none;
@@ -399,7 +405,6 @@ export const Showoff = styled.div`
 export const FormSubmision = styled.form`
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
 
   flex: ${props => props.flex || 'initial'};
   align-self: ${props => props.self || 'auto'};

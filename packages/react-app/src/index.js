@@ -1,5 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+
 import { ethers } from "ethers";
 import { Provider } from "react-redux";
 import { Web3ReactProvider } from "@web3-react/core";
@@ -36,13 +38,15 @@ function getLibrary(provider) {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <ApolloProvider client={client}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <App />
-      </Web3ReactProvider>
-    </ApolloProvider>
-  </Provider>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <App />
+        </Web3ReactProvider>
+      </ApolloProvider>
+    </Provider>
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

@@ -1,17 +1,30 @@
-import React from "react";
+import React, {useState} from "react";
 import ReactGA from "react-ga";
-import { ToastContainer } from "react-toastify";
+import { Routes, Route, Link } from "react-router-dom";
+
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
-import Home from "pages/Home";
-import Header from "segments/Header";
-import styled from "styled-components";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+
+import styled, {ThemeProvider} from "styled-components";
 import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 
-import "react-toastify/dist/ReactToastify.min.css";
+import Header from "sections/Header";
+import LeftBar from "sections/LeftBar";
+
+import Home from "pages/Home";
+import Feedbox from "pages/Feedbox";
+import Channels from "pages/Channels";
+
+import InboxPage from "pages/InboxPage";
+
+import { themeLight, themeDark } from "config/Themization";
+import GLOBALS from "config/Globals";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -49,22 +62,51 @@ export default function App() {
   const triedEager = useEagerConnect();
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
+  
   // Initialize GA
   ReactGA.initialize("UA-165415629-5");
   ReactGA.pageview("/login");
   // Initialize GA
 
+  // Initialize Theme
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  }
+
   return (
-    <>
-      <HeaderContainer>
-        <Header/>
+    <ThemeProvider theme={darkMode ? themeDark : themeLight }>
+      <HeaderContainer style={{backgroundColor: "black"}}>
+        <Header 
+          isDarkMode={darkMode}
+          darkModeToggle={() => {toggleDarkMode()}}
+        />
       </HeaderContainer>
 
-      <ParentContainer>
+      <ParentContainer
+        headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+      >
+        
+        {active && 
+          <LeftBarContainer
+            leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
+          >
+            <LeftBar />
+          </LeftBarContainer>
+        }
+
         {active && !error && (
-          <HomeContainer>
-            <Home />
-          </HomeContainer>
+          <ContentContainer
+            leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
+          >
+            <Interface>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="inbox" element={<InboxPage />} />
+              </Routes>
+            </Interface>
+          </ContentContainer>
         )}
 
         {!active && (
@@ -149,7 +191,7 @@ export default function App() {
         pauseOnFocusLoss
         draggable
       />
-    </>
+    </ThemeProvider>
   );
 }
 
@@ -166,19 +208,44 @@ const HeaderContainer = styled.header`
 const ParentContainer = styled.div`
   flex-wrap: wrap;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
-  margin: 80px 20px 50px 20px;
   flex: 1;
+  background: ${props => props.theme.mainBg};
+  margin: ${props => props.headerHeight}px 0px 0px 0px;
 `;
 
-const HomeContainer = styled.div`
+const LeftBarContainer = styled.div`
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: ${props => props.leftBarWidth}px;
+  position: fixed;
+`
+
+const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   align-self: center;
   width: 100%;
   max-width: 1100px;
+
+  margin: 20px 20px 20px ${props => props.leftBarWidth + 20}px;
 `;
+
+const Interface = styled(Item)`
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+
+  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  border: 1px solid rgb(225, 225, 225);
+  max-height: calc(100vh - 140px);
+
+  margin: 15px;
+  overflow: hidden;
+`
 
 const ProviderLogo = styled.img`
   width: 15vw;
@@ -234,9 +301,7 @@ const ProviderLabel = styled.span`
   margin: 5px;
 `;
 
-const StyledContainer = styled(ToastContainer).attrs({
-  // custom props
-})`
+const StyledContainer = styled(ToastContainer).attrs({})`
   .Toastify__toast-container {
   }
   .Toastify__toast {

@@ -3,7 +3,7 @@ import React from "react";
 import { addresses, abis } from "@project/contracts";
 import { ethers, utils, BigNumber} from "ethers";
 //import { parseEther, bigNumber } from 'ethers/utils'
-const claims = require("config/claims.json")
+const claims = require("config/airdrop/claims.json")
 
 // Airdrop Helper Functions
 const AirdropHelper = {

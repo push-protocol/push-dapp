@@ -18,7 +18,7 @@ const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 
 // Create Header
-function ViewChannels() {
+function Channels() {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
@@ -295,4 +295,4 @@ const SearchIconImage = styled.img`
 `;
 
 // Export Default
-export default ViewChannels;
+export default Channels;

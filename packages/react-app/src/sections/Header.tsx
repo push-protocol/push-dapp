@@ -1,8 +1,5 @@
 import React from "react";
 
-import styled, { css } from "styled-components";
-import {Section, Item, ItemH, Button} from 'components/SharedStyling';
-
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import {
   NoEthereumProviderError,
@@ -10,12 +7,17 @@ import {
 } from '@web3-react/injected-connector'
 import { Web3Provider } from 'ethers/providers'
 
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
+
+import styled, { css } from "styled-components";
+import {Section, Item, ItemH, Button} from 'components/SharedStyling';
+
 import Profile from 'components/Profile';
 import Bell from 'components/Bell';
 
 
 // Create Header
-function Header() {
+function Header({ isDarkMode, darkModeToggle }) {
   const context = useWeb3React<Web3Provider>()
 
   const { active, error } = useWeb3React();
@@ -48,7 +50,7 @@ function Header() {
   }
 
   return (
-    <HeaderContainer
+    <Container
       direction="row"
       padding="10px 15px"
     >
@@ -75,6 +77,28 @@ function Header() {
             height={32}
           />
         }
+      
+      <Item
+        flex="initial"
+        justify="flex-end"
+        padding="16px"
+        margin="0px 10px 0px 0px"
+        position="relative"
+        border-radius="100%"
+      >
+        <Item
+          position="absolute"
+          top="4px"
+        >
+          <DarkModeSwitch
+            style={{ marginBottom: '2rem' }}
+            checked={isDarkMode}
+            onChange={darkModeToggle}
+            size={24}
+            sunColor="#ddd"
+          />
+        </Item>
+      </Item>
 
         {showLoginControls &&
           <Item
@@ -107,15 +131,14 @@ function Header() {
           <Connection phase={active ? 'active' : error ? 'error' : 'waiting'} />
         </ItemH>
       </ItemH>
-    </HeaderContainer>
+    </Container>
   );
 }
 
 // CSS Styles
-const HeaderContainer = styled(Section)`
-  @media (max-width: 1440px) {
-    background: rgb(255,255,255);
-  }
+const Container = styled(Section)`
+  background: ${props => props.theme.headerBg};
+  border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
 `
 
 const Logo = styled.img`
