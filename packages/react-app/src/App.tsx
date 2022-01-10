@@ -27,7 +27,7 @@ import {
 } from 'connectors'
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-
+import TimerComponent from './segments/TimerComponent';
 import Home from 'pages/Home';
 import Header from 'segments/Header';
 
@@ -109,6 +109,9 @@ function App() {
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector)
 
+
+  // Timer component
+  // return <div> <TimerComponent/> 
   return (
       <>
         <HeaderContainer>
