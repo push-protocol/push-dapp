@@ -59,6 +59,7 @@ function ViewChannels() {
       channelsVisited,
       CHANNELS_PER_PAGE
     );
+    dispatch(incrementPage())
     if (!channels.length) {
       dispatch(setChannelMeta(channelsMeta));
     }
@@ -88,9 +89,6 @@ function ViewChannels() {
     setChannelToShow(channels);
   }, [channels]);
 
-  console.log("\n\n");
-  console.log("\n\n");
-  console.log({ channels });
 
   function searchForChannel() {
     if (loadingChannel) return; //if we are already loading, do nothing

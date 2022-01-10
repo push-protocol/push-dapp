@@ -3,12 +3,14 @@ import contractReducer from './slices/contractSlice';
 import channelReducer from './slices/channelSlice';
 import adminReducer from './slices/adminSlice';
 import notificationReducer from './slices/notificationSlice';
+import spamReducer from './slices/spamSlice';
 
 const rootReducer = combineReducers({
 	contracts: contractReducer,
     channels: channelReducer,
     admin: adminReducer,
-	notifications: notificationReducer
+	notifications: notificationReducer,
+	spam: spamReducer
 });
 
 const store = configureStore({

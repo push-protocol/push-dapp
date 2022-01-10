@@ -104,7 +104,7 @@ function TimerItem() {
               margin="10px -15px -15px -15px"
               self="stretch"
             >
-            We are going live on mainnet on 11th jan
+            We are going live on mainnet on 11th jan 2022
             </Anchor>
           </>
         }

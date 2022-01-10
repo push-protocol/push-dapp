@@ -1,5 +1,5 @@
 /**
- * This file helps us maintain the notifications fetched in state, so when tabs are switched we can retain the notification information
+ * This file helps us maintain the spamnotifications fetched in state, so when tabs are switched we can retain the notification information
  */
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -11,7 +11,7 @@ const initialState = {
 }
 
 export const contractSlice = createSlice({
-    name: "notifications",
+    name: "spam",
     initialState,
     reducers: {
         toggleToggler: (state) => {
@@ -36,7 +36,6 @@ export const contractSlice = createSlice({
             state.finishedFetching = true;
         },
         updateTopNotifications: (state, action) => {
-            console.log({pp: action.payload});
             state.notifications = [...action.payload.notifs, ...state.notifications.slice(action.payload.pageSize)];
             console.log({sn: state.notifications});
         }

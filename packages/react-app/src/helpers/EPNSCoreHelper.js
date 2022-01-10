@@ -149,7 +149,12 @@ const EPNSCoreHelper = {
       // To get channel info from a channel address
       EPNSCoreHelper.getChannelInfo(channel, contract)
         .then(response => EPNSCoreHelper.getChannelEvent(channel, response.channelStartBlock.toNumber(), response.channelUpdateBlock.toNumber(), contract))
-        .then(response => EPNSCoreHelper.getJsonFileFromIdentity(response, channel))
+        .then(response => {
+          // add little hack for now to change coindesk's descriptioon
+          const hash = channel === "0x8C28Cf33d9Fd3D0293f963b1cd27e3FF422B425c" ? "1+bafkreif643vf3cteadznccivnsk5uj26e3ls7onbshnldb3aej3omrxsau" : response
+          return EPNSCoreHelper.getJsonFileFromIdentity(hash, channel)
+          // return EPNSCoreHelper.getJsonFileFromIdentity(response, channel)
+        })
         .then(response => {
           if (enableLogs) console.log("getChannelJsonFromChannelAddress() --> %o", response);
           resolve(response);

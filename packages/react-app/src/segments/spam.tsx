@@ -14,27 +14,31 @@ import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-} from "redux/slices/notificationSlice";
+} from "redux/slices/spamSlice";
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
+import { updateTopNotifications } from "redux/slices/notificationSlice";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-function SpamBox() {
+function SpamBox({ currentTab }) {
   const dispatch = useDispatch();
   const { account, chainId, library } = useWeb3React();
-  const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
-  const [spams, setSpams] = React.useState([]);
-  const [page, setPage] = React.useState(1);
-  const [finishedFetching, setFinishedFetching] = React.useState(false);
-  const { notifications } = useSelector((state: any) => state.notifications);
-  const [counter, setCounter] = React.useState(0);
+  const { epnsCommReadProvider } = useSelector(
+    (state: any) => state.contracts
+  );
+
+  const { notifications, page, finishedFetching } = useSelector((state: any) => state.spam);
+  const { toggle } = useSelector(
+    (state: any) => state.notifications
+  );
   const EPNS_DOMAIN = {
     name: "EPNS COMM V1",
     chainId: chainId,
-    verifyingContract: epnsCommReadProvider.address,
+    verifyingContract: epnsCommReadProvider?.address,
   };
 
+  const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   const loadNotifications = async () => {
@@ -47,15 +51,24 @@ function SpamBox() {
         page,
         envConfig.apiUrl
       );
-      const parsedResponse = utils
+      const parsedResponsePromise = utils
         .parseApiResponse(results)
-        .map((elem: any, i: any) => {
+        .map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
+          const {
+            data: { subscribers },
+          } = await postReq("/channels/get_subscribers", {
+            channel: results[i].channel,
+            op: "read",
+          });
+          elem.subscribers = subscribers;
           return { ...elem };
         });
-      setSpams((s) => [...s, ...parsedResponse]);
+      const parsedResponse = await Promise.all(parsedResponsePromise);
+      // get all the subsc
+      dispatch(addPaginatedNotifications(parsedResponse));
       if (count === 0) {
-        setFinishedFetching(true);
+        dispatch(setFinishedFetching());
       }
     } catch (err) {
       console.log(err);
@@ -63,6 +76,58 @@ function SpamBox() {
       setLoading(false);
     }
   };
+
+  const fetchLatestNotifications = async () => {
+    if (loading || bgUpdateLoading) return;
+    setBgUpdateLoading(true);
+    setLoading(true);
+
+    try {
+      const { count, results } = await api.fetchSpamNotifications(
+        account,
+        NOTIFICATIONS_PER_PAGE,
+        1,
+        envConfig.apiUrl
+      );
+      if (!notifications.length) {
+        dispatch(incrementPage());
+      }
+      const parsedResponsePromise = utils
+        .parseApiResponse(results)
+        .map(async (elem: any, i: any) => {
+          elem.channel = results[i].channel;
+          const {
+            data: { subscribers },
+          } = await postReq("/channels/get_subscribers", {
+            channel: results[i].channel,
+            op: "read",
+          });
+          elem.subscribers = subscribers;
+          return { ...elem };
+        });
+      const parsedResponse = await Promise.all(parsedResponsePromise);
+      dispatch(
+        updateTopNotifications({
+          notifs: parsedResponse,
+          pageSize: NOTIFICATIONS_PER_PAGE,
+        })
+      );
+      if (count === 0) {
+        dispatch(setFinishedFetching());
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setBgUpdateLoading(false);
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (account && currentTab === "spambox") {
+      fetchLatestNotifications();
+    }
+  }, [account, currentTab]);
 
   React.useEffect(() => {
     if (epnsCommReadProvider) {
@@ -73,11 +138,15 @@ function SpamBox() {
   //function to query more notifications
   const handlePagination = async () => {
     loadNotifications();
-    setPage((p) => p + 1);
+    dispatch(incrementPage());
   };
 
   const showWayPoint = (index: any) => {
-    return Number(index) === notifications.length - 1 && !finishedFetching;
+    return (
+      Number(index) === notifications.length - 1 &&
+      !finishedFetching &&
+      !bgUpdateLoading
+    );
   };
 
   const onSubscribeToChannel = async (channelAddress) => {
@@ -108,32 +177,24 @@ function SpamBox() {
     });
   };
 
-  const isSubscribedFn = async (channelAddr: any) => {
-    return await postReq("/channels/get_subscribers", {
-      channel: channelAddr,
-      op: "read",
-    })
-      .then(({ data }) => {
-        const subs = data.subscribers;
-        const subscribed = subs.includes(account);
-        if (!subscribed) {
-          setCounter((c) => c + 1);
-        }
-        return subscribed;
-      })
-      .catch((err) => {
-        console.log(`getChannelSubscribers => ${err.message}`);
-        return [];
-      });
+  const isSubscribedFn = async (subscribers: any) => {
+    return subscribers
+      .map((a) => a.toLowerCase())
+      .includes(account.toLowerCase());
   };
 
   // Render
   return (
     <>
       <Container>
-        {spams && (
+        {bgUpdateLoading && (
+          <div style={{ marginTop: "10px" }}>
+            <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+          </div>
+        )}
+        {notifications && (
           <Items id="scrollstyle-secondary">
-            {spams.map((oneNotification, index) => {
+            {notifications.map((oneNotification, index) => {
               const {
                 cta,
                 title,
@@ -142,11 +203,12 @@ function SpamBox() {
                 icon,
                 image,
                 channel,
+                subscribers,
               } = oneNotification;
               // render the notification item
               return (
                 <div key={`${message}+${title}`}>
-                  {showWayPoint(index) && (
+                  {showWayPoint(index) && !loading && (
                     <Waypoint onEnter={() => handlePagination()} />
                   )}
                   <NotificationItem
@@ -156,19 +218,22 @@ function SpamBox() {
                     app={app}
                     icon={icon}
                     image={image}
-                    subscribeFn={() => onSubscribeToChannel(channel)}
+                    subscribeFn={(e) => {
+                      e?.stopPropagation();
+                      onSubscribeToChannel(channel);
+                    }}
                     isSpam
-                    isSubscribedFn={async () => isSubscribedFn(channel)}
+                    isSubscribedFn={async () => isSubscribedFn(subscribers)}
                   />
                 </div>
               );
             })}
           </Items>
         )}
-        {loading && (
+        {loading && !bgUpdateLoading && (
           <Loader type="Oval" color="#35c5f3" height={40} width={40} />
         )}
-        {!loading && (!counter || !spams.length) && (
+        {!loading && !notifications.length && (
           <CenteredContainerInfo>
             <DisplayNotice
               title="You currently have no spam notifications."

@@ -349,18 +349,22 @@ function CreateChannel() {
                 accept="image/jpeg,image/png"
               />
             </Item>
-            <Item align="flex-end">
-              <Minter
-                onClick={() => {
-                  mintDai();
-                }}
-              >
-                <Pool>
-                  <br></br>
-                  <PoolShare>Get Free DAI for Channel</PoolShare>
-                </Pool>
-              </Minter>
-            </Item>
+            {
+              chainId != 1 ? (
+              <Item align="flex-end">
+                <Minter
+                  onClick={() => {
+                    mintDai();
+                  }}
+                >
+                  <Pool>
+                    <br></br>
+                    <PoolShare>Get Free DAI for Channel</PoolShare>
+                  </Pool>
+                </Minter>
+              </Item>
+              ): <></>
+            }
           </Content>
         </Section>
       )}

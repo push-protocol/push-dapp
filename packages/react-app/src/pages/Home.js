@@ -33,7 +33,7 @@ import {
   setCanVerify,
   setDelegatees,
 } from "redux/slices/adminSlice";
-import { addNewNotification } from "redux/slices/notificationSlice";
+import { addNewNotification, toggleToggler, resetState } from "redux/slices/notificationSlice";
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
@@ -73,76 +73,6 @@ function Home() {
         "Please connect to the Kovan network to access channels",
     });
   };
-  /**
-   * Event listener for new notifications
-   */
-  const listenFornewNotifications = () => {
-    const event = "SendNotification";
-    //callback function for listener
-    const cb = async (eventChannelAddress, eventUserAddress, identityHex) => {
-      const userAddress = account;
-      const identity = hex2ascii(identityHex);
-      const notificationId = identity
-        .concat("+")
-        .concat(eventChannelAddress)
-        .concat("+")
-        .concat(eventUserAddress)
-        .toLocaleLowerCase();
-      const ipfsId = identity.split("+")[1];
-      const channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-        eventChannelAddress
-      );
-
-      // Form Gateway URL
-      const url = "https://ipfs.io/ipfs/" + ipfsId;
-      fetch(url)
-        .then((result) => result.json())
-        .then(async (result) => {
-          const ipfsNotification = { ...result };
-          const notificationTitle =
-            ipfsNotification.notification.title !== ""
-              ? ipfsNotification.notification.title
-              : channelJson.name;
-          const toastMessage = {
-            notificationTitle,
-            notificationBody: ipfsNotification.notification.body,
-          };
-          const notificationObject = {
-            title: notificationTitle,
-            message: ipfsNotification.data.amsg,
-            cta: ipfsNotification.data.acta,
-            app: channelJson.name,
-            icon: channelJson.icon,
-            image: ipfsNotification.data.aimg,
-          };
-
-          if (ipfsNotification.data.type === "1") {
-            const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
-              eventChannelAddress
-            );
-            const isSubscribed = channelSubscribers.find((sub) => {
-              return sub.toLowerCase() === account.toLowerCase();
-            });
-            if (isSubscribed) {
-              console.log("message recieved", notificationObject);
-              showToast(toastMessage);
-              dispatch(addNewNotification(notificationObject));
-            }
-          } else if (userAddress === eventUserAddress) {
-            showToast(toastMessage);
-            dispatch(addNewNotification(notificationObject));
-          }
-        })
-        .catch((err) => {
-          console.log(
-            "!!!Error, getting new notification data from ipfs --> %o",
-            err
-          );
-        });
-    };
-    epnsCommReadProvider.on(event, cb);
-    return () => epnsCommReadProvider.off.bind(epnsCommReadProvider, event, cb); //when we unmount we remove the listener
-  };
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -151,6 +81,11 @@ function Home() {
     }
   }, [toast]);
   // toast related section
+
+  React.useEffect(() => {
+    dispatch(resetState());
+    setTimeout(() => dispatch(toggleToggler()), 300)
+  }, [account]);
 
   /**
    * Logic to get channel alias and alias verification status as well as create instances of core and comunicator contract
@@ -261,7 +196,6 @@ function Home() {
         epnsCommReadProvider
       );
       checkUserForChannelOwnership();
-      listenFornewNotifications();
       fetchDelegators();
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
@@ -464,27 +398,12 @@ function Home() {
             Receive Notifs
           </ControlText>
         </ControlButton>
-
-        <ControlButton
-          index={4}
-          active={controlAt == 4 ? 1 : 0}
-          border="#e20880"
-          onClick={() => {
-            userClickedAt(4);
-          }}
-        >
-          <ControlImage src="./svg/feedbox.svg" active={controlAt == 3 ? 1 : 0} />
-          <ControlText active={controlAt == 3 ? 1 : 0}>
-            Spam Notifications
-          </ControlText>
-        </ControlButton>
       </Controls>
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
-        {controlAt == 4 && <SpamBox />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}

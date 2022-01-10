@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
-    "@epnsproject/frontend-sdk-staging": "^1.4.2",
+    "@epnsproject/frontend-sdk-staging": "1.4.2",
     "@ethersproject/providers": "^5.0.0-beta.151",
     "@ethersproject/units": "^5.0.0-beta.132",
     "@material-ui/core": "4.11.0",
@@ -64,7 +64,6 @@
     "react-loader-spinner": "3.1.14",
     "react-redux": "^7.2.6",
     "react-scripts": "^3.3.1",
-    "react-select": "^5.2.1",
     "react-spinners": "0.8.3",
     "react-toastify": "6.0.9",
     "react-tooltip": "^4.2.21",
@@ -84,6 +83,8 @@
     "extends": "react-app"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "start": "react-scripts start",
