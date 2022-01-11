@@ -34,11 +34,11 @@ import {
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
 export const ALLOWED_CORE_NETWORK = 1; //chainId of network which we have deployed the core contract on
-const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
+const CHANNEL_TAB = 0; //Default to 1 which is the channel tab
 
 // Create Header
 function InboxPage() {
-  ReactGA.pageview("/home");
+  ReactGA.pageview("/inbox");
 
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();

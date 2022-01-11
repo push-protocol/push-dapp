@@ -1,5 +1,10 @@
 import React from "react";
+
 import styled, { css } from 'styled-components';
+import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+
+import StackGrid, { transitions } from "react-stack-grid";
+
 import Loader from 'react-loader-spinner'
 import { Waypoint } from "react-waypoint";
 
@@ -11,6 +16,8 @@ import { ethers } from "ethers";
 import DisplayNotice from "components/DisplayNotice";
 import ViewNFTItem from "components/ViewNFTItem";
 
+
+const { scaleDown } = transitions;
 
 // Create Header
 function AllNFTs({controlAt, setControlAt, setTokenId}) {
@@ -53,12 +60,12 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
   }
 
   return (
-    <>
+    <Section align="center">
       {loading &&
         <ContainerInfo>
           <Loader
            type="Oval"
-           color="#35c5f3"
+           color="#674c9f"
            height={40}
            width={40}
           />
@@ -67,17 +74,17 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
 
       {!loading && NFTObjects.length == 0 &&
         <ContainerInfo>
-          <DisplayNotice
-            title="That's weird, No ROCKSTAR NFTs in EPNS... world is ending... right?"
-            theme="primary"
+          <Loader
+           type="Oval"
+           color="#674c9f"
+           height={40}
+           width={40}
           />
         </ContainerInfo>
       }
-      
 
       {!loading && NFTObjects.length != 0 &&
-        <Items id="scrollstyle-secondary">
-
+        <ItemH id="scrollstyle-secondary">
           {Object.keys(NFTObjects).map(index => {
             if (NFTObjects) {
               return (
@@ -87,18 +94,17 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
                   NFTObject={NFTObjects[index]}
                   nftReadProvider={nftReadProvider}
                   nftWriteProvider={nftWriteProvider}
-                  controlAt={controlAt} 
+                  controlAt={controlAt}
                   setControlAt={setControlAt}
-                  setTokenId={setTokenId} 
+                  setTokenId={setTokenId}
                 />
                 </>
               );
             }
-            
           })}
-        </Items>
+        </ItemH>
       }
-    </>
+    </Section>
   );
 }
 

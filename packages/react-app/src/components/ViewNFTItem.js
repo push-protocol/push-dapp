@@ -1,5 +1,8 @@
 import React from "react";
-import styled, { css } from 'styled-components';
+
+import styled, { css, keyframes } from "styled-components";
+import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+
 import { Device } from 'assets/Device';
 
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,13 +10,15 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import Loader from 'react-loader-spinner';
 
 import Skeleton from '@yisheng90/react-loading';
-import { IoMdPeople } from 'react-icons/io';
+import { IoIosGift } from 'react-icons/io';
 import { GiTwoCoins } from 'react-icons/gi';
 
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-//import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
+import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
+
+import ReactPlayer from 'react-player'
 
 import NFTHelper from 'helpers/NFTHelper';
 
@@ -97,83 +102,64 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
 
   // render
   return (
-    <Container key={NFTObject.id}>
-      <ChannelLogo>
+    <Item
+      key={NFTObject.id}
+    >
+      <ChannelLogo
+        theme={
+          !!account && !!library && account == NFTObject.owner ?
+            "#e20880" :
+            !!account && !!library && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB ?
+              "#eee" :
+              "#fff"
+        }
+      >
         <ChannelLogoOuter>
           <ChannelLogoInner>
-          {loading &&
-            <Skeleton color="#eee" width="100%" height="100%" />
-          }
-          {!loading &&
-              <ChannelLogoImg src= {`https://ipfs.io/ipfs/${NFTObject.metadata}`} onError={(e) => (e.target.onerror = null, e.target.src = "./image-not-available.jpeg")}/>
-          }
+            {loading &&
+              <Skeleton color="#eee" width="100%" height="100%" />
+            }
+            {!loading &&
+              <ReactPlayer url={`https://ipfs.io/ipfs/${NFTObject.metadata}`} controls={true} playing={false} loop={true}/>
+            }
+            {!!account && !!library && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB &&
+              <NFTStatus>
+                <IoIosGift size={20} color="#fff"/>
+                <NFTStatusTitle>
+                  Gifted
+                </NFTStatusTitle>
+              </NFTStatus>
+            }
+
+            {!!account && !!library && NFTObject.claimable &&
+              <NFTClaim>
+                <NFTClaimTitle>
+                  2400 $PUSH
+                </NFTClaimTitle>
+              </NFTClaim>
+            }
           </ChannelLogoInner>
         </ChannelLogoOuter>
-      </ChannelLogo>
 
-      <ChannelInfo>
-        <ChannelTitle>
-          {loading &&
-            <Skeleton color="#eee" width="50%" height={24} />
-          }
-          {!loading &&
-            <ChannelTitleLink>{NFTObject.id}</ChannelTitleLink>
-          }
-        </ChannelTitle>
-        {controlAt == 1 &&
-          <ChannelMeta>
-          {loading &&
-            <>
-              <SkeletonWrapper atH={10} atW={30} marginBottom="0">
-                <Skeleton />
-              </SkeletonWrapper>
-            </>
-          }
-          {!loading &&
-            <>
-              <Subscribers>
-                <IoMdPeople size={20} color="#ccc"/>
-                <SubscribersCount>
-                  {NFTObject.owner}
-                </SubscribersCount>
-              </Subscribers>
-              <Pool>
-                <GiTwoCoins size={20} color="#ccc"/>
-                {NFTObject.claimable &&
-                  <PoolShare>
-                  Claimable
-                </PoolShare>
-                }
-                {!NFTObject.claimable &&
-                  <PoolShare>
-                  Claimed
-                </PoolShare>
-                }
-              </Pool>
-            </>
-          }
-        </ChannelMeta>
-        }
-      </ChannelInfo>
-      {!!account && !!library && controlAt == 0 &&
-        <>
-          <LineBreak />
+      {!!account && !!library &&
+        <ItemH>
+
           <ChannelActions>
             {loading &&
               <SkeletonButton>
                 <Skeleton />
               </SkeletonButton>
             }
-            {!loading && 
+            {!!account && !!library && account == NFTObject.owner && !loading &&
               <UnsubscribeButton >
                 <ActionTitle onClick={() => {
-                  setTokenId(NFTObject.id) 
+                  setTokenId(NFTObject.id)
                   setControlAt(2)
                 }}
                   >Transfer</ActionTitle>
               </UnsubscribeButton>
             }
-            {!loading && 
+            {!!account && !!library && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled = {!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
@@ -186,7 +172,7 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
                     </ActionLoader>
                   }
                   {NFTObject.claimable &&
-                    <ActionTitle hideit={txInProgress} onClick={() => {handleClaim(NFTObject.id)}}>Claim Rewards </ActionTitle>
+                    <ActionTitle hideit={txInProgress} onClick={() => {handleClaim(NFTObject.id)}}>Claim $PUSH</ActionTitle>
                   }
                   {!NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} >Rewards Claimed</ActionTitle>
@@ -194,13 +180,51 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
                 </UnsubscribeButton>
             }
           </ChannelActions>
-        </>
+        </ItemH>
       }
-    </Container>
+      </ChannelLogo>
+    </Item>
   );
 }
 
 // css styles
+const NFTTextStyle = styled.label`
+  margin: 0px 5px;
+  color: #fff;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+`
+
+const NFTStatus = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+`
+
+const NFTStatusTitle = styled(NFTTextStyle)`
+  background: #35c4f3;
+`
+
+const NFTClaim = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+`
+
+const NFTClaimTitle = styled(NFTTextStyle)`
+  background: #e20880;
+`
+
 const Container = styled.div`
   flex: 1;
   // display: inline;
@@ -226,8 +250,9 @@ const SkeletonWrapper = styled.div`
 `
 
 const ChannelLogo = styled.div`
-  max-width: 100px;
-  min-width: 32px;
+  background: ${props => props.theme || '#fff'};
+  max-width: 25%;
+  min-width: 200px;
   flex: 1;
   margin: 5px;
   padding: 10px;
@@ -237,7 +262,7 @@ const ChannelLogo = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-self: flex-start;
+  align-self: center;
 `
 
 const ChannelLogoOuter = styled.div`
@@ -397,6 +422,7 @@ const ChannelActionButton = styled.button`
 `
 
 const ActionTitle = styled.span`
+  font-size: 12px;
   ${ props => props.hideit && css`
     visibility: hidden;
   `};
@@ -430,7 +456,7 @@ const SubscribeButton = styled(ChannelActionButton)`
 `
 
 const UnsubscribeButton = styled(ChannelActionButton)`
-  background: #674c9f;
+  background: #000;
 `
 
 const OwnerButton = styled(ChannelActionButton)`

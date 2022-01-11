@@ -12,11 +12,12 @@ import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "components/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
+
 import Info from "segments/Info";
 import SpamBox from "segments/spam";
-import Feedbox from "segments/Feedbox";
 
 import Channels from "pages/Channels";
+import Feedbox from "pages/Feedbox";
 
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelCreationDashboard from "segments/ChannelCreationDashboard";

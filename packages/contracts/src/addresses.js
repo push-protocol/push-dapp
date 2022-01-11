@@ -5,17 +5,25 @@ const addresses = {
   epnscore: "0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE",
   epnsEthComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ropsten core contract
   epnsPolyComm: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa", // the ploygon comm contract
+  
   dai: "0x6B175474E89094C44Da98b954EedeAC495271d0F", //address for dai
   aDai: "0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201",
-  staking: "0xd9218bb2a7Ff0131555A9b6F179fF5103a27a286",
-  yieldFarmPUSH: "0xFe0bcF750d4042480943CC8bA818CA3482DDf691",
-  yieldFarmLP: "0xE65fE4a8BCEB8A71D6A8D06dF2D91a9637081c61",
-  epnsToken: "0x38c4A4C7fa26eA48E34C45a9F6bDb5DA3f599c55",
-  epnsLPToken: "0x69E12FfD1170d851c096FfEC6A8eF27D26D96c0f",
-  rockstar: "0xCD1B6C8DDB9A735AA5961Ab4aa5B513fba23A3a3", //ropsten address
-  batchMintNFT: "0x9A20272669BBAa6254358ba4BB0520fFc813691C", //ropsten address
-  NFTRewards: "0x1f4CA0b2B0541b942A440A3f6673883eEacb2cb3", //ropsten address
-  distributor: "0x4Cd9Fe2E0acb9BC28fA51106b99825bd7a02309e", //ropsten address
+
+  staking: "0xB72ff1e675117beDefF05a7D0a472c3844cfec85",
+  yieldFarmPUSH: "0x6019B84E2eE9EB62BC42E32AB6375A7095886366",
+  yieldFarmLP: "0xbB2A70e67770D0A7F5f42d883C5BBE9b85e0DcD6",
+  epnsToken: "0xf418588522d5dd018b425E472991E52EBBeEEEEE",
+  epnsLPToken: "0xaf31fd9c3b0350424bf96e551d2d1264d8466205",
+
+  uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+
+  WETHAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", // mainnet address
+  USDTAddress: "0xdac17f958d2ee523a2206206994597c13d831ec7", // mainnet address
+
+  rockstar: "0x3f8C2152b79276b78315CAF66cCF951780580A8a", //mainnet address
+  batchMintNFT: "0x6BaeeD93336B277D8949Cb89161269032698f443", //mainnet address
+  NFTRewards: "0xc4708BB6EC3B797344f123126171302e4e3E68E2", //mainnet address
+  distributor: "0x64CfAb2eA55ADAe08c9040fdA247828444fB9D0D", //mainnet address
 };
 
 export default addresses;

@@ -209,7 +209,7 @@ function SpamBox({ currentTab }) {
               return (
                 <div key={`${message}+${title}`}>
                   {showWayPoint(index) && !loading && (
-                    <Waypoint onEnter={() => handlePagination()} />
+                    <Waypoint onEnter={handlePagination} />
                   )}
                   <NotificationItem
                     notificationTitle={title}

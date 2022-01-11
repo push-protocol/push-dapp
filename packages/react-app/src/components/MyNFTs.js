@@ -24,7 +24,7 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    
+
     if (!!(library && account)) {
       const contractInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, library);
       setNftReadProvider(contractInstance);
@@ -74,7 +74,7 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
           />
         </ContainerInfo>
       }
-      
+
 
       {!loading && NFTObjects.length != 0 &&
         <Items id="scrollstyle-secondary">
@@ -87,13 +87,13 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
                   NFTObject={NFTObjects[index]}
                   nftReadProvider={nftReadProvider}
                   nftWriteProvider={nftWriteProvider}
-                  controlAt={controlAt} 
-                  setControlAt={setControlAt} 
+                  controlAt={controlAt}
+                  setControlAt={setControlAt}
                   setTokenId={setTokenId}
                 />
               );
             }
-            
+
           })}
         </Items>
       }

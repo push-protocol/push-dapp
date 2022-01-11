@@ -20,174 +20,179 @@ import GLOBALS from "config/Globals";
 // Create Header
 function LeftBar() {
     const [sectionOverride, setSectionOverride] = useState([])
+    const [menuList, setMenuList] = useState([])
+    const [loading, setLoading] = useState(false);
 
     const theme = useTheme();
     const location = useLocation();
 
-    let leftBarPrimaryList = [];
-    let count = -1;
-    Object.entries(LeftBarList.sections).forEach(([key, value]) => {
-        count++;
-        let identifier = count.toString();
+    // Similar to componentDidMount and componentDidUpdate:
+    useEffect(() => {
+        if (!loading) {
+            setLoading(true);
 
-        const section = LeftBarList.sections[key];
-
-        leftBarPrimaryList[identifier] = {};
-        leftBarPrimaryList[identifier].active = false;
-        leftBarPrimaryList[identifier].isSection = true;
-        leftBarPrimaryList[identifier].hasItems = false;
-
-        if (location.pathname === section.href) {
-            leftBarPrimaryList[identifier].active = true;
-        }
-        leftBarPrimaryList[identifier].data = value;
-
-        if (section.hasOwnProperty('drilldown')) {
-            Object.entries(section.drilldown).forEach(([drillkey, drillvalue]) => {
+            let leftBarPrimaryList = [];
+            let count = -1;
+            Object.entries(LeftBarList.sections).forEach(([key, value]) => {
                 count++;
-                let childidentifier = count.toString();
+                let identifier = count.toString();
 
-                const item = section.drilldown[drillkey];
+                const section = LeftBarList.sections[key];
 
-                leftBarPrimaryList[childidentifier] = {};
-                leftBarPrimaryList[childidentifier].active = false;
-                leftBarPrimaryList[childidentifier].isSection = false;
-                leftBarPrimaryList[identifier].hasItems = true;
+                leftBarPrimaryList[identifier] = {};
+                leftBarPrimaryList[identifier].active = false;
+                leftBarPrimaryList[identifier].isSection = true;
+                leftBarPrimaryList[identifier].hasItems = false;
 
-                // Check and expand it if the pathname matches
-                if (location.pathname === item.href) {
+                if (location.pathname === section.href) {
                     leftBarPrimaryList[identifier].active = true;
-                    leftBarPrimaryList[childidentifier].active = true;
                 }
+                leftBarPrimaryList[identifier].data = value;
 
-                leftBarPrimaryList[childidentifier].data = drillvalue;
-            })
+                if (section.hasOwnProperty('drilldown')) {
+                    Object.entries(section.drilldown).forEach(([drillkey, drillvalue]) => {
+                        count++;
+                        let childidentifier = count.toString();
+
+                        const item = section.drilldown[drillkey];
+
+                        leftBarPrimaryList[childidentifier] = {};
+                        leftBarPrimaryList[childidentifier].active = false;
+                        leftBarPrimaryList[childidentifier].isSection = false;
+                        leftBarPrimaryList[identifier].hasItems = true;
+
+                        // Check and expand it if the pathname matches
+                        if (location.pathname === item.href) {
+                            leftBarPrimaryList[identifier].active = true;
+                            leftBarPrimaryList[childidentifier].active = true;
+                        }
+
+                        leftBarPrimaryList[childidentifier].data = drillvalue;
+                    })
+                }
+            });
+
+            setMenuList(leftBarPrimaryList)
         }
-    });
-
-    console.log(leftBarPrimaryList);
+        
+    }, []);
     
-
-    const renderDrilldownItem = (item) => {
-        return (
-            <Item>
-                <Span>item.name</Span>
-            </Item>
-        );
-    }
-
     return (
         <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-            <Primary>
-                {Object.keys(leftBarPrimaryList).map(function(key) {
-                    // if it's a section
-                    if (leftBarPrimaryList[key].isSection) {
-                        const section = leftBarPrimaryList[key];
-                        const data = section.data;
-                        let renderer = (
-                            <LeftBarPrimarySection 
-                                key={key}
-                                flex="1"
-                                align="stretch"
-                            >
-                                <Anchor
-                                    flex="1"
-                                    title={`${data.title}`}
-                                    href={`${data.href ? data.href : '#'}`}
-                                    disabled={data.disabled}
-                                    target={data.newTab ? "_blank" : "self"}
-                                    hoverBG={theme.leftBarHoverColor}
-                                    radius="12px"
-                                    align="stretch"
-                                    margin="10px"
-                                >
-                                    <ItemH
-                                        align="center"
+            {menuList.length > 0 &&
+                <>
+                    <Primary>
+                        {Object.keys(menuList).map(function(key) {
+                            // if it's a section
+                            if (menuList[key].isSection) {
+                                const section = menuList[key];
+                                const data = section.data;
+                                let renderer = (
+                                    <LeftBarPrimarySection 
+                                        key={key}
+                                        flex="1"
+                                        align="stretch"
                                     >
-                                        <LeftBarPrimarySectionIcon
-                                            src={`./${data.src}`}
-                                            margin="0 5px"
-                                            alt={`${data.alt}`}
-                                        />
-                                        <Span 
-                                            flex="1" 
-                                            weight="400"
-                                            spacing="0"
-                                            margin="0 5px"
-                                            color={theme.leftBarFontColor}
+                                        <Anchor
+                                            flex="1"
+                                            title={`${data.title}`}
+                                            href={`${data.href ? data.href : '#'}`}
+                                            disabled={data.disabled}
+                                            target={data.newTab ? "_blank" : "self"}
+                                            hoverBG={theme.leftBarHoverColor}
+                                            radius="12px"
+                                            align="stretch"
+                                            margin="10px"
                                         >
-                                            {data.name}
-                                        </Span>
-                                        
-                                        {section.hasItems && section.active &&
-                                            <BiChevronDown
-                                                color={theme.leftBarFontColor}
-                                            />
-                                        }
+                                            <ItemH
+                                                align="center"
+                                            >
+                                                <LeftBarPrimarySectionIcon
+                                                    src={`./${data.src}`}
+                                                    margin="0 5px"
+                                                    alt={`${data.alt}`}
+                                                />
+                                                <Span 
+                                                    flex="1" 
+                                                    weight="400"
+                                                    spacing="0"
+                                                    margin="0 5px"
+                                                    color={theme.leftBarFontColor}
+                                                >
+                                                    {data.name}
+                                                </Span>
+                                                
+                                                {section.hasItems && section.active &&
+                                                    <BiChevronDown
+                                                        color={theme.leftBarFontColor}
+                                                    />
+                                                }
 
-                                        {section.hasItems && !section.active &&
-                                            <BiChevronDown
-                                                color={theme.leftBarFontColor}
-                                            />
-                                        }
-                                    </ItemH>
-                                </Anchor>
-                            </LeftBarPrimarySection>
-                        )
+                                                {section.hasItems && !section.active &&
+                                                    <BiChevronDown
+                                                        color={theme.leftBarFontColor}
+                                                    />
+                                                }
+                                            </ItemH>
+                                        </Anchor>
+                                    </LeftBarPrimarySection>
+                                )
 
-                        return renderer;
-                    }
-                    // if it's items
-                    else {
-                        const item = leftBarPrimaryList[key];
-                        const data = item.data;
+                                return renderer;
+                            }
+                            // if it's items
+                            else {
+                                const item = menuList[key];
+                                const data = item.data;
 
-                        return (
-                            <LeftBarPrimaryItem
-                                key={key}
-                                flex="1"
-                                align="stretch"
-                            >
-                                <Anchor
-                                    flex="1"
-                                    title={`${data.title}`}
-                                    href={`${data.href ? data.href : '#'}`}
-                                    alt={`${data.alt}`}
-                                    disabled={data.disabled}
-                                    target={data.newTab ? "_blank" : "self"}
-                                    hoverBG={theme.leftBarHoverColor}
-                                    radius="12px"
-                                    align="stretch"
-                                    margin="10px"
-                                >
-                                    <ItemH
-                                        align="center"
+                                return (
+                                    <LeftBarPrimaryItem
+                                        key={key}
+                                        flex="1"
+                                        align="stretch"
                                     >
-                                        <LeftBarPrimaryItemIcon
-                                            src={`./${data.src}`}
-                                            margin="0 5px"
+                                        <Anchor
+                                            flex="1"
+                                            title={`${data.title}`}
+                                            href={`${data.href ? data.href : '#'}`}
                                             alt={`${data.alt}`}
-                                        />
-                                        <Span 
-                                            flex="1" 
-                                            weight="400"
-                                            spacing="0"
-                                            margin="0 5px"
-                                            size="14px"
-                                            color={theme.leftBarFontColor}
+                                            disabled={data.disabled}
+                                            target={data.newTab ? "_blank" : "self"}
+                                            hoverBG={theme.leftBarHoverColor}
+                                            radius="12px"
+                                            align="stretch"
+                                            margin="10px"
                                         >
-                                            {data.name}
-                                        </Span>
-                                    </ItemH>
-                                </Anchor>
-                            </LeftBarPrimaryItem>
-                        )
-                    }
-                })}
-            </Primary>
-            <Secondary>
+                                            <ItemH
+                                                align="center"
+                                            >
+                                                <LeftBarPrimaryItemIcon
+                                                    src={`./${data.src}`}
+                                                    margin="0 5px"
+                                                    alt={`${data.alt}`}
+                                                />
+                                                <Span 
+                                                    flex="1" 
+                                                    weight="400"
+                                                    spacing="0"
+                                                    margin="0 5px"
+                                                    size="14px"
+                                                    color={theme.leftBarFontColor}
+                                                >
+                                                    {data.name}
+                                                </Span>
+                                            </ItemH>
+                                        </Anchor>
+                                    </LeftBarPrimaryItem>
+                                )
+                            }
+                        })}
+                    </Primary>
+                    <Secondary>
 
-            </Secondary>
+                    </Secondary>
+                </>
+            }
         </Container>
     );
 }

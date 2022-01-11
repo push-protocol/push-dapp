@@ -111,7 +111,7 @@ function Header({ isDarkMode, darkModeToggle }) {
               textTransform="uppercase"
               weight="600"
               radius="20px"
-              onClick={() => disconnect()}
+              onClick={disconnect}
             >
               Disconnect
             </Button>

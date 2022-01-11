@@ -22,6 +22,15 @@ import Feedbox from "pages/Feedbox";
 import Channels from "pages/Channels";
 
 import InboxPage from "pages/InboxPage";
+import SpamPage from "pages/SpamPage";
+import ChannelsPage from "pages/ChannelsPage";
+import ChannelDashboardPage from "pages/ChannelDashboardPage";
+
+import GovernancePage from "pages/GovernancePage";
+
+import YieldFarmingPage from "pages/YieldFarmingPage";
+import NFTPage from "pages/NFTPage";
+import AirdropPage from "pages/AirdropPage";
 
 import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
@@ -83,10 +92,10 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
-      <HeaderContainer style={{backgroundColor: "black"}}>
+      <HeaderContainer>
         <Header
           isDarkMode={darkMode}
-          darkModeToggle={() => {toggleDarkMode()}}
+          darkModeToggle={toggleDarkMode}
         />
       </HeaderContainer>
 
@@ -94,28 +103,37 @@ export default function App() {
         headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
       >
 
-        {active &&
-          <LeftBarContainer
-            leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
-          >
-            <LeftBar />
-          </LeftBarContainer>
-        }
+        {(active) && !error && (
+          <>
+            <LeftBarContainer
+              leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
+            >
+              <LeftBar />
+            </LeftBarContainer>
 
-        {active && !error && (
-          <ContentContainer
-            leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
-          >
-            <Interface>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="inbox" element={<InboxPage />} />
-              </Routes>
-            </Interface>
-          </ContentContainer>
+            <ContentContainer
+              leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
+            >
+              <Interface>
+                <Routes>
+                  <Route path="inbox" element={<InboxPage />} />
+                  <Route path="channels" element={<ChannelsPage />} />
+                  <Route path="dashboard" element={<ChannelDashboardPage />} />
+                  <Route path="spam" element={<SpamPage />} />
+
+                  <Route path="govern" element={<GovernancePage />} />
+
+                  <Route path="yield" element={<YieldFarmingPage />} />
+                  <Route path="rockstar" element={<NFTPage />} />
+                  <Route path="gratitude" element={<AirdropPage />} />
+                  <Route path="/" element={<ChannelsPage />} />
+                </Routes>
+              </Interface>
+            </ContentContainer>
+          </>
         )}
 
-        {!active && (
+        {(!active) && (
           <Item>
             <ProviderLogo
               src="./epnshomelogo.png"
@@ -227,6 +245,10 @@ const LeftBarContainer = styled.div`
   bottom: 0;
   width: ${props => props.leftBarWidth}px;
   position: fixed;
+
+  @media (max-width: 992px) {
+    display: none;
+  }
 `
 
 const ContentContainer = styled.div`
@@ -234,9 +256,12 @@ const ContentContainer = styled.div`
   flex: 1;
   align-self: center;
   width: 100%;
-  max-width: 1100px;
 
   margin: 20px 20px 20px ${props => props.leftBarWidth + 20}px;
+
+  @media (max-width: 992px) {
+    margin: 20px;
+  }
 `;
 
 const Interface = styled(Item)`
@@ -247,7 +272,6 @@ const Interface = styled(Item)`
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
   border: 1px solid rgb(225, 225, 225);
-  max-height: calc(100vh - 140px);
 
   margin: 15px;
   overflow: hidden;
