@@ -29,7 +29,7 @@ function  Info() {
         </ContainerInfo>
       }
 
-      {!loading && controlAt == 0 && 
+      {!loading && controlAt == 0 &&
       <>
         <InfoBox>
           <ViewInfoItem/>

@@ -1275,7 +1275,7 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.12.0", "@babel/runtime@^7.13.10":
+"@babel/runtime@^7.12.0", "@babel/runtime@^7.13.10", "@babel/runtime@^7.7.6":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.7.tgz#03ff99f64106588c9c403c6ecb8c3bafbbdff1fa"
   integrity sha512-9E9FJowqAsytyOY6LG+1KuueckRL+aQW+mKvXRXnuFGyRAyepJPmEo9vgMfXUA6O9u3IeEdv9MAkppFcaQwogQ==
@@ -1473,7 +1473,7 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@epnsproject/frontend-sdk-staging@^1.4.2":
+"@epnsproject/frontend-sdk-staging@1.4.2":
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/@epnsproject/frontend-sdk-staging/-/frontend-sdk-staging-1.4.2.tgz#0b3ec2c9baedca884331fd2285b81ebd3c2bde90"
   integrity sha512-kmc8LCPnoNpiQheJIXN6gNkxXndoO/GRQ+uvV/7aQ3Ig/gBPixf/vlEir1l4NwnHpzd68Eccf17ZY1NZmWbjLg==
@@ -2380,6 +2380,92 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
+"@react-spring/animated@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/animated/-/animated-9.4.1.tgz#6b5e57725408ba8347f098a5111a9fb4de74a81b"
+  integrity sha512-uAJkcrSlpg8uSe8zy7eJcDdNpI5QvRXrZUKhn5dlGAPk3psgY5qj6pahzB0k5NZZQ27ls8Z5Nt4VKhGaXPJNDQ==
+  dependencies:
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/core@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/core/-/core-9.4.1.tgz#0658611dd961d745ac9cfc9dde5e86f2895e182a"
+  integrity sha512-sXQmGg4wNeyoVZ/LdEF01xtzQKZtLIyFDX03hoa0oa9VTgLNTVSbVXD9q2xsH8HtWpY4OFPTi/9Noi93gjnYyg==
+  dependencies:
+    "@react-spring/animated" "~9.4.0"
+    "@react-spring/rafz" "~9.4.0"
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/konva@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/konva/-/konva-9.4.1.tgz#0621e5a65a438574285f627fd2c34298e422d372"
+  integrity sha512-rDn72jVTOyVbRcg5SEQmbUIPxKXSx3HlRS8sGHgJ6r2IUgmaVVqWApFLoUSoIYW+WF/TnhSUvpEoYWFfOiQ+5g==
+  dependencies:
+    "@react-spring/animated" "~9.4.0"
+    "@react-spring/core" "~9.4.0"
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/native@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/native/-/native-9.4.1.tgz#c02fcfb95d35aeefff94559076edbc8f70aaeecc"
+  integrity sha512-RCRemg8XWIK+m4S3/Upu26Jr0caSSU2As2RTvVMKwInZnW+CkZoJNjQSSoUnq9MfC7DvvS+7MCu8PJRiy2/cvQ==
+  dependencies:
+    "@react-spring/animated" "~9.4.0"
+    "@react-spring/core" "~9.4.0"
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/rafz@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/rafz/-/rafz-9.4.1.tgz#66ed8eadf5c1784d89b210f443fd2ec9fdb59fb6"
+  integrity sha512-R/mNOQ4axraWsL/jwzoaqfeX6RwUODg3WOGweL8zYbHHheRqQV+QwnhGmDATepBZ1H3UUulhXvOqkzWzjnpuQQ==
+
+"@react-spring/shared@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/shared/-/shared-9.4.1.tgz#6c688cbe093ada7f6cd8ed2b9d28a807b6665ede"
+  integrity sha512-7atTQOhEQmw5UEYbb5yk7YEaf11AcRF7UISfAmr9FJ2FJD4VUVCn1R4V78omiFiRvnU6qI3GRhkRnIvYM8aAZw==
+  dependencies:
+    "@react-spring/rafz" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/three@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/three/-/three-9.4.1.tgz#c2c659c0eda847522dc0e5039c63a97c355ac805"
+  integrity sha512-TQiR/yzQfoueiIjak5XHE4mHdJOI9rntfpqEtwF0B2hfpeyw/XNl7nMbbY66UGoKLLVGH2YAjqvMAt3Cx4QKuA==
+  dependencies:
+    "@react-spring/animated" "~9.4.0"
+    "@react-spring/core" "~9.4.0"
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/types@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/types/-/types-9.4.1.tgz#93a203e5b922362e6643b95aff0989dd1a33b77b"
+  integrity sha512-eZmlFRc+XkY/HJi4RswLkIHH0nKQkqKRHPUqnseffcBuZ5FNXKDUmNnLUpqkrCpl746QCFVQtI5QptLklDATfQ==
+
+"@react-spring/web@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/web/-/web-9.4.1.tgz#dd8560af6834a9c41cd7061bc98721e9f64a8557"
+  integrity sha512-ajlGJl0Zqa3idhZw0KL5chP8AIn4wPHpDY7WjtWaWjVZSZRSBAeHmfqNLtAGCjazeO/Q6zmt6wdGs8bX8q42rQ==
+  dependencies:
+    "@react-spring/animated" "~9.4.0"
+    "@react-spring/core" "~9.4.0"
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
+
+"@react-spring/zdog@~9.4.0":
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/@react-spring/zdog/-/zdog-9.4.1.tgz#6dcb358e1314d46dcd3e58ac8ebba057908103ee"
+  integrity sha512-fd/BWVukp5MYb5izEgt9BRgLWtpiuAh7vl+mjxozqyIFSMs7Uv+uB2sioHh/FrlC9bB44h72vXXx94wSfqZS0g==
+  dependencies:
+    "@react-spring/animated" "~9.4.0"
+    "@react-spring/core" "~9.4.0"
+    "@react-spring/shared" "~9.4.0"
+    "@react-spring/types" "~9.4.0"
 
 "@reduxjs/toolkit@^1.7.1":
   version "1.7.1"
@@ -9268,6 +9354,13 @@ hi-base32@~0.5.0:
   resolved "https://registry.yarnpkg.com/hi-base32/-/hi-base32-0.5.1.tgz#1279f2ddae2673219ea5870c2121d2a33132857e"
   integrity sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA==
 
+history@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/history/-/history-5.2.0.tgz#7cdd31cf9bac3c5d31f09c231c9928fad0007b7c"
+  integrity sha512-uPSF6lAJb3nSePJ43hN3eKj1dTWpN9gMod0ZssbFTIsen+WehTmEadgL+kg78xLJFdRfrrC//SavDzmRVdE+Ig==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+
 hmac-drbg@^1.0.0, hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -15182,15 +15275,14 @@ react-dev-utils@^10.2.1:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-dom@16.12.0:
-  version "16.12.0"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.12.0.tgz#0da4b714b8d13c2038c9396b54a92baea633fe11"
-  integrity sha512-LMxFfAGrcS3kETtQaCkTKjMiifahaMySFDn71fZUNpPHZQEzmk/GiAeIT8JSOrHB23fnuCOMruL2a8NYlw+8Gw==
+react-dom@17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-17.0.2.tgz#ecffb6845e3ad8dbfcdc498f0d0a939736502c23"
+  integrity sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
-    prop-types "^15.6.2"
-    scheduler "^0.18.0"
+    scheduler "^0.20.2"
 
 react-dropdown@1.9.0:
   version "1.9.0"
@@ -15216,12 +15308,10 @@ react-ga@2.7.0:
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
   integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
 
-react-icons@3.10.0:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-3.10.0.tgz#6c217a2dde2e8fa8d293210023914b123f317297"
-  integrity sha512-WsQ5n1JToG9VixWilSo1bHv842Cj5aZqTGiS3Ud47myF6aK7S/IUY2+dHcBdmkQcCFRuHsJ9OMUI0kTDfjyZXQ==
-  dependencies:
-    camelcase "^5.0.0"
+react-icons@4.1.1:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
+  integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
 
 react-is@^16.12.0, react-is@^16.13.1, react-is@^16.6.3, react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.13.1"
@@ -15289,6 +15379,21 @@ react-redux@^7.2.6:
     loose-envify "^1.4.0"
     prop-types "^15.7.2"
     react-is "^17.0.2"
+
+react-router-dom@6:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.2.1.tgz#32ec81829152fbb8a7b045bf593a22eadf019bec"
+  integrity sha512-I6Zax+/TH/cZMDpj3/4Fl2eaNdcvoxxHoH1tYOREsQ22OKDYofGebrNm6CTPUcvLvZm63NL/vzCYdjf9CUhqmA==
+  dependencies:
+    history "^5.2.0"
+    react-router "6.2.1"
+
+react-router@6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.2.1.tgz#be2a97a6006ce1d9123c28934e604faef51448a3"
+  integrity sha512-2fG0udBtxou9lXtK97eJeET2ki5//UWfQSl1rlJ7quwe6jrktK9FCCc8dQb5QY6jAv3jua8bBQRhhDOM/kVRsg==
+  dependencies:
+    history "^5.2.0"
 
 react-scripts@^3.3.1:
   version "3.4.4"
@@ -15370,6 +15475,18 @@ react-spinners@0.8.3:
   dependencies:
     "@emotion/core" "^10.0.15"
 
+react-spring@^9.0.0-rc.3:
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/react-spring/-/react-spring-9.4.1.tgz#7d17fdbcc527eb89ce9a642c86ec4e91cfee5909"
+  integrity sha512-1RO7FUpBFrnM2vhiaMyuzpi0YnAsCPpFdzAZtCCGsRKgNYLg28xE1J5vWk/GNoKhvpQePEuK6j9DLoDg9vDZbw==
+  dependencies:
+    "@react-spring/core" "~9.4.0"
+    "@react-spring/konva" "~9.4.0"
+    "@react-spring/native" "~9.4.0"
+    "@react-spring/three" "~9.4.0"
+    "@react-spring/web" "~9.4.0"
+    "@react-spring/zdog" "~9.4.0"
+
 react-toastify@6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-6.0.9.tgz#2a65e5ad9e05f3ee47664cbc69441498b9d694ce"
@@ -15379,13 +15496,12 @@ react-toastify@6.0.9:
     prop-types "^15.7.2"
     react-transition-group "^4.4.1"
 
-react-tooltip@^4.2.21:
-  version "4.2.21"
-  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-4.2.21.tgz#840123ed86cf33d50ddde8ec8813b2960bfded7f"
-  integrity sha512-zSLprMymBDowknr0KVDiJ05IjZn9mQhhg4PRsqln0OZtURAJ1snt1xi5daZfagsh6vfsziZrc9pErPTDY1ACig==
+react-toggle-dark-mode@1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-toggle-dark-mode/-/react-toggle-dark-mode-1.0.4.tgz#196defb8ed5fa7623241048d46104fa24d98e214"
+  integrity sha512-MREeRur1XGzwyDZZAvPFg01wL9ljR1Dugubc3s/i2bMlLIKaWPfQgx5JbomZfLAxa6OXYDbozJa0e+v39GawmA==
   dependencies:
-    prop-types "^15.7.2"
-    uuid "^7.0.3"
+    react-spring "^9.0.0-rc.3"
 
 react-transition-group@^2.7.0:
   version "2.9.0"
@@ -16126,14 +16242,6 @@ saxes@^3.1.9:
   integrity sha512-Ydydq3zC+WYDJK1+gRxRapLIED9PWeSuuS41wqyoRmzvhhh9nc+QQrVMKJYzJFULazeGhzSV0QleN2wD3boh2g==
   dependencies:
     xmlchars "^2.1.1"
-
-scheduler@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.18.0.tgz#5901ad6659bc1d8f3fdaf36eb7a67b0d6746b1c4"
-  integrity sha512-agTSHR1Nbfi6ulI0kYNK0203joW2Y5W4po4l+v03tOoiJKpTBbxpNhWDvqc/4IcOw+KLmSiQLTasZ4cab2/UWQ==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
 
 scheduler@^0.20.2:
   version "0.20.2"
@@ -18033,11 +18141,6 @@ uuid@^3.3.2, uuid@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
-
-uuid@^7.0.3:
-  version "7.0.3"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.3.tgz#c5c9f2c8cf25dc0a372c4df1441c41f5bd0c680b"
-  integrity sha512-DPSke0pXhTZgoF/d+WSt2QaKMCFSfx7QegxEWT+JOuHF5aWrKEn0G+ztjuJg/gG8/ItK+rbPCD/yNv8yyih6Cg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"

@@ -10,6 +10,8 @@ coverage
 
 # production
 build
+dump.rdb
+yarn.lock
 
 # misc
 .DS_Store
@@ -400,3 +402,6 @@ node_modules
 bin_output
 logs
 dump.rdb
+
+package-lock.json
+yarn.lock

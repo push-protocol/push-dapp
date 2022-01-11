@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "react-loader-spinner";
 import hex2ascii from "hex2ascii";
-import { addresses, abis, envConfig } from "@project/contracts";
+import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import config from "config";
@@ -13,18 +13,13 @@ import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "components/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
-import SpamBox from "segments/spam";
-import Feedbox from "segments/Feedbox";
-
+import Feedbox from "pages/Feedbox";
 import Channels from "pages/Channels";
-
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
-
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 import { postReq } from "api";
-
 import {
   setCoreReadProvider,
   setCoreWriteProvider,
@@ -37,13 +32,12 @@ import {
   setCanVerify,
   setDelegatees,
 } from "redux/slices/adminSlice";
-import { addNewNotification, toggleToggler, resetState } from "redux/slices/notificationSlice";
-
-export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
+import { addNewNotification } from "redux/slices/notificationSlice";
+export const ALLOWED_CORE_NETWORK = 1; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
 
 // Create Header
-function Home() {
+function InboxPage() {
   ReactGA.pageview("/home");
 
   const dispatch = useDispatch();
@@ -77,6 +71,76 @@ function Home() {
         "Please connect to the Ethereum network to access channels",
     });
   };
+  /**
+   * Event listener for new notifications
+   */
+  const listenFornewNotifications = () => {
+    const event = "SendNotification";
+    //callback function for listener
+    const cb = async (eventChannelAddress, eventUserAddress, identityHex) => {
+      const userAddress = account;
+      const identity = hex2ascii(identityHex);
+      const notificationId = identity
+        .concat("+")
+        .concat(eventChannelAddress)
+        .concat("+")
+        .concat(eventUserAddress)
+        .toLocaleLowerCase();
+      const ipfsId = identity.split("+")[1];
+      const channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
+        eventChannelAddress
+      );
+
+      // Form Gateway URL
+      const url = "https://ipfs.io/ipfs/" + ipfsId;
+      fetch(url)
+        .then((result) => result.json())
+        .then(async (result) => {
+          const ipfsNotification = { ...result };
+          const notificationTitle =
+            ipfsNotification.notification.title !== ""
+              ? ipfsNotification.notification.title
+              : channelJson.name;
+          const toastMessage = {
+            notificationTitle,
+            notificationBody: ipfsNotification.notification.body,
+          };
+          const notificationObject = {
+            title: notificationTitle,
+            message: ipfsNotification.data.amsg,
+            cta: ipfsNotification.data.acta,
+            app: channelJson.name,
+            icon: channelJson.icon,
+            image: ipfsNotification.data.aimg,
+          };
+
+          if (ipfsNotification.data.type === "1") {
+            const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
+              eventChannelAddress
+            );
+            const isSubscribed = channelSubscribers.find((sub) => {
+              return sub.toLowerCase() === account.toLowerCase();
+            });
+            if (isSubscribed) {
+              console.log("message recieved", notificationObject);
+              showToast(toastMessage);
+              dispatch(addNewNotification(notificationObject));
+            }
+          } else if (userAddress === eventUserAddress) {
+            showToast(toastMessage);
+            dispatch(addNewNotification(notificationObject));
+          }
+        })
+        .catch((err) => {
+          console.log(
+            "!!!Error, getting new notification data from ipfs --> %o",
+            err
+          );
+        });
+    };
+    epnsCommReadProvider.on(event, cb);
+    return () => epnsCommReadProvider.off.bind(epnsCommReadProvider, event, cb); //when we unmount we remove the listener
+  };
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -85,11 +149,6 @@ function Home() {
     }
   }, [toast]);
   // toast related section
-
-  React.useEffect(() => {
-    dispatch(resetState());
-    setTimeout(() => dispatch(toggleToggler()), 300)
-  }, [account]);
 
   /**
    * Logic to get channel alias and alias verification status as well as create instances of core and comunicator contract
@@ -182,8 +241,12 @@ function Home() {
     userClickedAt(INITIAL_OPEN_TAB);
     setChannelJson([]);
     // save push admin to global state
-    epnsReadProvider.pushChannelAdmin().then((response) => {
+    epnsReadProvider.pushChannelAdmin()
+    .then((response) => {
       dispatch(setPushAdmin(response));
+    })
+    .catch(err =>{
+      console.log({err})
     });
 
     // EPNS Read Provider Set
@@ -200,6 +263,7 @@ function Home() {
         epnsCommReadProvider
       );
       checkUserForChannelOwnership();
+      listenFornewNotifications();
       fetchDelegators();
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
@@ -283,126 +347,6 @@ function Home() {
   // Render
   return (
     <Container>
-      <Controls>
-        <ControlButton
-          index={0}
-          active={controlAt == 0 ? 1 : 0}
-          border="#e20880"
-          onClick={() => {
-            userClickedAt(0);
-          }}
-        >
-          <ControlImage
-            src="./svg/feedbox.svg"
-            active={controlAt == 0 ? 1 : 0}
-          />
-          <ControlText active={controlAt == 0 ? 1 : 0}>Inbox</ControlText>
-        </ControlButton>
-
-        <ControlButton
-          index={1}
-          active={controlAt == 1 ? 1 : 0}
-          border="#35c5f3"
-          onClick={() => {
-            userClickedAt(1);
-          }}
-        >
-          <ControlImage
-            src="./svg/channel.svg"
-            active={controlAt == 1 ? 1 : 0}
-          />
-          <ControlText active={controlAt == 1 ? 1 : 0}>Channels</ControlText>
-        </ControlButton>
-
-        <ControlButton
-          index={2}
-          active={controlAt == 2 ? 1 : 0}
-          border="#674c9f"
-          disabled={!adminStatusLoaded}
-          onClick={() => {
-            if (adminStatusLoaded) {
-              // if youre not on kovan and you dont have a channel, you cannot create except on kovan, so throw error
-              if (!channelAdmin && !onCoreNetwork) {
-                return showNetworkToast();
-              }
-              if (channelAdmin && !aliasVerified && !onCoreNetwork) {
-                return setModalOpen(true);
-              }
-              userClickedAt(2);
-            }
-          }}
-        >
-          {!adminStatusLoaded && (
-            <Loader type="Oval" color="#674c9f" height={32} width={32} />
-          )}
-          {channelAdmin &&
-            adminStatusLoaded &&
-            (onCoreNetwork ? true : aliasVerified) && (
-              <ControlChannelContainer>
-                <ControlChannelImage
-                  src={`${channelJson.icon}`}
-                  active={controlAt == 2 ? 1 : 0}
-                />
-                <ControlChannelText active={controlAt == 2 ? 1 : 0}>
-                  {channelJson.name}
-                </ControlChannelText>
-              </ControlChannelContainer>
-            )}
-          {channelAdmin &&
-            adminStatusLoaded &&
-            aliasVerified === false &&
-            !onCoreNetwork && (
-              <ControlChannelContainer>
-                <ControlChannelImage
-                  src={`${channelJson.icon}`}
-                  active={controlAt == 2 ? 1 : 0}
-                />
-                <ControlChannelText active={controlAt == 2 ? 1 : 0}>
-                  Verify channel alias
-                </ControlChannelText>
-              </ControlChannelContainer>
-            )}
-          {channelAdmin &&
-            adminStatusLoaded &&
-            aliasVerified === null &&
-            !onCoreNetwork && (
-              <ControlChannelContainer>
-                <ControlChannelImage
-                  src={`${channelJson.icon}`}
-                  active={controlAt == 2 ? 1 : 0}
-                />
-                <ControlChannelText active={controlAt == 2 ? 1 : 0}>
-                  Contact the admin
-                </ControlChannelText>
-              </ControlChannelContainer>
-            )}
-          {!channelAdmin && adminStatusLoaded && (
-            <>
-              <ControlImage
-                src="./svg/channeladmin.svg"
-                active={controlAt == 2 ? 1 : 0}
-              />
-              <ControlText active={controlAt == 2 ? 1 : 0}>
-                Create Your Channel
-              </ControlText>
-            </>
-          )}
-        </ControlButton>
-
-        <ControlButton
-          index={3}
-          active={controlAt == 3 ? 1 : 0}
-          border="#e20880"
-          onClick={() => {
-            userClickedAt(3);
-          }}
-        >
-          <ControlImage src="./svg/share.svg" active={controlAt == 3 ? 1 : 0} />
-          <ControlText active={controlAt == 3 ? 1 : 0}>
-            Receive Notifs
-          </ControlText>
-        </ControlButton>
-      </Controls>
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <Channels />}
@@ -541,13 +485,9 @@ const Interface = styled.div`
   flex: 1;
   display: flex;
 
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  border: 1px solid rgb(225, 225, 225);
-
-  margin: 15px;
+  margin-bottom: 15px;
   overflow: hidden;
 `;
 
 // Export Default
-export default Home;
+export default InboxPage;

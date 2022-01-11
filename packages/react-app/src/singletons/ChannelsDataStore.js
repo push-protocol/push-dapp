@@ -315,7 +315,7 @@ export default class ChannelsDataStore {
    * Get paginated channel information
    * @param {Number} startIndex the number of channels viewed so far e.g 50
    * @param {Number} pageCount the number of items per page we want
-   * @returns 
+   * @returns
    */
   getChannelFromApi = async (startIndex, pageCount) => {
     return postReq("/channels/fetch_channels", {

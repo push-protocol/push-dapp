@@ -3,7 +3,7 @@ import React from "react";
 import { addresses, abis } from "@project/contracts";
 import { ethers, utils, BigNumber} from "ethers";
 //import { parseEther, bigNumber } from 'ethers/utils'
-const claims = require("config/claims.json")
+const claims = require("config/airdrop/claims.json")
 
 // Airdrop Helper Functions
 const AirdropHelper = {
@@ -14,18 +14,18 @@ const AirdropHelper = {
         if (!second) {
           return first
         }
-      
+
         return Buffer.from(
           utils.solidityKeccak256(['bytes32', 'bytes32'], [first, second].sort(Buffer.compare)).slice(2),
           'hex'
         )
     },
-      
+
     toNode : (index, account, amount) => {
     const pairHex = utils.solidityKeccak256(['uint256', 'address', 'uint256'], [index, account, amount])
     return Buffer.from(pairHex.slice(2), 'hex')
     },
-      
+
     verifyProof : (
     index,
     account,
@@ -37,40 +37,40 @@ const AirdropHelper = {
     for (const item of proof) {
         pair = AirdropHelper.combinedHash(pair, item)
     }
-    
+
     return pair.equals(root)
     },
-      
+
     getNextLayer : (elements) => {
     return elements.reduce((layer, el, idx, arr) => {
         if (idx % 2 === 0) {
         // Hash the current element with its pair element
         layer.push(AirdropHelper.combinedHash(el, arr[idx + 1]))
         }
-    
+
         return layer
     }, [])
     },
-      
+
     getRoot : (balances) => {
     let nodes = balances
         .map(({ account, amount, index }) => AirdropHelper.toNode(index, account, amount))
         // sort by lexicographical order
         .sort(Buffer.compare)
-    
+
     // deduplicate any eleents
     nodes = nodes.filter((el, idx) => {
         return idx === 0 || !nodes[idx - 1].equals(el)
     })
-    
+
     const layers = []
     layers.push(nodes)
-    
+
     // Get next layer until we reach the root
     while (layers[layers.length - 1].length > 1) {
         layers.push(AirdropHelper.getNextLayer(layers[layers.length - 1]))
     }
-    
+
     return layers[layers.length - 1][0]
     },
 
@@ -95,7 +95,7 @@ const AirdropHelper = {
         return({verified: false})
     },
 
-  
+
 
 }
 

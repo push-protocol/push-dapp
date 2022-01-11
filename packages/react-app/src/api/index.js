@@ -23,7 +23,7 @@ export const getReq = async (path) => {
 /**
  * A function used to make post requests to the backend
  * @param {String} path e.g /feeds/get_feeds, this represents the route of the enpoint to call
- * @param {Object} obj 
+ * @param {Object} obj
  * @returns {Promise}
  */
 export const postReq = async (path, obj) => {
