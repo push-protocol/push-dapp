@@ -460,12 +460,10 @@ const ControlButton = styled.div`
   &:hover {
     opacity: 0.9;
     cursor: pointer;
-    pointer: hand;
   }
   &:active {
     opacity: 0.75;
     cursor: pointer;
-    pointer: hand;
   }
 `;
 

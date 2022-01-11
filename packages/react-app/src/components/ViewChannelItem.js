@@ -429,7 +429,7 @@ function ViewChannelItem({ channelObjectProp }) {
         <ChannelLogoOuter>
           <ChannelLogoInner>
             {loading ? (
-              <Skeleton color="#eee" width="100%" height="100%" />
+              <Skeleton color="#eee"  height="100%" />
             ) : (
               <ChannelLogoImg src={`${channelJson.icon}`} />
             )}

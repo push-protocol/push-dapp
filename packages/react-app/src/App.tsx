@@ -45,7 +45,7 @@ export default function App() {
   React.useEffect(()=>{
     const now = Date.now()/ 1000;
     setcurrentTime(now)
-  })
+  },[])
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -231,13 +231,11 @@ const ProviderButton = styled.button`
   &:hover {
     opacity: 0.9;
     cursor: pointer;
-    pointer: hand;
     border: 1px solid ${(props) => props.border};
   }
   &:active {
     opacity: 0.75;
     cursor: pointer;
-    pointer: hand;
     border: 1px solid ${(props) => props.border};
   }
 `;
