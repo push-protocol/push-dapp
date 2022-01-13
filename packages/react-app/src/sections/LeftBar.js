@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"
+import { useLocation, Link } from "react-router-dom";
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import {
@@ -11,7 +11,7 @@ import { Web3Provider } from 'ethers/providers'
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 import styled, { useTheme } from "styled-components";
-import {Section, Item, ItemH, Span, Anchor, Image} from 'components/SharedStyling';
+import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import LeftBarList from "config/LeftBarList";
 
@@ -43,6 +43,7 @@ function LeftBar() {
                 leftBarPrimaryList[identifier].active = false;
                 leftBarPrimaryList[identifier].isSection = true;
                 leftBarPrimaryList[identifier].hasItems = false;
+                leftBarPrimaryList[identifier].id = key;
 
                 if (location.pathname === section.href) {
                     leftBarPrimaryList[identifier].active = true;
@@ -50,28 +51,36 @@ function LeftBar() {
                 leftBarPrimaryList[identifier].data = value;
 
                 if (section.hasOwnProperty('drilldown')) {
-                    Object.entries(section.drilldown).forEach(([drillkey, drillvalue]) => {
-                        count++;
-                        let childidentifier = count.toString();
+                  leftBarPrimaryList[identifier].drilldown = {}
+                  let drillcount = -1;
 
-                        const item = section.drilldown[drillkey];
+                  Object.entries(section.drilldown).forEach(([drillkey, drillvalue]) => {
+                    drillcount++;
 
-                        leftBarPrimaryList[childidentifier] = {};
-                        leftBarPrimaryList[childidentifier].active = false;
-                        leftBarPrimaryList[childidentifier].isSection = false;
-                        leftBarPrimaryList[identifier].hasItems = true;
+                    let drillIdentifier = drillcount.toString();
 
-                        // Check and expand it if the pathname matches
-                        if (location.pathname === item.href) {
-                            leftBarPrimaryList[identifier].active = true;
-                            leftBarPrimaryList[childidentifier].active = true;
-                        }
+                    const item = section.drilldown[drillkey];
 
-                        leftBarPrimaryList[childidentifier].data = drillvalue;
-                    })
+                    leftBarPrimaryList[identifier].drilldown[drillIdentifier] = {};
+                    leftBarPrimaryList[identifier].drilldown[drillIdentifier].active = false;
+                    leftBarPrimaryList[identifier].drilldown[drillIdentifier].isSection = false;
+                    leftBarPrimaryList[identifier].drilldown[drillIdentifier].id = drillkey;
+                    leftBarPrimaryList[identifier].drilldown[drillIdentifier]parent = leftBarPrimaryList[identifier].id;
+
+                    leftBarPrimaryList[identifier].hasItems = true;
+
+                    // Check and expand it if the pathname matches
+                    if (location.pathname === item.href) {
+                        leftBarPrimaryList[identifier].active = true;
+                        leftBarPrimaryList[childidentifier].active = true;
+                    }
+
+                    leftBarPrimaryList[childidentifier].data = drillvalue;
+                  })
                 }
             });
-
+            
+            console.log(leftBarPrimaryList)
             setMenuList(leftBarPrimaryList)
         }
         
@@ -151,13 +160,12 @@ function LeftBar() {
                                         flex="1"
                                         align="stretch"
                                     >
-                                        <Anchor
+                                        <RouterLink
                                             flex="1"
                                             title={`${data.title}`}
-                                            href={`${data.href ? data.href : '#'}`}
+                                            to={`${data.href ? data.href : '#'}`}
                                             alt={`${data.alt}`}
                                             disabled={data.disabled}
-                                            target={data.newTab ? "_blank" : "self"}
                                             hoverBG={theme.leftBarHoverColor}
                                             radius="12px"
                                             align="stretch"
@@ -182,7 +190,7 @@ function LeftBar() {
                                                     {data.name}
                                                 </Span>
                                             </ItemH>
-                                        </Anchor>
+                                        </RouterLink>
                                     </LeftBarPrimaryItem>
                                 )
                             }

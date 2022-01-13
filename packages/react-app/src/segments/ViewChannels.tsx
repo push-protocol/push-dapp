@@ -1,5 +1,5 @@
 
-import React from "react";
+import React from 'react';
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
@@ -166,16 +166,16 @@ function ViewChannels() {
             {(search ? channelToShow : channels).map(
               (channel: any, index: any) =>
                 channel &&
-                channel.addr !== ZERO_ADDRESS && (
-                  <>
-                    <div key={channel.addr}>
-                      <ViewChannelItem channelObjectProp={channel} />
-                    </div>
-                    {showWayPoint(index) && (
-                      <Waypoint onEnter={updateCurrentPage} />
-                    )}
-                  </>
-                )
+              channel.addr !== ZERO_ADDRESS && (
+                <>
+                  <div key={channel.addr}>
+                    <ViewChannelItem channelObjectProp={channel} />
+                  </div>
+                  {showWayPoint(index) && (
+                    <Waypoint onEnter={updateCurrentPage} />
+                  )}
+                </>
+              )
             )}
             {/* render all channels depending on if we are searching or not */}
 
