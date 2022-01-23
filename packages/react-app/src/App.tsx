@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import ReactGA from "react-ga";
-import { Routes, Route, Link } from "react-router-dom";
+import { Navigate, Routes, Route, Link } from "react-router-dom";
 
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -15,7 +15,7 @@ import styled, {ThemeProvider} from "styled-components";
 import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 
 import Header from "sections/Header";
-import LeftBar from "sections/LeftBar";
+import Navigation from "sections/Navigation";
 
 import Home from "pages/Home";
 import Feedbox from "pages/Feedbox";
@@ -107,7 +107,7 @@ export default function App() {
             <LeftBarContainer
               leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
             >
-              <LeftBar />
+              <Navigation />
             </LeftBarContainer>
 
             <ContentContainer
@@ -125,7 +125,10 @@ export default function App() {
                   <Route path="yield" element={<YieldFarmingPage />} />
                   <Route path="rockstar" element={<NFTPage />} />
                   <Route path="gratitude" element={<AirdropPage />} />
-                  <Route path="/" element={<ChannelsPage />} />
+                  <Route
+                      path="/"
+                      element={<Navigate to="/channels" />}
+                  />
                 </Routes>
               </Interface>
             </ContentContainer>

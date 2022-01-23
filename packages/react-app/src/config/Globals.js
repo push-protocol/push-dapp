@@ -12,6 +12,12 @@ export default {
     CONSTANTS: {
       HEADER_HEIGHT: 70,
       LEFT_BAR_WIDTH: 260,
+
+      NAVBAR_SECTIONS: {
+        PRIMARY: 1,
+        SECONDARY: 2,
+        FULL: 3
+      }
     },
   
     ADJUSTMENTS: {

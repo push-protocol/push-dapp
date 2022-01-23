@@ -5,8 +5,16 @@ import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Para, Image,
 
 import { BsChevronExpand } from 'react-icons/bs';
 
-import { useWeb3React } from '@web3-react/core'
+import Loader from 'react-loader-spinner'
+import { Waypoint } from "react-waypoint";
 
+import { useWeb3React } from '@web3-react/core'
+import { addresses, abis } from "@project/contracts";
+import NFTHelper from 'helpers/NFTHelper';
+import { ethers } from "ethers";
+
+import DisplayNotice from "components/DisplayNotice";
+import ViewNFTItem from "components/ViewNFTItem";
 import MyNFTs from "components/MyNFTs";
 import AllNFTs from "components/AllNFTs";
 import TransferNFT from "components/TransferNFT";
@@ -109,21 +117,21 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
             </Controls>
             */}
 
-            {controlAt == 0 &&
+            {controlAt === 0 &&
               <MyNFTs
                 controlAt={controlAt}
                 setControlAt={setControlAt}
                 setTokenId={setTokenId}
               />
             }
-            {controlAt == 1 &&
+            {controlAt === 1 &&
               <AllNFTs
                 controlAt={controlAt}
                 setControlAt={setControlAt}
                 setTokenId={setTokenId}
               />
             }
-            {controlAt == 2 && tokenId &&
+            {controlAt === 2 && tokenId &&
               <TransferNFT tokenId={tokenId}/>
             }
           </Item>

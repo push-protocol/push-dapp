@@ -18,7 +18,7 @@ import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player';
 
 import NFTHelper from 'helpers/NFTHelper';
 

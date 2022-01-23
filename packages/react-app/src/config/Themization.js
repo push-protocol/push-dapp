@@ -8,6 +8,7 @@ const themeLight = {
 
     // Left Bar Theme
     leftBarBg: '#fff',
+    leftBarButtonBg: '#fff',
     leftBarHoverColor: '#5c5c5c',
     leftBarFontColor: '#000',
 
@@ -24,6 +25,7 @@ const themeDark = {
 
     // Left Bar Theme
     leftBarBg: '#000',
+    leftBarButtonBg: '#000',
     leftBarHoverColor: '#fff',
     leftBarFontColor: '#fff',
 
