@@ -397,6 +397,8 @@ function ViewChannelItem({ channelObjectProp }) {
 
   // render
   return (
+    <>
+    <Outer>
     <Container key={channelObject.addr}>
       <ChannelLogo>
         <ChannelLogoOuter>
@@ -459,7 +461,7 @@ function ViewChannelItem({ channelObjectProp }) {
             </>
           ) : (
             <>
-              <Subscribers>
+              <Subscribers title="Subscribers">
                 <IoMdPeople size={20} color="#ccc" />
                 <SubscribersCount>{memberCount}</SubscribersCount>
               </Subscribers>
@@ -485,17 +487,17 @@ function ViewChannelItem({ channelObjectProp }) {
                   {formatAddress(copyText)}
                 </SubscribersCount>
               </Subscribers>
-              {verifierDetails && (
-                <Subscribers>
-                  <VerifiedBy>Verified by:</VerifiedBy>
-                  <VerifierIcon src={verifierDetails.icon} />
-                  <VerifierName>{verifierDetails.name}</VerifierName>
-                </Subscribers>
-              )}
+              
             </>
           )}
+          
         </ChannelMeta>
+      
+        
+        
+      
       </ChannelInfo>
+      
       {!!account && !!library && (
         <>
           <LineBreak />
@@ -525,6 +527,7 @@ function ViewChannelItem({ channelObjectProp }) {
                 <ActionTitle hideit={vLoading}>Verify Channel</ActionTitle>
               </SubscribeButton>
             )}
+            
             {!loading && (isPushAdmin || canUnverify) && isVerified && (
               <UnsubscribeButton onClick={unverifyChannel} disabled={vLoading}>
                 {vLoading && (
@@ -567,28 +570,86 @@ function ViewChannelItem({ channelObjectProp }) {
                   </UnsubscribeButton>
                 )}
               </>
+              
             )}
+              
           </ChannelActions>
         </>
       )}
+      
+     
+    </Container>
+    {/* {verifierDetails  */}
+    { (
+      <VerificationSection>
+        <VerifiedBy>Verified by:</VerifiedBy>
+        {/* <VerifierIcon src={verifierDetails.icon} />
+        <VerifierName>{verifierDetails.name}</VerifierName> */}
+        <VerifierIcon src='./bell.svg' />
+        <VerifierName>Ethereum Push Notification Service</VerifierName>
+      </VerificationSection>
+    )}
+    </Outer>
+     
+      
       {toast && (
         <NotificationToast notification={toast} clearToast={clearToast} />
       )}
-    </Container>
+    
+    </>
+    
   );
 }
 
 // css styles
+const Outer = styled.div`
+display: flex;
+flex-direction: column;
+background: #fff;
+  border-radius: 10px;
+  border: 1px solid rgb(237, 237, 237);
+  margin: 15px 0px;
+`;
+
+const VerificationSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  flex-wrap: wrap;
+  
+  display: inline-block;
+  position: absolute;
+  background-color: #DDDDDD ;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 7px;
+  border-top-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  right: 20px;
+  margin-top: 117px;
+
+  @media(max-width: 900px)
+  {
+    display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  display: block;
+  position: relative;
+  right: 0px;
+  height: auto;
+  padding-bottom:7px;
+  
+  margin-top:auto;
+  }
+
+`;
 const Container = styled.div`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
 
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid rgb(237, 237, 237);
-
-  margin: 15px 0px;
+  
   justify-content: center;
   padding: 10px;
 `;
@@ -687,8 +748,10 @@ const VerifierIcon = styled.img`
 const VerifierName = styled.span`
   font-weight: 400;
   color: black;
+  justify-content: cenetr;
   font-size: 16px;
   letter-spacing: 0em;
+  text-align:center;
 `;
 
 const ChannelDesc = styled.div`
