@@ -17,6 +17,10 @@ export default {
         PRIMARY: 1,
         SECONDARY: 2,
         FULL: 3
+      },
+
+      NAVBAR_IDENTIFIERS: {
+        CREATE_CHANNEL: 1,
       }
     },
   

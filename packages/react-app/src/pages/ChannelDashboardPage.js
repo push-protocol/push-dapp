@@ -13,7 +13,7 @@ import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "components/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
-import Feedbox from "pages/Feedbox";
+import Feedbox from "segments/Feedbox";
 import Channels from "pages/Channels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelCreationDashboard from "segments/ChannelCreationDashboard";

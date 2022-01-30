@@ -6,7 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
-import SpamBox from "./spam";
+
 import {
   api,
   utils,
@@ -16,9 +16,10 @@ import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-  resetState,
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
+
+import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -114,132 +115,67 @@ function Feedbox() {
 
   // Render
   return (
-    <FullWidth>
-      <Wrapper>
-        <Button active={currentTab == "inbox"} onClick={() => setCurrentTab("inbox")}>Inbox</Button>
-        <Button active={currentTab == "spambox"} onClick={() => setCurrentTab("spambox")} spam>
-          Spam
-        </Button>
-      </Wrapper>
-      {currentTab == "spambox" ? (
-        <SpamBox currentTab={currentTab} />
-      ) : (
-        <Container>
-          {bgUpdateLoading && (
-            <div style={{ marginTop: "10px" }}>
-              <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-            </div>
-          )}
-          {notifications && (
-            <Items id="scrollstyle-secondary">
-              {notifications.map((oneNotification, index) => {
-                const {
-                  cta,
-                  title,
-                  message,
-                  app,
-                  icon,
-                  image,
-                } = oneNotification;
+    <Container>
+      {notifications && (
+        <Notifs id="scrollstyle-secondary">
 
-                // render the notification item
-                return (
-                  <div key={`${message}+${title}`}>
-                    {showWayPoint(index) && (
-                      <Waypoint onEnter={() =>handlePagination} />
-                    )}
-                    <NotificationItem
-                      notificationTitle={title}
-                      notificationBody={message}
-                      cta={cta}
-                      app={app}
-                      icon={icon}
-                      image={image}
-                    />
-                  </div>
-                );
-              })}
-            </Items>
+          {bgUpdateLoading && (
+            <Item
+              padding="10px 20px"
+            >
+              <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+            </Item>
           )}
+
+          {notifications.map((oneNotification, index) => {
+            const {
+              cta,
+              title,
+              message,
+              app,
+              icon,
+              image,
+            } = oneNotification;
+
+            // render the notification item
+            return (
+              <div key={`${message}+${title}`}>
+                {showWayPoint(index) && (
+                  <Waypoint onEnter={() => handlePagination()} />
+                )}
+                <NotificationItem
+                  notificationTitle={title}
+                  notificationBody={message}
+                  cta={cta}
+                  app={app}
+                  icon={icon}
+                  image={image}
+                />
+              </div>
+            );
+          })}
+
           {loading && !bgUpdateLoading && (
-            <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+            <Item
+              padding="10px 20px"
+            >
+              <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+            </Item>
           )}
-          {!notifications.length && !loading && (
-            <CenteredContainerInfo>
-              <DisplayNotice
-                title="You currently have no notifications, try subscribing to some channels."
-                theme="third"
-              />
-            </CenteredContainerInfo>
-          )}
-        </Container>
+        </Notifs>
       )}
-    </FullWidth>
+      {!notifications.length && !loading && (
+        <Item>
+          <DisplayNotice
+            title="You currently have no notifications, try subscribing to some channels."
+            theme="third"
+          />
+        </Item>
+      )}
+    </Container>
   );
 }
 
-const FullWidth = styled.div`
-  width: 100%;
-`;
-const Wrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  justify-content: space-between;
-`;
-
-const Button = styled.div`
-  border: 0;
-  outline: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 400;
-  position: relative;
-  background: ${(props: any) => (props.spam ? "#e20880" : "#674C9F")};
-  min-width: 100px;
-  width: 45%;
-  cursor: ${(props: any) => (props.active ? "not-allowed" : "pointer")};
-  opacity: ${(props: any) => (props.active ? 0.5 : 1)};
-
-  &:hover {
-    opacity: ${(props: any) => (props.active ? 0.5 : 0.8)};
-  }
-`;
-
-const EmptyWrapper = styled.div`
-  padding-top: 50px;
-  padding-bottom: 50px;
-`;
-const CenteredContainerInfo = styled.div`
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Items = styled.div`
-  display: block;
-  align-self: stretch;
-  padding: 10px 20px;
-  overflow-y: scroll;
-  background: #fafafa;
-`;
 // css styles
 const Container = styled.div`
   display: flex;
@@ -250,17 +186,20 @@ const Container = styled.div`
   align-content: center;
   align-items: center;
   justify-content: center;
-  max-height: 100vh;
+  height: inherit;
+`;
 
-  // padding: 20px;
-  // font-size: 16px;
-  // display: flex;
-  // font-weight: 200;
-  // align-content: center;
-  // align-items: center;
-  // justify-content: center;
-  // width: 100%;
-  // min-height: 40vh;
+const Notifs = styled.div`
+  align-self: stretch;
+  padding: 10px 20px;
+  overflow-y: scroll;
+  background: ${props => props.theme.mainBg};
+  flex: 1;
+
+  "-webkit-scrollbar-track": {
+    background-color: #EEE;
+    border-radius: 10px;
+  }
 `;
 
 // Export Default

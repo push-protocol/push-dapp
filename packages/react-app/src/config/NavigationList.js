@@ -1,3 +1,6 @@
+import { themeLight, themeDark } from "config/Themization";
+import GLOBALS from "config/Globals";
+
 const NavigationList = {
     primary: {
       communicate: {
@@ -23,6 +26,17 @@ const NavigationList = {
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: 'Inbox',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
           spam: {
             src: "svg/feedbox.svg",
@@ -34,6 +48,17 @@ const NavigationList = {
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: 'Spam',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },  
           channels: {
             src: "svg/channel.svg",
@@ -45,8 +70,20 @@ const NavigationList = {
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: 'View Channels',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
           createChannel: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
             src: "svg/channeladmin.svg",
             iconFactory: null,
             name: 'Create Channel',
@@ -56,6 +93,39 @@ const NavigationList = {
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: 'Channel Dashboard',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+          receiveNotifs: {
+            src: "svg/share.svg",
+            iconFactory: null,
+            name: 'Receive Notifs',
+            title: 'Receive Notifs',
+            alt: 'Receive Notifs',
+            href: '/receive',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Receive Notifications',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_THIRD,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
         }
       },
@@ -70,16 +140,27 @@ const NavigationList = {
         opened: false,
         isRoute: true,
         hasMenuLogic: true,
+        headerTag: {
+          title: "Let's Govern",
+          light: {
+            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+            fg: themeLight.headerTagFg,
+          },
+          dark: {
+            bg: themeDark.headerTagBg,
+            fg: themeDark.headerTagFg,
+          }
+        }
       },
       incentives: {
         src: "svg/incentive.svg",
         iconFactory: null,
         name: 'Incentives',
         title: 'Check Incentives Tab',
-        alt: 'Communicate Tab Icon',
+        alt: 'Incentives Tab Icon',
         href: null,
         newTab: false,
-        opened: true,
+        opened: false,
         isRoute: true,
         hasMenuLogic: true,
   
@@ -94,6 +175,17 @@ const NavigationList = {
             newTab: false,
             isRoute: true,  
             hasMenuLogic: true,
+            headerTag: {
+              title: "Yield Farming",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
           rockstars: {
             src: "svg/rockstars.svg",
@@ -105,6 +197,17 @@ const NavigationList = {
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: "Rockstars NFTs",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
           airdrop: {
             src: "svg/gratitude.svg",
@@ -116,7 +219,55 @@ const NavigationList = {
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: "Gratitude Drop",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_THIRD,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },      
+        }
+      },
+      walkthrough: {
+        src: "svg/incentive.svg",
+        iconFactory: null,
+        name: 'Walkthrough',
+        title: 'Check Walkthrough Tab',
+        alt: 'Walkthrough Tab Icon',
+        href: null,
+        newTab: false,
+        opened: false,
+        isRoute: true,
+        hasMenuLogic: true,
+  
+        drilldown: {
+          tutorial: {
+            src: "svg/yield.svg",
+            iconFactory: null,
+            name: 'Tutorial',
+            title: 'Tutorial',
+            alt: 'Open Tutorial',
+            href: '/tutorial',
+            newTab: false,
+            isRoute: true,  
+            hasMenuLogic: true,
+          },
+          faq: {
+            src: "svg/rockstars.svg",
+            iconFactory: null,
+            name: 'FAQs',
+            title: 'Checkout Frequently Asked Questions',
+            alt: 'Open FAQs',
+            href: '/faq',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+          }, 
         }
       }
     },
@@ -128,30 +279,6 @@ const NavigationList = {
         title: 'Checkout latest news',
         alt: "Open What's Latest",
         href: 'https://staging-dapp.epns.io',
-        newTab: true,
-        opened: false,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-      walkthrough: {
-        src: "svg/channel.svg",
-        iconFactory: null,
-        name: 'Walkthrough',
-        title: 'Start Walkthrough Tutorial',
-        alt: 'Start Walkthrough Tutorial',
-        href: '/walkthrough',
-        newTab: false,
-        opened: false,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-      staging: {
-        src: "svg/channel.svg",
-        iconFactory: null,
-        name: 'Staging Interface',
-        title: 'Checkout staging interface',
-        alt: 'Goto staging interface',
-        href: 'https://staging-app.epns.io',
         newTab: true,
         opened: false,
         isRoute: false,
@@ -169,64 +296,19 @@ const NavigationList = {
         isRoute: false,
         isMenuLogic: false,
       },
+      staging: {
+        src: "svg/channel.svg",
+        iconFactory: null,
+        name: 'Staging Interface',
+        title: 'Checkout staging interface',
+        alt: 'Goto staging interface',
+        href: 'https://staging-app.epns.io',
+        newTab: true,
+        opened: false,
+        isRoute: false,
+        isMenuLogic: false,
+      },
     },
-    social: {
-      twitter: {
-        src: "BsTwitter",
-        iconFactory: 'BsTwitter',
-        name: null,
-        title: 'Visit Twitter',
-        alt: 'Open Twitter',
-        href: 'https://twitter.com/epnsproject',
-        newTab: true,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-      telegram: {
-        src: "FaTelegramPlane",
-        iconFactory: "FaTelegramPlane",
-        name: null,
-        title: 'Visit Telegram',
-        alt: 'Open Telegram',
-        href: 'https://t.me/epnsproject',
-        newTab: true,
-        isRoute: false,
-        isMenuLogic: false,
-      },  
-      discord: {
-        src: "BsDiscord",
-        iconFactory: "BsDiscord",
-        name: null,
-        title: 'Visit Twitter',
-        alt: 'Open Twitter',
-        href: 'https://twitter.com/epnsproject',
-        newTab: true,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-      medium: {
-        src: "FaMedium",
-        iconFactory: "FaMedium",
-        name: null,
-        title: 'Visit Medium',
-        alt: 'Open Medium',
-        href: 'https://medium.com/@epnsproject',
-        newTab: true,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-      github: {
-        src: "FaGithub",
-        iconFactory: "FaGithub",
-        name: 'Create Channel',
-        title: 'Create Channel',
-        alt: 'Create Channels / Dashboard',
-        href: 'https://github.com/ethereum-push-notification-service',
-        newTab: true,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-    }
   }
   
   

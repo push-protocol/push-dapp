@@ -1,4 +1,4 @@
-import React, { Components, useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
@@ -10,13 +10,17 @@ import { Web3Provider } from 'ethers/providers'
 
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
+import { BsTwitter, BsDiscord } from 'react-icons/bs';
+import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
+
 import styled, { useTheme, css } from "styled-components";
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
 import NavigationList from "config/NavigationList";
 
-import { themeLight, themeDark } from "config/Themization";
+import { NavigationContext } from "contexts/NavigationContext";
+
 import GLOBALS from "config/Globals";
 
 // Create Header
@@ -24,6 +28,8 @@ function Navigation() {
     const [sectionOverride, setSectionOverride] = useState([])
     const [menuList, setMenuList] = useState([])
     const [loading, setLoading] = useState(false);
+
+    const { setNavigationSetup } = useContext(NavigationContext)
 
     const theme = useTheme();
     const location = useLocation();
@@ -39,21 +45,19 @@ function Navigation() {
           // Set Secondary List
           const secondaryList = returnTransformedList(NavigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
 
-          // Set Social List
-          const socialList = returnTransformedList(NavigationList.social, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SOCIAL);
-          
           // Set Nav List
           let count = -1;
-          let mobList = returnNavList(NavigationList.primary, count);
-          mobList = Object.assign(mobList, returnNavList(NavigationList.secondary, Object.keys(mobList).length));
+          let navList = returnNavList(NavigationList.primary, count);
+          console.log(navList)
+          navList = Object.assign(navList, returnNavList(NavigationList.secondary, Object.keys(navList).length));
           
           const finalList = {
             primary: primaryList,
             secondary: secondaryList,
-            social: socialList,
-            mobile: mobList
+            mobile: navList
           };
           
+          setNavigationSetup(navList);
           setMenuList(finalList);
       }
         
@@ -231,9 +235,9 @@ function Navigation() {
 
             // Check and expand it if the pathname matches
             if (location.pathname === item.href) {
-                transformedList[identifier].active = true;
+              transformedList[identifier].active = true;
             }
-            transformedList[identifier].data = drillvalue;
+            transformedList[identifier].data = drillvalue.data;
           })
         }
         else {
@@ -400,6 +404,7 @@ function Navigation() {
                   <Secondary
                     align="stretch"
                     justify="flex-end"
+                    margin="10px 0px 10px 0px"
                   >
                     {
                       renderMainItems(
@@ -408,6 +413,69 @@ function Navigation() {
                       )
                     }
                   </Secondary>
+
+                  {/* Put social */}
+                  <ItemH
+                    flex="initial"
+                    padding="10px"
+                    bg={theme.leftBarSocialBg}
+                  >
+                    <Anchor
+                      title="Open Twitter"
+                      href="https://twitter.com/epnsproject"
+                      target="_blank"
+                      bg={theme.leftBarSocialIconBg}
+                      radius="4px"
+                      padding="10px"
+                      margin="5px"
+                    >
+                      <FaTwitter size={15} color="#fff"/>
+                    </Anchor>
+                    <Anchor
+                      title="Open Telegram"
+                      href="https://t.me/epnsproject"
+                      target="_blank"
+                      bg={theme.leftBarSocialIconBg}
+                      radius="4px"
+                      padding="10px"
+                      margin="5px"
+                    >
+                      <FaTelegramPlane size={15} color="#fff"/>
+                    </Anchor>
+                    <Anchor
+                      title="Open Medium"
+                      href="https://medium.com/ethereum-push-notification-service"
+                      target="_blank"
+                      bg={theme.leftBarSocialIconBg}
+                      radius="4px"
+                      padding="10px"
+                      margin="5px"
+                    >
+                      <FaMedium size={15} color="#fff"/>
+                    </Anchor>
+                    <Anchor
+                      title="Open Discord"
+                      href="https://discord.gg/YVPB99F9W5"
+                      target="_blank"
+                      bg={theme.leftBarSocialIconBg}
+                      radius="4px"
+                      padding="10px"
+                      margin="5px"
+                    >
+                      <FaDiscord size={15} color="#fff"/>
+                    </Anchor>
+                    <Anchor
+                      title="Open Github"
+                      href="https://github.com/ethereum-push-notification-service"
+                      target="_blank"
+                      bg={theme.leftBarSocialIconBg}
+                      radius="4px"
+                      padding="10px"
+                      margin="5px"
+                    >
+                      <FaGithub size={15} color={"#fff"}/>
+                    </Anchor>
+                  </ItemH>
                 </Footer>
           </>
             }

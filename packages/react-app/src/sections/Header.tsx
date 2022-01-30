@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useLocation } from 'react-router-dom';
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import {
@@ -9,22 +10,59 @@ import { Web3Provider } from 'ethers/providers'
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
+import { SwitchTransition, CSSTransition } from "react-transition-group";
+
 import styled, { css } from "styled-components";
-import {Section, Item, ItemH, Button} from 'components/SharedStyling';
+import {Section, Item, ItemH, Button, Span} from 'components/SharedStyling';
 
 import Profile from 'components/Profile';
 import Bell from 'components/Bell';
 
+import { NavigationContext } from "contexts/NavigationContext";
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
+  // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
+
+  const { navigationSetup } = useContext(NavigationContext)
 
   const { active, error } = useWeb3React();
   const { deactivate } = context
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
+  // Handle Header Tag
+  const [ headerTag, setHeaderTag ] = React.useState(null);
+
+  // Get Location
+  const location = useLocation();
+
+  React.useEffect(() => {
+    // runs when navigation setup is updated, will run on init
+    updateHeaderTag(location)
+  }, [navigationSetup])
+
+  // Change text based on change of location
+  React.useEffect(() => {
+    // runs on location, i.e. route, change
+    updateHeaderTag(location)
+  }, [location])
+
+  // handle header tag update
+  const updateHeaderTag = (location) => {
+    if (navigationSetup) {
+      Object.entries(navigationSetup).forEach(([key, value]) => {
+        const item = navigationSetup[key];
+        if (location.pathname === item.data.href) {
+          setHeaderTag(item.data.headerTag);
+        }
+      })
+    }
+    
+  }
+
+  // handle error functions
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
@@ -41,7 +79,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   }
 
   const bellPressed = () => {
-    setShowLoginControls(!showLoginControls);
+    // setShowLoginControls(!showLoginControls);
+    console.log(navigationSetup);
   }
 
   const disconnect = () => {
@@ -54,6 +93,7 @@ function Header({ isDarkMode, darkModeToggle }) {
       direction="row"
       padding="10px 15px"
     >
+      
       <ItemH
         justify="flex-start"
         flex="0"
@@ -69,6 +109,25 @@ function Header({ isDarkMode, darkModeToggle }) {
       <ItemH
         justify="flex-end"
       >
+        {headerTag && 
+          <HeaderTag
+            align="flex-start"
+            margin="5px 15px"
+            overflow="hidden"
+          >
+            <Span
+              textTransform="uppercase"
+              spacing="0.1em"
+              weight="normal"
+              padding="8px 15px"
+              bg={!isDarkMode ? headerTag.light.bg : headerTag.dark.bg}
+              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
+            >
+              {headerTag.title}
+            </Span>
+          </HeaderTag>
+        }
+        
         {active && !error &&
           <Bell
             badgeCount={0}
@@ -78,7 +137,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         }
       
-      <Item
+      <DarkMode
         flex="initial"
         justify="flex-end"
         padding="16px"
@@ -98,7 +157,7 @@ function Header({ isDarkMode, darkModeToggle }) {
             sunColor="#ddd"
           />
         </Item>
-      </Item>
+      </DarkMode>
 
         {showLoginControls &&
           <Item
@@ -183,6 +242,18 @@ const Connection = styled.span`
   ${props => props.phase === 'error' && css`
     background: #DC143C;
   `};
+`
+
+const HeaderTag = styled(Item)`
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+
+const DarkMode = styled(Item)`
+  @media (max-width: 768px) {
+    display: none;
+  }
 `
 
 // Export Default
