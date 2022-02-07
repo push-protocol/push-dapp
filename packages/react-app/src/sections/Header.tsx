@@ -10,9 +10,9 @@ import { Web3Provider } from 'ethers/providers'
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
-import { SwitchTransition, CSSTransition } from "react-transition-group";
+import { AiOutlineMenu } from 'react-icons/ai';
 
-import styled, { css } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 import {Section, Item, ItemH, Button, Span} from 'components/SharedStyling';
 
 import Profile from 'components/Profile';
@@ -20,8 +20,13 @@ import Bell from 'components/Bell';
 
 import { NavigationContext } from "contexts/NavigationContext";
 
+import GLOBALS from "config/Globals";
+
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
+  // Get theme
+  const theme = useTheme();
+
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
 
@@ -31,6 +36,9 @@ function Header({ isDarkMode, darkModeToggle }) {
   const { deactivate } = context
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
+
+  // Handle Nav Bar
+  const [showNavBar, setShowNavBar] = React.useState(false);
 
   // Handle Header Tag
   const [ headerTag, setHeaderTag ] = React.useState(null);
@@ -52,15 +60,16 @@ function Header({ isDarkMode, darkModeToggle }) {
   // handle header tag update
   const updateHeaderTag = (location) => {
     if (navigationSetup) {
-      Object.entries(navigationSetup).forEach(([key, value]) => {
-        const item = navigationSetup[key];
+      Object.entries(navigationSetup.navigation).forEach(([key, value]) => {
+        const item = navigationSetup.navigation[key];
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
         }
       })
     }
-    
+    console.log(navigationSetup)
   }
+
 
   // handle error functions
   function getErrorMessage(error: Error) {
@@ -79,8 +88,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   }
 
   const bellPressed = () => {
-    // setShowLoginControls(!showLoginControls);
-    console.log(navigationSetup);
+    setShowLoginControls(!showLoginControls);
   }
 
   const disconnect = () => {
@@ -91,18 +99,55 @@ function Header({ isDarkMode, darkModeToggle }) {
   return (
     <Container
       direction="row"
-      padding="10px 15px"
+      padding="0px 15px"
     >
       
       <ItemH
         justify="flex-start"
         flex="0"
       >
-        {active && !error &&
-          <Profile />
-        }
-        {!active &&
-          <Logo src="epns.png" />
+        <RightBarContainer
+          justify="flex-start"
+          flex="0"
+        >
+          <RightBarDesktop
+            justify="flex-start"
+            flex="0"
+          >
+            {active && !error &&
+              <Profile />
+            }
+            {!active &&
+              <Logo src="epns.png" />
+            }
+          </RightBarDesktop>
+          
+          <RightBarMobile>
+            <Button
+              bg="transparent"
+              padding="5px"
+              radius="12px"
+              onClick={() => {setShowNavBar(!showNavBar)}}
+            >
+              <AiOutlineMenu size={30} color={theme.headerIconsBg}/>
+            </Button>
+          </RightBarMobile>
+        </RightBarContainer>
+        
+        {navigationSetup && showNavBar && 
+          <NavMenuContainer
+            align="flex-start"
+          >
+            <NavMenu>
+              {active && !error &&
+                <Profile />
+              }
+
+              {Object.keys(navigationSetup.navigation).map(function(key) {
+
+              })}
+            </NavMenu>
+          </NavMenuContainer>
         }
       </ItemH>
 
@@ -112,7 +157,6 @@ function Header({ isDarkMode, darkModeToggle }) {
         {headerTag && 
           <HeaderTag
             align="flex-start"
-            margin="5px 15px"
             overflow="hidden"
           >
             <Span
@@ -137,27 +181,27 @@ function Header({ isDarkMode, darkModeToggle }) {
           />
         }
       
-      <DarkMode
-        flex="initial"
-        justify="flex-end"
-        padding="16px"
-        margin="0px 10px 0px 0px"
-        position="relative"
-        border-radius="100%"
-      >
-        <Item
-          position="absolute"
-          top="4px"
+        <DarkMode
+          flex="initial"
+          justify="flex-end"
+          padding="16px"
+          margin="0px 10px 0px 0px"
+          position="relative"
+          border-radius="100%"
         >
-          <DarkModeSwitch
-            style={{ marginBottom: '2rem' }}
-            checked={isDarkMode}
-            onChange={darkModeToggle}
-            size={24}
-            sunColor="#ddd"
-          />
-        </Item>
-      </DarkMode>
+          <Item
+            position="absolute"
+            top="4px"
+          >
+            <DarkModeSwitch
+              style={{ marginBottom: '2rem' }}
+              checked={isDarkMode}
+              onChange={darkModeToggle}
+              size={24}
+              sunColor="#ddd"
+            />
+          </Item>
+        </DarkMode>
 
         {showLoginControls &&
           <Item
@@ -198,10 +242,52 @@ function Header({ isDarkMode, darkModeToggle }) {
 const Container = styled(Section)`
   background: ${props => props.theme.headerBg};
   border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
+  height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
 `
 
 const Logo = styled.img`
   height: 40px;
+`
+
+const RightBarContainer = styled(ItemH)`
+
+`
+
+const RightBarDesktop = styled(ItemH)`
+  @media (max-width: 992px) {
+    display: none;
+  }
+`
+
+const RightBarMobile = styled(ItemH)`
+  margin: 5px 5px 5px -5px;
+  
+  @media (min-width: 993px) {
+    display: none;
+  }
+`
+
+const NavMenuContainer = styled(Item)`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  z-index: 1;
+  align-items: flex-start;
+  padding: 10px 10px;
+
+  backdrop-filter: url(filters.svg#filter) blur(100px) saturate(250%);
+  background: ${props => props.theme.navMenuBg};
+  z-index: 11;
+`
+
+const NavMenu = styled(Item)`
+  align-items: stretch;
+  justify-content: flex-start;
 `
 
 const Notice = styled.span`
@@ -245,8 +331,11 @@ const Connection = styled.span`
 `
 
 const HeaderTag = styled(Item)`
-  @media (max-width: 768px) {
-    display: none;
+  flex: 1;
+  margin="5px 15px"
+
+  @media (min-width: 993px) {
+    margin: "5px 10px";
   }
 `
 

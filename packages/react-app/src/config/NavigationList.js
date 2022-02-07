@@ -39,7 +39,7 @@ const NavigationList = {
             }
           },
           spam: {
-            src: "svg/feedbox.svg",
+            src: "svg/spam.svg",
             iconFactory: null,
             name: 'Spam',
             title: 'Spam',
@@ -234,7 +234,7 @@ const NavigationList = {
         }
       },
       walkthrough: {
-        src: "svg/incentive.svg",
+        src: "svg/walkthrough.svg",
         iconFactory: null,
         name: 'Walkthrough',
         title: 'Check Walkthrough Tab',
@@ -247,7 +247,7 @@ const NavigationList = {
   
         drilldown: {
           tutorial: {
-            src: "svg/yield.svg",
+            src: "svg/tutorial.svg",
             iconFactory: null,
             name: 'Tutorial',
             title: 'Tutorial',
@@ -258,7 +258,7 @@ const NavigationList = {
             hasMenuLogic: true,
           },
           faq: {
-            src: "svg/rockstars.svg",
+            src: "svg/qna.svg",
             iconFactory: null,
             name: 'FAQs',
             title: 'Checkout Frequently Asked Questions',
@@ -273,7 +273,7 @@ const NavigationList = {
     },
     secondary: {
       latest: {
-        src: "svg/channel.svg",
+        src: "svg/news.svg",
         iconFactory: null,
         name: 'Latest',
         title: 'Checkout latest news',
@@ -285,24 +285,12 @@ const NavigationList = {
         isMenuLogic: false,
       },
       support: {
-        src: "svg/channel.svg",
+        src: "svg/support.svg",
         iconFactory: null,
         name: 'Support',
         title: 'Open a support ticket',
         alt: 'Open Support Ticket',
         href: 'https://staging-dapp.epns.io',
-        newTab: true,
-        opened: false,
-        isRoute: false,
-        isMenuLogic: false,
-      },
-      staging: {
-        src: "svg/channel.svg",
-        iconFactory: null,
-        name: 'Staging Interface',
-        title: 'Checkout staging interface',
-        alt: 'Goto staging interface',
-        href: 'https://staging-app.epns.io',
         newTab: true,
         opened: false,
         isRoute: false,

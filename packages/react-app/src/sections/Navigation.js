@@ -1,16 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-import {
-  NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected
-} from '@web3-react/injected-connector'
-import { Web3Provider } from 'ethers/providers'
-
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
-
-import { BsTwitter, BsDiscord } from 'react-icons/bs';
+import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
@@ -25,11 +16,10 @@ import GLOBALS from "config/Globals";
 
 // Create Header
 function Navigation() {
-    const [sectionOverride, setSectionOverride] = useState([])
-    const [menuList, setMenuList] = useState([])
     const [loading, setLoading] = useState(false);
+    const [ refresh, setRefresh ] = useState(false);
 
-    const { setNavigationSetup } = useContext(NavigationContext)
+    const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
 
     const theme = useTheme();
     const location = useLocation();
@@ -48,82 +38,120 @@ function Navigation() {
           // Set Nav List
           let count = -1;
           let navList = returnNavList(NavigationList.primary, count);
-          console.log(navList)
           navList = Object.assign(navList, returnNavList(NavigationList.secondary, Object.keys(navList).length));
           
           const finalList = {
             primary: primaryList,
             secondary: secondaryList,
-            mobile: navList
+            navigation: navList
           };
           
-          setNavigationSetup(navList);
-          setMenuList(finalList);
+          setNavigationSetup(finalList);
       }
         
     }, []);
-
+    
     const returnTransformedList = (lists, identity) => {
       let transformedList = [];
       let count = -1;
       Object.entries(lists).forEach(([key, value]) => {
-          count++;
-          let identifier = count.toString();
+        count++;
+        let identifier = count.toString();
 
-          const section = lists[key];
+        const section = lists[key];
 
-          transformedList[identifier] = {};
-          transformedList[identifier].active = false;
-          transformedList[identifier].isSection = true;
-          transformedList[identifier].hasMenuLogic = value.hasMenuLogic;
+        transformedList[identifier] = {};
+        transformedList[identifier].active = false;
+        transformedList[identifier].isSection = true;
+        transformedList[identifier].hasMenuLogic = value.hasMenuLogic;
 
-          transformedList[identifier].id = identity + "_" + key;
-          transformedList[identifier].parent = null;
-          transformedList[identifier].hasItems = false;
-          transformedList[identifier].opened = false;
+        transformedList[identifier].id = identity + "_" + key;
+        transformedList[identifier].parent = null;
+        transformedList[identifier].hasItems = false;
+        transformedList[identifier].opened = false;
 
-          if (location.pathname === section.href) {
-              transformedList[identifier].active = true;
-          }
-          transformedList[identifier].data = value;
+        if (location.pathname === section.href) {
+            transformedList[identifier].active = true;
+        }
+        transformedList[identifier].data = value;
 
-          if (section.hasOwnProperty('drilldown')) {
-            let drillcount = -1;
-            let drilldownModified = {};
+        if (section.hasOwnProperty('drilldown')) {
+          let drillcount = -1;
+          let drilldownModified = {};
 
-            Object.entries(section.drilldown).forEach(([drillkey, drillvalue]) => {
-              drillcount++;
-              let drillIdentifier = drillcount.toString();
-              const item = section.drilldown[drillkey];
+          Object.entries(section.drilldown).forEach(([drillkey, drillvalue]) => {
+            drillcount++;
+            let drillIdentifier = drillcount.toString();
+            const item = section.drilldown[drillkey];
 
-              drilldownModified[drillIdentifier] = {};
-              drilldownModified[drillIdentifier].active = false;
-              drilldownModified[drillIdentifier].isSection = false;
-              drilldownModified[drillIdentifier].hasMenuLogic = drillvalue.hasMenuLogic;
+            drilldownModified[drillIdentifier] = {};
+            drilldownModified[drillIdentifier].active = false;
+            drilldownModified[drillIdentifier].isSection = false;
+            drilldownModified[drillIdentifier].hasMenuLogic = drillvalue.hasMenuLogic;
 
-              drilldownModified[drillIdentifier].id = drillkey;
-              drilldownModified[drillIdentifier].parent = transformedList[identifier].id;
-              transformedList[identifier].hasItems = true;
+            drilldownModified[drillIdentifier].id = drillkey;
+            drilldownModified[drillIdentifier].parent = transformedList[identifier].id;
+            transformedList[identifier].hasItems = true;
 
-              // Check and expand it if the pathname matches
-              if (location.pathname === item.href) {
-                  transformedList[identifier].active = true;
-                  transformedList[identifier].opened = true;
+            // Check and expand it if the pathname matches
+            if (location.pathname === item.href) {
+                transformedList[identifier].active = true;
+                transformedList[identifier].opened = true;
 
-                  drilldownModified[drillIdentifier].active = true;
-              }
+                drilldownModified[drillIdentifier].active = true;
+            }
 
-              drilldownModified[drillIdentifier].data = drillvalue;
-            })
+            drilldownModified[drillIdentifier].data = drillvalue;
+          })
 
-            transformedList[identifier].data.drilldown = drilldownModified;
-          }
+          transformedList[identifier].data.drilldown = drilldownModified;
+        }
       });
 
       return transformedList;
     }
 
-    const mutateTransformedList = (item, sectionID) => {
+    // Location has changed, reflect it accordingly
+    React.useEffect(() => {
+      if (navigationSetup) {
+        // loop and find the item in question
+        Object.entries(navigationSetup).forEach(([key, value]) => {
+          if (key === "primary" || key === "secondary") {
+            const topSection = navigationSetup[key];
+
+            Object.entries(topSection).forEach(([key, value]) => {
+              const section = topSection[key];
+
+              if (section.data.hasOwnProperty('drilldown')) {
+                Object.entries(section.data.drilldown).forEach(([drillkey, drillvalue]) => {
+                  const item = section.data.drilldown[drillkey];
+
+                  if (location.pathname === item.data.href) {
+                    const transformedList = mutateTransformedList(item);
+                    setNavigationSetup(transformedList);
+                    setRefresh(!refresh);
+                    return;
+                  }
+                });
+              }
+              else {
+                if (location.pathname === section.data.href) {
+                  const transformedList = mutateTransformedList(section);
+                  setNavigationSetup(transformedList);
+                  setRefresh(!refresh);
+                  return;
+                }
+              }
+            });
+          }
+        });
+      }
+    }, [location, navigationSetup])
+
+    const mutateTransformedList = (item, onlyDrilldown) => {
+      // Finally transform the json menulist
+      let transformedMenuList = navigationSetup; 
+
       let activeParentId = null;
       let activeDrilldownId = null; 
 
@@ -139,14 +167,11 @@ function Navigation() {
           activeParentId = item.parent;
         }
       }
-      
+
       if (activeParentId == null && activeDrilldownId == null) {
         // nothing to do, return back
-        return;
+        return transformedMenuList;
       }
-
-      // Finally transform the json menulist
-      let transformedMenuList = menuList; 
 
       // Check and take action on Drop down getting toggled or section doesn't have dropdown menu
       let selectedSectionIsActionable = false;
@@ -158,7 +183,7 @@ function Navigation() {
               const section = transformedMenuList[key][sectionkey];
               
               if (section.id === activeParentId) {
-                section.opened = !section.opened;
+                transformedMenuList[key][sectionkey].opened = !transformedMenuList[key][sectionkey].opened;
 
                 if (section.hasItems) {
                   selectedSectionIsActionable = true;
@@ -169,49 +194,52 @@ function Navigation() {
         })
       }
 
-      if (selectedSectionIsActionable) {
+      if (selectedSectionIsActionable || onlyDrilldown) {
         // section had items but activeDrilldownId not set means dropdown toggle
-        return;
+        return transformedMenuList;
       }
+      else {
+        // menu item is getting selected
+        Object.keys(transformedMenuList).forEach(key => {
+          if (key === 'primary' || key === 'secondary') {
+            Object.keys(transformedMenuList[key]).forEach(sectionkey => {
+              const section = transformedMenuList[key][sectionkey];
 
-      // menu item is getting selected
-      Object.keys(transformedMenuList).forEach(key => {
-        if (key === 'primary' || key === 'secondary') {
-          Object.keys(transformedMenuList[key]).forEach(sectionkey => {
-            const section = transformedMenuList[key][sectionkey];
-
-            if (section.id !== activeParentId) {
-              if (section.active) {
-                transformedMenuList[key][sectionkey].active = false;
+              if (section.id !== activeParentId) {
+                if (section.active) {
+                  transformedMenuList[key][sectionkey].active = false;
+                  
+                  if (section.hasItems) {
+                    // loop and make all false
+                    Object.keys(transformedMenuList[key][sectionkey].data.drilldown).forEach(drillkey => {
+                      transformedMenuList[key][sectionkey].data.drilldown[drillkey].active = false;
+                    })
+                  }
+                }
+              }
+              else {
+                transformedMenuList[key][sectionkey].active = true;
                 
                 if (section.hasItems) {
                   // loop and make all false
                   Object.keys(transformedMenuList[key][sectionkey].data.drilldown).forEach(drillkey => {
-                    transformedMenuList[key][sectionkey].data.drilldown[drillkey].active = false;
+                    const item = transformedMenuList[key][sectionkey].data.drilldown[drillkey];
+
+                    if (item.id === activeDrilldownId) {
+                      transformedMenuList[key][sectionkey].data.drilldown[drillkey].active = true;
+                    }
+                    else {
+                      transformedMenuList[key][sectionkey].data.drilldown[drillkey].active = false;
+                    }
                   })
                 }
               }
-            }
-            else {
-              transformedMenuList[key][sectionkey].active = true;
-              
-              if (section.hasItems) {
-                // loop and make all false
-                Object.keys(transformedMenuList[key][sectionkey].data.drilldown).forEach(drillkey => {
-                  const item = transformedMenuList[key][sectionkey].data.drilldown[drillkey];
+            })
+          }
+        })
+      }
 
-                  if (item.id === activeDrilldownId) {
-                    item.active = true;
-                  }
-                  else {
-                    item.active = false;
-                  }
-                })
-              }
-            }
-          })
-        }
-      })
+      return transformedMenuList;
     }
 
     const returnNavList = (lists, count) => {
@@ -299,7 +327,10 @@ function Navigation() {
                   align="stretch"
                   bg={theme.leftBarButtonBg}
                   zIndex={2}
-                  onClick={() => mutateTransformedList(section, sectionID)}
+                  refresh={refresh}
+                  onClick={() => {
+                    mutateTransformedList(section, true)
+                  }}
                 >
                   <NavigationButton
                     item={section}
@@ -350,6 +381,7 @@ function Navigation() {
         <SectionGroup
           align="stretch"
           opened={opened}
+          refresh={refresh}
         >
           {Object.keys(drilldown).map(function(key) {
             const item = drilldown[key];
@@ -367,7 +399,10 @@ function Navigation() {
                   align="stretch"
                   bg={theme.leftBarButtonBg}
                   zIndex={1}
-                  onClick={() => mutateTransformedList(item, sectionID)}
+                  refresh={refresh}
+                  onClick={() => {
+                    // mutateTransformedList(item)
+                  }}
                 >
                   <NavigationButton
                     item={item}
@@ -386,100 +421,106 @@ function Navigation() {
     }
     
     return (
-        <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-            {Object.keys(menuList).length > 0 &&
-              <>
-                <Primary>
-                  {
-                    renderMainItems(
-                      menuList.primary,
-                      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
-                    )
-                  }
-                </Primary>
-                <Footer
-                  justify="flex-end"
-                  align="strecth"
-                >
-                  <Secondary
-                    align="stretch"
-                    justify="flex-end"
-                    margin="10px 0px 10px 0px"
-                  >
-                    {
-                      renderMainItems(
-                        menuList.secondary,
-                        GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY
-                      )
-                    }
-                  </Secondary>
+      <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
+        {!navigationSetup &&
+          <Item padding="20px" justify="flex-start">
+            <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
+          </Item>
+        }
+        {navigationSetup && Object.keys(navigationSetup).length > 0 &&
+          <>
+            <Primary>
+              {
+                renderMainItems(
+                  navigationSetup.primary,
+                  GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                )
+              }
+            </Primary>
+            <Footer
+              justify="flex-end"
+              align="strecth"
+            >
+              <Secondary
+                align="stretch"
+                justify="flex-end"
+                margin="10px 0px 10px 0px"
+              >
+                {
+                  renderMainItems(
+                    navigationSetup.secondary,
+                    GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY
+                  )
+                }
+              </Secondary>
 
-                  {/* Put social */}
-                  <ItemH
-                    flex="initial"
-                    padding="10px"
-                    bg={theme.leftBarSocialBg}
-                  >
-                    <Anchor
-                      title="Open Twitter"
-                      href="https://twitter.com/epnsproject"
-                      target="_blank"
-                      bg={theme.leftBarSocialIconBg}
-                      radius="4px"
-                      padding="10px"
-                      margin="5px"
-                    >
-                      <FaTwitter size={15} color="#fff"/>
-                    </Anchor>
-                    <Anchor
-                      title="Open Telegram"
-                      href="https://t.me/epnsproject"
-                      target="_blank"
-                      bg={theme.leftBarSocialIconBg}
-                      radius="4px"
-                      padding="10px"
-                      margin="5px"
-                    >
-                      <FaTelegramPlane size={15} color="#fff"/>
-                    </Anchor>
-                    <Anchor
-                      title="Open Medium"
-                      href="https://medium.com/ethereum-push-notification-service"
-                      target="_blank"
-                      bg={theme.leftBarSocialIconBg}
-                      radius="4px"
-                      padding="10px"
-                      margin="5px"
-                    >
-                      <FaMedium size={15} color="#fff"/>
-                    </Anchor>
-                    <Anchor
-                      title="Open Discord"
-                      href="https://discord.gg/YVPB99F9W5"
-                      target="_blank"
-                      bg={theme.leftBarSocialIconBg}
-                      radius="4px"
-                      padding="10px"
-                      margin="5px"
-                    >
-                      <FaDiscord size={15} color="#fff"/>
-                    </Anchor>
-                    <Anchor
-                      title="Open Github"
-                      href="https://github.com/ethereum-push-notification-service"
-                      target="_blank"
-                      bg={theme.leftBarSocialIconBg}
-                      radius="4px"
-                      padding="10px"
-                      margin="5px"
-                    >
-                      <FaGithub size={15} color={"#fff"}/>
-                    </Anchor>
-                  </ItemH>
-                </Footer>
+              {/* Put social */}
+              <ItemH
+                flex="initial"
+                padding="10px"
+                radius="0px 12px 0px 0px"
+                bg={theme.leftBarSocialBg}
+              >
+                <Anchor
+                  title="Open Twitter"
+                  href="https://twitter.com/epnsproject"
+                  target="_blank"
+                  bg={theme.leftBarSocialIconBg}
+                  radius="4px"
+                  padding="10px"
+                  margin="5px"
+                >
+                  <FaTwitter size={15} color="#fff"/>
+                </Anchor>
+                <Anchor
+                  title="Open Telegram"
+                  href="https://t.me/epnsproject"
+                  target="_blank"
+                  bg={theme.leftBarSocialIconBg}
+                  radius="4px"
+                  padding="10px"
+                  margin="5px"
+                >
+                  <FaTelegramPlane size={15} color="#fff"/>
+                </Anchor>
+                <Anchor
+                  title="Open Medium"
+                  href="https://medium.com/ethereum-push-notification-service"
+                  target="_blank"
+                  bg={theme.leftBarSocialIconBg}
+                  radius="4px"
+                  padding="10px"
+                  margin="5px"
+                >
+                  <FaMedium size={15} color="#fff"/>
+                </Anchor>
+                <Anchor
+                  title="Open Discord"
+                  href="https://discord.gg/YVPB99F9W5"
+                  target="_blank"
+                  bg={theme.leftBarSocialIconBg}
+                  radius="4px"
+                  padding="10px"
+                  margin="5px"
+                >
+                  <FaDiscord size={15} color="#fff"/>
+                </Anchor>
+                <Anchor
+                  title="Open Github"
+                  href="https://github.com/ethereum-push-notification-service"
+                  target="_blank"
+                  bg={theme.leftBarSocialIconBg}
+                  radius="4px"
+                  padding="10px"
+                  margin="5px"
+                >
+                  <FaGithub size={15} color={"#fff"}/>
+                </Anchor>
+              </ItemH>
+            </Footer>
           </>
-            }
-        </Container>
+        }
+      </Container>
     );
 }
 

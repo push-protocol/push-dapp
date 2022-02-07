@@ -184,7 +184,7 @@ const Container = styled.div`
 
   font-weight: 200;
   align-content: center;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   height: inherit;
 `;

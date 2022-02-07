@@ -23,10 +23,10 @@ function ReceiveNotifsPage() {
 // css style
 const Container = styled.div`
   flex: 1;
-  display: block;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 72px);
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
   background: ${props => props.theme.mainBg};
+  align-self: stretch;
 `;
 
 // Export Default
