@@ -10,13 +10,14 @@ import { Web3Provider } from 'ethers/providers'
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
-import { AiOutlineMenu } from 'react-icons/ai';
+import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 
 import styled, { css, useTheme } from "styled-components";
 import {Section, Item, ItemH, Button, Span} from 'components/SharedStyling';
 
 import Profile from 'components/Profile';
 import Bell from 'components/Bell';
+import NavigationButton from 'components/NavigationButton';
 
 import { NavigationContext } from "contexts/NavigationContext";
 
@@ -122,31 +123,59 @@ function Header({ isDarkMode, darkModeToggle }) {
             }
           </RightBarDesktop>
           
-          <RightBarMobile>
-            <Button
-              bg="transparent"
-              padding="5px"
-              radius="12px"
-              onClick={() => {setShowNavBar(!showNavBar)}}
-            >
-              <AiOutlineMenu size={30} color={theme.headerIconsBg}/>
-            </Button>
-          </RightBarMobile>
+          {active && !error &&
+            <RightBarMobile>
+              <Button
+                bg="transparent"
+                padding="5px"
+                radius="4px"
+                onClick={() => {setShowNavBar(!showNavBar)}}
+              >
+                <AiOutlineMenu size={30} color={theme.headerIconsBg}/>
+              </Button>
+            </RightBarMobile>
+          }
         </RightBarContainer>
         
-        {navigationSetup && showNavBar && 
+        {navigationSetup && showNavBar && active && !error &&
           <NavMenuContainer
             align="flex-start"
           >
-            <NavMenu>
-              {active && !error &&
-                <Profile />
-              }
-
+            <NavMenu
+            >
+              <Profile />
+              
               {Object.keys(navigationSetup.navigation).map(function(key) {
-
+                return (
+                  <Item
+                    onClick={() => {setShowNavBar(!showNavBar)}}
+                  >
+                    <NavigationButton
+                      item={navigationSetup.navigation[key]}
+                      data={navigationSetup.navigation[key].data}
+                      sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY}
+                      active={navigationSetup.navigation[key].active}
+                    />
+                  </Item>
+                );
               })}
             </NavMenu>
+
+            <Item
+              position="absolute"
+              top="15px"
+              right="5px"
+            >
+              <Button
+                bg="transparent"
+                padding="5px"
+                radius="4px"
+                onClick={() => {setShowNavBar(!showNavBar)}}
+              >
+                <AiOutlineClose size={30} color={theme.headerIconsBg}/>
+              </Button>
+            </Item>
+
           </NavMenuContainer>
         }
       </ItemH>
@@ -278,9 +307,7 @@ const NavMenuContainer = styled(Item)`
   justify-content: flex-start;
   z-index: 1;
   align-items: flex-start;
-  padding: 10px 10px;
 
-  backdrop-filter: url(filters.svg#filter) blur(100px) saturate(250%);
   background: ${props => props.theme.navMenuBg};
   z-index: 11;
 `
@@ -288,6 +315,7 @@ const NavMenuContainer = styled(Item)`
 const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
+  padding: 10px 10px;
 `
 
 const Notice = styled.span`
