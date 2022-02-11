@@ -21,6 +21,21 @@ import styled from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
 import Loader from "react-loader-spinner";
 
+// HELPER METHODS
+const validateEmail = (email) => {
+  const re =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
+const isEmpty = (field) => {
+  if (field.trim().length === 0) {
+    return true;
+  }
+
+  return false;
+};
+
 const SupportPage = () => {
   const contactFormTopics = ["Support", "Integrate", "Career", "Others"];
 
@@ -34,7 +49,57 @@ const SupportPage = () => {
   const [contactFormMsg, setContactFormMsg] = React.useState("");
   const [contactFormError, setContactFormError] = React.useState("");
 
-  const handleContactFormSubmit = () => {};
+  const handleContactFormSubmit = (e) => {
+		e.preventDefault();
+	
+		// Check everything in order
+		if (validateEmail(contactFormEmail)) {
+			if (isEmpty(contactFormName)) {
+				setContactFormError("Name can't be empty");
+				setContactFormProcessing(0);
+			} else if (isEmpty(contactFormSub)) {
+				setContactFormError("Subject can't be empty");
+				setContactFormProcessing(0);
+			} else if (isEmpty(contactFormMsg)) {
+				setContactFormError("Message can't be empty");
+				setContactFormProcessing(0);
+			} else {
+				setContactFormProcessing(1);
+	
+				const requestOptions = {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						from: contactFormEmail,
+						name: contactFormName,
+						topic: contactFormTopic,
+						sub: contactFormSub,
+						msg: contactFormMsg,
+					}),
+				};
+	
+				fetch(
+					"https://backend-kovan.epns.io/apis/mailing/send_mail",
+					requestOptions
+				)
+					.then((response) => response.json())
+					.then((jsondata) => {
+						// console.log(jsondata);
+						setContactFormProcessing(2);
+					})
+					.catch((err) => {
+						// console.log(err);
+						setContactFormError(
+							"Mayday! Mayday! something went wrong. Please retry..."
+						);
+						setContactFormProcessing(0);
+					});
+			}
+		} else {
+			setContactFormError("Incorrect e-mail, please check and retry!");
+			setContactFormProcessing(0);
+		}
+	};
 
   return (
     <Section id="contact" theme="#35c5f3" padding="20px 0px 80px 0px">
