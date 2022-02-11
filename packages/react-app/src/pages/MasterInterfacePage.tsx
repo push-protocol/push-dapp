@@ -20,6 +20,8 @@ import YieldFarmingPage from "pages/YieldFarmingPage";
 import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 
+import {SupportPage} from "pages/SupportPage";
+
 import GLOBALS from "config/Globals";
 
 // Create Header
@@ -44,6 +46,7 @@ function MasterInterfacePage() {
               path="/"
               element={<Navigate to="/channels" />}
           />
+          <Route path="support" element={<SupportPage/>}/>
         </Routes>
       </Interface>
 

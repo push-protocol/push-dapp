@@ -242,7 +242,7 @@ const ProviderButton = styled.button`
   flex: 1 1 0;
   min-width: 280px;
   background: #fff;
-  outline: 0;
+  outline: 0;ProviderButton
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
