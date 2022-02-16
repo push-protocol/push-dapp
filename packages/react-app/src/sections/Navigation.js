@@ -295,12 +295,12 @@ function Navigation() {
     const renderMainItems = (items, sectionID) => {
       let Section;
       let fontSize;
-      let buttonStyle=0;
+      let secondaryButton=0;
       switch(sectionID) {
         case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
           Section = SecondarySection;
           fontSize = "small";
-          buttonStyle=1;
+          secondaryButton=1;
           break;
         default:
           Section = PrimarySection;
@@ -320,7 +320,7 @@ function Navigation() {
             >
 
               {
-                (GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY)?
+                (secondaryButton)?
                   (
                     <Item
                     padding="10px"
@@ -335,6 +335,7 @@ function Navigation() {
                       bg={theme.leftBarButtonBg}
                       zIndex={2}
                       refresh={refresh}
+                      margintop="15px"
                       onClick={() => {
                         mutateTransformedList(section, true)
                       }}      
@@ -371,6 +372,7 @@ function Navigation() {
                       flex="1"
                       align="stretch"
                       bg={theme.leftBarButtonBg}
+                      margintop="-10px"
                       zIndex={2}
                       refresh={refresh}
                       onClick={() => {
@@ -613,10 +615,10 @@ const InheritedSectionItem = styled(Item)`
 `
 
 const SectionInnerGroupContainer = styled(Item)`
-  &:after {
+    &:after {
     content: '';
     position: absolute;
-    top: -10px;
+    top: ${props=>props.margintop};
     right: 0;
     left: 0;
     background: ${props => props.theme.leftBarButtonBg};
