@@ -37,7 +37,7 @@ const isEmpty = (field) => {
 };
 
 const SupportPage = () => {
-  const contactFormTopics = ["Support", "Integrate", "Career", "Others"];
+  const contactFormTopics = ["Support", "Integrate", "Others"];
 
   const [contactFormProcessing, setContactFormProcessing] = React.useState(0);
   const [contactFormName, setContactFormName] = React.useState("");
@@ -102,29 +102,10 @@ const SupportPage = () => {
 	};
 
   return (
-    <Section id="contact" theme="#35c5f3" padding="20px 0px 80px 0px">
+    <Section id="contact" theme="#FAFAFA">
       <Content className="contentBox">
         <Item align="stretch" justify="flex-start" margin="0px 20px">
-          <Item
-            align="flex-end"
-            tabletAlign="flex-start"
-            margin="0px 0px 20px 0px"
-            textAlign="right"
-            tabletTextAlign="left"
-          >
-            <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#fff" color="#000" weight="600" padding="0px 8px">
-                Contact
-              </Span>
-              <Span weight="200" color="#fff">
-                {" "}
-                Us!
-              </Span>
-            </H2>
-            <H3 color="#fff">Get in Touch</H3>
-          </Item>
-
-          <Item margin="10px -10px" self="stretch">
+          <Item self="stretch">
             <FormSubmision
               flex="1"
               direction="row"
@@ -144,7 +125,7 @@ const SupportPage = () => {
                         align="stretch"
                         minWidth="280px"
                       >
-                        <Input
+                        <ContactInput
                           radius="4px"
                           padding="12px"
                           bg="#fff"
@@ -155,6 +136,8 @@ const SupportPage = () => {
                             setContactFormName(e.target.value);
                           }}
                           autocomplete="name"
+                          style={{
+                          }}
                         />
                         {contactFormName.trim().length === 0 && (
                           <Span
@@ -179,7 +162,7 @@ const SupportPage = () => {
                         align="stretch"
                         minWidth="280px"
                       >
-                        <Input
+                        <ContactInput
                           required
                           placeholder="john@wick.com"
                           radius="4px"
@@ -229,7 +212,7 @@ const SupportPage = () => {
                       minWidth="280px"
                       margin="15px"
                     >
-                      <Input
+                      <ContactInput
                         required
                         placeholder="I want to tell you guys a secret!"
                         radius="4px"
@@ -263,7 +246,7 @@ const SupportPage = () => {
                       minWidth="280px"
                       margin="15px"
                     >
-                      <TextField
+                      <ContactTextArea
                         required
                         placeholder="This is where you will tell us that secret, or a bug or whatever is on your mind."
                         rows="6"
@@ -350,7 +333,7 @@ const SupportPage = () => {
                           cursor="hand"
                           color="#fff"
                           weight="400"
-                          size="0.8em"
+                          size=".9em"
                           spacing="0.2em"
                           type="submit"
                           value="Submit"
@@ -364,20 +347,6 @@ const SupportPage = () => {
           </Item>
         </Item>
       </Content>
-      <WaveOuter>
-        <WaveInner>
-          <Wave
-            fill="#fff"
-            paused={true}
-            options={{
-              height: 20,
-              amplitude: 30,
-              speed: 0.35,
-              points: 3,
-            }}
-          />
-        </WaveInner>
-      </WaveOuter>
     </Section>
   );
 };
@@ -397,6 +366,7 @@ const DropdownStyled = styled(Dropdown)`
     font-weight: 400;
     letter-spacing: 0.2em;
     font-size: 0.8em;
+		padding-left: 6px
   }
 
   .Dropdown-arrow {
@@ -430,5 +400,19 @@ const DropdownStyled = styled(Dropdown)`
     color: #fff;
   }
 `;
+
+const ContactInput = styled(Input)`
+	background: #FFFFFF;
+	border: 1px solid #D4D4D4;
+	box-sizing: border-box;
+	border-radius: 4px;
+`
+
+const ContactTextArea = styled(TextField)`
+	background: #FFFFFF;
+	border: 1px solid #D4D4D4;
+	box-sizing: border-box;
+	border-radius: 4px;
+`
 
 export { SupportPage };
