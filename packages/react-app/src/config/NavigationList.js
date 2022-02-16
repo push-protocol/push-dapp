@@ -299,10 +299,8 @@ const NavigationList = {
         isRoute: false,
         isMenuLogic: false,
       },
-      
     },
   }
-  
   
   export default NavigationList;
   
