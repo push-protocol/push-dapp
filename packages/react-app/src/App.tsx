@@ -78,7 +78,7 @@ export default function App() {
   }
   React.useEffect(()=>{
     window?.Olvy?.init({
-      organisation: "rijusougata13",
+      organisation: "epns",
     target: "#olvy-target",
     type: "sidebar",
     view: {
