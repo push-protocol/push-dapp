@@ -103,8 +103,15 @@ const SupportPage = () => {
 
   return (
     <Section id="contact" theme="#FAFAFA">
-      <Content className="contentBox">
+      <Content className="contentBox" padding="10px 0">
         <Item align="stretch" justify="flex-start" margin="0px 20px">
+            <Item align="stretch" align="flex-end" tabletAlign="flex-start" margin="0px 16px 0px 0px" textAlign="right" tabletTextAlign="left">
+              <H2 textTransform="uppercase" spacing="0.1em" bg="#fff">
+                <Span color="#000" weight="600" padding="0px">Contact US!</Span>
+                {/* <Span weight="200" color="#000"> Us!</Span> */}
+              </H2>
+              <H3 bg="#fff" color="#000">Get in Touch</H3>
+            </Item>
           <Item self="stretch">
             <FormSubmision
               flex="1"
@@ -126,6 +133,7 @@ const SupportPage = () => {
                         minWidth="280px"
                       >
                         <ContactInput
+													required
                           radius="4px"
                           padding="12px"
                           bg="#fff"
