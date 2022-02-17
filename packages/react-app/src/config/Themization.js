@@ -11,7 +11,7 @@ const themeLight = {
   headerIconsBg: '#000',
 
   // Nav Menu 
-  navMenuBg: '#ffffffdd',
+  navMenuBg: '#00000066',
 
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',
