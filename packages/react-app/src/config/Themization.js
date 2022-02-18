@@ -26,7 +26,18 @@ const themeLight = {
 
   // Interface Theme
   interfaceTopPadding: '0px',
-  mainBg: '#fff'
+  mainBg: '#fff',
+
+  yieldBg: "#f3f3f3",
+
+  pushPriceBg: "#000",
+
+  greyText: "#818589",
+
+  color: "#000",
+
+  channelBg: "#fafafa"
+
 };
 
 const themeDark = {
@@ -41,7 +52,7 @@ const themeDark = {
   headerIconsBg: '#fff',
 
   // Nav Menu 
-  navMenuBg: '#000000dd',
+  navMenuBg: '#000',
 
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',
@@ -56,7 +67,21 @@ const themeDark = {
 
   // Interface Theme
   interfaceTopPadding: '20px',
-  mainBg: '#000'
+  mainBg: '#000',
+
+  color: "#fff",
+
+  yieldBg: "#ddd",
+
+  questionBg: "#000",
+
+  pushPriceBg: "teal",
+
+  greyText: "#818589",
+
+  channelBg: "#000"
+
+
 }
 
 module.exports = {

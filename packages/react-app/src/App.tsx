@@ -77,6 +77,17 @@ export default function App() {
     setDarkMode(!darkMode);
   }
 
+  React.useEffect(() => {
+    const data = localStorage.getItem('theme')
+    if(data){
+      setDarkMode(JSON.parse(data))
+    }
+  },[])
+
+  React.useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(darkMode))
+  })
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
       <NavigationContextProvider>
@@ -222,6 +233,7 @@ const ContentContainer = styled.div`
   flex: 1;
   align-self: center;
   width: 100%;
+
 
   margin: 0px 0px 0px ${props => props.leftBarWidth}px;
 

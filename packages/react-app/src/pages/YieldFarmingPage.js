@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-import styled, { css, keyframes } from "styled-components";
+import styled, { css, keyframes, useTheme } from "styled-components";
 import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
@@ -14,11 +14,21 @@ import { useWeb3React } from "@web3-react/core";
 import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
 import PoolCard from "components/PoolCard";
 
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
+
 const ethers = require("ethers");
 
 // Create Header
 function YieldFarmingPage() {
   const { active, error, account, library, chainId } = useWeb3React();
+
+  const themes = useTheme();
+
+  const [darkMode, setDarkMode] = useState(false);
+
 
   const [poolStats, setPoolStats] = React.useState(null);
   const [pushPoolStats, setPushPoolStats] = React.useState(null);
@@ -215,13 +225,14 @@ function YieldFarmingPage() {
   }
 
   return (
+    <ThemeProvider theme={themes}>
     <Section>
       {poolStats ? (
         <>
-          <Content theme="#f3f3f3">
+          <Content themes={themes.yieldBg}>
             <ItemH margin="0px 15px 0px 15px" align="stretch">
               <StatsCard
-                bg="#fff"
+                bg={themes.mainBg} 
               >
                 <StatsHeading bg="#e20880">Total Value Locked</StatsHeading>
                 <StatsContent>
@@ -231,7 +242,7 @@ function YieldFarmingPage() {
               </StatsCard>
 
               <StatsCard
-                bg="#fff"
+                bg={themes.mainBg}
               >
                 <StatsHeading bg="#35c5f3">PUSH Rewards Given</StatsHeading>
                 <StatsContent>
@@ -242,7 +253,7 @@ function YieldFarmingPage() {
               </StatsCard>
 
               <StatsCard
-                bg="#fff"
+                bg={themes.mainBg}
               >
                 <StatsHeading bg="#674c9f">Time Left</StatsHeading>
                 <StatsContent>
@@ -253,9 +264,9 @@ function YieldFarmingPage() {
               </StatsCard>
 
               <StatsCard
-                bg="#fff"
+                bg={themes.mainBg}
               >
-                <StatsHeading bg="#000">PUSH Price</StatsHeading>
+                <StatsHeading bg={themes.pushPriceBg}>PUSH Price</StatsHeading>
                 <StatsContent>
                   <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
                   <StatsInnerSub>
@@ -311,6 +322,7 @@ function YieldFarmingPage() {
         </Item>
       )}
     </Section>
+    </ThemeProvider>
   );
 }
 

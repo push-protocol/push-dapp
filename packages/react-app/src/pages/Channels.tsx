@@ -1,5 +1,5 @@
-import React from "react";
-import styled from "styled-components";
+import React, {useState} from "react";
+import styled, { useTheme } from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,12 +13,19 @@ import Faucets from "components/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
 
+import {ThemeProvider} from "styled-components";
+import { themeLight, themeDark } from "config/Themization";
+
+
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 
 // Create Header
 function Channels() {
+  const themes = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
+
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
@@ -127,7 +134,7 @@ function Channels() {
   }, [search]);
 
   return (
-    <>
+    <ThemeProvider theme={themes}>
       <Container>
         {!loading && channels.length == 0 ? (
           <ContainerInfo>
@@ -193,7 +200,7 @@ function Channels() {
           </Items>
         )}
       </Container>
-    </>
+    </ThemeProvider>
   );
 }
 
@@ -206,12 +213,15 @@ const Header = styled.div`
   position: sticky;
   top: 0px;
   z-index: 2;
-  background: #fafafa;
 
   @media (max-width: 600px) {
     flex-direction: column;
   }
 `;
+
+//background: red;
+
+
 const InputWrapper = styled.div`
   width: 50%;
   position: relative;
@@ -285,8 +295,11 @@ const Items = styled.div`
   align-self: stretch;
   padding: 10px 20px;
   overflow-y: scroll;
-  background: #fafafa;
+  background: ${props => props.theme.channelBg};
+
 `;
+
+//background: red;
 
 const SearchIconImage = styled.img`
   position: absolute;

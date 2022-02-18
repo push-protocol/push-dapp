@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Para, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
@@ -19,9 +19,17 @@ import MyNFTs from "components/MyNFTs";
 import AllNFTs from "components/AllNFTs";
 import TransferNFT from "components/TransferNFT";
 
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
+
 // Create Header
 function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
   const { account, library } = useWeb3React();
+
+  const themes = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
 
   const [tokenId, setTokenId] = React.useState(null);
   const [controlAt, setControlAt] = React.useState(0);
@@ -46,14 +54,14 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
   }
 
   return (
-    <>
+    <ThemeProvider theme={themes}>
       <Section>
         <Content padding="20px 20px 0px">
           <Item align="flex-start" margin="0px 20px 0px 20px">
             <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">$ROCKSTAR</Span><Span weight="200"> of </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">EPNS</Span>
+              <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">$ROCKSTAR</Span><Span weight="200" color={themes.color}> of </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">EPNS</Span>
             </H2>
-            <H3>Thank you <B>community</B> for all your support. Over the next year, we are excited to continue returning our gratitude!</H3>
+            <H3 color={themes.greyText}>Thank you <B color={themes.color}>community</B> for all your support. Over the next year, we are excited to continue returning our gratitude!</H3>
           </Item>
 
           <Item align="stretch" justify="flex-start" margin="0px 20px 0px 20px">
@@ -65,7 +73,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
                   onClick={() => {toggleShowAnswer(1)}}
                   hover="#e20880"
                 >
-                  <Span>
+                  <Span color={themes.color}>
                     Does $ROCKSTAR of EPNS NFTs carry something along with NFTs?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -85,7 +93,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
                   onClick={() => {toggleShowAnswer(2)}}
                   hover="#e20880"
                 >
-                  <Span>
+                  <Span color={themes.color}>
                     How to get $ROCKSTAR of EPNS?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -137,7 +145,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
           </Item>
         </Content>
       </Section>
-    </>
+    </ThemeProvider>
   );
 }
 

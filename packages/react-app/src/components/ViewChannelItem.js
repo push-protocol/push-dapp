@@ -1,5 +1,5 @@
-import React from "react";
-import styled, { css } from "styled-components";
+import React, { useState } from "react";
+import styled, { css, useTheme } from "styled-components";
 import { Device } from "assets/Device";
 
 import { toast as toaster } from "react-toastify";
@@ -13,6 +13,10 @@ import { AiTwotoneCopy } from "react-icons/ai";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
 
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
 import { postReq } from "api";
 import NotificationToast from "components/NotificationToast";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
@@ -21,6 +25,11 @@ import { cacheChannelInfo } from "redux/slices/channelSlice";
 // Create Header
 function ViewChannelItem({ channelObjectProp }) {
   const dispatch = useDispatch();
+
+  const themes = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
+
+
   const {
     epnsReadProvider,
     epnsWriteProvider,
@@ -424,6 +433,7 @@ function ViewChannelItem({ channelObjectProp }) {
 
   // render
   return (
+    <ThemeProvider theme={themes}>
     <Container key={channelObject.addr}>
       <ChannelLogo>
         <ChannelLogoOuter>
@@ -446,6 +456,7 @@ function ViewChannelItem({ channelObjectProp }) {
               href={channelJson.url}
               target="_blank"
               rel="nofollow"
+              
             >
               {channelJson.name}
               {isVerified && (
@@ -602,6 +613,7 @@ function ViewChannelItem({ channelObjectProp }) {
         <NotificationToast notification={toast} clearToast={clearToast} />
       )}
     </Container>
+    </ThemeProvider>
   );
 }
 
@@ -618,9 +630,10 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
 
-  background: #fff;
+  background: ${props => props.theme.mainBg};
   border-radius: 10px;
   border: 1px solid rgb(237, 237, 237);
+
 
   margin: 15px 0px;
   justify-content: center;
@@ -649,6 +662,7 @@ const ChannelLogo = styled.div`
   flex-direction: column;
   justify-content: center;
   align-self: flex-start;
+
 `;
 
 const ChannelLogoOuter = styled.div`
@@ -683,6 +697,7 @@ const ChannelInfo = styled.div`
   flex-grow: 4;
   flex-direction: column;
   display: flex;
+
 `;
 
 const ChannelTitle = styled.div`
@@ -731,6 +746,8 @@ const ChannelDesc = styled.div`
   color: rgba(0, 0, 0, 0.75);
   font-weight: 400;
   flex-direction: column;
+  color: ${props => props.theme.color};
+
 `;
 
 const ChannelDescLabel = styled.label`
@@ -746,7 +763,7 @@ const ChannelMeta = styled.div`
 
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
-  color: #fff;
+  color: #fff; *********
   font-weight: 600;
   padding: 5px 10px;
   display: flex;

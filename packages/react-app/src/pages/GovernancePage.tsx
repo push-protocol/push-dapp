@@ -1,5 +1,5 @@
-import React from "react";
-import styled, { css } from 'styled-components';
+import React, { useState } from "react";
+import styled, { css, useTheme } from 'styled-components';
 import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3,LI, Image, P, Span, Anchor, Button, FormSubmision, Input, TextField, UL} from 'components/SharedStyling';
 import Loader from 'react-loader-spinner'
 import { Waypoint } from "react-waypoint";
@@ -13,16 +13,28 @@ import { ethers } from "ethers";
 
 import Blockies from "components/BlockiesIdenticon";
 
+
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
+
+
 import DisplayNotice from "components/DisplayNotice";
 import ViewDelegateeItem from "components/ViewDelegateeItem";
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
+
 const delegateesJSON = require("config/delegatees.json")
 const VOTING_TRESHOLD = 75000; //the treshold for delegates
 
 // Create Header
 function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
+  const themes = useTheme();
+
+  const [darkMode, setDarkMode] = useState(false);
+
   const { account, library } = useWeb3React();
 
   const [address, setAddress] = React.useState('');
@@ -285,9 +297,11 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
     </Toaster>
   )
 
+
   return (
+    <ThemeProvider theme={themes}>
     <Section>
-      <Content theme="#f3f3f3" padding="20px 20px 30px 20px">
+      <Content themes={themes.mainBg} padding="20px 20px 30px 20px">
         <Item align="stretch" justify="flex-start" margin="0px 15px 15px 15px">
           {(dashboardLoading || !prettyTokenBalance || !selfVotingPower) &&
             <Item padding="20px">
@@ -301,8 +315,9 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 align="stretch"
                 justify="flex-start"
                 self="stretch"
-                bg="#fff"
+                bg={themes.mainBg}
                 op="1"
+                
               >
                 <StatsHeading bg="#e20880">Governance Dashboard</StatsHeading>
                 <StatsContent>
@@ -333,12 +348,12 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
 
                     <Item align="flex-start" self="stretch" padding="10px" size="16px">
                       <ItemH flex="initial" padding="5px">
-                        <Span weight="500" padding="0px 8px 0px 0px">$PUSH Balance: </Span>
+                        <Span weight="500" padding="0px 8px 0px 0px" color={themes.color}>$PUSH Balance: </Span>
                         <CurvedSpan bg="#e20880" color="#fff" weight="600" padding="4px 8px" textTransform="uppercase">{prettyTokenBalance}</CurvedSpan>
                       </ItemH>
 
                       <ItemH flex="initial" padding="5px">
-                        <Span weight="500"  padding="0px 8px 0px 0px">Voting Power: </Span>
+                        <Span weight="500"  padding="0px 8px 0px 0px" color={themes.color}>Voting Power: </Span>
                         <CurvedSpan bg="#35c5f3" color="#fff" weight="600" padding="4px 8px" textTransform="uppercase">{selfVotingPower}</CurvedSpan>
                       </ItemH>
 
@@ -449,7 +464,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
             align="stretch"
             justify="flex-start"
             self="stretch"
-            bg="#fff"
+            bg={themes.mainBg}
           >
             <StatsHeading bg="#35c5f3">Meet the PUSH Nominees</StatsHeading>
             <NomineeContainer>
@@ -488,9 +503,10 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
       <Content padding="20px 20px 0px">
         <Item align="flex-start" margin="0px 15px 0px 15px">
           <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200">PUSH </Span><Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">DELEGATEES</Span>
+            <Span weight="200" color={themes.color}>PUSH </Span>
+            <Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">DELEGATEES</Span>
           </H2>
-          <H3>Let's start <B>governing!!</B> </H3>
+          <H3 color={themes.color}>Let's start <B color={themes.color}>governing!!</B> </H3>
         </Item>
 
         <Item>
@@ -537,7 +553,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
       </Content>
 
       {/* FAQs */}
-      <Content padding="20px 20px 35px" theme="#fff">
+      <Content padding="20px 20px 35px" themes={darkMode? themeLight : themeDark}>
         <Item align="stretch" justify="flex-start" margin="-10px 20px 0px 20px">
 
           {/* Question */}
@@ -546,8 +562,9 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
               <Question
                 onClick={() => {toggleShowAnswer(0)}}
                 hover="#e20880"
+                
               >
-                <Span>
+                <Span color={themes.color}>
                   What are PUSH Delegatees?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -568,7 +585,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(1)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   What are PUSH Nominees
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -590,7 +607,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(2)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   How can I become a PUSH Nominee?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -624,7 +641,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(3)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   What if I don't wish to be a PUSH Nominee?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -644,7 +661,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(4)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   Where should I start?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -663,7 +680,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(5)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   What happens to the delegated voting power when I sell my PUSH tokens?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -683,7 +700,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(6)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   How can I cast my vote?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -701,7 +718,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
                 onClick={() => {toggleShowAnswer(7)}}
                 hover="#e20880"
               >
-                <Span>
+                <Span color={themes.color}>
                   How can I keep up with EPNS Governance?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
@@ -717,6 +734,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
         </Item>
       </Content>
     </Section>
+    </ThemeProvider>
   );
 }
 

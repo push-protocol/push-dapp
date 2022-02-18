@@ -74,7 +74,9 @@ const Container = styled.div`
   // display: flex;
   // flex-wrap: wrap;
 
-  background: #fff;
+  background: ${props => props.theme.mainBg};
+
+  color:${props => props.theme.color};
   border-radius: 10px;
   border: 1px solid rgb(237, 237, 237);
 

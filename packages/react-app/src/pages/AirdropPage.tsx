@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
 import {Section, Content, Item, ItemH, ItemBreak, Para, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
 
 import { AiFillHeart } from 'react-icons/ai';
@@ -17,12 +17,19 @@ import AirdropHelper from 'helpers/AirdropHelper';
 
 import ViewInfoItem from "components/ViewInfoItem";
 
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
+
 import * as dotenv from "dotenv";
 import UsersDataStore from "singletons/UsersDataStore";
 dotenv.config();
 
 // Other Information section
 function AirdropPage() {
+  const themes = useTheme();
+
   const { account, library } = useWeb3React();
 
   const [controlAt, setControlAt] = React.useState(0);
@@ -120,24 +127,27 @@ function AirdropPage() {
     </Toaster>
   )
 
+  const [darkMode, setDarkMode] = useState(false);
+
+
   return (
-    <>
+    <ThemeProvider theme={themes}>
       <Section margin="20px">
         <Content padding="0px 20px 0px">
           <Item align="flex-start">
             <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">Gratitude</Span><Span weight="200"> Drop!</Span>
+              <Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">Gratitude</Span><Span weight="200" color={themes.color}> Drop!</Span>
             </H2>
-            <H3>We would never be here without you! Thanks for the <b>#PUSH</b>!!!</H3>
+            <H3 color={themes.color}>We would never be here without you! Thanks for the <b color={themes.color}>#PUSH</b>!!!</H3>
           </Item>
         </Content>
 
         <Content padding="0px 20px 0px 20px">
           <Item align="flex-start">
-            <Para margin="10px 0px 0px 0px">Thanks for the ton of support, feedback, encouragement and helping us out in every step! As a small token of our gratitude, we are dropping <B>1200 $PUSH</B> to anyone who:</Para>
+            <Para margin="10px 0px 0px 0px" color={themes.color}>Thanks for the ton of support, feedback, encouragement and helping us out in every step! As a small token of our gratitude, we are dropping <B color={themes.color}>1200 $PUSH</B> to anyone who:</Para>
 
-            <Para margin="20px 0px 0px 20px">- Donated to us on <B>Gitcoin grants round 6 or 7</B></Para>
-            <Para margin="10px 0px 0px 20px">- Used our dApp on or before <B>20th March, 2021</B>: <AMod href="https://app.epns.io" target="_blank" title="Visit our dApp">EPNS dApp</AMod></Para>
+            <Para margin="20px 0px 0px 20px" color={themes.color}>- Donated to us on <B color={themes.color}>Gitcoin grants round 6 or 7</B></Para>
+            <Para margin="10px 0px 0px 20px" color={themes.color}>- Used our dApp on or before <B color={themes.color}>20th March, 2021</B>: <AMod href="https://app.epns.io" target="_blank" title="Visit our dApp">EPNS dApp</AMod></Para>
           </Item>
 
           <Item padding="40px 0px 20px 0px">
@@ -184,7 +194,7 @@ function AirdropPage() {
       </Section>
 
       {/* FAQs */}
-      <Section theme="#fcfcfc" padding="0px 0px 0px 0px">
+      <Section themes={themes.mainBg} padding="0px 0px 0px 0px">
         <Content className="contentBox">
           <Item align="stretch" justify="flex-start" margin="-10px 20px 0px 20px">
 
@@ -195,7 +205,7 @@ function AirdropPage() {
                   onClick={() => {toggleShowAnswer(1)}}
                   hover="#e20880"
                 >
-                  <Span>
+                  <Span color={themes.color}>
                     What is $PUSH contract address?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -213,7 +223,7 @@ function AirdropPage() {
                   onClick={() => {toggleShowAnswer(2)}}
                   hover="#e20880"
                 >
-                  <Span>
+                  <Span color={themes.color}>
                     What is EPNS?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -233,7 +243,7 @@ function AirdropPage() {
                   onClick={() => {toggleShowAnswer(3)}}
                   hover="#e20880"
                 >
-                  <Span>
+                  <Span color={themes.color}>
                     Why are push notifications important for Web3?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -257,7 +267,7 @@ function AirdropPage() {
                   onClick={() => {toggleShowAnswer(4)}}
                   hover="#e20880"
                 >
-                  <Span>
+                  <Span color={themes.color}>
                     How can I keep up with EPNS?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -275,7 +285,7 @@ function AirdropPage() {
           </Item>
         </Content>
       </Section>
-    </>
+    </ThemeProvider>
   );
 }
 

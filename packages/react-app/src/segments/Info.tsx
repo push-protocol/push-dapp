@@ -61,7 +61,7 @@ const InfoBox = styled.div`
   padding: 10px 20px;
   display: block;
   align-self: stretch;
-  background: #fafafa;
+  background: ${props => props.theme.mainBg};
 `
 
 
