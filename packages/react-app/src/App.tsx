@@ -77,6 +77,7 @@ export default function App() {
     setDarkMode(!darkMode);
   }
 
+
   React.useEffect(() => {
     const data = localStorage.getItem('theme')
     if(data){
@@ -87,6 +88,27 @@ export default function App() {
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode))
   })
+
+
+  React.useEffect(()=>{
+    window?.Olvy?.init({
+      organisation: "epns",
+    target: "#olvy-target",
+    type: "sidebar",
+    view: {
+      showSearch: false,
+      compact: false,
+      showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
+      showUnreadIndicator: true,
+      unreadIndicatorColor: "#cc1919",
+      unreadIndicatorPosition: "top-right"
+    }
+    });
+    return function cleanup() {
+      window?.Olvy?.teardown();
+    };
+  
+});
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>

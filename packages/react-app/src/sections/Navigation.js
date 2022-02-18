@@ -25,6 +25,9 @@ function Navigation() {
     const location = useLocation();
 
     // Similar to componentDidMount and componentDidUpdate:
+
+    
+
     useEffect(() => {
       if (!loading) {
           setLoading(true);
@@ -292,11 +295,12 @@ function Navigation() {
     const renderMainItems = (items, sectionID) => {
       let Section;
       let fontSize;
-
+      let secondaryButton=0;
       switch(sectionID) {
         case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
           Section = SecondarySection;
           fontSize = "small";
+          secondaryButton=1;
           break;
         default:
           Section = PrimarySection;
@@ -307,7 +311,6 @@ function Navigation() {
         Object.keys(items).map(function(key) {
           const section = items[key];
           const data = section.data;
-          
           let innerRendered = (
             <Section 
                 key={key}
@@ -315,41 +318,89 @@ function Navigation() {
                 align="stretch"
                 size={fontSize}
             >
-              <Item
-                padding="10px"
-                flexBasis="100%"
-                align="stretch"
-                direction="row"
-                overflow="hidden"
-              >
-                <SectionInnerGroupContainer
-                  flex="1"
-                  align="stretch"
-                  bg={theme.leftBarButtonBg}
-                  zIndex={2}
-                  refresh={refresh}
-                  onClick={() => {
-                    mutateTransformedList(section, true)
-                  }}
-                >
-                  <NavigationButton
-                    item={section}
-                    data={data}
-                    sectionID={sectionID}
-                    active={section.active}
-                  />
-                </SectionInnerGroupContainer>
+
+              {
+                (secondaryButton)?
+                  (
+                    <Item
+                    padding="10px"
+                    flexBasis="100%"
+                    align="stretch"
+                    direction="row"
+                    overflow="hidden"
+                  >
+                    <SectionInnerGroupContainer
+                      flex="1"
+                      align="stretch"
+                      bg={theme.leftBarButtonBg}
+                      zIndex={2}
+                      refresh={refresh}
+                      margintop="15px"
+                      onClick={() => {
+                        mutateTransformedList(section, true)
+                      }}      
+                      id={data.id}          
+                    >
+                      <NavigationButton
+                        item={section}
+                        data={data}
+                        sectionID={sectionID}
+                        active={section.active}
+                      />
+                    </SectionInnerGroupContainer>
+                    
+                    { 
+                    section.hasItems 
+                      ? renderChildItems(
+                          data.drilldown, 
+                          section.opened,
+                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                        )
+                      : null
+                    }
+                  </Item>
+                  ):
+                  (
+                    <Item
+                    padding="10px"
+                    flexBasis="100%"
+                    align="stretch"
+                    direction="row"
+                    overflow="hidden"
+                  >
+                    <SectionInnerGroupContainer
+                      flex="1"
+                      align="stretch"
+                      bg={theme.leftBarButtonBg}
+                      margintop="-10px"
+                      zIndex={2}
+                      refresh={refresh}
+                      onClick={() => {
+                        mutateTransformedList(section, true)
+                      }}                  
+                    >
+                      <NavigationButton
+                        item={section}
+                        data={data}
+                        sectionID={sectionID}
+                        active={section.active}
+                      />
+                    </SectionInnerGroupContainer>
+                    
+                    { 
+                    section.hasItems 
+                      ? renderChildItems(
+                          data.drilldown, 
+                          section.opened,
+                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                        )
+                      : null
+                    }
+                  </Item>
+                  )
                 
-                { 
-                section.hasItems 
-                  ? renderChildItems(
-                      data.drilldown, 
-                      section.opened,
-                      GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
-                    )
-                  : null
-                }
-              </Item>
+              }
+             
                 
 
             </Section>
@@ -564,10 +615,10 @@ const InheritedSectionItem = styled(Item)`
 `
 
 const SectionInnerGroupContainer = styled(Item)`
-  &:after {
+    &:after {
     content: '';
     position: absolute;
-    top: -10px;
+    top: ${props=>props.margintop};
     right: 0;
     left: 0;
     background: ${props => props.theme.leftBarButtonBg};
