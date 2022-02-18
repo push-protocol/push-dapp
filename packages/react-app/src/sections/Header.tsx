@@ -309,6 +309,7 @@ const NavMenuContainer = styled(Item)`
   align-items: flex-start;
 
   background: ${props => props.theme.navMenuBg};
+  backdrop-filter: blur(30px);
   z-index: 11;
 `
 
