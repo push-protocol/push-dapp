@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled , {ThemeProvider} from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
@@ -20,6 +20,7 @@ import {
 } from "redux/slices/notificationSlice";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
+import { themeLight, themeDark } from "config/Themization";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -31,6 +32,7 @@ function Feedbox() {
     (state: any) => state.notifications
   );
 
+  const [darkMode, setDarkMode] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState("inbox");
@@ -115,6 +117,7 @@ function Feedbox() {
 
   // Render
   return (
+    <ThemeProvider theme={darkMode ? themeDark : themeLight }>
     <Container>
       {notifications && (
         <Notifs id="scrollstyle-secondary">
@@ -150,6 +153,7 @@ function Feedbox() {
                   app={app}
                   icon={icon}
                   image={image}
+                  theme={darkMode?"dark" : "light"}
                 />
               </div>
             );
@@ -173,6 +177,7 @@ function Feedbox() {
         </Item>
       )}
     </Container>
+    </ThemeProvider>
   );
 }
 

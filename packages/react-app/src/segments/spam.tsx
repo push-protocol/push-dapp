@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled , {ThemeProvider} from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
@@ -37,7 +37,7 @@ function SpamBox({ currentTab }) {
     chainId: chainId,
     verifyingContract: epnsCommReadProvider?.address,
   };
-
+  const [darkMode, setDarkMode] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -218,6 +218,7 @@ function SpamBox({ currentTab }) {
                     app={app}
                     icon={icon}
                     image={image}
+                    theme={darkMode?"dark" : "light"}
                     subscribeFn={(e) => {
                       e?.stopPropagation();
                       onSubscribeToChannel(channel);
