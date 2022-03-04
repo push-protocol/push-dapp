@@ -1,5 +1,5 @@
 import React from "react";
-import styled , {ThemeProvider} from "styled-components";
+import styled , {ThemeProvider , useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
@@ -32,7 +32,7 @@ function Feedbox() {
     (state: any) => state.notifications
   );
 
-  const [darkMode, setDarkMode] = React.useState(false);
+  const themes = useTheme();
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState("inbox");
@@ -90,7 +90,6 @@ function Feedbox() {
       setLoading(false);
     }
   };
-
   React.useEffect(() => {
     if (account && currentTab === "inbox") {
       fetchLatestNotifications();
@@ -117,7 +116,7 @@ function Feedbox() {
 
   // Render
   return (
-    <ThemeProvider theme={darkMode ? themeDark : themeLight }>
+    <ThemeProvider theme={themes}>
     <Container>
       {notifications && (
         <Notifs id="scrollstyle-secondary">
@@ -153,7 +152,7 @@ function Feedbox() {
                   app={app}
                   icon={icon}
                   image={image}
-                  theme={darkMode?"dark" : "light"}
+                  theme={themes.scheme}
                 />
               </div>
             );
