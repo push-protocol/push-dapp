@@ -235,12 +235,16 @@ function CreateChannel() {
 
     setProcessingInfo("Creating Channel TX in progress");
     anotherSendTxPromise
-      .then(async function(tx) {
-        console.log(tx);
-        console.log("Check: " + account);
-        await library.waitForTransaction(tx.hash);
-        setProcessing(3);
-        setProcessingInfo("Channel Created");
+    .then(async function (tx) {
+          console.log(tx);
+          console.log("Check: " + account);
+          await library.waitForTransaction(tx.hash);
+          setProcessing(3);
+          setProcessingInfo("Channel Created! Reloading...");
+
+          setTimeout(() => {
+              window.location.reload();
+          }, 2000);
       })
       .catch((err) => {
         console.log("Error --> %o", err);
@@ -373,16 +377,16 @@ function CreateChannel() {
       {uploadDone && !stakeFeesChoosen && (
         <Section>
           <Content padding="50px 0px 0px 0px">
-            <Item align="flex-start" margin="0px 20px">
+            {/* <Item align="flex-start" margin="0px 20px">
               <H3 color="#e20880">Set your staking fees in DAI</H3>
-            </Item>
+            </Item> */}
 
             <Item
               margin="-10px 20px 20px 20px"
               padding="20px 20px 10px 20px"
               bg="#f1f1f1"
             >
-              <Slider
+              {/* <Slider
                 defaultValue={minStakeFees}
                 onChangeCommitted={(event, value) => setChannelStakeFees(value)}
                 aria-labelledby="discrete-slider"
@@ -391,7 +395,7 @@ function CreateChannel() {
                 marks
                 min={minStakeFees}
                 max={25000}
-              />
+              /> */}
               <Span
                 weight="400"
                 size="1.0em"
