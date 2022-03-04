@@ -58,7 +58,7 @@ function ViewInfoItem() {
     <Container >
       <ChannelInfo>
         <ChannelTitle>
-          <ChannelTitleLink href= "#" target="_blank" rel="nofollow">
+          <ChannelTitleLink href={process.env.REACT_APP_HOW_TO_GUIDE} target="_blank" rel="nofollow">
             Click here for our How to Guides
           </ChannelTitleLink>
         </ChannelTitle>
