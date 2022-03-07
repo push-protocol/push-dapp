@@ -223,6 +223,9 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  background: inherit;
   
   top: 0px;
   z-index: 2;
