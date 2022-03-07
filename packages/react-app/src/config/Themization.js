@@ -1,5 +1,6 @@
 // Define what props.theme will look like
 const themeLight = {
+  scheme : "light",
   // Section Theme
   sectionBorderBg: 'transparent',
 
@@ -41,6 +42,7 @@ const themeLight = {
 };
 
 const themeDark = {
+  scheme : "dark",
   // Section Theme
   sectionBorderBg: '#333',
 
