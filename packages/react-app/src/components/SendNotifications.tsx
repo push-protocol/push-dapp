@@ -3,7 +3,7 @@
   import Dropdown from "react-dropdown";
   import { FiLink } from "react-icons/fi";
   import Loader from "react-loader-spinner";
-  import styled from "styled-components";
+  import styled , {useTheme} from "styled-components";
   import { BsFillImageFill } from "react-icons/bs";
   import { useSelector } from "react-redux";
   import { postReq } from "api";
@@ -44,6 +44,7 @@ const LIMITER_KEYS = ["Enter", ","];
 
 // Create Header
 function SendNotifications() {
+  const theme = useTheme();
   const { account, library, chainId } = useWeb3React();
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector(
     (state: any) => state.contracts
@@ -628,7 +629,7 @@ function SendNotifications() {
               <Content padding="10px 20px 20px">
                   <Item align="flex-start">
                       <H2 textTransform="uppercase" spacing="0.1em">
-                          <Span weight="200">Send </Span>
+                          <Span weight="200" style={{color : theme.color}}>Send </Span>
                           <Span
                               bg="#674c9f"
                               color="#fff"
@@ -639,7 +640,7 @@ function SendNotifications() {
                           </Span>
                       </H2>
                       {!isChannelDeactivated ? (
-                          <H3>
+                          <H3 style={{color : theme.color}}>
                               EPNS supports three types of notifications (for
                               now!). <b>Groups</b>, <b>Subsets</b>, and{" "}
                               <b>Targetted</b>

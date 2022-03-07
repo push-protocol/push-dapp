@@ -1,11 +1,12 @@
 import React from "react";
 import moment from "moment";
-import styled from "styled-components";
+import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { useWeb3React } from "@web3-react/core";
 const DATE_FORMAT = "DD/MM/YYYY";
 export default function ChannelDetails() {
+  const theme = useTheme();
   const { library } = useWeb3React();
   const { channelDetails, canVerify } = useSelector((state) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
@@ -63,7 +64,7 @@ export default function ChannelDetails() {
         </Details>
       </SectionTop>
 
-      <SectionDes>{channelDetails.info}</SectionDes>
+      <SectionDes style={{color : theme.color}}>{channelDetails.info}</SectionDes>
 
       <SectionDate>
         {canVerify && (
