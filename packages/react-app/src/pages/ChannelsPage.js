@@ -34,8 +34,7 @@ import {
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
 
-
-
+import GLOBALS from "config/Globals";
 
 export const ALLOWED_CORE_NETWORK = 42; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
@@ -376,10 +375,9 @@ function InboxPage() {
 
 // css style
 const Container = styled.div`
-  flex: 1;
   display: block;
-  flex-direction: column;
-  min-height: calc(100vh - 100px);
+  background: ${props => props.theme.mainBg};
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
 `;
 
 const Controls = styled.div`
