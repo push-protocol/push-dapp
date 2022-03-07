@@ -1,5 +1,5 @@
-import React from "react";
-import styled , {ThemeProvider , useTheme} from "styled-components";
+import React, {useState} from "react";
+import styled, { useTheme } from 'styled-components';
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
@@ -19,6 +19,10 @@ import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
 import { updateTopNotifications } from "redux/slices/notificationSlice";
 
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 function SpamBox({ currentTab }) {
@@ -27,6 +31,10 @@ function SpamBox({ currentTab }) {
   const { epnsCommReadProvider } = useSelector(
     (state: any) => state.contracts
   );
+
+  const themes = useTheme();
+
+  const [darkMode, setDarkMode] = useState(false);
 
   const { notifications, page, finishedFetching } = useSelector((state: any) => state.spam);
   const { toggle } = useSelector(
@@ -37,8 +45,7 @@ function SpamBox({ currentTab }) {
     chainId: chainId,
     verifyingContract: epnsCommReadProvider?.address,
   };
-  const themes = useTheme();
-  const [darkMode, setDarkMode] = React.useState(false);
+
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -186,7 +193,7 @@ function SpamBox({ currentTab }) {
 
   // Render
   return (
-    <>
+    <ThemeProvider theme={themes}>
       <Container>
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
@@ -244,7 +251,7 @@ function SpamBox({ currentTab }) {
           </CenteredContainerInfo>
         )}
       </Container>
-    </>
+    </ThemeProvider>
   );
 }
 
@@ -260,7 +267,6 @@ const Items = styled.div`
   align-self: stretch;
   padding: 10px 20px;
   overflow-y: scroll;
-  background: #fafafa;
 `;
 // css styles
 const Container = styled.div`

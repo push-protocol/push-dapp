@@ -15,11 +15,17 @@ import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
 
 import {ThemeProvider} from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
+import queryString from 'query-string';
+
 
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
+const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
+const SEARCH_DELAY = 1500;
+
+
 
 // Create Header
 function Channels() {
@@ -133,6 +139,14 @@ function Channels() {
     };
   }, [search]);
 
+  React.useEffect(() => {
+    const parsedChannel = String(queryString.parse(window.location.search).channel)
+    if(!ADDRESS_REGEX.test(parsedChannel)) return;
+    setTimeout(() => {
+      setSearch(parsedChannel);
+    }, SEARCH_DELAY)
+  }, [])
+
   return (
     <ThemeProvider theme={themes}>
       <Container>
@@ -209,8 +223,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: -webkit-sticky;
-  position: sticky;
+  
   top: 0px;
   z-index: 2;
 

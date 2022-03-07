@@ -1,11 +1,15 @@
-import React from "react";
-import styled , {ThemeProvider , useTheme} from "styled-components";
+import React, {useState} from "react";
+import styled, {useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
+
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
 
 import {
   api,
@@ -20,7 +24,6 @@ import {
 } from "redux/slices/notificationSlice";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
-import { themeLight, themeDark } from "config/Themization";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -33,6 +36,9 @@ function Feedbox() {
   );
 
   const themes = useTheme();
+
+  const [darkMode, setDarkMode] = useState(false);
+
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState("inbox");
@@ -185,6 +191,7 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  background: ${props => props.theme.mainBg};
 
   font-weight: 200;
   align-content: center;
@@ -197,7 +204,7 @@ const Notifs = styled.div`
   align-self: stretch;
   padding: 10px 20px;
   overflow-y: scroll;
-  background: ${props => props.theme.mainBg};
+  
   flex: 1;
 
   "-webkit-scrollbar-track": {
