@@ -17,7 +17,7 @@ const addresses = {
   NFTRewards: "0xdF0Aa8669688a608D6873b34A672e61cf3A5B3a7",
   distributor: "0x5B548D33874DeABaC2F683A6E1864795E09932F0",
   uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", //n
-  WETHAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab", // mainnet address //n
+  WETHAddress: "0xd0A1E359811322d97991E03f863a0C30C2cF029C", // mainnet address //n
   USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", // mainnet address //n
 };
 export default addresses;
