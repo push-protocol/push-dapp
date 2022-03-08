@@ -26,7 +26,11 @@ const themeLight = {
 
   // Interface Theme
   interfaceTopPadding: '0px',
+  interfaceBorder: '#f1f1f1',
+
+  backgroundBG: '#fff',
   mainBg: '#fff',
+  fontColor: '#000',
 
   yieldBg: "#f3f3f3",
 
@@ -67,7 +71,11 @@ const themeDark = {
 
   // Interface Theme
   interfaceTopPadding: '20px',
+  interfaceBorder: '#333',
+
+  backgroundBG: '#222',
   mainBg: '#000',
+  fontColor: '#fff',
 
   color: "#fff",
 

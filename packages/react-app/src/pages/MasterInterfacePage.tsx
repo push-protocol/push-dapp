@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import InboxPage from "pages/InboxPage";
 import SpamPage from "pages/SpamPage";
-import ChannelsPage from "pages/ChannelsPage";
+import ViewChannelsPage from "pages/ViewChannelsPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
 import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
 
@@ -32,7 +32,7 @@ function MasterInterfacePage() {
       <Interface>
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
-          <Route path="channels" element={<ChannelsPage />} />
+          <Route path="channels" element={<ViewChannelsPage />} />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
@@ -80,7 +80,7 @@ const Interface = styled(Item)`
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  border: 1px solid rgb(225, 225, 225);
+  border: 1px solid ${props => props.theme.interfaceBorder};
 
   margin: 15px 15px 15px 0px;
   overflow: hidden;

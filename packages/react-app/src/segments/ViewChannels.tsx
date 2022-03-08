@@ -1,18 +1,22 @@
-
-import React from 'react';
-import styled from "styled-components";
+import React, {useState} from "react";
+import styled, { useTheme } from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useDispatch, useSelector } from "react-redux";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
-import { envConfig } from "@project/contracts";
+
+import { Item } from "components/SharedStyling";
+import { AiOutlineSearch } from "react-icons/ai";
 
 import DisplayNotice from "components/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
+
+import {ThemeProvider} from "styled-components";
+import { themeLight, themeDark } from "config/Themization";
 
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -21,11 +25,12 @@ const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for th
 
 // Create Header
 function ViewChannels() {
+  const themes = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
+
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
-  const { channels, page, ZERO_ADDRESS } = useSelector(
-    (state: any) => state.channels
-  );
+  const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
 
   const [loading, setLoading] = React.useState(false);
   const [moreLoading, setMoreLoading] = React.useState(false);
@@ -35,7 +40,6 @@ function ViewChannels() {
   const [trialCount, setTrialCount] = React.useState(0);
 
   const channelsVisited = page * CHANNELS_PER_PAGE;
-  const isMainnet = chainId == 1;
 
   // fetch channel data if we are just getting to this pae
   React.useEffect(() => {
@@ -55,11 +59,10 @@ function ViewChannels() {
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
+    const channelsMeta = await ChannelsDataStore.instance.getChannelsMetaAsync(
       channelsVisited,
       CHANNELS_PER_PAGE
     );
-    dispatch(incrementPage())
     if (!channels.length) {
       dispatch(setChannelMeta(channelsMeta));
     }
@@ -69,7 +72,7 @@ function ViewChannels() {
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
+    const moreChannels = await ChannelsDataStore.instance.getChannelsMetaAsync(
       startingPoint,
       CHANNELS_PER_PAGE
     );
@@ -89,6 +92,9 @@ function ViewChannels() {
     setChannelToShow(channels);
   }, [channels]);
 
+  console.log("\n\n");
+  console.log("\n\n");
+  console.log({ channels });
 
   function searchForChannel() {
     if (loadingChannel) return; //if we are already loading, do nothing
@@ -128,9 +134,9 @@ function ViewChannels() {
       clearTimeout(timeout);
     };
   }, [search]);
-  
+
   return (
-    <>
+    <ThemeProvider theme={themes}>
       <Container>
         {!loading && channels.length == 0 ? (
           <ContainerInfo>
@@ -146,19 +152,27 @@ function ViewChannels() {
           >
             {!loading && (
               <Header style={{ minHeight: "140px" }}>
-                  {/* if on mainnet then occupy full width*/}
-                <InputWrapper style={{width: isMainnet ? "100%" : "50%"}}>
-                  <SearchBar
-                    type="text"
-                    value={search}
-                    onChange={(e: any) => setSearch(e.target.value)}
-                    className="input"
-                    placeholder="Search By Name/Address"
-                  />
-                  <SearchIconImage src='/searchicon.svg' alt="" />
-                </InputWrapper>
-                {!isMainnet && <Faucets />} 
-                {/* only display faucets on mainnet */}
+                <Item>
+                  <InputWrapper>
+                    <SearchBar
+                      type="text"
+                      value={search}
+                      onChange={(e: any) => setSearch(e.target.value)}
+                      className="input"
+                      placeholder="Search By Name/Address"
+                    />
+                    <Item
+                      position="absolute"
+                      top="0"
+                      bottom="0"
+                      right="10px"
+
+                    >
+                      <AiOutlineSearch size={20} style={{color: themes.fontColor}} />
+                    </Item>
+                  </InputWrapper>
+                </Item>
+                
               </Header>
             )}
 
@@ -166,16 +180,16 @@ function ViewChannels() {
             {(search ? channelToShow : channels).map(
               (channel: any, index: any) =>
                 channel &&
-              channel.addr !== ZERO_ADDRESS && (
-                <>
-                  <div key={channel.addr}>
-                    <ViewChannelItem channelObjectProp={channel} />
-                  </div>
-                  {showWayPoint(index) && (
-                    <Waypoint onEnter={updateCurrentPage} />
-                  )}
-                </>
-              )
+                channel.addr !== ZERO_ADDRESS && (
+                  <>
+                    <div key={channel.addr}>
+                      <ViewChannelItem channelObjectProp={channel} />
+                    </div>
+                    {showWayPoint(index) && (
+                      <Waypoint onEnter={updateCurrentPage} />
+                    )}
+                  </>
+                )
             )}
             {/* render all channels depending on if we are searching or not */}
 
@@ -199,7 +213,7 @@ function ViewChannels() {
           </Items>
         )}
       </Container>
-    </>
+    </ThemeProvider>
   );
 }
 
@@ -208,16 +222,17 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: -webkit-sticky;
-  position: sticky;
   top: 0px;
   z-index: 2;
-  background: #fafafa;
 
   @media (max-width: 600px) {
     flex-direction: column;
   }
 `;
+
+//background: red;
+
+
 const InputWrapper = styled.div`
   width: 50%;
   position: relative;
@@ -291,8 +306,9 @@ const Items = styled.div`
   align-self: stretch;
   padding: 10px 20px;
   overflow-y: scroll;
-  background: #fafafa;
 `;
+
+//background: red;
 
 const SearchIconImage = styled.img`
   position: absolute;
