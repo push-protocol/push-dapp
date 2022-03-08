@@ -26,9 +26,6 @@ function Navigation() {
     if(navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[0].data.drilldown[3].data.name = channelDetails.name;
     }
-    if(navigationSetup !== null && channelDetails==null){
-      navigationSetup.primary[0].data.drilldown[3].data.name = 'Create Channel';
-    }
     const theme = useTheme();
     const location = useLocation();
 
@@ -59,7 +56,7 @@ function Navigation() {
           setNavigationSetup(finalList);
       }
         
-    }, [channelDetails]);
+    }, []);
     
     const returnTransformedList = (lists, identity) => {
       let transformedList = [];
