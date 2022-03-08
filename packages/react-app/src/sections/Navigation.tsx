@@ -13,28 +13,32 @@ import NavigationList from "config/NavigationList";
 import { NavigationContext } from "contexts/NavigationContext";
 
 import GLOBALS from "config/Globals";
+import {useSelector} from "react-redux";
 
 // Create Header
 function Navigation() {
+    const { channelDetails } = useSelector((state: any) => state.admin);
+    console.log(channelDetails);
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
-
+    if(navigationSetup !== null && channelDetails!==null){
+      navigationSetup.primary[0].data.drilldown[3].data.name = channelDetails.name;
+    }
     const theme = useTheme();
     const location = useLocation();
 
     // Similar to componentDidMount and componentDidUpdate:
 
-    
-
+  
     useEffect(() => {
       if (!loading) {
           setLoading(true);
 
           // Set Primary List
           const primaryList = returnTransformedList(NavigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
-          
+  
           // Set Secondary List
           const secondaryList = returnTransformedList(NavigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
 

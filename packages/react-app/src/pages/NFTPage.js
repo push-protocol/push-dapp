@@ -114,7 +114,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
 
         <Content padding="0px 20px 20px" bg="#eee">
           <Item align="flex-start" margin="0px 20px 0px 20px">
-            {/*}
+            
             <Controls>
               <SubscribeButton index={0} active={controlAt == 0 ? 1 : 0} onClick={() => {userClickedAt(0)}} >
                 <ActionTitle >My NFTs</ActionTitle>
@@ -123,7 +123,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
                 <ActionTitle >All NFTs</ActionTitle>
               </SubscribeButton>
             </Controls>
-            */}
+           
 
             {controlAt === 0 &&
               <MyNFTs

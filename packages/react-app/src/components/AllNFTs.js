@@ -72,7 +72,7 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
         </ContainerInfo>
       }
 
-      {!loading && NFTObjects.length == 0 &&
+      {/* {!loading && NFTObjects.length == 0 &&
         <ContainerInfo>
           <Loader
            type="Oval"
@@ -81,7 +81,7 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
            width={40}
           />
         </ContainerInfo>
-      }
+      } */}
 
       {!loading && NFTObjects.length != 0 &&
         <ItemH id="scrollstyle-secondary">

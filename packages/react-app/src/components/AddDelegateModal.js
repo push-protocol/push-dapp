@@ -1,6 +1,6 @@
 import React, {useRef, useState} from 'react';
 import { useClick, useClickAway } from 'react-use';
-import styled from 'styled-components';
+import styled ,  {useTheme} from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import Loader from 'react-loader-spinner';
@@ -14,6 +14,8 @@ export default function AddDelegateModal({
     onClose,onSuccess, addDelegate
 }) {
 
+    const themes = useTheme();
+    console.log(themes);
     const modalRef = useRef(null);
     const [mainAdress, setMainAddress] = useState('');
     const [loading, setLoading] = useState('');
@@ -48,7 +50,7 @@ export default function AddDelegateModal({
 
     return (
         <Overlay>
-            <AliasModal ref={modalRef}>
+            <AliasModal ref={modalRef} background={themes}>
                 <Item align="flex-start">
                     <H2 textTransform="uppercase" spacing="0.1em">
                     <Span weight="200">Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
@@ -127,5 +129,5 @@ const Overlay = styled.div`
 
 const AliasModal = styled.div`
     padding: 20px 30px;
-    background: white;
+    background: ${props => props.background.mainBg};
 `;

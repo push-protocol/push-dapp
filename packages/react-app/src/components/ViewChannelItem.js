@@ -9,9 +9,10 @@ import Skeleton from "@yisheng90/react-loading";
 import { IoMdPeople } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
 import { FaRegAddressCard } from "react-icons/fa";
-import { AiTwotoneCopy } from "react-icons/ai";
+import { AiOutlineShareAlt } from "react-icons/ai";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import {ThemeProvider} from "styled-components";
 
@@ -28,6 +29,8 @@ function ViewChannelItem({ channelObjectProp }) {
 
   const themes = useTheme();
   const [darkMode, setDarkMode] = useState(false);
+
+  const navigate = useNavigate();
 
 
   const {
@@ -348,7 +351,13 @@ function ViewChannelItem({ channelObjectProp }) {
     }
   };
 
-  const copyToClipboard = (url) => {
+  const copyToClipboard = (address) => {
+    let hostname = window.location.hostname;
+    // if we are on localhost, attach the port
+    if (hostname === "localhost") {
+      hostname = hostname + ":3000";
+    }
+    const url = `${hostname}/channels?channel=${address}`;
     // fallback for non navigator browser support
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(url);
@@ -360,7 +369,10 @@ function ViewChannelItem({ channelObjectProp }) {
       document.execCommand("copy");
       document.body.removeChild(el);
     }
+
+
   };
+
 
   const unsubscribeAction = async () => {
     let txToast;
@@ -518,7 +530,7 @@ function ViewChannelItem({ channelObjectProp }) {
                     }}
                     style={{ cursor: "pointer" }}
                   >
-                    <AiTwotoneCopy />
+                    <AiOutlineShareAlt />
                     {formatAddress(copyText)}
                   </SubscribersCount>
                 </Subscribers>
