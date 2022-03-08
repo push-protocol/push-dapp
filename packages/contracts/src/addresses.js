@@ -18,6 +18,6 @@ const addresses = {
   distributor: "0x5B548D33874DeABaC2F683A6E1864795E09932F0",
   uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", //n
   WETHAddress: "0xc778417E063141139Fce010982780140Aa0cD5Ab", // mainnet address //n
-  USDTAddress: "0xdac17f958d2ee523a2206206994597c13d831ec7", // mainnet address //n
+  USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", // mainnet address //n
 };
 export default addresses;
