@@ -187,6 +187,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           <HeaderTag
             align="flex-start"
             overflow="hidden"
+            margin="0px 5px"
           >
             <Span
               textTransform="uppercase"
@@ -361,7 +362,7 @@ const Connection = styled.span`
 
 const HeaderTag = styled(Item)`
   flex: 1;
-  margin="5px 15px"
+  margin="5px 15px 5px 15px"
 
   @media (min-width: 993px) {
     margin: "5px 10px";

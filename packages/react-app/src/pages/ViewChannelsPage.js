@@ -375,9 +375,10 @@ function InboxPage() {
 
 // css style
 const Container = styled.div`
-  display: block;
+  display: flex;
   background: ${props => props.theme.mainBg};
   height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
+  align-self: stretch;
 `;
 
 const Controls = styled.div`
@@ -490,7 +491,6 @@ const Interface = styled.div`
   flex: 1;
   display: flex;
 
-  margin-bottom: 15px;
   overflow: hidden;
 `;
 

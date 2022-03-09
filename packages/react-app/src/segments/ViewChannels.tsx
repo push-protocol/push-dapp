@@ -6,8 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 
-import { Item } from "components/SharedStyling";
+import { Item, ItemH } from "components/SharedStyling";
 import { AiOutlineSearch } from "react-icons/ai";
+
+import UtilityHelper from 'helpers/UtilityHelper';
 
 import DisplayNotice from "components/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
@@ -146,34 +148,40 @@ function ViewChannels() {
             />
           </ContainerInfo>
         ) : (
-          <Items
-            id="scrollstyle-secondary"
-            style={{ position: "relative", padding: "0 1rem" }}
-          >
+          <ScrollItem>
             {!loading && (
-              <Header style={{ minHeight: "140px" }}>
-                <Item>
-                  <InputWrapper>
-                    <SearchBar
-                      type="text"
-                      value={search}
-                      onChange={(e: any) => setSearch(e.target.value)}
-                      className="input"
-                      placeholder="Search By Name/Address"
-                    />
-                    <Item
-                      position="absolute"
-                      top="0"
-                      bottom="0"
-                      right="10px"
+              <ItemH
+                padding="10px 0px"
+                flex="initial"
+              >
+                <Item
+                  flex="1"
+                  margin="10px"
+                  minWidth="320px"
+                >
+                  <SearchBar
+                    type="text"
+                    value={search}
+                    onChange={(e: any) => setSearch(e.target.value)}
+                    className="input"
+                    placeholder="Search By Name/Address"
+                  />
+                  <Item
+                    position="absolute"
+                    top="0"
+                    bottom="0"
+                    left="12px"
 
-                    >
-                      <AiOutlineSearch size={20} style={{color: themes.fontColor}} />
-                    </Item>
-                  </InputWrapper>
+                  >
+                    <AiOutlineSearch size={20} style={{color: themes.viewChannelSearchIcon}} />
+                  </Item>
                 </Item>
+
+                {!UtilityHelper.isMainnet(chainId) && 
+                  <Faucets /> 
+                }
                 
-              </Header>
+              </ItemH>
             )}
 
             {/* render all channels depending on if we are searching or not */}
@@ -202,6 +210,7 @@ function ViewChannels() {
                 />
               </CenteredContainerInfo>
             )}
+
             {/* display loader if pagination is loading next batch of channelTotalList */}
             {((moreLoading && channels.length) ||
               loading ||
@@ -210,7 +219,7 @@ function ViewChannels() {
                 <Loader type="Oval" color="#35c5f3" height={40} width={40} />
               </CenterContainer>
             )}
-          </Items>
+          </ScrollItem>
         )}
       </Container>
     </ThemeProvider>
@@ -218,42 +227,17 @@ function ViewChannels() {
 }
 
 // css styles
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  top: 0px;
-  z-index: 2;
-
-  @media (max-width: 600px) {
-    flex-direction: column;
-  }
-`;
-
-//background: red;
-
-
-const InputWrapper = styled.div`
-  width: 50%;
-  position: relative;
-
-  @media (max-width: 600px) {
-    width: 100%;
-    margin: 2rem 0;
-  }
-`;
-
 const SearchBar = styled.input`
   width: 100%;
   padding-right: 50px;
   height: 60px;
   padding-left: 40px;
 
-  background: rgb(255, 255, 255);
-  border: 1px solid rgba(169, 169, 169, 0.5);
+  background: ${props => props.theme.viewChannelSearchBg};
+  border: 1px solid ${props => props.theme.viewChannelSearchBorder};
+  color: ${props => props.theme.viewChannelSearchText};
   box-sizing: border-box;
   border-radius: 10px;
-  transition: 500ms;
   text-transform: capitalize;
   font-size: 16px;
 
@@ -272,6 +256,7 @@ const SearchBar = styled.input`
     border: 1px solid #ec008c;
   }
 `;
+
 const Container = styled.div`
   display: flex;
   flex: 1;
@@ -298,22 +283,38 @@ const CenteredContainerInfo = styled.div`
 
 const CenterContainer = styled(ContainerInfo)`
   width: fit-content;
-  margin: auto;
+  align-self: center;
 `;
 
-const Items = styled.div`
-  display: block;
+const ScrollItem = styled.div`
+  display: flex;
   align-self: stretch;
+  align-items: stretch;
+  justify-content: stretch;
+  flex-direction: column;
+  flex: 1;
   padding: 10px 20px;
   overflow-y: scroll;
-`;
 
-//background: red;
+  &::-webkit-scrollbar-track {
+    background-color: ${props => props.theme.scrollBg};
+    border-radius: 10px;
+  }
 
-const SearchIconImage = styled.img`
-  position: absolute;
-  right: 4px;
-  top: 4px;
+  &::-webkit-scrollbar {
+    background-color: ${props => props.theme.scrollBg};
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear,
+                       left top,
+                       left bottom,
+                       color-stop(0.44, #35c5f3),
+                       color-stop(0.72, #35b0f3),
+                       color-stop(0.86, #35a1f3));
+  }
 `;
 
 // Export Default
