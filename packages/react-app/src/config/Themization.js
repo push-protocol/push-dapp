@@ -1,5 +1,6 @@
 // Define what props.theme will look like
 const themeLight = {
+  scheme : "light",
   // Section Theme
   sectionBorderBg: 'transparent',
 
@@ -68,11 +69,18 @@ const themeLight = {
 
   color: "#000",
 
-  channelBg: "#fafafa"
+  channelBg: "#fafafa",
+
+  button: "#000",
+  
+  buttonColor: "#fff",
+
+  createColor: "#808080",
 
 };
 
 const themeDark = {
+  scheme : "dark",
   // Section Theme
   sectionBorderBg: '#333',
 
@@ -140,7 +148,16 @@ const themeDark = {
 
   greyText: "#818589",
 
-  channelBg: "#000"
+  channelBg: "#000",
+
+  button: "#fff",
+  
+  buttonColor: "#000",
+
+  buttonBd: "1px solid #fff",
+
+  createColor: "#fff",
+
 
 
 }

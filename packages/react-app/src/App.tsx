@@ -7,7 +7,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
 
-import styled, {ThemeProvider} from "styled-components";
+import styled, {useTheme} from "styled-components";
 import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 
 import Header from "sections/Header";
@@ -16,6 +16,8 @@ import Navigation from "sections/Navigation";
 import NavigationContextProvider from "contexts/NavigationContext";
 
 import MasterInterfacePage from "pages/MasterInterfacePage";
+
+import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
@@ -46,6 +48,9 @@ export default function App() {
     AbstractConnector
   >();
   const [currentTime,setcurrentTime]=React.useState(0);
+
+    const themes = useTheme();
+
 
   React.useEffect(()=>{
     const now = Date.now()/ 1000;
@@ -85,6 +90,10 @@ export default function App() {
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode))
   })
+
+  React.useEffect(()=>{
+    document.body.style.backgroundColor = darkMode ? "#000" : "#fff";
+  },[darkMode])
 
 
   React.useEffect(()=>{
@@ -145,8 +154,9 @@ export default function App() {
                 src="./epnshomelogo.png"
                 srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"}
               />
+              
               <Item
-                bg="#fafafa"
+                bg={darkMode ? themeDark : themeLight}
                 border="1px solid #ddd"
                 padding="15px"
                 radius="12px"
@@ -156,10 +166,10 @@ export default function App() {
                   <Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">
                     Connect
                   </Span>
-                  <Span weight="200"> Your Wallet</Span>
+                  <Span weight="200" color={darkMode ? themeDark : themeLight}> Your Wallet</Span>
                 </H2>
 
-                <ItemH maxWidth="800px" align="stretch">
+                <ItemH maxWidth="700px" align="stretch">
                   {Object.keys(web3Connectors).map((name) => {
                     const currentConnector = web3Connectors[name].obj;
                     const connected = currentConnector === connector;
@@ -188,7 +198,10 @@ export default function App() {
                           textTransform="uppercase"
                           size="12px"
                           weight="600"
-                          padding="10px"
+                          padding="20px"
+                          background={darkMode ? themeDark : themeLight}
+                          color={darkMode ? themeDark : themeLight}
+
                         >
                           {title}
                         </Span>
@@ -257,6 +270,7 @@ const ContentContainer = styled.div`
   width: 100%;
 
 
+
   margin: 0px 0px 0px ${props => props.leftBarWidth}px;
 
   @media (max-width: 992px) {
@@ -275,7 +289,7 @@ const ProviderLogo = styled.img`
 const ProviderButton = styled.button`
   flex: 1 1 0;
   min-width: 280px;
-  background: #fff;
+  background: ${props => props.theme.mainBg};
   outline: 0;ProviderButton
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);

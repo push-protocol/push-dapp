@@ -1,7 +1,7 @@
 import React from "react";
 import { Section, Content, Item } from "components/SharedStyling";
 import { useSelector, useDispatch } from "react-redux";
-import styled, { css } from "styled-components";
+import styled, { css , useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
 import { toast as toaster } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
@@ -36,6 +36,7 @@ function ChannelSettings() {
     CHANNEL_ACTIVE_STATE,
   } = useSelector((state: any) => state.channels);
 
+  const theme = useTheme();
   const { channelState } = channelDetails;
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
 
@@ -231,7 +232,7 @@ function ChannelSettings() {
 
   return (
     <div>
-      <DropdownWrapper>
+      <DropdownWrapper background ={theme}>
         <DeactivateButton
           isChannelDeactivated={isChannelDeactivated}
           onClick={toggleChannelActivationState}
@@ -335,7 +336,7 @@ const DropdownWrapper = styled.div`
   padding: 20px;
   padding-top: 30px;
 
-  background: #ffffff;
+  background: ${props => props.background.mainBg};
   border: 1px solid #a9a9a9;
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);

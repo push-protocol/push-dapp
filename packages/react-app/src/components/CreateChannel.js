@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Select from "react-select";
-import styled, { css } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 import {
   Section,
   Content,
@@ -33,6 +33,10 @@ import Loader from "react-loader-spinner";
 
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
+
 import { addresses, abis } from "@project/contracts";
 const ethers = require("ethers");
 
@@ -44,6 +48,10 @@ const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
 // Create Header
 function CreateChannel() {
   const { active, error, account, library, chainId } = useWeb3React();
+
+  const themes = useTheme();
+
+  const [darkMode, setDarkMode] = useState(false);
 
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
@@ -235,13 +243,17 @@ function CreateChannel() {
 
     setProcessingInfo("Creating Channel TX in progress");
     anotherSendTxPromise
-      .then(async function(tx) {
-        console.log(tx);
-        console.log("Check: " + account);
-        await library.waitForTransaction(tx.hash);
-        setProcessing(3);
-        setProcessingInfo("Channel Created");
-      })
+    .then(async function (tx) {
+      console.log(tx);
+      console.log("Check: " + account);
+      await library.waitForTransaction(tx.hash);
+      setProcessing(3);
+      setProcessingInfo("Channel Created! Reloading...");
+
+      setTimeout(() => {
+          window.location.reload();
+      }, 2000);
+  })
       .catch((err) => {
         console.log("Error --> %o", err);
         console.log({ err });
@@ -286,7 +298,7 @@ function CreateChannel() {
   };
 
   return (
-    <>
+    <ThemeProvider theme={themes}>
       <Section>
         <Content padding="10px 20px 20px">
           <Item align="flex-start">
@@ -294,10 +306,10 @@ function CreateChannel() {
               <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
                 Create
               </Span>
-              <Span weight="200"> Your Channel!</Span>
+              <Span weight="200" color={themes.color}> Your Channel!</Span>
             </H2>
-            <H3>
-              <b>Ethereum Push Notification Service</b> (EPNS) makes it
+            <H3 color={themes.createColor}>
+              <b color={themes.createColor}>Ethereum Push Notification Service</b> (EPNS) makes it
               extremely easy to open and maintain a genuine channel of
               communication with your users.
             </H3>
@@ -373,16 +385,16 @@ function CreateChannel() {
       {uploadDone && !stakeFeesChoosen && (
         <Section>
           <Content padding="50px 0px 0px 0px">
-            <Item align="flex-start" margin="0px 20px">
+            {/* <Item align="flex-start" margin="0px 20px">
               <H3 color="#e20880">Set your staking fees in DAI</H3>
-            </Item>
+            </Item> */}
 
             <Item
               margin="-10px 20px 20px 20px"
               padding="20px 20px 10px 20px"
               bg="#f1f1f1"
             >
-              <Slider
+              {/* <Slider
                 defaultValue={minStakeFees}
                 onChangeCommitted={(event, value) => setChannelStakeFees(value)}
                 aria-labelledby="discrete-slider"
@@ -391,7 +403,7 @@ function CreateChannel() {
                 marks
                 min={minStakeFees}
                 max={25000}
-              />
+              /> */}
               <Span
                 weight="400"
                 size="1.0em"
@@ -552,7 +564,7 @@ function CreateChannel() {
                 align="center"
               >
                 <Item flex="0" margin="0px 5px 0px 0px">
-                  <FiLink size={24} color="#000" />
+                  <FiLink size={24} color={themes.color} />
                 </Item>
                 <Item flex="1" margin="0px 0px 0px 5px" align="stretch">
                   <Input
@@ -650,7 +662,7 @@ function CreateChannel() {
           </Content>
         </Section>
       )}
-    </>
+    </ThemeProvider>
   );
 }
 

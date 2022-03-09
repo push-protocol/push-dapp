@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Section,
@@ -17,9 +17,12 @@ import {
 } from "components/SharedStyling";
 import Wave from "react-wavify";
 import Dropdown from "react-dropdown";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
 import Loader from "react-loader-spinner";
+
+import {ThemeProvider} from "styled-components";
+import { themeLight, themeDark } from "config/Themization";
 
 // HELPER METHODS
 const validateEmail = (email) => {
@@ -48,6 +51,9 @@ const SupportPage = () => {
   const [contactFormSub, setContactFormSub] = React.useState("");
   const [contactFormMsg, setContactFormMsg] = React.useState("");
   const [contactFormError, setContactFormError] = React.useState("");
+
+  const themes = useTheme();
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleContactFormSubmit = (e) => {
 		e.preventDefault();
@@ -102,15 +108,16 @@ const SupportPage = () => {
 	};
 
   return (
-    <Section id="contact" theme="#FAFAFA">
+    <ThemeProvider theme={themes}>
+    <Section id="contact" theme={themes.mainBg}>
       <Content className="contentBox" padding="10px 0">
         <Item align="stretch" justify="flex-start" margin="0px 20px">
             <Item align="stretch" align="flex-end" tabletAlign="flex-start" margin="0px 16px 0px 0px" textAlign="right" tabletTextAlign="left">
               <H2 textTransform="uppercase" spacing="0.1em" bg="#fff">
-                <Span color="#000" weight="600" padding="0px">Contact US!</Span>
+                <Span color={themes.color} weight="600" padding="0px">Contact US!</Span>
                 {/* <Span weight="200" color="#000"> Us!</Span> */}
               </H2>
-              <H3 bg="#fff" color="#000">Get in Touch</H3>
+              <H3 bg="#fff" color={themes.color}>Get in Touch</H3>
             </Item>
           <Item self="stretch">
             <FormSubmision
@@ -322,6 +329,7 @@ const SupportPage = () => {
                     <Button
                       bg="#000"
                       color="#fff"
+                      border={themes.buttonBd}
                       flex="1"
                       radius="4px"
                       disabled={contactFormProcessing}
@@ -356,6 +364,7 @@ const SupportPage = () => {
         </Item>
       </Content>
     </Section>
+    </ThemeProvider>
   );
 };
 
@@ -365,7 +374,7 @@ const DropdownStyled = styled(Dropdown)`
     background-color: #000;
     color: #fff;
     padding: 12px 52px 12px 10px;
-    border: 1px solid #000;
+    border: 1px solid ${props => props.theme.buttonBd};
     border-radius: 4px;
   }
 
