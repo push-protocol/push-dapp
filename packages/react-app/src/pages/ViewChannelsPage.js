@@ -14,7 +14,7 @@ import NotificationToast from "components/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
 import Feedbox from "segments/Feedbox";
-import Channels from "pages/Channels";
+import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
@@ -34,8 +34,7 @@ import {
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
 
-
-
+import GLOBALS from "config/Globals";
 
 export const ALLOWED_CORE_NETWORK = 42; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
@@ -355,7 +354,7 @@ function InboxPage() {
     <Container>
       <Interface>
         {controlAt == 0 && <Feedbox />}
-        {controlAt == 1 && <Channels />}
+        {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
         {toast && (
@@ -376,10 +375,10 @@ function InboxPage() {
 
 // css style
 const Container = styled.div`
-  flex: 1;
-  display: block;
-  flex-direction: column;
-  min-height: calc(100vh - 100px);
+  display: flex;
+  background: ${props => props.theme.mainBg};
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
+  align-self: stretch;
 `;
 
 const Controls = styled.div`
@@ -492,7 +491,6 @@ const Interface = styled.div`
   flex: 1;
   display: flex;
 
-  margin-bottom: 15px;
   overflow: hidden;
 `;
 

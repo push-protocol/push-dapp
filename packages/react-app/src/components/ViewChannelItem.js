@@ -451,7 +451,7 @@ function ViewChannelItem({ channelObjectProp }) {
         <ChannelLogoOuter>
           <ChannelLogoInner>
             {loading ? (
-              <Skeleton color="#eee"  height="100%" />
+              <Skeleton color={themes.interfaceSkeleton}  height="100%" />
             ) : (
               <ChannelLogoImg src={`${channelJson.icon}`} />
             )}
@@ -462,7 +462,7 @@ function ViewChannelItem({ channelObjectProp }) {
       <ChannelInfo>
         <ChannelTitle>
           {loading ? (
-            <Skeleton color="#eee" width="50%" height={24} />
+            <Skeleton color={themes.interfaceSkeleton} width="50%" height={24} />
           ) : (
             <ChannelTitleLink
               href={channelJson.url}
@@ -473,7 +473,7 @@ function ViewChannelItem({ channelObjectProp }) {
               {channelJson.name}
               {isVerified && (
                 <Subscribers style={{ display: "inline", marginLeft: "8px" }}>
-                  <GoVerified size={18} color="#35c4f3" />
+                  <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
                 </Subscribers>
               )}
             </ChannelTitleLink>
@@ -484,15 +484,15 @@ function ViewChannelItem({ channelObjectProp }) {
           {loading ? (
             <>
               <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color="#eee" width="100%" height={5} />
+                <Skeleton color={themes.interfaceSkeleton} width="100%" height={5} />
               </SkeletonWrapper>
 
               <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color="#eee" width="100%" height={5} />
+                <Skeleton color={themes.interfaceSkeleton} width="100%" height={5} />
               </SkeletonWrapper>
 
               <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color="#eee" width="40%" height={5} />
+                <Skeleton color={themes.interfaceSkeleton} width="40%" height={5} />
               </SkeletonWrapper>
             </>
           ) : (
@@ -504,19 +504,19 @@ function ViewChannelItem({ channelObjectProp }) {
           {loading ? (
             <>
               <SkeletonWrapper atH={10} atW={30} marginBottom="0">
-                <Skeleton />
+                <Skeleton color={themes.interfaceSkeleton} />
               </SkeletonWrapper>
             </>
           ) : (
             <ColumnFlex>
               <FlexBox style={{ marginBottom: "5px" }}>
                 <Subscribers>
-                  <IoMdPeople size={20} color="#ccc" />
+                  <IoMdPeople size={20} color={themes.viewChannelSecondaryIcon} />
                   <SubscribersCount>{memberCount}</SubscribersCount>
                 </Subscribers>
 
                 <Subscribers style={{ marginLeft: "10px" }}>
-                  <FaRegAddressCard size={20} color="#ccc" />
+                  <FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />
                   <SubscribersCount
                     onClick={() => {
                       copyToClipboard(channelJson.addr);
@@ -552,7 +552,7 @@ function ViewChannelItem({ channelObjectProp }) {
           <ChannelActions>
             {loading && (
               <SkeletonButton>
-                <Skeleton />
+                <Skeleton color={themes.interfaceSkeleton} />
               </SkeletonButton>
             )}
             {!loading && isPushAdmin && (
@@ -644,8 +644,7 @@ const Container = styled.div`
 
   background: ${props => props.theme.mainBg};
   border-radius: 10px;
-  border: 1px solid rgb(237, 237, 237);
-
+  border: 1px solid ${props => props.theme.viewChannelIconBorder};
 
   margin: 15px 0px;
   justify-content: center;
@@ -667,7 +666,7 @@ const ChannelLogo = styled.div`
   flex: 1;
   margin: 5px;
   padding: 10px;
-  border: 2px solid #fafafa;
+  border: 2px solid ${props => props.theme.viewChannelIconBorder};
   overflow: hidden;
   border-radius: 20px;
   display: flex;
@@ -719,7 +718,7 @@ const ChannelTitle = styled.div`
 const ChannelTitleLink = styled.a`
   text-decoration: none;
   font-weight: 600;
-  color: #e20880;
+  color: ${props => props.theme.viewChannelLink};
   font-size: 20px;
   &:hover {
     text-decoration: underline;
@@ -744,6 +743,7 @@ const VerifierIcon = styled.img`
   margin-left: 6px;
   margin-right: 4px;
 `;
+
 const VerifierName = styled.span`
   font-weight: 400;
   color: black;
@@ -775,7 +775,7 @@ const ChannelMeta = styled.div`
 
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
-  color: #fff; *********
+  color: #fff; 
   font-weight: 600;
   padding: 5px 10px;
   display: flex;
@@ -792,7 +792,7 @@ const Subscribers = styled.div`
 `;
 
 const SubscribersCount = styled(ChannelMetaBox)`
-  background: #35c4f3;
+  background: ${props => props.theme.viewChannelSecondaryBG};
   transition: 300ms;
 `;
 

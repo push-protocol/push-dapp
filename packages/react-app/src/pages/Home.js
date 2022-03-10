@@ -16,7 +16,7 @@ import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
 import SpamBox from "segments/spam";
 
-import Channels from "pages/Channels";
+import ViewChannels from "segments/ViewChannels";
 import Feedbox from "segments/Feedbox";
 
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
@@ -406,7 +406,7 @@ function Home() {
       </Controls>
       <Interface>
         {controlAt == 0 && <Feedbox />}
-        {controlAt == 1 && <Channels />}
+        {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
         {toast && (

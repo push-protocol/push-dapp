@@ -228,7 +228,7 @@ export const Span = styled.span`
 `
 
 export const B = styled.span`
-  color: ${props => props.color || '#000'};
+  color: ${props => props.color || 'inherit'};
   font-weight: ${props => props.weight || 'bold'};
 `
 

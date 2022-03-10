@@ -183,10 +183,11 @@ function Header({ isDarkMode, darkModeToggle }) {
       <ItemH
         justify="flex-end"
       >
-        {headerTag && 
+        {headerTag && active && !error &&
           <HeaderTag
             align="flex-start"
             overflow="hidden"
+            margin="0px 5px"
           >
             <Span
               textTransform="uppercase"
@@ -214,7 +215,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           flex="initial"
           justify="flex-end"
           padding="16px"
-          margin="0px 10px 0px 0px"
+          margin={active && !error ? "0px 10px 0px 0px" : "0px"}
           position="relative"
           border-radius="100%"
         >
@@ -361,7 +362,7 @@ const Connection = styled.span`
 
 const HeaderTag = styled(Item)`
   flex: 1;
-  margin="5px 15px"
+  margin="5px 15px 5px 15px"
 
   @media (min-width: 993px) {
     margin: "5px 10px";

@@ -366,41 +366,41 @@ function Navigation() {
                   ):
                   (
                     <Item
-                    padding="10px"
-                    flexBasis="100%"
-                    align="stretch"
-                    direction="row"
-                    overflow="hidden"
-                  >
-                    <SectionInnerGroupContainer
-                      flex="1"
+                      padding="10px"
+                      flexBasis="100%"
                       align="stretch"
-                      bg={theme.leftBarButtonBg}
-                      margintop="-10px"
-                      zIndex={2}
-                      refresh={refresh}
-                      onClick={() => {
-                        mutateTransformedList(section, true)
-                      }}                  
+                      direction="row"
+                      overflow="hidden"
                     >
-                      <NavigationButton
-                        item={section}
-                        data={data}
-                        sectionID={sectionID}
-                        active={section.active}
-                      />
-                    </SectionInnerGroupContainer>
+                        <SectionInnerGroupContainer
+                          flex="1"
+                          align="stretch"
+                          bg={theme.leftBarButtonBg}
+                          margintop="-10px"
+                          zIndex={2}
+                          refresh={refresh}
+                          onClick={() => {
+                            mutateTransformedList(section, true)
+                          }}                  
+                        >
+                        <NavigationButton
+                          item={section}
+                          data={data}
+                          sectionID={sectionID}
+                          active={section.active}
+                        />
+                      </SectionInnerGroupContainer>
                     
-                    { 
-                    section.hasItems 
-                      ? renderChildItems(
-                          data.drilldown, 
-                          section.opened,
-                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
-                        )
-                      : null
-                    }
-                  </Item>
+                      { 
+                      section.hasItems 
+                        ? renderChildItems(
+                            data.drilldown, 
+                            section.opened,
+                            GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                          )
+                        : null
+                      }
+                    </Item>
                   )
                 
               }

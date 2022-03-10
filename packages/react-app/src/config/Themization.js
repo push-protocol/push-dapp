@@ -27,7 +27,39 @@ const themeLight = {
 
   // Interface Theme
   interfaceTopPadding: '0px',
+  interfaceBorder: '#f1f1f1',
+
+  interfaceSkeleton: '#eee',
+
+  // Main Theme
+  backgroundBG: '#fff',
   mainBg: '#fff',
+  fontColor: '#000',
+  scrollBg: '#eee',
+
+  // View Channels Theme
+
+  // -- View Channel Header Theme
+  // -- -- Search Bar
+  viewChannelSearchBg: '#fff',
+  viewChannelSearchBorder: '#f1f1f1',
+  viewChannelSearchText: '#000',
+  viewChannelSearchIcon: '#333',
+
+  // -- -- Faucet Theme
+  faucetBg: '#fff',
+  faucetBorder: '#ededed',
+  faucetIcon: '#674c9f',
+  faucetHeader: '#e20880',
+
+  // -- View Channel Main Theme
+  viewChannelOuterBorder: '#ededed',
+  viewChannelLink: '#e20880',
+  viewChannelVerifiedBadge: '#ec008c',
+  viewChannelIconBorder: '#fafafa',
+  viewChannelSecondaryBG: '#35c5f3',
+  viewChannelSecondaryIcon: '#ccc',
+
 
   yieldBg: "#f3f3f3",
 
@@ -75,7 +107,36 @@ const themeDark = {
 
   // Interface Theme
   interfaceTopPadding: '20px',
+  interfaceBorder: '#333',
+  interfaceSkeleton: '#414141',
+
+  // Main Theme
+  backgroundBG: '#222',
   mainBg: '#000',
+  fontColor: '#fff',
+  scrollBg: '#333',
+
+  // View Channels Theme
+  // -- View Channel Header Theme
+  // -- -- Search Bar
+  viewChannelSearchBg: '#222',
+  viewChannelSearchBorder: '#333',
+  viewChannelSearchText: '#fff',
+  viewChannelSearchIcon: '#414141',
+
+  // -- -- Faucet Theme
+  faucetBg: '#222',
+  faucetBorder: '#333',
+  faucetIcon: '#414141',
+  faucetHeader: '#414141',
+
+  // -- View Channel Main Theme
+  viewChannelOuterBorder: '#444',
+  viewChannelLink: '#35c5f3',
+  viewChannelVerifiedBadge: '#ccc',
+  viewChannelIconBorder: '#222',
+  viewChannelSecondaryBG: '#222',
+  viewChannelSecondaryIcon: '#414141',
 
   color: "#fff",
 
