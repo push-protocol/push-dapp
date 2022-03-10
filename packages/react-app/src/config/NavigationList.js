@@ -246,17 +246,17 @@ const NavigationList = {
         hasMenuLogic: true,
   
         drilldown: {
-          tutorial: {
-            src: "svg/tutorial.svg",
-            iconFactory: null,
-            name: 'Tutorial',
-            title: 'Tutorial',
-            alt: 'Open Tutorial',
-            href: '/tutorial',
-            newTab: false,
-            isRoute: true,  
-            hasMenuLogic: true,
-          },
+          // tutorial: {
+          //   src: "svg/tutorial.svg",
+          //   iconFactory: null,
+          //   name: 'Tutorial',
+          //   title: 'Tutorial',
+          //   alt: 'Open Tutorial',
+          //   href: '/tutorial',
+          //   newTab: false,
+          //   isRoute: true,  
+          //   hasMenuLogic: true,
+          // },
           faq: {
             src: "svg/qna.svg",
             iconFactory: null,
