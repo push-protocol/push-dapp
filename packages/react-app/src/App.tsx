@@ -15,9 +15,6 @@ import Navigation from "sections/Navigation";
 
 import NavigationContextProvider from "contexts/NavigationContext";
 
-import Home from "pages/Home";
-import Channels from "pages/Channels";
-
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
 import {ThemeProvider} from "styled-components";
@@ -116,8 +113,7 @@ export default function App() {
     return function cleanup() {
       window?.Olvy?.teardown();
     };
-  
-});
+  });
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
@@ -151,7 +147,9 @@ export default function App() {
           )}
 
           {(!active) && (
-            <Item margin="70px">
+            <Item
+              justify="flex-start"
+            >
               <ProviderLogo
                 src="./epnshomelogo.png"
                 srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"}
@@ -162,6 +160,7 @@ export default function App() {
                 border="1px solid #ddd"
                 padding="15px"
                 radius="12px"
+                flex="initial"
               >
                 <H2 textTransform="uppercase" spacing="0.1em">
                   <Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">
@@ -212,8 +211,8 @@ export default function App() {
                 </ItemH>
               </Item>
 
-              <Span margin="10px" size="14px" color={darkMode ? themeDark : themeLight}>
-                By unlocking your wallet, <B color={darkMode ? themeDark : themeLight}>You agree</B> to our{" "}
+              <Span margin="10px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor }>
+                By unlocking your wallet, <B>You agree</B> to our{" "}
                 <A href="https://epns.io/tos" target="_blank">
                   Terms of Service
                 </A>{" "}
@@ -247,8 +246,9 @@ const ParentContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   flex: 1;
-  background: ${props => props.theme.mainBg};
+  background: ${props => props.theme.backgroundBG};
   margin: ${props => props.headerHeight}px 0px 0px 0px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px);
 `;
 
 const LeftBarContainer = styled.div`

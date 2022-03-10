@@ -14,8 +14,8 @@ import NotificationToast from "components/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
 import Feedbox from "segments/Feedbox";
-import Spambox from "pages/Spambox";
-import Channels from "pages/Channels";
+import Spambox from "segments/Spambox";
+import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
@@ -350,7 +350,7 @@ function InboxPage() {
     <Container>
       <Interface>
         {controlAt == 0 && <Spambox />}
-        {controlAt == 1 && <Channels />}
+        {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
         {toast && (

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 
 import { ethers } from "ethers";
 import { Provider } from "react-redux";
@@ -38,7 +38,7 @@ function getLibrary(provider) {
 }
 
 ReactDOM.render(
-  <BrowserRouter>
+  <HashRouter>
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Web3ReactProvider getLibrary={getLibrary}>
@@ -46,7 +46,7 @@ ReactDOM.render(
         </Web3ReactProvider>
       </ApolloProvider>
     </Provider>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById("root")
 );
 
