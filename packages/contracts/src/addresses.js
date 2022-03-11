@@ -2,8 +2,8 @@
 // Goerli, Kovan, Rinkeby and Ropsten. Replace it with your smart contracts.
 const addresses = {
   ceaErc20: "0xc1C0472c0C80bCcDC7F5D01A376Bd97a734B8815",
-  epnscore: "0x628E3191dE173d40b9fcDc171557958267c475a6",
-  epnsEthComm: "0x99047d328496C14016222a998564B334A4A5723f", 
+  epnscore: "0x97D7c5f14B8fe94Ef2b4bA589379f5Ec992197dA",
+  epnsEthComm: "0x87da9Af1899ad477C67FeA31ce89c1d2435c77DC", // the core contract
   epnsPolyComm: "0xD2ee1e96e3592d5945dDc1808834d7EE67400823", // the ploygon comm contract
   dai: "0xff795577d9ac8bd7d90ee22b6c1703490b6512fd", //address for dai
   aDai: "0x58AD4cB396411B691A9AAb6F74545b2C5217FE6a",
@@ -16,8 +16,8 @@ const addresses = {
   batchMintNFT: "0xCf733D547B9f7F87c1B1f63f45c197C007F8eedf",
   NFTRewards: "0xdF0Aa8669688a608D6873b34A672e61cf3A5B3a7",
   distributor: "0x5B548D33874DeABaC2F683A6E1864795E09932F0",
-  uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", //n
-  WETHAddress: "0xd0A1E359811322d97991E03f863a0C30C2cF029C", // mainnet address //n
-  USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", // mainnet address //n
+  uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
+  WETHAddress: "0xd0A1E359811322d97991E03f863a0C30C2cF029C",
+  USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", 
 };
 export default addresses;
