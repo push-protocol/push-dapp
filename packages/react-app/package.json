@@ -58,7 +58,7 @@
     "react-animations": "1.0.0",
     "react-cookie": "4.1.1",
     "react-dom": "17.0.2",
-    "react-dropdown": "1.9.0",
+    "react-dropdown": "^1.9.2",
     "react-dropzone-uploader": "2.11.0",
     "react-ga": "2.7.0",
     "react-icons": "^4.3.1",

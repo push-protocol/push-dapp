@@ -6,7 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
-
+import SearchFilter from '../components/SearchFilter';
 import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
@@ -124,8 +124,11 @@ function Feedbox() {
   return (
     <ThemeProvider theme={themes}>
     <Container>
+    <SearchFilter/>
+      
       {notifications && (
         <Notifs id="scrollstyle-secondary">
+          
 
           {bgUpdateLoading && (
             <Item
@@ -151,6 +154,7 @@ function Feedbox() {
                 {showWayPoint(index) && (
                   <Waypoint onEnter={() => handlePagination()} />
                 )}
+                
                 <NotificationItem
                   notificationTitle={title}
                   notificationBody={message}
