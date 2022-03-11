@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga";
+
 import styled, { css, useTheme } from 'styled-components';
 import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3,LI, Image, P, Span, Anchor, Button, FormSubmision, Input, TextField, UL} from 'components/SharedStyling';
 import Loader from 'react-loader-spinner'
@@ -31,6 +33,10 @@ const VOTING_TRESHOLD = 75000; //the treshold for delegates
 
 // Create Header
 function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
+  // React GA Analytics
+  ReactGA.pageview("/governance");
+
+  // setup themes (styled components)
   const themes = useTheme();
 
   const [darkMode, setDarkMode] = useState(false);

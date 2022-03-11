@@ -38,7 +38,7 @@ const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 
 // Create Header
 function ChannelDashboardPage() {
-  ReactGA.pageview("/dashboard");
+  ReactGA.pageview("/channel_dashboard");
 
   const themes = useTheme();
 

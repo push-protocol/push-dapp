@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {ThemeProvider} from "styled-components";
+import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 
 import { themeLight, themeDark } from "config/Themization";
 
@@ -644,7 +645,7 @@ const Container = styled.div`
 
   background: ${props => props.theme.mainBg};
   border-radius: 10px;
-  border: 1px solid ${props => props.theme.viewChannelIconBorder};
+  border: 1px solid ${props => props.theme.viewChannelOuterBorder};
 
   margin: 15px 0px;
   justify-content: center;
@@ -704,15 +705,19 @@ const ChannelLogoImg = styled.img`
 const ChannelInfo = styled.div`
   flex: 1;
   margin: 5px 10px;
-  min-width: 120px;
+  min-width: 240px;
   flex-grow: 4;
   flex-direction: column;
   display: flex;
 
 `;
 
-const ChannelTitle = styled.div`
-  margin-bottom: 5px;
+const ChannelTitle = styled(ItemH)`
+  padding: 5px 10px 5px 0px;
+  justify-content: flex-start;
+  margin: 0;
+  flex: initial;
+  align-items: center;
 `;
 
 const ChannelTitleLink = styled.a`
@@ -720,6 +725,8 @@ const ChannelTitleLink = styled.a`
   font-weight: 600;
   color: ${props => props.theme.viewChannelLink};
   font-size: 20px;
+  display: flex;
+  align-item: center;
   &:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -733,7 +740,6 @@ const VerifiedBy = styled.span`
   line-height: 20px;
   letter-spacing: 0.05em;
   font-weight: 600;
-  display: inline-block;
 `;
 
 const VerifierIcon = styled.img`

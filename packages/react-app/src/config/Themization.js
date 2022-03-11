@@ -53,7 +53,7 @@ const themeLight = {
   faucetHeader: '#e20880',
 
   // -- View Channel Main Theme
-  viewChannelOuterBorder: '#ededed',
+  viewChannelOuterBorder: '#eee',
   viewChannelLink: '#e20880',
   viewChannelVerifiedBadge: '#ec008c',
   viewChannelIconBorder: '#fafafa',
@@ -131,7 +131,7 @@ const themeDark = {
   faucetHeader: '#414141',
 
   // -- View Channel Main Theme
-  viewChannelOuterBorder: '#444',
+  viewChannelOuterBorder: '#222',
   viewChannelLink: '#35c5f3',
   viewChannelVerifiedBadge: '#ccc',
   viewChannelIconBorder: '#222',

@@ -152,87 +152,78 @@ function ViewChannels() {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        {!loading && channels.length == 0 ? (
-          <ContainerInfo>
-            <DisplayNotice
-              title="That's weird, No Channels in EPNS... world is ending... right?"
-              theme="primary"
-            />
-          </ContainerInfo>
-        ) : (
-          <ScrollItem>
-            {!loading && (
-              <ItemH
-                padding="10px 0px"
-                flex="initial"
+        <ScrollItem>
+          {!loading && (
+            <ItemH
+              padding="10px 0px"
+              flex="initial"
+            >
+              <Item
+                flex="1"
+                margin="10px"
+                minWidth="320px"
               >
-                <Item
-                  flex="1"
-                  margin="10px"
-                  minWidth="320px"
-                >
-                  <SearchBar
-                    type="text"
-                    value={search}
-                    onChange={(e: any) => setSearch(e.target.value)}
-                    className="input"
-                    placeholder="Search By Name/Address"
-                  />
-                  <Item
-                    position="absolute"
-                    top="0"
-                    bottom="0"
-                    left="12px"
-
-                  >
-                    <AiOutlineSearch size={20} style={{color: themes.viewChannelSearchIcon}} />
-                  </Item>
-                </Item>
-
-                {!UtilityHelper.isMainnet(chainId) && 
-                  <Faucets /> 
-                }
-                
-              </ItemH>
-            )}
-
-            {/* render all channels depending on if we are searching or not */}
-            {(search ? channelToShow : channels).map(
-              (channel: any, index: any) =>
-                channel &&
-                channel.addr !== ZERO_ADDRESS && (
-                  <>
-                    <div key={channel.addr}>
-                      <ViewChannelItem channelObjectProp={channel} />
-                    </div>
-                    {showWayPoint(index) && (
-                      <Waypoint onEnter={updateCurrentPage} />
-                    )}
-                  </>
-                )
-            )}
-            {/* render all channels depending on if we are searching or not */}
-
-            {/* if we are in search mode and there are no channels then display error message */}
-            {search && !channelToShow?.length && !loadingChannel && (
-              <CenteredContainerInfo>
-                <DisplayNotice
-                  title="No channels match your query, please search for another name/address"
-                  theme="third"
+                <SearchBar
+                  type="text"
+                  value={search}
+                  onChange={(e: any) => setSearch(e.target.value)}
+                  className="input"
+                  placeholder="Search By Name/Address"
                 />
-              </CenteredContainerInfo>
-            )}
+                <Item
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="12px"
 
-            {/* display loader if pagination is loading next batch of channelTotalList */}
-            {((moreLoading && channels.length) ||
-              loading ||
-              loadingChannel) && (
-              <CenterContainer>
-                <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-              </CenterContainer>
-            )}
-          </ScrollItem>
-        )}
+                >
+                  <AiOutlineSearch size={20} style={{color: themes.viewChannelSearchIcon}} />
+                </Item>
+              </Item>
+
+              {!UtilityHelper.isMainnet(chainId) && 
+                <Faucets /> 
+              }
+              
+            </ItemH>
+          )}
+
+          {/* render all channels depending on if we are searching or not */}
+          {(search ? channelToShow : channels).map(
+            (channel: any, index: any) =>
+              channel &&
+              channel.addr !== ZERO_ADDRESS && (
+                <>
+                  <div key={channel.addr}>
+                    <ViewChannelItem channelObjectProp={channel} />
+                  </div>
+                  {showWayPoint(index) && (
+                    <Waypoint onEnter={updateCurrentPage} />
+                  )}
+                </>
+              )
+          )}
+          {/* render all channels depending on if we are searching or not */}
+
+          {/* if we are in search mode and there are no channels then display error message */}
+          {search && !channelToShow?.length && !loadingChannel && (
+            <CenteredContainerInfo>
+              <DisplayNotice
+                title="No channels match your query, please search for another name/address"
+                theme="third"
+              />
+            </CenteredContainerInfo>
+          )}
+
+          {/* display loader if pagination is loading next batch of channelTotalList */}
+          {((moreLoading && channels.length) ||
+            loading ||
+            loadingChannel) && (
+            <CenterContainer>
+              <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+            </CenterContainer>
+          )}
+        </ScrollItem>
       </Container>
     </ThemeProvider>
   );
@@ -298,12 +289,13 @@ const CenterContainer = styled(ContainerInfo)`
   align-self: center;
 `;
 
-const ScrollItem = styled.div`
+const ScrollItem = styled(Item)`
   display: flex;
   align-self: stretch;
   align-items: stretch;
   justify-content: stretch;
-  flex-direction: column;
+  flex-wrap: nowrap;
+  
   flex: 1;
   padding: 10px 20px;
   overflow-y: scroll;
