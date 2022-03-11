@@ -517,15 +517,17 @@ function Navigation() {
                 bg={theme.leftBarSocialBg}
               >
                 <Anchor
-                  title="Open Twitter"
-                  href="https://twitter.com/epnsproject"
-                  target="_blank"
-                  bg={theme.leftBarSocialIconBg}
-                  radius="4px"
-                  padding="10px"
-                  margin="5px"
+                title="Open Twitter"
+                href="https://twitter.com/epnsproject"
+                target="_blank"
+                bg={theme.leftBarSocialIconBg}
+                radius="4px"
+                padding="10px"
+                margin="5px"
+                onMouseOver={({ target }) => target.style.color = theme.color}
+                onMouseOut={({target})=>target.style.color = "fff"}
                 >
-                  <FaTwitter size={15} color="#fff"/>
+                  <FaTwitter size={15} color="fff" />
                 </Anchor>
                 <Anchor
                   title="Open Telegram"
@@ -535,6 +537,8 @@ function Navigation() {
                   radius="4px"
                   padding="10px"
                   margin="5px"
+                  onMouseOver={({ target }) => target.style.color = theme.color}
+                  onMouseOut={({target})=>target.style.color = "fff"}
                 >
                   <FaTelegramPlane size={15} color="#fff"/>
                 </Anchor>
@@ -546,6 +550,8 @@ function Navigation() {
                   radius="4px"
                   padding="10px"
                   margin="5px"
+                  onMouseOver={({ target }) => target.style.color = theme.color}
+                  onMouseOut={({target})=>target.style.color = "fff"}
                 >
                   <FaMedium size={15} color="#fff"/>
                 </Anchor>
@@ -557,6 +563,8 @@ function Navigation() {
                   radius="4px"
                   padding="10px"
                   margin="5px"
+                  onMouseOver={({ target }) => target.style.color = theme.color}
+                  onMouseOut={({target})=>target.style.color = "fff"}
                 >
                   <FaDiscord size={15} color="#fff"/>
                 </Anchor>
@@ -568,6 +576,8 @@ function Navigation() {
                   radius="4px"
                   padding="10px"
                   margin="5px"
+                  onMouseOver={({ target }) => target.style.color = theme.color}
+                  onMouseOut={({target})=>target.style.color = "fff"}
                 >
                   <FaGithub size={15} color={"#fff"}/>
                 </Anchor>
