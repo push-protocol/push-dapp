@@ -263,10 +263,21 @@ const NavigationList = {
             name: 'FAQs',
             title: 'Checkout Frequently Asked Questions',
             alt: 'Open FAQs',
-            href: '/faq',
+            href: '/comingsoon',
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
+            headerTag: {
+              title: "FAQ",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           }, 
           
         }
