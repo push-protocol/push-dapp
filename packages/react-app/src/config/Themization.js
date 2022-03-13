@@ -92,7 +92,7 @@ const themeDark = {
   headerIconsBg: '#fff',
 
   // Nav Menu 
-  navMenuBg: '#000',
+  navMenuBg: '#00000066',
 
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',

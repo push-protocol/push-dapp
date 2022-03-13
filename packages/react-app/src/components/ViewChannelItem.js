@@ -17,10 +17,13 @@ import { useNavigate } from "react-router-dom";
 import {ThemeProvider} from "styled-components";
 import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 
-import { themeLight, themeDark } from "config/Themization";
-
 import { postReq } from "api";
+
+import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 import NotificationToast from "components/NotificationToast";
+
+import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial";
+
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
@@ -513,34 +516,43 @@ function ViewChannelItem({ channelObjectProp }) {
               </SkeletonWrapper>
             </>
           ) : (
-            <ColumnFlex>
-              <FlexBox style={{ marginBottom: "5px" }}>
-                <Subscribers>
-                  <IoMdPeople size={20} color={themes.viewChannelSecondaryIcon} />
-                  <SubscribersCount>{memberCount}</SubscribersCount>
-                </Subscribers>
+            <ItemH
+              align="center"
+              justify="flex-start"
+              margin="0px -5px"
+            >
+              <MetaInfoDisplayer
+                externalIcon={<IoMdPeople size={20} color={themes.viewChannelSecondaryIcon} />}
+                internalIcon={null}
+                text={memberCount}
+                bgColor={themes.viewChannelSecondaryBG}
+              />
 
-                <Subscribers style={{ marginLeft: "10px" }}>
-                  <FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />
-                  <SubscribersCount
-                    onClick={() => {
-                      copyToClipboard(channelJson.addr);
-                      setCopyText("copied");
-                    }}
-                    onMouseEnter={() => {
-                      setCopyText("click to copy");
-                    }}
-                    onMouseLeave={() => {
-                      setCopyText(channelJson.addr);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <AiOutlineShareAlt />
-                    {formatAddress(copyText)}
-                  </SubscribersCount>
-                </Subscribers>
-              </FlexBox>
-            </ColumnFlex>
+              <MetaInfoDisplayer
+                externalIcon={<FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />}
+                internalIcon={<AiOutlineShareAlt />}
+                text={formatAddress(copyText)}
+                bgColor={themes.viewChannelSecondaryBG}
+                onClick={() => {
+                  copyToClipboard(channelJson.addr);
+                  setCopyText("copied");
+                }}
+                onMouseEnter={() => {
+                  setCopyText("click to copy");
+                }}
+                onMouseLeave={() => {
+                  setCopyText(channelJson.addr);
+                }}
+              />
+
+              {isChannelTutorialized(channelObject.addr) && 
+                <ChannelTutorial 
+                  addr={channelObject.addr}
+                  bgColor={themes.viewChannelSecondaryBG}
+                />
+              }
+
+            </ItemH>
           )}
         </ChannelMeta>
       </ChannelInfo>
