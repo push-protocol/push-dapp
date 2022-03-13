@@ -158,10 +158,9 @@ function ViewChannels() {
               padding="10px 0px"
               flex="initial"
             >
-              <Item
+              <SearchContainer
                 flex="1"
                 margin="10px"
-                minWidth="320px"
               >
                 <SearchBar
                   type="text"
@@ -179,7 +178,7 @@ function ViewChannels() {
                 >
                   <AiOutlineSearch size={20} style={{color: themes.viewChannelSearchIcon}} />
                 </Item>
-              </Item>
+              </SearchContainer>
 
               {!UtilityHelper.isMainnet(chainId) && 
                 <Faucets /> 
@@ -318,6 +317,18 @@ const ScrollItem = styled(Item)`
                        color-stop(0.44, #35c5f3),
                        color-stop(0.72, #35b0f3),
                        color-stop(0.86, #35a1f3));
+  }
+`;
+
+const SearchContainer = styled(Item)`
+  min-width: 320px;
+
+  @media (max-width: 768px) {
+    min-width: 320px;
+  }
+
+  @media (max-width: 480px) {
+    min-width: 210px;
   }
 `;
 

@@ -471,12 +471,16 @@ function ViewChannelItem({ channelObjectProp }) {
               rel="nofollow"
               
             >
-              {channelJson.name}
-              {isVerified && (
-                <Subscribers style={{ display: "inline", marginLeft: "8px" }}>
-                  <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
-                </Subscribers>
-              )}
+              <Span>
+                {channelJson.name}
+                {isVerified && (
+                  <Span 
+                    margin="0px 5px"
+                  >
+                   <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
+                  </Span>
+                )}
+              </Span>
             </ChannelTitleLink>
           )}
         </ChannelTitle>
@@ -536,13 +540,6 @@ function ViewChannelItem({ channelObjectProp }) {
                   </SubscribersCount>
                 </Subscribers>
               </FlexBox>
-              {verifierDetails && (
-                <Subscribers>
-                  <VerifiedBy>Verified by:</VerifiedBy>
-                  <VerifierIcon src={verifierDetails.icon} />
-                  <VerifierName>{verifierDetails.name}</VerifierName>
-                </Subscribers>
-              )}
             </ColumnFlex>
           )}
         </ChannelMeta>
@@ -710,6 +707,9 @@ const ChannelInfo = styled.div`
   flex-direction: column;
   display: flex;
 
+  @media (max-width: 480px) {
+    min-width: 210px;
+  }
 `;
 
 const ChannelTitle = styled(ItemH)`
@@ -722,16 +722,25 @@ const ChannelTitle = styled(ItemH)`
 
 const ChannelTitleLink = styled.a`
   text-decoration: none;
-  font-weight: 600;
-  color: ${props => props.theme.viewChannelLink};
-  font-size: 20px;
   display: flex;
+  flex: 1;
   align-item: center;
   &:hover {
     text-decoration: underline;
     cursor: pointer;
     pointer: hand;
   }
+
+  & > Span {
+    font-weight: 600;
+    color: ${props => props.theme.viewChannelLink};
+    font-size: 20px;
+  }
+
+  & > Span > Span {
+    vertical-align: middle;
+  }
+
 `;
 
 const VerifiedBy = styled.span`
@@ -762,6 +771,7 @@ const ChannelDesc = styled.div`
   display: flex;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.75);
+  padding: 5px 0px 10px 0px;
   font-weight: 400;
   flex-direction: column;
   color: ${props => props.theme.color};
@@ -776,6 +786,7 @@ const ChannelMeta = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  padding: 5px 0px;
   font-size: 13px;
 `;
 
