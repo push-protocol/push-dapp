@@ -1,0 +1,16 @@
+.DropDown{
+    border: 0.5px solid #674C9F;
+    border-radius: 10px;
+    width: 24rem;
+    height: 2.4rem;
+    
+}
+
+
+/* .ant-input:focus {
+    border-right-color: white;
+    outline: 0;
+    -webkit-box-shadow: 0 0 0 2px rgba(87,168,233, .2);
+    box-shadow: 0 0 0 2px rgba(87,168,233, .2);
+} */
+

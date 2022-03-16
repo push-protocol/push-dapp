@@ -1,18 +1,20 @@
-import {React, useState,useEffect} from "react";
+import React from "react";
+import {useState,useEffect} from "react";
 import styled from "styled-components";
-import Loader from "react-loader-spinner";
-import { useSelector, useDispatch } from "react-redux";
-import DisplayNotice from "components/DisplayNotice";
-import Dropdown from 'react-dropdown';
-import 'react-dropdown/style.css';
+import { MultiSelect } from "react-multi-select-component";
+import './SearchFilter.css';
+import "antd/dist/antd.css";
+import {DatePicker,TimePicker} from "antd";
+
+
+
 
 
 export default function SearchFilter()
 {
-    // const [search,setSearch] = useState("");
-
-
+    let items=[]
     const applySearch = async () => {
+        console.log(selectedOption);
 
     }
 
@@ -20,8 +22,57 @@ export default function SearchFilter()
         
     }
 
+    // const options = [
+    //     { name: 'chocolate', id: 'Chocolate' },
+    //     { name: 'strawberry', id: 'Strawberry' },
+    //     { name: 'vanilla', id: 'Vanilla' },
+    //     { name: 'screen', id: 'Screen' },
+    //     { name: 'car', id: 'Car' },
+    //     { name: 'game', id: 'Game' },
+    //     { name: 'laptop', id: 'Laptop' },
+    //     { name: 'mouse', id: 'Mouse' },
+    //     { name: 'cable', id: 'Cable' },
+    //   ];
 
+    const [startDate,setStartDate] = useState(new Date());
+
+    // const options = [ 'chocolate','strawberry', 'vanilla','screen',  'car', 'game',  'laptop', 'mouse', 'cable'];
+
+      const options = [
+        { label: 'chocolate', value: 'Chocolate' },
+        { label: 'strawberry', value: 'Strawberry' },
+        { label: 'vanilla', value: 'Vanilla' },
+        { label: 'screen', value: 'Screen' },
+        { label: 'car', value: 'Car' },
+        { label: 'game', value: 'Game' },
+        { label: 'laptop', value: 'Laptop' },
+        { lable: 'mouse', value: 'Mouse' },
+        { label: 'cable', value: 'Cable' },
+      ];
+
+    const [selectedOption, setSelectedOption] = useState([]);
+    const [search, setSearch] = useState('');
+
+    const handleChange = ( selectedOptions) => {
+        setSelectedOption(selectedOptions);
+        console.log(`selected list is ${selectedOption}`)
+
+    }
+
+    // const onRemove = (selectedList, removedItem) => {
+    //     setSelectedOption(selectedList);
+    //     console.log(`selected list is ${selectedOption}`)
+    // }
+
+    // useEffect(() => {
+    //     // Update the document title using the browser API
+    //     // setSelectedOption(items);
+    //     console.log(`selected options are ${selectedOption}`);
+    //   },selectedOption);
+
+    
     return(
+     
         <Container>
             <TopBar>
                 <Left>
@@ -40,39 +91,117 @@ export default function SearchFilter()
 
             <SearchOptions>
                 <SectionSearch>
-                    <span>search</span>
-                    <span>search</span>
-                </SectionSearch>
+                 
+                {/* <Multiselect
+                    options={options} // Options to display in the dropdown
+                    selectedValues={selectedOption} // Preselected value to persist in dropdown
+                    onSelect={onSelect} // Function will trigger on select event
+                    onRemove={onRemove} // Function will trigger on remove event
+                    displayValue="name" // Property name to display in the dropdown options
+                    className="DropDown2"
+                /> */}
+                {/* <ReactMultiSelectCheckboxes options={options} /> */}
+                {/* <div className="DropDown"> */}
+                <SelectChannel>
+                    <MultiSelect
+                        options={options}
+                        value={selectedOption}
+                        onChange={setSelectedOption}
+                        labelledBy="Search Notifications from"
+                        // className="DropDown"
+                        style={{borderTopLeftRadius:"10px", borderBottomLeftRadius:"10px", borderTopRightRadius:"10px",borderBottomRightRadius:"10px"}}
+                    />
 
-                <SectionSearch mtop="1rem">
+                </SelectChannel>
+                
 
-
-
-                {/* <InputWrapper style={{ }} >
+                <InputWrapper>
                     <SearchBar
                         type="text"
                         value={search}
                         onChange={(e) =>
                             setSearch(e.target.value)
                         }
-                        className="input"
-                        placeholder="Search with keyword"
+                    
+                        // className=""
+                        // placeholder="Search with keywords"
                     />
                    
-                </InputWrapper> */}
+                </InputWrapper>
+           
+                {/* <Multiselect
+                    options={options} // Options to display in the dropdown
+                    selectedValues={selectedOption} // Preselected value to persist in dropdown
+                    onSelect={onSelect} // Function will trigger on select event
+                    onRemove={onRemove} // Function will trigger on remove event
+                    displayValue="name" // Property name to display in the dropdown options
+                    className="DropDown"
+                /> */}
+                    
+                </SectionSearch>
 
-                    <span>search</span>
-                    <span>search</span>
+                <SectionSearch>
+                        <RangeSection>
+                            <DatePicker style={{borderTopLeftRadius:'10px',borderBottomLeftRadius:"10px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px 0 white',WebkitBorderBeforeColor:'white',height:"40px", marginRight:"7rem",borderColor:"0.5px solid #674C9F",position:'relative'}} className="success" placeholder=""/>
+                            <DatePicker style={{borderTopRightRadius:'10px', borderBottomRightRadius:"10px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} className="success" placeholder=""/>
+                        </RangeSection>
+
+                        <RangeSection mtop="1.5rem">
+                            <TimePicker style={{borderTopLeftRadius:'10px',borderBottomLeftRadius:"10px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="" size="large" className="success"/>
+                            <TimePicker style={{borderTopRightRadius:'10px', borderBottomRightRadius:"10px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white', height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="" size="large" className="success"/>
+                        </RangeSection> 
+                     
+
+                    
                 </SectionSearch>
             </SearchOptions>
             
            
         </Container>
-
     )
 }
 
 
+const SelectChannel = styled.div`
+// display: flex;
+// flex-direction: row;
+border:  0.5px solid #674C9F;
+border-radius: 10px;
+height: "40px";
+
+
+
+`;
+
+const RangeSection = styled.div`
+display: flex;
+flex-direction: row;
+border:  0.5px solid #674C9F;
+border-radius: 10px;
+justify-content: space-between;
+height: "40px";
+margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
+position: relative;
+
+// &:hover{
+//     border:0.5px solid #674C9F;
+//     box-shadow: 0 0 2px #674C9F;
+// }
+
+// &:focus{
+//     border:0.5px solid #674C9F;
+//     box-shadow: 0 0 2px #674C9F;
+// }
+
+`;
+const Section = styled.div`
+display:flex;
+
+
+`;
+const Datexyz = styled.div`
+display:flex;
+`;
 const Container = styled.div`
 display: flex;
 flex-direction: column;
@@ -141,19 +270,19 @@ margin-right:  ${(props) => (props.mright ? props.mright : "")};
 
 const SearchOptions = styled.div`
 display: flex;
-flex-direction: column;
+flex-direction: row;
 margin-left: 2rem;
 margin-right: 2rem;
 margin-bottom: 1rem;
+justify-content: space-between;
 
 `;
 
 const SectionSearch = styled.div`
 disply: flex;
-flex-direction: row;
-justify-content: space-between;
-margin-top:  ${(props) => (props.mtop ? "1rem" : "")};
+flex-direction: column
 `;
+
 
 const InputWrapper = styled.div`
     width: 50%;
@@ -163,34 +292,25 @@ const InputWrapper = styled.div`
         width: 100%;
         margin: 2rem 0;
     }
+    
+// &:active{
+//     border:  0.5px solid #674C9F;
+// }
 `;
 
 const SearchBar = styled.input`
-    width: 100%;
-    padding-right: 50px;
-    height: 60px;
-    padding-left: 40px;
+display: flex;
+margin-top: 1.5rem;
+height: 40px;
+width: 25rem;
+border-radius: 10px;
+border:  0.5px solid #674C9F;
 
-    background: rgb(255, 255, 255);
-    border: 1px solid rgba(169, 169, 169, 0.5);
-    box-sizing: border-box;
-    border-radius: 10px;
-    transition: 500ms;
-    text-transform: capitalize;
-    font-size: 16px;
+&:active{
+    border:  0.5px solid #674C9F;
+}
 
-    input[type="reset"] {
-        display: none;
-    }
-    &::placeholder {
-        letter-spacing: 0.15em;
-    }
-    &:hover,
-    &:active,
-    &:focus {
-        outline: none;
-    }
-    &:focus {
-        border: 1px solid #ec008c;
-    }
+&:hover{
+    border:  0.5px solid #674C9F;
+}
 `;
