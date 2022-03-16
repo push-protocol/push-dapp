@@ -18,7 +18,6 @@ import {useSelector} from "react-redux";
 // Create Header
 function Navigation() {
     const { channelDetails } = useSelector((state: any) => state.admin);
-    console.log(channelDetails);
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
@@ -605,6 +604,23 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear,
+                       left top,
+                       left bottom,
+                       color-stop(0.44, #35c5f3),
+                       color-stop(0.72, #35b0f3),
+                       color-stop(0.86, #35a1f3));
+  }
   padding: 0px 0px 20px 0px;
 `
 
