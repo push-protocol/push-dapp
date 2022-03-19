@@ -2,6 +2,7 @@ import React from "react";
 import {useState,useEffect} from "react";
 import styled from "styled-components";
 import { MultiSelect } from "react-multi-select-component";
+// import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
 import './SearchFilter.css';
 import "antd/dist/antd.css";
 import {DatePicker,TimePicker} from "antd";
@@ -10,11 +11,20 @@ import {DatePicker,TimePicker} from "antd";
 
 
 
+
 export default function SearchFilter()
 {
-    let items=[]
+    // let items=[]
+    const [selectedOption, setSelectedOption] = useState([]);
+    const [search, setSearch] = useState('');
+
+    const [startDate,setStartDate] = useState();
+    const [endDate,setEndDate] = useState();
+    const [startTime,setStartTime] = useState();
+    const [endTime,setEndTime] = useState();
+
     const applySearch = async () => {
-        console.log(selectedOption);
+        console.log(`selected options: ${selectedOption}, selected keywords : ${search}, selected start date: ${startDate}, selected end date: ${endDate}, selected start time: ${startTime}, selected end time: ${endTime}`);
 
     }
 
@@ -34,7 +44,7 @@ export default function SearchFilter()
     //     { name: 'cable', id: 'Cable' },
     //   ];
 
-    const [startDate,setStartDate] = useState(new Date());
+
 
     // const options = [ 'chocolate','strawberry', 'vanilla','screen',  'car', 'game',  'laptop', 'mouse', 'cable'];
 
@@ -50,8 +60,7 @@ export default function SearchFilter()
         { label: 'cable', value: 'Cable' },
       ];
 
-    const [selectedOption, setSelectedOption] = useState([]);
-    const [search, setSearch] = useState('');
+  
 
     const handleChange = ( selectedOptions) => {
         setSelectedOption(selectedOptions);
@@ -59,96 +68,60 @@ export default function SearchFilter()
 
     }
 
-    // const onRemove = (selectedList, removedItem) => {
-    //     setSelectedOption(selectedList);
-    //     console.log(`selected list is ${selectedOption}`)
-    // }
-
-    // useEffect(() => {
-    //     // Update the document title using the browser API
-    //     // setSelectedOption(items);
-    //     console.log(`selected options are ${selectedOption}`);
-    //   },selectedOption);
 
     
     return(
      
-        <Container>
+         <Container>
             <TopBar>
                 <Left>
                     <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem"}} src="/svg/filterIcon.svg"/>
                     <span style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}}>Filter Notifications</span>
                 </Left>
                 <Buttons>
-                    <ButtonFeed bgColor='#e20880' mright="2rem" onClick={applySearch}>
+                    
+                <ButtonFeed bgColor='#e20880' onClick={applySearch}>
                             Apply
                     </ButtonFeed>    
-                    <ButtonFeed bgColor='#35c5f3' onClick={reset}>
+                    {/* <ButtonFeed bgColor='#35c5f3' onClick={reset}>
                         Reset
-                    </ButtonFeed> 
+                    </ButtonFeed>  */}
                 </Buttons>
             </TopBar>
 
             <SearchOptions>
-                <SectionSearch>
+                <SectionSearch mright='3.5rem'>
                  
-                {/* <Multiselect
-                    options={options} // Options to display in the dropdown
-                    selectedValues={selectedOption} // Preselected value to persist in dropdown
-                    onSelect={onSelect} // Function will trigger on select event
-                    onRemove={onRemove} // Function will trigger on remove event
-                    displayValue="name" // Property name to display in the dropdown options
-                    className="DropDown2"
-                /> */}
-                {/* <ReactMultiSelectCheckboxes options={options} /> */}
-                {/* <div className="DropDown"> */}
                 <SelectChannel>
                     <MultiSelect
                         options={options}
                         value={selectedOption}
                         onChange={setSelectedOption}
                         labelledBy="Search Notifications from"
-                        // className="DropDown"
-                        style={{borderTopLeftRadius:"10px", borderBottomLeftRadius:"10px", borderTopRightRadius:"10px",borderBottomRightRadius:"10px"}}
+                        className="DropDown"
+                        placeholder=""
                     />
 
                 </SelectChannel>
-                
 
-                <InputWrapper>
-                    <SearchBar
-                        type="text"
-                        value={search}
-                        onChange={(e) =>
-                            setSearch(e.target.value)
-                        }
-                    
-                        // className=""
-                        // placeholder="Search with keywords"
-                    />
-                   
-                </InputWrapper>
-           
-                {/* <Multiselect
-                    options={options} // Options to display in the dropdown
-                    selectedValues={selectedOption} // Preselected value to persist in dropdown
-                    onSelect={onSelect} // Function will trigger on select event
-                    onRemove={onRemove} // Function will trigger on remove event
-                    displayValue="name" // Property name to display in the dropdown options
-                    className="DropDown"
-                /> */}
+                <input type="text" className="input" placeholder="Search With Keyword" onChange={(e) => {
+                    // console.log(e.target.value);
+                    setSearch(e.target.value);
+                
+                }}/>
+                
                     
                 </SectionSearch>
 
-                <SectionSearch>
-                        <RangeSection>
-                            <DatePicker style={{borderTopLeftRadius:'10px',borderBottomLeftRadius:"10px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px 0 white',WebkitBorderBeforeColor:'white',height:"40px", marginRight:"7rem",borderColor:"0.5px solid #674C9F",position:'relative'}} className="success" placeholder=""/>
-                            <DatePicker style={{borderTopRightRadius:'10px', borderBottomRightRadius:"10px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} className="success" placeholder=""/>
+                <SectionSearch mleft='3.5rem'>
+                        <RangeSection mttop="1.5rem">
+                            <DatePicker onChange={(data) => {setStartDate(data)}} style={{borderTopLeftRadius:'5px',borderBottomLeftRadius:"5px",textColor:'#674C9F', borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px 0 white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} className="Date1" placeholder="Start Date"/>
+                            <DatePicker onChange={(data) => {setEndDate(data)}} style={{borderTopRightRadius:'5px', borderBottomRightRadius:"5px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} className="success" placeholder="End Date"/>
                         </RangeSection>
 
                         <RangeSection mtop="1.5rem">
-                            <TimePicker style={{borderTopLeftRadius:'10px',borderBottomLeftRadius:"10px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="" size="large" className="success"/>
-                            <TimePicker style={{borderTopRightRadius:'10px', borderBottomRightRadius:"10px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white', height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="" size="large" className="success"/>
+                            <TimePicker onChange={(data) => {setStartTime(data)}} style={{borderTopLeftRadius:'5px',borderBottomLeftRadius:"5px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",width:"9.5rem",borderColor:"0.5px solid #674C9F"}} placeholder="Start Time"  className="success"/>
+                            <TimePicker onChange={(data) => {setEndTime(data)}} style={{borderTopRightRadius:'5px', borderBottomRightRadius:"5px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',width:"9.5rem", height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="End Time"  className="success"/>
                         </RangeSection> 
                      
 
@@ -157,41 +130,71 @@ export default function SearchFilter()
             </SearchOptions>
             
            
-        </Container>
+           
+         </Container>
     )
 }
+
+
+const DateAlignment = styled.div`
+margin-right: 7rem;
+
+@media(max-width: 600px)
+{
+    margin-right: 2rem;
+}
+
+
+@media(max-width: 400px)
+{
+    margin-right: 0rem;
+}
+
+
+
+@media(max-width: 1000px)
+{
+    margin-right: 3rem;
+}
+`;
 
 
 const SelectChannel = styled.div`
 // display: flex;
 // flex-direction: row;
-border:  0.5px solid #674C9F;
-border-radius: 10px;
-height: "40px";
+border:  0.1px solid #674C9F;
+border-radius: 5px;
+height: "2.4rem";
+flex-grow: 1;
+flex: 1;
+// margin-right: 4rem;
 
+@media(max-width: 600px)
+{
+    // width: 17rem;
+}
 
-
+@media(max-width: 1000px)
+{
+    // width: 20.1rem;
+}
 `;
 
 const RangeSection = styled.div`
 display: flex;
 flex-direction: row;
-border:  0.5px solid #674C9F;
-border-radius: 10px;
+border:  0.1px solid #674C9F;
+border-radius: 5px;
 justify-content: space-between;
 height: "40px";
 margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
 position: relative;
 
-// &:hover{
-//     border:0.5px solid #674C9F;
-//     box-shadow: 0 0 2px #674C9F;
-// }
+@media(max-width: 600px)
+{
+    margin-top:  ${(props) => (props.mttop ? props.mttop : "")};
+}
 
-// &:focus{
-//     border:0.5px solid #674C9F;
-//     box-shadow: 0 0 2px #674C9F;
-// }
 
 `;
 const Section = styled.div`
@@ -220,7 +223,7 @@ margin-bottom: 1rem;
 
 @media (max-width:500px)
 {
-    flex-direction: column;
+    // flex-direction: column;
 }
 
 `;
@@ -276,11 +279,28 @@ margin-right: 2rem;
 margin-bottom: 1rem;
 justify-content: space-between;
 
+@media(max-width: 600px)
+{
+    flex-direction: column;
+    justify-content: center;
+    align-item: center;
+}
+
 `;
 
 const SectionSearch = styled.div`
 disply: flex;
-flex-direction: column
+flex-direction: column;
+align-items: center;
+justify-content: center;
+flex: 1;
+@media(min-width: 600px)
+{
+    
+margin-right:  ${(props) => (props.mright ? props.mright : "")};
+margin-left:  ${(props) => (props.mleft ? props.mleft : "")};
+
+}
 `;
 
 
@@ -288,29 +308,44 @@ const InputWrapper = styled.div`
     width: 50%;
     position: relative;
 
-    @media (max-width: 600px) {
-        width: 100%;
-        margin: 2rem 0;
-    }
-    
-// &:active{
-//     border:  0.5px solid #674C9F;
-// }
 `;
 
 const SearchBar = styled.input`
 display: flex;
 margin-top: 1.5rem;
 height: 40px;
-width: 25rem;
-border-radius: 10px;
-border:  0.5px solid #674C9F;
+// width: 25rem;
+border: 0.5px solid #674C9F;
+border-radius: 5px;
 
-&:active{
-    border:  0.5px solid #674C9F;
+// color: #35C5F3;
+
+input[type="reset"] {
+    display: none;
+}
+&::placeholder {
+    letter-spacing: 0.15em;
+}
+&:hover,
+&:active,
+&:focus {
+    outline: none;
+}
+&:focus {
+    border: 0.5px solid #674C9F;
 }
 
-&:hover{
-    border:  0.5px solid #674C9F;
+@media(max-width: 600px)
+{
+    // width: 17rem;
+    font-size: 16px;
+    padding: 2px;
+}
+
+@media(max-width: 1000px)
+{
+    // width: 20rem;
 }
 `;
+
+

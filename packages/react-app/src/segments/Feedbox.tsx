@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import styled, {useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
@@ -8,6 +8,9 @@ import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
 import SearchFilter from '../components/SearchFilter';
 import {ThemeProvider} from "styled-components";
+
+
+
 
 import { themeLight, themeDark } from "config/Themization";
 
@@ -28,6 +31,9 @@ import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 function Feedbox() {
+
+
+  
   const dispatch = useDispatch();
   const { account } = useWeb3React();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
@@ -124,7 +130,11 @@ function Feedbox() {
   return (
     <ThemeProvider theme={themes}>
     <Container>
-    <SearchFilter/>
+      <SearchContainer>
+      <SearchFilter/>
+      </SearchContainer>
+
+
       
       {notifications && (
         <Notifs id="scrollstyle-secondary">
@@ -191,17 +201,22 @@ function Feedbox() {
 }
 
 // css styles
+
+const SearchContainer = styled.div`
+// display: flex;
+`;
 const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
   background: ${props => props.theme.mainBg};
-
+  // padding: 1.3rem;
   font-weight: 200;
   align-content: center;
   align-items: stretch;
   justify-content: center;
   height: inherit;
+  
 `;
 
 const Notifs = styled.div`
@@ -216,6 +231,12 @@ const Notifs = styled.div`
     border-radius: 10px;
   }
 `;
+
+
+
+
+
+
 
 // Export Default
 export default Feedbox;

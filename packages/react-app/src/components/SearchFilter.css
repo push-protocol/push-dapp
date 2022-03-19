@@ -1,16 +1,58 @@
+
+
 .DropDown{
-    border: 0.5px solid #674C9F;
+    /* border: 0.5px solid #674C9F; */
     border-radius: 10px;
-    width: 24rem;
-    height: 2.4rem;
+    /* width: 25rem; */
+    height: 2.5rem;
     
 }
 
+.input{
+    /* display: flex;
+    flex-grow: inherit; */
+    border: 0.5px solid #674C9F;
+    height: 40px;
+    border-radius: 5px;
+    margin-top: 1.5rem;
+    width: 100%;
+    color: black;
+    font-weight: 400;
+    position: relative;
 
-/* .ant-input:focus {
-    border-right-color: white;
-    outline: 0;
-    -webkit-box-shadow: 0 0 0 2px rgba(87,168,233, .2);
-    box-shadow: 0 0 0 2px rgba(87,168,233, .2);
+}
+.input:focus{
+    outline: none;
+
+}
+
+.input::placeholder
+{
+        opacity: 0.6;
+        letter-spacing: 0.15em;
+}
+
+/* .Date1{
+    margin-right: 7rem;
 } */
+
+@media(max-width: 600px)
+{
+.input{
+    width: 100%;
+}
+    .DropDown{
+        /* width: 17rem; */
+    }
+}
+
+@media(max-width: 1000px)
+{
+
+    .DropDown{
+        /* width: 20rem; */
+    }
+}
+
+
 
