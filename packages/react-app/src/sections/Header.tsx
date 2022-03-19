@@ -138,11 +138,15 @@ function Header({ isDarkMode, darkModeToggle }) {
         </RightBarContainer>
         
         {navigationSetup && showNavBar && active && !error &&
-          <NavMenuContainer>
+          <NavMenuContainer
+            tabletAlign="flex-start"
+          >
             <NavMenu>
               <Profile />
 
-              <NavMenuInner>
+              <NavMenuInner
+                tabletAlign="flex-start"
+              >
                 {Object.keys(navigationSetup.navigation).map(function(key) {
                   return (
                     <Item
