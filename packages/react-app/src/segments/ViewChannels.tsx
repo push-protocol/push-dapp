@@ -60,10 +60,11 @@ function ViewChannels() {
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await ChannelsDataStore.instance.getChannelsMetaAsync(
+    const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
       channelsVisited,
       CHANNELS_PER_PAGE
     );
+    dispatch(incrementPage())
     if (!channels.length) {
       dispatch(setChannelMeta(channelsMeta));
     }
@@ -73,7 +74,7 @@ function ViewChannels() {
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await ChannelsDataStore.instance.getChannelsMetaAsync(
+    const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
       startingPoint,
       CHANNELS_PER_PAGE
     );
@@ -93,10 +94,6 @@ function ViewChannels() {
     setChannelToShow(channels);
   }, [channels]);
 
-  console.log("\n\n");
-  console.log("\n\n");
-  console.log({ channels });
-
   function searchForChannel() {
     if (loadingChannel) return; //if we are already loading, do nothing
     if (search) {
@@ -104,9 +101,7 @@ function ViewChannels() {
       setChannelToShow([]); //maybe remove later
       postReq("/channels/search", {
         query: search,
-        op: "read",
-        page : 1,
-        pageSize : 1000
+        op: "read"
       })
         .then((data) => {
           setChannelToShow(data.data.channels || []);
