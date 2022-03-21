@@ -130,9 +130,9 @@ function Feedbox() {
   return (
     <ThemeProvider theme={themes}>
     <Container>
-      <SearchContainer>
+       {/* <SearchContainer> */}
       <SearchFilter/>
-      </SearchContainer>
+      {/* </SearchContainer>  */}
 
 
       
@@ -202,9 +202,6 @@ function Feedbox() {
 
 // css styles
 
-const SearchContainer = styled.div`
-// display: flex;
-`;
 const Container = styled.div`
   display: flex;
   flex: 1;

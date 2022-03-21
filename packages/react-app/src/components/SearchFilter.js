@@ -4,8 +4,11 @@ import styled from "styled-components";
 import { MultiSelect } from "react-multi-select-component";
 // import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
 import './SearchFilter.css';
-import "antd/dist/antd.css";
-import {DatePicker,TimePicker} from "antd";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+// import "antd/dist/antd.css";
+// import {DatePicker,TimePicker} from "antd";
+import TimePicker from 'react-time-picker';
 
 
 
@@ -58,6 +61,10 @@ export default function SearchFilter()
         { label: 'laptop', value: 'Laptop' },
         { lable: 'mouse', value: 'Mouse' },
         { label: 'cable', value: 'Cable' },
+        { label: 'pen', value: 'Pen' },
+        { label: 'keys', value: 'Keys' },
+        { label: 'button', value: 'Button' },
+        { label: 'earphone', value: 'Earphone' },
       ];
 
   
@@ -92,37 +99,63 @@ export default function SearchFilter()
             <SearchOptions>
                 <SectionSearch mright='3.5rem'>
                  
-                <SelectChannel>
+                {/* <SelectChannel> */}
                     <MultiSelect
                         options={options}
+                        valueRenderer={ () => {
+                            if(selectedOption.length === 0)  return 'Show Notifications from'
+                            return `${selectedOption.length} Selected`
+                        }}
                         value={selectedOption}
                         onChange={setSelectedOption}
                         labelledBy="Search Notifications from"
                         className="DropDown"
-                        placeholder=""
+                        placeholder="Search Notifications from"
                     />
 
-                </SelectChannel>
-
-                <input type="text" className="input" placeholder="Search With Keyword" onChange={(e) => {
+                {/* </SelectChannel> */}
+                <InputWrapper>
+                
+                <input type="text" className="input2" placeholder="Search With Keyword" onChange={(e) => {
                     // console.log(e.target.value);
                     setSearch(e.target.value);
                 
                 }}/>
+                </InputWrapper>
+
                 
                     
                 </SectionSearch>
 
                 <SectionSearch mleft='3.5rem'>
-                        <RangeSection mttop="1.5rem">
+                        {/* <RangeSection mttop="1.5rem">
                             <DatePicker onChange={(data) => {setStartDate(data)}} style={{borderTopLeftRadius:'5px',borderBottomLeftRadius:"5px",textColor:'#674C9F', borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px 0 white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} className="Date1" placeholder="Start Date"/>
                             <DatePicker onChange={(data) => {setEndDate(data)}} style={{borderTopRightRadius:'5px', borderBottomRightRadius:"5px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",borderColor:"0.5px solid #674C9F"}} className="success" placeholder="End Date"/>
                         </RangeSection>
+                        
 
                         <RangeSection mtop="1.5rem">
                             <TimePicker onChange={(data) => {setStartTime(data)}} style={{borderTopLeftRadius:'5px',borderBottomLeftRadius:"5px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",width:"9.5rem",borderColor:"0.5px solid #674C9F"}} placeholder="Start Time"  className="success"/>
                             <TimePicker onChange={(data) => {setEndTime(data)}} style={{borderTopRightRadius:'5px', borderBottomRightRadius:"5px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',width:"9.5rem", height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="End Time"  className="success"/>
-                        </RangeSection> 
+                        </RangeSection>  */}
+                        {/* <RangeSection>
+                            <DatePicker className="date" selected={startDate} onChange={(date) => setStartDate(date)} placeholder="Start Date"/>
+                            <img className="dateimg" src="/date.png"/>
+                            <div class="vl"></div>
+                            <DatePicker className="date2" selected={endDate} onChange={(date) => setEndDate(date)} placeholder="End Date"/>
+                            <img className="dateimg" src="/date.png"/>
+
+                        </RangeSection> */}
+
+
+                        {/* <RangeSection>
+                        <TimePicker onChange={setEndTime} value={startTime} />
+                        <img className="dateimg" src="/date.png"/>
+                            <div class="vl"></div>
+                        <TimePicker onChange={setEndTime} value={endTime} />
+                        <img className="dateimg" src="/date.png"/>
+                        </RangeSection>
+                         */}
                      
 
                     
@@ -164,9 +197,10 @@ const SelectChannel = styled.div`
 // flex-direction: row;
 border:  0.1px solid #674C9F;
 border-radius: 5px;
-height: "2.4rem";
+height: "40";
 flex-grow: 1;
 flex: 1;
+// max-width: 31rem;
 // margin-right: 4rem;
 
 @media(max-width: 600px)
@@ -305,8 +339,14 @@ margin-left:  ${(props) => (props.mleft ? props.mleft : "")};
 
 
 const InputWrapper = styled.div`
-    width: 50%;
-    position: relative;
+    display:flex;
+    height: 40px;
+    border: 0.5px solid #674C9F;
+    border-radius: 5px;
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 1px;
+    
 
 `;
 

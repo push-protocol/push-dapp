@@ -1,35 +1,132 @@
 
+.date{
+    /* width: 5rem; */
+    align-items: center !important;
+}
+
+.date2{
+    /* width: 5rem; */
+    /* margin-right: 0%; */
+    align-items: center !important;
+}
+
+.vl {
+    border-left: 2px solid #B4B4B4;
+    height: 30x;
+    margin-left: 1rem;
+  }
 
 .DropDown{
     /* border: 0.5px solid #674C9F; */
     border-radius: 10px;
     /* width: 25rem; */
     height: 2.5rem;
+
     
 }
 
-.input{
+.dateimg{
+    width: 20px;
+    height: 20px;
+    margin-top: 9px;
+    margin-right: 9px;
+}
+.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
+    font-weight: 400 !important;
+}
+
+.react-datepicker__day, .react-datepicker__month-text, .react-datepicker__quarter-text, .react-datepicker__year-text {
+    font-weight: 400 !important;
+}
+.button, input{
+    height: 30px !important;
+    border: 1px solid white;
+    color: #674C9F;
+    /* width: 5rem; */
+
+}
+
+
+
+
+.button, input, input2 :focus{
+    height: 35px;
+    outline: none !important;
+    border: 1px solid white !important;
+
+}
+
+
+.iQSpGP{
+    height: 40px !important;
+    border-radius: 5px !important;
+    border: 0.5px solid #674C9F;
+    padding: 2px;
+}
+
+
+.dropdown-heading{
+
+color: #E20880 !important;
+font-weight: 400 !important;
+font-size: 1.1rem !important;
+margin-top: 3px;
+
+
+}
+
+.gray{
+    color:  #B0B0B0 !important;
+    
+}
+
+
+.dropdown-heading:focus{
+     border: 1px solid #674C9F !important;
+        box-shadow: 0 0 2px white !important;
+}
+.dropdown-container{
+    border: 0.5px solid #674C9F !important;
+    height: 45px !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    }
+    .dropdown-container:focus-within{
+        border: 0.5px solid #674C9F!important;
+        box-shadow: 0 0 0 2px white !important;
+
+    }
+    .cZpmt:focus{
+        border: 1px solid #674C9F !important;
+        box-shadow: 0 0 2px white !important;
+
+    }
+.input2{
     /* display: flex;
     flex-grow: inherit; */
-    border: 0.5px solid #674C9F;
-    height: 40px;
-    border-radius: 5px;
-    margin-top: 1.5rem;
-    width: 100%;
-    color: black;
+    border: 0.5px solid white;
+    /* height: 40px;
+    border-radius: 5px; */
+    font-size: 1.1rem;
+    margin-top: 2.5px;
     font-weight: 400;
     position: relative;
+    color: #35C5F3;
+    padding-left: 0.7rem;
 
 }
-.input:focus{
+/* .input:focus{
     outline: none;
 
-}
+} */
 
-.input::placeholder
+.input2::placeholder
 {
-        opacity: 0.6;
-        letter-spacing: 0.15em;
+        opacity: 1;
+        letter-spacing: 0.10em;
+        font-weight: 400;
+        color: #B0B0B0 !important;
+        
 }
 
 /* .Date1{
@@ -38,8 +135,16 @@
 
 @media(max-width: 600px)
 {
+
+    .dropdown-heading{
+        max-width: 260px !important;
+        overflow: hidden !important;
+        color: #E20880 !important;
+        font-weight: 400;
+        
+        }
 .input{
-    width: 100%;
+    /* width: 100%; */
 }
     .DropDown{
         /* width: 17rem; */
