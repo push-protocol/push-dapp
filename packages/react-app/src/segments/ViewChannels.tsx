@@ -16,10 +16,8 @@ import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
-import queryString from 'query-string';
 
 import {ThemeProvider} from "styled-components";
-import { themeLight, themeDark } from "config/Themization";
 
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -31,8 +29,6 @@ const SEARCH_DELAY = 1500;
 // Create Header
 function ViewChannels() {
   const themes = useTheme();
-  const [darkMode, setDarkMode] = useState(false);
-
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
@@ -109,6 +105,8 @@ function ViewChannels() {
       postReq("/channels/search", {
         query: search,
         op: "read",
+        page : 1,
+        pageSize : 1000
       })
         .then((data) => {
           setChannelToShow(data.data.channels || []);
@@ -142,7 +140,7 @@ function ViewChannels() {
 
 
   React.useEffect(() => {
-    const parsedChannel = String(queryString.parse(window.location.search).channel)
+    const parsedChannel = window.location.href.toString().slice(41);
     if(!ADDRESS_REGEX.test(parsedChannel)) return;
     setTimeout(() => {
       setSearch(parsedChannel);
