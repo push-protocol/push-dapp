@@ -109,6 +109,8 @@ function ViewChannels() {
       postReq("/channels/search", {
         query: search,
         op: "read",
+        page : 1,
+        pageSize : 1000
       })
         .then((data) => {
           setChannelToShow(data.data.channels || []);
