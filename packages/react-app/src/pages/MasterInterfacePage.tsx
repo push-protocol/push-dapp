@@ -21,76 +21,79 @@ import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
 
-import {SupportPage} from "pages/SupportPage";
+import { SupportPage } from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
 
 // Create Header
 function MasterInterfacePage() {
-  // Render
-  return (
-    <Container>
-      <Interface>
-        <Routes>
-          <Route path="inbox" element={<InboxPage />} />
-          <Route path="channels" element={<ViewChannelsPage />} />
-          <Route path="dashboard" element={<ChannelDashboardPage />} />
-          <Route path="spam" element={<SpamPage />} />
-          <Route path="receive" element={<ReceiveNotifsPage />} />
+    // Render
+    return (
+        <Container>
+            <Interface>
+                <Routes>
+                    <Route path="inbox" element={<InboxPage />} />
+                    <Route path="channels" element={<ViewChannelsPage />} />
+                    <Route
+                        path="dashboard"
+                        element={<ChannelDashboardPage />}
+                    />
+                    <Route path="spam" element={<SpamPage />} />
+                    <Route path="receive" element={<ReceiveNotifsPage />} />
 
-          <Route path="govern" element={<GovernancePage />} />
+                    <Route path="govern" element={<GovernancePage />} />
 
-          <Route path="yield" element={<YieldFarmingPage />} />
-          <Route path="rockstar" element={<NFTPage />} />
-          <Route path="gratitude" element={<AirdropPage />} />
-          <Route path="comingsoon" element={<ComingSoonPage />} />
-          <Route
-              path="/"
-              element={<Navigate to="/channels" />}
-          />
-          <Route path="support" element={<SupportPage/>}/>
-        </Routes>
-      </Interface>
+                    <Route path="yield" element={<YieldFarmingPage />} />
+                    <Route path="rockstar" element={<NFTPage />} />
+                    <Route path="gratitude" element={<AirdropPage />} />
+                    <Route path="comingsoon" element={<ComingSoonPage />} />
+                    <Route path="/" element={<Navigate to="/channels" />} />
+                    <Route path="support" element={<SupportPage />} />
+                </Routes>
+            </Interface>
 
-      {/* For Channels Opt-in / Opt-out */}
-      <ToastContainer
-        position="bottom-right"
-        autoClose={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-      />
-    </Container>
-  );
+            {/* For Channels Opt-in / Opt-out */}
+            <ToastContainer
+                position="bottom-right"
+                autoClose={false}
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+            />
+        </Container>
+    );
 }
 
 // css style
 const Container = styled.div`
-  flex: 1;
-  flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
-  align-items: stretch;
+    flex: 1;
+    flex-direction: column;
+    min-height: calc(
+        100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px -
+            ${(props) => props.theme.interfaceTopPadding}
+    );
+    padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px;
+    align-items: stretch;
 `;
 
 const Interface = styled(Item)`
-  flex: 1;
-  display: flex;
-  align-items: stretch;
+    flex: 1;
+    display: flex;
+    align-items: stretch;
 
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  border: 1px solid ${props => props.theme.interfaceBorder};
+    box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    border: 1px solid ${(props) => props.theme.interfaceBorder};
 
-  margin: 15px 15px 15px 0px;
-  overflow: hidden;
+    margin: 15px 15px 15px 0px;
+    overflow: hidden;
 
-  @media (max-width: 992px) {
-    margin: 15px 0px;
-  }
-`
+    @media (max-width: 992px) {
+        margin: 15px 0px;
+    }
+`;
 
 // Export Default
 export default MasterInterfacePage;

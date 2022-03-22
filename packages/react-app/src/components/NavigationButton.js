@@ -1,135 +1,148 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {
+    Section,
+    Item,
+    ItemH,
+    Span,
+    Anchor,
+    RouterLink,
+    Image,
+} from "components/SharedStyling";
 
 import { themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
 
 // Create Header
 function NavigationButton({ item, data, sectionID, active }) {
-  const theme = useTheme();
+    const theme = useTheme();
 
-  let SelectedIcon;
-  let RouteLogic;
+    let SelectedIcon;
+    let RouteLogic;
 
-  switch(sectionID) {
-    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
-      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
-      break;
-    default:
-      SelectedIcon = item.isSection ? LeftBarPrimarySectionIcon : LeftBarPrimaryItemIcon;
-  }
+    switch (sectionID) {
+        case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+            SelectedIcon = item.isSection
+                ? LeftBarSecondarySectionIcon
+                : LeftBarSecondaryItemIcon;
+            break;
+        default:
+            SelectedIcon = item.isSection
+                ? LeftBarPrimarySectionIcon
+                : LeftBarPrimaryItemIcon;
+    }
 
-  if (data.isRoute) {
-    RouteLogic = RouterLink;
-  }
-  else {
-    RouteLogic = Anchor;
-  }
+    if (data.isRoute) {
+        RouteLogic = RouterLink;
+    } else {
+        RouteLogic = Anchor;
+    }
 
-  return (
-    <RouteLogic
-      flex="1"
-      title={`${data.title}`}
-      to={`${data.href ? data.href : '#'}`}
-      href={`${data.href ? data.href : '#'}`}
-      alt={`${data.alt}`}
-      target={data.isRoute ? null : data.newTab ? "_blank" : "self"}
-      disabled={data.disabled}
-      hoverBG={theme.leftBarHoverColor}
-      radius="12px"
-      align="stretch"
-      padding="10px"
-      margin={item.isSection ? "0px" : "5px"}
-      active={active}
-    >
-      <ItemH
-          align="center"
-      >
-          <SelectedIcon
-            src={`./${data.src}`}
-            margin="0 5px"
+    return (
+        <RouteLogic
+            flex="1"
+            title={`${data.title}`}
+            to={`${data.href ? data.href : "#"}`}
+            href={`${data.href ? data.href : "#"}`}
             alt={`${data.alt}`}
+            target={data.isRoute ? null : data.newTab ? "_blank" : "self"}
+            disabled={data.disabled}
+            hoverBG={theme.leftBarHoverColor}
+            radius="12px"
+            align="stretch"
+            padding="10px"
+            margin={item.isSection ? "0px" : "5px"}
             active={active}
-          />
-          
-          <Span 
-            flex="1" 
-            weight="400"
-            spacing="0"
-            margin="0 5px"
-            color={theme.leftBarFontColor}
-          >
-            {data.name}
-          </Span>
-          
-          {item.hasItems && !item.opened &&
-            <BiChevronDown
-              color={theme.leftBarFontColor}
-            />
-          }
+        >
+            <ItemH align="center">
+                <SelectedIcon
+                    src={`./${data.src}`}
+                    margin="0 5px"
+                    alt={`${data.alt}`}
+                    active={active}
+                />
 
-          {item.hasItems && item.opened &&
-            <BiChevronUp
-              color={theme.leftBarFontColor}
-            />
-          }
-      </ItemH>
-    </RouteLogic>
-  );
+                <Span
+                    flex="1"
+                    weight="400"
+                    spacing="0"
+                    margin="0 5px"
+                    color={theme.leftBarFontColor}
+                >
+                    {data.name}
+                </Span>
+
+                {item.hasItems && !item.opened && (
+                    <BiChevronDown color={theme.leftBarFontColor} />
+                )}
+
+                {item.hasItems && item.opened && (
+                    <BiChevronUp color={theme.leftBarFontColor} />
+                )}
+            </ItemH>
+        </RouteLogic>
+    );
 }
 
 // css styles
 const InheritedSectionGroupIcon = styled(Image)`
-  height: 32px;
-  width: 32px;
-  margin: 0 5px;
+    height: 32px;
+    width: 32px;
+    margin: 0 5px;
 
-  filter: ${(props) => props.active ? "brightness(1)" : props.theme === themeDark ? "brightness(0) invert(1)" : "brightness(0)"};
-  opacity: ${(props) => props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
+    filter: ${(props) =>
+        props.active
+            ? "brightness(1)"
+            : props.theme === themeDark
+            ? "brightness(0) invert(1)"
+            : "brightness(0)"};
+    opacity: ${(props) =>
+        props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
 
-  transition: transform .1s ease-out;
-  ${ props => props.active && css`
-    transform: scale(1.1) translate(0px, 0px);
-  `};
-`
+    transition: transform 0.1s ease-out;
+    ${(props) =>
+        props.active &&
+        css`
+            transform: scale(1.1) translate(0px, 0px);
+        `};
+`;
 
 const InheritedSectionItemIcon = styled(Image)`
-  height: 16px;
-  width: 16px;
-  margin: 0 5px;
+    height: 16px;
+    width: 16px;
+    margin: 0 5px;
 
-  filter: ${(props) => props.active ? "brightness(1)" : props.theme === themeDark ? "brightness(0) invert(1)" : "brightness(0)"};
-  opacity: ${(props) => props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
+    filter: ${(props) =>
+        props.active
+            ? "brightness(1)"
+            : props.theme === themeDark
+            ? "brightness(0) invert(1)"
+            : "brightness(0)"};
+    opacity: ${(props) =>
+        props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
 
-  transition: transform .1s ease-out;
-  ${ props => props.active && css`
-    transform: scale(1.25) translate(0px, 0px);
-  `};
+    transition: transform 0.1s ease-out;
+    ${(props) =>
+        props.active &&
+        css`
+            transform: scale(1.25) translate(0px, 0px);
+        `};
+`;
 
-`
+const LeftBarPrimarySectionIcon = styled(InheritedSectionGroupIcon)``;
 
-const LeftBarPrimarySectionIcon = styled(InheritedSectionGroupIcon)`
-
-`
-
-const LeftBarPrimaryItemIcon = styled(InheritedSectionItemIcon)`
-
-`
-
+const LeftBarPrimaryItemIcon = styled(InheritedSectionItemIcon)``;
 
 const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
-  height: 16px;
-  width: 16px;
-`
+    height: 16px;
+    width: 16px;
+`;
 
-const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)`
-
-`
+const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 
 // Export Default
 export default NavigationButton;

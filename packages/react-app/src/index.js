@@ -18,36 +18,36 @@ import "./index.css";
 dotenv.config();
 // You should replace this uri with your own and put it into a .env file
 const client = new ApolloClient({
-  uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging",
-  cache: new InMemoryCache(),
+    uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging",
+    cache: new InMemoryCache(),
 });
 
 /**
  * A utility function used to get the provider
  */
 function getLibrary(provider) {
-  const gottenProvider = new ethers.providers.Web3Provider(provider, "any");
-  // adding this is important to deal with changing networks
-  gottenProvider.on("network", (_, oldNetwork) => {
-    if (oldNetwork) {
-      // when network has been changed, refresh the page
-      window.location.reload();
-    }
-  });
-  return gottenProvider;
+    const gottenProvider = new ethers.providers.Web3Provider(provider, "any");
+    // adding this is important to deal with changing networks
+    gottenProvider.on("network", (_, oldNetwork) => {
+        if (oldNetwork) {
+            // when network has been changed, refresh the page
+            window.location.reload();
+        }
+    });
+    return gottenProvider;
 }
 
 ReactDOM.render(
-  <HashRouter>
-    <Provider store={store}>
-      <ApolloProvider client={client}>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <App />
-        </Web3ReactProvider>
-      </ApolloProvider>
-    </Provider>
-  </HashRouter>,
-  document.getElementById("root")
+    <HashRouter>
+        <Provider store={store}>
+            <ApolloProvider client={client}>
+                <Web3ReactProvider getLibrary={getLibrary}>
+                    <App />
+                </Web3ReactProvider>
+            </ApolloProvider>
+        </Provider>
+    </HashRouter>,
+    document.getElementById("root")
 );
 
 // If you want your app to work offline and load faster, you can change
