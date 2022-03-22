@@ -1,25 +1,97 @@
+.react-time-picker__button:enabled{
+    display: none;
+}
+
+.react-time-picker__wrapper {
+    border: 0px !important;
+    border-radius: 5px !important;
+    height: 40px !important;
+}
+
+
+.time{
+    width: 100%;
+}
+
+.time2{
+    width: 100%;
+}
+
 
 .date{
-    /* width: 5rem; */
+    display: flex;
     align-items: center !important;
+    width: 50%;
+    padding-top: 3px;
+    
 }
 
 .date2{
-    /* width: 5rem; */
-    /* margin-right: 0%; */
+    display: flex;
+    width: 50%;
     align-items: center !important;
+    padding-top: 3px;
+    font-weight: 400;
 }
 
-.vl {
-    border-left: 2px solid #B4B4B4;
-    height: 30x;
-    margin-left: 1rem;
-  }
+.date::placeholder{
+    color:  #B0B0B0 !important;
+    
+}
+
+.date2::placeholder{
+    color:  #B0B0B0 !important;
+    
+}
+
+    .vl {
+        border-left: 2px solid #B4B4B4;
+        height: 30x;
+        margin-left: 1rem;
+        margin-right: 1rem;
+      }
+
+      
+    
+
+@media (max-width: 1000px) {
+
+    .date{
+       
+        width: 70%;
+    }
+    
+    .date2{
+      
+        width: 70%;
+    }
+    
+}
+
+.react-time-picker__inputGroup__amPm :focus{
+    border: 0px !important;
+}
+
+
+
+
+
+
+.react-time-picker__inputGroup__input {
+    color: #674C9F !important;
+    font-weight: 400 !important;
+    height: 85% !important;
+}
+
+
+
+.react-time-picker__inputGroup__input {
+    color: #674C9F !important;
+    font-weight: 400 !important;
+}
 
 .DropDown{
-    /* border: 0.5px solid #674C9F; */
     border-radius: 10px;
-    /* width: 25rem; */
     height: 2.5rem;
 
     
@@ -27,6 +99,19 @@
 
 .dateimg{
     width: 20px;
+    height: 20px;
+    margin-top: 9px;
+    margin-right: 9px;
+}
+
+.dateimg2{
+    width: 18px;
+    height: 20px;
+    margin-top: 9px;
+    margin-right: 9px;
+}
+.dateimg3{
+    width: 18px;
     height: 20px;
     margin-top: 9px;
     margin-right: 9px;
@@ -40,10 +125,8 @@
 }
 .button, input{
     height: 30px !important;
-    border: 1px solid white;
+    border: 0px;
     color: #674C9F;
-    /* width: 5rem; */
-
 }
 
 
@@ -52,12 +135,16 @@
 .button, input, input2 :focus{
     height: 35px;
     outline: none !important;
-    border: 1px solid white !important;
+    border: 0px solid white !important;
+    font-weight: 400;
 
 }
 
 
 .iQSpGP{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
     height: 40px !important;
     border-radius: 5px !important;
     border: 0.5px solid #674C9F;
@@ -102,11 +189,7 @@ margin-top: 3px;
 
     }
 .input2{
-    /* display: flex;
-    flex-grow: inherit; */
-    border: 0.5px solid white;
-    /* height: 40px;
-    border-radius: 5px; */
+    border: 0px solid white;
     font-size: 1.1rem;
     margin-top: 2.5px;
     font-weight: 400;
@@ -115,11 +198,6 @@ margin-top: 3px;
     padding-left: 0.7rem;
 
 }
-/* .input:focus{
-    outline: none;
-
-} */
-
 .input2::placeholder
 {
         opacity: 1;
@@ -128,36 +206,27 @@ margin-top: 3px;
         color: #B0B0B0 !important;
         
 }
-
-/* .Date1{
-    margin-right: 7rem;
-} */
-
 @media(max-width: 600px)
 {
 
     .dropdown-heading{
-        max-width: 260px !important;
         overflow: hidden !important;
         color: #E20880 !important;
         font-weight: 400;
         
         }
-.input{
-    /* width: 100%; */
-}
-    .DropDown{
-        /* width: 17rem; */
-    }
+        .date{
+          
+            width: 80%;
+        }
+        
+        .date2{
+           
+            width: 80%;
+        }
+
 }
 
-@media(max-width: 1000px)
-{
-
-    .DropDown{
-        /* width: 20rem; */
-    }
-}
 
 
 

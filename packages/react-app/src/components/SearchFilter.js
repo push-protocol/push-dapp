@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 // import "antd/dist/antd.css";
 // import {DatePicker,TimePicker} from "antd";
 import TimePicker from 'react-time-picker';
-
+// import TimePicker from 'rc-time-picker';
 
 
 
@@ -138,14 +138,22 @@ export default function SearchFilter()
                             <TimePicker onChange={(data) => {setStartTime(data)}} style={{borderTopLeftRadius:'5px',borderBottomLeftRadius:"5px", borderRight:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',height:"40px",width:"9.5rem",borderColor:"0.5px solid #674C9F"}} placeholder="Start Time"  className="success"/>
                             <TimePicker onChange={(data) => {setEndTime(data)}} style={{borderTopRightRadius:'5px', borderBottomRightRadius:"5px", borderLeft:'1px solid white',WebkitBoxShadow:'0 0 2px white',WebkitBorderBeforeColor:'white',width:"9.5rem", height:"40px",borderColor:"0.5px solid #674C9F"}} placeholder="End Time"  className="success"/>
                         </RangeSection>  */}
-                        {/* <RangeSection>
-                            <DatePicker className="date" selected={startDate} onChange={(date) => setStartDate(date)} placeholder="Start Date"/>
+                        <RangeSection>
+                            <DatePicker className="date" selected={startDate} onChange={(date) => setStartDate(date)} placeholderText="Start Date"/>
                             <img className="dateimg" src="/date.png"/>
                             <div class="vl"></div>
-                            <DatePicker className="date2" selected={endDate} onChange={(date) => setEndDate(date)} placeholder="End Date"/>
+                            <DatePicker className="date2" selected={endDate} onChange={(date) => setEndDate(date)} placeholderText="End Date"/>
                             <img className="dateimg" src="/date.png"/>
 
-                        </RangeSection> */}
+                        </RangeSection>
+                        <RangeSection mtop="1rem">
+                            {/* <TimePicker/> */}
+                            <TimePicker className="time" onChange={setEndTime} value={startTime} placeholderText="sscvr"/>
+                            <img className="dateimg3" src="/date.png"/>
+                                <div class="vl"></div>
+                            <TimePicker className="time2" onChange={setEndTime} value={endTime} />
+                            <img className="dateimg2" src="/date.png"/>
+                        </RangeSection>
 
 
                         {/* <RangeSection>
@@ -346,6 +354,10 @@ const InputWrapper = styled.div`
     margin-top: 1.5rem;
     width: 100%;
     padding: 1px;
+    @media(max-width:600px)
+    {
+        margin-bottom: 1.5rem;
+    }
     
 
 `;
