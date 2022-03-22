@@ -607,9 +607,11 @@ const Primary = styled(Item)`
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
+
   &::-webkit-scrollbar {
     width: 6px;
   }
+
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-image: -webkit-gradient(linear,
