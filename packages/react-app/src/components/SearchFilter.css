@@ -52,6 +52,14 @@
         margin-top: 5px;
       }
 
+      @media(max-width:600px)
+      {
+          .vl{
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+
+          }
+      }
       
     
 
@@ -69,17 +77,24 @@
     
 }
 
-.react-time-picker__inputGroup__amPm :focus{
-    border: 0px !important;
+
+
+.react-time-picker__inputGroup__amPm:focus{
+    border: 0px white !important;
 }
 
 
 
 
+.react-time-picker__inputGroup__divider {
+    color:  #B0B0B0 !important;
+
+}
 
 
 .react-time-picker__inputGroup__input {
     color: #674C9F !important;
+    /* color:  #B0B0B0 !important; */
     font-weight: 400 !important;
     height: 85% !important;
 }
@@ -87,13 +102,15 @@
 
 
 .react-time-picker__inputGroup__input {
-    color: #674C9F !important;
+    /* color: #674C9F !important; */
     font-weight: 400 !important;
 }
 
 .DropDown{
     border-radius: 10px;
     height: 2.5rem;
+    background-color: inherit;
+
 
     
 }
@@ -133,11 +150,13 @@
 
 
 
+
 .button, input, input2 :focus{
     height: 35px;
     outline: none !important;
     border: 0px solid white !important;
     font-weight: 400;
+    background-color: inherit;
 
 }
 
@@ -163,6 +182,12 @@ margin-top: 3px;
 
 }
 
+
+
+.rmsc .dropdown-container {
+    background-color: inherit;
+}
+
 .gray{
     color:  #B0B0B0 !important;
     
@@ -171,7 +196,7 @@ margin-top: 3px;
 
 .dropdown-heading:focus{
      border: 1px solid #674C9F !important;
-        box-shadow: 0 0 2px white !important;
+        box-shadow: 0 0 0px white !important;
 }
 .dropdown-container{
     border: 0.5px solid #674C9F !important;
@@ -181,12 +206,12 @@ margin-top: 3px;
     }
     .dropdown-container:focus-within{
         border: 0.5px solid #674C9F!important;
-        box-shadow: 0 0 0 2px white !important;
+        box-shadow: 0 0 0 0px white !important;
 
     }
     .cZpmt:focus{
         border: 1px solid #674C9F !important;
-        box-shadow: 0 0 2px white !important;
+        box-shadow: 0 0 0px white !important;
 
     }
 .input2{
@@ -197,6 +222,7 @@ margin-top: 3px;
     position: relative;
     color: #35C5F3;
     padding-left: 0.7rem;
+    width: 100%;
 
 }
 .input2::placeholder

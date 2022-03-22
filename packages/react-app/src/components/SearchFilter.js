@@ -1,6 +1,6 @@
 import React from "react";
 import {useState,useEffect} from "react";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { MultiSelect } from "react-multi-select-component";
 // import ReactMultiSelectCheckboxes from 'react-multiselect-checkboxes';
 import './SearchFilter.css';
@@ -10,6 +10,11 @@ import "react-datepicker/dist/react-datepicker.css";
 // import {DatePicker,TimePicker} from "antd";
 import TimePicker from 'react-time-picker';
 // import TimePicker from 'rc-time-picker';
+
+import styled, {useTheme} from "styled-components";
+import {ThemeProvider} from "styled-components";
+
+import { themeLight, themeDark } from "config/Themization";
 
 
 
@@ -21,10 +26,16 @@ export default function SearchFilter()
     const [selectedOption, setSelectedOption] = useState([]);
     const [search, setSearch] = useState('');
 
-    const [startDate,setStartDate] = useState();
-    const [endDate,setEndDate] = useState();
+    const [startDate,setStartDate] = useState(new Date());
+    const [endDate,setEndDate] = useState(new Date());
     const [startTime,setStartTime] = useState();
     const [endTime,setEndTime] = useState();
+
+    
+    const themes = useTheme();
+
+    const [darkMode, setDarkMode] = useState(false);
+
 
     const applySearch = async () => {
         console.log(`selected options: ${selectedOption}, selected keywords : ${search}, selected start date: ${startDate}, selected end date: ${endDate}, selected start time: ${startTime}, selected end time: ${endTime}`);
@@ -78,6 +89,8 @@ export default function SearchFilter()
 
     
     return(
+     <ThemeProvider theme={themes}>
+
      
          <Container>
             <TopBar>
@@ -148,10 +161,10 @@ export default function SearchFilter()
                         </RangeSection>
                         <RangeSection mtop="1rem">
                             {/* <TimePicker/> */}
-                            <TimePicker className="time" onChange={setEndTime} value={startTime} placeholderText="sscvr"/>
+                            <TimePicker disableClock="true" className="time" onChange={setStartTime} value={startTime} />
                             <img className="dateimg3" src="/date.png"/>
                                 <div class="vl"></div>
-                            <TimePicker className="time2" onChange={setEndTime} value={endTime} />
+                            <TimePicker disableClock="true" className="time2" onChange={setEndTime} value={endTime} />
                             <img className="dateimg2" src="/date.png"/>
                         </RangeSection>
 
@@ -173,6 +186,7 @@ export default function SearchFilter()
            
            
          </Container>
+         </ThemeProvider>
     )
 }
 
