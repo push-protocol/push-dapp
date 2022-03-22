@@ -23,6 +23,7 @@ import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
 
+
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 function SpamBox({ currentTab }) {

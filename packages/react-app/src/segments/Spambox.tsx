@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
 import SpamBox from "segments/spam";
+
+import SearchFilter from '../components/SearchFilter';
 import {
   api,
   utils,
@@ -115,6 +117,7 @@ function Feedbox() {
   // Render
   return (
     <FullWidth>
+      <SearchFilter/>
       <SpamBox currentTab={currentTab} />
     </FullWidth>
   );
