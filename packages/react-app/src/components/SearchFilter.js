@@ -20,7 +20,7 @@ import { themeLight, themeDark } from "config/Themization";
 
 
 
-export default function SearchFilter()
+export default function SearchFilter(props)
 {
     // let items=[]
     const [selectedOption, setSelectedOption] = useState([]);
@@ -38,54 +38,38 @@ export default function SearchFilter()
 
 
     const applySearch = async () => {
-        console.log(`selected options: ${selectedOption}, selected keywords : ${search}, selected start date: ${startDate}, selected end date: ${endDate}, selected start time: ${startTime}, selected end time: ${endTime}`);
-
+        console.log(`selected options: ${selectedOption[0].value}, selected keywords : ${search}, selected start date: ${startDate}, selected end date: ${endDate}, selected start time: ${startTime}, selected end time: ${endTime}`);
+                            //list of channels ["0xaaa" , "0xbbb"]       //provide a start epoch           //provide an end epoch
+        props.filter(search, selectedOption,                        new Date(startDate).getTime()/1000,   new Date(endDate).getTime()/1000);
     }
-
+    // var InputValue = inputValue.value;
     const reset = async () => {
+
+        setStartDate(new Date());
+        setEndDate(new Date());
+        setSearch('');
+        setSelectedOption([]);
         
     }
-
-    // const options = [
-    //     { name: 'chocolate', id: 'Chocolate' },
-    //     { name: 'strawberry', id: 'Strawberry' },
-    //     { name: 'vanilla', id: 'Vanilla' },
-    //     { name: 'screen', id: 'Screen' },
-    //     { name: 'car', id: 'Car' },
-    //     { name: 'game', id: 'Game' },
-    //     { name: 'laptop', id: 'Laptop' },
-    //     { name: 'mouse', id: 'Mouse' },
-    //     { name: 'cable', id: 'Cable' },
-    //   ];
-
-
-
-    // const options = [ 'chocolate','strawberry', 'vanilla','screen',  'car', 'game',  'laptop', 'mouse', 'cable'];
-
-      const options = [
-        { label: 'chocolate', value: 'Chocolate' },
-        { label: 'strawberry', value: 'Strawberry' },
-        { label: 'vanilla', value: 'Vanilla' },
-        { label: 'screen', value: 'Screen' },
-        { label: 'car', value: 'Car' },
-        { label: 'game', value: 'Game' },
-        { label: 'laptop', value: 'Laptop' },
-        { lable: 'mouse', value: 'Mouse' },
-        { label: 'cable', value: 'Cable' },
-        { label: 'pen', value: 'Pen' },
-        { label: 'keys', value: 'Keys' },
-        { label: 'button', value: 'Button' },
-        { label: 'earphone', value: 'Earphone' },
-      ];
-
-  
-
+    console.log(props.notifications);
+    var options = [];
+    props.notifications.map(each => options.push({label : each.app , value : each.channel }));
+    var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
     const handleChange = ( selectedOptions) => {
         setSelectedOption(selectedOptions);
         console.log(`selected list is ${selectedOption}`)
 
     }
 
+    var image='/svg/filterIcon.svg';
+
+    React.useEffect(() => {
+        if(themes==='themeDark')
+        image='/svg/filterIcon.svg'
+        else
+        image='/svg/filterw.png'
+
+    },themes)
 
     
     return(
@@ -95,26 +79,28 @@ export default function SearchFilter()
          <Container>
             <TopBar>
                 <Left>
-                    <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem"}} src="/svg/filterIcon.svg"/>
-                    <span style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}}>Filter Notifications</span>
+                {/* src= "/svg/filterIcon.svg" */}
+                {!darkMode ? ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterIcon.svg' />) : ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterw.png' />)}
+                     {/* <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src={image} /> */}
+                    <span style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}}>Filter Notifications</span> 
                 </Left>
                 <Buttons>
                     
-                <ButtonFeed bgColor='#e20880' onClick={applySearch}>
+                <ButtonFeed bgColor='#e20880' mright="1rem" onClick={applySearch}>
                             Apply
                     </ButtonFeed>    
-                    {/* <ButtonFeed bgColor='#35c5f3' onClick={reset}>
+                    <ButtonFeed bgColor='#35c5f3' onClick={reset}>
                         Reset
-                    </ButtonFeed>  */}
+                    </ButtonFeed> 
                 </Buttons>
             </TopBar>
 
             <SearchOptions>
                 <SectionSearch mright='3.5rem'>
                  
-                {/* <SelectChannel> */}
+                <SelectChannel>
                     <MultiSelect
-                        options={options}
+                        options={uniqueOptions}
                         valueRenderer={ () => {
                             if(selectedOption.length === 0)  return 'Show Notifications from'
                             return `${selectedOption.length} Selected`
@@ -126,10 +112,10 @@ export default function SearchFilter()
                         placeholder="Search Notifications from"
                     />
 
-                {/* </SelectChannel> */}
+                </SelectChannel>
                 <InputWrapper>
                 
-                <input type="text" className="input2" placeholder="Search With Keyword" onChange={(e) => {
+                <input value={search} type="text" className="input2" placeholder="Search With Keyword" onChange={(e) => {
                     // console.log(e.target.value);
                     setSearch(e.target.value);
                 
@@ -154,16 +140,16 @@ export default function SearchFilter()
                         <RangeSection>
                             <DatePicker className="date" selected={startDate} onChange={(date) => setStartDate(date)} placeholderText="Start Date"/>
                             <img className="dateimg" src="/date.png"/>
-                            <div class="vl"></div>
+                            <Vl></Vl>
                             <DatePicker className="date2" selected={endDate} onChange={(date) => setEndDate(date)} placeholderText="End Date"/>
                             <img className="dateimg" src="/date.png"/>
 
                         </RangeSection>
-                        <RangeSection mtop="1rem">
+                        <RangeSection mtop="1.5rem">
                             {/* <TimePicker/> */}
                             <TimePicker disableClock="true" className="time" onChange={setStartTime} value={startTime} />
                             <img className="dateimg3" src="/date.png"/>
-                                <div class="vl"></div>
+                                <Vl></Vl>
                             <TimePicker disableClock="true" className="time2" onChange={setEndTime} value={endTime} />
                             <img className="dateimg2" src="/date.png"/>
                         </RangeSection>
@@ -190,7 +176,21 @@ export default function SearchFilter()
     )
 }
 
+const Vl = styled.div`
+border-left: 1px solid ${props => props.theme.faucetBorder};
+height: 30px;
+margin-left: 1rem;
+margin-right: 1rem;
+margin-top: 5px;
 
+@media(max-width: 600px)
+{
+
+    margin-left: 0.5rem;
+            margin-right: 0.5rem;
+
+}
+`;
 const DateAlignment = styled.div`
 margin-right: 7rem;
 
@@ -217,13 +217,16 @@ margin-right: 7rem;
 const SelectChannel = styled.div`
 // display: flex;
 // flex-direction: row;
-border:  0.1px solid #674C9F;
+// border:  0.1px solid #674C9F;
+
+border: 1px solid ${props => props.theme.faucetBorder};
 border-radius: 5px;
 height: "40";
 flex-grow: 1;
 flex: 1;
 // max-width: 31rem;
 // margin-right: 4rem;
+font-family: Source Sans Pro;
 
 @media(max-width: 600px)
 {
@@ -239,7 +242,8 @@ flex: 1;
 const RangeSection = styled.div`
 display: flex;
 flex-direction: row;
-border:  0.1px solid #674C9F;
+border: 1px solid ${props => props.theme.faucetBorder};
+
 border-radius: 5px;
 justify-content: space-between;
 height: "40px";
@@ -264,7 +268,9 @@ display:flex;
 const Container = styled.div`
 display: flex;
 flex-direction: column;
-border:  0.5px solid #674C9F;
+// border:  0.5px solid #674C9F;
+// border:${(props) => (props.Border ? props.Border : "")}
+border: 1px solid ${props => props.theme.faucetBorder};
 border-radius: 10px;
 margin: 1.3rem;
 `;
@@ -274,8 +280,9 @@ const TopBar = styled.div`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-border-bottom:  0.5px solid #674C9F;
+border-bottom: 1px solid ${props => props.theme.faucetBorder};;
 margin-bottom: 1rem;
+font-family: Source Sans Pro;
 
 @media (max-width:500px)
 {
@@ -287,6 +294,7 @@ margin-bottom: 1rem;
 const Left = styled.div`
 display: flex;
 flex-direction: row;
+font-family: Source Sans Pro;
 `;
 
 const Buttons = styled.div`
@@ -296,13 +304,15 @@ justify-content: space-between;
 margin-right: 2rem;
 margin-top: 0.3rem;
 margin-bottom: 0.5rem;
-@media (max-width: 500px)
+@media (max-width: 600px)
 {
-    margin-right: 0.5rem;
+    margin-right: 1.5rem;
     margin-left: 2rem;
     width: 4rem;
+    flex-direction: column;
     
 }
+font-family: Source Sans Pro;
 
 `;
 
@@ -324,6 +334,7 @@ margin-right:  ${(props) => (props.mright ? props.mright : "")};
 {
     margin-right:  ${(props) => (props.mright ? "1.5rem" : "")};
 }
+font-family: Source Sans Pro;
 `;
 
 
@@ -334,6 +345,7 @@ margin-left: 2rem;
 margin-right: 2rem;
 margin-bottom: 1rem;
 justify-content: space-between;
+font-family: Source Sans Pro;
 
 @media(max-width: 600px)
 {
@@ -350,6 +362,7 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 flex: 1;
+font-family: Source Sans Pro;
 @media(min-width: 600px)
 {
     
@@ -363,7 +376,9 @@ margin-left:  ${(props) => (props.mleft ? props.mleft : "")};
 const InputWrapper = styled.div`
     display:flex;
     height: 40px;
-    border: 0.5px solid #674C9F;
+    // border: 0.5px solid #674C9F;
+    
+border: 1px solid ${props => props.theme.faucetBorder};
     border-radius: 5px;
     margin-top: 1.5rem;
     width: 100%;
@@ -383,6 +398,7 @@ height: 40px;
 // width: 25rem;
 border: 0.5px solid #674C9F;
 border-radius: 5px;
+font-family: Source Sans Pro;
 
 // color: #35C5F3;
 

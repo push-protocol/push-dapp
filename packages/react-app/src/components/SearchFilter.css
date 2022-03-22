@@ -23,6 +23,7 @@
     align-items: center !important;
     width: 50%;
     padding-top: 3px;
+    font-family: Source Sans Pro;
     
 }
 
@@ -32,6 +33,7 @@
     align-items: center !important;
     padding-top: 3px;
     font-weight: 400;
+    font-family: Source Sans Pro;
 }
 
 .date::placeholder{
@@ -44,24 +46,7 @@
     
 }
 
-    .vl {
-        border-left: 2px solid #B4B4B4;
-        height: 30px;
-        margin-left: 1rem;
-        margin-right: 1rem;
-        margin-top: 5px;
-      }
-
-      @media(max-width:600px)
-      {
-          .vl{
-            margin-left: 0.5rem;
-            margin-right: 0.5rem;
-
-          }
-      }
-      
-    
+  
 
 @media (max-width: 1000px) {
 
@@ -81,6 +66,7 @@
 
 .react-time-picker__inputGroup__amPm:focus{
     border: 0px white !important;
+    font-family: Source Sans Pro;
 }
 
 
@@ -88,6 +74,7 @@
 
 .react-time-picker__inputGroup__divider {
     color:  #B0B0B0 !important;
+    font-family: Source Sans Pro;
 
 }
 
@@ -97,6 +84,7 @@
     /* color:  #B0B0B0 !important; */
     font-weight: 400 !important;
     height: 85% !important;
+    font-family: Source Sans Pro;
 }
 
 
@@ -104,6 +92,7 @@
 .react-time-picker__inputGroup__input {
     /* color: #674C9F !important; */
     font-weight: 400 !important;
+    font-family: Source Sans Pro;
 }
 
 .DropDown{
@@ -142,9 +131,10 @@
     font-weight: 400 !important;
 }
 .button, input{
-    height: 30px !important;
+    height: 40px !important;
     border: 0px;
     color: #674C9F;
+    font-family: Source Sans Pro;
 }
 
 
@@ -169,6 +159,7 @@
     border-radius: 5px !important;
     border: 0.5px solid #674C9F;
     padding: 2px;
+    font-family: Source Sans Pro;
 }
 
 
@@ -178,6 +169,7 @@ color: #E20880 !important;
 font-weight: 400 !important;
 font-size: 1.1rem !important;
 margin-top: 3px;
+font-family: Source Sans Pro;
 
 
 }
@@ -195,22 +187,22 @@ margin-top: 3px;
 
 
 .dropdown-heading:focus{
-     border: 1px solid #674C9F !important;
+     border: 0px solid white !important;
         box-shadow: 0 0 0px white !important;
 }
 .dropdown-container{
-    border: 0.5px solid #674C9F !important;
+    border: 0px solid white !important;
     height: 45px !important;
     margin: 0px !important;
     padding: 0px !important;
     }
     .dropdown-container:focus-within{
-        border: 0.5px solid #674C9F!important;
+        border: 0px solid white !important;
         box-shadow: 0 0 0 0px white !important;
 
     }
     .cZpmt:focus{
-        border: 1px solid #674C9F !important;
+        /* border: 1px solid #674C9F !important; */
         box-shadow: 0 0 0px white !important;
 
     }
@@ -223,6 +215,7 @@ margin-top: 3px;
     color: #35C5F3;
     padding-left: 0.7rem;
     width: 100%;
+    font-family: Source Sans Pro;
 
 }
 .input2::placeholder
