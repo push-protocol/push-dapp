@@ -15,7 +15,7 @@ import TimePicker from 'react-time-picker';
 
 
 
-export default function SearchFilter()
+export default function SearchFilter(props)
 {
     // let items=[]
     const [selectedOption, setSelectedOption] = useState([]);
@@ -23,52 +23,22 @@ export default function SearchFilter()
 
     const [startDate,setStartDate] = useState();
     const [endDate,setEndDate] = useState();
-    const [startTime,setStartTime] = useState();
-    const [endTime,setEndTime] = useState();
+    const [startTime,setStartTime] = useState(0);
+    const [endTime,setEndTime] = useState(0);
 
     const applySearch = async () => {
         console.log(`selected options: ${selectedOption}, selected keywords : ${search}, selected start date: ${startDate}, selected end date: ${endDate}, selected start time: ${startTime}, selected end time: ${endTime}`);
-
+                            //list of channels ["0xaaa" , "0xbbb"]       //provide a start epoch           //provide an end epoch
+        props.filter(search, selectedOption,                        new Date(startDate).getTime()/1000,   new Date(endDate).getTime()/1000);
     }
 
     const reset = async () => {
         
     }
-
-    // const options = [
-    //     { name: 'chocolate', id: 'Chocolate' },
-    //     { name: 'strawberry', id: 'Strawberry' },
-    //     { name: 'vanilla', id: 'Vanilla' },
-    //     { name: 'screen', id: 'Screen' },
-    //     { name: 'car', id: 'Car' },
-    //     { name: 'game', id: 'Game' },
-    //     { name: 'laptop', id: 'Laptop' },
-    //     { name: 'mouse', id: 'Mouse' },
-    //     { name: 'cable', id: 'Cable' },
-    //   ];
-
-
-
-    // const options = [ 'chocolate','strawberry', 'vanilla','screen',  'car', 'game',  'laptop', 'mouse', 'cable'];
-
-      const options = [
-        { label: 'chocolate', value: 'Chocolate' },
-        { label: 'strawberry', value: 'Strawberry' },
-        { label: 'vanilla', value: 'Vanilla' },
-        { label: 'screen', value: 'Screen' },
-        { label: 'car', value: 'Car' },
-        { label: 'game', value: 'Game' },
-        { label: 'laptop', value: 'Laptop' },
-        { lable: 'mouse', value: 'Mouse' },
-        { label: 'cable', value: 'Cable' },
-        { label: 'pen', value: 'Pen' },
-        { label: 'keys', value: 'Keys' },
-        { label: 'button', value: 'Button' },
-        { label: 'earphone', value: 'Earphone' },
-      ];
-
-  
-
+    console.log(props.notifications);
+    var options = [];
+    props.notifications.map(each => options.push({label : each.app , value : each.channel }));
+    var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
     const handleChange = ( selectedOptions) => {
         setSelectedOption(selectedOptions);
         console.log(`selected list is ${selectedOption}`)
@@ -101,7 +71,7 @@ export default function SearchFilter()
                  
                 {/* <SelectChannel> */}
                     <MultiSelect
-                        options={options}
+                        options={uniqueOptions}
                         valueRenderer={ () => {
                             if(selectedOption.length === 0)  return 'Show Notifications from'
                             return `${selectedOption.length} Selected`
