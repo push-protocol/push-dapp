@@ -46,9 +46,10 @@
 
     .vl {
         border-left: 2px solid #B4B4B4;
-        height: 30x;
+        height: 30px;
         margin-left: 1rem;
         margin-right: 1rem;
+        margin-top: 5px;
       }
 
       

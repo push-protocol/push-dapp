@@ -356,7 +356,7 @@ const InputWrapper = styled.div`
     padding: 1px;
     @media(max-width:600px)
     {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
     }
     
 
