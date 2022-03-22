@@ -85,7 +85,7 @@ function SpamBox({ currentTab }) {
         for(const notif of notifications){
             if(
                 ( (Filter.channels === undefined ?  true : (Filter.channels.includes(notif.channel)))&&
-            notif.date >= startDate && notif.date <= endDate
+            notif.epoch >= startDate && notif.epoch <= endDate
             && await notif.message.toLowerCase().match(regex)!==null )
             )
             filterNotif.push(notif);
