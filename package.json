@@ -9,10 +9,12 @@
   ],
   "private": true,
   "scripts": {
+    "react-app:install": "yarn workspace @project/react-app install --ignore-platform",
     "react-app:build": "yarn workspace @project/react-app build",
     "react-app:eject": "yarn workspace @project/react-app eject",
     "react-app:start": "yarn workspace @project/react-app start",
     "react-app:test": "yarn workspace @project/react-app test",
+    "react-app:format": "yarn workspace @project/react-app format",
     "subgraph:auth": "yarn workspace @project/subgraph auth",
     "subgraph:codegen": "yarn workspace @project/subgraph codegen",
     "subgraph:build": "yarn workspace @project/subgraph build",

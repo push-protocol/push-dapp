@@ -81,6 +81,7 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
+    "prettier": "^2.6.0",
     "@testing-library/dom": "^6.12.2",
     "@types/react": "^16.9.19",
     "eslint": "^6.8.0",
@@ -90,6 +91,7 @@
     "extends": "react-app"
   },
   "scripts": {
+    "format": "prettier --write \"src/**/*.{js,jsx,json,ts,tsx,css,html}\"",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",

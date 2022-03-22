@@ -1,0 +1,40 @@
+name: nodeJs CI
+
+on:
+  push:
+    branches: [ main, ci-cd ]
+  pull_request:
+    branches: [ main, ci-cd ]
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12
+
+      # ESLint and Prettier must be in `package.json`
+      - name: Install Node.js dependencies
+        run: yarn run react-app:install
+
+      - run: yarn run react-app:format
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4.1.2
+        with:
+          commit_message: Apply formatting changes
+
+      - name: Lint Code Base
+        uses: github/super-linter@v3.17.0
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_MARKDOWN: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.git_TOKEN }}
+      - run: yarn run react-app:test --if-present
