@@ -135,7 +135,7 @@ function ViewChannels() {
 
 
   React.useEffect(() => {
-    const parsedChannel = window.location.href.toString().slice(41);
+    const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42)
     if(!ADDRESS_REGEX.test(parsedChannel)) return;
     setTimeout(() => {
       setSearch(parsedChannel);
