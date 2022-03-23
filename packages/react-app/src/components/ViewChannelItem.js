@@ -22,7 +22,7 @@ import { postReq } from "api";
 import NotificationToast from "components/NotificationToast";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
-
+import { incrementStepIndex,addNewWelcomeNotif } from "redux/slices/userJourneySlice";
 // Create Header
 function ViewChannelItem({ channelObjectProp }) {
   const dispatch = useDispatch();
@@ -32,6 +32,10 @@ function ViewChannelItem({ channelObjectProp }) {
 
   const navigate = useNavigate();
 
+  const {
+    run,
+    stepIndex
+  } = useSelector((state) => state.userJourney);
 
   const {
     epnsReadProvider,
@@ -145,10 +149,11 @@ function ViewChannelItem({ channelObjectProp }) {
           console.log(`getChannelSubscribers => ${err.message}`);
           return [];
         });
-      const subscribed = channelSubscribers.find((sub) => {
+        let subscribed = channelSubscribers.find((sub) => {
         return sub.toLowerCase() === account.toLowerCase();
       });
 
+      if (run) subscribed = false;
       setIsPushAdmin(pushAdminAddress === account);
       setMemberCount(channelSubscribers.length);
       setSubscribed(subscribed);
@@ -161,6 +166,15 @@ function ViewChannelItem({ channelObjectProp }) {
       );
       setCanUnverify(channelObject.verifiedBy == account);
       setChannelJson({ ...channelJson, addr: channelObject.addr });
+      if (
+        // channelObject.addr === "0xB88460Bb2696CAb9D66013A05dFF29a28330689D" && //production
+        channelObject.addr === "0x2177cFc66474bBEce7Cbf114d780A5cfE78485De" && //development
+        run &&
+        stepIndex === 3
+      ) {
+        console.log(channelObject.addr);
+        dispatch(incrementStepIndex());
+      }
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
@@ -322,6 +336,29 @@ function ViewChannelItem({ channelObjectProp }) {
         }
       );
 
+      if(run) {
+        console.log("in run");
+        toaster.update(txToast, {
+          render: "Sucesfully opted into channel !",
+          type: toaster.TYPE.SUCCESS,
+          autoClose: 5000,
+        });
+        dispatch(addNewWelcomeNotif({
+          cta: "",
+          title: channelJson.info,
+          message: `Welcome to ${channelJson.name} Channel. From now onwards, you'll be getting notifications from this channel`,
+          icon: channelJson.icon,
+          url: channelJson.url,
+          sid: "",
+          app: channelJson.name,
+          image: ""
+        }))
+        setTxInProgress(false); 
+        setSubscribed(true);
+        if(stepIndex === 4) dispatch(incrementStepIndex());
+        return;
+      }
+
       postReq("/channels/subscribe_offchain", {
         signature,
         message,
@@ -446,7 +483,7 @@ function ViewChannelItem({ channelObjectProp }) {
   // render
   return (
     <ThemeProvider theme={themes}>
-    <Container key={channelObject.addr}>
+    <Container key={channelObject.addr} className={channelObject.addr} id={`addr-${channelObject.addr}`}>
       <ChannelLogo>
         <ChannelLogoOuter>
           <ChannelLogoInner>
@@ -585,8 +622,8 @@ function ViewChannelItem({ channelObjectProp }) {
                 <ActionTitle hideit={vLoading}>Unverify Channel</ActionTitle>
               </UnsubscribeButton>
             )}
-            {!loading && !subscribed && (
-              <SubscribeButton onClick={subscribe} disabled={txInProgress}>
+            {!loading && (!subscribed  || run) && (
+              <SubscribeButton onClick={subscribe} disabled={txInProgress} className="optin" >
                 {txInProgress && (
                   <ActionLoader>
                     <Loader type="Oval" color="#FFF" height={16} width={16} />
@@ -595,7 +632,7 @@ function ViewChannelItem({ channelObjectProp }) {
                 <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
               </SubscribeButton>
             )}
-            {!loading && subscribed && (
+            {!loading && subscribed && !run && (
               <>
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (

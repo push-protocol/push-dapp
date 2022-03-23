@@ -4,6 +4,7 @@ import GLOBALS from "config/Globals";
 const NavigationList = {
     primary: {
       communicate: {
+        uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.COMMUNICATE_TAB,
         src: "svg/communicate.svg",
         iconFactory: null,
         name: 'Communicate',
@@ -246,17 +247,28 @@ const NavigationList = {
         hasMenuLogic: true,
   
         drilldown: {
-          // tutorial: {
-          //   src: "svg/tutorial.svg",
-          //   iconFactory: null,
-          //   name: 'Tutorial',
-          //   title: 'Tutorial',
-          //   alt: 'Open Tutorial',
-          //   href: '/tutorial',
-          //   newTab: false,
-          //   isRoute: true,  
-          //   hasMenuLogic: true,
-          // },
+          tutorial: {
+            src: "svg/tutorial.svg",
+            iconFactory: null,
+            name: 'Tutorial',
+            title: 'Tutorial',
+            alt: 'Open Tutorial',
+            href: '/tutorial',
+            newTab: false,
+            isRoute: true,  
+            hasMenuLogic: true,
+            headerTag: {
+              title: "App Walkthrough",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
           faq: {
             src: "svg/qna.svg",
             iconFactory: null,

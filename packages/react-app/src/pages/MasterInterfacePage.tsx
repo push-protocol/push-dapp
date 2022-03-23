@@ -20,7 +20,7 @@ import YieldFarmingPage from "pages/YieldFarmingPage";
 import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
-
+import TutorialPage from "pages/TutorialPage";
 import {SupportPage} from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
@@ -43,6 +43,7 @@ function MasterInterfacePage() {
           <Route path="yield" element={<YieldFarmingPage />} />
           <Route path="rockstar" element={<NFTPage />} />
           <Route path="gratitude" element={<AirdropPage />} />
+          <Route path="tutorial" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
           <Route
               path="/"

@@ -23,6 +23,10 @@ import {
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
 
+import {
+  addNewWelcomeNotif
+} from "redux/slices/userJourneySlice";
+
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -38,6 +42,8 @@ function Feedbox() {
   const themes = useTheme();
 
   const [darkMode, setDarkMode] = useState(false);
+
+  const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
 
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -65,7 +71,7 @@ function Feedbox() {
     }
   };
   const fetchLatestNotifications = async () => {
-    if (loading || bgUpdateLoading) return;
+    if (loading || bgUpdateLoading || run) return;
     setBgUpdateLoading(true);
     setLoading(true);
     try {
@@ -135,34 +141,59 @@ function Feedbox() {
             </Item>
           )}
 
-          {notifications.map((oneNotification, index) => {
-            const {
-              cta,
-              title,
-              message,
-              app,
-              icon,
-              image,
-            } = oneNotification;
+          { !run && notifications.map((oneNotification, index) => {
+              const {
+                cta,
+                title,
+                message,
+                app,
+                icon,
+                image,
+              } = oneNotification;
 
-            // render the notification item
-            return (
-              <div key={`${message}+${title}`}>
-                {showWayPoint(index) && (
-                  <Waypoint onEnter={() => handlePagination()} />
-                )}
-                <NotificationItem
-                  notificationTitle={title}
-                  notificationBody={message}
-                  cta={cta}
-                  app={app}
-                  icon={icon}
-                  image={image}
-                  theme={themes.scheme}
-                />
-              </div>
-            );
-          })}
+              // render the notification item
+              return (
+                <div key={`${message}+${title}`}>
+                  {showWayPoint(index) && (
+                    <Waypoint onEnter={() => handlePagination()} />
+                  )}
+                  <NotificationItem
+                    notificationTitle={title}
+                    notificationBody={message}
+                    cta={cta}
+                    app={app}
+                    icon={icon}
+                    image={image}
+                  />
+                </div>
+              );
+            })
+          }
+          { run && welcomeNotifs.map((oneNotification, index) => {
+              const {
+                cta,
+                title,
+                message,
+                app,
+                icon,
+                image,
+              } = oneNotification;
+
+              // render the notification item
+              return (
+                <div key={`${message}+${title}`}>
+                  <NotificationItem
+                    notificationTitle={title}
+                    notificationBody={message}
+                    cta={cta}
+                    app={app}
+                    icon={icon}
+                    image={image}
+                  />
+                </div>
+              );
+            })
+          }
 
           {loading && !bgUpdateLoading && (
             <Item
@@ -173,7 +204,7 @@ function Feedbox() {
           )}
         </Notifs>
       )}
-      {!notifications.length && !loading && (
+      {((!run && !notifications.length) || (run && !welcomeNotifs.length)) && !loading && (
         <Item>
           <DisplayNotice
             title="You currently have no notifications, try subscribing to some channels."

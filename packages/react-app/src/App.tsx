@@ -6,6 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
+import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
 
 import styled, {useTheme} from "styled-components";
 import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
@@ -14,13 +15,15 @@ import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 
 import NavigationContextProvider from "contexts/NavigationContext";
-
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
 import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+
+import {incrementStepIndex, decrementStepIndex, setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
+import { useSelector, useDispatch } from "react-redux";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -43,6 +46,9 @@ const web3Connectors = {
 };
 
 export default function App() {
+
+  const dispatch = useDispatch();
+
   const { connector, activate, active, error } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<
     AbstractConnector
@@ -51,6 +57,11 @@ export default function App() {
 
     const themes = useTheme();
 
+    const {
+      run,
+      stepIndex,
+      isCommunicateOpen
+    } = useSelector((state: any) => state.userJourney);
 
   React.useEffect(()=>{
     const now = Date.now()/ 1000;
@@ -115,9 +126,234 @@ export default function App() {
     };
   });
 
+  const steps = [
+    {
+      //0
+      content: (
+        <div>
+          <h2>Let's begin our journey!</h2>
+          <p>
+            Welcome to the <B>ETHERIUM</B> <B>PUSH</B>{" "}
+            <B>NOTIFICATION SERVICE</B>{" "}
+          </p>
+          <button onClick={() => {
+              if( isCommunicateOpen)
+              dispatch(incrementStepIndex());
+            dispatch(incrementStepIndex());}}>Next</button>
+        </div>
+      ),
+      locale: { next: <strong aria-label="next">NEXT</strong> },
+      placement: "center",
+      target: "body",
+      // spotlightClicks: true,
+      // disableOverlayClose: false,
+    },
+    {
+      //1
+      content: (
+        <div>
+          <h2>Click on Communicate!</h2>
+          <button onClick={
+            () => dispatch(incrementStepIndex())
+          }>Next</button>
+        </div>
+      ),
+      placement: "right-start",
+      target: ".communicate",
+      styles: {
+        options: {
+          arrowColor: "#a9a9a9",
+          backgroundColor: "#e6e6e6",
+          beaconSize: "30px",
+          beaconColor: "#fff",
+          beaconBorderColor: "#fff",
+          textColor: "#e675ce",
+          width: "100%",
+          zIndex: 9999,
+        },
+        tooltip: {
+          backgroundColor: "#2596be",
+          color: "#fff",
+          maxWidth: "350px",
+          zIndex: 9999,
+        },
+      },
+      spotlightClicks: true,
+      disableAnimation: false,
+      disablefloating: false,
+    },
+    {
+      //2
+      content: (
+        <div>
+          <h2>Click on channels!</h2>
+          {/* <button onClick={
+            () => dispatch(incrementStepIndex())
+          }>Next</button> */}
+        </div>
+      ),
+      placement: "right-start",
+      target: ".channels",
+      styles: {
+        options: {
+          arrowColor: "#a9a9a9",
+          backgroundColor: "#e6e6e6",
+          beaconSize: "30px",
+          beaconColor: "#fff",
+          beaconBorderColor: "#fff",
+          textColor: "#e675ce",
+          width: "100%",
+          zIndex: 9999,
+        },
+        tooltip: {
+          backgroundColor: "#2596be",
+          color: "#fff",
+          maxWidth: "350px",
+          zIndex: 9999,
+        },
+      },
+      spotlightClicks: true,
+      disableAnimation: false,
+      disablefloating: false,
+    },
+    {
+      //3
+      content: <div> This is the place where you see all your channels</div>,
+      placement: "center",
+      target: "body",
+    },
+    {
+      //4
+      content: (
+        <div>
+          <h2>Click on Opt-in!</h2>
+          {/* <button onClick={
+      () => dispatch(incrementStepIndex())
+    }>Next</button> */}
+        </div>
+      ),
+      placement: "top-center",
+      position: "top-center",
+      // target: `#addr-0x0000000000000000000000000000000000000000`, //production
+      target: `#addr-0x2177cFc66474bBEce7Cbf114d780A5cfE78485De`, //development
+      disableOverlayClose: false,
+      spotlightClicks: true,
+      offsetTop: "-100px",
+      defaultProps: false,
+    },
+    {
+      //5
+      content: (
+        <div>
+          <h2>Click on Inbox!</h2>
+          {/* <button onClick={
+          () => dispatch(incrementStepIndex())
+        }>Next</button> */}
+        </div>
+      ),
+      placement: "right-start",
+      target: ".inbox",
+      spotlightClicks: true,
+      disablefloating: true,
+    },
+    {
+      //6
+      content: (
+        <div>
+          <h2>You will get all your messages here.</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+        </div>
+      ),
+      placement: "left",
+      target: `#scrollstyle-secondary`,
+      // disableOverlayClose: false,
+    },
+    {
+      //7
+      content: (
+        <div>
+          <h2>You will get all your spam messages here.</h2>
+          {/* <button onClick={
+      () => dispatch(incrementStepIndex())
+    }>Next</button> */}
+        </div>
+      ),
+      placement: "right-start",
+      target: `.spam`,
+      spotlightClicks: true,
+    },
+    {
+      //8
+      content: (
+        <div>
+          <h2>You will Recieve all your notifications here</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+        </div>
+      ),
+      placement: "right-start",
+      target: `.receive`,
+      spotlightClicks: true,
+    },
+    {
+      //9
+      content: (
+        <div>
+          <h2>Tutorial Complete</h2>
+          <p>
+            <B>THANK YOU</B>{" "}
+          </p>
+          <button onClick={() => {dispatch(setRun(false))
+      dispatch(setIndex(0))
+      dispatch(setWelcomeNotifsEmpty());}}>Next</button>
+        </div>
+      ),
+      locale: { next: <strong aria-label="next">NEXT</strong> },
+      placement: "center",
+      target: "body",
+      // spotlightClicks: true,
+      // disableOverlayClose: false,
+    },
+  ]
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    console.log(data)
+    // console.log(STATUS);
+    const { action, lifecycle, status, index } = data
+    if (lifecycle === "ready") {
+      setTimeout(() => {
+        document.querySelector("div > section > div").scrollTop = 0
+      }, 100)
+    }
+    
+    
+    if ( action === "skip" || index == 10 ) { //action === "close" ||
+      dispatch(setRun(false))
+      dispatch(setIndex(0))
+      dispatch(setWelcomeNotifsEmpty());
+    }
+    // else if (action === 'next' && status === 'running') {
+    //   dispatch(incrementStepIndex());
+    // }
+  }
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
       <NavigationContextProvider>
+      <Joyride
+          run={run}
+          steps={steps}
+          // continuous={true}
+          stepIndex={stepIndex}
+          primaryProps={false}
+          // scrollToFirstStep={true}
+          // disableOverlayClose={false}
+          // showProgress={true}
+          disableScrolling={true}
+          disableScrollParentFix={true}
+          disableFlip={true}
+          showSkipButton={true}
+          callback={handleJoyrideCallback}
+        />
         <HeaderContainer>
           <Header
             isDarkMode={darkMode}

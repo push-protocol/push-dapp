@@ -13,7 +13,9 @@ import NavigationList from "config/NavigationList";
 import { NavigationContext } from "contexts/NavigationContext";
 
 import GLOBALS from "config/Globals";
-import {useSelector} from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
+import {incrementStepIndex, decrementStepIndex, setRun, setIndex , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
 
 // Create Header
 function Navigation() {
@@ -21,13 +23,14 @@ function Navigation() {
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
+    const { run, stepIndex , isCommunicateOpen } = useSelector((state) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[0].data.drilldown[3].data.name = channelDetails.name;
     }
     const theme = useTheme();
     const location = useLocation();
-
+    const dispatch = useDispatch();
     // Similar to componentDidMount and componentDidUpdate:
 
   
@@ -340,6 +343,7 @@ function Navigation() {
                       refresh={refresh}
                       margintop="15px"
                       onClick={() => {
+                        console.log(`Clicked secondary button`);
                         mutateTransformedList(section, true)
                       }}      
                       id={data.id}          
@@ -379,8 +383,29 @@ function Navigation() {
                           zIndex={2}
                           refresh={refresh}
                           onClick={() => {
+                            const uid = section.data.uid;
+                            console.log("UID= ", uid);
+                            // if(run && uid == 2 && section.opened && stepIndex == 0 || isCommunicateOpen == true ) {
+                            //   dispatch(incrementStepIndex())
+                            //   dispatch(setCommunicateOpen(true))
+                            // }
+                            if(uid == 2 ){
+                              // dispatch(incrementStepIndex())
+                              if(!section.opened)
+                              dispatch(setCommunicateOpen(true))
+                              else
+                              dispatch(setCommunicateOpen(false))
+                            }
+                              
+                            console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
-                          }}                  
+    
+                        if(run && (stepIndex=== 1))
+                        {
+                          for (let i=0;i<300;i++){}
+                          dispatch(incrementStepIndex())
+                        }
+                          }}              
                         >
                         <NavigationButton
                           item={section}
@@ -455,6 +480,11 @@ function Navigation() {
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
+                    if(run && (stepIndex=== 2 || stepIndex === 5 || stepIndex === 6|| stepIndex === 7|| stepIndex === 8))
+                    {
+                      dispatch(incrementStepIndex())
+                    }
+                    console.log(`Clicked  button`);
                     // mutateTransformedList(item)
                   }}
                 >
