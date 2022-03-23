@@ -48,10 +48,15 @@ function SpamBox({ currentTab }) {
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const filterNotifications = async (query , channels , startDate = "2000-01-01" , endDate = "9999-99-99") => {
+  const reset = ()=>setFilter(false);
+  const filterNotifications = async (query , channels , startDate , endDate) => {
     if(loading)return;
     setLoading(true);
-    setFilter(!filter);
+    setFilter(true);
+    if(startDate == null)startDate = new Date('January 1, 2000');
+    if(endDate == null)endDate = new Date('January 1, 3000');
+    startDate = startDate.getTime()/1000;
+    endDate = endDate.getTime()/1000;
     var Filter = {
         channels : channels , 
         date : {lowDate : startDate , highDate : endDate}
@@ -108,6 +113,7 @@ function SpamBox({ currentTab }) {
         let parsedResponse = utils.parseApiResponse(results);
           parsedResponse.forEach( (each,i) => {
               each.date = results[i].epoch;
+              each.epoch = (new Date(each.date).getTime() / 1000);
           })
           const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
             elem.channel = results[i].channel;
@@ -149,7 +155,8 @@ function SpamBox({ currentTab }) {
       }
       let parsedResponse = utils.parseApiResponse(results);
         parsedResponse.forEach( (each,i) => {
-            each.date = results[i].epoch.substring(0,10);
+            each.date = results[i].epoch;
+            each.epoch = (new Date(each.date).getTime() / 1000);
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
@@ -244,7 +251,7 @@ function SpamBox({ currentTab }) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-      <SearchFilter notifications = {notifications} filter = {filterNotifications}/>
+      <SearchFilter notifications = {notifications} filterNotifications = {filterNotifications} filter={filter} reset={reset}/>
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
             <Loader type="Oval" color="#35c5f3" height={40} width={40} />

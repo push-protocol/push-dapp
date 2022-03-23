@@ -39,12 +39,16 @@ function Feedbox() {
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState("inbox");
-
+  
+    const reset = ()=>setFilter(false);
     const filterNotifications = async (query , channels , startDate , endDate) => {
-      console.log(query , channels , startDate , endDate);
+        if(startDate == null)startDate = new Date('January 1, 2000');
+        if(endDate == null)endDate = new Date('January 1, 3000');
+        startDate = startDate.getTime()/1000;
+        endDate = endDate.getTime()/1000;
         if(loading)return;
         setLoading(true);
-        setFilter(!filter);
+        setFilter(true);
         var Filter = {
             channels : channels , 
             date : {lowDate : startDate , highDate : endDate}
@@ -180,7 +184,7 @@ function Feedbox() {
   return (
     <ThemeProvider theme={themes}>
     <Container>
-    <SearchFilter notifications={notifications} filter={filterNotifications} />
+    <SearchFilter notifications={notifications} filterNotifications={filterNotifications} filter={filter} reset={reset}/>
       {notifications && (
         <Notifs id="scrollstyle-secondary">
 

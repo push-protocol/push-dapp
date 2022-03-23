@@ -1,144 +1,33 @@
-.react-time-picker__button:enabled{
-    display: none;
-}
-
-.react-time-picker__wrapper {
+.react-datetime-picker__wrapper {
     border: 0px !important;
     border-radius: 5px !important;
     height: 40px !important;
 }
-
-
-.time{
-    width: 100%;
+.react-datetime-picker__inputGroup{
+    text-align: center !important;
 }
-
-.time2{
-    width: 100%;
+.react-datetime-picker__inputGroup__input{
+    font-weight: 500 !important;
+    color : #35C5F3;
 }
-
+.react-datetime-picker__button svg {
+    stroke : #35C5F3
+}
 
 .date{
     display: flex;
     align-items: center !important;
-    width: 50%;
-    padding-top: 3px;
+    width: 100%;
     font-family: Source Sans Pro;
     
 }
 
-.date2{
-    display: flex;
-    width: 50%;
-    align-items: center !important;
-    padding-top: 3px;
-    font-weight: 400;
-    font-family: Source Sans Pro;
-}
-
-.date::placeholder{
-    color:  #B0B0B0 !important;
-    
-}
-
-.date2::placeholder{
-    color:  #B0B0B0 !important;
-    
-}
-
-  
-
-@media (max-width: 1000px) {
-
-    .date{
-       
-        width: 70%;
-    }
-    
-    .date2{
-      
-        width: 70%;
-    }
-    
-}
-
-
-
-.react-time-picker__inputGroup__amPm:focus{
-    border: 0px white !important;
-    font-family: Source Sans Pro;
-}
-
-
-
-
-.react-time-picker__inputGroup__divider {
-    color:  #B0B0B0 !important;
-    font-family: Source Sans Pro;
-
-}
-
-
-.react-time-picker__inputGroup__input {
-    color: #674C9F !important;
-    /* color:  #B0B0B0 !important; */
-    font-weight: 400 !important;
-    height: 85% !important;
-    font-family: Source Sans Pro;
-}
-
-
-
-.react-time-picker__inputGroup__input {
-    /* color: #674C9F !important; */
-    font-weight: 400 !important;
-    font-family: Source Sans Pro;
-}
 
 .DropDown{
     border-radius: 10px;
     height: 2.5rem;
     background-color: inherit;
-
-
-    
 }
-
-.dateimg{
-    width: 20px;
-    height: 20px;
-    margin-top: 9px;
-    margin-right: 9px;
-}
-
-.dateimg2{
-    width: 18px;
-    height: 20px;
-    margin-top: 9px;
-    margin-right: 9px;
-}
-.dateimg3{
-    width: 18px;
-    height: 20px;
-    margin-top: 9px;
-    margin-right: 9px;
-}
-.react-datepicker__day-name, .react-datepicker__day, .react-datepicker__time-name {
-    font-weight: 400 !important;
-}
-
-.react-datepicker__day, .react-datepicker__month-text, .react-datepicker__quarter-text, .react-datepicker__year-text {
-    font-weight: 400 !important;
-}
-.button, input{
-    height: 40px !important;
-    border: 0px;
-    color: #674C9F;
-    font-family: Source Sans Pro;
-}
-
-
-
 
 
 .button, input, input2 :focus{
@@ -158,7 +47,7 @@
     height: 40px !important;
     border-radius: 5px !important;
     border: 0.5px solid #674C9F;
-    padding: 2px;
+    /* padding: 2px; */
     font-family: Source Sans Pro;
 }
 
@@ -170,8 +59,6 @@ font-weight: 400 !important;
 font-size: 1.1rem !important;
 margin-top: 3px;
 font-family: Source Sans Pro;
-
-
 }
 
 
@@ -192,7 +79,7 @@ font-family: Source Sans Pro;
 }
 .dropdown-container{
     border: 0px solid white !important;
-    height: 45px !important;
+    /* height: 45px !important; */
     margin: 0px !important;
     padding: 0px !important;
     }
@@ -226,26 +113,7 @@ font-family: Source Sans Pro;
         color: #B0B0B0 !important;
         
 }
-@media(max-width: 600px)
-{
 
-    .dropdown-heading{
-        overflow: hidden !important;
-        color: #E20880 !important;
-        font-weight: 400;
-        
-        }
-        .date{
-          
-            width: 80%;
-        }
-        
-        .date2{
-           
-            width: 80%;
-        }
-
-}
 
 
 
