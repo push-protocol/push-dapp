@@ -32,7 +32,8 @@ export default function SearchFilter(props)
     var options = [];
     props.notifications.map(each => options.push({label : each.app , value : each.channel }));
     var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
-      
+
+
     return(
      <ThemeProvider theme={themes}>
          <Container>
@@ -55,7 +56,7 @@ export default function SearchFilter(props)
                 <SectionSearch mright='3.5rem'>
                  
                 <SelectChannel>
-                    <MultiSelect
+                    <SMultiSelect
                         options={uniqueOptions}
                         valueRenderer={ () => {
                             if(selectedOption.length === 0)  return 'Show Notifications from'
@@ -64,7 +65,6 @@ export default function SearchFilter(props)
                         value={selectedOption}
                         onChange={setSelectedOption}
                         labelledBy="Search Notifications from"
-                        className="DropDown"
                         placeholder="Search Notifications from"
                     />
 
@@ -79,9 +79,15 @@ export default function SearchFilter(props)
                 </SectionSearch>
                 <SectionSearch mleft='3.5rem'>
                         <RangeSection>
+                            <TimeLabelDiv>
+                                <div>Start Date</div>
+                            </TimeLabelDiv>
                             <DateTimePicker className="date" value={startDate} onChange={setStartDate}/>
                         </RangeSection>
                         <RangeSection mtop="1.5rem">
+                            <TimeLabelDiv>
+                                <div>End Date</div>
+                            </TimeLabelDiv>
                             <DateTimePicker className="date" value={endDate} onChange={setEndDate}/>
                         </RangeSection>
                 </SectionSearch>
@@ -90,6 +96,36 @@ export default function SearchFilter(props)
     </ThemeProvider>
     )
 }
+
+const TimeLabelDiv = styled.div`
+    flex: 2;
+    padding: 0 10px;
+    background-color: #35c5f3;
+    align-self: stretch;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+
+
+    div{
+        margin-top: 10px;
+        font-family: Source Sans Pro;
+    }
+`
+
+
+const SMultiSelect = styled(MultiSelect)`
+    font-family: Source Sans Pro;
+    ${props => props.theme.scheme === "dark" && `
+        --rmsc-main: #4285f4;
+        --rmsc-hover: #0e0c0a;
+        --rmsc-selected: #1d1915;
+        --rmsc-border: #333333;
+        --rmsc-gray: #555555;
+        --rmsc-bg: #000000;
+        color: #fff;
+    `}
+`
 
 
 const SelectChannel = styled.div`
@@ -105,6 +141,7 @@ border: 1px solid ${props => props.theme.faucetBorder};
 
 border-radius: 5px;
 justify-content: space-between;
+align-items: center;
 height: "40px";
 margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
 position: relative;
@@ -213,8 +250,8 @@ font-family: Source Sans Pro;
 const InputWrapper = styled.div`
     display:flex;
     height: 40px;
-    
-border: 1px solid ${props => props.theme.faucetBorder};
+
+    border: 1px solid ${props => props.theme.faucetBorder};
     border-radius: 5px;
     margin-top: 1.5rem;
     width: 100%;
