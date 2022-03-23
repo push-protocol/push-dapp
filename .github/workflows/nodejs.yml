@@ -37,4 +37,4 @@ jobs:
           VALIDATE_MARKDOWN: false
           DEFAULT_BRANCH: ci-cd
           GITHUB_TOKEN: ${{ secrets.git_TOKEN }}
-      - run: yarn run react-app:test --if-present
+      - run: yarn run react-app:test
