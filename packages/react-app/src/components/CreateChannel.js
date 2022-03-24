@@ -238,7 +238,10 @@ function CreateChannel() {
     var anotherSendTxPromise = contract.createChannelWithFees(
       channelType,
       identityBytes,
-      fees
+      fees,
+      {
+        gasLimit: 1000000
+      }
     );
 
     setProcessingInfo("Creating Channel TX in progress");
