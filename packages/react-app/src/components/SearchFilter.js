@@ -71,9 +71,8 @@ export default function SearchFilter(props)
                 </SelectChannel>
                 <InputWrapper>
                 
-                <input value={search} type="text" className="input2" placeholder="Search With Keyword" onChange={(e) => {
+                <input value={search} type="text" className="input2" placeholder="Search With Keyword" style={{"fontFamily":"Source Sans Pro"}} onChange={(e) => {
                     setSearch(e.target.value);
-                
                 }}/>
                 </InputWrapper> 
                 </SectionSearch>
@@ -82,13 +81,13 @@ export default function SearchFilter(props)
                             <TimeLabelDiv>
                                 <div>Start Date</div>
                             </TimeLabelDiv>
-                            <DateTimePicker className="date" value={startDate} onChange={setStartDate}/>
+                            <SDateTimePicker className="date" value={startDate} onChange={setStartDate}/>
                         </RangeSection>
                         <RangeSection mtop="1.5rem">
                             <TimeLabelDiv>
                                 <div>End Date</div>
                             </TimeLabelDiv>
-                            <DateTimePicker className="date" value={endDate} onChange={setEndDate}/>
+                            <SDateTimePicker className="date" value={endDate} onChange={setEndDate}/>
                         </RangeSection>
                 </SectionSearch>
             </SearchOptions>
@@ -96,6 +95,18 @@ export default function SearchFilter(props)
     </ThemeProvider>
     )
 }
+
+
+const SDateTimePicker = styled(DateTimePicker)`
+    .react-datetime-picker__inputGroup__input{
+        font-weight: 500 !important;
+        color : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
+    }
+
+    .react-datetime-picker__button svg {
+        stroke : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
+    }
+`
 
 const TimeLabelDiv = styled.div`
     flex: 2;
@@ -116,6 +127,20 @@ const TimeLabelDiv = styled.div`
 
 const SMultiSelect = styled(MultiSelect)`
     font-family: Source Sans Pro;
+    .search input{
+        color : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
+    }
+
+    /* Aligns the option label with the checkbox */
+    .select-item{
+        position: relative;
+    }
+    .select-item span{
+        position: absolute;
+        margin-top: 7px;
+        margin-left: 22px;
+    }
+
     ${props => props.theme.scheme === "dark" && `
         --rmsc-main: #4285f4;
         --rmsc-hover: #0e0c0a;
@@ -238,7 +263,6 @@ flex-direction: column;
 align-items: center;
 justify-content: center;
 flex: 1;
-font-family: Source Sans Pro;
 @media(min-width: 600px)
 {
     margin-right:  ${(props) => (props.mright ? props.mright : "")};
