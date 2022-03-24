@@ -278,7 +278,6 @@ const InputWrapper = styled.div`
     border: 1px solid ${props => props.theme.faucetBorder};
     border-radius: 5px;
     margin-top: 1.5rem;
-    width: 100%;
     padding: 1px;
     @media(max-width:600px)
     {
