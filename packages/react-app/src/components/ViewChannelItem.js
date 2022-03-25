@@ -152,20 +152,24 @@ function ViewChannelItem({ channelObjectProp }) {
       setIsPushAdmin(pushAdminAddress === account);
       setMemberCount(channelSubscribers.length);
       setSubscribed(subscribed);
-      setIsVerified(
-        Boolean(
-          channelObject && channelObject.verifiedBy &&
-            (channelObject.verifiedBy !== ZERO_ADDRESS ||
-              channelObject.addr === pushAdminAddress)
-        )
-      );
-      setCanUnverify(channelObject.verifiedBy == account);
       setChannelJson({ ...channelJson, addr: channelObject.addr });
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
     }
   };
+
+  React.useEffect(() => {
+    if (!channelObject) return
+    setIsVerified(
+      Boolean(
+        (channelObject.verifiedBy &&
+          channelObject.verifiedBy !== ZERO_ADDRESS) ||
+          channelObject.addr === pushAdminAddress
+      )
+    )
+    setCanUnverify(channelObject.verifiedBy == account)
+  }, [channelObject])
 
   // toast customize
   const LoaderToast = ({ msg, color }) => (
