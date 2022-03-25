@@ -389,7 +389,7 @@ function Navigation() {
                             //   dispatch(incrementStepIndex())
                             //   dispatch(setCommunicateOpen(true))
                             // }
-                            if(uid == 2 ){
+                            if(uid === 2 ){
                               // dispatch(incrementStepIndex())
                               if(!section.opened)
                               dispatch(setCommunicateOpen(true))
@@ -400,10 +400,11 @@ function Navigation() {
                             console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
-                        if(run && (stepIndex=== 1))
+                        if(run && (stepIndex === 1 && uid === 2))//sam
                         {
-                          for (let i=0;i<300;i++){}
-                          dispatch(incrementStepIndex())
+                          setTimeout(() => {
+                            dispatch(incrementStepIndex())
+                          }, 800);
                         }
                           }}              
                         >
@@ -465,7 +466,6 @@ function Navigation() {
           {Object.keys(drilldown).map(function(key) {
             const item = drilldown[key];
             const data = item.data;
-            
             return (
               <SectionItem
                   key={key}
@@ -480,8 +480,9 @@ function Navigation() {
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
-                    if(run && (stepIndex=== 2 || stepIndex === 5 || stepIndex === 6|| stepIndex === 7|| stepIndex === 8))
-                    {
+                    // console.log();
+                    if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 5 && data.name === "Inbox")|| (stepIndex === 7 && data.name === "Spam") ||  (stepIndex === 8 && data.name === "Receive Notifs") ))
+                    { //|| (stepIndex === 6 && data.name === "Channels")
                       dispatch(incrementStepIndex())
                     }
                     console.log(`Clicked  button`);

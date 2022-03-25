@@ -145,6 +145,7 @@ export default function App() {
       locale: { next: <strong aria-label="next">NEXT</strong> },
       placement: "center",
       target: "body",
+      defaultProps: false,
       // spotlightClicks: true,
       // disableOverlayClose: false,
     },
@@ -181,6 +182,7 @@ export default function App() {
       spotlightClicks: true,
       disableAnimation: false,
       disablefloating: false,
+      defaultProps: false,
     },
     {
       //2
@@ -215,6 +217,7 @@ export default function App() {
       spotlightClicks: true,
       disableAnimation: false,
       disablefloating: false,
+      defaultProps: false,
     },
     {
       //3
@@ -227,9 +230,6 @@ export default function App() {
       content: (
         <div>
           <h2>Click on Opt-in!</h2>
-          {/* <button onClick={
-      () => dispatch(incrementStepIndex())
-    }>Next</button> */}
         </div>
       ),
       placement: "top-center",
@@ -237,7 +237,7 @@ export default function App() {
       // target: `#addr-0x0000000000000000000000000000000000000000`, //production
       target: `#addr-0x2177cFc66474bBEce7Cbf114d780A5cfE78485De`, //development
       disableOverlayClose: false,
-      spotlightClicks: true,
+      // spotlightClicks: true,
       offsetTop: "-100px",
       defaultProps: false,
     },
@@ -255,17 +255,19 @@ export default function App() {
       target: ".inbox",
       spotlightClicks: true,
       disablefloating: true,
+      defaultProps: false,
     },
     {
       //6
       content: (
         <div>
-          <h2>You will get all your messages here.</h2>
+          <h2>You will get all your inbox messages here.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
-      placement: "left",
-      target: `#scrollstyle-secondary`,
+      placement: "top",
+      // position: "top-center",
+      target: `.hdvjVo`,
       // disableOverlayClose: false,
     },
     {
@@ -281,6 +283,7 @@ export default function App() {
       placement: "right-start",
       target: `.spam`,
       spotlightClicks: true,
+      defaultProps: false,
     },
     {
       //8
@@ -292,10 +295,54 @@ export default function App() {
       ),
       placement: "right-start",
       target: `.receive`,
+      // target: `.sc-AxheI`,
       spotlightClicks: true,
+      defaultProps: false,
     },
     {
       //9
+      content: (
+        <div>
+          <h2>You will Recieve all your Browser notifications here</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+        </div>
+      ),
+      placement: "right-start",
+      target: `#epns-browser`,
+      // target: `.sc-AxheI`,
+      spotlightClicks: true,
+      defaultProps: false,
+    },
+    {
+      //10
+      content: (
+        <div>
+          <h2>You will Recieve all your notifications here</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+        </div>
+      ),
+      placement: "right-start",
+      target: `#epns-app-ios`,
+      // target: `.sc-AxheI`,
+      spotlightClicks: true,
+      defaultProps: false,
+    },
+    {
+      //11
+      content: (
+        <div>
+          <h2>You will Recieve all your notifications here</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+        </div>
+      ),
+      placement: "right-start",
+      target: `#epns-app`,
+      // target: `.sc-AxheI`,
+      spotlightClicks: true,
+      defaultProps: false,
+    },
+    {
+      //12
       content: (
         <div>
           <h2>Tutorial Complete</h2>
@@ -310,6 +357,7 @@ export default function App() {
       locale: { next: <strong aria-label="next">NEXT</strong> },
       placement: "center",
       target: "body",
+      defaultProps: false,
       // spotlightClicks: true,
       // disableOverlayClose: false,
     },
@@ -326,7 +374,7 @@ export default function App() {
     }
     
     
-    if ( action === "skip" || index == 10 ) { //action === "close" ||
+    if ( action === "skip" || index == 13 ) { //action === "close" ||
       dispatch(setRun(false))
       dispatch(setIndex(0))
       dispatch(setWelcomeNotifsEmpty());

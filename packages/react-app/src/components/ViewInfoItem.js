@@ -13,8 +13,8 @@ function ViewInfoItem() {
   // render
   return (
     <>
-    <Container >
-      <ChannelInfo>
+    <Container id="epns-browser">
+      <ChannelInfo >
         <ChannelTitle>
           <>
           <AppLinkText>
@@ -27,8 +27,8 @@ function ViewInfoItem() {
         </ChannelTitle>
       </ChannelInfo>
     </Container>
-    <Container >
-      <ChannelInfo>
+    <Container id="epns-app-ios">
+      <ChannelInfo >
         <ChannelTitle>
           <>
           <AppLinkText>
@@ -41,8 +41,8 @@ function ViewInfoItem() {
         </ChannelTitle>
       </ChannelInfo>
     </Container>
-    <Container >
-      <ChannelInfo>
+    <Container id="epns-app">
+      <ChannelInfo >
         <ChannelTitle>
           <>
           <AppLinkText>
