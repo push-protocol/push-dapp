@@ -14,14 +14,21 @@
     .react-datetime-picker__inputGroup{
         width: 4rem !important;
     }
-   
+
+    .hAGKHU div {
+        margin-top: 0px !important;
+    }
+    
     
 }
 .hAGKHU{
         
     border-top-left-radius: 5px !important;
 border-bottom-left-radius: 5px !important;
+height: 40px !important;
+padding-top:0px !important;
 }
+
 
 
 .date{
