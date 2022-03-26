@@ -10,6 +10,20 @@
     font-weight: 500 !important;
 }
 
+@media (max-width:600px) {
+    .react-datetime-picker__inputGroup{
+        width: 4rem !important;
+    }
+   
+    
+}
+.hAGKHU{
+        
+    border-top-left-radius: 5px !important;
+border-bottom-left-radius: 5px !important;
+}
+
+
 .date{
     flex: 6;
     display: flex;
