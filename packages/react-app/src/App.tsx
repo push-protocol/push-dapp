@@ -303,8 +303,9 @@ export default function App() {
       //9
       content: (
         <div>
-          <h2>You will Recieve all your Browser notifications here</h2>
+          <h2>You can see all your notifications on the EPNS Browser Extension. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button><a href={`${process.env.REACT_APP_BROWSER_EXTENSION_URL}`} target="_blank">Download</a></button>
         </div>
       ),
       placement: "right-start",
@@ -317,8 +318,9 @@ export default function App() {
       //10
       content: (
         <div>
-          <h2>You will Recieve all your notifications here</h2>
+          <h2>You can see all your notifications on the EPNS ANDROID APP. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button><a href={`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
       ),
       placement: "right-start",
@@ -331,8 +333,9 @@ export default function App() {
       //11
       content: (
         <div>
-          <h2>You will Recieve all your notifications here</h2>
+          <h2>You can see all your notifications on the EPNS IOS APP. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button><a href={`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
       ),
       placement: "right-start",
