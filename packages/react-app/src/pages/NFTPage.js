@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga";
 
 import styled, { css, useTheme } from 'styled-components';
 import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Para, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
@@ -26,6 +27,9 @@ import { themeLight, themeDark } from "config/Themization";
 
 // Create Header
 function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
+  // React GA Analytics
+  ReactGA.pageview("/rockstars");
+
   const { account, library } = useWeb3React();
 
   const themes = useTheme();

@@ -82,6 +82,43 @@ const NavigationList = {
               }
             }
           },
+          receiveNotifs: {
+            src: "svg/share.svg",
+            iconFactory: null,
+            name: 'Receive Notifs',
+            title: 'Receive Notifs',
+            alt: 'Receive Notifs',
+            href: '/receive',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Receive Notifications',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_THIRD,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+        }
+      },
+      developer: {
+        src: "svg/developer.svg",
+        iconFactory: null,
+        name: 'Developer',
+        title: 'Check Developer Tab',
+        alt: 'Developer Tab Icon',
+        href: null,
+        newTab: false,
+        opened: false,
+        isRoute: true,
+        hasMenuLogic: true,
+  
+        drilldown: {
           createChannel: {
             uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
             src: "svg/channeladmin.svg",
@@ -97,28 +134,6 @@ const NavigationList = {
               title: 'Channel Dashboard',
               light: {
                 bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-                fg: themeLight.headerTagFg,
-              },
-              dark: {
-                bg: themeDark.headerTagBg,
-                fg: themeDark.headerTagFg,
-              }
-            }
-          },
-          receiveNotifs: {
-            src: "svg/share.svg",
-            iconFactory: null,
-            name: 'Receive Notifs',
-            title: 'Receive Notifs',
-            alt: 'Receive Notifs',
-            href: '/receive',
-            newTab: false,
-            isRoute: true,
-            hasMenuLogic: true,
-            headerTag: {
-              title: 'Receive Notifications',
-              light: {
-                bg: GLOBALS.COLORS.GRADIENT_THIRD,
                 fg: themeLight.headerTagFg,
               },
               dark: {
@@ -279,7 +294,6 @@ const NavigationList = {
               }
             }
           }, 
-          
         }
         
       }

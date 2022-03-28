@@ -15,13 +15,20 @@ function NavigationButton({ item, data, sectionID, active }) {
 
   let SelectedIcon;
   let RouteLogic;
+  let definedMargin;
 
   switch(sectionID) {
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE:
+      SelectedIcon = LeftBarPrimaryItemIcon;
+      definedMargin = "5px";
+      break;
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? "0px" : "5px";
       break;
     default:
       SelectedIcon = item.isSection ? LeftBarPrimarySectionIcon : LeftBarPrimaryItemIcon;
+      definedMargin = item.isSection ? "0px" : "5px";
   }
 
   if (data.isRoute) {
@@ -44,7 +51,7 @@ function NavigationButton({ item, data, sectionID, active }) {
       radius="12px"
       align="stretch"
       padding="10px"
-      margin={item.isSection ? "0px" : "5px"}
+      margin={definedMargin}
       active={active}
     >
       <ItemH

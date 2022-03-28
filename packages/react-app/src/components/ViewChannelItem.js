@@ -15,11 +15,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {ThemeProvider} from "styled-components";
-
-import { themeLight, themeDark } from "config/Themization";
+import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
 
 import { postReq } from "api";
+
+import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 import NotificationToast from "components/NotificationToast";
+
+import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial";
+
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
@@ -474,12 +478,16 @@ function ViewChannelItem({ channelObjectProp }) {
               rel="nofollow"
               
             >
-              {channelJson.name}
-              {isVerified && (
-                <Subscribers style={{ display: "inline", marginLeft: "8px" }}>
-                  <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
-                </Subscribers>
-              )}
+              <Span>
+                {channelJson.name}
+                {isVerified && (
+                  <Span 
+                    margin="0px 5px"
+                  >
+                   <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
+                  </Span>
+                )}
+              </Span>
             </ChannelTitleLink>
           )}
         </ChannelTitle>
@@ -512,41 +520,43 @@ function ViewChannelItem({ channelObjectProp }) {
               </SkeletonWrapper>
             </>
           ) : (
-            <ColumnFlex>
-              <FlexBox style={{ marginBottom: "5px" }}>
-                <Subscribers>
-                  <IoMdPeople size={20} color={themes.viewChannelSecondaryIcon} />
-                  <SubscribersCount>{memberCount}</SubscribersCount>
-                </Subscribers>
+            <ItemH
+              align="center"
+              justify="flex-start"
+              margin="0px -5px"
+            >
+              <MetaInfoDisplayer
+                externalIcon={<IoMdPeople size={20} color={themes.viewChannelSecondaryIcon} />}
+                internalIcon={null}
+                text={memberCount}
+                bgColor={themes.viewChannelSecondaryBG}
+              />
 
-                <Subscribers style={{ marginLeft: "10px" }}>
-                  <FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />
-                  <SubscribersCount
-                    onClick={() => {
-                      copyToClipboard(channelJson.addr);
-                      setCopyText("copied");
-                    }}
-                    onMouseEnter={() => {
-                      setCopyText("click to copy");
-                    }}
-                    onMouseLeave={() => {
-                      setCopyText(channelJson.addr);
-                    }}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <AiOutlineShareAlt />
-                    {formatAddress(copyText)}
-                  </SubscribersCount>
-                </Subscribers>
-              </FlexBox>
-              {verifierDetails && (
-                <Subscribers>
-                  <VerifiedBy>Verified by:</VerifiedBy>
-                  <VerifierIcon src={verifierDetails.icon} />
-                  <VerifierName>{verifierDetails.name}</VerifierName>
-                </Subscribers>
-              )}
-            </ColumnFlex>
+              <MetaInfoDisplayer
+                externalIcon={<FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />}
+                internalIcon={<AiOutlineShareAlt />}
+                text={formatAddress(copyText)}
+                bgColor={themes.viewChannelSecondaryBG}
+                onClick={() => {
+                  copyToClipboard(channelJson.addr);
+                  setCopyText("copied");
+                }}
+                onMouseEnter={() => {
+                  setCopyText("click to copy");
+                }}
+                onMouseLeave={() => {
+                  setCopyText(channelJson.addr);
+                }}
+              />
+
+              {isChannelTutorialized(channelObject.addr) && 
+                <ChannelTutorial 
+                  addr={channelObject.addr}
+                  bgColor={themes.viewChannelSecondaryBG}
+                />
+              }
+
+            </ItemH>
           )}
         </ChannelMeta>
       </ChannelInfo>
@@ -648,7 +658,7 @@ const Container = styled.div`
 
   background: ${props => props.theme.mainBg};
   border-radius: 10px;
-  border: 1px solid ${props => props.theme.viewChannelIconBorder};
+  border: 1px solid ${props => props.theme.viewChannelOuterBorder};
 
   margin: 15px 0px;
   justify-content: center;
@@ -708,27 +718,45 @@ const ChannelLogoImg = styled.img`
 const ChannelInfo = styled.div`
   flex: 1;
   margin: 5px 10px;
-  min-width: 120px;
+  min-width: 240px;
   flex-grow: 4;
   flex-direction: column;
   display: flex;
 
+  @media (max-width: 480px) {
+    min-width: 210px;
+  }
 `;
 
-const ChannelTitle = styled.div`
-  margin-bottom: 5px;
+const ChannelTitle = styled(ItemH)`
+  padding: 5px 10px 5px 0px;
+  justify-content: flex-start;
+  margin: 0;
+  flex: initial;
+  align-items: center;
 `;
 
 const ChannelTitleLink = styled.a`
   text-decoration: none;
-  font-weight: 600;
-  color: ${props => props.theme.viewChannelLink};
-  font-size: 20px;
+  display: flex;
+  flex: 1;
+  align-item: center;
   &:hover {
     text-decoration: underline;
     cursor: pointer;
     pointer: hand;
   }
+
+  & > Span {
+    font-weight: 600;
+    color: ${props => props.theme.viewChannelLink};
+    font-size: 20px;
+  }
+
+  & > Span > Span {
+    vertical-align: middle;
+  }
+
 `;
 
 const VerifiedBy = styled.span`
@@ -737,7 +765,6 @@ const VerifiedBy = styled.span`
   line-height: 20px;
   letter-spacing: 0.05em;
   font-weight: 600;
-  display: inline-block;
 `;
 
 const VerifierIcon = styled.img`
@@ -760,6 +787,7 @@ const ChannelDesc = styled.div`
   display: flex;
   font-size: 14px;
   color: rgba(0, 0, 0, 0.75);
+  padding: 5px 0px 10px 0px;
   font-weight: 400;
   flex-direction: column;
   color: ${props => props.theme.color};
@@ -774,6 +802,7 @@ const ChannelMeta = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  padding: 5px 0px;
   font-size: 13px;
 `;
 
