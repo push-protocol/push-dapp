@@ -60,7 +60,8 @@ export default function App() {
     const {
       run,
       stepIndex,
-      isCommunicateOpen
+      isCommunicateOpen,
+      tutorialContinous
     } = useSelector((state: any) => state.userJourney);
 
   React.useEffect(()=>{
@@ -227,22 +228,32 @@ export default function App() {
     },
     {
       //4
+    },
+    {
+      //5
       content: (
         <div>
           <h2>Click on Opt-in!</h2>
+          <p> You can click into any number of elements as you want</p>
+          <button onClick={
+            () => dispatch(incrementStepIndex())
+          }>Next</button>
         </div>
       ),
-      placement: "top-center",
-      position: "top-center",
+      // placement: "top-center",
+      // position: "top-center",
       // target: `#addr-0x0000000000000000000000000000000000000000`, //production
-      target: `#addr-0x2177cFc66474bBEce7Cbf114d780A5cfE78485De`, //development
+      // target: `#addr-0x2177cFc66474bBEce7Cbf114d780A5cfE78485De`, //development
+      placement: "center",
+      target: "body",
       disableOverlayClose: false,
       // spotlightClicks: true,
       offsetTop: "-100px",
       defaultProps: false,
     },
+    // {},//6
     {
-      //5
+      //6
       content: (
         <div>
           <h2>Click on Inbox!</h2>
@@ -258,20 +269,22 @@ export default function App() {
       defaultProps: false,
     },
     {
-      //6
+      //7
       content: (
         <div>
           <h2>You will get all your inbox messages here.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
-      placement: "top",
+      // placement: "top",
       // position: "top-center",
-      target: `.hdvjVo`,
+      // target: `.hdvjVo`,
+      placement: "center",
+      target: "body",
       // disableOverlayClose: false,
     },
     {
-      //7
+      //8
       content: (
         <div>
           <h2>You will get all your spam messages here.</h2>
@@ -286,10 +299,25 @@ export default function App() {
       defaultProps: false,
     },
     {
-      //8
+      //9
       content: (
         <div>
-          <h2>You will Recieve all your notifications here</h2>
+          <h2>You will get all your spam messages here.</h2>
+          {/* <button onClick={
+      () => dispatch(incrementStepIndex())
+    }>Next</button> */}
+        </div>
+      ),
+      placement: "center",
+      target: `body`,
+      spotlightClicks: true,
+      defaultProps: false,
+    },
+    {
+      //10
+      content: (
+        <div>
+          <h2>You Can Recieve all your notifications here</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
@@ -300,10 +328,10 @@ export default function App() {
       defaultProps: false,
     },
     {
-      //9
+      //11
       content: (
         <div>
-          <h2>You will Recieve all your Browser notifications here</h2>
+          <h2>You can Recieve all your Browser notifications through our extension as well</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
@@ -314,10 +342,10 @@ export default function App() {
       defaultProps: false,
     },
     {
-      //10
+      //12
       content: (
         <div>
-          <h2>You will Recieve all your notifications here</h2>
+          <h2>Our IOS App here</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
@@ -328,10 +356,10 @@ export default function App() {
       defaultProps: false,
     },
     {
-      //11
+      //13
       content: (
         <div>
-          <h2>You will Recieve all your notifications here</h2>
+          <h2>Our Android App Here</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
@@ -342,7 +370,7 @@ export default function App() {
       defaultProps: false,
     },
     {
-      //12
+      //14
       content: (
         <div>
           <h2>Tutorial Complete</h2>
@@ -374,7 +402,7 @@ export default function App() {
     }
     
     
-    if ( action === "skip" || index == 13 ) { //action === "close" ||
+    if ( action === "skip" || index == 15 ) { //action === "close" ||
       dispatch(setRun(false))
       dispatch(setIndex(0))
       dispatch(setWelcomeNotifsEmpty());
@@ -390,12 +418,11 @@ export default function App() {
       <Joyride
           run={run}
           steps={steps}
-          // continuous={true}
+          continuous={tutorialContinous}
           stepIndex={stepIndex}
           primaryProps={false}
-          // scrollToFirstStep={true}
-          // disableOverlayClose={false}
-          // showProgress={true}
+          hideBackButton={true}
+          hideBackButton={false}
           disableScrolling={true}
           disableScrollParentFix={true}
           disableFlip={true}
