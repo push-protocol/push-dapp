@@ -481,7 +481,7 @@ function Navigation() {
                   refresh={refresh}
                   onClick={() => {
                     // console.log();
-                    if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 9 && data.name === "Receive Notifs") ))
+                    if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ))
                     { //|| (stepIndex === 6 && data.name === "Channels")
                       dispatch(incrementStepIndex())
                     }

@@ -303,6 +303,7 @@ export default function App() {
       content: (
         <div>
           <h2>You will get all your spam messages here.</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
           {/* <button onClick={
       () => dispatch(incrementStepIndex())
     }>Next</button> */}
@@ -331,8 +332,9 @@ export default function App() {
       //11
       content: (
         <div>
-          <h2>You can Recieve all your Browser notifications through our extension as well</h2>
+          <h2>You can see all your notifications on the EPNS Browser Extension. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button><a href={`${process.env.REACT_APP_BROWSER_EXTENSION_URL}`} target="_blank">Download</a></button>
         </div>
       ),
       placement: "right-start",
@@ -345,8 +347,9 @@ export default function App() {
       //12
       content: (
         <div>
-          <h2>Our IOS App here</h2>
+          <h2>You can see all your notifications on the EPNS ANDROID APP. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button><a href={`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
       ),
       placement: "right-start",
@@ -359,8 +362,9 @@ export default function App() {
       //13
       content: (
         <div>
-          <h2>Our Android App Here</h2>
+          <h2>You can see all your notifications on the EPNS IOS APP. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button><a href={`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
       ),
       placement: "right-start",
