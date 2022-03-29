@@ -308,6 +308,10 @@ export const Anchor = styled.a`
   }
 `
 
+export const AnchorLink = styled(Anchor)`
+  background-color:${props => props.theme.scheme === "dark" ? props.bg :"#d1cdcd"};
+`
+
 export const RouterLink = styled(Link)`
   display: flex;
   flex-direction: ${props => props.direction || 'row'};

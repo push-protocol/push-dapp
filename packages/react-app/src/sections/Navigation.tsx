@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {Section, Item, ItemH, Span, AnchorLink as Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
 import navigationList from "config/NavigationList";
@@ -568,6 +568,7 @@ function Navigation() {
                   <FaDiscord size={15} color="#fff"/>
                 </Anchor>
                 <Anchor
+                  // style={{backgroundColor:"red"}}
                   title="Open Github"
                   href="https://github.com/ethereum-push-notification-service"
                   target="_blank"
