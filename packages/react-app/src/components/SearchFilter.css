@@ -23,6 +23,7 @@
         margin: 0% !important;
         font-size:16px !important;
         width: 2rem !important;
+        margin-top: 0px !important;
         /* height: 1.5rem; */
     }
     .hAGKHU {
@@ -33,6 +34,7 @@
         padding: 0% !important;
         align-items: center !important;
         justify-content: center !important;
+       
         
     }
     
@@ -54,6 +56,10 @@
     font-weight: 500 !important;
 }
 
+.hAGKHU div {
+    margin-top: -0.4rem !important;
+    /* height: 1.5rem; */
+}
 
 .react-datetime-picker__inputGroup__minute{
     font-weight: 400 !important;
