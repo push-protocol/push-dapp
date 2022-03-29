@@ -77,7 +77,7 @@ export default function SearchFilter(props)
                 </InputWrapper> 
                 </SectionSearch>
                 <SectionSearch mleft='3.5rem'>
-                        <RangeSection>
+                        <RangeSection mtop="0.5rem">
                             <TimeLabelDiv>
                                 <div>Start Date</div>
                             </TimeLabelDiv>
@@ -168,8 +168,12 @@ border-radius: 5px;
 justify-content: space-between;
 align-items: center;
 height: "40px";
-margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
+
 position: relative;
+@media(max-width:600px)
+{
+    margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
+}
 `;
 
 const Container = styled.div`
@@ -254,6 +258,8 @@ font-family: Source Sans Pro;
     flex-direction: column;
     justify-content: center;
     align-item: center;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
 }
 `;
 
@@ -267,6 +273,7 @@ flex: 1;
 {
     margin-right:  ${(props) => (props.mright ? props.mright : "")};
     margin-left:  ${(props) => (props.mleft ? props.mleft : "")};
+    margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
 }
 `;
 
