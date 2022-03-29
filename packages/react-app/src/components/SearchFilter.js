@@ -83,7 +83,7 @@ export default function SearchFilter(props)
                             </TimeLabelDiv>
                             <SDateTimePicker className="date" value={startDate} onChange={setStartDate}/>
                         </RangeSection>
-                        <RangeSection mtop="1.5rem">
+                        <RangeSection mttop="1.5rem">
                             <TimeLabelDiv>
                                 <div>End Date</div>
                             </TimeLabelDiv>
@@ -170,6 +170,7 @@ align-items: center;
 height: "40px";
 
 position: relative;
+margin-top:  ${(props) => (props.mttop ? props.mttop : "")};
 @media(max-width:600px)
 {
     margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
