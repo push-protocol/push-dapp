@@ -2,9 +2,7 @@ import React from "react";
 import {useState,useEffect} from "react";
 import { MultiSelect } from "react-multi-select-component";
 import './SearchFilter.css';
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import TimePicker from 'react-time-picker';
 import styled, {useTheme} from "styled-components";
 import {ThemeProvider} from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
@@ -32,65 +30,76 @@ export default function SearchFilter(props)
     var options = [];
     props.notifications.map(each => options.push({label : each.app , value : each.channel }));
     var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
+    const [showFilter,setShowFilter] = useState(false); 
 
 
     return(
      <ThemeProvider theme={themes}>
          <Container>
-            <TopBar>
+            <TopBar mbtm={showFilter ? '1rem' : '0px'}>
                 <Left>
                 {themes.scheme === 'light' ? ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterIcon.svg' />) : ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterw.png' />)}
-                    <span style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}}>Filter Notifications</span> 
+                    <span className="showfilter" onClick={()=> {showFilter ? setShowFilter(false) : setShowFilter(true)}}>
+                        <span className="filter" style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}} >Filter Notifications</span> 
+                        <span className="arrow"> <img src="/svg/arrow.svg"/> </span>
+                    </span>
+                    
                 </Left>
-                <Buttons>
+                {
+                    showFilter ? ( <Buttons>
                     <ButtonFeed bgColor='#e20880' onClick={applySearch}>
                             Apply
                     </ButtonFeed>    
                     <ButtonFeed bgColor='#35c5f3' onClick={reset}>
                         Reset
                     </ButtonFeed> 
-                </Buttons>
+                </Buttons>) : (<></>)
+                }
+               
+               
             </TopBar>
 
-            <SearchOptions>
-                <SectionSearch mright='3.5rem'>
-                 
-                <SelectChannel>
-                    <SMultiSelect
-                        options={uniqueOptions}
-                        valueRenderer={ () => {
-                            if(selectedOption.length === 0)  return 'Show Notifications from'
-                            return `${selectedOption.length} Selected`
-                        }}
-                        value={selectedOption}
-                        onChange={setSelectedOption}
-                        labelledBy="Search Notifications from"
-                        placeholder="Search Notifications from"
-                    />
-
-                </SelectChannel>
-                <InputWrapper>
-                
-                <input value={search} type="text" className="input2" placeholder="Search With Keyword" style={{"fontFamily":"Source Sans Pro"}} onChange={(e) => {
-                    setSearch(e.target.value);
-                }}/>
-                </InputWrapper> 
-                </SectionSearch>
-                <SectionSearch mleft='3.5rem'>
-                        <RangeSection mtop="0.5rem">
-                            <TimeLabelDiv>
-                                <div>Start Date</div>
-                            </TimeLabelDiv>
-                            <SDateTimePicker className="date" value={startDate} onChange={setStartDate}/>
-                        </RangeSection>
-                        <RangeSection mttop="1.5rem">
-                            <TimeLabelDiv>
-                                <div>End Date</div>
-                            </TimeLabelDiv>
-                            <SDateTimePicker className="date" value={endDate} onChange={setEndDate}/>
-                        </RangeSection>
-                </SectionSearch>
-            </SearchOptions>
+            {
+                    showFilter ? ( <SearchOptions>
+                        <SectionSearch mright='3.5rem'>
+                         
+                        <SelectChannel>
+                            <SMultiSelect
+                                options={uniqueOptions}
+                                valueRenderer={ () => {
+                                    if(selectedOption.length === 0)  return 'Show Notifications from'
+                                    return `${selectedOption.length} Selected`
+                                }}
+                                value={selectedOption}
+                                onChange={setSelectedOption}
+                                labelledBy="Search Notifications from"
+                                placeholder="Search Notifications from"
+                            />
+        
+                        </SelectChannel>
+                        <InputWrapper>
+                        
+                        <input value={search} type="text" className="input2" placeholder="Search With Keyword" style={{"fontFamily":"Source Sans Pro"}} onChange={(e) => {
+                            setSearch(e.target.value);
+                        }}/>
+                        </InputWrapper> 
+                        </SectionSearch>
+                        <SectionSearch mleft='3.5rem'>
+                                <RangeSection mtop="0.5rem">
+                                    <TimeLabelDiv>
+                                        <div>Start Date</div>
+                                    </TimeLabelDiv>
+                                    <SDateTimePicker className="date" value={startDate} onChange={setStartDate}/>
+                                </RangeSection>
+                                <RangeSection mttop="1.5rem">
+                                    <TimeLabelDiv>
+                                        <div>End Date</div>
+                                    </TimeLabelDiv>
+                                    <SDateTimePicker className="date" value={endDate} onChange={setEndDate}/>
+                                </RangeSection>
+                        </SectionSearch>
+                    </SearchOptions>) : (<></>)
+                }
          </Container>
     </ThemeProvider>
     )
@@ -193,8 +202,10 @@ const TopBar = styled.div`
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-border-bottom: 1px solid ${props => props.theme.faucetBorder};;
-margin-bottom: 1rem;
+border-bottom: 1px solid ${props => props.theme.faucetBorder};
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+margin-bottom: ${(props) => (props.mbtm ? props.mbtm : "")};
 font-family: Source Sans Pro;
 `;
 
