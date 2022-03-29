@@ -12,7 +12,7 @@
 
 
 
-@media (max-width:600px) {
+@media (max-width:850px) {
     .react-datetime-picker__inputGroup{
         width: 4rem !important;
         margin-right: -2px !important;
@@ -20,12 +20,20 @@
     }
 
     .hAGKHU div {
-        margin-top: 0% !important;
+        margin: 0% !important;
         font-size:16px !important;
-        padding: 3px;
+        width: 2rem !important;
+        /* height: 1.5rem; */
     }
     .hAGKHU {
+        display: flex !important;
+        flex-direction: row !important;
         margin-top: 0px !important;
+        width: 3rem !important;
+        padding: 0% !important;
+        align-items: center !important;
+        justify-content: center !important;
+        
     }
     
     .react-datetime-picker__button
@@ -38,21 +46,45 @@
         width: 1rem !important;
         margin: 0px !important;
     }
+   
     
 }
 .react-datetime-picker__inputGroup__input--hasLeadingZero
 {
     font-weight: 500 !important;
 }
+
+
+.react-datetime-picker__inputGroup__minute{
+    font-weight: 400 !important;
+}
+
+.react-datetime-picker__clock{
+    display: none;
+}
+
+
+
 .hAGKHU{
         
     border-top-left-radius: 5px !important;
 border-bottom-left-radius: 5px !important;
-height: 40px !important;
-padding:0px !important;
+/* height: 40px !important; */
+    display: flex !important;
+    flex-direction: row !important;
+    margin-top: 0px !important;
+    width: 3rem !important;
+    padding: 0% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+
 }
 
-
+.react-datetime-picker__inputGroup__divider
+{
+    font-weight: 400;
+}
 
 .date{
     flex: 6;
