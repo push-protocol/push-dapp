@@ -568,7 +568,6 @@ function Navigation() {
                   <FaDiscord size={15} color="#fff"/>
                 </Anchor>
                 <Anchor
-                  // style={{backgroundColor:"red"}}
                   title="Open Github"
                   href="https://github.com/ethereum-push-notification-service"
                   target="_blank"
