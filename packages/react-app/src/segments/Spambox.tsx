@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
 import SpamBox from "segments/spam";
+import { postReq } from "api";
 import {
   api,
   utils,
