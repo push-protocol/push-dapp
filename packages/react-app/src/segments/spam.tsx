@@ -5,6 +5,7 @@ import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
+import SearchFilter from '../components/SearchFilter';
 import {
   api,
   utils,
@@ -18,12 +19,9 @@ import {
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
 import { updateTopNotifications } from "redux/slices/notificationSlice";
-
 import {ThemeProvider} from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
-
-const NOTIFICATIONS_PER_PAGE = 10;
+const NOTIFICATIONS_PER_PAGE = 1000000;
 // Create Header
 function SpamBox({ currentTab }) {
   const dispatch = useDispatch();
@@ -45,9 +43,62 @@ function SpamBox({ currentTab }) {
     chainId: chainId,
     verifyingContract: epnsCommReadProvider?.address,
   };
-
+  const [filteredNotifications , setFilteredNotifications] = React.useState([]);
+  const [filter , setFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
+  const reset = ()=>setFilter(false);
+  const filterNotifications = async (query , channels , startDate , endDate) => {
+    if(loading)return;
+    setLoading(true);
+    setFilter(true);
+    if(startDate == null)startDate = new Date('January 1, 2000');
+    if(endDate == null)endDate = new Date('January 1, 3000');
+    startDate = startDate.getTime()/1000;
+    endDate = endDate.getTime()/1000;
+    var Filter = {
+        channels : channels , 
+        date : {lowDate : startDate , highDate : endDate}
+    };
+    if(channels.length == 0)delete Filter.channels;
+
+
+    setFilteredNotifications([]);
+    if(notifications.length >= NOTIFICATIONS_PER_PAGE){
+        try {
+            const {count , results} = await postReq("/feeds/search", {
+                subscriber : account,
+                searchTerm: query,
+                filter: Filter,
+                isSpam: 1,
+                page: 1,
+                pageSize: 5,
+                op: "read"
+            });
+            const parsedResponse = utils.parseApiResponse(results);
+            setFilteredNotifications([parsedResponse]);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    else{
+        console.log(notifications);
+        const regex = new RegExp(`^.*?${query.toLowerCase()}.*?$`);
+        let filterNotif = [];
+        for(const notif of notifications){
+            if(
+                ( (Filter.channels === undefined ?  true : (Filter.channels.includes(notif.channel)))&&
+            notif.epoch >= startDate && notif.epoch <= endDate
+            && await notif.message.toLowerCase().match(regex)!==null )
+            )
+            filterNotif.push(notif);
+        }
+        setFilteredNotifications(filterNotif);
+    }
+    setLoading(false);
+}
 
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
@@ -59,21 +110,23 @@ function SpamBox({ currentTab }) {
         page,
         envConfig.apiUrl
       );
-      const parsedResponsePromise = utils
-        .parseApiResponse(results)
-        .map(async (elem: any, i: any) => {
-          elem.channel = results[i].channel;
-          const {
-            data: { subscribers },
-          } = await postReq("/channels/get_subscribers", {
-            channel: results[i].channel,
-            op: "read",
-          });
-          elem.subscribers = subscribers;
-          return { ...elem };
+        let parsedResponse = utils.parseApiResponse(results);
+          parsedResponse.forEach( (each,i) => {
+              each.date = results[i].epoch;
+              each.epoch = (new Date(each.date).getTime() / 1000);
+          })
+          const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+            elem.channel = results[i].channel;
+            const {
+              data: { subscribers },
+            } = await postReq("/channels/get_subscribers", {
+              channel: results[i].channel,
+              op: "read",
+            });
+            elem.subscribers = subscribers;
+            return { ...elem };
         });
-      const parsedResponse = await Promise.all(parsedResponsePromise);
-      // get all the subsc
+        parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (count === 0) {
         dispatch(setFinishedFetching());
@@ -100,9 +153,12 @@ function SpamBox({ currentTab }) {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponsePromise = utils
-        .parseApiResponse(results)
-        .map(async (elem: any, i: any) => {
+      let parsedResponse = utils.parseApiResponse(results);
+        parsedResponse.forEach( (each,i) => {
+            each.date = results[i].epoch;
+            each.epoch = (new Date(each.date).getTime() / 1000);
+        })
+        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
           const {
             data: { subscribers },
@@ -113,7 +169,7 @@ function SpamBox({ currentTab }) {
           elem.subscribers = subscribers;
           return { ...elem };
         });
-      const parsedResponse = await Promise.all(parsedResponsePromise);
+      parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(
         updateTopNotifications({
           notifs: parsedResponse,
@@ -195,6 +251,7 @@ function SpamBox({ currentTab }) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
+      <SearchFilter notifications = {notifications} filterNotifications = {filterNotifications} filter={filter} reset={reset}/>
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
             <Loader type="Oval" color="#35c5f3" height={40} width={40} />
@@ -202,7 +259,7 @@ function SpamBox({ currentTab }) {
         )}
         {notifications && (
           <Items id="scrollstyle-secondary">
-            {notifications.map((oneNotification, index) => {
+            {(filter? filteredNotifications : notifications).map((oneNotification, index) => {
               const {
                 cta,
                 title,
@@ -242,7 +299,7 @@ function SpamBox({ currentTab }) {
         {loading && !bgUpdateLoading && (
           <Loader type="Oval" color="#35c5f3" height={40} width={40} />
         )}
-        {!loading && !notifications.length && (
+        {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
           <CenteredContainerInfo>
             <DisplayNotice
               title="You currently have no spam notifications."
@@ -279,6 +336,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   max-height: 100vh;
+  background: ${props => props.theme.mainBg};
 
   // padding: 20px;
   // font-size: 16px;

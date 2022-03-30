@@ -5,10 +5,10 @@ import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {Section, Item, ItemH, Span, AnchorLink as Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
-import NavigationList from "config/NavigationList";
+import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
 
@@ -23,7 +23,7 @@ function Navigation() {
 
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[0].data.drilldown[3].data.name = channelDetails.name;
+      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
     }
     const theme = useTheme();
     const location = useLocation();
@@ -36,15 +36,15 @@ function Navigation() {
           setLoading(true);
 
           // Set Primary List
-          const primaryList = returnTransformedList(NavigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
+          const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
   
           // Set Secondary List
-          const secondaryList = returnTransformedList(NavigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+          const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
 
           // Set Nav List
           let count = -1;
-          let navList = returnNavList(NavigationList.primary, count);
-          navList = Object.assign(navList, returnNavList(NavigationList.secondary, Object.keys(navList).length));
+          let navList = returnNavList(navigationList.primary, count);
+          navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
           
           const finalList = {
             primary: primaryList,

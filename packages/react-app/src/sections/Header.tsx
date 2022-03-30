@@ -139,26 +139,29 @@ function Header({ isDarkMode, darkModeToggle }) {
         
         {navigationSetup && showNavBar && active && !error &&
           <NavMenuContainer
-            align="flex-start"
+            tabletAlign="flex-start"
           >
-            <NavMenu
-            >
+            <NavMenu>
               <Profile />
-              
-              {Object.keys(navigationSetup.navigation).map(function(key) {
-                return (
-                  <Item
-                    onClick={() => {setShowNavBar(!showNavBar)}}
-                  >
-                    <NavigationButton
-                      item={navigationSetup.navigation[key]}
-                      data={navigationSetup.navigation[key].data}
-                      sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY}
-                      active={navigationSetup.navigation[key].active}
-                    />
-                  </Item>
-                );
-              })}
+
+              <NavMenuInner
+                tabletAlign="flex-start"
+              >
+                {Object.keys(navigationSetup.navigation).map(function(key) {
+                  return (
+                    <Item
+                      onClick={() => {setShowNavBar(!showNavBar)}}
+                    >
+                      <NavigationButton
+                        item={navigationSetup.navigation[key]}
+                        data={navigationSetup.navigation[key].data}
+                        sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
+                        active={navigationSetup.navigation[key].active}
+                      />
+                    </Item>
+                  );
+                })}
+              </NavMenuInner>
             </NavMenu>
 
             <Item
@@ -318,6 +321,16 @@ const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
   padding: 10px 10px;
+`
+
+const NavMenuInner = styled(Item)`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y: scroll;
+  height: calc(100vh - 70px);
 `
 
 const Notice = styled.span`
