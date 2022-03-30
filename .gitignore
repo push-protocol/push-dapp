@@ -22,8 +22,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+/packages/react-app/node_modules/
 # subgraph
 /packages/subgraph/build/
+/packages/subgraph/node_modules/
 /packages/subgraph/src/types/
 
 # Created by .ignore support plugin (hsz.mobi)
