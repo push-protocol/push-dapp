@@ -2,7 +2,6 @@ import React from "react";
 import {useState,useEffect} from "react";
 import { MultiSelect } from "react-multi-select-component";
 import './SearchFilter.css';
-import "react-datepicker/dist/react-datepicker.css";
 import styled, {useTheme} from "styled-components";
 import {ThemeProvider} from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
