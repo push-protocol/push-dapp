@@ -8,7 +8,7 @@ import styled, { useTheme, css } from "styled-components";
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
-import NavigationList from "config/NavigationList";
+import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
 
@@ -18,13 +18,12 @@ import {useSelector} from "react-redux";
 // Create Header
 function Navigation() {
     const { channelDetails } = useSelector((state: any) => state.admin);
-    console.log(channelDetails);
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[0].data.drilldown[3].data.name = channelDetails.name;
+      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
     }
     const theme = useTheme();
     const location = useLocation();
@@ -37,15 +36,15 @@ function Navigation() {
           setLoading(true);
 
           // Set Primary List
-          const primaryList = returnTransformedList(NavigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
+          const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
   
           // Set Secondary List
-          const secondaryList = returnTransformedList(NavigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+          const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
 
           // Set Nav List
           let count = -1;
-          let navList = returnNavList(NavigationList.primary, count);
-          navList = Object.assign(navList, returnNavList(NavigationList.secondary, Object.keys(navList).length));
+          let navList = returnNavList(navigationList.primary, count);
+          navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
           
           const finalList = {
             primary: primaryList,
@@ -605,6 +604,23 @@ const Primary = styled(Item)`
   justify-content: flex-start;
   background: '#fff';
   overflow-y: scroll;
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(linear,
+                       left top,
+                       left bottom,
+                       color-stop(0.44, #35c5f3),
+                       color-stop(0.72, #35b0f3),
+                       color-stop(0.86, #35a1f3));
+  }
   padding: 0px 0px 20px 0px;
 `
 

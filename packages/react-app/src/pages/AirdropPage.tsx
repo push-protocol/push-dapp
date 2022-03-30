@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga";
 
 import styled, { css, useTheme } from 'styled-components';
 import {Section, Content, Item, ItemH, ItemBreak, Para, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
@@ -28,6 +29,9 @@ dotenv.config();
 
 // Other Information section
 function AirdropPage() {
+  // React GA Analytics
+  ReactGA.pageview("/airdrop");
+
   const themes = useTheme();
 
   const { account, library } = useWeb3React();

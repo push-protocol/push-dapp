@@ -7,7 +7,7 @@ import { toast as toaster } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
 
-import { ALLOWED_CORE_NETWORK } from "pages/Home";
+import { ALLOWED_CORE_NETWORK } from "pages/DeprecatedHome";
 import AddDelegateModal from "./AddDelegateModal";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import ActivateChannelModal from "./ActivateChannelModal";

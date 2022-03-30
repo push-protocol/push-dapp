@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ReactGA from "react-ga";
 
 import {
   Section,
@@ -40,6 +41,9 @@ const isEmpty = (field) => {
 };
 
 const SupportPage = () => {
+  // React GA Analytics
+  ReactGA.pageview("/support");
+
   const contactFormTopics = ["Support", "Integrate", "Others"];
 
   const [contactFormProcessing, setContactFormProcessing] = React.useState(0);

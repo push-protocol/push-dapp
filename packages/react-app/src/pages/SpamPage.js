@@ -39,7 +39,7 @@ const CHANNEL_TAB = 0; //Default to 1 which is the channel tab
 
 // Create Header
 function InboxPage() {
-  ReactGA.pageview("/inbox");
+  ReactGA.pageview("/spam");
 
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();

@@ -149,6 +149,7 @@ export default function App() {
           {(!active) && (
             <Item
               justify="flex-start"
+              padding="15px"
             >
               <ProviderLogo
                 src="./epnshomelogo.png"
