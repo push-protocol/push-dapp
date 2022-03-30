@@ -40,7 +40,11 @@ export default function SearchFilter(props)
                 {themes.scheme === 'light' ? ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterIcon.svg' />) : ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterw.png' />)}
                     <span className="showfilter" onClick={()=> {showFilter ? setShowFilter(false) : setShowFilter(true)}}>
                         <span className="filter" style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}} >Filter Notifications</span> 
-                        <span className="arrow"> <img src="/svg/arrow.svg"/> </span>
+                        <span className="arrow">
+                            <ToggleArrowImg>
+                                <img alt="arrow" className={`${showFilter ? "down" : "up"}`} src="/svg/arrow.svg"/> 
+                            </ToggleArrowImg>
+                        </span>
                     </span>
                     
                 </Left>
@@ -311,9 +315,20 @@ const InputWrapper = styled.div`
     {
         margin-bottom: 1rem;
     }
-    
-
 `;
 
+
+const ToggleArrowImg = styled.div`
+
+    .down {
+        transform: rotate(-180deg);
+        transition: transform .25s;
+    }
+
+    .up{
+        transform: rotate(-360deg);
+        transition: transform .25s;
+    }
+`
 
 
