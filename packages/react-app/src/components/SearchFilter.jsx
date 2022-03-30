@@ -106,6 +106,7 @@ export default function SearchFilter(props)
 
 
 const SDateTimePicker = styled(DateTimePicker)`
+    padding-right: 4px;
     .react-datetime-picker__inputGroup__input{
         font-weight: 500 !important;
         color : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
@@ -129,6 +130,10 @@ const TimeLabelDiv = styled.div`
     div{
         margin-top: 10px;
         font-family: Source Sans Pro;
+    }
+
+    @media(max-width: 400px){
+        padding: 0 4px;
     }
 `
 
@@ -194,6 +199,11 @@ flex-direction: column;
 border: 1px solid ${props => props.theme.faucetBorder};
 border-radius: 10px;
 margin: 1.3rem;
+
+@media(max-width: 400px){
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
 `;
 
 
