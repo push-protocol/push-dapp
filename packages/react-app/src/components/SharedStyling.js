@@ -389,6 +389,15 @@ export const A = styled(Anchor)`
   text-transform: initial;
 `
 
+export const C = styled(Anchor)`
+  display: inline;
+  color: #4292e4;
+  background: transparent;
+  padding: 0px;
+  letter-spacing: inherit;
+  text-transform: initial;
+`
+
 export const Button = styled.button`
   display: flex;
   flex: ${props => props.flex || 'initial'};
