@@ -556,6 +556,13 @@ function ViewChannelItem({ channelObjectProp }) {
                 />
               }
 
+              {verifierDetails && (
+                <Subscribers>
+                  <VerifiedBy>Verified by:</VerifiedBy>
+                  <VerifierIcon src={verifierDetails.icon} />
+                  <VerifierName>{verifierDetails.name}</VerifierName>
+                </Subscribers>
+              )}
             </ItemH>
           )}
         </ChannelMeta>
@@ -777,7 +784,7 @@ const VerifierIcon = styled.img`
 
 const VerifierName = styled.span`
   font-weight: 400;
-  color: black;
+  color: ${props => props.theme.color};
   font-size: 16px;
   letter-spacing: 0em;
 `;
