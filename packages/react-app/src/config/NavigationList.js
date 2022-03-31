@@ -324,7 +324,7 @@ const NavigationList = {
             name: 'FAQs',
             title: 'Checkout Frequently Asked Questions',
             alt: 'Open FAQs',
-            href: '/comingsoon',
+            href: '/faq',
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
