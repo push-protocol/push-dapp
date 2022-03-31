@@ -205,6 +205,9 @@ function Header({ isDarkMode, darkModeToggle }) {
           </HeaderTag>
         }
         
+
+       
+           
         {active && !error &&
           <Bell
             badgeCount={0}
@@ -213,28 +216,13 @@ function Header({ isDarkMode, darkModeToggle }) {
             height={32}
           />
         }
-      
-        <DarkMode
-          flex="initial"
-          justify="flex-end"
-          padding="16px"
-          margin={active && !error ? "0px 10px 0px 0px" : "0px"}
-          position="relative"
-          border-radius="100%"
-        >
-          <Item
-            position="absolute"
-            top="4px"
-          >
-            <DarkModeSwitch
-              style={{ marginBottom: '2rem' }}
+         <DarkModeSwitch
+              style={{ margin: '0 1rem' }}
               checked={isDarkMode}
               onChange={darkModeToggle}
               size={24}
               sunColor="#ddd"
             />
-          </Item>
-        </DarkMode>
 
         {showLoginControls &&
           <Item
