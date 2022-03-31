@@ -165,29 +165,29 @@ const NavigationList = {
               }
             }
           },
-          createTestChannel: {
-            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_TEST_CHANNEL,
-            src: "svg/news.svg",
-            iconFactory: null,
-            name: 'Create Test Channel',
-            title: 'Go To Staging Environment To Create a Test Channel',
-            alt: 'Create A Test Channel',
-            href: 'https://staging-app.epns.io/#/dashboard',
-            newTab: false,
-            isRoute: false,
-            hasMenuLogic: true,
-            headerTag: {
-              title: 'Create A Test Channel',
-              light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-                fg: themeLight.headerTagFg,
-              },
-              dark: {
-                bg: themeDark.headerTagBg,
-                fg: themeDark.headerTagFg,
-              }
-            }
-          },
+          // createTestChannel: {
+          //   uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_TEST_CHANNEL,
+          //   src: "svg/news.svg",
+          //   iconFactory: null,
+          //   name: 'Create Test Channel',
+          //   title: 'Go To Staging Environment To Create a Test Channel',
+          //   alt: 'Create A Test Channel',
+          //   href: 'https://staging-app.epns.io/#/dashboard',
+          //   newTab: false,
+          //   isRoute: false,
+          //   hasMenuLogic: true,
+          //   headerTag: {
+          //     title: 'Create A Test Channel',
+          //     light: {
+          //       bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          //       fg: themeLight.headerTagFg,
+          //     },
+          //     dark: {
+          //       bg: themeDark.headerTagBg,
+          //       fg: themeDark.headerTagFg,
+          //     }
+          //   }
+          // },
         },
       },
       govern: {
