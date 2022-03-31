@@ -8,7 +8,7 @@ import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
 
 import styled, {useTheme} from "styled-components";
-import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
+import { Item, ItemH, Span, H2, B, A, C } from "components/SharedStyling";
 
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
@@ -212,7 +212,7 @@ export default function App() {
                 </ItemH>
               </Item>
 
-              <Span margin="10px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor }>
+              <Span margin="30px 0px 0px 0px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor }>
                 By unlocking your wallet, <B>You agree</B> to our{" "}
                 <A href="https://epns.io/tos" target="_blank">
                   Terms of Service
@@ -223,6 +223,17 @@ export default function App() {
                 </A>
                 .
               </Span>
+              
+              <Item
+                flex="initial"
+                padding="30px 15px"
+                radius="12px"
+              >
+                <StyledItem>
+                  <span> Note: </span> The EPNS protocol has been under development for 1+ year,  and completed a <C href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank"> ChainSafe audit </C> in October 2021. However, the mainnet is still a new product milestone.  Always DYOR, and anticipate bugs and UI improvements.  Learn how to report any bugs in our  <C href="https://discord.com/invite/YVPB99F9W5" target="_blank">Discord.</C>
+                </StyledItem>
+              </Item>
+
             </Item>
           )}
         </ParentContainer>
@@ -232,6 +243,27 @@ export default function App() {
 }
 
 // CSS STYLES
+const StyledItem = styled(Item)`
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  display: block;
+  background: ${props => props.theme.backgroundBG};
+  color: ${props => props.theme.color};
+  border:1px solid #ddd;
+  padding:30px 15px;
+  border-radius:12px;
+  line-height: 18px;
+  align-items: center;
+  width:44rem;
+  span{
+    color: #e20880;
+  }
+  @media(max-width:400px){
+    width: auto;
+  }
+`;
+
+
 const HeaderContainer = styled.header`
   left: 0;
   right: 0;
