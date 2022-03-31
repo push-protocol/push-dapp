@@ -49,7 +49,7 @@ function ComingSoonPage(props) {
                   <Answer>
                     <Span>
                       Any user or protocol that activates itself as a service to send notifications is a Channel.
-                    </Span>
+                      </Span>
                   </Answer>
                 }
               </QnAItem>
@@ -71,10 +71,13 @@ function ComingSoonPage(props) {
                     <Span>
                       Not at all
                     </Span>
-
                     <Span>
-                      Channel creation is only important for any protocol or service that wants to trigger notifications for its users. If you are a user who is only interested in receiving notifications and being up to the minute with the Web3 world, channel creation is not at all required for you.
+                      Channel creation is only important for any protocol or service that wants to trigger notifications for its users. If you are a user who is only interested in receiving notifications and being up to the minute with the Web3 world, channel creation is not at all required for you.  
                     </Span>
+
+                    {/* <Span>
+                      Channel creation is only important for any protocol or service that wants to trigger notifications for its users. If you are a user who is only interested in receiving notifications and being up to the minute with the Web3 world, channel creation is not at all required for you.
+                    </Span> */}
                   </Answer>
                 }
               </QnAItem>
@@ -161,15 +164,21 @@ function ComingSoonPage(props) {
                     <Span>
                     In order to receive notifications seamlessly, EPNS provides 3 different crypto front-ends
                     </Span>
+                    <Span2>
+                      <AMod href="https://app.epns.io/" target="_blank">EPNS Dapp</AMod>
+                    </Span2>
+                    <Span2 mtop="0.2rem">
+                      <AMod href="https://chrome.google.com/webstore/detail/epns-protocol-alpha/lbdcbpaldalgiieffakjhiccoeebchmg" target="_blank">Browser Extension</AMod>
+                    </Span2>
+                    <Span2 mtop="0.2rem">
+                      <AMod href="https://play.google.com/store/apps/details?id=io.epns.epns" target="_blank"><span style={{marginRight:"0.3rem"}}>Android</span></AMod> <span style={{marginRight:"0.3rem"}}>and</span> <AMod href="https://apps.apple.com/app/ethereum-push-service-epns/id1528614910" target="_blank">IOS Apps</AMod>
+                    </Span2>
+                    
 
                     
                   </Answer>
                 }
               </QnAItem>
-
-
-
-
             </Item>
           </Item>
         </Content>
@@ -177,6 +186,17 @@ function ComingSoonPage(props) {
       </ThemeProvider>
   );
 }
+
+
+
+export const Span2 = styled.span`
+  display: flex;
+  flex-direction: row;
+  margin-left: 2rem;
+  color:black;
+  font-weight:300;
+  margin-top:${props => props.mtop || "0px" }
+`
 
 const Heading = styled.h2`
   color: ${props => props.theme.scheme === "dark" ? props.theme.color : props.color || "#000"};
