@@ -229,7 +229,7 @@ const SearchBar = styled.input`
   padding-left: 40px;
 
   background: ${props => props.theme.viewChannelSearchBg};
-  border: 1px solid ${props => props.theme.viewChannelSearchBorder};
+  border: 1px solid ${props => props.theme.viewChannelSearchBorder} !important;
   color: ${props => props.theme.viewChannelSearchText};
   box-sizing: border-box;
   border-radius: 10px;
