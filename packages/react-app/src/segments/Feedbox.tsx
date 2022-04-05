@@ -76,13 +76,12 @@ function Feedbox() {
             }
         }
         else{
-            const regex = new RegExp(`^.*?${query.toLowerCase()}.*?$`);
             let filterNotif = [];
             for(const notif of notifications){
                 if(
                     ( (Filter.channels === undefined ?  true : (Filter.channels.includes(notif.channel)))&&
                 notif.epoch >= startDate && notif.epoch <= endDate
-                && await notif.message.toLowerCase().match(regex)!==null )
+                && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())) )
                 )
                 filterNotif.push(notif);
             }

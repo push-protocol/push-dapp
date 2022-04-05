@@ -8,7 +8,7 @@ import DateTimePicker from 'react-datetime-picker';
 
 export default function SearchFilter(props)
 {
-    const [selectedOption, setSelectedOption] = useState([]);
+    
     const [search, setSearch] = useState('');
     const [startDate,setStartDate] = useState();
     const [endDate,setEndDate] = useState();
@@ -19,17 +19,20 @@ export default function SearchFilter(props)
         selectedOption.length ? selectedOption.map(each => channels.push(each.value)) : (channels = []);
         props.filterNotifications(search, channels, startDate,endDate);
     }
-    const reset = async () => {
-        setStartDate(null);
-        setEndDate(null);
-        setSearch('');
-        setSelectedOption([]);
-        props.reset();
-    }
+    
     var options = [];
     props.notifications.map(each => options.push({label : each.app , value : each.channel }));
     var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
     const [showFilter,setShowFilter] = useState(false); 
+    const [selectedOption, setSelectedOption] = useState(uniqueOptions);
+
+    const reset = async () => {
+        setStartDate(null);
+        setEndDate(null);
+        setSearch('');
+        setSelectedOption(uniqueOptions);
+        props.reset();
+    }
 
 
     return(
@@ -330,5 +333,4 @@ const ToggleArrowImg = styled.div`
         transition: transform .25s;
     }
 `
-
 
