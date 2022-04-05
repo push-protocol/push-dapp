@@ -270,7 +270,7 @@ function YieldFarmingPage() {
                 <StatsContent>
                   <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
                   <StatsInnerSub>
-                    <a target="_blank" href="https://app.uniswap.org/#/swap?inputCurrency=0xf418588522d5dd018b425e472991e52ebbeeeeee">Uniswap</a>
+                    <a target="_blank" href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}>Uniswap</a>
                   </StatsInnerSub>
                 </StatsContent>
                 <StatsPreview color="#000">UNISWAP</StatsPreview>
