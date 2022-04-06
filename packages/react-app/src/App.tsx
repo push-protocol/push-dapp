@@ -9,7 +9,7 @@ import { injected, walletconnect, portis, ledger } from "connectors";
 import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
 
 import styled, {useTheme} from "styled-components";
-import { Item, ItemH, Span, H2, B, A, C } from "components/SharedStyling";
+import { Item, ItemH, Span, H2, B, A, C  } from "components/SharedStyling";
 
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
@@ -154,10 +154,10 @@ export default function App() {
       //1
       content: (
         <div>
-          <h2>Click on Communicate!</h2>
-          <button onClick={
+          <h2> Click on Communicate tab in the sidebar to show the features</h2>
+          {/* <button onClick={
             () => dispatch(incrementStepIndex())
-          }>Next</button>
+          }>Next</button> */}
         </div>
       ),
       placement: "right-start",
@@ -189,7 +189,7 @@ export default function App() {
       //2
       content: (
         <div>
-          <h2>Click on channels!</h2>
+          <h2>Click on the Channels button in the sidebar to go to the Channels Page</h2>
           {/* <button onClick={
             () => dispatch(incrementStepIndex())
           }>Next</button> */}
@@ -222,7 +222,7 @@ export default function App() {
     },
     {
       //3
-      content: <div> This is the place where you see all your channels</div>,
+      content: <div> <h2>This is the Channels Page. Here, you can see the Channels of all the Protocols that are there on EPNS.</h2></div>,
       placement: "center",
       target: "body",
     },
@@ -234,7 +234,7 @@ export default function App() {
       content: (
         <div>
           <h2>Click on Opt-in!</h2>
-          <p> You can opt-in into any number of Channels as you want</p>
+          <p> You can opt-in in the Channels from which you want to get notifications. You can opt-in in any number of Channels as you want. Opt-in in at least one of the channels to proceed to the next step. To opt-in, click on the optin button, then there will be a Metamask popup, in which you have to sign the transaction, and voila, you've opted in</p>
           <button onClick={
             () => dispatch(incrementStepIndex())
           }>Next</button>
@@ -257,6 +257,9 @@ export default function App() {
       content: (
         <div>
           <h2>Click on Inbox!</h2>
+          <p>
+          Click on the Inbox button in the sidebar to go to the Inbox page, where you'll be seeing all your future notifications.
+          </p>
           {/* <button onClick={
           () => dispatch(incrementStepIndex())
         }>Next</button> */}
@@ -272,7 +275,7 @@ export default function App() {
       //7
       content: (
         <div>
-          <h2>You will get all your inbox messages here.</h2>
+          <h2>You can see some of the welcome notifications from the Channels, that you've just opted in. Here, you'll be seeing all your notifications.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
         </div>
       ),
@@ -287,7 +290,7 @@ export default function App() {
       //8
       content: (
         <div>
-          <h2>You will get all your spam messages here.</h2>
+          <h2>Click on the Inbox button in the sidebar to go to the Spam page.</h2>
           {/* <button onClick={
       () => dispatch(incrementStepIndex())
     }>Next</button> */}
@@ -302,7 +305,7 @@ export default function App() {
       //9
       content: (
         <div>
-          <h2>You will get all your spam messages here.</h2>
+          <h2>Here, you'll be seeing all the notifications from the Channels that you haven't opted in yet.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
           {/* <button onClick={
       () => dispatch(incrementStepIndex())
@@ -318,7 +321,7 @@ export default function App() {
       //10
       content: (
         <div>
-          <h2>You Can Recieve all your notifications here</h2>
+          <h2>Click on the Receive Notifs button in the sidebar.</h2>
           <button onClick={() => {
               dispatch(incrementStepIndex());
              dispatch(setTutorialContinous(true))}}>Next</button>
@@ -349,7 +352,7 @@ export default function App() {
       //12
       content: (
         <div>
-          <h2>You can see all your notifications on the EPNS ANDROID APP. Click on Download Button to download it.</h2>
+          <h2>ou can see all your notifications on the EPNS ANDROID APP. Click on Download Button to download it.</h2>
           <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
           <button><a href={`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
@@ -381,7 +384,7 @@ export default function App() {
         <div>
           <h2>Tutorial Complete</h2>
           <p>
-            <B>THANK YOU</B>{" "}
+          Hurray! The tutorial is complete. Congratulations, Now, you’ve got a pretty good understanding of the whole flow of EPNS Dapp.
           </p>
           <button onClick={() => {dispatch(setRun(false))
       dispatch(setIndex(0))
