@@ -142,7 +142,53 @@ const NavigationList = {
               }
             }
           },
-        }
+          developerGuide: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.DEVELOPER_GUIDE,
+            src: "svg/tutorial.svg",
+            iconFactory: null,
+            name: "Developer's Guide",
+            title: "Developer's Guide",
+            alt: "Developer's Guide",
+            href: 'https://docs.epns.io/',
+            newTab: false,
+            isRoute: false,
+            hasMenuLogic: true,
+            headerTag: {
+              title: "Developer's Guide",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+          // createTestChannel: {
+          //   uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_TEST_CHANNEL,
+          //   src: "svg/news.svg",
+          //   iconFactory: null,
+          //   name: 'Create Test Channel',
+          //   title: 'Go To Staging Environment To Create a Test Channel',
+          //   alt: 'Create A Test Channel',
+          //   href: 'https://staging-app.epns.io/#/dashboard',
+          //   newTab: false,
+          //   isRoute: false,
+          //   hasMenuLogic: true,
+          //   headerTag: {
+          //     title: 'Create A Test Channel',
+          //     light: {
+          //       bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          //       fg: themeLight.headerTagFg,
+          //     },
+          //     dark: {
+          //       bg: themeDark.headerTagBg,
+          //       fg: themeDark.headerTagFg,
+          //     }
+          //   }
+          // },
+        },
       },
       govern: {
         src: "svg/govern.svg",
@@ -150,22 +196,60 @@ const NavigationList = {
         name: 'Govern',
         title: 'Governance Tab',
         alt: 'Governance Tab Icon', 
-        href: '/govern',
+        href: null,
         newTab: false,
         opened: false,
         isRoute: true,
         hasMenuLogic: true,
-        headerTag: {
-          title: "Let's Govern",
-          light: {
-            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-            fg: themeLight.headerTagFg,
+  
+        drilldown: {
+          governance: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
+            src: "svg/channeladmin.svg",
+            iconFactory: null,
+            name: 'Governance DAPP',
+            title: 'Governance DAPP',
+            alt: 'Governance DAPP',
+            href: '/govern',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Governance DAPP',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
-          dark: {
-            bg: themeDark.headerTagBg,
-            fg: themeDark.headerTagFg,
-          }
-        }
+          governanceGuide: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE_GUIDE,
+            src: "svg/tutorial.svg",
+            iconFactory: null,
+            name: "Governance Guide",
+            title: "Governance Guide",
+            alt: "Governance Guide",
+            href: ' https://docs.epns.io/epns-governance/governance-guide',
+            newTab: false,
+            isRoute: false,
+            hasMenuLogic: true,
+            headerTag: {
+              title: "Governance Guide",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+        },
       },
       incentives: {
         src: "svg/incentive.svg",
@@ -278,7 +362,7 @@ const NavigationList = {
             name: 'FAQs',
             title: 'Checkout Frequently Asked Questions',
             alt: 'Open FAQs',
-            href: '/comingsoon',
+            href: '/faq',
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,

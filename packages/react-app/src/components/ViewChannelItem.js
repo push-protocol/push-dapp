@@ -156,20 +156,24 @@ function ViewChannelItem({ channelObjectProp }) {
       setIsPushAdmin(pushAdminAddress === account);
       setMemberCount(channelSubscribers.length);
       setSubscribed(subscribed);
-      setIsVerified(
-        Boolean(
-          channelObject && channelObject.verifiedBy &&
-            (channelObject.verifiedBy !== ZERO_ADDRESS ||
-              channelObject.addr === pushAdminAddress)
-        )
-      );
-      setCanUnverify(channelObject.verifiedBy == account);
       setChannelJson({ ...channelJson, addr: channelObject.addr });
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
     }
   };
+
+  React.useEffect(() => {
+    if (!channelObject) return
+    setIsVerified(
+      Boolean(
+        (channelObject.verifiedBy &&
+          channelObject.verifiedBy !== ZERO_ADDRESS) ||
+          channelObject.addr === pushAdminAddress
+      )
+    )
+    setCanUnverify(channelObject.verifiedBy == account)
+  }, [channelObject])
 
   // toast customize
   const LoaderToast = ({ msg, color }) => (
@@ -551,6 +555,14 @@ function ViewChannelItem({ channelObjectProp }) {
                   bgColor={themes.viewChannelSecondaryBG}
                 />
               }
+                  
+              {verifierDetails && (
+                <Subscribers>
+                  <VerifiedBy>Verified by:</VerifiedBy>
+                  <VerifierIcon src={verifierDetails.icon} />
+                  <VerifierName>{verifierDetails.name}</VerifierName>
+                </Subscribers>
+              )}
 
             </ItemH>
           )}
@@ -773,7 +785,7 @@ const VerifierIcon = styled.img`
 
 const VerifierName = styled.span`
   font-weight: 400;
-  color: black;
+  color: ${props => props.theme.color};
   font-size: 16px;
   letter-spacing: 0em;
 `;

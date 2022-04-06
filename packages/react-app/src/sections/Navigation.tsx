@@ -5,10 +5,10 @@ import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {Section, Item, ItemH, Span, AnchorLink as Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
-import navigationList from "config/navigationList";
+import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
 
@@ -23,7 +23,7 @@ function Navigation() {
 
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[0].data.drilldown[3].data.name = channelDetails.name;
+      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
     }
     const theme = useTheme();
     const location = useLocation();
