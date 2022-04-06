@@ -5,6 +5,8 @@ import './SearchFilter.css';
 import styled, {useTheme} from "styled-components";
 import {ThemeProvider} from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
+import Loader from "react-loader-spinner";
+import { Item } from './SharedStyling';
 
 export default function SearchFilter(props)
 {
@@ -17,7 +19,7 @@ export default function SearchFilter(props)
     const applySearch = async () => {
         var channels = [];
         selectedOption.length ? selectedOption.map(each => channels.push(each.value)) : (channels = []);
-        props.filterNotifications(search, channels, startDate,endDate);
+        await props.filterNotifications(search, channels, startDate,endDate);
     }
     
     var options = [];
@@ -25,6 +27,7 @@ export default function SearchFilter(props)
     var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
     const [showFilter,setShowFilter] = useState(false); 
     const [selectedOption, setSelectedOption] = useState(uniqueOptions);
+    // console.log(props.notifications);
 
     const reset = async () => {
         setStartDate(null);
@@ -41,6 +44,7 @@ export default function SearchFilter(props)
             <TopBar mbtm={showFilter ? '1rem' : '0px'}>
                 <Left>
                 {themes.scheme === 'light' ? ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterIcon.svg' />) : ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterw.png' />)}
+                {!props.loadFilter?
                     <span className="showfilter" onClick={()=> {showFilter ? setShowFilter(false) : setShowFilter(true)}}>
                         <span className="filter" style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}} >Filter Notifications</span> 
                         <span className="arrow">
@@ -49,6 +53,16 @@ export default function SearchFilter(props)
                             </ToggleArrowImg>
                         </span>
                     </span>
+                    :
+                    <span className="showfilter">
+                        <span className="filter" style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}} >Filter Notifications</span> 
+                        <Item
+                            padding="10px 20px"
+                            >
+                            <Loader type="Oval" color="#35c5f3" height={20} width={20} />
+                        </Item>
+                    </span>
+                }
                     
                 </Left>
                 {
