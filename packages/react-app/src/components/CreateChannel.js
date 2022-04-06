@@ -31,6 +31,8 @@ import Slider from "@material-ui/core/Slider";
 
 import Loader from "react-loader-spinner";
 
+import { envConfig } from "@project/contracts";
+
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 
 import {ThemeProvider} from "styled-components";
@@ -45,6 +47,8 @@ const ipfs = require("ipfs-api")();
 const minStakeFees = 50;
 const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
 
+const CORE_CHAIN_ID = envConfig.coreContractChain;
+
 // Create Header
 function CreateChannel() {
   const { active, error, account, library, chainId } = useWeb3React();
@@ -52,6 +56,7 @@ function CreateChannel() {
   const themes = useTheme();
 
   const [darkMode, setDarkMode] = useState(false);
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
@@ -320,6 +325,20 @@ function CreateChannel() {
         </Content>
       </Section>
 
+      {!onCoreNetwork ? 
+      <>
+        <Section>
+          <Content padding="50px 20px 20px">
+            <Item align="flex-start">
+              <H3 color="#e20880">
+                You can't Create Channel on Alias Chains. Please switch to Ethereum Kovan Network to create a channel.
+              </H3>
+              </Item>
+          </Content>
+        </Section>
+      </>
+      :
+      <>
       <Section>
         <Content padding="0px 20px 20px">
           <ItemH justify="space-between">
@@ -664,7 +683,9 @@ function CreateChannel() {
             </Item>
           </Content>
         </Section>
-      )}
+        )}
+        </>
+      }
     </ThemeProvider>
   );
 }

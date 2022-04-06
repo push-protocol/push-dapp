@@ -163,7 +163,8 @@ function ChannelDashboardPage() {
         ? library
         : ethers.getDefaultProvider(ALLOWED_CORE_NETWORK, {
             etherscan: config.etherscanToken,
-          });
+        });
+      console.log(coreProvider);
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
@@ -185,12 +186,13 @@ function ChannelDashboardPage() {
             op: "read",
           }).then(({ data }) => {
             // if it returns undefined then we need to let them know to verify their channel
+            console.log(data);
             if (!data) {
-              setAliasVerified(false);
+              setAliasVerified(null);
               return;
             }
             const { status } = data;
-            setAliasVerified(status || null);
+            setAliasVerified(status);
             return data;
           });
         }
@@ -236,8 +238,8 @@ function ChannelDashboardPage() {
    * When we instantiate the contract instances, fetch basic information about the user
    * Corresponding channel owned.
    */
-  React.useEffect(() => {
-    if (!epnsReadProvider || !epnsCommReadProvider) return;
+  React.useEffect(async () => {
+    if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
     // Reset when account refreshes
     setChannelAdmin(false);
     dispatch(setUserChannelDetails(null));
@@ -266,11 +268,12 @@ function ChannelDashboardPage() {
         epnsReadProvider,
         epnsCommReadProvider
       );
+      await checkUserForAlias();
       checkUserForChannelOwnership();
       listenFornewNotifications();
       fetchDelegators();
     }
-  }, [epnsReadProvider, epnsCommReadProvider]);
+  }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   // handle user action at control center
   const userClickedAt = (controlIndex) => {
@@ -311,10 +314,14 @@ function ChannelDashboardPage() {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
+    if (!epnsWriteProvider) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
+    console.log(ownerAccount);
     EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
       .then(async (response) => {
+        console.log(response);
+        console.log(epnsWriteProvider);
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(
           ownerAccount
@@ -346,6 +353,39 @@ function ChannelDashboardPage() {
       .finally(() => {
         setAdminStatusLoaded(true);
       });
+  };
+
+  // Check if a user is a channel or not
+  const checkUserForAlias = async () => {
+    // Check if account is admin or not and handle accordingly
+    const aliasEth = await postReq("/channels/get_eth_address", {
+          aliasAddress: account,
+          op: "read",
+        }).then(({ data }) => {
+          console.log({ data });
+          const ethAccount = data;
+          if (ethAccount) {
+            setAliasEthAccount(ethAccount.ethAddress);
+          }
+          return data;
+        });
+    if (aliasEth) {
+      // if an alias exists, check if its verified.
+      await postReq("/channels/get_alias_verification_status", {
+        aliasAddress: account,
+        op: "read",
+      }).then(({ data }) => {
+        // if it returns undefined then we need to let them know to verify their channel
+        console.log(data);
+        if (!data) {
+          setAliasVerified(null);
+          return;
+        }
+        const { status } = data;
+        setAliasVerified(status);
+        return data;
+      });
+    }
   };
 
   // Render
