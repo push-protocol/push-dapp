@@ -9,7 +9,7 @@
    welcomeNotifs: [],// only welcome notifications
    tutorialContinous: false,
    isCommunicateOpen: false,
-   
+   isDeveloperOpen: false,
  };
  
  export const userJourneySlice = createSlice({
@@ -40,7 +40,10 @@
              },
          setCommunicateOpen: (state, action) => {
              state.isCommunicateOpen = action.payload;
-             }
+             },
+            setDeveloperOpen: (state, action) => {
+                state.isDeveloperOpen = action.payload;
+            },
      }
  });
  
@@ -52,7 +55,8 @@
      addNewWelcomeNotif,
      setWelcomeNotifsEmpty,
      setTutorialContinous,
-     setCommunicateOpen
+     setCommunicateOpen,
+    setDeveloperOpen
  } = userJourneySlice.actions;
  
  export default userJourneySlice.reducer;

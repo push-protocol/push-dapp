@@ -15,7 +15,7 @@ import { NavigationContext } from "contexts/NavigationContext";
 import GLOBALS from "config/Globals";
 
 import { useDispatch, useSelector } from "react-redux";
-import {incrementStepIndex, decrementStepIndex, setRun, setIndex , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
+import {incrementStepIndex, decrementStepIndex, setRun, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
 
 // Create Header
 function Navigation() {
@@ -382,21 +382,21 @@ function Navigation() {
                           margintop="-10px"
                           zIndex={2}
                           refresh={refresh}
+                          // id={section.data.name}
                           onClick={() => {
                             const uid = section.data.uid;
-                            console.log("UID= ", uid);
-                            // if(run && uid == 2 && section.opened && stepIndex == 0 || isCommunicateOpen == true ) {
-                            //   dispatch(incrementStepIndex())
-                            //   dispatch(setCommunicateOpen(true))
-                            // }
                             if(uid === 2 ){
-                              // dispatch(incrementStepIndex())
                               if(!section.opened)
                               dispatch(setCommunicateOpen(true))
                               else
                               dispatch(setCommunicateOpen(false))
                             }
-                              
+                            else if(uid === 3){
+                              if(!section.opened)
+                              dispatch(setDeveloperOpen(true))
+                              else
+                              dispatch(setDeveloperOpen(false))
+                            }
                             console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     

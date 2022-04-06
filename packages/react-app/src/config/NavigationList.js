@@ -108,6 +108,7 @@ const NavigationList = {
         }
       },
       developer: {
+        uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.DEVELOPER_TAB,
         src: "svg/developer.svg",
         iconFactory: null,
         name: 'Developer',

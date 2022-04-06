@@ -22,6 +22,7 @@ export default {
       NAVBAR_IDENTIFIERS: {
         CREATE_CHANNEL: 1,
         COMMUNICATE_TAB: 2,
+        DEVELOPER_TAB: 3,
       }
     },
   

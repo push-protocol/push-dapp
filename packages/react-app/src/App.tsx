@@ -386,6 +386,44 @@ export default function App() {
           <p>
           Hurray! The tutorial is complete. Congratulations, Now, you’ve got a pretty good understanding of the whole flow of EPNS Dapp.
           </p>
+          <button onClick={() => {dispatch(incrementStepIndex()); dispatch(setTutorialContinous(false));}}>Next(For Developers)</button>
+
+          <button onClick={() => {dispatch(setRun(false))
+      dispatch(setIndex(0))
+      dispatch(setWelcomeNotifsEmpty());}}>Close Tutorial</button>
+        </div>
+      ),
+      locale: { next: <strong aria-label="next">NEXT</strong> },
+      placement: "center",
+      target: "body",
+      defaultProps: false,
+      // spotlightClicks: true,
+      // disableOverlayClose: false,
+    },
+    {
+      //15
+      content: (
+        <div>
+          <h2>Developer tab</h2>
+          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+         </div>
+      ),
+      locale: { next: <strong aria-label="next">NEXT</strong> },
+      placement: "right-start",
+      target: ".developer",
+      defaultProps: false,
+      // spotlightClicks: true,
+      // disableOverlayClose: false,
+    },
+    
+    {
+      //14
+      content: (
+        <div>
+          <h2>Tutorial Complete</h2>
+          <p>
+          Hurray! The tutorial is complete. Congratulations, Now, you’ve got a pretty good understanding of the whole flow of EPNS Dapp.
+          </p>
           <button onClick={() => {dispatch(setRun(false))
       dispatch(setIndex(0))
       dispatch(setWelcomeNotifsEmpty());}}>Next</button>
@@ -411,7 +449,7 @@ export default function App() {
     }
     
     
-    if ( action === "skip" || index == 15 ) { //action === "close" ||
+    if ( action === "skip" || index == 18 ) { //action === "close" ||
       dispatch(setRun(false))
       dispatch(setIndex(0))
       dispatch(setWelcomeNotifsEmpty());
