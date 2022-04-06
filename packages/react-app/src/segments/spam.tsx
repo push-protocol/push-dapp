@@ -225,7 +225,8 @@ function SpamBox({ currentTab }) {
           return { ...elem };
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      setNotif(parsedResponse);
+      let res = parsedResponse.filter( notif => !isSubscribedFn(notif.subscribers));
+      setNotif(res);
 
     } catch (err) {
       console.log(err);
@@ -294,7 +295,7 @@ function SpamBox({ currentTab }) {
     });
   };
 
-  const isSubscribedFn = async (subscribers: any) => {
+  const isSubscribedFn = (subscribers: any) => {
     return subscribers
       .map((a) => a.toLowerCase())
       .includes(account.toLowerCase());
