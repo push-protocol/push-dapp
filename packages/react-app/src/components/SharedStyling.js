@@ -308,6 +308,10 @@ export const Anchor = styled.a`
   }
 `
 
+export const AnchorLink = styled(Anchor)`
+  background-color:${props => props.theme.scheme === "dark" ? props.bg :"#d1cdcd"};
+`
+
 export const RouterLink = styled(Link)`
   display: flex;
   flex-direction: ${props => props.direction || 'row'};
@@ -379,6 +383,15 @@ export const RouterLink = styled(Link)`
 export const A = styled(Anchor)`
   display: inline;
   color: #e1087f;
+  background: transparent;
+  padding: 0px;
+  letter-spacing: inherit;
+  text-transform: initial;
+`
+
+export const C = styled(Anchor)`
+  display: inline;
+  color: #4292e4;
   background: transparent;
   padding: 0px;
   letter-spacing: inherit;

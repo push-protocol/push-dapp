@@ -68,7 +68,6 @@ function Header({ isDarkMode, darkModeToggle }) {
         }
       })
     }
-    console.log(navigationSetup)
   }
 
 
@@ -139,26 +138,29 @@ function Header({ isDarkMode, darkModeToggle }) {
         
         {navigationSetup && showNavBar && active && !error &&
           <NavMenuContainer
-            align="flex-start"
+            tabletAlign="flex-start"
           >
-            <NavMenu
-            >
+            <NavMenu>
               <Profile />
-              
-              {Object.keys(navigationSetup.navigation).map(function(key) {
-                return (
-                  <Item
-                    onClick={() => {setShowNavBar(!showNavBar)}}
-                  >
-                    <NavigationButton
-                      item={navigationSetup.navigation[key]}
-                      data={navigationSetup.navigation[key].data}
-                      sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY}
-                      active={navigationSetup.navigation[key].active}
-                    />
-                  </Item>
-                );
-              })}
+
+              <NavMenuInner
+                tabletAlign="flex-start"
+              >
+                {Object.keys(navigationSetup.navigation).map(function(key) {
+                  return (
+                    <Item
+                      onClick={() => {setShowNavBar(!showNavBar)}}
+                    >
+                      <NavigationButton
+                        item={navigationSetup.navigation[key]}
+                        data={navigationSetup.navigation[key].data}
+                        sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
+                        active={navigationSetup.navigation[key].active}
+                      />
+                    </Item>
+                  );
+                })}
+              </NavMenuInner>
             </NavMenu>
 
             <Item
@@ -202,6 +204,9 @@ function Header({ isDarkMode, darkModeToggle }) {
           </HeaderTag>
         }
         
+
+       
+           
         {active && !error &&
           <Bell
             badgeCount={0}
@@ -210,28 +215,13 @@ function Header({ isDarkMode, darkModeToggle }) {
             height={32}
           />
         }
-      
-        <DarkMode
-          flex="initial"
-          justify="flex-end"
-          padding="16px"
-          margin={active && !error ? "0px 10px 0px 0px" : "0px"}
-          position="relative"
-          border-radius="100%"
-        >
-          <Item
-            position="absolute"
-            top="4px"
-          >
-            <DarkModeSwitch
-              style={{ marginBottom: '2rem' }}
+         <DarkModeSwitch
+              style={{ margin: '0 1rem' }}
               checked={isDarkMode}
               onChange={darkModeToggle}
               size={24}
               sunColor="#ddd"
             />
-          </Item>
-        </DarkMode>
 
         {showLoginControls &&
           <Item
@@ -318,6 +308,16 @@ const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
   padding: 10px 10px;
+`
+
+const NavMenuInner = styled(Item)`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow-y: scroll;
+  height: calc(100vh - 70px);
 `
 
 const Notice = styled.span`

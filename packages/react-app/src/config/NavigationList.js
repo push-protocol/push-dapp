@@ -83,29 +83,6 @@ const NavigationList = {
               }
             }
           },
-          createChannel: {
-            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
-            src: "svg/channeladmin.svg",
-            iconFactory: null,
-            name: 'Create Channel',
-            title: 'Create Channel',
-            alt: 'Create Channels / Dashboard',
-            href: '/dashboard',
-            newTab: false,
-            isRoute: true,
-            hasMenuLogic: true,
-            headerTag: {
-              title: 'Channel Dashboard',
-              light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-                fg: themeLight.headerTagFg,
-              },
-              dark: {
-                bg: themeDark.headerTagBg,
-                fg: themeDark.headerTagFg,
-              }
-            }
-          },
           receiveNotifs: {
             src: "svg/share.svg",
             iconFactory: null,
@@ -129,6 +106,90 @@ const NavigationList = {
             }
           },
         }
+      },
+      developer: {
+        src: "svg/developer.svg",
+        iconFactory: null,
+        name: 'Developer',
+        title: 'Check Developer Tab',
+        alt: 'Developer Tab Icon',
+        href: null,
+        newTab: false,
+        opened: false,
+        isRoute: true,
+        hasMenuLogic: true,
+  
+        drilldown: {
+          createChannel: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
+            src: "svg/channeladmin.svg",
+            iconFactory: null,
+            name: 'Create Channel',
+            title: 'Create Channel',
+            alt: 'Create Channels / Dashboard',
+            href: '/dashboard',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Channel Dashboard',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+          developerGuide: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.DEVELOPER_GUIDE,
+            src: "svg/tutorial.svg",
+            iconFactory: null,
+            name: "Developer's Guide",
+            title: "Developer's Guide",
+            alt: "Developer's Guide",
+            href: 'https://docs.epns.io/',
+            newTab: false,
+            isRoute: false,
+            hasMenuLogic: true,
+            headerTag: {
+              title: "Developer's Guide",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+          // createTestChannel: {
+          //   uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_TEST_CHANNEL,
+          //   src: "svg/news.svg",
+          //   iconFactory: null,
+          //   name: 'Create Test Channel',
+          //   title: 'Go To Staging Environment To Create a Test Channel',
+          //   alt: 'Create A Test Channel',
+          //   href: 'https://staging-app.epns.io/#/dashboard',
+          //   newTab: false,
+          //   isRoute: false,
+          //   hasMenuLogic: true,
+          //   headerTag: {
+          //     title: 'Create A Test Channel',
+          //     light: {
+          //       bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          //       fg: themeLight.headerTagFg,
+          //     },
+          //     dark: {
+          //       bg: themeDark.headerTagBg,
+          //       fg: themeDark.headerTagFg,
+          //     }
+          //   }
+          // },
+        },
       },
       govern: {
         src: "svg/govern.svg",
@@ -275,7 +336,7 @@ const NavigationList = {
             name: 'FAQs',
             title: 'Checkout Frequently Asked Questions',
             alt: 'Open FAQs',
-            href: '/comingsoon',
+            href: '/faq',
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
@@ -291,7 +352,6 @@ const NavigationList = {
               }
             }
           }, 
-          
         }
         
       }

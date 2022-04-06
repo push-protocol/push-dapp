@@ -21,6 +21,8 @@ import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
 import TutorialPage from "pages/TutorialPage";
+import FAQPage from "pages/FAQPage";
+
 import {SupportPage} from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
@@ -45,6 +47,7 @@ function MasterInterfacePage() {
           <Route path="gratitude" element={<AirdropPage />} />
           <Route path="tutorial" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
+          <Route path="faq" element={<FAQPage />} />
           <Route
               path="/"
               element={<Navigate to="/channels" />}

@@ -1,0 +1,214 @@
+.react-datetime-picker__wrapper {
+    border: 0px !important;
+    border-radius: 5px !important;
+    height: 40px !important;
+}
+.react-datetime-picker__inputGroup{
+    text-align: center !important;
+}
+.react-datetime-picker__inputGroup__input{
+    font-weight: 500 !important;
+}
+
+.showfilter:hover{
+    cursor: pointer;
+}
+.showfilter{
+    display: flex;
+    flex-direction: row;
+
+}
+
+
+@media (max-width:850px) {
+    .react-datetime-picker__inputGroup{
+        width: 4rem !important;
+        margin-right: -2px !important;
+        margin: 0px !important;
+    }
+
+    .hAGKHU div {
+        margin: 0% !important;
+        font-size:16px !important;
+        width: 2rem !important;
+        margin-top: 0px !important;
+        /* height: 1.5rem; */
+    }
+    .hAGKHU {
+        display: flex !important;
+        flex-direction: row !important;
+        margin-top: 0px !important;
+        width: 3rem !important;
+        padding: 0% !important;
+        align-items: center !important;
+        justify-content: center !important;
+       
+        
+    }
+    
+    .react-datetime-picker__button
+    {
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+    .gScVOw
+    {
+        width: 1rem !important;
+        margin: 0px !important;
+    }
+   
+    
+}
+.react-datetime-picker__inputGroup__input--hasLeadingZero
+{
+    font-weight: 500 !important;
+}
+
+.hAGKHU div {
+    margin-top: -0.4rem !important;
+    /* height: 1.5rem; */
+}
+
+.react-datetime-picker__inputGroup__minute{
+    font-weight: 400 !important;
+}
+
+.react-datetime-picker__clock{
+    display: none;
+}
+
+.filter:hover{
+    cursor: pointer;
+}
+
+.arrow:hover{
+    cursor: pointer;
+}
+
+.filter{
+margin-bottom: 1rem;
+}
+
+.arrow{
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 0.7rem;
+    
+}
+
+.hAGKHU{
+        
+    border-top-left-radius: 5px !important;
+border-bottom-left-radius: 5px !important;
+/* height: 40px !important; */
+    display: flex !important;
+    flex-direction: row !important;
+    margin-top: 0px !important;
+    width: 3rem !important;
+    padding: 0% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+
+}
+
+.react-datetime-picker__inputGroup__divider
+{
+    font-weight: 400;
+}
+
+.date{
+    flex: 6;
+    display: flex;
+    align-items: center !important;
+    font-family: Source Sans Pro;
+}
+
+.DropDown{
+    border-radius: 10px;
+    height: 2.5rem;
+    background-color: inherit;
+}
+
+.button, input, input2 :focus{
+    height: 35px;
+    outline: none !important;
+    border: 0px solid white !important;
+    font-weight: 400;
+    background-color: inherit;
+
+}
+
+.iQSpGP{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 40px !important;
+    border-radius: 5px !important;
+    border: 0.5px solid #674C9F;
+    /* padding: 2px; */
+    font-family: Source Sans Pro;
+}
+
+.dropdown-heading{
+    /* color: #E20880 !important; */
+    font-weight: 400 !important;
+    font-size: 1.1rem !important;
+    margin-top: 3px;
+    font-family: Source Sans Pro;
+}
+
+
+
+.rmsc .dropdown-container {
+    background-color: inherit;
+}
+
+.gray{
+    color:  #B0B0B0 !important;
+    
+}
+
+
+.dropdown-heading:focus{
+     border: 0px solid white !important;
+        box-shadow: 0 0 0px white !important;
+}
+.dropdown-container{
+    border: 0px solid white !important;
+    /* height: 45px !important; */
+    margin: 0px !important;
+    padding: 0px !important;
+}
+    
+.dropdown-container:focus-within{
+        border: 0px solid white !important;
+        box-shadow: 0 0 0 0px white !important;
+}
+.cZpmt:focus{
+    /* border: 1px solid #674C9F !important; */
+    box-shadow: 0 0 0px white !important;
+}
+
+.input2{
+    border: 0px solid white;
+    font-size: 1.1rem;
+    margin-top: 2.5px;
+    font-weight: 400;
+    position: relative;
+    color: #35C5F3;
+    padding-left: 0.7rem;
+    width: 100%;
+
+}
+.input2::placeholder
+{
+    opacity: 1;
+    font-weight: 400;
+    font-family: Source Sans Pro;
+    color: #B0B0B0 !important;
+}
+
+

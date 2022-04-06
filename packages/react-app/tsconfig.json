@@ -26,5 +26,5 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/segments/ViewChannels.jsx"  ]
+, "src/segments/ViewChannels.jsx", "src/components/SearchFilter.jsx"  ]
 }

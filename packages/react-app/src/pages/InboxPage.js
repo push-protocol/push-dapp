@@ -20,6 +20,7 @@ import GLOBALS from "config/Globals";
 
 // Create Header
 function InboxPage() {
+  // React GA Analytics
   ReactGA.pageview("/inbox");
 
   const dispatch = useDispatch();

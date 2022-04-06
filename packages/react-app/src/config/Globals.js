@@ -16,7 +16,7 @@ export default {
       NAVBAR_SECTIONS: {
         PRIMARY: 1,
         SECONDARY: 2,
-        FULL: 3
+        MOBILE: 3
       },
 
       NAVBAR_IDENTIFIERS: {
