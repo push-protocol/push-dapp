@@ -22,7 +22,7 @@ import {ThemeProvider} from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
 
-import {incrementStepIndex, decrementStepIndex, setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
+import {incrementStepIndex, decrementStepIndex, setRun, setIndex, setWelcomeNotifsEmpty , setTutorialContinous} from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
 
 import * as dotenv from "dotenv";
@@ -234,7 +234,7 @@ export default function App() {
       content: (
         <div>
           <h2>Click on Opt-in!</h2>
-          <p> You can click into any number of elements as you want</p>
+          <p> You can opt-in into any number of Channels as you want</p>
           <button onClick={
             () => dispatch(incrementStepIndex())
           }>Next</button>
@@ -319,7 +319,9 @@ export default function App() {
       content: (
         <div>
           <h2>You Can Recieve all your notifications here</h2>
-          <button onClick={() => dispatch(incrementStepIndex())}>Next</button>
+          <button onClick={() => {
+              dispatch(incrementStepIndex());
+             dispatch(setTutorialContinous(true))}}>Next</button>
         </div>
       ),
       placement: "right-start",
@@ -337,7 +339,7 @@ export default function App() {
           <button><a href={`${process.env.REACT_APP_BROWSER_EXTENSION_URL}`} target="_blank">Download</a></button>
         </div>
       ),
-      placement: "right-start",
+      placement: "bottom",
       target: `#epns-browser`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -352,7 +354,7 @@ export default function App() {
           <button><a href={`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
       ),
-      placement: "right-start",
+      placement: "bottom",
       target: `#epns-app-ios`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -367,7 +369,7 @@ export default function App() {
           <button><a href={`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`} target="_blank">Download</a></button>
         </div>
       ),
-      placement: "right-start",
+      placement: "bottom",
       target: `#epns-app`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -426,7 +428,7 @@ export default function App() {
           stepIndex={stepIndex}
           primaryProps={false}
           hideBackButton={true}
-          hideBackButton={false}
+          hideCloseButton={true}
           disableScrolling={true}
           disableScrollParentFix={true}
           disableFlip={true}

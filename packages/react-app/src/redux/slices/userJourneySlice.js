@@ -9,6 +9,7 @@
    welcomeNotifs: [],// only welcome notifications
    tutorialContinous: false,
    isCommunicateOpen: false,
+   
  };
  
  export const userJourneySlice = createSlice({

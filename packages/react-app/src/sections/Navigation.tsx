@@ -483,6 +483,7 @@ function Navigation() {
                     // console.log();
                     if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ))
                     { //|| (stepIndex === 6 && data.name === "Channels")
+                      if(stepIndex === 10)dispatch(setTutorialContinous(true));
                       dispatch(incrementStepIndex())
                     }
                     console.log(`Clicked  button`);
