@@ -275,7 +275,7 @@ function Feedbox() {
 
             // render the notification item
             return (
-              <div key={`${message}+${title}`}>
+              <div key={index}>
                 {showWayPoint(index) && (
                   <Waypoint onEnter={() => handlePagination()} />
                 )}
