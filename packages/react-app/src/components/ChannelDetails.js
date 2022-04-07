@@ -1,10 +1,13 @@
 import React from "react";
 import moment from "moment";
+import { ethers } from "ethers";
+import { envConfig } from "@project/contracts";
 import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { useWeb3React } from "@web3-react/core";
 const DATE_FORMAT = "DD/MM/YYYY";
+
 export default function ChannelDetails() {
   const theme = useTheme();
   const { library } = useWeb3React();
@@ -32,7 +35,9 @@ export default function ChannelDetails() {
     if (!channelDetails) return;
     (async function() {
       const bn = channelDetails.channelStartBlock.toString();
-      const block = await library.getBlock(+bn);
+
+      // using ethers jsonRpcProvider instead of library bcz channels are created on only core chain, that's why block can be fetched from that only
+      const block = await (new ethers.providers.JsonRpcProvider(envConfig.coreRPC)).getBlock(+bn);
       const date = moment(block.timestamp * 1000);//convert from millisecs
       setCreationDate(date.format(DATE_FORMAT))
     })();
