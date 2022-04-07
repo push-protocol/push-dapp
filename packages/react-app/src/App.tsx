@@ -61,7 +61,8 @@ export default function App() {
       run,
       stepIndex,
       isCommunicateOpen,
-      tutorialContinous
+      tutorialContinous,
+      isDeveloperOpen,
     } = useSelector((state: any) => state.userJourney);
 
   React.useEffect(()=>{
@@ -146,7 +147,8 @@ export default function App() {
       locale: { next: <strong aria-label="next">NEXT</strong> },
       placement: "center",
       target: "body",
-      defaultProps: false,
+      // defaultProps: false,
+      
       // spotlightClicks: true,
       // disableOverlayClose: false,
     },
@@ -170,7 +172,7 @@ export default function App() {
           beaconColor: "#fff",
           beaconBorderColor: "#fff",
           textColor: "#e675ce",
-          width: "100%",
+          width: "100%",  
           zIndex: 9999,
         },
         tooltip: {
@@ -225,6 +227,7 @@ export default function App() {
       content: <div> <h2>This is the Channels Page. Here, you can see the Channels of all the Protocols that are there on EPNS.</h2></div>,
       placement: "center",
       target: "body",
+      hideFooter: true,
     },
     {
       //4
@@ -386,7 +389,10 @@ export default function App() {
           <p>
           Hurray! The tutorial is complete. Congratulations, Now, you’ve got a pretty good understanding of the whole flow of EPNS Dapp.
           </p>
-          <button onClick={() => {dispatch(incrementStepIndex()); dispatch(setTutorialContinous(false));}}>Next(For Developers)</button>
+          <button onClick={() => {
+            if( isDeveloperOpen)
+            dispatch(incrementStepIndex());
+            dispatch(incrementStepIndex()); dispatch(setTutorialContinous(false));}}>Next(For Developers)</button>
 
           <button onClick={() => {dispatch(setRun(false))
       dispatch(setIndex(0))
@@ -411,30 +417,36 @@ export default function App() {
       locale: { next: <strong aria-label="next">NEXT</strong> },
       placement: "right-start",
       target: ".developer",
+      spotlightClicks: true,
+      disableAnimation: false,
+      disablefloating: false,
       defaultProps: false,
-      // spotlightClicks: true,
-      // disableOverlayClose: false,
     },
-    
     {
-      //14
+      //16
       content: (
         <div>
-          <h2>Tutorial Complete</h2>
-          <p>
-          Hurray! The tutorial is complete. Congratulations, Now, you’ve got a pretty good understanding of the whole flow of EPNS Dapp.
-          </p>
-          <button onClick={() => {dispatch(setRun(false))
-      dispatch(setIndex(0))
-      dispatch(setWelcomeNotifsEmpty());}}>Next</button>
+          <h2>Create channel</h2>
         </div>
       ),
-      locale: { next: <strong aria-label="next">NEXT</strong> },
-      placement: "center",
-      target: "body",
+      placement: "right-start",
+      target: ".create",
+      spotlightClicks: true,
+      disablefloating: true,
       defaultProps: false,
-      // spotlightClicks: true,
-      // disableOverlayClose: false,
+    },
+    {
+      //17
+      content: (
+        <div>
+          <h2>Develpoper Docs are here thank you</h2>
+        </div>
+      ),
+      placement: "right-start",
+      target: ".guide",
+      spotlightClicks: true,
+      disablefloating: true,
+      defaultProps: false,
     },
   ]
 
@@ -449,7 +461,7 @@ export default function App() {
     }
     
     
-    if ( action === "skip" || index == 18 ) { //action === "close" ||
+    if ( action === "skip" || index === 18 ) { //action === "close" ||
       dispatch(setRun(false))
       dispatch(setIndex(0))
       dispatch(setWelcomeNotifsEmpty());

@@ -400,7 +400,7 @@ function Navigation() {
                             console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
-                        if(run && (stepIndex === 1 && uid === 2))//sam
+                        if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 15 && uid === 3)))
                         {
                           setTimeout(() => {
                             dispatch(incrementStepIndex())
@@ -481,8 +481,8 @@ function Navigation() {
                   refresh={refresh}
                   onClick={() => {
                     // console.log();
-                    if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ))
-                    { //|| (stepIndex === 6 && data.name === "Channels")
+                    if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ||  (stepIndex === 16 && data.name === "Create Channel") ||  (stepIndex === 17 && data.name === "Developer's Guide")))
+                    { 
                       if(stepIndex === 10)dispatch(setTutorialContinous(true));
                       dispatch(incrementStepIndex())
                     }
