@@ -162,9 +162,7 @@ function InboxPage() {
     (async function init() {
       const coreProvider = onCoreNetwork
         ? library
-        : ethers.getDefaultProvider(ALLOWED_CORE_NETWORK, {
-            etherscan: config.etherscanToken,
-          });
+        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
@@ -217,10 +215,12 @@ function InboxPage() {
       // initialise the read contract for the communicator function
       if (!!(library && account)) {
         let signer = library.getSigner(account);
+        let coreSigner = coreProvider.getSigner(account);
+
         const coreSignerInstance = new ethers.Contract(
           addresses.epnscore,
           abis.epnscore,
-          signer
+          coreSigner
         );
         const communicatorSignerInstance = new ethers.Contract(
           commAddress,

@@ -7,6 +7,7 @@ import Loader from "react-loader-spinner";
 import hex2ascii from "hex2ascii";
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { envConfig } from "@project/contracts";
 
 import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
@@ -33,7 +34,7 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
-export const ALLOWED_CORE_NETWORK = 42; //chainId of network which we have deployed the core contract on
+export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 
 // Create Header
@@ -52,7 +53,8 @@ function ChannelDashboardPage() {
     epnsCommReadProvider,
   } = useSelector((state) => state.contracts);
 
-  const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
+  const CORE_CHAIN_ID = envConfig.coreContractChain;
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
   const [controlAt, setControlAt] = React.useState(0);
@@ -161,10 +163,7 @@ function ChannelDashboardPage() {
     (async function init() {
       const coreProvider = onCoreNetwork
         ? library
-        : ethers.getDefaultProvider(ALLOWED_CORE_NETWORK, {
-            etherscan: config.etherscanToken,
-        });
-      console.log(coreProvider);
+        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
@@ -218,10 +217,12 @@ function ChannelDashboardPage() {
       // initialise the read contract for the communicator function
       if (!!(library && account)) {
         let signer = library.getSigner(account);
+        let coreSigner = coreProvider.getSigner(account);
+
         const coreSignerInstance = new ethers.Contract(
           addresses.epnscore,
           abis.epnscore,
-          signer
+          coreSigner
         );
         const communicatorSignerInstance = new ethers.Contract(
           commAddress,
@@ -317,15 +318,14 @@ function ChannelDashboardPage() {
     if (!epnsWriteProvider) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
+    if (!ownerAccount) return;
     console.log(ownerAccount);
     EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
       .then(async (response) => {
-        console.log(response);
-        console.log(epnsWriteProvider);
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(
-          ownerAccount
-        );
+            ownerAccount
+          );
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
         const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
           ownerAccount
