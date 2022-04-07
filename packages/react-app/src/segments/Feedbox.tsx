@@ -26,7 +26,7 @@ import {
 } from "redux/slices/userJourneySlice";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
-const NOTIFICATIONS_PER_PAGE = 100000;
+const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
 function Feedbox() {
@@ -43,8 +43,11 @@ function Feedbox() {
 
   const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
 
+  const [limit , setLimit] = React.useState(10);
+  const [allNotf , setNotif] = React.useState([]);
   const [filteredNotifications , setFilteredNotifications] = React.useState([]);
   const [filter , setFilter] = React.useState(false);
+  const [loadFilter , setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState("inbox");
@@ -55,7 +58,9 @@ function Feedbox() {
         if(endDate == null)endDate = new Date('January 1, 3000');
         startDate = startDate.getTime()/1000;
         endDate = endDate.getTime()/1000;
+
         if(loading)return;
+        setBgUpdateLoading(true);
         setLoading(true);
         setFilter(true);
         var Filter = {
@@ -66,37 +71,54 @@ function Feedbox() {
 
         
         setFilteredNotifications([]);
-        if(notifications.length >= NOTIFICATIONS_PER_PAGE){
-            try {
-                const {count , results} = await postReq("/feeds/search", {
-                    subscriber : account,
-                    searchTerm: query,
-                    filter: Filter,
-                    isSpam: 0,
-                    page: 1,
-                    pageSize: 5,
-                    op: "read"
-                });
-                const parsedResponse = utils.parseApiResponse(results);
-                setFilteredNotifications([parsedResponse]);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        }
-        else{
+        // if(notifications.length >= NOTIFICATIONS_PER_PAGE){
+        //     try {
+        //         const {count , results} = await postReq("/feeds/search", {
+        //             subscriber : account,
+        //             searchTerm: query,
+        //             filter: Filter,
+        //             isSpam: 0,
+        //             page: 1,
+        //             pageSize: 5,
+        //             op: "read"
+        //         });
+        //         const parsedResponse = utils.parseApiResponse(results);
+        //         setFilteredNotifications([parsedResponse]);
+        //     }
+        //     catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+        // else{
+          try{
             let filterNotif = [];
-            for(const notif of notifications){
+            for(const notif of allNotf){
+              let timestamp;
+              const matches = notif.message.match(/\[timestamp:(.*?)\]/);
+              if(matches){
+                timestamp = matches[1];
+              }
+              else timestamp = notif.epoch;
                 if(
                     ( (Filter.channels === undefined ?  true : (Filter.channels.includes(notif.channel)))&&
-                notif.epoch >= startDate && notif.epoch <= endDate
+                timestamp >= startDate && timestamp <= endDate
                 && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())) )
                 )
                 filterNotif.push(notif);
+
+                
+
             }
-            setFilteredNotifications(filterNotif);
-        }
-        setLoading(false);
+            await setFilteredNotifications(filterNotif);
+          }catch(err){
+            console.log(err);
+          } finally {
+            setLoading(false);
+            setBgUpdateLoading(false);
+          }
+            
+        // }
+        
     }
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
@@ -113,7 +135,6 @@ function Feedbox() {
       if (count === 0) {
         dispatch(setFinishedFetching());
       }
-      console.log(notifications);
     } catch (err) {
       console.log(err);
     } finally {
@@ -163,28 +184,75 @@ function Feedbox() {
         }
     };
 
-    React.useEffect(() => {
-        if (account && currentTab === "inbox") {
-            fetchLatestNotifications();
-        }
-    }, [account, currentTab]);
+    const fetchAllNotif = async () => {
+      setLoadFilter(true);
+      try {
+          const { count, results } = await api.fetchNotifications(
+              account,
+              100000,
+              1,
+              envConfig.apiUrl
+          );
+          if (!notifications.length) {
+              dispatch(incrementPage());
+          }
+          const parsedResponse = utils.parseApiResponse(results);
+          const map1 = new Map();
+          const map2 = new Map();
+          results.forEach( each => {
+              map1.set(each.payload.data.sid , each.epoch);
+              map2.set(each.payload.data.sid , each.channel);
+          })
+          parsedResponse.forEach( each => {
+              each.date = map1.get(each.sid);
+              each.epoch = (new Date(each.date).getTime() / 1000);
+              each.channel = map2.get(each.sid);
+          })
+          setNotif(parsedResponse);
+      } catch (err) {
+          console.log(err);
+      } finally {
+        setLoadFilter(false);
+      }
+  };
+
+    // React.useEffect(() => {
+    //     if (account && currentTab === "inbox") {
+    //         fetchLatestNotifications();
+    //     }
+    // }, [account, currentTab]);
 
     React.useEffect(() => {
         fetchLatestNotifications();
+        fetchAllNotif();
     }, [toggle]);
 
     //function to query more notifications
     const handlePagination = async () => {
+      if(filter){
+        setLimit(limit+10);
+      }
+      else{
         loadNotifications();
         dispatch(incrementPage());
+      }
+        
     };
 
     const showWayPoint = (index: any) => {
-        return (
+      if(!filter){
+          return (
             Number(index) === notifications.length - 1 &&
             !finishedFetching &&
             !bgUpdateLoading
         );
+      }
+      else{
+        return (
+          Number(index) === limit - 1
+      );
+      }
+        
     };
     const [clicked, setClicked] = React.useState(false);
 
@@ -192,7 +260,7 @@ function Feedbox() {
   return (
     <ThemeProvider theme={themes}>
     <Container>
-    <SearchFilter notifications={notifications} filterNotifications={filterNotifications} filter={filter} reset={reset}/>
+    <SearchFilter notifications={allNotf} filterNotifications={filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter}/>
       {notifications && (
         <Notifs id="scrollstyle-secondary">
 
@@ -228,8 +296,7 @@ function Feedbox() {
               );
             })
           }
-            {
-            (filter? filteredNotifications : notifications).map((oneNotification, index) => {
+            {(filter? filteredNotifications.slice(0,limit) : notifications).map((oneNotification, index) => {
             const {
               cta,
               title,
@@ -241,7 +308,7 @@ function Feedbox() {
             if(run) return;
             // render the notification item
             return (
-              <div key={`${message}+${title}`}>
+              <div key={index}>
                 {showWayPoint(index) && (
                   <Waypoint onEnter={() => handlePagination()} />
                 )}

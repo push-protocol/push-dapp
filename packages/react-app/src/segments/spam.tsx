@@ -15,13 +15,13 @@ import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
+  updateTopNotifications
 } from "redux/slices/spamSlice";
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
-import { updateTopNotifications } from "redux/slices/notificationSlice";
 import {ThemeProvider} from "styled-components";
 
-const NOTIFICATIONS_PER_PAGE = 1000000;
+const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 function SpamBox({ currentTab }) {
   const dispatch = useDispatch();
@@ -45,6 +45,8 @@ function SpamBox({ currentTab }) {
     chainId: chainId,
     verifyingContract: epnsCommReadProvider?.address,
   };
+  const [allNotif , setNotif] = React.useState([]);
+  const [loadFilter , setLoadFilter] = React.useState(false);
   const [filteredNotifications , setFilteredNotifications] = React.useState([]);
   const [filter , setFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
@@ -54,6 +56,7 @@ function SpamBox({ currentTab }) {
   const filterNotifications = async (query , channels , startDate , endDate) => {
     if(loading)return;
     setLoading(true);
+    setBgUpdateLoading(true);
     setFilter(true);
     if(startDate == null)startDate = new Date('January 1, 2000');
     if(endDate == null)endDate = new Date('January 1, 3000');
@@ -67,37 +70,45 @@ function SpamBox({ currentTab }) {
 
 
     setFilteredNotifications([]);
-    if(notifications.length >= NOTIFICATIONS_PER_PAGE){
-        try {
-            const {count , results} = await postReq("/feeds/search", {
-                subscriber : account,
-                searchTerm: query,
-                filter: Filter,
-                isSpam: 1,
-                page: 1,
-                pageSize: 5,
-                op: "read"
-            });
-            const parsedResponse = utils.parseApiResponse(results);
-            setFilteredNotifications([parsedResponse]);
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-    else{
+    // if(notifications.length >= NOTIFICATIONS_PER_PAGE){
+    //     try {
+    //         const {count , results} = await postReq("/feeds/search", {
+    //             subscriber : account,
+    //             searchTerm: query,
+    //             filter: Filter,
+    //             isSpam: 1,
+    //             page: 1,
+    //             pageSize: 5,
+    //             op: "read"
+    //         });
+    //         const parsedResponse = utils.parseApiResponse(results);
+    //         setFilteredNotifications([parsedResponse]);
+    //     }
+    //     catch (err) {
+    //         console.log(err);
+    //     }
+    // }
+    // else{
+    
         let filterNotif = [];
-        for(const notif of notifications){
-          if(
-              ( (Filter.channels === undefined ?  true : (Filter.channels.includes(notif.channel)))&&
-          notif.epoch >= startDate && notif.epoch <= endDate
-          && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())) )
-          )
+        for(const notif of allNotif){
+          let timestamp;
+          const matches = notif.message.match(/\[timestamp:(.*?)\]/);
+            if(matches){
+              timestamp = matches[1];
+            }
+            else timestamp = notif.epoch;
+            if(
+                ( (Filter.channels === undefined ?  true : (Filter.channels.includes(notif.channel)))&&
+            timestamp >= startDate && timestamp <= endDate
+            &&  notif.message.toLowerCase().includes(query.toLowerCase()) )
+            )
             filterNotif.push(notif);
         }
         setFilteredNotifications(filterNotif);
-    }
+    // }
     setLoading(false);
+    setBgUpdateLoading(false);
 }
 
   const loadNotifications = async () => {
@@ -187,11 +198,56 @@ function SpamBox({ currentTab }) {
     }
   };
 
-  React.useEffect(() => {
-    if (account && currentTab === "spambox") {
-      fetchLatestNotifications();
+  const fetchAllNotif = async () => {
+    setLoadFilter(true);
+    try {
+      const { count, results } = await api.fetchSpamNotifications(
+        account,
+        100000,
+        1,
+        envConfig.apiUrl
+      );
+      if (!notifications.length) {
+        dispatch(incrementPage());
+      }
+      let parsedResponse = utils.parseApiResponse(results);
+        parsedResponse.forEach( (each,i) => {
+            each.date = results[i].epoch;
+            each.epoch = (new Date(each.date).getTime() / 1000);
+        })
+        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+          elem.channel = results[i].channel;
+          const {
+            data: { subscribers },
+          } = await postReq("/channels/get_subscribers", {
+            channel: results[i].channel,
+            op: "read",
+          });
+          elem.subscribers = subscribers;
+          return { ...elem };
+        });
+      parsedResponse = await Promise.all(parsedResponsePromise);
+      let res = parsedResponse.filter( notif => !isSubscribedFn(notif.subscribers));
+      setNotif(res);
+
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setBgUpdateLoading(false);
+      setLoading(false);
+      setLoadFilter(false);
     }
-  }, [account, currentTab]);
+  };
+
+  React.useEffect(() => {
+    // if (account && currentTab === "spambox") {
+      fetchLatestNotifications();
+      fetchAllNotif();
+    // }
+    // else{
+    //   console.log(account);
+    // }
+  }, []);
 
   React.useEffect(() => {
     if (epnsCommReadProvider) {
@@ -241,7 +297,7 @@ function SpamBox({ currentTab }) {
     });
   };
 
-  const isSubscribedFn = async (subscribers: any) => {
+  const isSubscribedFn = (subscribers: any) => {
     return subscribers
       .map((a) => a.toLowerCase())
       .includes(account.toLowerCase());
@@ -251,7 +307,7 @@ function SpamBox({ currentTab }) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-      <SearchFilter notifications = {notifications} filterNotifications = {filterNotifications} filter={filter} reset={reset}/>
+      <SearchFilter notifications = {allNotif} filterNotifications = {filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter}/>
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
             <Loader type="Oval" color="#35c5f3" height={40} width={40} />
@@ -271,8 +327,9 @@ function SpamBox({ currentTab }) {
                 subscribers,
               } = oneNotification;
               // render the notification item
+              // console.log(app , index);
               return (
-                <div key={`${message}+${title}`}>
+                <div key={index}>
                   {showWayPoint(index) && !loading && (
                     <Waypoint onEnter={handlePagination} />
                   )}
