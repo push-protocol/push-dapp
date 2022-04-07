@@ -71,7 +71,7 @@ const ChannelOwnerDashboard = () => {
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
-
+          
           {aliasVerified === false &&
             <>
               <ThemeProvider theme={themes}>
@@ -114,13 +114,13 @@ const ChannelOwnerDashboard = () => {
           }
           {/* display the create channel page if there are no details */}
           {/* display the channel settings */}
-          {channelDetails && (!onCoreNetwork && aliasVerified) ? <ChannelSettings /> : ""}
+          {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelSettings /> : ""}
           {/* display the channel settings */}
           {/* display the details about the profile of the channel */}
-          {channelDetails && (!onCoreNetwork && aliasVerified) ? <ChannelDetails /> : ""}
+          {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
           {/* display the details about the profile of the channel */}
           {/* display the notifications settings */}
-          {(channelDetails && (!onCoreNetwork && aliasVerified)) || delegatees?.length ? <SendNotifications /> : ""}
+          {(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""}
           {/* display the notifications settings */}
         </ModifiedContent>
       </Section>

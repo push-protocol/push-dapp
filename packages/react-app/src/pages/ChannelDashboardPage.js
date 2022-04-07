@@ -269,8 +269,9 @@ function ChannelDashboardPage() {
         epnsReadProvider,
         epnsCommReadProvider
       );
+      
       await checkUserForAlias();
-      checkUserForChannelOwnership();
+      await checkUserForChannelOwnership();
       listenFornewNotifications();
       fetchDelegators();
     }
@@ -315,10 +316,8 @@ function ChannelDashboardPage() {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
-    if (!epnsWriteProvider) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
-    if (!ownerAccount) return;
     console.log(ownerAccount);
     EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
       .then(async (response) => {
