@@ -57,9 +57,7 @@ const ChannelOwnerDashboard = () => {
               return;
             }
             const { status } = data;
-            console.log(status);
             setAliasVerified(status);
-            console.log(aliasVerified);
             return data;
           });
         }
@@ -108,7 +106,7 @@ const ChannelOwnerDashboard = () => {
 
           {modalOpen &&
             <AliasVerificationModal
-              onClose={() => setModalOpen(false)}
+              onClose={(val) => setModalOpen(val)}
               onSuccess={() => setAliasVerified(true)}
               verificationStatus={aliasVerified}
               aliasEthAccount={aliasEthAccount}
@@ -116,13 +114,13 @@ const ChannelOwnerDashboard = () => {
           }
           {/* display the create channel page if there are no details */}
           {/* display the channel settings */}
-          {channelDetails ? <ChannelSettings /> : ""}
+          {channelDetails && (!onCoreNetwork && aliasVerified) ? <ChannelSettings /> : ""}
           {/* display the channel settings */}
           {/* display the details about the profile of the channel */}
-          {channelDetails ? <ChannelDetails /> : ""}
+          {channelDetails && (!onCoreNetwork && aliasVerified) ? <ChannelDetails /> : ""}
           {/* display the details about the profile of the channel */}
           {/* display the notifications settings */}
-          {channelDetails || delegatees?.length ? <SendNotifications /> : ""}
+          {(channelDetails && (!onCoreNetwork && aliasVerified)) || delegatees?.length ? <SendNotifications /> : ""}
           {/* display the notifications settings */}
         </ModifiedContent>
       </Section>
