@@ -72,7 +72,7 @@ const ChannelOwnerDashboard = () => {
           {/* display the create channel page if there are no details */}
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
           
-          {aliasVerified === false &&
+          {aliasEthAccount !== null && aliasVerified === false &&
             <>
               <ThemeProvider theme={themes}>
                 <Section>
