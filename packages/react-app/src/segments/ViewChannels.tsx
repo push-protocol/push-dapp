@@ -176,7 +176,7 @@ function ViewChannels() {
               </SearchContainer>
 
               {!UtilityHelper.isMainnet(chainId) && 
-                <Faucets /> 
+                <Faucets chainId={chainId} /> 
               }
               
             </ItemH>
