@@ -267,7 +267,8 @@ function ChannelDashboardPage() {
       ChannelsDataStore.instance.init(
         account,
         epnsReadProvider,
-        epnsCommReadProvider
+        epnsCommReadProvider,
+        chainId
       );
       
       await checkUserForAlias();

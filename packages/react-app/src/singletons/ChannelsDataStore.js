@@ -30,12 +30,16 @@ export default class ChannelsDataStore {
     account: null,
     epnsReadProvider: null,
     epnsCommReadProvider: null,
+    chainId: null,
   };
 
   // init
-  init = (account, epnsReadProvider, epnsCommReadProvider) => {
+  init = (account, epnsReadProvider, epnsCommReadProvider, chainId) => {
     // set account
     this.state.account = account;
+
+    // set chainId
+    this.state.chainId = chainId;
 
     // First attach listeners then overwrite the old one if any
     this.resetChannelsListeners();
@@ -318,12 +322,14 @@ export default class ChannelsDataStore {
    * @returns
    */
   getChannelFromApi = async (startIndex, pageCount) => {
-    return postReq("/channels/fetch_channels", {
+    return postReq("/channels/get_channels_with_sub", {
       page: Math.ceil(startIndex / pageCount) || 1,
       pageSize: pageCount,
-      op: "write",
+      address: this.state.account,
+      blockchain: this.state.chainId,
+      op: "read",
     }).then((response) => {
-      const output = response.data.results.map(({channel}) => ({addr: channel}));
+      const output = response.data.channelsDetail.map(({channel}) => ({addr: channel}));
       return output;
     });
   };

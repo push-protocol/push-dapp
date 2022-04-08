@@ -265,7 +265,8 @@ function InboxPage() {
       ChannelsDataStore.instance.init(
         account,
         epnsReadProvider,
-        epnsCommReadProvider
+        epnsCommReadProvider,
+        chainId
       );
       checkUserForChannelOwnership();
       listenFornewNotifications();
