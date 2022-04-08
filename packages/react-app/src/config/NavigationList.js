@@ -196,22 +196,60 @@ const NavigationList = {
         name: 'Govern',
         title: 'Governance Tab',
         alt: 'Governance Tab Icon', 
-        href: '/govern',
+        href: null,
         newTab: false,
         opened: false,
         isRoute: true,
         hasMenuLogic: true,
-        headerTag: {
-          title: "Let's Govern",
-          light: {
-            bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-            fg: themeLight.headerTagFg,
+  
+        drilldown: {
+          governance: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
+            src: "svg/channeladmin.svg",
+            iconFactory: null,
+            name: 'Governance DAPP',
+            title: 'Governance DAPP',
+            alt: 'Governance DAPP',
+            href: '/govern',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Governance DAPP',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
           },
-          dark: {
-            bg: themeDark.headerTagBg,
-            fg: themeDark.headerTagFg,
-          }
-        }
+          governanceGuide: {
+            uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE_GUIDE,
+            src: "svg/tutorial.svg",
+            iconFactory: null,
+            name: "Governance Guide",
+            title: "Governance Guide",
+            alt: "Governance Guide",
+            href: ' https://docs.epns.io/epns-governance/governance-guide',
+            newTab: false,
+            isRoute: false,
+            hasMenuLogic: true,
+            headerTag: {
+              title: "Governance Guide",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+        },
       },
       incentives: {
         src: "svg/incentive.svg",
