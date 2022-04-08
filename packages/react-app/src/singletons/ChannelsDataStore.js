@@ -1,7 +1,7 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { ethers } from "ethers";
 
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { postReq } from "api";
 
 // STATIC SINGLETON
@@ -31,6 +31,7 @@ export default class ChannelsDataStore {
     epnsReadProvider: null,
     epnsCommReadProvider: null,
     chainId: null,
+    onCoreNetwork: false,
   };
 
   // init
@@ -40,6 +41,7 @@ export default class ChannelsDataStore {
 
     // set chainId
     this.state.chainId = chainId;
+    this.state.onCoreNetwork = (chainId === envConfig.coreContractChain);
 
     // First attach listeners then overwrite the old one if any
     this.resetChannelsListeners();
@@ -450,12 +452,28 @@ export default class ChannelsDataStore {
   };
 
   getChannelSubscribers = async (channelAddress) => {
+    if (!channelAddress) return;
     const cachedSubscribers = this.state.subscribers[channelAddress];
     if (cachedSubscribers) {
       return cachedSubscribers;
     }
+    let address = channelAddress;
+    if (!this.state.onCoreNetwork) {
+      await postReq("/channels/get_alias_details", {
+          channel: channelAddress,
+          op: "read",
+        }).then(({ data }) => {
+          const aliasAccount = data;
+          if (aliasAccount) {
+            address = aliasAccount.aliasAddress;
+          }
+          return data;
+        });
+    }
+
     return postReq("/channels/get_subscribers", {
-      channel: channelAddress,
+      channel: address,
+      blockchain: this.state.chainId,
       op: "read",
     })
       .then(({ data }) => {

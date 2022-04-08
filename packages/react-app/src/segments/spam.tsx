@@ -19,7 +19,7 @@ import {
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
 import { updateTopNotifications } from "redux/slices/notificationSlice";
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
 
 const NOTIFICATIONS_PER_PAGE = 1000000;
 // Create Header
@@ -47,6 +47,8 @@ function SpamBox({ currentTab }) {
   const [filter , setFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
+  const onCoreNetwork = (chainId === envConfig.coreContractChain);
 
   const reset = ()=>setFilter(false);
   const filterNotifications = async (query , channels , startDate , endDate) => {
@@ -117,10 +119,15 @@ function SpamBox({ currentTab }) {
           })
           const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
             elem.channel = results[i].channel;
+            let address = results[i].channel;
+            if (!onCoreNetwork) {
+              address = await fetchAliasAddress(results[i].channel);
+            }
             const {
               data: { subscribers },
             } = await postReq("/channels/get_subscribers", {
-              channel: results[i].channel,
+              channel: address,
+              blockchain: chainId,
               op: "read",
             });
             elem.subscribers = subscribers;
@@ -160,10 +167,15 @@ function SpamBox({ currentTab }) {
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
+          let address = results[i].channel;
+          if (!onCoreNetwork) {
+            address = await fetchAliasAddress(results[i].channel);
+          }
           const {
             data: { subscribers },
           } = await postReq("/channels/get_subscribers", {
-            channel: results[i].channel,
+            channel: address,
+            blockchain: chainId,
             op: "read",
           });
           elem.subscribers = subscribers;
@@ -199,6 +211,23 @@ function SpamBox({ currentTab }) {
     }
   }, [epnsCommReadProvider, account]);
 
+  const fetchAliasAddress = async (channelAddress) => {
+    if (channelAddress === null) return;
+    const ethAlias = await postReq("/channels/get_alias_details", {
+          channel: channelAddress,
+          op: "read",
+        }).then(({ data }) => {
+          console.log({ data });
+          let aliasAccount;
+          if (data) {
+            aliasAccount = data.aliasAddress
+          }
+          return aliasAccount;
+        });
+    
+    return ethAlias;
+  }
+
   //function to query more notifications
   const handlePagination = async () => {
     loadNotifications();
@@ -215,6 +244,12 @@ function SpamBox({ currentTab }) {
 
   const onSubscribeToChannel = async (channelAddress) => {
     let txToast;
+
+    let address = channelAddress;
+    if (!onCoreNetwork) {
+      address = await fetchAliasAddress(channelAddress);
+    }
+
     const type = {
       Subscribe: [
         { name: "channel", type: "address" },
@@ -223,7 +258,7 @@ function SpamBox({ currentTab }) {
       ],
     };
     const message = {
-      channel: channelAddress,
+      channel: address,
       subscriber: account,
       action: "Subscribe",
     };

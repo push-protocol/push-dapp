@@ -27,6 +27,8 @@ import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
+import { envConfig } from "@project/contracts";
+
 // Create Header
 function ViewChannelItem({ channelObjectProp }) {
   const dispatch = useDispatch();
@@ -49,9 +51,11 @@ function ViewChannelItem({ channelObjectProp }) {
     (state) => state.channels
   );
   const { account, library, chainId } = useWeb3React();
-  const isOwner = channelObjectProp.addr === account;
+
+  const onCoreNetwork = (chainId === envConfig.coreContractChain);
 
   const [channelObject, setChannelObject] = React.useState({});
+  const [isOwner, setIsOwner] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState({});
   const [subscribed, setSubscribed] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
@@ -65,6 +69,7 @@ function ViewChannelItem({ channelObjectProp }) {
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(null);
+  const [ethAliasAccount, setEthAliasAccount] = React.useState(null);
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
@@ -95,6 +100,29 @@ function ViewChannelItem({ channelObjectProp }) {
       });
     }
   }, [account, channelObject, chainId]);
+
+  React.useEffect(() => {
+    (async function init() {
+      // if we are not on the core network then check for if this account is an alias for another channel
+      if (!onCoreNetwork) {
+        if (channelObject.addr === null) return;
+        // get the alias address of the eth address, in order to properly render information about the channel
+        const aliasEth = await postReq("/channels/get_alias_details", {
+          channel: channelObject.addr,
+          op: "read",
+        }).then(({ data }) => {
+          console.log({ data });
+          const aliasAccount = data;
+          if (aliasAccount) {
+            setEthAliasAccount(aliasAccount.aliasAddress);
+            setIsOwner(account === aliasAccount.aliasAddress);
+            fetchChannelJson();
+          }
+          return data;
+        });
+      }
+    })();
+    }, [account, channelObject, chainId]);
 
   React.useEffect(() => {
     if (!channelObjectProp) return;
@@ -136,8 +164,14 @@ function ViewChannelItem({ channelObjectProp }) {
           })
         );
       }
+      let channelAddress = channelObject.addr;
+      if (!onCoreNetwork) {
+        channelAddress = ethAliasAccount;
+      }
+      if (channelAddress === null) return;
       const channelSubscribers = await postReq("/channels/get_subscribers", {
-        channel: channelObject.addr,
+        channel: channelAddress,
+        blockchain: chainId,
         op: "read",
       })
         .then(({ data }) => {
@@ -152,7 +186,6 @@ function ViewChannelItem({ channelObjectProp }) {
       const subscribed = channelSubscribers.find((sub) => {
         return sub.toLowerCase() === account.toLowerCase();
       });
-
       setIsPushAdmin(pushAdminAddress === account);
       setMemberCount(channelSubscribers.length);
       setSubscribed(subscribed);
@@ -308,8 +341,14 @@ function ViewChannelItem({ channelObjectProp }) {
           { name: "action", type: "string" },
         ],
       };
+
+      let channelAddress = channelObject.addr;
+      if (!onCoreNetwork) {
+        channelAddress = ethAliasAccount;
+      }
+
       const message = {
-        channel: channelObject.addr,
+        channel: channelAddress,
         subscriber: account,
         action: "Subscribe",
       };
@@ -392,8 +431,14 @@ function ViewChannelItem({ channelObjectProp }) {
           { name: "action", type: "string" },
         ],
       };
+
+      let channelAddress = channelObject.addr;
+      if (!onCoreNetwork) {
+        channelAddress = ethAliasAccount;
+      }
+
       const message = {
-        channel: channelObject.addr,
+        channel: channelAddress,
         unsubscriber: account,
         action: "Unsubscribe",
       };
@@ -531,6 +576,8 @@ function ViewChannelItem({ channelObjectProp }) {
                 text={memberCount}
                 bgColor={themes.viewChannelSecondaryBG}
               />
+                  <div>{channelJson.addr}</div>
+                  <div>{ethAliasAccount}</div>
 
               <MetaInfoDisplayer
                 externalIcon={<FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />}
