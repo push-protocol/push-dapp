@@ -468,7 +468,7 @@ function ViewChannelItem({ channelObjectProp }) {
       })
         .then((res) => {
           setSubscribed(false);
-          setMemberCount(memberCount + 1);
+          setMemberCount(memberCount - 1);
           toaster.update(txToast, {
             render: "Sucesfully opted out of channel !",
             type: toaster.TYPE.SUCCESS,
