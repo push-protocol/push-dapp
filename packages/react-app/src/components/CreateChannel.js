@@ -330,7 +330,7 @@ function CreateChannel() {
         <Section>
           <Content padding="50px 20px 20px">
             <Item align="flex-start">
-              <H3 color="#e20880">
+                <H3 color="#e20880" weight={700}>
                 You can't Create Channel on Alias Chains. Please switch to Ethereum Kovan Network to create a channel.
               </H3>
               </Item>
