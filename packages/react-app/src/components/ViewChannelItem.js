@@ -576,8 +576,6 @@ function ViewChannelItem({ channelObjectProp }) {
                 text={memberCount}
                 bgColor={themes.viewChannelSecondaryBG}
               />
-                  <div>{channelJson.addr}</div>
-                  <div>{ethAliasAccount}</div>
 
               <MetaInfoDisplayer
                 externalIcon={<FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />}
