@@ -186,9 +186,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               channel &&
               channel.addr !== ZERO_ADDRESS && (
                 <>
-                  <div key={channel.addr}>
+                  <Item key={channel.addr} self="stretch">
                     <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
-                  </div>
+                  </Item>
                   {showWayPoint(index) && (
                     <Waypoint onEnter={updateCurrentPage} />
                   )}

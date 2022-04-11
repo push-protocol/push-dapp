@@ -159,6 +159,7 @@ const PreviewContent = styled.div`
   max-width: 1140px;
   flex: 1 1;
   display: flex;
+  flex-direction: column;
 `
 
 const Preview = styled.div`
