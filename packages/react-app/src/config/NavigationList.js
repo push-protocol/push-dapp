@@ -207,17 +207,17 @@ const NavigationList = {
         drilldown: {
           governance: {
             uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
-            src: "svg/channeladmin.svg",
+            src: "svg/governalt.svg",
             iconFactory: null,
-            name: 'Governance DAPP',
-            title: 'Governance DAPP',
-            alt: 'Governance DAPP',
+            name: 'Governance',
+            title: 'Governance',
+            alt: 'Governance',
             href: '/govern',
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
             headerTag: {
-              title: 'Governance DAPP',
+              title: 'Governance',
               light: {
                 bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
@@ -232,15 +232,15 @@ const NavigationList = {
             uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE_GUIDE,
             src: "svg/tutorial.svg",
             iconFactory: null,
-            name: "Governance Guide",
-            title: "Governance Guide",
-            alt: "Governance Guide",
+            name: "Learn to Govern",
+            title: "Learn to Govern",
+            alt: "Learn to Govern",
             href: ' https://docs.epns.io/epns-governance/governance-guide',
             newTab: false,
             isRoute: false,
             hasMenuLogic: true,
             headerTag: {
-              title: "Governance Guide",
+              title: "Learn to Govern",
               light: {
                 bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,

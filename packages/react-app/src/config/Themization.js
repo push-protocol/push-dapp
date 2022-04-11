@@ -35,7 +35,9 @@ const themeLight = {
   backgroundBG: '#fff',
   mainBg: '#fff',
   fontColor: '#000',
+  fontColorSecondary: '#00000099',
   scrollBg: '#eee',
+  borderBg: '#f1f1f1',
 
   // View Channels Theme
 
@@ -60,6 +62,9 @@ const themeLight = {
   viewChannelSecondaryBG: '#35c5f3',
   viewChannelSecondaryIcon: '#ccc',
 
+  // -- -- View Channel Tuts
+  viewChannelTutsTitleBg: '#000',
+  viewChannelTutsButtonBg: '#e20880',
 
   yieldBg: "#f3f3f3",
 
@@ -114,7 +119,9 @@ const themeDark = {
   backgroundBG: '#222',
   mainBg: '#000',
   fontColor: '#fff',
+  fontColorSecondary: '#ffffff99',
   scrollBg: '#333',
+  borderBg: '#333',
 
   // View Channels Theme
   // -- View Channel Header Theme
@@ -137,6 +144,10 @@ const themeDark = {
   viewChannelIconBorder: '#222',
   viewChannelSecondaryBG: '#222',
   viewChannelSecondaryIcon: '#414141',
+
+  // -- -- View Channel Tuts
+  viewChannelTutsTitleBg: '#000',
+  viewChannelTutsButtonBg: '#000',
 
   color: "#fff",
 

@@ -28,7 +28,7 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 import { incrementStepIndex,addNewWelcomeNotif } from "redux/slices/userJourneySlice";
 // Create Header
-function ViewChannelItem({ channelObjectProp }) {
+function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
 
   const themes = useTheme();
@@ -491,8 +491,7 @@ function ViewChannelItem({ channelObjectProp }) {
 
   // render
   return (
-    <ThemeProvider theme={themes}>
-    <Container key={channelObject.addr} className={channelObject.addr} id={`addr-${channelObject.addr}`}>
+    <Container key={channelObject.addr}>
       <ChannelLogo>
         <ChannelLogoOuter>
           <ChannelLogoInner>
@@ -514,7 +513,6 @@ function ViewChannelItem({ channelObjectProp }) {
               href={channelJson.url}
               target="_blank"
               rel="nofollow"
-              
             >
               <Span>
                 {channelJson.name}
@@ -522,7 +520,7 @@ function ViewChannelItem({ channelObjectProp }) {
                   <Span 
                     margin="0px 5px"
                   >
-                   <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
+                  <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
                   </Span>
                 )}
               </Span>
@@ -591,6 +589,8 @@ function ViewChannelItem({ channelObjectProp }) {
                 <ChannelTutorial 
                   addr={channelObject.addr}
                   bgColor={themes.viewChannelSecondaryBG}
+                  loadTeaser={loadTeaser}
+                  playTeaser={playTeaser}
                 />
               }
                   
@@ -685,7 +685,6 @@ function ViewChannelItem({ channelObjectProp }) {
         <NotificationToast notification={toast} clearToast={clearToast} />
       )}
     </Container>
-    </ThemeProvider>
   );
 }
 
@@ -709,6 +708,8 @@ const Container = styled.div`
   margin: 15px 0px;
   justify-content: center;
   padding: 10px;
+
+  align-self: stretch;
 `;
 
 const SkeletonWrapper = styled.div`
