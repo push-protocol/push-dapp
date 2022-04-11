@@ -27,7 +27,7 @@ const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const SEARCH_DELAY = 1500;
 
 // Create Header
-function ViewChannels() {
+function ViewChannels({ loadTeaser, playTeaser }) {
   const themes = useTheme();
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
@@ -187,7 +187,7 @@ function ViewChannels() {
               channel.addr !== ZERO_ADDRESS && (
                 <>
                   <div key={channel.addr}>
-                    <ViewChannelItem channelObjectProp={channel} />
+                    <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
                   </div>
                   {showWayPoint(index) && (
                     <Waypoint onEnter={updateCurrentPage} />
