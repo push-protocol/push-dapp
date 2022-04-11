@@ -304,6 +304,7 @@ function SpamBox({ currentTab }) {
                 image,
                 channel,
                 subscribers,
+                blockchain
               } = oneNotification;
               // render the notification item
               return (
@@ -325,6 +326,7 @@ function SpamBox({ currentTab }) {
                     }}
                     isSpam
                     isSubscribedFn={async () => isSubscribedFn(subscribers)}
+                    chainName={blockchain}
                   />
                 </div>
               );
