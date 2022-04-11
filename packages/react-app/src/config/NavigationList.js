@@ -350,9 +350,9 @@ const NavigationList = {
           tutorial: {
             src: "svg/tutorial.svg",
             iconFactory: null,
-            name: 'Tutorial',
-            title: 'Tutorial',
-            alt: 'Open Tutorial',
+            name: 'Live Walkthrough',
+            title: 'Live Walkthrough',
+            alt: 'Start Live Walkthrough',
             href: '/tutorial',
             newTab: false,
             isRoute: true,  
@@ -360,7 +360,7 @@ const NavigationList = {
             headerTag: {
               title: "App Walkthrough",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
