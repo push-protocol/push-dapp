@@ -14,28 +14,12 @@ function  Info() {
   const { account, library } = useWeb3React();
 
   const [controlAt, setControlAt] = React.useState(0);
-  const [loading, setLoading] = React.useState(false);
 
   return (
     <Container>
-      {loading &&
-        <ContainerInfo>
-          <Loader
-           type="Oval"
-           color="#35c5f3"
-           height={40}
-           width={40}
-          />
-        </ContainerInfo>
-      }
-
-      {!loading && controlAt == 0 &&
-      <>
-        <InfoBox>
-          <ViewInfoItem/>
-        </InfoBox>
-      </>
-      }
+      <InfoBox>
+        <ViewInfoItem/>
+      </InfoBox>
     </Container>
   );
 }
@@ -58,7 +42,6 @@ const ContainerInfo = styled.div`
   padding: 20px;
 `
 const InfoBox = styled.div`
-  padding: 10px 20px;
   display: block;
   align-self: stretch;
   background: ${props => props.theme.mainBg};

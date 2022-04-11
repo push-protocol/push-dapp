@@ -40,9 +40,8 @@ export const ALLOWED_CORE_NETWORK = 42; //chainId of network which we have deplo
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
 
 // Create Header
-function InboxPage() {
+function InboxPage({ loadTeaser, playTeaser }) {
   ReactGA.pageview("/channels");
-
 
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
@@ -354,7 +353,7 @@ function InboxPage() {
     <Container>
       <Interface>
         {controlAt == 0 && <Feedbox />}
-        {controlAt == 1 && <ViewChannels />}
+        {controlAt == 1 && <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} />}
         {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
         {controlAt == 3 && <Info />}
         {toast && (
