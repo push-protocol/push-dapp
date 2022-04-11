@@ -186,9 +186,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               channel &&
               channel.addr !== ZERO_ADDRESS && (
                 <>
-                  <Item key={channel.addr} self="stretch">
+                  <ViewChannelItems key={channel.addr} self="stretch">
                     <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
-                  </Item>
+                  </ViewChannelItems>
+
                   {showWayPoint(index) && (
                     <Waypoint onEnter={updateCurrentPage} />
                   )}
@@ -268,6 +269,10 @@ const Container = styled.div`
 const ContainerInfo = styled.div`
   padding: 20px;
 `;
+
+const ViewChannelItems = styled.div`
+  align-self: stretch;
+`
 
 const CenteredContainerInfo = styled.div`
   padding: 20px;
