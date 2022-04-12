@@ -16,7 +16,7 @@ import { GiTwoCoins } from 'react-icons/gi';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
+// import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
 import ReactPlayer from 'react-player';
 

@@ -2,7 +2,7 @@ import React from "react";
 
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-import { parseEther, bigNumber } from 'ethers/utils'
+// import { parseEther, bigNumber } from 'ethers/utils'
 
 // FeedDB Helper Function
 const NFTHelper = {

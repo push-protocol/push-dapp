@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 
 import Loader from 'react-loader-spinner';
-import { bigNumberify, parseUnits } from 'ethers/utils'
+// import { bigNumberify, parseUnits } from 'ethers/utils'
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
