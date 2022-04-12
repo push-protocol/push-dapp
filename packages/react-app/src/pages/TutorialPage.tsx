@@ -47,7 +47,7 @@ function TutorialPage(props) {
                 hover="#e20880"
               >
                 <Span color={themes.color}>
-                  LFG! Show me everything!
+                  Show me everything!
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"}/>
               </Question>
