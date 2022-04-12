@@ -291,6 +291,7 @@ function Feedbox() {
                     app={app}
                     icon={icon}
                     image={image}
+                    theme={themes.scheme}
                   />
                 </div>
               );
