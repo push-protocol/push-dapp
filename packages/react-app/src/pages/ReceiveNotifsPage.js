@@ -23,7 +23,7 @@ function ReceiveNotifsPage() {
 
           <Item align="stretch" justify="flex-start" margin="0px 0px 0px 0px">
             <H2 textTransform="uppercase" spacing="0.1em" margin="10px 0px 20px 0px">
-              <Span weight="200" color={themes.fontColor}>Recieve </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">Notifications</Span>
+              <Span weight="200" color={themes.fontColor}>Receive </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">Notifications</Span>
             </H2>
             <H3 maxWidth="768px" color={themes.fontColorSecondary}>The following frontends enables receiving push alerts for your wallet. More coming soon!</H3>
           </Item>
