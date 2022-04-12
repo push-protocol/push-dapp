@@ -185,32 +185,6 @@ const channelsTuts = {
     userjourneyshort: 'thedefiant',
     article: 'https://medium.com/ethereum-push-notification-service/epns-teams-up-with-the-defiant-to-bring-defi-news-directly-to-users-wallets-8b4896d674bb'
   },
-
-
-/*
-Zaryab, Nilesh
-For the following channels, I couldnt get the sample screenshots of the notifs.
-Im working on getting them.
-
-  need dummy notifs from 
-  ens
-  coindesk
-  snapshot
-  oasis
-  PoH
-  KyberSwap
-  Angle
-  Idle
-  Armor
-  pods
-  ooki
-  symphony
-  Aave
-*/
-  
-  
-
-  
 }
 
 export default channelsTuts;
