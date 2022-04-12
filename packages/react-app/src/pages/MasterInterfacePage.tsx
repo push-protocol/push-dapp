@@ -62,7 +62,7 @@ function MasterInterfacePage() {
           <Route path="yield" element={<YieldFarmingPage />} />
           <Route path="rockstar" element={<NFTPage />} />
           <Route path="gratitude" element={<AirdropPage />} />
-          <Route path="tutorial" element={<TutorialPage />} />
+          <Route path="live_walkthrough" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route
