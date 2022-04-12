@@ -911,7 +911,10 @@ const UserJourneySteps = () => {
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
                 window.open("https://docs.epns.io/", "_blank");
-                dispatch(incrementStepIndex());
+                // dispatch(incrementStepIndex());
+                dispatch(setRun(false))
+                dispatch(setIndex(0))
+                dispatch(setWelcomeNotifsEmpty());
               }}
             >
               Developer Docs
@@ -919,7 +922,7 @@ const UserJourneySteps = () => {
           </ItemH>
         </Item>
       ),
-      placement: "right-start",
+      placement: "top-start",
       target: ".guide",
       spotlightClicks: true,
       disablefloating: true,
