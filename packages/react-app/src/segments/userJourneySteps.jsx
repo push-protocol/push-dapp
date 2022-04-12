@@ -910,7 +910,8 @@ const UserJourneySteps = () => {
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open("https://docs.epns.io/", "_blank")
+                window.open("https://docs.epns.io/", "_blank");
+                dispatch(incrementStepIndex());
               }}
             >
               Developer Docs

@@ -25,7 +25,7 @@ function Navigation() {
 
     const { run, stepIndex , isCommunicateOpen } = useSelector((state) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
-    if(navigationSetup !== null && channelDetails!==null){
+    if(!run && navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
     }
     const theme = useTheme();
