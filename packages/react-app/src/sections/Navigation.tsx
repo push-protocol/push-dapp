@@ -316,7 +316,21 @@ function Navigation() {
       let rendered = (
         Object.keys(items).map(function(key) {
           const section = items[key];
+          console.log(section)
           const data = section.data;
+          const uid = section.data.uid;
+          if(uid === 2 ){
+            if(section.opened)
+            dispatch(setCommunicateOpen(true))
+            else
+            dispatch(setCommunicateOpen(false))
+          }
+          else if(uid === 3){
+            if(section.opened)
+            dispatch(setDeveloperOpen(true))
+            else
+            dispatch(setDeveloperOpen(false))
+          }
           let innerRendered = (
             <Section 
                 key={key}
@@ -384,26 +398,28 @@ function Navigation() {
                           refresh={refresh}
                           // id={section.data.name}
                           onClick={() => {
-                            const uid = section.data.uid;
-                            if(uid === 2 ){
-                              if(!section.opened)
-                              dispatch(setCommunicateOpen(true))
-                              else
-                              dispatch(setCommunicateOpen(false))
-                            }
-                            else if(uid === 3){
-                              if(!section.opened)
-                              dispatch(setDeveloperOpen(true))
-                              else
-                              dispatch(setDeveloperOpen(false))
-                            }
+                            // const uid = section.data.uid;
+                            // if(uid === 2 ){
+                            //   if(!section.opened)
+                            //   dispatch(setCommunicateOpen(true))
+                            //   else
+                            //   dispatch(setCommunicateOpen(false))
+                            // }
+                            // else if(uid === 3){
+                            //   if(!section.opened)
+                            //   dispatch(setDeveloperOpen(true))
+                            //   else
+                            //   dispatch(setDeveloperOpen(false))
+                            // }
                             console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
                         if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3)))
                         {
+
                           setTimeout(() => {
                             dispatch(incrementStepIndex())
+                            // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
                           }, 500);
                         }
                           }}              

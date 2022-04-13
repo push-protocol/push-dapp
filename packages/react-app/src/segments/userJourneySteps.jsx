@@ -222,6 +222,7 @@ const UserJourneySteps = () => {
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
+                // dispatch(setTutorialContinous(false));
                 dispatch(incrementStepIndex());
               }}
             >
