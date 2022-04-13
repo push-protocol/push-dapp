@@ -407,3 +407,5 @@ dump.rdb
 
 package-lock.json
 yarn.lock
+.yarn
+.yarnrc.yml

@@ -1,6 +1,6 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { ethers } from "ethers";
-import { bigNumber } from "ethers/utils";
+// import { bigNumber } from "ethers/utils";
 
 import { addresses, abis } from "@project/contracts";
 
