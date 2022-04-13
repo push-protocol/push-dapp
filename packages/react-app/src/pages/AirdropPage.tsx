@@ -305,6 +305,7 @@ const Container = styled.div`
   justify-content: center;
 
   max-height: 80vh;
+  background: ${props => props.theme.mainBg};
 `
 
 const ContainerInfo = styled.div`
@@ -400,13 +401,13 @@ const QnAItem = styled(Item)`
   align-self: stretch;
   flex: auto;
   margin: 15px 0px;
-  border: 1px solid #fafafa;
+  border: 1px solid ${props => props.theme.qnaBgBorder};
   border-radius: 10px;
   box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.20);
   overflow: hidden;
 
   & ${Question} {
-    background: transparent;
+    background: ${props => props.theme.qnaBg};
     justify-content: flex-start;
     text-transform: uppercase;
 

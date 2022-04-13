@@ -6,21 +6,25 @@ import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
+import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
 
 import styled, {useTheme} from "styled-components";
-import { Item, ItemH, Span, H2, B, A, C } from "components/SharedStyling";
+import { Item, ItemH, Span, H2, H3, B, A, C, Button } from "components/SharedStyling";
 
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 
 import NavigationContextProvider from "contexts/NavigationContext";
-
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
 import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+
+import {setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
+import { useSelector, useDispatch } from "react-redux";
+import UserJourneySteps from "segments/userJourneySteps.jsx";
 
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -43,14 +47,23 @@ const web3Connectors = {
 };
 
 export default function App() {
+
+  const dispatch = useDispatch();
+
   const { connector, activate, active, error } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<
     AbstractConnector
   >();
-  const [currentTime,setcurrentTime]=React.useState(0);
+  const [currentTime, setcurrentTime] = React.useState(0);
 
-    const themes = useTheme();
+  const themes = useTheme();
 
+  const {
+    run,
+    stepIndex,
+    tutorialContinous,
+  } = useSelector((state: any) => state.userJourney);
+  
 
   React.useEffect(()=>{
     const now = Date.now()/ 1000;
@@ -78,7 +91,6 @@ export default function App() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   }
-
 
   React.useEffect(() => {
     const data = localStorage.getItem('theme')
@@ -115,9 +127,60 @@ export default function App() {
     };
   });
 
+  const steps = UserJourneySteps();
+
+  const handleJoyrideCallback = (data: CallBackProps) => {
+    // console.log(data)
+    // console.log(STATUS);
+    const { action, lifecycle, status, index } = data
+    if (lifecycle === "ready") {
+      setTimeout(() => {
+        document.querySelector("div > section > div").scrollTop = 0
+      }, 100)
+    }
+    
+    
+    if ( action === "close" || index === 20 ) { //action === "close" ||
+      dispatch(setRun(false))
+      dispatch(setIndex(0))
+      dispatch(setWelcomeNotifsEmpty());
+    }
+    // else if (action === 'next' && status === 'running') {
+    //   dispatch(incrementStepIndex());
+    // }
+  }
+
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
       <NavigationContextProvider>
+        <Joyride
+          run={run}
+          steps={steps}
+          continuous={tutorialContinous}
+          stepIndex={stepIndex}
+          hideFooter={true}
+          primaryProps={false}
+          hideBackButton={true}
+          hideCloseButton={false}
+          disableScrolling={true}
+          disableScrollParentFix={true}
+          disableFlip={true}
+          showNextButton={false}
+          showSkipButton={false}
+          disableOverlayClose={true}
+          callback={handleJoyrideCallback}
+          styles={{
+            options: {
+              arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+              backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+              overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+              primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+              textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+              minWidth: 280,
+              zIndex: 1000,
+            },
+          }}
+        />
         <HeaderContainer>
           <Header
             isDarkMode={darkMode}
@@ -200,8 +263,8 @@ export default function App() {
                           size="12px"
                           weight="600"
                           padding="20px"
-                          background={darkMode ? themeDark : themeLight}
-                          color={darkMode ? themeDark : themeLight}
+                          background={darkMode ? themeDark.backgroundBG : themeLight.backgroundBG}
+                          color={darkMode ? themeDark.fontColor : themeLight.fontColor}
 
                         >
                           {title}
@@ -358,4 +421,32 @@ const ProviderImage = styled.img`
   width: 32px;
   max-height: 32px;
   padding: 10px;
+`;
+
+const BeaconExample = styled.span`
+  height: 10px;
+  width: 10px;
+  background: ${props => props.theme.dynamicTutsPrimaryColor};
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  position: relative;
+  margin: 0px 10px;
+`;
+
+const BeaconExamplePulse = styled.span`
+  animation: 1.2s ease-in-out 0s infinite normal none running joyride-beacon-outer;
+  background-color: transparent;
+  border: 2px solid ${props => props.theme.dynamicTutsPrimaryColor};
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: block;
+  height: 26px;
+  width: 26px;
+  left: -8px;
+  top: -8px;
+  opacity: 0.9;
+  position: absolute;
+  transform-origin: center center;
 `;
