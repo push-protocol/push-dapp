@@ -23,10 +23,12 @@ function Navigation() {
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
-    const { run, stepIndex , isCommunicateOpen } = useSelector((state) => state.userJourney);
+  const { run, stepIndex, isCommunicateOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(!run && navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+    } else if(run && navigationSetup !== null) {
+      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
     }
     const theme = useTheme();
     const location = useLocation();

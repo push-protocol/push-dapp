@@ -557,7 +557,7 @@ const UserJourneySteps = () => {
             margin="5px 0px 15px 0px"
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           >
-            EPNS Android App
+            EPNS iOS App
           </H3>
           
           <Item
@@ -566,7 +566,7 @@ const UserJourneySteps = () => {
             align="stretch"
           >
             <Span color="inherit">
-              Install the EPNS Android app to enable push notifications directly to your android devices!
+              Install the EPNS iOS app to enable push notifications directly to your iOS (Apple) devices!
             </Span>
           </Item>
 
@@ -581,10 +581,10 @@ const UserJourneySteps = () => {
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open(`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`, '_blank');
+                window.open(`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`, '_blank');
               }}
             >
-              Android App
+              iOS App
             </Button>
 
             <Button
@@ -617,7 +617,7 @@ const UserJourneySteps = () => {
             margin="5px 0px 15px 0px"
             color={darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor}
           >
-            EPNS iOS App
+            EPNS Android App
           </H3>
           
           <Item
@@ -626,7 +626,7 @@ const UserJourneySteps = () => {
             align="stretch"
           >
             <Span color="inherit">
-              Install the EPNS iOS app to enable push notifications directly to your iOS (Apple) devices!
+              Install the EPNS Android app to enable push notifications directly to your android devices!
             </Span>
           </Item>
 
@@ -641,10 +641,10 @@ const UserJourneySteps = () => {
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open(`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`, '_blank');
+                window.open(`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`, '_blank');
               }}
             >
-              iOS App
+              Android App
             </Button>
 
             <Button
