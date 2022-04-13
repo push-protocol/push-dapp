@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled, {useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
@@ -20,7 +20,13 @@ import {
   setFinishedFetching,
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
-import { Item } from 'components/SharedStyling';
+
+
+import {
+  addNewWelcomeNotif
+} from "redux/slices/userJourneySlice";
+
+import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 const NOTIFICATIONS_PER_PAGE = 10;
 
@@ -34,6 +40,13 @@ function Feedbox() {
   );
 
   const themes = useTheme();
+
+
+  const [darkMode, setDarkMode] = useState(false);
+
+  const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
+
+
   const [limit , setLimit] = React.useState(10);
   const [allNotf , setNotif] = React.useState([]);
   const [filteredNotifications , setFilteredNotifications] = React.useState([]);
@@ -262,6 +275,33 @@ function Feedbox() {
               <Loader type="Oval" color="#35c5f3" height={40} width={40} />
             </Item>
           )}
+          { run && welcomeNotifs.map((oneNotification, index) => {
+              const {
+                cta,
+                title,
+                message,
+                app,
+                icon,
+                image,
+              } = oneNotification;
+
+
+              // render the notification item
+              return (
+                <div key={`${message}+${title}`}>
+                  <NotificationItem
+                    notificationTitle={title}
+                    notificationBody={message}
+                    cta={cta}
+                    app={app}
+                    icon={icon}
+                    image={image}
+                    theme={themes.scheme}
+                  />
+                </div>
+              );
+            })
+          }
 
             {(filter? filteredNotifications.slice(0,limit) : notifications).map((oneNotification, index) => {
             const {
@@ -272,7 +312,7 @@ function Feedbox() {
               icon,
               image,
             } = oneNotification;
-
+            if(run) return;
             // render the notification item
             return (
               <div key={index}>
@@ -301,7 +341,7 @@ function Feedbox() {
           )}
         </Notifs>
       )}
-      {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
+      {((!run && !notifications.length) || (!run && filter && !filteredNotifications.length) || (run && !welcomeNotifs.length)) && !loading && (
         <Item>
           <DisplayNotice
             title="You currently have no notifications, try subscribing to some channels."

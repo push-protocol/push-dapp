@@ -13,7 +13,9 @@ import navigationList from "config/NavigationList";
 import { NavigationContext } from "contexts/NavigationContext";
 
 import GLOBALS from "config/Globals";
-import {useSelector} from "react-redux";
+
+import { useDispatch, useSelector } from "react-redux";
+import {incrementStepIndex, decrementStepIndex, setRun, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
 
 // Create Header
 function Navigation() {
@@ -21,13 +23,16 @@ function Navigation() {
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
+  const { run, stepIndex, isCommunicateOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
-    if(navigationSetup !== null && channelDetails!==null){
+    if(!run && navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+    } else if(run && navigationSetup !== null) {
+      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
     }
     const theme = useTheme();
     const location = useLocation();
-
+    const dispatch = useDispatch();
     // Similar to componentDidMount and componentDidUpdate:
 
   
@@ -313,7 +318,21 @@ function Navigation() {
       let rendered = (
         Object.keys(items).map(function(key) {
           const section = items[key];
+          console.log(section)
           const data = section.data;
+          const uid = section.data.uid;
+          if(uid === 2 ){
+            if(section.opened)
+            dispatch(setCommunicateOpen(true))
+            else
+            dispatch(setCommunicateOpen(false))
+          }
+          else if(uid === 3){
+            if(section.opened)
+            dispatch(setDeveloperOpen(true))
+            else
+            dispatch(setDeveloperOpen(false))
+          }
           let innerRendered = (
             <Section 
                 key={key}
@@ -340,6 +359,7 @@ function Navigation() {
                       refresh={refresh}
                       margintop="15px"
                       onClick={() => {
+                        console.log(`Clicked secondary button`);
                         mutateTransformedList(section, true)
                       }}      
                       id={data.id}          
@@ -378,9 +398,33 @@ function Navigation() {
                           margintop="-10px"
                           zIndex={2}
                           refresh={refresh}
+                          // id={section.data.name}
                           onClick={() => {
+                            // const uid = section.data.uid;
+                            // if(uid === 2 ){
+                            //   if(!section.opened)
+                            //   dispatch(setCommunicateOpen(true))
+                            //   else
+                            //   dispatch(setCommunicateOpen(false))
+                            // }
+                            // else if(uid === 3){
+                            //   if(!section.opened)
+                            //   dispatch(setDeveloperOpen(true))
+                            //   else
+                            //   dispatch(setDeveloperOpen(false))
+                            // }
+                            console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
-                          }}                  
+    
+                        if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3)))
+                        {
+
+                          setTimeout(() => {
+                            dispatch(incrementStepIndex())
+                            // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
+                          }, 500);
+                        }
+                          }}              
                         >
                         <NavigationButton
                           item={section}
@@ -440,7 +484,6 @@ function Navigation() {
           {Object.keys(drilldown).map(function(key) {
             const item = drilldown[key];
             const data = item.data;
-            
             return (
               <SectionItem
                   key={key}
@@ -455,6 +498,13 @@ function Navigation() {
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
+                    // console.log();
+                    if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ||  (stepIndex === 16 && data.name === "Create Channel") ||  (stepIndex === 17 && data.name === "Developer's Guide")))
+                    { 
+                      if(stepIndex === 10)dispatch(setTutorialContinous(true));
+                      dispatch(incrementStepIndex())
+                    }
+                    console.log(`Clicked  button`);
                     // mutateTransformedList(item)
                   }}
                 >

@@ -4,6 +4,7 @@ import GLOBALS from "config/Globals";
 const NavigationList = {
     primary: {
       communicate: {
+        uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.COMMUNICATE_TAB,
         src: "svg/communicate.svg",
         iconFactory: null,
         name: 'Communicate',
@@ -107,6 +108,7 @@ const NavigationList = {
         }
       },
       developer: {
+        uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.DEVELOPER_TAB,
         src: "svg/developer.svg",
         iconFactory: null,
         name: 'Developer',
@@ -152,9 +154,31 @@ const NavigationList = {
             href: 'https://docs.epns.io/',
             newTab: false,
             isRoute: false,
-            hasMenuLogic: true,
+            hasMenuLogic: false,
             headerTag: {
               title: "Developer's Guide",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
+          dynamicEnviroment: {
+            src: "svg/network.svg",
+            iconFactory: null,
+            name: window.hostname == "app.epns.io" ? "Staging dApp" : window.hostname == "staging-app.epns.io" ? "Dev dApp": "Prod dApp",
+            title: window.hostname == "app.epns.io" ? "Staging dApp" : window.hostname == "staging-app.epns.io" ? "Dev dApp": "Prod dApp",
+            alt: window.hostname == "app.epns.io" ? "Checkout Staging dApp" : window.hostname == "staging-app.epns.io" ? "Checkout Dev dApp": "Checkout Prod dApp",
+            href: window.hostname == "app.epns.io" ? "https://staging-app.epns.io" : window.hostname == "staging-app.epns.io" ? "https://app-dev.epns.io": "https://app.epns.io",
+            newTab: false,
+            isRoute: false,
+            hasMenuLogic: false,
+            headerTag: {
+              title: "Various dApp Enviroments",
               light: {
                 bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
@@ -205,17 +229,21 @@ const NavigationList = {
         drilldown: {
           governance: {
             uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
-            src: "svg/channeladmin.svg",
+
+            src: "svg/governalt.svg",
             iconFactory: null,
-            name: 'Governance DAPP',
-            title: 'Governance DAPP',
-            alt: 'Governance DAPP',
+            name: 'Governance',
+            title: 'Governance',
+            alt: 'Governance',
+
             href: '/govern',
             newTab: false,
             isRoute: true,
             hasMenuLogic: true,
             headerTag: {
-              title: 'Governance DAPP',
+
+              title: 'Governance',
+
               light: {
                 bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
@@ -230,15 +258,19 @@ const NavigationList = {
             uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE_GUIDE,
             src: "svg/tutorial.svg",
             iconFactory: null,
-            name: "Governance Guide",
-            title: "Governance Guide",
-            alt: "Governance Guide",
+
+            name: "Learn to Govern",
+            title: "Learn to Govern",
+            alt: "Learn to Govern",
+
             href: ' https://docs.epns.io/epns-governance/governance-guide',
             newTab: false,
             isRoute: false,
             hasMenuLogic: true,
             headerTag: {
-              title: "Governance Guide",
+
+              title: "Learn to Govern",
+
               light: {
                 bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
@@ -345,17 +377,28 @@ const NavigationList = {
         hasMenuLogic: true,
   
         drilldown: {
-          // tutorial: {
-          //   src: "svg/tutorial.svg",
-          //   iconFactory: null,
-          //   name: 'Tutorial',
-          //   title: 'Tutorial',
-          //   alt: 'Open Tutorial',
-          //   href: '/tutorial',
-          //   newTab: false,
-          //   isRoute: true,  
-          //   hasMenuLogic: true,
-          // },
+          livewalkthrough: {
+            src: "svg/tutorial.svg",
+            iconFactory: null,
+            name: 'Live Walkthrough',
+            title: 'Live Walkthrough',
+            alt: 'Start Live Walkthrough',
+            href: '/live_walkthrough',
+            newTab: false,
+            isRoute: true,  
+            hasMenuLogic: true,
+            headerTag: {
+              title: "Live Walkthrough",
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
           faq: {
             src: "svg/qna.svg",
             iconFactory: null,
