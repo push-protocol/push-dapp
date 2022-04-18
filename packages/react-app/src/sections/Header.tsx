@@ -68,7 +68,6 @@ function Header({ isDarkMode, darkModeToggle }) {
         }
       })
     }
-    console.log(navigationSetup)
   }
 
 

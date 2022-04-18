@@ -17,7 +17,7 @@ import { IoMdShareAlt } from 'react-icons/io';
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
+// import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
 function ViewDelegateeItem({ delegateeObject, epnsToken, pushBalance, theme }) {
   const { account, library } = useWeb3React();

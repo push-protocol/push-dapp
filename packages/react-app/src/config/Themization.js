@@ -33,12 +33,14 @@ const themeLight = {
 
   // Main Theme
   backgroundBG: '#fff',
+  backgroundBGLucid: '#00000099',
   mainBg: '#fff',
   fontColor: '#000',
+  fontColorSecondary: '#00000099',
   scrollBg: '#eee',
+  borderBg: '#f1f1f1',
 
   // View Channels Theme
-
   // -- View Channel Header Theme
   // -- -- Search Bar
   viewChannelSearchBg: '#fff',
@@ -60,6 +62,21 @@ const themeLight = {
   viewChannelSecondaryBG: '#35c5f3',
   viewChannelSecondaryIcon: '#ccc',
 
+  // -- -- View Channel Tuts
+  viewChannelTutsTitleBg: '#000',
+  viewChannelTutsButtonBg: '#e20880',
+
+  // Dynamic Tuts
+  dynamicTutsBg: '#fff',
+  dynamicTutsBgOverlay: '#00000099',
+  dynamicTutsFontColor: '000',
+  dynamicTutsButtonBg: '#000',
+  dynamicTutsButtonColor: '#fff',
+  dynamicTutsPrimaryColor: '#e20880',
+
+  // QnA
+  qnaBg: '#fff',
+  qnaBgBorder: '#fafafa',
 
   yieldBg: "#f3f3f3",
 
@@ -112,9 +129,12 @@ const themeDark = {
 
   // Main Theme
   backgroundBG: '#222',
+  backgroundBGLucid: '#000000cc',
   mainBg: '#000',
   fontColor: '#fff',
+  fontColorSecondary: '#ffffff99',
   scrollBg: '#333',
+  borderBg: '#333',
 
   // View Channels Theme
   // -- View Channel Header Theme
@@ -137,6 +157,22 @@ const themeDark = {
   viewChannelIconBorder: '#222',
   viewChannelSecondaryBG: '#222',
   viewChannelSecondaryIcon: '#414141',
+
+  // -- -- View Channel Tuts
+  viewChannelTutsTitleBg: '#000',
+  viewChannelTutsButtonBg: '#000',
+
+  // Dynamic Tutorial
+  dynamicTutsBg: '#222',
+  dynamicTutsBgOverlay: '#000000cc',
+  dynamicTutsFontColor: '#fff',
+  dynamicTutsButtonBg: '#000',
+  dynamicTutsButtonColor: '#fff',
+  dynamicTutsPrimaryColor: '#fff',
+
+  // QnA
+  qnaBg: '#222',
+  qnaBgBorder: '#666',
 
   color: "#fff",
 

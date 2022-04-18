@@ -78,6 +78,7 @@ function InboxPage() {
   // Render
   return (
     <Container>
+    <div className="joyride"></div>
       <Feedbox />
       {toast && (
         <NotificationToast notification={toast} clearToast={clearToast} />
