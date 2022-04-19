@@ -69,7 +69,6 @@ function CreateChannel() {
   const [final, setFinal] = useState(false);
   const [imageSrc, setImageSrc] = useState(undefined);
   const [croppedImage, setCroppedImage] = useState(undefined);
-  const [showCrop, showCropped] = useState(false);
 
   const [stepFlow, setStepFlow] = React.useState(1);
 
@@ -320,6 +319,7 @@ function CreateChannel() {
   };
 
   const handleFile = async (file, path) => {
+    setCroppedImage(undefined);
     setView(true);
     setFinal(false);
 
@@ -432,15 +432,7 @@ function CreateChannel() {
                   <div className="inner">
                     {view ? (
                       <div className="crop-div">
-                        <ImageClipper
-                          className="cropper"
-                          imageSrc={imageSrc}
-                          onImageCropped={(croppedImage) =>
-                            setCroppedImage(croppedImage)
-                          }
-                          ref={childRef}
-                        />
-                        {croppedImage && (
+                        {croppedImage ? (
                           <div>
                             <img
                               alt="Cropped Img"
@@ -448,6 +440,15 @@ function CreateChannel() {
                               className="croppedImage"
                             />
                           </div>
+                        ) : (
+                          <ImageClipper
+                            className="cropper"
+                            imageSrc={imageSrc}
+                            onImageCropped={(croppedImage) =>
+                              setCroppedImage(croppedImage)
+                            }
+                            ref={childRef}
+                          />
                         )}
                       </div>
                     ) : (
@@ -456,22 +457,23 @@ function CreateChannel() {
 
                     <ButtonSpace>
                       <div className="crop-button">
-                        {view && (
-                          <Button
-                            onClick={() => {
-                              childRef.current.showCroppedImage();
-                              showCropped(true);
-                            }}
-                          >
-                            Clip Image
-                          </Button>
-                        )}
-                      </div>
-
-                      <div className="crop-button">
-                        {showCrop && (
-                          <Button onClick={() => proceed()}>Submit</Button>
-                        )}
+                        {view &&
+                          (!croppedImage ? (
+                            <Button
+                              bg="#1C4ED8"
+                              onClick={() => {
+                                childRef.current.showCroppedImage();
+                              }}
+                            >
+                              Clip Image
+                            </Button>
+                          ) : (
+                            <div className="crop-button">
+                              <Button bg="#1C4ED8" onClick={() => proceed()}>
+                                Next
+                              </Button>
+                            </div>
+                          ))}
                       </div>
                     </ButtonSpace>
 
@@ -933,14 +935,8 @@ const PoolShare = styled(ChannelMetaBox)`
 `;
 
 const ButtonSpace = styled.div`
-  width: 80%;
-  display: flex;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-  flex-direction: row;
+  width: 40%;
   align-items: center;
-  justify-content: space-between;
   margin: 1rem auto;
 `;
 
