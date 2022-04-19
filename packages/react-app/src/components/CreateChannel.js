@@ -451,20 +451,7 @@ function CreateChannel() {
                         )}
                       </div>
                     ) : (
-                      !final && <ImageIcon />
-                    )}
-
-                    {final && (
-                      <div className="check-space">
-                        <img
-                          alt="Cropped Img"
-                          src={croppedImage}
-                          className="croppedImage"
-                        />
-                        <div className="button-space" onClick={() => proceed()}>
-                          <Button bg="#1C4ED8">Next</Button>
-                        </div>
-                      </div>
+                      <ImageIcon />
                     )}
 
                     <ButtonSpace>
@@ -483,15 +470,7 @@ function CreateChannel() {
 
                       <div className="crop-button">
                         {showCrop && (
-                          <Button
-                            onClick={() => {
-                              setFinal(true);
-                              setView(false);
-                              showCropped(false);
-                            }}
-                          >
-                            Proceed
-                          </Button>
+                          <Button onClick={() => proceed()}>Submit</Button>
                         )}
                       </div>
                     </ButtonSpace>
@@ -954,8 +933,11 @@ const PoolShare = styled(ChannelMetaBox)`
 `;
 
 const ButtonSpace = styled.div`
-  width: 40%;
+  width: 80%;
   display: flex;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
@@ -981,9 +963,19 @@ const Space = styled.div`
         width: 100%;
         display: flex;
         flex-direction: row;
+        @media (max-width: 768px) {
+          flex-direction: column;
+        }
         justify-content: space-evenly;
         align-items: center;
         margin-right: auto;
+        div {
+          .croppedImage {
+            @media (max-width: 768px) {
+              margin-top: 1rem;
+            }
+          }
+        }
         .cropper {
           width: 250px;
           height: 250px;
@@ -1006,7 +998,9 @@ const Space = styled.div`
         display: flex;
         justify-content: center;
         width: 100%;
-        // margin-top: 1rem;
+        @media (max-width: 768px) {
+          margin-top: 1rem;
+        }
       }
       .svg {
         margin: 0px auto;
