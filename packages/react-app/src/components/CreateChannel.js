@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Select from "react-select";
 import styled, { css, useTheme } from "styled-components";
 import {
@@ -20,24 +20,19 @@ import {
   Input,
   TextField,
 } from "components/SharedStyling";
-
 import { FiLink } from "react-icons/fi";
-
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
-
 import Loader from "react-loader-spinner";
-
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
-
-import {ThemeProvider} from "styled-components";
-
+import { ThemeProvider } from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
-
 import { addresses, abis } from "@project/contracts";
+import ImageClipper from "./ImageClipper";
+import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+
 const ethers = require("ethers");
 
 const ipfs = require("ipfs-api")();
@@ -67,6 +62,14 @@ function CreateChannel() {
   const [channelURL, setChannelURL] = React.useState("");
   const [channelFile, setChannelFile] = React.useState(undefined);
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
+
+  //image upload states
+  const childRef = useRef();
+  const [view, setView] = useState(false);
+  const [final, setFinal] = useState(false);
+  const [imageSrc, setImageSrc] = useState(undefined);
+  const [croppedImage, setCroppedImage] = useState(undefined);
+  const [showCrop, showCropped] = useState(false);
 
   const [stepFlow, setStepFlow] = React.useState(1);
 
@@ -112,6 +115,13 @@ function CreateChannel() {
         }
       };
     });
+  };
+
+  const proceed = () => {
+    setStepFlow(2);
+    setProcessing(0);
+    setUploadDone(true);
+    console.log(channelFile);
   };
 
   const handleLogoSizeLimitation = (base64) => {
@@ -238,25 +248,22 @@ function CreateChannel() {
     var anotherSendTxPromise = contract.createChannelWithFees(
       channelType,
       identityBytes,
-      fees,
-      {
-        gasLimit: 1000000
-      }
+      fees
     );
 
     setProcessingInfo("Creating Channel TX in progress");
     anotherSendTxPromise
-    .then(async function (tx) {
-      console.log(tx);
-      console.log("Check: " + account);
-      await library.waitForTransaction(tx.hash);
-      setProcessing(3);
-      setProcessingInfo("Channel Created! Reloading...");
+      .then(async function(tx) {
+        console.log(tx);
+        console.log("Check: " + account);
+        await library.waitForTransaction(tx.hash);
+        setProcessing(3);
+        setProcessingInfo("Channel Created! Reloading...");
 
-      setTimeout(() => {
+        setTimeout(() => {
           window.location.reload();
-      }, 2000);
-  })
+        }, 2000);
+      })
       .catch((err) => {
         console.log("Error --> %o", err);
         console.log({ err });
@@ -300,6 +307,62 @@ function CreateChannel() {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleOnDrop = (e) => {
+    //prevent the browser from opening the image
+    e.preventDefault();
+    e.stopPropagation();
+    //let's grab the image file
+    handleFile(e.dataTransfer, "transfer");
+  };
+
+  const handleFile = async (file, path) => {
+    setView(true);
+    setFinal(false);
+
+    //you can carry out any file validations here...
+    if (file?.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file?.files[0]);
+
+      reader.onloadend = function(e) {
+        setImageSrc(reader.result);
+      };
+    } else {
+      return "Nothing....";
+    }
+  };
+
+  useEffect(() => {
+    if (croppedImage) {
+      toDataURL(croppedImage, function(dataUrl) {
+        const response = handleLogoSizeLimitation(dataUrl);
+        if (response.success) {
+          setChannelFile(croppedImage);
+        }
+      });
+    } else {
+      return "Nothing";
+    }
+  }, [croppedImage]);
+
+  function toDataURL(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = function() {
+      var reader = new FileReader();
+      reader.onloadend = function() {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  }
+
   return (
     <ThemeProvider theme={themes}>
       <Section>
@@ -309,12 +372,17 @@ function CreateChannel() {
               <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
                 Create
               </Span>
-              <Span weight="200" color={themes.color}> Your Channel!</Span>
+              <Span weight="200" color={themes.color}>
+                {" "}
+                Your Channel!
+              </Span>
             </H2>
             <H3 color={themes.createColor}>
-              <b color={themes.createColor}>Ethereum Push Notification Service</b> (EPNS) makes it
-              extremely easy to open and maintain a genuine channel of
-              communication with your users.
+              <b color={themes.createColor}>
+                Ethereum Push Notification Service
+              </b>{" "}
+              (EPNS) makes it extremely easy to open and maintain a genuine
+              channel of communication with your users.
             </H3>
           </Item>
         </Content>
@@ -348,13 +416,111 @@ function CreateChannel() {
         <Section>
           <Content padding="50px 20px 20px">
             <Item align="flex-start">
-              <H3 color="#e20880">
-                Upload Channel Logo to start the process. Make sure image is
-                128x128px.
+              <H3 color="#e20880" margin="0px 0px">
+                Upload Channel Logo to start the process. Clip image to resize
+                to 128x128px.
               </H3>
             </Item>
 
-            <Item margin="-10px 0px 20px 0px">
+            <Space className="">
+              <div>
+                <div
+                  onDragOver={(e) => handleDragOver(e)}
+                  onDrop={(e) => handleOnDrop(e)}
+                  className="bordered"
+                >
+                  <div className="inner">
+                    {view ? (
+                      <div className="crop-div">
+                        <ImageClipper
+                          className="cropper"
+                          imageSrc={imageSrc}
+                          onImageCropped={(croppedImage) =>
+                            setCroppedImage(croppedImage)
+                          }
+                          ref={childRef}
+                        />
+                        {croppedImage && (
+                          <div>
+                            <img
+                              alt="Cropped Img"
+                              src={croppedImage}
+                              className="croppedImage"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      !final && <ImageIcon />
+                    )}
+
+                    {final && (
+                      <div className="check-space">
+                        <img
+                          alt="Cropped Img"
+                          src={croppedImage}
+                          className="croppedImage"
+                        />
+                        <div className="button-space" onClick={() => proceed()}>
+                          <Button bg="#1C4ED8">Next</Button>
+                        </div>
+                      </div>
+                    )}
+
+                    <ButtonSpace>
+                      <div className="crop-button">
+                        {view && (
+                          <Button
+                            onClick={() => {
+                              childRef.current.showCroppedImage();
+                              showCropped(true);
+                            }}
+                          >
+                            Clip Image
+                          </Button>
+                        )}
+                      </div>
+
+                      <div className="crop-button">
+                        {showCrop && (
+                          <Button
+                            onClick={() => {
+                              setFinal(true);
+                              setView(false);
+                              showCropped(false);
+                            }}
+                          >
+                            Proceed
+                          </Button>
+                        )}
+                      </div>
+                    </ButtonSpace>
+
+                    <div className="text-div">
+                      <label htmlFor="file-upload" className="labeled">
+                        <div>Upload a file</div>
+                        <input
+                          id="file-upload"
+                          accept="image/*"
+                          name="file-upload"
+                          hidden
+                          onChange={(e) => handleFile(e.target, "target")}
+                          type="file"
+                          className="sr-only"
+                          readOnly
+                        />
+                      </label>
+                      <div className="">- or drag and drop</div>
+                    </div>
+                    <p className="text-below">
+                      PNG, JPG.Proceed to clip and submit final
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Space>
+
+            {/* <Item margin="-10px 0px 20px 0px">
               <Dropzone
                 onChangeStatus={handleChangeStatus}
                 onSubmit={handleLogoSubmit}
@@ -363,9 +529,8 @@ function CreateChannel() {
                 multiple={false}
                 accept="image/jpeg,image/png"
               />
-            </Item>
-            {
-              chainId != 1 ? (
+            </Item> */}
+            {chainId != 1 ? (
               <Item align="flex-end">
                 <Minter
                   onClick={() => {
@@ -378,8 +543,9 @@ function CreateChannel() {
                   </Pool>
                 </Minter>
               </Item>
-              ): <></>
-            }
+            ) : (
+              <></>
+            )}
           </Content>
         </Section>
       )}
@@ -785,6 +951,127 @@ const Pool = styled.div`
 const PoolShare = styled(ChannelMetaBox)`
   background: #e20880;
   // background: #674c9f;
+`;
+
+const ButtonSpace = styled.div`
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem auto;
+`;
+
+const Space = styled.div`
+  width: 100%;
+  margin-bottom: 2rem;
+  .bordered {
+    display: flex;
+    justify-content: center;
+    border: 4px dotted #ccc;
+    border-radius: 10px;
+    padding: 6px;
+    margin-top: 10px;
+    .inner {
+      margin-top: 0.25rem;
+      text-align: center;
+      padding: 10px;
+      width: 100%;
+      .crop-div {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        margin-right: auto;
+        .cropper {
+          width: 250px;
+          height: 250px;
+        }
+      }
+      .check-space {
+        .croppedImage {
+          width: auto;
+          height: auto;
+          border-radius: 5px;
+        }
+        .button-space {
+          margin-top: 1rem;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+        }
+      }
+      .crop-button {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        // margin-top: 1rem;
+      }
+      .svg {
+        margin: 0px auto;
+        height: 3rem;
+        width: 3rem;
+        color: #ccc;
+      }
+      .text-div {
+        display: flex;
+        font-size: 1rem;
+        line-height: 1rem;
+        margin-top: 0.2rem;
+        color: #ccc;
+        justify-content: center;
+        .labeled {
+          position: relative;
+          cursor: pointer;
+          background-color: white;
+          border-radius: 4px;
+          color: #60a5fa;
+        }
+      }
+      .text-below {
+        font-size: 1rem;
+        line-height: 1rem;
+        color: #ccc;
+        margin-top: 0.3rem;
+      }
+    }
+  }
+  .image-error {
+    font-size: 1rem;
+    line-height: 1rem;
+    color: red;
+    margin-top: 0.5rem;
+  }
+  .image {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    .item {
+      width: 4rem;
+      height: auto;
+      border-radius: 4px;
+    }
+    .image-border {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-left: 2rem;
+      .text {
+        font-size: 1rem;
+        line-height: 1rem;
+        color: #ccc;
+        margin-top: 1rem;
+      }
+    }
+  }
+`;
+
+const Field = styled.div`
+  margin: 20px 0px 5px 0px;
+  color: #4b5563;
+  font-size: small;
+  text-transform: uppercase;
 `;
 
 // Export Default
