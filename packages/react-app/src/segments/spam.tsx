@@ -242,10 +242,8 @@ function SpamBox({ currentTab }) {
           return { ...elem };
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
-
       let res = parsedResponse.filter( notif => !isSubscribedFn(notif.subscribers));
       setNotif(res);
-
 
     } catch (err) {
       console.log(err);

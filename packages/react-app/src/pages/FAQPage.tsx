@@ -32,6 +32,12 @@ function ComingSoonPage(props) {
               </H2>
             </Item>
 
+            <Item align="stretch" justify="flex-start" margin="0px 0px 0px 0px">
+              <H2 textTransform="uppercase" spacing="0.1em" margin="20px 0px 20px 0px" size="1.6rem">
+                <Span weight="600" padding="0px 8px" bg="#E20880" color="#fff">For Users</Span>
+              </H2>
+            </Item>
+
             <Item align="stretch" justify="flex-start">
               {/* Question */}
               <Item align="stretch" margin="0px 0px 20px 0px">
@@ -174,9 +180,149 @@ function ComingSoonPage(props) {
                       <Span2 mtop="0.2rem">
                         <AMod href="https://play.google.com/store/apps/details?id=io.epns.epns" target="_blank"><span style={{marginRight:"0.3rem"}}>Android</span></AMod> <span style={{marginRight:"0.3rem"}}>and</span> <AMod href="https://apps.apple.com/app/ethereum-push-service-epns/id1528614910" target="_blank">IOS Apps</AMod>
                       </Span2>
-                      
+                    </Answer>
+                  }
+                </QnAItem>
+              </Item>
+            </Item>
 
-                      
+            <Item align="stretch" justify="flex-start" margin="0px 0px 0px 0px">
+              <H2 textTransform="uppercase" spacing="0.1em" margin="30px 0px 20px 0px" size="1.6rem">
+                <Span weight="600" padding="0px 8px" bg="#E20880" color="#fff">For Developers</Span>
+              </H2>
+            </Item>
+
+            <Item align="stretch" justify="flex-start">
+              {/* Question */}
+              <Item align="stretch" margin="0px 0px 20px 0px">
+                <QnAItem>
+                  <Question
+                    onClick={() => {toggleShowAnswer(7)}}
+                    hover="#e20880"
+                  >
+                    <Span color={themes.color}>
+                      How do I create a Channel?
+                    </Span>
+                    <BsChevronExpand size={20} color={"#ddd"}/>
+                  </Question>
+
+                  {showAnswers[7] &&
+                    <Answer>
+                      <Span>
+                        Easiest way to create a channel is from our <AMod target="_blank" href="https://app.epns.io/#/dashboard">EPNS Dapp</AMod> itself. Find the entire channel creation process <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/create-your-first-channel">here</AMod>.
+                        </Span>
+                    </Answer>
+                  }
+                </QnAItem>
+
+
+                <QnAItem>
+                  <Question
+                    onClick={() => {toggleShowAnswer(8)}}
+                    hover="#e20880"
+                  >
+                    <Span color={themes.color}>
+                    What are the different types of Notifications?
+                    </Span>
+                    <BsChevronExpand size={20} color={"#ddd"}/>
+                  </Question>
+
+                  {showAnswers[8] &&
+                    <Answer>
+                      <Span>
+                        The 3 main types of notifications right now:
+                      </Span>
+                      <Span>
+                        <b>Broadcast Notification</b>: <i>Sent out to all Subscribers of a Channel</i> 
+                      </Span>
+                      <Span>
+                        <b>Subset Notification</b>: <i>Sent out to a group of all the subscribers</i> 
+                      </Span>
+                      <Span>
+                        <b>Targetted Notification</b>: <i>Sent out to a specific subscriber of your channel</i> 
+                      </Span>
+                    </Answer>
+                  }
+                </QnAItem>
+
+                <QnAItem>
+                  <Question
+                    onClick={() => {toggleShowAnswer(9)}}
+                    hover="#e20880"
+                  >
+                    <Span color={themes.color}>
+                    How do I send notifications?
+                    </Span>
+                    <BsChevronExpand size={20} color={"#ddd"}/>
+                  </Question>
+
+                  {showAnswers[9] &&
+                    <Answer>
+                      <Span>
+                      Sending a notification is possible from the DAPP, Back-end as well as Smart Contracts.
+                      </Span>
+                    </Answer>
+                  }
+                </QnAItem>
+
+                <QnAItem>
+                  <Question
+                    onClick={() => {toggleShowAnswer(10)}}
+                    hover="#e20880"
+                  >
+                    <Span color={themes.color}>
+                    How do I use Backend-Sdk and Showrunners?
+                    </Span>
+                    <BsChevronExpand size={20} color={"#ddd"}/>
+                  </Question>
+
+                  {showAnswers[10] &&
+                    <Answer>
+                      <Span>
+                      EPNS Documentation hub contains in-depth details on how to use our <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up">Backend SDKs</AMod> and <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/working-with-showrunners">Showrunners</AMod>. Check them out. 
+                      </Span>
+                    </Answer>
+                  }
+                </QnAItem>
+
+
+                <QnAItem>
+                  <Question
+                    onClick={() => {toggleShowAnswer(11)}}
+                    hover="#e20880"
+                  >
+                    <Span color={themes.color}>
+                    DHow do I use the Front-SDK?
+                    </Span>
+                    <BsChevronExpand size={20} color={"#ddd"}/>
+                  </Question>
+
+                  {showAnswers[11] &&
+                    <Answer>
+                      <Span>
+                      EPNS Documentation hub contains in-depth details on how to use our <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/integrating-with-front-end-sdk">Front-end SDK</AMod>.
+                      </Span>
+                    </Answer>
+                  }
+                </QnAItem>
+
+
+                <QnAItem>
+                  <Question
+                    onClick={() => {toggleShowAnswer(12)}}
+                    hover="#e20880"
+                  >
+                    <Span color={themes.color}>
+                    Where can I find Developer Documentations?
+                    </Span>
+                    <BsChevronExpand size={20} color={"#ddd"}/>
+                  </Question>
+
+                  {showAnswers[12] &&
+                    <Answer>
+                      <Span>
+                      All of our documentation can be found in our <AMod target="_blank" href="https://docs.epns.io/">EPNS Documentation HUB</AMod>.
+                      </Span>
                     </Answer>
                   }
                 </QnAItem>
@@ -217,7 +363,6 @@ const Heading = styled.h2`
   font-family: ${props => props.family || "'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${props => props.textAlign || "inherit"};
   margin-left:20px;
-
   @media (max-width: 768px) {
 		font-size: 2.8rem;
 	}
@@ -231,7 +376,6 @@ const Question = styled(Button)`
 const Answer = styled(Item)`
   align-items: stretch;
   align-self: stretch;
-
 `
 
 const QnAItem = styled(Item)`
@@ -243,26 +387,22 @@ const QnAItem = styled(Item)`
   border-radius: 10px;
   box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.20);
   overflow: hidden;
-
   & ${Question} {
     background: ${props => props.theme.qnaBg};
     justify-content: flex-start;
     text-transform: uppercase;
-
     & ${Span} {
       font-weight: 400;
       letter-spacing: 0.2em;
       margin-left: 10px;
       flex: 1;
     }
-
     &:hover {
       & ${Span} {
         color: #fff;
       }
     }
   }
-
   & ${Answer} {
     border: 1px solid #e6e6e6;
     border-top: 1px solid #e6e6e6;
@@ -271,7 +411,6 @@ const QnAItem = styled(Item)`
     padding: 10px 15px;
     align-items: flex-start;
     background: #fff;
-
     & ${Span} {
       line-height: 1.5em;
       margin: 10px;

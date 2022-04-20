@@ -21,13 +21,11 @@ import {
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
 
-
 import {
   addNewWelcomeNotif
 } from "redux/slices/userJourneySlice";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
-
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
@@ -41,11 +39,9 @@ function Feedbox() {
 
   const themes = useTheme();
 
-
   const [darkMode, setDarkMode] = useState(false);
 
   const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
-
 
   const [limit , setLimit] = React.useState(10);
   const [allNotf , setNotif] = React.useState([]);
@@ -285,7 +281,6 @@ function Feedbox() {
                 image,
               } = oneNotification;
 
-
               // render the notification item
               return (
                 <div key={`${message}+${title}`}>
@@ -302,7 +297,6 @@ function Feedbox() {
               );
             })
           }
-
             {(filter? filteredNotifications.slice(0,limit) : notifications).map((oneNotification, index) => {
             const {
               cta,
