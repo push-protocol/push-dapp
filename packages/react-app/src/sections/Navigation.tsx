@@ -318,7 +318,7 @@ function Navigation() {
       let rendered = (
         Object.keys(items).map(function(key) {
           const section = items[key];
-          console.log(section)
+          // console.log(section)
           const data = section.data;
           const uid = section.data.uid;
           if(uid === 2 ){
@@ -359,7 +359,7 @@ function Navigation() {
                       refresh={refresh}
                       margintop="15px"
                       onClick={() => {
-                        console.log(`Clicked secondary button`);
+                        // console.log(`Clicked secondary button`);
                         mutateTransformedList(section, true)
                       }}      
                       id={data.id}          
@@ -413,7 +413,7 @@ function Navigation() {
                             //   else
                             //   dispatch(setDeveloperOpen(false))
                             // }
-                            console.log(`Clicked primary button`);
+                            // console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
                         if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3)))
@@ -504,7 +504,7 @@ function Navigation() {
                       if(stepIndex === 10)dispatch(setTutorialContinous(true));
                       dispatch(incrementStepIndex())
                     }
-                    console.log(`Clicked  button`);
+                    // console.log(`Clicked  button`);
                     // mutateTransformedList(item)
                   }}
                 >
