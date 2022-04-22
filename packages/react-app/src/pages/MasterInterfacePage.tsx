@@ -117,9 +117,10 @@ function MasterInterfacePage() {
 const Container = styled.div`
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px );
+  padding: 5px 20px 20px 20px;
   align-items: stretch;
+
 `;
 
 const Interface = styled(Item)`
@@ -133,6 +134,7 @@ const Interface = styled(Item)`
 
   margin: 15px 15px 15px 0px;
   overflow: hidden;
+
 
   @media (max-width: 992px) {
     margin: 15px 0px;
