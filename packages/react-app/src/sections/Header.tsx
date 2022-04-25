@@ -79,7 +79,7 @@ const chainIds = envConfig.allowedNetworks;
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: hexlify(chainIds[0]) }]
+            params: [{ chainId: hexlify(envConfig.coreContractChain) }]
           });
         } catch (err) {
           console.error(err);
