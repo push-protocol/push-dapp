@@ -7,6 +7,7 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from '@web3-react/injected-connector'
 import { Web3Provider } from 'ethers/providers'
+import { hexlify } from "ethers/utils";
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
@@ -22,6 +23,8 @@ import NavigationButton from 'components/NavigationButton';
 import { NavigationContext } from "contexts/NavigationContext";
 
 import GLOBALS from "config/Globals";
+
+import { envConfig } from "@project/contracts";
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -70,12 +73,26 @@ function Header({ isDarkMode, darkModeToggle }) {
     }
   }
 
+async function handleChangeNetwork(){
+const chainIds = envConfig.allowedNetworks;
+  if (!chainIds.includes(window.ethereum.networkVersion)) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: hexlify(envConfig.coreContractChain) }]
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+}
 
   // handle error functions
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
     } else if (error instanceof UnsupportedChainIdError) {
+      handleChangeNetwork();
       return "Unsupported Network, please connect to the Ethereum Kovan network"
     } else if (
       error instanceof UserRejectedRequestErrorInjected
