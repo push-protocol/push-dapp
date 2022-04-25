@@ -75,11 +75,11 @@ function Header({ isDarkMode, darkModeToggle }) {
 
 async function handleChangeNetwork(){
 const chainIds = envConfig.allowedNetworks;
-  if (window.ethereum.networkVersion !== chainIds) {
+  if (!chainIds.includes(window.ethereum.networkVersion)) {
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: hexlify(chainIds) }]
+            params: [{ chainId: hexlify(chainIds[0]) }]
           });
         } catch (err) {
           console.error(err);
