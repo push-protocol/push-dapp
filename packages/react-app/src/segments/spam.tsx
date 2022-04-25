@@ -19,10 +19,7 @@ import {
 } from "redux/slices/spamSlice";
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
-
-import { updateTopNotifications } from "redux/slices/notificationSlice";
 import { ThemeProvider } from "styled-components";
-
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
