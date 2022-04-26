@@ -108,9 +108,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   React.useEffect(() => {
     (async function init() {
+      if (channelObject.addr === null) return;
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
-        if (channelObject.addr === null) return;
         // get the alias address of the eth address, in order to properly render information about the channel
         const aliasEth = await postReq("/channels/get_alias_details", {
           channel: channelObject.addr,
@@ -125,6 +125,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           }
           return data;
         });
+      } else {
+        setIsOwner(account === channelObject.addr);
       }
     })();
     }, [account, channelObject, chainId]);
