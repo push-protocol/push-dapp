@@ -7,21 +7,8 @@ import { Item, ItemH, Span, H3, B, A, Button } from "components/SharedStyling";
 import {incrementStepIndex, setRun, setIndex, setWelcomeNotifsEmpty , setTutorialContinous} from "../redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
 
-const UserJourneySteps = () => {
+const UserJourneySteps = ({darkMode}) => {
   const dispatch = useDispatch();
-
-  const [darkMode, setDarkMode] = useState(false);
-
-  React.useEffect(() => {
-    const data = localStorage.getItem('theme')
-    if(data){
-      setDarkMode(JSON.parse(data))
-    }
-  },[])
-
-  React.useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(darkMode))
-  })
 
   const {
       isCommunicateOpen,

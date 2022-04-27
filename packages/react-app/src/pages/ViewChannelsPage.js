@@ -374,7 +374,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
   );
 }
 
-// css style
+// css style 
 const Container = styled.div`
   display: flex;
   background: ${props => props.theme.mainBg};
