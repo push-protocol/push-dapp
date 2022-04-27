@@ -471,6 +471,7 @@ export default class ChannelsDataStore {
         });
     }
 
+    if (!address) return;
     return postReq("/channels/get_subscribers", {
       channel: address,
       blockchain: this.state.chainId,
