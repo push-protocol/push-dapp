@@ -5,7 +5,7 @@ import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "react-loader-spinner";
 import hex2ascii from "hex2ascii";
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis ,envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import config from "config";
@@ -34,7 +34,7 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
-export const ALLOWED_CORE_NETWORK = 42; //chainId of network which we have deployed the core contract on
+export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 0; //Default to 1 which is the channel tab
 
 // Create Header

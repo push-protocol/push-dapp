@@ -22,6 +22,7 @@ import NavigationButton from 'components/NavigationButton';
 import { NavigationContext } from "contexts/NavigationContext";
 
 import GLOBALS from "config/Globals";
+import { envConfig } from "@project/contracts";
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -76,7 +77,10 @@ function Header({ isDarkMode, darkModeToggle }) {
     if (error instanceof NoEthereumProviderError) {
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
     } else if (error instanceof UnsupportedChainIdError) {
+      if(envConfig.coreContractChain === 42)
       return "Unsupported Network, please connect to the Ethereum Kovan network"
+      else 
+      return "Unsupported Network, please connect to the Ethereum Mainnet network"
     } else if (
       error instanceof UserRejectedRequestErrorInjected
     ) {

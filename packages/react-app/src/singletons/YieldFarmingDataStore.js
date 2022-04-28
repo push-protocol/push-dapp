@@ -2,7 +2,7 @@ import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { ethers } from "ethers";
 // import { bigNumber } from "ethers/utils";
 
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis , envConfig } from "@project/contracts";
 
 const ONE_PUSH = ethers.BigNumber.from(1).mul(
   ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18))
@@ -298,8 +298,11 @@ export default class YieldFarmingDataStore {
   ) => {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
-
-    const apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1))
+    let apr;
+    if(envConfig.coreContractChain === 42)
+    apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
+    else
+    apr = annualRewards.mul(1000000).div(totalStaked);
     const aprFormatted = (parseInt(apr.toString())/10000).toFixed(2)
 
     return aprFormatted
@@ -315,14 +318,12 @@ export default class YieldFarmingDataStore {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
 
-    const apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1))
+    let apr;
+    if(envConfig.coreContractChain === 42)
+    apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
+    else
+    apr = annualRewards.mul(1000000).div(totalStaked);
     const aprFormatted = (parseInt(apr.toString())/(10000 * poolStats.lpToPushRatio)).toFixed(2)
-
-    // console.log(annualRewards.toString(), genesisEpochAmount.toString())
-    // if (poolStats) {
-    //   console.log(poolStats.totalValueLocked)
-    //   console.log(poolStats["lpToPushRatio"])
-    // }
 
     return aprFormatted
 
