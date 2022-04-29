@@ -21,6 +21,7 @@ import ViewInfoItem from "components/ViewInfoItem";
 import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
+import { envConfig } from "@project/contracts";
 
 
 import * as dotenv from "dotenv";
@@ -34,7 +35,8 @@ function AirdropPage() {
 
   const themes = useTheme();
 
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
+  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const [controlAt, setControlAt] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -50,6 +52,13 @@ function AirdropPage() {
 
     setShowAnswers(newShowAnswers);
   }
+
+  React.useEffect(() => {
+    if (!onCoreNetwork) {
+      const url = window.location.origin;
+      window.location.replace(`${url}/#/notavailable`);
+    }
+  })
 
   React.useEffect(() => {
     if (!!(library && account)) {

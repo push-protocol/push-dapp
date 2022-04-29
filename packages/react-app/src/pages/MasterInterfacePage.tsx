@@ -22,6 +22,7 @@ import YieldFarmingPage from "pages/YieldFarmingPage";
 import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
+import NotAvailablePage from "./NotAvailablePage";
 import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
 
@@ -64,6 +65,7 @@ function MasterInterfacePage() {
           <Route path="gratitude" element={<AirdropPage />} />
           <Route path="live_walkthrough" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
+          <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route
               path="/"

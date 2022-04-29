@@ -27,6 +27,7 @@ import ViewDelegateeItem from "components/ViewDelegateeItem";
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
+import { envConfig } from "@project/contracts";
 
 const delegateesJSON = require("config/delegatees.json")
 const VOTING_TRESHOLD = 75000; //the treshold for delegates
@@ -41,7 +42,8 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
 
   const [darkMode, setDarkMode] = useState(false);
 
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
+  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const [address, setAddress] = React.useState('');
   const [ens, setENS] = React.useState('');
@@ -75,6 +77,12 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
     setShowAnswers(newShowAnswers);
   }
 
+  React.useEffect(() => {
+    if (!onCoreNetwork) {
+      const url = window.location.origin;
+      window.location.replace(`${url}/#/notavailable`);
+    }
+  })
 
   React.useEffect(() => {
     if (account && account != '') {
