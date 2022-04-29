@@ -6,8 +6,21 @@ import { Item, ItemH, Span, Anchor} from 'components/SharedStyling';
 import { FaGasPump } from 'react-icons/fa';
 
 // Faucet URLs
-function Faucets() {
+function Faucets({chainId}) {
   const themes = useTheme();
+
+  const faucetInfo = {
+    "42": {
+      name: "Kovan Ether",
+      network: "Kovan",
+      url: "https://gitter.im/kovan-testnet/faucet"
+    },
+    "80001": {
+      name: "Mumbai Matic",
+      network: "Polygon",
+      url: "https://faucet.polygon.technology/"
+    }
+  }
 
   // render
   return (
@@ -32,7 +45,7 @@ function Faucets() {
         size="12px"
         weight="600"
       >
-        Get Free Kovan Ether
+        Get Free {faucetInfo[chainId].name}
       </Span>
 
       <Item margin="5px">
@@ -62,7 +75,7 @@ function Faucets() {
       <Item margin="5px">
         <Anchor
           direction="column"
-          href="https://gitter.im/kovan-testnet/faucet"
+          href={faucetInfo[chainId].url}
           target="_blank"
           rel="nofollow"
         >
@@ -79,7 +92,7 @@ function Faucets() {
             textTransform="uppercase"
             radius="8px"
           >
-            Faucet Kovan
+            Faucet {faucetInfo[chainId].network}
           </Span>
         </Anchor>
       </Item>

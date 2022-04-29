@@ -16,6 +16,7 @@ import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
+import { incrementStepIndex } from "redux/slices/userJourneySlice";
 
 import {ThemeProvider} from "styled-components";
 
@@ -32,6 +33,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
+  const {
+    run,
+    stepIndex
+  } = useSelector((state: any) => state.userJourney);
 
   const [loading, setLoading] = React.useState(false);
   const [moreLoading, setMoreLoading] = React.useState(false);
@@ -68,6 +73,16 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     if (!channels.length) {
       dispatch(setChannelMeta(channelsMeta));
     }
+
+    // increases the step once the channel are loaded
+    if (
+        run &&
+        stepIndex === 3
+      ) {
+      dispatch(incrementStepIndex());
+      dispatch(incrementStepIndex());
+    }
+
     setLoading(false);
   };
 
@@ -101,7 +116,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow([]); //maybe remove later
       postReq("/channels/search", {
         query: search,
-        op: "read"
+        op: "read",
+        page : 1,
+        pageSize : 1000
       })
         .then((data) => {
           setChannelToShow(data.data.channels || []);
@@ -174,7 +191,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               </SearchContainer>
 
               {!UtilityHelper.isMainnet(chainId) && 
-                <Faucets /> 
+                <Faucets chainId={chainId} /> 
               }
               
             </ItemH>

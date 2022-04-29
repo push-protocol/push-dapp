@@ -347,4 +347,3 @@ const ToggleArrowImg = styled.div`
         transition: transform .25s;
     }
 `
-

@@ -26,7 +26,10 @@ import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial
 
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
+
+import { envConfig } from "@project/contracts";
 import { incrementStepIndex,addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
@@ -53,9 +56,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     (state) => state.channels
   );
   const { account, library, chainId } = useWeb3React();
-  const isOwner = channelObjectProp.addr === account;
+
+  const onCoreNetwork = (chainId === envConfig.coreContractChain);
 
   const [channelObject, setChannelObject] = React.useState({});
+  const [isOwner, setIsOwner] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState({});
   const [subscribed, setSubscribed] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
@@ -69,6 +74,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(null);
+  const [ethAliasAccount, setEthAliasAccount] = React.useState(null);
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
@@ -99,6 +105,31 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       });
     }
   }, [account, channelObject, chainId]);
+
+  React.useEffect(() => {
+    (async function init() {
+      if (!channelObject.addr) return;
+      // if we are not on the core network then check for if this account is an alias for another channel
+      if (!onCoreNetwork) {
+        // get the alias address of the eth address, in order to properly render information about the channel
+        const aliasEth = await postReq("/channels/get_alias_details", {
+          channel: channelObject.addr,
+          op: "read",
+        }).then(({ data }) => {
+          console.log({ data });
+          const aliasAccount = data;
+          if (aliasAccount) {
+            setEthAliasAccount(aliasAccount.aliasAddress);
+            setIsOwner(account === aliasAccount.aliasAddress);
+            fetchChannelJson();
+          }
+          return data;
+        });
+      } else {
+        setIsOwner(account === channelObject.addr);
+      }
+    })();
+    }, [account, channelObject, chainId]);
 
   React.useEffect(() => {
     if (!channelObjectProp) return;
@@ -140,8 +171,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           })
         );
       }
+      let channelAddress = channelObject.addr;
+      if (!onCoreNetwork) {
+        if (ethAliasAccount == 'NULL') return;
+        channelAddress = ethAliasAccount;
+      }
+      if (!channelAddress) return;
       const channelSubscribers = await postReq("/channels/get_subscribers", {
-        channel: channelObject.addr,
+        channel: channelAddress,
+        blockchain: chainId,
         op: "read",
       })
         .then(({ data }) => {
@@ -162,15 +200,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       setMemberCount(channelSubscribers.length);
       setSubscribed(subscribed);
       setChannelJson({ ...channelJson, addr: channelObject.addr });
-      if (
-        // channelObject.addr === "0xB88460Bb2696CAb9D66013A05dFF29a28330689D" && //production
-        run &&
-        channelObject.addr === "0x2177cFc66474bBEce7Cbf114d780A5cfE78485De" && //development
-        stepIndex === 3
-      ) {
-        console.log(channelObject.addr);
-        dispatch(incrementStepIndex());
-      }
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
@@ -323,8 +352,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           { name: "action", type: "string" },
         ],
       };
+
+      let channelAddress = channelObject.addr;
+      if (!onCoreNetwork) {
+        channelAddress = ethAliasAccount;
+      }
+
       const message = {
-        channel: channelObject.addr,
+        channel: channelAddress,
         subscriber: account,
         action: "Subscribe",
       };
@@ -430,8 +465,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           { name: "action", type: "string" },
         ],
       };
+
+      let channelAddress = channelObject.addr;
+      if (!onCoreNetwork) {
+        channelAddress = ethAliasAccount;
+      }
+
       const message = {
-        channel: channelObject.addr,
+        channel: channelAddress,
         unsubscriber: account,
         action: "Unsubscribe",
       };
@@ -461,7 +502,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       })
         .then((res) => {
           setSubscribed(false);
-          setMemberCount(memberCount + 1);
+          setMemberCount(memberCount - 1);
           toaster.update(txToast, {
             render: "Sucesfully opted out of channel !",
             type: toaster.TYPE.SUCCESS,

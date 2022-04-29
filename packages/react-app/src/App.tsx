@@ -10,7 +10,6 @@ import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joy
 
 import styled, {useTheme} from "styled-components";
 import { Item, ItemH, Span, H2, H3, B, A, C, Button } from "components/SharedStyling";
-
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 
@@ -286,7 +285,6 @@ export default function App() {
                 </A>
                 .
               </Span>
-
               <Item
                 flex="initial"
                 padding="30px 15px"

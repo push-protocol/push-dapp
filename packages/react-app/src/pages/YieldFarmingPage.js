@@ -17,6 +17,7 @@ import PoolCard from "components/PoolCard";
 import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
+import { envConfig } from "@project/contracts";
 
 
 const ethers = require("ethers");
@@ -24,6 +25,7 @@ const ethers = require("ethers");
 // Create Header
 function YieldFarmingPage() {
   const { active, error, account, library, chainId } = useWeb3React();
+  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const themes = useTheme();
 
@@ -54,6 +56,13 @@ function YieldFarmingPage() {
 
     setShowAnswers(newShowAnswers);
   }
+
+  React.useEffect(() => {
+    if (!onCoreNetwork) {
+      const url = window.location.origin;
+      window.location.replace(`${url}/#/notavailable`);
+    }
+  })
 
   const getPoolStats = React.useCallback(async () => {
     const poolStats = await YieldFarmingDataStore.instance.getPoolStats();

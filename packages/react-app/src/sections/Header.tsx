@@ -93,7 +93,7 @@ const chainIds = envConfig.allowedNetworks;
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
     } else if (error instanceof UnsupportedChainIdError) {
       handleChangeNetwork();
-      return "Unsupported Network, please connect to the Ethereum Kovan network"
+      return "Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network"
     } else if (
       error instanceof UserRejectedRequestErrorInjected
     ) {

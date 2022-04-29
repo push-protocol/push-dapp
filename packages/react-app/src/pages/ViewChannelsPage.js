@@ -7,6 +7,7 @@ import Loader from "react-loader-spinner";
 import hex2ascii from "hex2ascii";
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { envConfig } from "@project/contracts";
 
 import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
@@ -36,7 +37,7 @@ import { addNewNotification } from "redux/slices/notificationSlice";
 
 import GLOBALS from "config/Globals";
 
-export const ALLOWED_CORE_NETWORK = 42; //chainId of network which we have deployed the core contract on
+export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
 
 // Create Header
@@ -160,9 +161,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
     (async function init() {
       const coreProvider = onCoreNetwork
         ? library
-        : ethers.getDefaultProvider(ALLOWED_CORE_NETWORK, {
-            etherscan: config.etherscanToken,
-          });
+        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
@@ -215,10 +214,12 @@ function InboxPage({ loadTeaser, playTeaser }) {
       // initialise the read contract for the communicator function
       if (!!(library && account)) {
         let signer = library.getSigner(account);
+        let coreSigner = coreProvider.getSigner(account);
+
         const coreSignerInstance = new ethers.Contract(
           addresses.epnscore,
           abis.epnscore,
-          signer
+          coreSigner
         );
         const communicatorSignerInstance = new ethers.Contract(
           commAddress,
@@ -263,7 +264,8 @@ function InboxPage({ loadTeaser, playTeaser }) {
       ChannelsDataStore.instance.init(
         account,
         epnsReadProvider,
-        epnsCommReadProvider
+        epnsCommReadProvider,
+        chainId
       );
       checkUserForChannelOwnership();
       listenFornewNotifications();
