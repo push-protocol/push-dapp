@@ -383,7 +383,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       if(run) {
         console.log("in run");
         toaster.update(txToast, {
-          render: "Sucesfully opted into channel !",
+          render: "Successfully opted into channel !",
           type: toaster.TYPE.SUCCESS,
           autoClose: 5000,
         });
@@ -413,7 +413,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         setSubscribed(true);
         setMemberCount(memberCount + 1);
         toaster.update(txToast, {
-          render: "Sucesfully opted into channel !",
+          render: "Successfully opted into channel !",
           type: toaster.TYPE.SUCCESS,
           autoClose: 5000,
         });
@@ -504,7 +504,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           setSubscribed(false);
           setMemberCount(memberCount - 1);
           toaster.update(txToast, {
-            render: "Sucesfully opted out of channel !",
+            render: "Successfully opted out of channel !",
             type: toaster.TYPE.SUCCESS,
             autoClose: 5000,
           });
