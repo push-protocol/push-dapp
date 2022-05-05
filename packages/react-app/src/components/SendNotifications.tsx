@@ -102,7 +102,7 @@ function SendNotifications() {
 
   // on change for the subset type notifications input
   const handleSubsetInputChange = (e: any) => {
-      // if the user enters in a comma or an enter then seperate the addresses
+      // if the user enters in a comma or an enter then separate the addresses
       if (LIMITER_KEYS.includes(e.key)) {
           e.preventDefault();
           // if they enter a limiter key, then add the temp value to the recipeints list
@@ -904,7 +904,7 @@ function SendNotifications() {
                                                   multipleRecipients.length ===
                                                   0
                                               }
-                                              placeholder="Enter recipients wallet addresses seperated by a comma or by pressing the enter key"
+                                              placeholder="Enter recipients wallet addresses separated by a comma or by pressing the enter key"
                                               radius="4px"
                                               padding="12px"
                                               border="1px solid #674c9f"
