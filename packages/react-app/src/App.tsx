@@ -6,6 +6,7 @@ import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
+import { envConfig } from "@project/contracts";
 import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
 
 import styled, {useTheme} from "styled-components";
@@ -80,7 +81,7 @@ export default function App() {
   useInactiveListener(!triedEager || !!activatingConnector);
 
   // Initialize GA
-  ReactGA.initialize("UA-165415629-5");
+  ReactGA.initialize(envConfig.googleAnalyticsId);
   ReactGA.pageview("/login");
   // Initialize GA
 
