@@ -25,7 +25,6 @@ import { NavigationContext } from "contexts/NavigationContext";
 import GLOBALS from "config/Globals";
 import { envConfig } from "@project/contracts";
 
-import { envConfig } from "@project/contracts";
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
