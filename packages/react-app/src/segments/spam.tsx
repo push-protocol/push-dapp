@@ -19,7 +19,8 @@ import {
 } from "redux/slices/spamSlice";
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
+import { ethers } from "ethers";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -51,6 +52,18 @@ function SpamBox({ currentTab }) {
   const [filter , setFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+
+  const onCoreNetwork = (chainId === envConfig.coreContractChain);
+
+  const nameToIdDev = {
+    "POLYGON_TEST_MUMBAI": 80001,
+    "ETH_TEST_KOVAN": 42
+  }
+
+  const nameToIdProd = {
+    "POLYGON": 137,
+    "ETH": 1
+  }
 
   const reset = ()=>setFilter(false);
   const filterNotifications = async (query , channels , startDate , endDate) => {
@@ -90,7 +103,7 @@ function SpamBox({ currentTab }) {
     // }
     // else{
     
-        let filterNotif = [];
+    let filterNotif = [];
         for(const notif of allNotif){
           let timestamp;
           const matches = notif.message.match(/\[timestamp:(.*?)\]/);
@@ -128,10 +141,16 @@ function SpamBox({ currentTab }) {
           })
           const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
             elem.channel = results[i].channel;
+            let address = results[i].channel;
+            
+            if (results[i].blockchain === 'POLYGON_TEST_MUMBAI') {
+              address = await fetchEthAddress(results[i].channel);
+            }
             const {
               data: { subscribers },
             } = await postReq("/channels/get_subscribers", {
-              channel: results[i].channel,
+              channel: address,
+              blockchain: chainId,
               op: "read",
             });
             elem.subscribers = subscribers;
@@ -171,10 +190,15 @@ function SpamBox({ currentTab }) {
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
+          let address = results[i].channel;
+          if (results[i].blockchain === 'POLYGON_TEST_MUMBAI') {
+            address = await fetchEthAddress(results[i].channel);
+          }
           const {
             data: { subscribers },
           } = await postReq("/channels/get_subscribers", {
-            channel: results[i].channel,
+            channel: address,
+            blockchain: chainId,
             op: "read",
           });
           elem.subscribers = subscribers;
@@ -217,17 +241,21 @@ function SpamBox({ currentTab }) {
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
+          let address = results[i].channel;
+          if (results[i].blockchain === 'POLYGON_TEST_MUMBAI') {
+            address = await fetchEthAddress(results[i].channel);
+          }
           const {
             data: { subscribers },
           } = await postReq("/channels/get_subscribers", {
-            channel: results[i].channel,
+            channel: address,
             op: "read",
           });
           elem.subscribers = subscribers;
           return { ...elem };
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      let res = parsedResponse.filter( notif => !isSubscribedFn(notif.subscribers));
+      let res = parsedResponse.filter(notif => !isSubscribedFn(notif.subscribers));
       setNotif(res);
 
     } catch (err) {
@@ -255,6 +283,40 @@ function SpamBox({ currentTab }) {
     }
   }, [epnsCommReadProvider, account]);
 
+  const fetchAliasAddress = async (channelAddress) => {
+    if (channelAddress === null) return;
+    const ethAlias = await postReq("/channels/get_alias_details", {
+          channel: channelAddress,
+          op: "read",
+        }).then(({ data }) => {
+          console.log({ data });
+          let aliasAccount;
+          if (data) {
+            aliasAccount = data.aliasAddress
+          }
+          return aliasAccount;
+        });
+    
+    return ethAlias;
+  }
+
+  const fetchEthAddress = async (channelAddress) => {
+    if (channelAddress === null) return;
+    const aliasEth = await postReq("/channels/get_eth_address", {
+      aliasAddress: channelAddress,
+      op: "read",
+    }).then(({ data }) => {
+      console.log({ data });
+      let ethAccount;
+      if (data) {
+        ethAccount = data.ethAddress
+      }
+      return ethAccount;
+    });
+    
+    return aliasEth;
+  }
+
   //function to query more notifications
   const handlePagination = async () => {
     loadNotifications();
@@ -269,8 +331,21 @@ function SpamBox({ currentTab }) {
     );
   };
 
-  const onSubscribeToChannel = async (channelAddress) => {
+  const onSubscribeToChannel = async (channelAddress, blockchain) => {
+    if (!channelAddress) return;
     let txToast;
+    let address = channelAddress;
+
+    const nameToObj = (envConfig.coreContractChain === 1) ? nameToIdProd : nameToIdDev;
+    if (chainId !== nameToObj[blockchain]) {
+      if (!onCoreNetwork) {
+        address = await fetchAliasAddress(channelAddress);
+      } else {
+        address = await fetchEthAddress(channelAddress);
+      }
+    }
+
+    if (!address) return;
     const type = {
       Subscribe: [
         { name: "channel", type: "address" },
@@ -279,7 +354,7 @@ function SpamBox({ currentTab }) {
       ],
     };
     const message = {
-      channel: channelAddress,
+      channel: address,
       subscriber: account,
       action: "Subscribe",
     };
@@ -287,7 +362,6 @@ function SpamBox({ currentTab }) {
     const signature = await library
       .getSigner(account)
       ._signTypedData(EPNS_DOMAIN, type, message);
-
     return postReq("/channels/subscribe_offchain", {
       signature,
       message,
@@ -315,7 +389,7 @@ function SpamBox({ currentTab }) {
         )}
         {notifications && (
           <Items id="scrollstyle-secondary">
-            {(filter && !run ? filteredNotifications : notifications).map((oneNotification, index) => {
+            {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
               const {
                 cta,
                 title,
@@ -325,6 +399,7 @@ function SpamBox({ currentTab }) {
                 image,
                 channel,
                 subscribers,
+                blockchain
               } = oneNotification;
               // render the notification item
               // console.log(app , index);
@@ -343,10 +418,11 @@ function SpamBox({ currentTab }) {
                     theme={themes.scheme}
                     subscribeFn={(e) => {
                       e?.stopPropagation();
-                      onSubscribeToChannel(channel);
+                      onSubscribeToChannel(channel, blockchain);
                     }}
                     isSpam
                     isSubscribedFn={async () => isSubscribedFn(subscribers)}
+                    chainName={blockchain}
                   />
                 </div>
               );

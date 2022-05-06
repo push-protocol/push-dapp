@@ -23,6 +23,7 @@ import TransferNFT from "components/TransferNFT";
 import {ThemeProvider} from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
+import { envConfig } from "@project/contracts";
 
 
 // Create Header
@@ -30,7 +31,8 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
   // React GA Analytics
   ReactGA.pageview("/rockstars");
 
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
+  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const themes = useTheme();
   const [darkMode, setDarkMode] = useState(false);
@@ -49,6 +51,13 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
   }
 
   React.useEffect(() => {
+    if (!onCoreNetwork) {
+      const url = window.location.origin;
+      window.location.replace(`${url}/#/notavailable`);
+    }
+  })
+
+  React.useEffect(() => {
     userClickedAt(1);
   }, [account]);
 
@@ -60,7 +69,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
   return (
     <ThemeProvider theme={themes}>
       <Section>
-        <Content padding="20px 20px 0px">
+          <Content padding="20px 20px 0px">
           <Item align="flex-start" margin="0px 20px 0px 20px">
             <H2 textTransform="uppercase" spacing="0.1em">
               <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">$ROCKSTAR</Span><Span weight="200" color={themes.color}> of </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">EPNS</Span>
@@ -147,7 +156,7 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
               <TransferNFT tokenId={tokenId}/>
             }
           </Item>
-        </Content>
+          </Content>
       </Section>
     </ThemeProvider>
   );

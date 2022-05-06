@@ -26,6 +26,9 @@ import Dropzone from "react-dropzone-uploader";
 import { makeStyles } from "@material-ui/core/styles";
 import Slider from "@material-ui/core/Slider";
 import Loader from "react-loader-spinner";
+
+import { envConfig } from "@project/contracts";
+
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
@@ -40,6 +43,8 @@ const ipfs = require("ipfs-api")();
 const minStakeFees = 50;
 const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
 
+const CORE_CHAIN_ID = envConfig.coreContractChain;
+
 // Create Header
 function CreateChannel() {
   const { active, error, account, library, chainId } = useWeb3React();
@@ -47,6 +52,7 @@ function CreateChannel() {
   const themes = useTheme();
 
   const [darkMode, setDarkMode] = useState(false);
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
@@ -62,6 +68,7 @@ function CreateChannel() {
   const [channelURL, setChannelURL] = React.useState("");
   const [channelFile, setChannelFile] = React.useState(undefined);
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
+  const [daiAmountVal, setDaiAmountVal] = useState("");
 
   //image upload states
   const childRef = useRef();
@@ -72,7 +79,28 @@ function CreateChannel() {
 
   const [stepFlow, setStepFlow] = React.useState(1);
 
-  React.useEffect(() => {});
+  //checking DAI for user
+  React.useEffect(() => {
+    const checkDaiFunc = async () => {
+        let checkDaiAmount = new ethers.Contract(
+            addresses.dai,
+            abis.dai,
+            library
+        );
+
+        let value = await checkDaiAmount.allowance(
+            account,
+            addresses.epnscore
+        );
+        value = value?.toString();
+        const convertedVal = ethers.utils.formatEther(value);
+        setDaiAmountVal(convertedVal);
+        if (convertedVal >= 50.0) {
+            setChannelStakeFees(convertedVal);
+        }
+    };
+    checkDaiFunc();
+  }, []);
 
   // called every time a file's `status` changes
   const handleChangeStatus = ({ meta, file }, status) => {
@@ -80,15 +108,6 @@ function CreateChannel() {
   };
 
   const onDropHandler = (files) => {
-    //   var file = files[0]
-    //   const reader = new FileReader();
-    //   reader.onload = (event) => {
-    //     console.log(event.target.result);
-    //   };
-    //   reader.readAsDataURL(file);
-    // setChannelFile(file);
-    // console.log("Drop Handler");
-    // console.log(file);
   };
 
   // receives array of files that are done uploading when submit button is clicked
@@ -225,14 +244,15 @@ function CreateChannel() {
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
-    var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
-    const tx = await sendTransactionPromise;
-
-    console.log(tx);
-    console.log("waiting for tx to finish");
-    setProcessingInfo("Waiting for Approval TX to finish...");
-
-    await library.waitForTransaction(tx.hash);
+    if(daiAmountVal < 50.0){
+      var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
+      const tx = await sendTransactionPromise;
+  
+      console.log(tx);
+      console.log("waiting for tx to finish");
+      setProcessingInfo("Waiting for Approval TX to finish...");
+      await library.waitForTransaction(tx.hash);
+    }
 
     let contract = new ethers.Contract(
       addresses.epnscore,
@@ -247,7 +267,10 @@ function CreateChannel() {
     var anotherSendTxPromise = contract.createChannelWithFees(
       channelType,
       identityBytes,
-      fees
+      fees,
+      {
+        gasLimit: 1000000
+      }
     );
 
     setProcessingInfo("Creating Channel TX in progress");
@@ -388,6 +411,20 @@ function CreateChannel() {
         </Content>
       </Section>
 
+      {!onCoreNetwork ? 
+      <>
+        <Section>
+          <Content padding="50px 20px 20px">
+            <Item align="flex-start">
+                <H3 color="#e20880" weight={700}>
+                You can't Create Channel on Alias Chains. Please switch to Ethereum Kovan Network to create a channel.
+              </H3>
+              </Item>
+          </Content>
+        </Section>
+      </>
+      :
+      <>
       <Section>
         <Content padding="0px 20px 20px">
           <ItemH justify="space-between">
@@ -811,7 +848,9 @@ function CreateChannel() {
             </Item>
           </Content>
         </Section>
-      )}
+        )}
+        </>
+      }
     </ThemeProvider>
   );
 }

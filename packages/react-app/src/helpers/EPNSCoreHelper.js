@@ -77,6 +77,7 @@ const EPNSCoreHelper = {
   },
   // To retrieve a channel's Info from channel address
   getChannelInfo: async (channel, contract) => {
+    if (channel === null) return;
     const enableLogs = 0;
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
@@ -163,6 +164,7 @@ const EPNSCoreHelper = {
   },
   // Helper to get Channel from Channel's address
   getChannelJsonFromChannelAddress: async (channel, contract) => {
+    if (channel === null) return;
     const enableLogs = 0;
 
     return new Promise ((resolve, reject) => {
@@ -187,6 +189,7 @@ const EPNSCoreHelper = {
   },
   // Helper to get Channel from User's address
   getChannelJsonFromUserAddress: async (user, contract) => {
+    if (user === null) return;
     const enableLogs = 0;
 
     return new Promise ((resolve, reject) => {

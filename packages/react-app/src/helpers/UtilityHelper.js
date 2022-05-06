@@ -1,7 +1,7 @@
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet : (chainId) => {
-    if (chainId === 1) {
+    if (chainId === 1 || chainId === 137) {
       return true;
     }
   },

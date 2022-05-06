@@ -24,7 +24,7 @@ function InboxPage() {
   ReactGA.pageview("/inbox");
 
   const dispatch = useDispatch();
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const {
     epnsReadProvider,
     epnsCommReadProvider,
@@ -69,7 +69,8 @@ function InboxPage() {
       ChannelsDataStore.instance.init(
         account,
         epnsReadProvider,
-        epnsCommReadProvider
+        epnsCommReadProvider,
+        chainId
       );
     }
   }, [epnsReadProvider, epnsCommReadProvider]);

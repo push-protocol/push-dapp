@@ -305,6 +305,7 @@ function Feedbox() {
               app,
               icon,
               image,
+              blockchain
             } = oneNotification;
             if(run) return;
             // render the notification item
@@ -320,6 +321,7 @@ function Feedbox() {
                   app={app}
                   icon={icon}
                   image={image}
+                  chainName={blockchain}
                   theme={themes.scheme}
                 />
               </div>

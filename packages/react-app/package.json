@@ -18,7 +18,7 @@
     "@apollo/client": "^3.3.7",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
-    "@epnsproject/frontend-sdk-staging": "^1.7.1",
+    "@epnsproject/frontend-sdk-staging": "^1.7.8",
     "@ethersproject/providers": "^5.0.0-beta.151",
     "@ethersproject/units": "^5.0.0-beta.132",
     "@material-ui/core": "4.11.0",

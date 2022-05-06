@@ -1,7 +1,7 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { ethers } from "ethers";
 
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { postReq } from "api";
 
 // STATIC SINGLETON
@@ -30,12 +30,18 @@ export default class ChannelsDataStore {
     account: null,
     epnsReadProvider: null,
     epnsCommReadProvider: null,
+    chainId: null,
+    onCoreNetwork: false,
   };
 
   // init
-  init = (account, epnsReadProvider, epnsCommReadProvider) => {
+  init = (account, epnsReadProvider, epnsCommReadProvider, chainId) => {
     // set account
     this.state.account = account;
+
+    // set chainId
+    this.state.chainId = chainId;
+    this.state.onCoreNetwork = (chainId === envConfig.coreContractChain);
 
     // First attach listeners then overwrite the old one if any
     this.resetChannelsListeners();
@@ -318,12 +324,14 @@ export default class ChannelsDataStore {
    * @returns
    */
   getChannelFromApi = async (startIndex, pageCount) => {
-    return postReq("/channels/fetch_channels", {
+    return postReq("/channels/get_channels_with_sub", {
       page: Math.ceil(startIndex / pageCount) || 1,
       pageSize: pageCount,
-      op: "write",
+      address: this.state.account,
+      blockchain: this.state.chainId,
+      op: "read",
     }).then((response) => {
-      const output = response.data.results.map(({channel}) => ({addr: channel}));
+      const output = response.data.channelsDetail.map(({channel}) => ({addr: channel}));
       return output;
     });
   };
@@ -444,12 +452,29 @@ export default class ChannelsDataStore {
   };
 
   getChannelSubscribers = async (channelAddress) => {
+    if (!channelAddress) return;
     const cachedSubscribers = this.state.subscribers[channelAddress];
     if (cachedSubscribers) {
       return cachedSubscribers;
     }
+    let address = channelAddress;
+    if (!this.state.onCoreNetwork) {
+      await postReq("/channels/get_alias_details", {
+          channel: channelAddress,
+          op: "read",
+        }).then(({ data }) => {
+          const aliasAccount = data;
+          if (aliasAccount) {
+            address = aliasAccount.aliasAddress;
+          }
+          return data;
+        });
+    }
+
+    if (!address) return;
     return postReq("/channels/get_subscribers", {
-      channel: channelAddress,
+      channel: address,
+      blockchain: this.state.chainId,
       op: "read",
     })
       .then(({ data }) => {

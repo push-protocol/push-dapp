@@ -198,7 +198,8 @@ function Home() {
       ChannelsDataStore.instance.init(
         account,
         epnsReadProvider,
-        epnsCommReadProvider
+        epnsCommReadProvider,
+        chainId
       );
       checkUserForChannelOwnership();
       fetchDelegators();

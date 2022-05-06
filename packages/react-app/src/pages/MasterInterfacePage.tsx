@@ -22,6 +22,7 @@ import YieldFarmingPage from "pages/YieldFarmingPage";
 import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
+import NotAvailablePage from "./NotAvailablePage";
 import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
 
@@ -64,6 +65,7 @@ function MasterInterfacePage() {
           <Route path="gratitude" element={<AirdropPage />} />
           <Route path="live_walkthrough" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
+          <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route
               path="/"
@@ -117,9 +119,10 @@ function MasterInterfacePage() {
 const Container = styled.div`
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px );
+  padding: 5px 20px 20px 20px;
   align-items: stretch;
+
 `;
 
 const Interface = styled(Item)`
@@ -133,6 +136,7 @@ const Interface = styled(Item)`
 
   margin: 15px 15px 15px 0px;
   overflow: hidden;
+
 
   @media (max-width: 992px) {
     margin: 15px 0px;
