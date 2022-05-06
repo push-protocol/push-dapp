@@ -554,12 +554,12 @@ function CreateChannel() {
                   bg="#fff"
                   value={channelInfo}
                   onChange={(e) => {
-                    if(e.target.value.length > 200)
-                    {
-                      // window.alert("200 characters limit reached");
-                      return;
-                    }
-                    setChannelInfo(e.target.value);
+                    // if(e.target.value.length > 200)
+                    // {
+                    //   // window.alert("200 characters limit reached");
+                    //   return;
+                    // }
+                    setChannelInfo(e.target.value.slice(0,200));
                   }}
                   autocomplete="off"
                 />
