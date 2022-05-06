@@ -1,6 +1,5 @@
 // environmental configurations for the dapp for different environments
 const config = {
-    environment: "development",
     apiUrl: "https://backend-dev.epns.io/apis",
     allowedNetworks: [
         42, //for ropsten
