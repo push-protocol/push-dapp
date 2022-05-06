@@ -35,11 +35,7 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
-<<<<<<< HEAD
-export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;; //chainId of network which we have deployed the core contract on
-=======
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
->>>>>>> main
 const CHANNEL_TAB = 0; //Default to 1 which is the channel tab
 
 // Create Header
