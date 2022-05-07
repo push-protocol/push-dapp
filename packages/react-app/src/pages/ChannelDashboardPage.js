@@ -393,7 +393,16 @@ function ChannelDashboardPage() {
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <ViewChannels />}
-        {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
+        {controlAt == 2 && adminStatusLoaded ? 
+            <ChannelOwnerDashboard /> 
+            // <ChannelLoadingMessage>
+            //   Channel details are being loaded, please wait…
+            // </ChannelLoadingMessage>
+          : 
+            <ChannelLoadingMessage>
+              Channel details are being loaded, please wait…
+            </ChannelLoadingMessage>
+        }
         {controlAt == 3 && <Info />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
@@ -411,6 +420,16 @@ function ChannelDashboardPage() {
 }
 
 // css style
+const ChannelLoadingMessage = styled.div`
+width: 100%;
+/* background-color: red; */
+padding: 40px;
+font-size: 1.5em;
+font-weight: 300;
+text-align: center;
+color: ${props => props.theme.color};
+`
+
 const Container = styled.div`
   flex: 1;
   display: block;
