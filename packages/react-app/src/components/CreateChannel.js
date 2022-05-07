@@ -728,9 +728,9 @@ function CreateChannel() {
               >
                 <TextField
                   required
-                  placeholder="Your Channel's Short Description (200 Characters)"
+                  placeholder="Your Channel's Short Description (250 Characters)"
                   rows="4"
-                  maxlength="200"
+                  maxlength="250"
                   radius="4px"
                   padding="12px"
                   weight="400"
@@ -738,10 +738,14 @@ function CreateChannel() {
                   bg="#fff"
                   value={channelInfo}
                   onChange={(e) => {
-                    setChannelInfo(e.target.value);
+                    setChannelInfo(e.target.value.slice(0,250));
                   }}
                   autocomplete="off"
                 />
+                
+                <SpanR>
+                  {250-channelInfo.length} characters remains
+                </SpanR>
               </Item>
 
               <ItemH
@@ -856,6 +860,14 @@ function CreateChannel() {
 }
 
 // css styles
+const SpanR = styled.div`
+color: #e20880;
+opacity: 0.7;
+position: absolute;
+bottom: 0px;
+right: 0.8rem;
+z-index: 1;
+`;
 const Step = styled.div`
   height: 12px;
   width: 12px;
