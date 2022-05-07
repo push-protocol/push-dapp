@@ -42,6 +42,7 @@ export default function ChannelDetails() {
       setCreationDate(date.format(DATE_FORMAT))
     })();
   }, [channelDetails]);
+  
 
   return (
     <ChannelDetailsWrapper>
