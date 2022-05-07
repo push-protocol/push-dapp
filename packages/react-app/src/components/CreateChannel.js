@@ -728,9 +728,9 @@ function CreateChannel() {
               >
                 <TextField
                   required
-                  placeholder="Your Channel's Short Description (200 Characters)"
+                  placeholder="Your Channel's Short Description (250 Characters)"
                   rows="4"
-                  maxlength="200"
+                  maxlength="250"
                   radius="4px"
                   padding="12px"
                   weight="400"
@@ -738,13 +738,13 @@ function CreateChannel() {
                   bg="#fff"
                   value={channelInfo}
                   onChange={(e) => {
-                    setChannelInfo(e.target.value.slice(0,200));
+                    setChannelInfo(e.target.value.slice(0,250));
                   }}
                   autocomplete="off"
                 />
                 
                 <SpanR>
-                  {200-channelInfo.length} characters remains
+                  {250-channelInfo.length} characters remains
                 </SpanR>
               </Item>
 
