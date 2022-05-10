@@ -1,5 +1,6 @@
 import React from "react";
 
+import axios from 'axios';
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 //import { parseEther, bigNumber } from 'ethers/utils'
@@ -10,6 +11,16 @@ const ENS_CHANNEL_ADDR = "0x983110309620D911731Ac0932219af06091b6744";
 const ENS_HASH = "1+bafkreiekigkyezwrspignt7l7vsrjefjmogwmigy4eqtts277cu2p23ilm";
 // FeedDB Helper Function
 const EPNSCoreHelper = {
+  // get gas price in dollars
+  getGasPriceInDollars: async (library) => {
+    const ethPrice = await axios.get("https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD") 
+    .then(({data}) => data.USD || 0);
+    const gasPriceInWei = await library.getGasPrice();
+    const gasPriceInEth = ethers.utils.formatEther(gasPriceInWei);
+    const gasPriceInUsd = gasPriceInEth * ethPrice;
+    return gasPriceInUsd;
+  },
+
   // To get owner info
   getOwnerInfo: async (contract) => {
     const enableLogs = 0;
