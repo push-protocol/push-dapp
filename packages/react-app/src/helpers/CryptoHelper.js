@@ -17,13 +17,16 @@ const CryptoHelper = {
   },
   // To Encrypt Secret with Public key
   encryptWithRPCEncryptionPublicKey: function (text, encryptionPublicKey) {
-    const encryptedSecret = metamaskSigUtil.encryptSafely({
+    const encryptedSecret = metamaskSigUtil.encrypt({
       publicKey: encryptionPublicKey,
       data: text,
       version: 'x25519-xsalsa20-poly1305'
     });
 
-    return encryptedSecret;
+    const bufferRes = Buffer.from(JSON.stringify(encryptedSecret), 'utf8');
+    const result = bufferRes.toString('hex');
+
+    return result;
   },
   // To Form Encryted Secret, no more than 15 characters supported
   encryptWithECIES: async function (message, publicKey) {
