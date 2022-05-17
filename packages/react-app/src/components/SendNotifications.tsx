@@ -35,10 +35,11 @@ const ethers = require("ethers");
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
   { value: "1", label: "Broadcast (IPFS Payload)" },
-  // { value: "2", label: "Secret (IPFS Payload)" },
+  // { value: "2", label: "Old Secret (IPFS Payload)" },
   { value: "3", label: "Targetted (IPFS Payload)" },
   { value: "4", label: "Subset (IPFS Payload)" },
-  // { value: "5", label: "Offchain (Push)" },
+  { value: "5", label: "Secret (IPFS Payload)" },
+  // { value: "6", label: "Offchain (Push)" },
 ];
 const LIMITER_KEYS = ["Enter", ","];
 
@@ -201,21 +202,66 @@ function SendNotifications() {
           case "3":
               break;
 
+          // Old Secret Notification
+        //   case "2":
+        //       // Create secret
+        //       let secret = CryptoHelper.makeid(14);
+
+        //       // Encrypt payload and change sub and nfMsg in notification
+        //       nsub = "You have a secret message!";
+        //       nmsg = "Open the app to see your secret message!";
+
+        //       // get public key from EPNSCoreHelper
+        //       let k = await EPNSCoreHelper.getPublicKey(
+        //           nfRecipient,
+        //           epnsCommWriteProvider
+        //       );
+        //       if (k == null) {
+        //           // No public key, can't encrypt
+        //           setNFInfo(
+        //               "Public Key Registration is required for encryption!"
+        //           );
+        //           setNFProcessing(2);
+
+        //           toast.update(notificationToast, {
+        //               render: "Unable to encrypt for this user, no public key registered",
+        //               type: toast.TYPE.ERROR,
+        //               autoClose: 5000,
+        //           });
+
+        //           return;
+        //       }
+
+        //       let publickey = k.toString().substring(2);
+        //       //console.log("This is public Key: " + publickey);
+
+        //       secretEncrypted = await CryptoHelper.encryptWithECIES(
+        //           secret,
+        //           publickey
+        //       );
+        //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
+        //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
+        //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+        //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
+        //       break;
+
+          // Targetted Notification
+          case "4":
+              break;
+                
           // Secret Notification
-          case "2":
-              // Create secret
+          case "5":
+                // Create secret
               let secret = CryptoHelper.makeid(14);
 
               // Encrypt payload and change sub and nfMsg in notification
               nsub = "You have a secret message!";
               nmsg = "Open the app to see your secret message!";
 
-              // get public key from EPNSCoreHelper
-              let k = await EPNSCoreHelper.getPublicKey(
-                  nfRecipient,
-                  epnsCommWriteProvider
-              );
-              if (k == null) {
+              // get public key from Backend API
+              let encryptionKey = "";
+
+              if (encryptionKey == null) {
                   // No public key, can't encrypt
                   setNFInfo(
                       "Public Key Registration is required for encryption!"
@@ -231,25 +277,22 @@ function SendNotifications() {
                   return;
               }
 
-              let publickey = k.toString().substring(2);
-              //console.log("This is public Key: " + publickey);
+              let publickey = encryptionKey;
+              console.log("This is public Key: " + publickey);
 
-              secretEncrypted = await CryptoHelper.encryptWithECIES(
+              secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
                   secret,
                   publickey
               );
+              console.log(secretEncrypted);
               asub = CryptoHelper.encryptWithAES(nfSub, secret);
               amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
               acta = CryptoHelper.encryptWithAES(nfCTA, secret);
               aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
               break;
 
-          // Targetted Notification
-          case "4":
-              break;
-
           // Offchain Notification
-          case "5":
+          case "6":
               console.log(
                   nsub,
                   nmsg,
@@ -262,6 +305,7 @@ function SendNotifications() {
               );
 
               break;
+          
           default:
               break;
       }
@@ -274,7 +318,8 @@ function SendNotifications() {
           nfType === "1" ||
           nfType === "2" ||
           nfType === "3" ||
-          nfType === "4"
+          nfType === "4" ||
+          nfType === "5"
       ) {
           // Checks for optional fields
           if (nfSubEnabled && isEmpty(nfSub)) {
@@ -371,7 +416,8 @@ function SendNotifications() {
           nfType === "1" ||
           nfType === "2" ||
           nfType === "3" ||
-          nfType === "4"
+          nfType === "4" ||
+          nfType === "5"
       ) {
           // Prepare Identity and send notification
           const identity = nfType + "+" + storagePointer;
@@ -411,6 +457,13 @@ function SendNotifications() {
                   title: asub,
               },
           };
+
+          if (nfType === "5" || nfType === "2") {
+              payload.notification = {
+                  body: nmsg,
+                  title: nsub
+              }
+          }
 
           const message = payload.data;
           console.log(payload, "payload");
@@ -509,7 +562,7 @@ function SendNotifications() {
           //     setNFProcessing(0);
           //   });
       }
-      if (nfType === "5") {
+      if (nfType === "6") {
           // const jsonPayload = {
           //   notification: {
           //     title: nsub,
