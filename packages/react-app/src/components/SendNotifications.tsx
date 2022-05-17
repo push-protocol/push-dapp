@@ -252,7 +252,7 @@ function SendNotifications() {
           // Secret Notification
           case "5":
                 // Create secret
-              let secret = CryptoHelper.makeid(14);
+              let secret = CryptoHelper.makeid(8);
 
               // Encrypt payload and change sub and nfMsg in notification
               nsub = "You have a secret message!";
@@ -462,7 +462,8 @@ function SendNotifications() {
               payload.notification = {
                   body: nmsg,
                   title: nsub
-              }
+              };
+              payload.data.secret = secretEncrypted;
           }
 
           const message = payload.data;
