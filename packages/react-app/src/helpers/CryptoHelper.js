@@ -28,6 +28,14 @@ const CryptoHelper = {
 
     return result;
   },
+  decryptWithWalletRPCMethod: async function (provider, encryptedMessage, account) {
+    const result = await provider.request({
+      method: 'eth_decrypt',
+      params: [encryptedMessage, account],
+    });
+
+    return result;
+  },
   // To Form Encryted Secret, no more than 15 characters supported
   encryptWithECIES: async function (message, publicKey) {
     const compressedKey = EthCrypto.publicKey.compress(publicKey);
