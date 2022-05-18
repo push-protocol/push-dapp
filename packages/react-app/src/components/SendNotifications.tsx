@@ -259,7 +259,12 @@ function SendNotifications() {
               nmsg = "Open the app to see your secret message!";
 
               // get public key from Backend API
-              let encryptionKey = "";
+              let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
+                  address: nfRecipient,
+                  op: "read"
+              }).then(res => {
+                  return res.data?.encryption_key;
+              });
 
               if (encryptionKey == null) {
                   // No public key, can't encrypt
@@ -284,11 +289,11 @@ function SendNotifications() {
                   secret,
                   publickey
               );
-              console.log(secretEncrypted);
-              asub = CryptoHelper.encryptWithAES(nfSub, secret);
+            //   console.log(secretEncrypted);
+              if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
               amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-              acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-              aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
+              if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+              if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
               break;
 
           // Offchain Notification
