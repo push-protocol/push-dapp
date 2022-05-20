@@ -378,7 +378,7 @@ function SpamBox({ currentTab }) {
       .includes(account.toLowerCase());
   };
 
-  const onDecrypt = async (secret, title, message) => {
+  const onDecrypt = async ({secret, title, message, image, cta}) => {
     let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
     
     // decrypt notification message
@@ -386,7 +386,13 @@ function SpamBox({ currentTab }) {
 
     // decrypt notification title
     let decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
-    return { title: decryptedTitle, body: decryptedBody };
+
+    // decrypt notification image
+    let decryptedImage = await CryptoHelper.decryptWithAES(image, decryptedSecret);
+
+    // decrypt notification cta
+    let decryptedCta = await CryptoHelper.decryptWithAES(cta, decryptedSecret);
+    return { title: decryptedTitle, body: decryptedBody, image: decryptedImage, cta: decryptedCta };
   }
 
   // Render
@@ -437,7 +443,7 @@ function SpamBox({ currentTab }) {
                     isSpam
                     isSubscribedFn={async () => isSubscribedFn(subscribers)}
                     isSecret={secret != ''}
-                    decryptFn={(e) => onDecrypt(secret, title, message)}
+                    decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                     chainName={blockchain}
                   />
                 </div>

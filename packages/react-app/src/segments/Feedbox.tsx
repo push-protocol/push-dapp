@@ -256,7 +256,7 @@ function Feedbox() {
         
     };
   
-  const onDecrypt = async (secret, title, message) => {
+  const onDecrypt = async ({secret, title, message, image, cta}) => {
     let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
     
     // decrypt notification message
@@ -264,7 +264,13 @@ function Feedbox() {
 
     // decrypt notification title
     let decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
-    return { title: decryptedTitle, body: decryptedBody };
+
+    // decrypt notification image
+    let decryptedImage = await CryptoHelper.decryptWithAES(image, decryptedSecret);
+
+    // decrypt notification cta
+    let decryptedCta = await CryptoHelper.decryptWithAES(cta, decryptedSecret);
+    return { title: decryptedTitle, body: decryptedBody, image: decryptedImage, cta: decryptedCta };
   }
 
   // Render
@@ -335,7 +341,7 @@ function Feedbox() {
                   icon={icon}
                   image={image}
                   isSecret={secret != ''}
-                  decryptFn={(e) => onDecrypt(secret, title, message)}
+                  decryptFn={(e) => onDecrypt({ secret, title, message, image, cta })}
                   chainName={blockchain}
                   theme={themes.scheme}
                 />
