@@ -21,9 +21,8 @@ import {
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
 
-import {
-  addNewWelcomeNotif
-} from "redux/slices/userJourneySlice";
+import { toast as toaster } from "react-toastify";
+import NotificationToast from "components/NotificationToast";
 import CryptoHelper from "helpers/CryptoHelper";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
@@ -42,6 +41,10 @@ function Feedbox() {
 
   const [darkMode, setDarkMode] = useState(false);
 
+  // toast related section
+	const [toast, showToast] = React.useState(null);
+	const clearToast = () => showToast(null);
+
   const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
 
   const [limit , setLimit] = React.useState(10);
@@ -52,6 +55,27 @@ function Feedbox() {
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [currentTab, setCurrentTab] = React.useState("inbox");
+
+  // toast customize
+  const LoaderToast = ({ msg, color }) => (
+    <Toaster>
+      <Loader type="Oval" color={color} height={30} width={30} />
+      <ToasterMsg>{msg}</ToasterMsg>
+    </Toaster>
+	);
+
+	const NormalToast = ({ msg }) => (
+		<Toaster>
+      <ToasterMsg>{msg}</ToasterMsg>
+    </Toaster>
+  )
+  
+  //clear toast variable after it is shown
+	React.useEffect(() => {
+		if (toast) {
+			clearToast();
+		}
+	}, [toast]);
   
     const reset = ()=>setFilter(false);
     const filterNotifications = async (query , channels , startDate , endDate) => {
@@ -256,21 +280,72 @@ function Feedbox() {
         
     };
   
-  const onDecrypt = async ({secret, title, message, image, cta}) => {
-    let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+  const onDecrypt = async ({ secret, title, message, image, cta }) => {
+    let txToast;
+    try {
+      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
     
-    // decrypt notification message
-    const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
+      // decrypt notification message
+      const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
 
-    // decrypt notification title
-    let decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
+      // decrypt notification title
+      let decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
 
-    // decrypt notification image
-    let decryptedImage = await CryptoHelper.decryptWithAES(image, decryptedSecret);
+      // decrypt notification image
+      let decryptedImage = await CryptoHelper.decryptWithAES(image, decryptedSecret);
 
-    // decrypt notification cta
-    let decryptedCta = await CryptoHelper.decryptWithAES(cta, decryptedSecret);
-    return { title: decryptedTitle, body: decryptedBody, image: decryptedImage, cta: decryptedCta };
+      // decrypt notification cta
+      let decryptedCta = await CryptoHelper.decryptWithAES(cta, decryptedSecret);
+      return { title: decryptedTitle, body: decryptedBody, image: decryptedImage, cta: decryptedCta };
+    } catch (error) {
+      if (error.code === 4001) {
+        // EIP-1193 userRejectedRequest error
+        console.error(error);
+        txToast = toaster.dark(
+          <NormalToast msg="User denied message decryption" />,
+          {
+            position: "bottom-right",
+            type: toaster.TYPE.ERROR,
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
+      } else if(error.code === -32601) {
+					console.error(error);
+					txToast = toaster.dark(
+						<NormalToast msg="Your wallet doesn't support message decryption." />,
+						{
+							position: "bottom-right",
+							type: toaster.TYPE.ERROR,
+							autoClose: 5000,
+							hideProgressBar: true,
+							closeOnClick: true,
+							pauseOnHover: true,
+							draggable: true,
+							progress: undefined,
+						}
+					);
+				} else {
+					console.error(error);
+					txToast = toaster.dark(
+						<NormalToast msg="There was an error in message decryption" />,
+						{
+							position: "bottom-right",
+							type: toaster.TYPE.ERROR,
+							autoClose: 5000,
+							hideProgressBar: true,
+							closeOnClick: true,
+							pauseOnHover: true,
+							draggable: true,
+							progress: undefined,
+						}
+					);
+				}
+    }
   }
 
   // Render
@@ -365,7 +440,13 @@ function Feedbox() {
             theme="third"
           />
         </Item>
-      )}
+        )}
+        {toast && (
+					<NotificationToast
+						notification={toast}
+						clearToast={clearToast}
+					/>
+				)}
     </Container>
     </ThemeProvider>
   );
@@ -396,6 +477,17 @@ const Notifs = styled.div`
     background-color: #EEE;
     border-radius: 10px;
   }
+`;
+
+const Toaster = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px 10px;
+`;
+
+const ToasterMsg = styled.div`
+  margin: 0px 10px;
 `;
 
 // Export Default
