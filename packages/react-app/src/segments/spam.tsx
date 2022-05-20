@@ -20,6 +20,7 @@ import {
 import { postReq } from "api";
 import DisplayNotice from "components/DisplayNotice";
 import { ThemeProvider } from "styled-components";
+import CryptoHelper from "helpers/CryptoHelper";
 import { ethers } from "ethers";
 
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -377,6 +378,24 @@ function SpamBox({ currentTab }) {
       .includes(account.toLowerCase());
   };
 
+  const onDecrypt = async (secret, title, message, notification) => {
+    let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+    
+    // decrypt notification message
+    const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
+
+    // decrypt notification title
+    // title might be empty, that's why initializing to default notification.title
+    let decryptedTitle = notification.title;
+    console.log(decryptedTitle, notification, title);
+    if (title != '') {
+      console.log("in func");
+      decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
+    }
+    console.log(decryptedTitle);
+    return { title: decryptedTitle, body: decryptedBody };
+  }
+
   // Render
   return (
     <ThemeProvider theme={themes}>
@@ -397,6 +416,8 @@ function SpamBox({ currentTab }) {
                 app,
                 icon,
                 image,
+                secret,
+                notification,
                 channel,
                 subscribers,
                 blockchain
@@ -409,8 +430,8 @@ function SpamBox({ currentTab }) {
                     <Waypoint onEnter={handlePagination} />
                   )}
                   <NotificationItem
-                    notificationTitle={title}
-                    notificationBody={message}
+                    notificationTitle={notification.title}
+                    notificationBody={notification.body}
                     cta={cta}
                     app={app}
                     icon={icon}
@@ -422,6 +443,8 @@ function SpamBox({ currentTab }) {
                     }}
                     isSpam
                     isSubscribedFn={async () => isSubscribedFn(subscribers)}
+                    isSecret={secret != ''}
+                    decryptFn={(e) => onDecrypt(secret, title, message, notification)}
                     chainName={blockchain}
                   />
                 </div>

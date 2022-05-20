@@ -24,6 +24,7 @@ import {
 import {
   addNewWelcomeNotif
 } from "redux/slices/userJourneySlice";
+import CryptoHelper from "helpers/CryptoHelper";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -31,7 +32,7 @@ const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 function Feedbox() {
   const dispatch = useDispatch();
-  const { account } = useWeb3React();
+  const { account, library } = useWeb3React();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
@@ -254,7 +255,21 @@ function Feedbox() {
       }
         
     };
-    const [clicked, setClicked] = React.useState(false);
+  
+  const onDecrypt = async (secret, title, message, notification) => {
+    let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+    
+    // decrypt notification message
+    const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
+
+    // decrypt notification title
+    // title might be empty, that's why initializing to default notification.title
+    let decryptedTitle = notification.title;
+    console.log(decryptedTitle, notification, title);
+    decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
+    console.log(decryptedTitle);
+    return { title: decryptedTitle, body: decryptedBody };
+  }
 
   // Render
   return (
@@ -305,6 +320,8 @@ function Feedbox() {
               app,
               icon,
               image,
+              secret,
+              notification,
               blockchain
             } = oneNotification;
             if(run) return;
@@ -315,12 +332,14 @@ function Feedbox() {
                   <Waypoint onEnter={() => handlePagination()} />
                 )}
                 <NotificationItem
-                  notificationTitle={title}
-                  notificationBody={message}
+                  notificationTitle={notification.title}
+                  notificationBody={notification.body}
                   cta={cta}
                   app={app}
                   icon={icon}
                   image={image}
+                  isSecret={secret != ''}
+                  decryptFn={(e) => onDecrypt(secret, title, message, notification)}
                   chainName={blockchain}
                   theme={themes.scheme}
                 />
