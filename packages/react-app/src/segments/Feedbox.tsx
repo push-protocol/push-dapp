@@ -341,7 +341,7 @@ function Feedbox() {
                   icon={icon}
                   image={image}
                   isSecret={secret != ''}
-                  decryptFn={(e) => onDecrypt({ secret, title, message, image, cta })}
+                  decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                   chainName={blockchain}
                   theme={themes.scheme}
                 />
