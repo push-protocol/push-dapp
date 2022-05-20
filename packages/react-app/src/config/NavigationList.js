@@ -39,6 +39,28 @@ const NavigationList = {
               }
             }
           },
+          chat: {
+            src: "svg/communicate.svg",
+            iconFactory: null,
+            name: 'Chat',
+            title: 'Chat',
+            alt: 'Open Chat',
+            href: '/chat',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Chat',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
           spam: {
             src: "svg/spam.svg",
             iconFactory: null,
@@ -170,10 +192,10 @@ const NavigationList = {
           dynamicEnviroment: {
             src: "svg/network.svg",
             iconFactory: null,
-            name: window.location.hostname == "app.epns.io" ? "Staging dApp" : "Prod dApp",
-            title: window.location.hostname == "app.epns.io" ? "Staging dApp" : "Prod dApp",
-            alt: window.location.hostname == "app.epns.io" ? "Checkout Staging dApp" : "Checkout Prod dApp",
-            href: window.location.hostname == "app.epns.io" ? "https://staging-app.epns.io" : "https://app.epns.io",
+            name: window.hostname == "app.epns.io" ? "Try Staging dApp" : window.hostname == "staging-app.epns.io" ? "Try Dev dApp": "Try Prod dApp",
+            title: window.hostname == "app.epns.io" ? "Try Staging dApp" : window.hostname == "staging-app.epns.io" ? "Try Dev dApp": "Try Prod dApp",
+            alt: window.hostname == "app.epns.io" ? "Checkout Staging dApp" : window.hostname == "staging-app.epns.io" ? "Checkout Dev dApp": "Checkout Prod dApp",
+            href: window.hostname == "app.epns.io" ? "https://staging-app.epns.io" : window.hostname == "staging-app.epns.io" ? "https://app-dev.epns.io": "https://app.epns.io",
             newTab: false,
             isRoute: false,
             hasMenuLogic: false,
@@ -412,30 +434,9 @@ const NavigationList = {
                 fg: themeDark.headerTagFg,
               }
             }
-          },
-          quickGuide: {
-            src: "svg/tutorial.svg",
-            iconFactory: null,
-            name: "Quick Guide",
-            title: "Quick Guide",
-            alt: "Quick Guide",
-            href: 'https://getstarted.epns.io/',
-            newTab: false,
-            isRoute: false,
-            hasMenuLogic: false,
-            headerTag: {
-              title: "Quick Guide",
-              light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-                fg: themeLight.headerTagFg,
-              },
-              dark: {
-                bg: themeDark.headerTagBg,
-                fg: themeDark.headerTagFg,
-              }
-            }
-          },
-        } 
+          }, 
+        }
+        
       }
     },
     secondary: {

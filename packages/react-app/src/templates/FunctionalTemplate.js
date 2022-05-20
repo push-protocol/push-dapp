@@ -1,5 +1,6 @@
 import React from "react";
-import styled, { css } from 'styled-components';
+import styled, { css, useTheme } from 'styled-components';
+import { Section } from 'components/SharedStyling';
 
 import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 
@@ -21,7 +22,7 @@ function Templater() {
 }
 
 // css styles
-const Container = styled.div`
+const Container = styled(Section)`
 
 `
 
