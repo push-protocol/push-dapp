@@ -49,6 +49,7 @@ function MasterInterfacePage() {
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
           <Route path="chat" element={<ChatPage />} />
+          <Route path="chattest" element={<ChatTestPage />} />
           <Route path="channels" element={
               <ViewChannelsPage 
                 loadTeaser={setLoadTeaserVideo}

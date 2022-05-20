@@ -7,7 +7,7 @@ import ChatTest from "segments/ChatTest";
 
 import GLOBALS from "config/Globals";
 
-function ChatPage(props) {
+function ChatTestPage(props) {
   const themes = useTheme();
 
   // Render

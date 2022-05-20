@@ -61,6 +61,28 @@ const NavigationList = {
               }
             }
           },
+          chattest: {
+            src: "svg/communicate.svg",
+            iconFactory: null,
+            name: 'Chat Test',
+            title: 'Chat Test',
+            alt: 'Open Chat Test',
+            href: '/chattest',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Chat Test',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_THIRD,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              }
+            }
+          },
           spam: {
             src: "svg/spam.svg",
             iconFactory: null,

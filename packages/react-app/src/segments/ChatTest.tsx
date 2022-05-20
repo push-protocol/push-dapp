@@ -4,8 +4,7 @@ import styled, { useTheme } from "styled-components";
 import Loader from "react-loader-spinner";
 import {ThemeProvider} from "styled-components";
 
-import ChatPrimary from "components/chat/ChatPrimary";
-import ChatDisplayer from "components/chat/ChatDisplayer";
+import ChatTestInternal from "components/chat/ChatTestInternal";
 
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
@@ -16,9 +15,7 @@ function ChatTest() {
     return (
       <ThemeProvider theme={themes}>
         <Container>
-          <ItemH>
-
-          </ItemH>
+          <ChatTestInternal />
         </Container>
       </ThemeProvider>
     );
