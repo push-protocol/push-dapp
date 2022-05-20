@@ -256,18 +256,14 @@ function Feedbox() {
         
     };
   
-  const onDecrypt = async (secret, title, message, notification) => {
+  const onDecrypt = async (secret, title, message) => {
     let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
     
     // decrypt notification message
     const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
 
     // decrypt notification title
-    // title might be empty, that's why initializing to default notification.title
-    let decryptedTitle = notification.title;
-    console.log(decryptedTitle, notification, title);
-    decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
-    console.log(decryptedTitle);
+    let decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
     return { title: decryptedTitle, body: decryptedBody };
   }
 
@@ -339,7 +335,7 @@ function Feedbox() {
                   icon={icon}
                   image={image}
                   isSecret={secret != ''}
-                  decryptFn={(e) => onDecrypt(secret, title, message, notification)}
+                  decryptFn={(e) => onDecrypt(secret, title, message)}
                   chainName={blockchain}
                   theme={themes.scheme}
                 />
