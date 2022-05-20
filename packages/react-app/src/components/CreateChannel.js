@@ -41,7 +41,7 @@ const ethers = require("ethers");
 const ipfs = require("ipfs-api")();
 
 const minStakeFees = 50;
-const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
+const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },{value: "NONE", label: "None"}];
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
@@ -714,6 +714,7 @@ function CreateChannel() {
                   weight="400"
                   size="1rem"
                   bg="#fff"
+                  disabled = {(chainDetails==="" || chainDetails==="NONE") ? true : false}
                   value={channelAlias}
                   onChange={(e) => {
                     setChannelAlias(e.target.value);

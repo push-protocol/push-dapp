@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import { useClickAway } from 'react-use';
+// import { useClickAway } from 'react-use';
 import styled from 'styled-components';
 import Loader from 'react-loader-spinner';
 
@@ -16,7 +16,7 @@ export default function RemoveDelegateModal({
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    useClickAway(modalRef, onClose);
+    // useClickAway(modalRef, onClose);
 
     const addDelegateFunction = () => {
         setLoading('loading')

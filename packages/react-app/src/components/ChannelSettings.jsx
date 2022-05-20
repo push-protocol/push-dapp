@@ -1,5 +1,5 @@
 import React from "react";
-import { useClickAway } from "react-use";
+// import { useClickAway } from "react-use";
 import styled from "styled-components";
 import ChannelSettingsDropdown from "./ChannelSettingsDropdown";
 
@@ -10,7 +10,7 @@ export default function ChannelSettings() {
     setActive((a) => !a);
   };
 
-  useClickAway(modalRef, () => active && setActive(false));
+  // useClickAway(modalRef, () => active && setActive(false));
 
   return (
     <SettingsWrapper ref={modalRef}>
