@@ -35,6 +35,7 @@ import { themeLight, themeDark } from "config/Themization";
 import { addresses, abis } from "@project/contracts";
 import ImageClipper from "./ImageClipper";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+import './createChannel.css';
 
 const ethers = require("ethers");
 
@@ -698,7 +699,7 @@ function CreateChannel() {
                     colors: {
                       ...theme.colors,
                       primary25: "#e20880",
-                      primary: "#e20880",
+                      primary: "#e20880"
                     },
                   })}
                   onChange={(selectedOption) => {
