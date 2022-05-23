@@ -65,7 +65,7 @@ function InboxPage() {
 				return res.data?.encryption_key;
 		});
 
-		if (encryptionKey) {
+		if (encryptionKey != null) {
 			setEnabledSecretNotif(true);
 		}
 	}, [enabledSecretNotif])
@@ -215,7 +215,7 @@ function InboxPage() {
 			console.log(result);
 
 			toaster.update(txToast, {
-				render: "Successfully opted out of channel !",
+				render: "Successfully enabled secret notifications !",
 				type: toaster.TYPE.SUCCESS,
 				autoClose: 5000,
 			});
@@ -242,7 +242,7 @@ function InboxPage() {
 
 	const enableSecretNotif = async () => {
 		let txToast;
-		if (enableSecretNotif) {
+		if (enabledSecretNotif) {
 			txToast = toaster.dark(
 				<NormalToast msg="Secret Notifications are already enabled." />,
 				{

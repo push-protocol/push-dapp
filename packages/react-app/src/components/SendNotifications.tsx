@@ -256,7 +256,7 @@ function SendNotifications() {
 
               // Encrypt payload and change sub and nfMsg in notification
               nsub = "You have a secret message!";
-              nmsg = "Open the app to see your secret message!";
+              nmsg = "Click on Decrypt button to see your secret message!";
 
               // get public key from Backend API
               let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
