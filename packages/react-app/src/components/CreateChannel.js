@@ -217,7 +217,6 @@ function CreateChannel() {
     var blockchain = chainDetailsSplit[0];
     var chain_id = chainDetailsSplit[1];
     var address = channelAlias;
-
     const input = JSON.stringify({
       name: channelName,
       info: channelInfo,
@@ -227,6 +226,25 @@ function CreateChannel() {
       chain_id: chain_id,
       address: address,
     });
+
+    console.log(`input is ${input}`);
+    
+
+    if(blockchain == "NONE")
+    {
+      input.blockchain="";
+      input.address="";
+    }
+
+    // const input = JSON.stringify({
+    //   name: channelName,
+    //   info: channelInfo,
+    //   url: channelURL,
+    //   icon: channelFile,
+    //   blockchain: blockchain,
+    //   chain_id: chain_id,
+    //   address: address,
+    // });
 
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
@@ -701,7 +719,15 @@ function CreateChannel() {
                       primary25: "#e20880",
                       primary: "#e20880"
                     },
-                  })}
+                  })} 
+                  styles={{
+                    control: base => ({
+                      ...base,
+                      "&:hover": {
+                        borderColor: "red"
+                      }
+                    })
+                  }}
                   onChange={(selectedOption) => {
                     setChainDetails(selectedOption.value);
                   }}
