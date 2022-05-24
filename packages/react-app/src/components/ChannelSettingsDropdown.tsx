@@ -228,6 +228,7 @@ function ChannelSettings() {
     });
   };
 
+<<<<<<< HEAD
   const addSubgraphDetails = (input: string) => {
     setAddSubgraphDetailsLoading(true);
     return addSubGraph(input).finally(() => {
@@ -239,6 +240,12 @@ function ChannelSettings() {
     //temporarily deactivate the deactivate button if not on core network
     return <></>;
   }
+=======
+  // if (!onCoreNetwork) {
+  //   //temporarily deactivate the deactivate button if not on core network
+  //   return <></>;
+  // }
+>>>>>>> main
 
   return (
     <div>
@@ -248,7 +255,8 @@ function ChannelSettings() {
           onClick={toggleChannelActivationState}
         >
           <ActionTitle>
-            {loading ? (
+            {!onCoreNetwork ?
+              ("") : loading ? (
               "Loading ..."
             ) : isChannelBlocked ? (
               "Channel Blocked"
