@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled, { css , useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
 import { toast as toaster } from "react-toastify";
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, addSubGraph } from "@project/contracts";
 import { postReq } from "api";
 
 import { ALLOWED_CORE_NETWORK } from "pages/DeprecatedHome";
@@ -230,7 +230,7 @@ function ChannelSettings() {
 
   const addSubgraphDetails = (input: string) => {
     setAddSubgraphDetailsLoading(true);
-    return epnsCommWriteProvider.addSubGraph(input).finally(() => {
+    return addSubGraph(input).finally(() => {
       setAddSubgraphDetailsLoading(false);
     });
   };

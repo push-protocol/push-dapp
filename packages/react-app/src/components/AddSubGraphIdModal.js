@@ -32,7 +32,8 @@ onClose, onSuccess, addSubGraphDetails
     const addSubGraphDetailsSubmit = () => {
         setLoading('loading');
         const input = {
-
+            subgraphId : subGraphId,
+            pollTime : pollTime
         }
         addSubGraphDetails(input)
         .then(async (tx) => {
