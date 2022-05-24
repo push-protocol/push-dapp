@@ -228,9 +228,9 @@ function ChannelSettings() {
     });
   };
 
-  const addSubgraphDetails = (input: string) => {
+  const addSubgraphDetails = (input: any) => {
     setAddSubgraphDetailsLoading(true);
-    return epnsCommWriteProvider.addSubGraph(input).finally(() => {
+    return epnsWriteProvider.addSubGraph(input).finally(() => {
       setAddSubgraphDetailsLoading(false);
     });
   };

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Slider from "@material-ui/core/Slider";
 import styled, {useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
-// import { useClickAway } from "react-use";
+import { useClickAway } from "react-use";
 import {
   Section,
   Content,
@@ -13,7 +13,7 @@ import {
   H2,
   Input
 } from "components/SharedStyling";
-
+const ethers = require("ethers");
 
 export default function AddSubGraphIdModal({
 onClose, onSuccess, addSubGraphDetails
@@ -27,38 +27,68 @@ onClose, onSuccess, addSubGraphDetails
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    // useClickAway(modalRef, onClose);
+    useClickAway(modalRef, onClose);
 
-    const addSubGraphDetailsSubmit = () => {
-        setLoading('loading');
-        const input = {
+    const addSubGraphDetailsSubmit = async () => {
+        try {
+            setLoading('loading');
 
-        }
-        addSubGraphDetails(input)
-        .then(async (tx) => {
-            console.log(tx);
-            setLoading("Transaction Sent!");
+            const jsonPayload = {
+                subGraphId: subGraphId,
+                pollTime: pollTime
+            }
 
-            setTimeout(() => {
-                onSuccess();
-                onClose();
-            }, 2000);
+            const input = JSON.stringify(jsonPayload);
+            console.log(input);
 
-        })
-        .catch((err) => {
+            console.log("Uploding to IPFS...");
+
+            const ipfs = require("nano-ipfs-store").at(
+                "https://ipfs.infura.io:5001"
+            );
+
+            let storagePointer;
+            try {
+                storagePointer = await ipfs.add(input);
+            } catch (e) {
+                throw new Error("IPFS Upload Error");
+            }
+
+            console.log("IPFS cid: %o", storagePointer);
+
+            // Prepare Identity bytes
+            const identityBytes = ethers.utils.toUtf8Bytes(storagePointer);
             console.log({
-                err
-            })
+                identityBytes,
+            });
+
+            addSubGraphDetails(identityBytes)
+                .then(async (tx) => {
+                    console.log(tx);
+                    setLoading("Transaction Sent!");
+
+                    setTimeout(() => {
+                        onSuccess();
+                        onClose();
+                    }, 2000);
+                }).catch((err) => {
+                    console.log(err);
+                    setLoading('There was an error');
+                    setTimeout(() => {
+                        setLoading('')
+                    }, 2000);
+                    onClose();
+                })
+        } catch (err) {
+            console.log(err)
             setLoading('There was an error');
             setTimeout(() => {
                 setLoading('')
-            }, 2000)
-        })
+            }, 2000);
+            onClose();
+        }
     };
     
-
-
-
   return (
     <Overlay>
     <AliasModal ref={modalRef} background={themes}>
@@ -97,9 +127,9 @@ onClose, onSuccess, addSubGraphDetails
                 bg='#e20880'
                 color='#fff'
                 flex="1"
+                disabled={subGraphId == '' || pollTime == ''}
                 radius="0px"
                 padding="20px 10px"
-                // disabled={mainAdress.length !== 42}
                 onClick={addSubGraphDetailsSubmit}
             >
                 { loading && <Loader
@@ -114,7 +144,7 @@ onClose, onSuccess, addSubGraphDetails
                     textTransform="uppercase"
                     color="#fff" weight="400"
                     size="0.8em" spacing="0.2em"
-                    value={loading ? loading : "Add Delegate"}
+                    value={loading ? loading : "Add Subgraph Details"}
                 />
             </Button>
         </Item>
