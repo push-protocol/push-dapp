@@ -248,7 +248,8 @@ function ChannelSettings() {
           onClick={toggleChannelActivationState}
         >
           <ActionTitle>
-            {loading ? (
+            {!onCoreNetwork ?
+              ("") : loading ? (
               "Loading ..."
             ) : isChannelBlocked ? (
               "Channel Blocked"
