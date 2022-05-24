@@ -190,6 +190,8 @@ function CreateChannel() {
     
     e.preventDefault();
     
+        
+    
 
     if (
       isEmpty(channelName) ||
@@ -220,34 +222,21 @@ function CreateChannel() {
     var blockchain = chainDetailsSplit[0];
     var chain_id = chainDetailsSplit[1];
     var address = channelAlias;
-    var input 
-    
-    if(blockchain == "NONE")
-    {
-      input =  JSON.stringify({
-        name: channelName,
-        info: channelInfo,
-        url: channelURL,
-        icon: channelFile,
-        blockchain: "",
-        chain_id: chain_id,
-        address: address,
-      });
-    }
-    else{
+    const input = JSON.stringify({
+      name: channelName,
+      info: channelInfo,
+      url: channelURL,
+      icon: channelFile,
+      blockchain: blockchain,
+      chain_id: chain_id,
+      address: address,
+    });
 
-      input =  JSON.stringify({
-        name: channelName,
-        info: channelInfo,
-        url: channelURL,
-        icon: channelFile,
-        blockchain: blockchain,
-        chain_id: chain_id,
-        address: address,
-      });
-
-    }
     
+    // if(blockchain == "NONE")
+    // {
+    //   input.blockchain = "";
+    // }
     
 
     console.log(`input is ${input}`);
@@ -257,7 +246,7 @@ function CreateChannel() {
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
-    const storagePointer = await ipfs.add(input);
+    var storagePointer = storagePointer = await ipfs.add(input);
     console.log("IPFS storagePointer:", storagePointer);
     setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
