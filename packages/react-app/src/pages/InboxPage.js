@@ -338,6 +338,7 @@ function InboxPage() {
 							}
 							radius="50px"
 							onClick={enableSecretNotif}
+							disabled={enabledSecretNotif}
 						>
 							<span style={{ color: "#fff" }}>
 								{enabledSecretNotif ? 'Secret Notifications are enabled' : 'Enable Secret Notifications'}

@@ -283,7 +283,6 @@ function SendNotifications() {
               }
 
               let publickey = encryptionKey;
-              console.log("This is public Key: " + publickey);
 
               secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
                   secret,
@@ -700,9 +699,9 @@ function SendNotifications() {
                       </H2>
                       {!isChannelDeactivated ? (
                           <H3 style={{color : theme.color}}>
-                              EPNS supports three types of notifications (for
-                              now!). <b>Groups</b>, <b>Subsets</b>, and{" "}
-                              <b>Targetted</b>
+                              EPNS supports four types of notifications (for
+                              now!). <b>Groups</b>, <b>Subsets</b>, <b>Targetted</b>, and{" "}
+                              <b>Secret</b>
                               {/* and{" "} <b>Subsets</b>. */}
                           </H3>
                       ) : (
