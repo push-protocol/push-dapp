@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Slider from "@material-ui/core/Slider";
 import styled, {useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
-// import { useClickAway } from "react-use";
+import { useClickAway } from "react-use";
 import {
   Section,
   Content,
@@ -27,7 +27,7 @@ onClose, onSuccess, addSubGraphDetails
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    // useClickAway(modalRef, onClose);
+    useClickAway(modalRef, onClose);
 
     const addSubGraphDetailsSubmit = () => {
         setLoading('loading');

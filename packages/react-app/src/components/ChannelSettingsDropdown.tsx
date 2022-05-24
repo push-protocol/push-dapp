@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled, { css , useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
 import { toast as toaster } from "react-toastify";
-import { addresses, abis, addSubGraph } from "@project/contracts";
+import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
 
 import { ALLOWED_CORE_NETWORK } from "pages/DeprecatedHome";
@@ -228,24 +228,17 @@ function ChannelSettings() {
     });
   };
 
-<<<<<<< HEAD
   const addSubgraphDetails = (input: string) => {
     setAddSubgraphDetailsLoading(true);
-    return addSubGraph(input).finally(() => {
-      setAddSubgraphDetailsLoading(false);
-    });
+    // return addSubGraph(input).finally(() => {
+    //   setAddSubgraphDetailsLoading(false);
+    // });
   };
 
   if (!onCoreNetwork) {
     //temporarily deactivate the deactivate button if not on core network
     return <></>;
   }
-=======
-  // if (!onCoreNetwork) {
-  //   //temporarily deactivate the deactivate button if not on core network
-  //   return <></>;
-  // }
->>>>>>> main
 
   return (
     <div>
