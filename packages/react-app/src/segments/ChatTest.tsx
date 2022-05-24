@@ -26,14 +26,12 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  background: ${props => props.theme.backgroundBGLucid};
+  background: ${props => props.theme.mainBg};
 
   font-weight: 200;
-  align-content: center;
   align-items: stretch;
-  justify-content: center;
+  justify-content: flex-start;
   height: inherit;
-
 `;
 
 const ScrollItem = styled(Item)`

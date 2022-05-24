@@ -176,7 +176,7 @@ export default function App() {
     return function cleanup() {
       window?.Olvy?.teardown();
     };
-  });
+  }, []);
 
   const steps = UserJourneySteps({darkMode});
 
