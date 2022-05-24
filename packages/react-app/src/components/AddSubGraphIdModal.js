@@ -30,37 +30,26 @@ onClose, onSuccess, addSubGraphDetails
     useClickAway(modalRef, onClose);
 
     const addSubGraphDetailsSubmit = async () => {
+        if (pollTime == '' || subGraphId == '') {
+            setLoading('Fields are empty! Retry');
+            setTimeout(() => {
+                setLoading('')
+            }, 2000);
+            return;
+        } else if (pollTime < 60) {
+            setLoading('Poll Time must be at least 60 sec');
+            setTimeout(() => {
+                setLoading('')
+            }, 2000);
+            return;
+        }
         try {
             setLoading('loading');
 
-            const jsonPayload = {
-                subGraphId: subGraphId,
-                pollTime: pollTime
-            }
-
-            const input = JSON.stringify(jsonPayload);
-            console.log(input);
-
-            console.log("Uploding to IPFS...");
-
-            const ipfs = require("nano-ipfs-store").at(
-                "https://ipfs.infura.io:5001"
-            );
-
-            let storagePointer;
-            try {
-                storagePointer = await ipfs.add(input);
-            } catch (e) {
-                throw new Error("IPFS Upload Error");
-            }
-
-            console.log("IPFS cid: %o", storagePointer);
+            const input = pollTime + "+" + subGraphId;
 
             // Prepare Identity bytes
-            const identityBytes = ethers.utils.toUtf8Bytes(storagePointer);
-            console.log({
-                identityBytes,
-            });
+            const identityBytes = ethers.utils.toUtf8Bytes(input);
 
             addSubGraphDetails(identityBytes)
                 .then(async (tx) => {
@@ -96,7 +85,7 @@ onClose, onSuccess, addSubGraphDetails
             <H2 textTransform="uppercase" spacing="0.1em">
             <Span weight="200">Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">SubGraph</Span>
             </H2>
-            <H3>Enter SubGraphId and Poll Time</H3>
+            <H3>Enter SubGraph Id and Poll Time</H3>
         </Item>
         <Item align="flex-start">
             <CustomInput
@@ -113,7 +102,9 @@ onClose, onSuccess, addSubGraphDetails
         <Item align="flex-start">
             <CustomInput
                 required
-                placeholder="Enter the Poll Time"
+                type="number"
+                min="60"
+                placeholder="Enter Poll Time (in seconds)"
                 radius="4px"
                 padding="12px"
                 border="1px solid #674c9f"
@@ -127,7 +118,7 @@ onClose, onSuccess, addSubGraphDetails
                 bg='#e20880'
                 color='#fff'
                 flex="1"
-                disabled={subGraphId == '' || pollTime == ''}
+                disabled={loading != ''}
                 radius="0px"
                 padding="20px 10px"
                 onClick={addSubGraphDetailsSubmit}
@@ -181,6 +172,6 @@ overflow-y: scroll;
 `;
 
 const AliasModal = styled.div`
-padding: 20px 30px;
+padding: 20px 25px;
 background: ${props => props.background.mainBg};
 `;
