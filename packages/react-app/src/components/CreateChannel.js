@@ -63,6 +63,7 @@ function CreateChannel() {
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
 
   const [chainDetails, setChainDetails] = React.useState("");
+  // const [chainDetailsComp, setChainDetailsComp] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -186,7 +187,9 @@ function CreateChannel() {
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
+    
     e.preventDefault();
+    
 
     if (
       isEmpty(channelName) ||
@@ -196,7 +199,7 @@ function CreateChannel() {
       channelAlias
         ? isEmpty(chainDetails)
         : chainDetails
-        ? isEmpty(channelAlias)
+        ? chainDetails == "NONE" ? false : isEmpty(channelAlias)
         : false
     ) {
       setProcessing(3);
@@ -217,34 +220,39 @@ function CreateChannel() {
     var blockchain = chainDetailsSplit[0];
     var chain_id = chainDetailsSplit[1];
     var address = channelAlias;
-    const input = JSON.stringify({
-      name: channelName,
-      info: channelInfo,
-      url: channelURL,
-      icon: channelFile,
-      blockchain: blockchain,
-      chain_id: chain_id,
-      address: address,
-    });
+    var input 
+    
+    if(blockchain == "NONE")
+    {
+      input =  JSON.stringify({
+        name: channelName,
+        info: channelInfo,
+        url: channelURL,
+        icon: channelFile,
+        blockchain: "",
+        chain_id: chain_id,
+        address: address,
+      });
+    }
+    else{
+
+      input =  JSON.stringify({
+        name: channelName,
+        info: channelInfo,
+        url: channelURL,
+        icon: channelFile,
+        blockchain: blockchain,
+        chain_id: chain_id,
+        address: address,
+      });
+
+    }
+    
+    
 
     console.log(`input is ${input}`);
     
 
-    if(blockchain == "NONE")
-    {
-      input.blockchain="";
-      input.address="";
-    }
-
-    // const input = JSON.stringify({
-    //   name: channelName,
-    //   info: channelInfo,
-    //   url: channelURL,
-    //   icon: channelFile,
-    //   blockchain: blockchain,
-    //   chain_id: chain_id,
-    //   address: address,
-    // });
 
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
