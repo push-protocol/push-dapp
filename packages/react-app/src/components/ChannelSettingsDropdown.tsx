@@ -11,6 +11,7 @@ import { ALLOWED_CORE_NETWORK } from "pages/DeprecatedHome";
 import AddDelegateModal from "./AddDelegateModal";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import ActivateChannelModal from "./ActivateChannelModal";
+import AddSubGraphIdModal from "./AddSubGraphIdModal";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 
@@ -51,6 +52,8 @@ function ChannelSettings() {
   const [poolContrib, setPoolContrib] = React.useState(0);
   const [addDelegateLoading, setAddDelegateLoading] = React.useState(false);
   const [addModalOpen, setAddModalOpen] = React.useState(false);
+  const [addSubGraphIdOpen, setAddSubGraphIdOpen] = React.useState(false);
+  const [addSubgraphDetailsLoading, setAddSubgraphDetailsLoading] = React.useState(false);
   const [removeDelegateLoading, setRemoveDelegateLoading] = React.useState(
     false
   );
@@ -225,10 +228,17 @@ function ChannelSettings() {
     });
   };
 
-  // if (!onCoreNetwork) {
-  //   //temporarily deactivate the deactivate button if not on core network
-  //   return <></>;
-  // }
+  const addSubgraphDetails = (input: any) => {
+    setAddSubgraphDetailsLoading(true);
+    return epnsWriteProvider.addSubGraph(input).finally(() => {
+      setAddSubgraphDetailsLoading(false);
+    });
+  };
+
+  if (!onCoreNetwork) {
+    //temporarily deactivate the deactivate button if not on core network
+    return <></>;
+  }
 
   return (
     <div>
@@ -251,6 +261,21 @@ function ChannelSettings() {
           </ActionTitle>
         </DeactivateButton>
         <ActiveChannelWrapper>
+
+        <ChannelActionButton
+            disabled={channelInactive}
+            onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
+          >
+            <ActionTitle>
+              {addSubgraphDetailsLoading ? (
+                <Loader type="Oval" color="#FFF" height={16} width={16} />
+              ) : (
+                "Add SubGraph Details"
+              )}
+            </ActionTitle>
+          </ChannelActionButton>
+
+
           <ChannelActionButton
             disabled={channelInactive}
             onClick={() => !channelInactive && setAddModalOpen(true)}
@@ -276,6 +301,8 @@ function ChannelSettings() {
               )}
             </ActionTitle>
           </ChannelActionButton>
+
+          
         </ActiveChannelWrapper>
       </DropdownWrapper>
       {/* modal to display the activate channel popup */}
@@ -322,6 +349,21 @@ function ChannelSettings() {
           removeDelegate={removeDelegate}
         />
       )}
+
+      { addSubGraphIdOpen && (
+        <AddSubGraphIdModal
+        onClose={(val) => setAddSubGraphIdOpen(val)}
+        onSuccess={() => {
+          toaster.update(notificationToast(), {
+            render: "SubGraph Details Added",
+            type: toaster.TYPE.INFO,
+            autoClose: 5000,
+          });
+        }}
+        addSubGraphDetails={addSubgraphDetails}
+        />
+
+      ) }
     </div>
   );
 }
