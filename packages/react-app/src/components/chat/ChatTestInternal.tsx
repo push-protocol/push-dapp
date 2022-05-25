@@ -7,16 +7,16 @@ import { Content, Item, H2, H3, Span } from "components/SharedStyling";
 import { DID } from 'dids'
 // import ThreeIdResolver from '@ceramicnetwork/3id-did-resolver'
 // import KeyDidResolver from 'key-did-resolver'
-// import { createCeramic } from 'helpers/ceramic'
+import { createCeramic } from 'helpers/ceramic'
 // import { createDataStore } from 'helpers/datastore'
-// import { getProvider } from 'helpers/wallet'
+import { getProvider } from 'helpers/wallet'
 
 // // Encrypting and Signing
 import * as IPFS from 'ipfs-core'
 // import * as dagJose from 'dag-jose'
 
 function LoginIDX() {
-  // const ceramicPromise = createCeramic()
+  const ceramicPromise = createCeramic()
 
   const [did, setDid] = useState({});
   const [ipfs, setIPFS] = useState(null);
@@ -31,16 +31,16 @@ function LoginIDX() {
   React.useEffect(() => {
     initializeIPFS();
   }, []);
-
+  
   const initializeIPFS = async () => {
-    // if (ipfs) {
-    //   return ipfs;
-    // }
-    // else {
-    //   const instance = await IPFS.create();
-    //   setIPFS(instance);
-    //   return instance;
-    // }
+    if (ipfs) {
+      return ipfs;
+    }
+    else {
+      const instance = await IPFS.create();
+      setIPFS(instance);
+      return instance;
+    }
   }
 
   const getDAGFile = async () => {
@@ -59,22 +59,22 @@ function LoginIDX() {
   };
 
   const connectToCeramic = async () => {
-    //     const [ceramic, provider] = await Promise.all([ceramicPromise, getProvider()])
-    //     const keyDidResolver = KeyDidResolver.getResolver()
-    //     const threeIdResolver = ThreeIdResolver.getResolver(ceramic)
-    //     const resolverRegistry = {
-    //         ...threeIdResolver,
-    //         ...keyDidResolver,
-    //     }
-    //     const did = new DID({
-    //         provider: provider,
-    //         resolver: resolverRegistry,
-    //     })
-    //     await did.authenticate()
-    //     await ceramic.setDID(did)
-    //     // const datastore = createDataStore(ceramic)
-    //     setDid(did);
-    //     setCeramicState(ceramic);
+    const [ceramic, provider] = await Promise.all([ceramicPromise, getProvider()])
+    // const keyDidResolver = KeyDidResolver.getResolver()
+    // const threeIdResolver = ThreeIdResolver.getResolver(ceramic)
+    // const resolverRegistry = {
+    //     ...threeIdResolver,
+    //     ...keyDidResolver,
+    // }
+    // const did = new DID({
+    //     provider: provider,
+    //     resolver: resolverRegistry,
+    // })
+    // await did.authenticate()
+    // await ceramic.setDID(did)
+    // // const datastore = createDataStore(ceramic)
+    // setDid(did);
+    // setCeramicState(ceramic);
   };
 
   const createStream = async (e) => {
