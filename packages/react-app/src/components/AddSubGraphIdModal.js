@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import Slider from "@material-ui/core/Slider";
-import styled, {useTheme} from "styled-components";
+import styled, {ThemeProvider, useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { useClickAway } from "react-use";
 import {
@@ -20,14 +20,13 @@ onClose, onSuccess, addSubGraphDetails
 }) {
 
     const themes = useTheme();
-    console.log(themes);
     const modalRef = useRef(null);
     const [subGraphId, setSubGraphId] = useState('');
     const [pollTime, setPollTime] = useState('');
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    useClickAway(modalRef, onClose);
+    useClickAway(modalRef, () => onClose(loading !== ''));
 
     const addSubGraphDetailsSubmit = async () => {
         if (pollTime == '' || subGraphId == '') {
@@ -78,69 +77,71 @@ onClose, onSuccess, addSubGraphDetails
         }
     };
     
-  return (
-    <Overlay>
-    <AliasModal ref={modalRef} background={themes}>
-        <Item align="flex-start">
-            <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200">Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">SubGraph</Span>
-            </H2>
-            <H3>Enter SubGraph Id and Poll Time</H3>
-        </Item>
-        <Item align="flex-start">
-            <CustomInput
-                required
-                placeholder="Enter SubGraph Id"
-                radius="4px"
-                padding="12px"
-                border="1px solid #674c9f"
-                bg="#fff"
-                value={subGraphId}
-                onChange={(e) => {setSubGraphId(e.target.value)}}
-            />
-        </Item>
-        <Item align="flex-start">
-            <CustomInput
-                required
-                type="number"
-                min="60"
-                placeholder="Enter Poll Time (in seconds)"
-                radius="4px"
-                padding="12px"
-                border="1px solid #674c9f"
-                bg="#fff"
-                value={pollTime}
-                onChange={(e) => {setPollTime(e.target.value)}}
-            />
-        </Item>
-        <Item margin="15px 0px 0px 0px" flex="1" self="stretch" align="stretch">
-            <Button
-                bg='#e20880'
-                color='#fff'
-                flex="1"
-                disabled={loading != ''}
-                radius="0px"
-                padding="20px 10px"
-                onClick={addSubGraphDetailsSubmit}
-            >
-                { loading && <Loader
-                    type="Oval"
-                    color="#FFF"
-                    height={16}
-                    width={16}
-                    />
-                }
-                <StyledInput
-                    cursor="hand"
-                    textTransform="uppercase"
-                    color="#fff" weight="400"
-                    size="0.8em" spacing="0.2em"
-                    value={loading ? loading : "Add Subgraph Details"}
+    return (
+    <ThemeProvider theme={themes}>
+      <Overlay>
+        <AliasModal ref={modalRef} background={themes}>
+            <Item align="flex-start">
+                <H2 textTransform="uppercase" spacing="0.1em">
+                <Span weight="200" color={themes.color}>Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">SubGraph</Span>
+                </H2>
+                <H3 color={themes.color}>Enter SubGraph Id and Poll Time (at least 60 sec)</H3>
+            </Item>
+            <Item align="flex-start">
+                <CustomInput
+                    required
+                    placeholder="Enter SubGraph Id"
+                    radius="4px"
+                    padding="12px"
+                    border="1px solid #674c9f"
+                    bg="#fff"
+                    value={subGraphId}
+                    onChange={(e) => {setSubGraphId(e.target.value)}}
                 />
-            </Button>
-        </Item>
-    </AliasModal>
-</Overlay>
+            </Item>
+            <Item align="flex-start">
+                <CustomInput
+                    required
+                    type="number"
+                    min="60"
+                    placeholder="Enter Poll Time (in seconds)"
+                    radius="4px"
+                    padding="12px"
+                    border="1px solid #674c9f"
+                    bg="#fff"
+                    value={pollTime}
+                    onChange={(e) => {setPollTime(e.target.value)}}
+                />
+            </Item>
+            <Item margin="15px 0px 0px 0px" flex="1" self="stretch" align="stretch">
+                <Button
+                    bg='#e20880'
+                    color='#fff'
+                    flex="1"
+                    disabled={loading != ''}
+                    radius="0px"
+                    padding="20px 20px"
+                    onClick={addSubGraphDetailsSubmit}
+                >
+                    { loading && <Loader
+                        type="Oval"
+                        color="#FFF"
+                        height={16}
+                        width={16}
+                        />
+                    }
+                    <StyledInput
+                        cursor="hand"
+                        textTransform="uppercase"
+                        color="#fff" weight="400"
+                        size="0.8em" spacing="0.2em"
+                        value={loading ? loading : "Add Subgraph Details"}
+                    />
+                </Button>
+            </Item>
+        </AliasModal>
+      </Overlay>
+    </ThemeProvider>
 )
 }
 

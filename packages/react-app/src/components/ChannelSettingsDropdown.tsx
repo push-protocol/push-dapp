@@ -352,9 +352,7 @@ function ChannelSettings() {
 
       { addSubGraphIdOpen && (
         <AddSubGraphIdModal
-        onClose={() => {
-          setAddSubGraphIdOpen(false);
-        }}
+        onClose={(val) => setAddSubGraphIdOpen(val)}
         onSuccess={() => {
           toaster.update(notificationToast(), {
             render: "SubGraph Details Added",
