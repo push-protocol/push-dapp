@@ -1584,6 +1584,7 @@
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@epnsproject/frontend-sdk-staging/-/frontend-sdk-staging-1.8.1.tgz#ee7c8a269a2b1259f61bbd9732e98b7536a4adc4"
   integrity sha512-kX01quH9InDjnYdUoV8Dibr1VCIuPGwMeAqD+gUdUBKITMVPDfk++G+q6NBKOxSDaOtwAe3EHcn2e7fcpJd33g==
+
   dependencies:
     "@rollup/plugin-commonjs" "^20.0.0"
     ansi-regex "^2.1.1"
