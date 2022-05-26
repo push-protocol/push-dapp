@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import Slider from "@material-ui/core/Slider";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
-// import { useClickAway } from "react-use";
+import { useClickAway } from "react-use";
 import {
   Section,
   Content,
@@ -22,7 +22,7 @@ export default function ActivateChannelModal({
   onClose,
 }) {
   const popupRef = React.useRef(null);
-  // useClickAway(popupRef, onClose); //close the popoup when we click away
+  useClickAway(popupRef, onClose); //close the popoup when we click away
   return (
     <PopupOverlay>
       <PopupSlider ref={popupRef}>
