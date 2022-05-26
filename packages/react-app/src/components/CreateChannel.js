@@ -663,7 +663,7 @@ function CreateChannel() {
                 self="stretch"
                 align="stretch"
               >
-                <InputDiv>
+                <InputDiv border="1px solid black">
                 <Input
                   required
                   placeholder="Your Channel Name"
@@ -730,7 +730,12 @@ function CreateChannel() {
                     setChainDetails(selectedOption.value);
                   }}
                 />
-                <InputDiv>
+                <InputDiv border={() => {
+                  if(chainDetails == "NONE" || chainDetails=="")
+                  return "1px solid gray"
+                  else
+                  return "1px solid black"
+                }}>
                 
                 <Input
                   placeholder="Your Channel's Alias address"
@@ -899,7 +904,7 @@ function CreateChannel() {
 
 const InputDiv = styled.div`
   display: flex;
-  border: 1px solid black;
+  border: ${(props) => props.border || "none"};;
 `
 const SpanR = styled.div`
 color: #e20880;
