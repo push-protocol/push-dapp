@@ -222,7 +222,8 @@ function CreateChannel() {
     var blockchain = chainDetailsSplit[0];
     var chain_id = chainDetailsSplit[1];
     var address = channelAlias;
-    const input = JSON.stringify({
+
+    let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
@@ -230,19 +231,16 @@ function CreateChannel() {
       blockchain: blockchain,
       chain_id: chain_id,
       address: address,
-    });
+    };
 
-    
-    // if(blockchain == "NONE")
-    // {
-    //   input.blockchain = "";
-    // }
-    
+    if(blockchain == "NONE")
+    {
+      input.blockchain = "";
+    }
 
+    input = JSON.stringify(input);
+    
     console.log(`input is ${input}`);
-    
-
-
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
