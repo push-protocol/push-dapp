@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import React from 'react';
 import styled from "styled-components";
 import Loader from "react-loader-spinner";
@@ -7,7 +5,7 @@ import { Waypoint } from "react-waypoint";
 import { useDispatch, useSelector } from "react-redux";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
-import { envConfig } from "@project/contracts";
+// import { envConfig } from "@project/contracts";
 
 import { AiOutlineSearch } from "react-icons/ai";
 
@@ -32,7 +30,7 @@ const SEARCH_DELAY = 1500;
 
 
 // Create Header
-function ViewChannels() {
+function ViewChannels({ loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector(
@@ -179,7 +177,7 @@ function ViewChannels() {
                   />
                   <SearchIconImage src='/searchicon.svg' alt="" />
                 </InputWrapper>
-                {!isMainnet && <Faucets />} 
+                {!isMainnet && <Faucets chainId={chainId} />} 
                 {/* only display faucets on mainnet */}
               </Header>
             )}
@@ -191,7 +189,7 @@ function ViewChannels() {
               channel.addr !== ZERO_ADDRESS && (
                 <>
                   <div key={channel.addr}>
-                    <ViewChannelItem channelObjectProp={channel} />
+                    <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser}/>
                   </div>
                   {showWayPoint(index) && (
                     <Waypoint onEnter={updateCurrentPage} />

@@ -33,7 +33,7 @@ const delegateesJSON = require("config/delegatees.json")
 const VOTING_TRESHOLD = 75000; //the treshold for delegates
 
 // Create Header
-function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
+function GovernancePage() {
   // React GA Analytics
   ReactGA.pageview("/governance");
 
