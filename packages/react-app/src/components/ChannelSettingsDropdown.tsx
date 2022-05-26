@@ -225,10 +225,10 @@ function ChannelSettings() {
     });
   };
 
-  if (!onCoreNetwork) {
-    //temporarily deactivate the deactivate button if not on core network
-    return <></>;
-  }
+  // if (!onCoreNetwork) {
+  //   //temporarily deactivate the deactivate button if not on core network
+  //   return <></>;
+  // }
 
   return (
     <div>
@@ -238,7 +238,8 @@ function ChannelSettings() {
           onClick={toggleChannelActivationState}
         >
           <ActionTitle>
-            {loading ? (
+            {!onCoreNetwork ?
+              ("") : loading ? (
               "Loading ..."
             ) : isChannelBlocked ? (
               "Channel Blocked"

@@ -663,12 +663,12 @@ function CreateChannel() {
                 self="stretch"
                 align="stretch"
               >
+                <InputDiv>
                 <Input
                   required
                   placeholder="Your Channel Name"
                   maxlength="40"
                   padding="12px"
-                  border="1px solid #000"
                   weight="400"
                   size="1.2em"
                   bg="#fff"
@@ -677,6 +677,9 @@ function CreateChannel() {
                     setChannelName(e.target.value);
                   }}
                 />
+                </InputDiv>
+
+               
                 {channelName.trim().length == 0 && (
                   <Span
                     padding="4px 10px"
@@ -692,7 +695,7 @@ function CreateChannel() {
                   </Span>
                 )}
               </Item>
-
+              
               <Item
                 margin="15px 20px 15px 20px"
                 flex="1"
@@ -727,9 +730,12 @@ function CreateChannel() {
                     setChainDetails(selectedOption.value);
                   }}
                 />
+                <InputDiv>
+                
                 <Input
                   placeholder="Your Channel's Alias address"
                   maxlength="40"
+                  maxllength="100%"
                   padding="12px"
                   style={{ paddingLeft: "22%" }}
                   border="1px solid #000"
@@ -742,7 +748,11 @@ function CreateChannel() {
                     setChannelAlias(e.target.value);
                   }}
                 />
+                </InputDiv>
+                
+                
               </Item>
+              
               <Item
                 margin="15px 20px 15px 20px"
                 flex="1"
@@ -883,6 +893,14 @@ function CreateChannel() {
 }
 
 // css styles
+
+
+
+
+const InputDiv = styled.div`
+  display: flex;
+  border: 1px solid black;
+`
 const SpanR = styled.div`
 color: #e20880;
 opacity: 0.7;
