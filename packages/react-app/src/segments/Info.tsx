@@ -5,10 +5,8 @@ import Loader from 'react-loader-spinner'
 import { useWeb3React } from '@web3-react/core'
 
 import ViewInfoItem from "components/ViewInfoItem";
-
 import * as dotenv from "dotenv";
 dotenv.config();
-
 // Other Information section
 function  Info() {
   const { account, library } = useWeb3React();

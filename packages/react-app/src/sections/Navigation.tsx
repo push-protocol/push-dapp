@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
 

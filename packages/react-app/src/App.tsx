@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, {useState} from "react";
 import ReactGA from "react-ga";
 
@@ -27,10 +28,8 @@ import { useSelector, useDispatch } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps.jsx";
 import { getPushToken, onMessageListener } from "./firebase";
 
-import * as dotenv from "dotenv";
 import { postReq } from "api";
 import { toast } from "react-toastify";
-dotenv.config();
 
 // define the different type of connectors which we use
 const web3Connectors = {

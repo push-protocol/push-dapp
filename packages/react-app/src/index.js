@@ -9,13 +9,13 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 import * as serviceWorker from "./serviceWorker";
 import * as dotenv from "dotenv";
-
 import App from "./App";
 import store from "./redux/store";
 import "./index.css";
 
 // enable environmental variables across the entire application
 dotenv.config();
+
 // You should replace this uri with your own and put it into a .env file
 const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging",

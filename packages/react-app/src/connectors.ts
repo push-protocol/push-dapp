@@ -11,8 +11,8 @@ import { TrezorConnector } from '@web3-react/trezor-connector'
 // import { FortmaticConnector } from '@web3-react/fortmatic-connector'
 // import { SquarelinkConnector } from '@web3-react/squarelink-connector'
 // import { TorusConnector } from '@web3-react/torus-connector'
-
 require('dotenv').config();
+
 const SUPPORTED_CHAIN_IDS = [...envConfig.allowedNetworks];
 const POLLING_INTERVAL = 12000;
 const CORE_CHAIN_ID = envConfig.coreContractChain;

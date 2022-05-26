@@ -7,7 +7,6 @@ import Loader from 'react-loader-spinner';
 
 import { useWeb3React } from '@web3-react/core';
 
-
 // Other Information URLs
 function ViewInfoItem() {
   // render
