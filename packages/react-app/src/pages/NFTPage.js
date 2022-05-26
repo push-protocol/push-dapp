@@ -27,7 +27,7 @@ import { envConfig } from "@project/contracts";
 
 
 // Create Header
-function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
+function NFTPage() {
   // React GA Analytics
   ReactGA.pageview("/rockstars");
 

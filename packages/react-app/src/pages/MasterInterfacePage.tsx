@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import ReactGA from "react-ga";
 import { Navigate, Routes, Route, Link } from "react-router-dom";
@@ -108,7 +107,15 @@ function MasterInterfacePage() {
                 <VscClose size={40} color="#fff"/>
               </PreviewClose>
               <Preview>
-                <div class='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                <div className='videoWrapper'>
+                  <iframe
+                    title="Video"
+                    src={loadTeaserVideo}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen>
+                  </iframe>
+                </div>
               </Preview>
             </PreviewContent>
           </PreviewBG>

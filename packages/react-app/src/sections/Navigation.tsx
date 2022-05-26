@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
 
@@ -27,9 +26,9 @@ function Navigation() {
   const { run, stepIndex, isCommunicateOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(!run && navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+      navigationSetup['primary'][1].data.drilldown[0].data.name = channelDetails.name;
     } else if(run && navigationSetup !== null) {
-      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+      navigationSetup['primary'][1].data.drilldown[0].data.name = 'Create Channel';
     }
     const theme = useTheme();
     const location = useLocation();
@@ -75,7 +74,7 @@ function Navigation() {
         transformedList[identifier] = {};
         transformedList[identifier].active = false;
         transformedList[identifier].isSection = true;
-        transformedList[identifier].hasMenuLogic = value.hasMenuLogic;
+        transformedList[identifier].hasMenuLogic = value['hasMenuLogic'];
 
         transformedList[identifier].id = identity + "_" + key;
         transformedList[identifier].parent = null;
@@ -99,7 +98,7 @@ function Navigation() {
             drilldownModified[drillIdentifier] = {};
             drilldownModified[drillIdentifier].active = false;
             drilldownModified[drillIdentifier].isSection = false;
-            drilldownModified[drillIdentifier].hasMenuLogic = drillvalue.hasMenuLogic;
+            drilldownModified[drillIdentifier].hasMenuLogic = drillvalue['hasMenuLogic'];
 
             drilldownModified[drillIdentifier].id = drillkey;
             drilldownModified[drillIdentifier].parent = transformedList[identifier].id;
@@ -139,7 +138,7 @@ function Navigation() {
                   const item = section.data.drilldown[drillkey];
 
                   if (location.pathname === item.data.href) {
-                    const transformedList = mutateTransformedList(item);
+                    const transformedList = mutateTransformedList(item, false);
                     setNavigationSetup(transformedList);
                     setRefresh(!refresh);
                     return;
@@ -148,7 +147,7 @@ function Navigation() {
               }
               else {
                 if (location.pathname === section.data.href) {
-                  const transformedList = mutateTransformedList(section);
+                  const transformedList = mutateTransformedList(section, false);
                   setNavigationSetup(transformedList);
                   setRefresh(!refresh);
                   return;
@@ -277,7 +276,7 @@ function Navigation() {
             if (location.pathname === item.href) {
               transformedList[identifier].active = true;
             }
-            transformedList[identifier].data = drillvalue.data;
+            transformedList[identifier].data = drillvalue['data'];
           })
         }
         else {
@@ -537,7 +536,7 @@ function Navigation() {
             <Primary>
               {
                 renderMainItems(
-                  navigationSetup.primary,
+                  navigationSetup['primary'],
                   GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                 )
               }
@@ -553,7 +552,7 @@ function Navigation() {
               >
                 {
                   renderMainItems(
-                    navigationSetup.secondary,
+                    navigationSetup['secondary'],
                     GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY
                   )
                 }

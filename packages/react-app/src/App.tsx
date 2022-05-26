@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, {useState} from "react";
 import ReactGA from "react-ga";
 
@@ -30,6 +29,12 @@ import { getPushToken, onMessageListener } from "./firebase";
 
 import { postReq } from "api";
 import { toast } from "react-toastify";
+
+declare global {
+  interface Window {
+      Olvy:any;
+  }
+}
 
 // define the different type of connectors which we use
 const web3Connectors = {
@@ -158,20 +163,23 @@ export default function App() {
   },[darkMode])
 
 
-  React.useEffect(()=>{
-    window?.Olvy?.init({
-      organisation: "epns",
-    target: "#olvy-target",
-    type: "sidebar",
-    view: {
-      showSearch: false,
-      compact: false,
-      showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
-      showUnreadIndicator: true,
-      unreadIndicatorColor: "#cc1919",
-      unreadIndicatorPosition: "top-right"
+  React.useEffect(()=> {
+    if (window && window.Olvy) {
+      window?.Olvy?.init({
+        organisation: "epns",
+        target: "#olvy-target",
+        type: "sidebar",
+        view: {
+          showSearch: false,
+          compact: false,
+          showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
+          showUnreadIndicator: true,
+          unreadIndicatorColor: "#cc1919",
+          unreadIndicatorPosition: "top-right"
+        }
+      });
     }
-    });
+    
     return function cleanup() {
       window?.Olvy?.teardown();
     };
@@ -203,9 +211,9 @@ export default function App() {
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
       <NavigationContextProvider>
-        <Joyride
+        {/* <Joyride
           run={run}
-          steps={steps}
+          steps={[]}
           continuous={tutorialContinous}
           stepIndex={stepIndex}
           hideFooter={true}
@@ -226,11 +234,11 @@ export default function App() {
               overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
               primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
               textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-              minWidth: 280,
+              width: 280,
               zIndex: 1000,
             },
           }}
-        />
+        /> */}
         <HeaderContainer>
           <Header
             isDarkMode={darkMode}
