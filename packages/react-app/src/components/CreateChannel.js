@@ -713,6 +713,7 @@ function CreateChannel() {
                 <Input
                   placeholder="Your Channel's Alias address"
                   maxlength="40"
+                  maxllength="100%"
                   padding="12px"
                   style={{ paddingLeft: "22%" }}
                   border="1px solid #000"
@@ -869,6 +870,8 @@ function CreateChannel() {
 }
 
 // css styles
+
+
 
 
 const InputDiv = styled.div`

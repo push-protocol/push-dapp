@@ -526,6 +526,7 @@ export const Input = styled.input`
   outline: ${props => props.outline || "none"};
   overflow: ${props => props.overflow || "hidden"};
   position: relative;
+  width: ${props => props.maxllength};
 
   cursor: ${props => props.cursor || "initial"};
   pointer: ${props => props.hand || "initial"};
