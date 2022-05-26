@@ -1,7 +1,7 @@
 import { Caip10Link } from '@ceramicnetwork/stream-caip10-link'
 import { TileDocument } from '@ceramicnetwork/stream-tile'
 
-const CeramicClient = require('@ceramicnetwork/http-client')
+import { CeramicClient } from '@ceramicnetwork/http-client'
 
 export async function createCeramic() {
   const ceramic = new CeramicClient('https://ceramic-clay.3boxlabs.com')
