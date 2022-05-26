@@ -2,6 +2,9 @@
   "name": "@project/react-app",
   "version": "0.3.0",
   "homepage": "https://app-dev.epns.io",
+  "browser":{
+    "child_process": false
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -47,10 +50,12 @@
     "@web3-react/walletconnect-connector": "6.2.0",
     "@yisheng90/react-loading": "1.2.3",
     "antd": "^4.19.2",
+    "assert": "2.0.0",
     "babel-plugin-styled-components": "1.10.7",
     "blockies": "0.0.2",
     "blockies-identicon": "0.1.0",
     "browserslist": "4.14.6",
+    "constants-browserify": "1.0.0",
     "crypto-js": "4.0.0",
     "customized-multiselect-dropdown": "^1.0.3",
     "date-fns": "^2.28.0",
@@ -87,7 +92,7 @@
     "react-player": "2.9.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "6",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^5.0.1",
     "react-select": "^5.2.2",
     "react-spinners": "0.8.3",
     "react-stack-grid": "0.7.1",
@@ -99,15 +104,19 @@
     "react-wavify": "^1.5.4",
     "react-waypoint": "^9.0.3",
     "secp256k1-v4": "https://github.com/HarshRajat/secp256k1-node",
+    "stream-browserify": "3.0.0",
     "styled-components": "5.1.0",
     "typescript": "^3.7.5",
+    "url": "0.11.0",
     "web3modal": "1.9.7"
   },
   "devDependencies": {
     "@testing-library/dom": "^6.12.2",
     "@types/react": "^16.9.19",
+    "customize-cra": "1.0.0",
     "eslint": "^6.8.0",
-    "eslint-plugin-flowtype": "^4.6.0"
+    "eslint-plugin-flowtype": "^4.6.0",
+    "react-app-rewired": "2.2.1"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -115,9 +124,9 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject",
-    "start": "react-scripts start",
-    "test": "react-scripts test"
+    "build": "react-app-rewired build",
+    "start": "react-app-rewired start",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
   }
 }
