@@ -11,6 +11,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { VscClose } from 'react-icons/vsc';
 
 import InboxPage from "pages/InboxPage";
+import ChatPage from "pages/ChatPage";
+import ChatTestPage from "pages/ChatTestPage";
 import SpamPage from "pages/SpamPage";
 import ViewChannelsPage from "pages/ViewChannelsPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
@@ -22,7 +24,6 @@ import YieldFarmingPage from "pages/YieldFarmingPage";
 import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
-import NotAvailablePage from "./NotAvailablePage";
 import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
 
@@ -47,6 +48,8 @@ function MasterInterfacePage() {
       <Interface>
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
+          <Route path="chat" element={<ChatPage />} />
+          <Route path="chattest" element={<ChatTestPage />} />
           <Route path="channels" element={
               <ViewChannelsPage 
                 loadTeaser={setLoadTeaserVideo}
@@ -65,7 +68,6 @@ function MasterInterfacePage() {
           <Route path="gratitude" element={<AirdropPage />} />
           <Route path="live_walkthrough" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
-          <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route
               path="/"
@@ -105,7 +107,15 @@ function MasterInterfacePage() {
                 <VscClose size={40} color="#fff"/>
               </PreviewClose>
               <Preview>
-                <div class='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                <div className='videoWrapper'>
+                  <iframe
+                    title="Video"
+                    src={loadTeaserVideo}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen>
+                  </iframe>
+                </div>
               </Preview>
             </PreviewContent>
           </PreviewBG>
@@ -119,10 +129,9 @@ function MasterInterfacePage() {
 const Container = styled.div`
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px );
-  padding: 5px 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
+  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
   align-items: stretch;
-
 `;
 
 const Interface = styled(Item)`
@@ -136,7 +145,6 @@ const Interface = styled(Item)`
 
   margin: 15px 15px 15px 0px;
   overflow: hidden;
-
 
   @media (max-width: 992px) {
     margin: 15px 0px;

@@ -23,7 +23,6 @@ import {ThemeProvider} from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
 import { envConfig } from "@project/contracts";
 
-
 import * as dotenv from "dotenv";
 import UsersDataStore from "singletons/UsersDataStore";
 dotenv.config();

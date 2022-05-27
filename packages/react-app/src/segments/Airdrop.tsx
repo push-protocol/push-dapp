@@ -17,9 +17,7 @@ import AirdropHelper from 'helpers/AirdropHelper';
 
 import ViewInfoItem from "components/ViewInfoItem";
 
-import * as dotenv from "dotenv";
 import UsersDataStore from "singletons/UsersDataStore";
-dotenv.config();
 
 // Other Information section
 function Airdrop() {

@@ -24,13 +24,17 @@ import GLOBALS from "config/Globals";
 
 import {setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
-import UserJourneySteps from "segments/userJourneySteps.jsx";
+import UserJourneySteps from "segments/userJourneySteps";
 import { getPushToken, onMessageListener } from "./firebase";
 
-import * as dotenv from "dotenv";
 import { postReq } from "api";
 import { toast } from "react-toastify";
-dotenv.config();
+
+declare global {
+  interface Window {
+      Olvy:any;
+  }
+}
 
 // define the different type of connectors which we use
 const web3Connectors = {
@@ -159,24 +163,27 @@ export default function App() {
   },[darkMode])
 
 
-  React.useEffect(()=>{
-    window?.Olvy?.init({
-      organisation: "epns",
-    target: "#olvy-target",
-    type: "sidebar",
-    view: {
-      showSearch: false,
-      compact: false,
-      showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
-      showUnreadIndicator: true,
-      unreadIndicatorColor: "#cc1919",
-      unreadIndicatorPosition: "top-right"
+  React.useEffect(()=> {
+    if (window && window.Olvy) {
+      window?.Olvy?.init({
+        organisation: "epns",
+        target: "#olvy-target",
+        type: "sidebar",
+        view: {
+          showSearch: false,
+          compact: false,
+          showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
+          showUnreadIndicator: true,
+          unreadIndicatorColor: "#cc1919",
+          unreadIndicatorPosition: "top-right"
+        }
+      });
     }
-    });
+    
     return function cleanup() {
       window?.Olvy?.teardown();
     };
-  });
+  }, []);
 
   const steps = UserJourneySteps({darkMode});
 
@@ -209,14 +216,14 @@ export default function App() {
           steps={steps}
           continuous={tutorialContinous}
           stepIndex={stepIndex}
-          hideFooter={true}
-          primaryProps={false}
+          // hideFooter={true}
+          // primaryProps={false}
           hideBackButton={true}
           hideCloseButton={false}
           disableScrolling={true}
           disableScrollParentFix={true}
-          disableFlip={true}
-          showNextButton={false}
+          // disableFlip={true}
+          // showNextButton={false}
           showSkipButton={false}
           disableOverlayClose={true}
           callback={handleJoyrideCallback}
@@ -227,7 +234,7 @@ export default function App() {
               overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
               primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
               textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-              minWidth: 280,
+              width: 280,
               zIndex: 1000,
             },
           }}

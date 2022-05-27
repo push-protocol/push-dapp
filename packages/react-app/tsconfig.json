@@ -17,14 +17,17 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react",
     "baseUrl": "src",
     "noImplicitAny": false,
-    "checkJs": false
+    "checkJs": false,
+    "noFallthroughCasesInSwitch": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/segments/ViewChannels.jsx", "src/components/SearchFilter.jsx"  ]
+    "**/*.tsx",
+    "src/segments/ViewChannels.jsx",
+    "src/components/SearchFilter.jsx"
+  ]
 }
