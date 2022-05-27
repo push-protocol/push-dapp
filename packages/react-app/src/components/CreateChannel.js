@@ -35,13 +35,14 @@ import { themeLight, themeDark } from "config/Themization";
 import { addresses, abis } from "@project/contracts";
 import ImageClipper from "./ImageClipper";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+import './createChannel.css';
 
 const ethers = require("ethers");
 
 const ipfs = require("ipfs-api")();
 
 const minStakeFees = 50;
-const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
+const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },{value: "NONE", label: "None"}];
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
@@ -62,6 +63,7 @@ function CreateChannel() {
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
 
   const [chainDetails, setChainDetails] = React.useState("");
+  // const [chainDetailsComp, setChainDetailsComp] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -185,7 +187,11 @@ function CreateChannel() {
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
+    
     e.preventDefault();
+    
+        
+    
 
     if (
       isEmpty(channelName) ||
@@ -195,7 +201,7 @@ function CreateChannel() {
       channelAlias
         ? isEmpty(chainDetails)
         : chainDetails
-        ? isEmpty(channelAlias)
+        ? chainDetails == "NONE" ? false : isEmpty(channelAlias)
         : false
     ) {
       setProcessing(3);
@@ -217,7 +223,7 @@ function CreateChannel() {
     var chain_id = chainDetailsSplit[1];
     var address = channelAlias;
 
-    const input = JSON.stringify({
+    let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
@@ -225,12 +231,20 @@ function CreateChannel() {
       blockchain: blockchain,
       chain_id: chain_id,
       address: address,
-    });
+    };
 
+    if(blockchain == "NONE")
+    {
+      input.blockchain = "";
+    }
+
+    input = JSON.stringify(input);
+    
+    console.log(`input is ${input}`);
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
-    const storagePointer = await ipfs.add(input);
+    var storagePointer = storagePointer = await ipfs.add(input);
     console.log("IPFS storagePointer:", storagePointer);
     setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
@@ -649,12 +663,12 @@ function CreateChannel() {
                 self="stretch"
                 align="stretch"
               >
+                <InputDiv border="1px solid black">
                 <Input
                   required
                   placeholder="Your Channel Name"
                   maxlength="40"
                   padding="12px"
-                  border="1px solid #000"
                   weight="400"
                   size="1.2em"
                   bg="#fff"
@@ -663,6 +677,9 @@ function CreateChannel() {
                     setChannelName(e.target.value);
                   }}
                 />
+                </InputDiv>
+
+               
                 {channelName.trim().length == 0 && (
                   <Span
                     padding="4px 10px"
@@ -678,7 +695,6 @@ function CreateChannel() {
                   </Span>
                 )}
               </Item>
-
 
               <Item
                 margin="15px 20px 15px 20px"
@@ -699,28 +715,49 @@ function CreateChannel() {
                     colors: {
                       ...theme.colors,
                       primary25: "#e20880",
-                      primary: "#e20880",
+                      primary: "#e20880"
                     },
-                  })}
+                  })} 
+                  styles={{
+                    control: base => ({
+                      ...base,
+                      "&:hover": {
+                        borderColor: "red"
+                      }
+                    })
+                  }}
                   onChange={(selectedOption) => {
                     setChainDetails(selectedOption.value);
                   }}
                 />
+                <InputDiv border={() => {
+                  if(chainDetails == "NONE" || chainDetails=="")
+                  return "1px solid gray"
+                  else
+                  return "1px solid black"
+                }}>
+                
                 <Input
                   placeholder="Your Channel's Alias address"
                   maxlength="40"
+                  maxllength="100%"
                   padding="12px"
                   style={{ paddingLeft: "22%" }}
                   border="1px solid #000"
                   weight="400"
                   size="1rem"
                   bg="#fff"
+                  disabled = {(chainDetails==="" || chainDetails==="NONE") ? true : false}
                   value={channelAlias}
                   onChange={(e) => {
                     setChannelAlias(e.target.value);
                   }}
                 />
+                </InputDiv>
+                
+                
               </Item>
+              
               <Item
                 margin="15px 20px 15px 20px"
                 flex="1"
@@ -861,6 +898,14 @@ function CreateChannel() {
 }
 
 // css styles
+
+
+
+
+const InputDiv = styled.div`
+  display: flex;
+  border: ${(props) => props.border || "none"};;
+`
 const SpanR = styled.div`
 color: #e20880;
 opacity: 0.7;

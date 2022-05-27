@@ -1,0 +1,18 @@
+.kITDl{
+    color: black !important;
+}
+
+.select__option:hover{
+    color: white;
+}
+
+.select__option:focus{
+    color: white;
+}
+
+
+/* .kITDl:hover{
+    color: white !important;
+}
+
+ */
