@@ -1,9 +1,10 @@
 import React, {useRef, useState} from 'react';
-import { useClick, useClickAway } from 'react-use';
+// import { useClick, useClickAway } from 'react-use';
 import styled ,  {useTheme} from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import Loader from 'react-loader-spinner';
+import { ThemeProvider } from "styled-components";
 
 import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
 
@@ -21,7 +22,7 @@ export default function AddDelegateModal({
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    useClickAway(modalRef, onClose);
+    // useClickAway(modalRef, onClose);
 
     const addDelegateFunction = () => {
         setLoading('loading')
@@ -49,13 +50,14 @@ export default function AddDelegateModal({
     
 
     return (
-        <Overlay>
+        <ThemeProvider theme={themes}>
+            <Overlay>
             <AliasModal ref={modalRef} background={themes}>
                 <Item align="flex-start">
                     <H2 textTransform="uppercase" spacing="0.1em">
-                    <Span weight="200">Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
+                    <Span weight="200"  weight="200" color={themes.scheme=="dark" ? "white" : "black"}>Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
                     </H2>
-                    <H3>Add an account who can send notifications on your behalf.</H3>
+                    <H3  weight="200" color={themes.scheme=="dark" ? "white" : "black"}>Add an account who can send notifications on your behalf.</H3>
                 </Item>
                 <Item align="flex-start">
                     <CustomInput
@@ -97,6 +99,9 @@ export default function AddDelegateModal({
                 </Item>
             </AliasModal>
         </Overlay>
+
+        </ThemeProvider>
+        
     )
 }
 
