@@ -22,7 +22,6 @@
     "@apollo/client": "^3.3.7",
     "@ceramicnetwork/3id-did-resolver": "2.0.4",
     "@ceramicnetwork/http-client": "2.0.4",
-    "@ceramicnetwork/stream-caip10-link": "2.0.4",
     "@ceramicstudio/idx": "0.12.2",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
