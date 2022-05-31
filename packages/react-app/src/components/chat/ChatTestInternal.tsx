@@ -5,7 +5,7 @@ import { Content, Item, ItemH, H2, H3, Span, Button, Input } from "components/Sh
 
 // Helpers
 import { createCeramic } from 'helpers/w2w/Ceramic'
-import * as DIDHelpers from 'helpers/w2w/Did'
+import * as DIDHelpers from 'helpers/w2w/DID'
 
 // DID and Ceramic
 import { ThreeIdConnect } from '@3id/connect'

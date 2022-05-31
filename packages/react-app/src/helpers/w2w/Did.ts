@@ -30,12 +30,12 @@ export async function CreateDID(keyDIDGetResolver: () => ResolverRegistry,
     return did;
 }
 
-export async function encrypt(content: string, did: DID) {
+export async function encrypt(content: object | string, did: DID): Promise<JWE> {
     const jwe: JWE = await did.createDagJWE(content as unknown as Record<string, any>, [did.id]);
     return jwe;
 }
 
-export async function decrypt(jwe: JWE, did: DID): Promise<string> {
-    const cleartext: string = await did.decryptDagJWE(jwe) as unknown as string;
+export async function decrypt(cipher: object, did: DID): Promise<string> {
+    const cleartext: string = await did.decryptDagJWE(cipher as JWE) as unknown as string;
     return cleartext;
 }
