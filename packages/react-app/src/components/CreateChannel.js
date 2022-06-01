@@ -703,6 +703,7 @@ function CreateChannel() {
                 align="stretch"
                 style={{ position: "relative" }}
               >
+              
                 <Select
                   className="basic-single"
                   classNamePrefix="select"
@@ -741,27 +742,27 @@ function CreateChannel() {
                   >
                     <img className="iImage" src="/i.png" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
                   </Span>
-                {chainDetails!='Ethereum' &&
-                (
+                {/* {chainDetails!='Ethereum' &&
+                ( */}
 
                   <InputDiv border={() => {
-                    if(chainDetails == "Ethereum" || chainDetails=="")
-                    return "1px solid gray"
+                    if(chainDetails == "Ethereum")
+                    return "1px solid white"
                     else
                     return "1px solid black"
                   }}>
                   
                   <Input
-                    placeholder="Your Channel's Alias address"
+                    placeholder={(chainDetails === "Ethereum" ? "" : "Your Channel's Alias address")}
                     maxlength="40"
                     maxllength="100%"
                     padding="12px"
                     style={{ paddingLeft: "22%" }}
-                    border="1px solid #000"
+                    // border= {(chainDetails === "Ethereum" ? "1px solid white" : "1px solid #000" )}
                     weight="400"
                     size="1rem"
                     bg="#fff"
-                    disabled = {(chainDetails==="" || chainDetails==="NONE") ? true : false}
+                    disabled = {(chainDetails==="" || chainDetails==="Ethereum") ? true : false}
                     value={channelAlias}
                     onChange={(e) => {
                       setChannelAlias(e.target.value);
@@ -770,8 +771,8 @@ function CreateChannel() {
                   </InputDiv>
                   
 
-                )
-                }
+                {/* )
+                } */}
             
                 
               </Item>
