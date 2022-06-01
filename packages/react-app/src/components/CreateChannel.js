@@ -907,10 +907,8 @@ function CreateChannel() {
 
 const InputDiv = styled.div`
   display: flex;
-  border: ${(props) => props.border || "none"};
+  border: ${(props) => props.border || "none"};;
 `
-
-
 const SpanR = styled.div`
 color: #e20880;
 opacity: 0.7;

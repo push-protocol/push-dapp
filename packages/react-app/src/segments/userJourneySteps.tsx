@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import styled from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
@@ -13,7 +13,7 @@ const UserJourneySteps = ({darkMode}) => {
   const {
       isCommunicateOpen,
       isDeveloperOpen,
-    } = useSelector((state) => state.userJourney);
+    } = useSelector((state) => state['userJourney']);
 
   const steps = [
     {
@@ -64,7 +64,7 @@ const UserJourneySteps = ({darkMode}) => {
         </Item>
       ),
       locale: { next: <strong aria-label="next">NEXT</strong> },
-      placement: "center",
+      placement: 'center' as const,
       target: "body",
       hideFooter: true,
       // defaultProps: false,
@@ -85,7 +85,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "right-start",
+      placement: 'right-start' as const,
       target: ".communicate",
       spotlightClicks: true,
       disableAnimation: false,
@@ -117,7 +117,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "right-start",
+      placement: "right-start" as const,
       target: ".channels",
       spotlightClicks: true,
       disableAnimation: false,
@@ -149,7 +149,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "center",
+      placement: "center" as const,
       target: "body",
       hideFooter: true,
       styles: {
@@ -166,6 +166,8 @@ const UserJourneySteps = ({darkMode}) => {
     },
     {
       //4
+      content: (<></>),
+      target: "body",
     },
     {
       //5
@@ -222,7 +224,7 @@ const UserJourneySteps = ({darkMode}) => {
       // position: "top-center",
       // target: `#addr-0x0000000000000000000000000000000000000000`, //production
       // target: `#addr-0x2177cFc66474bBEce7Cbf114d780A5cfE78485De`, //development
-      placement: "center",
+      placement: "center" as const,
       target: "body",
       disableOverlayClose: false,
       // spotlightClicks: true,
@@ -230,7 +232,6 @@ const UserJourneySteps = ({darkMode}) => {
       defaultProps: false,
       hideFooter: true,
     },
-    // {},//6
     {
       //6
       content: (
@@ -244,7 +245,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "right-start",
+      placement: "right-start" as const,
       target: ".inbox",
       spotlightClicks: true,
       disablefloating: true,
@@ -310,7 +311,7 @@ const UserJourneySteps = ({darkMode}) => {
       // placement: "top",
       // position: "top-center",
       // target: `.hdvjVo`,
-      placement: "center",
+      placement: "center" as const,
       target: "body",
       // disableOverlayClose: false,
       hideFooter: true,
@@ -328,7 +329,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "right-start",
+      placement: "right-start" as const,
       target: `.spam`,
       spotlightClicks: true,
       defaultProps: false,
@@ -385,7 +386,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "center",
+      placement: "center" as const,
       target: `body`,
       spotlightClicks: true,
       defaultProps: false,
@@ -404,7 +405,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "right-start",
+      placement: "right-start" as const,
       target: `.receive`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -468,7 +469,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "center",
+      placement: "center" as const,
       target: `body`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -528,7 +529,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "bottom",
+      placement: "bottom" as const,
       target: `#epns-browser`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -588,7 +589,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "bottom",
+      placement: "bottom" as const,
       target: `#epns-app-ios`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -648,7 +649,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "bottom",
+      placement: "bottom" as const,
       target: `#epns-app`,
       // target: `.sc-AxheI`,
       spotlightClicks: true,
@@ -720,7 +721,7 @@ const UserJourneySteps = ({darkMode}) => {
         </Item>
       ),
       locale: { next: <strong aria-label="next">NEXT</strong> },
-      placement: "center",
+      placement: "center" as const,
       target: "body",
       defaultProps: false,
       // spotlightClicks: true,
@@ -740,7 +741,7 @@ const UserJourneySteps = ({darkMode}) => {
           </Span>
         </Item>
       ),
-      placement: "right-start",
+      placement: "right-start" as const,
       target: ".developer",
       spotlightClicks: true,
       disableAnimation: false,
@@ -801,7 +802,7 @@ const UserJourneySteps = ({darkMode}) => {
         </Item>
       ),
       locale: { next: <strong aria-label="next">NEXT</strong> },
-      placement: "center",
+      placement: "center" as const,
       target: ".developer",
       spotlightClicks: true,
       disableAnimation: false,
@@ -854,7 +855,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "right-start",
+      placement: "right-start" as const,
       target: ".create",
       spotlightClicks: true,
       disablefloating: true,
@@ -910,7 +911,7 @@ const UserJourneySteps = ({darkMode}) => {
           </ItemH>
         </Item>
       ),
-      placement: "top-start",
+      placement: "top-start" as const,
       target: ".guide",
       spotlightClicks: true,
       disablefloating: true,
