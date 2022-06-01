@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import { useClick, useClickAway } from 'react-use';
+// import { useClick, useClickAway } from 'react-use';
 import styled ,  {useTheme} from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
@@ -21,7 +21,7 @@ export default function AddDelegateModal({
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    useClickAway(modalRef, onClose);
+    // useClickAway(modalRef, onClose);
 
     const addDelegateFunction = () => {
         setLoading('loading')
