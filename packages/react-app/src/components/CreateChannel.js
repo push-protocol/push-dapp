@@ -740,7 +740,7 @@ function CreateChannel() {
                     size="0.7rem"
                     z="1"
                   >
-                    <img className="iImage" src="/i.png" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
+                    <img className="iImage" src="/svg/info.svg" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
                   </Span>
                 {/* {chainDetails!='Ethereum' &&
                 ( */}
