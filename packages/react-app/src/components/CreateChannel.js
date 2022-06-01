@@ -732,7 +732,7 @@ function CreateChannel() {
                   }}
                 />
 
-                    <Span
+                    {/* <Span
                     left="0px"
                     title="Some Text Explaining About The Alias Network"
                     top="-15px"
@@ -741,7 +741,7 @@ function CreateChannel() {
                     z="1"
                   >
                     <img className="iImage" src="/svg/info.svg" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
-                  </Span>
+                  </Span> */}
                 {/* {chainDetails!='Ethereum' &&
                 ( */}
 
