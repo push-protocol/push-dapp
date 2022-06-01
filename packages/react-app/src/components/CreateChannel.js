@@ -663,7 +663,7 @@ function CreateChannel() {
                 self="stretch"
                 align="stretch"
               >
-                <InputDiv border="1px solid black">
+                {/* <InputDiv border="1px solid black"> */}
                 <Input
                   required
                   placeholder="Your Channel Name"
@@ -677,7 +677,7 @@ function CreateChannel() {
                     setChannelName(e.target.value);
                   }}
                 />
-                </InputDiv>
+                    {/* </InputDiv> */}
 
                
                 {channelName.trim().length == 0 && (
