@@ -42,7 +42,7 @@ const ethers = require("ethers");
 const ipfs = require("ipfs-api")();
 
 const minStakeFees = 50;
-const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },{value: "NONE", label: "None"}];
+const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },{value: "Ethereum", label: "Ethereum"}];
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
@@ -201,7 +201,7 @@ function CreateChannel() {
       channelAlias
         ? isEmpty(chainDetails)
         : chainDetails
-        ? chainDetails == "NONE" ? false : isEmpty(channelAlias)
+        ? chainDetails == "Ethereum" ? false : isEmpty(channelAlias)
         : false
     ) {
       setProcessing(3);
@@ -233,7 +233,7 @@ function CreateChannel() {
       address: address,
     };
 
-    if(blockchain == "NONE")
+    if(blockchain == "Ethereum")
     {
       input.blockchain = "";
     }
@@ -730,31 +730,49 @@ function CreateChannel() {
                     setChainDetails(selectedOption.value);
                   }}
                 />
-                <InputDiv border={() => {
-                  if(chainDetails == "NONE" || chainDetails=="")
-                  return "1px solid gray"
-                  else
-                  return "1px solid black"
-                }}>
-                
-                <Input
-                  placeholder="Your Channel's Alias address"
-                  maxlength="40"
-                  maxllength="100%"
-                  padding="12px"
-                  style={{ paddingLeft: "22%" }}
-                  border="1px solid #000"
-                  weight="400"
-                  size="1rem"
-                  bg="#fff"
-                  disabled = {(chainDetails==="" || chainDetails==="NONE") ? true : false}
-                  value={channelAlias}
-                  onChange={(e) => {
-                    setChannelAlias(e.target.value);
-                  }}
-                />
-                </InputDiv>
-                
+
+                    <Span
+                    left="0px"
+                    title="Some Text Explaining About The Alias Network"
+                    top="-15px"
+                    pos="absolute"
+                    size="0.7rem"
+                    z="1"
+                  >
+                    <img className="iImage" src="/i.png" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
+                  </Span>
+                {chainDetails!='Ethereum' &&
+                (
+
+                  <InputDiv border={() => {
+                    if(chainDetails == "Ethereum" || chainDetails=="")
+                    return "1px solid gray"
+                    else
+                    return "1px solid black"
+                  }}>
+                  
+                  <Input
+                    placeholder="Your Channel's Alias address"
+                    maxlength="40"
+                    maxllength="100%"
+                    padding="12px"
+                    style={{ paddingLeft: "22%" }}
+                    border="1px solid #000"
+                    weight="400"
+                    size="1rem"
+                    bg="#fff"
+                    disabled = {(chainDetails==="" || chainDetails==="NONE") ? true : false}
+                    value={channelAlias}
+                    onChange={(e) => {
+                      setChannelAlias(e.target.value);
+                    }}
+                  />
+                  </InputDiv>
+                  
+
+                )
+                }
+            
                 
               </Item>
               
@@ -782,7 +800,7 @@ function CreateChannel() {
                 />
                 
                 <SpanR>
-                  {250-channelInfo.length} characters remains
+                  <span style={{marginLeft:"15px", marginRight:"15px", marginTop:"8px", marginBottom:"12px"}}>{250-channelInfo.length} characters remains</span>
                 </SpanR>
               </Item>
 
@@ -907,12 +925,17 @@ const InputDiv = styled.div`
   border: ${(props) => props.border || "none"};;
 `
 const SpanR = styled.div`
-color: #e20880;
-opacity: 0.7;
 position: absolute;
 bottom: 0px;
 right: 0.8rem;
+color:white;
 z-index: 1;
+// height: 0.2rem;
+margin-bottom: 1px;
+background:  #E20880;
+border-radius: 20px;
+align-items: center;
+font-size: 19px;
 `;
 const Step = styled.div`
   height: 12px;

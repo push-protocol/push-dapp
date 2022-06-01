@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import { useClick, useClickAway } from 'react-use';
+// import { useClick, useClickAway } from 'react-use';
 import styled, {ThemeProvider, useTheme} from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
@@ -25,7 +25,7 @@ export default function AliasVerificationModal({
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
-    useClickAway(modalRef, ()=>onClose(loading !== ''));
+    // useClickAway(modalRef, ()=>onClose(loading !== ''));
 
     const checkAlias = async () => {
         console.log(mainAddress, aliasEthAccount);

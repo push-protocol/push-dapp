@@ -10,6 +10,10 @@
     color: white;
 }
 
+.iImage:hover{
+    cursor: pointer;
+}
+
 
 /* .kITDl:hover{
     color: white !important;
