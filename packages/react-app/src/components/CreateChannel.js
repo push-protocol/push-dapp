@@ -663,21 +663,24 @@ function CreateChannel() {
                 self="stretch"
                 align="stretch"
               >
-                {/* <InputDiv border="1px solid black"> */}
+                <InputDiv border="1px solid black">
                 <Input
                   required
                   placeholder="Your Channel Name"
                   maxlength="40"
                   padding="12px"
                   weight="400"
+                  width="100%"
                   size="1.2em"
+                  border="1px solid black"
                   bg="#fff"
+                  style={{width:"100%"}}
                   value={channelName}
                   onChange={(e) => {
                     setChannelName(e.target.value);
                   }}
                 />
-                    {/* </InputDiv> */}
+                </InputDiv>
 
                
                 {channelName.trim().length == 0 && (
