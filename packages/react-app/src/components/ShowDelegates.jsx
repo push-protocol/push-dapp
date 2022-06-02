@@ -1,13 +1,13 @@
 import React from "react";
 import { Item, Span, Section, Content, H2, H3 } from "./SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { AiOutlineCopy } from "react-icons/ai";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
 import { useSelector } from "react-redux";
 import { useDeviceWidthCheck } from "hooks";
 import RemoveDelegateModal from "./RemoveDelegateModal";
+import DelegateInfo from "./DelegateInfo";
 
 const ShowDelegates = () => {
   const { account } = useWeb3React();
@@ -115,16 +115,7 @@ const ShowDelegates = () => {
                       key={delegate}
                     >
                       <Item direction="row" justify="flex-start">
-                        <Wallet>
-                          {!isMobile ?
-                            delegate :
-                            <>{delegate.substring(0, 6)}.....{delegate.substring(delegate.length - 6)}</>
-                          }
-                        </Wallet>
-                        <CopyToClipboard
-                          color={theme.headerTagBg}
-                          onClick={() => navigator.clipboard.writeText(delegate)}
-                        />
+                        <DelegateInfo delegateAddress={delegate} />
                       </Item>
                       {(account.toLowerCase() != delegate.toLowerCase()) ?
                         <RemoveButton onClick={() => {
@@ -156,45 +147,6 @@ const ShowDelegates = () => {
     </>
   )
 }
-
-const Wallet = styled.span`
-  margin: 0px 10px;
-  padding: 8px 15px;
-  height: 16px;
-  display: flex;
-  align-items: baseline;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 16px;
-  color: #fff;
-  border-radius: 15px;
-  background: rgb(226,8,128);
-  background: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-`
-
-const CopyToClipboard = styled(AiOutlineCopy)`
-  font-size: 20px;
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-`
 
 const ChannelActionButton = styled.button`
   border: 0;
