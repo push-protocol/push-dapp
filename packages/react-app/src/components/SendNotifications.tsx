@@ -684,7 +684,7 @@ function SendNotifications() {
   return (
       <>
           <Section>
-              <Content padding="10px 20px 20px">
+              <Content padding="10px 30px 20px">
                   <Item align="flex-start">
                       <H2 textTransform="uppercase" spacing="0.1em">
                           <Span weight="200" style={{color : theme.color}}>Send </Span>
@@ -727,7 +727,7 @@ function SendNotifications() {
                               onSubmit={handleSendMessage}
                           >
                               <Item
-                                  margin="0px 20px"
+                                  margin="0px 30px"
                                   flex="1"
                                   self="stretch"
                                   align="stretch"

@@ -86,6 +86,8 @@ export default function ChannelDetails() {
         </Date>
       </SectionDate>
 
+      <hr />
+
       <ShowDelegates />
 
       <hr />
