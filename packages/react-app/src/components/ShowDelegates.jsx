@@ -87,6 +87,7 @@ const ShowDelegates = () => {
             spacing="3px"
             size="14px"
             color="#000"
+            weight="500"
           >
             List of Delegate Addresses
           </Span>
