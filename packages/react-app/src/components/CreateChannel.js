@@ -701,12 +701,17 @@ function CreateChannel() {
                 flex="1"
                 self="stretch"
                 align="stretch"
+                direction="row"
+                height="20px"
                 style={{ position: "relative" }}
               >
               
-                <Select
-                  className="basic-single"
-                  classNamePrefix="select"
+               {/* <ItemAlias>
+
+                  <DivSelect> */}
+                  <Select
+                  // className="basic-single"
+                  // classNamePrefix="select"
                   placeholder="Alias network"
                   name="color"
                   options={ALIAS_CHAINS}
@@ -733,15 +738,17 @@ function CreateChannel() {
                 />
 
                     {/* <Span
-                    left="0px"
+                    right="0px"
                     title="Some Text Explaining About The Alias Network"
-                    top="-15px"
+                    top="0px"
                     pos="absolute"
                     size="0.7rem"
                     z="1"
                   >
                     <img className="iImage" src="/svg/info.svg" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
                   </Span> */}
+
+                  {/* </DivSelect> */}
                 {/* {chainDetails!='Ethereum' &&
                 ( */}
 
@@ -750,14 +757,15 @@ function CreateChannel() {
                     return "1px solid white"
                     else
                     return "1px solid black"
-                  }}>
+                  }}
+                  >
                   
                   <Input
                     placeholder={(chainDetails === "Ethereum" ? "" : "Your Channel's Alias address")}
                     maxlength="40"
-                    maxllength="100%"
+                    maxllength="200%"
                     padding="12px"
-                    style={{ paddingLeft: "22%" }}
+                    // style={{ paddingLeft: "22%" }}
                     // border= {(chainDetails === "Ethereum" ? "1px solid white" : "1px solid #000" )}
                     weight="400"
                     size="1rem"
@@ -774,11 +782,11 @@ function CreateChannel() {
                 {/* )
                 } */}
             
-                
+                {/* </ItemAlias> */}
               </Item>
               
               <Item
-                margin="15px 20px 15px 20px"
+                margin="55px 20px 15px 20px"
                 flex="1"
                 self="stretch"
                 align="stretch"
@@ -920,10 +928,28 @@ function CreateChannel() {
 
 
 
+// const ItemAlias = styled.div`
+// display: flex;
+// flex-direction: row;
+// margin=15px 20px 15px 20px;
+// flex=1;
+// // self=stretch;
+// align=stretch;
+// width: 100%;
+// height: 40px;
+
+// `;
+
+
+// const DivSelect = styled.div`
+// display:flex;
+
+// `;
 
 const InputDiv = styled.div`
   display: flex;
-  border: ${(props) => props.border || "none"};;
+  border: ${(props) => props.border || "none"};
+  margin-bottom: ${(props) => props.marginBottom || "none"};
 `
 const SpanR = styled.div`
 position: absolute;

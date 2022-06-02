@@ -14,6 +14,45 @@
     cursor: pointer;
 }
 
+.css-1t4u32w-control:hover{
+    border:none !important;
+}
+.css-1t4u32w-control:focus{
+    border: none !important;
+    box-shadow: none !important;
+}
+.css-1t4u32w-control{
+    border: none !important;
+}
+
+.css-b62m3t-container{
+    width: 50% !important;
+    border: 1px solid black !important;
+
+}
+
+.css-b62m3t-container:focus{
+    box-shadow: 0 0 0px white !important;
+    border: none !important;
+}
+
+.css-1psg5m7-control{
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.css-319lph-ValueContainer{
+    margin-top: 5px;
+}
+
+.css-1hb7zxy-IndicatorsContainer{
+    margin-top: 5px;
+}
+
+/* .css-b62m3t-container{
+    width: 50% !important;
+} */
+
 
 /* .kITDl:hover{
     color: white !important;
