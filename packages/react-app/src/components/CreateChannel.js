@@ -42,7 +42,7 @@ const ethers = require("ethers");
 const ipfs = require("ipfs-api")();
 
 const minStakeFees = 50;
-const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },{value: "Ethereum", label: "Ethereum"}];
+const ALIAS_CHAINS = [{value: "Ethereum", label: "Ethereum"},{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
@@ -712,7 +712,7 @@ function CreateChannel() {
                   <Select
                   // className="basic-single"
                   // classNamePrefix="select"
-                  placeholder="Alias network"
+                  placeholder="Choose the channels network"
                   name="color"
                   options={ALIAS_CHAINS}
                   theme={(theme) => ({
@@ -738,13 +738,13 @@ function CreateChannel() {
                 />
 
                     <Span
-                    right="53.5%"
+                    right="54%"
                     bRadius="50%"
                     padding="-1px"
                     className="imgSpan"
                     bg="linear-gradient(90deg, #E20880 0%, #674C9F 52.75%, #35C5F3 100%)"
                     title="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain "
-                    top="2px"
+                    top="100%"
                     pos="absolute"
                     size="0.7rem"
                     z="1"
@@ -756,29 +756,15 @@ function CreateChannel() {
                     </div>
                     
                   </Span>
-                  {/* <InputDiv border={() => {
-                    if(chainDetails == "Ethereum")
-                    return "1px solid white"
-                    else
-                    return "1px solid black"
-                  }}>
-                      <InputAddress
-                        placeholder={(chainDetails === "Ethereum" ? "" : "Your Channel's Alias address")}
-                      />
-                  </InputDiv> */}
-
                   
-                  {/* </DivSelect> */}
-                {/* {chainDetails!='Ethereum' &&
-                ( */}
 
                   <InputDiv border={() => {
-                    if(chainDetails == "Ethereum")
+                    if(themes.scheme == "dark")
                     return "1px solid white"
                     else
                     return "1px solid black"
                   }}
-                  // width="50%"
+                  visibility = {chainDetails === "Ethereum" ? "hidden" : "visible"}
                   >
                   
                   <Input
@@ -788,8 +774,9 @@ function CreateChannel() {
                     padding="12px"
                     weight="400"
                     size="1rem"
-                    bg="#fff"
+                    bg="white"
                     disabled = {(chainDetails==="" || chainDetails==="Ethereum") ? true : false}
+                    visibility = {chainDetails === "Ethereum" ? "hidden" : "visible"}
                     value={channelAlias}
                     onChange={(e) => {
                       setChannelAlias(e.target.value);
@@ -798,10 +785,6 @@ function CreateChannel() {
                   </InputDiv>
                   
 
-                {/* )
-                } */}
-            
-                {/* </ItemAlias> */}
               </Item>
               
               <Item
@@ -946,32 +929,13 @@ function CreateChannel() {
 // css styles
 
 
-
-// const ItemAlias = styled.div`
-// display: flex;
-// flex-direction: row;
-// margin=15px 20px 15px 20px;
-// flex=1;
-// // self=stretch;
-// align=stretch;
-// width: 100%;
-// height: 40px;
-
-// `;
-
-
-// const DivSelect = styled.div`
-// display:flex;
-
-// `;
-
-
 const InputDiv = styled.div`
-  display: flex;
+  display: ${(props) => props.display || "flex"};;
   flex:1;
   border: ${(props) => props.border || "none"};
   margin-bottom: ${(props) => props.marginBottom || "none"};
   width: ${(props) => props.width || "none"};
+  visibility:  ${props => props.visibility || ""};
 `
 const SpanR = styled.div`
 position: absolute;
