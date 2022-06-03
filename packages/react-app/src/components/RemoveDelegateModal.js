@@ -8,11 +8,11 @@ import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
 
 
 export default function RemoveDelegateModal({
-    onClose,onSuccess, removeDelegate
+    onClose,onSuccess, removeDelegate, address=""
 }) {
 
     const modalRef = useRef(null);
-    const [mainAdress, setMainAddress] = useState('');
+    const [mainAdress, setMainAddress] = useState(address);
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
