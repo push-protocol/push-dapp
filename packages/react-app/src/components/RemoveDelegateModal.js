@@ -50,9 +50,9 @@ export default function RemoveDelegateModal({
             <AliasModal ref={modalRef} background={themes}>
                 <Item align="flex-start">
                     <H2 textTransform="uppercase" spacing="0.1em">
-                    <Span weight="200" color={themes.scheme=="dark" ? "white" : "black"}>Remove </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
+                    <Span weight="200" color={themes.fontColor}>Remove </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
                     </H2>
-                    <H3 color={themes.scheme=="dark" ? "white" : "black"}>Remove an account who can send notifications on your behalf.</H3>
+                    <H3 color={themes.fontColor}>Remove an account who can send notifications on your behalf.</H3>
                 </Item>
                 <Item align="flex-start">
                     <CustomInput
