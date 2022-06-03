@@ -23,7 +23,9 @@
 }
 .css-1t4u32w-control{
     border: none !important;
+    height: 59px;
 }
+
 
 .css-b62m3t-container{
     width: 50% !important;
@@ -42,13 +44,30 @@
 }
 
 .css-319lph-ValueContainer{
-    margin-top: 5px;
+    margin-top: 5px; 
 }
 
 .css-1hb7zxy-IndicatorsContainer{
     margin-top: 5px;
 }
 
+.iImage{
+    filter: invert(100%) sepia(0%) saturate(2%) hue-rotate(59deg) brightness(105%) contrast(101%);
+}
+
+.test {
+    display:none;
+  }
+  .mainDiv {
+    display:inline-block;
+  }
+  .imgSpan:hover .test {
+    display:block;
+  }
+
+/* .css-6j8wv5-Input{
+    height: 35px;
+} */
 /* .css-b62m3t-container{
     width: 50% !important;
 } */

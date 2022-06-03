@@ -217,6 +217,7 @@ export const Span = styled.span`
   padding: ${props => props.padding || "0px"};
   letter-spacing: ${props => props.spacing || "inherit"};
   text-align: ${props => props.textAlign || "initial"};
+  border-radius: ${props => props.bRadius || "initial"};
 
   position: ${props => props.pos || 'initial'};
   right: ${props => props.right || 'auto'};

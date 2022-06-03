@@ -706,9 +706,9 @@ function CreateChannel() {
                 style={{ position: "relative" }}
               >
               
-               {/* <ItemAlias>
+               {/* <ItemAlias> */}
 
-                  <DivSelect> */}
+                  
                   <Select
                   // className="basic-single"
                   // classNamePrefix="select"
@@ -737,17 +737,37 @@ function CreateChannel() {
                   }}
                 />
 
-                    {/* <Span
-                    right="0px"
-                    title="Some Text Explaining About The Alias Network"
-                    top="0px"
+                    <Span
+                    right="53.5%"
+                    bRadius="50%"
+                    padding="-1px"
+                    className="imgSpan"
+                    bg="linear-gradient(90deg, #E20880 0%, #674C9F 52.75%, #35C5F3 100%)"
+                    title="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain "
+                    top="2px"
                     pos="absolute"
                     size="0.7rem"
                     z="1"
                   >
-                    <img className="iImage" src="/svg/info.svg" style={{width:"15px", height:"15px", objectFit:"contain"}}/>
-                  </Span> */}
+                    <div className="mainDiv">
+                    <img className="iImage" src="/svg/info.svg" style={{width:"20px", height:"20px", marginTop:"0px", marginBottom:"-2px"}}/>
+                    
+                  {/* <span className="test">When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain <a href="">read more</a></span> */}
+                    </div>
+                    
+                  </Span>
+                  {/* <InputDiv border={() => {
+                    if(chainDetails == "Ethereum")
+                    return "1px solid white"
+                    else
+                    return "1px solid black"
+                  }}>
+                      <InputAddress
+                        placeholder={(chainDetails === "Ethereum" ? "" : "Your Channel's Alias address")}
+                      />
+                  </InputDiv> */}
 
+                  
                   {/* </DivSelect> */}
                 {/* {chainDetails!='Ethereum' &&
                 ( */}
@@ -758,15 +778,14 @@ function CreateChannel() {
                     else
                     return "1px solid black"
                   }}
+                  // width="50%"
                   >
                   
                   <Input
                     placeholder={(chainDetails === "Ethereum" ? "" : "Your Channel's Alias address")}
                     maxlength="40"
-                    maxllength="200%"
+                    maxllength="100%"
                     padding="12px"
-                    // style={{ paddingLeft: "22%" }}
-                    // border= {(chainDetails === "Ethereum" ? "1px solid white" : "1px solid #000" )}
                     weight="400"
                     size="1rem"
                     bg="#fff"
@@ -946,10 +965,13 @@ function CreateChannel() {
 
 // `;
 
+
 const InputDiv = styled.div`
   display: flex;
+  flex:1;
   border: ${(props) => props.border || "none"};
   margin-bottom: ${(props) => props.marginBottom || "none"};
+  width: ${(props) => props.width || "none"};
 `
 const SpanR = styled.div`
 position: absolute;
