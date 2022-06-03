@@ -768,7 +768,7 @@ function CreateChannel() {
                   >
                   
                   <Input
-                    placeholder={(chainDetails === "Ethereum" ? "" : "Your Channel's Alias address")}
+                    placeholder="Your Channel's Alias address"
                     maxlength="40"
                     maxllength="100%"
                     padding="12px"
