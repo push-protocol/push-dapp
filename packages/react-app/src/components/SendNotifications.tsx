@@ -28,7 +28,7 @@ import Switch from "@material-ui/core/Switch";
 import { useWeb3React } from "@web3-react/core";
 
 import { CloseIcon } from "assets/icons";
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+import PreviewNotifModal from "./PreviewNotifModal";
 import CryptoHelper from "helpers/CryptoHelper";
 const ethers = require("ethers");
 
@@ -72,6 +72,7 @@ function SendNotifications() {
   const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
   const [nfInfo, setNFInfo] = React.useState("");
   const [delegateeOptions, setDelegateeOptions] = React.useState([]);
+  const [previewNotifModalOpen, setPreviewNotifModalOpen] = React.useState(false);
 
   const isChannelDeactivated = channelDetails
       ? channelDetails.channelState === CHANNNEL_DEACTIVATED_STATE
@@ -100,6 +101,33 @@ function SendNotifications() {
           setChannelAddress(delegatees[0].address);
       }
   }, [delegatees, account]);
+    
+    const isAllFieldsFilled = () => {
+        if (nfRecipient == "" ||
+            nfType == "" ||
+            nfMsg == "" ||
+            (nfSubEnabled && nfSub == "") ||
+            (nfCTAEnabled && nfCTA == "") ||
+            (nfMediaEnabled && nfMedia == "")
+        ) {
+            console.log("hello world 1");
+            return false;
+        }
+        console.log("hello world 2");
+        return true;
+    };
+
+    const previewNotif = (e: any) => {
+        e.preventDefault();
+        if(isAllFieldsFilled())
+            setPreviewNotifModalOpen(true)
+        else {
+            setNFInfo("Please fill all fields to preview");
+            setTimeout(() => {
+                setNFInfo('');
+            }, 2000);
+        }
+    }
 
   // on change for the subset type notifications input
   const handleSubsetInputChange = (e: any) => {
@@ -1181,13 +1209,29 @@ function SendNotifications() {
                                   <Item
                                       margin="15px 0px 0px 0px"
                                       flex="1"
+                                      direction="row"
                                       self="stretch"
                                       align="stretch"
                                   >
                                       <Button
+                                          bg="#35C5F3"
+                                          color="#fff"
+                                          flex="0.5"
+                                          radius="0px"
+                                          weight="400"
+                                          size="0.8em"
+                                          spacing="0.2em"
+                                          padding="20px 10px"
+                                          textTransform="uppercase"
+                                          onClick={(e) => previewNotif(e)}
+                                      >
+                                        Preview Notification
+                                      </Button>
+
+                                      <Button
                                           bg="#e20880"
                                           color="#fff"
-                                          flex="1"
+                                          flex="0.5"
                                           radius="0px"
                                           padding="20px 10px"
                                           disabled={
@@ -1220,6 +1264,18 @@ function SendNotifications() {
                           </FormSubmision>
                       </Item>
                   </ModifiedContent>
+                    {previewNotifModalOpen && (
+                        <PreviewNotifModal
+                            onClose={(val) => setPreviewNotifModalOpen(val)}
+                            details={{
+                                acta: nfCTA,
+                                aimg: nfMedia,
+                                amsg: nfMsg,
+                                asub: nfSub,
+                                type: nfType,
+                            }}
+                        />
+                    )}
               </Section>
           )}
       </>
