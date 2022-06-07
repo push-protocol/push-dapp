@@ -1,5 +1,5 @@
+//@ts-ignore
 import * as openpgp from 'openpgp';
-
 export const generateKeyPair = async (passphrase: string): Promise<{ privateKey: string, publicKey: string }> => {
     return await openpgp.generateKey({
         type: 'rsa', // Type of the key

@@ -1,10 +1,10 @@
 import * as PGP from './PGP'
-import * as DIDHelper from './DID'
+import * as DIDHelper from './Did'
 import * as Ceramic from './Ceramic'
 import * as IPFS from './IPFS';
 import { DID } from 'dids'
 import { JWE } from 'did-jwt';
-import { decrypt } from './DID';
+import { decrypt } from './Did';
 import { CID, IPFSHTTPClient } from "ipfs-http-client"
 
 

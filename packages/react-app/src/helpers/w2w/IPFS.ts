@@ -1,6 +1,5 @@
 import { DID } from 'dids'
 import { JWE } from 'did-jwt';
-import { decrypt } from './DID';
 import { CID, create, IPFSHTTPClient } from "ipfs-http-client"
 
 export function createIPFSClient(): IPFSHTTPClient {

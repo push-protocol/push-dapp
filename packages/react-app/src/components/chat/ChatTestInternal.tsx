@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { Content, Item, ItemH, H2, H3, Span, Button, Input } from "components/SharedStyling";
 
 // Helpers
-import { createCeramic, getDIDFromWallet } from 'helpers/w2w/Ceramic'
-import * as DIDHelpers from 'helpers/w2w/DID'
+import { createCeramic, getDIDFromWallet } from '../../helpers/w2w/Ceramic'
+import * as DIDHelpers from '../../helpers/w2w/Did'
 
 // DID and Ceramic
 import { ThreeIdConnect } from '@3id/connect'
