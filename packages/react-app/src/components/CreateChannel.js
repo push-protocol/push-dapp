@@ -287,7 +287,7 @@ function CreateChannel() {
       }
     );
 
-    setProcessingInfo("Creating Channel TX in progress");
+    setProcessingInfo("Creating Channel, the transaction is in progress");
     anotherSendTxPromise
       .then(async function(tx) {
         console.log(tx);
