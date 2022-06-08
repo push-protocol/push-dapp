@@ -844,7 +844,7 @@ function CreateChannel() {
                   disabled={processing == 1 ? true : false}
                 >
                   {processing == 1 && (
-                    <Loader type="Oval" color="#fff" height={24} width={24} />
+                    <Loader type="Oval" color="#000" height={24} width={24} />
                   )}
                   {processing != 1 && (
                     <Input
