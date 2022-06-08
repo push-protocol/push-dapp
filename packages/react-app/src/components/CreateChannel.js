@@ -287,7 +287,7 @@ function CreateChannel() {
       }
     );
 
-    setProcessingInfo("Creating Channel TX in progress");
+    setProcessingInfo("Creating Channel, the transaction is in progress");
     anotherSendTxPromise
       .then(async function(tx) {
         console.log(tx);
@@ -871,7 +871,7 @@ function CreateChannel() {
           <Content padding="0px 0px 0px 0px">
             {processing == 1 && (
               <Item margin="20px 0px 10px 0px">
-                <Loader type="Oval" color="#000" height={24} width={24} />
+                <Loader type="Oval" color="#fff" height={24} width={24} />
               </Item>
             )}
 
