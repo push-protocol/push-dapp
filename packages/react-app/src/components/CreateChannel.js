@@ -287,7 +287,7 @@ function CreateChannel() {
       }
     );
 
-    setProcessingInfo("Creating Channel TX in progress");
+    setProcessingInfo("Creating Channel, the transaction is in progress");
     anotherSendTxPromise
       .then(async function(tx) {
         console.log(tx);
@@ -530,7 +530,7 @@ function CreateChannel() {
 
                     <div className="text-div">
                       <label htmlFor="file-upload" className="labeled">
-                        <div>Upload a file</div>
+                        <div style={{padding:"3px"}}>Upload a file</div>
                         <input
                           id="file-upload"
                           accept="image/*"
@@ -844,7 +844,7 @@ function CreateChannel() {
                   disabled={processing == 1 ? true : false}
                 >
                   {processing == 1 && (
-                    <Loader type="Oval" color="#fff" height={24} width={24} />
+                    <Loader type="Oval" color={themes.color} height={24} width={24} />
                   )}
                   {processing != 1 && (
                     <Input
@@ -871,7 +871,7 @@ function CreateChannel() {
           <Content padding="0px 0px 0px 0px">
             {processing == 1 && (
               <Item margin="20px 0px 10px 0px">
-                <Loader type="Oval" color="#000" height={24} width={24} />
+                <Loader type="Oval" color={themes.color} height={24} width={24} />
               </Item>
             )}
 

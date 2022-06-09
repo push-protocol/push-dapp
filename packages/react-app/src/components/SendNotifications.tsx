@@ -36,7 +36,7 @@ const ethers = require("ethers");
 const NFTypes = [
   { value: "1", label: "Broadcast (IPFS Payload)" },
   // { value: "2", label: "Old Secret (IPFS Payload)" },
-  { value: "3", label: "Targetted (IPFS Payload)" },
+  { value: "3", label: "Targeted (IPFS Payload)" },
   { value: "4", label: "Subset (IPFS Payload)" },
   { value: "5", label: "Secret (IPFS Payload)" },
   // { value: "6", label: "Offchain (Push)" },
@@ -198,7 +198,7 @@ function SendNotifications() {
           case "1":
               break;
 
-          // Targetted Notification
+          // Targeted Notification
           case "3":
               break;
 
@@ -245,7 +245,7 @@ function SendNotifications() {
         //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
         //       break;
 
-          // Targetted Notification
+          // Targeted Notification
           case "4":
               break;
                 
@@ -700,7 +700,7 @@ function SendNotifications() {
                       {!isChannelDeactivated ? (
                           <H3 style={{color : theme.color}}>
                               EPNS supports four types of notifications (for
-                              now!). <b>Groups</b>, <b>Subsets</b>, <b>Targetted</b>, and{" "}
+                              now!). <b>Groups</b>, <b>Subsets</b>, <b>Targeted</b>, and{" "}
                               <b>Secret</b>
                               {/* and{" "} <b>Subsets</b>. */}
                           </H3>
@@ -1073,7 +1073,7 @@ function SendNotifications() {
                                       <Item flex="0" margin="0px 5px 0px 0px">
                                           <BsFillImageFill
                                               size={24}
-                                              color="#000"
+                                              color={theme.color}
                                           />
                                       </Item>
                                       <Item
@@ -1120,7 +1120,7 @@ function SendNotifications() {
                                       align="center"
                                   >
                                       <Item flex="0" margin="0px 5px 0px 0px">
-                                          <FiLink size={24} color="#000" />
+                                          <FiLink size={24} color={theme.color} />
                                       </Item>
                                       <Item
                                           flex="1"
@@ -1270,7 +1270,7 @@ function SendNotifications() {
   `;
 
   const DropdownHeader = styled.div`
-  color: black;
+  color: ${props => props.theme.color || "#000"};
   padding: 10px;
   letter-spacing: 3px;
   font-size: 14px;

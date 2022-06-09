@@ -401,6 +401,7 @@ export const C = styled(Anchor)`
 export const Button = styled.button`
   display: flex;
   flex: ${props => props.flex || 'initial'};
+  disabled: ${props => props.disabled || false};
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
@@ -420,7 +421,7 @@ export const Button = styled.button`
   overflow: ${props => props.overflow || "hidden"};
   z-index: 3;
 
-  cursor: pointer;
+  cursor: ${props => props.disabled != true ? "pointer" : "default"};
   pointer: hand;
 
   &:before {
