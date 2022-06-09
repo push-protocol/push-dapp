@@ -823,12 +823,7 @@ function CreateChannel() {
 
                     <SpanR>
                       <span
-                        style={{
-                          marginLeft: "15px",
-                          marginRight: "15px",
-                          marginTop: "12px",
-                          marginBottom: "12px",
-                        }}
+                        style={{padding: "15px"}}
                       >
                         {250 - channelInfo.length} characters remains
                       </span>
@@ -967,12 +962,12 @@ const SpanR = styled.div`
   right: 0.8rem;
   color: white;
   z-index: 1;
-  // height: 0.2rem;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  padding: 5px;
   background: #e20880;
   border-radius: 20px;
   align-items: center;
-  font-size: 19px;
+  font-size: 16px;
 `;
 const Step = styled.div`
   height: 12px;
