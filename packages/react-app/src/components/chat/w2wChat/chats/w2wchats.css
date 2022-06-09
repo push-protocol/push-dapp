@@ -1,0 +1,60 @@
+.chat{
+    display: flex;
+    flex-direction: column;
+    
+    
+}
+.chatTop{
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+}
+.chatTop img{
+    width: 2.6rem;
+    height: 2.6rem;
+}
+.chatImg{
+    width: 10%;
+    border-radius: 20%;
+  
+    margin-left: 10px;
+}
+
+.w2wchatContent{
+    display: flex;
+    flex-direction: column;
+    
+    padding: 0;
+    height: 6rem;
+}
+.chatText{
+    
+    max-width: 500px;
+    margin-left: 10px;
+    opacity: 0.9;
+    color: rgb(0, 0, 0);
+    font-weight: 400;
+    position: relative;
+    top: -2.7rem;
+    padding: 0;
+    font-size: 1rem;
+}
+.chatDetail{
+    display: flex;
+    flex-direction: row;
+    
+}
+
+.chatOwner{
+    font-weight: 450;
+    font-size: 1.2rem;
+    margin-left: 10px;
+    position: relative;
+    top: -1.2rem;
+}
+.chatTime{
+    font-size: 0.9rem;
+    margin-left: 10px;
+    margin-top: 1px;
+    font-weight: 350;
+}

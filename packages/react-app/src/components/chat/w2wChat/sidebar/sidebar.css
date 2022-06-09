@@ -1,0 +1,15 @@
+.sidebar_body{
+    width: 28%;
+    height: 100%;
+    
+    position: relative;
+    
+}
+.sidebar_search{
+    width: 100%;
+  
+    max-width: 100vh;
+    display: flex;
+    position: relative;
+  
+}

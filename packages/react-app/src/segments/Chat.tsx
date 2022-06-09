@@ -1,12 +1,9 @@
 import React, { useState } from "react";
 import styled, { useTheme } from "styled-components";
 
-import Loader from "react-loader-spinner";
 import {ThemeProvider} from "styled-components";
 
-import ChatPrimary from "components/chat/ChatPrimary";
-import ChatDisplayer from "components/chat/ChatDisplayer";
-
+import W2wIndex from 'components/chat/w2wChat/w2wIndex';
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 // Create Header
@@ -17,8 +14,7 @@ function Chat() {
       <ThemeProvider theme={themes}>
         <Container>
           <ItemH>
-            <ChatPrimary />
-            <ChatDisplayer />
+            <W2wIndex/>
           </ItemH>
         </Container>
       </ThemeProvider>
@@ -29,14 +25,13 @@ function Chat() {
 const Container = styled.div`
   display: flex;
   flex: 1;
-  flex-direction: column;
-  background: ${props => props.theme.backgroundBGLucid};
-
+  position:'fixed';
+  background:'blue';
   font-weight: 200;
   align-content: center;
   align-items: stretch;
   justify-content: center;
-  height: inherit;
+  height: 83.6vh;
 
 `;
 

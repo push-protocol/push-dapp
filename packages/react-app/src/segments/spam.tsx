@@ -406,6 +406,7 @@ function SpamBox({ currentTab }) {
               return (
                 <div key={index}>
                   {showWayPoint(index) && !loading && (
+                    //@ts-ignore
                     <Waypoint onEnter={handlePagination} />
                   )}
                   <NotificationItem

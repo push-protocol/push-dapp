@@ -1,0 +1,75 @@
+.defaultMessage_body{
+    width: 100%;
+    height: 5rem;
+    
+    background: rgb(255, 255, 255);
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    flex-direction: row;
+}
+.defaultMessage_body:hover
+{
+    background-color: rgb(238, 234, 234);
+}
+.defaultMessage_body:focus{
+    background: aqua;
+}
+.defaultMessage_1{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+.defaultMessage_2{
+    
+    display: flex;
+    flex-direction: row;
+}
+.defaultMessage_3{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.defaultMessage_lastMsg{
+    font-size: 1.1rem;
+    color: rgb(124, 119, 119);
+    position: relative;
+    top: -.2rem;
+    left: 0.7rem;
+}
+.defaultMessage_img img{
+    border-radius: 20%;
+    width: 50%;
+    height: 2.8rem;
+    top: 0.8rem;
+    left: 0.5rem;
+    position: relative;
+    display: flex;
+    
+
+}
+.defaultMessage_img{
+    width: 25%;
+   
+    display: flex;
+    position: relative;
+
+}
+.defaultMessage_name{
+    font-size: 1.2rem;
+    width: 50%;
+    position: relative;
+    display: flex;
+    text-align: left;
+    left: -1rem;
+    top: 0.8rem;
+}
+.defaultMessage_time{
+    font-size: 1rem;
+    position: relative;
+    display: flex;
+    text-align: right;
+    opacity: 0.5;
+    
+    top: 0.8rem;
+}

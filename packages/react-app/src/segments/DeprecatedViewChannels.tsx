@@ -192,6 +192,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                     <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser}/>
                   </div>
                   {showWayPoint(index) && (
+                    //@ts-ignore
                     <Waypoint onEnter={updateCurrentPage} />
                   )}
                 </>

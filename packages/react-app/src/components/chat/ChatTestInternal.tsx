@@ -55,6 +55,7 @@ function LoginIDX() {
     try {
       // Using the Ceramic client instance, we can load the link for a given CAIP-10 account
       const link = await getDIDFromWallet(ceramicInstance, account, chainId);
+      console.log(link,'link');
       // The `did` property of the loaded link will contain the DID string value if set
       setLink(link);
     }

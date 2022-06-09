@@ -1,0 +1,156 @@
+.chatBox_body{
+    width: 75%;
+    height: 100vh;
+}
+.chatBox_body img{
+    width: 100%;
+    height: 99.7%;
+}
+
+.chatBoxNavBar{
+    width: 75%;
+    height: 8vh;
+    position: absolute;
+    z-index: 400;
+    display: flex;
+    background-color: rgb(255, 255, 255);
+    border-bottom: 1px rgb(80, 79, 79) solid;
+    border-radius: 3px;   
+}
+
+.chatBoxEpnsLogo{
+    position: absolute;
+    left: 46vw;
+    top: 0.5rem;
+}
+.chatBoxEpnsLogo img{
+    width: 6rem;
+
+}
+.chatBoxUserName{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+.chatBoxUserName img{
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 20%;
+   
+}
+.askForIntent{
+    display: flex;
+    font-size: 2rem;
+    position: relative;
+    justify-content: center;
+    text-align: end;
+    
+    width: 100%;
+    height: 100%;
+}
+.askForIntent p{
+    text-align: end;
+    position: absolute;
+    border: 1px solid rgb(25, 66, 92);
+    padding: 10px;
+    
+    border-radius: 8px;
+    color: white;
+    background-color: rgb(66, 133, 83);
+    top: 35%;
+}
+
+.chatBoxWallet{
+    font-weight: 510;
+    font-size: 1.2rem;
+    position: relative;
+    top: -1.5rem;
+    margin-left: 15px;
+}
+.chatBoxNavDetail{
+    position: relative;
+    top: 1rem;
+    display: flex;
+    flex-direction: row;
+}
+.chatBoxNavDetail i{
+    position: relative;
+    top: -0.2rem;
+    margin-left: 5px;
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+.chatBoxTop{
+    height: 65%;
+    overflow-y: scroll;
+    padding-top: 10vh;
+    padding-right: 10px;
+    background-image: url('../w2wAsset/bg.png');
+    
+}
+.chatBoxBottom {
+    
+    height: 50px;
+    display: flex;
+
+    align-items: center;
+    border-radius: 20px;
+    padding:6px;
+    justify-content: space-between;
+}
+
+.chatMessageInput{
+    width: 80%;
+    height: 39px;
+    padding: 10px;
+    border-radius: 10px;
+    outline: none;
+    border:1px solid black;
+    border-style: none;
+    resize: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    
+    resize: none;
+
+}
+.chatSubmitButton {
+    width: 10rem;
+    height: 3rem;
+    border: none;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    
+    margin-right: 2rem;
+    background-color: rgb(121, 96, 134);
+    color: white;
+}
+
+.emojiButton{
+    width: 3rem;
+    height: 3rem;
+    border: none;
+    border-radius: 5px;
+    position: relative;
+    left: 0.5rem;
+    background-color: transparent;
+    cursor: pointer;
+    font-weight: 100;
+}
+.emojiButton i{
+    font-size: 3rem;
+    position: absolute;
+    left: 0rem;
+    top: 0;
+}
+.fa-smile::before{
+    content: "\f111";
+    color:#f1c40f;
+}
+
+.fa-smile::after{
+    left: 0;
+    position: absolute;
+    content: '\f118';
+}
