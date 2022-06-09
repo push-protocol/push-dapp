@@ -1073,7 +1073,7 @@ function SendNotifications() {
                                       <Item flex="0" margin="0px 5px 0px 0px">
                                           <BsFillImageFill
                                               size={24}
-                                              color="#fff"
+                                              color={theme.color}
                                           />
                                       </Item>
                                       <Item
@@ -1120,7 +1120,7 @@ function SendNotifications() {
                                       align="center"
                                   >
                                       <Item flex="0" margin="0px 5px 0px 0px">
-                                          <FiLink size={24} color="#fff" />
+                                          <FiLink size={24} color={theme.color} />
                                       </Item>
                                       <Item
                                           flex="1"
@@ -1270,7 +1270,7 @@ function SendNotifications() {
   `;
 
   const DropdownHeader = styled.div`
-  color: black;
+  color: ${props => props.theme.color || "#000"};
   padding: 10px;
   letter-spacing: 3px;
   font-size: 14px;
