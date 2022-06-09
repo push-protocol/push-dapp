@@ -672,9 +672,10 @@ function CreateChannel() {
                         required
                         placeholder="Your Channel Name"
                         maxlength="40"
+                        maxllength="100%"
                         padding="12px"
                         weight="400"
-                        size="1.2em"
+                        size="1em"
                         bg="#fff"
                         value={channelName}
                         onChange={(e) => {
@@ -825,7 +826,7 @@ function CreateChannel() {
                         style={{
                           marginLeft: "15px",
                           marginRight: "15px",
-                          marginTop: "8px",
+                          marginTop: "12px",
                           marginBottom: "12px",
                         }}
                       >
@@ -967,7 +968,7 @@ const SpanR = styled.div`
   color: white;
   z-index: 1;
   // height: 0.2rem;
-  margin-bottom: 1px;
+  margin-bottom: 10px;
   background: #e20880;
   border-radius: 20px;
   align-items: center;
