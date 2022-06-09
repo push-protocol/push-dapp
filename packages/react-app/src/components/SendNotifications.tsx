@@ -35,10 +35,11 @@ const ethers = require("ethers");
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
   { value: "1", label: "Broadcast (IPFS Payload)" },
-  // { value: "2", label: "Secret (IPFS Payload)" },
-  { value: "3", label: "Targetted (IPFS Payload)" },
+  // { value: "2", label: "Old Secret (IPFS Payload)" },
+  { value: "3", label: "Targeted (IPFS Payload)" },
   { value: "4", label: "Subset (IPFS Payload)" },
-  // { value: "5", label: "Offchain (Push)" },
+  { value: "5", label: "Secret (IPFS Payload)" },
+  // { value: "6", label: "Offchain (Push)" },
 ];
 const LIMITER_KEYS = ["Enter", ","];
 
@@ -197,25 +198,75 @@ function SendNotifications() {
           case "1":
               break;
 
-          // Targetted Notification
+          // Targeted Notification
           case "3":
               break;
 
+          // Old Secret Notification
+        //   case "2":
+        //       // Create secret
+        //       let secret = CryptoHelper.makeid(14);
+
+        //       // Encrypt payload and change sub and nfMsg in notification
+        //       nsub = "You have a secret message!";
+        //       nmsg = "Open the app to see your secret message!";
+
+        //       // get public key from EPNSCoreHelper
+        //       let k = await EPNSCoreHelper.getPublicKey(
+        //           nfRecipient,
+        //           epnsCommWriteProvider
+        //       );
+        //       if (k == null) {
+        //           // No public key, can't encrypt
+        //           setNFInfo(
+        //               "Public Key Registration is required for encryption!"
+        //           );
+        //           setNFProcessing(2);
+
+        //           toast.update(notificationToast, {
+        //               render: "Unable to encrypt for this user, no public key registered",
+        //               type: toast.TYPE.ERROR,
+        //               autoClose: 5000,
+        //           });
+
+        //           return;
+        //       }
+
+        //       let publickey = k.toString().substring(2);
+        //       //console.log("This is public Key: " + publickey);
+
+        //       secretEncrypted = await CryptoHelper.encryptWithECIES(
+        //           secret,
+        //           publickey
+        //       );
+        //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
+        //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
+        //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+        //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
+        //       break;
+
+          // Targeted Notification
+          case "4":
+              break;
+                
           // Secret Notification
-          case "2":
-              // Create secret
-              let secret = CryptoHelper.makeid(14);
+          case "5":
+                // Create secret
+              let secret = CryptoHelper.makeid(8);
 
               // Encrypt payload and change sub and nfMsg in notification
               nsub = "You have a secret message!";
-              nmsg = "Open the app to see your secret message!";
+              nmsg = "Click on Decrypt button to see your secret message!";
 
-              // get public key from EPNSCoreHelper
-              let k = await EPNSCoreHelper.getPublicKey(
-                  nfRecipient,
-                  epnsCommWriteProvider
-              );
-              if (k == null) {
+              // get public key from Backend API
+              let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
+                  address: nfRecipient,
+                  op: "read"
+              }).then(res => {
+                  return res.data?.encryption_key;
+              });
+
+              if (encryptionKey == null) {
                   // No public key, can't encrypt
                   setNFInfo(
                       "Public Key Registration is required for encryption!"
@@ -231,25 +282,21 @@ function SendNotifications() {
                   return;
               }
 
-              let publickey = k.toString().substring(2);
-              //console.log("This is public Key: " + publickey);
+              let publickey = encryptionKey;
 
-              secretEncrypted = await CryptoHelper.encryptWithECIES(
+              secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
                   secret,
                   publickey
               );
-              asub = CryptoHelper.encryptWithAES(nfSub, secret);
+            //   console.log(secretEncrypted);
+              if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
               amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-              acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-              aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-              break;
-
-          // Targetted Notification
-          case "4":
+              if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+              if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
               break;
 
           // Offchain Notification
-          case "5":
+          case "6":
               console.log(
                   nsub,
                   nmsg,
@@ -262,6 +309,7 @@ function SendNotifications() {
               );
 
               break;
+          
           default:
               break;
       }
@@ -274,7 +322,8 @@ function SendNotifications() {
           nfType === "1" ||
           nfType === "2" ||
           nfType === "3" ||
-          nfType === "4"
+          nfType === "4" ||
+          nfType === "5"
       ) {
           // Checks for optional fields
           if (nfSubEnabled && isEmpty(nfSub)) {
@@ -371,7 +420,8 @@ function SendNotifications() {
           nfType === "1" ||
           nfType === "2" ||
           nfType === "3" ||
-          nfType === "4"
+          nfType === "4" ||
+          nfType === "5"
       ) {
           // Prepare Identity and send notification
           const identity = nfType + "+" + storagePointer;
@@ -411,6 +461,14 @@ function SendNotifications() {
                   title: asub,
               },
           };
+
+          if (nfType === "5" || nfType === "2") {
+              payload.notification = {
+                  body: nmsg,
+                  title: nsub
+              };
+              payload.data.secret = secretEncrypted;
+          }
 
           const message = payload.data;
           console.log(payload, "payload");
@@ -509,7 +567,7 @@ function SendNotifications() {
           //     setNFProcessing(0);
           //   });
       }
-      if (nfType === "5") {
+      if (nfType === "6") {
           // const jsonPayload = {
           //   notification: {
           //     title: nsub,
@@ -626,7 +684,7 @@ function SendNotifications() {
   return (
       <>
           <Section>
-              <Content padding="10px 20px 20px">
+              <Content padding="10px 30px 20px">
                   <Item align="flex-start">
                       <H2 textTransform="uppercase" spacing="0.1em">
                           <Span weight="200" style={{color : theme.color}}>Send </Span>
@@ -641,9 +699,9 @@ function SendNotifications() {
                       </H2>
                       {!isChannelDeactivated ? (
                           <H3 style={{color : theme.color}}>
-                              EPNS supports three types of notifications (for
-                              now!). <b>Groups</b>, <b>Subsets</b>, and{" "}
-                              <b>Targetted</b>
+                              EPNS supports four types of notifications (for
+                              now!). <b>Groups</b>, <b>Subsets</b>, <b>Targeted</b>, and{" "}
+                              <b>Secret</b>
                               {/* and{" "} <b>Subsets</b>. */}
                           </H3>
                       ) : (
@@ -669,7 +727,7 @@ function SendNotifications() {
                               onSubmit={handleSendMessage}
                           >
                               <Item
-                                  margin="0px 20px"
+                                  margin="0px 30px"
                                   flex="1"
                                   self="stretch"
                                   align="stretch"
@@ -1015,7 +1073,7 @@ function SendNotifications() {
                                       <Item flex="0" margin="0px 5px 0px 0px">
                                           <BsFillImageFill
                                               size={24}
-                                              color="#000"
+                                              color={theme.color}
                                           />
                                       </Item>
                                       <Item
@@ -1062,7 +1120,7 @@ function SendNotifications() {
                                       align="center"
                                   >
                                       <Item flex="0" margin="0px 5px 0px 0px">
-                                          <FiLink size={24} color="#000" />
+                                          <FiLink size={24} color={theme.color} />
                                       </Item>
                                       <Item
                                           flex="1"
@@ -1212,7 +1270,7 @@ function SendNotifications() {
   `;
 
   const DropdownHeader = styled.div`
-  color: black;
+  color: ${props => props.theme.color || "#000"};
   padding: 10px;
   letter-spacing: 3px;
   font-size: 14px;

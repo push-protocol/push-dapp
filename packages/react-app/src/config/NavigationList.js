@@ -257,7 +257,7 @@ const NavigationList = {
             name: "Learn to Govern",
             title: "Learn to Govern",
             alt: "Learn to Govern",
-            href: ' https://docs.epns.io/epns-governance/governance-guide',
+            href: 'https://docs.epns.io/governance/epns-governance/governance-guide',
             newTab: false,
             isRoute: false,
             hasMenuLogic: true,

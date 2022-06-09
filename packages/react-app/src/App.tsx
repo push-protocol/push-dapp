@@ -24,7 +24,7 @@ import GLOBALS from "config/Globals";
 
 import {setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
-import UserJourneySteps from "segments/userJourneySteps.jsx";
+import UserJourneySteps from "segments/userJourneySteps";
 import { getPushToken, onMessageListener } from "./firebase";
 
 import * as dotenv from "dotenv";
@@ -209,14 +209,14 @@ export default function App() {
           steps={steps}
           continuous={tutorialContinous}
           stepIndex={stepIndex}
-          hideFooter={true}
-          primaryProps={false}
+          // hideFooter={true}
+          // primaryProps={false}
           hideBackButton={true}
           hideCloseButton={false}
           disableScrolling={true}
           disableScrollParentFix={true}
-          disableFlip={true}
-          showNextButton={false}
+          // disableFlip={true}
+          // showNextButton={false}
           showSkipButton={false}
           disableOverlayClose={true}
           callback={handleJoyrideCallback}
@@ -227,7 +227,6 @@ export default function App() {
               overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
               primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
               textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-              minWidth: 280,
               zIndex: 1000,
             },
           }}

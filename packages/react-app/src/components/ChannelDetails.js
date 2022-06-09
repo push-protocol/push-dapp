@@ -5,12 +5,11 @@ import { envConfig } from "@project/contracts";
 import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { useWeb3React } from "@web3-react/core";
+import ShowDelegates from "./ShowDelegates";
 const DATE_FORMAT = "DD/MM/YYYY";
 
 export default function ChannelDetails() {
   const theme = useTheme();
-  const { library } = useWeb3React();
   const { channelDetails, canVerify } = useSelector((state) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
     (state) => state.channels
@@ -42,7 +41,6 @@ export default function ChannelDetails() {
       setCreationDate(date.format(DATE_FORMAT))
     })();
   }, [channelDetails]);
-  
 
   return (
     <ChannelDetailsWrapper>
@@ -87,6 +85,10 @@ export default function ChannelDetails() {
           <span style={{ marginLeft: "10px" }}>{creationDate}</span>
         </Date>
       </SectionDate>
+
+      <hr />
+
+      <ShowDelegates />
 
       <hr />
     </ChannelDetailsWrapper>

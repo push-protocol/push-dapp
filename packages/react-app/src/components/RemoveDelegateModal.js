@@ -1,18 +1,19 @@
 import React, {useRef, useState} from 'react';
 import { useClickAway } from 'react-use';
-import styled from 'styled-components';
+import styled, {useTheme} from 'styled-components';
 import Loader from 'react-loader-spinner';
 
 import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
+import { ThemeProvider } from "styled-components";
 
 
 
 export default function RemoveDelegateModal({
-    onClose,onSuccess, removeDelegate
+    onClose,onSuccess, removeDelegate, address=""
 }) {
-
+    const themes = useTheme();
     const modalRef = useRef(null);
-    const [mainAdress, setMainAddress] = useState('');
+    const [mainAdress, setMainAddress] = useState(address);
     const [loading, setLoading] = useState('');
 
     // Form signer and contract connection
@@ -44,13 +45,14 @@ export default function RemoveDelegateModal({
     
 
     return (
-        <Overlay>
-            <AliasModal ref={modalRef}>
+        <ThemeProvider theme={themes}>
+             <Overlay>
+            <AliasModal ref={modalRef} background={themes}>
                 <Item align="flex-start">
                     <H2 textTransform="uppercase" spacing="0.1em">
-                    <Span weight="200">Remove </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
+                    <Span weight="200" color={themes.fontColor}>Remove </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
                     </H2>
-                    <H3>Remove an account who can send notifications on your behalf.</H3>
+                    <H3 color={themes.fontColor}>Remove an account who can send notifications on your behalf.</H3>
                 </Item>
                 <Item align="flex-start">
                     <CustomInput
@@ -60,6 +62,7 @@ export default function RemoveDelegateModal({
                         padding="12px"
                         border="1px solid #674c9f"
                         bg="#fff"
+                        // bg = {themes.scheme=="dark" ? "#000" : "#fff"}
                         value={mainAdress}
                         onChange={(e) => {setMainAddress(e.target.value)}}
                     />
@@ -92,6 +95,8 @@ export default function RemoveDelegateModal({
                 </Item>
             </AliasModal>
         </Overlay>
+        </ThemeProvider>
+       
     )
 }
 
@@ -124,5 +129,5 @@ const Overlay = styled.div`
 
 const AliasModal = styled.div`
     padding: 20px 30px;
-    background: white;
+    background: ${props => props.theme.scheme === "dark" ? `black` :`white`};
 `;
