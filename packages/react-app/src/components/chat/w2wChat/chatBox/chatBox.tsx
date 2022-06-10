@@ -1,5 +1,4 @@
-
-import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
+import React,{useState,useContext,useEffect,useRef,useCallback} from 'react';
 import './chatBox.css';
 //@ts-ignore
 import defaultChat from '../w2wAsset/default.png';
@@ -20,7 +19,7 @@ interface Message {
     wallet: string
 }
 
-const ChatBox = ()=>{
+const ChatBox = () => {
     const { currentChat, viewChatBox } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
     const [arrivalMessage, setArrivalMessage] = useState(null);
