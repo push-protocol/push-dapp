@@ -19,12 +19,12 @@ import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import './w2wIndex.css';
 interface Feeds{
-  wallet:string,
-  lastMessage:string,
-  avatar:string,
-  time:string,
-  did:string,
-  intent:boolean
+    name:string,
+    lastMessage:string,
+    profile_picture:string,
+    time:string,
+    intent:Boolean
+   
 }
 interface AppContextInterface{
   currentChat:Feeds,viewChatBox:boolean

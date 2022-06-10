@@ -11,7 +11,7 @@
     background-color: white;
     width: 220px;
     color: black;
-    left: 30rem;
+    left: 10rem;
     border-radius: 10px;
     box-sizing: border-box;
     border: 2px solid black;
@@ -33,11 +33,16 @@
     color: rgb(38, 36, 36);
     padding: 2px;
     position: relative;
-    font-size: 2rem;
+    font-size: 1.2rem;
     width: 100%;
     text-align: center;
-
+    left: -1rem;
     font-family: sans-serif;
+}
+.dropdown_menu ul li i{
+    font-size: 1.2rem;
+    position: relative;
+    top: 0.1rem;
 }
 .dropdown_menu ul li:nth-child(1){
     position: relative;
@@ -53,4 +58,5 @@
 
 .dropdown_menu ul li:hover{
     color: red;
+    cursor: pointer;
 }

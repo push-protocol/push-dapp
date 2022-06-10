@@ -1,7 +1,7 @@
 
-export const getPrevMessages = async (CombinedDid:string)=>{
+export const getInbox = async (Did:string)=>{
     try{
-        const response = await fetch('/api/w2w/getMessages/'+CombinedDid);
+        const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/'+Did);
         const data:any = await response.json();
         return data;
     }

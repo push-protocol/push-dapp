@@ -12,7 +12,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 
 import Picker from 'emoji-picker-react';
-import {getPrevMessages,postMessageToServer,getArrivalMessage} from '../../../../helpers/w2wChatHelper';
+import {postMessageToServer,getArrivalMessage} from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 interface Message {
     time:number,
@@ -104,11 +104,11 @@ const  ChatBox = ()=>{
                         <div className='chatBoxNavBar'>
                             <div className='chatBoxUserName'>
                                     <img
-                                        src = {test}
+                                        src = {currentChat.profile_picture}
                                         alt=""
                                     />
                                     <div className='chatBoxNavDetail'>
-                                        <p className='chatBoxWallet'>0x03faC3dB99f382ffF7c796ccec63CC9360250743</p>
+                                        <p className='chatBoxWallet'>{currentChat.name}</p>
                                         <div>
                                             {currentChat.intent ? (
                                                 <Dropdown/>
