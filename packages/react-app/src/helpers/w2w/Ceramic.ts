@@ -18,4 +18,5 @@ export async function getDIDFromWallet(ceramicClient: CeramicClient, walletAddre
     walletAddress + '@eip155:1'
   )
   return link.did;
+
 }

@@ -3,8 +3,11 @@ import Sidebar from './sidebar/sidebar';
 import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
 //Helper
-import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic'
+import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
+import {encrypt,decrypt} from '../../../helpers/w2w/Did';
+import {generateKeyPair} from '../../../helpers/w2w/PGP';
 import * as DIDHelpers from '../../../helpers/w2w/Did';
+import {getKeys,updateKeys,randomString,createUser} from '../../../helpers/w2wChatHelper';
 //DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
 import { DID } from 'dids'
@@ -19,15 +22,15 @@ import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import './w2wIndex.css';
 interface Feeds{
-  wallet:string,
-  lastMessage:string,
-  avatar:string,
-  time:string,
-  did:string,
-  intent:boolean
+    name:string,
+    lastMessage:string,
+    profile_picture:string,
+    time:string,
+    intent:Boolean
+   
 }
 interface AppContextInterface{
-  currentChat:Feeds,viewChatBox:boolean
+  currentChat:Feeds,viewChatBox:boolean,getLinkWallets:(account:string)=>Promise<string>
 }
 export const Context = React.createContext<AppContextInterface | null>(null)
 function App(){
@@ -56,11 +59,40 @@ function App(){
       const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
       console.log(did);
       setDid(did);
-    
       setIsLoading(false);
       setCeramicInstance(ceramic);
+      const response = await getKeys(did.id);
+      console.log(response);
+      if(response===null)
+      {   
+          const userDetails = await createUser(did.id);
+          console.log(userDetails);
+          localStorage.setItem('name',userDetails.name);
+          localStorage.setItem('avatar',userDetails.profile_picture);
+          const randomstring = randomString();
+          const keyPairs = await generateKeyPair(randomstring);
+          const encrypted = await encrypt(keyPairs.privateKey,did);
+          console.log(encrypted);
+          const decrypted = await decrypt(encrypted,did);
+          console.log(decrypted);
+          //await updateKeys(did.id,keyPairs.privateKey,keyPairs.publicKey);
+          
+      }
+      console.log(response);
     };
-  
+
+    const getLinkWallets = async (account:string):Promise<string> => {
+      try {
+        // Using the Ceramic client instance, we can load the link for a given CAIP-10 account
+        const link = await getDIDFromWallet(ceramicInstance, account, 1);
+        console.log(link,'link');
+        // The `did` property of the loaded link will contain the DID string value if set
+        return link;
+      }
+      catch(e) {
+        console.log(e);
+      }
+    };
     const setChat = (text:Feeds)=>{
       console.log(text);
       setViewChatBox(true);
@@ -70,7 +102,7 @@ function App(){
     return (
         <div className="w2wIndex">
           {!isLoading &&
-            <Context.Provider value = {{currentChat,viewChatBox}}>
+            <Context.Provider value = {{currentChat,viewChatBox,getLinkWallets}}>
                 <Sidebar setChat = {setChat}/>
                 <ChatBox/>
             </Context.Provider>
