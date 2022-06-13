@@ -28,7 +28,7 @@ import Switch from "@material-ui/core/Switch";
 import { useWeb3React } from "@web3-react/core";
 
 import { CloseIcon } from "assets/icons";
-import PreviewNotifModal from "./PreviewNotifModal";
+import PreviewNotif from "./PreviewNotif";
 import CryptoHelper from "helpers/CryptoHelper";
 const ethers = require("ethers");
 
@@ -72,7 +72,6 @@ function SendNotifications() {
   const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
   const [nfInfo, setNFInfo] = React.useState("");
   const [delegateeOptions, setDelegateeOptions] = React.useState([]);
-  const [previewNotifModalOpen, setPreviewNotifModalOpen] = React.useState(false);
 
   const isChannelDeactivated = channelDetails
       ? channelDetails.channelState === CHANNNEL_DEACTIVATED_STATE
@@ -117,17 +116,17 @@ function SendNotifications() {
         return true;
     };
 
-    const previewNotif = (e: any) => {
-        e.preventDefault();
-        if(isAllFieldsFilled())
-            setPreviewNotifModalOpen(true)
-        else {
-            setNFInfo("Please fill all fields to preview");
-            setTimeout(() => {
-                setNFInfo('');
-            }, 2000);
-        }
-    }
+    // const previewNotif = (e: any) => {
+    //     e.preventDefault();
+    //     if(isAllFieldsFilled())
+    //         setPreviewNotifModalOpen(true)
+    //     else {
+    //         setNFInfo("Please fill all fields to preview");
+    //         setTimeout(() => {
+    //             setNFInfo('');
+    //         }, 2000);
+    //     }
+    // }
 
   // on change for the subset type notifications input
   const handleSubsetInputChange = (e: any) => {
@@ -1205,6 +1204,17 @@ function SendNotifications() {
                                   </Item>
                               )}
 
+                                
+                                   {nfType && (<PreviewNotif
+                                        details={{
+                                            acta: nfCTA,
+                                            aimg: nfMedia,
+                                            amsg: nfMsg,
+                                            asub: nfSub,
+                                            type: nfType,
+                                        }}
+                                    />)}
+
                               {nfType && (
                                   <Item
                                       margin="15px 0px 0px 0px"
@@ -1213,7 +1223,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
-                                      <Button
+                                      {/* <Button
                                           bg="#35C5F3"
                                           color="#fff"
                                           flex="0.5"
@@ -1226,12 +1236,12 @@ function SendNotifications() {
                                           onClick={(e) => previewNotif(e)}
                                       >
                                         Preview Notification
-                                      </Button>
+                                      </Button> */}
 
                                       <Button
                                           bg="#e20880"
                                           color="#fff"
-                                          flex="0.5"
+                                          flex="1"
                                           radius="0px"
                                           padding="20px 10px"
                                           disabled={
@@ -1264,18 +1274,7 @@ function SendNotifications() {
                           </FormSubmision>
                       </Item>
                   </ModifiedContent>
-                    {previewNotifModalOpen && (
-                        <PreviewNotifModal
-                            onClose={(val) => setPreviewNotifModalOpen(val)}
-                            details={{
-                                acta: nfCTA,
-                                aimg: nfMedia,
-                                amsg: nfMsg,
-                                asub: nfSub,
-                                type: nfType,
-                            }}
-                        />
-                    )}
+                  
               </Section>
           )}
       </>
