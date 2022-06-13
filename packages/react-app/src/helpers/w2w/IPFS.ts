@@ -13,5 +13,6 @@ export async function store(content: JWE, ipfs: IPFSHTTPClient): Promise<CID> {
 export async function get(cid: string, ipfs: IPFSHTTPClient): Promise<JWE> {
   const cidObject = CID.parse(cid);
   const jwe = (await ipfs.dag.get(cidObject)).value;
+  console.log(jwe);
   return jwe;
 }

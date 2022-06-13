@@ -39,6 +39,7 @@
 .search{
   width: 100%;
   display: flex;
+  
 }
 .searchBody{
   display: flex;
@@ -51,6 +52,7 @@
   position: relative;
   margin-top: 10px;
   width: 100%;
+ 
   overflow-x: hidden;
   position: absolute;
   max-height: 77vh;

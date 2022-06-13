@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useEffect, useState,useCallback,useContext} from 'react';
 import './searchBar.css';
 //@ts-ignore
 import SearchIcon from "@material-ui/icons/Search";
@@ -7,87 +7,99 @@ import CloseIcon from "@material-ui/icons/Close";
 import MessageFeed from '../messageFeed/messageFeed';
 import {getAllWallets} from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
+import {Context} from '../w2wIndex';
 
 interface Feeds{
-    wallet:string,
-    lastMessage:string,
-    avatar:string,
-    time:string,
+    name:string,
+    lastMessage:string | null,
+    profile_picture:string,
+    time?:string,
     did?:string,
     intent?:boolean
 }
 
 const SearchBar = (props: { setChat: any; })=>{
+    const {getLinkWallets} = useContext(Context);
     const [wordEntered,setWordEntered] = useState<string>('');
-    const [data,setData] = useState<Feeds[]>([{wallet:'0xb4aB2...702e1',lastMessage:'Hello, how are u? wefwf ervesrv',avatar:'s',time:`5/27/2022`}]);
+    const [data,setData] = useState<Feeds[]>([])
     const [error,setError] = useState<string>(null);
     const [filteredUserData,setFilteredUserData] = useState<any>([]);
     const [isValid,setIsValid] = useState<boolean>(false);
     const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
     var web3 = new Web3(provider);
     var ENS = web3.eth.ens;
-    /*useEffect(()=>{
+    const getAllUsers = useCallback(async ()=>{
+        const responseData = await getAllWallets();
+        setData(responseData);
+    },[])
+    useEffect(()=>{
         //getting all the wallets from server
-        //const responseData = await getAllWallets();
-        //setData(responseData);
+        getAllUsers();
         
-    },[]);*/
+    },[]);
     const searchFromDb = (address:string)=>{
             let filteredData = [];
             if(address.length)
             {
                 filteredData = data.filter(details=>{
                     return (
-                        details.wallet.trim().includes(address.trim())
+                        details.did.trim().includes(address.trim())
                     )
                 });
-               
-            }        
+                setIsValid(true);
+                if(filteredData.length)
+                {
+                    
+                    setFilteredUserData(filteredData);
+                }
+                else{
+                    
+                    setFilteredUserData([]);
+                    
+                }
+                }        
             else
             {
                 setIsValid(false);
                 setFilteredUserData([]);
                 setWordEntered("");
             }
-            if(filteredData.length)
-            {
-                setIsValid(true);
-                setFilteredUserData(filteredData);
-            }
-            else{
-                
-                setFilteredUserData([]);
-                
-            }
+            
     }
     const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>)=>{
         let searchAddress = event.target.value;
+       
         setWordEntered(searchAddress);
         searchFromDb(searchAddress);
+        
         
     }
     const submitSearch = async (event)=>{
         event.preventDefault();
         try{
-            console.log(event,wordEntered);
             if(!web3.utils.isAddress(wordEntered))
             {
                 const address:string = await ENS.getAddress(wordEntered);
-             
-                searchFromDb(address);
+                console.log(address);
+                const did = await getLinkWallets(address);
+                if(did===null)
+                {
+                    searchFromDb('');
+                }
+                else{
+                    searchFromDb(did);
+                }
             }
             else{
-                searchFromDb(wordEntered);
-            }
-            
-            
+                const did = await getLinkWallets(wordEntered);
+                searchFromDb(did);
+            }   
         }
         catch(err)
         {
-
-            console.log(err);
+            setFilteredUserData([]);
+            console.log(err,"hello");
         }
-        
     }
     const clearInput = () => {
         setFilteredUserData([]);
@@ -96,7 +108,7 @@ const SearchBar = (props: { setChat: any; })=>{
         setIsValid(false);
       };
     return (
-        <div role="search" >
+        <div className="search" >
             <form onSubmit = {submitSearch}>
                 <div className="searchInputs">
                     <input
