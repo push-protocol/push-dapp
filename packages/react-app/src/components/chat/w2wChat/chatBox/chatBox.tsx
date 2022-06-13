@@ -11,7 +11,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 
 import Picker from 'emoji-picker-react';
-import { postMessageToServer } from '../../../../helpers/w2wChatHelper';
+import {postMessageToServer,getArrivalMessage} from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
@@ -99,16 +99,16 @@ const ChatBox = () => {
                     <>
                         <div className='chatBoxNavBar'>
                             <div className='chatBoxUserName'>
-                                <img
-                                    src={test}
-                                    alt=""
-                                />
-                                <div className='chatBoxNavDetail'>
-                                    <p className='chatBoxWallet'>0x03faC3dB99f382ffF7c796ccec63CC9360250743</p>
-                                    <div>
-                                        {currentChat.intent !== 'Pending' ? (
-                                            <Dropdown />
-                                        ) :
+                                    <img
+                                        src = {currentChat.profile_picture}
+                                        alt=""
+                                    />
+                                    <div className='chatBoxNavDetail'>
+                                        <p className='chatBoxWallet'>{currentChat.name}</p>
+                                        <div>
+                                            {currentChat.intent ? (
+                                                <Dropdown/>
+                                            ):
                                             null
                                         }
                                     </div>

@@ -1,7 +1,7 @@
 .defaultMessage_body{
     width: 100%;
     height: 5rem;
-    
+    border-bottom: 0.5px solid rgb(242, 242, 242);
     background: rgb(255, 255, 255);
     display: flex;
     cursor: pointer;
@@ -39,8 +39,8 @@
 }
 .defaultMessage_img img{
     border-radius: 20%;
-    width: 50%;
-    height: 2.8rem;
+    width: 80%;
+    height: 4.2rem;
     top: 0.8rem;
     left: 0.5rem;
     position: relative;
@@ -56,12 +56,14 @@
 
 }
 .defaultMessage_name{
-    font-size: 1.2rem;
-    width: 50%;
+    font-size: 1.1rem;
+    width: 100%;
+    opacity: 0.9;
     position: relative;
     display: flex;
     text-align: left;
-    left: -1rem;
+    left: 0rem;
+    font-family: Helvetica;
     top: 0.8rem;
 }
 .defaultMessage_time{
