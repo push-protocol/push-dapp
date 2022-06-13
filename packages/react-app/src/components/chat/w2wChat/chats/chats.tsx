@@ -29,10 +29,8 @@ export default function Chats(props: chatProps) {
                     <div className='chatText'>
                         <p >{props.text}</p>
                     </div>
-
                 </div>
             </div>
-
         </div>
     )
 }

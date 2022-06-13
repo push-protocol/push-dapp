@@ -36,19 +36,24 @@ const ChatBox = () => {
             return;
         }
 
+        setMessages([]);
+        let messagesChat: Message[] = [];
+
         while (messageCID) {
             const current = await IPFSHelper.get(messageCID, ipfs);
-            const msg: MessageIPFS = JSON.parse(new TextDecoder('utf-8').decode(current));
-            const messageChat: Message = { time: msg.timestamp, text: msg.messageContent, wallet: msg.fromWallet }
-            const updateMessage = [...messages, messageChat];
-            setMessages(updateMessage);
-            const link = msg.link;
+            const msgIPFS: MessageIPFS = current as MessageIPFS
+            const msgChat: Message = { time: msgIPFS.timestamp, text: msgIPFS.messageContent, wallet: msgIPFS.fromWallet }
+
+            console.log(messagesChat);
+            messagesChat = [...messages, msgChat];
+            const link = msgIPFS.link;
             if (link) {
                 messageCID = link;
             } else {
                 break;
             }
         }
+        setMessages(messagesChat);
     }
 
     const scrollRef: any = useRef();

@@ -1,15 +1,16 @@
 import { randomBytes } from '@stablelib/random';
 import { toString } from 'uint8arrays/to-string';
 export const getInbox = async (Did:string)=>{
-    try{
-        const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/'+Did);
-        const data:any = await response.json();
+    try {
+        const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/' + Did);
+        const data: any = await response.json();
         return data;
     }
-    catch(err){
+    catch (err) {
         console.log(err);
     }
 }
+
 export const postMessageToServer = async (time:number,text:string,wallet:string)=>{
     try {
         const response = await fetch('/api/w2w/postMessage', {
@@ -58,76 +59,72 @@ export const getPrevUsersFeed = async()=>{
         return data.messages;
     }
     catch (err) {
-        console.log(err);
+        console.error(err);
     }
 }
 
 export const getAllWallets = async ()=>{
-    try{
+    try {
         const response = await fetch('http://localhost:4000/apis/w2w/getUsers');
-        const data =  await response.json();
-        console.log(data);
+        const data = await response.json();
         return data;
     }
     catch (err) {
-
+        console.error(err);
     }
 }
-export const createUser = async (did:string)=>{
-    try{
-        const response  = await fetch('http://localhost:4000/apis/w2w/createUser',{
-            method:'PUT',
-            headers:{
-                "content-Type":'application/json'
+
+export const createUser = async (did: string, publicKey: string, encryptedPrivateKey: string) => {
+    try {
+        const response = await fetch('http://localhost:4000/apis/w2w/createUser', {
+            method: 'PUT',
+            headers: {
+                "content-Type": 'application/json'
             },
-            body:JSON.stringify({
-                did
+            body: JSON.stringify({
+                did,
+                publicKey,
+                encryptedPrivateKey
             })
         });
         const data = await response.json();
         return data;
     }
-    catch(err)
-    {
-
+    catch (err) {
+        console.error(err);
     }
 }
 
-export const getKeys = async (Did:string)=>{
-    try{
-        console.log("keys");
-        const response = await fetch('http://localhost:4000/apis/w2w/keys/did/'+Did);
-        const data:any = await response.json();
-        console.log(data);
+export const getKeys = async (Did: string) => {
+    try {
+        const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + Did);
+        const data: any = await response.json();
         return data;
-        
-       
     }
-    catch(err){
+    catch (err) {
         console.log(err);
     }
-
 }
 
 export const updateKeys = async (Did:string,privateKey:string,publicKey:string)=>{
-    try{
-        const response  = await fetch('http://localhost:4000/apis/w2w/keys/did/'+Did,{
-            method:'PUT',
-            headers:{
-                "content-Type":'application/json'
+    try {
+        const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + Did, {
+            method: 'PUT',
+            headers: {
+                "content-Type": 'application/json'
             },
-            body:JSON.stringify({
+            body: JSON.stringify({
                 publicKey,
-                privateKeyCID:privateKey
+                privateKeyCID: privateKey
             })
         });
         return response.json();
     }
-    catch(err)
-    {
-
+    catch (err) {
+        console.error(err);
     }
 }
+
 export function randomString() {
     return toString(randomBytes(16), 'base64');
 }
