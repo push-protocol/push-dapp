@@ -40,7 +40,6 @@ const ChatBox = () => {
         }
         setMessages([]);
         while (messageCID) {
-            console.log(messageCID)
             const current = await IPFSHelper.get(messageCID, ipfs);
             const msgIPFS: MessageIPFS = current as MessageIPFS
             const msg: IMessage = { content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp };
