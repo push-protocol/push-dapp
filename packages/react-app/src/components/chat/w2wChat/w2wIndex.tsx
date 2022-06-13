@@ -65,7 +65,6 @@ function App() {
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelpers.Get3IDDIDProvider(threeID, provider, account);
     const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
-    console.log(did);
     setDid(did);
     setIsLoading(false);
     setCeramicInstance(ceramic);
