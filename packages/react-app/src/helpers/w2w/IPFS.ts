@@ -13,7 +13,7 @@ export interface MessageIPFS {
 }
 
 export function createIPFSClient(): IPFSHTTPClient {
-  return create();
+  return create({ host: 'ipfs.infura.io', port: 5001, protocol: 'https' });
 }
 
 export async function store(content: JWE, ipfs: IPFSHTTPClient): Promise<CID> {
