@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './sidebar/sidebar';
 import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
@@ -7,7 +7,7 @@ import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
 import { encrypt, decrypt } from '../../../helpers/w2w/Did';
 import { generateKeyPair } from '../../../helpers/w2w/PGP';
 import * as DIDHelpers from '../../../helpers/w2w/Did';
-import { getKeys, updateKeys, randomString, createUser } from '../../../helpers/w2wChatHelper';
+import { getKeys, randomString, createUser } from '../../../helpers/w2wChatHelper';
 //DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
 import { DID } from 'dids'

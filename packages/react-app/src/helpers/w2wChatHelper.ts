@@ -1,5 +1,6 @@
 import { randomBytes } from '@stablelib/random';
 import { toString } from 'uint8arrays/to-string';
+
 export const getInbox = async (Did:string)=>{
     try {
         const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/' + Did);
@@ -35,37 +36,9 @@ export const postMessageToServer = async (time:number,text:string,wallet:string)
     }
 }
 
-export const getArrivalMessage = async ()=>{
-    try {
-        const response = await fetch('/api/w2w/arrivalMessage');
-        if (response.status !== 200) {
-            throw new Error("something went wrong")
-        }
-        const data: any = await response.json();
-        return data
-    }
-    catch (err) {
-        console.log(err);
-    }
-}
-
-export const getPrevUsersFeed = async()=>{
-    try {
-        const response = await fetch('api/w2w/allChats');
-        if (response.status !== 200) {
-            throw new Error("Failed");
-        }
-        const data: any = await response.json();
-        return data.messages;
-    }
-    catch (err) {
-        console.error(err);
-    }
-}
-
 export const getAllWallets = async ()=>{
     try {
-        const response = await fetch('http://localhost:4000/apis/w2w/getUsers');
+        const response = await fetch('http://localhost:4000/apis/w2w/users');
         const data = await response.json();
         return data;
     }
@@ -76,8 +49,8 @@ export const getAllWallets = async ()=>{
 
 export const createUser = async (did: string, publicKey: string, encryptedPrivateKey: string) => {
     try {
-        const response = await fetch('http://localhost:4000/apis/w2w/createUser', {
-            method: 'PUT',
+        const response = await fetch('http://localhost:4000/apis/w2w/user', {
+            method: 'POST',
             headers: {
                 "content-Type": 'application/json'
             },
@@ -103,25 +76,6 @@ export const getKeys = async (Did: string) => {
     }
     catch (err) {
         console.log(err);
-    }
-}
-
-export const updateKeys = async (Did:string,privateKey:string,publicKey:string)=>{
-    try {
-        const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + Did, {
-            method: 'PUT',
-            headers: {
-                "content-Type": 'application/json'
-            },
-            body: JSON.stringify({
-                publicKey,
-                privateKeyCID: privateKey
-            })
-        });
-        return response.json();
-    }
-    catch (err) {
-        console.error(err);
     }
 }
 

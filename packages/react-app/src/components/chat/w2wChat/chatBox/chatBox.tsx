@@ -11,7 +11,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 
 import Picker from 'emoji-picker-react';
-import {postMessageToServer,getArrivalMessage} from '../../../../helpers/w2wChatHelper';
+import { postMessageToServer } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
