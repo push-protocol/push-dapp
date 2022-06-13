@@ -2,33 +2,30 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import './messageFeed.css';
 import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
-//@ts-ignore
 import { getInbox } from '../../../../helpers/w2wChatHelper';
-import { createIPFSClient, get, store } from '../../../../helpers/w2w/IPFS';
-import { DID } from 'dids';
-import { Context } from '../w2wIndex';
+import { Context, Feeds } from '../w2wIndex';
 
 interface messageFeedProps {
     filteredUserData: {}[],
     setChat: (arg0: any) => void
 }
 
-interface Feeds {
+export interface InboxChat {
     name: string,
-    lastMessage: string,
-    profile_picture: string,
-    time: string,
-    intent: Boolean
+    avatar: string,
+    timestamp: number,
+    lastMessage: string
 }
 
 const MessageFeed = (props: messageFeedProps) => {
     const { did } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
+    const [inboxMessages, setInboxMessages] = useState<InboxChat[]>()
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
 
     const fetchMyApi = useCallback(async () => {
-        const response = await getInbox(did.id);
-        setFeeds(response);
+        const inbox: Feeds[] = await getInbox(did.id);
+        setFeeds(inbox);
         setMessagesLoading(true);
     }, [])
 
@@ -40,11 +37,9 @@ const MessageFeed = (props: messageFeedProps) => {
             setFeeds(props.filteredUserData);
         }
         setMessagesLoading(false);
-
     }, [props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
-        feed = { ...feed, intent: true }
         props.setChat(feed);
     }
 
@@ -65,13 +60,8 @@ const MessageFeed = (props: messageFeedProps) => {
                             (
                                 <div>
                                     {feeds.map((feed: Feeds) => (
-                                        <div onClick={() => { setCurrentChat(feed) }} >
-                                            <DefaultMessage
-                                                name={feed.name.split('-').toString().replace(/,/g, " ").charAt(0).toUpperCase() + feed.name.split('-').toString().replace(/,/g, " ").slice(1)}
-                                                lastMessage={feed.lastMessage}
-                                                time={feed.time}
-                                                avatar={feed.profile_picture}
-                                            />
+                                        <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
+                                            <DefaultMessage inbox={feed}/>
                                         </div>
                                     ))}
                                 </div>
@@ -84,4 +74,5 @@ const MessageFeed = (props: messageFeedProps) => {
     )
 
 }
+
 export default MessageFeed;

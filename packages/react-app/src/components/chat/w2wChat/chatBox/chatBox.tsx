@@ -5,31 +5,34 @@ import defaultChat from '../w2wAsset/default.png';
 import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
 // @ts-ignore
-import test from '../w2wAsset/test.jpg';
 import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 
 import Picker from 'emoji-picker-react';
-import { postMessageToServer } from '../../../../helpers/w2wChatHelper';
+import { postMessage } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
 
+import { Web3Provider } from "ethers/providers";
+import { useWeb3React } from "@web3-react/core";
+
 const ChatBox = () => {
-    const { currentChat, viewChatBox } = useContext(Context);
+    const { account } = useWeb3React<Web3Provider>();
+    const { currentChat, viewChatBox, did } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
-    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages, setMessages] = useState<IMessage[]>([]);
 
-    interface Message {
+    interface IMessage {
+        fromWallet: string,
         time: number,
-        text: string,
-        wallet: string
-    };
+        content: string
+    }
 
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
@@ -37,15 +40,16 @@ const ChatBox = () => {
         }
 
         setMessages([]);
-        let messagesChat: Message[] = [];
+        let messagesChat: IMessage[] = [];
 
         while (messageCID) {
+            console.log(messageCID)
             const current = await IPFSHelper.get(messageCID, ipfs);
             const msgIPFS: MessageIPFS = current as MessageIPFS
-            const msgChat: Message = { time: msgIPFS.timestamp, text: msgIPFS.messageContent, wallet: msgIPFS.fromWallet }
+            const msg: IMessage = { content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp };
+            console.log(msgIPFS)
 
-            console.log(messagesChat);
-            messagesChat = [...messages, msgChat];
+            messagesChat = [...messages, msg];
             const link = msgIPFS.link;
             if (link) {
                 messageCID = link;
@@ -71,10 +75,14 @@ const ChatBox = () => {
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
-            const msg = { time: Date.now(), text: newMessage, wallet: "0y03faC3d...743" }
-            // Send messages to server
-            const response = await postMessageToServer(Date.now(), newMessage, "0y03faC3d...743")
-            setMessages([...messages, msg]);
+            try {
+                await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
+                const msg: IMessage = { time: Date.now(), content: newMessage, fromWallet: account };
+                setMessages([...messages, msg]);
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
         setNewMessage("");
     }
@@ -124,21 +132,23 @@ const ChatBox = () => {
                             </div>
                         </div>
                         <div className='chatBoxTop'>
-                            {currentChat.intent ? (
-                                messages.map((msg: { time: any; text: string; wallet: string; }) => (
-                                    <div ref={scrollRef} >
-                                        <Chats time={msg.time} text={msg.text} wallet={msg.wallet} />
-                                    </div>
-                                ))
-                            )
-                                :
-                                (
-                                    <div className='askForIntent'>
-                                        <p>
-                                            Click here to send intent
-                                        </p>
-                                    </div>
-                                )
+                            {
+                                currentChat.intent ? (
+                                    React.Children.toArray(
+                                        messages.map((msg) => (
+                                            <div ref={scrollRef} >
+                                                <Chats time={msg.time} text={msg.content} wallet={msg.fromWallet} />
+                                            </div>
+                                        ))
+                                    )
+                                ) :
+                                    (
+                                        <div className='askForIntent'>
+                                            <p>
+                                                Click here to send intent
+                                            </p>
+                                        </div>
+                                    )
                             }
                         </div>
 
@@ -162,7 +172,7 @@ const ChatBox = () => {
                                 onEmojiClick={addEmoji}
                                 pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
                             />}
-                            <button className='chatSubmitButton' onClick={handleSubmit} >{currentChat.intent ? 'Send' : 'Send Intent'}</button>
+                            <button className='chatSubmitButton' onClick={handleSubmit}>{currentChat.intent ? 'Send' : 'Send Intent'}</button>
                         </div>
                     </>
                 )
