@@ -33,7 +33,6 @@ const MessageFeed = (props: messageFeedProps) => {
     }, [])
 
     useEffect(() => {
-        console.log(props);
         if (!props.filteredUserData?.length) {
             fetchMyApi();
         }

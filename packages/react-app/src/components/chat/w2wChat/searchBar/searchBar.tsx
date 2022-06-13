@@ -15,14 +15,11 @@ import Web3 from 'web3';
 import {Context, Feeds} from '../w2wIndex';
 
 const SearchBar = (props: { setChat: any; }) => {
-    const { connector } = useWeb3React<Web3Provider>();
+    const { connector, chainId } = useWeb3React<Web3Provider>();
     const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState<Feeds[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
-    const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
-    var web3 = new Web3(provider);
-    var ENS = web3.eth.ens;
     
     const getAllUsers = useCallback(async () => {
         const responseData = await getAllWallets();
@@ -58,12 +55,14 @@ const SearchBar = (props: { setChat: any; }) => {
     const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
         let searchAddress = event.target.value;
         setWordEntered(searchAddress);
-        searchFromDb(searchAddress);
     }
 
     const submitSearch = async (event) => {
         event.preventDefault();
         try {
+            const provider = await connector.getProvider();
+            var web3 = new Web3(provider);
+            var ENS = web3.eth.ens;
             if (!web3.utils.isAddress(wordEntered)) {
                 const address: string = await ENS.getAddress(wordEntered);
                 const did = await getLinkWallets(address);
