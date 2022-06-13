@@ -6,9 +6,9 @@ import Loader from '../Loader/Loader';
 import test from '../w2wAsset/test.jpg'
 import {getPrevUsersFeed} from '../../../../helpers/w2wChatHelper';
 interface messageFeedProps{
-    isValid:boolean,
-    filteredUserData:{}[],
-    setChat: (arg0: any)=> void;
+    isValid: boolean,
+    filteredUserData: {}[],
+    setChat: (arg0: any) => void;
 }
 interface Feeds{
     wallet:string,
@@ -18,7 +18,7 @@ interface Feeds{
     did:string,
     intent:boolean
 }
-const MessageFeed = (props:messageFeedProps)=>{
+const MessageFeed = (props: messageFeedProps) => {
     const [feeds,setFeeds] = useState([]);
     //const [searchedFeeds,setSearchedFeeds] = useState([]);
     const [feedCount,setFeedCount] = useState<number>(0);

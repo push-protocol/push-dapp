@@ -1,20 +1,20 @@
 import React,{useEffect, useState} from 'react';
 import './searchBar.css';
-//@ts-ignore
+// @ts-ignore
 import SearchIcon from "@material-ui/icons/Search";
-//@ts-ignore
+// @ts-ignore
 import CloseIcon from "@material-ui/icons/Close";
 import MessageFeed from '../messageFeed/messageFeed';
-import {getAllWallets} from '../../../../helpers/w2wChatHelper';
+import { getAllWallets } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 
-interface Feeds{
-    wallet:string,
-    lastMessage:string,
-    avatar:string,
-    time:string,
-    did?:string,
-    intent?:boolean
+interface Feeds {
+    wallet: string,
+    lastMessage: string,
+    avatar: string,
+    time: string,
+    did?: string,
+    intent?: boolean
 }
 
 const SearchBar = (props: { setChat: any; })=>{
@@ -75,15 +75,13 @@ const SearchBar = (props: { setChat: any; })=>{
             else {
                 searchFromDb(wordEntered);
             }
-
-
         }
         catch (err) {
 
             console.log(err);
         }
-
     }
+
     const clearInput = () => {
         setFilteredUserData([]);
         setWordEntered("");

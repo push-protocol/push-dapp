@@ -67,7 +67,6 @@ function App() {
   };
 
   const setChat = (text: Feeds) => {
-    console.log('entrei aqui')
     console.log(text);
     setViewChatBox(true);
     setCurrentChat(text);

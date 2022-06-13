@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import './chatBox.css';
 // @ts-ignore
 import defaultChat from '../w2wAsset/default.png';
@@ -130,7 +130,7 @@ const ChatBox = () => {
                                 (
                                     <div className='askForIntent'>
                                         <p>
-                                            Ask for Intent to send messages
+                                            Click here to send intent
                                         </p>
                                     </div>
                                 )
@@ -140,7 +140,7 @@ const ChatBox = () => {
                         <div className='chatBoxBottom'>
                             <textarea
                                 className='chatMessageInput'
-                                placeholder={currentChat.intent ? 'write something...' : 'Write message to send intent...'}
+                                placeholder={currentChat.intent == 'Pending' ? 'Text Message' : 'Write message to send intent...'}
                                 onChange={changeHandler}
                                 value={newMessage}
                             >
@@ -157,8 +157,7 @@ const ChatBox = () => {
                                 onEmojiClick={addEmoji}
                                 pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
                             />}
-                            <button className='chatSubmitButton' onClick={handleSubmit} >{currentChat.intent ? 'Send' : 'send Intent'}</button>
-
+                            <button className='chatSubmitButton' onClick={handleSubmit} >{currentChat.intent ? 'Send' : 'Send Intent'}</button>
                         </div>
                     </>
                 )
