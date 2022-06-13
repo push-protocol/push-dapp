@@ -38,18 +38,14 @@ const ChatBox = () => {
         if (!messageCID) {
             return;
         }
-
         setMessages([]);
-        let messagesChat: IMessage[] = [];
-
         while (messageCID) {
             console.log(messageCID)
             const current = await IPFSHelper.get(messageCID, ipfs);
             const msgIPFS: MessageIPFS = current as MessageIPFS
             const msg: IMessage = { content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp };
-            console.log(msgIPFS)
 
-            messagesChat = [...messages, msg];
+            setMessages(m => [...m, msg])
             const link = msgIPFS.link;
             if (link) {
                 messageCID = link;
@@ -57,7 +53,6 @@ const ChatBox = () => {
                 break;
             }
         }
-        setMessages(messagesChat);
     }
 
     const scrollRef: any = useRef();
