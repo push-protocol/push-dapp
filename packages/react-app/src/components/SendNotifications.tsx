@@ -708,6 +708,8 @@ function SendNotifications() {
       </Toaster>
   );
 
+  let showPreview = nfSub !== '' || nfMsg !== '' || nfCTA !== '' || nfMedia !== ''
+
   return (
       <>
           <Section>
@@ -1205,7 +1207,7 @@ function SendNotifications() {
                               )}
 
                                 
-                                   {nfType && (<PreviewNotif
+                                   {showPreview && (<PreviewNotif
                                         details={{
                                             acta: nfCTA,
                                             aimg: nfMedia,
