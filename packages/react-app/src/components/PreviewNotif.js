@@ -45,10 +45,10 @@ export default function PreviewNotif({ details }) {
         <Item align="flex-start" padding="0px 0px 0px">
           <H2 textTransform="uppercase" spacing="0.1em">
             <Span weight="100" style={{ color: themes.color }}>
-              Preview{" "}
+              Notification
             </Span>
             <Span bg="#674c9f" color="#fff" weight="100" padding="4px 4px">
-              Notification
+              Preview
             </Span>
           </H2>
         </Item>
