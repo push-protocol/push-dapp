@@ -28,7 +28,7 @@
 
 
 .css-b62m3t-container{
-    width: 50% !important;
+    width: 100% !important;
     border: 1px solid black !important;
 
 }
@@ -63,13 +63,13 @@ display:inline-block;
 }
 .imgSpan{
     position: absolute;
-    top: 120%;
-    right: 54%;
+    top: 29px;
+    right: 46px;
     background: linear-gradient(90deg, #E20880 0%, #674C9F 52.75%, #35C5F3 100%);
     border-radius: 100%;
     padding: -1px;
     height: 100%;
-    z-index: 1;
+    z-index: 10;
     size: 0.8em;
 }
 .imgSpan:hover .test {
@@ -79,37 +79,16 @@ display:block;
 .imgSpan:hover::after {
 position: absolute;
 content: attr(data-tooltip);
-left: 1em;
-top: 2em;
+right: 0.5em;
+bottom: 2em;
 background-color: #333;
 color: white;
 padding: .5em;
 font-size: .75em;
 width: 300px;
 height: 50px;
+z-index: 10;
 }
-
-@media (min-width:501px)and (max-width: 1429px) {
-    .imgSpan{
-        top: 120%;
-        right: 57%;
-    }
-    .imgSpan:hover::after {
-        left: -8em;
-        font-size: .75em;
-        }
-  }
-
-@media screen and (max-width: 500px) {
-    .imgSpan{
-        top: 140%;
-        right: 64%;
-    }
-    .imgSpan:hover::after {
-        left: -8em;
-        font-size: .75em;
-        }
-  }
 
 .css-6j8wv5-Input{
     height: 46px !important;

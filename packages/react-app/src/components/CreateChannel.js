@@ -65,7 +65,7 @@ function CreateChannel() {
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
 
-  const [chainDetails, setChainDetails] = React.useState("");
+  const [chainDetails, setChainDetails] = React.useState("Ethereum");
   // const [chainDetailsComp, setChainDetailsComp] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
@@ -695,7 +695,7 @@ function CreateChannel() {
                         size="0.7rem"
                         z="1"
                       >
-                        Name of Channel
+                        Channel's Name
                       </Span>
                     )}
                   </Item>
@@ -733,23 +733,16 @@ function CreateChannel() {
                             borderColor: "red",
                           },
                         }),
-                      }}
+                        }}
+                      defaultValue={{label: "Ethereum", value:"Ethereum"}}
                       onChange={(selectedOption) => {
                         setChainDetails(selectedOption.value);
                       }}
                     />
 
                     <span
-                      // right="54%"
-                      // bRadius="50%"
-                      // padding="-1px"
                       className="imgSpan"
-                      // bg="linear-gradient(90deg, #E20880 0%, #674C9F 52.75%, #35C5F3 100%)"
-                      data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain "
-                      // top="100%"
-                      // pos="absolute"
-                      // size="0.7rem"
-                      // z="1"
+                      data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
                     >
                       <img
                         className="iImage"
@@ -763,46 +756,78 @@ function CreateChannel() {
                       />
 
                       {/* <span className="test">When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain <a href="">read more</a></span> */}
-                    </span>
+                      </span>
+                      <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                        z="1"
+                      >
+                        Choose Channel's Activation Network
+                      </Span>
 
-                    <InputDiv
-                      border={() => {
-                        if (themes.scheme == "dark") return "1px solid white";
-                        else return "1px solid black";
-                      }}
-                      visibility={
-                        chainDetails === "Ethereum" ? "hidden" : "visible"
-                      }
-                    >
-                      <Input
-                        placeholder="Your Channel's Alias address"
-                        maxlength="40"
-                        maxllength="100%"
-                        padding="12px"
-                        weight="400"
-                        size="1rem"
-                        bg="white"
-                        disabled={
-                          chainDetails === "" || chainDetails === "Ethereum"
-                            ? true
-                            : false
-                        }
-                        visibility={
-                          chainDetails === "Ethereum" ? "hidden" : "visible"
-                        }
-                        value={channelAlias}
-                        onChange={(e) => {
-                          setChannelAlias(e.target.value);
-                        }}
-                      />
-                    </InputDiv>
                   </Item>
+                    
+                    {chainDetails != "Ethereum" &&
+                    <Item
+                      margin="55px 20px 15px 20px"
+                      flex="1"
+                      self="stretch"
+                      align="stretch"
+                      style={{ position: "relative" }}
+                    >
+                      <InputDiv
+                        border={() => {
+                          if (themes.scheme == "dark") return "1px solid white";
+                          else return "1px solid black";
+                        }}
+                      >
+                        <Input
+                          placeholder="Your Channel's Alias address"
+                          maxlength="40"
+                          maxllength="100%"
+                          padding="12px"
+                          weight="400"
+                          size="1rem"
+                          bg="white"
+                          disabled={
+                            chainDetails === "" || chainDetails === "Ethereum"
+                              ? true
+                              : false
+                          }
+                          visibility={
+                            chainDetails === "Ethereum" ? "hidden" : "visible"
+                          }
+                          value={channelAlias}
+                          onChange={(e) => {
+                            setChannelAlias(e.target.value);
+                          }}
+                        />
+                      </InputDiv>
+                      <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                      >
+                        Make sure you own this address as verification will take place.
+                      </Span>
+                    </Item>
+                    }
 
                   <Item
-                    margin="55px 20px 15px 20px"
+                    margin="0px 20px 15px 20px"
                     flex="1"
                     self="stretch"
                     align="stretch"
+                    style={{marginTop: `${chainDetails === "Ethereum" ? "55px" : "20px"}`, position: "relative"}}
                   >
                     <TextField
                       required
@@ -828,6 +853,17 @@ function CreateChannel() {
                         {250 - channelInfo.length} characters remains
                       </span>
                     </SpanR>
+                    <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                      >
+                        Channel's Description
+                      </Span>
                   </Item>
 
                   <ItemH
