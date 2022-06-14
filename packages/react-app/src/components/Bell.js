@@ -57,7 +57,7 @@ const Container = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 10px;
+  margin: 0px;
   position: relative;
   height: ${props => props.height || 40}px;
   width: ${props => props.width || 40}px;
