@@ -1,23 +1,9 @@
-import React,{useState} from 'react';
+import React from 'react';
 import SearchBar from '../searchBar/searchBar';
 import './sidebar.css';
+import { Feeds } from '../w2wIndex'
 
-const Sidebar = (props)=>{
-    
-   // const [searching,setIsSearching] = useState(false);
-    //const [walletsData,setWalletData] = useState([]);
-    /*const searchWallets = (data: string | any[])=>{
-       
-        if(data.length)
-        {
-            setIsSearching(true);
-        }
-        else{
-            setIsSearching(false);
-        }
-       
-       
-    }*/
+const Sidebar = (props: { setChat: (text: Feeds) => void; }) => {
     return (
         <div className='sidebar_body'>
             <div className='sidebar_search'>

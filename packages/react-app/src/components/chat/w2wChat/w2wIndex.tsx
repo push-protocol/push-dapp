@@ -7,7 +7,7 @@ import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
 import {encrypt,decrypt} from '../../../helpers/w2w/Did';
 import {generateKeyPair} from '../../../helpers/w2w/PGP';
 import * as DIDHelpers from '../../../helpers/w2w/Did';
-import {getKeys,updateKeys,randomString,createUser} from '../../../helpers/w2wChatHelper';
+import {getKeys,randomString,createUser,getUser} from '../../../helpers/w2wChatHelper';
 //DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
 import { DID } from 'dids'
@@ -21,7 +21,9 @@ import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import './w2wIndex.css';
-interface Feeds{
+export interface Feeds{
+    did:DID,
+    threadhash: string,
     name:string,
     lastMessage:string,
     profile_picture:string,
@@ -30,7 +32,7 @@ interface Feeds{
    
 }
 interface AppContextInterface{
-  currentChat:Feeds,viewChatBox:boolean,getLinkWallets:(account:string)=>Promise<string>
+  currentChat:Feeds,viewChatBox:boolean,getLinkWallets:(account:string)=>Promise<string>,did:DID
 }
 export const Context = React.createContext<AppContextInterface | null>(null)
 function App(){
@@ -61,20 +63,18 @@ function App(){
       setDid(did);
       setIsLoading(false);
       setCeramicInstance(ceramic);
-      const response = await getKeys(did.id);
+      const response = await getUser(did.id);
       console.log(response);
       if(response===null)
       {   
-          const userDetails = await createUser(did.id);
+          const randomstring = randomString();
+          const keyPairs = await generateKeyPair(randomstring);
+          const encryptedPrivateKey = await encrypt(keyPairs.privateKey,did);
+          const userDetails = await createUser(did.id,keyPairs.publicKey,encryptedPrivateKey.toString());
           console.log(userDetails);
           localStorage.setItem('name',userDetails.name);
           localStorage.setItem('avatar',userDetails.profile_picture);
-          const randomstring = randomString();
-          const keyPairs = await generateKeyPair(randomstring);
-          const encrypted = await encrypt(keyPairs.privateKey,did);
-          console.log(encrypted);
-          const decrypted = await decrypt(encrypted,did);
-          console.log(decrypted);
+         
           //await updateKeys(did.id,keyPairs.privateKey,keyPairs.publicKey);
           
       }
@@ -102,7 +102,7 @@ function App(){
     return (
         <div className="w2wIndex">
           {!isLoading &&
-            <Context.Provider value = {{currentChat,viewChatBox,getLinkWallets}}>
+            <Context.Provider value = {{currentChat,viewChatBox,getLinkWallets,did}}>
                 <Sidebar setChat = {setChat}/>
                 <ChatBox/>
             </Context.Provider>

@@ -1,26 +1,27 @@
-import React,{useState,useContext,useEffect,useRef,useCallback} from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import './chatBox.css';
 import cn from 'classnames';
 import {motion,AnimatePresence} from 'framer-motion';
 //@ts-ignore
+// @ts-ignore
 import defaultChat from '../w2wAsset/default.png';
 import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
-//@ts-ignore
-import test from '../w2wAsset/test.jpg';
+// @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
-//@ts-ignore
+// @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 
 import Picker from 'emoji-picker-react';
-import {postMessageToServer,getArrivalMessage} from '../../../../helpers/w2wChatHelper';
+import { postMessage } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
-interface Message {
-    time: number,
-    text: string,
-    wallet: string,
-    sent:Boolean
-}
+
+import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
+import { IPFSHTTPClient } from 'ipfs-http-client';
+import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
+
+import { Web3Provider } from "ethers/providers";
+import { useWeb3React } from "@web3-react/core";
 
 const transition = {
     type: 'spring',
@@ -42,63 +43,73 @@ const transition = {
   }
 
 const ChatBox = () => {
-    const { currentChat, viewChatBox } = useContext(Context);
+    const { account } = useWeb3React<Web3Provider>();
+    const { currentChat, viewChatBox, did } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
-    const [arrivalMessage, setArrivalMessage] = useState(null);
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
-    const myDid: string = '0x3efwrff434fsdf3443zxw123';
-    const [messages, setMessages] = useState<Message[]>([{ time: Date.now(), text: "hello dfvbv everdtbrdtrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0y03faC3d...743" ,sent:true}
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:true }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:true }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:false}
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:true}
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:true}
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:true }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:true}
-    ]);
+    const [messages, setMessages] = useState<IMessage[]>([]);
+
+    interface IMessage {
+        sent: boolean,
+        fromWallet: string,
+        time: number,
+        content: string
+    }
+
+    const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
+        if (!messageCID) {
+            return;
+        }
+        setMessages([]);
+        while (messageCID) {
+            const current = await IPFSHelper.get(messageCID, ipfs);
+            const msgIPFS: MessageIPFS = current as MessageIPFS
+            const msg: IMessage = {
+                content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp,
+                sent: false
+            };
+
+            setMessages(m => [...m, msg])
+            const link = msgIPFS.link;
+            if (link) {
+                messageCID = link;
+            } else {
+                break;
+            }
+        }
+    }
 
     const scrollRef: any = useRef();
-    /*useEffect(async ()=>{
-        //const arrivalMessage = await getArrivalMessage();
-        //setArrivalMessage(arrivalMessage.message);
-    },[]);*/
-    /* const CombinedDid = currentChat.did+myDid;
-     
-     useEffect( ()=>{
-         (
-             async ()=>{
-                 const data =  await getPrevMessages(CombinedDid);
-                 setMessages(data);
-             }
-         )();
-     },[currentChat])
-     */
-    /*  useEffect(()=>{
-         // arrivalMessage && 
-         // setMessages((prev)=>[...prev,arrivalMessage]);
-      },[arrivalMessage,currentChat])
-      */
+
     useEffect(() => {
-        //scrollRef.current?.scrollIntoView({behavior:"smooth"});
-    }, [messages])
+        const getMessagesFromIPFS = async () => {
+            if (currentChat?.threadhash) {
+                const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
+                await getMessagesFromCID(currentChat.threadhash, IPFSClient);
+            }
+        }
+        getMessagesFromIPFS().catch(err => console.error(err));
+    }, [currentChat]);
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
-            const msg = { time: Date.now(), text: newMessage, wallet: "0y03faC3d...743",sent:true}
-            // send msg to server
-            const response = await postMessageToServer(Date.now(), newMessage, "0y03faC3d...743")
-            console.log(msg);
-            setMessages([...messages, msg]);
+            try {
+                //await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
+                const msg: IMessage = {
+                    time: Date.now(), content: newMessage, fromWallet: account,
+                    sent: false
+                };
+                setMessages([...messages, msg]);
+            }
+            catch (error) {
+                console.log(error)
+            }
         }
         setNewMessage("");
-
     }
+
     const changeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setNewMessage(e.target.value);
         if (newMessage === "") {
@@ -108,10 +119,12 @@ const ChatBox = () => {
             setTextAreaDisabled(false);
         }
     }
+
     const addEmoji = (e, emojiObject) => {
         setNewMessage(newMessage + emojiObject.emoji);
         setShowEmojis(false);
     }
+
     return (
         <div className='chatBox_body'>
             {!viewChatBox ? (
@@ -134,9 +147,7 @@ const ChatBox = () => {
                                             ):
                                             null
                                         }
-
                                     </div>
-
                                 </div>
                             </div>
                             <div className='chatBoxEpnsLogo'>
@@ -146,13 +157,13 @@ const ChatBox = () => {
                         <div className='chatBoxTop'>
                           
                             {currentChat.intent ? (
-                                messages.map((msg: { time: any; text: string; wallet: string;sent:boolean },i) => {
+                                messages.map((msg,i) => {
                                     const isLast = i === messages.length - 1
                                     console.log(isLast);
                                     const noTail = !isLast && messages[i + 1]?.sent === msg.sent
                                     return (
                                         <div ref={scrollRef} className = {cn("w2wmsgshared", msg.sent ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
-                                            <Chats time={msg.time} text={msg.text} wallet={msg.wallet} />
+                                            <Chats time={msg.time} text={msg.content} wallet={msg.fromWallet} />
                                         </div>
                                     )
                                 })
@@ -171,7 +182,7 @@ const ChatBox = () => {
                         <div className='chatBoxBottom'>
                             <textarea
                                 className='chatMessageInput'
-                                placeholder={currentChat.intent ? 'write something...' : 'Write message to send intent...'}
+                                placeholder={currentChat.intent ? 'Text Message' : 'Write message to send intent...'}
                                 onChange={changeHandler}
                                 value={newMessage}
                             >
@@ -188,15 +199,12 @@ const ChatBox = () => {
                                 onEmojiClick={addEmoji}
                                 pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
                             />}
-                            <button className='chatSubmitButton' onClick={handleSubmit} >{currentChat.intent ? 'Send' : 'send Intent'}</button>
-
+                            <button className='chatSubmitButton' onClick={handleSubmit}>{currentChat.intent ? 'Send' : 'Send Intent'}</button>
                         </div>
                     </>
                 )
             }
-
         </div>
     )
-
 }
 export default ChatBox;
