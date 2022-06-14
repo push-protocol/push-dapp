@@ -1,5 +1,7 @@
 import React,{useState,useContext,useEffect,useRef,useCallback} from 'react';
 import './chatBox.css';
+import cn from 'classnames';
+import {motion,AnimatePresence} from 'framer-motion';
 //@ts-ignore
 import defaultChat from '../w2wAsset/default.png';
 import { Context } from '../w2wIndex';
@@ -16,8 +18,28 @@ import Dropdown from '../dropdown/dropdown';
 interface Message {
     time: number,
     text: string,
-    wallet: string
+    wallet: string,
+    sent:Boolean
 }
+
+const transition = {
+    type: 'spring',
+    stiffness: 200,
+    mass: 0.2,
+    damping: 20,
+  }
+  
+  const variants = {
+    initial: {
+      opacity: 0,
+      y: 300,
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      transition,
+    },
+  }
 
 const ChatBox = () => {
     const { currentChat, viewChatBox } = useContext(Context);
@@ -26,18 +48,18 @@ const ChatBox = () => {
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
     const myDid: string = '0x3efwrff434fsdf3443zxw123';
-    const [messages, setMessages] = useState<Message[]>([{ time: Date.now(), text: "hello dfvbv everdtbrdtrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0y03faC3d...743" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
-        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" }
+    const [messages, setMessages] = useState<Message[]>([{ time: Date.now(), text: "hello dfvbv everdtbrdtrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0y03faC3d...743" ,sent:true}
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:true }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:true }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:false}
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:true}
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:true}
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:true }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756",sent:false }
+        , { time: Date.now(), text: "hi df erger erffwrf ergegr egevbv e12ewvvrrfetrbdbrdtbrdbbr ervgervsrgv servesrv ", wallet: "0x05faC3d...756" ,sent:true}
     ]);
 
     const scrollRef: any = useRef();
@@ -68,7 +90,7 @@ const ChatBox = () => {
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
-            const msg = { time: Date.now(), text: newMessage, wallet: "0y03faC3d...743" }
+            const msg = { time: Date.now(), text: newMessage, wallet: "0y03faC3d...743",sent:true}
             // send msg to server
             const response = await postMessageToServer(Date.now(), newMessage, "0y03faC3d...743")
             console.log(msg);
@@ -122,13 +144,18 @@ const ChatBox = () => {
                             </div>
                         </div>
                         <div className='chatBoxTop'>
-
+                          
                             {currentChat.intent ? (
-                                messages.map((msg: { time: any; text: string; wallet: string; }) => (
-                                    <div ref={scrollRef} >
-                                        <Chats time={msg.time} text={msg.text} wallet={msg.wallet} />
-                                    </div>
-                                ))
+                                messages.map((msg: { time: any; text: string; wallet: string;sent:boolean },i) => {
+                                    const isLast = i === messages.length - 1
+                                    console.log(isLast);
+                                    const noTail = !isLast && messages[i + 1]?.sent === msg.sent
+                                    return (
+                                        <div ref={scrollRef} className = {cn("w2wmsgshared", msg.sent ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
+                                            <Chats time={msg.time} text={msg.text} wallet={msg.wallet} />
+                                        </div>
+                                    )
+                                })
                             )
                                 :
                                 (

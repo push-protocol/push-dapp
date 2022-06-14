@@ -31,12 +31,9 @@
     
     max-width: 500px;
     margin-left: 10px;
-    opacity: 0.9;
-    color: rgb(0, 0, 0);
     font-weight: 400;
     position: relative;
-    top: -2.7rem;
-    padding: 0;
+    font-family: helvetica;
     font-size: 1rem;
 }
 .chatDetail{

@@ -9,6 +9,81 @@
     height: 99.7%;
 }
 
+.chatBoxTop::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .chatBoxTop::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 10px;
+    opacity: 0.5;
+  }
+
+  .chatBoxTop::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: transparent;
+  }
+  
+.w2wmsgshared {
+    position: relative; /* Setup a relative container for our psuedo elements */
+    max-width: 300px;
+    margin-bottom: 15px;
+    padding-left: 5px;
+    padding-right: 8px;
+    word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
+    border-radius: 25px;
+}
+.w2wmsgshared::before {
+      width: 20px;
+    }
+  
+.w2wmsgshared:after {
+      width: 26px;
+      background-color: var(--bg); /* All tails have the same bg cutout */
+    }
+  
+.w2wmsgshared:before,
+.w2wmsgshared:after {
+      position: absolute;
+      bottom: 0;
+      height: 25px; /* height of our bubble "tail" - should match the border-radius above */
+      content: '';
+}
+
+.w2wmsgsent {
+    align-self: flex-end;
+    color: white;
+    background: #0b93f6;
+}
+.w2wmsgsent::before {
+      right: -7px;
+      background-color: #0b93f6;
+      border-bottom-left-radius: 26px 24px;
+    }
+  
+.w2wmsgsent::after {
+      right: -26px;
+      border-bottom-left-radius: 20px;
+}
+.w2wmsgreceived {
+    align-self: flex-start;
+    color: black;
+    
+    background: #e5e5ea;
+}
+.w2wmsgreceived::before {
+      left: -10px;
+      
+      background-color: #e5e5ea;
+      border-bottom-right-radius: 16px 14px;
+    }
+  
+.w2wmsgreceived::after {
+      left: -29px;
+     
+      border-bottom-right-radius: 10px;
+    }
+
 .chatBoxNavBar{
     width: 75%;
     height: 8vh;
@@ -33,10 +108,12 @@
     display: flex;
     flex-direction: row;
     margin: 10px;
+  
 }
 .chatBoxUserName img{
     width: 2.8rem;
     height: 2.8rem;
+    
     border-radius: 20%;
    
 }
@@ -86,17 +163,27 @@
     height: 65%;
     overflow-y: scroll;
     padding-top: 10vh;
-    padding-right: 10px;
-    background-image: url('../w2wAsset/bg.png');
+    padding-right: 0px;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    margin: 0 2px;
     
+    
+}
+.w2wnoTail{
+    margin-bottom: 2px;
+}
+.w2wnoTail::before,::after{
+    opacity: 0;
 }
 .chatBoxBottom {
     
     height: 50px;
     display: flex;
-
+    border-top:1px solid black;
     align-items: center;
-    border-radius: 20px;
+    
     padding:6px;
     justify-content: space-between;
 }
@@ -125,7 +212,7 @@
     cursor: pointer;
     
     margin-right: 2rem;
-    background-color: rgb(121, 96, 134);
+    background-color: rgb(58, 103, 137);
     color: white;
 }
 
