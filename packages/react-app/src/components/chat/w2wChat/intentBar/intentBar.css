@@ -1,0 +1,125 @@
+:root {
+    --rad: .7rem;
+    --dur: .3s;
+    --color-dark: #2f2f2f;
+    --color-light: #fff;
+    --color-brand: #57bd84;
+    --font-fam: "Lato", sans-serif;
+    --height: 5rem;
+    --btn-width: 6rem;
+    --bez: cubic-bezier(0, 0, 0.43, 1.49);
+  }
+  
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+  
+  
+  .searchInputs input {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    position: relative;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-color: #2f2f2f;
+    font-size: 18px;
+    padding: 15px;
+    background-color: #f7f7f7;
+    height: 35px;
+    border-top:1px rgb(80, 79, 79) solid ;
+    outline: #2a95a5;
+    width: 17.5vw;
+  }
+  .searchInputs input:focus{
+    border: 1.2px solid #35c2d8;
+    
+    outline: #2a95a5;
+  }
+  .search{
+    width: 100%;
+    display: flex;
+    
+  }
+  .searchBody{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: -0.8rem;
+  
+  }
+  .sidebar_message{
+    position: relative;
+    margin-top: 10px;
+    width: 100%;
+   
+    overflow-x: hidden;
+    position: absolute;
+    max-height: 77vh;
+    top: 3rem;
+    
+  }
+  .sidebar_message:hover{
+    overflow: auto;
+    overflow-x: hidden;
+    position: absolute;
+    
+  }
+  /* ===== Scrollbar CSS ===== */
+    /* Firefox */
+    body {
+      scrollbar-width: auto;
+      scrollbar-color: #121212 #fefbfb;
+      z-index: 400;
+    }
+  
+    /* Chrome, Edge, and Safari */
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+  
+    ::-webkit-scrollbar-track {
+      background: #ffffff;
+      border-radius: 10px;
+      opacity: 0.5;
+    }
+  
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background-image: -webkit-gradient(linear,
+                         left top,
+                         left bottom,
+                         color-stop(0.44, #35c5f3),
+                         color-stop(0.72, #35b0f3),
+                         color-stop(0.86, #35a1f3));
+    }
+    
+  .searchIcon {
+    height: 65px;
+    background-color: #f7f7f7;
+    
+    position: relative;
+   
+    border-left: 0px;
+    cursor: pointer;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+   
+    display: grid;
+    place-items: center;
+  }
+  #clearBtn {
+    cursor: pointer;
+  }
+  .searchInputs {
+    
+    display: flex;
+    width: 100%;
+    
+  }
+  .searchIcon svg {
+    font-size: 35px;
+    position: relative;
+    
+  }
+  

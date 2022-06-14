@@ -7,6 +7,12 @@ export const getInbox = async (Did: string) => {
     return data;
 }
 
+export const getIntents = async (Did: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/intents/did/' + Did);
+    const data: any = await response.json();
+    return data;
+}
+
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string, 
     messageContent: string, messageType: string, signature: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/messages', {
