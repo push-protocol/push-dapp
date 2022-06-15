@@ -1,5 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import './chatBox.css';
+import cn from 'classnames';
+// import {motion,AnimatePresence} from 'framer-motion';
+//@ts-ignore
 // @ts-ignore
 import defaultChat from '../w2wAsset/default.png';
 import { Context } from '../w2wIndex';
@@ -20,6 +23,25 @@ import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 
+const transition = {
+    type: 'spring',
+    stiffness: 200,
+    mass: 0.2,
+    damping: 20,
+  }
+  
+  const variants = {
+    initial: {
+      opacity: 0,
+      y: 300,
+    },
+    enter: {
+      opacity: 1,
+      y: 0,
+      transition,
+    },
+  }
+
 const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
     const { currentChat, viewChatBox, did } = useContext(Context);
@@ -29,6 +51,7 @@ const ChatBox = () => {
     const [messages, setMessages] = useState<IMessage[]>([]);
 
     interface IMessage {
+        sent: boolean,
         fromWallet: string,
         time: number,
         content: string
@@ -42,7 +65,10 @@ const ChatBox = () => {
         while (messageCID) {
             const current = await IPFSHelper.get(messageCID, ipfs);
             const msgIPFS: MessageIPFS = current as MessageIPFS
-            const msg: IMessage = { content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp };
+            const msg: IMessage = {
+                content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp,
+                sent: false
+            };
 
             setMessages(m => [...m, msg])
             const link = msgIPFS.link;
@@ -70,8 +96,11 @@ const ChatBox = () => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
             try {
-                await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
-                const msg: IMessage = { time: Date.now(), content: newMessage, fromWallet: account };
+                //await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
+                const msg: IMessage = {
+                    time: Date.now(), content: newMessage, fromWallet: account,
+                    sent: false
+                };
                 setMessages([...messages, msg]);
             }
             catch (error) {
@@ -126,30 +155,34 @@ const ChatBox = () => {
                             </div>
                         </div>
                         <div className='chatBoxTop'>
-                            {
-                                currentChat.intent ? (
-                                    React.Children.toArray(
-                                        messages.map((msg) => (
-                                            <div ref={scrollRef} >
-                                                <Chats time={msg.time} text={msg.content} wallet={msg.fromWallet} />
-                                            </div>
-                                        ))
-                                    )
-                                ) :
-                                    (
-                                        <div className='askForIntent'>
-                                            <p>
-                                                Click here to send intent
-                                            </p>
+                          
+                            {currentChat.intent ? (
+                                messages.map((msg,i) => {
+                                    const isLast = i === messages.length - 1
+                                    console.log(isLast);
+                                    const noTail = !isLast && messages[i + 1]?.sent === msg.sent
+                                    return (
+                                        <div ref={scrollRef} className = {cn("w2wmsgshared", msg.sent ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
+                                            <Chats time={msg.time} text={msg.content} wallet={msg.fromWallet} />
                                         </div>
                                     )
+                                })
+                            )
+                                :
+                                (
+                                    <div className='askForIntent'>
+                                        <p>
+                                            Ask for Intent to send messages
+                                        </p>
+                                    </div>
+                                )
                             }
                         </div>
 
                         <div className='chatBoxBottom'>
                             <textarea
                                 className='chatMessageInput'
-                                placeholder={currentChat.intent == 'Pending' ? 'Text Message' : 'Write message to send intent...'}
+                                placeholder={currentChat.intent ? 'Text Message' : 'Write message to send intent...'}
                                 onChange={changeHandler}
                                 value={newMessage}
                             >

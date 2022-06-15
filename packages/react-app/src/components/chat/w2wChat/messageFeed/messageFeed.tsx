@@ -25,6 +25,7 @@ const MessageFeed = (props: messageFeedProps) => {
 
     const fetchMyApi = useCallback(async () => {
         const inbox: Feeds[] = await getInbox(did.id);
+        console.log(inbox);
         setFeeds(inbox);
         setMessagesLoading(true);
     }, [])

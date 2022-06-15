@@ -18,7 +18,7 @@ const SearchBar = (props: { setChat: any; }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
     const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
-    const [allUsers, setAllUsers] = useState<Feeds[]>([])
+    const [allUsers, setAllUsers] = useState([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     
     const getAllUsers = useCallback(async () => {

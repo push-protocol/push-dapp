@@ -11,24 +11,42 @@ import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import IntentFeed from '../intentFeed/intentFeed';
 import { getAllWallets } from '../../../../helpers/w2wChatHelper';
+import { getIntents } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import {Context, Feeds} from '../w2wIndex';
 
 const IntentBar = (props: { setChat: any; }) => {
+    const { did } = useContext(Context);
     const { connector, chainId } = useWeb3React<Web3Provider>();
     const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
-    const [allUsers, setAllUsers] = useState<Feeds[]>([])
+    const [allUsers, setAllUsers] = useState([]);
+    const [allIntents, setAllIntents] = useState([]);
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     
     const getAllUsers = useCallback(async () => {
         const responseData = await getAllWallets();
-        setAllUsers(responseData);
+        await setAllUsers(responseData);
+    }, []);
+
+    const getAllIntents = useCallback(async() => {
+        const responseData = await getIntents(did.id);
+        await setAllIntents(responseData);
     }, []);
 
     useEffect(() => {
-        // Get all the wallets from server
         getAllUsers();
+        getAllIntents();
+        var filteredUsers = [];
+        allUsers.forEach(user => {
+            allIntents.forEach(intent => {
+                if (user.did === intent.intent_sent_by && intent.intent!='Approved') {
+                    console.log("Found a valid intent");
+                    filteredUsers.push(user);
+                }
+            });
+        });
+        setFilteredUserData(filteredUsers);
     }, []);
 
     const searchFromDb = (did: string) => {

@@ -12,24 +12,9 @@ interface chatProps {
 
 export default function Chats(props: chatProps) {
     return (
-        <div className="chat">
-            <div className='chatTop'>
-                <div>
-                    <img
-                        className='chatImg'
-                        src={test}
-                        alt=""
-                    />
-                </div>
-                <div className='w2wchatContent'>
-                    <div className='chatDetail'>
-                        <p className='chatOwner'>{props.wallet}</p>
-                        <div className='chatTime'>{format(props.time)}</div>
-                    </div>
-                    <div className='chatText'>
-                        <p >{props.text}</p>
-                    </div>
-                </div>
+        <div className = "chat">
+            <div className='chatText'>
+                <p >{props.text}</p>
             </div>
         </div>
     )
