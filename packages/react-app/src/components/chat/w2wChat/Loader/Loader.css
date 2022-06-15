@@ -11,10 +11,10 @@
     width: 51px;
     height: 51px;
     margin: 6px;
-    border: 6px solid rgb(226, 168, 43);
+    border: 6px solid rgb(43, 156, 226);
     border-radius: 50%;
     animation: loader 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: rgb(226, 168, 43) transparent transparent transparent ;
+    border-color: rgb(43, 144, 226) transparent transparent transparent ;
 }
 .loader div:nth-child(1)
 {

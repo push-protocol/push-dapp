@@ -8,10 +8,9 @@ import GLOBALS from "config/Globals";
 //
 
 function ChatPage(props) {
-
   return (
     <Container>
-          <Chat />     
+     <Chat/>   
     </Container>
   );
 }

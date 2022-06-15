@@ -5,17 +5,22 @@ import { format } from 'timeago.js';
 import test from '../w2wAsset/test.jpg';
 
 interface chatProps {
-    wallet: string,
     time: any,
     text: string
 }
 
 export default function Chats(props: chatProps) {
+   
     return (
+        <>
         <div className = "chat">
             <div className='chatText'>
                 <p >{props.text}</p>
+                <span >10:00 PM</span>
             </div>
+            
         </div>
+        
+        </>
     )
 }

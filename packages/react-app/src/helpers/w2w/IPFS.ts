@@ -9,6 +9,7 @@ export interface MessageIPFS {
     messageContent: string,
     signature: string
     link: string | null,
+    time:number
     readonly timestamp?: number
 }
 

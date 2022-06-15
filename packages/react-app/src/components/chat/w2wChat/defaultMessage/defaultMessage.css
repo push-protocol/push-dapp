@@ -28,14 +28,18 @@
 .defaultMessage_3{
     width: 100%;
     display: flex;
-    justify-content: center;
+    
+    text-align: left;
 }
 .defaultMessage_lastMsg{
     font-size: 1.1rem;
-    color: rgb(124, 119, 119);
+    color: rgb(90, 87, 87);
     position: relative;
-    top: -.2rem;
-    left: 0.7rem;
+    max-width: 100%;
+    top: -1rem;
+    margin-left: 4.5rem;
+    overflow: hidden;
+    align-items: flex-start;
 }
 .defaultMessage_img img{
     border-radius: 20%;
@@ -56,13 +60,14 @@
 
 }
 .defaultMessage_name{
-    font-size: 1.1rem;
+    font-size: 1rem;
     width: 100%;
     opacity: 0.9;
     position: relative;
     display: flex;
     text-align: left;
     left: 0rem;
+    font-weight: bold;
     font-family: Helvetica;
     top: 0.8rem;
 }

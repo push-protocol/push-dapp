@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import './chatBox.css';
 import cn from 'classnames';
-import {motion,AnimatePresence} from 'framer-motion';
 //@ts-ignore
 // @ts-ignore
 import defaultChat from '../w2wAsset/default.png';
@@ -23,39 +22,13 @@ import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 
-const transition = {
-    type: 'spring',
-    stiffness: 200,
-    mass: 0.2,
-    damping: 20,
-  }
-  
-  const variants = {
-    initial: {
-      opacity: 0,
-      y: 300,
-    },
-    enter: {
-      opacity: 1,
-      y: 0,
-      transition,
-    },
-  }
-
 const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
     const { currentChat, viewChatBox, did } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
-    const [messages, setMessages] = useState<IMessage[]>([]);
-
-    interface IMessage {
-        sent: boolean,
-        fromWallet: string,
-        time: number,
-        content: string
-    }
+    const [messages, setMessages] = useState<MessageIPFS[]>([]);
 
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
@@ -64,13 +37,10 @@ const ChatBox = () => {
         setMessages([]);
         while (messageCID) {
             const current = await IPFSHelper.get(messageCID, ipfs);
+            console.log(current);
             const msgIPFS: MessageIPFS = current as MessageIPFS
-            const msg: IMessage = {
-                content: msgIPFS.messageContent, fromWallet: msgIPFS.fromWallet, time: msgIPFS.timestamp,
-                sent: false
-            };
 
-            setMessages(m => [...m, msg])
+            setMessages(m => [msgIPFS,...m ])
             const link = msgIPFS.link;
             if (link) {
                 messageCID = link;
@@ -96,11 +66,7 @@ const ChatBox = () => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
             try {
-                //await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
-                const msg: IMessage = {
-                    time: Date.now(), content: newMessage, fromWallet: account,
-                    sent: false
-                };
+               const msg =  await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
                 setMessages([...messages, msg]);
             }
             catch (error) {
@@ -159,12 +125,15 @@ const ChatBox = () => {
                             {currentChat.intent ? (
                                 messages.map((msg,i) => {
                                     const isLast = i === messages.length - 1
-                                    console.log(isLast);
-                                    const noTail = !isLast && messages[i + 1]?.sent === msg.sent
+                                    
+                                    const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
                                     return (
-                                        <div ref={scrollRef} className = {cn("w2wmsgshared", msg.sent ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
-                                            <Chats time={msg.time} text={msg.content} wallet={msg.fromWallet} />
+                                        <>
+                                        <div ref={scrollRef} className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
+                                            <Chats time={msg.time} text={msg.messageContent}  />
+                                            
                                         </div>
+                                        </>
                                     )
                                 })
                             )

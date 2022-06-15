@@ -27,11 +27,20 @@
 .w2wmsgshared {
     position: relative; /* Setup a relative container for our psuedo elements */
     max-width: 300px;
-    margin-bottom: 15px;
+    
     padding-left: 5px;
     padding-right: 8px;
     word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
     border-radius: 25px;
+}
+
+.w2wmsgsharedspan{
+    position: relative; /* Setup a relative container for our psuedo elements */
+    max-width: 300px;
+    
+    word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
+   
+   
 }
 .w2wmsgshared::before {
       width: 20px;
@@ -50,11 +59,12 @@
       content: '';
 }
 
-.w2wmsgsent {
+.w2wmsgsent{
     align-self: flex-end;
     color: white;
     background: #0b93f6;
 }
+
 .w2wmsgsent::before {
       right: -7px;
       background-color: #0b93f6;
