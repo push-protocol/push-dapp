@@ -108,8 +108,8 @@ function ChannelDashboard() {
       <Channel>
         <Notice>
           <Title>Send Message!</Title>
-          <Info>EPNS supports three types of messages (for now!). <b>Groups</b>, <b>Secrets</b> and <b>Targetted</b>.</Info>
-          <Info>Group messages go to all people subscribed in the group. Secrets are encrypted and go to a specific subscriber (no one else can view it, thanks crypto!), Targetted are non-encrypted secrets mostly sent from the EPNS group to channel owners.</Info>
+          <Info>EPNS supports three types of messages (for now!). <b>Groups</b>, <b>Secrets</b> and <b>Targeted</b>.</Info>
+          <Info>Group messages go to all people subscribed in the group. Secrets are encrypted and go to a specific subscriber (no one else can view it, thanks crypto!), Targeted are non-encrypted secrets mostly sent from the EPNS group to channel owners.</Info>
         </Notice>
 
         <FormSubmision>

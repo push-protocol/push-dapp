@@ -53,7 +53,7 @@ function NavigationButton({ item, data, sectionID, active }) {
       padding="10px"
       margin={definedMargin}
       active={active}
-      className={data.name.toLowerCase()}
+      className={data?.name?.toLowerCase()}
     >
       <ItemH
           align="center"

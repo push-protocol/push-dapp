@@ -35,13 +35,17 @@ import { themeLight, themeDark } from "config/Themization";
 import { addresses, abis } from "@project/contracts";
 import ImageClipper from "./ImageClipper";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+import "./createChannel.css";
 
 const ethers = require("ethers");
 
 const ipfs = require("ipfs-api")();
 
 const minStakeFees = 50;
-const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
+const ALIAS_CHAINS = [
+  { value: "Ethereum", label: "Ethereum" },
+  { value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },
+];
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
@@ -61,7 +65,8 @@ function CreateChannel() {
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
 
-  const [chainDetails, setChainDetails] = React.useState("");
+  const [chainDetails, setChainDetails] = React.useState("Ethereum");
+  // const [chainDetailsComp, setChainDetailsComp] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -82,22 +87,19 @@ function CreateChannel() {
   //checking DAI for user
   React.useEffect(() => {
     const checkDaiFunc = async () => {
-        let checkDaiAmount = new ethers.Contract(
-            addresses.dai,
-            abis.dai,
-            library
-        );
+      let checkDaiAmount = new ethers.Contract(
+        addresses.dai,
+        abis.dai,
+        library
+      );
 
-        let value = await checkDaiAmount.allowance(
-            account,
-            addresses.epnscore
-        );
-        value = value?.toString();
-        const convertedVal = ethers.utils.formatEther(value);
-        setDaiAmountVal(convertedVal);
-        if (convertedVal >= 50.0) {
-            setChannelStakeFees(convertedVal);
-        }
+      let value = await checkDaiAmount.allowance(account, addresses.epnscore);
+      value = value?.toString();
+      const convertedVal = ethers.utils.formatEther(value);
+      setDaiAmountVal(convertedVal);
+      if (convertedVal >= 50.0) {
+        setChannelStakeFees(convertedVal);
+      }
     };
     checkDaiFunc();
   }, []);
@@ -107,8 +109,7 @@ function CreateChannel() {
     console.log(status, meta, file);
   };
 
-  const onDropHandler = (files) => {
-  };
+  const onDropHandler = (files) => {};
 
   // receives array of files that are done uploading when submit button is clicked
   const handleLogoSubmit = (files, allFiles) => {
@@ -185,6 +186,7 @@ function CreateChannel() {
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
+
     e.preventDefault();
 
     if (
@@ -195,7 +197,9 @@ function CreateChannel() {
       channelAlias
         ? isEmpty(chainDetails)
         : chainDetails
-        ? isEmpty(channelAlias)
+        ? chainDetails == "Ethereum"
+          ? false
+          : isEmpty(channelAlias)
         : false
     ) {
       setProcessing(3);
@@ -217,7 +221,7 @@ function CreateChannel() {
     var chain_id = chainDetailsSplit[1];
     var address = channelAlias;
 
-    const input = JSON.stringify({
+    let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
@@ -225,12 +229,19 @@ function CreateChannel() {
       blockchain: blockchain,
       chain_id: chain_id,
       address: address,
-    });
+    };
 
+    if (blockchain == "Ethereum") {
+      input.blockchain = "";
+    }
+
+    input = JSON.stringify(input);
+
+    console.log(`input is ${input}`);
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
-    const storagePointer = await ipfs.add(input);
+    var storagePointer = (storagePointer = await ipfs.add(input));
     console.log("IPFS storagePointer:", storagePointer);
     setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
@@ -244,10 +255,13 @@ function CreateChannel() {
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
-    if(daiAmountVal < 50.0){
-      var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
+    if (daiAmountVal < 50.0) {
+      var sendTransactionPromise = daiContract.approve(
+        addresses.epnscore,
+        fees
+      );
       const tx = await sendTransactionPromise;
-  
+
       console.log(tx);
       console.log("waiting for tx to finish");
       setProcessingInfo("Waiting for Approval TX to finish...");
@@ -269,7 +283,7 @@ function CreateChannel() {
       identityBytes,
       fees,
       {
-        gasLimit: 1000000
+        gasLimit: 1000000,
       }
     );
 
@@ -411,134 +425,138 @@ function CreateChannel() {
         </Content>
       </Section>
 
-      {!onCoreNetwork ? 
-      <>
-        <Section>
-          <Content padding="50px 20px 20px">
-            <Item align="flex-start">
+      {!onCoreNetwork ? (
+        <>
+          <Section>
+            <Content padding="50px 20px 20px">
+              <Item align="flex-start">
                 <H3 color="#e20880" weight={700}>
-                You can't Create Channel on Alias Chains. Please switch to Ethereum Kovan Network to create a channel.
-              </H3>
+                  You can't Create Channel on Alias Chains. Please switch to
+                  Ethereum Kovan Network to create a channel.
+                </H3>
               </Item>
-          </Content>
-        </Section>
-      </>
-      :
-      <>
-      <Section>
-        <Content padding="0px 20px 20px">
-          <ItemH justify="space-between">
-            <Step
-              bg="#fff"
-              activeBG="#e20880"
-              type={stepFlow >= 1 ? "active" : "inactive"}
-            />
-            <Step
-              bg="#fff"
-              activeBG="#e20880"
-              type={stepFlow >= 2 ? "active" : "inactive"}
-            />
-            <Step
-              bg="#fff"
-              activeBG="#e20880"
-              type={stepFlow >= 3 ? "active" : "inactive"}
-            />
-            <Line />
-          </ItemH>
-        </Content>
-      </Section>
+            </Content>
+          </Section>
+        </>
+      ) : (
+        <>
+          <Section>
+            <Content padding="0px 20px 20px">
+              <ItemH justify="space-between">
+                <Step
+                  bg="#fff"
+                  activeBG="#e20880"
+                  type={stepFlow >= 1 ? "active" : "inactive"}
+                />
+                <Step
+                  bg="#fff"
+                  activeBG="#e20880"
+                  type={stepFlow >= 2 ? "active" : "inactive"}
+                />
+                <Step
+                  bg="#fff"
+                  activeBG="#e20880"
+                  type={stepFlow >= 3 ? "active" : "inactive"}
+                />
+                <Line />
+              </ItemH>
+            </Content>
+          </Section>
 
-      {/* Image Upload Section */}
-      {!uploadDone && (
-        <Section>
-          <Content padding="50px 20px 20px">
-            <Item align="flex-start">
-              <H3 color="#e20880" margin="0px 0px">
-                Upload Channel Logo to start the process. Clip image to resize
-                to 128x128px.
-              </H3>
-            </Item>
+          {/* Image Upload Section */}
+          {!uploadDone && (
+            <Section>
+              <Content padding="50px 20px 20px">
+                <Item align="flex-start">
+                  <H3 color="#e20880" margin="0px 0px">
+                    Upload Channel Logo to start the process. Clip image to
+                    resize to 128x128px.
+                  </H3>
+                </Item>
 
-            <Space className="">
-              <div>
-                <div
-                  onDragOver={(e) => handleDragOver(e)}
-                  onDrop={(e) => handleOnDrop(e)}
-                  className="bordered"
-                >
-                  <div className="inner">
-                    {view ? (
-                      <div className="crop-div">
-                        {croppedImage ? (
-                          <div>
-                            <img
-                              alt="Cropped Img"
-                              src={croppedImage}
-                              className="croppedImage"
-                            />
+                <Space className="">
+                  <div>
+                    <div
+                      onDragOver={(e) => handleDragOver(e)}
+                      onDrop={(e) => handleOnDrop(e)}
+                      className="bordered"
+                    >
+                      <div className="inner">
+                        {view ? (
+                          <div className="crop-div">
+                            {croppedImage ? (
+                              <div>
+                                <img
+                                  alt="Cropped Img"
+                                  src={croppedImage}
+                                  className="croppedImage"
+                                />
+                              </div>
+                            ) : (
+                              <ImageClipper
+                                className="cropper"
+                                imageSrc={imageSrc}
+                                onImageCropped={(croppedImage) =>
+                                  setCroppedImage(croppedImage)
+                                }
+                                ref={childRef}
+                              />
+                            )}
                           </div>
                         ) : (
-                          <ImageClipper
-                            className="cropper"
-                            imageSrc={imageSrc}
-                            onImageCropped={(croppedImage) =>
-                              setCroppedImage(croppedImage)
-                            }
-                            ref={childRef}
-                          />
+                          <ImageIcon />
                         )}
-                      </div>
-                    ) : (
-                      <ImageIcon />
-                    )}
 
-                    <ButtonSpace>
-                      <div className="crop-button">
-                        {view &&
-                          (!croppedImage ? (
-                            <Button
-                              bg="#1C4ED8"
-                              onClick={() => {
-                                childRef.current.showCroppedImage();
-                              }}
-                            >
-                              Clip Image
-                            </Button>
-                          ) : (
-                            <div className="crop-button">
-                              <Button bg="#1C4ED8" onClick={() => proceed()}>
-                                Next
-                              </Button>
-                            </div>
-                          ))}
-                      </div>
-                    </ButtonSpace>
+                        <ButtonSpace>
+                          <div className="crop-button">
+                            {view &&
+                              (!croppedImage ? (
+                                <Button
+                                  bg="#1C4ED8"
+                                  onClick={() => {
+                                    childRef.current.showCroppedImage();
+                                  }}
+                                >
+                                  Clip Image
+                                </Button>
+                              ) : (
+                                <div className="crop-button">
+                                  <Button
+                                    bg="#1C4ED8"
+                                    onClick={() => proceed()}
+                                  >
+                                    Next
+                                  </Button>
+                                </div>
+                              ))}
+                          </div>
+                        </ButtonSpace>
 
-                    <div className="text-div">
-                      <label htmlFor="file-upload" className="labeled">
-                        <div>Upload a file</div>
-                        <input
-                          id="file-upload"
-                          accept="image/*"
-                          name="file-upload"
-                          hidden
-                          onChange={(e) => handleFile(e.target, "target")}
-                          type="file"
-                          className="sr-only"
-                          readOnly
-                        />
-                      </label>
-                      <div className="">- or drag and drop</div>
+                        <div className="text-div">
+                          <label htmlFor="file-upload" className="labeled">
+                            <div>Upload a file</div>
+                            <input
+                              id="file-upload"
+                              accept="image/*"
+                              name="file-upload"
+                              hidden
+                              onChange={(e) => handleFile(e.target, "target")}
+                              type="file"
+                              className="sr-only"
+                              readOnly
+                            />
+                          </label>
+                          <div className="">- or drag and drop</div>
+                        </div>
+                        <p className="text-below">
+                          PNG, JPG.Proceed to clip and submit final
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-below">
-                      PNG, JPG.Proceed to clip and submit final
-                    </p>
                   </div>
-                </div>
-              </div>
-            </Space>
+                </Space>
 
-            {/* <Item margin="-10px 0px 20px 0px">
+                {/* <Item margin="-10px 0px 20px 0px">
               <Dropzone
                 onChangeStatus={handleChangeStatus}
                 onSubmit={handleLogoSubmit}
@@ -548,40 +566,40 @@ function CreateChannel() {
                 accept="image/jpeg,image/png"
               />
             </Item> */}
-            {chainId != 1 ? (
-              <Item align="flex-end">
-                <Minter
-                  onClick={() => {
-                    mintDai();
-                  }}
-                >
-                  <Pool>
-                    <br></br>
-                    <PoolShare>Get Free DAI for Channel</PoolShare>
-                  </Pool>
-                </Minter>
-              </Item>
-            ) : (
-              <></>
-            )}
-          </Content>
-        </Section>
-      )}
+                {chainId != 1 ? (
+                  <Item align="flex-end">
+                    <Minter
+                      onClick={() => {
+                        mintDai();
+                      }}
+                    >
+                      <Pool>
+                        <br></br>
+                        <PoolShare>Get Free DAI for Channel</PoolShare>
+                      </Pool>
+                    </Minter>
+                  </Item>
+                ) : (
+                  <></>
+                )}
+              </Content>
+            </Section>
+          )}
 
-      {/* Stake Fees Section */}
-      {uploadDone && !stakeFeesChoosen && (
-        <Section>
-          <Content padding="50px 0px 0px 0px">
-            {/* <Item align="flex-start" margin="0px 20px">
+          {/* Stake Fees Section */}
+          {uploadDone && !stakeFeesChoosen && (
+            <Section>
+              <Content padding="50px 0px 0px 0px">
+                {/* <Item align="flex-start" margin="0px 20px">
               <H3 color="#e20880">Set your staking fees in DAI</H3>
             </Item> */}
 
-            <Item
-              margin="-10px 20px 20px 20px"
-              padding="20px 20px 10px 20px"
-              bg="#f1f1f1"
-            >
-              {/* <Slider
+                <Item
+                  margin="-10px 20px 20px 20px"
+                  padding="20px 20px 10px 20px"
+                  bg="#f1f1f1"
+                >
+                  {/* <Slider
                 defaultValue={minStakeFees}
                 onChangeCommitted={(event, value) => setChannelStakeFees(value)}
                 aria-labelledby="discrete-slider"
@@ -591,282 +609,401 @@ function CreateChannel() {
                 min={minStakeFees}
                 max={25000}
               /> */}
-              <Span
-                weight="400"
-                size="1.0em"
-                textTransform="uppercase"
-                spacing="0.2em"
-              >
-                Amount Staked: {channelStakeFees} DAI
-              </Span>
-            </Item>
-
-            <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
-              <Button
-                bg="#e20880"
-                color="#fff"
-                flex="1"
-                radius="0px"
-                padding="20px 10px"
-                onClick={() => {
-                  setStakeFeesChoosen(true);
-                  setStepFlow(3);
-                }}
-              >
-                <Span
-                  color="#fff"
-                  weight="400"
-                  textTransform="uppercase"
-                  spacing="0.1em"
-                >
-                  Continue
-                </Span>
-              </Button>
-            </Item>
-          </Content>
-        </Section>
-      )}
-
-      {/* Channel Entry */}
-      {uploadDone && stakeFeesChoosen && !channelInfoDone && (
-        <Section>
-          <Content padding="50px 0px 0px 0px">
-            <Item align="flex-start" margin="0px 20px">
-              <H3 color="#e20880">Setup your Channel Info</H3>
-            </Item>
-
-            <FormSubmision
-              flex="1"
-              direction="column"
-              margin="0px"
-              justify="center"
-              size="1.1rem"
-              onSubmit={handleCreateChannel}
-            >
-              <Item
-                margin="-10px 20px 15px 20px"
-                flex="1"
-                self="stretch"
-                align="stretch"
-              >
-                <Input
-                  required
-                  placeholder="Your Channel Name"
-                  maxlength="40"
-                  padding="12px"
-                  border="1px solid #000"
-                  weight="400"
-                  size="1.2em"
-                  bg="#fff"
-                  value={channelName}
-                  onChange={(e) => {
-                    setChannelName(e.target.value);
-                  }}
-                />
-                {channelName.trim().length == 0 && (
                   <Span
-                    padding="4px 10px"
-                    right="0px"
-                    top="0px"
-                    pos="absolute"
-                    color="#fff"
-                    bg="#000"
-                    size="0.7rem"
-                    z="1"
-                  >
-                    Name of Channel
-                  </Span>
-                )}
-              </Item>
-
-              <Item
-                margin="15px 20px 15px 20px"
-                flex="1"
-                self="stretch"
-                align="stretch"
-                style={{ position: "relative" }}
-              >
-                <Select
-                  className="basic-single"
-                  classNamePrefix="select"
-                  placeholder="Alias network"
-                  name="color"
-                  options={ALIAS_CHAINS}
-                  theme={(theme) => ({
-                    ...theme,
-                    borderRadius: 0,
-                    colors: {
-                      ...theme.colors,
-                      primary25: "#e20880",
-                      primary: "#e20880",
-                    },
-                  })}
-                  onChange={(selectedOption) => {
-                    setChainDetails(selectedOption.value);
-                  }}
-                />
-                <Input
-                  placeholder="Your Channel's Alias address"
-                  maxlength="40"
-                  padding="12px"
-                  style={{ paddingLeft: "22%" }}
-                  border="1px solid #000"
-                  weight="400"
-                  size="1rem"
-                  bg="#fff"
-                  value={channelAlias}
-                  onChange={(e) => {
-                    setChannelAlias(e.target.value);
-                  }}
-                />
-              </Item>
-              <Item
-                margin="15px 20px 15px 20px"
-                flex="1"
-                self="stretch"
-                align="stretch"
-              >
-                <TextField
-                  required
-                  placeholder="Your Channel's Short Description (250 Characters)"
-                  rows="4"
-                  maxlength="250"
-                  radius="4px"
-                  padding="12px"
-                  weight="400"
-                  border="1px solid #000"
-                  bg="#fff"
-                  value={channelInfo}
-                  onChange={(e) => {
-                    setChannelInfo(e.target.value.slice(0,250));
-                  }}
-                  autocomplete="off"
-                />
-                
-                <SpanR>
-                  {250-channelInfo.length} characters remains
-                </SpanR>
-              </Item>
-
-              <ItemH
-                margin="15px 20px 15px 20px"
-                flex="1"
-                self="stretch"
-                align="center"
-              >
-                <Item flex="0" margin="0px 5px 0px 0px">
-                  <FiLink size={24} color={themes.color} />
-                </Item>
-                <Item flex="1" margin="0px 0px 0px 5px" align="stretch">
-                  <Input
-                    required
-                    placeholder="Call to Action Link"
-                    padding="12px"
-                    border="1px solid #000"
-                    radius="4px"
                     weight="400"
-                    bg="#f1f1f1"
-                    value={channelURL}
-                    onChange={(e) => {
-                      setChannelURL(e.target.value);
-                    }}
-                  />
-                  {channelURL.trim().length == 0 && (
-                    <Span
-                      padding="4px 10px"
-                      right="0px"
-                      top="0px"
-                      pos="absolute"
-                      color="#fff"
-                      bg="#000"
-                      size="0.7rem"
-                      z="1"
-                    >
-                      Channel's Website URL
-                    </Span>
-                  )}
+                    size="1.0em"
+                    textTransform="uppercase"
+                    spacing="0.2em"
+                  >
+                    Amount Staked: {channelStakeFees} DAI
+                  </Span>
                 </Item>
-              </ItemH>
 
-              <Item
-                margin="15px 0px 0px 0px"
-                flex="1"
-                self="stretch"
-                align="stretch"
-              >
-                <Button
-                  bg="#e20880"
-                  color="#fff"
-                  flex="1"
-                  radius="0px"
-                  padding="20px 10px"
-                  disabled={processing == 1 ? true : false}
-                >
-                  {processing == 1 && (
-                    <Loader type="Oval" color="#fff" height={24} width={24} />
-                  )}
-                  {processing != 1 && (
-                    <Input
-                      cursor="hand"
-                      textTransform="uppercase"
+                <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
+                  <Button
+                    bg="#e20880"
+                    color="#fff"
+                    flex="1"
+                    radius="0px"
+                    padding="20px 10px"
+                    onClick={() => {
+                      setStakeFeesChoosen(true);
+                      setStepFlow(3);
+                    }}
+                  >
+                    <Span
                       color="#fff"
                       weight="400"
-                      size="0.8em"
-                      spacing="0.2em"
-                      type="submit"
-                      value="Setup Channel"
+                      textTransform="uppercase"
+                      spacing="0.1em"
+                    >
+                      Continue
+                    </Span>
+                  </Button>
+                </Item>
+              </Content>
+            </Section>
+          )}
+
+          {/* Channel Entry */}
+          {uploadDone && stakeFeesChoosen && !channelInfoDone && (
+            <Section>
+              <Content padding="50px 0px 0px 0px">
+                <Item align="flex-start" margin="0px 20px">
+                  <H3 color="#e20880">Setup your Channel Info</H3>
+                </Item>
+
+                <FormSubmision
+                  flex="1"
+                  direction="column"
+                  margin="0px"
+                  justify="center"
+                  size="1.1rem"
+                  onSubmit={handleCreateChannel}
+                >
+                  <Item
+                    margin="-10px 20px 15px 20px"
+                    flex="1"
+                    self="stretch"
+                    align="stretch"
+                  >
+                    <InputDiv border="1px solid black">
+                      <Input
+                        required
+                        placeholder="Your Channel Name"
+                        maxlength="40"
+                        maxllength="100%"
+                        padding="12px"
+                        weight="400"
+                        size="1em"
+                        bg="#fff"
+                        value={channelName}
+                        onChange={(e) => {
+                          setChannelName(e.target.value);
+                        }}
+                      />
+                    </InputDiv>
+
+                    {channelName.trim().length == 0 && (
+                      <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                        z="1"
+                      >
+                        Channel's Name
+                      </Span>
+                    )}
+                  </Item>
+
+                  <Item
+                    margin="15px 20px 15px 20px"
+                    flex="1"
+                    self="stretch"
+                    align="stretch"
+                    direction="row"
+                    height="20px"
+                    style={{ position: "relative" }}
+                  >
+                    {/* <ItemAlias> */}
+
+                    <Select
+                      // className="basic-single"
+                      // classNamePrefix="select"
+                      placeholder="Choose the channels network"
+                      name="color"
+                      options={ALIAS_CHAINS}
+                      theme={(theme) => ({
+                        ...theme,
+                        borderRadius: 0,
+                        colors: {
+                          ...theme.colors,
+                          primary25: "#e20880",
+                          primary: "#e20880",
+                        },
+                      })}
+                      styles={{
+                        control: (base) => ({
+                          ...base,
+                          "&:hover": {
+                            borderColor: "red",
+                          },
+                        }),
+                        }}
+                      defaultValue={{label: "Ethereum", value:"Ethereum"}}
+                      onChange={(selectedOption) => {
+                        setChainDetails(selectedOption.value);
+                      }}
                     />
-                  )}
-                </Button>
-              </Item>
-            </FormSubmision>
-          </Content>
-        </Section>
-      )}
 
-      {/* Channel Setup Progress */}
-      {(processing == 1 || processing == 3) && (
-        <Section>
-          <Content padding="0px 0px 0px 0px">
-            {processing == 1 && (
-              <Item margin="20px 0px 10px 0px">
-                <Loader type="Oval" color="#000" height={24} width={24} />
-              </Item>
-            )}
+                    <span
+                      className="imgSpan"
+                      data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
+                    >
+                      <img
+                        className="iImage"
+                        src="/svg/info.svg"
+                        style={{
+                          width: "20px",
+                          height: "20px",
+                          marginTop: "0px",
+                          marginBottom: "-2px",
+                        }}
+                      />
 
-            <Item
-              color="#fff"
-              bg={processing == 1 ? "#e1087f" : "#000"}
-              padding="10px 15px"
-              margin="15px 0px"
-            >
-              <Span
-                color="#fff"
-                textTransform="uppercase"
-                spacing="0.1em"
-                weight="400"
-                size="1em"
-              >
-                {processingInfo}
-              </Span>
-            </Item>
-          </Content>
-        </Section>
-        )}
+                      {/* <span className="test">When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain <a href="">read more</a></span> */}
+                      </span>
+                      <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                        z="1"
+                      >
+                        Choose Channel's Activation Network
+                      </Span>
+
+                  </Item>
+                    
+                    {chainDetails != "Ethereum" &&
+                    <Item
+                      margin="55px 20px 15px 20px"
+                      flex="1"
+                      self="stretch"
+                      align="stretch"
+                      style={{ position: "relative" }}
+                    >
+                      <InputDiv
+                        border={() => {
+                          if (themes.scheme == "dark") return "1px solid white";
+                          else return "1px solid black";
+                        }}
+                      >
+                        <Input
+                          placeholder="Your Channel's Alias address"
+                          maxlength="40"
+                          maxllength="100%"
+                          padding="12px"
+                          weight="400"
+                          size="1rem"
+                          bg="white"
+                          disabled={
+                            chainDetails === "" || chainDetails === "Ethereum"
+                              ? true
+                              : false
+                          }
+                          visibility={
+                            chainDetails === "Ethereum" ? "hidden" : "visible"
+                          }
+                          value={channelAlias}
+                          onChange={(e) => {
+                            setChannelAlias(e.target.value);
+                          }}
+                        />
+                      </InputDiv>
+                      <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                      >
+                        Make sure you own this address as verification will take place.
+                      </Span>
+                    </Item>
+                    }
+
+                  <Item
+                    margin="0px 20px 15px 20px"
+                    flex="1"
+                    self="stretch"
+                    align="stretch"
+                    style={{marginTop: `${chainDetails === "Ethereum" ? "55px" : "20px"}`, position: "relative"}}
+                  >
+                    <TextField
+                      required
+                      placeholder="Your Channel's Short Description (250 Characters)"
+                      rows="4"
+                      maxlength="250"
+                      radius="4px"
+                      padding="12px"
+                      weight="400"
+                      border="1px solid #000"
+                      bg="#fff"
+                      value={channelInfo}
+                      onChange={(e) => {
+                        setChannelInfo(e.target.value.slice(0, 250));
+                      }}
+                      autocomplete="off"
+                    />
+
+                    <SpanR>
+                      <span
+                        style={{padding: "15px"}}
+                      >
+                        {250 - channelInfo.length} characters remains
+                      </span>
+                    </SpanR>
+                    <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
+                        color="#fff"
+                        bg="#000"
+                        size="0.7rem"
+                      >
+                        Channel's Description
+                      </Span>
+                  </Item>
+
+                  <ItemH
+                    margin="15px 20px 15px 20px"
+                    flex="1"
+                    self="stretch"
+                    align="center"
+                  >
+                    <Item flex="0" margin="0px 5px 0px 0px">
+                      <FiLink size={24} color={themes.color} />
+                    </Item>
+                    <Item flex="1" margin="0px 0px 0px 5px" align="stretch">
+                      <Input
+                        required
+                        placeholder="Call to Action Link"
+                        padding="12px"
+                        border="1px solid #000"
+                        radius="4px"
+                        weight="400"
+                        bg="#f1f1f1"
+                        value={channelURL}
+                        onChange={(e) => {
+                          setChannelURL(e.target.value);
+                        }}
+                      />
+                      {channelURL.trim().length == 0 && (
+                        <Span
+                          padding="4px 10px"
+                          right="0px"
+                          top="0px"
+                          pos="absolute"
+                          color="#fff"
+                          bg="#000"
+                          size="0.7rem"
+                          z="1"
+                        >
+                          Channel's Website URL
+                        </Span>
+                      )}
+                    </Item>
+                  </ItemH>
+
+                  <Item
+                    margin="15px 0px 0px 0px"
+                    flex="1"
+                    self="stretch"
+                    align="stretch"
+                  >
+                    <Button
+                      bg="#e20880"
+                      color="#fff"
+                      flex="1"
+                      radius="0px"
+                      padding="20px 10px"
+                      disabled={processing == 1 ? true : false}
+                    >
+                      {processing == 1 && (
+                        <Loader
+                          type="Oval"
+                          color="#fff"
+                          height={24}
+                          width={24}
+                        />
+                      )}
+                      {processing != 1 && (
+                        <Input
+                          cursor="hand"
+                          textTransform="uppercase"
+                          color="#fff"
+                          weight="400"
+                          size="0.8em"
+                          spacing="0.2em"
+                          type="submit"
+                          value="Setup Channel"
+                        />
+                      )}
+                    </Button>
+                  </Item>
+                </FormSubmision>
+              </Content>
+            </Section>
+          )}
+
+          {/* Channel Setup Progress */}
+          {(processing == 1 || processing == 3) && (
+            <Section>
+              <Content padding="0px 0px 0px 0px">
+                {processing == 1 && (
+                  <Item margin="20px 0px 10px 0px">
+                    <Loader type="Oval" color="#000" height={24} width={24} />
+                  </Item>
+                )}
+
+                <Item
+                  color="#fff"
+                  bg={processing == 1 ? "#e1087f" : "#000"}
+                  padding="10px 15px"
+                  margin="15px 0px"
+                >
+                  <Span
+                    color="#fff"
+                    textTransform="uppercase"
+                    spacing="0.1em"
+                    weight="400"
+                    size="1em"
+                  >
+                    {processingInfo}
+                  </Span>
+                </Item>
+              </Content>
+            </Section>
+          )}
         </>
-      }
+      )}
     </ThemeProvider>
   );
 }
 
 // css styles
+
+const InputDiv = styled.div`
+  display: ${(props) => props.display || "flex"};
+  flex: 1;
+  border: ${(props) => props.border || "none"};
+  margin-bottom: ${(props) => props.marginBottom || "none"};
+  width: ${(props) => props.width || "none"};
+  visibility: ${(props) => props.visibility || ""};
+`;
 const SpanR = styled.div`
-color: #e20880;
-opacity: 0.7;
-position: absolute;
-bottom: 0px;
-right: 0.8rem;
-z-index: 1;
+  position: absolute;
+  bottom: 0px;
+  right: 0.8rem;
+  color: white;
+  z-index: 1;
+  margin-bottom: 5px;
+  padding: 5px;
+  background: #e20880;
+  border-radius: 20px;
+  align-items: center;
+  font-size: 16px;
 `;
 const Step = styled.div`
   height: 12px;

@@ -239,7 +239,7 @@ function ComingSoonPage(props) {
                         <b>Subset Notification</b>: <i>Sent out to a group of all the subscribers</i> 
                       </Span>
                       <Span>
-                        <b>Targetted Notification</b>: <i>Sent out to a specific subscriber of your channel</i> 
+                        <b>Targeted Notification</b>: <i>Sent out to a specific subscriber of your channel</i> 
                       </Span>
                     </Answer>
                   }
