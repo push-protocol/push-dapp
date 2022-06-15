@@ -26,7 +26,7 @@ const SearchBar = (props: { setChat: any; }) => {
         console.log(responseData);
         setAllUsers(responseData);
     }, []);
-
+    
     useEffect(() => {
         // Get all the wallets from server
         getAllUsers();
@@ -64,7 +64,7 @@ const SearchBar = (props: { setChat: any; }) => {
     const submitSearch = async (event) => {
         event.preventDefault();
         try {
-            
+            //const provider = await connector.getProvider();
             const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
             var web3 = new Web3(provider);
             var ENS = web3.eth.ens;
