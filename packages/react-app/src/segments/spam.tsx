@@ -204,7 +204,7 @@ function SpamBox({ currentTab }) {
     setLoading(true);
 
     try {
-      const { count, results } = await api.fetchSpamNotifications({
+      const { count, results } = await EPNSAPI.fetchSpamNotifications({
         user: account,
         pageSize: NOTIFICATIONS_PER_PAGE,
         page: 1,
@@ -256,7 +256,7 @@ function SpamBox({ currentTab }) {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await api.fetchSpamNotifications({
+      const { count, results } = await EPNSAPI.fetchSpamNotifications({
         user: account,
         pageSize: 100000,
         page: 1,
