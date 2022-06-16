@@ -12,6 +12,7 @@ import {
     Span,
     Button,
   } from "components/SharedStyling";
+import { varint } from 'multiformats';
 
 
 interface intentFeedProps {
@@ -38,8 +39,11 @@ const IntentFeed = (props: intentFeedProps) => {
         const inbox: Feeds[] = await getInbox(did.id);
         console.log("Printing inbox");
         console.table(inbox);
-        // filter out the feeds which have intent as approved
-        const filteredFeeds = inbox.filter(feed => feed.intent === 'Pending');
+        // filter out the feeds which have intent as approved if inbox is not empty
+        var filteredFeeds =[];
+        if (inbox.length > 0) {
+            filteredFeeds = inbox.filter(feed => feed.intent === 'Approved');
+        }
         setFeeds(filteredFeeds);
         setMessagesLoading(true);
     }, [])
