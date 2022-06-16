@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner';
 //Helper
 import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
 import {encrypt,decrypt} from '../../../helpers/w2w/Did';
-import {generateKeyPair} from '../../../helpers/w2w/PGP';
+import {generateKeyPair,encryptMessage,decryptMessage} from '../../../helpers/w2w/PGP';
 import * as DIDHelpers from '../../../helpers/w2w/Did';
 import {getKeys,randomString,createUser,getUser} from '../../../helpers/w2wChatHelper';
 //DID and ceramic
@@ -81,7 +81,9 @@ function App(){
           //await updateKeys(did.id,keyPairs.privateKey,keyPairs.publicKey);
           
       }
-      console.log(response);
+      
+     // const res = await encryptMessage({"hello":"world"},response.public_key);
+      //console.log(res);
     };
 
     const getLinkWallets = async (account:string):Promise<string> => {

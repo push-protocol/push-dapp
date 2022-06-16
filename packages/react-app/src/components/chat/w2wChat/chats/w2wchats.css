@@ -45,9 +45,9 @@
 .chatText span{
     font-size: 0.8rem;
     color: black;
-    width: 70px;
+    width: 6rem;
     position: relative;
-    margin-left: 10px;
+    left: 0.5rem;
     top: -1rem;
     opacity: 0.8;
     align-self: flex-end;

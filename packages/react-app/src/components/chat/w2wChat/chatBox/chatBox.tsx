@@ -3,19 +3,18 @@ import './chatBox.css';
 import cn from 'classnames';
 //@ts-ignore
 // @ts-ignore
-import defaultChat from '../w2wAsset/default.png';
+import epnsLogo from '../w2wAsset/epnsLogo.png';
 import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
-import epnsLogo from '../w2wAsset/epnsLogo.png';
 
 import Picker from 'emoji-picker-react';
 import { postMessage } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 
-import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
+import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
 
@@ -37,7 +36,7 @@ const ChatBox = () => {
         setMessages([]);
         while (messageCID) {
             const current = await IPFSHelper.get(messageCID, ipfs);
-            console.log(current);
+           
             const msgIPFS: MessageIPFS = current as MessageIPFS
 
             setMessages(m => [msgIPFS,...m ])
@@ -94,7 +93,9 @@ const ChatBox = () => {
     return (
         <div className='chatBox_body'>
             {!viewChatBox ? (
-                <img src={defaultChat}></img>
+                <div className="defaultChatPage">
+                   
+                </div>
             )
                 :
                 (
