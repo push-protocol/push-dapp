@@ -61,6 +61,7 @@
 }
 .sidebar_message:hover{
   overflow-x: hidden;
+  overflow-y: hidden;
   position: absolute;
   
 }
