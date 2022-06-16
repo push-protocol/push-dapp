@@ -13,8 +13,7 @@
   *, *::before, *::after {
     box-sizing: inherit;
   }
-  
-  
+
   .searchInputs input {
     background-color: rgb(255, 255, 255);
     border-radius: 10px;
@@ -41,6 +40,16 @@
     display: flex;
     
   }
+
+  .intentFilter_buttons{
+    padding-left:3%;
+    padding-right: 3%;
+    padding-bottom:3%;
+    width: 100%;
+    display: flex;
+    position: relative;
+}
+
   .searchBody{
     display: flex;
     flex-direction: column;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled, { useTheme } from "styled-components";
 
 import {ThemeProvider} from "styled-components";
@@ -9,12 +9,21 @@ import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/
 // Create Header
 function Chat() {
     const themes = useTheme();
+    const [rerender,setRerender] = useState(false);
+    const [display,setDisplay] = useState(1);
+    window.ethereum.on('accountsChanged',(account)=>{
+      window.location.reload();
+    });
+    window.ethereum.on('networksChanged',()=>{
+      window.location.reload();
+    })
     
+
     return (
       <ThemeProvider theme={themes}>
         <Container>
           <ItemH>
-            <W2wIndex/>
+               <W2wIndex/>
           </ItemH>
         </Container>
       </ThemeProvider>

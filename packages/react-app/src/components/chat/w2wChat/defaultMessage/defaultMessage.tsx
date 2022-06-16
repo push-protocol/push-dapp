@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InboxChat } from '../messageFeed/messageFeed';
 import { Feeds } from '../w2wIndex';
 import './defaultMessage.css';
+import Loader from '../Loader/Loader';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
@@ -12,6 +13,7 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
 
     useEffect(() => {
         async function resolveThreadHash() {
+            
             if (props.inbox?.threadhash) {
                 const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                 const current = await IPFSHelper.get(props.inbox.threadhash, IPFSClient);
@@ -22,7 +24,21 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
                     lastMessage: msgIPFS.messageContent,
                     timestamp: msgIPFS.timestamp
                 };
-                console.log(msg);
+                if(msg.lastMessage.length>25)
+                {
+                    msg.lastMessage = msg.lastMessage.slice(0,25)+'....';
+                }
+                setInboxMessage(msg);
+                setLoading(false);
+            }
+            else{
+                const msg: InboxChat = {
+                    name: props.inbox.name.split('-').toString().replace(/,/g, " ").charAt(0).toUpperCase() + props.inbox.name.split('-').toString().replace(/,/g, " ").slice(1),
+                    avatar: props.inbox.profile_picture,
+                    lastMessage: null,
+                    timestamp: null
+                };
+              
                 setInboxMessage(msg);
                 setLoading(false);
             }
@@ -32,7 +48,7 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
 
     return(
         (loading) ?
-            (<div>loading</div >) :
+            (<div></div >) :
             <div className='defaultMessage_body' >
                 <div className='defaultMessage_1'>
                     <div className='defaultMessage_2'>

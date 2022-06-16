@@ -22,13 +22,13 @@ import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import './w2wIndex.css';
 export interface Feeds{
-    did:DID,
+    did:string,
     threadhash: string,
     name:string,
     lastMessage:string,
     profile_picture:string,
     time:string,
-    intent:Boolean
+    intent:string
    
 }
 interface AppContextInterface{
@@ -46,6 +46,7 @@ function App(){
     const [encryptedData, setEncryptedData] = useState<JWE>();
     const [decryptedData, setDecryptedData] = useState<string>();
     */
+   
     useEffect(()=>{
       if(isLoading)
       {
@@ -57,7 +58,9 @@ function App(){
       const provider: Promise<any> = await connector.getProvider()
       const threeID: ThreeIdConnect = new ThreeIdConnect()
       const ceramic: CeramicClient = createCeramic();
+      console.log(account);
       const didProvider = await DIDHelpers.Get3IDDIDProvider(threeID, provider, account);
+      console.log(didProvider);
       const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
       console.log(did);
       setDid(did);

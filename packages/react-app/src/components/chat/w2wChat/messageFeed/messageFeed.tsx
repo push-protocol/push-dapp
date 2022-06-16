@@ -7,6 +7,7 @@ import { Context, Feeds } from '../w2wIndex';
 
 interface messageFeedProps {
     filteredUserData: {}[],
+    isValid:boolean,
     setChat: (arg0: any) => void
 }
 
@@ -26,19 +27,29 @@ const MessageFeed = (props: messageFeedProps) => {
     const fetchMyApi = useCallback(async () => {
         const inbox: Feeds[] = await getInbox(did.id);
         console.log(inbox);
-        setFeeds(inbox);
-        setMessagesLoading(true);
+        // filter out the feeds which have intent as approved
+        const filteredFeeds = inbox.filter(feed => feed.intent === 'Approved');
+        setFeeds(filteredFeeds);
     }, [])
-
+    /*setInterval(()=>{
+        const fetchMyApi = async () => {
+            const inbox: Feeds[] = await getInbox(did.id);
+            console.log(inbox,'hi');
+            setFeeds(inbox);
+        };
+        fetchMyApi();
+        
+    },10000);*/
     useEffect(() => {
-        if (!props.filteredUserData?.length) {
+        console.log(props);
+        if (!props.isValid) {
             fetchMyApi();
         }
         else {
             setFeeds(props.filteredUserData);
         }
         setMessagesLoading(false);
-    }, [props.filteredUserData]);
+    }, [props.isValid,props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
         props.setChat(feed);
@@ -47,18 +58,18 @@ const MessageFeed = (props: messageFeedProps) => {
     return (
         <>
             <section className='messageFeed_body'>
-                {(!messagesLoading) ? (
+                {(messagesLoading) && (
                     <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
                         <Loader />
                     </div>
-                ) :
-                    (
-                        (!feeds?.length) ? (
+                ) }
+                    {
+                        (!feeds?.length && !messagesLoading) ? (
                             <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
                                 No Address found.
                             </p>
                         ) :
-                            (
+                            (!messagesLoading &&
                                 <div>
                                     {feeds.map((feed: Feeds) => (
                                         <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
@@ -67,8 +78,9 @@ const MessageFeed = (props: messageFeedProps) => {
                                     ))}
                                 </div>
                             )
-                    )
-                }
+                    }
+                
+                
             </section>
 
         </>

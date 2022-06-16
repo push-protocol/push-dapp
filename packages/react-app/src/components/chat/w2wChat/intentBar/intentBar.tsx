@@ -14,6 +14,15 @@ import { getAllWallets } from '../../../../helpers/w2wChatHelper';
 import { getIntents } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import {Context, Feeds} from '../w2wIndex';
+import {
+    Section,
+    Content,
+    Item,
+    H3,
+    Span,
+    Button,
+  } from "components/SharedStyling";
+
 
 const IntentBar = (props: { setChat: any; }) => {
     const { did } = useContext(Context);
@@ -26,27 +35,35 @@ const IntentBar = (props: { setChat: any; }) => {
     
     const getAllUsers = useCallback(async () => {
         const responseData = await getAllWallets();
-        await setAllUsers(responseData);
+        setAllUsers(responseData);
+        console.log("printing users");
+        console.table(responseData);
     }, []);
 
     const getAllIntents = useCallback(async() => {
         const responseData = await getIntents(did.id);
-        await setAllIntents(responseData);
+        setAllIntents(responseData);
+        console.log("Printing intents");
+        console.table(responseData);
     }, []);
 
-    useEffect(() => {
-        getAllUsers();
-        getAllIntents();
+    const getAllUserDatafromIntents = useCallback(async() => {
         var filteredUsers = [];
         allUsers.forEach(user => {
             allIntents.forEach(intent => {
-                if (user.did === intent.intent_sent_by && intent.intent!='Approved') {
+                if (user.did == intent.intent_sent_by && intent.intent=='Pending') {
                     console.log("Found a valid intent");
                     filteredUsers.push(user);
                 }
             });
         });
-        setFilteredUserData(filteredUsers);
+        // setFilteredUserData(filteredUsers);
+    }, []);
+
+    useEffect(() => {
+        getAllUsers();
+        getAllIntents();
+        getAllUserDatafromIntents();
     }, []);
 
     const searchFromDb = (did: string) => {
@@ -109,25 +126,10 @@ const IntentBar = (props: { setChat: any; }) => {
 
     return (
         <div className="search" >
-            <form onSubmit={submitSearch}>
-                <div className="searchInputs">
-                    <input
-                        type="text"
-                        placeholder='Search Intents'
-                        value={wordEntered}
-                        onChange={handleSearch}
-
-                    />
-                    <div className="searchIcon">
-                        {wordEntered.length === 0 ? (
-                            <SearchIcon />
-                        ) : (
-                            <CloseIcon id="clearBtn" onClick={clearInput} />
-                        )}
-                    </div>
-                </div>
-            </form>
-
+            <div className='intentFilter_buttons' style={{color:"black", width:"100%", fontSize:"20px"}}>
+                <h1 style={{color:"black", fontSize:"medium"}}>Intents</h1>
+            </div>
+            
             <div className='sidebar_message'>
                 {<IntentFeed filteredUserData={filteredUserData} setChat={props.setChat} />}
             </div>

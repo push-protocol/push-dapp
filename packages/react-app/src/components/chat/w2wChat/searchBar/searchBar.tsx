@@ -20,12 +20,13 @@ const SearchBar = (props: { setChat: any; }) => {
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
-    
+    const [isValid,setIsValid]  = useState<boolean>(false);
     const getAllUsers = useCallback(async () => {
         const responseData = await getAllWallets();
+        // console.log(responseData);
         setAllUsers(responseData);
     }, []);
-
+    
     useEffect(() => {
         // Get all the wallets from server
         getAllUsers();
@@ -39,6 +40,8 @@ const SearchBar = (props: { setChat: any; }) => {
                     details.did.trim().includes(did.trim())
                 )
             });
+            setIsValid(true);
+            console.log(filteredData,did);
             if (filteredData.length) {
                 setFilteredUserData(filteredData);
             }
@@ -47,8 +50,9 @@ const SearchBar = (props: { setChat: any; }) => {
             }
         }
         else {
+            setIsValid(true);
             setFilteredUserData([]);
-            setWordEntered("");
+            //setWordEntered("");
         }
     }
 
@@ -60,11 +64,13 @@ const SearchBar = (props: { setChat: any; }) => {
     const submitSearch = async (event) => {
         event.preventDefault();
         try {
-            const provider = await connector.getProvider();
+            //const provider = await connector.getProvider();
+            const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
             var web3 = new Web3(provider);
             var ENS = web3.eth.ens;
             if (!web3.utils.isAddress(wordEntered)) {
                 const address: string = await ENS.getAddress(wordEntered);
+                console.log(address);
                 const did = await getLinkWallets(address);
                 if (did === null) {
                     searchFromDb('');
@@ -75,11 +81,13 @@ const SearchBar = (props: { setChat: any; }) => {
             }
             else {
                 const did = await getLinkWallets(wordEntered);
+                console.log(did);
                 searchFromDb(did);
             }
         }
         catch (err) {
-            setFilteredUserData([]);
+            searchFromDb('');
+            
             console.log(err, "hello");
         }
     }
@@ -87,6 +95,7 @@ const SearchBar = (props: { setChat: any; }) => {
     const clearInput = () => {
         setFilteredUserData([]);
         setWordEntered("");
+        setIsValid(false);
     };
 
     return (
@@ -111,7 +120,7 @@ const SearchBar = (props: { setChat: any; }) => {
             </form>
 
             <div className='sidebar_message'>
-                {<MessageFeed filteredUserData={filteredUserData} setChat={props.setChat} />}
+                {<MessageFeed isValid = {isValid} filteredUserData={filteredUserData} setChat={props.setChat} />}
             </div>
         </div>
     );

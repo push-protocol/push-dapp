@@ -4,8 +4,17 @@ import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
 import { getInbox } from '../../../../helpers/w2wChatHelper';
 import { Context, Feeds } from '../w2wIndex';
+import {
+    Section,
+    Content,
+    Item,
+    H3,
+    Span,
+    Button,
+  } from "components/SharedStyling";
 
-interface messageFeedProps {
+
+interface intentFeedProps {
     filteredUserData: {}[],
     setChat: (arg0: any) => void
 }
@@ -17,7 +26,9 @@ export interface InboxChat {
     lastMessage: string
 }
 
-const IntentFeed = (props: messageFeedProps) => {
+const IntentFeed = (props: intentFeedProps) => {
+    console.log("Printing props data");
+    console.table(props.filteredUserData);
     const { did } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
     const [inboxMessages, setInboxMessages] = useState<InboxChat[]>()
@@ -27,7 +38,9 @@ const IntentFeed = (props: messageFeedProps) => {
         const inbox: Feeds[] = await getInbox(did.id);
         console.log("Printing inbox");
         console.table(inbox);
-        setFeeds(inbox);
+        // filter out the feeds which have intent as approved
+        const filteredFeeds = inbox.filter(feed => feed.intent === 'Pending');
+        setFeeds(filteredFeeds);
         setMessagesLoading(true);
     }, [])
 
@@ -35,7 +48,8 @@ const IntentFeed = (props: messageFeedProps) => {
         if (!props.filteredUserData?.length) {
             fetchMyApi();
         }
-        else {
+        else {  
+            console.log("Setting through props");
             setFeeds(props.filteredUserData);
         }
         setMessagesLoading(false);
@@ -48,6 +62,10 @@ const IntentFeed = (props: messageFeedProps) => {
     return (
         <>
             <section className='messageFeed_body'>
+            <div className='intentFilter_buttons' style={{width:"100%"}}>
+                <Button style={{width:"50%", display:"inline-block", color:"black"}}> Sent </Button>
+                <Button style={{width:"50%", display:"inline-block", color:"black"}}> Received </Button>
+            </div>
                 {(!messagesLoading) ? (
                     <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
                         <Loader />
