@@ -82,8 +82,8 @@ function App(){
           
       }
       
-      const res = await encryptMessage({"hello":"world"},response.public_key);
-      console.log(res);
+     // const res = await encryptMessage({"hello":"world"},response.public_key);
+      //console.log(res);
     };
 
     const getLinkWallets = async (account:string):Promise<string> => {
