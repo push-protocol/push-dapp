@@ -324,14 +324,19 @@ export default class ChannelsDataStore {
    * @returns
    */
   getChannelFromApi = async (startIndex, pageCount) => {
-    return postReq("/channels/get_channels_with_sub", {
+    return postReq("/channels/search", {
       page: Math.ceil(startIndex / pageCount) || 1,
       pageSize: pageCount,
       address: this.state.account,
-      blockchain: this.state.chainId,
+      chainId: this.state.chainId,
+      query: " ",
       op: "read",
     }).then((response) => {
-      const output = response.data.channelsDetail.map(({channel}) => ({addr: channel}));
+      let output;
+      if (envConfig.coreContractChain === this.state.chainId)
+        output = response.data.channels.map(({ channel }) => ({ addr: channel, alias_address: null }));
+      else
+        output = response.data.channels.map(({ alias_address, channel }) => ({ addr: channel, alias_address: alias_address }));
       return output;
     });
   };
@@ -458,20 +463,7 @@ export default class ChannelsDataStore {
       return cachedSubscribers;
     }
     let address = channelAddress;
-    if (!this.state.onCoreNetwork) {
-      await postReq("/channels/get_alias_details", {
-          channel: channelAddress,
-          op: "read",
-        }).then(({ data }) => {
-          const aliasAccount = data;
-          if (aliasAccount) {
-            address = aliasAccount.aliasAddress;
-          }
-          return data;
-        });
-    }
-
-    if (!address) return;
+    
     return postReq("/channels/get_subscribers", {
       channel: address,
       blockchain: this.state.chainId,

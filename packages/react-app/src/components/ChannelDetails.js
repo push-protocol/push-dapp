@@ -6,19 +6,32 @@ import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
+import { Item } from "./SharedStyling";
+import { postReq } from "api";
+import { useWeb3React } from "@web3-react/core";
 const DATE_FORMAT = "DD/MM/YYYY";
+
+const networkName = {
+  42: "Polygon Mumbai",
+  1: "Polygon Mainnet"
+}
 
 export default function ChannelDetails() {
   const theme = useTheme();
+  const { chainId, account } = useWeb3React();
   const { channelDetails, canVerify } = useSelector((state) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
     (state) => state.channels
   );
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
   const [creationDate, setCreationDate] = React.useState("");
+  const [aliasVerified, setAliasVerified] = React.useState(null);
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
+
+  const CORE_CHAIN_ID = envConfig.coreContractChain;
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
@@ -41,6 +54,34 @@ export default function ChannelDetails() {
       setCreationDate(date.format(DATE_FORMAT))
     })();
   }, [channelDetails]);
+
+  React.useEffect(() => {
+    if (!onCoreNetwork) return;
+
+    (async function() {
+      await postReq("/channels/get_alias_details", {
+        channel : account,
+        op: "read",
+      }).then(async ({ data }) => {
+        const aliasAccount = data;
+        console.log(aliasAccount);
+        if (aliasAccount.aliasAddress) {
+          const { aliasAddress } = aliasAccount;
+            await postReq("/channels/get_alias_verification_status", {
+              aliasAddress: aliasAddress,
+              op: "read",
+            }).then(({ data }) => {
+              if (!data) {
+                return;
+              }
+              const { status } = data;
+              setAliasVerified(status || false);
+              return data;
+            });
+        }
+      });
+    })();
+  }, [account , chainId]);
 
   return (
     <ChannelDetailsWrapper>
@@ -68,7 +109,13 @@ export default function ChannelDetails() {
         </Details>
       </SectionTop>
 
-      <SectionDes style={{color : theme.color}}>{channelDetails.info}</SectionDes>
+      <SectionDes style={{ color: theme.color }}>{channelDetails.info}</SectionDes>
+      
+      {aliasVerified === false &&
+        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
+          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+        </Item>
+      }
 
       <SectionDate>
         {canVerify && (

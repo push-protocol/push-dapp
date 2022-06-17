@@ -13,6 +13,10 @@ import { envConfig } from "@project/contracts";
 import { postReq } from "api";
 import { ThemeProvider, useTheme } from "styled-components";
 
+const networkName = {
+  80001: "Polygon Mumbai",
+  137: "Polygon Mainnet"
+}
 
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
@@ -85,7 +89,7 @@ const ChannelOwnerDashboard = () => {
                         <Span weight="200" color={themes.color}> Your Channel Alias!</Span>
                       </H2>
                       <H3 color={themes.color} padding="10px 0px">
-                        You have to verify your main channel's alias to use the channel here.
+                        Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
                       </H3>
                       <Button
                         bg="#e20880"

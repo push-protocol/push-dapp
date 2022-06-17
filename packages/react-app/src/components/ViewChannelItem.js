@@ -60,7 +60,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const onCoreNetwork = (chainId === envConfig.coreContractChain);
 
   const [channelObject, setChannelObject] = React.useState({});
-  const [isOwner, setIsOwner] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState({});
   const [subscribed, setSubscribed] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
@@ -74,12 +73,18 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(null);
-  const [ethAliasAccount, setEthAliasAccount] = React.useState(null);
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
+
+  let isOwner;
+  if(!onCoreNetwork) {
+    isOwner = channelObject.alias_address === account;
+  } else {
+    isOwner = channelObject.addr === account;
+  }
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -100,36 +105,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     } else {
       // if this key (verifiedBy) is not present it means we are searching and should fetch the channel object from chain again
       epnsReadProvider.channels(channelObject.addr).then((response) => {
-        setChannelObject({ ...response, addr: channelObject.addr });
+        setChannelObject({ ...response, addr: channelObject.addr, alias_address: channelObject.alias_address });
         fetchChannelJson();
       });
     }
   }, [account, channelObject, chainId]);
-
-  React.useEffect(() => {
-    (async function init() {
-      if (!channelObject.addr) return;
-      // if we are not on the core network then check for if this account is an alias for another channel
-      if (!onCoreNetwork) {
-        // get the alias address of the eth address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/get_alias_details", {
-          channel: channelObject.addr,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const aliasAccount = data;
-          if (aliasAccount) {
-            setEthAliasAccount(aliasAccount.aliasAddress);
-            setIsOwner(account === aliasAccount.aliasAddress);
-            fetchChannelJson();
-          }
-          return data;
-        });
-      } else {
-        setIsOwner(account === channelObject.addr);
-      }
-    })();
-    }, [account, channelObject, chainId]);
 
   React.useEffect(() => {
     if (!channelObjectProp) return;
@@ -173,8 +153,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       }
       let channelAddress = channelObject.addr;
       if (!onCoreNetwork) {
-        if (ethAliasAccount == 'NULL') return;
-        channelAddress = ethAliasAccount;
+        channelAddress = channelObject.alias_address;
       }
       if (!channelAddress) return;
       const channelSubscribers = await postReq("/channels/get_subscribers", {
@@ -355,7 +334,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
       let channelAddress = channelObject.addr;
       if (!onCoreNetwork) {
-        channelAddress = ethAliasAccount;
+        channelAddress = channelObject.alias_address;
       }
 
       const message = {
@@ -468,7 +447,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
       let channelAddress = channelObject.addr;
       if (!onCoreNetwork) {
-        channelAddress = ethAliasAccount;
+        channelAddress = channelObject.alias_address;
       }
 
       const message = {
