@@ -87,7 +87,7 @@ export default function App() {
     })();
   }, [account]);
 
-  React.useEffect(() => {
+  // React.useEffect(() => {
     onMessageListener().then(payload => {
       if (!("Notification" in window)) {
         toast.dark(`${payload.notification.body} from: ${payload.notification.title}`,{
@@ -113,7 +113,7 @@ export default function App() {
       }
     }).catch(err => console.log('failed: ', err))
     .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
-  }, [triggerNotification]);
+  // }, [triggerNotification]);
   
 
   React.useEffect(()=>{

@@ -47,6 +47,11 @@ const ALIAS_CHAINS = [
   { value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },
 ];
 
+const networkName = {
+  42: "Ethereum Kovan",
+  1: "Ethereum Mainnet"
+}
+
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
 // Create Header
@@ -431,8 +436,7 @@ function CreateChannel() {
             <Content padding="50px 20px 20px">
               <Item align="flex-start">
                 <H3 color="#e20880" weight={700}>
-                  You can't Create Channel on Alias Chains. Please switch to
-                  Ethereum Kovan Network to create a channel.
+                  Channels can only be created on {networkName[envConfig.coreContractChain]} Network and not on Alias chains. Please switch to {networkName[envConfig.coreContractChain]} Network to create a channel.
                 </H3>
               </Item>
             </Content>

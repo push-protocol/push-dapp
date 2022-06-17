@@ -121,7 +121,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
           query: search,
           op: "read",
           page: 1,
-          pageSize: 1000
+          address: account,
+          pageSize: 1000,
+          chainId: chainId,
         };
       } else {
         payloadToSearchApiObj = {
