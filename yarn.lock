@@ -1587,10 +1587,10 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@epnsproject/frontend-sdk-staging@^1.7.8":
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/@epnsproject/frontend-sdk-staging/-/frontend-sdk-staging-1.8.3.tgz#7abc42ec4261251b00a17bf593a3e8e7d911d3bb"
-  integrity sha512-/lP25MLL2qq2wkCLra4KU/29F/TOy4xxFq4xlyLQGuFWpZm6aSJgM3ZqHVfAgBd+iqua3XzGzey7nvDWV16png==
+"@epnsproject/frontend-sdk-staging@^1.8.5":
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/@epnsproject/frontend-sdk-staging/-/frontend-sdk-staging-1.8.5.tgz#c0e3ddb0f9144e76e0bebde1d0fd40b4a807d84b"
+  integrity sha512-iQIRtkwD98PtGELA2iZkSPL/W+fxlBnVYEQQr5JEmFWqkew8nFwpq8x//kBd0Q+V2s2fhoc0vvZ632WLAol5pA==
   dependencies:
     "@rollup/plugin-commonjs" "^20.0.0"
     ansi-regex "^2.1.1"
@@ -4410,9 +4410,9 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
-"assemblyscript@git+https://github.com/AssemblyScript/assemblyscript.git#36040d5b5312f19a025782b5e36663823494c2f3":
+"assemblyscript@https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3":
   version "0.6.0"
-  resolved "git+https://github.com/AssemblyScript/assemblyscript.git#36040d5b5312f19a025782b5e36663823494c2f3"
+  resolved "https://github.com/AssemblyScript/assemblyscript#36040d5b5312f19a025782b5e36663823494c2f3"
   dependencies:
     "@protobufjs/utf8" "^1.1.0"
     binaryen "77.0.0-nightly.20190407"
