@@ -13,12 +13,12 @@ export const getIntents = async (Did: string) => {
     return data;
 }
 
-export const getUser = async (Did:string)=>{
-    const response = await fetch('http://localhost:4000/apis/w2w/getUser/did/'+Did);
+export const getUser = async (Did: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/getUser/did/' + Did);
     const data = await response.json();
     return data;
 }
-export const postMessage = async (fromWallet: string, fromDID: string, toDID: string, 
+export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/messages', {
         method: 'POST',
@@ -47,7 +47,7 @@ export const getAllWallets = async () => {
     return data;
 }
 
-export const createUser = async (did: string, publicKey: string, encryptedPrivateKey: string) => {
+export const createUser = async (did: string, publicKey: string, encryptedPrivateKey: string, wallet: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/user', {
         method: 'POST',
         headers: {
@@ -56,7 +56,8 @@ export const createUser = async (did: string, publicKey: string, encryptedPrivat
         body: JSON.stringify({
             did,
             publicKey,
-            encryptedPrivateKey
+            encryptedPrivateKey,
+            wallet
         })
     });
     const data = await response.json();
