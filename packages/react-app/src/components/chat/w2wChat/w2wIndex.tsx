@@ -21,6 +21,7 @@ import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import './w2wIndex.css';
+import {intitializeDb,addData} from './w2wIndexeddb';
 export interface Feeds{
     did:string,
     threadhash: string,
@@ -50,6 +51,7 @@ function App(){
     useEffect(()=>{
       if(isLoading)
       {
+        //addData('sdv','efvefv');
         connectToCeramic();
       }
     },[]);
@@ -59,6 +61,8 @@ function App(){
       const threeID: ThreeIdConnect = new ThreeIdConnect()
       const ceramic: CeramicClient = createCeramic();
       console.log(account);
+      //const v =  await intitializeDb('Read','helhl','fdddddddv');
+      //console.log(v);
       const didProvider = await DIDHelpers.Get3IDDIDProvider(threeID, provider, account);
       console.log(didProvider);
       const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
@@ -73,7 +77,7 @@ function App(){
           const randomstring = randomString();
           const keyPairs = await generateKeyPair(randomstring);
           const encryptedPrivateKey = await encrypt(keyPairs.privateKey,did);
-          const userDetails = await createUser(did.id,keyPairs.publicKey,encryptedPrivateKey.toString());
+          const userDetails = await createUser(did.id,keyPairs.publicKey,encryptedPrivateKey.toString(),account);
           console.log(userDetails);
           localStorage.setItem('name',userDetails.name);
           localStorage.setItem('avatar',userDetails.profile_picture);

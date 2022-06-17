@@ -4,7 +4,7 @@ import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
 import { getInbox } from '../../../../helpers/w2wChatHelper';
 import { Context, Feeds } from '../w2wIndex';
-
+import {} from '../w2wIndexeddb';
 interface messageFeedProps {
     filteredUserData: {}[],
     isValid:boolean,
@@ -25,10 +25,11 @@ const MessageFeed = (props: messageFeedProps) => {
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
 
     const fetchMyApi = useCallback(async () => {
-        const inbox: Feeds[] = await getInbox(did.id);
+        const inbox: Feeds[] = await getInbox(did.id); //[{},{}]=>"did":[]
         console.log(inbox);
         setFeeds(inbox);
-    }, [])
+    }, []);
+
     /*setInterval(()=>{
         const fetchMyApi = async () => {
             const inbox: Feeds[] = await getInbox(did.id);

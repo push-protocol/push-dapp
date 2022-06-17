@@ -41,7 +41,7 @@ export const getAllWallets = async () => {
     return data;
 }
 
-export const createUser = async (did: string, publicKey: string, encryptedPrivateKey: string) => {
+export const createUser = async (did: string, publicKey: string, encryptedPrivateKey: string,wallet:string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/user', {
         method: 'POST',
         headers: {
@@ -50,7 +50,8 @@ export const createUser = async (did: string, publicKey: string, encryptedPrivat
         body: JSON.stringify({
             did,
             publicKey,
-            encryptedPrivateKey
+            encryptedPrivateKey,
+            wallet
         })
     });
     const data = await response.json();

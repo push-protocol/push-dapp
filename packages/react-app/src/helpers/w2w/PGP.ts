@@ -19,6 +19,7 @@ const privateAndPubilcKeyObject = async (publicKeyArmored,privateKeyArmored)=>{
     })
     return {publicKeyObject,privateKeyObject}
 }
+
 export const encryptMessage = async (jsonMessage,publicKeyArmored,privateKeyArmored) => {
     console.log(jsonMessage);
     const {publicKeyObject,privateKeyObject} = await privateAndPubilcKeyObject(publicKeyArmored,privateKeyArmored);

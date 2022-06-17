@@ -13,7 +13,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
 import { postMessage } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
-
+import {intitializeDb} from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
@@ -35,11 +35,19 @@ const ChatBox = () => {
         }
         setMessages([]);
         while (messageCID) {
-            const current = await IPFSHelper.get(messageCID, ipfs);
-           
-            const msgIPFS: MessageIPFS = current as MessageIPFS
-
+            const getMessage = await intitializeDb('Read',1,'CID_store',messageCID,'','cid');
+            let msgIPFS:MessageIPFS;
+            if(getMessage!==undefined)
+            {
+                msgIPFS = getMessage.body;  
+            }
+            else{
+                const current = await IPFSHelper.get(messageCID, ipfs);//{}
+                await intitializeDb('Insert',1,'CID_store',messageCID,current,'cid');
+                msgIPFS = current as MessageIPFS 
+            }
             setMessages(m => [msgIPFS,...m ])
+            
             const link = msgIPFS.link;
             if (link) {
                 messageCID = link;
