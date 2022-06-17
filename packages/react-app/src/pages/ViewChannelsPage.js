@@ -311,6 +311,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
+    if (!onCoreNetwork && !aliasEthAccount) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
     EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
