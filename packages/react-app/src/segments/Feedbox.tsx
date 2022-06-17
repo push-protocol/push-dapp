@@ -14,7 +14,7 @@ import {
   utils,
   NotificationItem,
 } from "@epnsproject/frontend-sdk-staging";
-import * as EPNSAPI from "@epnsproject/sdk-restapi";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -150,7 +150,7 @@ function Feedbox() {
     if (loading || finishedFetching) return;
     setLoading(true);
     try {
-      const { count, results } = await EPNSAPI.fetchNotifications({
+      const { count, results } = await EpnsAPI.fetchNotifications({
         user: account,
         pageSize: NOTIFICATIONS_PER_PAGE,
         page,
@@ -173,7 +173,7 @@ function Feedbox() {
         setBgUpdateLoading(true);
         setLoading(true);
         try {
-            const { count, results } = await EPNSAPI.fetchNotifications({
+            const { count, results } = await EpnsAPI.fetchNotifications({
                 user: account,
                 pageSize: NOTIFICATIONS_PER_PAGE,
                 page: 1,
@@ -215,7 +215,7 @@ function Feedbox() {
     const fetchAllNotif = async () => {
       setLoadFilter(true);
       try {
-          const { count, results } = await EPNSAPI.fetchNotifications({
+          const { count, results } = await EpnsAPI.fetchNotifications({
               user: account,
               pageSize: 100000,
               page: 1,

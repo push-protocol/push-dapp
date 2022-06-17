@@ -11,7 +11,7 @@ import {
   utils,
   NotificationItem,
 } from "@epnsproject/frontend-sdk-staging";
-import * as EPNSAPI from "@epnsproject/sdk-restapi";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -157,7 +157,7 @@ function SpamBox({ currentTab }) {
     if (loading || finishedFetching  || run) return;
     setLoading(true);
     try {
-      const { count, results } = await EPNSAPI.fetchSpamNotifications({
+      const { count, results } = await EpnsAPI.fetchSpamNotifications({
         user: account,
         pageSize: NOTIFICATIONS_PER_PAGE,
         page,
@@ -201,7 +201,7 @@ function SpamBox({ currentTab }) {
     setLoading(true);
 
     try {
-      const { count, results } = await EPNSAPI.fetchSpamNotifications({
+      const { count, results } = await EpnsAPI.fetchSpamNotifications({
         user: account,
         pageSize: NOTIFICATIONS_PER_PAGE,
         page: 1,
@@ -251,7 +251,7 @@ function SpamBox({ currentTab }) {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await EPNSAPI.fetchSpamNotifications({
+      const { count, results } = await EpnsAPI.fetchSpamNotifications({
         user: account,
         pageSize: 100000,
         page: 1,
