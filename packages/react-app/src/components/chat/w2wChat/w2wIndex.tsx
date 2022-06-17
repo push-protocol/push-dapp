@@ -23,13 +23,16 @@ import { CeramicClient } from "@ceramicnetwork/http-client";
 import './w2wIndex.css';
 export interface Feeds {
   did: string,
-  threadhash: string,
-  name: string,
-  lastMessage: string,
-  profile_picture: string,
-  time: string,
-  intent: string
-
+  wallets: string,
+  name: string | null,
+  profile_picture: string | null,
+  public_key: string | null,
+  about: string | null,
+  threadhash: string | null,
+  combined_did: string | null,
+  intent: string | null,
+  intent_sent_by: string | null,
+  intent_timestamp: Date
 }
 
 interface AppContextInterface {

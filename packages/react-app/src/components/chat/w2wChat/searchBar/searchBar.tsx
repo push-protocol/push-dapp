@@ -1,4 +1,4 @@
-import React,{useEffect, useState,useCallback,useContext} from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './searchBar.css';
 
 import { Web3Provider } from "ethers/providers";
@@ -12,7 +12,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import MessageFeed from '../messageFeed/messageFeed';
 import { getAllWallets } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
-import {Context, Feeds} from '../w2wIndex';
+import { Context, Feeds } from '../w2wIndex';
 
 const SearchBar = (props: { setChat: any; }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
@@ -20,13 +20,13 @@ const SearchBar = (props: { setChat: any; }) => {
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
-    const [isValid,setIsValid]  = useState<boolean>(false);
+    const [isValid, setIsValid] = useState<boolean>(false);
     const getAllUsers = useCallback(async () => {
         const responseData = await getAllWallets();
         // console.log(responseData);
         setAllUsers(responseData);
     }, []);
-    
+
     useEffect(() => {
         // Get all the wallets from server
         getAllUsers();
@@ -41,7 +41,7 @@ const SearchBar = (props: { setChat: any; }) => {
                 )
             });
             setIsValid(true);
-            console.log(filteredData,did);
+            console.log(filteredData, did);
             if (filteredData.length) {
                 setFilteredUserData(filteredData);
             }
@@ -87,7 +87,7 @@ const SearchBar = (props: { setChat: any; }) => {
         }
         catch (err) {
             searchFromDb('');
-            
+
             console.log(err, "hello");
         }
     }
@@ -120,7 +120,7 @@ const SearchBar = (props: { setChat: any; }) => {
             </form>
 
             <div className='sidebar_message'>
-                {<MessageFeed isValid = {isValid} filteredUserData={filteredUserData} setChat={props.setChat} />}
+                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} />}
             </div>
         </div>
     );

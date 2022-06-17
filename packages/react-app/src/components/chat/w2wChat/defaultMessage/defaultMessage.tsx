@@ -13,32 +13,31 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
 
     useEffect(() => {
         async function resolveThreadHash() {
-            
+
             if (props.inbox?.threadhash) {
                 const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                 const current = await IPFSHelper.get(props.inbox.threadhash, IPFSClient);
                 const msgIPFS: MessageIPFS = current as MessageIPFS
                 const msg: InboxChat = {
-                    name: props.inbox.name.split('-').toString().replace(/,/g, " ").charAt(0).toUpperCase() + props.inbox.name.split('-').toString().replace(/,/g, " ").slice(1),
+                    name: props.inbox.wallets.split(',')[0],
                     avatar: props.inbox.profile_picture,
                     lastMessage: msgIPFS.messageContent,
                     timestamp: msgIPFS.timestamp
                 };
-                if(msg.lastMessage.length>25)
-                {
-                    msg.lastMessage = msg.lastMessage.slice(0,25)+'....';
+                if (msg.lastMessage.length > 25) {
+                    msg.lastMessage = msg.lastMessage.slice(0, 25) + '....';
                 }
                 setInboxMessage(msg);
                 setLoading(false);
             }
-            else{
+            else {
                 const msg: InboxChat = {
                     name: props.inbox.name.split('-').toString().replace(/,/g, " ").charAt(0).toUpperCase() + props.inbox.name.split('-').toString().replace(/,/g, " ").slice(1),
                     avatar: props.inbox.profile_picture,
                     lastMessage: null,
                     timestamp: null
                 };
-              
+
                 setInboxMessage(msg);
                 setLoading(false);
             }
@@ -46,7 +45,7 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
         resolveThreadHash()
     }, [])
 
-    return(
+    return (
         (loading) ?
             (<div></div >) :
             <div className='defaultMessage_body' >

@@ -7,7 +7,7 @@ import { Context, Feeds } from '../w2wIndex';
 
 interface messageFeedProps {
     filteredUserData: {}[],
-    isValid:boolean,
+    isValid: boolean,
     setChat: (arg0: any) => void
 }
 
@@ -49,7 +49,7 @@ const MessageFeed = (props: messageFeedProps) => {
             setFeeds(props.filteredUserData);
         }
         setMessagesLoading(false);
-    }, [props.isValid,props.filteredUserData]);
+    }, [props.isValid, props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
         props.setChat(feed);
@@ -62,25 +62,25 @@ const MessageFeed = (props: messageFeedProps) => {
                     <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
                         <Loader />
                     </div>
-                ) }
-                    {
-                        (!feeds?.length && !messagesLoading) ? (
-                            <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
-                                No Address found.
-                            </p>
-                        ) :
-                            (!messagesLoading &&
-                                <div>
-                                    {feeds.map((feed: Feeds) => (
-                                        <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
-                                            <DefaultMessage inbox={feed}/>
-                                        </div>
-                                    ))}
-                                </div>
-                            )
-                    }
-                
-                
+                )}
+                {
+                    (!feeds?.length && !messagesLoading) ? (
+                        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
+                            No Address found.
+                        </p>
+                    ) :
+                        (!messagesLoading &&
+                            <div>
+                                {feeds.map((feed: Feeds) => (
+                                    <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
+                                        <DefaultMessage inbox={feed} />
+                                    </div>
+                                ))}
+                            </div>
+                        )
+                }
+
+
             </section>
 
         </>
