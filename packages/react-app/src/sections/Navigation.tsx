@@ -8,7 +8,7 @@ import styled, { useTheme, css } from "styled-components";
 import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
-import navigationList from "config/navigationList";
+import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
 
