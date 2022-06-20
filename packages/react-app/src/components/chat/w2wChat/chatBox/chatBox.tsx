@@ -9,7 +9,7 @@ import Chats from '../chats/chats';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
-
+import MessageFeed from '../messageFeed/messageFeed';
 import Picker from 'emoji-picker-react';
 import { postMessage,getIntent,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';

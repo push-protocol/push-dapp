@@ -97,30 +97,25 @@ const MessageFeed = React.forwardRef((props: messageFeedProps,ref) => {
                     <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
                         <Loader />
                     </div>
-                ) }
-                    {
-                        (!feeds?.length && !messagesLoading) ? (
-                            <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
-                                No Address found.
-                            </p>
-                        ) :
-                            (!messagesLoading &&
-                                <div>
-                                    {feeds.map((feed: Feeds) => {
-                                   
-                                        return (
-                                            <>
-                                                <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
-                                                    <DefaultMessage inbox={feed}/>
-                                                </div>
-                                            </>
-                                        )
-                                    })}
-                                </div>
-                            )
-                    }
-                
-                
+                )}
+                {
+                    (!feeds?.length && !messagesLoading) ? (
+                        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
+                            No Address found.
+                        </p>
+                    ) :
+                        (!messagesLoading &&
+                            <div>
+                                {feeds.map((feed: Feeds) => (
+                                    <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
+                                        <DefaultMessage inbox={feed} />
+                                    </div>
+                                ))}
+                            </div>
+                        )
+                }
+
+
             </section>
 
         </>
