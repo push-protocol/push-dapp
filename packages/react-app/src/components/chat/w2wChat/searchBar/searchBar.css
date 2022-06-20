@@ -29,7 +29,7 @@
   height: 35px;
   border-top:1px rgb(80, 79, 79) solid ;
   outline: #2a95a5;
-  width: 17.5vw;
+  width: 17vw;
 }
 .searchInputs input:focus{
   border: 1.2px solid #35c2d8;

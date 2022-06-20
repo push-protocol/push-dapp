@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import './messageFeed.css';
 import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
-import { getInbox } from '../../../../helpers/w2wChatHelper';
+import { getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import { Context, Feeds } from '../w2wIndex';
-import {} from '../w2wIndexeddb';
+import {fetchMessagesFromIpfs,fetchInbox} from '../w2wUtils'
+import {intitializeDb} from '../w2wIndexeddb';
 interface messageFeedProps {
     filteredUserData: {}[],
     isValid:boolean,
@@ -13,7 +14,7 @@ interface messageFeedProps {
 
 export interface InboxChat {
     name: string,
-    avatar: string,
+    profile_picture: string,
     timestamp: number,
     lastMessage: string
 }
@@ -21,22 +22,45 @@ export interface InboxChat {
 const MessageFeed = (props: messageFeedProps) => {
     const { did } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
-    const [inboxMessages, setInboxMessages] = useState<InboxChat[]>()
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-
+    
+    
     const fetchMyApi = useCallback(async () => {
-        const inbox: Feeds[] = await getInbox(did.id); //[{},{}]=>"did":[]
-        console.log(inbox);
-        setFeeds(inbox);
+        const getMessage = await intitializeDb('Read',2,'Inbox',did.id,'','did');
+        if(getMessage!==undefined)
+        {
+            setFeeds(getMessage.body);
+        }
+        else{
+            const inbox = await fetchInbox(did);
+            setFeeds(inbox);
+        }
     }, []);
 
-    /*setInterval(()=>{
-        const fetchMyApi = async () => {
-            const inbox: Feeds[] = await getInbox(did.id);
-            console.log(inbox,'hi');
+       /* setInterval(async()=>{
+            const inbox = await getInbox(did.id); //[{},{}]=>"did":[]
+            for(let i in inbox)
+            {
+                if (inbox[i]?.threadhash) {
+                    const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
+                    const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient);
+                    const msgIPFS: MessageIPFS = current as MessageIPFS
+                    const msg: InboxChat = {
+                        name: inbox[i].wallets.split(',')[0].toString().slice(0,12)+'...',
+                        profile_picture:inbox[i].profile_picture,
+                        lastMessage: msgIPFS.messageContent,
+                        timestamp: msgIPFS.timestamp
+                    };
+                    if(msg.lastMessage.length>25)
+                    {
+                        msg.lastMessage = msg.lastMessage.slice(0,25)+'...';
+                    }
+                    inbox[i] = {...inbox[i],msg}
+                }
+            }
+            inbox?.sort((a,b)=>(a.timestamp>b.timestamp?1:-1))
+            await intitializeDb('Insert',2,'Inbox',did.id,inbox,'did');
             setFeeds(inbox);
-        };
-        fetchMyApi();
         
     },10000);*/
     useEffect(() => {
@@ -45,8 +69,17 @@ const MessageFeed = (props: messageFeedProps) => {
             fetchMyApi();
         }
         else {
-            setFeeds(props.filteredUserData);
+            const searchFn = async ()=>{
+                let inbox = await fetchMessagesFromIpfs(props.filteredUserData);
+                const threadhash = await getLatestThreadhash(inbox.did,did.id);
+                inbox = [{...inbox[0],threadhash}]
+                
+                setFeeds(inbox);
+            }
+            searchFn();
+            //console.log(feeds);
         }
+       
         setMessagesLoading(false);
     }, [props.isValid,props.filteredUserData]);
 
@@ -57,7 +90,7 @@ const MessageFeed = (props: messageFeedProps) => {
     return (
         <>
             <section className='messageFeed_body'>
-                {(messagesLoading) && (
+                {!feeds?.length && (messagesLoading) && (
                     <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
                         <Loader />
                     </div>
@@ -70,11 +103,16 @@ const MessageFeed = (props: messageFeedProps) => {
                         ) :
                             (!messagesLoading &&
                                 <div>
-                                    {feeds.map((feed: Feeds) => (
-                                        <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
-                                            <DefaultMessage inbox={feed}/>
-                                        </div>
-                                    ))}
+                                    {feeds.map((feed: Feeds) => {
+                                   
+                                        return (
+                                            <>
+                                                <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
+                                                    <DefaultMessage inbox={feed}/>
+                                                </div>
+                                            </>
+                                        )
+                                    })}
                                 </div>
                             )
                     }

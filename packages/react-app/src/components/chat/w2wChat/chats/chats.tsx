@@ -10,13 +10,15 @@ interface chatProps {
 }
 
 export default function Chats(props: chatProps) {
-   
+    let time:Date = new Date(props?.time);
+    let time1 = time.toLocaleTimeString('en-US');
+    let date = time1.slice(0,-6)
     return (
         <>
         <div className = "chat">
             <div className='chatText'>
                 <p >{props.text}</p>
-                <span >10:00 PM</span>
+                <span >{date}</span>
             </div>
             
         </div>

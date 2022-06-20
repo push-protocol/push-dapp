@@ -10,7 +10,7 @@ export interface MessageIPFS {
     signature: string
     link: string | null,
     time:number
-    readonly timestamp?: number
+    timestamp?: number
 }
 
 export function createIPFSClient(): IPFSHTTPClient {

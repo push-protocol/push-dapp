@@ -11,7 +11,7 @@ import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
 
 import Picker from 'emoji-picker-react';
-import { postMessage } from '../../../../helpers/w2wChatHelper';
+import { postMessage,getIntent,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 import {intitializeDb} from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -28,14 +28,15 @@ const ChatBox = () => {
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
+    const [hasIntent,setHasIntent] = useState<boolean>(true);
 
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
             return;
         }
         setMessages([]);
-        while (messageCID) {
-            const getMessage = await intitializeDb('Read',1,'CID_store',messageCID,'','cid');
+        while (messageCID) { 
+            const getMessage = await intitializeDb('Read',2,'CID_store',messageCID,'','cid');
             let msgIPFS:MessageIPFS;
             if(getMessage!==undefined)
             {
@@ -43,7 +44,7 @@ const ChatBox = () => {
             }
             else{
                 const current = await IPFSHelper.get(messageCID, ipfs);//{}
-                await intitializeDb('Insert',1,'CID_store',messageCID,current,'cid');
+                await intitializeDb('Insert',2,'CID_store',messageCID,current,'cid');
                 msgIPFS = current as MessageIPFS 
             }
             setMessages(m => [msgIPFS,...m ])
@@ -61,11 +62,31 @@ const ChatBox = () => {
 
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
-            if (currentChat?.threadhash) {
-                const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
-                await getMessagesFromCID(currentChat.threadhash, IPFSClient);
+            let intent = false;
+            if(currentChat)
+            {
+                if(currentChat?.did===did.id)
+                {
+                    setHasIntent(true);
+                }
+                else{
+                    intent = await getIntent(currentChat.did,did.id);
+                    console.log(intent)
+                    setHasIntent(intent);
+                }
+                console.log(currentChat.threadhash,intent);
+                if (currentChat?.threadhash && intent) {
+                   
+                    const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
+                    await getMessagesFromCID(currentChat.threadhash, IPFSClient);
+                }
+                else{
+                    setMessages([]);
+                }
             }
+            
         }
+        
         getMessagesFromIPFS().catch(err => console.error(err));
     }, [currentChat]);
 
@@ -74,7 +95,14 @@ const ChatBox = () => {
         if (newMessage.trim() !== "") {
             try {
                const msg =  await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
-                setMessages([...messages, msg]);
+               console.log(msg);
+               const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
+               setMessages([...messages, msg]);
+               const current = await IPFSHelper.get(msg.link, IPFSClient);//{}
+               console.log(currentChat.did,did.id)
+               const threadhash = await getLatestThreadhash(currentChat.did,did.id);
+               console.log(threadhash);
+               await intitializeDb('Insert',2,'CID_store',threadhash,current,'cid');
             }
             catch (error) {
                 console.log(error)
@@ -115,9 +143,9 @@ const ChatBox = () => {
                                         alt=""
                                     />
                                     <div className='chatBoxNavDetail'>
-                                        <p className='chatBoxWallet'>{currentChat.name}</p>
+                                        <p className='chatBoxWallet'>{currentChat.msg.name}</p>
                                         <div>
-                                            {currentChat.intent ? (
+                                            {hasIntent? (
                                                 <Dropdown/>
                                             ):
                                             null
@@ -131,15 +159,14 @@ const ChatBox = () => {
                         </div>
                         <div className='chatBoxTop'>
                           
-                            {currentChat.intent ? (
+                            {hasIntent ? (
                                 messages.map((msg,i) => {
                                     const isLast = i === messages.length - 1
-                                    
                                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
                                     return (
                                         <>
-                                        <div ref={scrollRef} className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
-                                            <Chats time={msg.time} text={msg.messageContent}  />
+                                        <div ref={scrollRef} key = {msg.link} className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
+                                            <Chats time={msg.timestamp} text={msg.messageContent}  />
                                             
                                         </div>
                                         </>
@@ -160,24 +187,24 @@ const ChatBox = () => {
                         <div className='chatBoxBottom'>
                             <textarea
                                 className='chatMessageInput'
-                                placeholder={currentChat.intent ? 'Text Message' : 'Write message to send intent...'}
+                                placeholder={hasIntent ? 'Text Message' : 'Write message to send intent...'}
                                 onChange={changeHandler}
                                 value={newMessage}
                             >
                             </textarea>
                             {
-                                currentChat.intent ? (
+                                hasIntent ? (
                                     <button className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
                                         <i className="fa fa-smile" aria-hidden="true" ></i>
                                     </button>
                                 ) :
                                     null
                             }
-                            {showEmojis && currentChat.intent && <Picker
+                            {showEmojis && hasIntent && <Picker
                                 onEmojiClick={addEmoji}
                                 pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
                             />}
-                            <button className='chatSubmitButton' onClick={handleSubmit}>{currentChat.intent ? 'Send' : 'Send Intent'}</button>
+                            <button className='chatSubmitButton' onClick={handleSubmit}>{hasIntent ? 'Send' : 'Send Intent'}</button>
                         </div>
                     </>
                 )

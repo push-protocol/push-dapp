@@ -1,7 +1,7 @@
 let db;
-export const intitializeDb =async (state,version,dbName,cid,message,index)=>{
+export const intitializeDb =async (state,version,dbName,key,message,index)=>{
     return await  new Promise((resolve,reject)=>{
-        const openRequest = window.indexedDB.open('w2w_idxDb',1);
+        const openRequest = window.indexedDB.open('w2w_idxDb',version);
         openRequest.onupgradeneeded=e=>{
             db = e.target.result;
             const cIDStore = db.createObjectStore(dbName,{keyPath:index});
@@ -12,11 +12,11 @@ export const intitializeDb =async (state,version,dbName,cid,message,index)=>{
             if(state==='Insert')
             {
                 
-                return resolve(addData(db, cid,dbName, message))
+                return resolve(addData(db, key,dbName, message,index))
             }
             else if(state==='Read')
             {
-                return resolve(viewData(db,cid,dbName))
+                return resolve(viewData(db,key,dbName,index))
 
             }
         }
@@ -28,15 +28,42 @@ export const intitializeDb =async (state,version,dbName,cid,message,index)=>{
     
 }
 
-export const addData =async (db,cid,dbName,chatMesage)=>{
+export const addData =async (db,key,dbName,chatMesage,index)=>{
     return await new Promise((resolve,reject)=>{
+        
+        
         const newItem = {
-            cid:cid,
             body:chatMesage
         }
+        if(dbName==='Inbox')
+        {
+            newItem['did'] = key
+        }
+        if(dbName==='CID_store')
+        {
+            newItem['cid'] = key
+        }
+       
         const tx = db.transaction(dbName,'readwrite');
         const objectStore = tx.objectStore(dbName);
+       /* const v = viewData(db,key,dbName,index);
+        console.log(v)
+        if(v)
+        {
+            let deleted = objectStore.delete(key);
+            deleted.onsuccess = (e)=>{
+                const query = objectStore.add(newItem);
+                console.log(newItem);
+                query.onsuccess = (e)=>{
+                    return resolve(query.result)
+                }
+                query.onerror = (e)=>{
+                    return reject(e.targert.errorCode);
+                }
+            }
+        }*/
         const query = objectStore.add(newItem);
+        console.log(newItem);
         query.onsuccess = (e)=>{
             return resolve(query.result)
         }
@@ -50,14 +77,14 @@ export const addData =async (db,cid,dbName,chatMesage)=>{
 
 }
 
-export const viewData =async(db,cid,dbName,index)=>{
+export const viewData =async(db,key,dbName,index)=>{
     return await  new Promise((resolve,reject)=>{
         const tx = db.transaction(dbName,'readonly');
         const objStore = tx.objectStore(dbName);
         const idx = objStore.index(index);
-        const query = idx.get(cid);
+        const query = idx.get(key);
         query.onsuccess = (e)=>{
-            console.table(query.result);
+           
             return resolve(query.result);
         }
         query.onerror = (e)=>{

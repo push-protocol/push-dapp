@@ -13,6 +13,7 @@ import MessageFeed from '../messageFeed/messageFeed';
 import { getAllWallets } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import {Context, Feeds} from '../w2wIndex';
+import { Wallet } from 'ethers';
 
 const SearchBar = (props: { setChat: any; }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
@@ -23,7 +24,7 @@ const SearchBar = (props: { setChat: any; }) => {
     const [isValid,setIsValid]  = useState<boolean>(false);
     const getAllUsers = useCallback(async () => {
         const responseData = await getAllWallets();
-        console.log(responseData);
+         console.log(responseData);
         setAllUsers(responseData);
     }, []);
     
@@ -32,16 +33,30 @@ const SearchBar = (props: { setChat: any; }) => {
         getAllUsers();
     }, []);
 
-    const searchFromDb = (did: string) => {
+    const searchFromDb = (wallet: string) => {
         let filteredData = [];
-        if (did.length) {
-            filteredData = allUsers.filter(details => {
-                return (
-                    details.did.trim().includes(did.trim())
-                )
-            });
+        if (wallet.length) {
+            for(let i in allUsers)
+            {
+                const  wallets = allUsers[i].wallets.split(',');
+                let found = false;
+                for(let j in wallets)
+                {
+                    
+                    if(wallets[j]===wordEntered)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                if(found)
+                {
+                    filteredData = [allUsers[i]];
+                    break
+                }
+            }
             setIsValid(true);
-            console.log(filteredData,did);
+            
             if (filteredData.length) {
                 setFilteredUserData(filteredData);
             }
@@ -71,18 +86,10 @@ const SearchBar = (props: { setChat: any; }) => {
             if (!web3.utils.isAddress(wordEntered)) {
                 const address: string = await ENS.getAddress(wordEntered);
                 console.log(address);
-                const did = await getLinkWallets(address);
-                if (did === null) {
-                    searchFromDb('');
-                }
-                else {
-                    searchFromDb(did);
-                }
+                searchFromDb(address);
             }
-            else {
-                const did = await getLinkWallets(wordEntered);
-                console.log(did);
-                searchFromDb(did);
+            else { 
+                    searchFromDb(wordEntered);
             }
         }
         catch (err) {

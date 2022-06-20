@@ -77,6 +77,6 @@
     display: flex;
     text-align: right;
     opacity: 0.5;
-    
+    left: -1rem;
     top: 0.8rem;
 }

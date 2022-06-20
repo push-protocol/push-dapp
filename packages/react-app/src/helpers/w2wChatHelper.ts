@@ -7,6 +7,12 @@ export const getInbox = async (Did: string) => {
     return data;
 }
 
+export const getIntents = async (Did: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/intents/did/' + Did);
+    const data: any = await response.json();
+    return data;
+}
+
 export const getUser = async (Did:string)=>{
     const response = await fetch('http://localhost:4000/apis/w2w/getUser/did/'+Did);
     const data = await response.json();
@@ -35,6 +41,12 @@ export const postMessage = async (fromWallet: string, fromDID: string, toDID: st
     return data;
 }
 
+export const getIntent = async (firstDID:string,secondDID:string)=>{
+  
+    const response = await fetch(`http://localhost:4000/apis/w2w/intent/did/${firstDID}/${secondDID}`);
+    const data = await response.json();
+    return data;
+}
 export const getAllWallets = async () => {
     const response = await fetch('http://localhost:4000/apis/w2w/users');
     const data = await response.json();
@@ -57,7 +69,14 @@ export const createUser = async (did: string, publicKey: string, encryptedPrivat
     const data = await response.json();
     return data;
 }
+export const getLatestThreadhash = async (firstDID:string,secondDID:string)=>{
+    const response = await fetch(`http://localhost:4000/apis/w2w/messages/dids/${firstDID}/${secondDID}`);
+    
+    const data = await response.json();
+    console.log(data);
+    return data;
 
+}
 export const getKeys = async (Did: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + Did);
     const data: any = await response.json();
