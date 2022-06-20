@@ -8,7 +8,7 @@ import {fetchMessagesFromIpfs,fetchInbox} from '../w2wUtils'
 import {intitializeDb} from '../w2wIndexeddb';
 interface messageFeedProps {
     filteredUserData: {}[],
-    isValid:boolean,
+    isValid: boolean,
     setChat: (arg0: any) => void
 }
 
@@ -84,7 +84,7 @@ const MessageFeed = React.forwardRef((props: messageFeedProps,ref) => {
         }
        
         setMessagesLoading(false);
-    }, [props.isValid,props.filteredUserData]);
+    }, [props.isValid, props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
         props.setChat(feed);
