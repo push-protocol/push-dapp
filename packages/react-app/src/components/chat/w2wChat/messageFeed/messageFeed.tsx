@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext,useImperativeHandle } from 'react';
 import './messageFeed.css';
 import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
@@ -18,12 +18,16 @@ export interface InboxChat {
     timestamp: number,
     lastMessage: string
 }
-
-const MessageFeed = (props: messageFeedProps) => {
+ 
+const MessageFeed = React.forwardRef((props: messageFeedProps,ref) => {
     const { did } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
     
+    const unCached = async (did)=>{
+        const inbox = await fetchInbox(did);
+        setFeeds(inbox);
+    }
     
     const fetchMyApi = useCallback(async () => {
         const getMessage = await intitializeDb('Read',2,'Inbox',did.id,'','did');
@@ -32,8 +36,7 @@ const MessageFeed = (props: messageFeedProps) => {
             setFeeds(getMessage.body);
         }
         else{
-            const inbox = await fetchInbox(did);
-            setFeeds(inbox);
+            await unCached(did)
         }
     }, []);
 
@@ -123,6 +126,6 @@ const MessageFeed = (props: messageFeedProps) => {
         </>
     )
 
-}
+})
 
 export default MessageFeed;
