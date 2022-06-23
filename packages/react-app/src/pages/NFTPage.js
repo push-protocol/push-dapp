@@ -2,27 +2,17 @@ import React, { useState } from "react";
 import ReactGA from "react-ga";
 
 import styled, { css, useTheme } from 'styled-components';
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Para, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+import {Section, Content, Item, A, B, H2, H3, Span, Button} from 'components/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
 
-import Loader from 'react-loader-spinner'
-import { Waypoint } from "react-waypoint";
-
 import { useWeb3React } from '@web3-react/core'
-import { addresses, abis } from "@project/contracts";
-import NFTHelper from 'helpers/NFTHelper';
-import { ethers } from "ethers";
-
-import DisplayNotice from "components/DisplayNotice";
-import ViewNFTItem from "components/ViewNFTItem";
 import MyNFTs from "components/MyNFTs";
 import AllNFTs from "components/AllNFTs";
 import TransferNFT from "components/TransferNFT";
 
 import {ThemeProvider} from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
 import { envConfig } from "@project/contracts";
 
 
@@ -32,7 +22,6 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
   ReactGA.pageview("/rockstars");
 
   const { account, library, chainId } = useWeb3React();
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const themes = useTheme();
   const [darkMode, setDarkMode] = useState(false);
@@ -50,12 +39,12 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
     setShowAnswers(newShowAnswers);
   }
 
-  React.useEffect(() => {
-    if (!onCoreNetwork) {
-      const url = window.location.origin;
-      window.location.replace(`${url}/#/notavailable`);
-    }
-  })
+  // React.useEffect(() => {
+  //   if (!onCoreNetwork) {
+  //     const url = window.location.origin;
+  //     window.location.replace(`${url}/#/notavailable`);
+  //   }
+  // })
 
   React.useEffect(() => {
     userClickedAt(1);
