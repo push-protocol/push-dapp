@@ -157,7 +157,7 @@ function ViewNFTV2Item({ NFTObject, nftReadProvider, nftWriteProvider, controlAt
                 <Skeleton />
               </SkeletonButton>
             }
-            {!!account && onMainnetCore && account == NFTObject.owner && !loading &&
+            {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
               <UnsubscribeButton >
                 <ActionTitle onClick={() => {
                   setTokenId(NFTObject.id)
@@ -166,7 +166,7 @@ function ViewNFTV2Item({ NFTObject, nftReadProvider, nftWriteProvider, controlAt
                   >Transfer</ActionTitle>
               </UnsubscribeButton>
             }
-            {!!account && onMainnetCore && account == NFTObject.owner && !loading &&
+            {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled = {!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
