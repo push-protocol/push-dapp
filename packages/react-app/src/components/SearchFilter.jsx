@@ -81,13 +81,13 @@ export default function SearchFilter(props)
 
             {
                     showFilter ? ( <SearchOptions>
-                        <SectionSearch mright='3.5rem'>
+                        <SectionSearch mright='3.5rem' mtop='3.6rem'>
                          
                         <SelectChannel>
                             <SMultiSelect
                                 options={uniqueOptions}
                                 valueRenderer={ () => {
-                                    if(selectedOption.length === 0)  return 'Show Notifications from'
+                                    if(selectedOption.length === 0)  return 'By Channel Name'
                                     return `${selectedOption.length} Selected`
                                 }}
                                 value={selectedOption}
@@ -99,12 +99,13 @@ export default function SearchFilter(props)
                         </SelectChannel>
                         <InputWrapper>
                         
-                        <input value={search} type="text" className="input2" placeholder="Search With Keyword" style={{"fontFamily":"Source Sans Pro"}} onChange={(e) => {
+                        <input value={search} type="text" className="input2" placeholder="By Keyword" style={{"fontFamily":"Source Sans Pro"}} onChange={(e) => {
                             setSearch(e.target.value);
                         }}/>
                         </InputWrapper> 
                         </SectionSearch>
                         <SectionSearch mleft='3.5rem'>
+                            <p style={{fontSize: "1.2rem", color:"#B4B4B4", fontWeight:"500", "fontFamily":"Source Sans Pro" }}>By time of notification sent</p>
                                 <RangeSection mtop="0.5rem">
                                     <TimeLabelDiv>
                                         <div>Start Date</div>
