@@ -19,5 +19,7 @@ const addresses = {
   uniswapV2Router02: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D", //n
   WETHAddress: "0xd0A1E359811322d97991E03f863a0C30C2cF029C", // mainnet address //n
   USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", // mainnet address //n
+  rockstarV2:"0xA2b885e7065EA59a3251489715ca80DE5Ff642f8",//mainnet address
+  NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
 };
 export default addresses;
