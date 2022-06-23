@@ -14,6 +14,7 @@ import {
   utils,
   NotificationItem,
 } from "@epnsproject/frontend-sdk-staging";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -31,7 +32,7 @@ const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
 function Feedbox() {
   const dispatch = useDispatch();
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
@@ -149,12 +150,13 @@ function Feedbox() {
     if (loading || finishedFetching) return;
     setLoading(true);
     try {
-      const { count, results } = await api.fetchNotifications(
-        account,
-        NOTIFICATIONS_PER_PAGE,
+      const { count, results } = await EpnsAPI.fetchNotifications({
+        user: account,
+        pageSize: NOTIFICATIONS_PER_PAGE,
         page,
-        envConfig.apiUrl
-      );
+        chainId,
+        dev: true,
+      });
       const parsedResponse = utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (count === 0) {
@@ -171,12 +173,13 @@ function Feedbox() {
         setBgUpdateLoading(true);
         setLoading(true);
         try {
-            const { count, results } = await api.fetchNotifications(
-                account,
-                NOTIFICATIONS_PER_PAGE,
-                1,
-                envConfig.apiUrl
-            );
+            const { count, results } = await EpnsAPI.fetchNotifications({
+                user: account,
+                pageSize: NOTIFICATIONS_PER_PAGE,
+                page: 1,
+                chainId,
+                dev: true,
+            });
             if (!notifications.length) {
                 dispatch(incrementPage());
             }
@@ -212,12 +215,13 @@ function Feedbox() {
     const fetchAllNotif = async () => {
       setLoadFilter(true);
       try {
-          const { count, results } = await api.fetchNotifications(
-              account,
-              100000,
-              1,
-              envConfig.apiUrl
-          );
+          const { count, results } = await EpnsAPI.fetchNotifications({
+              user: account,
+              pageSize: 100000,
+              page: 1,
+              chainId,
+              dev: true,
+          });
           if (!notifications.length) {
               dispatch(incrementPage());
           }

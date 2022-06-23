@@ -11,6 +11,7 @@ import {
   utils,
   NotificationItem,
 } from "@epnsproject/frontend-sdk-staging";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -156,12 +157,13 @@ function SpamBox({ currentTab }) {
     if (loading || finishedFetching  || run) return;
     setLoading(true);
     try {
-      const { count, results } = await api.fetchSpamNotifications(
-        account,
-        NOTIFICATIONS_PER_PAGE,
+      const { count, results } = await EpnsAPI.fetchSpamNotifications({
+        user: account,
+        pageSize: NOTIFICATIONS_PER_PAGE,
         page,
-        envConfig.apiUrl
-      );
+        chainId,
+        dev: true,
+      });
         let parsedResponse = utils.parseApiResponse(results);
           parsedResponse.forEach( (each,i) => {
               each.date = results[i].epoch;
@@ -199,12 +201,13 @@ function SpamBox({ currentTab }) {
     setLoading(true);
 
     try {
-      const { count, results } = await api.fetchSpamNotifications(
-        account,
-        NOTIFICATIONS_PER_PAGE,
-        1,
-        envConfig.apiUrl
-      );
+      const { count, results } = await EpnsAPI.fetchSpamNotifications({
+        user: account,
+        pageSize: NOTIFICATIONS_PER_PAGE,
+        page: 1,
+        chainId,
+        dev: true,
+      });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
@@ -248,12 +251,13 @@ function SpamBox({ currentTab }) {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await api.fetchSpamNotifications(
-        account,
-        100000,
-        1,
-        envConfig.apiUrl
-      );
+      const { count, results } = await EpnsAPI.fetchSpamNotifications({
+        user: account,
+        pageSize: 100000,
+        page: 1,
+        chainId,
+        dev: true,
+      });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
