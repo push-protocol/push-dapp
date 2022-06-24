@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { InboxChat } from '../messageFeed/messageFeed';
+import React from 'react';
 import { Feeds } from '../w2wIndex';
 import './defaultMessage.css';
 
 const DefaultMessage = (props: { inbox: Feeds }) => {
     let date=null;
+   
     if(props.inbox?.msg.timestamp!==null)
     {
         let time = new Date(props.inbox?.msg?.timestamp);
         date = time.toLocaleTimeString('en-US').slice(0,-6);
     }
-
+    
     return(
             <div className='defaultMessage_body' >
                 <div className='defaultMessage_1'>

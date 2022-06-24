@@ -111,14 +111,20 @@ const ChatBox = () => {
         setNewMessage("");
     }
 
-    const changeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const changeHandler = (e) => {
         setNewMessage(e.target.value);
+        console.log(e.target,'*');
         if (newMessage === "") {
             setTextAreaDisabled(true);
         }
         else {
             setTextAreaDisabled(false);
         }
+        if(e.key === 'Enter')
+        {   
+            handleSubmit(e);
+        }
+        
     }
 
     const addEmoji = (e, emojiObject) => {

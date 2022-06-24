@@ -14,7 +14,7 @@ import { getAllWallets } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import { Context, Feeds } from '../w2wIndex';
 
-const SearchBar = (props: { setChat: any; }) => {
+const SearchBar = (props: { setChat: any;renderInbox:any }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
     const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
@@ -37,7 +37,7 @@ const SearchBar = (props: { setChat: any; }) => {
         if (wallet.length) {
             for(let i in allUsers)
             {
-                const  wallets = allUsers[i].wallets.split(',');
+                const  wallets = allUsers[i].wallets.split(' ');
                 let found = false;
                 for(let j in wallets)
                 {
@@ -54,6 +54,7 @@ const SearchBar = (props: { setChat: any; }) => {
                     break
                 }
             }
+            console.log(filteredData);
             setIsValid(true);
             
             if (filteredData.length) {
@@ -64,6 +65,7 @@ const SearchBar = (props: { setChat: any; }) => {
             }
         }
         else {
+            console.log('hui');
             setIsValid(true);
             setFilteredUserData([]);
             //setWordEntered("");
@@ -126,7 +128,7 @@ const SearchBar = (props: { setChat: any; }) => {
             </form>
 
             <div className='sidebar_message'>
-                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} />}
+                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} renderInbox = {props.renderInbox}/>}
             </div>
         </div>
     );

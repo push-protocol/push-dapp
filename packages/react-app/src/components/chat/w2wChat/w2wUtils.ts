@@ -18,7 +18,7 @@ export const fetchMessagesFromIpfs = async (inbox)=>{
             const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient);
             const msgIPFS: MessageIPFS = current as MessageIPFS
             const msg: InboxChat = {
-                name: inbox[i].wallets.split(',')[0].toString().slice(0,17)+'...',
+                name: inbox[i].wallets.split(',')[0].toString().slice(0,15)+'...',
                 profile_picture:inbox[i].profile_picture,
                 lastMessage: msgIPFS.messageContent,
                 timestamp: msgIPFS.timestamp
@@ -32,7 +32,7 @@ export const fetchMessagesFromIpfs = async (inbox)=>{
         }
         else{
             const msg: InboxChat = {
-                name: inbox[i].wallets.split(',')[0].toString().slice(0,17)+'...',
+                name: inbox[i].wallets.split(',')[0].toString().slice(0,15)+'...',
                 profile_picture:inbox[i].profile_picture,
                 lastMessage: null,
                 timestamp: null
@@ -45,6 +45,7 @@ export const fetchMessagesFromIpfs = async (inbox)=>{
 }
 
 export const fetchInbox = async (did)=>{
+    console.log(did.id);
     let inbox = await getInbox(did.id); //[{},{}]=>"did":[]
     console.log(inbox);
     inbox = await fetchMessagesFromIpfs(inbox);

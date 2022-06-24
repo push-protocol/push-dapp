@@ -12,7 +12,7 @@ import {
     Button,
   } from "components/SharedStyling";
 
-const Sidebar = (props: { setChat: (text: Feeds) => void; }) => {
+const Sidebar = (props: { setChat: (text: Feeds) => void;renderInbox:any }) => {
 
     const [chatselected, setChatselected] = useState(true);
 
@@ -21,7 +21,7 @@ const Sidebar = (props: { setChat: (text: Feeds) => void; }) => {
             return (
                 <>
                 <div className='sidebar_search'>
-                    <SearchBar setChat = {props.setChat}/>
+                    <SearchBar setChat = {props.setChat} renderInbox = {props.renderInbox}/>
                 </div>
                 </>
             )

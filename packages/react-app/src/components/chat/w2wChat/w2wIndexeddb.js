@@ -68,7 +68,7 @@ export const addData =async (db,key,dbName,chatMesage,index)=>{
             return resolve(query.result)
         }
         query.onerror = (e)=>{
-            return reject(e.targert.errorCode);
+            return reject(e.target.errorCode);
         }
         tx.oncomplete = ()=>{
            db.close();

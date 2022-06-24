@@ -69,25 +69,21 @@ function App() {
     const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
     console.log(did);
     setDid(did);
-    setIsLoading(false);
+    
     setCeramicInstance(ceramic);
-    const response = await getUser(did.id);
+    const response = await getUser(did.id,account);
     console.log(response);
     if (response === null) {
       const randomstring = randomString();
       const keyPairs = await generateKeyPair(randomstring);
       const encryptedPrivateKey = await encrypt(keyPairs.privateKey, did);
-      const userDetails = await createUser(did.id, keyPairs.publicKey, encryptedPrivateKey.toString(), account);
+      const userDetails = await createUser(account,did.id,keyPairs.publicKey,encryptedPrivateKey.toString(),'pgp','xyz','a');
       console.log(userDetails);
-      localStorage.setItem('name', userDetails.name);
-      localStorage.setItem('avatar', userDetails.profile_picture);
-
       //await updateKeys(did.id,keyPairs.privateKey,keyPairs.publicKey);
 
     }
-
-    // const res = await encryptMessage({"hello":"world"},response.public_key);
-    //console.log(res);
+    setIsLoading(false);
+  
   };
 
   const getLinkWallets = async (account: string): Promise<string> => {
@@ -108,11 +104,15 @@ function App() {
     setCurrentChat(text);
 
   }
+  const renderInbox = (args:any)=>{
+    args(did);
+    
+  }
   return (
     <div className="w2wIndex">
       {!isLoading &&
         <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did }}>
-          <Sidebar setChat={setChat} />
+          <Sidebar setChat={setChat} renderInbox = {renderInbox}/>
           <ChatBox />
         </Context.Provider>
       }
