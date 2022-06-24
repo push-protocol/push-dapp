@@ -15,8 +15,8 @@ import { GiTwoCoins } from 'react-icons/gi';
 
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
-import { envConfig } from "@project/contracts";
 import { ethers } from "ethers";
+import { envConfig } from "@project/contracts";
 // import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
 import ReactPlayer from 'react-player';
@@ -24,21 +24,22 @@ import ReactPlayer from 'react-player';
 import NFTHelper from 'helpers/NFTHelper';
 
 // Create Header
-function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, setControlAt, setTokenId}) {
+function ViewNFTV2Item({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, setControlAt, setTokenId}) {
   const { account, library, chainId } = useWeb3React();
 
-  const [NFTRewardsContract, setNFTRewardsContract] = React.useState(null);
+  const [NFTRewardsV2Contract, setNFTRewardsV2Contract] = React.useState(null);
   const [ loading, setLoading ] = React.useState(true);
   const [ txInProgress, setTxInProgress ] = React.useState(false);
 
-  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
 
+  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
 
   React.useEffect(() => {
     if (!!(library && account)) {
       let signer = library.getSigner(account);
-      const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
-      setNFTRewardsContract(NFTRewardsInstance);
+    
+      const NFTRewardsV2Instance = new ethers.Contract(addresses.NFTRewardsV2, abis.NFTRewardsV2, signer);
+      setNFTRewardsV2Contract(NFTRewardsV2Instance);
     }
   }, [account,library]);
 
@@ -50,10 +51,10 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
 
   // to claim
   const handleClaim = async (tokenId) => {
-    if(NFTRewardsContract){
+    if(NFTRewardsV2Contract){
       setTxInProgress(true)
       let sendWithTxPromise
-      sendWithTxPromise = await NFTRewardsContract.claimReward(tokenId)
+      sendWithTxPromise = await NFTRewardsV2Contract.claimReward(tokenId)
       const tx = await sendWithTxPromise;
 
       console.log(tx);
@@ -104,6 +105,8 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
     </Toaster>
   )
 
+  let newIp = (NFTObject.nftInfo.animation_url).replace('https://epns.mypinata.cloud/ipfs/','https://ipfs.io/ipfs/')
+
   // render
   return (
     <Item
@@ -113,7 +116,7 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
         theme={
           !!account && !!library && account == NFTObject.owner ?
             "#e20880" :
-            !!account && !!library && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB ?
+            !!account && !!library && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 ?
               "#eee" :
               "#fff"
         }
@@ -124,9 +127,9 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
               <Skeleton color="#eee" width="100%" height="100%" />
             }
             {!loading &&
-              <ReactPlayer url={`https://ipfs.io/ipfs/${NFTObject.metadata}`} controls={true} playing={false} loop={true}/>
+              <ReactPlayer url={`${newIp}`} controls={true} playing={false} loop={true}/>
             }
-            {!!account && !!library && NFTObject.owner != 0xFbA7Df351ADD4E79099f63E33b2679EDFDD5e2aB &&
+            {!!account && !!library && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 &&
               <NFTStatus>
                 <IoIosGift size={20} color="#fff"/>
                 <NFTStatusTitle>
@@ -138,7 +141,7 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
             {!!account && !!library && NFTObject.claimable &&
               <NFTClaim>
                 <NFTClaimTitle>
-                  2400 $PUSH
+                  900 $PUSH
                 </NFTClaimTitle>
               </NFTClaim>
             }
@@ -158,7 +161,7 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
               <UnsubscribeButton >
                 <ActionTitle onClick={() => {
                   setTokenId(NFTObject.id)
-                  setControlAt(2)
+                  setControlAt(3)
                 }}
                   >Transfer</ActionTitle>
               </UnsubscribeButton>
@@ -479,4 +482,4 @@ const ToasterMsg = styled.div`
 `
 
 // Export Default
-export default ViewNFTItem;
+export default ViewNFTV2Item;
