@@ -4,11 +4,15 @@ export const intitializeDb =async (state,version,dbName,key,message,index)=>{
         const openRequest = window.indexedDB.open('w2w_idxDb',version);
         openRequest.onupgradeneeded=e=>{
             db = e.target.result;
-            const cIDStore = db.createObjectStore(dbName,{keyPath:index});
-            cIDStore.createIndex(index,index,{unique:true});
+            
+            const cIDStore = db.createObjectStore('Inbox',{keyPath:'did'});
+            cIDStore.createIndex('did','did',{unique:true});
+            const cIDStore1 = db.createObjectStore('CID_store',{keyPath:'cid'});
+            cIDStore1.createIndex("cid","cid",{unique:true});
         }
         openRequest.onsuccess= (e)=>{
             db = e.target.result;
+
             if(state==='Insert')
             {
                 
@@ -31,7 +35,7 @@ export const intitializeDb =async (state,version,dbName,key,message,index)=>{
 export const addData =async (db,key,dbName,chatMesage,index)=>{
     return await new Promise((resolve,reject)=>{
         
-        
+
         const newItem = {
             body:chatMesage
         }
@@ -43,32 +47,19 @@ export const addData =async (db,key,dbName,chatMesage,index)=>{
         {
             newItem['cid'] = key
         }
-       
+        console.log(newItem);
         const tx = db.transaction(dbName,'readwrite');
         const objectStore = tx.objectStore(dbName);
-       /* const v = viewData(db,key,dbName,index);
-        console.log(v)
-        if(v)
-        {
-            let deleted = objectStore.delete(key);
-            deleted.onsuccess = (e)=>{
-                const query = objectStore.add(newItem);
-                console.log(newItem);
-                query.onsuccess = (e)=>{
-                    return resolve(query.result)
-                }
-                query.onerror = (e)=>{
-                    return reject(e.targert.errorCode);
-                }
-            }
-        }*/
-        const query = objectStore.add(newItem);
-        console.log(newItem);
+       
+        const query = objectStore.put(newItem);
+        
         query.onsuccess = (e)=>{
+            console.log("success");
             return resolve(query.result)
         }
         query.onerror = (e)=>{
-            return reject(e.target.errorCode);
+            console.log(e.target.error,dbName);
+            return reject(e.target.error);
         }
         tx.oncomplete = ()=>{
            db.close();
@@ -80,6 +71,7 @@ export const addData =async (db,key,dbName,chatMesage,index)=>{
 export const viewData =async(db,key,dbName,index)=>{
     return await  new Promise((resolve,reject)=>{
         const tx = db.transaction(dbName,'readonly');
+        console.log(tx);
         const objStore = tx.objectStore(dbName);
         const idx = objStore.index(index);
         const query = idx.get(key);
@@ -88,7 +80,7 @@ export const viewData =async(db,key,dbName,index)=>{
             return resolve(query.result);
         }
         query.onerror = (e)=>{
-            console.log(e.target.errorCode);
+            console.log(e.target.errorCode,dbName);
             reject(e.target.errorCode);
         }
     })

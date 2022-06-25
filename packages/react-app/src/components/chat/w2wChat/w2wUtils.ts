@@ -49,7 +49,7 @@ export const fetchInbox = async (did)=>{
     let inbox = await getInbox(did.id); //[{},{}]=>"did":[]
     console.log(inbox);
     inbox = await fetchMessagesFromIpfs(inbox);
-    
+    console.log(inbox);
     await intitializeDb('Insert',2,'Inbox',did.id,inbox,'did');
     return inbox;
 }

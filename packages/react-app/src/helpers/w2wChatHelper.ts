@@ -21,6 +21,14 @@ export const getUser = async (Did: string,account:string) => {
     console.log(data);
     return data;
 }
+
+export const getDidLinkWallets = async (Did:string)=>{
+    const response = await fetch('http://localhost:4000/apis/w2w/getDidLinkWallets/'+Did);
+    const data =await response.json();
+   
+    return data;
+}
+
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/messages', {

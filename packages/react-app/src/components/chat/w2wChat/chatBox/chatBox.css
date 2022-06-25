@@ -8,6 +8,20 @@
     width: 100%;
     height: 99.7%;
 }
+.showDateInChat{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    font-weight: 500;
+}
+.showDateInChat span{
+    border-radius: 20px; 
+    border:0.5px solid rgb(160, 160, 160);
+    padding: 7px;
+    cursor: pointer;
+}
+
 .defaultChatPage{
     background-color: #f2f2f2;
     width: 100%;

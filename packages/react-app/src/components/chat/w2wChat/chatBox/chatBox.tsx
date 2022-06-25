@@ -9,9 +9,8 @@ import Chats from '../chats/chats';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
-import MessageFeed from '../messageFeed/messageFeed';
 import Picker from 'emoji-picker-react';
-import { postMessage,getIntent,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
+import { postMessage,getIntent,getDidLinkWallets } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 import {intitializeDb} from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -29,7 +28,9 @@ const ChatBox = () => {
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
     const [hasIntent,setHasIntent] = useState<boolean>(true);
-
+    const [wallets,setWallets] = useState<string[]>([]);
+    let time;
+    let showTime = false;
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
             return;
@@ -37,6 +38,7 @@ const ChatBox = () => {
         setMessages([]);
         while (messageCID) { 
             const getMessage = await intitializeDb('Read',2,'CID_store',messageCID,'','cid');
+            console.log(getMessage);
             let msgIPFS:MessageIPFS;
             if(getMessage!==undefined)
             {
@@ -44,6 +46,7 @@ const ChatBox = () => {
             }
             else{
                 const current = await IPFSHelper.get(messageCID, ipfs);//{}
+                console.log(current);
                 await intitializeDb('Insert',2,'CID_store',messageCID,current,'cid');
                 msgIPFS = current as MessageIPFS 
             }
@@ -56,13 +59,16 @@ const ChatBox = () => {
                 break;
             }
         }
+        
     }
 
     const scrollRef: any = useRef();
 
     useEffect(() => {
+
         const getMessagesFromIPFS = async () => {
             let intent = false;
+            console.log(currentChat);
             if(currentChat)
             {
                 if(currentChat?.did===did.id)
@@ -84,10 +90,12 @@ const ChatBox = () => {
                     setMessages([]);
                 }
             }
+            const res = await getDidLinkWallets(currentChat.did);
+            setWallets(res);
             
         }
-        
         getMessagesFromIPFS().catch(err => console.error(err));
+        
     }, [currentChat]);
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -98,11 +106,11 @@ const ChatBox = () => {
                console.log(msg);
                const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                setMessages([...messages, msg]);
-               const current = await IPFSHelper.get(msg.link, IPFSClient);//{}
+               /*const current = await IPFSHelper.get(msg.link, IPFSClient);//{}
                console.log(currentChat.did,did.id)
                const threadhash = await getLatestThreadhash(currentChat.did,did.id);
                console.log(threadhash);
-               await intitializeDb('Insert',2,'CID_store',threadhash,current,'cid');
+               await intitializeDb('Insert',2,'CID_store',threadhash,current,'cid');*/
             }
             catch (error) {
                 console.log(error)
@@ -110,10 +118,16 @@ const ChatBox = () => {
         }
         setNewMessage("");
     }
-
+    const handleKeyPress = (e)=>{
+        const x = e.keyCode;
+        if(x===13)
+        {
+            handleSubmit(e);
+        }
+    }
     const changeHandler = (e) => {
         setNewMessage(e.target.value);
-        console.log(e.target,'*');
+        console.log(e,'*');
         if (newMessage === "") {
             setTextAreaDisabled(true);
         }
@@ -136,7 +150,6 @@ const ChatBox = () => {
         <div className='chatBox_body'>
             {!viewChatBox ? (
                 <div className="defaultChatPage">
-                   
                 </div>
             )
                 :
@@ -152,7 +165,7 @@ const ChatBox = () => {
                                         <p className='chatBoxWallet'>{currentChat.msg.name}</p>
                                         <div>
                                             {hasIntent? (
-                                                <Dropdown/>
+                                                <Dropdown wallets = {wallets} />
                                             ):
                                             null
                                         }
@@ -164,16 +177,41 @@ const ChatBox = () => {
                             </div>
                         </div>
                         <div className='chatBoxTop'>
-                          
+                
                             {hasIntent ? (
                                 messages.map((msg,i) => {
                                     const isLast = i === messages.length - 1
                                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
+                                    showTime = false;
+                                    
+                                    if(i===1)
+                                    {
+                                        time = messages[1].timestamp;
+                                        let date = new Date(time);
+                                        time = date.toDateString();
+                                        showTime = true;
+                                        
+                                    }
+                                    if(i>=1)
+                                    {
+                                        let duration = new Date(messages[i]?.timestamp);
+                                        let dateString = duration.toDateString();
+                                        if(dateString!==time)
+                                        {
+                                            showTime = true;
+                                            time = dateString;
+                                        }
+                                       
+                                       
+                                    }
+                                   
                                     return (
                                         <>
+                                        
+                                        {!showTime?null:<div className='showDateInChat'><span>{time}</span></div>}
                                         <div ref={scrollRef} key = {msg.link} className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
-                                            <Chats time={msg.timestamp} text={msg.messageContent}  />
                                             
+                                            <Chats time={msg.timestamp} text={msg.messageContent}  />
                                         </div>
                                         </>
                                     )
@@ -189,12 +227,12 @@ const ChatBox = () => {
                                 )
                             }
                         </div>
-
                         <div className='chatBoxBottom'>
                             <textarea
                                 className='chatMessageInput'
                                 placeholder={hasIntent ? 'Text Message' : 'Write message to send intent...'}
                                 onChange={changeHandler}
+                                onKeyDown =  {handleKeyPress}
                                 value={newMessage}
                             >
                             </textarea>

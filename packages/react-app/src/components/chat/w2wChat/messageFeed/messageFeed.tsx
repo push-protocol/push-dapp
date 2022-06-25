@@ -34,6 +34,7 @@ const MessageFeed = (props: messageFeedProps) => {
     const fetchMyApi = useCallback(async () => {
         console.log(did.id);
         const getMessage = await intitializeDb('Read',2,'Inbox',did.id,'','did');
+        console.log(getMessage)
         if(getMessage!==undefined)
         {
             setFeeds(getMessage.body);
@@ -43,30 +44,8 @@ const MessageFeed = (props: messageFeedProps) => {
         }
     }, []);
 
-       /* setInterval(async()=>{
-            const inbox = await getInbox(did.id); //[{},{}]=>"did":[]
-            for(let i in inbox)
-            {
-                if (inbox[i]?.threadhash) {
-                    const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
-                    const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient);
-                    const msgIPFS: MessageIPFS = current as MessageIPFS
-                    const msg: InboxChat = {
-                        name: inbox[i].wallets.split(',')[0].toString().slice(0,12)+'...',
-                        profile_picture:inbox[i].profile_picture,
-                        lastMessage: msgIPFS.messageContent,
-                        timestamp: msgIPFS.timestamp
-                    };
-                    if(msg.lastMessage.length>25)
-                    {
-                        msg.lastMessage = msg.lastMessage.slice(0,25)+'...';
-                    }
-                    inbox[i] = {...inbox[i],msg}
-                }
-            }
-            inbox?.sort((a,b)=>(a.timestamp>b.timestamp?1:-1))
-            await intitializeDb('Insert',2,'Inbox',did.id,inbox,'did');
-            setFeeds(inbox);
+      /* setInterval(async()=>{
+            unCached(did);
         
     },10000);*/
     useEffect(() => {
