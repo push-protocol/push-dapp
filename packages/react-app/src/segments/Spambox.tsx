@@ -11,9 +11,10 @@ import { postReq } from "api";
 import {
   api,
   utils,
-  NotificationItem,
+  // NotificationItem,
 } from "@epnsproject/frontend-sdk-staging";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -47,7 +48,7 @@ function Feedbox() {
         chainId,
         dev: true,
       });
-      const parsedResponse = utils.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (count === 0) {
         dispatch(setFinishedFetching());
@@ -73,7 +74,7 @@ function Feedbox() {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = utils.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.parseApiResponse(results);
       // replace the first 20 notifications with these
       dispatch(
         updateTopNotifications({

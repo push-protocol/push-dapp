@@ -12,9 +12,10 @@ import {ThemeProvider} from "styled-components";
 import {
   api,
   utils,
-  NotificationItem,
+  // NotificationItem,
 } from "@epnsproject/frontend-sdk-staging";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -157,7 +158,7 @@ function Feedbox() {
         chainId,
         dev: true,
       });
-      const parsedResponse = utils.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (count === 0) {
         dispatch(setFinishedFetching());
@@ -183,13 +184,15 @@ function Feedbox() {
             if (!notifications.length) {
                 dispatch(incrementPage());
             }
-            const parsedResponse = utils.parseApiResponse(results);
+            const parsedResponse = EpnsAPI.parseApiResponse(results);
             const map1 = new Map();
             const map2 = new Map();
             results.forEach( each => {
                 map1.set(each.payload.data.sid , each.epoch);
                 map2.set(each.payload.data.sid , each.channel);
             })
+            // return type of parsedApiResponse does not contain date, epoch and channel
+            // so it gives error below but it works
             parsedResponse.forEach( each => {
                 each.date = map1.get(each.sid);
                 each.epoch = (new Date(each.date).getTime() / 1000);
@@ -225,13 +228,15 @@ function Feedbox() {
           if (!notifications.length) {
               dispatch(incrementPage());
           }
-          const parsedResponse = utils.parseApiResponse(results);
+          const parsedResponse = EpnsAPI.parseApiResponse(results);
           const map1 = new Map();
           const map2 = new Map();
           results.forEach( each => {
               map1.set(each.payload.data.sid , each.epoch);
               map2.set(each.payload.data.sid , each.channel);
           })
+          // return type of parsedApiResponse does not contain date, epoch and channel
+          // so it gives error below but it works
           parsedResponse.forEach( each => {
               each.date = map1.get(each.sid);
               each.epoch = (new Date(each.date).getTime() / 1000);
@@ -375,6 +380,8 @@ function Feedbox() {
                 app,
                 icon,
                 image,
+                blockchain,
+                url
               } = oneNotification;
 
               // render the notification item
@@ -388,6 +395,10 @@ function Feedbox() {
                     icon={icon}
                     image={image}
                     theme={themes.scheme}
+                    chainName={blockchain}
+                    url={url}
+                    // NotificationItem throws an error if this variable is not passed
+                    isSpam={false}
                   />
                 </div>
               );
@@ -403,7 +414,8 @@ function Feedbox() {
               image,
               secret,
               notification,
-              blockchain
+              blockchain,
+              url
             } = oneNotification;
             if(run) return;
             // render the notification item
@@ -423,6 +435,9 @@ function Feedbox() {
                   decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                   chainName={blockchain}
                   theme={themes.scheme}
+                  url={url}
+                  // NotificationItem throws an error if this variable is not passed
+                  isSpam={false}
                 />
               </div>
             );

@@ -1698,13 +1698,21 @@
   optionalDependencies:
     fsevents "^2.3.2"
 
-"@epnsproject/sdk-restapi@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@epnsproject/sdk-restapi/-/sdk-restapi-0.0.3.tgz#6f71cb01a06093423fdf926953d4654781619952"
-  integrity sha512-gvXHV29Sl2MvSHgwdES61r4J6t4VwPejMOa30NFdc2/ruwdeuWRSX60edGdcQLNH8GFIZC2thsq9y0T0cb+emw==
+"@epnsproject/sdk-restapi@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@epnsproject/sdk-restapi/-/sdk-restapi-0.0.8.tgz#f9b7c76c3650b29f9538e45f8ded48c1d121be25"
+  integrity sha512-4iEK1YmuhTYwbpcPRZItVFicGHVxbyn5s+qDGz3RMQCAS/Eix7shtTFiPkrd9Mixge3ZNzvJjO7uQMEB1yyQTA==
   dependencies:
     axios "^0.27.2"
     tslib "^2.3.0"
+
+"@epnsproject/sdk-uiweb@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@epnsproject/sdk-uiweb/-/sdk-uiweb-0.1.6.tgz#415bafdeb11edbbe37257a28d5931a6e13cfe612"
+  integrity sha512-nPXczcexTMqvI8NrxC/f02wJ5fU+DJR8IpTAyKGFAOJGO9kNKOEFciK2Rbg8pC8weyssUgpxHhSsKGOisGtdUA==
+  dependencies:
+    date-fns "^2.28.0"
+    html-react-parser "^1.4.13"
 
 "@ethersproject/abi@5.0.0-beta.153":
   version "5.0.0-beta.153"
@@ -10105,7 +10113,7 @@ html-minifier-terser@^5.0.1:
     relateurl "^0.2.7"
     terser "^4.6.3"
 
-html-react-parser@^1.2.8:
+html-react-parser@^1.2.8, html-react-parser@^1.4.13:
   version "1.4.14"
   resolved "https://registry.yarnpkg.com/html-react-parser/-/html-react-parser-1.4.14.tgz#577b7a90be0c61eebbbc488d914ad08398c79ef5"
   integrity sha512-pxhNWGie8Y+DGDpSh8cTa0k3g8PsDcwlfolA+XxYo1AGDeB6e2rdlyv4ptU9bOTiZ2i3fID+6kyqs86MN0FYZQ==
