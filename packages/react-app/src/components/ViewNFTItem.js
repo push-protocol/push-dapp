@@ -15,6 +15,7 @@ import { GiTwoCoins } from 'react-icons/gi';
 
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
+import { envConfig } from "@project/contracts";
 import { ethers } from "ethers";
 // import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
@@ -24,11 +25,14 @@ import NFTHelper from 'helpers/NFTHelper';
 
 // Create Header
 function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, setControlAt, setTokenId}) {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const [NFTRewardsContract, setNFTRewardsContract] = React.useState(null);
   const [ loading, setLoading ] = React.useState(true);
   const [ txInProgress, setTxInProgress ] = React.useState(false);
+
+  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
+
 
   React.useEffect(() => {
     if (!!(library && account)) {
@@ -150,7 +154,7 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
                 <Skeleton />
               </SkeletonButton>
             }
-            {!!account && !!library && account == NFTObject.owner && !loading &&
+            {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
               <UnsubscribeButton >
                 <ActionTitle onClick={() => {
                   setTokenId(NFTObject.id)
@@ -159,7 +163,7 @@ function ViewNFTItem({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, 
                   >Transfer</ActionTitle>
               </UnsubscribeButton>
             }
-            {!!account && !!library && account == NFTObject.owner && !loading &&
+            {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled = {!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>

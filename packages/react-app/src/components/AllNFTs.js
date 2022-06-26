@@ -1,27 +1,21 @@
 import React from "react";
 
-import styled, { css } from 'styled-components';
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
-
-import StackGrid, { transitions } from "react-stack-grid";
+import styled from 'styled-components';
+import {Section, ItemH} from 'components/SharedStyling';
 
 import Loader from 'react-loader-spinner'
-import { Waypoint } from "react-waypoint";
+import { envConfig } from "@project/contracts";
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
 import NFTHelper from 'helpers/NFTHelper';
 import { ethers } from "ethers";
 
-import DisplayNotice from "components/DisplayNotice";
 import ViewNFTItem from "components/ViewNFTItem";
-
-
-const { scaleDown } = transitions;
 
 // Create Header
 function AllNFTs({controlAt, setControlAt, setTokenId}) {
-  const { account, library } = useWeb3React();
+  const { account, chainId, library } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
@@ -30,17 +24,23 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
 
   const [loading, setLoading] = React.useState(true);
 
+  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
+
+  const mainnetCoreProvider = onMainnetCore
+        ? library
+        : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
+
   React.useEffect(() => {
-    if (!!(library && account)) {
-      const contractInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, library);
+    if (!!(mainnetCoreProvider && account)) {
+      const contractInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, mainnetCoreProvider);
       setNftReadProvider(contractInstance);
-      let signer = library.getSigner(account);
+      let signer = mainnetCoreProvider.getSigner(account);
       const signerInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, signer);
       setNftWriteProvider(signerInstance);
       const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       setNFTRewardsContract(NFTRewardsInstance);
     }
-  }, [account, library]);
+  }, [account]);
 
   React.useEffect(() => {
     if(nftReadProvider && NFTRewardsContract){
