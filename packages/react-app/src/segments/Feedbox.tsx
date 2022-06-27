@@ -154,7 +154,6 @@ function Feedbox() {
         user: account,
         pageSize: NOTIFICATIONS_PER_PAGE,
         page,
-        chainId,
         dev: true,
       });
       const parsedResponse = utils.parseApiResponse(results);
@@ -177,7 +176,6 @@ function Feedbox() {
                 user: account,
                 pageSize: NOTIFICATIONS_PER_PAGE,
                 page: 1,
-                chainId,
                 dev: true,
             });
             if (!notifications.length) {
@@ -219,7 +217,6 @@ function Feedbox() {
               user: account,
               pageSize: 100000,
               page: 1,
-              chainId,
               dev: true,
           });
           if (!notifications.length) {
