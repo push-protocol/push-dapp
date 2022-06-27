@@ -1209,6 +1209,7 @@ function SendNotifications() {
                                 
                                    {showPreview && (<PreviewNotif
                                         details={{
+                                            channelAddress: channelAddress,
                                             acta: nfCTA,
                                             aimg: nfMedia,
                                             amsg: nfMsg,

@@ -1,13 +1,9 @@
-import React, { useRef } from "react";
-import { useClickAway } from "react-use";
+import React from "react";
 import styled, { ThemeProvider, useTheme } from "styled-components";
 import { Item, Span, H2, P } from "./SharedStyling";
 import { useWeb3React } from "@web3-react/core";
 import { NotificationItem } from "@epnsproject/frontend-sdk-staging";
 import { useSelector } from "react-redux";
-import { set } from "react-ga";
-import { useState } from "react";
-import { useEffect } from "react";
 
 const blockchainName = {
   1: "ETH_MAINNET",
@@ -17,20 +13,21 @@ const blockchainName = {
 };
 
 export default function PreviewNotif({ details }) {
-  const { channelDetails } = useSelector((state) => state.admin);
+  const { delegatees } = useSelector((state) => state.admin);
   const { chainId } = useWeb3React();
-  const [check, setCheck] = useState();
+
+  const channelDetail = delegatees.filter(delegateeInfo => delegateeInfo.address == details.channelAddress)[0];
 
   const themes = useTheme();
   const NotifItem = ({ test }) => {
     return (
-      channelDetails && (
+      channelDetail && (
         <NotificationItem
           notificationTitle={test?.asub}
           notificationBody={test?.amsg}
           cta={test?.acta}
-          app={channelDetails.name}
-          icon={channelDetails.icon}
+          app={channelDetail.name}
+          icon={channelDetail.icon}
           image={test?.aimg}
           chainName={blockchainName[chainId]}
           theme={themes.scheme}
