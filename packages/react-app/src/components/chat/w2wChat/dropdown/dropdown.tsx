@@ -6,7 +6,6 @@ const Dropdown = (props)=>{
     const showDropdown:any = useRef();
     const [copied,setCopied] = useState<boolean>(false);
    
-    console.log(props.wallets);
     const clickHandler = ()=>{
         showDropdown.current.classList.toggle('active');
     }
@@ -23,7 +22,7 @@ const Dropdown = (props)=>{
         setCopied(true);
         setTimeout(() => {
           setCopied(false);
-        }, 1500);
+        }, 1000);
       })
     }
     

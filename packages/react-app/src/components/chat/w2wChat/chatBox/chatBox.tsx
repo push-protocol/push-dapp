@@ -10,7 +10,7 @@ import Chats from '../chats/chats';
 import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
 import Picker from 'emoji-picker-react';
-import { postMessage,getIntent,getDidLinkWallets } from '../../../../helpers/w2wChatHelper';
+import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 import {intitializeDb} from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -19,8 +19,9 @@ import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
 
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
+import { fetchInbox } from '../w2wUtils';
 
-const ChatBox = () => {
+const ChatBox = (props) => {
     const { account } = useWeb3React<Web3Provider>();
     const { currentChat, viewChatBox, did } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
@@ -38,7 +39,7 @@ const ChatBox = () => {
         setMessages([]);
         while (messageCID) { 
             const getMessage = await intitializeDb('Read',2,'CID_store',messageCID,'','cid');
-            console.log(getMessage);
+           
             let msgIPFS:MessageIPFS;
             if(getMessage!==undefined)
             {
@@ -63,7 +64,9 @@ const ChatBox = () => {
     }
 
     const scrollRef: any = useRef();
-
+    const scrollToBottom = ()=>{
+        scrollRef.current?.scrollIntoView({behaviour:"smooth"});
+    }
     useEffect(() => {
 
         const getMessagesFromIPFS = async () => {
@@ -80,7 +83,6 @@ const ChatBox = () => {
                     console.log(intent)
                     setHasIntent(intent);
                 }
-                console.log(currentChat.threadhash,intent);
                 if (currentChat?.threadhash && intent) {
                    
                     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
@@ -92,9 +94,13 @@ const ChatBox = () => {
             }
             const res = await getDidLinkWallets(currentChat.did);
             setWallets(res);
+           
+
             
         }
         getMessagesFromIPFS().catch(err => console.error(err));
+        
+
         
     }, [currentChat]);
 
@@ -104,19 +110,19 @@ const ChatBox = () => {
             try {
                const msg =  await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
                console.log(msg);
-               const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                setMessages([...messages, msg]);
-               /*const current = await IPFSHelper.get(msg.link, IPFSClient);//{}
-               console.log(currentChat.did,did.id)
                const threadhash = await getLatestThreadhash(currentChat.did,did.id);
-               console.log(threadhash);
-               await intitializeDb('Insert',2,'CID_store',threadhash,current,'cid');*/
+               await intitializeDb('Insert',2,'CID_store',threadhash,msg,'cid');
+               const inbox = await fetchInbox(did);
+               console.log(inbox);
+               props.renderInbox(inbox);
             }
             catch (error) {
                 console.log(error)
             }
         }
         setNewMessage("");
+
     }
     const handleKeyPress = (e)=>{
         const x = e.keyCode;
@@ -127,7 +133,6 @@ const ChatBox = () => {
     }
     const changeHandler = (e) => {
         setNewMessage(e.target.value);
-        console.log(e,'*');
         if (newMessage === "") {
             setTextAreaDisabled(true);
         }
@@ -200,14 +205,10 @@ const ChatBox = () => {
                                         {
                                             showTime = true;
                                             time = dateString;
-                                        }
-                                       
-                                       
+                                        }  
                                     }
-                                   
                                     return (
                                         <>
-                                        
                                         {!showTime?null:<div className='showDateInChat'><span>{time}</span></div>}
                                         <div ref={scrollRef} key = {msg.link} className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
                                             

@@ -37,16 +37,18 @@ export interface Feeds {
 }
 
 interface AppContextInterface {
-  currentChat: Feeds, viewChatBox: boolean, getLinkWallets: (account: string) => Promise<string>, did: DID
+  currentChat: Feeds, viewChatBox: boolean, getLinkWallets: (account: string) => Promise<string>, did: DID,
+  renderInboxFeed:Array<{}> | null
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
 function App() {
-  const [viewChatBox, setViewChatBox] = useState(false);
+  const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const [did, setDid] = useState<DID>();
+  const [renderInboxFeed,setRenderInboxFeed] = useState<Array<{}> | null>();
   const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
   /* const [content, setContent] = useState<string>("");
    const [encryptedData, setEncryptedData] = useState<JWE>();
@@ -105,15 +107,15 @@ function App() {
 
   }
   const renderInbox = (args:any)=>{
-    args(did);
+    setRenderInboxFeed(args);
     
   }
   return (
     <div className="w2wIndex">
       {!isLoading &&
-        <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did }}>
+        <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did,renderInboxFeed }}>
           <Sidebar setChat={setChat} renderInbox = {renderInbox}/>
-          <ChatBox />
+          <ChatBox renderInbox = {renderInbox} />
         </Context.Provider>
       }
       {

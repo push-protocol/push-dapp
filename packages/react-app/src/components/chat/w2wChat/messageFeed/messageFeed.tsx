@@ -10,7 +10,7 @@ interface messageFeedProps {
     filteredUserData: {}[],
     isValid: boolean,
     setChat: (arg0: any) => void,
-    renderInbox:any
+    renderInbox:Array<{}>
 }
 
 export interface InboxChat {
@@ -21,7 +21,7 @@ export interface InboxChat {
 }
  
 const MessageFeed = (props: messageFeedProps) => {
-    const { did } = useContext(Context);
+    const { did,renderInboxFeed } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
    
@@ -48,6 +48,9 @@ const MessageFeed = (props: messageFeedProps) => {
             unCached(did);
         
     },10000);*/
+    useEffect(()=>{
+        setFeeds(renderInboxFeed);
+    },[renderInboxFeed])
     useEffect(() => {
        
         if (!props.isValid) {
@@ -58,11 +61,10 @@ const MessageFeed = (props: messageFeedProps) => {
                 
                 if(props.filteredUserData.length)
                 {
-                    console.log(props);
-                    let inbox = await fetchMessagesFromIpfs(props.filteredUserData);
-                    const threadhash = await getLatestThreadhash(inbox.did,did.id);
-                    inbox = [{...inbox[0],threadhash}]
                     
+                    let inbox = await fetchMessagesFromIpfs(props.filteredUserData);
+                    const threadhash = await getLatestThreadhash(inbox[0].did,did.id);
+                    inbox = [{...inbox[0],threadhash}]
                     setFeeds(inbox);
                 }
                 else{
@@ -79,7 +81,6 @@ const MessageFeed = (props: messageFeedProps) => {
     }, [props.isValid, props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
-        props.renderInbox(unCached);
         props.setChat(feed);
     }
 

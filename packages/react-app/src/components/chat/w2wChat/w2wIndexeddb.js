@@ -71,7 +71,6 @@ export const addData =async (db,key,dbName,chatMesage,index)=>{
 export const viewData =async(db,key,dbName,index)=>{
     return await  new Promise((resolve,reject)=>{
         const tx = db.transaction(dbName,'readonly');
-        console.log(tx);
         const objStore = tx.objectStore(dbName);
         const idx = objStore.index(index);
         const query = idx.get(key);

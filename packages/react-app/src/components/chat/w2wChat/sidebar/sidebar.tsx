@@ -4,11 +4,6 @@ import IntentBar from '../intentBar/intentBar';
 import './sidebar.css';
 import { Feeds } from '../w2wIndex'
 import {
-    Section,
-    Content,
-    Item,
-    H3,
-    Span,
     Button,
   } from "components/SharedStyling";
 
