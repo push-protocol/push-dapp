@@ -17,24 +17,41 @@ export default function PreviewNotif({ details }) {
   const { chainId } = useWeb3React();
 
   const channelDetail = delegatees.filter(delegateeInfo => delegateeInfo.address == details.channelAddress)[0];
+  console.log(channelDetail)
 
   const themes = useTheme();
+  // const NotifItem = ({ test }) => {
+  //   return (
+  //     channelDetail && (
+  //       <NotificationItem
+  //         notificationTitle={test?.asub}
+  //         notificationBody={test?.amsg}
+  //         cta={test?.acta}
+  //         app={channelDetail.name}
+  //         icon={channelDetail.icon}
+  //         image={test?.aimg}
+  //         chainName={blockchainName[chainId]}
+  //         theme={themes.scheme}
+  //       />
+  //     )
+  //   );
+  // };
+
   const NotifItem = ({ test }) => {
     return (
-      channelDetail && (
         <NotificationItem
           notificationTitle={test?.asub}
           notificationBody={test?.amsg}
           cta={test?.acta}
-          app={channelDetail.name}
-          icon={channelDetail.icon}
+          // app={channelDetail.name}
+          // icon={channelDetail.icon}
           image={test?.aimg}
           chainName={blockchainName[chainId]}
           theme={themes.scheme}
         />
-      )
     );
   };
+
 
   return (
     <ThemeProvider theme={themes}>
