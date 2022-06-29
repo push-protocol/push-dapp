@@ -52,6 +52,7 @@ function App() {
   const [did, setDid] = useState<DID>();
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>();
   const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
+  const [caip10Account, setCaip10Account] = useState<string>('');
 
   useEffect(() => {
     if (isLoading) {
@@ -59,22 +60,20 @@ function App() {
     }
   }, []);
 
-  // Render
   const connectToCeramic = async () => {
     const provider: Promise<any> = await connector.getProvider()
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
+    setCaip10Account(w2wHelper.walletToCAIP10(account, chainId));
     setDid(did);
     setCeramicInstance(ceramic);
-    const response = await w2wHelper.getUser(did.id, w2wHelper.walletToCAIP10(account, chainId));
+    const response = await w2wHelper.getUser(did.id, caip10Account);
     if (response === null) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
-      const userDetails = await w2wHelper.createUser(account, did.id, keyPairs.publicKey, encryptedPrivateKey.toString(), 'pgp', 'xyz', 'a');
-      console.log(userDetails);
-      //await updateKeys(did.id,keyPairs.privateKey,keyPairs.publicKey);
+      const userDetails = await w2wHelper.createUser({ wallet: caip10Account, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: encryptedPrivateKey.toString(), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
     }
     setIsLoading(false);
   };
@@ -83,8 +82,6 @@ function App() {
     try {
       // Using the Ceramic client instance, we can load the link for a given CAIP-10 account
       const link = await getDIDFromWallet(ceramicInstance, account, 1);
-      console.log(link, 'link');
-      // The `did` property of the loaded link will contain the DID string value if set
       return link;
     }
     catch (e) {
@@ -93,14 +90,12 @@ function App() {
   };
 
   const setChat = (text: Feeds) => {
-    console.log(text);
     setViewChatBox(true);
     setCurrentChat(text);
   }
 
   const renderInbox = (args: any) => {
     setRenderInboxFeed(args);
-
   }
 
   return (

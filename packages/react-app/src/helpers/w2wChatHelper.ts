@@ -70,7 +70,8 @@ export const getAllWallets = async () => {
     return data;
 }
 
-export const createUser = async (wallet: string, did: string, pgp_pub: string, pgp_priv_enc: string, pgp_enc_type: string, signature: string, sig_type: string) => {
+export const createUser = async ({ wallet, did, pgp_pub, pgp_priv_enc, pgp_enc_type, signature, sig_type }:
+    { wallet: string, did: string, pgp_pub: string, pgp_priv_enc: string, pgp_enc_type: string, signature: string, sig_type: string }) => {
     const response = await fetch('http://localhost:4000/apis/w2w/createUser', {
         method: 'POST',
         headers: {
