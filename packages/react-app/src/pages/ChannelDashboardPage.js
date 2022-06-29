@@ -327,7 +327,7 @@ function ChannelDashboardPage() {
           );
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
         const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
-          ownerAccount
+          account
         );
         dispatch(
           setUserChannelDetails({
