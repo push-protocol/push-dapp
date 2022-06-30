@@ -191,8 +191,6 @@ function Feedbox() {
                 map1.set(each.payload.data.sid , each.epoch);
                 map2.set(each.payload.data.sid , each.channel);
             })
-            // return type of parsedApiResponse does not contain date, epoch and channel
-            // so it gives error below but it works
             parsedResponse.forEach( each => {
                 each['date'] = map1.get(each.sid);
                 each['epoch'] = (new Date(each['date']).getTime() / 1000);
@@ -235,8 +233,6 @@ function Feedbox() {
               map1.set(each.payload.data.sid , each.epoch);
               map2.set(each.payload.data.sid , each.channel);
           })
-          // return type of parsedApiResponse does not contain date, epoch and channel
-          // so it gives error below but it works
           parsedResponse.forEach( each => {
               each['date'] = map1.get(each.sid);
               each['epoch'] = (new Date(each['date']).getTime() / 1000);
