@@ -434,8 +434,6 @@ function Feedbox() {
                   chainName={blockchain}
                   theme={themes.scheme}
                   url={url}
-                  // NotificationItem throws an error if this variable is not passed
-                  isSpam={false}
                 />
               </div>
             );
