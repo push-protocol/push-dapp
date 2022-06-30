@@ -169,8 +169,8 @@ function SpamBox({ currentTab }) {
         // return type of parsedApiResponse does not contain date, epoch and channel
         // so it gives error below but it works
           parsedResponse.forEach( (each,i) => {
-              each.date = results[i].epoch;
-              each.epoch = (new Date(each.date).getTime() / 1000);
+              each['date'] = results[i].epoch;
+              each['epoch'] = (new Date(each['date']).getTime() / 1000);
           })
           const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
             elem.channel = results[i].channel;
@@ -218,8 +218,8 @@ function SpamBox({ currentTab }) {
       // return type of parsedApiResponse does not contain date, epoch and channel
       // so it gives error below but it works
         parsedResponse.forEach( (each,i) => {
-            each.date = results[i].epoch;
-            each.epoch = (new Date(each.date).getTime() / 1000);
+            each['date'] = results[i].epoch;
+            each['epoch'] = (new Date(each['date']).getTime() / 1000);
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
@@ -270,8 +270,8 @@ function SpamBox({ currentTab }) {
       // return type of parsedApiResponse does not contain date, epoch and channel
       // so it gives error below but it works
         parsedResponse.forEach( (each,i) => {
-            each.date = results[i].epoch;
-            each.epoch = (new Date(each.date).getTime() / 1000);
+            each['date'] = results[i].epoch;
+            each['epoch'] = (new Date(each['date']).getTime() / 1000);
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
@@ -287,7 +287,7 @@ function SpamBox({ currentTab }) {
           return { ...elem };
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      let res = parsedResponse.filter(notif => !isSubscribedFn(notif.subscribers));
+      let res = parsedResponse.filter(notif => !isSubscribedFn(notif['subscribers']));
       setNotif(res);
 
     } catch (err) {
@@ -501,7 +501,8 @@ function SpamBox({ currentTab }) {
                 notification,
                 channel,
                 subscribers,
-                blockchain
+                blockchain,
+                url
               } = oneNotification;
               // render the notification item
               // console.log(app , index);
@@ -510,7 +511,6 @@ function SpamBox({ currentTab }) {
                   {showWayPoint(index) && !loading && (
                     <Waypoint onEnter={handlePagination} />
                   )}
-                  {/* subscribeFn is not expected as prop for NotificationItem */}
                   <NotificationItem
                     notificationTitle={notification.title}
                     notificationBody={notification.body}
@@ -519,15 +519,13 @@ function SpamBox({ currentTab }) {
                     icon={icon}
                     image={image}
                     theme={themes.scheme}
-                    subscribeFn={(e) => {
-                      e?.stopPropagation();
-                      onSubscribeToChannel(channel, blockchain);
-                    }}
+                    subscribeFn={() => onSubscribeToChannel(channel, blockchain)}
                     isSpam
                     isSubscribedFn={async () => isSubscribedFn(subscribers)}
                     isSecret={secret != ''}
                     decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                     chainName={blockchain}
+                    url={url}
                   />
                 </div>
               );

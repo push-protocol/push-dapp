@@ -194,9 +194,9 @@ function Feedbox() {
             // return type of parsedApiResponse does not contain date, epoch and channel
             // so it gives error below but it works
             parsedResponse.forEach( each => {
-                each.date = map1.get(each.sid);
-                each.epoch = (new Date(each.date).getTime() / 1000);
-                each.channel = map2.get(each.sid);
+                each['date'] = map1.get(each.sid);
+                each['epoch'] = (new Date(each['date']).getTime() / 1000);
+                each['channel'] = map2.get(each.sid);
             })
             dispatch(
                 updateTopNotifications({
@@ -238,9 +238,9 @@ function Feedbox() {
           // return type of parsedApiResponse does not contain date, epoch and channel
           // so it gives error below but it works
           parsedResponse.forEach( each => {
-              each.date = map1.get(each.sid);
-              each.epoch = (new Date(each.date).getTime() / 1000);
-              each.channel = map2.get(each.sid);
+              each['date'] = map1.get(each.sid);
+              each['epoch'] = (new Date(each['date']).getTime() / 1000);
+              each['channel'] = map2.get(each.sid);
           })
           setNotif(parsedResponse);
       } catch (err) {
@@ -397,8 +397,6 @@ function Feedbox() {
                     theme={themes.scheme}
                     chainName={blockchain}
                     url={url}
-                    // NotificationItem throws an error if this variable is not passed
-                    isSpam={false}
                   />
                 </div>
               );
