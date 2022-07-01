@@ -4,13 +4,14 @@ import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
 import { getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import { Context, Feeds } from '../w2wIndex';
-import {fetchMessagesFromIpfs,fetchInbox} from '../w2wUtils'
-import {intitializeDb} from '../w2wIndexeddb';
+import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
+import * as indexDB from '../w2wIndexeddb';
+
 interface messageFeedProps {
     filteredUserData: {}[],
     isValid: boolean,
     setChat: (arg0: any) => void,
-    renderInbox:Array<{}>
+    renderInbox: Array<{}>
 }
 
 export interface InboxChat {
@@ -19,64 +20,55 @@ export interface InboxChat {
     timestamp: number,
     lastMessage: string
 }
- 
+
 const MessageFeed = (props: messageFeedProps) => {
-    const { did,renderInboxFeed } = useContext(Context);
+    const { did, renderInboxFeed } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-   
-    const unCached = async (did)=>{
+
+    const unCached = async (did) => {
         const inbox = await fetchInbox(did);
-        console.log(inbox);
         setFeeds(inbox);
     }
-    
-    const fetchMyApi = useCallback(async () => {
-        console.log(did.id);
-        const getMessage = await intitializeDb('Read',2,'Inbox',did.id,'','did');
-        console.log(getMessage)
-        if(getMessage!==undefined)
-        {
+
+    const fetchMessagesFromCache = useCallback(async () => {
+        const getMessage = await indexDB.intitializeDb('Read', 2, 'Inbox', did.id, '', 'did');
+        if (getMessage !== undefined) {
             setFeeds(getMessage.body);
         }
-        else{
+        else {
             await unCached(did)
         }
     }, []);
 
-      /* setInterval(async()=>{
-            unCached(did);
-        
-    },10000);*/
-    useEffect(()=>{
-        setFeeds(renderInboxFeed);
-    },[renderInboxFeed])
+    /* setInterval(async()=>{
+          unCached(did);
+  },10000);*/
+
     useEffect(() => {
-       
+        setFeeds(renderInboxFeed);
+    }, [renderInboxFeed])
+
+    useEffect(() => {
         if (!props.isValid) {
-            fetchMyApi();
+            fetchMessagesFromCache();
         }
         else {
-            const searchFn = async ()=>{
-                
-                if(props.filteredUserData.length)
-                {
-                    
+            const searchFn = async () => {
+                if (props.filteredUserData.length) {
                     let inbox = await fetchMessagesFromIpfs(props.filteredUserData);
-                    const threadhash = await getLatestThreadhash(inbox[0].did,did.id);
-                    inbox = [{...inbox[0],threadhash}]
+                    const threadhash = await getLatestThreadhash(inbox[0].did, did.id);
+                    inbox = [{ ...inbox[0], threadhash }]
                     setFeeds(inbox);
                 }
-                else{
-
+                else {
                     setFeeds([]);
-                    console.log(props.filteredUserData,feeds);
+                    console.log(props.filteredUserData, feeds);
                 }
             }
             searchFn();
-            console.log(feeds);
         }
-       
+
         setMessagesLoading(false);
     }, [props.isValid, props.filteredUserData]);
 

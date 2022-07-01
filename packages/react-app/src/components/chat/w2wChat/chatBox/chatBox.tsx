@@ -1,18 +1,15 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import './chatBox.css';
 import cn from 'classnames';
-//@ts-ignore
 // @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
-// @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
-// @ts-ignore
 import Picker from 'emoji-picker-react';
-import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
+import { postMessage, getIntent, getDidLinkWallets, getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
-import {intitializeDb} from '../w2wIndexeddb';
+import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
@@ -28,8 +25,8 @@ const ChatBox = (props) => {
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
-    const [hasIntent,setHasIntent] = useState<boolean>(true);
-    const [wallets,setWallets] = useState<string[]>([]);
+    const [hasIntent, setHasIntent] = useState<boolean>(true);
+    const [wallets, setWallets] = useState<string[]>([]);
     let time;
     let showTime = false;
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
@@ -37,22 +34,21 @@ const ChatBox = (props) => {
             return;
         }
         setMessages([]);
-        while (messageCID) { 
-            const getMessage = await intitializeDb('Read',2,'CID_store',messageCID,'','cid');
-           
-            let msgIPFS:MessageIPFS;
-            if(getMessage!==undefined)
-            {
-                msgIPFS = getMessage.body;  
+        while (messageCID) {
+            const getMessage = await intitializeDb('Read', 2, 'CID_store', messageCID, '', 'cid');
+
+            let msgIPFS: MessageIPFS;
+            if (getMessage !== undefined) {
+                msgIPFS = getMessage.body;
             }
-            else{
+            else {
                 const current = await IPFSHelper.get(messageCID, ipfs);//{}
                 console.log(current);
-                await intitializeDb('Insert',2,'CID_store',messageCID,current,'cid');
-                msgIPFS = current as MessageIPFS 
+                await intitializeDb('Insert', 2, 'CID_store', messageCID, current, 'cid');
+                msgIPFS = current as MessageIPFS
             }
-            setMessages(m => [msgIPFS,...m ])
-            
+            setMessages(m => [msgIPFS, ...m])
+
             const link = msgIPFS.link;
             if (link) {
                 messageCID = link;
@@ -60,62 +56,58 @@ const ChatBox = (props) => {
                 break;
             }
         }
-        
+
     }
 
     const scrollRef: any = useRef();
-    const scrollToBottom = ()=>{
-        scrollRef.current?.scrollIntoView({behaviour:"smooth"});
+    const scrollToBottom = () => {
+        scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
     }
-    useEffect(() => {
 
+    useEffect(() => {
         const getMessagesFromIPFS = async () => {
             let intent = false;
             console.log(currentChat);
-            if(currentChat)
-            {
-                if(currentChat?.did===did.id)
-                {
+            if (currentChat) {
+                if (currentChat?.did === did.id) {
                     setHasIntent(true);
                 }
-                else{
-                    intent = await getIntent(currentChat.did,did.id);
+                else {
+                    intent = await getIntent(currentChat.did, did.id);
                     console.log(intent)
                     setHasIntent(intent);
                 }
                 if (currentChat?.threadhash && intent) {
-                   
+
                     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                     await getMessagesFromCID(currentChat.threadhash, IPFSClient);
                 }
-                else{
+                else {
                     setMessages([]);
                 }
             }
             const res = await getDidLinkWallets(currentChat.did);
             setWallets(res);
-           
 
-            
+
+
         }
-        getMessagesFromIPFS().catch(err => console.error(err));
-        
 
-        
+        getMessagesFromIPFS().catch(err => console.error(err));
     }, [currentChat]);
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
             try {
-               const msg =  await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
-               console.log(msg);
-               setMessages([...messages, msg]);
-               const threadhash = await getLatestThreadhash(currentChat.did,did.id);
-               await intitializeDb('Insert',2,'CID_store',threadhash,msg,'cid');
-               const inbox = await fetchInbox(did);
-               console.log(inbox);
-               props.renderInbox(inbox);
+                const msg = await postMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
+                console.log(msg);
+                setMessages([...messages, msg]);
+                const threadhash = await getLatestThreadhash(currentChat.did, did.id);
+                await intitializeDb('Insert', 2, 'CID_store', threadhash, msg, 'cid');
+                const inbox = await fetchInbox(did);
+                console.log(inbox);
+                props.renderInbox(inbox);
             }
             catch (error) {
                 console.log(error)
@@ -124,10 +116,9 @@ const ChatBox = (props) => {
         setNewMessage("");
 
     }
-    const handleKeyPress = (e)=>{
+    const handleKeyPress = (e) => {
         const x = e.keyCode;
-        if(x===13)
-        {
+        if (x === 13) {
             handleSubmit(e);
         }
     }
@@ -139,11 +130,10 @@ const ChatBox = (props) => {
         else {
             setTextAreaDisabled(false);
         }
-        if(e.key === 'Enter')
-        {   
+        if (e.key === 'Enter') {
             handleSubmit(e);
         }
-        
+
     }
 
     const addEmoji = (e, emojiObject) => {
@@ -162,16 +152,16 @@ const ChatBox = (props) => {
                     <>
                         <div className='chatBoxNavBar'>
                             <div className='chatBoxUserName'>
-                                    <img
-                                        src = {currentChat.profile_picture}
-                                        alt=""
-                                    />
-                                    <div className='chatBoxNavDetail'>
-                                        <p className='chatBoxWallet'>{currentChat.msg.name}</p>
-                                        <div>
-                                            {hasIntent? (
-                                                <Dropdown wallets = {wallets} />
-                                            ):
+                                <img
+                                    src={currentChat.profile_picture}
+                                    alt=""
+                                />
+                                <div className='chatBoxNavDetail'>
+                                    <p className='chatBoxWallet'>{currentChat.msg.name}</p>
+                                    <div>
+                                        {hasIntent ? (
+                                            <Dropdown wallets={wallets} />
+                                        ) :
                                             null
                                         }
                                     </div>
@@ -182,38 +172,35 @@ const ChatBox = (props) => {
                             </div>
                         </div>
                         <div className='chatBoxTop'>
-                
+
                             {hasIntent ? (
-                                messages.map((msg,i) => {
+                                messages.map((msg, i) => {
                                     const isLast = i === messages.length - 1
                                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
                                     showTime = false;
-                                    
-                                    if(i===1)
-                                    {
+
+                                    if (i === 1) {
                                         time = messages[1].timestamp;
                                         let date = new Date(time);
                                         time = date.toDateString();
                                         showTime = true;
-                                        
+
                                     }
-                                    if(i>=1)
-                                    {
+                                    if (i >= 1) {
                                         let duration = new Date(messages[i]?.timestamp);
                                         let dateString = duration.toDateString();
-                                        if(dateString!==time)
-                                        {
+                                        if (dateString !== time) {
                                             showTime = true;
                                             time = dateString;
-                                        }  
+                                        }
                                     }
                                     return (
                                         <>
-                                        {!showTime?null:<div className='showDateInChat'><span>{time}</span></div>}
-                                        <div ref={scrollRef} key = {msg.link} className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wmsgsent" :"w2wmsgreceived",noTail && "w2wnoTail")}>
-                                            
-                                            <Chats time={msg.timestamp} text={msg.messageContent}  />
-                                        </div>
+                                            {!showTime ? null : <div className='showDateInChat'><span>{time}</span></div>}
+                                            <div ref={scrollRef} key={msg.link} className={cn("w2wmsgshared", msg.fromDID === did.id ? "w2wmsgsent" : "w2wmsgreceived", noTail && "w2wnoTail")}>
+
+                                                <Chats time={msg.timestamp} text={msg.messageContent} />
+                                            </div>
                                         </>
                                     )
                                 })
@@ -233,7 +220,7 @@ const ChatBox = (props) => {
                                 className='chatMessageInput'
                                 placeholder={hasIntent ? 'Text Message' : 'Write message to send intent...'}
                                 onChange={changeHandler}
-                                onKeyDown =  {handleKeyPress}
+                                onKeyDown={handleKeyPress}
                                 value={newMessage}
                             >
                             </textarea>

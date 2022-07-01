@@ -30,7 +30,6 @@ export const encryptMessage = async (jsonMessage, publicKeyArmored, privateKeyAr
     return encrypted;
 }
 
-
 export const decryptMessage = async (encrypted, publicKeyArmored, privateKeyArmored, passphrase) => {
     const message = await openpgp.readMessage({
         armoredMessage: encrypted // the messaged that got encrypted in encrypt function above

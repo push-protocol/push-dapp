@@ -59,12 +59,12 @@ export const postMessage = async (fromWallet: string, fromDID: string, toDID: st
 }
 
 export const getIntent = async (firstDID: string, secondDID: string) => {
-
     const response = await fetch(`http://localhost:4000/apis/w2w/intent/did/${firstDID}/${secondDID}`);
     const data = await response.json();
     return data;
 }
-export const getAllWallets = async () => {
+
+export const getAllUsers = async (): Promise<User[]> => {
     const response = await fetch('http://localhost:4000/apis/w2w/getAllUsers');
     const data = await response.json();
     return data;
@@ -106,4 +106,20 @@ export const getKeys = async (Did: string) => {
 
 export function randomString() {
     return toString(randomBytes(16), 'base64');
+}
+
+export interface User {
+    readonly id?: string,
+    did: string,
+    wallets: string,
+    profile_picture: string | null,
+    pgp_pub: string,
+    pgp_priv_enc: string,
+    pgp_enc_type: string,
+    signature: string,
+    sig_type: string,
+    about: string | null,
+    num_msg: number,
+    allowed_num_msg: number,
+    linked_list_hash?: string | null
 }

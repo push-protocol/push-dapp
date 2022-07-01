@@ -38,8 +38,11 @@ export interface Feeds {
 }
 
 interface AppContextInterface {
-  currentChat: Feeds, viewChatBox: boolean, getLinkWallets: (account: string) => Promise<string>, did: DID,
+  currentChat: Feeds, viewChatBox: boolean, 
+  getLinkWallets: (account: string) => Promise<string>, 
+  did: DID,
   renderInboxFeed: Array<{}> | null
+  connectedAccount: string,
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
@@ -66,14 +69,15 @@ function App() {
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
-    setCaip10Account(w2wHelper.walletToCAIP10(account, chainId));
+    const caip10: string = w2wHelper.walletToCAIP10(account, chainId); // the useState does not update state immediately
+    setCaip10Account(caip10);
     setDid(did);
     setCeramicInstance(ceramic);
-    const response = await w2wHelper.getUser(did.id, caip10Account);
+    const response = await w2wHelper.getUser(did.id, caip10);
     if (response === null) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
-      const userDetails = await w2wHelper.createUser({ wallet: caip10Account, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: encryptedPrivateKey.toString(), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
+      const userDetails = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
     }
     setIsLoading(false);
   };
@@ -101,7 +105,7 @@ function App() {
   return (
     <div className="w2wIndex">
       {!isLoading &&
-        <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did, renderInboxFeed }}>
+        <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did, renderInboxFeed, connectedAccount: caip10Account }}>
           <Sidebar setChat={setChat} renderInbox={renderInbox} />
           <ChatBox renderInbox={renderInbox} />
         </Context.Provider>
