@@ -2,11 +2,11 @@ import React from "react";
 import moment from "moment";
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
-import styled , {useTheme} from "styled-components";
+import styled , {useTheme, ThemeProvider} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
-import { Item } from "./SharedStyling";
+import { Item, Section, Content, Button, H2, Span, H3 } from "./SharedStyling";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 const DATE_FORMAT = "DD/MM/YYYY";
@@ -18,6 +18,7 @@ const networkName = {
 
 export default function ChannelDetails() {
   const theme = useTheme();
+  const [modalOpen, setModalOpen] = React.useState(false);
   const { chainId, account } = useWeb3React();
   const { channelDetails, canVerify } = useSelector((state) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
@@ -110,11 +111,38 @@ export default function ChannelDetails() {
       </SectionTop>
 
       <SectionDes style={{ color: theme.color }}>{channelDetails.info}</SectionDes>
-      
+      <hr />
       {aliasVerified === false &&
-        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
-          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
-        </Item>
+        <>
+        <ThemeProvider theme={theme}>
+          <Section>
+            <Content padding="10px 0px 20px">
+              <Item align="flex-start">
+                <H2 textTransform="uppercase" spacing="0.1em">
+                  <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
+                    Verify
+                  </Span>
+                  <Span weight="200" color={theme.color}> Your Channel Alias!</Span>
+                </H2>
+                <H3 color={theme.color} padding="10px 0px">
+                  Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+                </H3>
+                <Button
+                  bg="#e20880"
+                  color="#fff"
+                  flex="1"
+                  padding="20px 10px"
+                  textTransform="uppercase"
+                  style={{width: "100%"}}
+                  onClick={() => setModalOpen(true)}
+                >
+                    Verify Channel Alias
+                </Button>      
+              </Item>
+            </Content>
+          </Section>
+        </ThemeProvider>
+        </>
       }
 
       <SectionDate>
