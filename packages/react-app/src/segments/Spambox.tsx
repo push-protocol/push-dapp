@@ -8,13 +8,7 @@ import { envConfig } from "@project/contracts";
 import DisplayNotice from "components/DisplayNotice";
 import SpamBox from "segments/spam";
 import { postReq } from "api";
-import {
-  api,
-  utils,
-  // NotificationItem,
-} from "@epnsproject/frontend-sdk-staging";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {
   addPaginatedNotifications,
   incrementPage,

@@ -9,11 +9,6 @@ import DisplayNotice from "components/DisplayNotice";
 import { postReq } from "api";
 import SearchFilter from '../components/SearchFilter';
 import {ThemeProvider} from "styled-components";
-import {
-  api,
-  utils,
-  // NotificationItem,
-} from "@epnsproject/frontend-sdk-staging";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {

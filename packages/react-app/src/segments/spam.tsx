@@ -6,11 +6,6 @@ import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import SearchFilter from '../components/SearchFilter';
-import {
-  api,
-  utils,
-  // NotificationItem,
-} from "@epnsproject/frontend-sdk-staging";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {
