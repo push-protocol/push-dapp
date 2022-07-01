@@ -357,9 +357,17 @@ function Feedbox() {
     <ThemeProvider theme={themes}>
     <Container>
     <SearchFilter notifications={allNotf} filterNotifications={filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter}/>
+    {((!run && !notifications.length) || (!run && filter && !filteredNotifications.length) || (run && !welcomeNotifs.length)) && !loading && (
+          <div style={{textAlign:"center"}}>
+          <DisplayNotice
+            title="You currently have no notifications, try subscribing to some channels."
+            theme="third"
+          ></DisplayNotice>
+          </div>
+        
+      )}
       {notifications && (
         <Notifs id="scrollstyle-secondary">
-
           {bgUpdateLoading && (
             <Item
               padding="10px 20px"
@@ -437,14 +445,7 @@ function Feedbox() {
           )}
         </Notifs>
       )}
-      {((!run && !notifications.length) || (!run && filter && !filteredNotifications.length) || (run && !welcomeNotifs.length)) && !loading && (
-        <Item>
-          <DisplayNotice
-            title="You currently have no notifications, try subscribing to some channels."
-            theme="third"
-          />
-        </Item>
-        )}
+      
         {toast && (
 					<NotificationToast
 						notification={toast}
@@ -473,8 +474,6 @@ const Container = styled.div`
 const Notifs = styled.div`
   align-self: stretch;
   padding: 10px 20px;
-  overflow-y: scroll;
-  
   flex: 1;
 
   "-webkit-scrollbar-track": {
