@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import styled, { css, keyframes, useTheme } from "styled-components";
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from '../primaries/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
 
@@ -12,7 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
-import PoolCard from "components/PoolCard";
+import PoolCard from "newcomponents/PoolCard";
 
 import {ThemeProvider} from "styled-components";
 

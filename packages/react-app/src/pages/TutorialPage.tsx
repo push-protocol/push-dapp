@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styled, { css, useTheme, ThemeProvider } from 'styled-components';
 
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
-import {incrementStepIndex, decrementStepIndex, setRun} from "redux/slices/userJourneySlice";
+import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from '../primaries/SharedStyling';
+import { incrementStepIndex, decrementStepIndex, setRun } from "redux/slices/userJourneySlice";
 import Inbox from "./InboxPage";
 
 import { BsChevronExpand } from 'react-icons/bs';
@@ -43,13 +43,13 @@ function TutorialPage(props) {
           <Item align="stretch" justify="flex-start" margin="0px 0px 20px 0px">
             <QnAItem>
               <Question
-                onClick={() => {onStart()}}
+                onClick={() => { onStart() }}
                 hover="#e20880"
               >
                 <Span color={themes.color}>
                   Show me everything!
                 </Span>
-                <BsChevronExpand size={20} color={"#ddd"}/>
+                <BsChevronExpand size={20} color={"#ddd"} />
               </Question>
             </QnAItem>
           </Item>
