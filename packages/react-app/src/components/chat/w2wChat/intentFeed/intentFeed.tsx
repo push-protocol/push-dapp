@@ -182,7 +182,7 @@ const IntentFeed = (props: intentFeedProps) => {
 
                                 <div>
                                     {receivedIntents.map((intent: any) => (
-                                        <div key={intent.threadhash} onClick={() => {showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by)}} >
+                                        <div key={intent.threadhash} onClick={() => {setCurrentChat(intent); showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by)}} >
                                             <DefaultIntent inbox={intent}/>
                                         </div>
                                     ))}
@@ -242,8 +242,9 @@ const IntentFeed = (props: intentFeedProps) => {
                     Approve or Reject your Intent
                 </Typography>
                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    You have received an intent from {receivedIntentFrom}. Intent Message: {intentMessage}.
+                    You have received an intent from {receivedIntentFrom}.
                 </Typography>
+                <br/>
                 <Button onClick={()=>{ApproveIntent("Approved")}}>Approve</Button>
                 <Button onClick={()=>{ApproveIntent("Reproved")}}>Reject</Button>
                 </Box>

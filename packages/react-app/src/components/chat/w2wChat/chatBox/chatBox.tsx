@@ -10,7 +10,7 @@ import Chats from '../chats/chats';
 import 'font-awesome/css/font-awesome.min.css';
 // @ts-ignore
 import Picker from 'emoji-picker-react';
-import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
+import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash,createIntent, getIntentStatus } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 import {intitializeDb} from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -25,13 +25,16 @@ const ChatBox = (props) => {
     const { account } = useWeb3React<Web3Provider>();
     const { currentChat, viewChatBox, did } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
-    const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
+    const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
     const [hasIntent,setHasIntent] = useState<boolean>(true);
     const [wallets,setWallets] = useState<string[]>([]);
+    const [intentSentandPending, setIntentSentandPending] = useState<boolean>(false);
+
     let time;
     let showTime = false;
+
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
             return;
@@ -70,16 +73,27 @@ const ChatBox = (props) => {
     useEffect(() => {
 
         const getMessagesFromIPFS = async () => {
+            setNewMessage("");
             let intent = false;
+            console.log("PRINTING CURRENT CHAT");
             console.log(currentChat);
             if(currentChat)
-            {
+            {   
+                setIntentSentandPending(false);
+                setTextAreaDisabled(false);
                 if(currentChat?.did===did.id)
                 {
                     setHasIntent(true);
                 }
                 else{
                     intent = await getIntent(currentChat.did,did.id);
+                    if(intent==true){
+                        var intentStatusValue = await getIntentStatus(currentChat.did, did.id);
+                        if(intentStatusValue=="Pending"){
+                            setIntentSentandPending(true);
+                            setTextAreaDisabled(true);
+                        }
+                    }
                     console.log(intent)
                     setHasIntent(intent);
                 }
@@ -124,6 +138,24 @@ const ChatBox = (props) => {
         setNewMessage("");
 
     }
+
+    const sendIntent = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        if (newMessage.trim() !== "") {
+            try {
+               const msg = await createIntent(currentChat.did, did.id, account, newMessage, 'signature');
+               console.log(msg);
+               const inbox = await fetchInbox(did);
+               console.log(inbox);
+               props.renderInbox(inbox);
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+        setNewMessage("");
+    }
+
     const handleKeyPress = (e)=>{
         const x = e.keyCode;
         if(x===13)
@@ -134,10 +166,10 @@ const ChatBox = (props) => {
     const changeHandler = (e) => {
         setNewMessage(e.target.value);
         if (newMessage === "") {
-            setTextAreaDisabled(true);
+            // setTextAreaDisabled(true);
         }
         else {
-            setTextAreaDisabled(false);
+            // setTextAreaDisabled(false);
         }
         if(e.key === 'Enter')
         {   
@@ -149,6 +181,15 @@ const ChatBox = (props) => {
     const addEmoji = (e, emojiObject) => {
         setNewMessage(newMessage + emojiObject.emoji);
         setShowEmojis(false);
+    }
+
+    const placeholderTextArea = ()=>{
+        if(intentSentandPending==true)
+            return "Can't send any messages until intent is accepted !";
+        if(hasIntent==true)
+            return "New Text Message";
+        else
+            return "Intent Message";
     }
 
     return (
@@ -229,9 +270,11 @@ const ChatBox = (props) => {
                             }
                         </div>
                         <div className='chatBoxBottom'>
+
                             <textarea
+                                disabled = {textAreaDisabled}
                                 className='chatMessageInput'
-                                placeholder={hasIntent ? 'Text Message' : 'Write message to send intent...'}
+                                placeholder={placeholderTextArea()}
                                 onChange={changeHandler}
                                 onKeyDown =  {handleKeyPress}
                                 value={newMessage}
@@ -239,7 +282,7 @@ const ChatBox = (props) => {
                             </textarea>
                             {
                                 hasIntent ? (
-                                    <button className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
+                                    <button disabled = {textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
                                         <i className="fa fa-smile" aria-hidden="true" ></i>
                                     </button>
                                 ) :
@@ -249,7 +292,12 @@ const ChatBox = (props) => {
                                 onEmojiClick={addEmoji}
                                 pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
                             />}
-                            <button className='chatSubmitButton' onClick={handleSubmit}>{hasIntent ? 'Send' : 'Send Intent'}</button>
+                              {
+                                hasIntent ? (
+                                    <button disabled = {textAreaDisabled} className='chatSubmitButton' onClick={handleSubmit}>Send</button>
+                                ) :
+                                <button className='chatSubmitButton' onClick={sendIntent}>Send Intent</button>
+                            }
                         </div>
                     </>
                 )
