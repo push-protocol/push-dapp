@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import Sidebar from './sidebar/sidebar';
 import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
@@ -39,24 +39,23 @@ export interface Feeds {
 
 interface AppContextInterface {
   currentChat: Feeds, viewChatBox: boolean, 
-  getLinkWallets: (account: string) => Promise<string>, 
   did: DID,
   renderInboxFeed: Array<{}> | null
-  connectedAccount: string,
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
-
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const [did, setDid] = useState<DID>();
-  const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>();
-  const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
   const [caip10Account, setCaip10Account] = useState<string>('');
 
+  const [userProfile,setUserProfile] = useState<string>('');
+  const [userWallets,setUserWallets] = useState<string>('');
+  const [renderInboxFeed,setRenderInboxFeed] = useState<Array<{}> | null>();
+  const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
   useEffect(() => {
     if (isLoading) {
       connectToCeramic();
@@ -78,6 +77,13 @@ function App() {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
       const userDetails = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
+      console.log(userDetails);
+      setUserProfile(userDetails.profile_picture);
+      setUserWallets(userDetails.wallets);
+    }
+    else{
+      setUserProfile(response.profile_picture);
+      setUserWallets(response.wallets);
     }
     setIsLoading(false);
   };
@@ -98,30 +104,33 @@ function App() {
     setCurrentChat(text);
   }
 
-  const renderInbox = (args: any) => {
-    setRenderInboxFeed(args);
+  const renderInbox = (args:Array<{}>)=>{
+    setRenderInboxFeed(args); 
   }
 
   return (
-    <div className="w2wIndex">
-      {!isLoading &&
-        <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did, renderInboxFeed, connectedAccount: caip10Account }}>
-          <Sidebar setChat={setChat} renderInbox={renderInbox} />
-          <ChatBox renderInbox={renderInbox} />
-        </Context.Provider>
-      }
-      {
-        isLoading &&
-        (
-          <div className='w2wIndexLoaderContainer'>
-            <Loader
-              className="w2wLoader"
-              type="Oval" />
-            <p>Fetching Did</p>
-          </div>
-        )
-      }
-    </div>
+    <>
+      <div className="w2wIndex">
+        {!isLoading ?
+          (
+            <Context.Provider value={{ currentChat, viewChatBox, did,renderInboxFeed }}>
+              <Sidebar setChat={setChat} renderInbox = {renderInbox} userProfile = {userProfile} userWallets = {userWallets}/>
+              <ChatBox renderInbox = {renderInbox} />
+            </Context.Provider>
+          )
+          :
+          (
+            <div className='w2wIndexLoaderContainer'>
+              <Loader
+                className="w2wLoader"
+                type="Oval" />
+              <p>Fetching Did</p>
+            </div>
+
+          )
+        }
+      </div>
+    </>
   )
 }
 export default App;

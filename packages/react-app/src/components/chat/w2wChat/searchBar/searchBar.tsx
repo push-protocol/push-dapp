@@ -12,7 +12,6 @@ import { User } from '../../../../helpers/w2wChatHelper';
 
 const SearchBar = (props: { setChat: any; renderInbox: any }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
-    const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
@@ -97,6 +96,7 @@ const SearchBar = (props: { setChat: any; renderInbox: any }) => {
     };
 
     return (
+        <>
         <div className="search" >
             <form onSubmit={submitSearch}>
                 <div className="searchInputs">
@@ -116,11 +116,11 @@ const SearchBar = (props: { setChat: any; renderInbox: any }) => {
                     </div>
                 </div>
             </form>
-
             <div className='sidebar_message'>
                 {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} renderInbox={props.renderInbox} />}
             </div>
         </div>
+    </>
     );
 };
 

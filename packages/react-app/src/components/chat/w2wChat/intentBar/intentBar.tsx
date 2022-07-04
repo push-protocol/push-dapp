@@ -24,7 +24,6 @@ import {
 const IntentBar = (props: { setChat: any; }) => {
     const { did } = useContext(Context);
     const { connector, chainId } = useWeb3React<Web3Provider>();
-    const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState([]);
     const [allIntents, setAllIntents] = useState([]);
@@ -97,17 +96,17 @@ const IntentBar = (props: { setChat: any; }) => {
             var ENS = web3.eth.ens;
             if (!web3.utils.isAddress(wordEntered)) {
                 const address: string = await ENS.getAddress(wordEntered);
-                const did = await getLinkWallets(address);
+               // const did = await getLinkWallets(address);
                 if (did === null) {
                     searchFromDb('');
                 }
                 else {
-                    searchFromDb(did);
+                //    searchFromDb(did);
                 }
             }
             else {
-                const did = await getLinkWallets(wordEntered);
-                searchFromDb(did);
+              //  const did = await getLinkWallets(wordEntered);
+                //searchFromDb(did);
             }
         }
         catch (err) {

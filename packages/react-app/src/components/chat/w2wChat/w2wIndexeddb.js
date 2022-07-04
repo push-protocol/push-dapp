@@ -1,10 +1,8 @@
 let db;
-
-export const intitializeDb = async (state, version, dbName, key, message, index) => {
-    return await new Promise((resolve, reject) => {
-        const openRequest = window.indexedDB.open('w2w_idxDb', version);
-
-        openRequest.onupgradeneeded = e => {
+export const intitializeDb =async (state,version,dbName,key,message,index)=>{
+    return await  new Promise((resolve,reject)=>{
+        const openRequest = window.indexedDB.open('w2w_idxDb',version);
+        openRequest.onupgradeneeded=(e)=>{
             db = e.target.result;
             const cIDStore = db.createObjectStore('Inbox', { keyPath: 'did' });
             cIDStore.createIndex('did', 'did', { unique: true });
