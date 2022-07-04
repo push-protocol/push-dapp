@@ -103,7 +103,7 @@ export function randomString() {
 
 export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/intent', {
-        method: 'POST',
+        method: 'PUT',
         headers: {
             "content-Type": 'application/json'
         },
@@ -114,6 +114,5 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
             signature
         })
     });
-    const data = await response.json();
-    return data;
+    return response;
 }

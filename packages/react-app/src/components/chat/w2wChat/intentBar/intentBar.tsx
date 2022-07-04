@@ -41,7 +41,6 @@ const IntentBar = (props: { setChat: any; }) => {
     }, []);
 
     useEffect(() => {
-        getAllIntents();
     }, []);
 
 

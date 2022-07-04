@@ -9,6 +9,9 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { getIntents } from '../../../../helpers/w2wChatHelper';
 import { approveIntent } from '../../../../helpers/w2wChatHelper';
 import {
     Section,
@@ -43,6 +46,13 @@ export interface InboxChat {
     lastMessage: string
 }
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 const IntentFeed = (props: intentFeedProps) => {
     console.log("Printing filtered user data in intentfeed component");
     console.log(props.filteredUserData);
@@ -57,6 +67,9 @@ const IntentFeed = (props: intentFeedProps) => {
     const [open, setOpen] = useState(false);
     const [receivedIntentFrom, setReceivedIntentFrom] = useState();
     const [intentMessage, setIntentMessage] = useState();
+    const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
+    const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
+    
 
     const [toDID, settoDID] = useState();
   
@@ -68,8 +81,9 @@ const IntentFeed = (props: intentFeedProps) => {
         setOpen(true);
     };
 
-    async function resolve_threadhash(intents){
-        var updated_intents = await fetchMessagesFromIpfs(intents);
+    async function resolve_threadhash(){
+        var all_intents:any = await getIntents(did.id);
+        var updated_intents = await fetchMessagesFromIpfs(all_intents);
         var allIntents:any = updated_intents;
         var sentIntents=[], receivedIntents = [];
         for(var i=0; i<allIntents.length; i++){
@@ -89,8 +103,7 @@ const IntentFeed = (props: intentFeedProps) => {
     }
     
     useEffect(() => {
-        var allIntents:any = props.filteredUserData;
-        resolve_threadhash(allIntents); 
+        resolve_threadhash(); 
     }, [props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
@@ -106,9 +119,15 @@ const IntentFeed = (props: intentFeedProps) => {
 
     async function ApproveIntent(status){
         var fromDID = did.id;
-        const res =  await approveIntent(toDID, fromDID, status, "signature");
+        const res =  await approveIntent(fromDID, toDID, status, "1");
         console.log(res);
         handleClose();
+        if(status=="Approved")
+            setOpenSuccessSnackBar(true);
+        else
+            setOpenReprovalSnackBar(true);
+        await resolve_threadhash();
+        viewSentIntents();
     }
 
     function displaySentIntents(){
@@ -187,6 +206,22 @@ const IntentFeed = (props: intentFeedProps) => {
         setShowReceivedIntent(true);
     }
 
+    const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenSuccessSnackBar(false);
+      };
+
+      const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenReprovalSnackBar(false);
+      };
+
     return (
         <>
             <section className='messageFeed_body'>
@@ -195,23 +230,40 @@ const IntentFeed = (props: intentFeedProps) => {
                 <Button style={{width:"50%", display:"inline-block", color:"black"}} onClick={viewReceivedIntents}> Received </Button>
             </div>
 
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Approve or Reject your Intent
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                You have received an intent from {receivedIntentFrom}. Intent Message: {intentMessage}.
-            </Typography>
-            <Button onClick={()=>{ApproveIntent("Approved")}}>Approve</Button>
-            <Button onClick={()=>{ApproveIntent("Rejected")}}>Reject</Button>
-            </Box>
-        </Modal>
+            {/* Modals */}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Approve or Reject your Intent
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    You have received an intent from {receivedIntentFrom}. Intent Message: {intentMessage}.
+                </Typography>
+                <Button onClick={()=>{ApproveIntent("Approved")}}>Approve</Button>
+                <Button onClick={()=>{ApproveIntent("Reproved")}}>Reject</Button>
+                </Box>
+            </Modal>
+
+            {/* Snackbar for successful approval */}
+            <Snackbar open={openSuccessSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
+                <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%' }}>
+                Intent succesfully Approved !
+                </Alert>
+            </Snackbar>
+
+
+            {/* Snackbar for rejected intent */}
+            <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
+                <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
+                Intent was Reproved !
+                </Alert>
+            </Snackbar>
+            
 
             {displaySentIntents()}
             {displayReceivedIntents()}
