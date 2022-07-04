@@ -3,6 +3,10 @@ import { Feeds } from '../w2wIndex';
 import './defaultMessage.css';
 
 const DefaultMessage = (props: { inbox: Feeds }) => {
+    // printing default message props
+    console.log("Default message props");
+    console.log(props);
+    
     let date=null;
    
     if(props.inbox?.msg.timestamp!==null)

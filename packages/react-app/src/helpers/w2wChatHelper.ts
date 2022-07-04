@@ -100,3 +100,20 @@ export const getKeys = async (Did: string) => {
 export function randomString() {
     return toString(randomBytes(16), 'base64');
 }
+
+export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/intent', {
+        method: 'POST',
+        headers: {
+            "content-Type": 'application/json'
+        },
+        body: JSON.stringify({
+            toDID,
+            fromDID,
+            status,
+            signature
+        })
+    });
+    const data = await response.json();
+    return data;
+}
