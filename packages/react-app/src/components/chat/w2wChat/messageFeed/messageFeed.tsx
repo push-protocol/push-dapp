@@ -6,6 +6,7 @@ import { getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import { Context, Feeds } from '../w2wIndex';
 import {fetchMessagesFromIpfs,fetchInbox} from '../w2wUtils'
 import {intitializeDb} from '../w2wIndexeddb';
+import { DID } from 'dids';
 interface messageFeedProps {
     filteredUserData: {}[],
     isValid: boolean,
@@ -22,10 +23,10 @@ export interface InboxChat {
  
 const MessageFeed = (props: messageFeedProps) => {
     const { did,renderInboxFeed } = useContext(Context);
-    const [feeds, setFeeds] = useState([]);
+    const [feeds, setFeeds] = useState<Array<{}>>([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
    
-    const unCached = async (did)=>{
+    const unCached = async (did:DID)=>{
         const inbox = await fetchInbox(did);
         console.log(inbox);
         setFeeds(inbox);
@@ -33,32 +34,29 @@ const MessageFeed = (props: messageFeedProps) => {
     
     const fetchMyApi = useCallback(async () => {
         console.log(did.id);
-        const getMessage = await intitializeDb('Read',2,'Inbox',did.id,'','did');
-        console.log(getMessage)
-        if(getMessage!==undefined)
+        const getInbox = await intitializeDb('Read',2,'Inbox',did.id,'','did');
+        console.log(getInbox)
+        if(getInbox!==undefined)
         {
-            setFeeds(getMessage.body);
+            setFeeds(getInbox.body);
         }
         else{
             await unCached(did)
         }
     }, []);
 
-      /* setInterval(async()=>{
-            unCached(did);
-        
-    },10000);*/
     useEffect(()=>{
         setFeeds(renderInboxFeed);
-    },[renderInboxFeed])
+    },[renderInboxFeed]);
+
     useEffect(() => {
-       
-        if (!props.isValid) {
+        if (!props.isValid) 
+        {
             fetchMyApi();
         }
-        else {
+        else 
+        {
             const searchFn = async ()=>{
-                
                 if(props.filteredUserData.length)
                 {
                     
@@ -93,28 +91,30 @@ const MessageFeed = (props: messageFeedProps) => {
                     </div>
                 )}
                 {
-                    (!feeds?.length && !messagesLoading) ? (
+                    (!feeds?.length && !messagesLoading) 
+                    ? 
+                    (
                         <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
                             No Address found.
                         </p>
-                    ) :
-                        (!messagesLoading &&
-                            <div>
-                                {feeds.map((feed: Feeds) => (
-                                    <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }}>
-                                        <DefaultMessage inbox={feed} />
-                                    </div>
-                                ))}
-                            </div>
-                        )
+                    ) 
+                    :
+                    (
+                        !messagesLoading ?
+                        <div>
+                            {feeds.map((feed: Feeds) => (
+                                <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }}>
+                                    <DefaultMessage inbox={feed} />
+                                </div>
+                            ))}
+                        </div>
+                        :
+                        null
+                    )
                 }
-
-
             </section>
-
         </>
     )
-
 }
 
 export default MessageFeed;

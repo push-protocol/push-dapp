@@ -2,12 +2,14 @@ import * as IPFSHelper from '../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../helpers/w2w/IPFS';
 import {intitializeDb} from './w2wIndexeddb';
+
 import {getInbox} from '../../../helpers/w2wChatHelper';
 export interface InboxChat {
     name: string,
     profile_picture: string,
     timestamp: number,
-    lastMessage: string
+    lastMessage: string,
+    messageType:string
 }
 
 export const fetchMessagesFromIpfs = async (inbox)=>{
@@ -17,11 +19,13 @@ export const fetchMessagesFromIpfs = async (inbox)=>{
             const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
             const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient);
             const msgIPFS: MessageIPFS = current as MessageIPFS
+            
             const msg: InboxChat = {
-                name: inbox[i].wallets.split(',')[0].toString().slice(0,15)+'...',
+                name: inbox[i].wallets.split(',')[0].toString(),
                 profile_picture:inbox[i].profile_picture,
                 lastMessage: msgIPFS.messageContent,
-                timestamp: msgIPFS.timestamp
+                timestamp: msgIPFS.timestamp,
+                messageType:msgIPFS.messageType
             };
             if(msg.lastMessage.length>25)
             {
@@ -32,10 +36,11 @@ export const fetchMessagesFromIpfs = async (inbox)=>{
         }
         else{
             const msg: InboxChat = {
-                name: inbox[i].wallets.split(',')[0].toString().slice(0,15)+'...',
+                name: inbox[i].wallets.split(',')[0].toString(),
                 profile_picture:inbox[i].profile_picture,
                 lastMessage: null,
-                timestamp: null
+                timestamp: null,
+                messageType:null
             }
             inbox[i] = {...inbox[i],msg}
         }
@@ -53,3 +58,11 @@ export const fetchInbox = async (did)=>{
     await intitializeDb('Insert',2,'Inbox',did.id,inbox,'did');
     return inbox;
 }
+
+export const formatFileSize = (size: number) => {
+    let i = Math.floor(Math.log(size) / Math.log(1024));
+  
+    return `${(size / Math.pow(1024, i)).toFixed(1)} ${
+      ["B", "KB", "MB", "GB", "TB"][i]
+    }`;
+};

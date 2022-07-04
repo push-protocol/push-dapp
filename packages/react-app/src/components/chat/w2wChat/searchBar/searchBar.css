@@ -20,13 +20,14 @@
   border-radius: 10px;
   position: relative;
   border-top-right-radius: 0;
+  border-top-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   border-color: #2f2f2f;
   font-size: 18px;
   padding: 15px;
   background-color: #f7f7f7;
-  height: 35px;
+  height: 28px;
   border-top:1px rgb(80, 79, 79) solid ;
   outline: #2a95a5;
   width: 17vw;
@@ -39,6 +40,7 @@
 .search{
   width: 100%;
   display: flex;
+  flex-direction: column;
   
 }
 .searchBody{
@@ -50,13 +52,14 @@
 }
 .sidebar_message{
   position: relative;
-  margin-top: 10px;
+  margin-top: 15px;
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
+  
   position: absolute;
   max-height: 77vh;
-  top: 3rem;
+  top: 10rem;
   
 }
 .sidebar_message:hover{
@@ -90,7 +93,7 @@
   }
   
 .searchIcon {
-  height: 65px;
+  height: 58px;
   background-color: #f7f7f7;
   
   position: relative;
@@ -109,6 +112,7 @@
 .searchInputs {
   
   display: flex;
+  
   width: 100%;
   
 }

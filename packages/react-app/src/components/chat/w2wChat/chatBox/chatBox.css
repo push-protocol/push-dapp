@@ -21,14 +21,53 @@
     padding: 7px;
     cursor: pointer;
 }
+.stickerIcon_btn,.GifIcon_btn{
+    width: 1.5rem;
+    background-color: transparent;
+    color: #255b82;
+    cursor: pointer;
+}
 
 .defaultChatPage{
     background-color: #f2f2f2;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    
     position: relative;
     height: 100%;
 }
-
+.defaultChatPageText{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+.defaultChatPage img{
+    width: 9rem;
+    height: 7rem;
+    border-radius: 20%;
+    position: relative;
+    top:-4rem;
+    left: 7rem;
+}
+.defaultChatPage p{
+    position: relative;
+    top: -4.5rem;
+    font-size: 2rem;
+    color: #255b82;
+    width: 100%;
+    font-weight: 400;
+    align-items: center;
+    left: 7rem;
+}
+.defaultChatPage span{
+    position: relative;
+    top: -5rem;
+    font-size: 1.2rem;
+    font-weight: 400;
+    opacity: 0.8;
+}
 .chatBoxTop::-webkit-scrollbar {
     width: 5px;
   }
@@ -43,81 +82,13 @@
     border-radius: 10px;
     background-image: transparent;
   }
-  
-.w2wmsgshared {
-    position: relative; /* Setup a relative container for our psuedo elements */
-    max-width: 300px;
-    
-    padding-left: 5px;
-    padding-right: 8px;
-    word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
-    border-radius: 25px;
-}
-
-.w2wmsgsharedspan{
-    position: relative; /* Setup a relative container for our psuedo elements */
-    max-width: 300px;
-    
-    word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
-   
-   
-}
-.w2wmsgshared::before {
-      width: 20px;
-    }
-  
-.w2wmsgshared:after {
-      width: 26px;
-       /* All tails have the same bg cutout */
-    }
-  
-.w2wmsgshared:before,
-.w2wmsgshared:after {
-      position: absolute;
-      bottom: 0;
-      height: 25px; /* height of our bubble "tail" - should match the border-radius above */
-      content: '';
-}
-
-.w2wmsgsent{
-    align-self: flex-end;
-    color: white;
-    background: #0b93f6;
-}
-
-.w2wmsgsent::before {
-      right: -7px;
-      background-color: #0b93f6;
-      border-bottom-left-radius: 26px 24px;
-    }
-  
-.w2wmsgsent::after {
-      right: -26px;
-      border-bottom-left-radius: 20px;
-}
-.w2wmsgreceived {
-    align-self: flex-start;
-    color: black;
-    
-    background: #e5e5ea;
-}
-.w2wmsgreceived::before {
-      left: -10px;
-      
-      background-color: #e5e5ea;
-      border-bottom-right-radius: 16px 14px;
-    }
-  
-.w2wmsgreceived::after {
-      left: -29px;
-     
-      border-bottom-right-radius: 10px;
-    }
-
+ 
 .chatBoxNavBar{
     width: 75%;
     height: 8vh;
     position: absolute;
+    display: flex;
+    justify-content: space-between;
     z-index: 400;
     display: flex;
     background-color: rgb(255, 255, 255);
@@ -125,14 +96,33 @@
     border-radius: 3px;   
 }
 
-.chatBoxEpnsLogo{
-    position: absolute;
-    left: 46vw;
-    top: 0.5rem;
+.blockUserDropdown{
+    padding: 10px;
+    background-color: white;
+    border: 0.5px solid black;
+    z-index: 800;
+    position: relative;
+    border-radius: 5px;
+    left: -5.5rem;
+    font-weight: 450;
+    width: 75px;
+    cursor: pointer;
 }
-.chatBoxEpnsLogo img{
-    width: 6rem;
-
+.blockUserDropdown:hover{
+    background-color: #e5e5ea;
+}
+.chatBoxEpnsLogo{
+    
+    display: flex;
+    position: relative;
+    top: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 5%;
+}
+.chatBoxEpnsLogo i{
+   font-size: 1.5rem;
+    cursor: pointer;
 }
 .chatBoxUserName{
     display: flex;
@@ -171,7 +161,7 @@
 
 .chatBoxWallet{
     font-weight: 510;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     position: relative;
     top: -1.5rem;
     margin-left: 15px;
@@ -192,24 +182,21 @@
 .chatBoxTop{
     height: 65%;
     overflow-y: scroll;
-    padding-top: 10vh;
+    padding-top: 9vh;
     padding-right: 0px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     overflow-x: hidden;
     margin: 0 2px;
     
+}
+
+.beforeMessageLoader{
+    display: flex;
+    justify-content: center;
     
 }
-.w2wnoTail{
-    margin-bottom: 2px;
-}
-.w2wnoTail::before{
-    opacity: 0;
-}
-.w2wnoTail::after{
-    opacity: 0;
-}
+
 .chatBoxBottom {
     
     height: 50px;
@@ -221,6 +208,20 @@
     justify-content: space-between;
 }
 
+.chatBoxBottomInput{
+    display:none
+}
+
+.chatBoxBottom label{
+    cursor: pointer;
+}
+
+.chatBoxBottom i{
+    font-size: 1.5rem;
+    color: rgb(58, 103, 137);
+    margin-left: 5px;
+
+}
 .chatMessageInput{
     width: 80%;
     height: 39px;
@@ -230,28 +231,32 @@
     border:1px solid black;
     border-style: none;
     resize: none;
-    font-size: 1.1rem;
-    font-weight: bold;
+    font-size: 1rem;
+    font-weight: 400;
     
     resize: none;
 
 }
 .chatSubmitButton {
-    width: 10rem;
-    height: 3rem;
     border: none;
-    font-size: 1.1rem;
+    font-size: 1.8rem;
     border-radius: 5px;
     cursor: pointer;
-    
+    background-color: transparent;
     margin-right: 2rem;
-    background-color: rgb(58, 103, 137);
-    color: white;
+    color: rgb(58, 103, 137);
 }
-
+.imageloader{
+    border: none;
+    font-size: 1.8rem;
+    border-radius: 5px;
+    background-color: transparent;
+    margin-right: 2rem;
+    color: rgb(58, 103, 137);
+}
 .emojiButton{
-    width: 3rem;
-    height: 3rem;
+    width: 2rem;
+    height: 2rem;
     border: none;
     border-radius: 5px;
     position: relative;
@@ -261,14 +266,15 @@
     font-weight: 100;
 }
 .emojiButton i{
-    font-size: 3rem;
+    font-size: 2rem;
     position: absolute;
-    left: 0rem;
+    left: 0;
     top: 0;
 }
 .fa-smile::before{
     content: "\f111";
     color:#f1c40f;
+
 }
 
 .fa-smile::after{

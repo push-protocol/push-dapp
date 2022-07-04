@@ -1,12 +1,9 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './searchBar.css';
-
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
-
 // @ts-ignore
 import SearchIcon from "@material-ui/icons/Search";
-
 // @ts-ignore
 import CloseIcon from "@material-ui/icons/Close";
 import MessageFeed from '../messageFeed/messageFeed';
@@ -16,9 +13,8 @@ import { Context, Feeds } from '../w2wIndex';
 
 const SearchBar = (props: { setChat: any;renderInbox:any }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
-    const { getLinkWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
-    const [allUsers, setAllUsers] = useState([])
+    const [allUsers, setAllUsers] = useState<Array<Feeds>>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     const [isValid, setIsValid] = useState<boolean>(false);
     const getAllUsers = useCallback(async () => {
@@ -41,7 +37,6 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
                 let found = false;
                 for(let j in wallets)
                 {
-                    
                     if(wallets[j]===wordEntered)
                     {
                         found = true;
@@ -107,6 +102,7 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
     };
 
     return (
+        <>
         <div className="search" >
             <form onSubmit={submitSearch}>
                 <div className="searchInputs">
@@ -126,11 +122,16 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
                     </div>
                 </div>
             </form>
-
             <div className='sidebar_message'>
-                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} renderInbox = {props.renderInbox}/>}
+                <MessageFeed 
+                    isValid={isValid} 
+                    filteredUserData={filteredUserData} 
+                    setChat={props.setChat} 
+                    renderInbox = {props.renderInbox}
+                />
             </div>
         </div>
+    </>
     );
 };
 

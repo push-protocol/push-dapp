@@ -26,3 +26,10 @@ export async function get(cid: string, ipfs: IPFSHTTPClient): Promise<any> {
   const content: any = (await ipfs.dag.get(cidObject)).value;
   return content;
 }
+
+export async function uploadImage(image,ipfs:IPFSHTTPClient):Promise<string>{
+  console.log(image);
+  const cid = await ipfs.add(image);
+  console.log(cid);
+  return cid.path;
+}

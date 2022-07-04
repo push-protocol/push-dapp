@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect} from 'react';
 import Sidebar from './sidebar/sidebar';
 import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
@@ -11,7 +11,6 @@ import { getKeys, randomString, createUser, getUser } from '../../../helpers/w2w
 //DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
 import { DID } from 'dids'
-import { JWE } from 'did-jwt';
 import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
 import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
 import { Caip10Link } from '@ceramicnetwork/stream-caip10-link';
@@ -37,24 +36,21 @@ export interface Feeds {
 }
 
 interface AppContextInterface {
-  currentChat: Feeds, viewChatBox: boolean, getLinkWallets: (account: string) => Promise<string>, did: DID,
+  currentChat: Feeds, viewChatBox: boolean, did: DID,
   renderInboxFeed:Array<{}> | null
 }
 
-export const Context = React.createContext<AppContextInterface | null>(null)
+export const Context = React.createContext<AppContextInterface | null>(null);
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const [did, setDid] = useState<DID>();
+  const [userProfile,setUserProfile] = useState<string>('');
+  const [userWallets,setUserWallets] = useState<string>('');
   const [renderInboxFeed,setRenderInboxFeed] = useState<Array<{}> | null>();
   const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
-  /* const [content, setContent] = useState<string>("");
-   const [encryptedData, setEncryptedData] = useState<JWE>();
-   const [decryptedData, setDecryptedData] = useState<string>();
-   */
-
   useEffect(() => {
     if (isLoading) {
       connectToCeramic();
@@ -81,55 +77,48 @@ function App() {
       const encryptedPrivateKey = await encrypt(keyPairs.privateKey, did);
       const userDetails = await createUser(account,did.id,keyPairs.publicKey,encryptedPrivateKey.toString(),'pgp','xyz','a');
       console.log(userDetails);
-      //await updateKeys(did.id,keyPairs.privateKey,keyPairs.publicKey);
-
+      setUserProfile(userDetails.profile_picture);
+      setUserWallets(userDetails.wallets);
+    }
+    else{
+      setUserProfile(response.profile_picture);
+      setUserWallets(response.wallets);
     }
     setIsLoading(false);
-  
   };
 
-  const getLinkWallets = async (account: string): Promise<string> => {
-    try {
-      // Using the Ceramic client instance, we can load the link for a given CAIP-10 account
-      const link = await getDIDFromWallet(ceramicInstance, account, 1);
-      console.log(link, 'link');
-      // The `did` property of the loaded link will contain the DID string value if set
-      return link;
-    }
-    catch (e) {
-      console.log(e);
-    }
-  };
   const setChat = (text: Feeds) => {
     console.log(text);
     setViewChatBox(true);
     setCurrentChat(text);
-
   }
-  const renderInbox = (args:any)=>{
-    setRenderInboxFeed(args);
-    
+
+  const renderInbox = (args:Array<{}>)=>{
+    setRenderInboxFeed(args); 
   }
   return (
-    <div className="w2wIndex">
-      {!isLoading &&
-        <Context.Provider value={{ currentChat, viewChatBox, getLinkWallets, did,renderInboxFeed }}>
-          <Sidebar setChat={setChat} renderInbox = {renderInbox}/>
-          <ChatBox renderInbox = {renderInbox} />
-        </Context.Provider>
-      }
-      {
-        isLoading &&
-        (
-          <div className='w2wIndexLoaderContainer'>
-            <Loader
-              className="w2wLoader"
-              type="Oval" />
-            <p>Fetching Did</p>
-          </div>
-        )
-      }
-    </div>
+    <>
+      <div className="w2wIndex">
+        {!isLoading ?
+          (
+            <Context.Provider value={{ currentChat, viewChatBox, did,renderInboxFeed }}>
+              <Sidebar setChat={setChat} renderInbox = {renderInbox} userProfile = {userProfile} userWallets = {userWallets}/>
+              <ChatBox renderInbox = {renderInbox} />
+            </Context.Provider>
+          )
+          :
+          (
+            <div className='w2wIndexLoaderContainer'>
+              <Loader
+                className="w2wLoader"
+                type="Oval" />
+              <p>Fetching Did</p>
+            </div>
+
+          )
+        }
+      </div>
+    </>
   )
 }
 export default App;

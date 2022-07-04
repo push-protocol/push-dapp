@@ -41,6 +41,9 @@
     overflow: hidden;
     align-items: flex-start;
 }
+.defaultMessage_lastMsg i{
+    font-size: 1rem;
+}
 .defaultMessage_img img{
     border-radius: 20%;
     width: 80%;
@@ -48,10 +51,9 @@
     top: 0.8rem;
     left: 0.5rem;
     position: relative;
-    display: flex;
-    
-
+    display: flex;   
 }
+
 .defaultMessage_img{
     width: 25%;
    

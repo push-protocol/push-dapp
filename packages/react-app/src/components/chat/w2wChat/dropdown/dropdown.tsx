@@ -1,7 +1,6 @@
 import React,{useRef,useState} from 'react';
 import './dropdown.css';
 //@ts-ignore
-import line from '../w2wAsset/line.jpg';
 const Dropdown = (props)=>{
     const showDropdown:any = useRef();
     const [copied,setCopied] = useState<boolean>(false);
@@ -10,9 +9,12 @@ const Dropdown = (props)=>{
         showDropdown.current.classList.toggle('active');
     }
     async function copyTextToClipboard(text) {
-      if ('clipboard' in navigator) {
+      if ('clipboard' in navigator) 
+      {
         return await navigator.clipboard.writeText(text);
-      } else {
+      } 
+      else 
+      {
         return document.execCommand('copy', true, text);
       }
     }
@@ -39,7 +41,15 @@ const Dropdown = (props)=>{
                 <ul>
                   {
                     props.wallets.map((wallet:string)=>{
-                      return <li>{wallet}{!copied ? <i className="fa fa-clone" aria-hidden="true"  onClick={()=>{handleClick(wallet)}}></i>:<i className="fa fa-check" aria-hidden="true"></i>} </li>
+                      return <li>
+                              {wallet}
+                              {!copied 
+                              ? 
+                              <i className="fa fa-clone" aria-hidden="true"  onClick={()=>{handleClick(wallet)}}></i>
+                              :
+                              <i className="fa fa-check" aria-hidden="true"></i>
+                              } 
+                             </li>
                     })
                   }
                 </ul>
