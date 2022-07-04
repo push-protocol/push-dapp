@@ -3,7 +3,7 @@ import ReactGA from "react-ga";
 import { Navigate, Routes, Route, Link } from "react-router-dom";
 
 import styled from "styled-components";
-import { Content, Item, ItemH, Span, H2, B, Anchor } from "components/SharedStyling";
+import { Content, Item, ItemH, Span, H2, B, Anchor } from "../primaries/SharedStyling";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -26,7 +26,7 @@ import NotAvailablePage from "./NotAvailablePage";
 import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
 
-import {SupportPage} from "pages/SupportPage";
+import { SupportPage } from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
 
@@ -48,11 +48,11 @@ function MasterInterfacePage() {
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
           <Route path="channels" element={
-              <ViewChannelsPage 
-                loadTeaser={setLoadTeaserVideo}
-                playTeaser={setPlayTeaserVideo}
-              />
-            } 
+            <ViewChannelsPage
+              loadTeaser={setLoadTeaserVideo}
+              playTeaser={setPlayTeaserVideo}
+            />
+          }
           />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
           <Route path="spam" element={<SpamPage />} />
@@ -68,10 +68,10 @@ function MasterInterfacePage() {
           <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route
-              path="/"
-              element={<Navigate to="/channels" />}
+            path="/"
+            element={<Navigate to="/channels" />}
           />
-          <Route path="support" element={<SupportPage/>}/>
+          <Route path="support" element={<SupportPage />} />
         </Routes>
       </Interface>
 
@@ -92,7 +92,7 @@ function MasterInterfacePage() {
           <PreviewBG
             href="#"
             bg="transparent"
-            onClick={(e) => {e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo)}}
+            onClick={(e) => { e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo) }}
           >
             <PreviewContent className="contentBox">
               <PreviewClose
@@ -100,9 +100,9 @@ function MasterInterfacePage() {
                 bg="transparent"
                 hover="transparent"
                 hoverBG="transparent"
-                onClick={(e) => {e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo)}}
+                onClick={(e) => { e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo) }}
               >
-                <VscClose size={40} color="#fff"/>
+                <VscClose size={40} color="#fff" />
               </PreviewClose>
               <Preview>
                 <div class='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>

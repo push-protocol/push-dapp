@@ -4,16 +4,16 @@ import { ethers } from "ethers";
 import styled, { useTheme, ThemeProvider } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
-import { Item, Button } from "components/SharedStyling";
+import { Item, Button } from "../primaries/SharedStyling";
 import { addresses, abis, envConfig } from "@project/contracts";
 import { postReq } from "api";
 
 import { toast as toaster } from "react-toastify";
-import NotificationToast from "components/NotificationToast";
+import NotificationToast from "../primaries/NotificationToast";
 
 import Loader from "react-loader-spinner";
 
-import Feedbox from "segments/Feedbox";
+import Feedbox from "newsegments/Feedbox";
 
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";

@@ -1,7 +1,7 @@
 import React from "react";
 
 import styled from 'styled-components';
-import {Section, ItemH} from '../primaries/SharedStyling';
+import {Section, ItemH} from 'components/SharedStyling';
 
 import Loader from 'react-loader-spinner'
 import { envConfig } from "@project/contracts";
@@ -11,7 +11,7 @@ import { addresses, abis } from "@project/contracts";
 import NFTHelper from 'helpers/NFTHelper';
 import { ethers } from "ethers";
 
-import ViewNFTItem from "newcomponents/ViewNFTItem";
+import ViewNFTItem from "components/ViewNFTItem";
 
 // Create Header
 function AllNFTs({controlAt, setControlAt, setTokenId}) {

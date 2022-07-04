@@ -1,8 +1,5 @@
 import React from "react";
-
 import styled from 'styled-components';
-import {Section, ItemH} from '../primaries/SharedStyling';
-
 import Loader from 'react-loader-spinner'
 import { envConfig } from "@project/contracts";
 
@@ -11,11 +8,12 @@ import { addresses, abis } from "@project/contracts";
 import NFTHelper from 'helpers/NFTHelper';
 import { ethers } from "ethers";
 
+import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTItem from "newcomponents/ViewNFTItem";
 
 // Create Header
-function AllNFTs({controlAt, setControlAt, setTokenId}) {
-  const { account, chainId, library } = useWeb3React();
+function MyNFTs({controlAt, setControlAt, setTokenId}) {
+  const { account, library, chainId } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
@@ -27,8 +25,8 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
   const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
 
   const mainnetCoreProvider = onMainnetCore
-        ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
+    ? library
+    : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC);
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {
@@ -48,47 +46,46 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
     }
   }, [account, nftReadProvider, nftWriteProvider, NFTRewardsContract]);
 
-  // to fetch all minted NFT Details
+  // to fetch NFT Details
   const fetchNFTDetails = async () => {
-    let totalSupply = await NFTHelper.getTotalSupply(nftReadProvider);
+    let balance = await NFTHelper.getNFTBalance(account, nftReadProvider);
     setLoading(false);
-    for(let i=0; i<totalSupply; i++){
-      let tokenId = await NFTHelper.getTokenByIndex(i, nftReadProvider)
+    for(let i=0; i<balance; i++){
+      let tokenId = await NFTHelper.getTokenOfOwnerByIndex(account, i, nftReadProvider)
       let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract)
       await setNFTObjects(prev => [...prev, NFTObject])
     }
   }
 
   return (
-    <Section align="center">
+    <>
       {loading &&
         <ContainerInfo>
           <Loader
            type="Oval"
-           color="#674c9f"
+           color="#35c5f3"
            height={40}
            width={40}
           />
         </ContainerInfo>
       }
 
-      {/* {!loading && NFTObjects.length == 0 &&
+      {!loading && NFTObjects.length == 0 &&
         <ContainerInfo>
-          <Loader
-           type="Oval"
-           color="#674c9f"
-           height={40}
-           width={40}
+          <DisplayNotice
+            title="No ROCKSTAR tokens are available in your account"
+            theme="primary"
           />
         </ContainerInfo>
-      } */}
+      }
+
 
       {!loading && NFTObjects.length != 0 &&
-        <ItemH id="scrollstyle-secondary">
+        <Items id="scrollstyle-secondary">
+
           {Object.keys(NFTObjects).map(index => {
-            if (NFTObjects) {
+            if (NFTObjects[index].id) {
               return (
-                <>
                 <ViewNFTItem
                   key={NFTObjects[index].id}
                   NFTObject={NFTObjects[index]}
@@ -98,13 +95,13 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
                   setControlAt={setControlAt}
                   setTokenId={setTokenId}
                 />
-                </>
               );
             }
+
           })}
-        </ItemH>
+        </Items>
       }
-    </Section>
+    </>
   );
 }
 
@@ -121,7 +118,6 @@ const Container = styled.div`
 
   max-height: 80vh;
 `
-
 const ContainerInfo = styled.div`
   padding: 20px;
 `
@@ -135,4 +131,4 @@ const Items = styled.div`
 `
 
 // Export Default
-export default AllNFTs;
+export default MyNFTs;

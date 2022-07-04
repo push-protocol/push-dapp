@@ -10,13 +10,13 @@ import { useWeb3React } from "@web3-react/core";
 
 import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import NotificationToast from "components/NotificationToast";
-import AliasVerificationodal from "components/AliasVerificationModal";
-import Info from "segments/Info";
-import Feedbox from "segments/Feedbox";
-import ViewChannels from "segments/ViewChannels";
-import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
-import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
+import NotificationToast from "../primaries/NotificationToast";
+import AliasVerificationModal from "newcomponents/AliasVerificationModal";
+import Info from "newsegments/Info";
+import Feedbox from "newsegments/Feedbox";
+import ViewChannels from "newsegments/ViewChannels";
+import ChannelOwnerDashboard from "newsegments/ChannelOwnerDashboard";
+import ChannelCreationDashboard from "newsegments/ChannelCreationDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 import { postReq } from "api";
@@ -408,7 +408,7 @@ function ChannelDashboardPage() {
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}
         {modalOpen && (
-          <AliasVerificationodal
+          <AliasVerificationModal
             onClose={() => setModalOpen(false)}
             onSuccess={() => setAliasVerified(true)}
             verificationStatus={aliasVerified}

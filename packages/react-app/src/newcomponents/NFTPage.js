@@ -11,8 +11,8 @@ import MyNFTs from "newcomponents/MyNFTs";
 import MyNFTsV2 from "newcomponents/MyNFTsV2";
 import AllNFTs from "newcomponents/AllNFTs";
 import AllNFTsV2 from "newcomponents/AllNFTsV2";
-import TransferNFT from "newcomponents/TransferNFT";
-import TransferNFTv2 from "newcomponents/TransferNFTv2";
+import TransferNFT from "components/TransferNFT";
+import TransferNFTv2 from "components/TransferNFTv2";
 
 
 import {ThemeProvider} from "styled-components";
