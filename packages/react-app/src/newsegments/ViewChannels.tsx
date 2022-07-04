@@ -7,14 +7,14 @@ import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 
-import { Item, ItemH } from "components/SharedStyling";
+import { Item, ItemH } from "../primaries/SharedStyling";
 import { AiOutlineSearch } from "react-icons/ai";
 
 import UtilityHelper from 'helpers/UtilityHelper';
 
-import DisplayNotice from "components/DisplayNotice";
-import ViewChannelItem from "components/ViewChannelItem";
-import Faucets from "components/Faucets";
+import DisplayNotice from "../primaries/DisplayNotice";
+import ViewChannelItem from "newcomponents/ViewChannelItem";
+import Faucets from "newcomponents/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
