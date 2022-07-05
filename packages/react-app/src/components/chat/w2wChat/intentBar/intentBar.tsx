@@ -12,16 +12,8 @@ import * as w2wChatHelper from '../../../../helpers/w2wChatHelper';
 import { getIntents } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import {Context, Feeds} from '../w2wIndex';
-import {
-    Section,
-    Content,
-    Item,
-    H3,
-    Span,
-    Button,
-  } from "components/SharedStyling";
 
-const IntentBar = (props: { setChat: any; }) => {
+const IntentBar = () => {
     const { did } = useContext(Context);
     const { connector, chainId } = useWeb3React<Web3Provider>();
     const [wordEntered, setWordEntered] = useState<string>('');
@@ -127,7 +119,7 @@ const IntentBar = (props: { setChat: any; }) => {
             </div>
             
             <div className='sidebar_message'>
-                {<IntentFeed filteredUserData={filteredUserData} setChat={props.setChat} />}
+                {<IntentFeed filteredUserData={filteredUserData} />}
             </div>
         </div>
     );

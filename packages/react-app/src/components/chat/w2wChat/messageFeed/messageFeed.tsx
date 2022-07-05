@@ -9,9 +9,7 @@ import {intitializeDb} from '../w2wIndexeddb';
 import { DID } from 'dids';
 interface messageFeedProps {
     filteredUserData: {}[],
-    isValid: boolean,
-    setChat: (arg0: any) => void,
-    renderInbox: Array<{}>
+    isValid: boolean
 }
 
 export interface InboxChat {
@@ -22,7 +20,7 @@ export interface InboxChat {
 }
 
 const MessageFeed = (props: messageFeedProps) => {
-    const { did,renderInboxFeed } = useContext(Context);
+    const { did,renderInboxFeed,setChat} = useContext(Context);
     const [feeds, setFeeds] = useState<Array<{}>>([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
    
@@ -76,7 +74,7 @@ const MessageFeed = (props: messageFeedProps) => {
     }, [props.isValid, props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
-        props.setChat(feed);
+        setChat(feed);
     }
 
     return (

@@ -10,8 +10,9 @@ import Web3 from 'web3';
 import { Context } from '../w2wIndex';
 import { User } from '../../../../helpers/w2wChatHelper';
 
-const SearchBar = (props: { setChat: any; renderInbox: any }) => {
+const SearchBar = () => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
+    
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
@@ -117,7 +118,7 @@ const SearchBar = (props: { setChat: any; renderInbox: any }) => {
                 </div>
             </form>
             <div className='sidebar_message'>
-                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} renderInbox={props.renderInbox} />}
+                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} />}
             </div>
         </div>
     </>

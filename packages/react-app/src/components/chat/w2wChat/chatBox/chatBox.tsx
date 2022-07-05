@@ -22,12 +22,9 @@ import { useWeb3React } from "@web3-react/core";
 import { fetchInbox } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
 
-interface chatBoxProps{
-    renderInbox:(args:Array<{}>)=>void;
-}
-const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
+const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
-    const { currentChat, viewChatBox, did } = useContext(Context);
+    const { currentChat, viewChatBox, did ,renderInbox} = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
@@ -125,7 +122,7 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
             await intitializeDb('Insert',2,'CID_store',threadhash,msg,'cid');
             const inbox = await fetchInbox(did);
             console.log(inbox);
-            props.renderInbox(inbox);
+            renderInbox(inbox);
          }
          catch (error) {
              console.log(error)

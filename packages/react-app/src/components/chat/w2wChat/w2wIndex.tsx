@@ -40,7 +40,12 @@ export interface Feeds {
 interface AppContextInterface {
   currentChat: Feeds, viewChatBox: boolean, 
   did: DID,
-  renderInboxFeed: Array<{}> | null
+  renderInboxFeed: Array<{}> | null,
+  userProfile:string,
+  userWallets:string,
+  setChat:(text:Feeds)=>void,
+  renderInbox:(args:Array<{}>)=>void
+
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
@@ -51,7 +56,6 @@ function App() {
   const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const [did, setDid] = useState<DID>();
   const [caip10Account, setCaip10Account] = useState<string>('');
-
   const [userProfile,setUserProfile] = useState<string>('');
   const [userWallets,setUserWallets] = useState<string>('');
   const [renderInboxFeed,setRenderInboxFeed] = useState<Array<{}> | null>();
@@ -88,16 +92,6 @@ function App() {
     setIsLoading(false);
   };
 
-  const getLinkWallets = async (account: string): Promise<string> => {
-    try {
-      // Using the Ceramic client instance, we can load the link for a given CAIP-10 account
-      const link = await getDIDFromWallet(ceramicInstance, account, 1);
-      return link;
-    }
-    catch (e) {
-      console.log(e);
-    }
-  };
 
   const setChat = (text: Feeds) => {
     setViewChatBox(true);
@@ -113,9 +107,9 @@ function App() {
       <div className="w2wIndex">
         {!isLoading ?
           (
-            <Context.Provider value={{ currentChat, viewChatBox, did,renderInboxFeed }}>
-              <Sidebar setChat={setChat} renderInbox = {renderInbox} userProfile = {userProfile} userWallets = {userWallets}/>
-              <ChatBox renderInbox = {renderInbox} />
+            <Context.Provider value={{ currentChat, viewChatBox, did,renderInboxFeed,userProfile,userWallets,setChat,renderInbox }}>
+              <Sidebar />
+              <ChatBox />
             </Context.Provider>
           )
           :

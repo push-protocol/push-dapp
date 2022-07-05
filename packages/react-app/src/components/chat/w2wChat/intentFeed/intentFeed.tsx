@@ -17,7 +17,6 @@ import { varint } from 'multiformats';
 
 interface intentFeedProps {
     filteredUserData: {}[],
-    setChat: (arg0: any) => void
 }
 
 export interface InboxChat {
@@ -30,7 +29,7 @@ export interface InboxChat {
 const IntentFeed = (props: intentFeedProps) => {
     console.log("Printing props data");
     console.table(props.filteredUserData);
-    const { did } = useContext(Context);
+    const { did,setChat } = useContext(Context);
     const [feeds, setFeeds] = useState([]);
     const [inboxMessages, setInboxMessages] = useState<InboxChat[]>()
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -60,7 +59,7 @@ const IntentFeed = (props: intentFeedProps) => {
     }, [props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
-        props.setChat(feed);
+        setChat(feed);
     }
 
     return (

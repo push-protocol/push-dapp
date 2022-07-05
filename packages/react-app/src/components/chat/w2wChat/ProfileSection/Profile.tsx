@@ -9,12 +9,11 @@ declare const Buffer
 
 interface profilePropsType{
     profile_picture:string,
-    wallets:string,
     updateProfile:(image:string)=>void
 }
 const Profile = (props:profilePropsType)=>{
-    const { did } = useContext(Context);
-    const wallets = props.wallets.split(',');
+    const { did,userWallets } = useContext(Context);
+    const wallets = userWallets.split(',');
     const [copiedDid,setCopiedDid] = useState<boolean>(false);
     const [copiedWallet,setCopiedWallet] = useState<boolean>(false);
     const [profile,setProfile] = useState('');

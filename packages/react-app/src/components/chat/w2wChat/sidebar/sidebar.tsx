@@ -1,24 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState,useContext} from 'react';
 import SearchBar from '../searchBar/searchBar';
 import IntentBar from '../intentBar/intentBar';
 import './sidebar.css';
-import { Feeds } from '../w2wIndex';
+import { Feeds,Context } from '../w2wIndex';
 import ProfileHeader from '../ProfileSection/ProfileHeader';
 import Profile from '../ProfileSection/Profile';
 import {
     Button,
   } from "components/SharedStyling";
 
-interface sideBarPropsType{
-  userProfile:string,
-  userWallets:string,
-  renderInbox:(args:Array<{}>)=>void,
-  setChat:(text:Feeds)=>void
-} 
-const Sidebar = (props:sideBarPropsType) => {
+
+const Sidebar = () => {
     const [chatselected, setChatselected] = useState(true);
+    const {userProfile} = useContext(Context);
     const [showProfile,setShowProfile] = useState(false);
-    const  [updateProfileImage,setUserProfileImage] = useState(props.userProfile);
+    const  [updateProfileImage,setUserProfileImage] = useState(userProfile);
     const updateProfile =(image:string)=>{
         setUserProfileImage(image);
     }
@@ -38,10 +34,7 @@ const Sidebar = (props:sideBarPropsType) => {
                     ?
                     (
                         <div className='sidebar_search'>
-                            <SearchBar 
-                                setChat = {props.setChat} 
-                                renderInbox = {props.renderInbox}
-                            />
+                            <SearchBar/>
                         </div>
                     )
                     :
@@ -49,7 +42,6 @@ const Sidebar = (props:sideBarPropsType) => {
                         <div  className='sidebar_profile'>
                             <Profile 
                                 profile_picture = {updateProfileImage} 
-                                wallets = {props.userWallets} 
                                 updateProfile = {updateProfile}
                             />
                         </div>
@@ -68,7 +60,7 @@ const Sidebar = (props:sideBarPropsType) => {
                     />
                 </div>
                 <div className='sidebar_search'>
-                    <IntentBar setChat = {props.setChat}/>
+                    <IntentBar />
                 </div>
                 </>
             )
