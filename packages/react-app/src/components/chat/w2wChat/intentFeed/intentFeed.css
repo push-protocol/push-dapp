@@ -11,3 +11,19 @@
     position: relative;
     
 }
+.intentFilter_buttons button{
+    width:50%;
+    display: inline-block;
+    color:black;
+    border:1px solid black;
+    border-right: 0;
+    border-left: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.intentFilter_buttons button:focus{
+    background-color: rgb(91, 144, 204);
+}

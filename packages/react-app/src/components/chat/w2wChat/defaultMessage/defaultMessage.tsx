@@ -3,6 +3,10 @@ import { Feeds } from '../w2wIndex';
 import './defaultMessage.css';
 import {CID} from 'ipfs-http-client';
 const DefaultMessage = (props: { inbox: Feeds }) => {
+    // printing default message props
+    console.log("Default message props");
+    console.log(props);
+    
     let date=null;
     const [imageSource,setImageSource] = useState<string>('');
     console.log(props);

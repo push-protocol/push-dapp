@@ -9,7 +9,7 @@ import {CID} from 'ipfs-http-client';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
-import { postMessage, getIntent, getDidLinkWallets, getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
+import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash,createIntent, getIntentStatus } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -26,7 +26,7 @@ const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
     const { currentChat, viewChatBox, did ,renderInbox} = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
-    const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(true);
+    const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
     const [imageSource,setImageSource] = useState<string>('');
@@ -37,9 +37,9 @@ const ChatBox = () => {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isGifPickerOpened,setIsGifPickerOpened] = useState<boolean>(false);
-    
-    let time:string="";
+    const [intentSentandPending, setIntentSentandPending] = useState<boolean>(false);
     let showTime = false;
+    let time:string="";
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
             return;
@@ -75,6 +75,7 @@ const ChatBox = () => {
     }
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
+            setNewMessage("");
             let intent = false;
             try{
     
@@ -86,13 +87,22 @@ const ChatBox = () => {
                 setImageSource(currentChat.profile_picture);
             }
             if(currentChat)
-            {
+            {   
+                setIntentSentandPending(false);
+                setTextAreaDisabled(false);
                 if(currentChat?.did===did.id)
                 {
                     setHasIntent(true);
                 }
                 else{
-                    intent = await getIntent(currentChat?.did,did.id);
+                    intent = await getIntent(currentChat.did,did.id);
+                    if(intent==true){
+                        var intentStatusValue = await getIntentStatus(currentChat.did, did.id);
+                        if(intentStatusValue=="Pending" || intentStatusValue==="Reproved"){
+                            setIntentSentandPending(true);
+                            setTextAreaDisabled(true);
+                        }
+                    }
                     console.log(intent)
                     setHasIntent(intent);
                 }
@@ -134,14 +144,32 @@ const ChatBox = () => {
             sendMessage(account,did.id,currentChat.did,newMessage,'Text','signature');
         }
     }
-    const handleKeyPress = (e) => {
+    const sendIntent = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        if (newMessage.trim() !== "") {
+            try {
+               const msg = await createIntent(currentChat.did, did.id, account, newMessage, 'signature');
+               console.log(msg);
+               const inbox = await fetchInbox(did);
+               console.log(inbox);
+               renderInbox(inbox);
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+        setNewMessage("");
+    }
+    const handleKeyPress = (e)=>{
         const x = e.keyCode;
         if (x === 13) {
             handleSubmit(e);
         }
     }
+    
     const textOnChange = (e)=>{
         setNewMessage(e.target.value);
+        
     }
     const uploadFile = async (file:File)=>{
         try{
@@ -192,8 +220,16 @@ const ChatBox = () => {
     const sendGif = (url:string)=>{
         console.log(url);
         sendMessage(account,did.id,currentChat.did,url,'Gif','signature');
-
     }
+    const placeholderTextArea = ()=>{
+        if(intentSentandPending==true)
+            return "Can't send any messages until intent is accepted !";
+        if(hasIntent==true)
+            return "New Text Message";
+        else
+            return "Intent Message";
+    }
+
     return (
         <div className='chatBox_body'>
             {!viewChatBox ? (
@@ -263,7 +299,6 @@ const ChatBox = () => {
                                         <>
                                          {!showTime ? null:<div className='showDateInChat'><span>{time}</span></div>}
                                          <Chats msg = {msg} did = {did} noTail = {noTail} />
-                                         
                                         </>
                                     )
                                 })
@@ -321,8 +356,9 @@ const ChatBox = () => {
                                 </button>
                             </div>
                             <textarea
+                                disabled = {textAreaDisabled}
                                 className='chatMessageInput'
-                                placeholder={hasIntent ? 'Text Message' : 'Write message to send intent...'}
+                                placeholder={placeholderTextArea()}
                                 onKeyDown =  {handleKeyPress}
                                 onChange = {textOnChange}
                                 value={newMessage}
@@ -330,7 +366,7 @@ const ChatBox = () => {
                             </textarea>
                             {
                                 hasIntent ? (
-                                    <button className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
+                                    <button disabled = {textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
                                         <i className="fa fa-smile" aria-hidden="true" ></i>
                                     </button>
                                 ) :
@@ -356,23 +392,6 @@ const ChatBox = () => {
             }
         </div>
     )
+    
 }
 export default ChatBox;
-/*
-
- <InfiniteScroll
-                            dataLength={messages.length as number}
-                            next = {()=>setLimitCount((prev)=>prev+10)}
-                            inverse
-                            hasMore = {(messages.length as number) >= limitCount}
-                            loader = {
-                                <div className='beforeMessageLoader'>
-                                    <Loader/>
-                                </div>
-                            }  
-                            style = {{display:"flex" ,flexDirection:"column-reverse"}}
-                             
-                        >
-
-                        </InfiniteScroll>
-*/

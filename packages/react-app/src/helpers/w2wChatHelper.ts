@@ -76,7 +76,12 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
     return data;
 }
 
-export const getAllUsers = async (): Promise<User[]> => {
+export const getIntentStatus = async (firstDID:string,secondDID:string)=>{
+    const response = await fetch(`http://localhost:4000/apis/w2w/intentstatus/did/${firstDID}/${secondDID}`);
+    const data = await response.json();
+    return data;
+}
+export const getAllUsers = async ():Promise<User[]> => {
     const response = await fetch('http://localhost:4000/apis/w2w/getAllUsers');
     const data = await response.json();
     return data;
@@ -115,11 +120,9 @@ export const getKeys = async (Did: string) => {
     const data: any = await response.json();
     return data;
 }
-
 export function randomString() {
     return toString(randomBytes(16), 'base64');
 }
-
 export interface User {
     readonly id?: string,
     did: string,
@@ -134,4 +137,36 @@ export interface User {
     num_msg: number,
     allowed_num_msg: number,
     linked_list_hash?: string | null
+}
+export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/intent', {
+        method: 'PUT',
+        headers: {
+            "content-Type": 'application/json'
+        },
+        body: JSON.stringify({
+            toDID,
+            fromDID,
+            status,
+            signature
+        })
+    });
+    return response;
+}
+
+export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string,signature:string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/intent', {
+        method: 'POST',
+        headers: {
+            "content-Type": 'application/json'
+        },
+        body: JSON.stringify({
+            toDID,
+            fromDID, 
+            fromWallet,
+            message,
+            signature
+        })
+    });
+    return response;
 }

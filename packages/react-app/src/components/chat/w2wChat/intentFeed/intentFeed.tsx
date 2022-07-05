@@ -1,19 +1,27 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './intentFeed.css';
-import DefaultMessage from '../defaultMessage/defaultMessage';
-import Loader from '../Loader/Loader';
-import { getInbox } from '../../../../helpers/w2wChatHelper';
+import DefaultIntent from '../defaultIntent/defaultIntent';
 import { Context, Feeds } from '../w2wIndex';
-import {
-    Section,
-    Content,
-    Item,
-    H3,
-    Span,
-    Button,
-  } from "components/SharedStyling";
-import { varint } from 'multiformats';
-
+import {fetchIntent} from '../w2wUtils';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { approveIntent } from '../../../../helpers/w2wChatHelper';
+import { intitializeDb } from '../w2wIndexeddb';
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 interface intentFeedProps {
     filteredUserData: {}[],
@@ -26,73 +34,216 @@ export interface InboxChat {
     lastMessage: string
 }
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 const IntentFeed = (props: intentFeedProps) => {
-    console.log("Printing props data");
-    console.table(props.filteredUserData);
+    console.log("Printing filtered user data in intentfeed component");
+    console.log(props.filteredUserData);
     const { did,setChat } = useContext(Context);
-    const [feeds, setFeeds] = useState([]);
-    const [inboxMessages, setInboxMessages] = useState<InboxChat[]>()
-    const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
+    const [showSentIntent, setShowSentIntent] = useState(true);
+    const [showReceivedIntent, setShowReceivedIntent] = useState(false);
+    const [sentIntents, setSentIntents] = useState([]);
+    const [receivedIntents, setReceivedIntents] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [receivedIntentFrom, setReceivedIntentFrom] = useState();
+    const [intentMessage, setIntentMessage] = useState();
+    const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
+    const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
+    
 
-    const fetchMyApi = useCallback(async () => {
-        const inbox: Feeds[] = await getInbox(did.id);
-        console.log("Printing inbox");
-        console.table(inbox);
-        // filter out the feeds which have intent as approved if inbox is not empty
-        var filteredFeeds =[];
-        if (inbox.length > 0) {
-            filteredFeeds = inbox.filter(feed => feed.intent === 'Approved');
+    const [toDID, settoDID] = useState();
+  
+    const handleClose = () => {
+        setOpen(false);
+    };
+        
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    async function resolve_threadhash(){
+        let getIntent:Array<Feeds>;
+        getIntent = await intitializeDb('Read',2,'Intent',did.id,'','did');
+        console.log(getIntent)
+        if(getIntent===undefined)
+        {
+            getIntent = await fetchIntent(did);
         }
-        setFeeds(filteredFeeds);
-        setMessagesLoading(true);
-    }, [])
-
+        let sentIntents=[], receivedIntents = [];
+        for(var i=0; i<getIntent.length; i++){
+            if(getIntent[i].intent_sent_by === did.id){
+                sentIntents.push(getIntent[i]);
+            }
+            else{
+                receivedIntents.push(getIntent[i]);
+            }
+        }
+        setSentIntents(sentIntents);
+        setReceivedIntents(receivedIntents);
+        console.log("Sent intents");
+        console.log(sentIntents);
+        console.log("Received Intents");
+        console.log(receivedIntents);
+    }
+    
     useEffect(() => {
-        if (!props.filteredUserData?.length) {
-            fetchMyApi();
-        }
-        else {  
-            console.log("Setting through props");
-            setFeeds(props.filteredUserData);
-        }
-        setMessagesLoading(false);
+        resolve_threadhash(); 
     }, [props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
         setChat(feed);
     }
 
+    function showModal(intentFrom, intentMsg, todid){
+        setReceivedIntentFrom(intentFrom);
+        setIntentMessage(intentMsg);
+        settoDID(todid);
+        handleOpen();
+    }
+
+    async function ApproveIntent(status){
+        var fromDID = did.id;
+        const res =  await approveIntent(fromDID, toDID, status, "1");
+        console.log(res);
+        handleClose();
+        if(status=="Approved")
+            setOpenSuccessSnackBar(true);
+        else
+            setOpenReprovalSnackBar(true);
+        await resolve_threadhash();
+        viewSentIntents();
+    }
+
+    function displaySentIntents(){
+        if(showSentIntent==true){
+            return (
+                <>
+                    {
+                        (!sentIntents?.length) ? (
+                            <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
+                                No sent intents !
+                            </p>
+                        ) :
+                            (
+                                <>
+                                <div>
+                                    {sentIntents.map((intent: any) => (
+                                        <div key={intent.threadhash} onClick={() => { setCurrentChat(intent) }} >
+                                            <DefaultIntent inbox={intent}/>
+                                        </div>
+                                    ))}
+                                </div>
+                                </>
+                            )
+                    }
+
+                </>
+            )
+        }
+    }
+
+    function displayReceivedIntents(){
+        if(showReceivedIntent==true){
+            return (
+                <>
+                    {
+                        (!receivedIntents?.length) ? (
+                            <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
+                                No received intents !
+                            </p>
+                        ) :
+                            (
+                                <>
+                                <div>
+                                    {receivedIntents.map((intent: any) => (
+                                        <div key={intent.threadhash} onClick={() => {setCurrentChat(intent); showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by)}} >
+                                            <DefaultIntent inbox={intent}/>
+                                        </div>
+                                    ))}
+                                </div>
+                                </>
+                            )
+                    }
+
+                </>
+            )
+        }
+    }
+
+    function viewSentIntents(){
+        setShowReceivedIntent(false);
+        setShowSentIntent(true);
+    }
+
+    function viewReceivedIntents(){
+        setShowSentIntent(false);
+        setShowReceivedIntent(true);
+    }
+
+    const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenSuccessSnackBar(false);
+      };
+
+      const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenReprovalSnackBar(false);
+      };
+
     return (
         <>
             <section className='messageFeed_body'>
             <div className='intentFilter_buttons' style={{width:"100%"}}>
-                <Button style={{width:"50%", display:"inline-block", color:"black"}}> Sent </Button>
-                <Button style={{width:"50%", display:"inline-block", color:"black"}}> Received </Button>
+                <Button onClick={viewSentIntents}> Sent Intents</Button>
+                <Button onClick={viewReceivedIntents}> Received Intents</Button>
             </div>
-                {(!messagesLoading) ? (
-                    <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
-                        <Loader />
-                    </div>
-                ) :
-                    (
-                        (!feeds?.length) ? (
-                            <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
-                                No intents found from given address.
-                            </p>
-                        ) :
-                            (
-                                <div>
-                                    {feeds.map((feed: Feeds) => (
-                                        <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }} >
-                                            <DefaultMessage inbox={feed}/>
-                                        </div>
-                                    ))}
-                                </div>
-                            )
-                    )
-                }
-            </section>
 
+            {/* Modals */}
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Approve or Reject your Intent
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    You have received an intent from {receivedIntentFrom}.
+                </Typography>
+                <br/>
+                <Button onClick={()=>{ApproveIntent("Approved")}}>Approve</Button>
+                <Button onClick={()=>{ApproveIntent("Reproved")}}>Reject</Button>
+                </Box>
+            </Modal>
+
+            {/* Snackbar for successful approval */}
+            <Snackbar open={openSuccessSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
+                <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%' }}>
+                Intent succesfully Approved !
+                </Alert>
+            </Snackbar>
+            {/* Snackbar for rejected intent */}
+            <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
+                <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
+                Intent was Reproved !
+                </Alert>
+            </Snackbar>
+            {displaySentIntents()}
+            {displayReceivedIntents()}
+            </section>
         </>
     )
 
