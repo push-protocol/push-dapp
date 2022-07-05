@@ -1,4 +1,4 @@
-import React,{useEffect, useState,useCallback,useContext} from 'react';
+import React, { useState } from 'react';
 import SearchBar from '../searchBar/searchBar';
 import IntentBar from '../intentBar/intentBar';
 import './sidebar.css';
@@ -58,7 +58,7 @@ const Sidebar = (props:sideBarPropsType) => {
                 </>
             )
         }
-        else{
+        else {
             return (
                 <>
                 <div className='userProfileBar'>
@@ -75,23 +75,23 @@ const Sidebar = (props:sideBarPropsType) => {
         }
     }
 
-    function showChats(){
+    function showChats() {
         setChatselected(true);
     }
 
-    function showIntents(){
+    function showIntents() {
         setChatselected(false);
     }
 
     return (
         <>
-        <div className='sidebar_body'>
-            {renderselected()}
-            <div className='sidebar_bottom'>
-                <Button style={{color:"black"}} className="sidebar_bottom_button" onClick={showChats}>Chats</Button>
-                <Button style={{color:"black"}} className="sidebar_bottom_button" onClick={showIntents}>Intents</Button>
+            <div className='sidebar_body'>
+                {renderselected()}
+                <div className='sidebar_bottom'>
+                    <Button style={{ color: "black" }} className="sidebar_bottom_button" onClick={showChats}>Chats</Button>
+                    <Button style={{ color: "black" }} className="sidebar_bottom_button" onClick={showIntents}>Intents</Button>
+                </div>
             </div>
-        </div>
         </>
     );
 }

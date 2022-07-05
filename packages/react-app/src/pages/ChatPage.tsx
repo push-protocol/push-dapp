@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 
 import styled, { useTheme } from 'styled-components';
 import { Section } from 'components/SharedStyling';
@@ -10,7 +10,7 @@ import GLOBALS from "config/Globals";
 function ChatPage(props) {
   return (
     <Container>
-     <Chat/>   
+      <Chat />
     </Container>
   );
 }

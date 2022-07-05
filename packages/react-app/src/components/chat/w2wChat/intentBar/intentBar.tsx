@@ -4,13 +4,11 @@ import './intentBar.css';
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 
-// @ts-ignore
 import SearchIcon from "@material-ui/icons/Search";
 
-// @ts-ignore
 import CloseIcon from "@material-ui/icons/Close";
 import IntentFeed from '../intentFeed/intentFeed';
-import { getAllWallets } from '../../../../helpers/w2wChatHelper';
+import * as w2wChatHelper from '../../../../helpers/w2wChatHelper';
 import { getIntents } from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import {Context, Feeds} from '../w2wIndex';
@@ -23,7 +21,6 @@ import {
     Button,
   } from "components/SharedStyling";
 
-
 const IntentBar = (props: { setChat: any; }) => {
     const { did } = useContext(Context);
     const { connector, chainId } = useWeb3React<Web3Provider>();
@@ -33,10 +30,10 @@ const IntentBar = (props: { setChat: any; }) => {
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     
     const getAllUsers = useCallback(async () => {
-        const responseData = await getAllWallets();
-        setAllUsers(responseData);
+        const users = await w2wChatHelper.getAllUsers();
+        setAllUsers(users);
         console.log("printing users");
-        console.table(responseData);
+        console.table(users);
     }, []);
 
     const getAllIntents = useCallback(async() => {

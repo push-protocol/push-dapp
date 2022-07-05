@@ -11,7 +11,7 @@ interface messageFeedProps {
     filteredUserData: {}[],
     isValid: boolean,
     setChat: (arg0: any) => void,
-    renderInbox:Array<{}>
+    renderInbox: Array<{}>
 }
 
 export interface InboxChat {
@@ -20,7 +20,7 @@ export interface InboxChat {
     timestamp: number,
     lastMessage: string
 }
- 
+
 const MessageFeed = (props: messageFeedProps) => {
     const { did,renderInboxFeed } = useContext(Context);
     const [feeds, setFeeds] = useState<Array<{}>>([]);
@@ -28,7 +28,6 @@ const MessageFeed = (props: messageFeedProps) => {
    
     const unCached = async (did:DID)=>{
         const inbox = await fetchInbox(did);
-        console.log(inbox);
         setFeeds(inbox);
     }
     
@@ -40,7 +39,7 @@ const MessageFeed = (props: messageFeedProps) => {
         {
             setFeeds(getInbox.body);
         }
-        else{
+        else {
             await unCached(did)
         }
     }, []);
@@ -61,20 +60,18 @@ const MessageFeed = (props: messageFeedProps) => {
                 {
                     
                     let inbox = await fetchMessagesFromIpfs(props.filteredUserData);
-                    const threadhash = await getLatestThreadhash(inbox[0].did,did.id);
-                    inbox = [{...inbox[0],threadhash}]
+                    const threadhash = await getLatestThreadhash(inbox[0].did, did.id);
+                    inbox = [{ ...inbox[0], threadhash }]
                     setFeeds(inbox);
                 }
-                else{
-
+                else {
                     setFeeds([]);
-                    console.log(props.filteredUserData,feeds);
+                    console.log(props.filteredUserData, feeds);
                 }
             }
             searchFn();
-            console.log(feeds);
         }
-       
+
         setMessagesLoading(false);
     }, [props.isValid, props.filteredUserData]);
 

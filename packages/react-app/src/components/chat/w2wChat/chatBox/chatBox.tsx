@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useRef, ChangeEvent,FC } from 'react';
 import './chatBox.css';
 import cn from 'classnames';
-//@ts-ignore
 // @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 import { Context } from '../w2wIndex';
@@ -9,11 +8,10 @@ import Chats from '../chats/chats';
 import {CID} from 'ipfs-http-client';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
-// @ts-ignore
 import Picker from 'emoji-picker-react';
-import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
+import { postMessage, getIntent, getDidLinkWallets, getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
-import {intitializeDb} from '../w2wIndexeddb';
+import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
@@ -50,19 +48,18 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
             return;
         }
         setMessages([]);
-        while (messageCID) { 
-            const getMessage = await intitializeDb('Read',2,'CID_store',messageCID,'','cid');
-           
-            let msgIPFS:MessageIPFS;
-            if(getMessage!==undefined)
-            {
-                msgIPFS = getMessage.body;  
+        while (messageCID) {
+            const getMessage = await intitializeDb('Read', 2, 'CID_store', messageCID, '', 'cid');
+
+            let msgIPFS: MessageIPFS;
+            if (getMessage !== undefined) {
+                msgIPFS = getMessage.body;
             }
-            else{
+            else {
                 const current = await IPFSHelper.get(messageCID, ipfs);//{}
                 console.log(current);
-                await intitializeDb('Insert',2,'CID_store',messageCID,current,'cid');
-                msgIPFS = current as MessageIPFS 
+                await intitializeDb('Insert', 2, 'CID_store', messageCID, current, 'cid');
+                msgIPFS = current as MessageIPFS
             }
             setMessages(m => [msgIPFS,...m ])
             
@@ -76,8 +73,8 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
     }
 
     const scrollRef: any = useRef();
-    const scrollToBottom = ()=>{
-        scrollRef.current?.scrollIntoView({behaviour:"smooth"});
+    const scrollToBottom = () => {
+        scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
     }
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
@@ -103,11 +100,11 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
                     setHasIntent(intent);
                 }
                 if (currentChat?.threadhash && intent) {
-                   
+
                     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                     await getMessagesFromCID(currentChat.threadhash, IPFSClient);
                 }
-                else{
+                else {
                     setMessages([]);
                 }
             }
@@ -140,10 +137,9 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
             sendMessage(account,did.id,currentChat.did,newMessage,'Text','signature');
         }
     }
-    const handleKeyPress = (e)=>{
+    const handleKeyPress = (e) => {
         const x = e.keyCode;
-        if(x===13)
-        {
+        if (x === 13) {
             handleSubmit(e);
         }
     }
@@ -264,7 +260,7 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
                                         {
                                             showTime = true;
                                             time = dateString;
-                                        }  
+                                        }
                                     }
                                     return (
                                         <>

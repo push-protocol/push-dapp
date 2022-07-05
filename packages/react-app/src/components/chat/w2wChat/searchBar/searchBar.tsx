@@ -2,25 +2,24 @@ import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './searchBar.css';
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
-// @ts-ignore
 import SearchIcon from "@material-ui/icons/Search";
-// @ts-ignore
 import CloseIcon from "@material-ui/icons/Close";
 import MessageFeed from '../messageFeed/messageFeed';
-import { getAllWallets } from '../../../../helpers/w2wChatHelper';
+import * as w2wChatHelper from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
-import { Context, Feeds } from '../w2wIndex';
+import { Context } from '../w2wIndex';
+import { User } from '../../../../helpers/w2wChatHelper';
 
-const SearchBar = (props: { setChat: any;renderInbox:any }) => {
+const SearchBar = (props: { setChat: any; renderInbox: any }) => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
     const [wordEntered, setWordEntered] = useState<string>('');
-    const [allUsers, setAllUsers] = useState<Array<Feeds>>([])
+    const [allUsers, setAllUsers] = useState<User[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     const [isValid, setIsValid] = useState<boolean>(false);
+
     const getAllUsers = useCallback(async () => {
-        const responseData = await getAllWallets();
-         console.log(responseData);
-        setAllUsers(responseData);
+        const users = await w2wChatHelper.getAllUsers();
+        setAllUsers(users);
     }, []);
 
     useEffect(() => {
@@ -28,30 +27,26 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
         getAllUsers();
     }, []);
 
-    const searchFromDb = (wallet: string) => {
+    const searchUser = (wallet: string) => {
         let filteredData = [];
         if (wallet.length) {
-            for(let i in allUsers)
-            {
-                const  wallets = allUsers[i].wallets.split(' ');
+            for (let i in allUsers) {
+                const wallets = allUsers[i].wallets.split(' ');
                 let found = false;
-                for(let j in wallets)
-                {
-                    if(wallets[j]===wordEntered)
-                    {
+                for (let j in wallets) {
+                    if (wallets[j] === wordEntered) {
                         found = true;
                         break;
                     }
                 }
-                if(found)
-                {
+                if (found) {
                     filteredData = [allUsers[i]];
                     break
                 }
             }
             console.log(filteredData);
             setIsValid(true);
-            
+
             if (filteredData.length) {
                 setFilteredUserData(filteredData);
             }
@@ -60,7 +55,6 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
             }
         }
         else {
-            console.log('hui');
             setIsValid(true);
             setFilteredUserData([]);
             //setWordEntered("");
@@ -72,26 +66,26 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
         setWordEntered(searchAddress);
     }
 
+    // users can search for wallet addresses, ENS and DID
     const submitSearch = async (event) => {
         event.preventDefault();
         try {
-            //const provider = await connector.getProvider();
             const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
+            // const provider = await connector.getProvider();
             var web3 = new Web3(provider);
             var ENS = web3.eth.ens;
             if (!web3.utils.isAddress(wordEntered)) {
-                const address: string = await ENS.getAddress(wordEntered);
+                const address: string = await ENS.getAddress(wordEntered); // if there is no ens domain, it will throw an error
+                console.log('ola')
                 console.log(address);
-                searchFromDb(address);
+                searchUser(address);
             }
-            else { 
-                    searchFromDb(wordEntered);
+            else {
+                searchUser(wordEntered);
             }
         }
         catch (err) {
-            searchFromDb('');
-
-            console.log(err, "hello");
+            searchUser('');
         }
     }
 
@@ -108,7 +102,7 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
                 <div className="searchInputs">
                     <input
                         type="text"
-                        placeholder='Search Addresses/ Ens Names'
+                        placeholder='Search for addresses or ENS Domains'
                         value={wordEntered}
                         onChange={handleSearch}
 
@@ -123,12 +117,7 @@ const SearchBar = (props: { setChat: any;renderInbox:any }) => {
                 </div>
             </form>
             <div className='sidebar_message'>
-                <MessageFeed 
-                    isValid={isValid} 
-                    filteredUserData={filteredUserData} 
-                    setChat={props.setChat} 
-                    renderInbox = {props.renderInbox}
-                />
+                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} setChat={props.setChat} renderInbox={props.renderInbox} />}
             </div>
         </div>
     </>
