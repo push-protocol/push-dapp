@@ -185,7 +185,7 @@
     padding-top: 9vh;
     padding-right: 0px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     overflow-x: hidden;
     margin: 0 2px;
     

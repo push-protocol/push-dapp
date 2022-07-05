@@ -64,7 +64,7 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
                 await intitializeDb('Insert',2,'CID_store',messageCID,current,'cid');
                 msgIPFS = current as MessageIPFS 
             }
-            setMessages(m => [...m,msgIPFS ])
+            setMessages(m => [msgIPFS,...m ])
             
             const link = msgIPFS.link;
             if (link) {
@@ -122,7 +122,7 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
             console.log(typeof message);
             const msg =  await postMessage(account, fromDid, toDid, message, messageType, signature);
             console.log(msg);
-            setMessages([msg,...messages ]);
+            setMessages([...messages,msg ]);
             setNewMessage("");
             const threadhash = await getLatestThreadhash(currentChat.did,did.id);
             await intitializeDb('Insert',2,'CID_store',threadhash,msg,'cid');
@@ -245,10 +245,10 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
                             </div>
                         </div>
                         
-                        <div className='chatBoxTop'>
+                        <div className='chatBoxTop' ref = {scrollRef}>
                             {hasIntent ? (
                                 messages.map((msg,i) => {
-                                    const isLast = i === 0
+                                    const isLast = i === messages.length-1
                                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
                                     let time1:string = "";
                                     if(i>0)
@@ -258,16 +258,9 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
                                     showTime = false;
                                     if(i>=0)
                                     {
-                                        if(i==0)
-                                        {
-                                            time = (new Date()).toDateString()
-                                        }
-                                        
                                         let duration = new Date(messages[i]?.timestamp);
-                                        
                                         let dateString = duration.toDateString();
-                                        console.log(dateString,time,i);
-                                        if(dateString!==time)
+                                        if(dateString!==time || i===0)
                                         {
                                             showTime = true;
                                             time = dateString;
@@ -275,10 +268,9 @@ const ChatBox:FC<chatBoxProps> = (props:chatBoxProps) => {
                                     }
                                     return (
                                         <>
-                                         {!showTime || time1==="" ? null:<div className='showDateInChat'><span>{time1}</span></div>}
+                                         {!showTime ? null:<div className='showDateInChat'><span>{time}</span></div>}
                                          <Chats msg = {msg} did = {did} noTail = {noTail} />
                                          
-                                         {i===messages.length-1? <div className='showDateInChat'><span>{time1}</span></div>:null}
                                         </>
                                     )
                                 })
