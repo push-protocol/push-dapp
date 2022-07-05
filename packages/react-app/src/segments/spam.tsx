@@ -6,12 +6,8 @@ import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
 import { envConfig } from "@project/contracts";
 import SearchFilter from '../components/SearchFilter';
-import {
-  api,
-  utils,
-  NotificationItem,
-} from "@epnsproject/frontend-sdk-staging";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -164,10 +160,10 @@ function SpamBox({ currentTab }) {
         chainId,
         dev: true,
       });
-        let parsedResponse = utils.parseApiResponse(results);
+        let parsedResponse = EpnsAPI.parseApiResponse(results);
           parsedResponse.forEach( (each,i) => {
-              each.date = results[i].epoch;
-              each.epoch = (new Date(each.date).getTime() / 1000);
+              each['date'] = results[i].epoch;
+              each['epoch'] = (new Date(each['date']).getTime() / 1000);
           })
           const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
             elem.channel = results[i].channel;
@@ -211,10 +207,10 @@ function SpamBox({ currentTab }) {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = utils.parseApiResponse(results);
+      let parsedResponse = EpnsAPI.parseApiResponse(results);
         parsedResponse.forEach( (each,i) => {
-            each.date = results[i].epoch;
-            each.epoch = (new Date(each.date).getTime() / 1000);
+            each['date'] = results[i].epoch;
+            each['epoch'] = (new Date(each['date']).getTime() / 1000);
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
@@ -261,10 +257,10 @@ function SpamBox({ currentTab }) {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = utils.parseApiResponse(results);
+      let parsedResponse = EpnsAPI.parseApiResponse(results);
         parsedResponse.forEach( (each,i) => {
-            each.date = results[i].epoch;
-            each.epoch = (new Date(each.date).getTime() / 1000);
+            each['date'] = results[i].epoch;
+            each['epoch'] = (new Date(each['date']).getTime() / 1000);
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
           elem.channel = results[i].channel;
@@ -280,7 +276,7 @@ function SpamBox({ currentTab }) {
           return { ...elem };
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      let res = parsedResponse.filter(notif => !isSubscribedFn(notif.subscribers));
+      let res = parsedResponse.filter(notif => !isSubscribedFn(notif['subscribers']));
       setNotif(res);
 
     } catch (err) {
@@ -494,7 +490,8 @@ function SpamBox({ currentTab }) {
                 notification,
                 channel,
                 subscribers,
-                blockchain
+                blockchain,
+                url
               } = oneNotification;
               // render the notification item
               // console.log(app , index);
@@ -511,15 +508,13 @@ function SpamBox({ currentTab }) {
                     icon={icon}
                     image={image}
                     theme={themes.scheme}
-                    subscribeFn={(e) => {
-                      e?.stopPropagation();
-                      onSubscribeToChannel(channel, blockchain);
-                    }}
+                    subscribeFn={() => onSubscribeToChannel(channel, blockchain)}
                     isSpam
                     isSubscribedFn={async () => isSubscribedFn(subscribers)}
                     isSecret={secret != ''}
                     decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                     chainName={blockchain}
+                    url={url}
                   />
                 </div>
               );
