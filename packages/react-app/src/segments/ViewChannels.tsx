@@ -361,3 +361,4 @@ const SearchContainer = styled(Item)`
 
 // Export Default
 export default ViewChannels; 
+export {ScrollItem};
