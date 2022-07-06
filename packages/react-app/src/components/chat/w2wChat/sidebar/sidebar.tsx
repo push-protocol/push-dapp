@@ -59,18 +59,32 @@ const Sidebar = () => {
                         profile_picture = {updateProfileImage} 
                     />
                 </div>
-                <div className='sidebar_search'>
-                    <IntentBar />
-                </div>
+                {
+                !showProfile 
+                    ?
+                    (
+                        <div className='sidebar_search'>
+                            <IntentBar />
+                        </div>
+                    )
+                    :
+                    (
+                        <div  className='sidebar_profile'>
+                            <Profile 
+                                profile_picture = {updateProfileImage} 
+                                updateProfile = {updateProfile}
+                            />
+                        </div>
+                    )
+                }
+                
                 </>
             )
         }
     }
-
     function showChats() {
         setChatselected(true);
     }
-
     function showIntents() {
         setChatselected(false);
     }

@@ -76,11 +76,6 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
     return data;
 }
 
-export const getIntentStatus = async (firstDID:string,secondDID:string)=>{
-    const response = await fetch(`http://localhost:4000/apis/w2w/intentstatus/did/${firstDID}/${secondDID}`);
-    const data = await response.json();
-    return data;
-}
 export const getAllUsers = async ():Promise<User[]> => {
     const response = await fetch('http://localhost:4000/apis/w2w/getAllUsers');
     const data = await response.json();
@@ -168,5 +163,6 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
             signature
         })
     });
-    return response;
+    const data = await response.json();
+    return data;
 }

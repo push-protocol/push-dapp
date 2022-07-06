@@ -36,6 +36,7 @@ const MessageFeed = (props: messageFeedProps) => {
         if(getInbox!==undefined)
         {
             setFeeds(getInbox.body);
+            await unCached(did);
         }
         else {
             await unCached(did)

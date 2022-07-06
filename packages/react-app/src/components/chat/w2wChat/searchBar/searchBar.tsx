@@ -64,7 +64,13 @@ const SearchBar = () => {
 
     const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
         let searchAddress = event.target.value;
-        setWordEntered(searchAddress);
+        if(searchAddress==="")
+        {
+            clearInput();
+        }
+        else{
+            setWordEntered(searchAddress);
+        }
     }
 
     // users can search for wallet addresses, ENS and DID
@@ -75,6 +81,7 @@ const SearchBar = () => {
             // const provider = await connector.getProvider();
             var web3 = new Web3(provider);
             var ENS = web3.eth.ens;
+            console.log(web3.utils.isAddress(wordEntered));
             if (!web3.utils.isAddress(wordEntered)) {
                 const address: string = await ENS.getAddress(wordEntered); // if there is no ens domain, it will throw an error
                 console.log('ola')

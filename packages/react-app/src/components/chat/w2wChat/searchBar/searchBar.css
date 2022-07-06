@@ -37,6 +37,9 @@
   
   outline: #2a95a5;
 }
+.searchInputs input::placeholder{
+  font-size: 14px;
+}
 .search{
   width: 100%;
   display: flex;

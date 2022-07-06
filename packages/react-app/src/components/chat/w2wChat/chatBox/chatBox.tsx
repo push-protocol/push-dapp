@@ -9,7 +9,7 @@ import {CID} from 'ipfs-http-client';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
-import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash,createIntent, getIntentStatus } from '../../../../helpers/w2wChatHelper';
+import { postMessage,getIntent,getDidLinkWallets,getLatestThreadhash,createIntent } from '../../../../helpers/w2wChatHelper';
 import Dropdown from '../dropdown/dropdown';
 import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -19,8 +19,19 @@ import Loader from "react-loader-spinner";
 import GifIcon from '../W2WIcons/GifIcon';
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
-import { fetchInbox } from '../w2wUtils';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import { fetchInbox,fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
+
+
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
+    props,
+    ref,
+  ) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+
 
 const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
@@ -37,7 +48,8 @@ const ChatBox = () => {
     const imageInputRef = useRef<HTMLInputElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isGifPickerOpened,setIsGifPickerOpened] = useState<boolean>(false);
-    const [intentSentandPending, setIntentSentandPending] = useState<boolean>(false);
+    const [intentSentandPending, setIntentSentandPending] = useState<string>("");
+    const [openReprovalSnackbar,setOpenSuccessSnackBar] = useState<boolean>(false);
     let showTime = false;
     let time:string="";
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
@@ -76,37 +88,31 @@ const ChatBox = () => {
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
             setNewMessage("");
-            let intent = false;
-            try{
-    
-                const cid = CID.parse(currentChat.profile_picture);
-                setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
-            }
-            catch(err)
-            {
-                setImageSource(currentChat.profile_picture);
-            }
+            console.log(currentChat);
+            let hasintent = false;
             if(currentChat)
             {   
-                setIntentSentandPending(false);
-                setTextAreaDisabled(false);
+                try{
+        
+                    const cid = CID.parse(currentChat.profile_picture);
+                    setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
+                }
+                catch(err)
+                {
+                    setImageSource(currentChat.profile_picture);
+                }
                 if(currentChat?.did===did.id)
                 {
                     setHasIntent(true);
                 }
                 else{
-                    intent = await getIntent(currentChat.did,did.id);
-                    if(intent==true){
-                        var intentStatusValue = await getIntentStatus(currentChat.did, did.id);
-                        if(intentStatusValue=="Pending" || intentStatusValue==="Reproved"){
-                            setIntentSentandPending(true);
-                            setTextAreaDisabled(true);
-                        }
-                    }
-                    console.log(intent)
-                    setHasIntent(intent);
+                    const intentStatus = await getIntent(currentChat.did,did.id);
+                    setIntentSentandPending(intentStatus.intent);
+                    console.log(intentStatus);
+                    hasintent = intentStatus.hasIntent;
+                    setHasIntent(intentStatus.hasIntent);
                 }
-                if (currentChat?.threadhash && intent) {
+                if (currentChat?.threadhash && hasintent) {
 
                     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
                     await getMessagesFromCID(currentChat.threadhash, IPFSClient);
@@ -114,9 +120,9 @@ const ChatBox = () => {
                 else {
                     setMessages([]);
                 }
+                const res = await getDidLinkWallets(currentChat.did);
+                setWallets(res);  
             }
-            const res = await getDidLinkWallets(currentChat.did);
-            setWallets(res);  
         }
         getMessagesFromIPFS().catch(err => console.error(err));
     }, [currentChat]);
@@ -140,25 +146,38 @@ const ChatBox = () => {
     }
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        if (newMessage.trim() !== "") {
-            sendMessage(account,did.id,currentChat.did,newMessage,'Text','signature');
+
+        if (newMessage.trim() !== "" ) {
+            if(hasIntent && intentSentandPending==='Approved')
+            {
+                sendMessage(account,did.id,currentChat.did,newMessage,'Text','signature');
+            }
+            else{
+                sendIntent();
+            }
         }
     }
-    const sendIntent = async (e: { preventDefault: () => void; }) => {
-        e.preventDefault();
-        if (newMessage.trim() !== "") {
-            try {
-               const msg = await createIntent(currentChat.did, did.id, account, newMessage, 'signature');
-               console.log(msg);
-               const inbox = await fetchInbox(did);
-               console.log(inbox);
-               renderInbox(inbox);
+    const sendIntent = async () => {
+        try {
+                if(!hasIntent && intentSentandPending==="Pending")
+                {
+                    const msg = await createIntent(currentChat.did, did.id, account, newMessage, 'signature');
+                    console.log(msg);
+                    setHasIntent(true);
+                    setMessages([...messages,msg ]);
+                    setNewMessage("");
+                    const intent = fetchIntent(did);
+                    console.log(intent);
+                }
+                else{
+                    setNewMessage("");
+                    setOpenSuccessSnackBar(true);
+                }
             }
-            catch (error) {
-                console.log(error)
-            }
+        catch (error) {
+            console.log(error)
         }
-        setNewMessage("");
+        
     }
     const handleKeyPress = (e)=>{
         const x = e.keyCode;
@@ -221,10 +240,17 @@ const ChatBox = () => {
         console.log(url);
         sendMessage(account,did.id,currentChat.did,url,'Gif','signature');
     }
+    const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setOpenSuccessSnackBar(false);
+      };
     const placeholderTextArea = ()=>{
-        if(intentSentandPending==true)
+        if(intentSentandPending==="Pending" && hasIntent===true)
             return "Can't send any messages until intent is accepted !";
-        if(hasIntent==true)
+        if(hasIntent===true && intentSentandPending==='Approved')
             return "New Text Message";
         else
             return "Intent Message";
@@ -244,6 +270,11 @@ const ChatBox = () => {
                 :
                 (
                     <>
+                        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
+                            <Alert onClose={handleCloseSuccessSnackbar} severity="error" sx={{ width: '100%' }}>
+                                Cannot send message, Intent is not approved!
+                            </Alert>
+                        </Snackbar>
                         <div className='chatBoxNavBar'>
                             <div className='chatBoxUserName'>
                                     <img
@@ -315,46 +346,57 @@ const ChatBox = () => {
                         </div>
                         
                         <div className='chatBoxBottom'>
-                            <label>
-                                <i className="fa fa-2x fa-camera"></i>
-                                <input
-                                 type="file" 
-                                 id = "inputTag"
-                                 className = "chatBoxBottomInput"
-                                 ref = {imageInputRef}
-                                 accept="image/*"
-                                 onChange = {handleFileInputChange}
-                                 />
-                            </label>
-                            <label>
-                                <i className="fa fa-link" aria-hidden="true"></i>
-                                <input
-                                 type="file" 
-                                 id = "inputTag"
-                                
-                                 className = "chatBoxBottomInput"
-                                 ref = {fileInputRef}
-                                 onChange = {handleFileInputChange}
-                                 />
-                            </label>
-                            
-                            <div className='gifPicker'>
-                                {isGifPickerOpened ?(
-                                    <GifPicker
-                                    setIsOpened = {setIsGifPickerOpened}
-                                    onSelect = {sendGif}
-                                    />
+                            { intentSentandPending==='Approved' && hasIntent
+                                ? 
+                                (
+                                    <>
+                                    <label>
+                                        <i className="fa fa-2x fa-camera"></i>
+                                        <input
+                                        type="file" 
+                                        id = "inputTag"
+                                        className = "chatBoxBottomInput"
+                                        ref = {imageInputRef}
+                                        accept="image/*"
+                                        onChange = {handleFileInputChange}
+                                        />
+                                    </label>
+                                    <label>
+                                        <i className="fa fa-link" aria-hidden="true"></i>
+                                        <input
+                                        type="file" 
+                                        id = "inputTag"
+                                        
+                                        className = "chatBoxBottomInput"
+                                        ref = {fileInputRef}
+                                        onChange = {handleFileInputChange}
+                                        />
+                                    </label>
+                                    
+                                    <div className='gifPicker'>
+                                        {isGifPickerOpened ?(
+                                            <GifPicker
+                                            setIsOpened = {setIsGifPickerOpened}
+                                            onSelect = {sendGif}
+                                            />
+                                        )
+                                        :
+                                        null
+                                        }
+                                        <button
+                                            className='GifIcon_btn'
+                                            onClick = {()=>setIsGifPickerOpened(true)}
+                                            >
+                                            <GifIcon/>
+                                        </button>
+                                    </div>
+                                    </>
                                 )
                                 :
-                                null
-                                }
-                                <button
-                                    className='GifIcon_btn'
-                                    onClick = {()=>setIsGifPickerOpened(true)}
-                                    >
-                                    <GifIcon/>
-                                </button>
-                            </div>
+                                (
+                                    null
+                                )
+                            }
                             <textarea
                                 disabled = {textAreaDisabled}
                                 className='chatMessageInput'

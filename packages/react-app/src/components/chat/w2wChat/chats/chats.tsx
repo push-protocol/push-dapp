@@ -18,7 +18,6 @@ const URL_REGEX =
 	/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
 
 const Text = ({content}:TextProps)=>{
-    console.log(content);
     const words = content.split(' ');
     return (
         <p>
@@ -40,6 +39,7 @@ export default function Chats({msg,did,noTail}:chatProps) {
     let time:Date = new Date(msg?.timestamp);
     let time1 = time.toLocaleTimeString('en-US');
     let date = time1.slice(0,-6)+time1.slice(-2,);
+   
     
     return (
         <>
@@ -59,7 +59,7 @@ export default function Chats({msg,did,noTail}:chatProps) {
             
             )
             :
-            msg.messageType==='Image' ? (
+            msg.messageType==='Image' ?(
                 <>
                     
                     <div 
@@ -89,7 +89,7 @@ export default function Chats({msg,did,noTail}:chatProps) {
                 </>
             )
             :
-            msg.messageType==='Gif' ? (
+            msg.messageType==='Gif' ?(
                 <>
                     <div
                          key = {msg.link} 
@@ -117,7 +117,7 @@ export default function Chats({msg,did,noTail}:chatProps) {
                 </>
             )
             :
-            msg.messageType==='File' ?(
+            msg.messageType==='File'?(
                 <>
                 <div
                     key = {msg.link} 

@@ -13,7 +13,7 @@ interface GifPickerProps {
 
 const GifPicker: FC<GifPickerProps> = ({ setIsOpened, onSelect }) => {
   const [searchInputValue, setSearchInputValue] = useState("");
-
+  console.log("gif");
   const timeOutRef = useRef<any>(null);
 
   const { data, loading, error } = useFetch(`giphy-${searchInputValue}`, () =>

@@ -54,8 +54,6 @@ const IntentFeed = (props: intentFeedProps) => {
     const [intentMessage, setIntentMessage] = useState();
     const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
     const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
-    
-
     const [toDID, settoDID] = useState();
   
     const handleClose = () => {
@@ -66,14 +64,7 @@ const IntentFeed = (props: intentFeedProps) => {
         setOpen(true);
     };
 
-    async function resolve_threadhash(){
-        let getIntent:Array<Feeds>;
-        getIntent = await intitializeDb('Read',2,'Intent',did.id,'','did');
-        console.log(getIntent)
-        if(getIntent===undefined)
-        {
-            getIntent = await fetchIntent(did);
-        }
+    function seperateSentAndReceivedIntent(getIntent){
         let sentIntents=[], receivedIntents = [];
         for(var i=0; i<getIntent.length; i++){
             if(getIntent[i].intent_sent_by === did.id){
@@ -89,6 +80,25 @@ const IntentFeed = (props: intentFeedProps) => {
         console.log(sentIntents);
         console.log("Received Intents");
         console.log(receivedIntents);
+    }
+    async function resolve_threadhash(){
+        let getIntent;
+        console.log(props.filteredUserData);
+        getIntent = await intitializeDb('Read',2,'Intent',did.id,'','did');
+        
+        if(getIntent===undefined)
+        {
+            getIntent = await fetchIntent(did);
+            seperateSentAndReceivedIntent(getIntent);
+        }
+        else{
+            getIntent = getIntent.body;
+            seperateSentAndReceivedIntent(getIntent);
+            getIntent = await fetchIntent(did);
+            seperateSentAndReceivedIntent(getIntent);
+        }
+
+        
     }
     
     useEffect(() => {

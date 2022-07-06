@@ -4,12 +4,8 @@ import './defaultMessage.css';
 import {CID} from 'ipfs-http-client';
 const DefaultMessage = (props: { inbox: Feeds }) => {
     // printing default message props
-    console.log("Default message props");
-    console.log(props);
-    
     let date=null;
     const [imageSource,setImageSource] = useState<string>('');
-    console.log(props);
     if(props.inbox?.msg.timestamp!==null)
     {
         let time = new Date(props.inbox?.msg?.timestamp);
@@ -25,7 +21,6 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
         catch(err)
         {
             setImageSource(props.inbox.profile_picture);
-            console.log(imageSource);
             
         }
     },[])
@@ -58,11 +53,15 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
                                 </div>
                                 )
                                 :
-                                (
+                                props.inbox.msg.messageType==='Gif' ?(
                                 <div>
                                    <i className="fa fa-picture-o" aria-hidden="true"></i> 
                                     Gif
                                 </div>
+                                )
+                                :
+                                (
+                                    null
                                 )
                             }
                         </div>
