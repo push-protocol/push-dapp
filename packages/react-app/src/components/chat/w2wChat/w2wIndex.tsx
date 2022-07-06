@@ -77,6 +77,7 @@ function App() {
     setDid(did);
     setCeramicInstance(ceramic);
     const response = await w2wHelper.getUser(did.id, caip10);
+    console.log(response);
     if (response === null) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);

@@ -282,7 +282,7 @@ const ChatBox = () => {
                                         alt=""
                                     />
                                     <div className='chatBoxNavDetail'>
-                                        <p className='chatBoxWallet'>{currentChat.msg.name}</p>
+                                        <p className='chatBoxWallet'>{currentChat.msg.name.split(':').at(-1)}</p>
                                         <div>
                                             {hasIntent? (
                                                 <Dropdown wallets = {wallets} />

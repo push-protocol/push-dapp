@@ -20,7 +20,7 @@ export const fetchMessagesFromIpfs = async (inbox) => {
             const msgIPFS: MessageIPFS = current as MessageIPFS
 
             const msg: InboxChat = {
-                name: inbox[i].wallets.split(',')[0].toString(),
+                name: inbox[i].wallets.split(' ')[0].toString(),
                 profile_picture: inbox[i].profile_picture,
                 lastMessage: msgIPFS.messageContent,
                 timestamp: msgIPFS.timestamp,
@@ -34,7 +34,7 @@ export const fetchMessagesFromIpfs = async (inbox) => {
         }
         else {
             const msg: InboxChat = {
-                name: inbox[i].wallets.split(',')[0].toString(),
+                name: inbox[i].wallets.split(' ')[0].toString(),
                 profile_picture: inbox[i].profile_picture,
                 lastMessage: null,
                 timestamp: null,

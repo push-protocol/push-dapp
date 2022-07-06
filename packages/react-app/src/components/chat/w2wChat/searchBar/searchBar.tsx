@@ -12,12 +12,12 @@ import { User } from '../../../../helpers/w2wChatHelper';
 
 const SearchBar = () => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
-    
+    const {userWallets} = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     const [isValid, setIsValid] = useState<boolean>(false);
-
+    const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
     const getAllUsers = useCallback(async () => {
         const users = await w2wChatHelper.getAllUsers();
         setAllUsers(users);
@@ -28,7 +28,7 @@ const SearchBar = () => {
         getAllUsers();
     }, []);
 
-    const searchUser = (wallet: string) => {
+    const searchUser = async (wallet: string) => {
         let filteredData = [];
         if (wallet.length) {
             for (let i in allUsers) {
@@ -52,7 +52,18 @@ const SearchBar = () => {
                 setFilteredUserData(filteredData);
             }
             else {
-                setFilteredUserData([]);
+                var web3 = new Web3(provider);
+                if(web3.utils.isAddress(wordEntered))
+                {
+                    const caip10: string = w2wChatHelper.walletToCAIP10(wallet, chainId);
+                    const userCreated = await w2wChatHelper.createUser({wallet:caip10,did:caip10,pgp_pub:"toBeFilled",pgp_priv_enc:"toBeFilled", pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a'});
+                    console.log(userCreated);
+                    setFilteredUserData([userCreated]);
+                }
+                else{
+                    setFilteredUserData([]);
+                }
+                
             }
         }
         else {
@@ -77,14 +88,13 @@ const SearchBar = () => {
     const submitSearch = async (event) => {
         event.preventDefault();
         try {
-            const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
             // const provider = await connector.getProvider();
             var web3 = new Web3(provider);
             var ENS = web3.eth.ens;
             console.log(web3.utils.isAddress(wordEntered));
             if (!web3.utils.isAddress(wordEntered)) {
                 const address: string = await ENS.getAddress(wordEntered); // if there is no ens domain, it will throw an error
-                console.log('ola')
+                console.log('ola');
                 console.log(address);
                 searchUser(address);
             }

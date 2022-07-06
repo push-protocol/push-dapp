@@ -13,7 +13,8 @@ interface profilePropsType{
 }
 const Profile = (props:profilePropsType)=>{
     const { did,userWallets } = useContext(Context);
-    const wallets = userWallets.split(',');
+    console.log(userWallets);
+    const wallets = userWallets.split(' ');
     const [copiedDid,setCopiedDid] = useState<boolean>(false);
     const [copiedWallet,setCopiedWallet] = useState<boolean>(false);
     const [profile,setProfile] = useState('');

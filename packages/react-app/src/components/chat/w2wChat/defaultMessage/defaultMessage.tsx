@@ -13,7 +13,6 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
     }
     useEffect(()=>{
         try{
-    
             const cid = CID.parse(props.inbox.profile_picture);
             console.log(props.inbox.profile_picture);
             setImageSource(`https://ipfs.infura.io/ipfs/${props.inbox.profile_picture}`)
@@ -30,7 +29,7 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
                 <div className='defaultMessage_1'>
                     <div className='defaultMessage_2'>
                         <div className='defaultMessage_img'><img src={imageSource}></img></div>
-                        <div className='defaultMessage_name'>{props.inbox.msg.name.slice(0,16)+'...'}</div>
+                        <div className='defaultMessage_name'>{props.inbox.msg.name.split(':').at(-1).slice(0,16)+'...'}</div>
                         <div className='defaultMessage_time'>{date}</div>
                     </div>
                     <div className='defaultMessage_3'>
