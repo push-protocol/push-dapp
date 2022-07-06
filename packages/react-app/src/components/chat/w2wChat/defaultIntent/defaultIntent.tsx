@@ -12,7 +12,7 @@ const DefaultIntent = (props: any) => {
     if(props.inbox?.intent_timestamp!==null)
     {
         let time = new Date(props.inbox?.intent_timestamp);
-        date = time.toLocaleTimeString('en-US').slice(0,-6);
+        date = time.toLocaleTimeString('en-US').slice(0,-6)+time.toLocaleTimeString('en-US').slice(-2,);
     }
     
     return(
@@ -21,7 +21,7 @@ const DefaultIntent = (props: any) => {
                     <div className='defaultMessage_2'>
                         <div className='defaultMessage_img'><img src={props.inbox.profile_picture}></img></div>
 
-                        <div className='defaultMessage_name'>{props.inbox.msg.name.slice(0,19)+'...'}</div>
+                        <div className='defaultMessage_name'>{props.inbox.msg.name.split(':').at(-1).slice(0,19)+'...'}</div>
                         <div className='defaultMessage_time'>{date}</div>
                     </div>
                     <div className='defaultMessage_3'>
