@@ -1,19 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import Loader from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
-import { envConfig } from "@project/contracts";
-import DisplayNotice from "../primaries/DisplayNotice";
 import SpamBox from "segments/spam";
-import { postReq } from "api";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-  resetState,
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
 
@@ -22,7 +16,6 @@ const NOTIFICATIONS_PER_PAGE = 10;
 function Feedbox() {
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
-  const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
   );

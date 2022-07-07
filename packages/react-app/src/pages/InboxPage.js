@@ -56,18 +56,21 @@ function InboxPage() {
 	}, [toast]);
 	// toast related section
 
-	React.useEffect(async () => {
-		// get public key from Backend API
-		let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-				address: account,
-				op: "read"
-		}).then(res => {
-				return res.data?.encryption_key;
-		});
+	React.useEffect(() => {
+		const fetchEncryptionKey = async () => {
+			// get public key from Backend API
+			let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
+					address: account,
+					op: "read"
+			}).then(res => {
+					return res.data?.encryption_key;
+			});
 
-		if (encryptionKey != null) {
-			setEnabledSecretNotif(true);
+			if (encryptionKey != null) {
+				setEnabledSecretNotif(true);
+			}
 		}
+		fetchEncryptionKey();
 	}, [enabledSecretNotif])
 
 	React.useEffect(() => {

@@ -8,8 +8,8 @@ import userJourneyReducer from './slices/userJourneySlice';
 
 const rootReducer = combineReducers({
 	contracts: contractReducer,
-    channels: channelReducer,
-    admin: adminReducer,
+	channels: channelReducer,
+	admin: adminReducer,
 	notifications: notificationReducer,
 	spam: spamReducer,
 	userJourney: userJourneyReducer,

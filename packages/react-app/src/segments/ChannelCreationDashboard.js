@@ -1,15 +1,10 @@
 import React from "react";
-
-import styled, { css } from 'styled-components';
 import {Section, Content} from 'primaries/SharedStyling';
 
 import CreateChannel from 'components/CreateChannel';
 
 // CREATE CHANNEL OWNER DASHBOARD
 function ChannelCreationDashboard() {
-  React.useEffect(() => {
-
-  });
 
   // RRENDER
   return (

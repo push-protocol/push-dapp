@@ -1,7 +1,6 @@
 import React,{useState} from "react";
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Loader from 'react-loader-spinner'
-import { Waypoint } from "react-waypoint";
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
@@ -131,28 +130,8 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
 }
 
 // css styles
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  font-weight: 200;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-
-  max-height: 80vh;
-`
 const ContainerInfo = styled.div`
   padding: 20px;
-`
-
-const Items = styled.div`
-  display: block;
-  align-self: stretch;
-  padding: 10px 20px;
-  overflow-y: scroll;
-  background: #fafafa;
 `
 
 // Export Default

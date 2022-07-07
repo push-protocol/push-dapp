@@ -18,7 +18,6 @@ import { postReq } from "api";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { ThemeProvider } from "styled-components";
 import CryptoHelper from "helpers/CryptoHelper";
-import { ethers } from "ethers";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 
@@ -33,8 +32,6 @@ function SpamBox({ currentTab }) {
 
   const themes = useTheme();
 
-  const [darkMode, setDarkMode] = useState(false);
-
   // toast related section
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
@@ -42,9 +39,6 @@ function SpamBox({ currentTab }) {
   const { run } = useSelector((state: any) => state.userJourney);
 
   const { notifications, page, finishedFetching } = useSelector((state: any) => state.spam);
-  const { toggle } = useSelector(
-    (state: any) => state.notifications
-  );
   const EPNS_DOMAIN = {
     name: "EPNS COMM V1",
     chainId: chainId,
@@ -58,14 +52,6 @@ function SpamBox({ currentTab }) {
   const [loading, setLoading] = React.useState(false);
 
   const onCoreNetwork = (chainId === envConfig.coreContractChain);
-
-  // toast customize
-  const LoaderToast = ({ msg, color }) => (
-    <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
-  );
 
   const NormalToast = ({ msg }) => (
     <Toaster>
@@ -86,8 +72,8 @@ function SpamBox({ currentTab }) {
   }
 
   const nameToIdProd = {
-    "POLYGON": 137,
-    "ETH": 1
+    "POLYGON_MAINNET": 137,
+    "ETH_MAINNET": 1
   }
 
   const reset = () => setFilter(false);

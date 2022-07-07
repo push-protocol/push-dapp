@@ -1,9 +1,8 @@
 import React from "react";
-import ReactGA from "react-ga";
-import { Navigate, Routes, Route, Link } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 
 import styled from "styled-components";
-import { Content, Item, ItemH, Span, H2, B, Anchor } from "../primaries/SharedStyling";
+import { Item, Anchor } from "../primaries/SharedStyling";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -105,7 +104,7 @@ function MasterInterfacePage() {
                 <VscClose size={40} color="#fff" />
               </PreviewClose>
               <Preview>
-                <div class='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                <div className='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
               </Preview>
             </PreviewContent>
           </PreviewBG>

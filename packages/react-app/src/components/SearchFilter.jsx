@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import './SearchFilter.css';
 import styled, { useTheme } from "styled-components";

@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import styled, { css, useTheme } from 'styled-components';
-import { Section, Content, Item, ItemH, ItemBreak, Para, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from '../primaries/SharedStyling';
+import styled, { useTheme } from 'styled-components';
+import { Section, Content, Item, Para, A, B, H2, H3, Span, Button } from '../primaries/SharedStyling';
 
-import { AiFillHeart } from 'react-icons/ai';
 import { BsChevronExpand } from 'react-icons/bs';
 
 import Loader from 'react-loader-spinner'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
@@ -16,16 +15,11 @@ import { ethers } from "ethers";
 
 import AirdropHelper from 'helpers/AirdropHelper';
 
-import ViewInfoItem from "components/ViewInfoItem";
-
 import { ThemeProvider } from "styled-components";
-
-import { themeLight, themeDark } from "config/Themization";
 import { envConfig } from "@project/contracts";
 
 
 import * as dotenv from "dotenv";
-import UsersDataStore from "singletons/UsersDataStore";
 dotenv.config();
 
 // Other Information section

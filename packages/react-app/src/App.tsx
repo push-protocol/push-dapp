@@ -7,10 +7,10 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
-import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
+import Joyride, { CallBackProps } from "react-joyride";
 
 import styled, { useTheme } from "styled-components";
-import { Item, ItemH, Span, H2, H3, B, A, C, Button } from "./primaries/SharedStyling";
+import { Item, ItemH, Span, H2, B, A, C } from "./primaries/SharedStyling";
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 
@@ -58,8 +58,6 @@ export default function App() {
     AbstractConnector
   >();
   const [currentTime, setcurrentTime] = React.useState(0);
-
-  const themes = useTheme();
 
   const {
     run,

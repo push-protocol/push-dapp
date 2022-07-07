@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import { useWeb3React } from '@web3-react/core';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {toolingPostReq} from "api/index"
 import { envConfig } from "@project/contracts";
 const GAS_LIMIT = 50;
+
 const ERROR_TOAST_DEFAULTS = {
     type: toast.TYPE.ERROR,
     autoClose: 5000,
@@ -14,8 +14,6 @@ const ERROR_TOAST_DEFAULTS = {
     draggable: true,
     progress: undefined
   };
-  
-
 
 const checkForDelegateError = async(gasEstimate,library) => {
     // return false if no error

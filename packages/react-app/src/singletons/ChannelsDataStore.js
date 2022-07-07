@@ -1,7 +1,6 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import { ethers } from "ethers";
 
-import { addresses, abis, envConfig } from "@project/contracts";
+import { envConfig } from "@project/contracts";
 import { postReq } from "api";
 
 // STATIC SINGLETON

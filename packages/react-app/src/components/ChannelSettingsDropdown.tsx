@@ -1,5 +1,4 @@
 import React from "react";
-import { Section, Content, Item } from "primaries/SharedStyling";
 import { useSelector, useDispatch } from "react-redux";
 import styled, { css , useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
@@ -92,7 +91,7 @@ function ChannelSettings() {
         true
       )
     );
-  }, [account]);
+  }, [account, channelDetails.poolContribution]);
 
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
@@ -173,7 +172,6 @@ function ChannelSettings() {
     });
 
     const pushValue = response.response.data.quote.PUSH.price;
-    const amountsOut = pushValue * Math.pow(10, 18);
 
     await epnsWriteProvider
       // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
@@ -446,13 +444,6 @@ const ChannelActionButton = styled.button`
     pointer: hand;
   }
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-`;
-
-const Settings = styled.img`
-  width: 40px;
-  height: 40px;
-  margin-left: auto;
-  margin-right: 30px;
 `;
 
 // Export Default

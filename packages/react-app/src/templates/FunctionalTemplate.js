@@ -1,11 +1,8 @@
 import React from "react";
-import styled, { css } from 'styled-components';
-
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import styled from 'styled-components';
 
 // Create Header
 function Templater() {
-  const [openFlag, setOpenFlag] = React.useState(false);
 
   React.useEffect(() => {
 

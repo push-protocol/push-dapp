@@ -6,32 +6,22 @@ import {
   Content,
   Item,
   ItemH,
-  ItemBreak,
-  H1,
   H2,
   H3,
-  Image,
-  P,
   Span,
-  Anchor,
   Button,
-  Showoff,
   FormSubmision,
   Input,
   TextField,
 } from "../primaries/SharedStyling";
 import { FiLink } from "react-icons/fi";
 import "react-dropzone-uploader/dist/styles.css";
-import Dropzone from "react-dropzone-uploader";
-import { makeStyles } from "@material-ui/core/styles";
-import Slider from "@material-ui/core/Slider";
 import Loader from "react-loader-spinner";
 
 import { envConfig } from "@project/contracts";
 
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
-import { themeLight, themeDark } from "config/Themization";
 import { addresses, abis } from "@project/contracts";
 import ImageClipper from "../primaries/ImageClipper";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";

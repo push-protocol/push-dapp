@@ -2,29 +2,23 @@ import React, { useState } from "react";
 import ReactGA from "react-ga";
 
 import styled, { css, useTheme } from 'styled-components';
-import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, LI, Image, P, Span, Anchor, Button, FormSubmision, Input, TextField, UL } from '../primaries/SharedStyling';
+import { Section, Content, Item, ItemH, A, B, H2, H3, LI, Span, Button, Input, UL } from '../primaries/SharedStyling';
 import Loader from 'react-loader-spinner'
-import { Waypoint } from "react-waypoint";
 import { BsChevronExpand } from 'react-icons/bs';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import InfoTooltip from "../primaries/InfoTooltip";
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { ethers } from "ethers";
-import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD, ERROR_TOAST_DEFAULTS } from "components/ViewDelegateeItem";
+import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD } from "components/ViewDelegateeItem";
 import { toolingPostReq } from "../api/index";
 import Blockies from "../primaries/BlockiesIdenticon";
 
 import { ThemeProvider } from "styled-components"
 
-import { themeLight, themeDark } from "config/Themization"
-
-import DisplayNotice from "primaries/DisplayNotice";
 import ViewDelegateeItem from "components/ViewDelegateeItem";
 
-import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
-import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";
 import { createTransactionObject } from '../helpers/GaslessHelper';
 import { executeDelegateTx } from '../helpers/WithGasHelper';
 import { envConfig } from "@project/contracts";
@@ -33,14 +27,12 @@ const delegateesJSON = require("config/delegatees.json")
 const VOTING_TRESHOLD = 75000; //the treshold for delegates
 
 // Create Header
-function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
+function GovernancePage() {
   // React GA Analytics
   ReactGA.pageview("/governance");
 
   // setup themes (styled components)
   const themes = useTheme();
-
-  const [darkMode, setDarkMode] = useState(false);
 
   const { account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === envConfig.coreContractChain;
@@ -54,8 +46,6 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
 
   const [txInProgress, setTxInProgress] = React.useState(false);
   const [controlAt, setControlAt] = React.useState(0);
-  const [user, setUser] = React.useState(null);
-  const [owner, setOwner] = React.useState(null);
   const [delegateesObject, setDelegateesObject] = React.useState({});
   const [pushDelegatees, setPushDelegatees] = React.useState([]);
   const [pushNominees, setPushNominees] = React.useState([]);
@@ -65,7 +55,6 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
 
   const [showDelegateePrompt, setShowDelegateePrompt] = React.useState(false);
   const [delegatee, setDelegatee] = React.useState(null);
-  const [delegateTxLoading, setDelegateTxLoading] = React.useState(false);
 
   const [showAnswers, setShowAnswers] = React.useState([]);
   const [selfVotingPower, setSelfVotingPower] = React.useState(null);
@@ -74,7 +63,6 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
   const [signerObject, setSignerObject] = React.useState(null);
   const [gaslessInfo, setGaslessInfo] = useState(null);
   const [transactionMode, setTransactionMode] = React.useState('gasless');
-
 
   const toggleShowAnswer = (id) => {
     let newShowAnswers = [...showAnswers];
@@ -644,7 +632,7 @@ function GovernancePage({ epnsReadProvider, epnsWriteProvide }) {
         </Content>
 
         {/* FAQs */}
-        <Content padding="20px 20px 35px" themes={darkMode ? themeLight : themeDark}>
+        <Content padding="20px 20px 35px">
           <Item align="stretch" justify="flex-start" margin="-10px 20px 0px 20px">
 
             {/* Question */}

@@ -1,11 +1,8 @@
 import React, { useRef, useState } from "react";
-import Slider from "@material-ui/core/Slider";
 import styled, {ThemeProvider, useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { useClickAway } from "react-use";
 import {
-  Section,
-  Content,
   Item,
   H3,
   Span,

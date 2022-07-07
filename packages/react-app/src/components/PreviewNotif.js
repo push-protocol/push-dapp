@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { ThemeProvider, useTheme } from "styled-components";
-import { Item, Span, H2, P } from "../primaries/SharedStyling";
+import { Item, Span, H2 } from "../primaries/SharedStyling";
 import { useWeb3React } from "@web3-react/core";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import { useSelector } from "react-redux";
@@ -14,7 +14,7 @@ const blockchainName = {
 
 export default function PreviewNotif({ details }) {
   const { delegatees, channelDetails } = useSelector((state) => state.admin);
-  const { chainId, account } = useWeb3React();
+  const { chainId } = useWeb3React();
 
   let channelDetail;
   channelDetail = delegatees.filter(delegateeInfo => delegateeInfo.address == details.channelAddress)[0];

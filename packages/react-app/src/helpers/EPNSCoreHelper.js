@@ -1,8 +1,5 @@
-import React from "react";
-
 import axios from 'axios';
 import { postReq } from "api";
-import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 //import { parseEther, bigNumber } from 'ethers/utils'
 

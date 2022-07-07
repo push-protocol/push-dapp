@@ -4,7 +4,6 @@ import { ethers } from "ethers";
 import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import Loader from "react-loader-spinner";
-import hex2ascii from "hex2ascii";
 import { addresses, abis, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
@@ -14,13 +13,11 @@ import NotificationToast from "../primaries/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 
 import Info from "segments/Info";
-import SpamBox from "segments/spam";
 
 import ViewChannels from "segments/ViewChannels";
 import Feedbox from "segments/Feedbox";
 
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
-import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
 
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";

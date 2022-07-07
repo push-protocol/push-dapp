@@ -1,14 +1,13 @@
 import React from "react";
 
-import styled, { css, useTheme } from 'styled-components';
-import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Para, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from '../primaries/SharedStyling';
+import styled, { useTheme } from 'styled-components';
+import { Section, Content, Item, A, H2, Span, Button } from '../primaries/SharedStyling';
 
 import { ThemeProvider } from "styled-components";
 import { BsChevronExpand } from 'react-icons/bs';
 
-function ComingSoonPage(props) {
+function FaqPage() {
   const themes = useTheme();
-  const [loading, setLoading] = React.useState(true);
 
   const [showAnswers, setShowAnswers] = React.useState([]);
 
@@ -427,4 +426,4 @@ const AMod = styled(A)`
 
 
 // Export Default
-export default ComingSoonPage;
+export default FaqPage;

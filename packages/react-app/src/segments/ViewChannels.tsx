@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { useTheme } from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";

@@ -4,9 +4,7 @@ import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
-import { envConfig } from "@project/contracts";
 import DisplayNotice from "../primaries/DisplayNotice";
-import { postReq } from "api";
 import SearchFilter from 'components/SearchFilter';
 import {ThemeProvider} from "styled-components";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
@@ -22,21 +20,18 @@ import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 import CryptoHelper from "helpers/CryptoHelper";
 
-import { Section, Item, ItemH, Span, Anchor, RouterLink, Image } from '../primaries/SharedStyling';
+import { Item } from '../primaries/SharedStyling';
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
 function Feedbox() {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
-  const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
   );
 
   const themes = useTheme();
-
-  const [darkMode, setDarkMode] = useState(false);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -51,15 +46,6 @@ function Feedbox() {
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
-  const [currentTab, setCurrentTab] = React.useState("inbox");
-
-  // toast customize
-  const LoaderToast = ({ msg, color }) => (
-    <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
-  );
 
   const NormalToast = ({ msg }) => (
     <Toaster>

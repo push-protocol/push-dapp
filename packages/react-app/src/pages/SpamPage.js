@@ -3,21 +3,17 @@ import ReactGA from "react-ga";
 import { ethers } from "ethers";
 import styled, { css } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import Loader from "react-loader-spinner";
 import hex2ascii from "hex2ascii";
 import { addresses, abis ,envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
-import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "../primaries/NotificationToast";
 import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
-import Feedbox from "segments/Feedbox";
 import Spambox from "segments/Spambox";
 import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
-import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 import { postReq } from "api";
@@ -375,112 +371,6 @@ const Container = styled.div`
   display: block;
   flex-direction: column;
   min-height: calc(100vh - 100px);
-`;
-
-const Controls = styled.div`
-  flex: 0;
-  display: flex;
-  flex-direction: row;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-
-const ControlButton = styled.div`
-  flex: 1 1 21%;
-  height: 120px;
-  min-width: 200px;
-  background: #fff;
-
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  border: 1px solid rgb(225, 225, 225);
-
-  border-bottom: 10px solid rgb(180, 180, 180);
-  margin: 20px;
-  overflow: hidden;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-bottom: 10px solid
-    ${(props) => (props.active ? props.border : "rgb(180,180,180)")};
-
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-`;
-
-const ControlImage = styled.img`
-  height: 30%;
-  margin-right: 15px;
-  filter: ${(props) => (props.active ? "brightness(1)" : "brightness(0)")};
-  opacity: ${(props) => (props.active ? "1" : "0.25")};
-
-  transition: transform 0.2s ease-out;
-  ${(props) =>
-    props.active &&
-    css`
-      transform: scale(3.5) translate(-20px, 0px);
-      opacity: 0.4;
-    `};
-`;
-
-const ControlText = styled.label`
-  font-size: 16px;
-  font-weight: 200;
-  opacity: ${(props) => (props.active ? "1" : "0.75")};
-
-  transition: transform 0.2s ease-out;
-  ${(props) =>
-    props.active &&
-    css`
-      transform: scale(1.3) translate(-10px, 0px);
-    `};
-`;
-
-const ControlChannelContainer = styled.div`
-  margin: 0px 20px;
-  flex-direction: column;
-  align-items: center;
-  display: flex;
-`;
-
-const ControlChannelImage = styled.img`
-  width: 20%;
-  margin-bottom: 10px;
-  transition: transform 0.2s ease-out;
-  ${(props) =>
-    props.active &&
-    css`
-      transform: scale(3.5) translate(-40px, 5px);
-      opacity: 0.2;
-      z-index: 1;
-    `};
-`;
-
-const ControlChannelText = styled.label`
-  font-size: 16px;
-  font-weight: 300;
-  opacity: ${(props) => (props.active ? "1" : "0.75")};
-  transition: transform 0.2s ease-out;
-  background: -webkit-linear-gradient(#db268a, #34c6f3);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  z-index: 2;
-  ${(props) =>
-    props.active &&
-    css`
-      transform: scale(1.1) translate(0px, -20px);
-    `};
 `;
 
 const Interface = styled.div`

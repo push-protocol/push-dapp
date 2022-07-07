@@ -5,7 +5,6 @@ import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
 import { useSelector } from "react-redux";
-import { useDeviceWidthCheck } from "hooks";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import DelegateInfo from "./DelegateInfo";
 

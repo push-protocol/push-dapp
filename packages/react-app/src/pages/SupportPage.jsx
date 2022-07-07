@@ -6,8 +6,6 @@ import {
   Content,
   Item,
   ItemH,
-  WaveOuter,
-  WaveInner,
   H2,
   H3,
   Span,
@@ -16,19 +14,16 @@ import {
   Input,
   TextField,
 } from "../primaries/SharedStyling";
-import Wave from "react-wavify";
 import Dropdown from "react-dropdown";
 import styled, { useTheme } from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
 import Loader from "react-loader-spinner";
 
 import { ThemeProvider } from "styled-components";
-import { themeLight, themeDark } from "config/Themization";
 
 // HELPER METHODS
 const validateEmail = (email) => {
-  const re =
-    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
 
@@ -57,7 +52,6 @@ const SupportPage = () => {
   const [contactFormError, setContactFormError] = React.useState("");
 
   const themes = useTheme();
-  const [darkMode, setDarkMode] = useState(false);
 
   const handleContactFormSubmit = (e) => {
     e.preventDefault();

@@ -1,10 +1,9 @@
 import React from "react";
 import styled, { css } from 'styled-components';
 import Blockies from "primaries/BlockiesIdenticon";
-import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from '../primaries/SharedStyling';
+import { Item, ItemH, ItemBreak, Image, Span, Anchor } from '../primaries/SharedStyling';
 import { Device } from 'assets/Device';
-import InfoTooltip from "../primaries/InfoTooltip";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import {toolingPostReq} from "../api/index"
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -15,10 +14,8 @@ import { FiTwitter } from 'react-icons/fi';
 import { GoVerified } from 'react-icons/go';
 import { IoMdShareAlt } from 'react-icons/io';
 
-import { addresses, abis } from "@project/contracts";
+import { addresses } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
-import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 import {createTransactionObject} from '../helpers/GaslessHelper';
 import {executeDelegateTx} from '../helpers/WithGasHelper';
 import Web3 from 'web3';

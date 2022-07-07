@@ -1,8 +1,5 @@
 import React from "react";
-import styled, { css } from 'styled-components';
-import Loader from 'react-loader-spinner'
-
-import { useWeb3React } from '@web3-react/core'
+import styled from 'styled-components';
 
 import ViewInfoItem from "components/ViewInfoItem";
 
@@ -11,9 +8,6 @@ dotenv.config();
 
 // Other Information section
 function Info() {
-  const { account, library } = useWeb3React();
-
-  const [controlAt, setControlAt] = React.useState(0);
 
   return (
     <Container>

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 
-import styled, { css, keyframes, useTheme } from "styled-components";
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from '../primaries/SharedStyling';
+import styled, { useTheme } from "styled-components";
+import {Section, Content, Item, ItemH, Span } from '../primaries/SharedStyling';
 
-import { BsChevronExpand } from 'react-icons/bs';
-
-import { AnimateOnChange } from "react-animation";
 import Loader from "react-loader-spinner";
-import { ToastContainer, toast } from "react-toastify";
 
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
@@ -16,7 +12,6 @@ import PoolCard from "components/PoolCard";
 
 import {ThemeProvider} from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
 import { envConfig } from "@project/contracts";
 
 
@@ -24,13 +19,10 @@ const ethers = require("ethers");
 
 // Create Header
 function YieldFarmingPage() {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const themes = useTheme();
-
-  const [darkMode, setDarkMode] = useState(false);
-
 
   const [poolStats, setPoolStats] = React.useState(null);
   const [pushPoolStats, setPushPoolStats] = React.useState(null);
@@ -45,17 +37,6 @@ function YieldFarmingPage() {
   const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
   const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
   const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
-
-  const [showAnswers, setShowAnswers] = React.useState([]);
-
-  const [loadingUserData, setLoadingUserData] = React.useState(false);
-
-  const toggleShowAnswer = (id) => {
-    let newShowAnswers = [...showAnswers];
-    newShowAnswers[id] = !newShowAnswers[id];
-
-    setShowAnswers(newShowAnswers);
-  }
 
   React.useEffect(() => {
     if (!onCoreNetwork) {
