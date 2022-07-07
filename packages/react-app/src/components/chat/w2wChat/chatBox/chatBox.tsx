@@ -85,14 +85,13 @@ const ChatBox = () => {
     const scrollToBottom = () => {
         scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
     }
+
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
             setNewMessage("");
-            console.log(currentChat);
             let hasintent = false;
             if (currentChat) {
                 try {
-
                     const cid = CID.parse(currentChat.profile_picture);
                     setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
                 }
@@ -126,21 +125,19 @@ const ChatBox = () => {
 
     const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
         try {
-            console.log(typeof message);
             const msg = await postMessage(account, fromDid, toDid, message, messageType, signature);
-            console.log(msg);
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await getLatestThreadhash(currentChat.did, did.id);
             await intitializeDb('Insert', 2, 'CID_store', threadhash, msg, 'cid');
             const inbox = await fetchInbox(did);
-            console.log(inbox);
             renderInbox(inbox);
         }
         catch (error) {
             console.log(error)
         }
     }
+
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
@@ -153,6 +150,7 @@ const ChatBox = () => {
             }
         }
     }
+
     const sendIntent = async () => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
