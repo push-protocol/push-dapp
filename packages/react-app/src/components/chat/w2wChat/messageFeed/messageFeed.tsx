@@ -6,7 +6,7 @@ import { getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
 import { Context, Feeds } from '../w2wIndex';
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb';
-import { DID } from 'dids';
+
 interface messageFeedProps {
     filteredUserData: {}[],
     isValid: boolean
@@ -24,21 +24,16 @@ const MessageFeed = (props: messageFeedProps) => {
     const [feeds, setFeeds] = useState<Array<{}>>([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
 
-    const unCached = async (did: DID) => {
-        const inbox = await fetchInbox(did);
-        setFeeds(inbox);
-    }
-
-    const fetchMyApi = useCallback(async () => {
-        console.log(did.id);
+    const getInbox = useCallback(async () => {
         const getInbox = await intitializeDb('Read', 2, 'Inbox', did.id, '', 'did');
-        console.log(getInbox)
         if (getInbox !== undefined) {
             setFeeds(getInbox.body);
-            await unCached(did);
+            const inbox = await fetchInbox(did);
+            setFeeds(inbox);
         }
         else {
-            await unCached(did)
+            const inbox = await fetchInbox(did);
+            setFeeds(inbox);
         }
     }, []);
 
@@ -48,12 +43,11 @@ const MessageFeed = (props: messageFeedProps) => {
 
     useEffect(() => {
         if (!props.isValid) {
-            fetchMyApi();
+            getInbox();
         }
         else {
             const searchFn = async () => {
                 if (props.filteredUserData.length) {
-
                     let inbox = await fetchMessagesFromIpfs(props.filteredUserData);
                     const threadhash = await getLatestThreadhash(inbox[0].did, did.id);
                     inbox = [{ ...inbox[0], threadhash }]

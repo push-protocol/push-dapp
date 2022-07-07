@@ -49,7 +49,7 @@ interface AppContextInterface {
   connectedUser: User
 }
 
-interface User {
+export interface User {
   readonly id?: string,
   did: string,
   wallets: string,

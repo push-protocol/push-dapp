@@ -1,81 +1,81 @@
-import React, { useState,useContext} from 'react';
+import React, { useState, useContext } from 'react';
 import SearchBar from '../searchBar/searchBar';
 import IntentBar from '../intentBar/intentBar';
 import './sidebar.css';
-import { Feeds,Context } from '../w2wIndex';
+import { Feeds, Context } from '../w2wIndex';
 import ProfileHeader from '../ProfileSection/ProfileHeader';
 import Profile from '../ProfileSection/Profile';
 import { Button } from "components/SharedStyling";
 
 const Sidebar = () => {
     const [chatselected, setChatselected] = useState(true);
-    const {userProfile} = useContext(Context);
+    const { userProfile } = useContext(Context);
     const [showProfile, setShowProfile] = useState(false);
-    const  [updateProfileImage,setUserProfileImage] = useState(userProfile);
+    const [updateProfileImage, setUserProfileImage] = useState(userProfile);
 
     const updateProfile = (image: string) => {
         setUserProfileImage(image);
     }
 
-    function renderselected(){
-        if(chatselected){
+    function renderselected() {
+        if (chatselected) {
             return (
                 <>
-                <div className='userProfileBar'>
-                    <ProfileHeader 
-                        setProfile = {setShowProfile} 
-                        profile_picture = {updateProfileImage} 
-                    />
-                </div>
-                {
-                    !showProfile 
-                    ?
-                    (
-                        <div className='sidebar_search'>
-                            <SearchBar/>
-                        </div>
-                    )
-                    :
-                    (
-                        <div  className='sidebar_profile'>
-                            <Profile 
-                                profile_picture = {updateProfileImage} 
-                                updateProfile = {updateProfile}
-                            />
-                        </div>
-                    )
-                }
+                    <div className='userProfileBar'>
+                        <ProfileHeader
+                            setProfile={setShowProfile}
+                            profile_picture={updateProfileImage}
+                        />
+                    </div>
+                    {
+                        !showProfile
+                            ?
+                            (
+                                <div className='sidebar_search'>
+                                    <SearchBar />
+                                </div>
+                            )
+                            :
+                            (
+                                <div className='sidebar_profile'>
+                                    <Profile
+                                        profile_picture={updateProfileImage}
+                                        updateProfile={updateProfile}
+                                    />
+                                </div>
+                            )
+                    }
                 </>
             )
         }
         else {
             return (
                 <>
-                <div className='userProfileBar'>
-                    <ProfileHeader
-                        setProfile = {setShowProfile} 
-                        profile_picture = {updateProfileImage} 
-                    />
-                </div>
-                {
-                !showProfile 
-                    ?
-                    (
-                        <div className='sidebar_search'>
-                            <IntentBar />
-                        </div>
-                    )
-                    :
-                    (
-                        <div  className='sidebar_profile'>
-                            <Profile 
-                                profile_picture = {updateProfileImage} 
-                                updateProfile = {updateProfile}
-                            />
-                        </div>
-                    )
-                }
-                
+                    <div className='userProfileBar'>
+                        <ProfileHeader
+                            setProfile={setShowProfile}
+                            profile_picture={updateProfileImage}
+                        />
+                    </div>
+                    {
+                        !showProfile
+                            ?
+                            (
+                                <div className='sidebar_search'>
+                                    <IntentBar />
+                                </div>
+                            )
+                            :
+                            (
+                                <div className='sidebar_profile'>
+                                    <Profile
+                                        profile_picture={updateProfileImage}
+                                        updateProfile={updateProfile}
+                                    />
+                                </div>
+                            )
+                    }
+
                 </>
             )
         }

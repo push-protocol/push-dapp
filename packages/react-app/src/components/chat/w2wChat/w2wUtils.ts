@@ -2,6 +2,7 @@ import * as IPFSHelper from '../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../helpers/w2w/IPFS';
 import { intitializeDb } from './w2wIndexeddb';
+import { DID } from 'dids'
 
 import { getInbox, getIntents } from '../../../helpers/w2wChatHelper';
 export interface InboxChat {
@@ -47,17 +48,17 @@ export const fetchMessagesFromIpfs = async (inbox) => {
     return inbox
 }
 
-export const fetchInbox = async (did) => {
+export const fetchInbox = async (did: DID) => {
     let inbox = await getInbox(did.id); //[{},{}]=>"did":[]
     inbox = await fetchMessagesFromIpfs(inbox);
     await intitializeDb('Insert', 2, 'Inbox', did.id, inbox, 'did');
     return inbox;
 }
 
-export const fetchIntent = async (did)=>{
-    let Intents= await getIntents(did.id);
+export const fetchIntent = async (did) => {
+    let Intents = await getIntents(did.id);
     Intents = await fetchMessagesFromIpfs(Intents);
-    await intitializeDb('Insert',2,'Intent',did.id,Intents,'did');
+    await intitializeDb('Insert', 2, 'Intent', did.id, Intents, 'did');
     return Intents;
 }
 
