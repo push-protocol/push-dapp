@@ -1,7 +1,7 @@
 import React from "react";
 
 import styled, { useTheme } from 'styled-components';
-import { Item, ItemH, Span, A} from 'components/SharedStyling';
+import { Item, ItemH, Span, A} from '../primaries/SharedStyling';
 
 // Faucet URLs
 function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave }) {

@@ -1,9 +1,9 @@
 import React from "react";
 import styled, { css } from 'styled-components';
-import Blockies from "components/BlockiesIdenticon";
-import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from 'components/SharedStyling';
+import Blockies from "primaries/BlockiesIdenticon";
+import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from '../primaries/SharedStyling';
 import { Device } from 'assets/Device';
-import InfoTooltip from "components/InfoTooltip";
+import InfoTooltip from "../primaries/InfoTooltip";
 import { ToastContainer, toast } from 'react-toastify';
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import {toolingPostReq} from "../api/index"

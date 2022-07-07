@@ -11,16 +11,16 @@ import { useWeb3React } from "@web3-react/core";
 import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "../primaries/NotificationToast";
-import AliasVerificationodal from "newcomponents/AliasVerificationModal";
+import AliasVerificationodal from "components/AliasVerificationModal";
 
-import Info from "newsegments/Info";
-import SpamBox from "newsegments/spam";
+import Info from "segments/Info";
+import SpamBox from "segments/spam";
 
-import ViewChannels from "newsegments/ViewChannels";
-import Feedbox from "newsegments/Feedbox";
+import ViewChannels from "segments/ViewChannels";
+import Feedbox from "segments/Feedbox";
 
-import ChannelOwnerDashboard from "newsegments/ChannelOwnerDashboard";
-import ChannelCreationDashboard from "newsegments/ChannelCreationDashboard";
+import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
+import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
 
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";

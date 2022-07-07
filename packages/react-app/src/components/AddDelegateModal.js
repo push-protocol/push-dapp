@@ -6,7 +6,7 @@ import { addresses, abis } from "@project/contracts";
 import Loader from 'react-loader-spinner';
 import { ThemeProvider } from "styled-components";
 
-import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
+import {Item, H2, H3, Span, Button, Input} from 'primaries/SharedStyling';
 
 const ethers = require('ethers');
 

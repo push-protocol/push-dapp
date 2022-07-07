@@ -6,7 +6,7 @@ import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
-import { Item } from "./SharedStyling";
+import { Item } from "../primaries/SharedStyling";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 const DATE_FORMAT = "DD/MM/YYYY";

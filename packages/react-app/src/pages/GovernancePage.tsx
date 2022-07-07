@@ -12,7 +12,7 @@ import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { ethers } from "ethers";
-import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD, ERROR_TOAST_DEFAULTS } from "../newcomponents/ViewDelegateeItem";
+import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD, ERROR_TOAST_DEFAULTS } from "components/ViewDelegateeItem";
 import { toolingPostReq } from "../api/index";
 import Blockies from "../primaries/BlockiesIdenticon";
 
@@ -20,8 +20,8 @@ import { ThemeProvider } from "styled-components"
 
 import { themeLight, themeDark } from "config/Themization"
 
-import DisplayNotice from "../primaries/DisplayNotice";
-import ViewDelegateeItem from "newcomponents/ViewDelegateeItem";
+import DisplayNotice from "primaries/DisplayNotice";
+import ViewDelegateeItem from "components/ViewDelegateeItem";
 
 import ChannelsDataStore, { ChannelEvents } from "singletons/ChannelsDataStore";
 import UsersDataStore, { UserEvents } from "singletons/UsersDataStore";

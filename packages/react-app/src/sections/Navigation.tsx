@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, AnchorLink as Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {Section, Item, ItemH, Span, AnchorLink as Anchor, RouterLink, Image} from 'primaries/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
 import navigationList from "config/NavigationList";

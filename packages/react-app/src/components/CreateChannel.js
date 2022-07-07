@@ -19,7 +19,7 @@ import {
   FormSubmision,
   Input,
   TextField,
-} from "components/SharedStyling";
+} from "../primaries/SharedStyling";
 import { FiLink } from "react-icons/fi";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
@@ -33,7 +33,7 @@ import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
 import { addresses, abis } from "@project/contracts";
-import ImageClipper from "./ImageClipper";
+import ImageClipper from "../primaries/ImageClipper";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 import "./createChannel.css";
 

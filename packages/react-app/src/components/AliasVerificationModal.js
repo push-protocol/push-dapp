@@ -5,8 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import Loader from 'react-loader-spinner';
 import { postReq } from "../api";
-
-import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
+import {Item, H2, H3, Span, Button, Input} from '../primaries/SharedStyling';
 
 const ethers = require('ethers');
 

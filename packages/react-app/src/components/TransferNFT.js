@@ -1,7 +1,7 @@
 import React from "react";
 
 import styled, { css } from 'styled-components';
-import {Section, Content, Item, ItemH, ItemBreak, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+import {Section, Content, Item, ItemH, ItemBreak, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from '../primaries/SharedStyling';
 
 import { FiLink } from 'react-icons/fi';
 

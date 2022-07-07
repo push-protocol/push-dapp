@@ -1,7 +1,7 @@
 import React from "react";
 
 import styled, { css } from 'styled-components';
-import {Section, Content} from 'components/SharedStyling';
+import {Section, Content} from 'primaries/SharedStyling';
 
 import CreateChannel from 'components/CreateChannel';
 

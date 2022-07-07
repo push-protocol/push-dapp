@@ -12,7 +12,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
-import PoolCard from "newcomponents/PoolCard";
+import PoolCard from "components/PoolCard";
 
 import {ThemeProvider} from "styled-components";
 

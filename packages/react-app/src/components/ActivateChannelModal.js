@@ -10,7 +10,7 @@ import {
   H3,
   Span,
   Button,
-} from "components/SharedStyling";
+} from "primaries/SharedStyling";
 
 const MIN_STAKE_FEES = 50;
 

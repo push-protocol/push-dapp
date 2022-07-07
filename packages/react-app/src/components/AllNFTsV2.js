@@ -21,7 +21,7 @@ import {
   FormSubmision,
   Input,
   TextField,
-} from "components/SharedStyling";
+} from "../primaries/SharedStyling";
 
 import StackGrid, { transitions } from "react-stack-grid";
 
@@ -33,7 +33,7 @@ import { addresses, abis } from "@project/contracts";
 import NFTHelper from "helpers/NFTHelper";
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
-import DisplayNotice from "components/DisplayNotice";
+import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTV2Item from "components/ViewNFTsV2Item";
 
 const { scaleDown } = transitions;

@@ -9,9 +9,9 @@ import NFTHelper from 'helpers/NFTHelper';
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
 
-import DisplayNotice from "components/DisplayNotice";
+import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTV2Item from "components/ViewNFTsV2Item";
-import { ItemH } from "./SharedStyling";
+import { ItemH } from "../primaries/SharedStyling";
 
 // Create Header
 function MyNFTs({controlAt, setControlAt, setTokenId}) {

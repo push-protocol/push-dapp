@@ -6,7 +6,7 @@ import styled, { useTheme } from "styled-components";
 import { ThemeProvider } from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
 import Loader from "react-loader-spinner";
-import { Item } from './SharedStyling';
+import { Item } from '../primaries/SharedStyling';
 
 export default function SearchFilter(props) {
 

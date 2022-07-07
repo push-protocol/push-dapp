@@ -7,12 +7,12 @@ import {Section, Content, Item, A, B, H2, H3, Span, Button} from '../primaries/S
 import { BsChevronExpand } from 'react-icons/bs';
 
 import { useWeb3React } from '@web3-react/core'
-import MyNFTs from "newcomponents/MyNFTs";
-import MyNFTsV2 from "newcomponents/MyNFTsV2";
-import AllNFTs from "newcomponents/AllNFTs";
-import AllNFTsV2 from "newcomponents/AllNFTsV2";
-import TransferNFT from "newcomponents/TransferNFT";
-import TransferNFTv2 from "newcomponents/TransferNFTv2";
+import MyNFTs from "components/MyNFTs";
+import MyNFTsV2 from "components/MyNFTsV2";
+import AllNFTs from "components/AllNFTs";
+import AllNFTsV2 from "components/AllNFTsV2";
+import TransferNFT from "components/TransferNFT";
+import TransferNFTv2 from "components/TransferNFTv2";
 
 
 import {ThemeProvider} from "styled-components";

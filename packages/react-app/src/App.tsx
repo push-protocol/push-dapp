@@ -24,7 +24,7 @@ import GLOBALS from "config/Globals";
 
 import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
-import UserJourneySteps from "newsegments/userJourneySteps";
+import UserJourneySteps from "segments/userJourneySteps";
 import { getPushToken, onMessageListener } from "./firebase";
 
 import * as dotenv from "dotenv";

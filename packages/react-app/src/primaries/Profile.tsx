@@ -4,7 +4,7 @@ import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
 import styled, { css } from 'styled-components';
 
 import Loader from 'react-loader-spinner'
-import Blockies from "components/BlockiesIdenticon";
+import Blockies from "primaries/BlockiesIdenticon";
 //   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
 
 // Create Header

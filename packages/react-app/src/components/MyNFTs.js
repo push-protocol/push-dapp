@@ -8,7 +8,7 @@ import { addresses, abis } from "@project/contracts";
 import NFTHelper from 'helpers/NFTHelper';
 import { ethers } from "ethers";
 
-import DisplayNotice from "components/DisplayNotice";
+import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTItem from "components/ViewNFTItem";
 
 // Create Header

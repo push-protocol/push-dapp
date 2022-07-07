@@ -4,7 +4,7 @@ import ReactGA from "react-ga";
 import styled, {useTheme} from "styled-components";
 import { Section, Content, Item, ItemH, Span, H2, B, A, H3 } from "../primaries/SharedStyling";
 
-import Info from "newsegments/Info";
+import Info from "segments/Info";
 
 import GLOBALS from "config/Globals";
 

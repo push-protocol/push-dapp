@@ -12,7 +12,7 @@ import {
   Button,
   H2,
   Input
-} from "components/SharedStyling";
+} from "primaries/SharedStyling";
 const ethers = require("ethers");
 
 export default function AddSubGraphIdModal({

@@ -15,12 +15,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import {ThemeProvider} from "styled-components";
-import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
+import { Item, ItemH, Span, H2, B, A } from "../primaries/SharedStyling";
 
 import { postReq } from "api";
 
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
-import NotificationToast from "components/NotificationToast";
+import NotificationToast from "../primaries/NotificationToast";
 
 import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial";
 

@@ -2,15 +2,15 @@ import React from "react";
 import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 
 import styled, { css, keyframes } from "styled-components";
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
-import InfoTooltip from "components/InfoTooltip";
+import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from '../primaries/SharedStyling';
+import InfoTooltip from "../primaries/InfoTooltip";
 
 import { addresses, abis } from "@project/contracts";
 import { ToastContainer, toast } from "react-toastify";
 
 import { AnimateOnChange } from "react-animation";
 import Loader from "react-loader-spinner";
-import Blockies from "components/BlockiesIdenticon";
+import Blockies from "../primaries/BlockiesIdenticon";
 
 //   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
 const ethers = require("ethers");

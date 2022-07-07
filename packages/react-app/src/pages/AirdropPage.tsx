@@ -16,7 +16,7 @@ import { ethers } from "ethers";
 
 import AirdropHelper from 'helpers/AirdropHelper';
 
-import ViewInfoItem from "newcomponents/ViewInfoItem";
+import ViewInfoItem from "components/ViewInfoItem";
 
 import { ThemeProvider } from "styled-components";
 
