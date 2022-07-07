@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import Slider from "@material-ui/core/Slider";
 import styled from "styled-components";
 import Loader from "react-loader-spinner";

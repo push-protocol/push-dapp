@@ -1,15 +1,10 @@
 import React, {useRef, useState} from 'react';
-import { useClick, useClickAway } from 'react-use';
-import styled ,  {useTheme} from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
-import { addresses, abis } from "@project/contracts";
+import { useClickAway } from 'react-use';
+import styled, {useTheme} from 'styled-components';
 import Loader from 'react-loader-spinner';
 import { ThemeProvider } from "styled-components";
 
 import {Item, H2, H3, Span, Button, Input} from 'primaries/SharedStyling';
-
-const ethers = require('ethers');
-
 
 export default function AddDelegateModal({
     onClose,onSuccess, addDelegate

@@ -13,10 +13,12 @@ const blockchainName = {
 };
 
 export default function PreviewNotif({ details }) {
-  const { delegatees } = useSelector((state) => state.admin);
-  const { chainId } = useWeb3React();
+  const { delegatees, channelDetails } = useSelector((state) => state.admin);
+  const { chainId, account } = useWeb3React();
 
-  const channelDetail = delegatees.filter(delegateeInfo => delegateeInfo.address == details.channelAddress)[0];
+  let channelDetail;
+  channelDetail = delegatees.filter(delegateeInfo => delegateeInfo.address == details.channelAddress)[0];
+  if(!channelDetail) channelDetail = channelDetails; 
 
   const themes = useTheme();
   const NotifItem = ({ test }) => {

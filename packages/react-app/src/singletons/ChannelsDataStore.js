@@ -488,22 +488,32 @@ export default class ChannelsDataStore {
         // console.log("getChannelJsonAsync() [CACHED] --> %o", this.state.channelsJson[channelAddress]);
         resolve(this.state.channelsJson[channelAddress]);
       } else {
-        await EPNSCoreHelper.getChannelJsonFromChannelAddress(
-          channelAddress,
-          this.state.epnsReadProvider
-        )
+        try {
+          let objResponse = {};
+          const getChannelJson = EPNSCoreHelper.getChannelJsonFromChannelAddress(
+            channelAddress,
+            this.state.epnsReadProvider
+          )
           .then((response) => {
-            // First set the cache
-            this.state.channelsJson[channelAddress] = response;
-
-            // resolve
-            // console.log("getChannelJsonAsync() [Address: %s] --> %o", channelAddress, response);
-            resolve(response);
-          })
-          .catch((err) => {
-            console.log("!!!Error, getChannelJsonAsync() --> %o", err);
-            reject(err);
+            objResponse = { ...response, ...objResponse };
           });
+          
+          const getAliasAddress = EPNSCoreHelper.getAliasAddressFromChannelAddress(
+            channelAddress
+          )
+          .then((response) => {
+            objResponse.alias_address = response;
+          });
+          
+          await Promise.all([getAliasAddress, getChannelJson]);
+
+          console.log("getChannelJsonAsync() [Address: %s] --> %o", objResponse);
+          this.state.channelsJson[channelAddress] = objResponse;
+          resolve(objResponse);
+        } catch(err) {
+          console.log("!!!Error, getChannelJsonAsync() --> %o", err);
+          reject(err);
+        };
       }
     });
   };

@@ -1,6 +1,7 @@
 import React from "react";
+import { Section, Content, Item } from "primaries/SharedStyling";
 import { useSelector, useDispatch } from "react-redux";
-import styled, { css, useTheme } from "styled-components";
+import styled, { css , useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
 import { toast as toaster } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
@@ -176,7 +177,7 @@ function ChannelSettings() {
 
     await epnsWriteProvider
       // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
-      .deactivateChannel(Math.floor(pushValue))
+      .deactivateChannel(Math.floor(pushValue)) 
       .then(async (tx: any) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -234,46 +235,48 @@ function ChannelSettings() {
     });
   };
 
-  if (!onCoreNetwork) {
-    //temporarily deactivate the deactivate button if not on core network
-    return <></>;
-  }
+  // if (!onCoreNetwork) {
+  //   //temporarily deactivate the deactivate button if not on core network
+  //   return <></>;
+  // }
 
   return (
     <div>
-      <DropdownWrapper background={theme}>
+      <DropdownWrapper background ={theme}>
         <DeactivateButton
           isChannelDeactivated={isChannelDeactivated}
           onClick={toggleChannelActivationState}
         >
           <ActionTitle>
-            {!onCoreNetwork ?
-              ("") : loading ? (
-                "Loading ..."
-              ) : isChannelBlocked ? (
-                "Channel Blocked"
-              ) : isChannelDeactivated ? (
-                "Activate Channel"
-              ) : (
-                "Deactivate Channel"
-              )}
+            {!onCoreNetwork ? (
+              ""
+            ) : loading ? (
+              "Loading ..."
+            ) : isChannelBlocked ? (
+              "Channel Blocked"
+            ) : isChannelDeactivated ? (
+              "Activate Channel"
+            ) : (
+              "Deactivate Channel"
+            )}
           </ActionTitle>
         </DeactivateButton>
         <ActiveChannelWrapper>
-
-          <ChannelActionButton
-            disabled={channelInactive}
-            onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
-          >
-            <ActionTitle>
-              {addSubgraphDetailsLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
-              ) : (
-                "Add SubGraph Details"
-              )}
-            </ActionTitle>
-          </ChannelActionButton>
-
+        
+          {onCoreNetwork &&
+            <ChannelActionButton
+              disabled={channelInactive}
+              onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
+            >
+              <ActionTitle>
+                {addSubgraphDetailsLoading ? (
+                  <Loader type="Oval" color="#FFF" height={16} width={16} />
+                ) : (
+                  "Add SubGraph Details"
+                )}
+              </ActionTitle>
+            </ChannelActionButton>
+          }
 
           <ChannelActionButton
             disabled={channelInactive}
@@ -301,7 +304,7 @@ function ChannelSettings() {
             </ActionTitle>
           </ChannelActionButton>
 
-
+          
         </ActiveChannelWrapper>
       </DropdownWrapper>
       {/* modal to display the activate channel popup */}
@@ -351,18 +354,17 @@ function ChannelSettings() {
 
       {addSubGraphIdOpen && (
         <AddSubGraphIdModal
-          onClose={(val) => setAddSubGraphIdOpen(val)}
-          onSuccess={() => {
-            toaster.update(notificationToast(), {
-              render: "SubGraph Details Added",
-              type: toaster.TYPE.INFO,
-              autoClose: 5000,
-            });
-          }}
-          addSubGraphDetails={addSubgraphDetails}
+        onClose={(val) => setAddSubGraphIdOpen(val)}
+        onSuccess={() => {
+          toaster.update(notificationToast(), {
+            render: "SubGraph Details Added",
+            type: toaster.TYPE.INFO,
+            autoClose: 5000,
+          });
+        }}
+        addSubGraphDetails={addSubgraphDetails}
         />
-
-      )}
+      ) }
     </div>
   );
 }

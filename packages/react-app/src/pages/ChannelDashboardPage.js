@@ -10,8 +10,8 @@ import { useWeb3React } from "@web3-react/core";
 
 import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import NotificationToast from "../primaries/NotificationToast";
-import AliasVerificationModal from "components/AliasVerificationModal";
+import NotificationToast from "primaries/NotificationToast";
+import AliasVerificationodal from "components/AliasVerificationModal";
 import Info from "segments/Info";
 import Feedbox from "segments/Feedbox";
 import ViewChannels from "segments/ViewChannels";
@@ -35,6 +35,13 @@ import {
 import { addNewNotification } from "redux/slices/notificationSlice";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
+
+const blockchainName = {
+  1: "ETH_MAINNET",
+  137: "POLYGON_MAINNET",
+  42: "ETH_TEST_KOVAN",
+  80001: "POLYGON_TEST_MUMBAI",
+};
 
 // Create Header
 function ChannelDashboardPage() {
@@ -248,10 +255,10 @@ function ChannelDashboardPage() {
     setChannelJson([]);
     // save push admin to global state
     epnsReadProvider.pushChannelAdmin()
-    .then((response) => {
+      .then((response) => {
       dispatch(setPushAdmin(response));
     })
-    .catch(err =>{
+      .catch(err => {
       console.log({err})
     });
 
@@ -286,6 +293,7 @@ function ChannelDashboardPage() {
   const fetchDelegators = () => {
     postReq("/channels/delegatee/get_channels", {
       delegateAddress: account,
+      blockchain: blockchainName[chainId],
       op: "read",
     })
       .then(async ({ data: delegators }) => {
@@ -294,11 +302,12 @@ function ChannelDashboardPage() {
         if (delegators && delegators.channelOwners) {
           const channelInformationPromise = [
             ...new Set([account, ...delegators.channelOwners])//make the accounts unique
-          ].map((channelAddress) =>
-            ChannelsDataStore.instance
+          ].map((channelAddress) => {
+            return ChannelsDataStore.instance
               .getChannelJsonAsync(channelAddress)
               .then((res) => ({ ...res, address: channelAddress }))
               .catch(() => false)
+          }
           );
           const channelInformation = await Promise.all(
             channelInformationPromise
@@ -316,6 +325,11 @@ function ChannelDashboardPage() {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
+    if (!onCoreNetwork && aliasEthAccount == null) {
+      setChannelAdmin(false);
+      setAdminStatusLoaded(true);
+      return;
+    }
     // Check if account is admin or not and handle accordingly
     const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
     console.log(ownerAccount);
@@ -408,7 +422,7 @@ function ChannelDashboardPage() {
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}
         {modalOpen && (
-          <AliasVerificationModal
+          <AliasVerificationodal
             onClose={() => setModalOpen(false)}
             onSuccess={() => setAliasVerified(true)}
             verificationStatus={aliasVerified}

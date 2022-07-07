@@ -91,6 +91,7 @@ function CreateChannel() {
 
   //checking DAI for user
   React.useEffect(() => {
+    if (!onCoreNetwork) return;
     const checkDaiFunc = async () => {
       let checkDaiAmount = new ethers.Contract(
         addresses.dai,
