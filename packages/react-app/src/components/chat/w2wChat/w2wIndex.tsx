@@ -38,14 +38,31 @@ export interface Feeds {
 }
 
 interface AppContextInterface {
-  currentChat: Feeds, viewChatBox: boolean,
+  currentChat: Feeds,
+  viewChatBox: boolean,
   did: DID,
   renderInboxFeed: Array<{}> | null,
   userProfile: string,
   userWallets: string,
   setChat: (text: Feeds) => void,
-  renderInbox: (args: Array<{}>) => void
+  renderInbox: (args: Array<{}>) => void,
+  connectedUser: User
+}
 
+interface User {
+  readonly id?: string,
+  did: string,
+  wallets: string,
+  profile_picture: string | null,
+  pgp_pub: string,
+  pgp_priv_enc: string,
+  pgp_enc_type: string,
+  signature: string,
+  sig_type: string,
+  about: string | null,
+  num_msg: number,
+  allowed_num_msg: number,
+  linked_list_hash?: string | null
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
@@ -58,6 +75,7 @@ function App() {
   const [caip10Account, setCaip10Account] = useState<string>('');
   const [userProfile, setUserProfile] = useState<string>('');
   const [userWallets, setUserWallets] = useState<string>('');
+  const [connectedUser, setConnectedUser] = useState<User>();
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>();
   const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
   useEffect(() => {
@@ -76,17 +94,19 @@ function App() {
     setCaip10Account(caip10);
     setDid(did);
     setCeramicInstance(ceramic);
-    const response = await w2wHelper.getUser(did.id, caip10);
-    if (response === null) {
+    const user = await w2wHelper.getUser(did.id, caip10);
+    if (user === null) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
-      const userDetails = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
-      setUserProfile(userDetails.profile_picture);
-      setUserWallets(userDetails.wallets);
+      const createdUser = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
+      setUserProfile(createdUser.profile_picture);
+      setUserWallets(createdUser.wallets);
+      setConnectedUser(createdUser);
     }
     else {
-      setUserProfile(response.profile_picture);
-      setUserWallets(response.wallets);
+      setUserProfile(user.profile_picture);
+      setUserWallets(user.wallets);
+      setConnectedUser(user);
     }
     setIsLoading(false);
   };
@@ -105,7 +125,7 @@ function App() {
       <div className="w2wIndex">
         {!isLoading ?
           (
-            <Context.Provider value={{ currentChat, viewChatBox, did, renderInboxFeed, userProfile, userWallets, setChat, renderInbox }}>
+            <Context.Provider value={{ currentChat, viewChatBox, did, renderInboxFeed, userProfile, userWallets, setChat, renderInbox, connectedUser }}>
               <Sidebar />
               <ChatBox />
             </Context.Provider>

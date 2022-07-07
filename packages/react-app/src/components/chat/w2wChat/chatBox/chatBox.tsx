@@ -23,7 +23,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
-
+import * as PGP from '../../../../helpers/w2w/PGP';
+import * as DIDHelper from '../../../../helpers/w2w/Did';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -32,10 +33,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-
 const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
-    const { currentChat, viewChatBox, did, renderInbox } = useContext(Context);
+    const { currentChat, viewChatBox, did, renderInbox, connectedUser } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
@@ -125,7 +125,9 @@ const ChatBox = () => {
 
     const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
         try {
-            const msg = await postMessage(account, fromDid, toDid, message, messageType, signature);
+            const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
+            const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
+            const msg = await postMessage(account, fromDid, toDid, cipherText, messageType, signature);
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await getLatestThreadhash(currentChat.did, did.id);
@@ -140,7 +142,6 @@ const ChatBox = () => {
 
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-
         if (newMessage.trim() !== "") {
             if (hasIntent && intentSentandPending === 'Approved') {
                 sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');

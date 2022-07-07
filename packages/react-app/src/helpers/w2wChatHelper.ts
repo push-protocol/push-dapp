@@ -50,7 +50,6 @@ export const uploadUserProfileImage = async (Did: string, image: string) => {
 
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
-    const cipherText = PGP.encryptMessage(messageContent)
     const response = await fetch('http://localhost:4000/apis/w2w/messages', {
         method: 'POST',
         headers: {

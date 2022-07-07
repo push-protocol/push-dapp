@@ -16,8 +16,8 @@ const privateAndPubilcKeyObject = async (publicKeyArmored, privateKeyArmored): P
     return { publicKey: publicKey, privateKey: privateKey };
 }
 
-export const encryptMessage = async (plainText: any, publicKeyArmored: string, privateKeyArmored: string) => {
-    const { publicKey, privateKey } = await privateAndPubilcKeyObject(publicKeyArmored, privateKeyArmored);
+export const encryptMessage = async (plainText: any, toPublicKeyArmored: string, fromPrivateKeyArmored: string) => {
+    const { publicKey, privateKey } = await privateAndPubilcKeyObject(toPublicKeyArmored, fromPrivateKeyArmored);
     const encrypted = await openpgp.encrypt({
         message: await openpgp.createMessage({ text: plainText }),
         encryptionKeys: publicKey,
