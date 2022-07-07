@@ -1,5 +1,6 @@
 import { randomBytes } from '@stablelib/random';
 import { toString } from 'uint8arrays/to-string';
+import * as PGP from '../helpers/w2w/PGP';
 
 export const walletToCAIP10 = (account: string, chainId: number): string => {
     if (chainId === 1) {
@@ -35,20 +36,21 @@ export const getDidLinkWallets = async (Did: string) => {
     return data;
 }
 
-export const uploadUserProfileImage = async (Did:string,image:string)=>{
-    const response = await fetch('http://localhost:4000/apis/w2w/updateProfilePicture/'+Did,{
-        method:'POST',
-        headers:{
-            "Content-Type":"application/json"
+export const uploadUserProfileImage = async (Did: string, image: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/updateProfilePicture/' + Did, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
         },
-        body:JSON.stringify({
+        body: JSON.stringify({
             image
         })
     });
-    
 }
+
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
+    const cipherText = PGP.encryptMessage(messageContent)
     const response = await fetch('http://localhost:4000/apis/w2w/messages', {
         method: 'POST',
         headers: {
@@ -76,7 +78,7 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
     return data;
 }
 
-export const getAllUsers = async ():Promise<User[]> => {
+export const getAllUsers = async (): Promise<User[]> => {
     const response = await fetch('http://localhost:4000/apis/w2w/getAllUsers');
     const data = await response.json();
     return data;
@@ -149,7 +151,7 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
     return response;
 }
 
-export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string,signature:string) => {
+export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/intent', {
         method: 'POST',
         headers: {
@@ -157,7 +159,7 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
         },
         body: JSON.stringify({
             toDID,
-            fromDID, 
+            fromDID,
             fromWallet,
             message,
             signature

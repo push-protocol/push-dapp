@@ -8,38 +8,32 @@ export const generateKeyPair = async (): Promise<{ privateKey: string, publicKey
     });
 };
 
-const privateAndPubilcKeyObject = async (publicKeyArmored, privateKeyArmored) => {
-    const publicKeyObject = await openpgp.readKey({ armoredKey: publicKeyArmored });
-    const privateKeyObject = await openpgp.decryptKey({
-        privateKey: await openpgp.readPrivateKey({ armoredKey: privateKeyArmored }),
-        passphrase: 'helloworld'
+const privateAndPubilcKeyObject = async (publicKeyArmored, privateKeyArmored): Promise<{ publicKey: openpgp.Key, privateKey: openpgp.PrivateKey }> => {
+    const publicKey = await openpgp.readKey({ armoredKey: publicKeyArmored });
+    const privateKey = await openpgp.decryptKey({
+        privateKey: await openpgp.readPrivateKey({ armoredKey: privateKeyArmored })
     })
-    return { publicKeyObject, privateKeyObject }
+    return { publicKey: publicKey, privateKey: privateKey };
 }
 
-export const encryptMessage = async (jsonMessage, publicKeyArmored, privateKeyArmored) => {
-    console.log(jsonMessage);
-    const { publicKeyObject, privateKeyObject } = await privateAndPubilcKeyObject(publicKeyArmored, privateKeyArmored);
-    console.log(publicKeyObject);
+export const encryptMessage = async (plainText: any, publicKeyArmored: string, privateKeyArmored: string) => {
+    const { publicKey, privateKey } = await privateAndPubilcKeyObject(publicKeyArmored, privateKeyArmored);
     const encrypted = await openpgp.encrypt({
-        message: await openpgp.createMessage({ text: 'Hello, World!' }), // input as Message object
-        encryptionKeys: publicKeyObject,
-        signingKeys: privateKeyObject // this will sign the object with privatekey
+        message: await openpgp.createMessage({ text: plainText }),
+        encryptionKeys: publicKey,
+        signingKeys: privateKey
     });
-    // console.log(encrypted); // '-----BEGIN PGP MESSAGE ... END PGP MESSAGE-----'
     return encrypted;
 }
 
-export const decryptMessage = async (encrypted, publicKeyArmored, privateKeyArmored, passphrase) => {
-    const message = await openpgp.readMessage({
-        armoredMessage: encrypted // the messaged that got encrypted in encrypt function above
-    });
-    const { publicKeyObject, privateKeyObject } = await privateAndPubilcKeyObject(publicKeyArmored, privateKeyArmored);
+export const decryptMessage = async (encrypted: any, publicKeyArmored: string, privateKeyArmored: string) => {
+    const message = await openpgp.readMessage({ armoredMessage: encrypted });
+    const { publicKey, privateKey } = await privateAndPubilcKeyObject(publicKeyArmored, privateKeyArmored);
     const { data: decrypted, signatures } = await openpgp.decrypt({
         message,
-        decryptionKeys: privateKeyObject,
-        expectSigned: true,//mandatory to verify signature
-        verificationKeys: publicKeyObject
+        decryptionKeys: privateKey,
+        expectSigned: true,
+        verificationKeys: publicKey
     });
     try {
         await signatures[0].verified;

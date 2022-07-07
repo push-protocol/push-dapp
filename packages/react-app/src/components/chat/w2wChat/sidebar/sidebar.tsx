@@ -5,21 +5,19 @@ import './sidebar.css';
 import { Feeds,Context } from '../w2wIndex';
 import ProfileHeader from '../ProfileSection/ProfileHeader';
 import Profile from '../ProfileSection/Profile';
-import {
-    Button,
-  } from "components/SharedStyling";
-
+import { Button } from "components/SharedStyling";
 
 const Sidebar = () => {
     const [chatselected, setChatselected] = useState(true);
     const {userProfile} = useContext(Context);
-    const [showProfile,setShowProfile] = useState(false);
+    const [showProfile, setShowProfile] = useState(false);
     const  [updateProfileImage,setUserProfileImage] = useState(userProfile);
-    const updateProfile =(image:string)=>{
+
+    const updateProfile = (image: string) => {
         setUserProfileImage(image);
     }
+
     function renderselected(){
-        
         if(chatselected){
             return (
                 <>
