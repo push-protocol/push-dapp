@@ -1,5 +1,5 @@
 import { randomBytes } from '@stablelib/random';
-import { User } from 'components/chat/w2wChat/w2wIndex';
+import { Feeds, User } from 'components/chat/w2wChat/w2wIndex';
 import { toString } from 'uint8arrays/to-string';
 
 export const walletToCAIP10 = (account: string, chainId: number): string => {
@@ -12,14 +12,14 @@ export const walletToCAIP10 = (account: string, chainId: number): string => {
     else throw new Error();
 }
 
-export const getInbox = async (Did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/' + Did);
-    const data: any = await response.json();
+export const getInbox = async (did: string): Promise<Feeds[]> => {
+    const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/' + did);
+    const data: Feeds[] = await response.json();
     return data;
 }
 
-export const getIntents = async (Did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/intents/did/' + Did);
+export const getIntents = async (did: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/intents/did/' + did);
     const data: any = await response.json();
     return data;
 }
@@ -30,14 +30,14 @@ export const getUser = async (did: string, account: string) => {
     return data;
 }
 
-export const getDidLinkWallets = async (Did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/getDidLinkWallets/' + Did);
+export const getDidLinkWallets = async (did: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/getDidLinkWallets/' + did);
     const data = await response.json();
     return data;
 }
 
-export const uploadUserProfileImage = async (Did: string, image: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/updateProfilePicture/' + Did, {
+export const uploadUserProfileImage = async (did: string, image: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/updateProfilePicture/' + did, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -111,8 +111,8 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
 
 }
 
-export const getKeys = async (Did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + Did);
+export const getKeys = async (did: string) => {
+    const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + did);
     const data: any = await response.json();
     return data;
 }

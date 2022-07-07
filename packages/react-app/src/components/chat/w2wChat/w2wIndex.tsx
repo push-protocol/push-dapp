@@ -66,6 +66,7 @@ export interface User {
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
+
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();

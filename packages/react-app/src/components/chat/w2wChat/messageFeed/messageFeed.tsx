@@ -16,7 +16,8 @@ export interface InboxChat {
     name: string,
     profile_picture: string,
     timestamp: number,
-    lastMessage: string
+    lastMessage: string,
+    messageType: string
 }
 
 const MessageFeed = (props: messageFeedProps) => {
@@ -28,11 +29,11 @@ const MessageFeed = (props: messageFeedProps) => {
         const getInbox = await intitializeDb('Read', 2, 'Inbox', did.id, '', 'did');
         if (getInbox !== undefined) {
             setFeeds(getInbox.body);
-            const inbox = await fetchInbox(did);
+            const inbox: Feeds[] = await fetchInbox(did);
             setFeeds(inbox);
         }
         else {
-            const inbox = await fetchInbox(did);
+            const inbox: Feeds[] = await fetchInbox(did);
             setFeeds(inbox);
         }
     }, []);
