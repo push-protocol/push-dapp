@@ -8,16 +8,17 @@ import MessageFeed from '../messageFeed/messageFeed';
 import * as w2wChatHelper from '../../../../helpers/w2wChatHelper';
 import Web3 from 'web3';
 import { Context } from '../w2wIndex';
-import { User } from '../../../../helpers/w2wChatHelper';
+import { User } from '../../../../components/chat/w2wChat/w2wIndex';
 
 const SearchBar = () => {
     const { connector, chainId } = useWeb3React<Web3Provider>();
-    const {userWallets} = useContext(Context);
+    const { userWallets } = useContext(Context);
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
     const [isValid, setIsValid] = useState<boolean>(false);
     const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
+
     const getAllUsers = useCallback(async () => {
         const users = await w2wChatHelper.getAllUsers();
         setAllUsers(users);
@@ -53,17 +54,16 @@ const SearchBar = () => {
             }
             else {
                 var web3 = new Web3(provider);
-                if(web3.utils.isAddress(wordEntered))
-                {
+                if (web3.utils.isAddress(wordEntered)) {
                     const caip10: string = w2wChatHelper.walletToCAIP10(wallet, chainId);
-                    const userCreated = await w2wChatHelper.createUser({wallet:caip10,did:caip10,pgp_pub:"toBeFilled",pgp_priv_enc:"toBeFilled", pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a'});
+                    const userCreated = await w2wChatHelper.createUser({ wallet: caip10, did: caip10, pgp_pub: "toBeFilled", pgp_priv_enc: "toBeFilled", pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
                     console.log(userCreated);
                     setFilteredUserData([userCreated]);
                 }
-                else{
+                else {
                     setFilteredUserData([]);
                 }
-                
+
             }
         }
         else {
@@ -75,11 +75,10 @@ const SearchBar = () => {
 
     const handleSearch = async (event: React.ChangeEvent<HTMLInputElement>) => {
         let searchAddress = event.target.value;
-        if(searchAddress==="")
-        {
+        if (searchAddress === "") {
             clearInput();
         }
-        else{
+        else {
             setWordEntered(searchAddress);
         }
     }
@@ -115,30 +114,30 @@ const SearchBar = () => {
 
     return (
         <>
-        <div className="search" >
-            <form onSubmit={submitSearch}>
-                <div className="searchInputs">
-                    <input
-                        type="text"
-                        placeholder='Search for addresses or ENS Domains'
-                        value={wordEntered}
-                        onChange={handleSearch}
+            <div className="search" >
+                <form onSubmit={submitSearch}>
+                    <div className="searchInputs">
+                        <input
+                            type="text"
+                            placeholder='Search for addresses or ENS Domains'
+                            value={wordEntered}
+                            onChange={handleSearch}
 
-                    />
-                    <div className="searchIcon">
-                        {wordEntered.length === 0 ? (
-                            <SearchIcon />
-                        ) : (
-                            <CloseIcon id="clearBtn" onClick={clearInput} />
-                        )}
+                        />
+                        <div className="searchIcon">
+                            {wordEntered.length === 0 ? (
+                                <SearchIcon />
+                            ) : (
+                                <CloseIcon id="clearBtn" onClick={clearInput} />
+                            )}
+                        </div>
                     </div>
+                </form>
+                <div className='sidebar_message'>
+                    {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} />}
                 </div>
-            </form>
-            <div className='sidebar_message'>
-                {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} />}
             </div>
-        </div>
-    </>
+        </>
     );
 };
 

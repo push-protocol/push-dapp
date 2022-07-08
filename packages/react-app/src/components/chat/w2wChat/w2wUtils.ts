@@ -2,15 +2,10 @@ import * as IPFSHelper from '../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../helpers/w2w/IPFS';
 import { intitializeDb } from './w2wIndexeddb';
-
+import { DID } from 'dids'
 import { getInbox, getIntents } from '../../../helpers/w2wChatHelper';
-export interface InboxChat {
-    name: string,
-    profile_picture: string,
-    timestamp: number,
-    lastMessage: string,
-    messageType: string
-}
+import { InboxChat } from './messageFeed/messageFeed';
+import { Feeds } from './w2wIndex';
 
 export const fetchMessagesFromIpfs = async (inbox) => {
     for (let i in inbox) {
@@ -18,6 +13,8 @@ export const fetchMessagesFromIpfs = async (inbox) => {
             const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
             const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient);
             const msgIPFS: MessageIPFS = current as MessageIPFS
+
+            let lastMessage = msgIPFS.messageContent;
 
             const msg: InboxChat = {
                 name: inbox[i].wallets.split(' ')[0].toString(),
@@ -47,17 +44,17 @@ export const fetchMessagesFromIpfs = async (inbox) => {
     return inbox
 }
 
-export const fetchInbox = async (did) => {
-    let inbox = await getInbox(did.id); //[{},{}]=>"did":[]
+export const fetchInbox = async (did: DID) => {
+    let inbox: Feeds[] = await getInbox(did.id); //[{},{}]=>"did":[]
     inbox = await fetchMessagesFromIpfs(inbox);
-    await intitializeDb('Insert', 2, 'Inbox', did.id, inbox, 'did');
+    await intitializeDb<Array<{}>>('Insert', 2, 'Inbox', did.id, inbox, 'did');
     return inbox;
 }
 
-export const fetchIntent = async (did)=>{
-    let Intents= await getIntents(did.id);
+export const fetchIntent = async (did) => {
+    let Intents = await getIntents(did.id);
     Intents = await fetchMessagesFromIpfs(Intents);
-    await intitializeDb('Insert',2,'Intent',did.id,Intents,'did');
+    await intitializeDb<Array<{}>>('Insert', 2, 'Intent', did.id, Intents, 'did');
     return Intents;
 }
 

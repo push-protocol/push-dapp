@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './sidebar/sidebar';
 import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
@@ -38,17 +38,35 @@ export interface Feeds {
 }
 
 interface AppContextInterface {
-  currentChat: Feeds, viewChatBox: boolean, 
+  currentChat: Feeds,
+  viewChatBox: boolean,
   did: DID,
   renderInboxFeed: Array<{}> | null,
-  userProfile:string,
-  userWallets:string,
-  setChat:(text:Feeds)=>void,
-  renderInbox:(args:Array<{}>)=>void
+  userProfile: string,
+  userWallets: string,
+  setChat: (text: Feeds) => void,
+  renderInbox: (args: Array<{}>) => void,
+  connectedUser: User
+}
 
+export interface User {
+  readonly id?: string,
+  did: string,
+  wallets: string,
+  profile_picture: string | null,
+  pgp_pub: string,
+  pgp_priv_enc: string,
+  pgp_enc_type: string,
+  signature: string,
+  sig_type: string,
+  about: string | null,
+  num_msg: number,
+  allowed_num_msg: number,
+  linked_list_hash?: string | null
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
+
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
@@ -56,9 +74,10 @@ function App() {
   const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const [did, setDid] = useState<DID>();
   const [caip10Account, setCaip10Account] = useState<string>('');
-  const [userProfile,setUserProfile] = useState<string>('');
-  const [userWallets,setUserWallets] = useState<string>('');
-  const [renderInboxFeed,setRenderInboxFeed] = useState<Array<{}> | null>();
+  const [userProfile, setUserProfile] = useState<string>('');
+  const [userWallets, setUserWallets] = useState<string>('');
+  const [connectedUser, setConnectedUser] = useState<User>();
+  const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>();
   const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
   useEffect(() => {
     if (isLoading) {
@@ -76,31 +95,30 @@ function App() {
     setCaip10Account(caip10);
     setDid(did);
     setCeramicInstance(ceramic);
-    const response = await w2wHelper.getUser(did.id, caip10);
-    console.log(response);
-    if (response === null) {
+    const user = await w2wHelper.getUser(did.id, caip10);
+    if (user === null) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
-      const userDetails = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
-      console.log(userDetails);
-      setUserProfile(userDetails.profile_picture);
-      setUserWallets(userDetails.wallets);
+      const createdUser = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
+      setUserProfile(createdUser.profile_picture);
+      setUserWallets(createdUser.wallets);
+      setConnectedUser(createdUser);
     }
-    else{
-      setUserProfile(response.profile_picture);
-      setUserWallets(response.wallets);
+    else {
+      setUserProfile(user.profile_picture);
+      setUserWallets(user.wallets);
+      setConnectedUser(user);
     }
     setIsLoading(false);
   };
-
 
   const setChat = (text: Feeds) => {
     setViewChatBox(true);
     setCurrentChat(text);
   }
 
-  const renderInbox = (args:Array<{}>)=>{
-    setRenderInboxFeed(args); 
+  const renderInbox = (args: Array<{}>) => {
+    setRenderInboxFeed(args);
   }
 
   return (
@@ -108,7 +126,7 @@ function App() {
       <div className="w2wIndex">
         {!isLoading ?
           (
-            <Context.Provider value={{ currentChat, viewChatBox, did,renderInboxFeed,userProfile,userWallets,setChat,renderInbox }}>
+            <Context.Provider value={{ currentChat, viewChatBox, did, renderInboxFeed, userProfile, userWallets, setChat, renderInbox, connectedUser }}>
               <Sidebar />
               <ChatBox />
             </Context.Provider>
@@ -121,7 +139,6 @@ function App() {
                 type="Oval" />
               <p>Fetching Did</p>
             </div>
-
           )
         }
       </div>

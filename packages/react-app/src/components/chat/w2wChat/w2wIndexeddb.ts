@@ -1,5 +1,5 @@
 let db:IDBDatabase;
-export const intitializeDb =async (state:string,version:number,dbName:string,key:string,message:string,index:string)=>{
+export const intitializeDb =async<T> (state:string,version:number,dbName:string,key:string,message:T,index:string)=>{
     return await  new Promise((resolve,reject)=>{
         const openRequest = window.indexedDB.open('w2w_idxDb',version);
         openRequest.onupgradeneeded=(e:any)=>{
@@ -17,7 +17,7 @@ export const intitializeDb =async (state:string,version:number,dbName:string,key
             if(state==='Insert')
             {
                 
-                return resolve(addData(db, key,dbName, message));
+                return resolve(addData<T>(db, key,dbName, message));
             }
             else if(state==='Read')
             {
@@ -30,7 +30,7 @@ export const intitializeDb =async (state:string,version:number,dbName:string,key
         }
     })   
 }
-export const addData =async (db:IDBDatabase,key:string,dbName:string,chatMesage:string)=>{
+export const addData =async <T>(db:IDBDatabase,key:string,dbName:string,chatMesage:T)=>{
     return await new Promise((resolve,reject)=>{
         const newItem = {
             body:chatMesage
