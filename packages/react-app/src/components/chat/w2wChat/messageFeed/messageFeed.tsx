@@ -31,7 +31,7 @@ const MessageFeed = (props: messageFeedProps) => {
     
     const fetchMyApi = useCallback(async () => {
         console.log(did.id);
-        const getInbox = await intitializeDb('Read',2,'Inbox',did.id,'','did');
+        const getInbox:any = await intitializeDb('Read',2,'Inbox',did.id,'','did');
         console.log(getInbox)
         if(getInbox!==undefined)
         {

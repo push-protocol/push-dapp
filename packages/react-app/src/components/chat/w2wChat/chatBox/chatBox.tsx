@@ -58,7 +58,7 @@ const ChatBox = () => {
         }
         setMessages([]);
         while (messageCID) {
-            const getMessage = await intitializeDb('Read', 2, 'CID_store', messageCID, '', 'cid');
+            const getMessage:any = await intitializeDb('Read', 2, 'CID_store', messageCID, '', 'cid');
 
             let msgIPFS: MessageIPFS;
             if (getMessage !== undefined) {
