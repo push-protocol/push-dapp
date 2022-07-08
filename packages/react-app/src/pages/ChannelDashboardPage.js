@@ -68,77 +68,6 @@ function ChannelDashboardPage() {
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
 
-  /**
-   * Event listener for new notifications
-   */
-  const listenFornewNotifications = () => {
-    const event = "SendNotification";
-    //callback function for listener
-    const cb = async (eventChannelAddress, eventUserAddress, identityHex) => {
-      const userAddress = account;
-      const identity = hex2ascii(identityHex);
-      const notificationId = identity
-        .concat("+")
-        .concat(eventChannelAddress)
-        .concat("+")
-        .concat(eventUserAddress)
-        .toLocaleLowerCase();
-      const ipfsId = identity.split("+")[1];
-      const channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-        eventChannelAddress
-      );
-
-      // Form Gateway URL
-      const url = "https://ipfs.io/ipfs/" + ipfsId;
-      fetch(url)
-        .then((result) => result.json())
-        .then(async (result) => {
-          const ipfsNotification = { ...result };
-          const notificationTitle =
-            ipfsNotification.notification.title !== ""
-              ? ipfsNotification.notification.title
-              : channelJson.name;
-          const toastMessage = {
-            notificationTitle,
-            notificationBody: ipfsNotification.notification.body,
-          };
-          const notificationObject = {
-            title: notificationTitle,
-            message: ipfsNotification.data.amsg,
-            cta: ipfsNotification.data.acta,
-            app: channelJson.name,
-            icon: channelJson.icon,
-            image: ipfsNotification.data.aimg,
-          };
-
-          if (ipfsNotification.data.type === "1") {
-            const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
-              eventChannelAddress
-            );
-            const isSubscribed = channelSubscribers.find((sub) => {
-              return sub.toLowerCase() === account.toLowerCase();
-            });
-            if (isSubscribed) {
-              console.log("message recieved", notificationObject);
-              showToast(toastMessage);
-              dispatch(addNewNotification(notificationObject));
-            }
-          } else if (userAddress === eventUserAddress) {
-            showToast(toastMessage);
-            dispatch(addNewNotification(notificationObject));
-          }
-        })
-        .catch((err) => {
-          console.log(
-            "!!!Error, getting new notification data from ipfs --> %o",
-            err
-          );
-        });
-    };
-    epnsCommReadProvider.on(event, cb);
-    return () => epnsCommReadProvider.off.bind(epnsCommReadProvider, event, cb); //when we unmount we remove the listener
-  };
-
   //clear toast variable after it is shown
   React.useEffect(() => {
     if (toast) {
@@ -264,7 +193,6 @@ function ChannelDashboardPage() {
       
       await checkUserForAlias();
       await checkUserForChannelOwnership();
-      listenFornewNotifications();
       fetchDelegators();
     }
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
