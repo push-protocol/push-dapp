@@ -1,7 +1,7 @@
 import React from "react";
 import ReactGA from "react-ga";
 import { ethers } from "ethers";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import hex2ascii from "hex2ascii";
 import { addresses, abis ,envConfig } from "@project/contracts";
@@ -49,7 +49,6 @@ function InboxPage() {
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
   const [controlAt, setControlAt] = React.useState(0);
-  const [modalOpen, setModalOpen] = React.useState(false);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
   const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
@@ -58,16 +57,7 @@ function InboxPage() {
 
   // toast related section
   const [toast, showToast] = React.useState(null);
-  const clearToast = () => showToast(null);
-  const showNetworkToast = () => {
-    showToast({
-      notificationTitle: (
-        <span style={{ color: "#e20880" }}> Invalid Network </span>
-      ),
-      notificationBody:
-        "Please connect to the Ethereum network to access channels",
-    });
-  };
+
   /**
    * Event listener for new notifications
    */
@@ -138,14 +128,6 @@ function InboxPage() {
     epnsCommReadProvider.on(event, cb);
     return () => epnsCommReadProvider.off.bind(epnsCommReadProvider, event, cb); //when we unmount we remove the listener
   };
-
-  //clear toast variable after it is shown
-  React.useEffect(() => {
-    if (toast) {
-      clearToast();
-    }
-  }, [toast]);
-  // toast related section
 
   /**
    * Logic to get channel alias and alias verification status as well as create instances of core and comunicator contract
@@ -346,20 +328,7 @@ function InboxPage() {
   return (
     <Container>
       <Interface>
-        {controlAt == 0 && <Spambox />}
-        {controlAt == 1 && <ViewChannels />}
-        {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
-        {controlAt == 3 && <Info />}
-        {toast && (
-          <NotificationToast notification={toast} clearToast={clearToast} />
-        )}
-        {modalOpen && (
-          <AliasVerificationodal
-            onClose={() => setModalOpen(false)}
-            onSuccess={() => setAliasVerified(true)}
-            verificationStatus={aliasVerified}
-          />
-        )}
+        <Spambox />
       </Interface>
     </Container>
   );

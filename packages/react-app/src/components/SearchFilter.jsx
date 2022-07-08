@@ -36,13 +36,12 @@ export default function SearchFilter(props) {
         props.reset();
     }
 
-
     return (
         <ThemeProvider theme={themes}>
             <Container>
                 <TopBar mbtm={showFilter ? '1rem' : '0px'}>
                     <Left>
-                        {themes.scheme === 'light' ? (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterIcon.svg' />) : (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterw.png' />)}
+                        {themes.scheme === 'light' ? (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterIcon.svg' alt="Filter Icon" />) : (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterw.png' alt="Filter Icon" />)}
                         {!props.loadFilter ?
                             <span className="showfilter" onClick={() => { showFilter ? setShowFilter(false) : setShowFilter(true) }}>
                                 <span className="filter" style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</span>

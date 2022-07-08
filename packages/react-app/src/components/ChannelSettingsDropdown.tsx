@@ -6,7 +6,7 @@ import { toast as toaster } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
 
-import { ALLOWED_CORE_NETWORK } from "pages/DeprecatedHome";
+import { envConfig } from "@project/contracts";
 import AddDelegateModal from "./AddDelegateModal";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import ActivateChannelModal from "./ActivateChannelModal";
@@ -21,6 +21,7 @@ import Loader from "react-loader-spinner";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
+const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
 // Create Header
 function ChannelSettings() {

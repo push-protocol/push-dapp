@@ -817,7 +817,6 @@ function GovernancePage() {
 }
 
 // css styles
-
 const RadioGroup = styled.div`
   display:flex;
   justify-content:space-around;
@@ -831,30 +830,11 @@ const RadioGroup = styled.div`
     width:100px;
   }
 `;
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  font-weight: 200;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-
-  max-height: 80vh;
-`
 
 const ContainerInfo = styled.div`
   padding: 20px;
 `
 
-const Items = styled.div`
-  display: block;
-  align-self: stretch;
-  padding: 10px 20px;
-  overflow-y: scroll;
-  background: #fafafa;
-`
 const Question = styled(Button)`
   align-items: stretch;
   align-self: stretch;
@@ -917,55 +897,6 @@ const AMod = styled(A)`
   font-weight: 500;
 `
 
-const EpicButton = styled(A)`
-  padding: 15px 15px;
-  margin-left: 25px;
-  color: #fff;
-  font-weight: 600;
-  border-radius: 8px;
-  background: linear-gradient(273deg, #674c9f 0%, rgba(226,8,128,1) 100%);
-  `
-const ChannelActionButton = styled.button`
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 15px;
-  margin: 10px;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 14px;
-  font-weight: 800;
-  // font-weight: 400;
-  position: relative;
-  &:hover {
-    opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
-    cursor: pointer;
-    pointer: hand;
-  }
-  ${props => props.disabled && css`
-    &:hover {
-      opacity: 1;
-      cursor: default;
-      pointer: default;
-    }
-    &:active {
-      opacity: 1;
-      cursor: default;
-      pointer: default;
-    }
-  `}
-`
-const GradientButton = styled(ChannelActionButton)`
-  // background: #674c9f;
-  background: linear-gradient(273deg, #674c9f 0%, rgba(226,8,128,1) 100%);
-  `
 const ActionTitle = styled.span`
   ${props => props.hideit && css`
     visibility: hidden;
@@ -994,14 +925,6 @@ const StatsCard = styled(Item)`
   &:hover {
     opacity: ${props => props.op ? "0.9" : props.op}
   }
-`;
-
-const CenterHeading = styled.h2`
-  text-align: center;
-`;
-
-const PoolContainer = styled.div`
-  display: flex;
 `;
 
 const StatsHeading = styled(Item)`
@@ -1069,14 +992,6 @@ const StatsInnerTitle = styled.span`
   letter-spacing: 0.1em;
   align-items: left;
   margin-top: 10px;
-`;
-
-
-const StatsInnerSub = styled.span`
-  font-size: 12px;
-  color: #999;
-  font-weight: 600;
-  align-self: flex-end;
 `;
 
 const ButtonAlt = styled(Button)`

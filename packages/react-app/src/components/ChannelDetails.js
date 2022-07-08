@@ -184,13 +184,6 @@ const Subscribers = styled.div`
   align-items: center;
 `;
 
-const ActiveIcon = styled.span`
-  width: 8px;
-  height: 8px;
-  background: #57c255;
-  border-radius: 50%;
-`;
-
 const ChanneStateText = styled.span`
   color: #57c255;
   font-family: Source Sans Pro;
@@ -238,10 +231,6 @@ const SubscribersCount = styled.span`
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-`;
-const SectionLine = styled.div`
-  margin-left: 30px;
-  margin-right: 30px;
 `;
 
 const Date = styled.div`

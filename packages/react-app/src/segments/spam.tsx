@@ -94,25 +94,6 @@ function SpamBox({ currentTab }) {
 
 
     setFilteredNotifications([]);
-    // if(notifications.length >= NOTIFICATIONS_PER_PAGE){
-    //     try {
-    //         const {count , results} = await postReq("/feeds/search", {
-    //             subscriber : account,
-    //             searchTerm: query,
-    //             filter: Filter,
-    //             isSpam: 1,
-    //             page: 1,
-    //             pageSize: 5,
-    //             op: "read"
-    //         });
-    //         const parsedResponse = utils.parseApiResponse(results);
-    //         setFilteredNotifications([parsedResponse]);
-    //     }
-    //     catch (err) {
-    //         console.log(err);
-    //     }
-    // }
-    // else{
 
     let filterNotif = [];
     for (const notif of allNotif) {
@@ -275,13 +256,8 @@ function SpamBox({ currentTab }) {
   };
 
   React.useEffect(() => {
-    // if (account && currentTab === "spambox") {
     fetchLatestNotifications();
     fetchAllNotif();
-    // }
-    // else{
-    //   console.log(account);
-    // }
   }, []);
 
   React.useEffect(() => {
@@ -340,7 +316,6 @@ function SpamBox({ currentTab }) {
 
   const onSubscribeToChannel = async (channelAddress, blockchain) => {
     if (!channelAddress) return;
-    let txToast;
     let address = channelAddress;
 
     const nameToObj = (envConfig.coreContractChain === 1) ? nameToIdProd : nameToIdDev;

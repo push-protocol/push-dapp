@@ -32,15 +32,11 @@ const Container = styled.div`
   max-height: 80vh;
 `
 
-const ContainerInfo = styled.div`
-  padding: 20px;
-`
 const InfoBox = styled.div`
   display: block;
   align-self: stretch;
   background: ${props => props.theme.mainBg};
 `
-
 
 // Export Default
 export default Info;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { useTheme } from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
@@ -77,27 +77,8 @@ function Feedbox() {
     };
     if (channels.length == 0) delete Filter.channels;
 
-
     setFilteredNotifications([]);
-    // if(notifications.length >= NOTIFICATIONS_PER_PAGE){
-    //     try {
-    //         const {count , results} = await postReq("/feeds/search", {
-    //             subscriber : account,
-    //             searchTerm: query,
-    //             filter: Filter,
-    //             isSpam: 0,
-    //             page: 1,
-    //             pageSize: 5,
-    //             op: "read"
-    //         });
-    //         const parsedResponse = utils.parseApiResponse(results);
-    //         setFilteredNotifications([parsedResponse]);
-    //     }
-    //     catch (err) {
-    //         console.log(err);
-    //     }
-    // }
-    // else{
+
     try {
       let filterNotif = [];
       for (const notif of allNotf) {
@@ -113,9 +94,6 @@ function Feedbox() {
             && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
         )
           filterNotif.push(notif);
-
-
-
       }
       await setFilteredNotifications(filterNotif);
     } catch (err) {
@@ -124,10 +102,8 @@ function Feedbox() {
       setLoading(false);
       setBgUpdateLoading(false);
     }
-
-    // }
-
   }
+
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
     setLoading(true);
@@ -150,88 +126,83 @@ function Feedbox() {
       setLoading(false);
     }
   };
-    const fetchLatestNotifications = async () => {
-        if (loading || bgUpdateLoading) return;
-        setBgUpdateLoading(true);
-        setLoading(true);
-        try {
-            const { count, results } = await EpnsAPI.fetchNotifications({
-                user: account,
-                pageSize: NOTIFICATIONS_PER_PAGE,
-                page: 1,
-                chainId,
-                dev: true,
-            });
-            if (!notifications.length) {
-                dispatch(incrementPage());
-            }
-            const parsedResponse = EpnsAPI.parseApiResponse(results);
-            const map1 = new Map();
-            const map2 = new Map();
-            results.forEach( each => {
-                map1.set(each.payload.data.sid , each.epoch);
-                map2.set(each.payload.data.sid , each.channel);
-            })
-            parsedResponse.forEach( each => {
-                each['date'] = map1.get(each.sid);
-                each['epoch'] = (new Date(each['date']).getTime() / 1000);
-                each['channel'] = map2.get(each.sid);
-            })
-            dispatch(
-                updateTopNotifications({
-                    notifs: parsedResponse,
-                    pageSize: NOTIFICATIONS_PER_PAGE,
-                })
-            );
-            if (count === 0) {
-                dispatch(setFinishedFetching());
-            }
-        } catch (err) {
-            console.log(err);
-        } finally {
-            setBgUpdateLoading(false);
-            setLoading(false);
-        }
-    };
-
-    const fetchAllNotif = async () => {
-      setLoadFilter(true);
-      try {
-          const { count, results } = await EpnsAPI.fetchNotifications({
-              user: account,
-              pageSize: 100000,
-              page: 1,
-              chainId,
-              dev: true,
-          });
-          if (!notifications.length) {
-              dispatch(incrementPage());
-          }
-          const parsedResponse = EpnsAPI.parseApiResponse(results);
-          const map1 = new Map();
-          const map2 = new Map();
-          results.forEach( each => {
-              map1.set(each.payload.data.sid , each.epoch);
-              map2.set(each.payload.data.sid , each.channel);
-          })
-          parsedResponse.forEach( each => {
-              each['date'] = map1.get(each.sid);
-              each['epoch'] = (new Date(each['date']).getTime() / 1000);
-              each['channel'] = map2.get(each.sid);
-          })
-          setNotif(parsedResponse);
-      } catch (err) {
-          console.log(err);
-      } finally {
-        setLoadFilter(false);
+    
+  const fetchLatestNotifications = async () => {
+    if (loading || bgUpdateLoading) return;
+    setBgUpdateLoading(true);
+    setLoading(true);
+    try {
+      const { count, results } = await EpnsAPI.fetchNotifications({
+          user: account,
+          pageSize: NOTIFICATIONS_PER_PAGE,
+          page: 1,
+          chainId,
+          dev: true,
+      });
+      if (!notifications.length) {
+          dispatch(incrementPage());
       }
+      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      const map1 = new Map();
+      const map2 = new Map();
+      results.forEach( each => {
+          map1.set(each.payload.data.sid , each.epoch);
+          map2.set(each.payload.data.sid , each.channel);
+      })
+      parsedResponse.forEach( each => {
+          each['date'] = map1.get(each.sid);
+          each['epoch'] = (new Date(each['date']).getTime() / 1000);
+          each['channel'] = map2.get(each.sid);
+      })
+      dispatch(
+          updateTopNotifications({
+              notifs: parsedResponse,
+              pageSize: NOTIFICATIONS_PER_PAGE,
+          })
+      );
+      if (count === 0) {
+          dispatch(setFinishedFetching());
+      }
+    } catch (err) {
+        console.log(err);
+    } finally {
+        setBgUpdateLoading(false);
+        setLoading(false);
+    }
   };
 
-  // React.useEffect(() => {
-  //     if (account && currentTab === "inbox") {
-  //         fetchLatestNotifications();
-  //     }
-  // }, [account, currentTab]);
+  const fetchAllNotif = async () => {
+    setLoadFilter(true);
+    try {
+      const { count, results } = await EpnsAPI.fetchNotifications({
+          user: account,
+          pageSize: 100000,
+          page: 1,
+          chainId,
+          dev: true,
+      });
+      if (!notifications.length) {
+          dispatch(incrementPage());
+      }
+      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      const map1 = new Map();
+      const map2 = new Map();
+      results.forEach( each => {
+          map1.set(each.payload.data.sid , each.epoch);
+          map2.set(each.payload.data.sid , each.channel);
+      })
+      parsedResponse.forEach( each => {
+          each['date'] = map1.get(each.sid);
+          each['epoch'] = (new Date(each['date']).getTime() / 1000);
+          each['channel'] = map2.get(each.sid);
+      })
+      setNotif(parsedResponse);
+    } catch (err) {
+        console.log(err);
+    } finally {
+      setLoadFilter(false);
+    }
+  };
 
   React.useEffect(() => {
     fetchLatestNotifications();
@@ -392,7 +363,7 @@ function Feedbox() {
               blockchain,
               url
             } = oneNotification;
-            if(run) return;
+            if(run) return <></>;
             // render the notification item
             return (
               <div key={index}>

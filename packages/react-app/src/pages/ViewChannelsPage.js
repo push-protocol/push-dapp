@@ -50,7 +50,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
-  const [controlAt, setControlAt] = React.useState(0);
+  const [controlAt, setControlAt] = React.useState(1);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [aliasEthAccount, setAliasEthAccount] = React.useState(null);

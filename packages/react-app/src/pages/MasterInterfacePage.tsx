@@ -35,17 +35,11 @@ function MasterInterfacePage() {
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
 
-  const runYoutube = (flag) => {
-    setPlayTeaserVideo(flag);
-    console.log("here");
-  }
-
   // Render
   return (
     <Container>
       <Interface>
         <Routes>
-          <Route path="inbox" element={<InboxPage />} />
           <Route path="channels" element={
             <ViewChannelsPage
               loadTeaser={setLoadTeaserVideo}
@@ -53,6 +47,7 @@ function MasterInterfacePage() {
             />
           }
           />
+          <Route path="inbox" element={<InboxPage />} />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
