@@ -12,12 +12,11 @@ import { User } from '../../../../components/chat/w2wChat/w2wIndex';
 import * as PushNodeClient from '../../../../api/w2w';
 
 const SearchBar = () => {
-    const { connector, chainId } = useWeb3React<Web3Provider>();
-    const { userWallets } = useContext(Context);
+    const { chainId } = useWeb3React<Web3Provider>();
     const [wordEntered, setWordEntered] = useState<string>('');
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [filteredUserData, setFilteredUserData] = useState<any>([]);
-    const [isValid, setIsValid] = useState<boolean>(false);
+    const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
     const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a');
 
     const getAllUsers = useCallback(async () => {
@@ -33,6 +32,7 @@ const SearchBar = () => {
     const searchUser = async (searchedUser: string) => {
         searchedUser = w2wChatHelper.caip10ToWallet(searchedUser);
         let filteredData = [];
+        setHasUserBeenSearched(true);
         if (searchedUser.length) {
             loopSearchForUser:
             for (let userIndex in allUsers) {
@@ -46,7 +46,6 @@ const SearchBar = () => {
                     }
                 }
             }
-            setIsValid(true);
 
             if (filteredData.length) {
                 setFilteredUserData(filteredData);
@@ -65,7 +64,6 @@ const SearchBar = () => {
             }
         }
         else {
-            setIsValid(true);
             setFilteredUserData([]);
         }
     }
@@ -103,7 +101,7 @@ const SearchBar = () => {
     const clearInput = () => {
         setFilteredUserData([]);
         setWordEntered("");
-        setIsValid(false);
+        setHasUserBeenSearched(false);
     };
 
     return (
@@ -128,7 +126,7 @@ const SearchBar = () => {
                     </div>
                 </form>
                 <div className='sidebar_message'>
-                    {<MessageFeed isValid={isValid} filteredUserData={filteredUserData} />}
+                    {<MessageFeed hasUserBeenSearched={hasUserBeenSearched} filteredUserData={filteredUserData} />}
                 </div>
             </div>
         </>

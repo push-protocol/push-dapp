@@ -9,7 +9,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 
 interface messageFeedProps {
     filteredUserData: {}[],
-    isValid: boolean
+    hasUserBeenSearched: boolean
 }
 
 export interface InboxChat {
@@ -43,7 +43,7 @@ const MessageFeed = (props: messageFeedProps) => {
     }, [renderInboxFeed]);
 
     useEffect(() => {
-        if (!props.isValid) {
+        if (!props.hasUserBeenSearched) {
             getInbox();
         }
         else {
@@ -63,7 +63,7 @@ const MessageFeed = (props: messageFeedProps) => {
         }
 
         setMessagesLoading(false);
-    }, [props.isValid, props.filteredUserData]);
+    }, [props.hasUserBeenSearched, props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
         setChat(feed);
