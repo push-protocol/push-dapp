@@ -19,6 +19,7 @@
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@epnsproject/frontend-sdk-staging": "^1.8.5",
+    "@epnsproject/sdk-ledgerlive": "^0.1.2",
     "@epnsproject/sdk-restapi": "^0.1.1",
     "@epnsproject/sdk-uiweb": "^0.1.7",
     "@ethersproject/providers": "^5.0.0-beta.151",
