@@ -82,7 +82,7 @@ const IntentFeed = (props: intentFeedProps) => {
     async function resolve_threadhash() {
         let getIntent;
         console.log(props.filteredUserData);
-        getIntent = await intitializeDb('Read', 2, 'Intent', did.id, '', 'did');
+        getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did');
 
         if (getIntent === undefined) {
             console.log('primeiro if')

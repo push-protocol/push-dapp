@@ -58,7 +58,7 @@ const ChatBox = () => {
         }
         setMessages([]);
         while (messageCID) {
-            const getMessage = await intitializeDb('Read', 2, 'CID_store', messageCID, '', 'cid');
+            const getMessage:any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid');
 
             let msgIPFS: MessageIPFS;
             if (getMessage !== undefined) {
@@ -67,7 +67,7 @@ const ChatBox = () => {
             else {
                 const current = await IPFSHelper.get(messageCID, ipfs);//{}
                 console.log(current);
-                await intitializeDb('Insert', 2, 'CID_store', messageCID, current, 'cid');
+                await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid');
                 msgIPFS = current as MessageIPFS
             }
             setMessages(m => [msgIPFS, ...m])
@@ -135,7 +135,7 @@ const ChatBox = () => {
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await getLatestThreadhash(currentChat.did, did.id);
-            await intitializeDb('Insert', 2, 'CID_store', threadhash, msg, 'cid');
+            await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', threadhash, msg, 'cid');
             const inbox = await fetchInbox(did);
             renderInbox(inbox);
         }

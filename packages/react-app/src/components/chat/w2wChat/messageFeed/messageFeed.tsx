@@ -26,7 +26,7 @@ const MessageFeed = (props: messageFeedProps) => {
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
 
     const getInbox = useCallback(async () => {
-        const getInbox = await intitializeDb('Read', 2, 'Inbox', did.id, '', 'did');
+        const getInbox:any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did');
         if (getInbox !== undefined) {
             setFeeds(getInbox.body);
             const inbox: Feeds[] = await fetchInbox(did);
