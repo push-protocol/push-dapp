@@ -9,6 +9,7 @@ import ShowDelegates from "./ShowDelegates";
 import { Item, Section, Content, Button, H2, Span, H3 } from "./SharedStyling";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
+import AliasVerificationModal from "./AliasVerificationModal";
 const DATE_FORMAT = "DD/MM/YYYY";
 
 const networkName = {
@@ -25,8 +26,8 @@ export default function ChannelDetails() {
     (state) => state.channels
   );
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
-  const [creationDate, setCreationDate] = React.useState("");
-  const [aliasVerified, setAliasVerified] = React.useState(null);
+  const [creationDate, setCreationDate] = React.useState(""); const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
+  const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
@@ -57,32 +58,40 @@ export default function ChannelDetails() {
   }, [channelDetails]);
 
   React.useEffect(() => {
-    if (!onCoreNetwork) return;
-
-    (async function() {
-      await postReq("/channels/get_alias_details", {
-        channel : account,
-        op: "read",
-      }).then(async ({ data }) => {
-        const aliasAccount = data;
-        console.log(aliasAccount);
-        if (aliasAccount.aliasAddress) {
-          const { aliasAddress } = aliasAccount;
-            await postReq("/channels/get_alias_verification_status", {
-              aliasAddress: aliasAddress,
-              op: "read",
-            }).then(({ data }) => {
-              if (!data) {
-                return;
-              }
-              const { status } = data;
-              setAliasVerified(status || false);
-              return data;
-            });
+    (async function init() {
+      // if we are not on the core network then check for if this account is an alias for another channel
+      if (!onCoreNetwork) {
+        // get the eth address of the alias address, in order to properly render information about the channel
+        const aliasEth = await postReq("/channels/get_eth_address", {
+          aliasAddress: account,
+          op: "read",
+        }).then(({ data }) => {
+          const ethAccount = data;
+          if (ethAccount) {
+            setAliasEthAccount(ethAccount.ethAddress);
+          }
+          return data;
+        });
+        if (aliasEth) {
+          // if an alias exists, check if its verified.
+          await postReq("/channels/get_alias_verification_status", {
+            aliasAddress: account,
+            op: "read",
+          }).then(({ data }) => {
+            console.log(data);
+            // if it returns undefined then we need to let them know to verify their channel
+            if (!data) {
+              setAliasVerified(null);
+              return;
+            }
+            const { status } = data;
+            setAliasVerified(status);
+            return data;
+          });
         }
-      });
+      }
     })();
-  }, [account , chainId]);
+    }, [account, chainId]);
 
   return (
     <ChannelDetailsWrapper>
@@ -143,7 +152,17 @@ export default function ChannelDetails() {
           </Section>
         </ThemeProvider>
         </>
+
       }
+
+      {modalOpen &&
+            <AliasVerificationModal
+              onClose={(val) => setModalOpen(val)}
+              onSuccess={() => setAliasVerified(true)}
+              verificationStatus={aliasVerified}
+              aliasEthAccount={aliasEthAccount}
+            />
+          }
 
       <SectionDate>
         {canVerify && (

@@ -41,7 +41,6 @@ const ChannelOwnerDashboard = () => {
           aliasAddress: account,
           op: "read",
         }).then(({ data }) => {
-          console.log({ data });
           const ethAccount = data;
           if (ethAccount) {
             setAliasEthAccount(ethAccount.ethAddress);
