@@ -125,8 +125,12 @@ const ChatBox = () => {
 
     const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
         try {
-            const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
-            const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
+            console.log('connectedUser', connectedUser);
+            console.log('currentChat', currentChat);
+            console.log('Public Key from Current Chat: ', currentChat.public_key);
+            // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
+            // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
+            const cipherText = message;
             const msg = await postMessage(account, fromDid, toDid, cipherText, messageType, signature);
             setMessages([...messages, msg]);
             setNewMessage("");
