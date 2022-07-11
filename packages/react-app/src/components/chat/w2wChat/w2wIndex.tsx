@@ -7,7 +7,8 @@ import Loader from 'react-loader-spinner';
 import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
 import { generateKeyPair } from '../../../helpers/w2w/PGP';
 import * as DIDHelper from '../../../helpers/w2w/Did';
-import * as w2wHelper from '../../../helpers/w2wChatHelper';
+import * as w2wHelper from '../../../helpers/w2w';
+import * as PushNodeClient from '../../../api/w2w';
 
 // DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
@@ -95,11 +96,11 @@ function App() {
     setCaip10Account(caip10);
     setDid(did);
     setCeramicInstance(ceramic);
-    const user = await w2wHelper.getUser(did.id, caip10);
-    if (user === null) {
+    const user = await PushNodeClient.getUser(did.id, caip10);
+    if (!user) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
-      const createdUser = await w2wHelper.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
+      const createdUser = await PushNodeClient.createUser({ wallet: caip10, did: did.id, pgp_pub: keyPairs.publicKey, pgp_priv_enc: JSON.stringify(encryptedPrivateKey), pgp_enc_type: 'pgp', signature: 'xyz', sig_type: 'a' });
       setUserProfile(createdUser.profile_picture);
       setUserWallets(createdUser.wallets);
       setConnectedUser(createdUser);

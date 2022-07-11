@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import './messageFeed.css';
 import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
-import { getLatestThreadhash } from '../../../../helpers/w2wChatHelper';
+import { getLatestThreadhash } from '../../../../api/w2w';
 import { Context, Feeds } from '../w2wIndex';
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb';
@@ -26,7 +26,7 @@ const MessageFeed = (props: messageFeedProps) => {
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
 
     const getInbox = useCallback(async () => {
-        const getInbox:any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did');
+        const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did');
         if (getInbox !== undefined) {
             setFeeds(getInbox.body);
             const inbox: Feeds[] = await fetchInbox(did);

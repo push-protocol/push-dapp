@@ -1,13 +1,13 @@
-import React,{useEffect, useState,useCallback,useContext} from 'react';
+import React, { useEffect, useState, useCallback, useContext } from 'react';
 import './intentBar.css';
 import IntentFeed from '../intentFeed/intentFeed';
-import { getIntents } from '../../../../helpers/w2wChatHelper';
-import {Context} from '../w2wIndex';
+import { getIntents } from '../../../../api/w2w';
+import { Context } from '../w2wIndex';
 
 const IntentBar = () => {
     const { did } = useContext(Context);
     const [allIntents, setAllIntents] = useState([]);
-    const getAllIntents = useCallback(async() => {
+    const getAllIntents = useCallback(async () => {
         const responseData = await getIntents(did.id);
         setAllIntents(responseData);
     }, []);
