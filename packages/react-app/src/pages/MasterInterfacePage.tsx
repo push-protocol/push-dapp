@@ -120,7 +120,7 @@ const Container = styled.div`
   flex: 1;
   flex-direction: column;
   min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: 5px 20px 20px 20px;
+  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
   align-items: stretch;
 
 `;
