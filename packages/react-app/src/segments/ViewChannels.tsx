@@ -68,7 +68,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
     const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
       channelsVisited,
-      CHANNELS_PER_PAGE
+      CHANNELS_PER_PAGE,
+      account,
+      chainId
     );
     dispatch(incrementPage())
     if (!channels.length) {
@@ -92,7 +94,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
     const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
       startingPoint,
-      CHANNELS_PER_PAGE
+      CHANNELS_PER_PAGE,
+      account,
+      chainId
     );
     dispatch(setChannelMeta([...channels, ...moreChannels]));
     setMoreLoading(false);

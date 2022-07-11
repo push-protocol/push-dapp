@@ -322,17 +322,17 @@ export default class ChannelsDataStore {
    * @param {Number} pageCount the number of items per page we want
    * @returns
    */
-  getChannelFromApi = async (startIndex, pageCount) => {
+  getChannelFromApi = async (startIndex, pageCount, account, chainId) => {
     return postReq("/channels/search", {
       page: Math.ceil(startIndex / pageCount) || 1,
       pageSize: pageCount,
-      address: this.state.account,
-      chainId: this.state.chainId,
+      address: account,
+      chainId: chainId,
       query: " ",
       op: "read",
     }).then((response) => {
       let output;
-      if (envConfig.coreContractChain === this.state.chainId)
+      if (envConfig.coreContractChain === chainId)
         output = response.data.channels.map(({ channel }) => ({ addr: channel, alias_address: null }));
       else
         output = response.data.channels.map(({ alias_address, channel }) => ({ addr: channel, alias_address: alias_address }));
@@ -344,7 +344,7 @@ export default class ChannelsDataStore {
   // get channels meta in a paginated format
   // by passing in the starting index and the number of items per page
   getChannelsMetaAsync = async (startIndex, pageCount) => {
-    this.getChannelFromApi(startIndex, pageCount)
+    this.getChannelFromApi(startIndex, pageCount, this.state.account, this.state.chainId)
     return new Promise(async (resolve, reject) => {
       // get total number of channels
       const channelsCount = await this.getChannelsCountAsync();
