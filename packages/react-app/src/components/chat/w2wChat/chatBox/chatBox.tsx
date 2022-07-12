@@ -186,8 +186,8 @@ const ChatBox = () => {
     }
     const uploadFile = async (file: File) => {
         try {
-            const TWENTY_MB = 1024 * 1024 * 20;
-            if (file.size > TWENTY_MB) {
+            const TWO_MB = 1024 * 1024 * 2;
+            if (file.size > TWO_MB) {
                 return;
             }
             setFileUploading(true);
@@ -236,7 +236,6 @@ const ChatBox = () => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpenSuccessSnackBar(false);
     };
     const placeholderTextArea = () => {

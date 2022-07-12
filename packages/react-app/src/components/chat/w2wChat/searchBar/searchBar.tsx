@@ -36,7 +36,7 @@ const SearchBar = () => {
                 const wallets = allUsers[i].wallets.split(' ');
                 let found = false;
                 for (let j in wallets) {
-                    if (wallets[j] === wordEntered) {
+                    if (wallets[j].split(':').at(-1).toString() === wallet) {
                         found = true;
                         break;
                     }
