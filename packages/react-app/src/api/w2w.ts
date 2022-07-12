@@ -127,6 +127,7 @@ export const getAllUsers = async (): Promise<User[]> => {
         }
     });
     const data = await response.json();
+    console.log('All Users: ', data);
     return data;
 }
 
