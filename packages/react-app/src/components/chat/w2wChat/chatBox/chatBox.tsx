@@ -89,7 +89,6 @@ const ChatBox = () => {
             let hasintent = false;
             if (currentChat) {
                 try {
-                    const cid = CID.parse(currentChat.profile_picture);
                     setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
                 }
                 catch (err) {

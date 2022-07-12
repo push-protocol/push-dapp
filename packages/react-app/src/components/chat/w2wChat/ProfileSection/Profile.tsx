@@ -54,15 +54,16 @@ const Profile = (props: profilePropsType) => {
         }, 1000);
       })
   }
+
   const changeHandler = async (event) => {
     const file = event.target.files[0];
     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
     const cid = await IPFSHelper.uploadImage(file, IPFSClient);
-    console.log(cid);
     setProfile(`https://ipfs.infura.io/ipfs/${cid}`);
     props.updateProfile(cid);
     await uploadUserProfileImage(did.id, cid);
   }
+
   return (
     <div className="profilePageContainer">
       <div className='profilePageprofileImg'>
