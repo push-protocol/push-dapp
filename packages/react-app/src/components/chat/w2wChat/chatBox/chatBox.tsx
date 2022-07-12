@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect, useRef, ChangeEvent, FC } from 'react';
+import React, { useState, useContext, useEffect, useRef, ChangeEvent } from 'react';
 import './chatBox.css';
-import cn from 'classnames';
 // @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 import { Context } from '../w2wIndex';
@@ -9,7 +8,7 @@ import { CID } from 'ipfs-http-client';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
-import { postMessage, getIntent, getDidLinkWallets, getLatestThreadhash, createIntent } from '../../../../helpers/w2wChatHelper';
+import * as PushNodeClient from '../../../../api/w2w';
 import Dropdown from '../dropdown/dropdown';
 import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -23,8 +22,6 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
-import * as PGP from '../../../../helpers/w2w/PGP';
-import * as DIDHelper from '../../../../helpers/w2w/Did';
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -92,7 +89,6 @@ const ChatBox = () => {
             let hasintent = false;
             if (currentChat) {
                 try {
-                    const cid = CID.parse(currentChat.profile_picture);
                     setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
                 }
                 catch (err) {
@@ -102,7 +98,7 @@ const ChatBox = () => {
                     setHasIntent(true);
                 }
                 else {
-                    const intentStatus = await getIntent(currentChat.did, did.id);
+                    const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id);
                     setIntentSentandPending(intentStatus.intent);
                     console.log(intentStatus);
                     hasintent = intentStatus.hasIntent;
@@ -116,7 +112,7 @@ const ChatBox = () => {
                 else {
                     setMessages([]);
                 }
-                const res = await getDidLinkWallets(currentChat.did);
+                const res = await PushNodeClient.getDidLinkWallets(currentChat.did);
                 setWallets(res);
             }
         }
@@ -125,12 +121,16 @@ const ChatBox = () => {
 
     const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
         try {
-            const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
-            const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
-            const msg = await postMessage(account, fromDid, toDid, cipherText, messageType, signature);
+            console.log('connectedUser', connectedUser);
+            console.log('currentChat', currentChat);
+            console.log('Public Key from Current Chat: ', currentChat.public_key);
+            // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
+            // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
+            const cipherText = message;
+            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature);
             setMessages([...messages, msg]);
             setNewMessage("");
-            const threadhash = await getLatestThreadhash(currentChat.did, did.id);
+            const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id);
             await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', threadhash, msg, 'cid');
             const inbox = await fetchInbox(did);
             renderInbox(inbox);
@@ -155,7 +155,7 @@ const ChatBox = () => {
     const sendIntent = async () => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                const msg = await createIntent(currentChat.did, did.id, account, newMessage, 'signature');
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, newMessage, 'signature');
                 console.log(msg);
                 setHasIntent(true);
                 setMessages([...messages, msg]);

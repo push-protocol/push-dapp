@@ -2,16 +2,6 @@ import { randomBytes } from '@stablelib/random';
 import { Feeds, User } from 'components/chat/w2wChat/w2wIndex';
 import { toString } from 'uint8arrays/to-string';
 
-export const walletToCAIP10 = (account: string, chainId: number): string => {
-    if (chainId === 1) {
-        return 'eip155:1:' + account;
-    }
-    else if (chainId === 42) {
-        return 'eip155:42:' + account
-    }
-    else throw new Error();
-}
-
 export const getInbox = async (did: string): Promise<Feeds[]> => {
     const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/' + did);
     const data: Feeds[] = await response.json();
@@ -80,6 +70,7 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
 export const getAllUsers = async (): Promise<User[]> => {
     const response = await fetch('http://localhost:4000/apis/w2w/getAllUsers');
     const data = await response.json();
+    console.log('All Users: ', data);
     return data;
 }
 

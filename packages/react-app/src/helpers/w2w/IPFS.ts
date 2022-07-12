@@ -2,15 +2,15 @@ import { JWE } from 'did-jwt';
 import { CID, create, IPFSHTTPClient } from "ipfs-http-client"
 
 export interface MessageIPFS {
-    fromWallet: string,
-    fromDID: string,
-    toDID: string,
-    messageType: string,
-    messageContent: string,
-    signature: string
-    link: string | null,
-    time:number
-    timestamp?: number
+  fromWallet: string,
+  fromDID: string,
+  toDID: string,
+  messageType: string,
+  messageContent: string,
+  signature: string
+  link: string | null,
+  time: number
+  timestamp?: number
 }
 
 export function createIPFSClient(): IPFSHTTPClient {
@@ -27,9 +27,7 @@ export async function get(cid: string, ipfs: IPFSHTTPClient): Promise<any> {
   return content;
 }
 
-export async function uploadImage(image,ipfs:IPFSHTTPClient):Promise<string>{
-  console.log(image);
+export async function uploadImage(image, ipfs: IPFSHTTPClient): Promise<string> {
   const cid = await ipfs.add(image);
-  console.log(cid);
   return cid.path;
 }
