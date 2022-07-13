@@ -96,7 +96,7 @@ function App() {
     setCaip10Account(caip10);
     setDid(did);
     setCeramicInstance(ceramic);
-    const user = await PushNodeClient.getUser(did.id, caip10);
+    const user = await PushNodeClient.getUser(did.id);
     if (!user) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
@@ -106,8 +106,9 @@ function App() {
       setConnectedUser(createdUser);
     }
     else {
+      const wallets:string = await PushNodeClient.updateWalletIfNotExist(did.id,caip10);
       setUserProfile(user.profile_picture);
-      setUserWallets(user.wallets);
+      setUserWallets(wallets);
       setConnectedUser(user);
     }
     setIsLoading(false);

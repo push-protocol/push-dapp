@@ -40,20 +40,35 @@ export const getIntents = async (did: string) => {
     return data;
 }
 
-export const getUser = async (did: string, account: string) => {
+export const getUser = async (did: string) => {
     const response = await fetch(`http://localhost:4000/apis/w2w/getUser`,{
         method:'POST',
         headers:{
             "Content-Type":"application/json"
         },
         body:JSON.stringify({
-            did,
-            account
+            did
         })
     });
     const data = await response.json();
     return data;
 }
+
+export const updateWalletIfNotExist = async (did:string,caip10:string)=>{
+    const response = await fetch('http://localhost:4000/apis/w2w/updateWalletIfNotExist',{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            did,
+            caip10
+        })
+    })
+    const data = await response.json();
+    return data;
+}
+
 
 export const getDidLinkWallets = async (did: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/getDidLinkWallets/',{
