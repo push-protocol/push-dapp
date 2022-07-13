@@ -9,7 +9,7 @@ import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
 import Joyride, { CallBackProps } from "react-joyride";
 
-import styled, { useTheme } from "styled-components";
+import styled from "styled-components";
 import { Item, ItemH, Span, H2, B, A, C } from "./primaries/SharedStyling";
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
@@ -30,6 +30,7 @@ import { getPushToken, onMessageListener } from "./firebase";
 import * as dotenv from "dotenv";
 import { postReq } from "api";
 import { toast } from "react-toastify";
+import InitState from "components/InitState";
 dotenv.config();
 
 // define the different type of connectors which we use
@@ -201,6 +202,7 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
+      <InitState />
       <NavigationContextProvider>
         <Joyride
           run={run}

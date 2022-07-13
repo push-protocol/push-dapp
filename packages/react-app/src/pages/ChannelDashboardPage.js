@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactGA from "react-ga";
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import hex2ascii from "hex2ascii";
 import { addresses, abis , envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
