@@ -105,6 +105,7 @@
     "react-loader-spinner": "3.1.14",
     "react-multi-select-component": "^4.2.3",
     "react-player": "2.9.0",
+    "react-query": "^3.39.1",
     "react-redux": "^7.2.6",
     "react-router-dom": "6",
     "react-scripts": "^5.0.1",

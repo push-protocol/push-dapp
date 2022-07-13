@@ -22,6 +22,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
+import { useQuery } from "react-query";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -32,7 +33,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 const ChatBox = () => {
     const { account } = useWeb3React<Web3Provider>();
-    const { currentChat, viewChatBox, did, renderInbox, connectedUser } = useContext(Context);
+    const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat } = useContext(Context);
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
@@ -47,6 +48,7 @@ const ChatBox = () => {
     const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
     const [intentSentandPending, setIntentSentandPending] = useState<string>("");
     const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
+    const { data, error, isError, isLoading } = useQuery<any>('current')
     let showTime = false;
     let time: string = "";
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
@@ -63,10 +65,10 @@ const ChatBox = () => {
             }
             else {
                 const current = await IPFSHelper.get(messageCID, ipfs);//{}
-                console.log(current);
                 await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid');
                 msgIPFS = current as MessageIPFS
             }
+            // console.log(getMessage, msgIPFS)
             setMessages(m => [msgIPFS, ...m])
 
             const link = msgIPFS.link;
@@ -78,10 +80,40 @@ const ChatBox = () => {
         }
     }
 
+
     const scrollRef: any = useRef();
     const scrollToBottom = () => {
         scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
     }
+
+    useEffect(() => {
+        function updateData() {
+            if (data !== undefined && currentChat?.wallets) {
+                const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+                setChat(newData)
+                // console.log(data, newData)
+            }
+        }
+        const interval = setInterval(() => updateData(), 2000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [data, currentChat?.wallets])
+
+
+
+    // useEffect(() => {
+    //     const consoleLog = () => {
+    //         console.log(currentChat)
+    //     }
+
+    //     const interval = setInterval(() => consoleLog(), 5000)
+    //     return () => {
+    //         clearInterval(interval)
+    //     }
+    // }, [currentChat])
+
+    // console.log(currentChat, viewChatBox, did, renderInbox, connectedUser)
 
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
@@ -100,7 +132,6 @@ const ChatBox = () => {
                 else {
                     const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id);
                     setIntentSentandPending(intentStatus.intent);
-                    console.log(intentStatus);
                     hasintent = intentStatus.hasIntent;
                     setHasIntent(intentStatus.hasIntent);
                 }
@@ -116,8 +147,9 @@ const ChatBox = () => {
                 setWallets(res);
             }
         }
-        getMessagesFromIPFS().catch(err => console.error(err));
+        getMessagesFromIPFS().catch(err => console.error(err))
     }, [currentChat]);
+
 
     const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
         try {
