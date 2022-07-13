@@ -50,6 +50,7 @@ const ChatBox = () => {
     const [intentSentandPending, setIntentSentandPending] = useState<string>("");
     const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
     const { data, error, isError, isLoading } = useQuery<any>('current')
+    const [SnackbarText, setSnackbarText] = useState<string>("");
     let showTime = false;
     let time: string = "";
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
@@ -122,6 +123,8 @@ const ChatBox = () => {
             let hasintent = false;
             if (currentChat) {
                 try {
+                    const cid = CID.parse(currentChat.profile_picture);
+
                     setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
                 }
                 catch (err) {
@@ -199,6 +202,7 @@ const ChatBox = () => {
             else {
                 setNewMessage("");
                 setOpenSuccessSnackBar(true);
+                setSnackbarText("Cannot send message, Intent is not approved!");
             }
         }
         catch (error) {
@@ -219,8 +223,10 @@ const ChatBox = () => {
     }
     const uploadFile = async (file: File) => {
         try {
-            const TWENTY_MB = 1024 * 1024 * 20;
-            if (file.size > TWENTY_MB) {
+            const TWO_MB = 1024 * 1024 * 2;
+            if (file.size > TWO_MB) {
+                setOpenSuccessSnackBar(true);
+                setSnackbarText("Files larger than 2mb is now allowed")
                 return;
             }
             setFileUploading(true);
@@ -269,7 +275,6 @@ const ChatBox = () => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpenSuccessSnackBar(false);
     };
     const placeholderTextArea = () => {
@@ -297,7 +302,7 @@ const ChatBox = () => {
                     <>
                         <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
                             <Alert onClose={handleCloseSuccessSnackbar} severity="error" sx={{ width: '100%' }}>
-                                Cannot send message, Intent is not approved!
+                                {SnackbarText}
                             </Alert>
                         </Snackbar>
                         <div className='chatBoxNavBar'>
