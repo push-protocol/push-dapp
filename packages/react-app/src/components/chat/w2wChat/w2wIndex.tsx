@@ -22,6 +22,7 @@ import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { useQuery } from "react-query";
 
 import './w2wIndex.css';
 
@@ -128,6 +129,10 @@ function App() {
   const renderInbox = (args: Array<{}>) => {
     setRenderInboxFeed(args);
   }
+
+  const { data, error, isError } = useQuery('current', getInbox, {
+    refetchInterval: 5000,
+  })
 
 
 
