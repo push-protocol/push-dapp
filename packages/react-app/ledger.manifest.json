@@ -1,0 +1,32 @@
+{
+    "id": "EPNS",
+    "name": "EPNS",
+    "url": "https://platform.apps.ledger.com/app/dapp-browser?dappName=EPNS&nanoApp=EPNS&url=https%3A%2F%2Fapp.epns.io%2F%3Fembed%3Dtrue",
+    "homepageUrl": "https://epns.io/",
+    "icon": "https://backend-dev.epns.io/assets/epnslogo.png",
+    "platform": "all",
+    "apiVersion": "0.0.1",
+    "manifestVersion": "1",
+    "branch": "stable",
+    "categories": [
+      "staking",
+      "defi",
+      "options"
+    ],
+    "currencies": [
+      "ethereum",
+      "dai"
+    ],
+    "content": {
+      "shortDescription": {
+        "en": "Protocol for blockchain based notifications that are chain agnostic, platform independent and incentivized!"
+      },
+      "description": {
+        "en": "Protocol for blockchain based notifications that are chain agnostic, platform independent and incentivized!"
+      }
+    },
+    "permissions": [],
+    "domains": [
+      "https://*"
+    ]
+}
