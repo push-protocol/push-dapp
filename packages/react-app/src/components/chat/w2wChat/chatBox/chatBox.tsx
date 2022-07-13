@@ -24,6 +24,7 @@ import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
 import { useQuery } from "react-query";
 
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
     ref,

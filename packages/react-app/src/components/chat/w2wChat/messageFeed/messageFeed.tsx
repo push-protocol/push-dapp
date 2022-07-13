@@ -7,8 +7,6 @@ import { Context, Feeds } from '../w2wIndex';
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb';
 import { useQuery } from "react-query";
-import { useQuery } from "react-query";
-
 
 interface messageFeedProps {
     filteredUserData: {}[],
@@ -44,9 +42,9 @@ const MessageFeed = (props: messageFeedProps) => {
     }, []);
 
 
-    // const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-    //     refetchInterval: 5000,
-    // })
+    const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+        refetchInterval: 5000,
+    })
 
 
     useEffect(() => {
