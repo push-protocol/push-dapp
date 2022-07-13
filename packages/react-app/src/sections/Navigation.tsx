@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, AnchorLink as Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {Section, Item, ItemH, AnchorLink as Anchor } from 'primaries/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
 import navigationList from "config/NavigationList";
@@ -15,7 +15,7 @@ import { NavigationContext } from "contexts/NavigationContext";
 import GLOBALS from "config/Globals";
 
 import { useDispatch, useSelector } from "react-redux";
-import {incrementStepIndex, decrementStepIndex, setRun, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
+import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
 
 // Create Header
 function Navigation() {
@@ -23,7 +23,7 @@ function Navigation() {
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
-  const { run, stepIndex, isCommunicateOpen } = useSelector((state: any) => state.userJourney);
+    const { run, stepIndex } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(!run && navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;

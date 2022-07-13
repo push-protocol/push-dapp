@@ -2,7 +2,7 @@ import React from "react";
 
 import styled, { useTheme } from 'styled-components';
 import { ThemeProvider } from "styled-components";
-import { Section, Content, Item } from 'components/SharedStyling';
+import { Section, Content, Item } from '../primaries/SharedStyling';
 import { envConfig } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core'
 
@@ -26,7 +26,7 @@ function NotAvailablePage(props) {
   // Render
   return (
     <ThemeProvider theme={themes}>
-      <Section style={{minHeight: '60vh'}}>
+      <Section style={{ minHeight: '60vh' }}>
         <Content padding="0px 20px 0px">
           <Item align="center">
             <Heading color="#333" spacing="0.05em" size="2rem" weight={700}>
@@ -35,7 +35,7 @@ function NotAvailablePage(props) {
           </Item>
         </Content>
       </Section>
-      </ThemeProvider>
+    </ThemeProvider>
   );
 }
 

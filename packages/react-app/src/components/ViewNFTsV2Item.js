@@ -1,30 +1,26 @@
 import React from "react";
 
-import styled, { css, keyframes } from "styled-components";
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+import styled, { css } from "styled-components";
+import { Item, ItemH } from '../primaries/SharedStyling';
 
 import { Device } from 'assets/Device';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import Loader from 'react-loader-spinner';
 
 import Skeleton from '@yisheng90/react-loading';
 import { IoIosGift } from 'react-icons/io';
-import { GiTwoCoins } from 'react-icons/gi';
 
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
-// import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 
 import ReactPlayer from 'react-player';
 
-import NFTHelper from 'helpers/NFTHelper';
-
 // Create Header
-function ViewNFTV2Item({ NFTObject, nftReadProvider, nftWriteProvider, controlAt, setControlAt, setTokenId}) {
+function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
   const { account, library, chainId } = useWeb3React();
 
   const [NFTRewardsV2Contract, setNFTRewardsV2Contract] = React.useState(null);

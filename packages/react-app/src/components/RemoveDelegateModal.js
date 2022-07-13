@@ -3,10 +3,8 @@ import { useClickAway } from 'react-use';
 import styled, {useTheme} from 'styled-components';
 import Loader from 'react-loader-spinner';
 
-import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
+import {Item, H2, H3, Span, Button, Input} from 'primaries/SharedStyling';
 import { ThemeProvider } from "styled-components";
-
-
 
 export default function RemoveDelegateModal({
     onClose,onSuccess, removeDelegate, address=""

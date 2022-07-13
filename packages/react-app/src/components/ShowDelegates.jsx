@@ -1,18 +1,23 @@
 import React from "react";
-import { Item, Span, Section, Content, H2, H3 } from "./SharedStyling";
+import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
 import { useSelector } from "react-redux";
-import { useDeviceWidthCheck } from "hooks";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import DelegateInfo from "./DelegateInfo";
 
+const blockchainName = {
+  1: "ETH_MAINNET",
+  137: "POLYGON_MAINNET",
+  42: "ETH_TEST_KOVAN",
+  80001: "POLYGON_TEST_MUMBAI",
+};
+
 const ShowDelegates = () => {
-  const { account } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const [delegatees, setDelegatees] = React.useState([account]);
-  const isMobile = useDeviceWidthCheck(600);
   const theme = useTheme();
   const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(false);
   const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
@@ -37,11 +42,12 @@ const ShowDelegates = () => {
   const fetchDelegatees = async () => {
     try {
       const { data } = await postReq("/channels/delegatee/get_delegate", {
-        channelAddress: account
+        channelAddress: account,
+        blockchain: blockchainName[chainId]
       });
 
       if (data?.delegateAddress) {
-        setDelegatees(data.delegateAddress);
+        setDelegatees([account, ...data.delegateAddress]);
       }
     } catch (err) {
       console.error(err);

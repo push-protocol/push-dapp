@@ -1,12 +1,5 @@
 import React from "react";
-import styled, { css } from 'styled-components';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
-import Loader from 'react-loader-spinner';
-
-import { useWeb3React } from '@web3-react/core';
-
+import styled from 'styled-components';
 
 // Other Information URLs
 function ViewInfoItem() {

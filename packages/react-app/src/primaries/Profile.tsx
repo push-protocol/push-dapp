@@ -1,15 +1,14 @@
 import React from "react";
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import Loader from 'react-loader-spinner'
-import Blockies from "components/BlockiesIdenticon";
-//   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
+import Blockies from "primaries/BlockiesIdenticon";
 
 // Create Header
 function Profile() {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { error, account, library } = useWeb3React();
 
   const [address, setAddress] = React.useState('');
   const [ens, setENS] = React.useState('');

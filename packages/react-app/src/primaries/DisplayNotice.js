@@ -2,8 +2,6 @@ import React from "react";
 import styled, { css } from 'styled-components';
 import { AnimateOnChange } from 'react-animation';
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
-
 // Create Header
 function DisplayNotice({ title, theme }) {
   React.useEffect(() => {

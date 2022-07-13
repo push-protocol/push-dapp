@@ -1,18 +1,15 @@
 import React, { useRef, useState } from "react";
-import Slider from "@material-ui/core/Slider";
 import styled, {ThemeProvider, useTheme} from "styled-components";
 import Loader from "react-loader-spinner";
 import { useClickAway } from "react-use";
 import {
-  Section,
-  Content,
   Item,
   H3,
   Span,
   Button,
   H2,
   Input
-} from "components/SharedStyling";
+} from "primaries/SharedStyling";
 const ethers = require("ethers");
 
 export default function AddSubGraphIdModal({

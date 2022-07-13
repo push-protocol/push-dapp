@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import ReactGA from "react-ga";
 
 import { Web3Provider } from "ethers/providers";
@@ -7,22 +7,22 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useEagerConnect, useInactiveListener } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
-import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
+import Joyride, { CallBackProps } from "react-joyride";
 
-import styled, {useTheme} from "styled-components";
-import { Item, ItemH, Span, H2, H3, B, A, C, Button } from "components/SharedStyling";
+import styled from "styled-components";
+import { Item, ItemH, Span, H2, B, A, C } from "./primaries/SharedStyling";
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 
 import NavigationContextProvider from "contexts/NavigationContext";
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
 
 import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
 
-import {setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
+import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
 import { getPushToken, onMessageListener } from "./firebase";
@@ -30,6 +30,7 @@ import { getPushToken, onMessageListener } from "./firebase";
 import * as dotenv from "dotenv";
 import { postReq } from "api";
 import { toast } from "react-toastify";
+import InitState from "components/InitState";
 dotenv.config();
 
 // define the different type of connectors which we use
@@ -59,8 +60,6 @@ export default function App() {
   >();
   const [currentTime, setcurrentTime] = React.useState(0);
 
-  const themes = useTheme();
-
   const {
     run,
     stepIndex,
@@ -68,11 +67,11 @@ export default function App() {
   } = useSelector((state: any) => state.userJourney);
   const [triggerNotification, setTriggerNotification] = React.useState(false);
   React.useEffect(() => {
-    if(!account) return;
-    (async function(){
+    if (!account) return;
+    (async function () {
       const tokenKey = `${CACHEPREFIX}${account}`;
       const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
-      if(!tokenExists){
+      if (!tokenExists) {
         const response = await getPushToken();
         const object = {
           op: 'register',
@@ -80,7 +79,7 @@ export default function App() {
           device_token: response,
           platform: 'dapp',
         };
-        await postReq('/pushtokens/register_no_auth',object);
+        await postReq('/pushtokens/register_no_auth', object);
         localStorage.setItem(tokenKey, response);
         localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
       }
@@ -88,38 +87,38 @@ export default function App() {
   }, [account]);
 
   // React.useEffect(() => {
-    onMessageListener().then(payload => {
-      if (!("Notification" in window)) {
-        toast.dark(`${payload.notification.body} from: ${payload.notification.title}`,{
-          type: toast.TYPE.DARK,
-          autoClose: 5000,
-          position: "top-right"
-        });
-      }else{
-        console.log('\n\n\n\n\n')
-        console.log("revieced push notification")
-        console.log('\n\n\n\n\n')
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-          title: payload.data.app,
-          body: payload.notification.body,
-          image: payload.data.aimg,
-          icon: payload?.data?.icon,
-          data: {
-            url: payload?.data?.acta || payload?.data?.url,
-          },
-        };
-        var notification = new Notification(notificationTitle,notificationOptions );
-      }
-    }).catch(err => console.log('failed: ', err))
+  onMessageListener().then(payload => {
+    if (!("Notification" in window)) {
+      toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
+        type: toast.TYPE.DARK,
+        autoClose: 5000,
+        position: "top-right"
+      });
+    } else {
+      console.log('\n\n\n\n\n')
+      console.log("revieced push notification")
+      console.log('\n\n\n\n\n')
+      const notificationTitle = payload.notification.title;
+      const notificationOptions = {
+        title: payload.data.app,
+        body: payload.notification.body,
+        image: payload.data.aimg,
+        icon: payload?.data?.icon,
+        data: {
+          url: payload?.data?.acta || payload?.data?.url,
+        },
+      };
+      var notification = new Notification(notificationTitle, notificationOptions);
+    }
+  }).catch(err => console.log('failed: ', err))
     .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
   // }, [triggerNotification]);
-  
 
-  React.useEffect(()=>{
-    const now = Date.now()/ 1000;
+
+  React.useEffect(() => {
+    const now = Date.now() / 1000;
     setcurrentTime(now)
-  },[])
+  }, [])
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -145,40 +144,40 @@ export default function App() {
 
   React.useEffect(() => {
     const data = localStorage.getItem('theme')
-    if(data){
+    if (data) {
       setDarkMode(JSON.parse(data))
     }
-  },[])
+  }, [])
 
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode))
   })
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     document.body.style.backgroundColor = darkMode ? "#000" : "#fff";
-  },[darkMode])
+  }, [darkMode])
 
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     window?.Olvy?.init({
       organisation: "epns",
-    target: "#olvy-target",
-    type: "sidebar",
-    view: {
-      showSearch: false,
-      compact: false,
-      showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
-      showUnreadIndicator: true,
-      unreadIndicatorColor: "#cc1919",
-      unreadIndicatorPosition: "top-right"
-    }
+      target: "#olvy-target",
+      type: "sidebar",
+      view: {
+        showSearch: false,
+        compact: false,
+        showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
+        showUnreadIndicator: true,
+        unreadIndicatorColor: "#cc1919",
+        unreadIndicatorPosition: "top-right"
+      }
     });
     return function cleanup() {
       window?.Olvy?.teardown();
     };
   });
 
-  const steps = UserJourneySteps({darkMode});
+  const steps = UserJourneySteps({ darkMode });
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     // console.log(data)
@@ -189,9 +188,9 @@ export default function App() {
         document.querySelector("div > section > div").scrollTop = 0
       }, 100)
     }
-    
-    
-    if ( action === "close" || index === 20 ) { //action === "close" ||
+
+
+    if (action === "close" || index === 20) { //action === "close" ||
       dispatch(setRun(false))
       dispatch(setIndex(0))
       dispatch(setWelcomeNotifsEmpty());
@@ -202,7 +201,8 @@ export default function App() {
   }
 
   return (
-    <ThemeProvider theme={darkMode ? themeDark : themeLight }>
+    <ThemeProvider theme={darkMode ? themeDark : themeLight}>
+      <InitState />
       <NavigationContextProvider>
         <Joyride
           run={run}
@@ -224,7 +224,7 @@ export default function App() {
             options: {
               arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
               backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+              overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
               primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
               textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
               zIndex: 1000,
@@ -235,7 +235,7 @@ export default function App() {
           <Header
             isDarkMode={darkMode}
             darkModeToggle={toggleDarkMode}
-          />  
+          />
         </HeaderContainer>
 
         <ParentContainer
@@ -268,7 +268,7 @@ export default function App() {
                 src="./epnshomelogo.png"
                 srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"}
               />
-              
+
               <Item
                 bg={darkMode ? themeDark : themeLight}
                 border="1px solid #ddd"
@@ -325,7 +325,7 @@ export default function App() {
                 </ItemH>
               </Item>
 
-              <Span margin="30px 0px 0px 0px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor }>
+              <Span margin="30px 0px 0px 0px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor}>
                 By unlocking your wallet, <B>You agree</B> to our{" "}
                 <A href="https://epns.io/tos" target="_blank">
                   Terms of Service

@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Section, Content, Button, Item, H2, Span, H3 } from "components/SharedStyling";
+import { Section, Content, Button, Item, H2, Span, H3 } from "../primaries/SharedStyling";
 
 import SendNotifications from "components/SendNotifications";
 import ChannelSettings from "components/ChannelSettings";

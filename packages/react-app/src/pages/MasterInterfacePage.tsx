@@ -1,9 +1,8 @@
 import React from "react";
-import ReactGA from "react-ga";
-import { Navigate, Routes, Route, Link } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 
 import styled from "styled-components";
-import { Content, Item, ItemH, Span, H2, B, Anchor } from "components/SharedStyling";
+import { Item, Anchor } from "../primaries/SharedStyling";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -26,7 +25,7 @@ import NotAvailablePage from "./NotAvailablePage";
 import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
 
-import {SupportPage} from "pages/SupportPage";
+import { SupportPage } from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
 
@@ -36,24 +35,19 @@ function MasterInterfacePage() {
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
 
-  const runYoutube = (flag) => {
-    setPlayTeaserVideo(flag);
-    console.log("here");
-  }
-
   // Render
   return (
     <Container>
       <Interface>
         <Routes>
-          <Route path="inbox" element={<InboxPage />} />
           <Route path="channels" element={
-              <ViewChannelsPage 
-                loadTeaser={setLoadTeaserVideo}
-                playTeaser={setPlayTeaserVideo}
-              />
-            } 
+            <ViewChannelsPage
+              loadTeaser={setLoadTeaserVideo}
+              playTeaser={setPlayTeaserVideo}
+            />
+          }
           />
+          <Route path="inbox" element={<InboxPage />} />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
@@ -68,10 +62,10 @@ function MasterInterfacePage() {
           <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route
-              path="/"
-              element={<Navigate to="/channels" />}
+            path="/"
+            element={<Navigate to="/channels" />}
           />
-          <Route path="support" element={<SupportPage/>}/>
+          <Route path="support" element={<SupportPage />} />
         </Routes>
       </Interface>
 
@@ -92,7 +86,7 @@ function MasterInterfacePage() {
           <PreviewBG
             href="#"
             bg="transparent"
-            onClick={(e) => {e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo)}}
+            onClick={(e) => { e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo) }}
           >
             <PreviewContent className="contentBox">
               <PreviewClose
@@ -100,12 +94,12 @@ function MasterInterfacePage() {
                 bg="transparent"
                 hover="transparent"
                 hoverBG="transparent"
-                onClick={(e) => {e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo)}}
+                onClick={(e) => { e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo) }}
               >
-                <VscClose size={40} color="#fff"/>
+                <VscClose size={40} color="#fff" />
               </PreviewClose>
               <Preview>
-                <div class='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+                <div className='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
               </Preview>
             </PreviewContent>
           </PreviewBG>

@@ -1,12 +1,11 @@
 import React, {useRef, useState} from 'react';
-import { useClick, useClickAway } from 'react-use';
+import { useClickAway } from 'react-use';
 import styled, {ThemeProvider, useTheme} from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
 import Loader from 'react-loader-spinner';
 import { postReq } from "../api";
-
-import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
+import {Item, H2, H3, Span, Button, Input} from '../primaries/SharedStyling';
 
 const ethers = require('ethers');
 
@@ -14,21 +13,20 @@ const ethers = require('ethers');
 export default function AliasVerificationModal({
     onClose,onSuccess, verificationStatus, aliasEthAccount
 }) {
-    const { active, error, account, library, chainId } = useWeb3React();
+    const { account, library } = useWeb3React();
     const signer = library.getSigner(account);
 
     const themes = useTheme();
 
     const modalRef = useRef(null);
     const polygonCommsContract = new ethers.Contract(addresses.epnsPolyComm, abis.epnsComm, signer);
-    const [mainAddress, setMainAddress] = useState(aliasEthAccount);
     const [loading, setLoading] = useState('');
+    const mainAddress = aliasEthAccount;
 
     // Form signer and contract connection
     useClickAway(modalRef, ()=>onClose(loading !== ''));
 
     const checkAlias = async () => {
-        console.log(mainAddress, aliasEthAccount);
         if (mainAddress == aliasEthAccount) {
             submitAlias();
         } else {

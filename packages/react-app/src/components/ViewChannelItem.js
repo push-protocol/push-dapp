@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { css, useTheme } from "styled-components";
 import { Device } from "assets/Device";
 
@@ -12,15 +12,13 @@ import { FaRegAddressCard } from "react-icons/fa";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-import {ThemeProvider} from "styled-components";
-import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
+import { ItemH, Span } from "../primaries/SharedStyling";
 
 import { postReq } from "api";
 
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
-import NotificationToast from "components/NotificationToast";
+import NotificationToast from "../primaries/NotificationToast";
 
 import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial";
 
@@ -35,9 +33,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
 
   const themes = useTheme();
-  const [darkMode, setDarkMode] = useState(false);
-
-  const navigate = useNavigate();
 
   const {
     run,

@@ -1,10 +1,8 @@
 import React from "react";
 import styled, { css } from 'styled-components';
-import Blockies from "components/BlockiesIdenticon";
-import { Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField } from 'components/SharedStyling';
-import { Device } from 'assets/Device';
-import InfoTooltip from "components/InfoTooltip";
-import { ToastContainer, toast } from 'react-toastify';
+import Blockies from "primaries/BlockiesIdenticon";
+import { Item, ItemH, ItemBreak, Image, Span, Anchor } from '../primaries/SharedStyling';
+import { toast } from 'react-toastify';
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import {toolingPostReq} from "../api/index"
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -15,10 +13,8 @@ import { FiTwitter } from 'react-icons/fi';
 import { GoVerified } from 'react-icons/go';
 import { IoMdShareAlt } from 'react-icons/io';
 
-import { addresses, abis } from "@project/contracts";
+import { addresses } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
-import { keccak256, arrayify, hashMessage, recoverPublicKey } from 'ethers/utils';
 import {createTransactionObject} from '../helpers/GaslessHelper';
 import {executeDelegateTx} from '../helpers/WithGasHelper';
 import Web3 from 'web3';
@@ -278,42 +274,12 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
 }
 
 // css styles
-const RadioGroup=styled.div`
-  display:flex;
-  flex-direction: column;
-  justify-content:space-around;
-  align-items:center;
-  width:300px;
-  margin:0px 20px;
-  div{
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    width:100px;
-  }
-`;
-const Label=styled.label`
-    margin:"10px";
-`;
 const SelectTag=styled.select`
   border: none;
   padding: 0 10px;
   background: transparent;
   outline: none;
 `;
-const Container = styled.div`
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid rgb(237, 237, 237);
-
-  margin: 15px 0px;
-  justify-content: center;
-  padding: 0px;
-`
 
 const DelegateeItem = styled.div`
   max-width: 220px;
@@ -372,25 +338,6 @@ const DelegateeWallet = styled(Span)`
   padding-top: 4px;
 `
 
-const LineBreak = styled.div`
-  display: none;
-  flex-basis: 100%;
-  height: 0;
-
-  @media ${Device.tablet} {
-    display: block;
-  }
-`
-
-const ChannelActions = styled.div`
-  margin: 5px;
-  flex-grow: 1;
-  max-width: 120px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const ChannelActionButton = styled.button`
   border: 0;
   outline: 0;
@@ -434,42 +381,8 @@ const ActionTitle = styled.span`
   `};
 `
 
-const ActionLoader = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const SkeletonButton = styled.div`
-  border: 0;
-  outline: 0;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 10px;
-  border-radius: 5px;
-  flex: 1;
-`
-
-const SubscribeButton = styled(ChannelActionButton)`
-  background: #e20880;
-`
-
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: #000;
-`
-
-const DisabledDelegate = styled(ChannelActionButton)`
-  background: #ccc;
-`
-const OwnerButton = styled(ChannelActionButton)`
-  background: #35c5f3;
 `
 
 const Toaster = styled.div`
@@ -482,50 +395,6 @@ const Toaster = styled.div`
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `
-const NFTTextStyle = styled.label`
-  margin: 0px 5px;
-  color: #fff;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 11px;
-`
-const NFTStatus = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-`
-
-const NFTStatusTitle = styled(NFTTextStyle)`
-  background: #35c4f3;
-`
-
-const NFTClaim = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-`
-
-const NFTClaimTitle = styled(NFTTextStyle)`
-  background: #e20880;
-`
-const Blocky = styled.div`
-  position: relative;
-  width: 100px;
-  height: 100px;
-  border-radius: 100%;
-  overflow: hidden;
-  transform: scale(0.85);
-  outline-width: 2px;
-  outline-color: rgba(225,225,225,1);
-`
 // Export Default
 export default ViewDelegateeItem;

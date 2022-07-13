@@ -1,5 +1,4 @@
 import React from "react";
-import { Section, Content, Item } from "components/SharedStyling";
 import { useSelector, useDispatch } from "react-redux";
 import styled, { css , useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
@@ -7,7 +6,7 @@ import { toast as toaster } from "react-toastify";
 import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
 
-import { ALLOWED_CORE_NETWORK } from "pages/DeprecatedHome";
+import { envConfig } from "@project/contracts";
 import AddDelegateModal from "./AddDelegateModal";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import ActivateChannelModal from "./ActivateChannelModal";
@@ -22,6 +21,7 @@ import Loader from "react-loader-spinner";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
+const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
 // Create Header
 function ChannelSettings() {
@@ -92,7 +92,7 @@ function ChannelSettings() {
         true
       )
     );
-  }, [account]);
+  }, [account, channelDetails.poolContribution]);
 
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
@@ -173,7 +173,6 @@ function ChannelSettings() {
     });
 
     const pushValue = response.response.data.quote.PUSH.price;
-    const amountsOut = pushValue * Math.pow(10, 18);
 
     await epnsWriteProvider
       // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
@@ -235,10 +234,10 @@ function ChannelSettings() {
     });
   };
 
-  if (!onCoreNetwork) {
-    //temporarily deactivate the deactivate button if not on core network
-    return <></>;
-  }
+  // if (!onCoreNetwork) {
+  //   //temporarily deactivate the deactivate button if not on core network
+  //   return <></>;
+  // }
 
   return (
     <div>
@@ -248,8 +247,9 @@ function ChannelSettings() {
           onClick={toggleChannelActivationState}
         >
           <ActionTitle>
-            {!onCoreNetwork ?
-              ("") : loading ? (
+            {!onCoreNetwork ? (
+              ""
+            ) : loading ? (
               "Loading ..."
             ) : isChannelBlocked ? (
               "Channel Blocked"
@@ -261,20 +261,21 @@ function ChannelSettings() {
           </ActionTitle>
         </DeactivateButton>
         <ActiveChannelWrapper>
-
-        <ChannelActionButton
-            disabled={channelInactive}
-            onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
-          >
-            <ActionTitle>
-              {addSubgraphDetailsLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
-              ) : (
-                "Add SubGraph Details"
-              )}
-            </ActionTitle>
-          </ChannelActionButton>
-
+        
+          {onCoreNetwork &&
+            <ChannelActionButton
+              disabled={channelInactive}
+              onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
+            >
+              <ActionTitle>
+                {addSubgraphDetailsLoading ? (
+                  <Loader type="Oval" color="#FFF" height={16} width={16} />
+                ) : (
+                  "Add SubGraph Details"
+                )}
+              </ActionTitle>
+            </ChannelActionButton>
+          }
 
           <ChannelActionButton
             disabled={channelInactive}
@@ -350,7 +351,7 @@ function ChannelSettings() {
         />
       )}
 
-      { addSubGraphIdOpen && (
+      {addSubGraphIdOpen && (
         <AddSubGraphIdModal
         onClose={(val) => setAddSubGraphIdOpen(val)}
         onSuccess={() => {
@@ -362,7 +363,6 @@ function ChannelSettings() {
         }}
         addSubGraphDetails={addSubgraphDetails}
         />
-
       ) }
     </div>
   );
@@ -445,13 +445,6 @@ const ChannelActionButton = styled.button`
     pointer: hand;
   }
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-`;
-
-const Settings = styled.img`
-  width: 40px;
-  height: 40px;
-  margin-left: auto;
-  margin-right: 30px;
 `;
 
 // Export Default

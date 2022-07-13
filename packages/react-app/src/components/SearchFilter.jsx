@@ -1,31 +1,30 @@
 import React from "react";
-import {useState,useEffect} from "react";
+import { useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
 import './SearchFilter.css';
-import styled, {useTheme} from "styled-components";
-import {ThemeProvider} from "styled-components";
+import styled, { useTheme } from "styled-components";
+import { ThemeProvider } from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
 import Loader from "react-loader-spinner";
-import { Item } from './SharedStyling';
+import { Item } from '../primaries/SharedStyling';
 
-export default function SearchFilter(props)
-{
-    
+export default function SearchFilter(props) {
+
     const [search, setSearch] = useState('');
-    const [startDate,setStartDate] = useState();
-    const [endDate,setEndDate] = useState();
+    const [startDate, setStartDate] = useState();
+    const [endDate, setEndDate] = useState();
     const themes = useTheme();
 
     const applySearch = async () => {
         var channels = [];
         selectedOption.length ? selectedOption.map(each => channels.push(each.value)) : (channels = []);
-        await props.filterNotifications(search, channels, startDate,endDate);
+        await props.filterNotifications(search, channels, startDate, endDate);
     }
-    
+
     var options = [];
-    props.notifications.map(each => options.push({label : each.app , value : each.channel }));
+    props.notifications.map(each => options.push({ label: each.app, value: each.channel }));
     var uniqueOptions = [...new Map(options.map((item) => [item["value"], item])).values()];
-    const [showFilter,setShowFilter] = useState(false); 
+    const [showFilter, setShowFilter] = useState(false);
     const [selectedOption, setSelectedOption] = useState(uniqueOptions);
     // console.log(props.notifications);
 
@@ -37,92 +36,91 @@ export default function SearchFilter(props)
         props.reset();
     }
 
+    return (
+        <ThemeProvider theme={themes}>
+            <Container>
+                <TopBar mbtm={showFilter ? '1rem' : '0px'}>
+                    <Left>
+                        {themes.scheme === 'light' ? (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterIcon.svg' alt="Filter Icon" />) : (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterw.png' alt="Filter Icon" />)}
+                        {!props.loadFilter ?
+                            <span className="showfilter" onClick={() => { showFilter ? setShowFilter(false) : setShowFilter(true) }}>
+                                <span className="filter" style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</span>
+                                <span className="arrow">
+                                    <ToggleArrowImg>
+                                        <img alt="arrow" className={`${showFilter ? "down" : "up"}`} src="/svg/arrow.svg" />
+                                    </ToggleArrowImg>
+                                </span>
+                            </span>
+                            :
+                            <span className="showfilter">
+                                <span className="filter" style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</span>
+                                <Item
+                                    padding="10px 20px"
+                                >
+                                    <Loader type="Oval" color="#35c5f3" height={20} width={20} />
+                                </Item>
+                            </span>
+                        }
 
-    return(
-     <ThemeProvider theme={themes}>
-         <Container>
-            <TopBar mbtm={showFilter ? '1rem' : '0px'}>
-                <Left>
-                {themes.scheme === 'light' ? ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterIcon.svg' />) : ( <img style={{height:"20px", width:"20px", marginTop:"1rem", marginLeft:"2rem",marginRight:"1rem" }} src='/svg/filterw.png' />)}
-                {!props.loadFilter?
-                    <span className="showfilter" onClick={()=> {showFilter ? setShowFilter(false) : setShowFilter(true)}}>
-                        <span className="filter" style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}} >Filter Notifications</span> 
-                        <span className="arrow">
-                            <ToggleArrowImg>
-                                <img alt="arrow" className={`${showFilter ? "down" : "up"}`} src="/svg/arrow.svg"/> 
-                            </ToggleArrowImg>
-                        </span>
-                    </span>
-                    :
-                    <span className="showfilter">
-                        <span className="filter" style={{marginTop:"1rem", fontWeight:"400", color:"#B4B4B4"}} >Filter Notifications</span> 
-                        <Item
-                            padding="10px 20px"
-                            >
-                            <Loader type="Oval" color="#35c5f3" height={20} width={20} />
-                        </Item>
-                    </span>
-                }
-                    
-                </Left>
+                    </Left>
+                    {
+                        showFilter ? (<Buttons>
+                            <ButtonFeed bgColor='#e20880' onClick={applySearch}>
+                                Apply
+                            </ButtonFeed>
+                            <ButtonFeed bgColor='#35c5f3' onClick={reset}>
+                                Reset
+                            </ButtonFeed>
+                        </Buttons>) : (<></>)
+                    }
+
+
+                </TopBar>
+
                 {
-                    showFilter ? ( <Buttons>
-                    <ButtonFeed bgColor='#e20880' onClick={applySearch}>
-                            Apply
-                    </ButtonFeed>    
-                    <ButtonFeed bgColor='#35c5f3' onClick={reset}>
-                        Reset
-                    </ButtonFeed> 
-                </Buttons>) : (<></>)
-                }
-               
-               
-            </TopBar>
-
-            {
-                    showFilter ? ( <SearchOptions>
+                    showFilter ? (<SearchOptions>
                         <SectionSearch mright='3.5rem' mtop='3.6rem'>
-                         
-                        <SelectChannel>
-                            <SMultiSelect
-                                options={uniqueOptions}
-                                valueRenderer={ () => {
-                                    if(selectedOption.length === 0)  return 'By Channel Name'
-                                    return `${selectedOption.length} Selected`
-                                }}
-                                value={selectedOption}
-                                onChange={setSelectedOption}
-                                labelledBy="Search Notifications from"
-                                placeholder="Search Notifications from"
-                            />
-        
-                        </SelectChannel>
-                        <InputWrapper>
-                        
-                        <input value={search} type="text" className="input2" placeholder="By Keyword" style={{"fontFamily":"Source Sans Pro"}} onChange={(e) => {
-                            setSearch(e.target.value);
-                        }}/>
-                        </InputWrapper> 
+
+                            <SelectChannel>
+                                <SMultiSelect
+                                    options={uniqueOptions}
+                                    valueRenderer={() => {
+                                        if (selectedOption.length === 0) return 'By Channel Name'
+                                        return `${selectedOption.length} Selected`
+                                    }}
+                                    value={selectedOption}
+                                    onChange={setSelectedOption}
+                                    labelledBy="Search Notifications from"
+                                    placeholder="Search Notifications from"
+                                />
+
+                            </SelectChannel>
+                            <InputWrapper>
+
+                                <input value={search} type="text" className="input2" placeholder="By Keyword" style={{ "fontFamily": "Source Sans Pro" }} onChange={(e) => {
+                                    setSearch(e.target.value);
+                                }} />
+                            </InputWrapper>
                         </SectionSearch>
                         <SectionSearch mleft='3.5rem'>
-                            <p style={{fontSize: "1.2rem", color:"#B4B4B4", fontWeight:"500", "fontFamily":"Source Sans Pro" }}>By time of notification sent</p>
-                                <RangeSection mtop="0.5rem">
-                                    <TimeLabelDiv>
-                                        <div>Start Date</div>
-                                    </TimeLabelDiv>
-                                    <SDateTimePicker className="date" value={startDate} onChange={setStartDate}/>
-                                </RangeSection>
-                                <RangeSection mttop="1.5rem">
-                                    <TimeLabelDiv>
-                                        <div>End Date</div>
-                                    </TimeLabelDiv>
-                                    <SDateTimePicker className="date" value={endDate} onChange={setEndDate}/>
-                                </RangeSection>
+                            <p style={{ fontSize: "1.2rem", color: "#B4B4B4", fontWeight: "500", "fontFamily": "Source Sans Pro" }}>By time of notification sent</p>
+                            <RangeSection mtop="0.5rem">
+                                <TimeLabelDiv>
+                                    <div>Start Date</div>
+                                </TimeLabelDiv>
+                                <SDateTimePicker className="date" value={startDate} onChange={setStartDate} />
+                            </RangeSection>
+                            <RangeSection mttop="1.5rem">
+                                <TimeLabelDiv>
+                                    <div>End Date</div>
+                                </TimeLabelDiv>
+                                <SDateTimePicker className="date" value={endDate} onChange={setEndDate} />
+                            </RangeSection>
                         </SectionSearch>
                     </SearchOptions>) : (<></>)
                 }
-         </Container>
-    </ThemeProvider>
+            </Container>
+        </ThemeProvider>
     )
 }
 
@@ -131,11 +129,11 @@ const SDateTimePicker = styled(DateTimePicker)`
     padding-right: 4px;
     .react-datetime-picker__inputGroup__input{
         font-weight: 500 !important;
-        color : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
+        color : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
     }
 
     .react-datetime-picker__button svg {
-        stroke : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
+        stroke : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
     }
 `
 
@@ -163,7 +161,7 @@ const TimeLabelDiv = styled.div`
 const SMultiSelect = styled(MultiSelect)`
     font-family: Source Sans Pro;
     .search input{
-        color : ${props => props.theme.scheme === "dark" ? `#fff` :`#000`};
+        color : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
     }
 
     /* Aligns the option label with the checkbox */
