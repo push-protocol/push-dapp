@@ -391,17 +391,30 @@ const ChatBox = () => {
                                     null
                                 )
                             }
-                            <textarea
+                            {
+                                hasIntent && intentSentandPending === 'Pending' ? (
+                                    <textarea
+                                    disabled
+                                    className='chatMessageInput'
+                                    placeholder={placeholderTextArea()}
+                                    onKeyDown={handleKeyPress}
+                                    onChange={textOnChange}
+                                    value={newMessage}
+                                    >
+                                    </textarea>
+                                ) :
+                                <textarea
                                 disabled={textAreaDisabled}
                                 className='chatMessageInput'
                                 placeholder={placeholderTextArea()}
                                 onKeyDown={handleKeyPress}
                                 onChange={textOnChange}
                                 value={newMessage}
-                            >
-                            </textarea>
+                                >
+                                </textarea>
+                            }
                             {
-                                hasIntent ? (
+                                hasIntent && intentSentandPending === 'Approved' ? (
                                     <button disabled={textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
                                         <i className="fa fa-smile" aria-hidden="true" ></i>
                                     </button>
