@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Sidebar from './sidebar/sidebar';
 import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
@@ -20,6 +20,10 @@ import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
+//@ts-ignore
+import { QueryClient, QueryClientProvider } from "react-query";
+//@ts-ignore
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import './w2wIndex.css';
 
@@ -71,6 +75,7 @@ export const Context = React.createContext<AppContextInterface | null>(null)
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [updatedChat, setUpdatedChat] = useState<any>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { connector, account, chainId } = useWeb3React<Web3Provider>();
   const [did, setDid] = useState<DID>();
@@ -80,6 +85,9 @@ function App() {
   const [connectedUser, setConnectedUser] = useState<User>();
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>();
   const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>();
+
+  const queryClient = new QueryClient({});
+
   useEffect(() => {
     if (isLoading) {
       connectToCeramic();
@@ -114,6 +122,7 @@ function App() {
     setIsLoading(false);
   };
 
+
   const setChat = (text: Feeds) => {
     setViewChatBox(true);
     setCurrentChat(text);
@@ -123,15 +132,25 @@ function App() {
     setRenderInboxFeed(args);
   }
 
+
+
+
+
+
   return (
     <>
       <div className="w2wIndex">
         {!isLoading ?
           (
-            <Context.Provider value={{ currentChat, viewChatBox, did, renderInboxFeed, userProfile, userWallets, setChat, renderInbox, connectedUser }}>
-              <Sidebar />
-              <ChatBox />
-            </Context.Provider>
+            <QueryClientProvider client={queryClient}>
+
+              <Context.Provider value={{ currentChat, viewChatBox, did, renderInboxFeed, userProfile, userWallets, setChat, renderInbox, connectedUser }}>
+                <Sidebar />
+                <ChatBox />
+              </Context.Provider>
+              {/* The rest of your application */}
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
           )
           :
           (
