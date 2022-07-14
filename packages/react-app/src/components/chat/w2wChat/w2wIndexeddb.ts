@@ -40,13 +40,12 @@ export const addData = async <T>(db: IDBDatabase, key: string, dbName: string, c
             newItem['cid'] = key
         }
         console.log(newItem);
-        const tx = db.transaction(dbName, 'readwrite');
-        const objectStore = tx.objectStore(dbName);
-
+        const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
+        const objectStore: IDBObjectStore = tx.objectStore(dbName);
         const query = objectStore.put(newItem);
 
         query.onsuccess = (e: any) => {
-            console.log("success");
+            // console.log("success");
             return resolve(query.result)
         }
         query.onerror = (e: any) => {
@@ -62,9 +61,9 @@ export const addData = async <T>(db: IDBDatabase, key: string, dbName: string, c
 
 export const viewData = async (db: IDBDatabase, key: string, dbName: string, index: string) => {
     return await new Promise((resolve, reject) => {
-        const tx = db.transaction(dbName, 'readonly');
-        const objStore = tx.objectStore(dbName);
-        const idx = objStore.index(index);
+        const tx: IDBTransaction = db.transaction(dbName, 'readonly');
+        const objStore: IDBObjectStore = tx.objectStore(dbName);
+        const idx: IDBIndex = objStore.index(index);
         const query = idx.get(key);
         query.onsuccess = (e) => {
 

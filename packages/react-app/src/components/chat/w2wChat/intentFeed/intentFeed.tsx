@@ -41,6 +41,15 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
+const NavButton = (props) => {
+    const { text, onClick, className } = props;
+    return (
+        <button className={className} onClick={onClick}>
+            {text}
+        </button>
+    );
+};
+
 const IntentFeed = (props: intentFeedProps) => {
     const { did, setChat } = useContext(Context);
     const [showSentIntent, setShowSentIntent] = useState(true);
@@ -53,6 +62,8 @@ const IntentFeed = (props: intentFeedProps) => {
     const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
     const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
     const [toDID, settoDID] = useState();
+    const [active, setActive] = useState(false);
+
 
     const handleClose = () => {
         setOpen(false);
@@ -205,13 +216,37 @@ const IntentFeed = (props: intentFeedProps) => {
         setOpenReprovalSnackBar(false);
     };
 
+    const makeActive = (status, task) => {
+        setActive(status);
+        if (task === 'sent') {
+            viewSentIntents()
+        } else {
+            viewReceivedIntents()
+        }
+    };
+
     return (
         <>
             <section className='messageFeed_body'>
-                <div className='intentFilter_buttons' style={{ width: "100%" }}>
+
+                <div className="feedBox">
+                    <div className="twin-button regular">
+                        <NavButton
+                            text="Sent Intents"
+                            className={!active ? "regular" : "none"}
+                            onClick={() => makeActive(false, 'sent')}
+                        />
+                        <NavButton
+                            text="Received Intents"
+                            className={active ? "regular" : "none"}
+                            onClick={() => makeActive(true, 'received')}
+                        />
+                    </div>
+                </div>
+                {/* <div className='intentFilter_buttons' style={{ width: "100%" }}>
                     <Button onClick={viewSentIntents}> Sent Intents</Button>
                     <Button onClick={viewReceivedIntents}> Received Intents</Button>
-                </div>
+                </div> */}
 
                 {/* Modals */}
                 <Modal
