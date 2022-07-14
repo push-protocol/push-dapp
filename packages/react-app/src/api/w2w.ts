@@ -14,8 +14,8 @@ export const getIntents = async (did: string) => {
     return data;
 }
 
-export const getUser = async (did: string, account: string) => {
-    const response = await fetch(`http://localhost:4000/apis/w2w/getUser/${did}/${account}`);
+export const getUser = async (did: string/*, account: string*/) => {
+    const response = await fetch(`http://localhost:4000/apis/w2w/getUser/${did}`);
     const data = await response.json();
     return data;
 }
@@ -126,7 +126,7 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
     return response;
 }
 
-export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
+export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, messageType: string, signature: string, signatureType: string) => {
     const response = await fetch('http://localhost:4000/apis/w2w/intent', {
         method: 'POST',
         headers: {
@@ -137,7 +137,9 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
             fromDID,
             fromWallet,
             message,
-            signature
+            signature,
+            message_type: messageType,
+            sig_type: signatureType
         })
     });
     const data = await response.json();

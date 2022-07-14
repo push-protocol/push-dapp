@@ -155,7 +155,7 @@ const ChatBox = () => {
     const sendIntent = async () => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, newMessage, 'signature');
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, newMessage, 'Text', 'signature', 'signatureType');
                 console.log(msg);
                 setHasIntent(true);
                 setMessages([...messages, msg]);

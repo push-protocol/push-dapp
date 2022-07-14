@@ -85,13 +85,11 @@ const IntentFeed = (props: intentFeedProps) => {
         getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did');
 
         if (getIntent === undefined) {
-            console.log('primeiro if')
             getIntent = await fetchIntent(did);
             seperateSentAndReceivedIntent(getIntent);
         }
         else {
             getIntent = getIntent.body;
-            console.log('segundo if')
             seperateSentAndReceivedIntent(getIntent);
             getIntent = await fetchIntent(did);
             seperateSentAndReceivedIntent(getIntent);
@@ -113,10 +111,9 @@ const IntentFeed = (props: intentFeedProps) => {
         handleOpen();
     }
 
-    async function ApproveIntent(status) {
+    async function ApproveIntent(status: string) {
         var fromDID = did.id;
         const res = await approveIntent(fromDID, toDID, status, "1");
-        console.log(res);
         handleClose();
         if (status == "Approved")
             setOpenSuccessSnackBar(true);

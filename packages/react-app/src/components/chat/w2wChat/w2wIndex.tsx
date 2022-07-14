@@ -96,7 +96,7 @@ function App() {
     setCaip10Account(caip10);
     setDid(did);
     setCeramicInstance(ceramic);
-    const user = await PushNodeClient.getUser(did.id, caip10);
+    const user = await PushNodeClient.getUser(did.id/*, caip10*/);
     if (!user) {
       const keyPairs = await generateKeyPair();
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did);
