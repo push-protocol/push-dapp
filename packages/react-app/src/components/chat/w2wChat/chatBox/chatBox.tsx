@@ -6,6 +6,7 @@ import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
 import { CID } from 'ipfs-http-client';
 // @ts-ignore
+import { envConfig } from "@project/contracts";
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
 import * as PushNodeClient from '../../../../api/w2w';
@@ -22,6 +23,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
+
+const infura_URL = envConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -92,7 +95,7 @@ const ChatBox = () => {
                 try {
                     const cid = CID.parse(currentChat.profile_picture);
                     
-                    setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
+                    setImageSource(infura_URL+`${currentChat.profile_picture}`)
                 }
                 catch (err) {
                     setImageSource(currentChat.profile_picture);

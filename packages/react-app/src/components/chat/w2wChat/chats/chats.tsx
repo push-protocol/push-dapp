@@ -5,6 +5,9 @@ import cn from 'classnames';
 import { DID } from 'dids'
 import Modal from '../Modal/Modal';
 import Files from '../Files/Files';
+import { envConfig } from "@project/contracts";
+
+const infura_URL = envConfig.infuraApiUrl;
 interface chatProps {
     msg:MessageIPFS,
     did:DID,
@@ -67,11 +70,11 @@ export default function Chats({msg,did,noTail}:chatProps) {
                         className = {cn("w2wmsgshared", msg.fromDID===did.id ? "w2wImgsent" :"w2wImgreceived",noTail && "w2wnoTail")}
                     >
                         <img 
-                            src = {`https://ipfs.infura.io/ipfs/${msg.messageContent}`}  
+                            src = {infura_URL+`${msg.messageContent}`}  
                             onClick = {
                                 ()=>{
                                     setShowImageModal(true)
-                                    setImageUrl(`https://ipfs.infura.io/ipfs/${msg.messageContent}`)
+                                    setImageUrl(infura_URL+`${msg.messageContent}`)
                                     }
                                 }
                         />

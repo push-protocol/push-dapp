@@ -3,6 +3,8 @@ import './ProfileHeader.css';
 //@ts-ignore
 import leftArrow from '../w2wAsset/leftArrow.png';
 import {CID} from 'ipfs-http-client';
+import { envConfig } from "@project/contracts";
+const infura_URL = envConfig.infuraApiUrl;
 
 interface profileHeaderPropsType{
     profile_picture:string,
@@ -16,7 +18,7 @@ const ProfileHeader = (props:profileHeaderPropsType)=>{
         try{
     
             const cid:CID = CID.parse(props.profile_picture);
-            setUserProfileImage(`https://ipfs.infura.io/ipfs/${props.profile_picture}`)
+            setUserProfileImage(infura_URL+`${props.profile_picture}`)
         }
         catch(err)
         {

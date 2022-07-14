@@ -1,7 +1,8 @@
 import { randomBytes } from '@stablelib/random';
 import { Feeds, User } from 'components/chat/w2wChat/w2wIndex';
 import { toString } from 'uint8arrays/to-string';
-
+import { envConfig } from "@project/contracts";
+const BASE_URL = envConfig.w2wApiUrl;
 export const walletToCAIP10 = (account: string, chainId: number): string => {
     if (chainId === 1) {
         return 'eip155:1:' + account;
@@ -13,7 +14,7 @@ export const walletToCAIP10 = (account: string, chainId: number): string => {
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
-    const response = await fetch('http://localhost:4000/apis/w2w/inbox/did',{
+    const response = await fetch(BASE_URL+'/w2w/inbox/did',{
         method:'POST',
         headers:{
             "Content-Type": "application/json"
@@ -27,7 +28,7 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
 }
 
 export const getIntents = async (did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/intents/did',{
+    const response = await fetch(BASE_URL+'/w2w/intents/did',{
         method:"POST",
         headers:{
             "Content-Type":"application/json"
@@ -41,7 +42,7 @@ export const getIntents = async (did: string) => {
 }
 
 export const getUser = async (did: string) => {
-    const response = await fetch(`http://localhost:4000/apis/w2w/getUser`,{
+    const response = await fetch(BASE_URL+'/w2w/getUser',{
         method:'POST',
         headers:{
             "Content-Type":"application/json"
@@ -55,7 +56,7 @@ export const getUser = async (did: string) => {
 }
 
 export const updateWalletIfNotExist = async (did:string,caip10:string)=>{
-    const response = await fetch('http://localhost:4000/apis/w2w/updateWalletIfNotExist',{
+    const response = await fetch(BASE_URL+'/w2w/updateWalletIfNotExist',{
         method:"POST",
         headers:{
             "Content-Type":"application/json"
@@ -71,7 +72,7 @@ export const updateWalletIfNotExist = async (did:string,caip10:string)=>{
 
 
 export const getDidLinkWallets = async (did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/getDidLinkWallets/',{
+    const response = await fetch(BASE_URL+'/w2w/getDidLinkWallets/',{
         method:"POST",
         headers:{
             "Content-Type":"application/json"
@@ -85,7 +86,7 @@ export const getDidLinkWallets = async (did: string) => {
 }
 
 export const uploadUserProfileImage = async (did: string, image: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/updateProfilePicture/' + did, {
+    const response = await fetch(BASE_URL+'/w2w/updateProfilePicture/' + did, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json"
@@ -98,7 +99,7 @@ export const uploadUserProfileImage = async (did: string, image: string) => {
 
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/messages', {
+    const response = await fetch(BASE_URL+'/w2w/messages', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'
@@ -120,7 +121,7 @@ export const postMessage = async (fromWallet: string, fromDID: string, toDID: st
 }
 
 export const getIntent = async (firstDID: string, secondDID: string) => {
-    const response = await fetch(`http://localhost:4000/apis/w2w/intent/did`,{
+    const response = await fetch(BASE_URL+'/w2w/intent/did',{
         method:"POST",
         headers:{
             "Content-Type":"application/json"
@@ -135,7 +136,7 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
 }
 
 export const getAllUsers = async (): Promise<User[]> => {
-    const response = await fetch('http://localhost:4000/apis/w2w/getAllUsers',{
+    const response = await fetch(BASE_URL+'/w2w/getAllUsers',{
         method:'POST',
         headers:{
             "content-Type":"application/json"
@@ -148,7 +149,7 @@ export const getAllUsers = async (): Promise<User[]> => {
 
 export const createUser = async ({ wallet, did, pgp_pub, pgp_priv_enc, pgp_enc_type, signature, sig_type }:
     { wallet: string, did: string, pgp_pub: string, pgp_priv_enc: string, pgp_enc_type: string, signature: string, sig_type: string }) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/createUser', {
+    const response = await fetch(BASE_URL+'/w2w/createUser', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'
@@ -168,7 +169,7 @@ export const createUser = async ({ wallet, did, pgp_pub, pgp_priv_enc, pgp_enc_t
 }
 
 export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
-    const response = await fetch(`http://localhost:4000/apis/w2w/messages/dids`,{
+    const response = await fetch(BASE_URL+'/w2w/messages/dids',{
         method:"POST",
         headers:{
             'Content-Type':"application/json"
@@ -184,7 +185,7 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
 }
 
 export const getKeys = async (did: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/keys/did/' + did);
+    const response = await fetch(BASE_URL+'/w2w/keys/did/' + did);
     const data: any = await response.json();
     return data;
 }
@@ -192,7 +193,7 @@ export function randomString() {
     return toString(randomBytes(16), 'base64');
 }
 export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/intent', {
+    const response = await fetch(BASE_URL+'/w2w/intent', {
         method: 'PUT',
         headers: {
             "content-Type": 'application/json'
@@ -208,7 +209,7 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
 }
 
 export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
-    const response = await fetch('http://localhost:4000/apis/w2w/intent', {
+    const response = await fetch(BASE_URL+'/w2w/intent', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'
