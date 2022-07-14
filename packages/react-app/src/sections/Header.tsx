@@ -14,10 +14,10 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 
 import styled, { css, useTheme } from "styled-components";
-import {Section, Item, ItemH, Button, Span} from 'components/SharedStyling';
+import {Section, Item, ItemH, Button, Span} from 'primaries/SharedStyling';
 
-import Profile from 'components/Profile';
-import Bell from 'components/Bell';
+import Profile from 'primaries/Profile';
+import Bell from 'primaries/Bell';
 import NavigationButton from 'components/NavigationButton';
 
 import { NavigationContext } from "contexts/NavigationContext";

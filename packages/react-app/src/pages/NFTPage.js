@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactGA from "react-ga";
 
 import styled, { css, useTheme } from 'styled-components';
-import {Section, Content, Item, A, B, H2, H3, Span, Button} from 'components/SharedStyling';
+import {Section, Content, Item, A, B, H2, H3, Span, Button} from '../primaries/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
 
@@ -14,26 +14,20 @@ import AllNFTsV2 from "components/AllNFTsV2";
 import TransferNFT from "components/TransferNFT";
 import TransferNFTv2 from "components/TransferNFTv2";
 
-
 import {ThemeProvider} from "styled-components";
 
-import { envConfig } from "@project/contracts";
-
-
 // Create Header
-function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
+function NFTPage() {
   // React GA Analytics
   ReactGA.pageview("/rockstars");
 
-  const { account, library, chainId } = useWeb3React();
+  const { account } = useWeb3React();
 
   const themes = useTheme();
-  const [darkMode, setDarkMode] = useState(false);
 
   const [tokenId, setTokenId] = React.useState(null);
   const [controlAt, setControlAt] = React.useState(1);
   const [version, setVersion] = React.useState(2);
-  const [loading, setLoading] = React.useState(true);
 
   const [showAnswers, setShowAnswers] = React.useState([]);
 
@@ -43,13 +37,6 @@ function NFTPage({ epnsReadProvider, epnsWriteProvide }) {
 
     setShowAnswers(newShowAnswers);
   }
-
-  // React.useEffect(() => {
-  //   if (!onCoreNetwork) {
-  //     const url = window.location.origin;
-  //     window.location.replace(`${url}/#/notavailable`);
-  //   }
-  // })
 
   React.useEffect(() => {
     userClickedAt(2);

@@ -1,8 +1,5 @@
 import React from "react";
 
-import styled, { css } from 'styled-components';
-import {Section, Content, Item, ItemH, Span, Anchor} from 'components/SharedStyling';
-
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { Tooltip } from "@material-ui/core";
 

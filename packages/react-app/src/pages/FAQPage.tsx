@@ -1,14 +1,13 @@
 import React from "react";
 
-import styled, {css, useTheme } from 'styled-components';
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Para, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
+import styled, { useTheme } from 'styled-components';
+import { Section, Content, Item, A, H2, Span, Button } from '../primaries/SharedStyling';
 
 import { ThemeProvider } from "styled-components";
 import { BsChevronExpand } from 'react-icons/bs';
 
-function ComingSoonPage(props) {
+function FaqPage() {
   const themes = useTheme();
-  const [loading, setLoading] = React.useState(true);
 
   const [showAnswers, setShowAnswers] = React.useState([]);
 
@@ -43,20 +42,20 @@ function ComingSoonPage(props) {
               <Item align="stretch" margin="0px 0px 20px 0px">
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(1)}}
+                    onClick={() => { toggleShowAnswer(1) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
                       What are Channels?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[1] &&
                     <Answer>
                       <Span>
                         Any user or protocol that activates itself as a service to send notifications is a Channel.
-                        </Span>
+                      </Span>
                     </Answer>
                   }
                 </QnAItem>
@@ -64,13 +63,13 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(2)}}
+                    onClick={() => { toggleShowAnswer(2) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    Is Channel Creation a compulsory process?
+                      Is Channel Creation a compulsory process?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[2] &&
@@ -79,7 +78,7 @@ function ComingSoonPage(props) {
                         Not at all
                       </Span>
                       <Span>
-                        Channel creation is only important for any protocol or service that wants to trigger notifications for its users. If you are a user who is only interested in receiving notifications and being up to the minute with the Web3 world, channel creation is not at all required for you.  
+                        Channel creation is only important for any protocol or service that wants to trigger notifications for its users. If you are a user who is only interested in receiving notifications and being up to the minute with the Web3 world, channel creation is not at all required for you.
                       </Span>
 
                       {/* <Span>
@@ -91,19 +90,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(3)}}
+                    onClick={() => { toggleShowAnswer(3) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    How do I opt into a Channel?
+                      How do I opt into a Channel?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[3] &&
                     <Answer>
                       <Span>
-                      Every Channel in the View Channels section comes with an opt-in button. Once you click on it and sign the transaction, you will be subscribed to that channel & receive its notifications.
+                        Every Channel in the View Channels section comes with an opt-in button. Once you click on it and sign the transaction, you will be subscribed to that channel & receive its notifications.
                       </Span>
                     </Answer>
                   }
@@ -111,19 +110,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(4)}}
+                    onClick={() => { toggleShowAnswer(4) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    Does Opting-in to a Channel require gas fees?
+                      Does Opting-in to a Channel require gas fees?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[4] &&
                     <Answer>
                       <Span>
-                      NOPE. Subscribing to a channel is a Gasless action. All you need to do is sign the transaction and that’s it. 
+                        NOPE. Subscribing to a channel is a Gasless action. All you need to do is sign the transaction and that’s it.
                       </Span>
                     </Answer>
                   }
@@ -132,23 +131,23 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(5)}}
+                    onClick={() => { toggleShowAnswer(5) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    Do I need ETHER to interact with the DAPP?
+                      Do I need ETHER to interact with the DAPP?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[5] &&
                     <Answer>
                       <Span>
-                      Nope. We have gasless mechanisms for most of the things in the Dapp. Therefore, an average joe doesn’t need any ether to use our dapp.
+                        Nope. We have gasless mechanisms for most of the things in the Dapp. Therefore, an average joe doesn’t need any ether to use our dapp.
                       </Span>
 
                       <Span>
-                      ETH or Funds are only required when a Channel is to be created.
+                        ETH or Funds are only required when a Channel is to be created.
                       </Span>
                     </Answer>
                   }
@@ -157,19 +156,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(6)}}
+                    onClick={() => { toggleShowAnswer(6) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    How do I receive notifications?
+                      How do I receive notifications?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[6] &&
                     <Answer>
                       <Span>
-                      In order to receive notifications seamlessly, EPNS provides 3 different crypto front-ends
+                        In order to receive notifications seamlessly, EPNS provides 3 different crypto front-ends
                       </Span>
                       <Span2>
                         <AMod href="https://app.epns.io/" target="_blank">EPNS Dapp</AMod>
@@ -178,7 +177,7 @@ function ComingSoonPage(props) {
                         <AMod href="https://chrome.google.com/webstore/detail/epns-protocol-alpha/lbdcbpaldalgiieffakjhiccoeebchmg" target="_blank">Browser Extension</AMod>
                       </Span2>
                       <Span2 mtop="0.2rem">
-                        <AMod href="https://play.google.com/store/apps/details?id=io.epns.epns" target="_blank"><span style={{marginRight:"0.3rem"}}>Android</span></AMod> <span style={{marginRight:"0.3rem"}}>and</span> <AMod href="https://apps.apple.com/app/ethereum-push-service-epns/id1528614910" target="_blank">IOS Apps</AMod>
+                        <AMod href="https://play.google.com/store/apps/details?id=io.epns.epns" target="_blank"><span style={{ marginRight: "0.3rem" }}>Android</span></AMod> <span style={{ marginRight: "0.3rem" }}>and</span> <AMod href="https://apps.apple.com/app/ethereum-push-service-epns/id1528614910" target="_blank">IOS Apps</AMod>
                       </Span2>
                     </Answer>
                   }
@@ -197,20 +196,20 @@ function ComingSoonPage(props) {
               <Item align="stretch" margin="0px 0px 20px 0px">
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(7)}}
+                    onClick={() => { toggleShowAnswer(7) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
                       How do I create a Channel?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[7] &&
                     <Answer>
                       <Span>
                         Easiest way to create a channel is from our <AMod target="_blank" href="https://app.epns.io/#/dashboard">EPNS Dapp</AMod> itself. Find the entire channel creation process <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/create-your-first-channel">here</AMod>.
-                        </Span>
+                      </Span>
                     </Answer>
                   }
                 </QnAItem>
@@ -218,13 +217,13 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(8)}}
+                    onClick={() => { toggleShowAnswer(8) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    What are the different types of Notifications?
+                      What are the different types of Notifications?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[8] &&
@@ -233,13 +232,13 @@ function ComingSoonPage(props) {
                         The 3 main types of notifications right now:
                       </Span>
                       <Span>
-                        <b>Broadcast Notification</b>: <i>Sent out to all Subscribers of a Channel</i> 
+                        <b>Broadcast Notification</b>: <i>Sent out to all Subscribers of a Channel</i>
                       </Span>
                       <Span>
-                        <b>Subset Notification</b>: <i>Sent out to a group of all the subscribers</i> 
+                        <b>Subset Notification</b>: <i>Sent out to a group of all the subscribers</i>
                       </Span>
                       <Span>
-                        <b>Targeted Notification</b>: <i>Sent out to a specific subscriber of your channel</i> 
+                        <b>Targeted Notification</b>: <i>Sent out to a specific subscriber of your channel</i>
                       </Span>
                     </Answer>
                   }
@@ -247,19 +246,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(9)}}
+                    onClick={() => { toggleShowAnswer(9) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    How do I send notifications?
+                      How do I send notifications?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[9] &&
                     <Answer>
                       <Span>
-                      Sending a notification is possible from the DAPP, Back-end as well as Smart Contracts.
+                        Sending a notification is possible from the DAPP, Back-end as well as Smart Contracts.
                       </Span>
                     </Answer>
                   }
@@ -267,19 +266,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(10)}}
+                    onClick={() => { toggleShowAnswer(10) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    How do I use Backend-Sdk and Showrunners?
+                      How do I use Backend-Sdk and Showrunners?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[10] &&
                     <Answer>
                       <Span>
-                      EPNS Documentation hub contains in-depth details on how to use our <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up">Backend SDKs</AMod> and <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/working-with-showrunners">Showrunners</AMod>. Check them out. 
+                        EPNS Documentation hub contains in-depth details on how to use our <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up">Backend SDKs</AMod> and <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/working-with-showrunners">Showrunners</AMod>. Check them out.
                       </Span>
                     </Answer>
                   }
@@ -288,19 +287,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(11)}}
+                    onClick={() => { toggleShowAnswer(11) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    DHow do I use the Front-SDK?
+                      DHow do I use the Front-SDK?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[11] &&
                     <Answer>
                       <Span>
-                      EPNS Documentation hub contains in-depth details on how to use our <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/integrating-with-front-end-sdk">Front-end SDK</AMod>.
+                        EPNS Documentation hub contains in-depth details on how to use our <AMod target="_blank" href="https://docs.epns.io/developer-zone/developer-guides/integrating-with-front-end-sdk">Front-end SDK</AMod>.
                       </Span>
                     </Answer>
                   }
@@ -309,19 +308,19 @@ function ComingSoonPage(props) {
 
                 <QnAItem>
                   <Question
-                    onClick={() => {toggleShowAnswer(12)}}
+                    onClick={() => { toggleShowAnswer(12) }}
                     hover="#e20880"
                   >
                     <Span color={themes.color}>
-                    Where can I find Developer Documentations?
+                      Where can I find Developer Documentations?
                     </Span>
-                    <BsChevronExpand size={20} color={"#ddd"}/>
+                    <BsChevronExpand size={20} color={"#ddd"} />
                   </Question>
 
                   {showAnswers[12] &&
                     <Answer>
                       <Span>
-                      All of our documentation can be found in our <AMod target="_blank" href="https://docs.epns.io/">EPNS Documentation HUB</AMod>.
+                        All of our documentation can be found in our <AMod target="_blank" href="https://docs.epns.io/">EPNS Documentation HUB</AMod>.
                       </Span>
                     </Answer>
                   }
@@ -332,7 +331,7 @@ function ComingSoonPage(props) {
           </Item>
         </Content>
       </Container>
-      </ThemeProvider>
+    </ThemeProvider>
   );
 }
 
@@ -348,7 +347,7 @@ const Span2 = styled.span`
   margin-left: 2rem;
   color:black;
   font-weight:300;
-  margin-top:${props => props.mtop || "0px" }
+  margin-top:${props => props.mtop || "0px"}
 `
 
 const Heading = styled.h2`
@@ -427,4 +426,4 @@ const AMod = styled(A)`
 
 
 // Export Default
-export default ComingSoonPage;
+export default FaqPage;

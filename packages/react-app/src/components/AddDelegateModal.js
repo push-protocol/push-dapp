@@ -1,15 +1,10 @@
 import React, {useRef, useState} from 'react';
-import { useClick, useClickAway } from 'react-use';
-import styled ,  {useTheme} from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
-import { addresses, abis } from "@project/contracts";
+import { useClickAway } from 'react-use';
+import styled, {useTheme} from 'styled-components';
 import Loader from 'react-loader-spinner';
 import { ThemeProvider } from "styled-components";
 
-import {Item, H2, H3, Span, Button, Input} from 'components/SharedStyling';
-
-const ethers = require('ethers');
-
+import {Item, H2, H3, Span, Button, Input} from 'primaries/SharedStyling';
 
 export default function AddDelegateModal({
     onClose,onSuccess, addDelegate
@@ -55,7 +50,7 @@ export default function AddDelegateModal({
             <AliasModal ref={modalRef} background={themes}>
                 <Item align="flex-start">
                     <H2 textTransform="uppercase" spacing="0.1em">
-                    <Span weight="200"  weight="200" color={themes.fontColor}>Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
+                    <Span weight="200" color={themes.fontColor}>Add </Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">Delegate</Span>
                     </H2>
                     <H3  weight="200" color={themes.fontColor}>Add an account who can send notifications on your behalf.</H3>
                 </Item>

@@ -1,8 +1,4 @@
-import React from "react";
-
-import { addresses, abis } from "@project/contracts";
-import { ethers, utils, BigNumber} from "ethers";
-// import { parseEther, bigNumber } from 'ethers/utils'
+import { utils, BigNumber} from "ethers";
 const claims = require("config/airdrop/claims.json")
 
 // Airdrop Helper Functions
@@ -76,7 +72,6 @@ const AirdropHelper = {
 
 
     verifyAddress: async (user, contract) => {
-        const enableLogs = 1;
         const merkleRootHex = claims.merkleRoot
         const merkleRoot = Buffer.from(merkleRootHex.slice(2), 'hex')
         if(claims.claims[user]){

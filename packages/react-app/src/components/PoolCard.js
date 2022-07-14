@@ -1,24 +1,22 @@
 import React from "react";
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
+import { useWeb3React } from "@web3-react/core";
 
-import styled, { css, keyframes } from "styled-components";
-import {Section, Content, Item, ItemH, ItemBreak, A, B, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
-import InfoTooltip from "components/InfoTooltip";
+import styled, { css } from "styled-components";
+import {Item, ItemH, B, H2, H3, Span, Button, Input} from '../primaries/SharedStyling';
+import InfoTooltip from "../primaries/InfoTooltip";
 
 import { addresses, abis } from "@project/contracts";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
-import { AnimateOnChange } from "react-animation";
 import Loader from "react-loader-spinner";
-import Blockies from "components/BlockiesIdenticon";
 
 //   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
 const ethers = require("ethers");
 
 const bn = function(number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
 
-const tokens = function (amount) { return (bn(amount).mul(bn(10).pow(18))).toString() }
-const tokensBN = function (amount) { return (bn(amount).mul(bn(10).pow(18))) }
+// const tokens = function (amount) { return (bn(amount).mul(bn(10).pow(18))).toString() }
+// const tokensBN = function (amount) { return (bn(amount).mul(bn(10).pow(18))) }
 const bnToInt = function (bnAmount) { return bnAmount.div(bn(10).pow(18)) }
 
 // Create Header

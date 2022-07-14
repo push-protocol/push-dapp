@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React from "react";
 import styled, { useTheme } from "styled-components";
 import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
@@ -7,19 +7,19 @@ import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 
-import { Item, ItemH } from "components/SharedStyling";
+import { Item, ItemH } from "../primaries/SharedStyling";
 import { AiOutlineSearch } from "react-icons/ai";
 
 import UtilityHelper from 'helpers/UtilityHelper';
 
-import DisplayNotice from "components/DisplayNotice";
+import DisplayNotice from "../primaries/DisplayNotice";
 import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
 
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
 
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -68,7 +68,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
     const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
       channelsVisited,
-      CHANNELS_PER_PAGE
+      CHANNELS_PER_PAGE,
+      account,
+      chainId
     );
     dispatch(incrementPage())
     if (!channels.length) {
@@ -77,9 +79,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
     // increases the step once the channel are loaded
     if (
-        run &&
-        stepIndex === 3
-      ) {
+      run &&
+      stepIndex === 3
+    ) {
       dispatch(incrementStepIndex());
       dispatch(incrementStepIndex());
     }
@@ -92,7 +94,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
     const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
       startingPoint,
-      CHANNELS_PER_PAGE
+      CHANNELS_PER_PAGE,
+      account,
+      chainId
     );
     dispatch(setChannelMeta([...channels, ...moreChannels]));
     setMoreLoading(false);
@@ -165,12 +169,12 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
   React.useEffect(() => {
     const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42)
-    if(!ADDRESS_REGEX.test(parsedChannel)) return;
+    if (!ADDRESS_REGEX.test(parsedChannel)) return;
     setTimeout(() => {
       setSearch(parsedChannel);
     }, SEARCH_DELAY)
   }, [])
-  
+
   return (
     <ThemeProvider theme={themes}>
       <Container>
@@ -198,14 +202,14 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   left="12px"
 
                 >
-                  <AiOutlineSearch size={20} style={{color: themes.viewChannelSearchIcon}} />
+                  <AiOutlineSearch size={20} style={{ color: themes.viewChannelSearchIcon }} />
                 </Item>
               </SearchContainer>
 
-              {!UtilityHelper.isMainnet(chainId) && 
-                <Faucets chainId={chainId} /> 
+              {!UtilityHelper.isMainnet(chainId) &&
+                <Faucets chainId={chainId} />
               }
-              
+
             </ItemH>
           )}
 
@@ -241,10 +245,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
           {((moreLoading && channels.length) ||
             loading ||
             loadingChannel) && (
-            <CenterContainer>
-              <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-            </CenterContainer>
-          )}
+              <CenterContainer>
+                <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+              </CenterContainer>
+            )}
         </ScrollItem>
       </Container>
     </ThemeProvider>

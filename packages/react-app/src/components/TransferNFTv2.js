@@ -1,32 +1,20 @@
 import React from "react";
 
 import styled, { css } from 'styled-components';
-import {Section, Content, Item, ItemH, ItemBreak, H1, H2, H3, Image, P, Span, Anchor, Button, Showoff, FormSubmision, Input, TextField} from 'components/SharedStyling';
-
-import { FiLink } from 'react-icons/fi';
+import {Section, Content, Item, H2, Span, Button, FormSubmision, Input} from '../primaries/SharedStyling';
 
 import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
-
-import { makeStyles } from '@material-ui/core/styles';
-import Slider from '@material-ui/core/Slider';
-
 import Loader from 'react-loader-spinner';
 // import { bigNumberify, parseUnits } from 'ethers/utils'
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 
 import { addresses, abis } from "@project/contracts";
-import NFTHelper from 'helpers/NFTHelper';
 const ethers = require('ethers');
-
-const ipfs = require('ipfs-api')()
-
-const minStakeFees = 50;
 
 // Create Header
 function TransferNFTv2({tokenId}) {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { account, library } = useWeb3React();
 
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
   const [toAddress, setToAddress] = React.useState('');

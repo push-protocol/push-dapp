@@ -3,17 +3,20 @@
     border-radius: 5px !important;
     height: 40px !important;
 }
-.react-datetime-picker__inputGroup{
+
+.react-datetime-picker__inputGroup {
     text-align: center !important;
 }
-.react-datetime-picker__inputGroup__input{
+
+.react-datetime-picker__inputGroup__input {
     font-weight: 500 !important;
 }
 
-.showfilter:hover{
+.showfilter:hover {
     cursor: pointer;
 }
-.showfilter{
+
+.showfilter {
     display: flex;
     flex-direction: row;
 
@@ -21,7 +24,7 @@
 
 
 @media (max-width:850px) {
-    .react-datetime-picker__inputGroup{
+    .react-datetime-picker__inputGroup {
         width: 4rem !important;
         margin-right: -2px !important;
         margin: 0px !important;
@@ -29,11 +32,12 @@
 
     .hAGKHU div {
         margin: 0% !important;
-        font-size:16px !important;
+        font-size: 16px !important;
         width: 2rem !important;
         margin-top: 0px !important;
         /* height: 1.5rem; */
     }
+
     .hAGKHU {
         display: flex !important;
         flex-direction: row !important;
@@ -42,25 +46,24 @@
         padding: 0% !important;
         align-items: center !important;
         justify-content: center !important;
-       
-        
+
+
     }
-    
-    .react-datetime-picker__button
-    {
+
+    .react-datetime-picker__button {
         margin: 0px !important;
         padding: 0px !important;
     }
-    .gScVOw
-    {
+
+    .gScVOw {
         width: 1rem !important;
         margin: 0px !important;
     }
-   
-    
+
+
 }
-.react-datetime-picker__inputGroup__input--hasLeadingZero
-{
+
+.react-datetime-picker__inputGroup__input--hasLeadingZero {
     font-weight: 500 !important;
 }
 
@@ -69,40 +72,40 @@
     /* height: 1.5rem; */
 }
 
-.react-datetime-picker__inputGroup__minute{
+.react-datetime-picker__inputGroup__minute {
     font-weight: 400 !important;
 }
 
-.react-datetime-picker__clock{
+.react-datetime-picker__clock {
     display: none;
 }
 
-.filter:hover{
+.filter:hover {
     cursor: pointer;
 }
 
-.arrow:hover{
+.arrow:hover {
     cursor: pointer;
 }
 
-.filter{
-margin-bottom: 1rem;
+.filter {
+    margin-bottom: 1rem;
 }
 
-.arrow{
-    
+.arrow {
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin-left: 0.7rem;
-    
+
 }
 
-.hAGKHU{
-        
+.hAGKHU {
+
     border-top-left-radius: 5px !important;
-border-bottom-left-radius: 5px !important;
-/* height: 40px !important; */
+    border-bottom-left-radius: 5px !important;
+    /* height: 40px !important; */
     display: flex !important;
     flex-direction: row !important;
     margin-top: 0px !important;
@@ -110,29 +113,30 @@ border-bottom-left-radius: 5px !important;
     padding: 0% !important;
     align-items: center !important;
     justify-content: center !important;
-    
+
 
 }
 
-.react-datetime-picker__inputGroup__divider
-{
+.react-datetime-picker__inputGroup__divider {
     font-weight: 400;
 }
 
-.date{
+.date {
     flex: 6;
     display: flex;
     align-items: center !important;
     font-family: Source Sans Pro;
 }
 
-.DropDown{
+.DropDown {
     border-radius: 10px;
     height: 2.5rem;
     background-color: inherit;
 }
 
-.button, input, input2 :focus{
+.button,
+input,
+input2 :focus {
     height: 35px;
     outline: none !important;
     border: 0px solid white !important;
@@ -141,7 +145,7 @@ border-bottom-left-radius: 5px !important;
 
 }
 
-.iQSpGP{
+.iQSpGP {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -152,7 +156,7 @@ border-bottom-left-radius: 5px !important;
     font-family: Source Sans Pro;
 }
 
-.dropdown-heading{
+.dropdown-heading {
     /* color: #E20880 !important; */
     font-weight: 400 !important;
     font-size: 1.1rem !important;
@@ -166,33 +170,35 @@ border-bottom-left-radius: 5px !important;
     background-color: inherit;
 }
 
-.gray{
-    color:  #B0B0B0 !important;
-    
+.gray {
+    color: #B0B0B0 !important;
+
 }
 
 
-.dropdown-heading:focus{
-     border: 0px solid white !important;
-        box-shadow: 0 0 0px white !important;
+.dropdown-heading:focus {
+    border: 0px solid white !important;
+    box-shadow: 0 0 0px white !important;
 }
-.dropdown-container{
+
+.dropdown-container {
     border: 0px solid white !important;
     /* height: 45px !important; */
     margin: 0px !important;
     padding: 0px !important;
 }
-    
-.dropdown-container:focus-within{
-        border: 0px solid white !important;
-        box-shadow: 0 0 0 0px white !important;
+
+.dropdown-container:focus-within {
+    border: 0px solid white !important;
+    box-shadow: 0 0 0 0px white !important;
 }
-.cZpmt:focus{
+
+.cZpmt:focus {
     /* border: 1px solid #674C9F !important; */
     box-shadow: 0 0 0px white !important;
 }
 
-.input2{
+.input2 {
     border: 0px solid white;
     font-size: 1.1rem;
     margin-top: 2.5px;
@@ -203,12 +209,10 @@ border-bottom-left-radius: 5px !important;
     width: 100%;
 
 }
-.input2::placeholder
-{
+
+.input2::placeholder {
     opacity: 1;
     font-weight: 400;
     font-family: Source Sans Pro;
     color: #B0B0B0 !important;
 }
-
-

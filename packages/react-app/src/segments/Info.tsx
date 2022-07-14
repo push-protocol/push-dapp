@@ -1,8 +1,5 @@
 import React from "react";
-import styled, { css } from 'styled-components';
-import Loader from 'react-loader-spinner'
-
-import { useWeb3React } from '@web3-react/core'
+import styled from 'styled-components';
 
 import ViewInfoItem from "components/ViewInfoItem";
 
@@ -10,15 +7,12 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 // Other Information section
-function  Info() {
-  const { account, library } = useWeb3React();
-
-  const [controlAt, setControlAt] = React.useState(0);
+function Info() {
 
   return (
     <Container>
       <InfoBox>
-        <ViewInfoItem/>
+        <ViewInfoItem />
       </InfoBox>
     </Container>
   );
@@ -38,15 +32,11 @@ const Container = styled.div`
   max-height: 80vh;
 `
 
-const ContainerInfo = styled.div`
-  padding: 20px;
-`
 const InfoBox = styled.div`
   display: block;
   align-self: stretch;
   background: ${props => props.theme.mainBg};
 `
 
-
 // Export Default
-export default  Info;
+export default Info;

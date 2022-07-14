@@ -1,10 +1,8 @@
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
-
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, Span, Anchor, RouterLink, Image} from 'components/SharedStyling';
+import {ItemH, Span, Anchor, RouterLink, Image} from 'primaries/SharedStyling';
 
 import { themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";

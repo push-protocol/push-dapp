@@ -19,7 +19,7 @@
   FormSubmision,
   Input,
   TextField,
-} from "components/SharedStyling";
+} from "primaries/SharedStyling";
 
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -30,7 +30,11 @@ import { useWeb3React } from "@web3-react/core";
 import { CloseIcon } from "assets/icons";
 import PreviewNotif from "./PreviewNotif";
 import CryptoHelper from "helpers/CryptoHelper";
+import { envConfig } from "@project/contracts";
+
 const ethers = require("ethers");
+
+const CORE_CHAIN_ID = envConfig.coreContractChain;
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
@@ -38,7 +42,7 @@ const NFTypes = [
   // { value: "2", label: "Old Secret (IPFS Payload)" },
   { value: "3", label: "Targeted (IPFS Payload)" },
   { value: "4", label: "Subset (IPFS Payload)" },
-  { value: "5", label: "Secret (IPFS Payload)" },
+//   { value: "5", label: "Secret (IPFS Payload)" },
   // { value: "6", label: "Offchain (Push)" },
 ];
 const LIMITER_KEYS = ["Enter", ","];
@@ -57,6 +61,8 @@ function SendNotifications() {
     (state: any) => state.channels
   );
 
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+    
   const [nfProcessing, setNFProcessing] = React.useState(0);
   const [channelAddress, setChannelAddress] = React.useState("");
   const [nfRecipient, setNFRecipient] = React.useState("");
@@ -75,10 +81,16 @@ function SendNotifications() {
 
   const isChannelDeactivated = channelDetails
       ? channelDetails.channelState === CHANNNEL_DEACTIVATED_STATE
-      : false;
-  const cannotDisplayDelegatees =
-      (delegatees.length === 1 && delegatees[0].address === account) ||
-      !delegatees.length; //do not display delegatees dropdown if you are the only delegatee to yourself or there are no delegatess
+        : false;
+    // console.log(delegatees);
+    let cannotDisplayDelegatees;
+    if (onCoreNetwork)
+        cannotDisplayDelegatees = (delegatees.length === 1 && delegatees[0].address === account) ||
+            !delegatees.length; //do not display delegatees dropdown if you are the only delegatee to yourself or there are no delegatess
+    else 
+        cannotDisplayDelegatees = (delegatees.length === 1 && delegatees[0].alias_address === account) ||
+            !delegatees.length;
+    
   // construct a list of channel delegators
   React.useEffect(() => {
       if (!account) return;
@@ -109,10 +121,8 @@ function SendNotifications() {
             (nfCTAEnabled && nfCTA == "") ||
             (nfMediaEnabled && nfMedia == "")
         ) {
-            console.log("hello world 1");
             return false;
         }
-        console.log("hello world 2");
         return true;
     };
 
@@ -728,9 +738,9 @@ function SendNotifications() {
                       </H2>
                       {!isChannelDeactivated ? (
                           <H3 style={{color : theme.color}}>
-                              EPNS supports four types of notifications (for
-                              now!). <b>Groups</b>, <b>Subsets</b>, <b>Targeted</b>, and{" "}
-                              <b>Secret</b>
+                              EPNS supports three types of notifications (for
+                              now!). <b>Groups</b>, <b>Subsets</b>, and{" "}<b>Targeted</b>
+                              {/* <b>Secret</b> */}
                               {/* and{" "} <b>Subsets</b>. */}
                           </H3>
                       ) : (
@@ -761,6 +771,7 @@ function SendNotifications() {
                                   self="stretch"
                                   align="stretch"
                               >
+                                  {console.log(cannotDisplayDelegatees)}
                                   {!cannotDisplayDelegatees && (
                                       <Item
                                           flex="5"
@@ -1207,7 +1218,7 @@ function SendNotifications() {
                               )}
 
                                 
-                                   {showPreview && (<PreviewNotif
+                                    {showPreview && (<PreviewNotif
                                         details={{
                                             channelAddress: channelAddress,
                                             acta: nfCTA,

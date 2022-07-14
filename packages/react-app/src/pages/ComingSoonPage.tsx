@@ -2,7 +2,7 @@ import React from "react";
 
 import styled, { useTheme } from 'styled-components';
 import { ThemeProvider } from "styled-components";
-import { Section, Content, Item } from 'components/SharedStyling';
+import { Section, Content, Item } from '../primaries/SharedStyling';
 
 function ComingSoonPage(props) {
   const themes = useTheme();
@@ -10,17 +10,17 @@ function ComingSoonPage(props) {
   // Render
   return (
     <ThemeProvider theme={themes}>
-      <Section style={{minHeight: '60vh'}}>
+      <Section style={{ minHeight: '60vh' }}>
         <Content padding="0px 20px 0px">
           <Item align="center">
             {console.log(props.theme)}
             <Heading color="#333" spacing="0.05em" size="4rem" weight={700}>
-             Coming soon.
+              Coming soon.
             </Heading>
           </Item>
         </Content>
       </Section>
-      </ThemeProvider>
+    </ThemeProvider>
   );
 }
 
