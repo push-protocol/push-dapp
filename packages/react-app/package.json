@@ -1,7 +1,7 @@
 {
   "name": "@project/react-app",
   "version": "0.3.0",
-  "homepage": "https://app-dev.epns.io",
+  "homepage": "https://dev.epns.io",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -108,7 +108,7 @@
     "extends": "react-app"
   },
   "scripts": {
-    "predeploy": "npm run build",
+    "predeploy": "",
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
