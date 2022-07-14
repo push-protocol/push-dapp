@@ -119,7 +119,7 @@ const ChatBox = () => {
         getMessagesFromIPFS().catch(err => console.error(err));
     }, [currentChat]);
 
-    const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
+    const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string, sig_type: string, enc_type: string) => {
         try {
             console.log('connectedUser', connectedUser);
             console.log('currentChat', currentChat);
@@ -127,7 +127,7 @@ const ChatBox = () => {
             // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
             // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
             const cipherText = message;
-            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature);
+            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature, sig_type, enc_type);
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id);
@@ -144,7 +144,7 @@ const ChatBox = () => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
             if (hasIntent && intentSentandPending === 'Approved') {
-                sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
+                sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature', 'sig_type', 'enc_type');
             }
             else {
                 sendIntent();
@@ -203,14 +203,14 @@ const ChatBox = () => {
 
                     resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
                     console.log(resultingfile);
-                    sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig');
+                    sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig', 'sig_type', 'enc_type');
                     setFileUploading(false);
                 }
             }
             else {
                 const cid = await IPFSHelper.uploadImage(file, IPFSClient);
                 content = cid;
-                sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig');
+                sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig', 'sig_type', 'enc_type');
                 setFileUploading(false);
             }
         }
@@ -230,7 +230,7 @@ const ChatBox = () => {
 
     const sendGif = (url: string) => {
         console.log(url);
-        sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature');
+        sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature', 'sig_type', 'enc_type');
     }
     const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
