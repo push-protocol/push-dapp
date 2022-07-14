@@ -8,7 +8,7 @@ import { CID } from 'ipfs-http-client';
 // @ts-ignore
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
-import * as PushNodeClient from '../../../../api/w2w';
+import * as PushNodeClient from '../../../../api';
 import Dropdown from '../dropdown/dropdown';
 import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -23,6 +23,8 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
 import { useQuery } from "react-query";
+import * as DIDHelper from '../../../../helpers/w2w/Did'
+import * as PGP from '../../../../helpers/w2w/PGP'
 
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -82,7 +84,6 @@ const ChatBox = () => {
         }
     }
 
-
     const scrollRef: any = useRef();
     const scrollToBottom = () => {
         scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
@@ -123,8 +124,6 @@ const ChatBox = () => {
             let hasintent = false;
             if (currentChat) {
                 try {
-                    const cid = CID.parse(currentChat.profile_picture);
-
                     setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
                 }
                 catch (err) {
@@ -292,7 +291,7 @@ const ChatBox = () => {
                     <div className='defaultChatPageText'>
                         <img src={epnsLogo} alt="" />
                         <p>W2W DAPP</p>
-                        <span>Start a conversation by clicking  on any dicussion!</span>
+                        <span>Start a conversation by clicking on any dicussion!</span>
                     </div>
                 </div>
             )

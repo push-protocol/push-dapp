@@ -3,7 +3,7 @@ import { IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../helpers/w2w/IPFS';
 import { intitializeDb } from './w2wIndexeddb';
 import { DID } from 'dids'
-import { getInbox, getIntents } from '../../../api/w2w';
+import { getInbox, getIntents } from '../../../api';
 import { InboxChat } from './messageFeed/messageFeed';
 import { Feeds } from './w2wIndex';
 
