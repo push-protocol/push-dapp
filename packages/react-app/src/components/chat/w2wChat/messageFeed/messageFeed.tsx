@@ -6,6 +6,7 @@ import { getLatestThreadhash } from '../../../../api/w2w';
 import { Context, Feeds } from '../w2wIndex';
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb';
+import { useQuery } from "react-query";
 
 interface messageFeedProps {
     filteredUserData: {}[],
@@ -21,7 +22,7 @@ export interface InboxChat {
 }
 
 const MessageFeed = (props: messageFeedProps) => {
-    const { did, renderInboxFeed, setChat } = useContext(Context);
+    const { did, renderInboxFeed, setChat, currentChat } = useContext(Context);
     const [feeds, setFeeds] = useState<Array<{}>>([]);
     const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
 
@@ -31,12 +32,20 @@ const MessageFeed = (props: messageFeedProps) => {
             setFeeds(getInbox.body);
             const inbox: Feeds[] = await fetchInbox(did);
             setFeeds(inbox);
+            return inbox
         }
         else {
             const inbox: Feeds[] = await fetchInbox(did);
             setFeeds(inbox);
+            return inbox
         }
     }, []);
+
+
+    const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+        refetchInterval: 5000,
+    })
+
 
     useEffect(() => {
         setFeeds(renderInboxFeed);
@@ -63,11 +72,20 @@ const MessageFeed = (props: messageFeedProps) => {
         }
 
         setMessagesLoading(false);
+        // if (!props.hasUserBeenSearched) {
+        //     const interval = setInterval(() => getInbox(), 5000)
+        //     return () => {
+        //         clearInterval(interval)
+        //     }
+        // }
     }, [props.hasUserBeenSearched, props.filteredUserData]);
 
     const setCurrentChat = (feed: any) => {
         setChat(feed);
     }
+
+
+
 
     return (
         <>
