@@ -55,6 +55,7 @@ const ChatBox = () => {
     const [SnackbarText, setSnackbarText] = useState<string>("");
     let showTime = false;
     let time: string = "";
+
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
             return;
