@@ -25,7 +25,6 @@ import GLOBALS from "config/Globals";
 import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
-import { getPushToken, onMessageListener } from "./firebase";
 
 import * as dotenv from "dotenv";
 import { postReq } from "api";
@@ -50,6 +49,12 @@ const web3Connectors = {
   Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
 };
 const CACHEPREFIX = "PUSH_TOKEN_";
+
+// Disable the browser notification on Metamask iphone mobile
+const isUserAgentIphone = (userAgent:string) =>{
+  return userAgent.indexOf("iPhone") !== -1
+}
+
 export default function App() {
 
   const dispatch = useDispatch();
@@ -69,56 +74,43 @@ export default function App() {
   const [triggerNotification, setTriggerNotification] = React.useState(false);
   
   React.useEffect(() => {
+    if(isUserAgentIphone(navigator.userAgent)) return
     if (!account) return;
     (async function () {
-      try {
-        const tokenKey = `${CACHEPREFIX}${account}`;
-        const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
-        if (!tokenExists) {
-          const response = await getPushToken();
-          const object = {
-            op: 'register',
-            wallet: account.toLowerCase(),
-            device_token: response,
-            platform: 'dapp',
-          };
-          await postReq('/pushtokens/register_no_auth', object);
-          localStorage.setItem(tokenKey, response);
-          localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
-        }
-      } catch(err) {
-        console.log("Error setting up the browser notification", err);
-      }
+      const {browserFunction} = require('./firebase')
+      await browserFunction(account);
     })();
   }, [account]);
 
-  // React.useEffect(() => {
-  onMessageListener().then(payload => {
-    if (!("Notification" in window)) {
-      toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
-        type: toast.TYPE.DARK,
-        autoClose: 5000,
-        position: "top-right"
-      });
-    } else {
-      console.log('\n\n\n\n\n')
-      console.log("revieced push notification")
-      console.log('\n\n\n\n\n')
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {
-        title: payload.data.app,
-        body: payload.notification.body,
-        image: payload.data.aimg,
-        icon: payload?.data?.icon,
-        data: {
-          url: payload?.data?.acta || payload?.data?.url,
-        },
-      };
-      var notification = new Notification(notificationTitle, notificationOptions);
-    }
-  }).catch(err => console.log('failed: ', err))
-    .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
-  // }, [triggerNotification]);
+  React.useEffect(() => {
+    if(isUserAgentIphone(navigator.userAgent)) return
+    const {onMessageListener} = require("./firebase")
+    onMessageListener().then(payload => {
+      if (!("Notification" in window)) {
+        toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
+          type: toast.TYPE.DARK,
+          autoClose: 5000,
+          position: "top-right"
+        });
+      } else {
+        console.log('\n\n\n\n\n')
+        console.log("revieced push notification")
+        console.log('\n\n\n\n\n')
+        const notificationTitle = payload.notification.title;
+        const notificationOptions = {
+          title: payload.data.app,
+          body: payload.notification.body,
+          image: payload.data.aimg,
+          icon: payload?.data?.icon,
+          data: {
+            url: payload?.data?.acta || payload?.data?.url,
+          },
+        };
+        var notification = new Notification(notificationTitle, notificationOptions);
+      }
+    }).catch(err => console.log('failed: ', err))
+      .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
+  }, [triggerNotification]);
 
 
   React.useEffect(() => {
