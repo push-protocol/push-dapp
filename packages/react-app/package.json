@@ -108,7 +108,7 @@
     "extends": "react-app"
   },
   "scripts": {
-    "predeploy": "",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
