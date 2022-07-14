@@ -65,23 +65,29 @@ export default function App() {
     stepIndex,
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
+
   const [triggerNotification, setTriggerNotification] = React.useState(false);
+  
   React.useEffect(() => {
     if (!account) return;
     (async function () {
-      const tokenKey = `${CACHEPREFIX}${account}`;
-      const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
-      if (!tokenExists) {
-        const response = await getPushToken();
-        const object = {
-          op: 'register',
-          wallet: account.toLowerCase(),
-          device_token: response,
-          platform: 'dapp',
-        };
-        await postReq('/pushtokens/register_no_auth', object);
-        localStorage.setItem(tokenKey, response);
-        localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
+      try {
+        const tokenKey = `${CACHEPREFIX}${account}`;
+        const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
+        if (!tokenExists) {
+          const response = await getPushToken();
+          const object = {
+            op: 'register',
+            wallet: account.toLowerCase(),
+            device_token: response,
+            platform: 'dapp',
+          };
+          await postReq('/pushtokens/register_no_auth', object);
+          localStorage.setItem(tokenKey, response);
+          localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
+        }
+      } catch(err) {
+        console.log("Error setting up the browser notification", err);
       }
     })();
   }, [account]);
