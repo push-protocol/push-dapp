@@ -2,16 +2,13 @@ import React from "react";
 import moment from "moment";
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
-import styled , {useTheme, ThemeProvider} from "styled-components";
+import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
-import { Button, Content, H2, H3, Item, Section, Span } from "../primaries/SharedStyling";
+import { Item } from "../primaries/SharedStyling";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
-import AliasVerificationModal from "./AliasVerificationModal";
-
-
 const DATE_FORMAT = "DD/MM/YYYY";
 
 const networkName = {
@@ -21,16 +18,14 @@ const networkName = {
 
 export default function ChannelDetails() {
   const theme = useTheme();
-  const [modalOpen, setModalOpen] = React.useState(false);
   const { chainId, account } = useWeb3React();
   const { channelDetails, canVerify } = useSelector((state) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
     (state) => state.channels
   );
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
-  const [creationDate, setCreationDate] = React.useState(""); 
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
-  const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
+  const [creationDate, setCreationDate] = React.useState("");
+  const [aliasVerified, setAliasVerified] = React.useState(null);
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
@@ -69,9 +64,9 @@ export default function ChannelDetails() {
         op: "read",
       }).then(async ({ data }) => {
         const aliasAccount = data;
-        const { aliasAddress } = aliasAccount;
-          setAliasEthAccount(aliasAddress);
+        console.log(aliasAccount);
         if (aliasAccount.aliasAddress) {
+          const { aliasAddress } = aliasAccount;
             await postReq("/channels/get_alias_verification_status", {
               aliasAddress: aliasAddress,
               op: "read",
@@ -87,7 +82,6 @@ export default function ChannelDetails() {
       });
     })();
   }, [account , chainId]);
-
 
   return (
     <ChannelDetailsWrapper>
@@ -116,49 +110,12 @@ export default function ChannelDetails() {
       </SectionTop>
 
       <SectionDes style={{ color: theme.color }}>{channelDetails.info}</SectionDes>
-      <hr />
-      {aliasEthAccount !== null && aliasVerified === false &&
-        <>
-        <ThemeProvider theme={theme}>
-          <Section>
-            <Content padding="10px 0px 20px">
-              <Item align="flex-start">
-                <H2 textTransform="uppercase" spacing="0.1em">
-                  <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-                    Verify
-                  </Span>
-                  <Span weight="200" color={theme.color}> Your Channel Alias!</Span>
-                </H2>
-                <H3 color={theme.color} padding="10px 0px">
-                  Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
-                </H3>
-                <Button
-                  bg="#e20880"
-                  color="#fff"
-                  flex="1"
-                  padding="20px 10px"
-                  textTransform="uppercase"
-                  style={{width: "100%"}}
-                  onClick={() => setModalOpen(true)}
-                >
-                    Verify Channel Alias
-                </Button>      
-              </Item>
-            </Content>
-          </Section>
-        </ThemeProvider>
-        </>
-
+      
+      {aliasVerified === false &&
+        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
+          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+        </Item>
       }
-
-      {modalOpen &&
-            <AliasVerificationModal
-              onClose={(val) => setModalOpen(val)}
-              onSuccess={() => setAliasVerified(true)}
-              verificationStatus={aliasVerified}
-              aliasEthAccount={aliasEthAccount}
-            />
-          }
 
       <SectionDate>
         {canVerify && (
@@ -240,7 +197,6 @@ const ChanneStateText = styled.span`
   margin-bottom: 8px;
   display: flex;
   align-items: center;
-
   ${(props) =>
     props.active &&
     `
@@ -287,7 +243,6 @@ const Verified = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   & > span {
     color: #ec008c;
     fontsize: 1em;
@@ -298,7 +253,6 @@ const Verified = styled.div`
 const ChannelName = styled.div`
   display: flex;
   flex-direction: row;
-
   font-family: Source Sans Pro;
   font-style: normal;
   font-weight: normal;

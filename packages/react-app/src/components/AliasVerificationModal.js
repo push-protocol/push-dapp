@@ -51,7 +51,7 @@ export default function AliasVerificationModal({
                 }, 2000);
 
                 setTimeout(() => {
-                    setLoading("Verification in Process. Please wait, it may take some time");
+                    setLoading("Please wait for the verification to finish. This usually takes around 5 minutes.");
                 }, 2000);
 
                 const intervalId = setInterval(async () => {
@@ -134,7 +134,7 @@ export default function AliasVerificationModal({
                                             textTransform="uppercase"
                                             color="#fff" weight="400"
                                             size="0.8em" spacing="0.2em"
-                                            value={loading ? "Please wait for the verification to finish. This usually takes around 5 minutes." : "Verify Alias"}
+                                            value={loading ? loading : "Verify Alias"}
                                         />
                                     </Button>
                                 </Item>
