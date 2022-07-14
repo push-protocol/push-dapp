@@ -80,9 +80,6 @@ function ChannelDashboardPage() {
    */
   React.useEffect(() => {
     (async function init() {
-      const coreProvider = onCoreNetwork
-        ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
@@ -114,42 +111,6 @@ function ChannelDashboardPage() {
             return data;
           });
         }
-      }
-      // if we are not on the core network then fetch if there is an alias address from the api
-      // inititalise the read contract for the core network
-      const coreContractInstance = new ethers.Contract(
-        addresses.epnscore,
-        abis.epnscore,
-        coreProvider
-      );
-      // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork
-        ? addresses.epnsEthComm
-        : addresses.epnsPolyComm;
-      const commContractInstance = new ethers.Contract(
-        commAddress,
-        abis.epnsComm,
-        library
-      );
-      dispatch(setCommunicatorReadProvider(commContractInstance));
-      dispatch(setCoreReadProvider(coreContractInstance));
-      // initialise the read contract for the communicator function
-      if (!!(library && account)) {
-        let signer = library.getSigner(account);
-        let coreSigner = coreProvider.getSigner(account);
-
-        const coreSignerInstance = new ethers.Contract(
-          addresses.epnscore,
-          abis.epnscore,
-          coreSigner
-        );
-        const communicatorSignerInstance = new ethers.Contract(
-          commAddress,
-          abis.epnsComm,
-          signer
-        );
-        dispatch(setCoreWriteProvider(coreSignerInstance));
-        dispatch(setCommunicatorWriteProvider(communicatorSignerInstance));
       }
     })();
   }, [account, chainId]);
