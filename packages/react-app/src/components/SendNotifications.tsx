@@ -1094,6 +1094,7 @@ function SendNotifications() {
                                           weight="400"
                                           border="1px solid #000"
                                           bg="#fff"
+                                          overflow="auto"
                                           value={nfMsg}
                                           onChange={(e) => {
                                               setNFMsg(e.target.value);
