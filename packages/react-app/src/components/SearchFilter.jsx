@@ -1,7 +1,6 @@
 import React from "react";
 import { useState } from "react";
 import { MultiSelect } from "react-multi-select-component";
-import './SearchFilter.css';
 import styled, { useTheme } from "styled-components";
 import { ThemeProvider } from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
@@ -43,23 +42,23 @@ export default function SearchFilter(props) {
                     <Left>
                         {themes.scheme === 'light' ? (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterIcon.svg' alt="Filter Icon" />) : (<img style={{ height: "20px", width: "20px", marginTop: "1rem", marginLeft: "2rem", marginRight: "1rem" }} src='/svg/filterw.png' alt="Filter Icon" />)}
                         {!props.loadFilter ?
-                            <span className="showfilter" onClick={() => { showFilter ? setShowFilter(false) : setShowFilter(true) }}>
-                                <span className="filter" style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</span>
-                                <span className="arrow">
+                            <FilterShow onClick={() => { showFilter ? setShowFilter(false) : setShowFilter(true) }}>
+                                <Filter style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</Filter>
+                                <Arrow>
                                     <ToggleArrowImg>
                                         <img alt="arrow" className={`${showFilter ? "down" : "up"}`} src="/svg/arrow.svg" />
                                     </ToggleArrowImg>
-                                </span>
-                            </span>
+                                </Arrow>
+                            </FilterShow>
                             :
-                            <span className="showfilter">
-                                <span className="filter" style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</span>
+                            <FilterShow>
+                                <Filter style={{ marginTop: "1rem", fontWeight: "400", color: "#B4B4B4" }} >Filter Notifications</Filter>
                                 <Item
                                     padding="10px 20px"
                                 >
                                     <Loader type="Oval" color="#35c5f3" height={20} width={20} />
                                 </Item>
-                            </span>
+                            </FilterShow>
                         }
 
                     </Left>
@@ -97,7 +96,7 @@ export default function SearchFilter(props) {
                             </SelectChannel>
                             <InputWrapper>
 
-                                <input value={search} type="text" className="input2" placeholder="By Keyword" style={{ "fontFamily": "Source Sans Pro" }} onChange={(e) => {
+                                <Input value={search} type="text" placeholder="By Keyword" onChange={(e) => {
                                     setSearch(e.target.value);
                                 }} />
                             </InputWrapper>
@@ -127,6 +126,29 @@ export default function SearchFilter(props) {
 
 const SDateTimePicker = styled(DateTimePicker)`
     padding-right: 4px;
+    flex: 6;
+    display: flex;
+    align-items: center !important;
+    font-family: Source Sans Pro;
+    .react-datetime-picker__wrapper {
+        border: 0px !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+    }
+    
+    .react-datetime-picker__inputGroup {
+        text-align: center !important;
+        @media(max-width:850px)
+            {
+                width: 4rem !important;
+                margin-right: -2px !important;
+                margin: 0px !important;
+            }
+    }
+    
+    .react-datetime-picker__inputGroup__input {
+        font-weight: 500 !important;
+    }
     .react-datetime-picker__inputGroup__input{
         font-weight: 500 !important;
         color : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
@@ -134,6 +156,26 @@ const SDateTimePicker = styled(DateTimePicker)`
 
     .react-datetime-picker__button svg {
         stroke : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
+    }
+    .react-datetime-picker__button{
+        @media(max-width:850px)
+            {
+                margin: 0px !important;
+                padding: 0px !important;
+            }
+    }
+    .react-datetime-picker__inputGroup__input--hasLeadingZero {
+        font-weight: 500 !important;
+    }
+    .react-datetime-picker__inputGroup__minute {
+        font-weight: 400 !important;
+    }
+
+    .react-datetime-picker__clock {
+        display: none;
+    }
+    .react-datetime-picker__inputGroup__divider {
+        font-weight: 400;
     }
 `
 
@@ -159,6 +201,9 @@ const TimeLabelDiv = styled.div`
 
 
 const SMultiSelect = styled(MultiSelect)`
+    font-weight: 400 !important;
+    font-size: 1.1rem !important;
+    margin-top: 3px;
     font-family: Source Sans Pro;
     .search input{
         color : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
@@ -173,6 +218,32 @@ const SMultiSelect = styled(MultiSelect)`
         margin-top: 7px;
         margin-left: 22px;
     }
+    .dropdown-container {
+        border: 0px solid white !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .dropdown-heading {
+       &:focus {
+        border: 0px solid white !important;
+        box-shadow: 0 0 0px white !important;
+            }
+        }
+        
+    .dropdown-container {
+        border: 0px solid white !important;
+        margin: 0px !important;
+        padding: 0px !important;
+    }
+
+    .dropdown-container {
+        &:focus-within {
+        border: 0px solid white !important;
+        box-shadow: 0 0 0 0px white !important;
+        }
+    }
+
 
     ${props => props.theme.scheme === "dark" && `
         --rmsc-main: #4285f4;
@@ -190,6 +261,60 @@ const SelectChannel = styled.div`
 border: 1px solid ${props => props.theme.faucetBorder};
 border-radius: 5px;
 font-family: Source Sans Pro;
+`;
+
+const FilterShow = styled.span`
+display: flex;
+flex-direction: row;
+&:hover {
+    cursor: pointer;
+}
+`;
+
+const Input = styled.input`
+    border: 0px solid white;
+    font-size: 1.1rem;
+    margin-top: 2.5px;
+    font-weight: 400;
+    position: relative;
+    color: #35C5F3;
+    padding-left: 0.7rem;
+    width: 100%;
+    height: 35px;
+    outline: none !important;
+    border: 0px solid white !important;
+    font-weight: 400;
+    background-color: inherit;
+    $:focus {
+        height: 35px;
+        outline: none !important;
+        border: 0px solid white !important;
+        font-weight: 400;
+        background-color: inherit;
+    }
+    &::placeholder {
+        opacity: 1;
+        font-weight: 400;
+        font-family: Source Sans Pro;
+        color: #B0B0B0 !important;
+      }
+`;
+
+const Filter = styled.span`
+margin-bottom: 1rem;
+&:hover {
+    cursor: pointer;
+}
+`;
+
+const Arrow = styled.span`
+display: flex;
+flex-direction: column;
+justify-content: center;
+margin-left: 0.7rem;
+&:hover {
+    cursor: pointer;
+}
 `;
 
 const RangeSection = styled.div`
