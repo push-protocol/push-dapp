@@ -209,19 +209,37 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
 }
 
 export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
-    const response = await fetch(BASE_URL+'/w2w/intent', {
-        method: 'POST',
-        headers: {
-            "content-Type": 'application/json'
-        },
-        body: JSON.stringify({
-            toDID,
-            fromDID,
-            fromWallet,
-            message,
-            signature
-        })
-    });
-    const data = await response.json();
-    return data;
+    if(message.length > 0){
+        const response = await fetch(BASE_URL+'/w2w/intent', {
+            method: 'POST',
+            headers: {
+                "content-Type": 'application/json'
+            },
+            body: JSON.stringify({
+                toDID,
+                fromDID,
+                fromWallet,
+                message,
+                signature
+            })
+        });
+        const data = await response.json();
+        return data;
+    }
+    else{
+        const response = await fetch(BASE_URL+'/w2w/intent', {
+            method: 'POST',
+            headers: {
+                "content-Type": 'application/json'
+            },
+            body: JSON.stringify({
+                toDID,
+                fromDID,
+                fromWallet,
+                signature
+            })
+        });
+        const data = await response.json();
+        return data;
+    }
 }
