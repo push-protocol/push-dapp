@@ -95,7 +95,7 @@ function App() {
   }, []);
 
   const connectToCeramic = async () => {
-    const provider: Promise<any> = await connector.getProvider()
+    const provider: Promise<any> = await connector.getProvider();
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);

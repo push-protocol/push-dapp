@@ -122,6 +122,7 @@ const ChatBox = () => {
     // console.log(currentChat, viewChatBox, did, renderInbox, connectedUser)
 
     useEffect(() => {
+        console.log(currentChat);
         const getMessagesFromIPFS = async () => {
             setNewMessage("");
             let hasintent = false;
@@ -316,7 +317,7 @@ const ChatBox = () => {
                                     alt=""
                                 />
                                 <div className='chatBoxNavDetail'>
-                                    <p className='chatBoxWallet'>{currentChat.msg.name.split(':').at(-1)}</p>
+                                    <p className='chatBoxWallet'>{currentChat.msg.name}</p>
                                     <div>
                                         {hasIntent ? (
                                             <Dropdown wallets={wallets} />
@@ -377,7 +378,8 @@ const ChatBox = () => {
                         </div>
 
                         <div className='chatBoxBottom'>
-                            {
+                            {(!hasIntent && intentSentandPending === "Pending") || (hasIntent && intentSentandPending === "Approved") ?
+                                (
                                 <>
                                     <label>
                                         <i className="fa fa-2x fa-camera"></i>
@@ -420,7 +422,11 @@ const ChatBox = () => {
                                         </button>
                                     </div>
                                 </>
-                                
+                                )
+                                :
+                                (
+                                    null
+                                )
                             }
                             {
                                 hasIntent && intentSentandPending === 'Pending' ? (
@@ -444,10 +450,16 @@ const ChatBox = () => {
                                 >
                                 </textarea>
                             }
-                            {
-                                <button disabled={textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
-                                    <i className="fa fa-smile" aria-hidden="true" ></i>
-                                </button>
+                            {(!hasIntent && intentSentandPending === "Pending") || (hasIntent && intentSentandPending === "Approved") ?
+                                (    
+                                    <button disabled={textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
+                                        <i className="fa fa-smile" aria-hidden="true" ></i>
+                                    </button>
+                                )
+                                :
+                                (
+                                    null
+                                )
                             }
                             {showEmojis && <Picker
                                 onEmojiClick={addEmoji}

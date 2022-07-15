@@ -39,10 +39,10 @@ function LoginIDX() {
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelpers.Get3IDDIDProvider(threeID, provider, account);
-    const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
+   // const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
 
-    setDid(did);
-    setCeramicInstance(ceramic);
+    //setDid(did);
+    //setCeramicInstance(ceramic);
   };
 
   const decrypt = async () => {

@@ -14,7 +14,7 @@ export const walletToCAIP10 = (account: string, chainId: number): string => {
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
-    const response = await fetch(BASE_URL+'/w2w/inbox/did',{
+    const response = await fetch(BASE_URL+'/w2w/inbox',{
         method:'POST',
         headers:{
             "Content-Type": "application/json"
@@ -28,7 +28,7 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
 }
 
 export const getIntents = async (did: string) => {
-    const response = await fetch(BASE_URL+'/w2w/intents/did',{
+    const response = await fetch(BASE_URL+'/w2w/getIntents',{
         method:"POST",
         headers:{
             "Content-Type":"application/json"
@@ -99,7 +99,7 @@ export const uploadUserProfileImage = async (did: string, image: string) => {
 
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
-    const response = await fetch(BASE_URL+'/w2w/messages', {
+    const response = await fetch(BASE_URL+'/w2w/postMessage', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'
@@ -121,7 +121,7 @@ export const postMessage = async (fromWallet: string, fromDID: string, toDID: st
 }
 
 export const getIntent = async (firstDID: string, secondDID: string) => {
-    const response = await fetch(BASE_URL+'/w2w/intent/did',{
+    const response = await fetch(BASE_URL+'/w2w/getIntent',{
         method:"POST",
         headers:{
             "Content-Type":"application/json"
@@ -169,7 +169,7 @@ export const createUser = async ({ wallet, did, pgp_pub, pgp_priv_enc, pgp_enc_t
 }
 
 export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
-    const response = await fetch(BASE_URL+'/w2w/messages/dids',{
+    const response = await fetch(BASE_URL+'/w2w/messages',{
         method:"POST",
         headers:{
             'Content-Type':"application/json"
@@ -193,7 +193,7 @@ export function randomString() {
     return toString(randomBytes(16), 'base64');
 }
 export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string) => {
-    const response = await fetch(BASE_URL+'/w2w/intent', {
+    const response = await fetch(BASE_URL+'/w2w/updateIntent', {
         method: 'PUT',
         headers: {
             "content-Type": 'application/json'
@@ -209,7 +209,7 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
 }
 
 export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
-    const response = await fetch(BASE_URL+'/w2w/intent', {
+    const response = await fetch(BASE_URL+'/w2w/createIntent', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'

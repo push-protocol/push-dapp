@@ -6,7 +6,6 @@ import { getLatestThreadhash } from '../../../../api/w2w';
 import { Context, Feeds } from '../w2wIndex';
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb';
-//@ts-ignore
 import { useQuery } from "react-query";
 
 interface messageFeedProps {
