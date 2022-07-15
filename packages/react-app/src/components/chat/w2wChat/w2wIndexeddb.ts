@@ -39,7 +39,6 @@ export const addData = async <T>(db: IDBDatabase, key: string, dbName: string, c
         if (dbName === 'CID_store') {
             newItem['cid'] = key
         }
-        console.log(newItem);
         const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
         const objectStore: IDBObjectStore = tx.objectStore(dbName);
         const query = objectStore.put(newItem);
