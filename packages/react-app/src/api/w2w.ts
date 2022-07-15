@@ -208,9 +208,10 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
     return response;
 }
 
-export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
+
+export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string,messageType:string, signature: string) => {
     if(message.length > 0){
-        const response = await fetch(BASE_URL+'/w2w/intent', {
+        const response = await fetch(BASE_URL+'/w2w/createIntent', {
             method: 'POST',
             headers: {
                 "content-Type": 'application/json'
@@ -220,6 +221,7 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
                 fromDID,
                 fromWallet,
                 message,
+                messageType,
                 signature
             })
         });
@@ -227,7 +229,7 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
         return data;
     }
     else{
-        const response = await fetch(BASE_URL+'/w2w/intent', {
+        const response = await fetch(BASE_URL+'/w2w/createIntent', {
             method: 'POST',
             headers: {
                 "content-Type": 'application/json'
@@ -236,6 +238,7 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
                 toDID,
                 fromDID,
                 fromWallet,
+                messageType,
                 signature
             })
         });
