@@ -27,9 +27,9 @@ import { useSelector, useDispatch } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
 
 import * as dotenv from "dotenv";
-import { postReq } from "api";
 import { toast } from "react-toastify";
 import InitState from "components/InitState";
+import {isUserAgentIphone} from "helpers/UtilityHelper";
 dotenv.config();
 
 // define the different type of connectors which we use
@@ -48,12 +48,8 @@ const web3Connectors = {
   Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
   Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
 };
-const CACHEPREFIX = "PUSH_TOKEN_";
 
-// Disable the browser notification on Metamask iphone mobile
-const isUserAgentIphone = (userAgent:string) =>{
-  return userAgent.indexOf("iPhone") !== -1
-}
+
 
 export default function App() {
 
