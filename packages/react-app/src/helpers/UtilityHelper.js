@@ -7,4 +7,9 @@ const UtilityHelper = {
   },
 }
 
+// Disable the browser notification on Metamask iphone mobile
+export const isUserAgentIphone = (userAgent) =>{
+  return userAgent.indexOf("iPhone") !== -1
+}
+
 export default UtilityHelper;
