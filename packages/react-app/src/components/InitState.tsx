@@ -1,8 +1,10 @@
 import React from "react";
 import { ethers } from "ethers";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addresses, abis , envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
+import UsersDataStore from "singletons/UsersDataStore";
 
 import {
   setCoreReadProvider,
@@ -11,11 +13,20 @@ import {
   setCommunicatorWriteProvider,
 } from "redux/slices/contractSlice";
 
+import {
+  setPushAdmin,
+} from "redux/slices/contractSlice";
+
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
 const InitState = () => {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
+  const {
+    epnsReadProvider,
+    epnsWriteProvider,
+    epnsCommReadProvider,
+  } = useSelector((state: any) => state.contracts);
 
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
@@ -69,6 +80,34 @@ const InitState = () => {
       }
     })();
   }, [account, chainId]);
+
+  React.useEffect(() => {
+    if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
+    // save push admin to global state
+    epnsReadProvider.pushChannelAdmin()
+      .then((response) => {
+        dispatch(setPushAdmin(response));
+      })
+      .catch(err => {
+        console.log({ err })
+      });
+
+    // EPNS Read Provider Set
+    if (epnsReadProvider != null && epnsCommReadProvider != null) {
+      // Instantiate Data Stores
+      UsersDataStore.instance.init(
+        account,
+        epnsReadProvider,
+        epnsCommReadProvider
+      );
+      ChannelsDataStore.instance.init(
+        account,
+        epnsReadProvider,
+        epnsCommReadProvider,
+        chainId
+      );
+    }
+  }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   return <></>;
 };

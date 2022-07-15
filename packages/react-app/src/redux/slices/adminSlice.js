@@ -7,7 +7,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     channelDetails: null,
     canVerify: false,
-    delegatees: []
+    delegatees: null
 };
 
 export const contractSlice = createSlice({
