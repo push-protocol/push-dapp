@@ -41,6 +41,7 @@ const ChatBox = () => {
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
+    const [Loading, setLoading] = useState<boolean>(true);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
     const [imageSource, setImageSource] = useState<string>('');
     const [hasIntent, setHasIntent] = useState<boolean>(true);
@@ -95,8 +96,9 @@ const ChatBox = () => {
         function updateData() {
             if (data !== undefined && currentChat?.wallets) {
                 const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-                setChat(newData)
-                // console.log(data, newData)
+                if (newData?.intent === 'Approved') {
+                    setChat(newData)
+                }
             }
         }
         const interval = setInterval(() => updateData(), 2000)
@@ -121,15 +123,15 @@ const ChatBox = () => {
     // console.log(currentChat, viewChatBox, did, renderInbox, connectedUser)
 
     useEffect(() => {
-        console.log(currentChat);
         const getMessagesFromIPFS = async () => {
             setNewMessage("");
+            setLoading(true)
             let hasintent = false;
             if (currentChat) {
                 try {
                     const cid = CID.parse(currentChat.profile_picture);
-                    
-                    setImageSource(infura_URL+`${currentChat.profile_picture}`)
+
+                    setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
                 }
                 catch (err) {
                     setImageSource(currentChat.profile_picture);
@@ -153,6 +155,7 @@ const ChatBox = () => {
                 }
                 const res = await PushNodeClient.getDidLinkWallets(currentChat.did);
                 setWallets(res);
+                setLoading(false)
             }
         }
         getMessagesFromIPFS().catch(err => console.error(err))
@@ -187,15 +190,15 @@ const ChatBox = () => {
                 sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
             }
             else {
-                sendIntent(newMessage,"Text");
+                sendIntent(newMessage, "Text");
             }
         }
     }
 
-    const sendIntent = async (content:string,contentType:string) => {
+    const sendIntent = async (content: string, contentType: string) => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, content,contentType, 'signature');
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, content, contentType, 'signature');
                 console.log(msg);
                 setHasIntent(true);
                 setMessages([...messages, msg]);
@@ -247,9 +250,9 @@ const ChatBox = () => {
                     resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
                     console.log(resultingfile);
                     if (!hasIntent && intentSentandPending === "Pending") {
-                        sendIntent(JSON.stringify(resultingfile),type);
+                        sendIntent(JSON.stringify(resultingfile), type);
                     }
-                    else{
+                    else {
                         sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig');
                     }
                     setFileUploading(false);
@@ -259,9 +262,9 @@ const ChatBox = () => {
                 const cid = await IPFSHelper.uploadImage(file, IPFSClient);
                 content = cid;
                 if (!hasIntent && intentSentandPending === "Pending") {
-                    sendIntent(content.toString(),type);
+                    sendIntent(content.toString(), type);
                 }
-                else{
+                else {
                     sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig');
                 }
                 setFileUploading(false);
@@ -284,9 +287,9 @@ const ChatBox = () => {
     const sendGif = (url: string) => {
         console.log(url);
         if (!hasIntent && intentSentandPending === "Pending") {
-            sendIntent(url,'Gif');
+            sendIntent(url, 'Gif');
         }
-        else{
+        else {
             sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature');
         }
     }
@@ -355,87 +358,95 @@ const ChatBox = () => {
                         </div>
 
                         <div className='chatBoxTop' ref={scrollRef}>
-                            {hasIntent ? (
-                                messages.map((msg, i) => {
-                                    const isLast = i === messages.length - 1
-                                    const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
-                                    let time1: string = "";
-                                    if (i > 0) {
-                                        time1 = time
-                                    }
-                                    showTime = false;
-                                    if (i >= 0) {
-                                        let duration = new Date(messages[i]?.timestamp);
-                                        let dateString = duration.toDateString();
-                                        if (dateString !== time || i === 0) {
-                                            showTime = true;
-                                            time = dateString;
+                            {Loading ? (
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                                    <Loader type="Oval" color="#34C5F3" height={40} width={40} />
+                                </div>
+                            ) : (<>
+                                {hasIntent ? (
+                                    messages?.map((msg, i) => {
+                                        const isLast = i === messages.length - 1
+                                        const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
+                                        let time1: string = "";
+                                        if (i > 0) {
+                                            time1 = time
                                         }
-                                    }
-                                    return (
-                                        <>
-                                            {!showTime ? null : <div className='showDateInChat'><span>{time}</span></div>}
-                                            <Chats msg={msg} did={did} noTail={noTail} />
-                                        </>
-                                    )
-                                })
-                            )
-                                :
-                                (
-                                    <div className='askForIntent'>
-                                        <p>
-                                            Ask for Intent to send messages
-                                        </p>
-                                    </div>
+                                        showTime = false;
+                                        if (i >= 0) {
+                                            let duration = new Date(messages[i]?.timestamp);
+                                            let dateString = duration.toDateString();
+                                            if (dateString !== time || i === 0) {
+                                                showTime = true;
+                                                time = dateString;
+                                            }
+                                        }
+                                        return (
+                                            <>
+                                                {!showTime ? null : <div className='showDateInChat'><span>{time}</span></div>}
+                                                <Chats msg={msg} did={did} noTail={noTail} />
+                                            </>
+                                        )
+                                    })
                                 )
-                            }
+                                    :
+                                    (
+                                        <div className='askForIntent'>
+                                            <p>
+                                                Ask for Intent to send messages
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                            </>)}
+
+
                         </div>
 
                         <div className='chatBoxBottom'>
                             {(!hasIntent && intentSentandPending === "Pending") || (hasIntent && intentSentandPending === "Approved") ?
                                 (
-                                <>
-                                    <label>
-                                        <i className="fa fa-2x fa-camera"></i>
-                                        <input
-                                            type="file"
-                                            id="inputTag"
-                                            className="chatBoxBottomInput"
-                                            ref={imageInputRef}
-                                            accept="image/*"
-                                            onChange={handleFileInputChange}
-                                        />
-                                    </label>
-                                    <label>
-                                        <i className="fa fa-link" aria-hidden="true"></i>
-                                        <input
-                                            type="file"
-                                            id="inputTag"
-
-                                            className="chatBoxBottomInput"
-                                            ref={fileInputRef}
-                                            onChange={handleFileInputChange}
-                                        />
-                                    </label>
-
-                                    <div className='gifPicker'>
-                                        {isGifPickerOpened ? (
-                                            <GifPicker
-                                                setIsOpened={setIsGifPickerOpened}
-                                                onSelect={sendGif}
+                                    <>
+                                        <label>
+                                            <i className="fa fa-2x fa-camera"></i>
+                                            <input
+                                                type="file"
+                                                id="inputTag"
+                                                className="chatBoxBottomInput"
+                                                ref={imageInputRef}
+                                                accept="image/*"
+                                                onChange={handleFileInputChange}
                                             />
-                                        )
-                                            :
-                                            null
-                                        }
-                                        <button
-                                            className='GifIcon_btn'
-                                            onClick={() => setIsGifPickerOpened(true)}
-                                        >
-                                            <GifIcon />
-                                        </button>
-                                    </div>
-                                </>
+                                        </label>
+                                        <label>
+                                            <i className="fa fa-link" aria-hidden="true"></i>
+                                            <input
+                                                type="file"
+                                                id="inputTag"
+
+                                                className="chatBoxBottomInput"
+                                                ref={fileInputRef}
+                                                onChange={handleFileInputChange}
+                                            />
+                                        </label>
+
+                                        <div className='gifPicker'>
+                                            {isGifPickerOpened ? (
+                                                <GifPicker
+                                                    setIsOpened={setIsGifPickerOpened}
+                                                    onSelect={sendGif}
+                                                />
+                                            )
+                                                :
+                                                null
+                                            }
+                                            <button
+                                                className='GifIcon_btn'
+                                                onClick={() => setIsGifPickerOpened(true)}
+                                            >
+                                                <GifIcon />
+                                            </button>
+                                        </div>
+                                    </>
                                 )
                                 :
                                 (
@@ -445,27 +456,27 @@ const ChatBox = () => {
                             {
                                 hasIntent && intentSentandPending === 'Pending' ? (
                                     <textarea
-                                    disabled
-                                    className='chatMessageInput'
-                                    placeholder={placeholderTextArea()}
-                                    onKeyDown={handleKeyPress}
-                                    onChange={textOnChange}
-                                    value={newMessage}
+                                        disabled
+                                        className='chatMessageInput'
+                                        placeholder={placeholderTextArea()}
+                                        onKeyDown={handleKeyPress}
+                                        onChange={textOnChange}
+                                        value={newMessage}
                                     >
                                     </textarea>
                                 ) :
-                                <textarea
-                                disabled={textAreaDisabled}
-                                className='chatMessageInput'
-                                placeholder={placeholderTextArea()}
-                                onKeyDown={handleKeyPress}
-                                onChange={textOnChange}
-                                value={newMessage}
-                                >
-                                </textarea>
+                                    <textarea
+                                        disabled={textAreaDisabled}
+                                        className='chatMessageInput'
+                                        placeholder={placeholderTextArea()}
+                                        onKeyDown={handleKeyPress}
+                                        onChange={textOnChange}
+                                        value={newMessage}
+                                    >
+                                    </textarea>
                             }
                             {(!hasIntent && intentSentandPending === "Pending") || (hasIntent && intentSentandPending === "Approved") ?
-                                (    
+                                (
                                     <button disabled={textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
                                         <i className="fa fa-smile" aria-hidden="true" ></i>
                                     </button>
