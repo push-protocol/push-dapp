@@ -208,7 +208,7 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
     return response;
 }
 
-export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, signature: string) => {
+export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string,messageType:string, signature: string) => {
     const response = await fetch(BASE_URL+'/w2w/createIntent', {
         method: 'POST',
         headers: {
@@ -219,6 +219,7 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
             fromDID,
             fromWallet,
             message,
+            messageType,
             signature
         })
     });

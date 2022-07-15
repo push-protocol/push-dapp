@@ -26,7 +26,6 @@ import GifPicker from '../Gifs/gifPicker';
 //@ts-ignore
 import { useQuery } from "react-query";
 
-
 const infura_URL = envConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
@@ -188,15 +187,15 @@ const ChatBox = () => {
                 sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
             }
             else {
-                sendIntent();
+                sendIntent(newMessage,"Text");
             }
         }
     }
 
-    const sendIntent = async () => {
+    const sendIntent = async (content:string,contentType:string) => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, newMessage, 'signature');
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, content,contentType, 'signature');
                 console.log(msg);
                 setHasIntent(true);
                 setMessages([...messages, msg]);
@@ -247,14 +246,24 @@ const ChatBox = () => {
 
                     resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
                     console.log(resultingfile);
-                    sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig');
+                    if (!hasIntent && intentSentandPending === "Pending") {
+                        sendIntent(JSON.stringify(resultingfile),type);
+                    }
+                    else{
+                        sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig');
+                    }
                     setFileUploading(false);
                 }
             }
             else {
                 const cid = await IPFSHelper.uploadImage(file, IPFSClient);
                 content = cid;
-                sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig');
+                if (!hasIntent && intentSentandPending === "Pending") {
+                    sendIntent(content.toString(),type);
+                }
+                else{
+                    sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig');
+                }
                 setFileUploading(false);
             }
         }
@@ -274,7 +283,12 @@ const ChatBox = () => {
 
     const sendGif = (url: string) => {
         console.log(url);
-        sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature');
+        if (!hasIntent && intentSentandPending === "Pending") {
+            sendIntent(url,'Gif');
+        }
+        else{
+            sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature');
+        }
     }
     const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
