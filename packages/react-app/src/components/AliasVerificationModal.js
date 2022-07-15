@@ -43,7 +43,7 @@ export default function AliasVerificationModal({
         anotherSendTxPromise
             .then(async (tx) => {
                 console.log(tx);
-                setLoading("Transaction Sent!");
+                setLoading("Transaction Sent! It usually takes 5mins to verify.");
 
                 await tx.wait(1);
                 setTimeout(() => {
@@ -51,7 +51,7 @@ export default function AliasVerificationModal({
                 }, 2000);
 
                 setTimeout(() => {
-                    setLoading("Please wait for the verification to finish. This usually takes around 5 minutes.");
+                    setLoading("Loading...");
                 }, 2000);
 
                 const intervalId = setInterval(async () => {
