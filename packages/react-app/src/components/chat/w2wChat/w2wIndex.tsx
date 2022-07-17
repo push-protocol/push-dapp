@@ -20,7 +20,9 @@ import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { CeramicClient } from "@ceramicnetwork/http-client";
+//@ts-ignore
 import { QueryClient, QueryClientProvider } from "react-query";
+//@ts-ignore
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import './w2wIndex.css';
@@ -93,7 +95,7 @@ function App() {
   }, []);
 
   const connectToCeramic = async () => {
-    const provider: Promise<any> = await connector.getProvider()
+    const provider: Promise<any> = await connector.getProvider();
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);

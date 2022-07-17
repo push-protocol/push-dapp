@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './intentFeed.css';
 import DefaultIntent from '../defaultIntent/defaultIntent';
-import { Context, Feeds } from '../w2wIndex';
+import { Context } from '../w2wIndex';
 import { fetchIntent } from '../w2wUtils';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -52,9 +52,6 @@ const NavButton = (props) => {
 
 const IntentFeed = (props: intentFeedProps) => {
     const { did, setChat } = useContext(Context);
-    const [showSentIntent, setShowSentIntent] = useState(true);
-    const [showReceivedIntent, setShowReceivedIntent] = useState(false);
-    const [sentIntents, setSentIntents] = useState([]);
     const [receivedIntents, setReceivedIntents] = useState([]);
     const [open, setOpen] = useState(false);
     const [receivedIntentFrom, setReceivedIntentFrom] = useState();
@@ -62,7 +59,6 @@ const IntentFeed = (props: intentFeedProps) => {
     const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
     const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
     const [toDID, settoDID] = useState();
-    const [active, setActive] = useState(false);
 
 
     const handleClose = () => {
@@ -73,37 +69,19 @@ const IntentFeed = (props: intentFeedProps) => {
         setOpen(true);
     };
 
-    function seperateSentAndReceivedIntent(getIntent) {
-        let sentIntents = [], receivedIntents = [];
-        for (var i = 0; i < getIntent.length; i++) {
-            if (getIntent[i].intent_sent_by === did.id) {
-                sentIntents.push(getIntent[i]);
-            }
-            else {
-                receivedIntents.push(getIntent[i]);
-            }
-        }
-        setSentIntents(sentIntents);
-        setReceivedIntents(receivedIntents);
-        console.log("Sent intents");
-        console.log(sentIntents);
-        console.log("Received Intents");
-        console.log(receivedIntents);
-    }
     async function resolve_threadhash() {
         let getIntent;
-        console.log(props.filteredUserData);
         getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did');
 
         if (getIntent === undefined) {
             getIntent = await fetchIntent(did);
-            seperateSentAndReceivedIntent(getIntent);
+            setReceivedIntents(getIntent);
         }
         else {
             getIntent = getIntent.body;
-            seperateSentAndReceivedIntent(getIntent);
+            setReceivedIntents(getIntent);
             getIntent = await fetchIntent(did);
-            seperateSentAndReceivedIntent(getIntent);
+            setReceivedIntents(getIntent);
         }
     }
 
@@ -131,73 +109,34 @@ const IntentFeed = (props: intentFeedProps) => {
         else
             setOpenReprovalSnackBar(true);
         await resolve_threadhash();
-        viewSentIntents();
     }
 
-    function displaySentIntents() {
-        if (showSentIntent == true) {
-            return (
-                <>
-                    {
-                        (!sentIntents?.length) ? (
-                            <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
-                                No sent intents !
-                            </p>
-                        ) :
-                            (
-                                <>
-                                    <div>
-                                        {sentIntents.map((intent: any) => (
-                                            <div key={intent.threadhash} onClick={() => { setCurrentChat(intent) }} >
-                                                <DefaultIntent inbox={intent} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </>
-                            )
-                    }
-
-                </>
-            )
-        }
-    }
 
     function displayReceivedIntents() {
-        if (showReceivedIntent == true) {
-            return (
-                <>
-                    {
-                        (!receivedIntents?.length) ? (
-                            <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
-                                No received intents !
-                            </p>
-                        ) :
-                            (
-                                <>
-                                    <div>
-                                        {receivedIntents.map((intent: any) => (
-                                            <div key={intent.threadhash} onClick={() => { setCurrentChat(intent); showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by) }} >
-                                                <DefaultIntent inbox={intent} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </>
-                            )
-                    }
+        return (
+            <>
+                {
+                    (!receivedIntents?.length) ? (
+                        <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
+                            No received intents !
+                        </p>
+                    ) :
+                        (
+                            <>
+                                <div>
+                                    {receivedIntents.map((intent: any) => (
+                                        <div key={intent.threadhash} onClick={() => { setCurrentChat(intent); showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by) }} >
+                                            <DefaultIntent inbox={intent} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )
+                }
 
-                </>
-            )
-        }
-    }
+            </>
+        )
 
-    function viewSentIntents() {
-        setShowReceivedIntent(false);
-        setShowSentIntent(true);
-    }
-
-    function viewReceivedIntents() {
-        setShowSentIntent(false);
-        setShowReceivedIntent(true);
     }
 
     const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -216,39 +155,9 @@ const IntentFeed = (props: intentFeedProps) => {
         setOpenReprovalSnackBar(false);
     };
 
-    const makeActive = (status, task) => {
-        setActive(status);
-        if (task === 'sent') {
-            viewSentIntents()
-        } else {
-            viewReceivedIntents()
-        }
-    };
-
     return (
         <>
             <section className='messageFeed_body'>
-
-                <div className="feedBox">
-                    <div className="twin-button regular">
-                        <NavButton
-                            text="Sent Intents"
-                            className={!active ? "regular" : "none"}
-                            onClick={() => makeActive(false, 'sent')}
-                        />
-                        <NavButton
-                            text="Received Intents"
-                            className={active ? "regular" : "none"}
-                            onClick={() => makeActive(true, 'received')}
-                        />
-                    </div>
-                </div>
-                {/* <div className='intentFilter_buttons' style={{ width: "100%" }}>
-                    <Button onClick={viewSentIntents}> Sent Intents</Button>
-                    <Button onClick={viewReceivedIntents}> Received Intents</Button>
-                </div> */}
-
-                {/* Modals */}
                 <Modal
                     open={open}
                     onClose={handleClose}
@@ -280,7 +189,6 @@ const IntentFeed = (props: intentFeedProps) => {
                         Intent was Reproved !
                     </Alert>
                 </Snackbar>
-                {displaySentIntents()}
                 {displayReceivedIntents()}
             </section>
         </>

@@ -6,6 +6,7 @@ import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
 import { CID } from 'ipfs-http-client';
 // @ts-ignore
+import { envConfig } from "@project/contracts";
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
 import * as PushNodeClient from '../../../../api';
@@ -22,10 +23,12 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
+//@ts-ignore
 import { useQuery } from "react-query";
 import * as DIDHelper from '../../../../helpers/w2w/Did'
 import * as PGP from '../../../../helpers/w2w/PGP'
 
+const infura_URL = envConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -40,6 +43,7 @@ const ChatBox = () => {
     const [newMessage, setNewMessage] = useState<string>("");
     const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
     const [showEmojis, setShowEmojis] = useState<boolean>(false);
+    const [Loading, setLoading] = useState<boolean>(true);
     const [messages, setMessages] = useState<MessageIPFS[]>([]);
     const [imageSource, setImageSource] = useState<string>('');
     const [hasIntent, setHasIntent] = useState<boolean>(true);
@@ -90,19 +94,20 @@ const ChatBox = () => {
         scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
     }
 
-    // useEffect(() => {
-    //     function updateData() {
-    //         if (data !== undefined && currentChat?.wallets) {
-    //             const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-    //             setChat(newData)
-    //             // console.log(data, newData)
-    //         }
-    //     }
-    //     const interval = setInterval(() => updateData(), 2000)
-    //     return () => {
-    //         clearInterval(interval)
-    //     }
-    // }, [data, currentChat?.wallets])
+    useEffect(() => {
+        function updateData() {
+            if (data !== undefined && currentChat?.wallets) {
+                const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+                if (newData?.intent === 'Approved') {
+                    setChat(newData)
+                }
+            }
+        }
+        const interval = setInterval(() => updateData(), 2000)
+        return () => {
+            clearInterval(interval)
+        }
+    }, [data, currentChat?.wallets])
 
 
 
@@ -122,6 +127,7 @@ const ChatBox = () => {
     useEffect(() => {
         const getMessagesFromIPFS = async () => {
             setNewMessage("");
+            setLoading(true)
             let hasintent = false;
             if (currentChat) {
                 try {
@@ -149,6 +155,7 @@ const ChatBox = () => {
                 }
                 const res = await PushNodeClient.getDidLinkWallets(currentChat.did);
                 setWallets(res);
+                setLoading(false)
             }
         }
         getMessagesFromIPFS().catch(err => console.error(err))
@@ -162,7 +169,7 @@ const ChatBox = () => {
             // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
             // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
             const cipherText = message;
-            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature, sig_type, enc_type);
+            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature);
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id);
@@ -182,28 +189,18 @@ const ChatBox = () => {
                 sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature', 'sig_type', 'enc_type');
             }
             else {
-                sendIntent();
+                sendIntent(newMessage, "Text");
             }
         }
     }
 
-    const sendIntent = async () => {
+    const sendIntent = async (content: string, contentType: string) => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                let encryptedMessage: string;
-                if (currentChat.public_key) {
-                    encryptedMessage = newMessage
-                }
-                else {
-                    // Encrypt message
-                    encryptedMessage = newMessage;
-                }
-
-                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, encryptedMessage, 'Text', 'signature', 'signatureType', 'encType');
-                if (msg.statusCode > 299)
-                    throw new Error();
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, content, contentType, 'signature', 'myencryptiontype', 'mysignaturetype');
+                console.log(msg);
                 setHasIntent(true);
-                setMessages([...messages, msg.data]);
+                setMessages([...messages, msg]);
                 setNewMessage("");
                 const intent = await fetchIntent(did);
             }
@@ -251,14 +248,24 @@ const ChatBox = () => {
 
                     resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
                     console.log(resultingfile);
-                    sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig', 'sig_type', 'enc_type');
+                    if (!hasIntent && intentSentandPending === "Pending") {
+                        sendIntent(JSON.stringify(resultingfile), type);
+                    }
+                    else {
+                        sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig', 'sig_type', 'enc_type');
+                    }
                     setFileUploading(false);
                 }
             }
             else {
                 const cid = await IPFSHelper.uploadImage(file, IPFSClient);
                 content = cid;
-                sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig', 'sig_type', 'enc_type');
+                if (!hasIntent && intentSentandPending === "Pending") {
+                    sendIntent(content.toString(), type);
+                }
+                else {
+                    sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig', 'sig_type', 'enc_type');
+                }
                 setFileUploading(false);
             }
         }
@@ -278,7 +285,12 @@ const ChatBox = () => {
 
     const sendGif = (url: string) => {
         console.log(url);
-        sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature', 'sig_type', 'enc_type');
+        if (!hasIntent && intentSentandPending === "Pending") {
+            sendIntent(url, 'Gif');
+        }
+        else {
+            sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature', 'sig_type', 'enc_type');
+        }
     }
     const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -321,7 +333,7 @@ const ChatBox = () => {
                                     alt=""
                                 />
                                 <div className='chatBoxNavDetail'>
-                                    <p className='chatBoxWallet'>{currentChat.msg.name.split(':').at(-1)}</p>
+                                    <p className='chatBoxWallet'>{currentChat.msg.name}</p>
                                     <div>
                                         {hasIntent ? (
                                             <Dropdown wallets={wallets} />
@@ -345,45 +357,52 @@ const ChatBox = () => {
                         </div>
 
                         <div className='chatBoxTop' ref={scrollRef}>
-                            {hasIntent ? (
-                                messages.map((msg, i) => {
-                                    const isLast = i === messages.length - 1
-                                    const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
-                                    let time1: string = "";
-                                    if (i > 0) {
-                                        time1 = time
-                                    }
-                                    showTime = false;
-                                    if (i >= 0) {
-                                        let duration = new Date(messages[i]?.timestamp);
-                                        let dateString = duration.toDateString();
-                                        if (dateString !== time || i === 0) {
-                                            showTime = true;
-                                            time = dateString;
+                            {Loading ? (
+                                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                                    <Loader type="Oval" color="#34C5F3" height={40} width={40} />
+                                </div>
+                            ) : (<>
+                                {hasIntent ? (
+                                    messages?.map((msg, i) => {
+                                        const isLast = i === messages.length - 1
+                                        const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
+                                        let time1: string = "";
+                                        if (i > 0) {
+                                            time1 = time
                                         }
-                                    }
-                                    return (
-                                        <>
-                                            {!showTime ? null : <div className='showDateInChat'><span>{time}</span></div>}
-                                            <Chats msg={msg} did={did} noTail={noTail} />
-                                        </>
-                                    )
-                                })
-                            )
-                                :
-                                (
-                                    <div className='askForIntent'>
-                                        <p>
-                                            Ask for Intent to send messages
-                                        </p>
-                                    </div>
+                                        showTime = false;
+                                        if (i >= 0) {
+                                            let duration = new Date(messages[i]?.timestamp);
+                                            let dateString = duration.toDateString();
+                                            if (dateString !== time || i === 0) {
+                                                showTime = true;
+                                                time = dateString;
+                                            }
+                                        }
+                                        return (
+                                            <>
+                                                {!showTime ? null : <div className='showDateInChat'><span>{time}</span></div>}
+                                                <Chats msg={msg} did={did} noTail={noTail} />
+                                            </>
+                                        )
+                                    })
                                 )
-                            }
+                                    :
+                                    (
+                                        <div className='askForIntent'>
+                                            <p>
+                                                Ask for Intent to send messages
+                                            </p>
+                                        </div>
+                                    )
+                                }
+                            </>)}
+
+
                         </div>
 
                         <div className='chatBoxBottom'>
-                            {intentSentandPending === 'Approved' && hasIntent
-                                ?
+                            {(!hasIntent && intentSentandPending === "Pending") || (hasIntent && intentSentandPending === "Approved") ?
                                 (
                                     <>
                                         <label>
@@ -455,15 +474,18 @@ const ChatBox = () => {
                                     >
                                     </textarea>
                             }
-                            {
-                                hasIntent && intentSentandPending === 'Approved' ? (
+                            {(!hasIntent && intentSentandPending === "Pending") || (hasIntent && intentSentandPending === "Approved") ?
+                                (
                                     <button disabled={textAreaDisabled} className='emojiButton' onClick={() => setShowEmojis(!showEmojis)}>
                                         <i className="fa fa-smile" aria-hidden="true" ></i>
                                     </button>
-                                ) :
+                                )
+                                :
+                                (
                                     null
+                                )
                             }
-                            {showEmojis && hasIntent && <Picker
+                            {showEmojis && <Picker
                                 onEmojiClick={addEmoji}
                                 pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
                             />}

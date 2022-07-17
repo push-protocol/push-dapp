@@ -2,6 +2,9 @@ import React,{useEffect,useState} from 'react';
 import { Feeds } from '../w2wIndex';
 import './defaultMessage.css';
 import {CID} from 'ipfs-http-client';
+import { envConfig } from "@project/contracts";
+const infura_URL = envConfig.infuraApiUrl;
+
 const DefaultMessage = (props: { inbox: Feeds }) => {
     // printing default message props
     let date=null;
@@ -15,7 +18,7 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
         try{
             const cid = CID.parse(props.inbox.profile_picture);
             console.log(props.inbox.profile_picture);
-            setImageSource(`https://ipfs.infura.io/ipfs/${props.inbox.profile_picture}`)
+            setImageSource(infura_URL+`${props.inbox.profile_picture}`)
         }
         catch(err)
         {

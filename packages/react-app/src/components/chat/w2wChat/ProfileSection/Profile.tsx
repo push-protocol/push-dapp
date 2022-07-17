@@ -5,6 +5,8 @@ import { uploadUserProfileImage } from '../../../../api';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { CID } from 'ipfs-http-client';
+import { envConfig } from "@project/contracts";
+const infura_URL = envConfig.infuraApiUrl;
 declare const Buffer
 
 interface profilePropsType {
@@ -22,7 +24,7 @@ const Profile = (props: profilePropsType) => {
     try {
       console.log(props.profile_picture);
       const cid = CID.parse(props.profile_picture);
-      setProfile(`https://ipfs.infura.io/ipfs/${props.profile_picture}`)
+      setProfile(infura_URL+`${props.profile_picture}`)
     }
     catch (err) {
       setProfile(props.profile_picture);
@@ -59,7 +61,7 @@ const Profile = (props: profilePropsType) => {
     const file = event.target.files[0];
     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient();
     const cid = await IPFSHelper.uploadImage(file, IPFSClient);
-    setProfile(`https://ipfs.infura.io/ipfs/${cid}`);
+    setProfile(infura_URL+`${cid}`);
     props.updateProfile(cid);
     await uploadUserProfileImage(did.id, cid);
   }
