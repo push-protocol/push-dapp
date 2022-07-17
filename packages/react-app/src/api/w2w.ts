@@ -1,16 +1,17 @@
 import { randomBytes } from '@stablelib/random';
 import { Feeds, User } from 'components/chat/w2wChat/w2wIndex';
+import { MessageIPFS } from 'helpers/w2w/IPFS';
 import { toString } from 'uint8arrays/to-string';
 
+export interface Result<T = void> {
+    statusCode: number,
+    errorMessage?: string | null,
+    data?: T
+}
+
 export const getInbox = async (did: string): Promise<Feeds[]> => {
-    const response = await fetch('http://localhost:4000/apis/w2w/inbox/did', {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            did
-        })
+    const response = await fetch('http://localhost:4000/apis/w2w/inbox/did/' + did, {
+        method: 'POST'
     });
     const data: Feeds[] = await response.json();
     return data;
@@ -158,7 +159,7 @@ export const createUser = async ({ wallet, did, pgp_pub, pgp_priv_enc, pgp_enc_t
 }
 
 export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
-    const response = await fetch(`http://localhost:4000/apis/w2w/messages/dids`, {
+    const response = await fetch(`http://localhost:4000/apis/w2w/messages`, {
         method: "POST",
         headers: {
             'Content-Type': "application/json"
@@ -197,7 +198,7 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
     return response;
 }
 
-export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, messageType: string, signature: string, signatureType: string) => {
+export const createIntent = async (toDID: string, fromDID: string, fromWallet: string, message: string, messageType: string, signature: string, signatureType: string, encType: string): Promise<Result<MessageIPFS>> => {
     const response = await fetch('http://localhost:4000/apis/w2w/intent', {
         method: 'POST',
         headers: {
@@ -208,9 +209,10 @@ export const createIntent = async (toDID: string, fromDID: string, fromWallet: s
             fromDID,
             fromWallet,
             message,
+            messageType: messageType,
             signature,
-            message_type: messageType,
-            sig_type: signatureType
+            sig_type: signatureType,
+            enc_type: encType
         })
     });
     const data = await response.json();

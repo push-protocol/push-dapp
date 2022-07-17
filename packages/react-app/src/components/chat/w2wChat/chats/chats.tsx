@@ -5,6 +5,7 @@ import cn from 'classnames';
 import { DID } from 'dids'
 import Modal from '../Modal/Modal';
 import Files from '../Files/Files';
+
 interface chatProps {
     msg: MessageIPFS,
     did: DID,

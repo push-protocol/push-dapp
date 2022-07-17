@@ -90,19 +90,19 @@ const ChatBox = () => {
         scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
     }
 
-    useEffect(() => {
-        function updateData() {
-            if (data !== undefined && currentChat?.wallets) {
-                const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-                setChat(newData)
-                // console.log(data, newData)
-            }
-        }
-        const interval = setInterval(() => updateData(), 2000)
-        return () => {
-            clearInterval(interval)
-        }
-    }, [data, currentChat?.wallets])
+    // useEffect(() => {
+    //     function updateData() {
+    //         if (data !== undefined && currentChat?.wallets) {
+    //             const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+    //             setChat(newData)
+    //             // console.log(data, newData)
+    //         }
+    //     }
+    //     const interval = setInterval(() => updateData(), 2000)
+    //     return () => {
+    //         clearInterval(interval)
+    //     }
+    // }, [data, currentChat?.wallets])
 
 
 
@@ -190,13 +190,22 @@ const ChatBox = () => {
     const sendIntent = async () => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, newMessage, 'Text', 'signature', 'signatureType');
-                console.log(msg);
+                let encryptedMessage: string;
+                if (currentChat.public_key) {
+                    encryptedMessage = newMessage
+                }
+                else {
+                    // Encrypt message
+                    encryptedMessage = newMessage;
+                }
+
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, encryptedMessage, 'Text', 'signature', 'signatureType', 'encType');
+                if (msg.statusCode > 299)
+                    throw new Error();
                 setHasIntent(true);
-                setMessages([...messages, msg]);
+                setMessages([...messages, msg.data]);
                 setNewMessage("");
-                const intent = fetchIntent(did);
-                console.log(intent);
+                const intent = await fetchIntent(did);
             }
             else {
                 setNewMessage("");
@@ -207,8 +216,8 @@ const ChatBox = () => {
         catch (error) {
             console.log(error)
         }
-
     }
+
     const handleKeyPress = (e) => {
         const x = e.keyCode;
         if (x === 13) {
@@ -220,6 +229,7 @@ const ChatBox = () => {
         setNewMessage(e.target.value);
 
     }
+
     const uploadFile = async (file: File) => {
         try {
             const TWO_MB = 1024 * 1024 * 2;
@@ -426,24 +436,24 @@ const ChatBox = () => {
                             {
                                 hasIntent && intentSentandPending === 'Pending' ? (
                                     <textarea
-                                    disabled
-                                    className='chatMessageInput'
-                                    placeholder={placeholderTextArea()}
-                                    onKeyDown={handleKeyPress}
-                                    onChange={textOnChange}
-                                    value={newMessage}
+                                        disabled
+                                        className='chatMessageInput'
+                                        placeholder={placeholderTextArea()}
+                                        onKeyDown={handleKeyPress}
+                                        onChange={textOnChange}
+                                        value={newMessage}
                                     >
                                     </textarea>
                                 ) :
-                                <textarea
-                                disabled={textAreaDisabled}
-                                className='chatMessageInput'
-                                placeholder={placeholderTextArea()}
-                                onKeyDown={handleKeyPress}
-                                onChange={textOnChange}
-                                value={newMessage}
-                                >
-                                </textarea>
+                                    <textarea
+                                        disabled={textAreaDisabled}
+                                        className='chatMessageInput'
+                                        placeholder={placeholderTextArea()}
+                                        onKeyDown={handleKeyPress}
+                                        onChange={textOnChange}
+                                        value={newMessage}
+                                    >
+                                    </textarea>
                             }
                             {
                                 hasIntent && intentSentandPending === 'Approved' ? (
