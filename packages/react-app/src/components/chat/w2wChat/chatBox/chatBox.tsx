@@ -161,7 +161,7 @@ const ChatBox = () => {
         getMessagesFromIPFS().catch(err => console.error(err))
     }, [currentChat]);
 
-    const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string, sig_type: string, enc_type: string) => {
+    const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string, sigType: string, encType: string) => {
         try {
             console.log('connectedUser', connectedUser);
             console.log('currentChat', currentChat);
@@ -169,7 +169,7 @@ const ChatBox = () => {
             // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
             // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
             const cipherText = message;
-            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature);
+            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature, "encType", 'sigType');
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id);
@@ -186,7 +186,7 @@ const ChatBox = () => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
             if (hasIntent && intentSentandPending === 'Approved') {
-                sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature', 'sig_type', 'enc_type');
+                sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature', 'sigType', 'encType');
             }
             else {
                 sendIntent(newMessage, "Text");

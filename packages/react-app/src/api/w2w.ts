@@ -95,8 +95,8 @@ export const uploadUserProfileImage = async (did: string, image: string) => {
 }
 
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
-    messageContent: string, messageType: string, signature: string) => {
-    const response = await fetch(BASE_URL + '/w2w/postMessage', {
+    messageContent: string, messageType: string, signature: string, encType: string, sigType: string) => {
+    const response = await fetch(BASE_URL + '/w2w/sendMessage', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'
@@ -107,7 +107,9 @@ export const postMessage = async (fromWallet: string, fromDID: string, toDID: st
             toDID,
             messageContent,
             messageType,
-            signature
+            signature,
+            enc_type: encType,
+            sig_type: sigType
         })
     });
     if (response.status > 299) {
@@ -189,7 +191,7 @@ export const getKeys = async (did: string) => {
 export function randomString() {
     return toString(randomBytes(16), 'base64');
 }
-export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string) => {
+export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string, sigType: string) => {
     const response = await fetch(BASE_URL + '/w2w/updateIntent', {
         method: 'PUT',
         headers: {
@@ -199,7 +201,8 @@ export const approveIntent = async (fromDID: string, toDID: string, status: stri
             toDID,
             fromDID,
             status,
-            signature
+            signature,
+            sig_type: sigType
         })
     });
     return response;

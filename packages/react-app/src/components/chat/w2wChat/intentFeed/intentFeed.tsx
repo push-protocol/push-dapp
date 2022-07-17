@@ -102,7 +102,7 @@ const IntentFeed = (props: intentFeedProps) => {
 
     async function ApproveIntent(status: string) {
         var fromDID = did.id;
-        const res = await approveIntent(fromDID, toDID, status, "1");
+        const res = await approveIntent(fromDID, toDID, status, "1", "sigType");
         handleClose();
         if (status == "Approved")
             setOpenSuccessSnackBar(true);
