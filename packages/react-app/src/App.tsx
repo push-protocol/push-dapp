@@ -4,7 +4,7 @@ import ReactGA from "react-ga";
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener } from "hooks";
+import { useEagerConnect, useInactiveListener, useBrowserNotification } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
 import Joyride, { CallBackProps } from "react-joyride";
@@ -27,9 +27,9 @@ import { useSelector, useDispatch } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
 
 import * as dotenv from "dotenv";
-import { toast } from "react-toastify";
 import InitState from "components/InitState";
-import {isUserAgentIphone} from "helpers/UtilityHelper";
+
+
 dotenv.config();
 
 // define the different type of connectors which we use
@@ -49,8 +49,6 @@ const web3Connectors = {
   Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
 };
 
-
-
 export default function App() {
 
   const dispatch = useDispatch();
@@ -67,47 +65,7 @@ export default function App() {
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
 
-  const [triggerNotification, setTriggerNotification] = React.useState(false);
   
-  React.useEffect(() => {
-    if(isUserAgentIphone(navigator.userAgent)) return
-    if (!account) return;
-    (async function () {
-      const {browserFunction} = require('./firebase')
-      await browserFunction(account);
-    })();
-  }, [account]);
-
-  React.useEffect(() => {
-    if(isUserAgentIphone(navigator.userAgent)) return
-    const {onMessageListener} = require("./firebase")
-    onMessageListener().then(payload => {
-      if (!("Notification" in window)) {
-        toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
-          type: toast.TYPE.DARK,
-          autoClose: 5000,
-          position: "top-right"
-        });
-      } else {
-        console.log('\n\n\n\n\n')
-        console.log("revieced push notification")
-        console.log('\n\n\n\n\n')
-        const notificationTitle = payload.notification.title;
-        const notificationOptions = {
-          title: payload.data.app,
-          body: payload.notification.body,
-          image: payload.data.aimg,
-          icon: payload?.data?.icon,
-          data: {
-            url: payload?.data?.acta || payload?.data?.url,
-          },
-        };
-        var notification = new Notification(notificationTitle, notificationOptions);
-      }
-    }).catch(err => console.log('failed: ', err))
-      .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
-  }, [triggerNotification]);
-
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
@@ -131,6 +89,9 @@ export default function App() {
 
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
+
+  // Enable browser notification
+  useBrowserNotification(account)
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
