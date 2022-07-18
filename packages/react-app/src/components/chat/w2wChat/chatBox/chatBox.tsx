@@ -4,8 +4,6 @@ import './chatBox.css';
 import epnsLogo from '../w2wAsset/epnsLogo.png';
 import { Context } from '../w2wIndex';
 import Chats from '../chats/chats';
-import { CID } from 'ipfs-http-client';
-// @ts-ignore
 import { envConfig } from "@project/contracts";
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
@@ -13,7 +11,7 @@ import * as PushNodeClient from '../../../../api';
 import Dropdown from '../dropdown/dropdown';
 import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
-import { IPFSHTTPClient } from 'ipfs-http-client';
+import { CID, IPFSHTTPClient } from 'ipfs-http-client';
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS';
 import Loader from "react-loader-spinner";
 import GifIcon from '../W2WIcons/GifIcon';
@@ -23,10 +21,7 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
-//@ts-ignore
 import { useQuery } from "react-query";
-import * as DIDHelper from '../../../../helpers/w2w/Did'
-import * as PGP from '../../../../helpers/w2w/PGP'
 
 const infura_URL = envConfig.infuraApiUrl;
 
@@ -131,7 +126,8 @@ const ChatBox = () => {
             let hasintent = false;
             if (currentChat) {
                 try {
-                    setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
+                    CID.parse(currentChat.profile_picture); // Will throw exception if invalid CID
+                    setImageSource(infura_URL + `${currentChat.profile_picture}`);
                 }
                 catch (err) {
                     setImageSource(currentChat.profile_picture);

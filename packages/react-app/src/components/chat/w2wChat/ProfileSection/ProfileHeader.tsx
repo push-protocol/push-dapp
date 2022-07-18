@@ -4,6 +4,7 @@ import './ProfileHeader.css';
 import leftArrow from '../w2wAsset/leftArrow.png';
 import { CID } from 'ipfs-http-client';
 import { envConfig } from "@project/contracts";
+
 const infura_URL = envConfig.infuraApiUrl;
 
 interface profileHeaderPropsType {
@@ -16,8 +17,7 @@ const ProfileHeader = (props: profileHeaderPropsType) => {
     const [userProfileImage, setUserProfileImage] = useState('');
     useEffect(() => {
         try {
-
-            const cid: CID = CID.parse(props.profile_picture);
+            CID.parse(props.profile_picture); // Will throw exception if invalid CID
             setUserProfileImage(infura_URL + `${props.profile_picture}`)
         }
         catch (err) {

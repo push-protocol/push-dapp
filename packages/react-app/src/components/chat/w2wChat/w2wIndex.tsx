@@ -4,7 +4,7 @@ import ChatBox from './chatBox/chatBox';
 import Loader from 'react-loader-spinner';
 
 // Helper
-import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
+import { createCeramic } from '../../../helpers/w2w/Ceramic';
 import { generateKeyPair } from '../../../helpers/w2w/PGP';
 import * as DIDHelper from '../../../helpers/w2w/Did';
 import * as w2wHelper from '../../../helpers/w2w';

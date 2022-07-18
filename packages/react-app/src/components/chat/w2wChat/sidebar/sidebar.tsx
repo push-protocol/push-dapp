@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import SearchBar from '../searchBar/searchBar';
 import IntentBar from '../intentBar/intentBar';
 import './sidebar.css';
-import { Feeds, Context } from '../w2wIndex';
+import { Context } from '../w2wIndex';
 import ProfileHeader from '../ProfileSection/ProfileHeader';
 import Profile from '../ProfileSection/Profile';
 import { Button } from "components/SharedStyling";
