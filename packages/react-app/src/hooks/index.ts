@@ -1,11 +1,4 @@
-import {useDeviceWidthCheck} from "./useDeviceWidthCheck"
-import {useEagerConnect} from "./useEagerConnect"
-import {useInactiveListener} from "./useInactiveListener"
-import {useBrowserNotification} from './useBrowserNotification'
-
-export {
-  useDeviceWidthCheck,
-  useEagerConnect,
-  useInactiveListener,
-  useBrowserNotification,
-}
+export * from "./useDeviceWidthCheck"
+export * from "./useEagerConnect"
+export * from "./useInactiveListener"
+export * from './useBrowserNotification'
