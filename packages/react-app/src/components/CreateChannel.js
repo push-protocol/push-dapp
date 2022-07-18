@@ -6,24 +6,34 @@ import {
   Content,
   Item,
   ItemH,
+  ItemBreak,
+  H1,
   H2,
   H3,
+  Image,
+  P,
   Span,
+  Anchor,
   Button,
+  Showoff,
   FormSubmision,
   Input,
   TextField,
-} from "../primaries/SharedStyling";
+} from "components/SharedStyling";
 import { FiLink } from "react-icons/fi";
 import "react-dropzone-uploader/dist/styles.css";
+import Dropzone from "react-dropzone-uploader";
+import { makeStyles } from "@material-ui/core/styles";
+import Slider from "@material-ui/core/Slider";
 import Loader from "react-loader-spinner";
 
 import { envConfig } from "@project/contracts";
 
-import { useWeb3React } from "@web3-react/core";
+import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
+import { themeLight, themeDark } from "config/Themization";
 import { addresses, abis } from "@project/contracts";
-import ImageClipper from "../primaries/ImageClipper";
+import ImageClipper from "./ImageClipper";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 import "./createChannel.css";
 
@@ -50,18 +60,15 @@ function CreateChannel() {
 
   const themes = useTheme();
 
-  const [darkMode, setDarkMode] = useState(false);
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
-
   const [uploadDone, setUploadDone] = React.useState(false);
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
 
   const [chainDetails, setChainDetails] = React.useState("Ethereum");
-  // const [chainDetailsComp, setChainDetailsComp] = React.useState("");
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -81,17 +88,18 @@ function CreateChannel() {
 
   //checking DAI for user
   React.useEffect(() => {
-    if (!onCoreNetwork) return;
     const checkDaiFunc = async () => {
       let checkDaiAmount = new ethers.Contract(
         addresses.dai,
         abis.dai,
         library
-      );
+        );
 
       let value = await checkDaiAmount.allowance(account, addresses.epnscore);
       value = value?.toString();
+      
       const convertedVal = ethers.utils.formatEther(value);
+      
       setDaiAmountVal(convertedVal);
       if (convertedVal >= 50.0) {
         setChannelStakeFees(convertedVal);
@@ -258,8 +266,6 @@ function CreateChannel() {
       );
       const tx = await sendTransactionPromise;
 
-      console.log(tx);
-      console.log("waiting for tx to finish");
       setProcessingInfo("Waiting for Approval TX to finish...");
       await library.waitForTransaction(tx.hash);
     }
@@ -286,11 +292,15 @@ function CreateChannel() {
     setProcessingInfo("Creating Channel TX in progress");
     anotherSendTxPromise
       .then(async function(tx) {
-        console.log(tx);
-        console.log("Check: " + account);
-        await library.waitForTransaction(tx.hash);
-        setProcessing(3);
-        setProcessingInfo("Channel Created! Reloading...");
+        let txCheck = await library.waitForTransaction(tx.hash);
+
+        if(JSON.parse(JSON.stringify(txCheck))['logs'].length===0){
+          setProcessingInfo("Channel is not Created. Try again! Reloading...");
+        }
+        else {
+          setProcessing(3);
+          setProcessingInfo("Channel is Created! Reloading...");
+        }
 
         setTimeout(() => {
           window.location.reload();
@@ -1114,6 +1124,7 @@ const Pool = styled.div`
 
 const PoolShare = styled(ChannelMetaBox)`
   background: #e20880;
+  cursor: pointer
   // background: #674c9f;
 `;
 
