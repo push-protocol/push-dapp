@@ -204,9 +204,16 @@ const SMultiSelect = styled(MultiSelect)`
     font-weight: 400 !important;
     font-size: 1.1rem !important;
     margin-top: 3px;
-    font-family: Source Sans Pro;
     .search input{
         color : ${props => props.theme.scheme === "dark" ? `#fff` : `#000`};
+    }
+
+    input {
+        height: 35px;
+        outline: none !important;
+        border: 0px solid white !important;
+        font-weight: 400;
+        background-color: inherit;
     }
 
     /* Aligns the option label with the checkbox */
@@ -230,6 +237,14 @@ const SMultiSelect = styled(MultiSelect)`
         box-shadow: 0 0 0px white !important;
             }
         }
+
+    .dropdown-content {
+        .panel-content {
+            overflow: hidden;
+            font-family: Source Sans Pro;
+            font-weight:18px;
+                }
+            }
         
     .dropdown-container {
         border: 0px solid white !important;
