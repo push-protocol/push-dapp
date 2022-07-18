@@ -333,7 +333,7 @@ export default class ChannelsDataStore {
       op: "read",
     }).then((response) => {
       let output;
-      if (envConfig.coreContractChain === chainId)
+      if (envConfig.coreContractChain !== chainId)
         output = response.data.channels.map(({ channel, memberCount, isSubscriber }) => {
           this.state.subscribersCount[channel] = memberCount;
           return { addr: channel, alias_address: null, memberCount: memberCount, isSubscriber: isSubscriber }

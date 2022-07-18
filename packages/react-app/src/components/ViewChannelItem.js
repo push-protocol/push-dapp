@@ -26,7 +26,8 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
 import { envConfig } from "@project/contracts";
-import { incrementStepIndex,addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -366,6 +367,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         chainId,
         contractAddress: epnsCommReadProvider.address,
       }).then((res) => {
+        dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
         setSubscribed(true);
         setMemberCount(memberCount + 1);
         toaster.update(txToast, {
@@ -457,6 +459,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         contractAddress: epnsCommReadProvider.address,
       })
         .then((res) => {
+          dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
           setSubscribed(false);
           setMemberCount(memberCount - 1);
           toaster.update(txToast, {
