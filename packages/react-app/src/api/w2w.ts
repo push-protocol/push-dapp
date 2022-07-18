@@ -1,24 +1,11 @@
-import { randomBytes } from '@stablelib/random';
 import { Feeds, User } from 'components/chat/w2wChat/w2wIndex';
-import { MessageIPFS } from 'helpers/w2w/IPFS';
-import { toString } from 'uint8arrays/to-string';
 import { envConfig } from "@project/contracts";
+
 const BASE_URL = envConfig.w2wApiUrl;
-export const walletToCAIP10 = (account: string, chainId: number): string => {
-    if (chainId === 1) {
-        return 'eip155:1:' + account;
-    }
-    else if (chainId === 42) {
-        return 'eip155:42:' + account
-    }
-    else throw new Error();
-}
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
     const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
-
         method: 'POST'
-
     });
     const data: Feeds[] = await response.json();
     return data;
@@ -66,7 +53,6 @@ export const updateWalletIfNotExist = async (did: string, caip10: string) => {
     const data = await response.json();
     return data;
 }
-
 
 export const getDidLinkWallets = async (did: string) => {
     const response = await fetch(BASE_URL + '/w2w/getDidLinkWallets/', {
@@ -183,14 +169,6 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
 
 }
 
-export const getKeys = async (did: string) => {
-    const response = await fetch(BASE_URL + '/w2w/keys/did/' + did);
-    const data: any = await response.json();
-    return data;
-}
-export function randomString() {
-    return toString(randomBytes(16), 'base64');
-}
 export const approveIntent = async (fromDID: string, toDID: string, status: string, signature: string, sigType: string) => {
     const response = await fetch(BASE_URL + '/w2w/updateIntent', {
         method: 'PUT',
