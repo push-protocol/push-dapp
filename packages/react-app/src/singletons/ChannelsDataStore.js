@@ -23,6 +23,7 @@ export default class ChannelsDataStore {
     channelsMeta: {},
     channelsJson: {},
     subscribers: {},
+    subscribersCount: {},
 
     callbacks: [],
 
@@ -333,9 +334,15 @@ export default class ChannelsDataStore {
     }).then((response) => {
       let output;
       if (envConfig.coreContractChain === chainId)
-        output = response.data.channels.map(({ channel }) => ({ addr: channel, alias_address: null }));
+        output = response.data.channels.map(({ channel, memberCount, isSubscriber }) => {
+          this.state.subscribersCount[channel] = memberCount;
+          return { addr: channel, alias_address: null, memberCount: memberCount, isSubscriber: isSubscriber }
+        });
       else
-        output = response.data.channels.map(({ alias_address, channel }) => ({ addr: channel, alias_address: alias_address }));
+        output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber }) => {
+          this.state.subscribersCount[channel] = memberCount;
+          return { addr: channel, alias_address: alias_address, memberCount: memberCount, isSubscriber: isSubscriber }
+        });
       return output;
     });
   };
@@ -475,6 +482,30 @@ export default class ChannelsDataStore {
       })
       .catch((err) => {
         console.log(`getChannelSubscribers => ${err.message}`);
+        return [];
+      });
+  };
+
+  getChannelSubscribersCount = async (channelAddress) => {
+    if (!channelAddress) return;
+    const cachedSubscribersCount = this.state.subscribers[channelAddress];
+    if (cachedSubscribersCount) {
+      return cachedSubscribersCount;
+    }
+    let address = channelAddress;
+    
+    return postReq("/channels/get_subscribers", {
+      channel: address,
+      blockchain: this.state.chainId,
+      op: "read",
+    })
+      .then(({ data }) => {
+        const subs = data.subscribers;
+        this.state.subscribersCount[channelAddress] = subs.length;
+        return subs.length;
+      })
+      .catch((err) => {
+        console.log(`getChannelSubscribersCount => ${err.message}`);
         return [];
       });
   };
