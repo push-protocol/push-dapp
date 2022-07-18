@@ -333,18 +333,12 @@ export default class ChannelsDataStore {
       op: "read",
     }).then((response) => {
       let output;
-      if (envConfig.coreContractChain !== chainId)
-        output = response.data.channels.map(({ channel, memberCount, isSubscriber }) => {
-          this.state.subscribersCount[channel] = memberCount;
-          return { addr: channel, alias_address: null, memberCount: memberCount, isSubscriber: isSubscriber }
-        });
-      else
-        output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber }) => {
-          this.state.subscribersCount[channel] = memberCount;
-          return { addr: channel, alias_address: alias_address, memberCount: memberCount, isSubscriber: isSubscriber }
-        });
+      output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber }) => {
+        this.state.subscribersCount[channel] = memberCount;
+        return { addr: channel, alias_address: alias_address, memberCount: memberCount, isSubscriber: isSubscriber }
+      });
       return output;
-    });
+    })
   };
   // CHANNELS META FUNCTIONS
   // To get channels meta
@@ -519,27 +513,27 @@ export default class ChannelsDataStore {
         resolve(this.state.channelsJson[channelAddress]);
       } else {
         try {
-          let objResponse = {};
-          const getChannelJson = EPNSCoreHelper.getChannelJsonFromChannelAddress(
+          // let objResponse = {};
+          const getChannelJson = await EPNSCoreHelper.getChannelJsonFromChannelAddress(
             channelAddress,
             this.state.epnsReadProvider
           )
           .then((response) => {
-            objResponse = { ...response, ...objResponse };
+            return response;
           });
+          // console.log(await this.state.channelsMeta, channelAddress);
+          // const getAliasAddress = EPNSCoreHelper.getAliasAddressFromChannelAddress(
+          //   channelAddress
+          // )
+          // .then((response) => {
+          //   objResponse.alias_address = response;
+          // });
           
-          const getAliasAddress = EPNSCoreHelper.getAliasAddressFromChannelAddress(
-            channelAddress
-          )
-          .then((response) => {
-            objResponse.alias_address = response;
-          });
-          
-          await Promise.all([getAliasAddress, getChannelJson]);
+          // await Promise.all([getAliasAddress, getChannelJson]);
 
-          console.log("getChannelJsonAsync() [Address: %s] --> %o", objResponse);
-          this.state.channelsJson[channelAddress] = objResponse;
-          resolve(objResponse);
+          console.log("getChannelJsonAsync() [Address: %s] --> %o", getChannelJson);
+          this.state.channelsJson[channelAddress] = getChannelJson;
+          resolve(getChannelJson);
         } catch(err) {
           console.log("!!!Error, getChannelJsonAsync() --> %o", err);
           reject(err);

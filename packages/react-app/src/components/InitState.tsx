@@ -44,7 +44,6 @@ const InitState = () => {
         abis.epnsComm,
         library
       );
-      console.log(commContractInstance, coreContractInstance);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
 
@@ -63,7 +62,6 @@ const InitState = () => {
           abis.epnsComm,
           signer
         );
-        console.log(coreSignerInstance, communicatorSignerInstance);
         dispatch(setCoreWriteProvider(coreSignerInstance));
         dispatch(setCommunicatorWriteProvider(communicatorSignerInstance));
       }
