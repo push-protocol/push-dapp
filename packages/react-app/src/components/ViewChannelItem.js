@@ -151,29 +151,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress = channelObject.alias_address;
       }
       if (!channelAddress) return;
-      const channelSubscribers = await postReq("/channels/get_subscribers", {
-        channel: channelAddress,
-        blockchain: chainId,
-        op: "read",
-      })
-        .then(({ data }) => {
-          const subs = data.subscribers;
 
-          return subs;
-        })
-        .catch((err) => {
-          console.log(`getChannelSubscribers => ${err.message}`);
-          return [];
-        });
-        let subscribed = channelSubscribers.find((sub) => {
-        return sub.toLowerCase() === account.toLowerCase();
-      });
-
-      if (run) subscribed = false;
       setIsPushAdmin(pushAdminAddress === account);
-      setMemberCount(channelSubscribers.length);
-      setSubscribed(subscribed);
-      setChannelJson({ ...channelJson, addr: channelObject.addr });
+      setMemberCount(channelObject.memberCount);
+      setSubscribed(channelObject.isSubscriber);
+      setChannelJson({ ...channelJson, addr: channelObject.addr, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
