@@ -411,6 +411,9 @@ color: white;
 width: 75px;
 border-radius: 5px;
 border: 2px solid white;
+display:flex;
+align-items:center;
+justify-content:center;
 background-color:  ${(props) => (props.bgColor ? props.bgColor : "")};
 margin-right:  ${(props) => (props.mright ? props.mright : "")};
 &:hover {
