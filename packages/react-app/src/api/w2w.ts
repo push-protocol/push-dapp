@@ -99,7 +99,7 @@ export const uploadUserProfileImage = async (did: string, image: string) => {
 
 export const postMessage = async (fromWallet: string, fromDID: string, toDID: string,
     messageContent: string, messageType: string, signature: string) => {
-    const response = await fetch(BASE_URL+'/w2w/postMessage', {
+    const response = await fetch(BASE_URL+'/w2w/sendMessage', {
         method: 'POST',
         headers: {
             "content-Type": 'application/json'
