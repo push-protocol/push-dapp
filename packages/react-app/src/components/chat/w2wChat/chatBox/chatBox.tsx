@@ -22,6 +22,7 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
 import { useQuery } from "react-query";
+import { caip10ToWallet } from '../../../../helpers/w2w';
 
 const infura_URL = envConfig.infuraApiUrl;
 
@@ -329,7 +330,7 @@ const ChatBox = () => {
                                     alt=""
                                 />
                                 <div className='chatBoxNavDetail'>
-                                    <p className='chatBoxWallet'>{currentChat.msg.name}</p>
+                                    <p className='chatBoxWallet'>{caip10ToWallet(currentChat.msg.name)}</p>
                                     <div>
                                         {hasIntent ? (
                                             <Dropdown wallets={wallets} />
