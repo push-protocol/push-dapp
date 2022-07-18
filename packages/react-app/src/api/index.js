@@ -10,13 +10,13 @@ const TOOLING_BASE_URL = envConfig.toolingApiUrl
  * @returns {Promise}
  */
 export const getReq = async (path) => {
-    try {
-      const response = await axios.get(BASE_URL + path);
-      return response;
-    } catch (error) {
-      throw error;
-    }
-  };
+  try {
+    const response = await axios.get(BASE_URL + path);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
 
 /**
  * A function used to make post requests to the backend
@@ -50,3 +50,5 @@ export const toolingPostReq = async (path, obj) => {
     throw error.response.data;
   }
 };
+
+export * from './w2w'

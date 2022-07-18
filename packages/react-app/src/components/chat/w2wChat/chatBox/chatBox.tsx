@@ -9,7 +9,7 @@ import { CID } from 'ipfs-http-client';
 import { envConfig } from "@project/contracts";
 import 'font-awesome/css/font-awesome.min.css';
 import Picker from 'emoji-picker-react';
-import * as PushNodeClient from '../../../../api/w2w';
+import * as PushNodeClient from '../../../../api';
 import Dropdown from '../dropdown/dropdown';
 import { intitializeDb } from '../w2wIndexeddb';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
@@ -25,6 +25,8 @@ import { fetchInbox, fetchIntent } from '../w2wUtils';
 import GifPicker from '../Gifs/gifPicker';
 //@ts-ignore
 import { useQuery } from "react-query";
+import * as DIDHelper from '../../../../helpers/w2w/Did'
+import * as PGP from '../../../../helpers/w2w/PGP';
 
 const infura_URL = envConfig.infuraApiUrl;
 
@@ -57,6 +59,7 @@ const ChatBox = () => {
     const [SnackbarText, setSnackbarText] = useState<string>("");
     let showTime = false;
     let time: string = "";
+
     const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
         if (!messageCID) {
             return;
@@ -85,7 +88,6 @@ const ChatBox = () => {
             }
         }
     }
-
 
     const scrollRef: any = useRef();
     const scrollToBottom = () => {
@@ -130,8 +132,7 @@ const ChatBox = () => {
             if (currentChat) {
                 try {
                     const cid = CID.parse(currentChat.profile_picture);
-
-                    setImageSource(`https://ipfs.infura.io/ipfs/${currentChat.profile_picture}`)
+                    setImageSource(infura_URL+`${currentChat.profile_picture}`)
                 }
                 catch (err) {
                     setImageSource(currentChat.profile_picture);
@@ -161,8 +162,7 @@ const ChatBox = () => {
         getMessagesFromIPFS().catch(err => console.error(err))
     }, [currentChat]);
 
-
-    const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string) => {
+    const sendMessage = async (account: string, fromDid: string, toDid: string, message: string, messageType: string, signature: string, sigType: string, encType: string) => {
         try {
             console.log('connectedUser', connectedUser);
             console.log('currentChat', currentChat);
@@ -170,7 +170,7 @@ const ChatBox = () => {
             // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
             // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
             const cipherText = message;
-            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature);
+            const msg = await PushNodeClient.postMessage(account, fromDid, toDid, cipherText, messageType, signature, "encType", 'sigType');
             setMessages([...messages, msg]);
             setNewMessage("");
             const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id);
@@ -187,7 +187,7 @@ const ChatBox = () => {
         e.preventDefault();
         if (newMessage.trim() !== "") {
             if (hasIntent && intentSentandPending === 'Approved') {
-                sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature');
+                sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature', 'sigType', 'encType');
             }
             else {
                 sendIntent(newMessage, "Text");
@@ -198,13 +198,12 @@ const ChatBox = () => {
     const sendIntent = async (content: string, contentType: string) => {
         try {
             if (!hasIntent && intentSentandPending === "Pending") {
-                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, content, contentType, 'signature');
+                const msg = await PushNodeClient.createIntent(currentChat.did, did.id, account, content, contentType, 'signature', 'myencryptiontype', 'mysignaturetype');
                 console.log(msg);
                 setHasIntent(true);
                 setMessages([...messages, msg]);
                 setNewMessage("");
-                const intent = fetchIntent(did);
-                console.log(intent);
+                const intent = await fetchIntent(did);
             }
             else {
                 setNewMessage("");
@@ -215,8 +214,8 @@ const ChatBox = () => {
         catch (error) {
             console.log(error)
         }
-
     }
+
     const handleKeyPress = (e) => {
         const x = e.keyCode;
         if (x === 13) {
@@ -228,6 +227,7 @@ const ChatBox = () => {
         setNewMessage(e.target.value);
 
     }
+
     const uploadFile = async (file: File) => {
         try {
             const TWO_MB = 1024 * 1024 * 2;
@@ -253,7 +253,7 @@ const ChatBox = () => {
                         sendIntent(JSON.stringify(resultingfile), type);
                     }
                     else {
-                        sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig');
+                        sendMessage(account, did.id, currentChat.did, JSON.stringify(resultingfile), type, 'sig', 'sig_type', 'enc_type');
                     }
                     setFileUploading(false);
                 }
@@ -265,7 +265,7 @@ const ChatBox = () => {
                     sendIntent(content.toString(), type);
                 }
                 else {
-                    sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig');
+                    sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig', 'sig_type', 'enc_type');
                 }
                 setFileUploading(false);
             }
@@ -290,7 +290,7 @@ const ChatBox = () => {
             sendIntent(url, 'Gif');
         }
         else {
-            sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature');
+            sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature', 'sig_type', 'enc_type');
         }
     }
     const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
@@ -315,7 +315,7 @@ const ChatBox = () => {
                     <div className='defaultChatPageText'>
                         <img src={epnsLogo} alt="" />
                         <p>W2W DAPP</p>
-                        <span>Start a conversation by clicking  on any dicussion!</span>
+                        <span>Start a conversation by clicking on any dicussion!</span>
                     </div>
                 </div>
             )

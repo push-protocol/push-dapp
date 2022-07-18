@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Profile.css';
 import { Context } from '../w2wIndex';
-import { uploadUserProfileImage } from '../../../../api/w2w';
+import { uploadUserProfileImage } from '../../../../api';
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS';
 import { IPFSHTTPClient } from 'ipfs-http-client';
 import { CID } from 'ipfs-http-client';

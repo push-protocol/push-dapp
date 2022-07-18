@@ -8,7 +8,7 @@ import { createCeramic, getDIDFromWallet } from '../../../helpers/w2w/Ceramic';
 import { generateKeyPair } from '../../../helpers/w2w/PGP';
 import * as DIDHelper from '../../../helpers/w2w/Did';
 import * as w2wHelper from '../../../helpers/w2w';
-import * as PushNodeClient from '../../../api/w2w';
+import * as PushNodeClient from '../../../api';
 
 // DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
@@ -114,7 +114,7 @@ function App() {
       setConnectedUser(createdUser);
     }
     else {
-      const wallets:string = await PushNodeClient.updateWalletIfNotExist(did.id,caip10);
+      const wallets: string = await PushNodeClient.updateWalletIfNotExist(did.id, caip10);
       setUserProfile(user.profile_picture);
       setUserWallets(wallets);
       setConnectedUser(user);

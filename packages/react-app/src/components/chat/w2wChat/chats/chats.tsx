@@ -71,11 +71,11 @@ export default function Chats({ msg, did, noTail }: chatProps) {
                             className={cn("w2wmsgshared", msg.fromDID === did.id ? "w2wImgsent" : "w2wImgreceived", noTail && "w2wnoTail")}
                         >
                             <img
-                                src={infura_URL+`${msg.messageContent}`}
+                                src={infura_URL + `${msg.messageContent}`}
                                 onClick={
                                     () => {
                                         setShowImageModal(true)
-                                        setImageUrl(infura_URL+`${msg.messageContent}`)
+                                        setImageUrl(infura_URL + `${msg.messageContent}`)
                                     }
                                 }
                             />

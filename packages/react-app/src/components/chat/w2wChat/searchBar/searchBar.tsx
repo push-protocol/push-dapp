@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './searchBar.css';
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
@@ -7,9 +7,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import MessageFeed from '../messageFeed/messageFeed';
 import * as w2wChatHelper from '../../../../helpers/w2w';
 import Web3 from 'web3';
-import { Context } from '../w2wIndex';
 import { User } from '../../../../components/chat/w2wChat/w2wIndex';
-import * as PushNodeClient from '../../../../api/w2w';
+import * as PushNodeClient from '../../../../api';
 
 const SearchBar = () => {
     const { chainId } = useWeb3React<Web3Provider>();

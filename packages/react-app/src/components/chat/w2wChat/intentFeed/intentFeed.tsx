@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import { approveIntent } from '../../../../api/w2w';
+import { approveIntent } from '../../../../api';
 import { intitializeDb } from '../w2wIndexeddb';
 const style = {
     position: 'absolute' as 'absolute',
@@ -74,7 +74,6 @@ const IntentFeed = (props: intentFeedProps) => {
         getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did');
 
         if (getIntent === undefined) {
-            console.log('primeiro if')
             getIntent = await fetchIntent(did);
             setReceivedIntents(getIntent);
         }
@@ -101,11 +100,11 @@ const IntentFeed = (props: intentFeedProps) => {
         handleOpen();
     }
 
-    async function ApproveIntent(status) {
+    async function ApproveIntent(status: string) {
         var fromDID = did.id;
-        const res = await approveIntent(fromDID, toDID, status, "1");
-        console.log(res);
+        console.log("hello");
         handleClose();
+        const res = await approveIntent(fromDID, toDID, status, "1", "sigType");
         if (status == "Approved")
             setOpenSuccessSnackBar(true);
         else
@@ -115,30 +114,30 @@ const IntentFeed = (props: intentFeedProps) => {
 
 
     function displayReceivedIntents() {
-            return (
-                <>
-                    {
-                        (!receivedIntents?.length) ? (
-                            <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
-                                No received intents !
-                            </p>
-                        ) :
-                            (
-                                <>
-                                    <div>
-                                        {receivedIntents.map((intent: any) => (
-                                            <div key={intent.threadhash} onClick={() => { setCurrentChat(intent); showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by) }} >
-                                                <DefaultIntent inbox={intent} />
-                                            </div>
-                                        ))}
-                                    </div>
-                                </>
-                            )
-                    }
+        return (
+            <>
+                {
+                    (!receivedIntents?.length) ? (
+                        <p style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}>
+                            No received intents !
+                        </p>
+                    ) :
+                        (
+                            <>
+                                <div>
+                                    {receivedIntents.map((intent: any) => (
+                                        <div key={intent.threadhash} onClick={() => { setCurrentChat(intent); showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by) }} >
+                                            <DefaultIntent inbox={intent} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )
+                }
 
-                </>
-            )
-        
+            </>
+        )
+
     }
 
     const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {

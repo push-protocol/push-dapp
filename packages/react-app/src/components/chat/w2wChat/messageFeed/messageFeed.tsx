@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import './messageFeed.css';
 import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
-import { getLatestThreadhash } from '../../../../api/w2w';
+import { getLatestThreadhash } from '../../../../api';
 import { Context, Feeds } from '../w2wIndex';
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb';
@@ -42,9 +42,9 @@ const MessageFeed = (props: messageFeedProps) => {
     }, []);
 
 
-    const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-        refetchInterval: 5000,
-    })
+    // const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+    //     refetchInterval: 5000,
+    // })
 
 
     useEffect(() => {
