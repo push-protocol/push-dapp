@@ -292,7 +292,7 @@ function CreateChannel() {
 
         if(JSON.parse(JSON.stringify(txCheck))['status']===0){
           setProcessing(3);
-          setProcessingInfo("Channel Not Created! Reloading...");
+          setProcessingInfo("Channel Not Created! Try Again. Reloading...");
         }
         else {
           setProcessing(3);
