@@ -367,10 +367,7 @@ function InboxPage() {
 const Container = styled.div`
 	flex-direction: column;
 	background: ${(props) => props.theme.mainBg};
-	height: calc(
-		100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px -
-			${(props) => props.theme.interfaceTopPadding}
-	);
+	height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
 	align-items: stretch;
 	align-self: stretch;
 `;
