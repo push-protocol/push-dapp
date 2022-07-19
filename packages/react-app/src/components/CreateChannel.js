@@ -288,9 +288,16 @@ function CreateChannel() {
       .then(async function(tx) {
         console.log(tx);
         console.log("Check: " + account);
-        await library.waitForTransaction(tx.hash);
-        setProcessing(3);
-        setProcessingInfo("Channel Created! Reloading...");
+        let txCheck = await library.waitForTransaction(tx.hash);
+
+        if(JSON.parse(JSON.stringify(txCheck))['status']===0){
+          setProcessing(3);
+          setProcessingInfo("Channel Not Created! Reloading...");
+        }
+        else {
+          setProcessing(3);
+          setProcessingInfo("Channel Created! Reloading...");
+        }
 
         setTimeout(() => {
           window.location.reload();
