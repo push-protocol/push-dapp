@@ -14,6 +14,7 @@ import {
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/spamSlice";
+import { cacheSubscribe } from "redux/slices/channelSlice";
 import { postReq } from "api";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { ThemeProvider } from "styled-components";
@@ -350,7 +351,9 @@ function SpamBox({ currentTab }) {
       op: "write",
       chainId,
       contractAddress: epnsCommReadProvider.address,
-    });
+    }).then((res) => {
+        dispatch(cacheSubscribe({ channelAddress: channelAddress }));
+      });;
   };
 
   const isSubscribedFn = (subscribers: any) => {
