@@ -69,6 +69,7 @@ const NavigationList = {
             alt: 'Open Chat Test',
             href: '/chattest',
             newTab: false,
+            onclick:{},
             isRoute: true,
             hasMenuLogic: true,
             headerTag: {

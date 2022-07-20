@@ -1,0 +1,77 @@
+.messageFeed_body {
+    position: relative;
+    background-color: transparent;
+}
+
+.intentFilter_buttons {
+    /* bottom of sidebar */
+    width: 100%;
+    height: 7%;
+    display: flex;
+    position: relative;
+
+}
+
+.intentFilter_buttons button {
+    width: 50%;
+    display: inline-block;
+    color: black;
+    border: 1px solid black;
+    border-right: 0;
+    border-left: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.feedBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.twin-button {
+    display: flex;
+    justify-content: center;
+    border-radius: 10px;
+    background-color: #E5E7EB;
+    /* width: 320px; */
+    width: 100%;
+    margin: 10px auto 0px auto;
+    padding: 3px;
+    text-align: center;
+    cursor: pointer;
+    align-items: center;
+}
+
+.twin-button .regular {
+    border: none;
+    background-color: white;
+    padding: 0.6rem;
+    width: 50%;
+    border-radius: 7px;
+    color: #6b7280;
+    font-size: 13px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    height: 100%;
+    cursor: pointer;
+}
+
+.twin-button .none {
+    width: 50%;
+    border: none;
+    color: #6b7280;
+    background-color: transparent;
+    text-decoration: none;
+    font-size: 13px;
+    height: auto;
+    padding: 0.6rem;
+    cursor: pointer;
+}
+
+
+.intentFilter_buttons button:focus {
+    background-color: rgb(91, 144, 204);
+}

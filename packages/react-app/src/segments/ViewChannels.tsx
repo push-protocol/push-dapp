@@ -218,6 +218,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   </ViewChannelItems>
 
                   {showWayPoint(index) && (
+                    //@ts-ignore
                     <Waypoint onEnter={updateCurrentPage} />
                   )}
                 </>

@@ -312,6 +312,7 @@ function Feedbox() {
             return (
               <div key={index}>
                 {showWayPoint(index) && (
+                  //@ts-ignore
                   <Waypoint onEnter={() => handlePagination()} />
                 )}
                 <NotificationItem

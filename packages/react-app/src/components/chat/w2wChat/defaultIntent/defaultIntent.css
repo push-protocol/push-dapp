@@ -1,0 +1,153 @@
+.defaultMessage_body {
+    width: 100%;
+    height: 5rem;
+    border-top: 0.5px solid rgb(236, 235, 235);
+    border-bottom: 0.5px solid rgb(236, 235, 235);
+    background: rgb(255, 255, 255);
+    display: flex;
+    cursor: pointer;
+    font-weight: 500;
+    flex-direction: row;
+    padding: 10px 10px;
+}
+
+.message_body {
+    border-top: 0.7px solid rgb(236, 235, 235);
+    border-bottom: 0.7px solid rgb(236, 235, 235);
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+    font-weight: 500;
+    padding: 20px 20px;
+}
+
+.message_body:hover {
+    background-color: rgb(238, 234, 234);
+}
+
+.message_body:focus {
+    background: aqua;
+}
+
+.defaultMessage_body:hover {
+    background-color: rgb(238, 234, 234);
+}
+
+.defaultMessage_body:focus {
+    background: aqua;
+}
+
+.message_content {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    /* justify-content: space-between; */
+}
+
+
+.message_content_img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 10%;
+}
+
+.message_content_body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.message_name {
+    color: #4b5563;
+    font-weight: bold;
+}
+
+.message_content_time {
+    align-self: flex-start;
+    margin-left: auto;
+    font-size: 0.9rem;
+    font-weight: lighter;
+    color: #6b7280;
+}
+
+.message_lastMsg {
+    font-size: 0.9rem;
+    font-weight: lighter;
+    color: #6b7280;
+    margin-top: 5px;
+}
+
+.defaultMessage_1 {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+
+}
+
+.defaultMessage_2 {
+
+    display: flex;
+    flex-direction: row;
+}
+
+.defaultMessage_3 {
+    width: 100%;
+    display: flex;
+
+    text-align: left;
+}
+
+.defaultMessage_lastMsg {
+    font-size: 1.1rem;
+    color: rgb(90, 87, 87);
+    position: relative;
+    max-width: 100%;
+    top: -1rem;
+    margin-left: 4.5rem;
+    overflow: hidden;
+    align-items: flex-start;
+}
+
+.defaultMessage_img img {
+    border-radius: 20%;
+    width: 80%;
+    height: 4.2rem;
+    top: 0.8rem;
+    left: 0.5rem;
+    position: relative;
+    display: flex;
+
+
+}
+
+.defaultMessage_img {
+    width: 25%;
+
+    display: flex;
+    position: relative;
+
+}
+
+.defaultMessage_name {
+    font-size: 1rem;
+    width: 100%;
+    opacity: 0.9;
+    position: relative;
+    display: flex;
+    text-align: left;
+    left: 0rem;
+    font-weight: bold;
+    font-family: Helvetica;
+    top: 0.8rem;
+}
+
+.defaultMessage_time {
+    font-size: 1rem;
+    position: relative;
+    display: flex;
+    text-align: right;
+    opacity: 0.5;
+    left: -1rem;
+    top: 0.8rem;
+}

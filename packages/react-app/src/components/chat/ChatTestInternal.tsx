@@ -4,8 +4,8 @@ import styled from "styled-components";
 import { Content, Item, ItemH, H2, H3, Span, Button, Input } from "components/SharedStyling";
 
 // Helpers
-import { createCeramic, getDIDFromWallet } from 'helpers/w2w/Ceramic'
-import * as DIDHelpers from 'helpers/w2w/DID'
+import { createCeramic, getDIDFromWallet } from '../../helpers/w2w/Ceramic'
+import * as DIDHelpers from '../../helpers/w2w/Did'
 
 // DID and Ceramic
 import { ThreeIdConnect } from '@3id/connect'
@@ -39,10 +39,10 @@ function LoginIDX() {
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic();
     const didProvider = await DIDHelpers.Get3IDDIDProvider(threeID, provider, account);
-    const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
+   // const did: DID = await DIDHelpers.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
 
-    setDid(did);
-    setCeramicInstance(ceramic);
+    //setDid(did);
+    //setCeramicInstance(ceramic);
   };
 
   const decrypt = async () => {
@@ -55,6 +55,7 @@ function LoginIDX() {
     try {
       // Using the Ceramic client instance, we can load the link for a given CAIP-10 account
       const link = await getDIDFromWallet(ceramicInstance, account, chainId);
+      console.log(link,'link');
       // The `did` property of the loaded link will contain the DID string value if set
       setLink(link);
     }

@@ -9,10 +9,10 @@ export async function Get3IDDIDProvider(threeIdConnect: ThreeIdConnect, provider
     return threeIdConnect.getDidProvider()
 }
 
-export async function CreateDID(keyDIDGetResolver: () => ResolverRegistry, 
-                                threeIDGetResolver: (ceramic: CeramicApi) => ResolverRegistry, 
-                                ceramic: CeramicApi,
-                                didProvider: DIDProvider): Promise<DID> {
+export async function CreateDID(keyDIDGetResolver: () => ResolverRegistry,
+    threeIDGetResolver: (ceramic: CeramicApi) => ResolverRegistry,
+    ceramic,
+    didProvider: DIDProvider): Promise<DID> {
 
     const threeIDResolver: ResolverRegistry = threeIDGetResolver(ceramic)
     const keyDIDResolver: ResolverRegistry = keyDIDGetResolver()

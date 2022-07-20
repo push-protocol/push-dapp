@@ -209,36 +209,10 @@ export default function App() {
   }
 
   return (
+    <>
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
       <NavigationContextProvider>
-        <Joyride
-          run={run}
-          steps={steps}
-          continuous={tutorialContinous}
-          stepIndex={stepIndex}
-          // hideFooter={true}
-          // primaryProps={false}
-          hideBackButton={true}
-          hideCloseButton={false}
-          disableScrolling={true}
-          disableScrollParentFix={true}
-          // disableFlip={true}
-          // showNextButton={false}
-          showSkipButton={false}
-          disableOverlayClose={true}
-          callback={handleJoyrideCallback}
-          styles={{
-            options: {
-              arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-              primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-              textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-              width: 280,
-              zIndex: 1000,
-            },
-          }}
-        />
+        
         <HeaderContainer>
           <Header
             isDarkMode={darkMode}
@@ -359,9 +333,37 @@ export default function App() {
         </ParentContainer>
       </NavigationContextProvider>
     </ThemeProvider>
+    </>
   );
 }
-
+/* <Joyride 
+          run={run}
+          steps={steps}
+          continuous={tutorialContinous}
+          stepIndex={stepIndex}
+          // hideFooter={true}
+          // primaryProps={false}
+          hideBackButton={true}
+          hideCloseButton={false}
+          disableScrolling={true}
+          disableScrollParentFix={true}
+          // disableFlip={true}
+          // showNextButton={false}
+          showSkipButton={false}
+          disableOverlayClose={true}
+          callback={handleJoyrideCallback}
+          styles={{
+            options: {
+              arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+              backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+              overlayColor:  darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+              primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+              textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+              width: 280,
+              zIndex: 1000,
+            },
+          }}
+        />*/
 // CSS STYLES
 const StyledItem = styled(Item)`
   font-size: 14px;
