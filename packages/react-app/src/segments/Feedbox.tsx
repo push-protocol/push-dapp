@@ -4,9 +4,10 @@ import Loader from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
+import { ScrollItem } from "./ViewChannels";
 import DisplayNotice from "../primaries/DisplayNotice";
-import SearchFilter from 'components/SearchFilter';
-import {ThemeProvider} from "styled-components";
+import SearchFilter from "components/SearchFilter";
+import { ThemeProvider } from "styled-components";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import {
@@ -20,7 +21,7 @@ import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 import CryptoHelper from "helpers/CryptoHelper";
 
-import { Item } from '../primaries/SharedStyling';
+import { Item } from "../primaries/SharedStyling";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
@@ -78,7 +79,6 @@ function Feedbox() {
     if (channels.length == 0) delete Filter.channels;
 
     setFilteredNotifications([]);
-
     try {
       let filterNotif = [];
       for (const notif of allNotf) {
@@ -86,12 +86,12 @@ function Feedbox() {
         const matches = notif.message.match(/\[timestamp:(.*?)\]/);
         if (matches) {
           timestamp = matches[1];
-        }
+        } 
         else timestamp = notif.epoch;
         if (
           ((Filter.channels === undefined ? true : (Filter.channels.includes(notif.channel))) &&
-            timestamp >= startDate && timestamp <= endDate
-            && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
+          timestamp >= startDate && timestamp <= endDate
+          && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
         )
           filterNotif.push(notif);
       }
@@ -103,7 +103,6 @@ function Feedbox() {
       setBgUpdateLoading(false);
     }
   }
-
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
     setLoading(true);
@@ -126,48 +125,47 @@ function Feedbox() {
       setLoading(false);
     }
   };
-    
   const fetchLatestNotifications = async () => {
     if (loading || bgUpdateLoading) return;
     setBgUpdateLoading(true);
     setLoading(true);
     try {
       const { count, results } = await EpnsAPI.fetchNotifications({
-          user: account,
-          pageSize: NOTIFICATIONS_PER_PAGE,
-          page: 1,
-          chainId,
-          dev: true,
+        user: account,
+        pageSize: NOTIFICATIONS_PER_PAGE,
+        page: 1,
+        chainId,
+        dev: true,
       });
       if (!notifications.length) {
-          dispatch(incrementPage());
+        dispatch(incrementPage());
       }
       const parsedResponse = EpnsAPI.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
-          map1.set(each.payload.data.sid , each.epoch);
-          map2.set(each.payload.data.sid , each.channel);
-      })
-      parsedResponse.forEach( each => {
-          each['date'] = map1.get(each.sid);
-          each['epoch'] = (new Date(each['date']).getTime() / 1000);
-          each['channel'] = map2.get(each.sid);
-      })
+        map1.set(each.payload.data.sid , each.epoch);
+        map2.set(each.payload.data.sid , each.channel);
+    })
+    parsedResponse.forEach( each => {
+        each['date'] = map1.get(each.sid);
+        each['epoch'] = (new Date(each['date']).getTime() / 1000);
+        each['channel'] = map2.get(each.sid);
+    })
       dispatch(
-          updateTopNotifications({
-              notifs: parsedResponse,
-              pageSize: NOTIFICATIONS_PER_PAGE,
-          })
+        updateTopNotifications({
+          notifs: parsedResponse,
+          pageSize: NOTIFICATIONS_PER_PAGE,
+        })
       );
       if (count === 0) {
-          dispatch(setFinishedFetching());
+        dispatch(setFinishedFetching());
       }
     } catch (err) {
-        console.log(err);
+      console.log(err);
     } finally {
-        setBgUpdateLoading(false);
-        setLoading(false);
+      setBgUpdateLoading(false);
+      setLoading(false);
     }
   };
 
@@ -175,30 +173,30 @@ function Feedbox() {
     setLoadFilter(true);
     try {
       const { count, results } = await EpnsAPI.fetchNotifications({
-          user: account,
-          pageSize: 100000,
-          page: 1,
-          chainId,
-          dev: true,
+        user: account,
+        pageSize: 100000,
+        page: 1,
+        chainId,
+        dev: true,
       });
       if (!notifications.length) {
-          dispatch(incrementPage());
+        dispatch(incrementPage());
       }
       const parsedResponse = EpnsAPI.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
-          map1.set(each.payload.data.sid , each.epoch);
-          map2.set(each.payload.data.sid , each.channel);
-      })
-      parsedResponse.forEach( each => {
-          each['date'] = map1.get(each.sid);
-          each['epoch'] = (new Date(each['date']).getTime() / 1000);
-          each['channel'] = map2.get(each.sid);
-      })
+        map1.set(each.payload.data.sid , each.epoch);
+        map2.set(each.payload.data.sid , each.channel);
+    })
+    parsedResponse.forEach( each => {
+        each['date'] = map1.get(each.sid);
+        each['epoch'] = (new Date(each['date']).getTime() / 1000);
+        each['channel'] = map2.get(each.sid);
+    })
       setNotif(parsedResponse);
     } catch (err) {
-        console.log(err);
+      console.log(err);
     } finally {
       setLoadFilter(false);
     }
@@ -213,12 +211,11 @@ function Feedbox() {
   const handlePagination = async () => {
     if (filter) {
       setLimit(limit + 10);
-    }
+    } 
     else {
       loadNotifications();
       dispatch(incrementPage());
     }
-
   };
 
   const showWayPoint = (index: any) => {
@@ -228,10 +225,10 @@ function Feedbox() {
         !finishedFetching &&
         !bgUpdateLoading
       );
-    }
+    } 
     else {
       return (
-        Number(index) === limit - 1
+      Number(index) === limit - 1
       );
     }
 
@@ -303,113 +300,122 @@ function Feedbox() {
         );
       }
     }
-  }
+  };
 
   // Render
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <SearchFilter notifications={allNotf} filterNotifications={filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter} />
-        {notifications && (
-          <Notifs id="scrollstyle-secondary">
-
-            {bgUpdateLoading && (
-              <Item
-                padding="10px 20px"
-              >
-                <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-              </Item>
-            )}
-            {run && welcomeNotifs.map((oneNotification, index) => {
-              const {
-                cta,
-                title,
-                message,
-                app,
-                icon,
-                image,
-                blockchain,
-                url
-              } = oneNotification;
-
-              // render the notification item
-              return (
-                <div key={`${message}+${title}`}>
-                  <NotificationItem
-                    notificationTitle={title}
-                    notificationBody={message}
-                    cta={cta}
-                    app={app}
-                    icon={icon}
-                    image={image}
-                    theme={themes.scheme}
-                    chainName={blockchain}
-                    url={url}
-                  />
-                </div>
-              );
-            })
-          }
-            {(filter? filteredNotifications.slice(0,limit) : notifications).map((oneNotification, index) => {
-            const {
-              cta,
-              title,
-              message,
-              app,
-              icon,
-              image,
-              secret,
-              notification,
-              blockchain,
-              url
-            } = oneNotification;
-            if(run) return <></>;
-            // render the notification item
-            return (
-              <div key={index}>
-                {showWayPoint(index) && (
-                  <Waypoint onEnter={() => handlePagination()} />
-                )}
-                <NotificationItem
-                  notificationTitle={notification.title}
-                  notificationBody={notification.body}
-                  cta={cta}
-                  app={app}
-                  icon={icon}
-                  image={image}
-                  isSecret={secret != ''}
-                  decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
-                  chainName={blockchain}
-                  theme={themes.scheme}
-                  url={url}
-                />
+        <SearchFilter
+          notifications={allNotf}
+          filterNotifications={filterNotifications}
+          filter={filter}
+          reset={reset}
+          loadFilter={loadFilter}
+        />
+        <ScrollItem>
+          {((!run && !notifications.length) ||
+            (!run && filter && !filteredNotifications.length) ||
+            (run && !welcomeNotifs.length)) &&
+            !loading && (
+              <div style={{ textAlign: "center" }}>
+                <DisplayNotice
+                  title="You currently have no notifications, try subscribing to some channels."
+                  theme="third"
+                ></DisplayNotice>
               </div>
-            );
-          })}
+            )}
+          {notifications && (
+            <Notifs id="scrollstyle-secondary">
+              {bgUpdateLoading && (
+                <Item padding="10px 20px">
+                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                </Item>
+              )}
+              {run &&
+                welcomeNotifs.map((oneNotification, index) => {
+                  const {
+                    cta,
+                    title,
+                    message,
+                    app,
+                    icon,
+                    image,
+                    blockchain,
+                    url
+                  } = oneNotification;
 
-          {loading && !bgUpdateLoading && (
-            <Item
-              padding="10px 20px"
-            >
-              <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-            </Item>
+                  // render the notification item
+                  return (
+                    <div key={`${message}+${title}`}>
+                      <NotificationItem
+                        notificationTitle={title}
+                        notificationBody={message}
+                        cta={cta}
+                        app={app}
+                        icon={icon}
+                        image={image}
+                        theme={themes.scheme}
+                        chainName={blockchain}
+                        url={url}
+                      />
+                    </div>
+                  );
+                })}
+              {(filter
+                ? filteredNotifications.slice(0, limit)
+                : notifications
+              ).map((oneNotification, index) => {
+                const {
+                  cta,
+                  title,
+                  message,
+                  app,
+                  icon,
+                  image,
+                  secret,
+                  notification,
+                  blockchain,
+                  url
+                } = oneNotification;
+                if (run) return;
+                // render the notification item
+                return (
+                  <div key={index}>
+                    {showWayPoint(index) && (
+                      <Waypoint onEnter={() => handlePagination()} />
+                    )}
+                    <NotificationItem
+                      notificationTitle={notification.title}
+                      notificationBody={notification.body}
+                      cta={cta}
+                      app={app}
+                      icon={icon}
+                      image={image}
+                      isSecret={secret != ""}
+                      decryptFn={() =>
+                        onDecrypt({ secret, title, message, image, cta })
+                      }
+                      chainName={blockchain}
+                      theme={themes.scheme}
+                      url={url}
+                    />
+                  </div>
+                );
+              })}
+
+              {loading && !bgUpdateLoading && (
+                <Item padding="10px 20px">
+                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                </Item>
+              )}
+            </Notifs>
           )}
-        </Notifs>
-      )}
-      {((!run && !notifications.length) || (!run && filter && !filteredNotifications.length) || (run && !welcomeNotifs.length)) && !loading && (
-        <Item>
-          <DisplayNotice
-            title="You currently have no notifications, try subscribing to some channels."
-            theme="third"
-          />
-        </Item>
-        )}
-        {toast && (
-          <NotificationToast
-            notification={toast}
-            clearToast={clearToast}
-          />
-        )}
+
+          {toast && (
+            <NotificationToast notification={toast} clearToast={clearToast} />
+          )}
+        </ScrollItem>
       </Container>
     </ThemeProvider>
   );
@@ -432,14 +438,7 @@ const Container = styled.div`
 const Notifs = styled.div`
   align-self: stretch;
   padding: 10px 20px;
-  overflow-y: scroll;
-  
   flex: 1;
-
-  "-webkit-scrollbar-track": {
-    background-color: #EEE;
-    border-radius: 10px;
-  }
 `;
 
 const Toaster = styled.div`
