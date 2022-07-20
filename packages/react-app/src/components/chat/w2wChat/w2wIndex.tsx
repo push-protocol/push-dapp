@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import Sidebar from './sidebar/sidebar'
 import ChatBox from './chatBox/chatBox'
 import Loader from 'react-loader-spinner'
@@ -20,9 +20,9 @@ import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import { CeramicClient } from '@ceramicnetwork/http-client'
-//@ts-ignore
+// @ts-ignore
 import { QueryClient, QueryClientProvider } from 'react-query'
-//@ts-ignore
+// @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import './w2wIndex.css'
@@ -42,18 +42,6 @@ export interface Feeds {
   intent_timestamp: Date
 }
 
-interface AppContextInterface {
-  currentChat: Feeds
-  viewChatBox: boolean
-  did: DID
-  renderInboxFeed: Array<{}> | null
-  userProfile: string
-  userWallets: string
-  setChat: (text: Feeds) => void
-  renderInbox: (args: Array<{}>) => void
-  connectedUser: User
-}
-
 export interface User {
   readonly id?: string
   did: string
@@ -70,21 +58,30 @@ export interface User {
   linked_list_hash?: string | null
 }
 
+interface AppContextInterface {
+  currentChat: Feeds
+  viewChatBox: boolean
+  did: DID
+  renderInboxFeed: Array<{}> | null
+  userProfile: string
+  userWallets: string
+  setChat: (text: Feeds) => void
+  renderInbox: (args: Array<{}>) => void
+  connectedUser: User
+}
+
 export const Context = React.createContext<AppContextInterface | null>(null)
 
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
   const [currentChat, setCurrentChat] = useState<Feeds>()
-  const [updatedChat, setUpdatedChat] = useState<any>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
-  const [caip10Account, setCaip10Account] = useState<string>('')
   const [userProfile, setUserProfile] = useState<string>('')
   const [userWallets, setUserWallets] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
-  const [ceramicInstance, setCeramicInstance] = useState<CeramicClient>()
 
   const queryClient = new QueryClient({})
 
@@ -101,9 +98,7 @@ function App() {
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account)
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
     const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
-    setCaip10Account(caip10)
     setDid(did)
-    setCeramicInstance(ceramic)
     const user = await PushNodeClient.getUser(did.id)
     if (!user) {
       const keyPairs = await generateKeyPair()
