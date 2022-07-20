@@ -79,7 +79,7 @@ const ChannelOwnerDashboard = () => {
           {aliasEthAccount !== null && aliasVerified === false &&
         <>
         <ThemeProvider theme={theme}>
-          <Section>
+          <Section padding="30px">
             <Content padding="10px 0px 20px">
               <Item align="flex-start">
                 <H2 textTransform="uppercase" spacing="0.1em">
@@ -137,7 +137,7 @@ const ChannelOwnerDashboard = () => {
 
 // css styles
 const ModifiedContent = styled(Content)`
-  padding: 30px;
+  padding: 0px;
   position: relative;
 `;
 
