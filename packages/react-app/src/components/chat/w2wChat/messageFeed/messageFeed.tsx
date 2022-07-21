@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect,useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
@@ -26,8 +26,7 @@ const MessageFeed = (props: messageFeedProps) => {
   const [feeds, setFeeds] = useState<Array<{}>>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
 
-  const getInbox = useCallback(async () => {
-    const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
+  const getInbox = async () => {
     if (!props.filteredUserData.length) {
         const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did');
         if (getInbox !== undefined) {
@@ -45,7 +44,7 @@ const MessageFeed = (props: messageFeedProps) => {
     else {
         console.log('not going')
     }
-  }, [])
+  }
 
   const { data, error, isError, isLoading } = useQuery('current', getInbox, {
       refetchInterval: 5000,
