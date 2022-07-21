@@ -66,6 +66,7 @@ function CreateChannel() {
   const [channelFile, setChannelFile] = React.useState(undefined);
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
   const [daiAmountVal, setDaiAmountVal] = useState("");
+  const [txStatus, setTxStatus] = useState(2);
 
   //image upload states
   const childRef = useRef();
@@ -97,38 +98,6 @@ function CreateChannel() {
     checkDaiFunc();
   }, []);
 
-  // called every time a file's `status` changes
-  const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file);
-  };
-
-  const onDropHandler = (files) => {};
-
-  // receives array of files that are done uploading when submit button is clicked
-  const handleLogoSubmit = (files, allFiles) => {
-    // console.log(files.map(f => f.meta))
-    allFiles.forEach((f) => {
-      var file = f.file;
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
-      // console.log(f.file);
-
-      reader.onloadend = function(e) {
-        // console.log(reader.result);
-        const response = handleLogoSizeLimitation(reader.result);
-        if (response.success) {
-          setStepFlow(2);
-          setProcessing(0);
-          setUploadDone(true);
-          setChannelFile(reader.result);
-        } else {
-          setProcessing(3);
-          setProcessingInfo(response.info);
-        }
-      };
-    });
-  };
-
   const proceed = () => {
     setStepFlow(2);
     setProcessing(0);
@@ -152,10 +121,6 @@ function CreateChannel() {
       };
     }
 
-    // only proceed if png or jpg
-    // This is brilliant: https://stackoverflow.com/questions/27886677/javascript-get-extension-from-base64-image
-    // char(0) => '/' : jpg
-    // char(0) => 'i' : png
     let fileext;
     console.log(base64Data.charAt(0));
     if (base64Data.charAt(0) == "/") {
@@ -282,13 +247,25 @@ function CreateChannel() {
       .then(async function(tx) {
         console.log(tx);
         console.log("Check: " + account);
-        await library.waitForTransaction(tx.hash);
-        setProcessing(3);
-        setProcessingInfo("Channel Created! Reloading...");
+        let txCheck = await library.waitForTransaction(tx.hash);
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+        if(txCheck.status === 0){
+          setProcessing(3);
+          setTxStatus(0);
+          setProcessingInfo("Transaction Failed due to some error! Try again");
+          setTimeout(() => {
+            setProcessing(0);
+            setTxStatus(2);
+            setChannelInfoDone(false);
+          }, 10000);
+        }
+        else {
+          setProcessing(3);
+          setProcessingInfo("Channel Created! Reloading...");
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
       })
       .catch((err) => {
         console.log("Error --> %o", err);
@@ -942,6 +919,18 @@ function CreateChannel() {
                     size="1em"
                   >
                     {processingInfo}
+                    {txStatus === 0 &&
+                      <div
+                        style={{
+                          textTransform: "none",
+                          padding: "10px 0px"
+                        }}
+                      >
+                        <div style={{paddingBottom: "5px"}}>It may be possible due to one of the following reasons:</div>
+                        <div>1. There is not enough DAI in your wallet.</div>
+                        <div>2. Network may be congested, due to that gas price increased. Try by increasing gas limit manually.</div> 
+                      </div>
+                    }  
                   </Span>
                 </Item>
               </Content>
