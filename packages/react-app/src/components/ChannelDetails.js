@@ -197,7 +197,6 @@ const ChanneStateText = styled.span`
   margin-bottom: 8px;
   display: flex;
   align-items: center;
-
   ${(props) =>
     props.active &&
     `
@@ -244,7 +243,6 @@ const Verified = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   & > span {
     color: #ec008c;
     fontsize: 1em;
@@ -255,7 +253,6 @@ const Verified = styled.div`
 const ChannelName = styled.div`
   display: flex;
   flex-direction: row;
-
   font-family: Source Sans Pro;
   font-style: normal;
   font-weight: normal;
