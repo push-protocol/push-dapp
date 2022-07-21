@@ -28,21 +28,28 @@ const MessageFeed = (props: messageFeedProps) => {
 
   const getInbox = useCallback(async () => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
-    if (getInbox !== undefined) {
-      setFeeds(getInbox.body)
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-      return inbox
-    } else {
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-      return inbox
+    if (!props.filteredUserData.length) {
+        const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did');
+        if (getInbox !== undefined) {
+            setFeeds(getInbox.body);
+            const inbox: Feeds[] = await fetchInbox(did);
+            setFeeds(inbox);
+            return inbox
+        }
+        else {
+            const inbox: Feeds[] = await fetchInbox(did);
+            setFeeds(inbox);
+            return inbox
+        }
+    }
+    else {
+        console.log('not going')
     }
   }, [])
 
-  // const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-  //     refetchInterval: 5000,
-  // })
+  const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+      refetchInterval: 5000,
+  })
 
   useEffect(() => {
     setFeeds(renderInboxFeed)
@@ -87,26 +94,22 @@ const MessageFeed = (props: messageFeedProps) => {
             <Loader />
           </div>
         )}
+
+
         {!feeds?.length && !messagesLoading ? (
           <p
             style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
           >
             No Address found.
           </p>
-        ) : !messagesLoading ? (
-          <div>
-            {feeds.map((feed: Feeds) => (
-              <div
-                key={feed.threadhash}
-                onClick={() => {
-                  setCurrentChat(feed)
-                }}
-              >
-                <DefaultMessage inbox={feed} />
-              </div>
-            ))}
-          </div>
-        ) : null}
+        ):
+           (<div>
+            {feeds?.map((feed: Feeds) => (
+                        <div key={feed.threadhash} onClick={() => { setCurrentChat(feed) }}>
+                            <DefaultMessage inbox={feed} />
+                        </div>
+                    ))}
+                </div>)}
       </section>
     </>
   )
