@@ -437,7 +437,6 @@ const Container = styled.div`
 
 const Notifs = styled.div`
   align-self: stretch;
-  padding: 10px 20px;
   flex: 1;
 `;
 
