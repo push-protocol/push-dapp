@@ -177,7 +177,7 @@ export const createUser = async ({
 }
 
 export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
-  const response = await fetch(BASE_URL + '/w2w/messages', {
+  const response = await fetch(BASE_URL + '/w2w/getMessages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
