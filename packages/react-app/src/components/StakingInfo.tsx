@@ -29,7 +29,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow}) => {
             padding="20px 10px"
             onClick={() => {
               setStakeFeesChoosen(true);
-              setStepFlow(3);
+              setStepFlow(2);
             }}
           >
             <Span

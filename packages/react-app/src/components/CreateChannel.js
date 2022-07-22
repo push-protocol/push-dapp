@@ -89,10 +89,9 @@ function CreateChannel() {
   }, []);
 
   const proceed = () => {
-    setStepFlow(2);
+    setStepFlow(3);
     setProcessing(0);
     setUploadDone(true);
-    console.log(channelFile);
   };
 
   const handleLogoSizeLimitation = (base64) => {
@@ -137,33 +136,18 @@ function CreateChannel() {
 
     e.preventDefault();
 
-    if (
-      isEmpty(channelName) ||
-      isEmpty(channelInfo) ||
-      isEmpty(channelURL) ||
-      isEmpty(channelFile) ||
-      channelAlias
-        ? isEmpty(chainDetails)
-        : chainDetails
-        ? chainDetails == "Ethereum"
-          ? false
-          : isEmpty(channelAlias)
-        : false
-    ) {
+    if (!channelFile) {
       setProcessing(3);
-      setProcessingInfo("Channel Fields are Empty! Please retry!");
+      setProcessingInfo("Please upload logo of the channel");
 
       return false;
     }
 
     // Check complete, start logic
-    setChannelInfoDone(true);
+    // setChannelInfoDone(true);
+    proceed();
     setProcessing(1);
 
-    console.log({
-      chainDetails,
-      channelAlias,
-    });
     var chainDetailsSplit = chainDetails.split(":");
     var blockchain = chainDetailsSplit[0];
     var chain_id = chainDetailsSplit[1];
@@ -269,14 +253,6 @@ function CreateChannel() {
       });
   };
 
-  const isEmpty = (field) => {
-    if (field.trim().length == 0) {
-      return true;
-    }
-
-    return false;
-  };
-
   useEffect(() => {
     if (croppedImage) {
       toDataURL(croppedImage, function(dataUrl) {
@@ -365,23 +341,9 @@ function CreateChannel() {
               </ItemH>
             </Content>
           </Section>
-
-          {/* Image Upload Section */}
-          {!uploadDone && (
-            <UploadLogo
-              croppedImage={croppedImage}
-              view={view}
-              imageSrc={imageSrc}
-              proceed={proceed}
-              setCroppedImage={setCroppedImage}
-              setView={setView}
-              setImageSrc={setImageSrc}
-              setProcessingInfo={setProcessingInfo}
-            />
-          )}
  
           {/* Stake Fees Section */}
-          {uploadDone && !stakeFeesChoosen && (
+          {!stakeFeesChoosen && (
             <StakingInfo
               channelStakeFees={channelStakeFees}
               setStakeFeesChoosen={setStakeFeesChoosen}
@@ -390,9 +352,9 @@ function CreateChannel() {
           )}
 
           {/* Channel Entry */}
-          {uploadDone && stakeFeesChoosen && !channelInfoDone && (
+          {stakeFeesChoosen && !channelInfoDone && (
             <ChannelInfo
-              processing={processing}
+              setStepFlow={setStepFlow}
               channelName={channelName}
               channelAlias={channelAlias}
               channelInfo={channelInfo}
@@ -403,6 +365,23 @@ function CreateChannel() {
               setChannelInfo={setChannelInfo}
               setChannelName={setChannelName}
               setChannelURL={setChannelURL}
+              setProcessing={setProcessing}
+              setProcessingInfo={setProcessingInfo}
+              setChannelInfoDone={setChannelInfoDone}
+            />
+          )}
+            
+          {/* Image Upload Section */}
+          {!uploadDone && channelInfoDone && stakeFeesChoosen && (
+            <UploadLogo
+              croppedImage={croppedImage}
+              view={view}
+              imageSrc={imageSrc}
+              processing={processing}
+              setCroppedImage={setCroppedImage}
+              setView={setView}
+              setImageSrc={setImageSrc}
+              setProcessingInfo={setProcessingInfo}
               handleCreateChannel={handleCreateChannel}
             />
           )}

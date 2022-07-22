@@ -14,7 +14,6 @@ const ALIAS_CHAINS = [
 ];
 
 const ChannelInfo = ({
-  processing,
   channelName,
   channelAlias,
   channelInfo,
@@ -25,9 +24,47 @@ const ChannelInfo = ({
   setChannelInfo,
   setChannelName,
   setChannelURL,
-  handleCreateChannel
+  setStepFlow,
+  setProcessingInfo,
+  setProcessing,
+  setChannelInfoDone,
 }) => {
   const themes = useTheme();
+
+  const isEmpty = (field) => {
+    if (field.trim().length == 0) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const isAllFilled = () => {
+    if (
+      isEmpty(channelName) ||
+      isEmpty(channelInfo) ||
+      isEmpty(channelURL) ||
+      (channelAlias
+      ? isEmpty(chainDetails)
+      : chainDetails
+        ? chainDetails == coreChain
+          ? false
+          : isEmpty(channelAlias)
+        : false)
+    ) {
+      setProcessing(3);
+      setProcessingInfo("Channel Fields are Empty! Please retry!");
+
+      setTimeout(() => {
+        setProcessing(2);
+        setProcessingInfo("");
+      }, 5000);
+
+      return false;
+    }
+
+    return true;
+  }
 
   return (
     <Section>
@@ -36,14 +73,14 @@ const ChannelInfo = ({
           <H3 color="#e20880">Setup your Channel Info</H3>
         </Item>
 
-        <FormSubmision
+        {/* <FormSubmision
           flex="1"
           direction="column"
           margin="0px"
           justify="center"
           size="1.1rem"
           onSubmit={handleCreateChannel}
-        >
+        > */}
           <Item
             margin="-10px 20px 15px 20px"
             flex="1"
@@ -269,9 +306,33 @@ const ChannelInfo = ({
                 </Span>
               )}
             </Item>
-          </ItemH>
+        </ItemH>
+        
+          <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
+            <Button
+              bg="#e20880"
+              color="#fff"
+              flex="1"
+              radius="0px"
+              padding="20px 10px"
+              onClick={() => {
+                if (!isAllFilled()) return;
+                setChannelInfoDone(true);
+                setStepFlow(3);
+              }}
+            >
+              <Span
+                color="#fff"
+                weight="400"
+                textTransform="uppercase"
+                spacing="0.1em"
+              >
+                Continue
+              </Span>
+            </Button>
+          </Item>
 
-          <Item
+          {/* <Item
             margin="15px 0px 0px 0px"
             flex="1"
             self="stretch"
@@ -306,8 +367,8 @@ const ChannelInfo = ({
                 />
               )}
             </Button>
-          </Item>
-        </FormSubmision>
+          </Item> */}
+        {/* </FormSubmision> */}
       </Content>
     </Section>
   );

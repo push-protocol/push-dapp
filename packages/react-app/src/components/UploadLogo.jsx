@@ -6,6 +6,8 @@ import {
   Item,
   H3,
   Button,
+  Input,
+  FormSubmision,
 } from "primaries/SharedStyling";
 import ImageClipper from "primaries/ImageClipper";
 import { useWeb3React } from "@web3-react/core";
@@ -13,16 +15,18 @@ import styled from "styled-components";
 import { ethers } from "ethers";
 import { addresses, abis } from "@project/contracts";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+import Loader from "react-loader-spinner";
 
 const UploadLogo = ({
   croppedImage,
   view,
   imageSrc,
-  proceed, 
+  processing,
   setCroppedImage,
   setView,
   setImageSrc,
   setProcessingInfo,
+  handleCreateChannel
 }) => {
   const childRef = useRef();
   const { chainId, library, account } = useWeb3React();
@@ -90,105 +94,143 @@ const UploadLogo = ({
             resize to 128x128px.
           </H3>
         </Item>
-
-        <Space className="">
-          <div>
-            <div
-              onDragOver={(e) => handleDragOver(e)}
-              onDrop={(e) => handleOnDrop(e)}
-              className="bordered"
-            >
-              <div className="inner">
-                {view ? (
-                  <div className="crop-div">
-                    {croppedImage ? (
-                      <div>
-                        <img
-                          alt="Cropped Img"
-                          src={croppedImage}
-                          className="croppedImage"
-                        />
-                      </div>
-                    ) : (
-                      <ImageClipper
-                        className="cropper"
-                        imageSrc={imageSrc}
-                        onImageCropped={(croppedImage) =>
-                          setCroppedImage(croppedImage)
-                        }
-                        ref={childRef}
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <ImageIcon />
-                )}
-
-                <ButtonSpace>
-                  <div className="crop-button">
-                    {view &&
-                      (!croppedImage ? (
-                        <Button
-                          bg="#1C4ED8"
-                          onClick={() => {
-                            childRef.current.showCroppedImage();
-                          }}
-                        >
-                          Clip Image
-                        </Button>
+        
+          <Space className="">
+            <div>
+              <div
+                onDragOver={(e) => handleDragOver(e)}
+                onDrop={(e) => handleOnDrop(e)}
+                className="bordered"
+              >
+                <div className="inner">
+                  {view ? (
+                    <div className="crop-div">
+                      {croppedImage ? (
+                        <div>
+                          <img
+                            alt="Cropped Img"
+                            src={croppedImage}
+                            className="croppedImage"
+                          />
+                        </div>
                       ) : (
-                        <div className="crop-button">
+                        <ImageClipper
+                          className="cropper"
+                          imageSrc={imageSrc}
+                          onImageCropped={(croppedImage) =>
+                            setCroppedImage(croppedImage)
+                          }
+                          ref={childRef}
+                        />
+                      )}
+                    </div>
+                  ) : (
+                    <ImageIcon />
+                  )}
+
+                  <ButtonSpace>
+                    <div className="crop-button">
+                      {view &&
+                        (!croppedImage && (
                           <Button
                             bg="#1C4ED8"
-                            onClick={() => proceed()}
+                            onClick={() => {
+                              childRef.current.showCroppedImage();
+                            }}
                           >
-                            Next
+                            Clip Image
                           </Button>
-                        </div>
-                      ))}
-                  </div>
-                </ButtonSpace>
+                        )
+                      )}
+                    </div>
+                  </ButtonSpace>
 
-                <div className="text-div">
-                  <label htmlFor="file-upload" className="labeled">
-                    <div>Upload a file</div>
-                    <input
-                      id="file-upload"
-                      accept="image/*"
-                      name="file-upload"
-                      hidden
-                      onChange={(e) => handleFile(e.target, "target")}
-                      type="file"
-                      className="sr-only"
-                      readOnly
-                    />
-                  </label>
-                  <div className="">- or drag and drop</div>
+                  <div className="text-div">
+                    <label htmlFor="file-upload" className="labeled">
+                      <div>Upload a file</div>
+                      <input
+                        id="file-upload"
+                        accept="image/*"
+                        name="file-upload"
+                        hidden
+                        onChange={(e) => handleFile(e.target, "target")}
+                        type="file"
+                        className="sr-only"
+                        readOnly
+                      />
+                    </label>
+                    <div className="">- or drag and drop</div>
+                  </div>
+                  <p className="text-below">
+                    PNG, JPG.Proceed to clip and submit final
+                  </p>
                 </div>
-                <p className="text-below">
-                  PNG, JPG.Proceed to clip and submit final
-                </p>
               </div>
             </div>
-          </div>
-        </Space>
+          </Space>
 
-        {!UtilityHelper.isMainnet(chainId) ? (
-          <Item align="flex-end">
-            <Minter
-              onClick={() => {
-                mintDai();
-              }}
+          {!UtilityHelper.isMainnet(chainId) ? (
+            <Item align="flex-end">
+              <Minter
+                onClick={() => {
+                  mintDai();
+                }}
+              >
+                <Pool>
+                  <br></br>
+                  <PoolShare>Get Free DAI for Channel</PoolShare>
+                </Pool>
+              </Minter>
+            </Item>
+          ) : (
+            <></>
+          )}
+
+        <FormSubmision
+          flex="1"
+          direction="column"
+          margin="0px"
+          justify="center"
+          size="1.1rem"
+          onSubmit={handleCreateChannel}
+        >
+          <Item
+            margin="15px 0px 0px 0px"
+            flex="1"
+            self="stretch"
+            align="stretch"
+          >
+            <Button
+              bg="#e20880"
+              color="#fff"
+              flex="1"
+              radius="0px"
+              padding="20px 10px"
+              disabled={processing == 1 ? true : false}
             >
-              <Pool>
-                <br></br>
-                <PoolShare>Get Free DAI for Channel</PoolShare>
-              </Pool>
-            </Minter>
+              {processing == 1 && (
+                <Loader
+                  type="Oval"
+                  color="#fff"
+                  height={24}
+                  width={24}
+                />
+              )}
+              {processing != 1 && (
+                <Input
+                  cursor="hand"
+                  textTransform="uppercase"
+                  color="#fff"
+                  weight="400"
+                  size="0.8em"
+                  spacing="0.2em"
+                  type="submit"
+                  value="Setup Channel"
+                />
+              )}
+            </Button>
           </Item>
-        ) : (
-          <></>
-        )}
+        </FormSubmision>
       </Content>
     </Section>
   );
