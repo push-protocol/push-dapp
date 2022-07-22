@@ -24,14 +24,6 @@ const UploadLogo = ({
   setImageSrc,
   setProcessingInfo,
 }) => {
-  console.log(croppedImage,
-    view,
-    imageSrc,
-    proceed,
-    setCroppedImage,
-    setView,
-    setImageSrc,
-    setProcessingInfo);
   const childRef = useRef();
   const { chainId, library, account } = useWeb3React();
 

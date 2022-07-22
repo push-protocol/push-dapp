@@ -19,14 +19,13 @@ import { FiLink } from "react-icons/fi";
 import "react-dropzone-uploader/dist/styles.css";
 import Loader from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
+import StakingInfo from "./StakingInfo";
 
 import { envConfig } from "@project/contracts";
 
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
-import ImageClipper from "../primaries/ImageClipper";
-import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 import "./createChannel.css";
 
 const ethers = require("ethers");
@@ -391,61 +390,11 @@ function CreateChannel() {
  
           {/* Stake Fees Section */}
           {uploadDone && !stakeFeesChoosen && (
-            <Section>
-              <Content padding="50px 0px 0px 0px">
-                {/* <Item align="flex-start" margin="0px 20px">
-              <H3 color="#e20880">Set your staking fees in DAI</H3>
-            </Item> */}
-
-                <Item
-                  margin="-10px 20px 20px 20px"
-                  padding="20px 20px 10px 20px"
-                  bg="#f1f1f1"
-                >
-                  {/* <Slider
-                defaultValue={minStakeFees}
-                onChangeCommitted={(event, value) => setChannelStakeFees(value)}
-                aria-labelledby="discrete-slider"
-                valueLabelDisplay="auto"
-                step={minStakeFees}
-                marks
-                min={minStakeFees}
-                max={25000}
-              /> */}
-                  <Span
-                    weight="400"
-                    size="1.0em"
-                    textTransform="uppercase"
-                    spacing="0.2em"
-                  >
-                    Amount Staked: {channelStakeFees} DAI
-                  </Span>
-                </Item>
-
-                <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
-                  <Button
-                    bg="#e20880"
-                    color="#fff"
-                    flex="1"
-                    radius="0px"
-                    padding="20px 10px"
-                    onClick={() => {
-                      setStakeFeesChoosen(true);
-                      setStepFlow(3);
-                    }}
-                  >
-                    <Span
-                      color="#fff"
-                      weight="400"
-                      textTransform="uppercase"
-                      spacing="0.1em"
-                    >
-                      Continue
-                    </Span>
-                  </Button>
-                </Item>
-              </Content>
-            </Section>
+            <StakingInfo
+              channelStakeFees={channelStakeFees}
+              setStakeFeesChoosen={setStakeFeesChoosen}
+              setStepFlow={setStepFlow}
+            />
           )}
 
           {/* Channel Entry */}
