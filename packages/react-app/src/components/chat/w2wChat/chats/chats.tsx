@@ -43,8 +43,6 @@ export default function Chats({ msg, did, noTail }: chatProps) {
     let time1 = time.toLocaleTimeString('en-US');
     let date = time1.slice(0, -6) + time1.slice(-2,);
 
-
-
     return (
         <>
             {msg.messageType === 'Text' ?

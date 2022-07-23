@@ -1,12 +1,10 @@
-import React from "react";
-import { FC } from "react";
+import React from 'react'
+import { FC } from 'react'
 
 const GifIcon: FC<{ className?: string }> = ({ className }) => {
   return (
     <svg
-      className={`text-primary h-[22px] w-[26px] object-contain ${
-        className || ""
-      }`}
+      className={`text-primary h-[22px] w-[26px] object-contain ${className || ''}`}
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
@@ -29,7 +27,7 @@ c8.62,0,15.609,6.989,15.609,15.609c0,8.62-6.989,15.609-15.609,15.609h-61.661v33.
         />
       </g>
     </svg>
-  );
-};
+  )
+}
 
-export default GifIcon;
+export default GifIcon
