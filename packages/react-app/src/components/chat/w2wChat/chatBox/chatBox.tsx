@@ -371,14 +371,15 @@ const ChatBox = () => {
                         time = dateString
                       }
                     }
+                    console.log(msg)
                     return (
                       <>
                         {!showTime ? null : (
-                          <div className="showDateInChat">
+                          <div className="showDateInChat" key={msg?.timestamp}>
                             <span>{time}</span>
                           </div>
                         )}
-                        <Chats msg={msg} did={did} noTail={noTail} />
+                        <Chats msg={msg} did={did} noTail={noTail} key={msg?.timestamp} />
                       </>
                     )
                   })
