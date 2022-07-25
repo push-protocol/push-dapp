@@ -7,6 +7,8 @@ import { Context, Feeds } from '../w2wIndex'
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
+import Snackbar from '@mui/material/Snackbar'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
 interface messageFeedProps {
   filteredUserData: {}[]
@@ -21,13 +23,18 @@ export interface InboxChat {
   messageType: string
 }
 
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+})
+
 const MessageFeed = (props: messageFeedProps) => {
   const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
   const [feeds, setFeeds] = useState<Array<{}>>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
-
+  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
   const getInbox = useCallback(async () => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
@@ -59,9 +66,13 @@ const MessageFeed = (props: messageFeedProps) => {
           console.log(Object.keys(props.filteredUserData[0]))
           if (Object.keys(props.filteredUserData[0]).includes('sameUser')) {
             setIsSameUser(true)
+            setOpenReprovalSnackBar(true)
+            setErrorMessage("you can't send intent to yourself")
             setFeeds([])
           } else if (Object.keys(props.filteredUserData[0]).includes('inValid')) {
             setIsInvalidAddress(true)
+            setOpenReprovalSnackBar(true)
+            setErrorMessage('Invalid Address')
             setFeeds([])
           } else {
             let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
@@ -90,6 +101,12 @@ const MessageFeed = (props: messageFeedProps) => {
     setChat(feed)
   }
 
+  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpenReprovalSnackBar(false)
+  }
   return (
     <>
       <section className="messageFeed_body">
@@ -130,6 +147,11 @@ const MessageFeed = (props: messageFeedProps) => {
             ))}
           </div>
         ) : null}
+        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
+          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
+            {errorMessage}
+          </Alert>
+        </Snackbar>
       </section>
     </>
   )
