@@ -94,7 +94,6 @@ const IntentFeed = (props: intentFeedProps) => {
     settoDID(todid)
     handleOpen()
   }
-
   async function ApproveIntent(status: string) {
     var fromDID = did.id
     const res = await approveIntent(fromDID, toDID, status, '1', 'sigType')

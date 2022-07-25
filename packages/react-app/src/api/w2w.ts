@@ -211,7 +211,8 @@ export const approveIntent = async (
       sig_type: sigType
     })
   })
-  return response
+  const data = await response.json()
+  return data
 }
 
 export const createIntent = async (
