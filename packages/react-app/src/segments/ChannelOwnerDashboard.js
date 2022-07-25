@@ -23,7 +23,7 @@ const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { channelDetails, delegatees } = useSelector((state) => state.admin);
+  const { channelDetails } = useSelector((state) => state.admin);
 
   const themes = useTheme();
 
@@ -126,8 +126,6 @@ const ChannelOwnerDashboard = () => {
           {/* display the details about the profile of the channel */}
           {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
           {/* display the details about the profile of the channel */}
-          {/* display the notifications settings */}
-          {(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""}
           {/* display the notifications settings */}
         </ModifiedContent>
       </Section>
