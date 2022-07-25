@@ -19,6 +19,9 @@ import CheckIcon from '@mui/icons-material/Check'
 import { showCharacters } from './helpers'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import { envConfig } from '@project/contracts'
+
+const INFURA_URL = envConfig.infuraApiUrl
 
 import styles from './styles'
 
@@ -28,10 +31,7 @@ interface profilePropsType {
   setValue: (number: number) => void
 }
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref,
-) {
+const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
@@ -47,7 +47,7 @@ const Profile = (props: profilePropsType) => {
   useEffect(() => {
     try {
       CID.parse(props.profile_picture)
-      setProfile(`https://ipfs.infura.io/ipfs/${props.profile_picture}`)
+      setProfile(INFURA_URL + `${props.profile_picture}`)
     } catch (err) {
       setProfile(props.profile_picture)
     }
@@ -81,11 +81,11 @@ const Profile = (props: profilePropsType) => {
     setMessage('Wallet copied successfully')
   }
 
-  const changeHandler = async (event) => {
+  const changeHandler = async event => {
     const file = event.target.files[0]
     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
     const cid = await IPFSHelper.uploadImage(file, IPFSClient)
-    setProfile(`https://ipfs.infura.io/ipfs/${cid}`)
+    setProfile(INFURA_URL + `${cid}`)
     props.updateProfile(cid)
     await uploadUserProfileImage(did.id, cid)
   }
@@ -94,22 +94,13 @@ const Profile = (props: profilePropsType) => {
     <>
       <Card sx={styles.container} elevation={0}>
         <Box sx={styles.header}>
-          <IconButton
-            aria-label="back"
-            onClick={() => props.setValue(0)}
-            sx={styles.backButtonHolder}
-          >
+          <IconButton aria-label="back" onClick={() => props.setValue(0)} sx={styles.backButtonHolder}>
             <KeyboardBackspaceIcon sx={styles.backButton} />
           </IconButton>
         </Box>
 
         <CardActionArea sx={{ position: 'relative', background: 'lightgrey' }}>
-          <CardMedia
-            component="img"
-            height="140"
-            image={profile}
-            alt="profile"
-          />
+          <CardMedia component="img" height="140" image={profile} alt="profile" />
         </CardActionArea>
 
         <Tooltip title="Change profile picture" placement="top-start">
@@ -117,12 +108,7 @@ const Profile = (props: profilePropsType) => {
             <img src={profile} alt="profile" />
 
             <section>
-              <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="label"
-                sx={styles.uploadIcon}
-              >
+              <IconButton color="primary" aria-label="upload picture" component="label" sx={styles.uploadIcon}>
                 <input
                   hidden
                   onChange={changeHandler}
@@ -151,10 +137,7 @@ const Profile = (props: profilePropsType) => {
               </Typography>
 
               {!copiedDid ? (
-                <IconButton
-                  aria-label="back"
-                  onClick={() => handleClickDid(did.id)}
-                >
+                <IconButton aria-label="back" onClick={() => handleClickDid(did.id)}>
                   <ContentCopyIcon sx={styles.copyIcon} />
                 </IconButton>
               ) : (
@@ -170,17 +153,14 @@ const Profile = (props: profilePropsType) => {
               Wallets:
             </Typography>
 
-            {wallets.map((wallet) => (
+            {wallets.map(wallet => (
               <Box sx={{ display: 'flex', marginBottom: 1 }}>
                 <Typography component="legend" sx={styles.value}>
                   {showCharacters(wallet)}
                 </Typography>
 
                 {!copiedWallet ? (
-                  <IconButton
-                    aria-label="back"
-                    onClick={() => handleClickWallet(wallet)}
-                  >
+                  <IconButton aria-label="back" onClick={() => handleClickWallet(wallet)}>
                     <ContentCopyIcon sx={styles.copyIcon} />
                   </IconButton>
                 ) : (

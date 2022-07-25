@@ -25,7 +25,7 @@ import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 
-const infuraURL = envConfig.infuraApiUrl
+const INFURA_URL = envConfig.infuraApiUrl
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -71,7 +71,7 @@ const ChatBox = () => {
         msgIPFS = current as MessageIPFS
       }
       // console.log(getMessage, msgIPFS)
-      setMessages((m) => [msgIPFS, ...m])
+      setMessages(m => [msgIPFS, ...m])
 
       const link = msgIPFS.link
       if (link) {
@@ -118,7 +118,7 @@ const ChatBox = () => {
       if (currentChat) {
         try {
           CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
-          setImageSource(infuraURL + `${currentChat.profile_picture}`)
+          setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
         } catch (err) {
           setImageSource(currentChat.profile_picture)
         }
@@ -141,7 +141,7 @@ const ChatBox = () => {
         setLoading(false)
       }
     }
-    getMessagesFromIPFS().catch((err) => console.error(err))
+    getMessagesFromIPFS().catch(err => console.error(err))
   }, [currentChat])
 
   const sendMessage = async (
@@ -221,14 +221,14 @@ const ChatBox = () => {
     }
   }
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = e => {
     const x = e.keyCode
     if (x === 13) {
       handleSubmit(e)
     }
   }
 
-  const textOnChange = (e) => {
+  const textOnChange = e => {
     setNewMessage(e.target.value)
   }
 
@@ -249,7 +249,7 @@ const ChatBox = () => {
         const reader = new FileReader()
         let resultingfile
         reader.readAsDataURL(file)
-        reader.onloadend = async (e) => {
+        reader.onloadend = async e => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
           console.log(resultingfile)
           if (!hasIntent && intentSentandPending === 'Pending') {
@@ -418,7 +418,7 @@ const ChatBox = () => {
                   </button>
                 </div>
               </>
-                ) : null}
+            ) : null}
             {hasIntent && intentSentandPending === 'Pending' ? (
               <textarea
                 disabled
@@ -444,7 +444,7 @@ const ChatBox = () => {
               <button disabled={textAreaDisabled} className="emojiButton" onClick={() => setShowEmojis(!showEmojis)}>
                 <i className="fa fa-smile" aria-hidden="true"></i>
               </button>
-                ) : null}
+            ) : null}
             {showEmojis && (
               <Picker
                 onEmojiClick={addEmoji}
