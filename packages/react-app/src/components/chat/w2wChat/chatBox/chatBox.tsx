@@ -23,8 +23,9 @@ import { fetchInbox, fetchIntent } from '../w2wUtils'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
+import ScrollToBottom from 'react-scroll-to-bottom'
 
-const infura_URL = envConfig.infuraApiUrl
+const INFURA_URL = envConfig.infuraApiUrl
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
@@ -51,7 +52,7 @@ const ChatBox = () => {
   const { data, error, isError, isLoading } = useQuery<any>('current')
   const [SnackbarText, setSnackbarText] = useState<string>('')
   let showTime = false
-  let time: string = ''
+  let time = ''
 
   const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
     if (!messageCID) {
@@ -65,7 +66,7 @@ const ChatBox = () => {
       if (getMessage !== undefined) {
         msgIPFS = getMessage.body
       } else {
-        const current = await IPFSHelper.get(messageCID, ipfs) //{}
+        const current = await IPFSHelper.get(messageCID, ipfs) // {}
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
         msgIPFS = current as MessageIPFS
       }
@@ -79,11 +80,6 @@ const ChatBox = () => {
         break
       }
     }
-  }
-
-  const scrollRef: any = useRef()
-  const scrollToBottom = () => {
-    scrollRef.current?.scrollIntoView({ behaviour: 'smooth' })
   }
 
   useEffect(() => {
@@ -122,7 +118,7 @@ const ChatBox = () => {
       if (currentChat) {
         try {
           CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
-          setImageSource(infura_URL + `${currentChat.profile_picture}`)
+          setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
         } catch (err) {
           setImageSource(currentChat.profile_picture)
         }
@@ -250,7 +246,7 @@ const ChatBox = () => {
       let content: string
       console.log(file)
       if (type === 'File') {
-        let reader = new FileReader()
+        const reader = new FileReader()
         let resultingfile
         reader.readAsDataURL(file)
         reader.onloadend = async e => {
@@ -310,8 +306,9 @@ const ChatBox = () => {
     setOpenSuccessSnackBar(false)
   }
   const placeholderTextArea = () => {
-    if (intentSentandPending === 'Pending' && hasIntent === true)
+    if (intentSentandPending === 'Pending' && hasIntent === true) {
       return "Can't send any messages until intent is accepted !"
+    }
     if (hasIntent === true && intentSentandPending === 'Approved') return 'New Text Message'
     else return 'Intent Message'
   }
@@ -347,7 +344,7 @@ const ChatBox = () => {
             </div>
           </div>
 
-          <div className="chatBoxTop" ref={scrollRef}>
+          <ScrollToBottom className="chatBoxTop">
             {Loading ? (
               <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                 <Loader type="Oval" color="#34C5F3" height={40} width={40} />
@@ -358,14 +355,11 @@ const ChatBox = () => {
                   messages?.map((msg, i) => {
                     const isLast = i === messages.length - 1
                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
-                    let time1: string = ''
-                    if (i > 0) {
-                      time1 = time
-                    }
+
                     showTime = false
                     if (i >= 0) {
-                      let duration = new Date(messages[i]?.timestamp)
-                      let dateString = duration.toDateString()
+                      const duration = new Date(messages[i]?.timestamp)
+                      const dateString = duration.toDateString()
                       if (dateString !== time || i === 0) {
                         showTime = true
                         time = dateString
@@ -390,7 +384,7 @@ const ChatBox = () => {
                 )}
               </>
             )}
-          </div>
+          </ScrollToBottom>
 
           <div className="chatBoxBottom">
             {(!hasIntent && intentSentandPending === 'Pending') ||
@@ -443,6 +437,7 @@ const ChatBox = () => {
                 onKeyDown={handleKeyPress}
                 onChange={textOnChange}
                 value={newMessage}
+                autoFocus
               ></textarea>
             )}
             {(!hasIntent && intentSentandPending === 'Pending') ||
