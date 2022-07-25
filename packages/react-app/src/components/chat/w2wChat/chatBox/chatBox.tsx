@@ -126,14 +126,11 @@ const ChatBox = () => {
         } catch (err) {
           setImageSource(currentChat.profile_picture)
         }
-        if (currentChat?.did === did.id) {
-          setHasIntent(true)
-        } else {
-          const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
-          setIntentSentandPending(intentStatus.intent)
-          hasintent = intentStatus.hasIntent
-          setHasIntent(intentStatus.hasIntent)
-        }
+        const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
+        setIntentSentandPending(intentStatus.intent)
+        hasintent = intentStatus.hasIntent
+        setHasIntent(intentStatus.hasIntent)
+
         if (currentChat?.threadhash && hasintent) {
           const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
           await getMessagesFromCID(currentChat.threadhash, IPFSClient)

@@ -25,6 +25,8 @@ const MessageFeed = (props: messageFeedProps) => {
   const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
   const [feeds, setFeeds] = useState<Array<{}>>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
+  const [isSameUser, setIsSameUser] = useState<boolean>(false)
+  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
 
   const getInbox = useCallback(async () => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
@@ -54,10 +56,19 @@ const MessageFeed = (props: messageFeedProps) => {
     } else {
       const searchFn = async () => {
         if (props.filteredUserData.length) {
-          let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
-          const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
-          inbox = [{ ...inbox[0], threadhash }]
-          setFeeds(inbox)
+          console.log(Object.keys(props.filteredUserData[0]))
+          if (Object.keys(props.filteredUserData[0]).includes('sameUser')) {
+            setIsSameUser(true)
+            setFeeds([])
+          } else if (Object.keys(props.filteredUserData[0]).includes('inValid')) {
+            setIsInvalidAddress(true)
+            setFeeds([])
+          } else {
+            let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
+            const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
+            inbox = [{ ...inbox[0], threadhash }]
+            setFeeds(inbox)
+          }
         } else {
           setFeeds([])
           console.log(props.filteredUserData, feeds)
@@ -87,7 +98,19 @@ const MessageFeed = (props: messageFeedProps) => {
             <Loader />
           </div>
         )}
-        {!feeds?.length && !messagesLoading ? (
+        {!feeds?.length && isSameUser ? (
+          <p
+            style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
+          >
+            you can't send intent to yourself
+          </p>
+        ) : !feeds?.length && isInValidAddress ? (
+          <p
+            style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
+          >
+            Invalid Address
+          </p>
+        ) : !feeds?.length && !messagesLoading ? (
           <p
             style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
           >

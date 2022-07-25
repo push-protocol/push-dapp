@@ -187,6 +187,9 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
       secondDID
     })
   })
+  if (response.status === 400) {
+    throw new Error('Error fetching threadhash')
+  }
   const data = await response.json()
   return data
 }

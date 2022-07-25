@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import './searchBar.css'
 import { Web3Provider } from 'ethers/providers'
+import { Context } from '../w2wIndex'
 import { useWeb3React } from '@web3-react/core'
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
@@ -12,9 +13,10 @@ import * as PushNodeClient from '../../../../api'
 
 const SearchBar = () => {
   const { chainId } = useWeb3React<Web3Provider>()
+  const { did } = useContext(Context)
   const [wordEntered, setWordEntered] = useState<string>('')
   const [allUsers, setAllUsers] = useState<User[]>([])
-  const [filteredUserData, setFilteredUserData] = useState<any>([])
+  const [filteredUserData, setFilteredUserData] = useState<Array<{}>>([])
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
@@ -44,9 +46,12 @@ const SearchBar = () => {
           }
         }
       }
-
       if (filteredData.length) {
-        setFilteredUserData(filteredData)
+        if (filteredData[0].did === did.id) {
+          setFilteredUserData([{ sameUser: true }])
+        } else {
+          setFilteredUserData(filteredData)
+        }
       }
       // User is not in the protocol. Create new user
       else {
@@ -64,7 +69,7 @@ const SearchBar = () => {
           })
           setFilteredUserData([userCreated])
         } else {
-          setFilteredUserData([])
+          setFilteredUserData([{ inValid: true }])
         }
       }
     } else {
