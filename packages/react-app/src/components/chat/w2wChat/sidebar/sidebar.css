@@ -1,7 +1,7 @@
 .sidebar_body{
     width: 27%;
     position: relative;
-    
+    padding: 0
 }
 .sidebar_search{
     width: 100%;
@@ -23,17 +23,15 @@
     /* bottom of sidebar */
 
     width: 100%;
-    height: 8%;
-    display: flex;
-    position: relative;
-    top: -2rem;
+    position: absolute;
+    bottom: 0;
     background-color: #f7f7f7;
+    border-top: 1;
+    border-color: divider;
+    left:0;
 }
 
 .sidebar_bottom_button{
     width: 50%;
-    color:"pink"
-}
-.sidebar_bottom_button:focus{
-    background-color: rgb(127, 168, 255);
+    font-size: 12px
 }
