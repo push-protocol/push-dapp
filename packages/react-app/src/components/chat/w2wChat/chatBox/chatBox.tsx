@@ -25,6 +25,7 @@ import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContextInterface } from '../../../../components/chat/w2wChat/w2wIndex'
+import _ from 'lodash'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -32,7 +33,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const ChatBox = () => {
+const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
   const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContextInterface = useContext<
     AppContextInterface
@@ -74,7 +75,7 @@ const ChatBox = () => {
         msgIPFS = current as MessageIPFS
       }
       // console.log(getMessage, msgIPFS)
-      setMessages(m => [msgIPFS, ...m])
+      setMessages((m) => [msgIPFS, ...m])
 
       const link = msgIPFS.link
       if (link) {
@@ -86,7 +87,7 @@ const ChatBox = () => {
   }
 
   useEffect(() => {
-    function updateData() {
+    function updateData(): void {
       if (data !== undefined && currentChat?.wallets) {
         const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
         if (newData?.intent === 'Approved') {
@@ -100,21 +101,8 @@ const ChatBox = () => {
     }
   }, [data, currentChat?.wallets])
 
-  // useEffect(() => {
-  //     const consoleLog = () => {
-  //         console.log(currentChat)
-  //     }
-
-  //     const interval = setInterval(() => consoleLog(), 5000)
-  //     return () => {
-  //         clearInterval(interval)
-  //     }
-  // }, [currentChat])
-
-  // console.log(currentChat, viewChatBox, did, renderInbox, connectedUser)
-
   useEffect(() => {
-    const getMessagesFromIPFS = async () => {
+    const getMessagesFromIPFS = async (): Promise<void> => {
       setNewMessage('')
       setLoading(true)
       let hasintent = false
@@ -141,7 +129,7 @@ const ChatBox = () => {
         setLoading(false)
       }
     }
-    getMessagesFromIPFS().catch(err => console.error(err))
+    getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
   const sendMessage = async (
@@ -153,7 +141,7 @@ const ChatBox = () => {
     signature: string,
     sigType: string,
     encType: string
-  ) => {
+  ): Promise<void> => {
     try {
       console.log('connectedUser', connectedUser)
       console.log('currentChat', currentChat)
@@ -182,7 +170,7 @@ const ChatBox = () => {
     }
   }
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
+  const handleSubmit = _.debounce((e: { preventDefault: () => void }): void => {
     e.preventDefault()
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
@@ -191,9 +179,9 @@ const ChatBox = () => {
         sendIntent(newMessage, 'Text')
       }
     }
-  }
+  }, 2000)
 
-  const sendIntent = async (content: string, contentType: string) => {
+  const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
         const msg = await PushNodeClient.createIntent(
@@ -221,18 +209,18 @@ const ChatBox = () => {
     }
   }
 
-  const handleKeyPress = e => {
+  const handleKeyPress = (e): void => {
     const x = e.keyCode
     if (x === 13) {
       handleSubmit(e)
     }
   }
 
-  const textOnChange = e => {
+  const textOnChange = (e): void => {
     setNewMessage(e.target.value)
   }
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: File): Promise<void> => {
     try {
       const TWO_MB = 1024 * 1024 * 2
       if (file.size > TWO_MB) {
@@ -249,7 +237,7 @@ const ChatBox = () => {
         const reader = new FileReader()
         let resultingfile
         reader.readAsDataURL(file)
-        reader.onloadend = async e => {
+        reader.onloadend = async (e): Promise<void> => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
           console.log(resultingfile)
           if (!hasIntent && intentSentandPending === 'Pending') {
@@ -282,16 +270,16 @@ const ChatBox = () => {
       console.log(err)
     }
   }
-  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     const file = e.target.files?.[0]
     if (file) uploadFile(file)
   }
-  const addEmoji = (e, emojiObject: { emoji: any }) => {
+  const addEmoji = (e, emojiObject: { emoji: any }): void => {
     setNewMessage(newMessage + emojiObject.emoji)
     setShowEmojis(false)
   }
 
-  const sendGif = (url: string) => {
+  const sendGif = (url: string): void => {
     console.log(url)
     if (!hasIntent && intentSentandPending === 'Pending') {
       sendIntent(url, 'Gif')
@@ -299,13 +287,13 @@ const ChatBox = () => {
       sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature', 'sig_type', 'enc_type')
     }
   }
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
     setOpenSuccessSnackBar(false)
   }
-  const placeholderTextArea = () => {
+  const placeholderTextArea = (): string => {
     if (intentSentandPending === 'Pending' && hasIntent === true) {
       return "Can't send any messages until intent is accepted !"
     }
@@ -442,7 +430,11 @@ const ChatBox = () => {
             )}
             {(!hasIntent && intentSentandPending === 'Pending') ||
             (hasIntent && intentSentandPending === 'Approved') ? (
-              <button disabled={textAreaDisabled} className="emojiButton" onClick={() => setShowEmojis(!showEmojis)}>
+              <button
+                disabled={textAreaDisabled}
+                className="emojiButton"
+                onClick={(): void => setShowEmojis(!showEmojis)}
+              >
                 <i className="fa fa-smile" aria-hidden="true"></i>
               </button>
             ) : null}

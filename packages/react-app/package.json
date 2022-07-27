@@ -18,6 +18,7 @@
     ]
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "@3id/connect": "0.4.1",
     "@apollo/client": "^3.3.7",
     "@ceramicnetwork/3id-did-resolver": "2.0.4",
@@ -133,6 +134,8 @@
     "web3modal": "1.9.7"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
+    "@types/react-loader-spinner": "^4.0.0",
     "@3id/connect": "0.4.1",
     "@ceramicnetwork/ceramic-core": "0.12.4",
     "@testing-library/dom": "^6.12.2",

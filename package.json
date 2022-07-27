@@ -28,8 +28,5 @@
       "**/@graphprotocol/graph-ts",
       "**/@graphprotocol/graph-ts/**"
     ]
-  },
-  "dependencies": {
-    "ipfs-http-client": "^57.0.0"
   }
 }
