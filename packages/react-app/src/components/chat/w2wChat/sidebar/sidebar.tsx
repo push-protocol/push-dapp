@@ -3,78 +3,93 @@ import SearchBar from '../searchBar/searchBar'
 import IntentBar from '../intentBar/intentBar'
 import './sidebar.css'
 import { Context } from '../w2wIndex'
-import ProfileHeader from '../ProfileSection/ProfileHeader'
+
+import Tabs from '@mui/material/Tabs'
+import Tab from '@mui/material/Tab'
+import Box from '@mui/material/Box'
+import PendingIcon from '@mui/icons-material/Pending'
+import ChatIcon from '@mui/icons-material/Chat'
+
+import ProfileHeader from '../profile'
 import Profile from '../ProfileSection/Profile'
-import { Button } from 'components/SharedStyling'
+
+function TabPanel({ children, value, index, ...other }): JSX.Element {
+  return (
+    <Box
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && children}
+    </Box>
+  )
+}
 
 const Sidebar = () => {
-  const [chatselected, setChatselected] = useState(true)
   const { userProfile } = useContext(Context)
-  const [showProfile, setShowProfile] = useState(false)
   const [updateProfileImage, setUserProfileImage] = useState(userProfile)
+
+  const [value, setValue] = useState(0)
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue)
+  }
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image)
   }
 
-  function renderselected() {
-    if (chatselected) {
-      return (
-        <>
-          <div className="userProfileBar">
-            <ProfileHeader setProfile={setShowProfile} profile_picture={updateProfileImage} />
-          </div>
-          {!showProfile ? (
+  return (
+    <Box className="sidebar_body">
+      <Box sx={{ position: 'relative' }}>
+        <ProfileHeader setValue={setValue} />
+
+        <TabPanel value={value} index={0}>
+          <Box>
             <div className="sidebar_search">
               <SearchBar />
             </div>
-          ) : (
-            <div className="sidebar_profile">
-              <Profile profile_picture={updateProfileImage} updateProfile={updateProfile} />
-            </div>
-          )}
-        </>
-      )
-    } else {
-      return (
-        <>
-          <div className="userProfileBar">
-            <ProfileHeader setProfile={setShowProfile} profile_picture={updateProfileImage} />
-          </div>
-          {!showProfile ? (
+          </Box>
+        </TabPanel>
+
+        <TabPanel value={value} index={1}>
+          <Box>
             <div className="sidebar_search">
               <IntentBar />
             </div>
-          ) : (
-            <div className="sidebar_profile">
-              <Profile profile_picture={updateProfileImage} updateProfile={updateProfile} />
-            </div>
-          )}
-        </>
-      )
-    }
-  }
-  function showChats() {
-    setChatselected(true)
-  }
-  function showIntents() {
-    setChatselected(false)
-  }
+          </Box>
+        </TabPanel>
 
-  return (
-    <>
-      <div className="sidebar_body">
-        {renderselected()}
-        <div className="sidebar_bottom">
-          <Button style={{ color: 'black' }} className="sidebar_bottom_button" onClick={showChats}>
-            Chats
-          </Button>
-          <Button style={{ color: 'black' }} className="sidebar_bottom_button" onClick={showIntents}>
-            Intents
-          </Button>
-        </div>
-      </div>
-    </>
+        <TabPanel value={value} index={2}>
+          <Box>
+            <div className="sidebar_profile">
+              <Profile profile_picture={updateProfileImage} updateProfile={updateProfile} setValue={setValue} />
+            </div>
+          </Box>
+        </TabPanel>
+      </Box>
+
+      <Box className="sidebar_bottom">
+        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+          <Tab
+            label="Chats"
+            icon={<ChatIcon fontSize="small" />}
+            iconPosition="start"
+            className="sidebar_bottom_button"
+            sx={{ fontSize: '12px' }}
+          />
+          <Tab
+            label="Intents"
+            icon={<PendingIcon fontSize="small" />}
+            iconPosition="start"
+            className="sidebar_bottom_button"
+            sx={{ fontSize: '12px' }}
+          />
+        </Tabs>
+      </Box>
+    </Box>
   )
 }
 

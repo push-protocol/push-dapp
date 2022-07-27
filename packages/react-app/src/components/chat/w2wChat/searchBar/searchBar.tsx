@@ -16,8 +16,9 @@ const SearchBar = () => {
   const { did } = useContext(Context)
   const [wordEntered, setWordEntered] = useState<string>('')
   const [allUsers, setAllUsers] = useState<User[]>([])
-  const [filteredUserData, setFilteredUserData] = useState<Array<{}>>([])
+  const [filteredUserData, setFilteredUserData] = useState<User[]>([])
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
+  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
   const getAllUsers = useCallback(async () => {
@@ -47,11 +48,7 @@ const SearchBar = () => {
         }
       }
       if (filteredData.length) {
-        if (filteredData[0].did === did.id) {
-          setFilteredUserData([{ sameUser: true }])
-        } else {
-          setFilteredUserData(filteredData)
-        }
+        setFilteredUserData(filteredData)
       }
       // User is not in the protocol. Create new user
       else {
@@ -69,7 +66,8 @@ const SearchBar = () => {
           })
           setFilteredUserData([userCreated])
         } else {
-          setFilteredUserData([{ inValid: true }])
+          setIsInvalidAddress(true)
+          setFilteredUserData([])
         }
       }
     } else {
@@ -127,7 +125,13 @@ const SearchBar = () => {
           </div>
         </form>
         <div className="sidebar_message">
-          {<MessageFeed hasUserBeenSearched={hasUserBeenSearched} filteredUserData={filteredUserData} />}
+          {
+            <MessageFeed
+              hasUserBeenSearched={hasUserBeenSearched}
+              filteredUserData={filteredUserData}
+              isInvalidAddress={isInValidAddress}
+            />
+          }
         </div>
       </div>
     </>

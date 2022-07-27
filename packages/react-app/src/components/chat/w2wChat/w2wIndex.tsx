@@ -110,7 +110,7 @@ function App() {
         pgp_priv_enc: JSON.stringify(encryptedPrivateKey),
         pgp_enc_type: 'pgp',
         signature: 'xyz',
-        sig_type: 'a'
+        sig_type: 'a',
       })
       setUserProfile(createdUser.profile_picture)
       setUserWallets(createdUser.wallets)
@@ -148,7 +148,7 @@ function App() {
                 userWallets,
                 setChat,
                 renderInbox,
-                connectedUser
+                connectedUser,
               }}
             >
               <Sidebar />

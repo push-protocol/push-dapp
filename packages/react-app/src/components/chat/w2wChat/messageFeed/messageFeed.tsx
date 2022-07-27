@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
@@ -13,6 +13,7 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert'
 interface messageFeedProps {
   filteredUserData: {}[]
   hasUserBeenSearched: boolean
+  isInvalidAddress: boolean
 }
 
 export interface InboxChat {
@@ -35,7 +36,7 @@ const MessageFeed = (props: messageFeedProps) => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const getInbox = useCallback(async () => {
+  const getInbox = async () => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       setFeeds(getInbox.body)
@@ -47,11 +48,11 @@ const MessageFeed = (props: messageFeedProps) => {
       setFeeds(inbox)
       return inbox
     }
-  }, [])
+  }
 
-  // const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-  //     refetchInterval: 5000,
-  // })
+  const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+    refetchInterval: 5000
+  })
 
   useEffect(() => {
     setFeeds(renderInboxFeed)
@@ -64,15 +65,10 @@ const MessageFeed = (props: messageFeedProps) => {
       const searchFn = async () => {
         if (props.filteredUserData.length) {
           console.log(Object.keys(props.filteredUserData[0]))
-          if (Object.keys(props.filteredUserData[0]).includes('sameUser')) {
+          if (Object(props.filteredUserData[0]).did === did.id) {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
             setErrorMessage("you can't send intent to yourself")
-            setFeeds([])
-          } else if (Object.keys(props.filteredUserData[0]).includes('inValid')) {
-            setIsInvalidAddress(true)
-            setOpenReprovalSnackBar(true)
-            setErrorMessage('Invalid Address')
             setFeeds([])
           } else {
             let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
@@ -81,8 +77,12 @@ const MessageFeed = (props: messageFeedProps) => {
             setFeeds(inbox)
           }
         } else {
+          if (props.isInvalidAddress) {
+            setIsInvalidAddress(true)
+            setOpenReprovalSnackBar(true)
+            setErrorMessage('Invalid Address')
+          }
           setFeeds([])
-          console.log(props.filteredUserData, feeds)
         }
       }
       searchFn()
