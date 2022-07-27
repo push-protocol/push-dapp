@@ -30,6 +30,11 @@
     ]
   },
   "dependencies": {
-    "ipfs-http-client": "^57.0.0"
+    "@types/lodash": "^4.14.182",
+    "ipfs-http-client": "^57.0.0",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/react-loader-spinner": "^4.0.0"
   }
 }
