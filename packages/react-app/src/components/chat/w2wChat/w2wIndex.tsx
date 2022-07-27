@@ -63,8 +63,6 @@ interface AppContextInterface {
   viewChatBox: boolean
   did: DID
   renderInboxFeed: Array<{}> | null
-  userProfile: string
-  userWallets: string
   setChat: (text: Feeds) => void
   renderInbox: (args: Array<{}>) => void
   connectedUser: User
@@ -78,8 +76,6 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
-  const [userProfile, setUserProfile] = useState<string>('')
-  const [userWallets, setUserWallets] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
 
@@ -110,15 +106,13 @@ function App() {
         pgp_priv_enc: JSON.stringify(encryptedPrivateKey),
         pgp_enc_type: 'pgp',
         signature: 'xyz',
-        sig_type: 'a',
+        sig_type: 'a'
       })
-      setUserProfile(createdUser.profile_picture)
-      setUserWallets(createdUser.wallets)
       setConnectedUser(createdUser)
     } else {
       const wallets: string = await PushNodeClient.updateWalletIfNotExist(did.id, caip10)
-      setUserProfile(user.profile_picture)
-      setUserWallets(wallets)
+      user.wallets = wallets
+
       setConnectedUser(user)
     }
     setIsLoading(false)
@@ -144,11 +138,9 @@ function App() {
                 viewChatBox,
                 did,
                 renderInboxFeed,
-                userProfile,
-                userWallets,
                 setChat,
                 renderInbox,
-                connectedUser,
+                connectedUser
               }}
             >
               <Sidebar />
