@@ -58,7 +58,7 @@ export interface User {
   linked_list_hash?: string | null
 }
 
-interface AppContextInterface {
+export interface AppContextInterface {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID

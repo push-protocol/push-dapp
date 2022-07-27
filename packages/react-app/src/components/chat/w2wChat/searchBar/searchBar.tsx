@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react'
 import './searchBar.css'
 import { Web3Provider } from 'ethers/providers'
-import { Context } from '../w2wIndex'
 import { useWeb3React } from '@web3-react/core'
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
@@ -13,7 +12,6 @@ import * as PushNodeClient from '../../../../api'
 
 const SearchBar = () => {
   const { chainId } = useWeb3React<Web3Provider>()
-  const { did } = useContext(Context)
   const [wordEntered, setWordEntered] = useState<string>('')
   const [allUsers, setAllUsers] = useState<User[]>([])
   const [filteredUserData, setFilteredUserData] = useState<User[]>([])
