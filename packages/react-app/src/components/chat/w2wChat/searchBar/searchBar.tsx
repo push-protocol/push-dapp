@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useContext } from 'react'
 import './searchBar.css'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
@@ -14,8 +14,9 @@ const SearchBar = () => {
   const { chainId } = useWeb3React<Web3Provider>()
   const [wordEntered, setWordEntered] = useState<string>('')
   const [allUsers, setAllUsers] = useState<User[]>([])
-  const [filteredUserData, setFilteredUserData] = useState<any>([])
+  const [filteredUserData, setFilteredUserData] = useState<User[]>([])
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
+  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
   const getAllUsers = useCallback(async () => {
@@ -44,7 +45,6 @@ const SearchBar = () => {
           }
         }
       }
-
       if (filteredData.length) {
         setFilteredUserData(filteredData)
       }
@@ -64,6 +64,7 @@ const SearchBar = () => {
           })
           setFilteredUserData([userCreated])
         } else {
+          setIsInvalidAddress(true)
           setFilteredUserData([])
         }
       }
@@ -122,7 +123,13 @@ const SearchBar = () => {
           </div>
         </form>
         <div className="sidebar_message">
-          {<MessageFeed hasUserBeenSearched={hasUserBeenSearched} filteredUserData={filteredUserData} />}
+          {
+            <MessageFeed
+              hasUserBeenSearched={hasUserBeenSearched}
+              filteredUserData={filteredUserData}
+              isInvalidAddress={isInValidAddress}
+            />
+          }
         </div>
       </div>
     </>

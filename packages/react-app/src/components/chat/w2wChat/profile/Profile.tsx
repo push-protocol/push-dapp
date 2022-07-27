@@ -7,12 +7,12 @@ import Box from '@mui/material/Box'
 import Tooltip from '@mui/material/Tooltip'
 
 const Profile = ({ setValue }: any): JSX.Element => {
-  const { userProfile } = useContext(Context)
+  const { connectedUser } = useContext(Context)
 
   return (
     <Box sx={styles.container} onClick={(): void => setValue(2)}>
       <Tooltip title="Profile" placement="top-start">
-        <Avatar alt="profile image" src={userProfile} sx={styles.profileImage} />
+        <Avatar alt="profile image" src={connectedUser.profile_picture} sx={styles.profileImage} />
       </Tooltip>
     </Box>
   )

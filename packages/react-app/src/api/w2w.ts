@@ -54,7 +54,7 @@ export const updateWalletIfNotExist = async (did: string, caip10: string) => {
   return data
 }
 
-export const getDidLinkWallets = async (did: string) => {
+export const getDidLinkWallets = async (did: string): Promise<string[]> => {
   const response = await fetch(BASE_URL + '/w2w/getDidLinkWallets/', {
     method: 'POST',
     headers: {
@@ -187,6 +187,9 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
       secondDID
     })
   })
+  if (response.status === 400) {
+    throw new Error('Error fetching threadhash')
+  }
   const data = await response.json()
   return data
 }

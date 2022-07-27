@@ -98,7 +98,7 @@ const IntentFeed = (props: intentFeedProps) => {
     var fromDID = did.id
     const res = await approveIntent(fromDID, toDID, status, '1', 'sigType')
     handleClose()
-    if (status == 'Approved') setOpenSuccessSnackBar(true)
+    if (status === 'Approved') setOpenSuccessSnackBar(true)
     else setOpenReprovalSnackBar(true)
     await resolve_threadhash()
   }
