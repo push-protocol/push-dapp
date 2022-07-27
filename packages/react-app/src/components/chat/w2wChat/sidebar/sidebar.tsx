@@ -28,8 +28,8 @@ function TabPanel({ children, value, index, ...other }): JSX.Element {
 }
 
 const Sidebar = () => {
-  const { userProfile } = useContext(Context)
-  const [updateProfileImage, setUserProfileImage] = useState(userProfile)
+  const { connectedUser } = useContext(Context)
+  const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profile_picture)
 
   const [value, setValue] = useState(0)
 

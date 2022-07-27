@@ -24,6 +24,7 @@ import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
+import { AppContextInterface } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
 
 const INFURA_URL = envConfig.infuraApiUrl
@@ -34,7 +35,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat } = useContext(Context)
+  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContextInterface = useContext<
+    AppContextInterface
+  >(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -110,22 +113,19 @@ const ChatBox = (): JSX.Element => {
         } catch (err) {
           setImageSource(currentChat.profile_picture)
         }
-        if (currentChat?.did === did.id) {
-          setHasIntent(true)
-        } else {
-          const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
-          setIntentSentandPending(intentStatus.intent)
-          hasintent = intentStatus.hasIntent
-          setHasIntent(intentStatus.hasIntent)
-        }
+        const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
+        setIntentSentandPending(intentStatus.intent)
+        hasintent = intentStatus.hasIntent
+        setHasIntent(intentStatus.hasIntent)
+
         if (currentChat?.threadhash && hasintent) {
           const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
           await getMessagesFromCID(currentChat.threadhash, IPFSClient)
         } else {
           setMessages([])
         }
-        const res = await PushNodeClient.getDidLinkWallets(currentChat.did)
-        setWallets(res)
+        const walletsResult: string[] = await PushNodeClient.getDidLinkWallets(currentChat.did)
+        setWallets(walletsResult)
         setLoading(false)
       }
     }
