@@ -52,9 +52,9 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
 
 
           <TextSpace>
-              <Span width="80%" color="#657795" size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving <br></br> to the next steps.</Span>
+              <Span color="#657795" size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
 
-              <AnchorLink href='https://gitter.im/kovan-testnet/faucet' target="_blank">ETH Faucet</AnchorLink>
+              <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
 
               {/* <AnchorLink>Get Free DAI for Staging</AnchorLink> */}
               {!UtilityHelper.isMainnet(chainId) ? (
@@ -108,7 +108,7 @@ const TabSpace = styled.div`
   height: 100px;
   border-radius: 20px;
   background-color: #f4f5fa;
-  margin-top: 50px;
+  margin-top: 20px;
   align-items: center;
   p {
     text-align: center;
@@ -148,6 +148,7 @@ const AnchorLink = styled.a`
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
+  width:10em;
   &:hover {
     text-decoration: underline;
   }
@@ -181,6 +182,7 @@ const PoolShare = styled(ChannelMetaBox)`
   text-align: center;
   font-size: 16px;
   font-weight: 500;
+  width:16em;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
