@@ -4387,7 +4387,7 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash@*", "@types/lodash@^4.14.159":
+"@types/lodash@*", "@types/lodash@^4.14.159", "@types/lodash@^4.14.182":
   version "4.14.182"
   resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.182.tgz"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
@@ -4479,6 +4479,13 @@
   integrity sha512-aBTIWg1emtu95bLTLx0cpkxwGW3ueZv71nE2YFBpL8k/z5czEW8yYpOo8Dp+UUAFAtKwNaOsh/ioSeQnWlZcfw==
   dependencies:
     "@types/react" "*"
+
+"@types/react-loader-spinner@^4.0.0":
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/@types/react-loader-spinner/-/react-loader-spinner-4.0.0.tgz"
+  integrity sha512-FKW/yD3KwpydC8gsLmdWCOW0v/aezTvxcqqU0umNHa4QNkVF37UgOeh6DgXIPkxRm/m+6fcgW9XYK6Ff+HCd3A==
+  dependencies:
+    react-loader-spinner "*"
 
 "@types/react-redux@^7.1.20":
   version "7.1.24"
@@ -12900,7 +12907,7 @@ ipfs-http-client@^56.0.3:
     stream-to-it "^0.2.2"
     uint8arrays "^3.0.0"
 
-ipfs-http-client@^57.0.0, ipfs-http-client@^57.0.1:
+ipfs-http-client@^57.0.1:
   version "57.0.3"
   resolved "https://registry.npmjs.org/ipfs-http-client/-/ipfs-http-client-57.0.3.tgz"
   integrity sha512-IOqxcMei7Y2bxU2Se98YB+HEv2rZp9aTbkQjNY4XgoeG3eMp0zU/6tpguOHzC5a6SOCojZRrcAAZq2RAwdmrhg==
@@ -20043,7 +20050,7 @@ react-lifecycles-compat@^3.0.4:
   resolved "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
   integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
 
-react-loader-spinner@3.1.14:
+react-loader-spinner@*, react-loader-spinner@3.1.14:
   version "3.1.14"
   resolved "https://registry.npmjs.org/react-loader-spinner/-/react-loader-spinner-3.1.14.tgz"
   integrity sha512-7V+upnW+RVA/O94LIB/EQLK2uaz/TpZBHG5uNXlOXgvxvALxlxVYeEDmus5Oex2C58fiwrsRvSyu/4VRmLbZ9Q==
