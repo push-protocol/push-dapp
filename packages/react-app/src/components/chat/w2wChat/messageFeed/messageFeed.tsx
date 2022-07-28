@@ -136,9 +136,9 @@ const MessageFeed = (props: messageFeedProps) => {
           </p>
         ) : !messagesLoading ? (
           <div>
-            {feeds.map((feed: Feeds) => (
+            {feeds.map((feed: Feeds, i) => (
               <div
-                key={feed.threadhash}
+                key={feed.threadhash || i}
                 onClick={() => {
                   setCurrentChat(feed)
                 }}
