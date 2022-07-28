@@ -38,6 +38,7 @@ function NavigationButton({ item, data, sectionID, active }) {
 
   return (
     <RouteLogic
+      style={{display: data.title==='hide'? 'none': 'block'}}
       flex="1"
       title={`${data.title}`}
       to={`${data.href ? data.href : '#'}`}
