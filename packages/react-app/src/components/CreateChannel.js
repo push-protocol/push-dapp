@@ -9,19 +9,20 @@ import {
   H2,
   H3,
   Span,
+  P,
 } from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
 import Loader from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
-
 import { envConfig } from "@project/contracts";
-
+import { MdCallMade } from "react-icons/md";
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
 import "./createChannel.css";
+import { Tabs } from "antd";
 
 const ethers = require("ethers");
 
@@ -29,11 +30,12 @@ const minStakeFees = 50;
 
 const networkName = {
   42: "Ethereum Kovan",
-  1: "Ethereum Mainnet"
-}
+  1: "Ethereum Mainnet",
+};
 
 const coreChain = "Ethereum Kovan";
 const CORE_CHAIN_ID = envConfig.coreContractChain;
+const { TabPane } = Tabs;
 
 // Create Header
 function CreateChannel() {
@@ -189,10 +191,13 @@ function CreateChannel() {
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
-    if(daiAmountVal < 50.0){
-      var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
+    if (daiAmountVal < 50.0) {
+      var sendTransactionPromise = daiContract.approve(
+        addresses.epnscore,
+        fees
+      );
       const tx = await sendTransactionPromise;
-  
+
       console.log(tx);
       console.log("waiting for tx to finish");
       setProcessingInfo("Waiting for Approval TX to finish...");
@@ -225,7 +230,7 @@ function CreateChannel() {
         console.log("Check: " + account);
         let txCheck = await library.waitForTransaction(tx.hash);
 
-        if(txCheck.status === 0){
+        if (txCheck.status === 0) {
           setProcessing(3);
           setTxStatus(0);
           setProcessingInfo("Transaction Failed due to some error! Try again");
@@ -234,8 +239,7 @@ function CreateChannel() {
             setTxStatus(2);
             setChannelInfoDone(false);
           }, 10000);
-        }
-        else {
+        } else {
           setProcessing(3);
           setProcessingInfo("Channel Created! Reloading...");
           setTimeout(() => {
@@ -282,72 +286,78 @@ function CreateChannel() {
 
   return (
     <ThemeProvider theme={themes}>
-      <Section>
-        <Content padding="10px 20px 20px">
-          <Item align="flex-start">
-            <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-                Create
-              </Span>
-              <Span weight="200" color={themes.color}>
-                {" "}
-                Your Channel!
+      <Section margin="0px 0px 40px">
+        <Content padding="10px 20px 10px">
+          <Item align="center">
+            <H2 textTransform="uppercase" spacing="0.075em">
+              <Span weight="400" size="32px" color={themes.color}>
+                Create Your Channel
               </Span>
             </H2>
-            <H3 color={themes.createColor}>
-              <b color={themes.createColor}>
-                Ethereum Push Notification Service
-              </b>{" "}
-              (EPNS) makes it extremely easy to open and maintain a genuine
+            <Span
+              color="#657795"
+              weight="400"
+              size="16px"
+              textTransform="none"
+              spacing="0.03em"
+              margin="0px 0px"
+            >
+              EPNS makes it extremely easy to open and maintain a genuine
               channel of communication with your users.
-            </H3>
+            </Span>
           </Item>
         </Content>
       </Section>
 
       {!onCoreNetwork ? (
         <>
-          <Section>
-            <Content padding="50px 20px 20px">
-              <Item align="flex-start">
-                <H3 color="#e20880" weight={700}>
-                  Channels can only be created on {networkName[envConfig.coreContractChain]} Network and not on Alias chains. Please switch to {networkName[envConfig.coreContractChain]} Network to create a channel.
-                </H3>
-              </Item>
-            </Content>
-          </Section>
+          <TabSpace>
+            <p>
+              Please select {networkName[envConfig.coreContractChain]} Network
+              in your Wallet to create a channel.
+            </p>
+          </TabSpace>
+
+          <TextLine text-align="center">
+            You will be asked to change your network to the Alias Network after{" "}
+            <br></br>
+            channel creation is complete.
+          </TextLine>
+
+          <TextLink href="https://www.google.com" target="_blank">
+            <p>What is an Alias Network?</p>
+            <MdCallMade />
+          </TextLink>
         </>
       ) : (
         <>
           <Section>
-            <Content padding="0px 20px 20px">
-              <ItemH justify="space-between">
-                <Step
-                  bg="#fff"
-                  activeBG="#e20880"
-                  type={stepFlow >= 1 ? "active" : "inactive"}
-                />
-                <Step
-                  bg="#fff"
-                  activeBG="#e20880"
-                  type={stepFlow >= 2 ? "active" : "inactive"}
-                />
-                <Step
-                  bg="#fff"
-                  activeBG="#e20880"
-                  type={stepFlow >= 3 ? "active" : "inactive"}
-                />
+            <Content>
+              <ItemH justify="center">
+                <Tab type={stepFlow >= 1 ? "active" : "inactive"}>
+                  <div>Staking Info</div>
+                  <Step type={stepFlow >= 1 ? "active" : "inactive"} />
+                </Tab>
+                <Tab type={stepFlow >= 2 ? "active" : "inactive"}>
+                  <div>Channel Info</div>
+                  <Step type={stepFlow >= 2 ? "active" : "inactive"} />
+                </Tab>
+                <Tab type={stepFlow >= 3 ? "active" : "inactive"}>
+                  <div>Upload Logo</div>
+                  <Step type={stepFlow >= 3 ? "active" : "inactive"} />
+                </Tab>
                 <Line />
               </ItemH>
             </Content>
           </Section>
- 
+
           {/* Stake Fees Section */}
           {!stakeFeesChoosen && (
             <StakingInfo
               channelStakeFees={channelStakeFees}
               setStakeFeesChoosen={setStakeFeesChoosen}
               setStepFlow={setStepFlow}
+              setProcessingInfo={setProcessingInfo}
             />
           )}
 
@@ -370,7 +380,7 @@ function CreateChannel() {
               setChannelInfoDone={setChannelInfoDone}
             />
           )}
-            
+
           {/* Image Upload Section */}
           {!uploadDone && channelInfoDone && stakeFeesChoosen && (
             <UploadLogo
@@ -410,18 +420,24 @@ function CreateChannel() {
                     size="1em"
                   >
                     {processingInfo}
-                    {txStatus === 0 &&
+                    {txStatus === 0 && (
                       <div
                         style={{
                           textTransform: "none",
-                          padding: "10px 0px"
+                          padding: "10px 0px",
                         }}
                       >
-                        <div style={{paddingBottom: "5px"}}>It may be possible due to one of the following reasons:</div>
+                        <div style={{ paddingBottom: "5px" }}>
+                          It may be possible due to one of the following
+                          reasons:
+                        </div>
                         <div>1. There is not enough DAI in your wallet.</div>
-                        <div>2. Network may be congested, due to that gas price increased. Try by increasing gas limit manually.</div> 
+                        <div>
+                          2. Network may be congested, due to that gas price
+                          increased. Try by increasing gas limit manually.
+                        </div>
                       </div>
-                    }  
+                    )}
                   </Span>
                 </Item>
               </Content>
@@ -435,17 +451,15 @@ function CreateChannel() {
 
 // css styles
 const Step = styled.div`
-  height: 12px;
-  width: 12px;
-  background: ${(props) => props.bg || "#fff"};
-  border: 4px solid ${(props) => props.activeBG || "#000"};
-  border-radius: 100%;
+  height: 5px;
+  width: 100%;
+  background: #cfd7e4;
+  border-radius: 13px;
 
   ${({ type }) =>
     type == "active" &&
     css`
-      background: ${(props) => props.activeBG || "#ddd"};
-      border: 4px solid #00000022;
+      background: #e20880;
     `};
 `;
 
@@ -457,6 +471,77 @@ const Line = styled.div`
   left: 0;
   margin: 0px 10px;
   z-index: -1;
+`;
+
+const TabSpace = styled.div`
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  height: 167px;
+  border-radius: 20px;
+  background-color: #f4f5fa;
+  margin: 0 auto;
+  text-transform: none;
+  margin-top: 60px;
+  color: #cf1c84;
+  align-items: center;
+  line-height: 24px;
+  font-size: 18px;
+  font-weight: 500;
+  p {
+    padding: 0 200px;
+    text-align: center;
+  }
+`;
+
+const TextLine = styled.p`
+  text-transform: none;
+  margin-top: 60px;
+  color: #657795;
+  line-height: 21px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+`;
+
+const TextLink = styled.a`
+  text-transform: none;
+  margin-top: 30px;
+  color: #cf1c84;
+  line-height: 21px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Tab = styled.div`
+  position: relative;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px 10px;
+  color: #657795;
+  div {
+    margin: 5px 0px;
+    font-family: "Manrope";
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  ${({ type }) =>
+    type == "active" &&
+    css`
+      color: #e20880;
+    `};
 `;
 
 export default CreateChannel;

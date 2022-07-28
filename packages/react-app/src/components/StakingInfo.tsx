@@ -1,31 +1,84 @@
 import React from "react";
-import { Button, Content, Item, Section, Span } from "primaries/SharedStyling";
+import { Anchor, Button, Content, Item, P, Section, Span } from "primaries/SharedStyling";
+import styled, { css, useTheme } from "styled-components";
+import { useWeb3React } from "@web3-react/core";
+import UtilityHelper from 'helpers/UtilityHelper';
+import { ethers } from "ethers";
+import { addresses, abis } from "@project/contracts";
 
-const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow}) => {
+
+
+const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
+  const { chainId, library, account } = useWeb3React();
+
+
+    //mind Dai
+    const mintDai = async () => {
+      try {
+        var signer = library.getSigner(account);
+        let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
+        console.log({
+          daiContract,
+        });
+        console.log(1);
+        let daiAmount = 1000;
+        const amount = ethers.utils.parseUnits(daiAmount.toString(), 18);
+        console.log(2);
+        var mintTransactionPromise = daiContract.mint(amount);
+        console.log(3);
+        const tx = await mintTransactionPromise;
+        console.log(tx);
+        await library.waitForTransaction(tx.hash);
+        console.log(4);
+        setProcessingInfo("1000 Dai minted successfully!");
+        console.log("Transaction Completed");
+      } catch (err) {
+        console.log(err);
+      }
+    };
   return (
     <Section>
-      <Content padding="50px 0px 0px 0px">
-        <Item
-          margin="-10px 20px 20px 20px"
-          padding="20px 20px 10px 20px"
-          bg="#f1f1f1"
-        >
-          <Span
-            weight="400"
-            size="1.0em"
-            textTransform="uppercase"
-            spacing="0.2em"
-          >
-            Amount Need to be Staked: {channelStakeFees} DAI
-          </Span>
-        </Item>
+      <Content padding="0px 0px 0px 0px">
+        <Body>
+          <TabSpace>
+            <p>
+              Amount for Staking
+            </p>
 
-        <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
+            <b>
+             {channelStakeFees} DAI
+            </b>
+          </TabSpace>
+
+
+          <TextSpace>
+              <Span width="80%" color="#657795" size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving <br></br> to the next steps.</Span>
+
+              <AnchorLink href='https://gitter.im/kovan-testnet/faucet' target="_blank">ETH Faucet</AnchorLink>
+
+              {/* <AnchorLink>Get Free DAI for Staging</AnchorLink> */}
+              {!UtilityHelper.isMainnet(chainId) ? (
+              <Minter
+                onClick={() => {
+                  mintDai();
+                }}
+              >
+                {/* <Pool>
+                  <br></br> */}
+                  <PoolShare>Get Free DAI for Channel</PoolShare>
+                {/* </Pool> */}
+              </Minter>
+          ) : (
+            <></>
+          )}
+          </TextSpace>
+
+        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 0px auto">
           <Button
             bg="#e20880"
             color="#fff"
             flex="1"
-            radius="0px"
+            radius="15px"
             padding="20px 10px"
             onClick={() => {
               setStakeFeesChoosen(true);
@@ -34,17 +87,104 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow}) => {
           >
             <Span
               color="#fff"
-              weight="400"
-              textTransform="uppercase"
-              spacing="0.1em"
+              weight="600"
+              textTransform="none"
+              line="22px"
+              size="16px"
             >
-              Continue
+              Next
             </Span>
           </Button>
         </Item>
+        </Body>
       </Content>
     </Section>
   );
 };
+const TabSpace = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+  border-radius: 20px;
+  background-color: #f4f5fa;
+  margin-top: 50px;
+  align-items: center;
+  p {
+    text-align: center;
+    color: #1E1E1E;
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.011em;
+    margin-left:50px;
+  }
+  b {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 150%;
+    text-align: right;
+    letter-spacing: -0.019em;
+    color: #CF1C84;
+    margin-right:50px;
+  }
+`;
+
+const TextSpace = styled.div`
+  width: 97%;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto;
+  margin-top: 40px;
+  align-items: flex-start;
+`;
+
+const AnchorLink = styled.a`
+  text-decoration: none;
+  text-transform: none;
+  color: #cf1c84;
+  line-height: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Body = styled.div`
+  margin: 0px auto;
+  width: 55%; 
+`
+
+const Minter = styled.div`
+  display: flex;
+`;
+
+const Pool = styled.div`
+  margin: 0px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ChannelMetaBox = styled.label`
+  color: #fff;
+`;
+
+const PoolShare = styled(ChannelMetaBox)`
+  text-decoration: none;
+  text-transform: none;
+  color: #cf1c84;
+  line-height: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
 
 export default StakingInfo;
