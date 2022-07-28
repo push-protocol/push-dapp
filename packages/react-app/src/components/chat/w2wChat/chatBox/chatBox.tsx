@@ -282,9 +282,9 @@ const ChatBox = (): JSX.Element => {
   const sendGif = (url: string): void => {
     console.log(url)
     if (!hasIntent && intentSentandPending === 'Pending') {
-      sendIntent(url, 'Gif')
+      sendIntent(url, 'GIF')
     } else {
-      sendMessage(account, did.id, currentChat.did, url, 'Gif', 'signature', 'sig_type', 'enc_type')
+      sendMessage(account, did.id, currentChat.did, url, 'GIF', 'signature', 'sig_type', 'enc_type')
     }
   }
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
