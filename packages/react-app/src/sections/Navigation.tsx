@@ -29,6 +29,7 @@ function Navigation() {
       navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
     } else if(run && navigationSetup !== null) {
       navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+      navigationSetup.primary[1].data.drilldown[1].data.title = 'hide';
     }
     const theme = useTheme();
     const location = useLocation();
