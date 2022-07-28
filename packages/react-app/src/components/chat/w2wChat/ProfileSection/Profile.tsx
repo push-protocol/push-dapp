@@ -35,10 +35,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const Profile = (props: profilePropsType) => {
+const Profile = (props: profilePropsType): JSX.Element => {
   const { did, connectedUser } = useContext(Context)
 
-  const wallets = connectedUser.wallets.split(' ')
+  const wallets = connectedUser.wallets.split(',')
   const [copiedDid, setCopiedDid] = useState<boolean>(false)
   const [copiedWallet, setCopiedWallet] = useState<boolean>(false)
   const [profile, setProfile] = useState('')

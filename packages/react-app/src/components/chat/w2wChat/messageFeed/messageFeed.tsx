@@ -36,7 +36,8 @@ const MessageFeed = (props: messageFeedProps) => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const getInbox = async () => {
+
+  const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       setFeeds(getInbox.body)
@@ -64,11 +65,10 @@ const MessageFeed = (props: messageFeedProps) => {
     } else {
       const searchFn = async () => {
         if (props.filteredUserData.length) {
-          console.log(Object.keys(props.filteredUserData[0]))
           if (Object(props.filteredUserData[0]).did === did.id) {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
-            setErrorMessage("you can't send intent to yourself")
+            setErrorMessage("You can't send intent to yourself")
             setFeeds([])
           } else {
             let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
@@ -101,12 +101,13 @@ const MessageFeed = (props: messageFeedProps) => {
     setChat(feed)
   }
 
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
     setOpenReprovalSnackBar(false)
   }
+
   return (
     <>
       <section className="messageFeed_body">
@@ -119,7 +120,7 @@ const MessageFeed = (props: messageFeedProps) => {
           <p
             style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
           >
-            you can't send intent to yourself
+            You can't send intent to yourself
           </p>
         ) : !feeds?.length && isInValidAddress ? (
           <p
