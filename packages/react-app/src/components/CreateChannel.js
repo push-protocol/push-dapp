@@ -332,23 +332,21 @@ function CreateChannel() {
       ) : (
         <>
           <Section>
-            <Content>
-              <ItemH justify="center">
-                <Tab type={stepFlow >= 1 ? "active" : "inactive"}>
-                  <div>Staking Info</div>
-                  <Step type={stepFlow >= 1 ? "active" : "inactive"} />
-                </Tab>
-                <Tab type={stepFlow >= 2 ? "active" : "inactive"}>
-                  <div>Channel Info</div>
-                  <Step type={stepFlow >= 2 ? "active" : "inactive"} />
-                </Tab>
-                <Tab type={stepFlow >= 3 ? "active" : "inactive"}>
-                  <div>Upload Logo</div>
-                  <Step type={stepFlow >= 3 ? "active" : "inactive"} />
-                </Tab>
-                <Line />
-              </ItemH>
-            </Content>
+            <ItemHere>
+              <Tab type={stepFlow >= 1 ? "active" : "inactive"}>
+                <div>Staking Info</div>
+                <Step type={stepFlow >= 1 ? "active" : "inactive"} />
+              </Tab>
+              <Tab type={stepFlow >= 2 ? "active" : "inactive"}>
+                <div>Channel Info</div>
+                <Step type={stepFlow >= 2 ? "active" : "inactive"} />
+              </Tab>
+              <Tab type={stepFlow >= 3 ? "active" : "inactive"}>
+                <div>Upload Logo</div>
+                <Step type={stepFlow >= 3 ? "active" : "inactive"} />
+              </Tab>
+              <Line />
+            </ItemHere>
           </Section>
 
           {/* Stake Fees Section */}
@@ -491,6 +489,19 @@ const TabSpace = styled.div`
   p {
     padding: 0 200px;
     text-align: center;
+    @media (max-width: 600px) {
+      padding: 0 10px;
+    }
+    @media (max-width: 1224px) {
+      padding: 0 50px;
+    }
+  }
+  @media (max-width: 600px) {
+    font-size: 12px;
+    height: auto;
+  }
+  @media (max-width: 1224px) {
+    font-size: 16px;
   }
 `;
 
@@ -537,11 +548,29 @@ const Tab = styled.div`
     font-size: 16px;
   }
 
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+
   ${({ type }) =>
     type == "active" &&
     css`
       color: #e20880;
     `};
+`;
+
+const ItemHere = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+  }
+  @media (max-width: 1224px) {
+    display: flex;
+    flex-direction: row;
+  }
 `;
 
 export default CreateChannel;

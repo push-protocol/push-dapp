@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Anchor, Button, Content, Item, P, Section, Span } from "primaries/SharedStyling";
 import styled, { css, useTheme } from "styled-components";
 import { useWeb3React } from "@web3-react/core";
@@ -37,8 +37,8 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
       }
     };
   return (
-    <Section>
-      <Content padding="0px 0px 0px 0px">
+    <Fragment>
+      {/* <Content padding="0px 0px 0px 0px"> */}
         <Body>
           <TabSpace>
             <p>
@@ -56,17 +56,13 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
 
               <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
 
-              {/* <AnchorLink>Get Free DAI for Staging</AnchorLink> */}
               {!UtilityHelper.isMainnet(chainId) ? (
               <Minter
                 onClick={() => {
                   mintDai();
                 }}
               >
-                {/* <Pool>
-                  <br></br> */}
                   <PoolShare>Get Free DAI for Channel</PoolShare>
-                {/* </Pool> */}
               </Minter>
           ) : (
             <></>
@@ -97,8 +93,8 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
           </Button>
         </Item>
         </Body>
-      </Content>
-    </Section>
+      {/* </Content> */}
+    </Fragment>
   );
 };
 const TabSpace = styled.div`
@@ -117,6 +113,10 @@ const TabSpace = styled.div`
     font-size: 20px;
     letter-spacing: -0.011em;
     margin-left:50px;
+    @media (max-width: 600px) {
+    margin-left:20px;
+    font-size: 14px;
+    }
   }
   b {
     font-style: normal;
@@ -127,16 +127,30 @@ const TabSpace = styled.div`
     letter-spacing: -0.019em;
     color: #CF1C84;
     margin-right:50px;
+    @media (max-width: 600px) {
+    margin-right:20px;
+    font-size: 20px;
+    }
   }
 `;
 
 const TextSpace = styled.div`
   width: 97%;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   margin: 0 auto;
   margin-top: 40px;
   align-items: flex-start;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+  }
+  @media (max-width: 1224px) {
+    width: 100%; 
+  }
 `;
 
 const AnchorLink = styled.a`
@@ -148,15 +162,27 @@ const AnchorLink = styled.a`
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
-  width:10em;
+  // width:15em;
+  white-space: nowrap;
+  margin: 0 2em;
   &:hover {
     text-decoration: underline;
+  }
+  @media (max-width: 600px) {
+    margin-top:1em;
   }
 `;
 
 const Body = styled.div`
   margin: 0px auto;
   width: 55%; 
+  @media (max-width: 600px) {
+    width: 95%; 
+  }
+  @media (max-width: 1224px) {
+    width: 75%; 
+  }
+  
 `
 
 const Minter = styled.div`
@@ -182,10 +208,15 @@ const PoolShare = styled(ChannelMetaBox)`
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  width:16em;
+  // width:16em;
+  margin: 0 0 0 2em;
+  white-space: nowrap;
   text-decoration: none;
   &:hover {
     text-decoration: underline;
+  }
+  @media (max-width: 600px) {
+    margin-top:1em;
   }
 `;
 
