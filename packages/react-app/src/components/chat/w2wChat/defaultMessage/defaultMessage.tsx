@@ -32,9 +32,7 @@ const DefaultMessage = (props: { inbox: Feeds }) => {
             <img src={imageSource}></img>
           </div>
           <div className="defaultMessage_name">
-            {caip10ToWallet(props.inbox.msg.name).slice(0, 8) +
-              '...' +
-              caip10ToWallet(props.inbox.msg.name).slice(-7, -1)}
+            {caip10ToWallet(props.inbox.msg.name).slice(0, 8) + '...' + caip10ToWallet(props.inbox.msg.name).slice(-7)}
           </div>
           <div className="defaultMessage_time">{date}</div>
         </div>

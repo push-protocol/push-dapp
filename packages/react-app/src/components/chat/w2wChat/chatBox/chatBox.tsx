@@ -19,7 +19,7 @@ import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { fetchInbox, fetchIntent } from '../w2wUtils'
+import { fetchInbox } from '../w2wUtils'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
@@ -46,7 +46,6 @@ const ChatBox = (): JSX.Element => {
   const [imageSource, setImageSource] = useState<string>('')
   const [hasIntent, setHasIntent] = useState<boolean>(true)
   const [wallets, setWallets] = useState<string[]>([])
-  const [blockUserOpt, setBlockUserOpt] = useState<boolean>(false)
   const [filesUploading, setFileUploading] = useState<boolean>(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -198,7 +197,6 @@ const ChatBox = (): JSX.Element => {
         setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')
-        const intent = await fetchIntent(did)
       } else {
         setNewMessage('')
         setOpenSuccessSnackBar(true)
@@ -325,10 +323,6 @@ const ChatBox = (): JSX.Element => {
                 <p className="chatBoxWallet">{caip10ToWallet(currentChat.msg.name)}</p>
                 <div>{hasIntent ? <Dropdown wallets={wallets} /> : null}</div>
               </div>
-            </div>
-            <div className="chatBoxEpnsLogo">
-              <i className="fa fa-ellipsis-v" aria-hidden="true" onClick={() => setBlockUserOpt(!blockUserOpt)}></i>
-              {blockUserOpt ? <div className="blockUserDropdown">Block User</div> : null}
             </div>
           </div>
 
