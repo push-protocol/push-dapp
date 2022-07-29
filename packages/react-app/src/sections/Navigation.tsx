@@ -17,20 +17,35 @@ import GLOBALS from "config/Globals";
 import { useDispatch, useSelector } from "react-redux";
 import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
 
+import { useWeb3React } from "@web3-react/core";
+import { envConfig } from "@project/contracts";
+
 // Create Header
 function Navigation() {
-    const { channelDetails } = useSelector((state: any) => state.admin);
+    const { channelDetails, aliasVerified, delegatees } = useSelector((state: any) => state.admin);
     const [loading, setLoading] = useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
-    const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
+    const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
+
+    const { chainId } = useWeb3React();
+    const CORE_CHAIN_ID = envConfig.coreContractChain;
+    const onCoreNetwork = CORE_CHAIN_ID === chainId;
+
     if(!run && navigationSetup !== null && channelDetails!==null){
       navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+      navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
     } else if(run && navigationSetup !== null) {
       navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-      navigationSetup.primary[1].data.drilldown[1].data.title = 'hide';
     }
+    if(!run && navigationSetup !== null && !(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
+      navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+    }
+    else if(!run && navigationSetup !== null && (channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
+      navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+    }
+
     const theme = useTheme();
     const location = useLocation();
     const dispatch = useDispatch();
