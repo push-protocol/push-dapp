@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import styled from "styled-components";
 import { Section, Content, Button, Item, H2, Span, H3 } from "../primaries/SharedStyling";
 
@@ -11,7 +11,6 @@ import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 import { postReq } from "api";
 import { ThemeProvider, useTheme } from "styled-components";
-import { NotificationContext } from "contexts/NotificationContext";
 
 const networkName = {
   80001: "Polygon Mumbai",
@@ -23,13 +22,10 @@ const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const channelDetails = useSelector((state) => state.admin);
+  const { channelDetails } = useSelector((state) => state.admin);
 
-  const themes = useTheme();
-
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
-
-  const {aliasVerified, setAliasVerified} = useContext(NotificationContext)
+  const [aliasEthAccount, setAliasEthAccount] = React.useState(null); 
+  const [aliasVerified, setAliasVerified] = React.useState(null); 
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -128,6 +124,8 @@ const ChannelOwnerDashboard = () => {
           {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
           {/* display the details about the profile of the channel */}
           {/* display the notifications settings */}
+          
+          
         </ModifiedContent>
       </Section>
     </>
