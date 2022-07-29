@@ -1,41 +1,39 @@
 import React, { Fragment } from "react";
-import { Anchor, Button, Content, Item, P, Section, Span } from "primaries/SharedStyling";
-import styled, { css, useTheme } from "styled-components";
+import { Button,Item,Span } from "primaries/SharedStyling";
+import styled from "styled-components";
 import { useWeb3React } from "@web3-react/core";
 import UtilityHelper from 'helpers/UtilityHelper';
 import { ethers } from "ethers";
 import { addresses, abis } from "@project/contracts";
 
-
-
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { chainId, library, account } = useWeb3React();
+  
+  //mint Dai
+  const mintDai = async () => {
+    try {
+      var signer = library.getSigner(account);
+      let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
+      console.log({
+        daiContract,
+      });
+      console.log(1);
+      let daiAmount = 1000;
+      const amount = ethers.utils.parseUnits(daiAmount.toString(), 18);
+      console.log(2);
+      var mintTransactionPromise = daiContract.mint(amount);
+      console.log(3);
+      const tx = await mintTransactionPromise;
+      console.log(tx);
+      await library.waitForTransaction(tx.hash);
+      console.log(4);
+      setProcessingInfo("1000 Dai minted successfully!");
+      console.log("Transaction Completed");
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-
-    //mind Dai
-    const mintDai = async () => {
-      try {
-        var signer = library.getSigner(account);
-        let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
-        console.log({
-          daiContract,
-        });
-        console.log(1);
-        let daiAmount = 1000;
-        const amount = ethers.utils.parseUnits(daiAmount.toString(), 18);
-        console.log(2);
-        var mintTransactionPromise = daiContract.mint(amount);
-        console.log(3);
-        const tx = await mintTransactionPromise;
-        console.log(tx);
-        await library.waitForTransaction(tx.hash);
-        console.log(4);
-        setProcessingInfo("1000 Dai minted successfully!");
-        console.log("Transaction Completed");
-      } catch (err) {
-        console.log(err);
-      }
-    };
   return (
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}

@@ -5,11 +5,8 @@ import {
   Section,
   Content,
   Item,
-  ItemH,
   H2,
-  H3,
   Span,
-  P,
 } from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
 import Loader from "react-loader-spinner";
@@ -22,12 +19,9 @@ import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
 import "./createChannel.css";
-import { Tabs } from "antd";
 
 const ethers = require("ethers");
-
 const minStakeFees = 50;
-
 const networkName = {
   42: "Ethereum Kovan",
   1: "Ethereum Mainnet",
@@ -35,7 +29,6 @@ const networkName = {
 
 const coreChain = "Ethereum Kovan";
 const CORE_CHAIN_ID = envConfig.coreContractChain;
-const { TabPane } = Tabs;
 
 // Create Header
 function CreateChannel() {
@@ -83,7 +76,7 @@ function CreateChannel() {
       value = value?.toString();
       const convertedVal = ethers.utils.formatEther(value);
       setDaiAmountVal(convertedVal);
-      if (convertedVal >= 50.0) {
+      if (convertedVal >= minStakeFees) {
         setChannelStakeFees(convertedVal);
       }
     };
@@ -112,14 +105,13 @@ function CreateChannel() {
       };
     }
 
-    let fileext;
     console.log(base64Data.charAt(0));
-    if (base64Data.charAt(0) == "/") {
+    if (base64Data.charAt(0) === "/") {
       return {
         success: 1,
         info: "Image checks passed",
       };
-    } else if (base64Data.charAt(0) == "i") {
+    } else if (base64Data.charAt(0) === "i") {
       return {
         success: 1,
         info: "Image checks passed",
@@ -167,7 +159,7 @@ function CreateChannel() {
 
     console.log(input);
 
-    if (blockchain == coreChain) {
+    if (blockchain === coreChain) {
       input.blockchain = "";
     }
 
@@ -395,10 +387,10 @@ function CreateChannel() {
           )}
 
           {/* Channel Setup Progress */}
-          {(processing == 1 || processing == 3) && (
+          {(processing === 1 || processing === 3) && (
             <Section>
               <Content padding="0px 0px 0px 0px">
-                {processing == 1 && (
+                {processing === 1 && (
                   <Item margin="20px 0px 10px 0px">
                     <Loader type="Oval" color="#000" height={24} width={24} />
                   </Item>
@@ -406,7 +398,7 @@ function CreateChannel() {
 
                 <Item
                   color="#fff"
-                  bg={processing == 1 ? "#e1087f" : "#000"}
+                  bg={processing === 1 ? "#e1087f" : "#000"}
                   padding="10px 15px"
                   margin="15px 0px"
                 >
@@ -455,7 +447,7 @@ const Step = styled.div`
   border-radius: 13px;
 
   ${({ type }) =>
-    type == "active" &&
+    type === "active" &&
     css`
       background: #e20880;
     `};
@@ -553,7 +545,7 @@ const Tab = styled.div`
   }
 
   ${({ type }) =>
-    type == "active" &&
+    type === "active" &&
     css`
       color: #e20880;
     `};
