@@ -347,16 +347,15 @@ const ChatBox = (): JSX.Element => {
                         time = dateString
                       }
                     }
-                    console.log(msg)
                     return (
-                      <>
+                      <div key={i}>
                         {!showTime ? null : (
-                          <div className="showDateInChat" key={msg?.timestamp}>
+                          <div className="showDateInChat" >
                             <span>{time}</span>
                           </div>
                         )}
-                        <Chats msg={msg} did={did} noTail={noTail} key={msg?.timestamp} />
-                      </>
+                        <Chats msg={msg} did={did} noTail={noTail}  />
+                      </div>
                     )
                   })
                 ) : (
