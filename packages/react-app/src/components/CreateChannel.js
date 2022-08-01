@@ -16,25 +16,17 @@ import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
 
-import { envConfig } from "@project/contracts";
-
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import "./createChannel.css";
-import { getCAIP } from "helpers/UtilityHelper";
+import { getCAIP, networkName } from "helpers/UtilityHelper";
 
 const ethers = require("ethers");
 
 const minStakeFees = 50;
 
-const networkName = {
-  42: "Ethereum Kovan",
-  1: "Ethereum Mainnet"
-}
-
-const coreChain = "Ethereum Kovan";
-const CORE_CHAIN_ID = envConfig.coreContractChain;
+const coreChainId = envConfig.coreContractChain;
 
 // Create Header
 function CreateChannel() {
@@ -42,7 +34,7 @@ function CreateChannel() {
 
   const themes = useTheme();
 
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const onCoreNetwork = coreChainId === chainId;
 
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
@@ -51,7 +43,7 @@ function CreateChannel() {
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
 
-  const [chainDetails, setChainDetails] = React.useState(coreChain);
+  const [chainDetails, setChainDetails] = React.useState(coreChainId);
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -149,8 +141,7 @@ function CreateChannel() {
     proceed();
     setProcessing(1);
 
-    const chainDetailsSplit = chainDetails.split(":");
-    const chain_id = parseInt(chainDetailsSplit[1]);
+    const aliaschainId = chainDetails;
     const aliasAddress = channelAlias;
 
     let input = {
@@ -158,7 +149,7 @@ function CreateChannel() {
       info: channelInfo,
       url: channelURL,
       icon: channelFile,
-      aliasDetails: getCAIP({chainId: chain_id, address: aliasAddress})
+      aliasDetails: getCAIP({chainId: aliaschainId, address: aliasAddress})
     };
 
     console.log(input);

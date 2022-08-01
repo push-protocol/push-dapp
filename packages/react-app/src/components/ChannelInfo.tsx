@@ -3,14 +3,21 @@ import { Button, Content, H3, Input, Item, ItemH, Section, Span, TextField } fro
 import { FiLink } from "react-icons/fi";
 import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
-import Loader from "react-loader-spinner";
+import { envConfig } from "@project/contracts";
 import "./createChannel.css";
+import { networkName } from "helpers/UtilityHelper";
 
-const coreChain = "Ethereum Kovan";
+const aliasChainMapping = {
+  1: 137,
+  42: 80001
+}
+
+const coreChainId = envConfig.coreContractChain;
+const aliasChainId = aliasChainMapping[coreChainId];
 
 const ALIAS_CHAINS = [
-  { value: coreChain, label: coreChain },
-  { value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },
+  { value: coreChainId, label: networkName[coreChainId] },
+  { value: aliasChainId, label: networkName[aliasChainId] },
 ];
 
 const ChannelInfo = ({
@@ -30,6 +37,7 @@ const ChannelInfo = ({
   setChannelInfoDone,
 }) => {
   const themes = useTheme();
+  console.log(ALIAS_CHAINS);
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
@@ -44,13 +52,7 @@ const ChannelInfo = ({
       isEmpty(channelName) ||
       isEmpty(channelInfo) ||
       isEmpty(channelURL) ||
-      (channelAlias
-      ? isEmpty(chainDetails)
-      : chainDetails
-        ? chainDetails == coreChain
-          ? false
-          : isEmpty(channelAlias)
-        : false)
+      (isEmpty(channelAlias) && chainDetails !== coreChainId)
     ) {
       setProcessing(3);
       setProcessingInfo("Channel Fields are Empty! Please retry!");
@@ -138,7 +140,7 @@ const ChannelInfo = ({
                     setChainDetails(option.value);
                     console.log(option);
                 }}
-                value={chainDetails}
+                value={networkName[chainDetails]}
               />
             </DropdownStyledParent>
 
@@ -174,7 +176,7 @@ const ChannelInfo = ({
 
           </Item>
             
-            {chainDetails != coreChain &&
+            {chainDetails != coreChainId &&
               <Item
                 margin="55px 20px 15px 20px"
                 flex="1"
@@ -197,12 +199,12 @@ const ChannelInfo = ({
                     size="1rem"
                     bg="white"
                     disabled={
-                      chainDetails === "" || chainDetails === coreChain
+                      chainDetails === "" || chainDetails === coreChainId
                         ? true
                         : false
                     }
                     visibility={
-                      chainDetails === coreChain ? "hidden" : "visible"
+                      chainDetails === coreChainId ? "hidden" : "visible"
                     }
                     value={channelAlias}
                     onChange={(e) => {
@@ -229,7 +231,7 @@ const ChannelInfo = ({
             flex="1"
             self="stretch"
             align="stretch"
-            style={{marginTop: `${chainDetails === coreChain ? "55px" : "20px"}`, position: "relative"}}
+            style={{marginTop: `${chainDetails === coreChainId ? "55px" : "20px"}`, position: "relative"}}
           >
             <TextField
               required

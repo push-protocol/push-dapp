@@ -14,6 +14,13 @@ export const isUserAgentIphone = (userAgent) =>{
   return userAgent.indexOf("iPhone") !== -1
 }
 
+export const networkName = {
+  42: "Ethereum Kovan",
+  1: "Ethereum Mainnet",
+  137: "Polygon Mainnet",
+  80001: "Polygon Mumbai"
+}
+
 export const Eip155EnableIds = [137, 80001];
 
 type CAIPProps = {
