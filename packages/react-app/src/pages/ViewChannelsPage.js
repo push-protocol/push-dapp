@@ -240,6 +240,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
         const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
           account
         );
+        console.log(response, channelJson, channelSubscribers);
         dispatch(
           setUserChannelDetails({
             ...response,

@@ -22,6 +22,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
 import "./createChannel.css";
+import { getCAIP } from "helpers/UtilityHelper";
 
 const ethers = require("ethers");
 
@@ -148,26 +149,19 @@ function CreateChannel() {
     proceed();
     setProcessing(1);
 
-    var chainDetailsSplit = chainDetails.split(":");
-    var blockchain = chainDetailsSplit[0];
-    var chain_id = chainDetailsSplit[1];
-    var address = channelAlias;
+    const chainDetailsSplit = chainDetails.split(":");
+    const chain_id = parseInt(chainDetailsSplit[1]);
+    const aliasAddress = channelAlias;
 
     let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
       icon: channelFile,
-      blockchain: blockchain,
-      chain_id: chain_id,
-      address: address,
+      aliasDetails: getCAIP({chainId: chain_id, address: aliasAddress})
     };
 
     console.log(input);
-
-    if (blockchain == coreChain) {
-      input.blockchain = "";
-    }
 
     input = JSON.stringify(input);
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Content, FormSubmision, H3, Input, Item, ItemH, Section, Span, TextField } from "primaries/SharedStyling";
+import { Button, Content, H3, Input, Item, ItemH, Section, Span, TextField } from "primaries/SharedStyling";
 import { FiLink } from "react-icons/fi";
 import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
