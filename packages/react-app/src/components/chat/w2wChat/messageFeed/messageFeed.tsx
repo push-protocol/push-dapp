@@ -15,7 +15,9 @@ interface messageFeedProps {
   hasUserBeenSearched: boolean
   isInvalidAddress: boolean
 }
-
+interface indexDbType<T> {
+  body: any
+}
 export interface InboxChat {
   name: string
   profile_picture: string
@@ -30,7 +32,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const MessageFeed = (props: messageFeedProps) => {
   const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
-  const [feeds, setFeeds] = useState<Array<{}>>([])
+  const [feeds, setFeeds] = useState<Feeds[] | null>()
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
@@ -39,6 +41,8 @@ const MessageFeed = (props: messageFeedProps) => {
 
   const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
+
+    console.log(getInbox)
     if (getInbox !== undefined) {
       setFeeds(getInbox.body)
       const inbox: Feeds[] = await fetchInbox(did)
@@ -50,11 +54,10 @@ const MessageFeed = (props: messageFeedProps) => {
       return inbox
     }
   }
-
   const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-    refetchInterval: 5000
+    refetchInterval: 5000,
+    enabled: !props.hasUserBeenSearched
   })
-
   useEffect(() => {
     setFeeds(renderInboxFeed)
   }, [renderInboxFeed])
@@ -136,9 +139,9 @@ const MessageFeed = (props: messageFeedProps) => {
           </p>
         ) : !messagesLoading ? (
           <div>
-            {feeds.map((feed: Feeds, i) => (
+            {feeds.map((feed: Feeds) => (
               <div
-                key={feed.threadhash || i}
+                key={feed.threadhash}
                 onClick={() => {
                   setCurrentChat(feed)
                 }}

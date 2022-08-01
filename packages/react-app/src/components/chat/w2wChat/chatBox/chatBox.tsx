@@ -14,6 +14,7 @@ import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS'
 import Loader from 'react-loader-spinner'
+import * as w2wChatHelper from '../../../../helpers/w2w'
 import GifIcon from '../W2WIcons/GifIcon'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
@@ -35,12 +36,19 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContextInterface = useContext<
-    AppContextInterface
-  >(Context)
+  const {
+    currentChat,
+    viewChatBox,
+    did,
+    renderInbox,
+    connectedUser,
+    setChat,
+    searchedUser
+  }: AppContextInterface = useContext<AppContextInterface>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
+  const { chainId } = useWeb3React<Web3Provider>()
   const [Loading, setLoading] = useState<boolean>(true)
   const [messages, setMessages] = useState<MessageIPFS[]>([])
   const [imageSource, setImageSource] = useState<string>('')
@@ -52,7 +60,7 @@ const ChatBox = (): JSX.Element => {
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
   const [intentSentandPending, setIntentSentandPending] = useState<string>('')
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
-  const { data, error, isError, isLoading } = useQuery<any>('current')
+
   const [SnackbarText, setSnackbarText] = useState<string>('')
   let showTime = false
   let time = ''
@@ -84,7 +92,36 @@ const ChatBox = (): JSX.Element => {
       }
     }
   }
+  const getMessagesFromIPFS = async (): Promise<void> => {
+    setNewMessage('')
+    setLoading(true)
+    console.log('fetching messages')
+    let hasintent = false
+    console.log(currentChat)
+    if (currentChat) {
+      try {
+        CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
+        setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
+      } catch (err) {
+        setImageSource(currentChat.profile_picture)
+      }
+      const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
+      setIntentSentandPending(intentStatus.intent)
+      hasintent = intentStatus.hasIntent
+      setHasIntent(intentStatus.hasIntent)
 
+      if (currentChat?.threadhash && hasintent) {
+        const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
+        await getMessagesFromCID(currentChat.threadhash, IPFSClient)
+      } else {
+        setMessages([])
+      }
+      const walletsResult: string[] = await PushNodeClient.getDidLinkWallets(currentChat.did)
+      setWallets(walletsResult)
+      setLoading(false)
+    }
+  }
+  const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
   useEffect(() => {
     function updateData(): void {
       if (data !== undefined && currentChat?.wallets) {
@@ -101,33 +138,6 @@ const ChatBox = (): JSX.Element => {
   }, [data, currentChat?.wallets])
 
   useEffect(() => {
-    const getMessagesFromIPFS = async (): Promise<void> => {
-      setNewMessage('')
-      setLoading(true)
-      let hasintent = false
-      if (currentChat) {
-        try {
-          CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
-        } catch (err) {
-          setImageSource(currentChat.profile_picture)
-        }
-        const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
-        setIntentSentandPending(intentStatus.intent)
-        hasintent = intentStatus.hasIntent
-        setHasIntent(intentStatus.hasIntent)
-
-        if (currentChat?.threadhash && hasintent) {
-          const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-          await getMessagesFromCID(currentChat.threadhash, IPFSClient)
-        } else {
-          setMessages([])
-        }
-        const walletsResult: string[] = await PushNodeClient.getDidLinkWallets(currentChat.did)
-        setWallets(walletsResult)
-        setLoading(false)
-      }
-    }
     getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
@@ -183,6 +193,20 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
+        const user = await PushNodeClient.getUser(did.id)
+        if (!user) {
+          const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
+          console.log(caip10)
+          await PushNodeClient.createUser({
+            wallet: caip10,
+            did: caip10,
+            pgp_pub: 'temp',
+            pgp_priv_enc: 'temp',
+            pgp_enc_type: 'pgp',
+            signature: 'temp',
+            sig_type: 'temp'
+          })
+        }
         const msg = await PushNodeClient.createIntent(
           currentChat.did,
           did.id,
@@ -350,11 +374,11 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : (
-                          <div className="showDateInChat" >
+                          <div className="showDateInChat">
                             <span>{time}</span>
                           </div>
                         )}
-                        <Chats msg={msg} did={did} noTail={noTail}  />
+                        <Chats msg={msg} did={did} noTail={noTail} />
                       </div>
                     )
                   })

@@ -62,10 +62,12 @@ export interface AppContextInterface {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
-  renderInboxFeed: Array<{}> | null
+  renderInboxFeed: Feeds[] | null
   setChat: (text: Feeds) => void
-  renderInbox: (args: Array<{}>) => void
+  renderInbox: (args: Feeds[]) => void
   connectedUser: User
+  setSearchedUser: any
+  searchedUser: string
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
@@ -76,8 +78,9 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
+  const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
-  const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
+  const [renderInboxFeed, setRenderInboxFeed] = useState<Feeds[] | null>()
 
   const queryClient = new QueryClient({})
 
@@ -123,7 +126,7 @@ function App() {
     setCurrentChat(text)
   }
 
-  const renderInbox = (args: Array<{}>) => {
+  const renderInbox = (args: Feeds[]) => {
     setRenderInboxFeed(args)
   }
 
@@ -139,6 +142,8 @@ function App() {
                 did,
                 renderInboxFeed,
                 setChat,
+                setSearchedUser,
+                searchedUser,
                 renderInbox,
                 connectedUser
               }}
