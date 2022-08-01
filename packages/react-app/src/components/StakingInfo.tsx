@@ -208,6 +208,7 @@ const PoolShare = styled(ChannelMetaBox)`
   font-weight: 500;
   // width:16em;
   margin: 0 0 0 2em;
+  cursor: pointer;
   white-space: nowrap;
   text-decoration: none;
   &:hover {
