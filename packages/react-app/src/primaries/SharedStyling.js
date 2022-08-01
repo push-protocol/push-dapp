@@ -607,6 +607,7 @@ export const Input = styled.input`
   position: relative;
   visibility: ${(props) => props.visibility || ""};
   width: ${(props) => props.maxllength};
+  height: ${(props) => props.height};
 
   cursor: ${(props) => props.cursor || "initial"};
   pointer: ${(props) => props.hand || "initial"};

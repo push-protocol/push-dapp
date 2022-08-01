@@ -68,10 +68,7 @@ const ChannelInfo = ({
 
   return (
     <Section>
-      <Content padding="50px 0px 0px 0px">
-        <Item align="flex-start" margin="0px 20px">
-          <H3 color="#e20880">Setup your Channel Info</H3>
-        </Item>
+      <Body>
 
         {/* <FormSubmision
           flex="1"
@@ -81,22 +78,28 @@ const ChannelInfo = ({
           size="1.1rem"
           onSubmit={handleCreateChannel}
         > */}
+          <Label>Channel Name & Network</Label>
+
           <Item
-            margin="-10px 20px 15px 20px"
+            margin="0px 0px 0px 0px"
             flex="1"
             self="stretch"
             align="stretch"
+            border='1px solid #BAC4D6'
+            radius='10px'
           >
-            <InputDiv border="1px solid black">
+            <InputDiv borderBottom="1px solid #BAC4D6" flex='1'>
               <Input
                 required
-                placeholder="Your Channel Name"
+                // placeholder="Your Channel Name"
                 maxlength="40"
                 maxllength="100%"
-                padding="12px"
+                padding="0px"
                 weight="400"
-                size="1em"
-                bg="#fff"
+                size="18px"
+                bg="transparent"
+                margin="10px 10px 10px 10px"
+                height="20px"
                 value={channelName}
                 onChange={(e) => {
                   setChannelName(e.target.value);
@@ -104,7 +107,7 @@ const ChannelInfo = ({
               />
             </InputDiv>
 
-            {channelName.trim().length == 0 && (
+            {/* {channelName.trim().length == 0 && (
               <Span
                 padding="4px 10px"
                 right="0px"
@@ -117,18 +120,18 @@ const ChannelInfo = ({
               >
                 Channel's Name
               </Span>
-            )}
-          </Item>
+            )} */}
+          {/* </Item>
 
           <Item
-            margin="15px 20px 15px 20px"
+            margin="0px 20px 15px 20px"
             flex="1"
             self="stretch"
             align="stretch"
             direction="row"
             height="20px"
             style={{ position: "relative" }}
-          >
+          > */}
             
             {/* dropdown */}
             <DropdownStyledParent>
@@ -142,7 +145,7 @@ const ChannelInfo = ({
               />
             </DropdownStyledParent>
 
-            <span
+            {/* <span
               className="imgSpan"
               data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
             >
@@ -157,21 +160,7 @@ const ChannelInfo = ({
                 }}
               />
 
-              {/* <span className="test">When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain <a href="">read more</a></span> */}
-              </span>
-              <Span
-                padding="4px 10px"
-                right="0px"
-                top="0px"
-                pos="absolute"
-                color="#fff"
-                bg="#000"
-                size="0.7rem"
-                z="1"
-              >
-                Choose Channel's Activation Network
-              </Span>
-
+              </span> */}
           </Item>
             
             {chainDetails != coreChain &&
@@ -369,15 +358,16 @@ const ChannelInfo = ({
             </Button>
           </Item> */}
         {/* </FormSubmision> */}
-      </Content>
+      </Body>
     </Section>
   );
 };
 
 const InputDiv = styled.div`
   display: ${(props) => props.display || "flex"};
-  flex: 1;
+  // flex: 1;
   border: ${(props) => props.border || "none"};
+  border-bottom: ${(props) => props.borderBottom || "none"};
   margin-bottom: ${(props) => props.marginBottom || "none"};
   width: ${(props) => props.width || "none"};
   visibility: ${(props) => props.visibility || ""};
@@ -397,6 +387,16 @@ const SpanR = styled.div`
   font-size: 16px;
 `;
 
+const Label = styled.div`
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: -0.011em;
+  color: #1E1E1E;
+`;
+
 const DropdownStyledParent = styled.div`
 flex:1;
 .is-open {
@@ -408,7 +408,8 @@ const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
       background-color: #fff;
       color: #000;
-      border: 1px solid black;
+      // border: 1px solid black;
+      border: none;
       width:100%;
       outline: none;
       height: 59px;
@@ -435,6 +436,17 @@ const DropdownStyled = styled(Dropdown)`
   .Dropdown-option:hover {
       background-color: #D00775;
       color: #000;
+  }
+`
+
+const Body = styled.div`
+  margin: 0px auto;
+  width: 55%; 
+  @media (max-width: 600px) {
+    width: 95%; 
+  }
+  @media (max-width: 1224px) {
+    width: 75%; 
   }
 `;
 

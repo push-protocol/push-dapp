@@ -180,7 +180,6 @@ const Body = styled.div`
   @media (max-width: 1224px) {
     width: 75%; 
   }
-  
 `
 
 const Minter = styled.div`
