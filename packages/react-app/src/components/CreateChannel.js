@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled, { css, useTheme } from "styled-components";
 import "react-dropdown/style.css";
-import {
-  Section,
-  Content,
-  Item,
-  H2,
-  Span,
-} from "../primaries/SharedStyling";
+import { Section, Content, Item, H2, Span } from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
 import Loader from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
@@ -316,7 +310,10 @@ function CreateChannel() {
             channel creation is complete.
           </TextLine>
 
-          <TextLink href="https://www.google.com" target="_blank">
+          <TextLink
+            href="https://docs.epns.io/developers/developer-zone/create-your-notif-channel/alias-on-polygon-network"
+            target="_blank"
+          >
             <p>What is an Alias Network?</p>
             <MdCallMade />
           </TextLink>
