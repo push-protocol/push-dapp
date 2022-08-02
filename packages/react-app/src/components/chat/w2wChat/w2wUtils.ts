@@ -4,7 +4,7 @@ import { MessageIPFS } from '../../../helpers/w2w/IPFS'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
 import { Feeds, getInbox, getIntents } from '../../../api'
-import { InboxChat } from './messageFeed/messageFeed'
+import { InboxChat } from './w2wIndex'
 
 export const fetchMessagesFromIpfs = async (inbox) => {
   for (let i in inbox) {
@@ -20,7 +20,9 @@ export const fetchMessagesFromIpfs = async (inbox) => {
         profile_picture: inbox[i].profile_picture,
         lastMessage: msgIPFS.messageContent,
         timestamp: msgIPFS.timestamp,
-        messageType: msgIPFS.messageType
+        messageType: msgIPFS.messageType,
+        signature: msgIPFS.signature,
+        signatureType: msgIPFS.sig_type
       }
       if (msg.lastMessage.length > 25) {
         msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'
@@ -32,7 +34,9 @@ export const fetchMessagesFromIpfs = async (inbox) => {
         profile_picture: inbox[i].profile_picture,
         lastMessage: null,
         timestamp: null,
-        messageType: null
+        messageType: null,
+        signature: null,
+        signatureType: null
       }
       inbox[i] = { ...inbox[i], msg }
     }

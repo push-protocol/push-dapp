@@ -16,14 +16,6 @@ interface messageFeedProps {
   isInvalidAddress: boolean
 }
 
-export interface InboxChat {
-  name: string
-  profile_picture: string
-  timestamp: number
-  lastMessage: string
-  messageType: string
-}
-
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })

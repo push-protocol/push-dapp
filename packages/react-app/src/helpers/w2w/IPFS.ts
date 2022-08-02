@@ -8,9 +8,11 @@ export interface MessageIPFS {
   messageType: string
   messageContent: string
   signature: string
+  sig_type: string
   link: string | null
   time: number
   timestamp?: number
+  enc_type: string
 }
 
 export function createIPFSClient(): IPFSHTTPClient {
