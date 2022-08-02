@@ -219,11 +219,14 @@ function CreateChannel() {
         if (txCheck.status === 0) {
           setProcessing(3);
           setTxStatus(0);
+          setStepFlow(2);
+          setChannelInfoDone(false);
+          setUploadDone(false);
           setProcessingInfo("Transaction Failed due to some error! Try again");
           setTimeout(() => {
             setProcessing(0);
             setTxStatus(2);
-            setChannelInfoDone(false);
+            // setChannelInfoDone(false);
           }, 10000);
         } else {
           setProcessing(3);
@@ -292,6 +295,16 @@ function CreateChannel() {
               channel of communication with your users.
             </Span>
           </Item>
+          {txStatus === 0 && (
+            <Body>
+              <div>Transaction failed due to one of the following reasons:</div>
+              <p>1. There is not enough DAI in your wallet.</p>
+              <p>
+                2. Gas price increased due to network congestion. Adjust gas
+                limit manually.
+              </p>
+            </Body>
+          )}
         </Content>
       </Section>
 
@@ -407,24 +420,6 @@ function CreateChannel() {
                     size="1em"
                   >
                     {processingInfo}
-                    {txStatus === 0 && (
-                      <div
-                        style={{
-                          textTransform: "none",
-                          padding: "10px 0px",
-                        }}
-                      >
-                        <div style={{ paddingBottom: "5px" }}>
-                          It may be possible due to one of the following
-                          reasons:
-                        </div>
-                        <div>1. There is not enough DAI in your wallet.</div>
-                        <div>
-                          2. Network may be congested, due to that gas price
-                          increased. Try by increasing gas limit manually.
-                        </div>
-                      </div>
-                    )}
                   </Span>
                 </Item>
               </Content>
@@ -562,4 +557,30 @@ const ItemHere = styled.div`
   }
 `;
 
+const Body = styled.div`
+  margin: 10px auto 0px auto;
+  width: 55%;
+  padding: 30px;
+  background-color: #f5f5fa;
+  border-radius: 20px;
+  div {
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 21px;
+    text-align: center;
+  }
+  p {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: #cf1c84;
+  }
+  @media (max-width: 600px) {
+    width: 95%;
+  }
+  @media (max-width: 1224px) {
+    width: 75%;
+  }
+`;
 export default CreateChannel;
