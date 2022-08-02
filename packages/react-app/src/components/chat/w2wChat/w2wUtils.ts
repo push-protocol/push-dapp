@@ -3,11 +3,10 @@ import { IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../helpers/w2w/IPFS'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
-import { getInbox, getIntents } from '../../../api'
+import { Feeds, getInbox, getIntents } from '../../../api'
 import { InboxChat } from './messageFeed/messageFeed'
-import { Feeds } from './w2wIndex'
 
-export const fetchMessagesFromIpfs = async inbox => {
+export const fetchMessagesFromIpfs = async (inbox) => {
   for (let i in inbox) {
     if (inbox[i]?.threadhash) {
       const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
@@ -49,7 +48,7 @@ export const fetchInbox = async (did: DID) => {
   return inbox
 }
 
-export const fetchIntent = async did => {
+export const fetchIntent = async (did) => {
   let Intents = await getIntents(did.id)
   Intents = await fetchMessagesFromIpfs(Intents)
   await intitializeDb<Array<{}>>('Insert', 2, 'Intent', did.id, Intents, 'did')
