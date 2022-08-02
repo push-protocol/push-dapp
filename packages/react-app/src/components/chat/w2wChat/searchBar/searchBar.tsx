@@ -7,8 +7,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import MessageFeed from '../messageFeed/messageFeed'
 import * as w2wChatHelper from '../../../../helpers/w2w'
 import Web3 from 'web3'
-import { User } from '../../../../components/chat/w2wChat/w2wIndex'
 import * as PushNodeClient from '../../../../api'
+import { User } from '../../../../api'
 
 const SearchBar = () => {
   const { chainId } = useWeb3React<Web3Provider>()

@@ -24,7 +24,7 @@ import { CeramicClient } from '@ceramicnetwork/http-client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { Feeds } from '../../../api'
+import { Feeds, User } from '../../../api'
 
 import './w2wIndex.css'
 
@@ -36,22 +36,6 @@ export interface InboxChat {
   messageType: string
   signature: string
   signatureType: string
-}
-
-export interface User {
-  readonly id?: string
-  did: string
-  wallets: string
-  profile_picture: string | null
-  pgp_pub: string
-  pgp_priv_enc: string
-  pgp_enc_type: string
-  signature: string
-  sig_type: string
-  about: string | null
-  num_msg: number
-  allowed_num_msg: number
-  linked_list_hash?: string | null
 }
 
 export interface ConnectedUser extends User {

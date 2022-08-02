@@ -1,4 +1,4 @@
-import { InboxChat, User } from 'components/chat/w2wChat/w2wIndex'
+import { InboxChat } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 
 const BASE_URL = envConfig.w2wApiUrl
@@ -9,7 +9,6 @@ export interface Feeds {
   msg: InboxChat
   did: string
   wallets: string
-  name: string | null
   profile_picture: string | null
   pgp_pub: string | null
   about: string | null
@@ -17,6 +16,21 @@ export interface Feeds {
   intent: string | null
   intent_sent_by: string | null
   intent_timestamp: Date
+}
+
+export interface User {
+  did: string
+  wallets: string
+  profile_picture: string | null
+  pgp_pub: string
+  pgp_priv_enc: string
+  pgp_enc_type: string
+  signature: string
+  sig_type: string
+  about: string | null
+  num_msg: number
+  allowed_num_msg: number
+  linked_list_hash?: string | null
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
