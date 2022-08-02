@@ -155,16 +155,16 @@ const ChatBox = (): JSX.Element => {
       // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
       // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
       const cipherText = message
-      const msg = await PushNodeClient.postMessage(
-        account,
-        fromDid,
-        toDid,
-        cipherText,
+      const msg = await PushNodeClient.postMessage({
+        fromWallet: account,
+        fromDID: fromDid,
+        toDID: toDid,
+        messageContent: cipherText,
         messageType,
         signature,
         encType,
         sigType
-      )
+      })
       setMessages([...messages, msg])
       setNewMessage('')
       const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id)
