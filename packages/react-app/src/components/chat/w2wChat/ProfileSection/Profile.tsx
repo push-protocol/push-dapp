@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import './Profile.css'
-import { Context } from '../w2wIndex'
+import { AppContext, Context } from '../w2wIndex'
 import { uploadUserProfileImage } from '../../../../api/w2w'
 import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
 import { IPFSHTTPClient } from 'ipfs-http-client'
@@ -36,7 +36,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const Profile = (props: profilePropsType): JSX.Element => {
-  const { did, connectedUser } = useContext(Context)
+  const { did, connectedUser }: AppContext = useContext<AppContext>(Context)
 
   const wallets = connectedUser.wallets.split(',')
   const [copiedDid, setCopiedDid] = useState<boolean>(false)
@@ -81,7 +81,7 @@ const Profile = (props: profilePropsType): JSX.Element => {
     setMessage('Wallet copied successfully')
   }
 
-  const changeHandler = async event => {
+  const changeHandler = async (event) => {
     const file = event.target.files[0]
     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
     const cid = await IPFSHelper.uploadImage(file, IPFSClient)
@@ -153,7 +153,7 @@ const Profile = (props: profilePropsType): JSX.Element => {
               Wallets:
             </Typography>
 
-            {wallets.map(wallet => (
+            {wallets.map((wallet) => (
               <Box sx={{ display: 'flex', marginBottom: 1 }}>
                 <Typography component="legend" sx={styles.value}>
                   {showCharacters(wallet)}
