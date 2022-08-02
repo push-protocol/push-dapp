@@ -1,5 +1,4 @@
 import React from 'react'
-import { Feeds } from '../w2wIndex'
 import './defaultIntent.css'
 
 const DefaultIntent = (props: any) => {

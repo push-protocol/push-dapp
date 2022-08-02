@@ -1,7 +1,22 @@
-import { Feeds, User } from 'components/chat/w2wChat/w2wIndex'
+import { User } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 
 const BASE_URL = envConfig.w2wApiUrl
+
+export interface Feeds {
+  msg: any
+  did: string
+  wallets: string
+  name: string | null
+  profile_picture: string | null
+  public_key: string | null
+  about: string | null
+  threadhash: string | null
+  combined_did: string | null
+  intent: string | null
+  intent_sent_by: string | null
+  intent_timestamp: Date
+}
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {

@@ -24,22 +24,18 @@ import { CeramicClient } from '@ceramicnetwork/http-client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { Feeds } from '../../../api'
 
 import './w2wIndex.css'
 
-export interface Feeds {
-  msg: any
-  did: string
-  wallets: string
-  name: string | null
-  profile_picture: string | null
-  public_key: string | null
-  about: string | null
-  threadhash: string | null
-  combined_did: string | null
-  intent: string | null
-  intent_sent_by: string | null
-  intent_timestamp: Date
+export interface InboxChat {
+  name: string
+  profile_picture: string
+  timestamp: number
+  lastMessage: string
+  messageType: string
+  signature: string
+  signatureType: string
 }
 
 export interface User {
@@ -58,6 +54,10 @@ export interface User {
   linked_list_hash?: string | null
 }
 
+export interface ConnectedUser extends User {
+  privateKey: string
+}
+
 export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
@@ -65,7 +65,7 @@ export interface AppContext {
   renderInboxFeed: Array<{}> | null
   setChat: (text: Feeds) => void
   renderInbox: (args: Array<{}>) => void
-  connectedUser: User
+  connectedUser: ConnectedUser
 }
 
 export const Context = React.createContext<AppContext | null>(null)
@@ -76,7 +76,7 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
-  const [connectedUser, setConnectedUser] = useState<User>()
+  const [connectedUser, setConnectedUser] = useState<ConnectedUser>()
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
 
   const queryClient = new QueryClient({})
@@ -87,7 +87,7 @@ function App() {
     }
   }, [])
 
-  const connectToCeramic = async () => {
+  const connectToCeramic = async (): Promise<void> => {
     const provider: Promise<any> = await connector.getProvider()
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic()
@@ -95,7 +95,7 @@ function App() {
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
     const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
     setDid(did)
-    const user = await PushNodeClient.getUser(did.id)
+    const user: User = await PushNodeClient.getUser(did.id)
     if (!user) {
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did)
@@ -108,12 +108,14 @@ function App() {
         signature: 'xyz',
         sig_type: 'a'
       })
-      setConnectedUser(createdUser)
+      const connectedUser: ConnectedUser = { ...createdUser, privateKey: keyPairs.privateKey }
+      setConnectedUser(connectedUser)
     } else {
+      const privateKey: string = await DIDHelper.decrypt(JSON.parse(user.pgp_priv_enc), did)
+      const connectedUser: ConnectedUser = { ...user, privateKey }
       const wallets: string = await PushNodeClient.updateWalletIfNotExist(did.id, caip10)
       user.wallets = wallets
-
-      setConnectedUser(user)
+      setConnectedUser(connectedUser)
     }
     setIsLoading(false)
   }
