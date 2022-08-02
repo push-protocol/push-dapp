@@ -5,6 +5,37 @@ import { toast } from 'react-toastify'
 
 const BASE_URL = envConfig.w2wApiUrl
 
+export interface Intent {
+  // This property contains all the info to be displayed on the sidebar for the other peer's information
+  // Such as the decrypted message content and peer's profilePicture
+  msg: InboxChat
+  intent: string
+  intent_sent_by: string
+  intentTimestamp: Date
+  name: string
+  about: string
+  wallets: string
+  did: string
+  profile_picture: string
+  threadhash: string
+  pgp_pub: string | null
+}
+
+export interface Feeds {
+  msg: InboxChat
+  did: string
+  wallets: string
+  name: string | null
+  profile_picture: string | null
+  public_key: string | null
+  about: string | null
+  threadhash: string | null
+  combined_did: string | null
+  intent: string | null
+  intent_sent_by: string | null
+  intent_timestamp: Date
+}
+
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
     method: 'POST'
@@ -13,7 +44,7 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
   return data
 }
 
-export const getIntents = async (did: string) => {
+export const getIntents = async (did: string): Promise<Intent[]> => {
   const response = await fetch(BASE_URL + '/w2w/getIntents', {
     method: 'POST',
     headers: {
@@ -23,7 +54,7 @@ export const getIntents = async (did: string) => {
       did
     })
   })
-  const data: any = await response.json()
+  const data: Intent[] = await response.json()
   return data
 }
 
@@ -83,16 +114,25 @@ export const uploadUserProfileImage = async (did: string, image: string) => {
   })
 }
 
-export const postMessage = async (
-  fromWallet: string,
-  fromDID: string,
-  toDID: string,
-  messageContent: string,
-  messageType: string,
-  signature: string,
-  encType: string,
+export const postMessage = async ({
+  fromWallet,
+  fromDID,
+  toDID,
+  messageContent,
+  messageType,
+  signature,
+  encType,
+  sigType
+}: {
+  fromWallet: string
+  fromDID: string
+  toDID: string
+  messageContent: string
+  messageType: string
+  signature: string
+  encType: string
   sigType: string
-) => {
+}) => {
   const response = await fetch(BASE_URL + '/w2w/sendMessage', {
     method: 'POST',
     headers: {
@@ -244,7 +284,8 @@ export const createIntent = async (
         message,
         messageType,
         signature,
-        sig_type: sigType
+        sig_type: sigType,
+        encType
       })
     })
     const data = await response.json()

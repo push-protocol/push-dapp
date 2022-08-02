@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
-import { getLatestThreadhash } from '../../../../api'
-import { Context, Feeds, ToastPosition } from '../w2wIndex'
+import { Feeds, getLatestThreadhash } from '../../../../api'
+import { AppContext, Context } from '../w2wIndex'
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
@@ -18,20 +18,12 @@ interface messageFeedProps {
   isInvalidAddress: boolean
 }
 
-export interface InboxChat {
-  name: string
-  profile_picture: string
-  timestamp: number
-  lastMessage: string
-  messageType: string
-}
-
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
 const MessageFeed = (props: messageFeedProps) => {
-  const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
+  const { did, renderInboxFeed, setChat }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Array<{}>>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
