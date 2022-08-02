@@ -16,7 +16,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]) => {
       let lastMessage = msgIPFS.messageContent
 
       const msg: InboxChat = {
-        name: inbox[i].wallets.split(' ')[0].toString(),
+        name: inbox[i].wallets.split(',')[0].toString(),
         profile_picture: inbox[i].profile_picture,
         lastMessage: msgIPFS.messageContent,
         timestamp: msgIPFS.timestamp,
