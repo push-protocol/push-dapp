@@ -28,7 +28,7 @@
         ".vscode/",
         "package-lock.json",
         "yarn.lock"
-    ],
+      ],
     "plugins": [
         "react",
         "@typescript-eslint",
@@ -41,7 +41,7 @@
         "space-before-function-paren": "off",
         "multiline-ternary": "off",
         "@typescript-eslint/ban-ts-ignore": "off",
-        "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/explicit-function-return-type": "error"
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }
