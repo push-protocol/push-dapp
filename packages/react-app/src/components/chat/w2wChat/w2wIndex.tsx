@@ -58,7 +58,7 @@ export interface User {
   linked_list_hash?: string | null
 }
 
-export interface AppContextInterface {
+export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
@@ -68,7 +68,7 @@ export interface AppContextInterface {
   connectedUser: User
 }
 
-export const Context = React.createContext<AppContextInterface | null>(null)
+export const Context = React.createContext<AppContext | null>(null)
 
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
