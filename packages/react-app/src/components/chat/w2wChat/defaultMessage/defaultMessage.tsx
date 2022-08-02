@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Feeds } from '../w2wIndex'
 import './defaultMessage.css'
 import { CID } from 'ipfs-http-client'
 import { envConfig } from '@project/contracts'
 import { caip10ToWallet } from 'helpers/w2w'
+import { Feeds } from 'api'
 const infura_URL = envConfig.infuraApiUrl
 
 const DefaultMessage = (props: { inbox: Feeds }) => {

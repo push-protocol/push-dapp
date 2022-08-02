@@ -256,7 +256,8 @@ export const createIntent = async (
         message,
         messageType,
         signature,
-        sig_type: sigType
+        sig_type: sigType,
+        encType
       })
     })
     const data = await response.json()
