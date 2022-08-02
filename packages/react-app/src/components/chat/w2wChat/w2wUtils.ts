@@ -6,7 +6,7 @@ import { DID } from 'dids'
 import { Feeds, getInbox, getIntents } from '../../../api'
 import { InboxChat } from './w2wIndex'
 
-export const fetchMessagesFromIpfs = async (inbox) => {
+export const fetchMessagesFromIPFS = async (inbox) => {
   for (let i in inbox) {
     if (inbox[i]?.threadhash) {
       const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
@@ -47,14 +47,14 @@ export const fetchMessagesFromIpfs = async (inbox) => {
 
 export const fetchInbox = async (did: DID) => {
   let inbox: Feeds[] = await getInbox(did.id) //[{},{}]=>"did":[]
-  inbox = await fetchMessagesFromIpfs(inbox)
+  inbox = await fetchMessagesFromIPFS(inbox)
   await intitializeDb<Array<{}>>('Insert', 2, 'Inbox', did.id, inbox, 'did')
   return inbox
 }
 
 export const fetchIntent = async (did) => {
-  let Intents = await getIntents(did.id)
-  Intents = await fetchMessagesFromIpfs(Intents)
+  let Intents: Feeds[] = await getIntents(did.id)
+  Intents = await fetchMessagesFromIPFS(Intents)
   await intitializeDb<Array<{}>>('Insert', 2, 'Intent', did.id, Intents, 'did')
   return Intents
 }

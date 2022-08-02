@@ -4,7 +4,7 @@ import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { Feeds, getLatestThreadhash } from '../../../../api'
 import { AppContext, Context } from '../w2wIndex'
-import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
+import { fetchMessagesFromIPFS, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import Snackbar from '@mui/material/Snackbar'
@@ -63,7 +63,7 @@ const MessageFeed = (props: messageFeedProps) => {
             setErrorMessage("You can't send intent to yourself")
             setFeeds([])
           } else {
-            let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
+            let inbox = await fetchMessagesFromIPFS(props.filteredUserData)
             const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
             inbox = [{ ...inbox[0], threadhash }]
             setFeeds(inbox)
