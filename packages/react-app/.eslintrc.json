@@ -16,6 +16,19 @@
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
+    "ignorePatterns": [
+        "node_modules",
+        "build",
+        "dist",
+        ".DS_Store",
+        ".env.local",
+        ".env.development.local",
+        ".env.test.local",
+        ".env.production.local",
+        ".vscode/",
+        "package-lock.json",
+        "yarn.lock"
+    ],
     "plugins": [
         "react",
         "@typescript-eslint",
@@ -28,6 +41,7 @@
         "space-before-function-paren": "off",
         "multiline-ternary": "off",
         "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
         "@typescript-eslint/explicit-function-return-type": "error"
     }
 }
