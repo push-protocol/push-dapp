@@ -120,12 +120,12 @@ function App() {
     setIsLoading(false)
   }
 
-  const setChat = (text: Feeds) => {
+  const setChat = (text: Feeds): void => {
     setViewChatBox(true)
     setCurrentChat(text)
   }
 
-  const renderInbox = (args: Array<{}>) => {
+  const renderInbox = (args: Array<{}>): void => {
     setRenderInboxFeed(args)
   }
 
