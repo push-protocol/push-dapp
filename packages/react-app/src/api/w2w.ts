@@ -1,10 +1,26 @@
-import { User } from 'components/chat/w2wChat/w2wIndex'
+import { InboxChat, User } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 
 const BASE_URL = envConfig.w2wApiUrl
 
+export interface Intent {
+  // This property contains all the info to be displayed on the sidebar for the other peer's information
+  // Such as the decrypted message content and peer's profilePicture
+  msg: InboxChat
+  intent: string
+  intent_sent_by: string
+  intentTimestamp: Date
+  name: string
+  about: string
+  wallets: string
+  did: string
+  profile_picture: string
+  threadhash: string
+  pgp_pub: string | null
+}
+
 export interface Feeds {
-  msg: any
+  msg: InboxChat
   did: string
   wallets: string
   name: string | null
@@ -26,7 +42,7 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
   return data
 }
 
-export const getIntents = async (did: string) => {
+export const getIntents = async (did: string): Promise<Intent[]> => {
   const response = await fetch(BASE_URL + '/w2w/getIntents', {
     method: 'POST',
     headers: {
@@ -36,7 +52,7 @@ export const getIntents = async (did: string) => {
       did
     })
   })
-  const data: any = await response.json()
+  const data: Intent[] = await response.json()
   return data
 }
 

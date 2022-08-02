@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import './intentFeed.css'
 import DefaultIntent from '../defaultIntent/defaultIntent'
-import { Context } from '../w2wIndex'
+import { AppContext, Context } from '../w2wIndex'
 import { fetchIntent } from '../w2wUtils'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal'
 import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { approveIntent } from '../../../../api'
+import { approveIntent, Intent } from '../../../../api'
 import { intitializeDb } from '../w2wIndexeddb'
 const style = {
   position: 'absolute' as 'absolute',
@@ -23,49 +23,33 @@ const style = {
   p: 4
 }
 
-interface intentFeedProps {
-  filteredUserData: {}[]
-}
-
-export interface InboxChat {
-  name: string
-  avatar: string
-  timestamp: number
-  lastMessage: string
+interface IntentFeedProps {
+  AllIntents: Intent[]
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const NavButton = props => {
-  const { text, onClick, className } = props
-  return (
-    <button className={className} onClick={onClick}>
-      {text}
-    </button>
-  )
-}
-
-const IntentFeed = (props: intentFeedProps) => {
-  const { did, setChat } = useContext(Context)
+const IntentFeed = (props: IntentFeedProps): JSX.Element => {
+  const { did, setChat }: AppContext = useContext<AppContext>(Context)
   const [receivedIntents, setReceivedIntents] = useState([])
   const [open, setOpen] = useState(false)
   const [receivedIntentFrom, setReceivedIntentFrom] = useState()
   const [intentMessage, setIntentMessage] = useState()
   const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false)
-  const [toDID, settoDID] = useState()
+  const [toDID, settoDID] = useState<string>()
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false)
   }
 
-  const handleOpen = () => {
+  const handleOpen = (): void => {
     setOpen(true)
   }
 
-  async function resolve_threadhash() {
+  async function resolveThreadhash(): Promise<void> {
     let getIntent
     getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
 
@@ -81,29 +65,28 @@ const IntentFeed = (props: intentFeedProps) => {
   }
 
   useEffect(() => {
-    resolve_threadhash()
-  }, [props.filteredUserData])
+    resolveThreadhash()
+  }, [props.AllIntents])
 
-  const setCurrentChat = (feed: any) => {
+  const setCurrentChat = (feed: any): void => {
     setChat(feed)
   }
 
-  function showModal(intentFrom, intentMsg, todid) {
+  function showModal(intentFrom, intentMsg, todid): void {
     setReceivedIntentFrom(intentFrom)
     setIntentMessage(intentMsg)
     settoDID(todid)
     handleOpen()
   }
-  async function ApproveIntent(status: string) {
-    var fromDID = did.id
-    const res = await approveIntent(fromDID, toDID, status, '1', 'sigType')
+  async function ApproveIntent(status: string): Promise<void> {
+    await approveIntent(did.id, toDID, status, '1', 'sigType')
     handleClose()
     if (status === 'Approved') setOpenSuccessSnackBar(true)
     else setOpenReprovalSnackBar(true)
-    await resolve_threadhash()
+    await resolveThreadhash()
   }
 
-  function displayReceivedIntents() {
+  function displayReceivedIntents(): JSX.Element {
     return (
       <>
         {!receivedIntents?.length ? (
@@ -118,7 +101,7 @@ const IntentFeed = (props: intentFeedProps) => {
               {receivedIntents.map((intent: any) => (
                 <div
                   key={intent.threadhash}
-                  onClick={() => {
+                  onClick={(): void => {
                     setCurrentChat(intent)
                     showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by)
                   }}
@@ -133,7 +116,7 @@ const IntentFeed = (props: intentFeedProps) => {
     )
   }
 
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -141,7 +124,7 @@ const IntentFeed = (props: intentFeedProps) => {
     setOpenSuccessSnackBar(false)
   }
 
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
     }
@@ -167,14 +150,14 @@ const IntentFeed = (props: intentFeedProps) => {
             </Typography>
             <br />
             <Button
-              onClick={() => {
+              onClick={(): void => {
                 ApproveIntent('Approved')
               }}
             >
               Approve
             </Button>
             <Button
-              onClick={() => {
+              onClick={(): void => {
                 ApproveIntent('Reproved')
               }}
             >
