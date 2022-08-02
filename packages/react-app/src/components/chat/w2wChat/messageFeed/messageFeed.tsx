@@ -3,7 +3,7 @@ import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { Feeds, getLatestThreadhash } from '../../../../api'
-import { Context } from '../w2wIndex'
+import { AppContext, Context } from '../w2wIndex'
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
@@ -21,7 +21,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const MessageFeed = (props: messageFeedProps) => {
-  const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
+  const { did, renderInboxFeed, setChat }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Array<{}>>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
