@@ -121,7 +121,7 @@ const ChatBox = (): JSX.Element => {
       setLoading(false)
     }
   }
-  const { data, error, isError, isLoading } = useQuery<any>('current')
+  const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
   useEffect(() => {
     function updateData(): void {
       if (data !== undefined && currentChat?.wallets) {
