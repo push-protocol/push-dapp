@@ -23,8 +23,8 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
   const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
     method: 'POST'
   })
-  const data: Feeds[] = await response.json()
-  return data
+  const inbox: Feeds[] = await response.json()
+  return inbox
 }
 
 export const getIntents = async (did: string): Promise<Feeds[]> => {
@@ -37,8 +37,8 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
       did
     })
   })
-  const data: Feeds[] = await response.json()
-  return data
+  const intents: Feeds[] = await response.json()
+  return intents
 }
 
 export const getUser = async (did: string) => {
