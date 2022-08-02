@@ -26,6 +26,8 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import './w2wIndex.css'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export interface Feeds {
   msg: any
@@ -70,6 +72,17 @@ export interface AppContextInterface {
 
 export const Context = React.createContext<AppContextInterface | null>(null)
 
+export const ToastPosition = {
+  position: 'top-right',
+  autoClose: 5000,
+  hideProgressBar: true,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: 0,
+  icon:true
+}
+
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
   const [currentChat, setCurrentChat] = useState<Feeds>()
@@ -78,6 +91,7 @@ function App() {
   const [did, setDid] = useState<DID>()
   const [connectedUser, setConnectedUser] = useState<User>()
   const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
+
 
   const queryClient = new QueryClient({})
 
@@ -96,7 +110,9 @@ function App() {
     const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
     setDid(did)
     const user = await PushNodeClient.getUser(did.id)
+    console.log('user',user);
     if (!user) {
+      toast.error("No User found",ToastPosition)
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did)
       const createdUser = await PushNodeClient.createUser({

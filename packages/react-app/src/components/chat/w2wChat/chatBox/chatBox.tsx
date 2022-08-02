@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef, ChangeEvent } from 'rea
 import './chatBox.css'
 // @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png'
-import { Context } from '../w2wIndex'
+import { Context, ToastPosition } from '../w2wIndex'
 import Chats from '../chats/chats'
 import { envConfig } from '@project/contracts'
 import 'font-awesome/css/font-awesome.min.css'
@@ -26,6 +26,8 @@ import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContextInterface } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
+import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
+import { toast } from 'react-toastify'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -132,6 +134,10 @@ const ChatBox = (): JSX.Element => {
     getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
+
+  console.log('current chat: ', currentChat);
+  
+
   const sendMessage = async (
     account: string,
     fromDid: string,
@@ -167,6 +173,7 @@ const ChatBox = (): JSX.Element => {
       renderInbox(inbox)
     } catch (error) {
       console.log(error)
+      toast.error("Cannot send Message, Try again later",ToastPosition)
     }
   }
 
@@ -313,11 +320,14 @@ const ChatBox = (): JSX.Element => {
         </div>
       ) : (
         <>
-          <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
+          <Snackbar open={openReprovalSnackbar} autoHideDuration={10000} onClose={handleCloseSuccessSnackbar}>
             <Alert onClose={handleCloseSuccessSnackbar} severity="error" sx={{ width: '100%' }}>
               {SnackbarText}
             </Alert>
           </Snackbar>
+
+          <ReactSnackbar open={openReprovalSnackbar} handleClose={handleCloseSuccessSnackbar} text={SnackbarText} severity={'error'}/>
+
           <div className="chatBoxNavBar">
             <div className="chatBoxUserName">
               <img src={imageSource} alt="" />
@@ -417,6 +427,7 @@ const ChatBox = (): JSX.Element => {
                 value={newMessage}
               ></textarea>
             ) : (
+              <>
               <textarea
                 disabled={textAreaDisabled}
                 className="chatMessageInput"
@@ -426,6 +437,7 @@ const ChatBox = (): JSX.Element => {
                 value={newMessage}
                 autoFocus
               ></textarea>
+            </>
             )}
             {(!hasIntent && intentSentandPending === 'Pending') ||
             (hasIntent && intentSentandPending === 'Approved') ? (
@@ -453,6 +465,7 @@ const ChatBox = (): JSX.Element => {
               </button>
             )}
           </div>
+          
         </>
       )}
     </div>

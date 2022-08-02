@@ -3,12 +3,14 @@ import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { getLatestThreadhash } from '../../../../api'
-import { Context, Feeds } from '../w2wIndex'
+import { Context, Feeds, ToastPosition } from '../w2wIndex'
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
+import { toast } from 'react-toastify'
 
 interface messageFeedProps {
   filteredUserData: {}[]
@@ -37,22 +39,38 @@ const MessageFeed = (props: messageFeedProps) => {
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
+  const [stopApi, setStopApi] = useState<boolean>(true)
+
   const getInbox = async (): Promise<Feeds[]> => {
+    
+
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       setFeeds(getInbox.body)
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-      return inbox
-    } else {
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-      return inbox
     }
+    const inbox: Feeds[] = await fetchInbox(did)
+    setFeeds(inbox)
+    return inbox
   }
 
-  const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-    refetchInterval: 5000
+  // const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+  //   refetchInterval: 5000
+  // })
+
+  const data = useQuery('current', getInbox, {
+    enabled: stopApi,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+    suspense: false,
+    onError: () => {
+      setStopApi(false)
+      toast.error("Error! Please Try Again later", ToastPosition)
+    },
+    retry: 3,
+    refetchInterval: 1000 * 5, // 5 seconds,
+    retryDelay:1000*5,//5 seconds
   })
 
   useEffect(() => {
@@ -69,6 +87,7 @@ const MessageFeed = (props: messageFeedProps) => {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
             setErrorMessage("You can't send intent to yourself")
+            toast.error("You can't send intent to yourself", ToastPosition)
             setFeeds([])
           } else {
             let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
@@ -140,6 +159,7 @@ const MessageFeed = (props: messageFeedProps) => {
               <div
                 key={feed.threadhash || i}
                 onClick={() => {
+                  console.log('feed', feed)
                   setCurrentChat(feed)
                 }}
               >
@@ -148,11 +168,18 @@ const MessageFeed = (props: messageFeedProps) => {
             ))}
           </div>
         ) : null}
-        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
+        {/* <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
           <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
             {errorMessage}
           </Alert>
-        </Snackbar>
+        </Snackbar> */}
+
+        <ReactSnackbar
+          text={errorMessage}
+          open={openReprovalSnackbar}
+          handleClose={handleCloseReprovalSnackbar}
+          severity={'error'}
+        />
       </section>
     </>
   )
