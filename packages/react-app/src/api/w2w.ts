@@ -64,6 +64,10 @@ export const getDidLinkWallets = async (did: string): Promise<string[]> => {
       did
     })
   })
+  console.log(response.status)
+  if (response.status > 299) {
+    throw new Error('No wallets found')
+  }
   const data = await response.json()
   return data
 }
@@ -263,4 +267,18 @@ export const createIntent = async (
     const data = await response.json()
     return data
   }
+}
+export const getRandomProfile = async (wallet: string) => {
+  const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      wallet
+    })
+  })
+  const data = await response.json()
+  console.log(data)
+  return data
 }

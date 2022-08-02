@@ -58,13 +58,14 @@ const SearchBar = () => {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           console.log(caip10)
           setSearchedUser(caip10)
-          //const profile = randomProfileGenerator(caip10)
+          const profile = await PushNodeClient.getRandomProfile(caip10)
+          console.log(profile.uniqueAvatar)
           const userCreated = {
             did: caip10,
             wallets: caip10,
             //msg: { timestamp: null, name: caip10, messageType: null },
             pgp_pub: 'temp',
-            profile_picture: '',
+            profile_picture: profile.uniqueAvatar,
             pgp_priv_enc: 'temp',
             pgp_enc_type: 'temp',
             signature: 'temp',

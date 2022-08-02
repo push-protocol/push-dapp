@@ -121,7 +121,7 @@ const ChatBox = (): JSX.Element => {
       setLoading(false)
     }
   }
-  const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  const { data, error, isError, isLoading } = useQuery<any>('current')
   useEffect(() => {
     function updateData(): void {
       if (data !== undefined && currentChat?.wallets) {
@@ -193,11 +193,12 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
-        const user = await PushNodeClient.getUser(did.id)
+        const user = await PushNodeClient.getUser(currentChat.did)
+        console.log(user)
         if (!user) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           console.log(caip10)
-          await PushNodeClient.createUser({
+          const userCreated = await PushNodeClient.createUser({
             wallet: caip10,
             did: caip10,
             pgp_pub: 'temp',
@@ -206,6 +207,7 @@ const ChatBox = (): JSX.Element => {
             signature: 'temp',
             sig_type: 'temp'
           })
+          console.log(userCreated)
         }
         const msg = await PushNodeClient.createIntent(
           currentChat.did,
