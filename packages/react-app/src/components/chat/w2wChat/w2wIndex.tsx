@@ -43,7 +43,6 @@ export interface Feeds {
 }
 
 export interface User {
-  readonly id?: string
   did: string
   wallets: string
   profile_picture: string | null

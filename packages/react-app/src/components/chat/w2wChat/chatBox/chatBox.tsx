@@ -194,11 +194,9 @@ const ChatBox = (): JSX.Element => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
         const user = await PushNodeClient.getUser(currentChat.did)
-        console.log(user)
         if (!user) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
-          console.log(caip10)
-          const userCreated = await PushNodeClient.createUser({
+          await PushNodeClient.createUser({
             wallet: caip10,
             did: caip10,
             pgp_pub: 'temp',
@@ -207,7 +205,6 @@ const ChatBox = (): JSX.Element => {
             signature: 'temp',
             sig_type: 'temp'
           })
-          console.log(userCreated)
         }
         const msg = await PushNodeClient.createIntent(
           currentChat.did,
@@ -219,7 +216,6 @@ const ChatBox = (): JSX.Element => {
           'myencryptiontype',
           'mysignaturetype'
         )
-        console.log(msg)
         setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')

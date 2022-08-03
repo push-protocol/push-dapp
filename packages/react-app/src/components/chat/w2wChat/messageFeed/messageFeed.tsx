@@ -15,9 +15,7 @@ interface messageFeedProps {
   hasUserBeenSearched: boolean
   isInvalidAddress: boolean
 }
-interface indexDbType<T> {
-  body: any
-}
+
 export interface InboxChat {
   name: string
   profile_picture: string
@@ -41,8 +39,6 @@ const MessageFeed = (props: messageFeedProps) => {
 
   const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
-
-    console.log(getInbox)
     if (getInbox !== undefined) {
       setFeeds(getInbox.body)
       const inbox: Feeds[] = await fetchInbox(did)
@@ -139,9 +135,9 @@ const MessageFeed = (props: messageFeedProps) => {
           </p>
         ) : !messagesLoading ? (
           <div>
-            {feeds.map((feed: Feeds) => (
+            {feeds.map((feed: Feeds, i) => (
               <div
-                key={feed.threadhash}
+                key={feed.threadhash || i}
                 onClick={() => {
                   setCurrentChat(feed)
                 }}
