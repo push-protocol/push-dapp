@@ -19,7 +19,7 @@ import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { fetchInbox, fetchIntent } from '../w2wUtils'
+import { fetchInbox } from '../w2wUtils'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
@@ -134,7 +134,6 @@ const ChatBox = (): JSX.Element => {
     getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
-
   const sendMessage = async ({
     account,
     fromDid,
@@ -176,7 +175,7 @@ const ChatBox = (): JSX.Element => {
       renderInbox(inbox)
     } catch (error) {
       console.log(error)
-      toast.error("Cannot send Message, Try again later",ToastPosition)
+      toast.error('Cannot send Message, Try again later', ToastPosition)
     }
   }
 
@@ -354,7 +353,12 @@ const ChatBox = (): JSX.Element => {
             </Alert>
           </Snackbar>
 
-          <ReactSnackbar open={openReprovalSnackbar} handleClose={handleCloseSuccessSnackbar} text={SnackbarText} severity={'error'}/>
+          <ReactSnackbar
+            open={openReprovalSnackbar}
+            handleClose={handleCloseSuccessSnackbar}
+            text={SnackbarText}
+            severity={'error'}
+          />
 
           <div className="chatBoxNavBar">
             <div className="chatBoxUserName">
@@ -456,16 +460,16 @@ const ChatBox = (): JSX.Element => {
               ></textarea>
             ) : (
               <>
-              <textarea
-                disabled={textAreaDisabled}
-                className="chatMessageInput"
-                placeholder={placeholderTextArea()}
-                onKeyDown={handleKeyPress}
-                onChange={textOnChange}
-                value={newMessage}
-                autoFocus
-              ></textarea>
-            </>
+                <textarea
+                  disabled={textAreaDisabled}
+                  className="chatMessageInput"
+                  placeholder={placeholderTextArea()}
+                  onKeyDown={handleKeyPress}
+                  onChange={textOnChange}
+                  value={newMessage}
+                  autoFocus
+                ></textarea>
+              </>
             )}
             {(!hasIntent && intentSentandPending === 'Pending') ||
             (hasIntent && intentSentandPending === 'Approved') ? (
@@ -493,7 +497,6 @@ const ChatBox = (): JSX.Element => {
               </button>
             )}
           </div>
-          
         </>
       )}
     </div>

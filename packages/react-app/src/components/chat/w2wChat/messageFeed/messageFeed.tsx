@@ -29,7 +29,6 @@ const MessageFeed = (props: messageFeedProps) => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
-
   const [stopApi, setStopApi] = useState<boolean>(true)
 
   const getInbox = async (): Promise<Feeds[]> => {
@@ -41,10 +40,6 @@ const MessageFeed = (props: messageFeedProps) => {
     setFeeds(inbox)
     return inbox
   }
-
-  // const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-  //   refetchInterval: 5000
-  // })
 
   const data = useQuery('current', getInbox, {
     enabled: stopApi,
@@ -59,7 +54,7 @@ const MessageFeed = (props: messageFeedProps) => {
     },
     retry: 3,
     refetchInterval: 1000 * 5, // 5 seconds,
-    retryDelay: 1000 * 5 //5 seconds
+    retryDelay: 1000 * 5 // 5 seconds
   })
 
   useEffect(() => {
@@ -148,7 +143,6 @@ const MessageFeed = (props: messageFeedProps) => {
               <div
                 key={feed.threadhash || i}
                 onClick={() => {
-                  console.log('feed', feed)
                   setCurrentChat(feed)
                 }}
               >
@@ -157,11 +151,6 @@ const MessageFeed = (props: messageFeedProps) => {
             ))}
           </div>
         ) : null}
-        {/* <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-            {errorMessage}
-          </Alert>
-        </Snackbar> */}
 
         <ReactSnackbar
           text={errorMessage}
