@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { postReq } from "api";
@@ -19,7 +19,7 @@ const ShowDelegates = () => {
   const { account, chainId } = useWeb3React();
   const [delegatees, setDelegatees] = React.useState([account]);
   const theme = useTheme();
-  const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(false);
+  const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(true);
   const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
   const [delegateToBeRemoved, setDelegateToBeRemoved] = React.useState('');
   const { epnsCommWriteProvider } = useSelector(
@@ -30,14 +30,9 @@ const ShowDelegates = () => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
   };
 
-  const showList = async () => {
-    if (isActiveDelegateDropdown) {
-      setIsActiveDelegateDropdown(false);
-      return;
-    }
-    setIsActiveDelegateDropdown(true);
-    fetchDelegatees();
-  }
+  useEffect(()=>{
+    fetchDelegatees()
+  },[])
 
   const fetchDelegatees = async () => {
     try {
@@ -59,18 +54,8 @@ const ShowDelegates = () => {
     <Section>
       <Content padding="10px 0px 20px">
       <Item align="flex-start">
-        <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200" style={{color : theme.color}}>Channel </Span>
-            <Span
-                bg="#674c9f"
-                color="#fff"
-                weight="600"
-                padding="0px 8px"
-            >
-                Delegates
-            </Span>
-          </H2>
-          <H3 style={{color : theme.color}}>
+          <H2 style={{color : theme.color}}>Channel Delegates </H2>
+          <H3 style={{color : theme.color, marginTop:'2px'}}>
             Delegates that can send notifications on behalf of this channel.
           </H3>
       </Item>
@@ -81,63 +66,44 @@ const ShowDelegates = () => {
         minWidth="280px"
         align="stretch"
         margin="10px 0px 30px 0px"
+        radius="10px"
         border="1px solid rgba(169, 169, 169, 0.5)"
       >
+      {isActiveDelegateDropdown && delegatees && 
         <Item
-          direction="row"
-          justify="space-between"
+          flex="5"
+          justify="flex-start"
+          align="stretch"
         >
-          <Span
-            textTransform="uppercase"
-            padding="10px"
-            spacing="3px"
-            size="14px"
-            color={theme.color}
-            weight="500"
-          >
-            List of Delegate Addresses
-          </Span>
-          <Span
-            padding="10px"
-            onClick={showList}
-          >
-            {!isActiveDelegateDropdown ? <GoTriangleDown color={theme.headerTagBg}/> : <GoTriangleUp color={theme.headerTagBg}/>}
-            </Span>
-          </Item>
-          {
-            isActiveDelegateDropdown && delegatees && 
+          {delegatees.map((delegate,idx) => {
+            return (
               <Item
-                flex="5"
-                justify="flex-start"
-                align="stretch"
+                padding="8px 5px"
+                direction="row"
+                justify="space-between"
+                key={delegate}
+                style={{
+                  borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
+                }}
               >
-                {delegatees.map((delegate) => {
-                  return (
-                    <Item
-                      border="1px solid rgba(169, 169, 169, 0.5)"
-                      padding="5px"
-                      direction="row"
-                      justify="space-between"
-                      key={delegate}
-                    >
-                      <Item direction="row" justify="flex-start">
-                        <DelegateInfo delegateAddress={delegate} />
-                      </Item>
-                      {(account.toLowerCase() != delegate.toLowerCase()) ?
-                        <RemoveButton onClick={() => {
-                          setDelegateToBeRemoved(delegate);
-                          setRemoveModalOpen(true);
-                        }}>
-                          Remove Delegate
-                        </RemoveButton> : 
-                        <OwnerButton disabled={true}>
-                          Owner
-                        </OwnerButton>
-                      }
-                    </Item>
-                  )
-                })}
+                <Item direction="row" justify="flex-start">
+                  <DelegateInfo delegateAddress={delegate} />
+                </Item>
+                {(account.toLowerCase() !== delegate.toLowerCase()) ?
+                  <RemoveButton onClick={() => {
+                    setDelegateToBeRemoved(delegate);
+                    setRemoveModalOpen(true);
+                  }}>
+                    Remove Delegate
+                  </RemoveButton> : 
+                  <OwnerButton disabled={true}>
+                    Channel Creator
+                  </OwnerButton>
+                }
               </Item>
+            )
+          })}
+        </Item>
         }
         {removeModalOpen && (
           <RemoveDelegateModal

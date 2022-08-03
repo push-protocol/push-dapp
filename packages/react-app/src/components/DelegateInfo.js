@@ -1,34 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDeviceWidthCheck } from "hooks";
+import {AiFillCopy,AiOutlineCopy } from 'react-icons/ai';
 
 const DelegateInfo = ({ delegateAddress }) => {
-  const [addressText, setAddressText] = useState(delegateAddress);
+  const [addressText,setAddressText] = useState(delegateAddress);
+  const [isCopied, setIsCopied] = useState(false)
   const isMobile = useDeviceWidthCheck(700);
+
+  useEffect(()=>{
+    if(!isMobile){
+      setAddressText(delegateAddress)
+    }else{
+      // clip address
+      const clippedAddrs = `${delegateAddress.substring(0, 6)}.....${delegateAddress.substring(delegateAddress.length - 6)}`
+      alert(clippedAddrs)
+      setAddressText(clippedAddrs)
+    }
+  },[isMobile])
 
   return (
     <Wallet
-      onMouseEnter={() => setAddressText("Click to Copy")}
-      onMouseLeave={() => setAddressText(delegateAddress)}
-      onClick={() => {
-        navigator.clipboard.writeText(delegateAddress)
-        setAddressText('Copied')
-      }}
+      // onMouseEnter={() => setAddressText("Click to Copy")}
+      onMouseLeave={() => setIsCopied(false)}
       minWidth={!isMobile ? '350px' : '120px'}
     >
-      {!isMobile && addressText}
-      {isMobile &&
-        addressText.length > 20 &&
-          <>{addressText.substring(0, 6)}.....{addressText.substring(addressText.length - 6)}</>
-      }
-      {isMobile && addressText.length < 20 && addressText}
+      <div style={{display:'flex',justifyContent:'space-between'}}>
+        {addressText}
+        <div 
+          style={{marginLeft:'10px',cursor:'pointer'}} 
+          onClick={() => {
+            navigator.clipboard.writeText(delegateAddress)
+            setIsCopied(true)
+          }}>
+          {
+            isCopied ? 
+              <AiFillCopy size={18} color="white"/>
+            :  
+              <AiOutlineCopy size={18} color="white"/>
+          }
+        </div>
+      </div>
     </Wallet>
   )
 }
 
 const Wallet = styled.span`
   margin: 0px 10px;
-  padding: 8px 15px;
+  padding: 10px 30px;
   height: 16px;
   display: flex;
   align-items: baseline;

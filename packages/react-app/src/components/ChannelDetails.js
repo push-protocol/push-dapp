@@ -93,15 +93,23 @@ export default function ChannelDetails() {
             {channelDetails.name}
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
-          <ChanneStateText active={channelIsActive}>
-            {channelIsActive
-              ? "ACTIVE"
-              : channelIsDeactivated
-              ? "DEACTIVATED"
-              : "BLOCKED"}
-          </ChanneStateText>
+          {
+            aliasVerified === false
+              ?
+                <AliasStateText>
+                  Alias Network Setup Pending
+                </AliasStateText>
+              :
+                <ChanneStateText active={channelIsActive}>
+                  {channelIsActive
+                    ? "Active"
+                    : channelIsDeactivated
+                    ? "Deactivated"
+                    : "Blocked"}
+                </ChanneStateText>
+          }
           <Subscribers>
-            <img src="/people.svg"></img>
+            <img src="/people.svg" alt="subscount"></img>
             <SubscribersCount>
               {channelDetails.subscribers.length}
             </SubscribersCount>
@@ -121,7 +129,6 @@ export default function ChannelDetails() {
         {canVerify && (
           <Verified>
             <span>verified by:</span>
-
             <VerifyingIcon src={verifyingChannel.icon}></VerifyingIcon>
             <VerifyingName>{verifyingChannel.name}</VerifyingName>
           </Verified>
@@ -132,12 +139,7 @@ export default function ChannelDetails() {
           <span style={{ marginLeft: "10px" }}>{creationDate}</span>
         </Date>
       </SectionDate>
-
-      <hr />
-
       <ShowDelegates />
-
-      <hr />
     </ChannelDetailsWrapper>
   );
 }
@@ -157,7 +159,7 @@ const SectionTop = styled.div`
 const ImageSection = styled.img`
   width: 120px;
   height: 120px;
-  border-radius: 50%;
+  border-radius: 10%;
   margin-right: 20px;
 `;
 const VerifyImage = styled.img`
@@ -185,32 +187,67 @@ const Subscribers = styled.div`
 `;
 
 const ChanneStateText = styled.span`
-  color: #57c255;
+  color: #2DBD81;
   font-family: Source Sans Pro;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
   line-height: 23px;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: ${(props) => (props.active ? "#57c255" : "red")};
+  color: ${(props) => (props.active ? "#2DBD81" : "red")};
   margin-bottom: 8px;
   display: flex;
   align-items: center;
+  background-color: #C6EFD1;
+  padding:4px 12px;
+  border-radius:16px;
+  margin-top:10px;
+  margin-bottom:14px;
+
   ${(props) =>
     props.active &&
     `
-        &::after {
-            width:8px;
-            height: 8px;
-            background: #57c255;
+        &::before {
+            width:16px;
+            height:16px;
+            background: #2DBD81;
             border-radius: 50%;
             content: "";
             display: inline-flex;
             align-items: center;
-            margin-left: 6px;
+            margin-right: 6px;
         }
     `}
+`;
+
+const AliasStateText = styled.span`
+  color: #E3B61C;
+  font-family: Source Sans Pro;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 23px;
+  font-weight: bolder;
+  color: #E3B61C;
+  display: flex;
+  align-items: center;
+  background-color: #E9EEC4;
+  padding:4px 12px;
+  border-radius:16px;
+  margin-top:10px;
+  margin-bottom:14px;
+ 
+  &::before {
+      width:16px;
+      height: 16px;
+      background: #E3B61C;
+      border-radius: 50%;
+      content: "";
+      display: inline-flex;
+      align-items: center;
+      margin-right: 6px;
+  }
+    
 `;
 
 const SubscribersCount = styled.span`
