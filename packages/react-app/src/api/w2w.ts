@@ -1,8 +1,38 @@
-import { Feeds, ToastPosition, User } from 'components/chat/w2wChat/w2wIndex'
+import { ToastPosition, InboxChat } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
 
 const BASE_URL = envConfig.w2wApiUrl
+
+export interface Feeds {
+  // This property contains all the info to be displayed on the sidebar for the other peer's information
+  // Such as the decrypted message content and peer's profilePicture
+  msg: InboxChat
+  did: string
+  wallets: string
+  profile_picture: string | null
+  pgp_pub: string | null
+  about: string | null
+  threadhash: string | null
+  intent: string | null
+  intent_sent_by: string | null
+  intent_timestamp: Date
+}
+
+export interface User {
+  did: string
+  wallets: string
+  profile_picture: string | null
+  pgp_pub: string
+  pgp_priv_enc: string
+  pgp_enc_type: string
+  signature: string
+  sig_type: string
+  about: string | null
+  num_msg: number
+  allowed_num_msg: number
+  linked_list_hash?: string | null
+}
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   // const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
@@ -25,19 +55,19 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
       const data: Feeds[] = await response.json()
       return data
     } catch (err) {
-      console.log('Retry',retry);
-      if(retry>1){
-        console.log('This ran');
-        toast.error("An Error Occurred! Please Reload the Page",ToastPosition)
+      console.log('Retry', retry)
+      if (retry > 1) {
+        console.log('This ran')
+        toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
       }
-      console.log('Error in the API call',err)
+      console.log('Error in the API call', err)
       retry++
       continue
     }
   }
 }
 
-export const getIntents = async (did: string) => {
+export const getIntents = async (did: string): Promise<Feeds[]> => {
   const response = await fetch(BASE_URL + '/w2w/getIntents', {
     method: 'POST',
     headers: {
@@ -47,12 +77,11 @@ export const getIntents = async (did: string) => {
       did
     })
   })
-  const data: any = await response.json()
-  return data
+  const intents: Feeds[] = await response.json()
+  return intents
 }
 
 export const getUser = async (did: string) => {
-
   // const response = await fetch(BASE_URL + '/w2w/getUser', {
   //   method: 'POST',
   //   headers: {
@@ -65,11 +94,10 @@ export const getUser = async (did: string) => {
   // const data = await response.json()
   // return data
 
-
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
-    try{
+    try {
       const response = await fetch(BASE_URL + '/w2w/getUser', {
         method: 'POST',
         headers: {
@@ -81,19 +109,17 @@ export const getUser = async (did: string) => {
       })
       const data = await response.json()
       return data
-    }catch(err){
-      console.log('Retry',retry);
-      if(retry>1){
-        console.log('This ran');
-        toast.error("An Error Occurred! Please Reload the Page",ToastPosition)
+    } catch (err) {
+      console.log('Retry', retry)
+      if (retry > 1) {
+        console.log('This ran')
+        toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
       }
-      console.log('Error in the API call',err)
+      console.log('Error in the API call', err)
       retry++
       continue
     }
   }
-
-  
 }
 
 export const updateWalletIfNotExist = async (did: string, caip10: string) => {
@@ -137,16 +163,25 @@ export const uploadUserProfileImage = async (did: string, image: string) => {
   })
 }
 
-export const postMessage = async (
-  fromWallet: string,
-  fromDID: string,
-  toDID: string,
-  messageContent: string,
-  messageType: string,
-  signature: string,
-  encType: string,
+export const postMessage = async ({
+  fromWallet,
+  fromDID,
+  toDID,
+  messageContent,
+  messageType,
+  signature,
+  encType,
+  sigType
+}: {
+  fromWallet: string
+  fromDID: string
+  toDID: string
+  messageContent: string
+  messageType: string
+  signature: string
+  encType: string
   sigType: string
-) => {
+}) => {
   const response = await fetch(BASE_URL + '/w2w/sendMessage', {
     method: 'POST',
     headers: {
@@ -298,7 +333,8 @@ export const createIntent = async (
         message,
         messageType,
         signature,
-        sig_type: sigType
+        sig_type: sigType,
+        encType
       })
     })
     const data = await response.json()

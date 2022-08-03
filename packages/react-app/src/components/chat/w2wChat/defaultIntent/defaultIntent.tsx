@@ -1,26 +1,21 @@
 import React from 'react'
-import { Feeds } from '../w2wIndex'
 import './defaultIntent.css'
 
-const DefaultIntent = (props: any) => {
-  // printing default message props
-  console.log('Printing Default intent props')
-  console.log(props)
-
+const DefaultIntent = (props: any): JSX.Element => {
   let date = null
 
   if (props.inbox?.intent_timestamp !== null) {
-    let time = new Date(props.inbox?.intent_timestamp)
+    const time = new Date(props.inbox?.intent_timestamp)
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2)
   }
 
-  let walletAddress = props.inbox.msg.name
+  const walletAddress = props.inbox.msg.name
     .split(':')
     .at(-1)
     .slice(0, 19)
-  let fh = walletAddress.slice(0, 6)
-  let sh = walletAddress.slice(-6)
-  let final = fh + '....' + sh
+  const fh = walletAddress.slice(0, 6)
+  const sh = walletAddress.slice(-6)
+  const final = fh + '....' + sh
 
   return (
     <div className="message_body">

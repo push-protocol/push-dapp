@@ -2,34 +2,26 @@ import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
-import { getLatestThreadhash } from '../../../../api'
-import { Context, Feeds } from '../w2wIndex'
-import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
+import { Feeds, getLatestThreadhash, User } from '../../../../api'
+import { AppContext, Context } from '../w2wIndex'
+import { fetchMessagesFromIPFS, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
-interface messageFeedProps {
-  filteredUserData: {}[]
+interface MessageFeedProps {
+  filteredUserData: User[]
   hasUserBeenSearched: boolean
   isInvalidAddress: boolean
-}
-
-export interface InboxChat {
-  name: string
-  profile_picture: string
-  timestamp: number
-  lastMessage: string
-  messageType: string
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const MessageFeed = (props: messageFeedProps) => {
-  const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
+const MessageFeed = (props: MessageFeedProps) => {
+  const { did, renderInboxFeed, setChat }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Array<{}>>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
@@ -37,17 +29,14 @@ const MessageFeed = (props: messageFeedProps) => {
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
-  const getInbox = async (): Promise<Feeds[]> => {
+  const getInbox = async (): Promise<void> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
-      setFeeds(getInbox.body)
       const inbox: Feeds[] = await fetchInbox(did)
       setFeeds(inbox)
-      return inbox
     } else {
       const inbox: Feeds[] = await fetchInbox(did)
       setFeeds(inbox)
-      return inbox
     }
   }
 
@@ -66,7 +55,7 @@ const MessageFeed = (props: messageFeedProps) => {
     if (!props.hasUserBeenSearched) {
       getInbox()
     } else {
-      const searchFn = async () => {
+      const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).did === did.id) {
             setIsSameUser(true)
@@ -74,7 +63,7 @@ const MessageFeed = (props: messageFeedProps) => {
             setErrorMessage("You can't send intent to yourself")
             setFeeds([])
           } else {
-            let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
+            let inbox: Feeds[] = await fetchMessagesFromIPFS(props.filteredUserData)
             const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
             inbox = [{ ...inbox[0], threadhash }]
             setFeeds(inbox)
@@ -92,12 +81,6 @@ const MessageFeed = (props: messageFeedProps) => {
     }
 
     setMessagesLoading(false)
-    // if (!props.hasUserBeenSearched) {
-    //     const interval = setInterval(() => getInbox(), 5000)
-    //     return () => {
-    //         clearInterval(interval)
-    //     }
-    // }
   }, [props.hasUserBeenSearched, props.filteredUserData])
 
   const setCurrentChat = (feed: any) => {

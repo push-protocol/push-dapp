@@ -19,12 +19,12 @@ import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { fetchInbox, fetchIntent } from '../w2wUtils'
+import { fetchInbox } from '../w2wUtils'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
-import { AppContextInterface } from '../../../../components/chat/w2wChat/w2wIndex'
+import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
 
 const INFURA_URL = envConfig.infuraApiUrl
@@ -35,9 +35,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContextInterface = useContext<
-    AppContextInterface
-  >(Context)
+  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContext = useContext<AppContext>(
+    Context
+  )
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -53,7 +53,7 @@ const ChatBox = (): JSX.Element => {
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
   const [intentSentandPending, setIntentSentandPending] = useState<string>('')
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
-  const { data, error, isError, isLoading } = useQuery<any>('current')
+  const { data } = useQuery<any>('current')
   const [SnackbarText, setSnackbarText] = useState<string>('')
   let showTime = false
   let time = ''
@@ -132,33 +132,39 @@ const ChatBox = (): JSX.Element => {
     getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
-  const sendMessage = async (
-    account: string,
-    fromDid: string,
-    toDid: string,
-    message: string,
-    messageType: string,
-    signature: string,
-    sigType: string,
+  const sendMessage = async ({
+    account,
+    fromDid,
+    toDid,
+    message,
+    messageType,
+    signature,
+    sigType,
+    encType
+  }: {
+    account: string
+    fromDid: string
+    toDid: string
+    message: string
+    messageType: string
+    signature: string
+    sigType: string
     encType: string
-  ): Promise<void> => {
+  }): Promise<void> => {
     try {
-      console.log('connectedUser', connectedUser)
-      console.log('currentChat', currentChat)
-      console.log('Public Key from Current Chat: ', currentChat.public_key)
       // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
       // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
       const cipherText = message
-      const msg = await PushNodeClient.postMessage(
-        account,
-        fromDid,
-        toDid,
-        cipherText,
+      const msg = await PushNodeClient.postMessage({
+        fromWallet: account,
+        fromDID: fromDid,
+        toDID: toDid,
+        messageContent: cipherText,
         messageType,
         signature,
-        'encType',
-        'sigType'
-      )
+        encType,
+        sigType
+      })
       setMessages([...messages, msg])
       setNewMessage('')
       const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id)
@@ -174,7 +180,16 @@ const ChatBox = (): JSX.Element => {
     e.preventDefault()
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
-        sendMessage(account, did.id, currentChat.did, newMessage, 'Text', 'signature', 'sigType', 'encType')
+        sendMessage({
+          account,
+          fromDid: did.id,
+          toDid: currentChat.did,
+          message: newMessage,
+          messageType: 'Text',
+          signature: 'signature',
+          sigType: 'sigType',
+          encType: 'encType'
+        })
       } else {
         sendIntent(newMessage, 'Text')
       }
@@ -194,11 +209,9 @@ const ChatBox = (): JSX.Element => {
           'myencryptiontype',
           'mysignaturetype'
         )
-        console.log(msg)
         setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')
-        const intent = await fetchIntent(did)
       } else {
         setNewMessage('')
         setOpenSuccessSnackBar(true)
@@ -243,16 +256,16 @@ const ChatBox = (): JSX.Element => {
           if (!hasIntent && intentSentandPending === 'Pending') {
             sendIntent(JSON.stringify(resultingfile), type)
           } else {
-            sendMessage(
+            sendMessage({
               account,
-              did.id,
-              currentChat.did,
-              JSON.stringify(resultingfile),
-              type,
-              'sig',
-              'sig_type',
-              'enc_type'
-            )
+              fromDid: did.id,
+              toDid: currentChat.did,
+              message: JSON.stringify(resultingfile),
+              messageType: type,
+              signature: 'sig',
+              sigType: 'sig_type',
+              encType: 'enc_type'
+            })
           }
           setFileUploading(false)
         }
@@ -262,7 +275,16 @@ const ChatBox = (): JSX.Element => {
         if (!hasIntent && intentSentandPending === 'Pending') {
           sendIntent(content.toString(), type)
         } else {
-          sendMessage(account, did.id, currentChat.did, content.toString(), type, 'sig', 'sig_type', 'enc_type')
+          sendMessage({
+            account,
+            fromDid: did.id,
+            toDid: currentChat.did,
+            message: content.toString(),
+            messageType: type,
+            signature: 'sig',
+            sigType: 'sig_type',
+            encType: 'enc_type'
+          })
         }
         setFileUploading(false)
       }
@@ -284,7 +306,16 @@ const ChatBox = (): JSX.Element => {
     if (!hasIntent && intentSentandPending === 'Pending') {
       sendIntent(url, 'GIF')
     } else {
-      sendMessage(account, did.id, currentChat.did, url, 'GIF', 'signature', 'sig_type', 'enc_type')
+      sendMessage({
+        account,
+        fromDid: did.id,
+        toDid: currentChat.did,
+        message: url,
+        messageType: 'GIF',
+        signature: 'signature',
+        sigType: 'sig_type',
+        encType: 'enc_type'
+      })
     }
   }
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -356,11 +387,11 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : (
-                          <div className="showDateInChat" >
+                          <div className="showDateInChat">
                             <span>{time}</span>
                           </div>
                         )}
-                        <Chats msg={msg} did={did} noTail={noTail}  />
+                        <Chats msg={msg} did={did} noTail={noTail} />
                       </div>
                     )
                   })
