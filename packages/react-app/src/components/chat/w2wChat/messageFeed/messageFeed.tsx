@@ -70,8 +70,7 @@ const MessageFeed = (props: MessageFeedProps) => {
             setFeeds([])
           } else {
             // When searching as of now the search will always result in only one user being displayed.
-            // There is no multiple users appearing on the sidebar when a search is done. The wallets must match
-            // exactly.
+            // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0]
             const threadhash: string = await getLatestThreadhash({ firstDID: user.did, secondDID: did.id })
             const inbox: Feeds = {
