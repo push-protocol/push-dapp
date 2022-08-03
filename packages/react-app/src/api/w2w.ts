@@ -65,6 +65,7 @@ export const getUser = async (did: string) => {
       did
     })
   })
+
   const data = await response.json()
   return data
 }

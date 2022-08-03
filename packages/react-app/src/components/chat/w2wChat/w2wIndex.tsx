@@ -27,6 +27,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { Feeds, User } from '../../../api'
 
 import './w2wIndex.css'
+import { toast, ToastOptions } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export interface InboxChat {
   name: string
@@ -53,6 +55,16 @@ export interface AppContext {
 }
 
 export const Context = React.createContext<AppContext | null>(null)
+
+export const ToastPosition: ToastOptions = {
+  position: 'top-right',
+  autoClose: 5000,
+  hideProgressBar: true,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: 0
+}
 
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
@@ -81,6 +93,7 @@ function App() {
     setDid(did)
     const user: User = await PushNodeClient.getUser(did.id)
     if (!user) {
+      toast.error('No User found', ToastPosition)
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did)
       const createdUser = await PushNodeClient.createUser({
