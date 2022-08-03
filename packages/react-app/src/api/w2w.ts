@@ -275,6 +275,5 @@ export const getRandomProfile = async (wallet: string) => {
     })
   })
   const data = await response.json()
-  console.log(data)
   return data
 }
