@@ -146,7 +146,8 @@ export const postMessage = async ({
   messageType,
   signature,
   encType,
-  sigType
+  sigType,
+  encryptedSecret
 }: {
   fromWallet: string
   fromDID: string
@@ -156,6 +157,7 @@ export const postMessage = async ({
   signature: string
   encType: string
   sigType: string
+  encryptedSecret: string
 }) => {
   const response = await fetch(BASE_URL + '/w2w/sendMessage', {
     method: 'POST',
@@ -170,7 +172,8 @@ export const postMessage = async ({
       messageType,
       signature,
       enc_type: encType,
-      sig_type: sigType
+      sig_type: sigType,
+      encryptedSecret
     })
   })
   if (response.status > 299) {
@@ -291,16 +294,27 @@ export const approveIntent = async (
   return data
 }
 
-export const createIntent = async (
-  toDID: string,
-  fromDID: string,
-  fromWallet: string,
-  message: string,
-  messageType: string,
-  signature: string,
-  encType: string,
+export const createIntent = async ({
+  toDID,
+  fromDID,
+  fromWallet,
+  message,
+  messageType,
+  signature,
+  encType,
+  sigType,
+  encryptedSecret
+}: {
+  toDID: string
+  fromDID: string
+  fromWallet: string
+  message: string
+  messageType: string
+  signature: string
+  encType: string
   sigType: string
-) => {
+  encryptedSecret: string
+}) => {
   if (message.length > 0) {
     const response = await fetch(BASE_URL + '/w2w/createIntent', {
       method: 'POST',
@@ -315,7 +329,8 @@ export const createIntent = async (
         messageType,
         signature,
         sig_type: sigType,
-        encType
+        encType,
+        encryptedSecret
       })
     })
     const data = await response.json()

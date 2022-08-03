@@ -11,8 +11,7 @@ import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
-import * as DIDHelper from '../../../../helpers/w2w/did'
-import * as PGPHelper from '../../../../helpers/w2w/pgp'
+import { encrypt } from '../../../../helpers/w2w'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
@@ -159,13 +158,12 @@ const ChatBox = (): JSX.Element => {
     encType: string
   }): Promise<void> => {
     try {
-      // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did)
-      // const cipherText: string = (await PGPHelper.encrypt({
-      //   plainText: message,
-      //   fromPrivateKeyArmored: currentChat.pgp_pub,
-      //   toPublicKeyArmored: fromPGPPrivateKey
-      // })) as string
-      const cipherText = message
+      const { cipherText, encryptedSecret } = await encrypt({
+        plainText: message,
+        encryptedFromPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        toPublicKeyArmored: currentChat.pgp_pub,
+        did
+      })
       const msg = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
@@ -174,7 +172,8 @@ const ChatBox = (): JSX.Element => {
         messageType,
         signature,
         encType,
-        sigType
+        sigType,
+        encryptedSecret
       })
       setMessages([...messages, msg])
       setNewMessage('')
@@ -222,16 +221,23 @@ const ChatBox = (): JSX.Element => {
             sig_type: 'temp'
           })
         }
-        const msg = await PushNodeClient.createIntent(
-          currentChat.did,
-          did.id,
-          account,
-          content,
-          contentType,
-          'signature',
-          'myencryptiontype',
-          'mysignaturetype'
-        )
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        const msg = await PushNodeClient.createIntent({
+          toDID: currentChat.did,
+          fromDID: did.id,
+          fromWallet: account,
+          message: content,
+          messageType: contentType,
+          signature: 'signature',
+          encType: 'myencryptiontype',
+          sigType: 'mysignaturetype',
+          encryptedSecret: 'abc'
+        })
         setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')

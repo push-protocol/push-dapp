@@ -1,11 +1,11 @@
 import CryptoJS from 'crypto-js'
 
-export function encryptWithAES({ message, key }: { message: string; key: string }): string {
-  return CryptoJS.AES.encrypt(message, key).toString()
+export function encrypt({ plainText, secretKey }: { plainText: string; secretKey: string }): string {
+  return CryptoJS.AES.encrypt(plainText, secretKey).toString()
 }
 
-export function decryptWithAES({ message, key }: { message: string; key: string }): string {
-  let bytes = CryptoJS.AES.decrypt(message, key)
+export function decrypt({ cipherText, secretKey }: { cipherText: string; secretKey: string }): string {
+  let bytes = CryptoJS.AES.decrypt(cipherText, secretKey)
   return bytes.toString(CryptoJS.enc.Utf8)
 }
 
