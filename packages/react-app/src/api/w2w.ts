@@ -1,48 +1,47 @@
-import { InboxChat, User } from 'components/chat/w2wChat/w2wIndex'
+import { InboxChat } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 
 const BASE_URL = envConfig.w2wApiUrl
 
-export interface Intent {
+export interface Feeds {
   // This property contains all the info to be displayed on the sidebar for the other peer's information
   // Such as the decrypted message content and peer's profilePicture
   msg: InboxChat
-  intent: string
-  intent_sent_by: string
-  intentTimestamp: Date
-  name: string
-  about: string
-  wallets: string
-  did: string
-  profile_picture: string
-  threadhash: string
-  pgp_pub: string | null
-}
-
-export interface Feeds {
-  msg: InboxChat
   did: string
   wallets: string
-  name: string | null
   profile_picture: string | null
-  public_key: string | null
+  pgp_pub: string | null
   about: string | null
   threadhash: string | null
-  combined_did: string | null
   intent: string | null
   intent_sent_by: string | null
   intent_timestamp: Date
+}
+
+export interface User {
+  did: string
+  wallets: string
+  profile_picture: string | null
+  pgp_pub: string
+  pgp_priv_enc: string
+  pgp_enc_type: string
+  signature: string
+  sig_type: string
+  about: string | null
+  num_msg: number
+  allowed_num_msg: number
+  linked_list_hash?: string | null
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
     method: 'POST'
   })
-  const data: Feeds[] = await response.json()
-  return data
+  const inbox: Feeds[] = await response.json()
+  return inbox
 }
 
-export const getIntents = async (did: string): Promise<Intent[]> => {
+export const getIntents = async (did: string): Promise<Feeds[]> => {
   const response = await fetch(BASE_URL + '/w2w/getIntents', {
     method: 'POST',
     headers: {
@@ -52,8 +51,8 @@ export const getIntents = async (did: string): Promise<Intent[]> => {
       did
     })
   })
-  const data: Intent[] = await response.json()
-  return data
+  const intents: Feeds[] = await response.json()
+  return intents
 }
 
 export const getUser = async (did: string) => {
@@ -217,7 +216,13 @@ export const createUser = async ({
   return data
 }
 
-export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
+export const getLatestThreadhash = async ({
+  firstDID,
+  secondDID
+}: {
+  firstDID: string
+  secondDID: string
+}): Promise<string> => {
   const response = await fetch(BASE_URL + '/w2w/getMessages', {
     method: 'POST',
     headers: {
@@ -231,7 +236,7 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
   if (response.status === 400) {
     throw new Error('Error fetching threadhash')
   }
-  const data = await response.json()
+  const data: string = await response.json()
   return data
 }
 
@@ -305,4 +310,17 @@ export const createIntent = async (
     const data = await response.json()
     return data
   }
+}
+export const getRandomProfile = async (wallet: string) => {
+  const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      wallet
+    })
+  })
+  const data = await response.json()
+  return data
 }

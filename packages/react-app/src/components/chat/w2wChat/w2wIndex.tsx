@@ -24,7 +24,7 @@ import { CeramicClient } from '@ceramicnetwork/http-client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { Feeds } from '../../../api'
+import { Feeds, User } from '../../../api'
 
 import './w2wIndex.css'
 import { toast, ToastOptions } from 'react-toastify'
@@ -40,22 +40,6 @@ export interface InboxChat {
   signatureType: string
 }
 
-export interface User {
-  readonly id?: string
-  did: string
-  wallets: string
-  profile_picture: string | null
-  pgp_pub: string
-  pgp_priv_enc: string
-  pgp_enc_type: string
-  signature: string
-  sig_type: string
-  about: string | null
-  num_msg: number
-  allowed_num_msg: number
-  linked_list_hash?: string | null
-}
-
 export interface ConnectedUser extends User {
   privateKey: string
 }
@@ -64,9 +48,9 @@ export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
-  renderInboxFeed: Array<{}> | null
+  setSearchedUser: any
+  searchedUser: string
   setChat: (text: Feeds) => void
-  renderInbox: (args: Array<{}>) => void
   connectedUser: ConnectedUser
 }
 
@@ -88,8 +72,8 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
+  const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>()
-  const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
 
   const queryClient = new QueryClient({})
 
@@ -138,10 +122,6 @@ function App() {
     setCurrentChat(text)
   }
 
-  const renderInbox = (args: Array<{}>): void => {
-    setRenderInboxFeed(args)
-  }
-
   return (
     <>
       <div className="w2wIndex">
@@ -152,9 +132,9 @@ function App() {
                 currentChat,
                 viewChatBox,
                 did,
-                renderInboxFeed,
                 setChat,
-                renderInbox,
+                setSearchedUser,
+                searchedUser,
                 connectedUser
               }}
             >

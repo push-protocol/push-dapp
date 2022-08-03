@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal'
 import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { approveIntent, Intent } from '../../../../api'
+import { approveIntent, Feeds } from '../../../../api'
 import { intitializeDb } from '../w2wIndexeddb'
 const style = {
   position: 'absolute' as 'absolute',
@@ -24,7 +24,7 @@ const style = {
 }
 
 interface IntentFeedProps {
-  AllIntents: Intent[]
+  AllIntents: Feeds[]
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {

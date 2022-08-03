@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react'
 import './intentBar.css'
 import IntentFeed from '../intentFeed/intentFeed'
-import { getIntents, Intent } from '../../../../api'
+import { Feeds, getIntents } from '../../../../api'
 import { AppContext, Context } from '../w2wIndex'
 
 const IntentBar = (): JSX.Element => {
   const { did }: AppContext = useContext<AppContext>(Context)
-  const [allIntents, setAllIntents] = useState([])
+  const [allIntents, setAllIntents] = useState<Feeds[]>([])
+
   const getAllIntents = useCallback(async () => {
-    const allIntentsResult: Intent[] = await getIntents(did.id)
+    const allIntentsResult: Feeds[] = await getIntents(did.id)
     setAllIntents(allIntentsResult)
   }, [])
 
