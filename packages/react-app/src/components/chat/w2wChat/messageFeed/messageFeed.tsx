@@ -51,9 +51,12 @@ const MessageFeed = (props: messageFeedProps) => {
     }
   }
 
-  const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-    refetchInterval: 5000
+  const data = useQuery('current', getInbox, {
+    refetchInterval: 7000
   })
+
+  console.log('Data from API',data);
+  
 
   useEffect(() => {
     setFeeds(renderInboxFeed)

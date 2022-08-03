@@ -26,6 +26,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
 import './w2wIndex.css'
+import { ToastContainer } from 'react-toastify'
 
 export interface Feeds {
   msg: any
@@ -66,6 +67,16 @@ export interface AppContextInterface {
   setChat: (text: Feeds) => void
   renderInbox: (args: Array<{}>) => void
   connectedUser: User
+}
+
+export const ToastPosition = {
+  position: 'top-right',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined
 }
 
 export const Context = React.createContext<AppContextInterface | null>(null)
@@ -118,6 +129,8 @@ function App() {
     setIsLoading(false)
   }
 
+  
+
   const setChat = (text: Feeds) => {
     setViewChatBox(true)
     setCurrentChat(text)
@@ -155,6 +168,7 @@ function App() {
             <p>Fetching Did</p>
           </div>
         )}
+        {/* <ToastContainer/> */}
       </div>
     </>
   )
