@@ -1,6 +1,6 @@
-import * as IPFSHelper from '../../../helpers/w2w/IPFS'
+import * as IPFSHelper from '../../../helpers/w2w/ipfs'
 import { IPFSHTTPClient } from 'ipfs-http-client'
-import { MessageIPFS } from '../../../helpers/w2w/IPFS'
+import { MessageIPFS } from '../../../helpers/w2w/ipfs'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
 import { Feeds, getInbox, getIntents } from '../../../api'

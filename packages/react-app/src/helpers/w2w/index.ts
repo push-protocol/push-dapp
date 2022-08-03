@@ -1,6 +1,6 @@
-import * as PGP from './PGP'
-import * as DIDHelper from './Did'
-import * as Ceramic from './Ceramic'
+import * as PGP from './pgp'
+import * as DIDHelper from './did'
+import * as Ceramic from './ceramic'
 
 export const walletToCAIP10 = (account: string, chainId: number): string => {
   if (account.includes('eip155:1') || account.includes('eip155:42')) {

@@ -4,9 +4,9 @@ import ChatBox from './chatBox/chatBox'
 import Loader from 'react-loader-spinner'
 
 // Helper
-import { createCeramic } from '../../../helpers/w2w/Ceramic'
-import { generateKeyPair } from '../../../helpers/w2w/PGP'
-import * as DIDHelper from '../../../helpers/w2w/Did'
+import { createCeramic } from '../../../helpers/w2w/ceramic'
+import { generateKeyPair } from '../../../helpers/w2w/pgp'
+import * as DIDHelper from '../../../helpers/w2w/did'
 import * as w2wHelper from '../../../helpers/w2w'
 import * as PushNodeClient from '../../../api'
 
