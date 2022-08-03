@@ -11,6 +11,8 @@ import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
+import * as DIDHelper from '../../../../helpers/w2w/did'
+import * as PGPHelper from '../../../../helpers/w2w/pgp'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
@@ -37,7 +39,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, setChat, searchedUser }: AppContext = useContext<AppContext>(Context)
+  const { currentChat, viewChatBox, did, setChat, searchedUser, connectedUser }: AppContext = useContext<AppContext>(
+    Context
+  )
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -155,8 +159,12 @@ const ChatBox = (): JSX.Element => {
     encType: string
   }): Promise<void> => {
     try {
-      // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
-      // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
+      // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did)
+      // const cipherText: string = (await PGPHelper.encrypt({
+      //   plainText: message,
+      //   fromPrivateKeyArmored: currentChat.pgp_pub,
+      //   toPublicKeyArmored: fromPGPPrivateKey
+      // })) as string
       const cipherText = message
       const msg = await PushNodeClient.postMessage({
         fromWallet: account,

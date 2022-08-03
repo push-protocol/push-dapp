@@ -95,17 +95,17 @@ function App() {
     if (!user) {
       toast.error('No User found', ToastPosition)
       const keyPairs = await generateKeyPair()
-      const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did)
+      const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, did)
       const createdUser = await PushNodeClient.createUser({
         wallet: caip10,
         did: did.id,
-        pgp_pub: keyPairs.publicKey,
+        pgp_pub: keyPairs.publicKeyArmored,
         pgp_priv_enc: JSON.stringify(encryptedPrivateKey),
         pgp_enc_type: 'pgp',
         signature: 'xyz',
         sig_type: 'a'
       })
-      const connectedUser: ConnectedUser = { ...createdUser, privateKey: keyPairs.privateKey }
+      const connectedUser: ConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored }
       setConnectedUser(connectedUser)
     } else {
       const privateKey: string = await DIDHelper.decrypt(JSON.parse(user.pgp_priv_enc), did)
