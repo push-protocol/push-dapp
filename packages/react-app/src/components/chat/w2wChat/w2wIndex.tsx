@@ -50,7 +50,7 @@ export interface AppContext {
   did: DID
   setSearchedUser: any
   searchedUser: string
-  setChat: (text: Feeds) => void
+  setChat: (feed: Feeds) => void
   connectedUser: ConnectedUser
 }
 
@@ -117,9 +117,9 @@ function App() {
     setIsLoading(false)
   }
 
-  const setChat = (text: Feeds): void => {
+  const setChat = (feed: Feeds): void => {
     setViewChatBox(true)
-    setCurrentChat(text)
+    setCurrentChat(feed)
   }
 
   return (

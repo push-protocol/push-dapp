@@ -50,17 +50,14 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
   }
 
   async function resolveThreadhash(): Promise<void> {
-    let getIntent
-    getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
-
-    if (getIntent === undefined) {
-      getIntent = await fetchIntent(did)
-      setReceivedIntents(getIntent)
+    // To-Do: As of now the cache is not being used
+    const intentsFromIndexDB = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
+    if (intentsFromIndexDB === undefined) {
+      const intents: Feeds[] = await fetchIntent(did)
+      setReceivedIntents(intents)
     } else {
-      getIntent = getIntent.body
-      setReceivedIntents(getIntent)
-      getIntent = await fetchIntent(did)
-      setReceivedIntents(getIntent)
+      const intents: Feeds[] = await fetchIntent(did)
+      setReceivedIntents(intents)
     }
   }
 
@@ -68,7 +65,7 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
     resolveThreadhash()
   }, [props.AllIntents])
 
-  const setCurrentChat = (feed: any): void => {
+  const setCurrentChat = (feed: Feeds): void => {
     setChat(feed)
   }
 
@@ -98,7 +95,7 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
         ) : (
           <>
             <div>
-              {receivedIntents.map((intent: any) => (
+              {receivedIntents.map((intent: Feeds) => (
                 <div
                   key={intent.threadhash}
                   onClick={(): void => {
