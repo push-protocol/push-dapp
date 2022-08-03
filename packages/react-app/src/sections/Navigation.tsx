@@ -23,7 +23,7 @@ import { envConfig } from "@project/contracts";
 // Create Header
 function Navigation() {
     const { channelDetails, aliasVerified, delegatees } = useSelector((state: any) => state.admin);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [ refresh, setRefresh ] = useState(false);
 
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
@@ -33,50 +33,54 @@ function Navigation() {
     const CORE_CHAIN_ID = envConfig.coreContractChain;
     const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
-    if(!run && navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
-      navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-    } else if(run && navigationSetup !== null) {
-      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-    }
-    if(!run && navigationSetup !== null && !(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
-      navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-    }
-    else if(!run && navigationSetup !== null && (channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
-      navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-    }
-
     const theme = useTheme();
     const location = useLocation();
     const dispatch = useDispatch();
-    // Similar to componentDidMount and componentDidUpdate:
 
-  
-    useEffect(() => {
-      if (!loading) {
-          setLoading(true);
-
-          // Set Primary List
-          const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
-  
-          // Set Secondary List
-          const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
-
-          // Set Nav List
-          let count = -1;
-          let navList = returnNavList(navigationList.primary, count);
-          navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
-          
-          const finalList = {
-            primary: primaryList,
-            secondary: secondaryList,
-            navigation: navList
-          };
-          
-          setNavigationSetup(finalList);
+    useEffect(()=>{
+      if(!run && navigationSetup !== null && channelDetails!==null){
+        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+      } else if(run && navigationSetup !== null) {
+        navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
       }
-        
+      if(!run && navigationSetup !== null && !(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+      }
+      else if(!run && navigationSetup !== null && (channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+      }  
+    },[channelDetails])
+    
+    // Similar to componentDidMount and componentDidUpdate:
+    useEffect(() => {
+      // Set Primary List
+      const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
+
+      // Set Secondary List
+      const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+
+      // Set Nav List
+      let count = -1;
+      let navList = returnNavList(navigationList.primary, count);
+      navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
+      
+      const finalList = {
+        primary: primaryList,
+        secondary: secondaryList,
+        navigation: navList
+      };
+      
+      setNavigationSetup(finalList);
     }, []);
+
+    useEffect(()=>{
+      if(channelDetails !== null){
+        setLoading(false)
+      }else{
+        setLoading(true)
+      }
+    },[channelDetails])
     
     const returnTransformedList = (lists, identity) => {
       let transformedList = [];
@@ -542,12 +546,19 @@ function Navigation() {
     
     return (
       <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-        {!navigationSetup &&
-          <Item padding="20px" justify="flex-start">
-            <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
-          </Item>
+        {(loading || !navigationSetup) &&
+          <Primary>
+            <Section 
+              flex="1"
+              align="centre"
+            >
+              <Item>
+                <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
+              </Item>
+            </Section>
+          </Primary>
         }
-        {navigationSetup && Object.keys(navigationSetup).length > 0 &&
+        {!loading && navigationSetup && Object.keys(navigationSetup).length > 0 &&
           <>
             <Primary>
               {
