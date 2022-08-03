@@ -1,7 +1,5 @@
-import { Feeds, ToastPosition, User } from 'components/chat/w2wChat/w2wIndex'
+import { InboxChat, User } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
-import { useQuery } from 'react-query'
-import { toast } from 'react-toastify'
 
 const BASE_URL = envConfig.w2wApiUrl
 
@@ -69,8 +67,8 @@ export const getUser = async (did: string) => {
     })
   })
 
-const data = await response.json()
-return data
+  const data = await response.json()
+  return data
 }
 
 export const updateWalletIfNotExist = async (did: string, caip10: string) => {
@@ -168,7 +166,7 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
     })
   })
   const data = await response.json()
-    return data
+  return data
 }
 
 export const getAllUsers = async (): Promise<User[]> => {
