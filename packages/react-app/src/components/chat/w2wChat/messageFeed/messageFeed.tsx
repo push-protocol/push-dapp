@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
+import { AppContext, Context, ToastPosition } from '../w2wIndex'
 import { Feeds, getLatestThreadhash, User } from '../../../../api'
-import { AppContext, Context } from '../w2wIndex'
 import { fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
-import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
+import { toast } from 'react-toastify'
 
 interface MessageFeedProps {
   filteredUserData: User[]
@@ -28,23 +29,33 @@ const MessageFeed = (props: MessageFeedProps) => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [stopApi, setStopApi] = useState<boolean>(true)
 
   const getInbox = async (): Promise<void> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-    } else {
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
+      setFeeds(getInbox.body)
     }
+    const inbox: Feeds[] = await fetchInbox(did)
+    setFeeds(inbox)
   }
-  
-  const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-    refetchInterval: 5000,
-    enabled: !props.hasUserBeenSearched
+
+  const data = useQuery('current', getInbox, {
+    enabled: !props.hasUserBeenSearched && stopApi,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+    suspense: false,
+    onError: () => {
+      setStopApi(false)
+      toast.error('Error! Please Try Again later', ToastPosition)
+    },
+    retry: 3,
+    refetchInterval: 1000 * 5, // 5 seconds,
+    retryDelay: 1000 * 5 // 5 seconds
   })
-  
+
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       getInbox()
@@ -55,6 +66,7 @@ const MessageFeed = (props: MessageFeedProps) => {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
             setErrorMessage("You can't send intent to yourself")
+            toast.error("You can't send intent to yourself", ToastPosition)
             setFeeds([])
           } else {
             // When searching as of now the search will always result in only one user being displayed.
@@ -150,11 +162,13 @@ const MessageFeed = (props: MessageFeedProps) => {
             ))}
           </div>
         ) : null}
-        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-            {errorMessage}
-          </Alert>
-        </Snackbar>
+
+        <ReactSnackbar
+          text={errorMessage}
+          open={openReprovalSnackbar}
+          handleClose={handleCloseReprovalSnackbar}
+          severity={'error'}
+        />
       </section>
     </>
   )
