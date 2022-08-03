@@ -21164,11 +21164,11 @@ scryptsy@^2.1.0:
   resolved "https://registry.npmjs.org/scryptsy/-/scryptsy-2.1.0.tgz"
   integrity sha512-1CdSqHQowJBnMAFyPEBRfqag/YP9OF394FV+4YREIJX4ljD7OxvQRDayyoyyCk+senRjSkP6VnUNQmVQqB6g7w==
 
-secp256k1-v4@cryptocoinjs/secp256k1-node:
-  version "4.0.3"
-  resolved "https://codeload.github.com/cryptocoinjs/secp256k1-node/tar.gz/f73cd3a2b95ec6f549a2feabfbf2b8f17b30dcc7"
+"secp256k1-v4@https://github.com/HarshRajat/secp256k1-node":
+  version "4.0.1"
+  resolved "https://github.com/HarshRajat/secp256k1-node#90a04a2e1127f4c1bfd7015aa5a7b22d08edb811"
   dependencies:
-    elliptic "^6.5.4"
+    elliptic "^6.5.2"
     node-addon-api "^2.0.0"
     node-gyp-build "^4.2.0"
 

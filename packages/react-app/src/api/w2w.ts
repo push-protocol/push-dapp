@@ -35,14 +35,6 @@ export interface User {
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
-  // const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
-  //   method: 'POST'
-  // })
-  // console.log('Response',response);
-
-  // const data: Feeds[] = await response.json()
-  // return data
-
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
@@ -51,13 +43,10 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
         method: 'POST'
       })
       if (response.status >= 500) continue
-      console.log('Response', response)
       const data: Feeds[] = await response.json()
       return data
     } catch (err) {
-      console.log('Retry', retry)
       if (retry > 1) {
-        console.log('This ran')
         toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
       }
       console.log('Error in the API call', err)
@@ -82,18 +71,6 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
 }
 
 export const getUser = async (did: string) => {
-  // const response = await fetch(BASE_URL + '/w2w/getUser', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   },
-  //   body: JSON.stringify({
-  //     did
-  //   })
-  // })
-  // const data = await response.json()
-  // return data
-
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
@@ -110,9 +87,7 @@ export const getUser = async (did: string) => {
       const data = await response.json()
       return data
     } catch (err) {
-      console.log('Retry', retry)
       if (retry > 1) {
-        console.log('This ran')
         toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
       }
       console.log('Error in the API call', err)
