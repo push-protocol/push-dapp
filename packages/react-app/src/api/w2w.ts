@@ -64,10 +64,6 @@ export const getDidLinkWallets = async (did: string): Promise<string[]> => {
       did
     })
   })
-  console.log(response.status)
-  if (response.status > 299) {
-    throw new Error('No wallets found')
-  }
   const data = await response.json()
   return data
 }
