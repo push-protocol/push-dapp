@@ -5,12 +5,11 @@ import { useWeb3React } from '@web3-react/core'
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
 import MessageFeed from '../messageFeed/messageFeed'
-import { Context } from '../w2wIndex'
+import { AppContext, Context } from '../w2wIndex'
 import * as w2wChatHelper from '../../../../helpers/w2w'
 import Web3 from 'web3'
-import { User } from '../../../../components/chat/w2wChat/w2wIndex'
-import { AppContextInterface } from '../../../../components/chat/w2wChat/w2wIndex'
 import * as PushNodeClient from '../../../../api'
+import { User } from '../../../../api'
 
 const SearchBar = () => {
   const { chainId } = useWeb3React<Web3Provider>()
@@ -19,7 +18,7 @@ const SearchBar = () => {
   const [filteredUserData, setFilteredUserData] = useState<User[]>([])
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
-  const { setSearchedUser }: AppContextInterface = useContext<AppContextInterface>(Context)
+  const { setSearchedUser }: AppContext = useContext<AppContext>(Context)
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
   const getAllUsers = useCallback(async () => {

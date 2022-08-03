@@ -2,52 +2,41 @@ import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
-import { getLatestThreadhash } from '../../../../api'
-import { Context, Feeds } from '../w2wIndex'
-import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
+import { Feeds, getLatestThreadhash, User } from '../../../../api'
+import { AppContext, Context } from '../w2wIndex'
+import { fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 
-interface messageFeedProps {
-  filteredUserData: {}[]
+interface MessageFeedProps {
+  filteredUserData: User[]
   hasUserBeenSearched: boolean
   isInvalidAddress: boolean
-}
-
-export interface InboxChat {
-  name: string
-  profile_picture: string
-  timestamp: number
-  lastMessage: string
-  messageType: string
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const MessageFeed = (props: messageFeedProps) => {
-  const { did, renderInboxFeed, setChat, currentChat } = useContext(Context)
-  const [feeds, setFeeds] = useState<Feeds[] | null>()
+const MessageFeed = (props: MessageFeedProps) => {
+  const { did, setChat }: AppContext = useContext<AppContext>(Context)
+  const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
-  const getInbox = async (): Promise<Feeds[]> => {
+  const getInbox = async (): Promise<void> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
-      setFeeds(getInbox.body)
       const inbox: Feeds[] = await fetchInbox(did)
       setFeeds(inbox)
-      return inbox
     } else {
       const inbox: Feeds[] = await fetchInbox(did)
       setFeeds(inbox)
-      return inbox
     }
   }
   const { data, error, isError, isLoading } = useQuery('current', getInbox, {
@@ -55,14 +44,10 @@ const MessageFeed = (props: messageFeedProps) => {
     enabled: !props.hasUserBeenSearched
   })
   useEffect(() => {
-    setFeeds(renderInboxFeed)
-  }, [renderInboxFeed])
-
-  useEffect(() => {
     if (!props.hasUserBeenSearched) {
       getInbox()
     } else {
-      const searchFn = async () => {
+      const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).did === did.id) {
             setIsSameUser(true)
@@ -70,10 +55,32 @@ const MessageFeed = (props: messageFeedProps) => {
             setErrorMessage("You can't send intent to yourself")
             setFeeds([])
           } else {
-            let inbox = await fetchMessagesFromIpfs(props.filteredUserData)
-            const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
-            inbox = [{ ...inbox[0], threadhash }]
-            setFeeds(inbox)
+            // When searching as of now the search will always result in only one user being displayed.
+            // There is no multiple users appearing on the sidebar when a search is done. The wallets must match
+            // exactly.
+            const user: User = props.filteredUserData[0]
+            const threadhash: string = await getLatestThreadhash({ firstDID: user.did, secondDID: did.id })
+            const inbox: Feeds = {
+              msg: {
+                name: user.wallets.split(',')[0].toString(),
+                profile_picture: user.profile_picture,
+                lastMessage: null,
+                timestamp: null,
+                messageType: null,
+                signature: null,
+                signatureType: null
+              },
+              wallets: user.wallets,
+              did: user.did,
+              threadhash: threadhash,
+              profile_picture: user.profile_picture,
+              about: user.about,
+              intent: null,
+              intent_sent_by: null,
+              intent_timestamp: null,
+              pgp_pub: user.pgp_pub
+            }
+            setFeeds([inbox])
           }
         } else {
           if (props.isInvalidAddress) {
@@ -88,15 +95,9 @@ const MessageFeed = (props: messageFeedProps) => {
     }
 
     setMessagesLoading(false)
-    // if (!props.hasUserBeenSearched) {
-    //     const interval = setInterval(() => getInbox(), 5000)
-    //     return () => {
-    //         clearInterval(interval)
-    //     }
-    // }
   }, [props.hasUserBeenSearched, props.filteredUserData])
 
-  const setCurrentChat = (feed: any) => {
+  const setCurrentChat = (feed: Feeds) => {
     setChat(feed)
   }
 

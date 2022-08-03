@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Feeds } from '../w2wIndex'
 import './defaultMessage.css'
 import { CID } from 'ipfs-http-client'
 import { envConfig } from '@project/contracts'
 import { caip10ToWallet } from 'helpers/w2w'
-const infura_URL = envConfig.infuraApiUrl
+import { Feeds } from 'api'
+const INFURA_URL = envConfig.infuraApiUrl
 
-const DefaultMessage = (props: { inbox: Feeds }) => {
+const DefaultMessage = (props: { inbox: Feeds }): JSX.Element => {
   // printing default message props
   let date = null
   const [imageSource, setImageSource] = useState<string>('')
   if (props.inbox?.msg.timestamp !== null) {
-    let time = new Date(props.inbox?.msg?.timestamp)
+    const time = new Date(props.inbox?.msg?.timestamp)
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2)
   }
   useEffect(() => {
     try {
-      const cid = CID.parse(props.inbox.profile_picture)
-      console.log(props.inbox.profile_picture)
-      setImageSource(infura_URL + `${props.inbox.profile_picture}`)
+      CID.parse(props.inbox.profile_picture)
+      setImageSource(INFURA_URL + `${props.inbox.profile_picture}`)
     } catch (err) {
       setImageSource(props.inbox.profile_picture)
     }

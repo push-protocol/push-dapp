@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useCallback, useContext } from 'react'
 import './intentBar.css'
 import IntentFeed from '../intentFeed/intentFeed'
-import { getIntents } from '../../../../api'
-import { Context } from '../w2wIndex'
+import { Feeds, getIntents } from '../../../../api'
+import { AppContext, Context } from '../w2wIndex'
 
-const IntentBar = () => {
-  const { did } = useContext(Context)
-  const [allIntents, setAllIntents] = useState([])
+const IntentBar = (): JSX.Element => {
+  const { did }: AppContext = useContext<AppContext>(Context)
+  const [allIntents, setAllIntents] = useState<Feeds[]>([])
+
   const getAllIntents = useCallback(async () => {
-    const responseData = await getIntents(did.id)
-    setAllIntents(responseData)
+    const allIntentsResult: Feeds[] = await getIntents(did.id)
+    setAllIntents(allIntentsResult)
   }, [])
 
   useEffect(() => {
@@ -17,7 +18,7 @@ const IntentBar = () => {
   }, [])
   return (
     <div className="search">
-      <div className="intentsidebar_message">{<IntentFeed filteredUserData={allIntents} />}</div>
+      <div className="intentsidebar_message">{<IntentFeed AllIntents={allIntents} />}</div>
     </div>
   )
 }
