@@ -310,3 +310,16 @@ export const createIntent = async (
     return data
   }
 }
+export const getRandomProfile = async (wallet: string) => {
+  const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      wallet
+    })
+  })
+  const data = await response.json()
+  return data
+}

@@ -39,11 +39,10 @@ const MessageFeed = (props: MessageFeedProps) => {
       setFeeds(inbox)
     }
   }
-
   const { data, error, isError, isLoading } = useQuery('current', getInbox, {
-    refetchInterval: 5000
+    refetchInterval: 5000,
+    enabled: !props.hasUserBeenSearched
   })
-
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       getInbox()

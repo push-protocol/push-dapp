@@ -46,6 +46,8 @@ export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
+  setSearchedUser: any
+  searchedUser: string
   setChat: (text: Feeds) => void
   connectedUser: ConnectedUser
 }
@@ -58,6 +60,7 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
+  const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>()
 
   const queryClient = new QueryClient({})
@@ -117,6 +120,8 @@ function App() {
                 viewChatBox,
                 did,
                 setChat,
+                setSearchedUser,
+                searchedUser,
                 connectedUser
               }}
             >

@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
 import MessageFeed from '../messageFeed/messageFeed'
+import { AppContext, Context } from '../w2wIndex'
 import * as w2wChatHelper from '../../../../helpers/w2w'
 import Web3 from 'web3'
 import * as PushNodeClient from '../../../../api'
@@ -17,6 +18,7 @@ const SearchBar = () => {
   const [filteredUserData, setFilteredUserData] = useState<User[]>([])
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
+  const { setSearchedUser }: AppContext = useContext<AppContext>(Context)
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
   const getAllUsers = useCallback(async () => {
@@ -53,15 +55,23 @@ const SearchBar = () => {
         var web3 = new Web3(provider)
         if (web3.utils.isAddress(wordEntered)) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
-          const userCreated = await PushNodeClient.createUser({
-            wallet: caip10,
+          setSearchedUser(caip10)
+          const profile = await PushNodeClient.getRandomProfile(caip10)
+
+          const userCreated: User = {
             did: caip10,
+            wallets: caip10,
             pgp_pub: 'temp',
+            profile_picture: profile.uniqueAvatar,
             pgp_priv_enc: 'temp',
-            pgp_enc_type: 'pgp',
+            pgp_enc_type: 'temp',
             signature: 'temp',
-            sig_type: 'temp'
-          })
+            sig_type: 'temp',
+            about: null,
+            num_msg: 1,
+            allowed_num_msg: 100,
+            linked_list_hash: null
+          }
           setFilteredUserData([userCreated])
         } else {
           setIsInvalidAddress(true)
