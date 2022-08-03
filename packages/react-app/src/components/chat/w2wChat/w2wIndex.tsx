@@ -54,8 +54,6 @@ export interface AppContext {
   connectedUser: ConnectedUser
 }
 
-export const Context = React.createContext<AppContext | null>(null)
-
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
   autoClose: 5000,
@@ -65,6 +63,8 @@ export const ToastPosition: ToastOptions = {
   draggable: true,
   progress: 0
 }
+
+export const Context = React.createContext<AppContext | null>(null)
 
 function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
