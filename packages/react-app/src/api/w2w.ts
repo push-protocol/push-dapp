@@ -215,7 +215,13 @@ export const createUser = async ({
   return data
 }
 
-export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
+export const getLatestThreadhash = async ({
+  firstDID,
+  secondDID
+}: {
+  firstDID: string
+  secondDID: string
+}): Promise<string> => {
   const response = await fetch(BASE_URL + '/w2w/getMessages', {
     method: 'POST',
     headers: {
@@ -229,7 +235,7 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
   if (response.status === 400) {
     throw new Error('Error fetching threadhash')
   }
-  const data = await response.json()
+  const data: string = await response.json()
   return data
 }
 

@@ -28,7 +28,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
       inbox[i] = { ...inbox[i], msg }
     } else {
       const msg: InboxChat = {
-        name: inbox[i].wallets.split(' ')[0].toString(),
+        name: inbox[i].wallets.split(',')[0].toString(),
         profile_picture: inbox[i].profile_picture,
         lastMessage: null,
         timestamp: null,

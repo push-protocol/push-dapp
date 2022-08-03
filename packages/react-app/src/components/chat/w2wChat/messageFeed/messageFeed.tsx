@@ -4,7 +4,7 @@ import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { Feeds, getLatestThreadhash, User } from '../../../../api'
 import { AppContext, Context } from '../w2wIndex'
-import { fetchMessagesFromIPFS, fetchInbox } from '../w2wUtils'
+import { fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import Snackbar from '@mui/material/Snackbar'
@@ -21,8 +21,8 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const MessageFeed = (props: MessageFeedProps) => {
-  const { did, renderInboxFeed, setChat }: AppContext = useContext<AppContext>(Context)
-  const [feeds, setFeeds] = useState<Array<{}>>([])
+  const { did, setChat }: AppContext = useContext<AppContext>(Context)
+  const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
@@ -45,10 +45,6 @@ const MessageFeed = (props: MessageFeedProps) => {
   })
 
   useEffect(() => {
-    setFeeds(renderInboxFeed)
-  }, [renderInboxFeed])
-
-  useEffect(() => {
     if (!props.hasUserBeenSearched) {
       getInbox()
     } else {
@@ -60,10 +56,32 @@ const MessageFeed = (props: MessageFeedProps) => {
             setErrorMessage("You can't send intent to yourself")
             setFeeds([])
           } else {
-            let inbox: Feeds[] = await fetchMessagesFromIPFS(props.filteredUserData)
-            const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
-            inbox = [{ ...inbox[0], threadhash }]
-            setFeeds(inbox)
+            // When searching as of now the search will always result in only one user being displayed.
+            // There is no multiple users appearing on the sidebar when a search is done. The wallets must match
+            // exactly.
+            const user: User = props.filteredUserData[0]
+            const threadhash: string = await getLatestThreadhash({ firstDID: user.did, secondDID: did.id })
+            const inbox: Feeds = {
+              msg: {
+                name: user.wallets.split(',')[0].toString(),
+                profile_picture: user.profile_picture,
+                lastMessage: null,
+                timestamp: null,
+                messageType: null,
+                signature: null,
+                signatureType: null
+              },
+              wallets: user.wallets,
+              did: user.did,
+              threadhash: threadhash,
+              profile_picture: user.profile_picture,
+              about: user.about,
+              intent: null,
+              intent_sent_by: null,
+              intent_timestamp: null,
+              pgp_pub: user.pgp_pub
+            }
+            setFeeds([inbox])
           }
         } else {
           if (props.isInvalidAddress) {
@@ -80,7 +98,7 @@ const MessageFeed = (props: MessageFeedProps) => {
     setMessagesLoading(false)
   }, [props.hasUserBeenSearched, props.filteredUserData])
 
-  const setCurrentChat = (feed: any) => {
+  const setCurrentChat = (feed: Feeds) => {
     setChat(feed)
   }
 

@@ -26,6 +26,7 @@ import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
+import { Feeds } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -35,9 +36,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContext = useContext<AppContext>(
-    Context
-  )
+  const { currentChat, viewChatBox, did, setChat }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -167,10 +166,8 @@ const ChatBox = (): JSX.Element => {
       })
       setMessages([...messages, msg])
       setNewMessage('')
-      const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id)
+      const threadhash = await PushNodeClient.getLatestThreadhash({ firstDID: currentChat.did, secondDID: did.id })
       await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', threadhash, msg, 'cid')
-      const inbox = await fetchInbox(did)
-      renderInbox(inbox)
     } catch (error) {
       console.log(error)
     }
