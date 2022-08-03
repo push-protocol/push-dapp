@@ -3,11 +3,10 @@ import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { Feeds, getLatestThreadhash } from '../../../../api'
-import { AppContext, Context } from '../w2wIndex'
+import { AppContext, Context, ToastPosition } from '../w2wIndex'
 import { fetchMessagesFromIpfs, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
-import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
 import { toast } from 'react-toastify'
@@ -34,8 +33,6 @@ const MessageFeed = (props: messageFeedProps) => {
   const [stopApi, setStopApi] = useState<boolean>(true)
 
   const getInbox = async (): Promise<Feeds[]> => {
-    
-
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       setFeeds(getInbox.body)
@@ -58,11 +55,11 @@ const MessageFeed = (props: messageFeedProps) => {
     suspense: false,
     onError: () => {
       setStopApi(false)
-      toast.error("Error! Please Try Again later", ToastPosition)
+      toast.error('Error! Please Try Again later', ToastPosition)
     },
     retry: 3,
     refetchInterval: 1000 * 5, // 5 seconds,
-    retryDelay:1000*5,//5 seconds
+    retryDelay: 1000 * 5 //5 seconds
   })
 
   useEffect(() => {
