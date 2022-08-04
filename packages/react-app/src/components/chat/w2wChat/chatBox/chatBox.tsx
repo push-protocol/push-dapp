@@ -29,6 +29,7 @@ import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
 import { toast } from 'react-toastify'
+import { DID } from 'dids'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -60,23 +61,33 @@ const ChatBox = (): JSX.Element => {
   let showTime = false
   let time = ''
 
-  const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
+  const getMessagesFromCID = async ({
+    messageCID,
+    ipfs,
+    encryptedPrivateKey,
+    did
+  }: {
+    messageCID: string
+    ipfs: IPFSHTTPClient
+    encryptedPrivateKey: string
+    did: DID
+  }): Promise<void> => {
     if (!messageCID) {
       return
     }
     setMessages([])
     while (messageCID) {
-      const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
+      const messageFromIndexDB: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
 
       let msgIPFS: MessageIPFS
-      if (getMessage !== undefined) {
-        msgIPFS = getMessage.body
+      if (messageFromIndexDB !== undefined) {
+        msgIPFS = messageFromIndexDB.body
       } else {
-        const current = await IPFSHelper.get(messageCID, ipfs) // {}
-        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
-        msgIPFS = current as MessageIPFS
+        const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID, ipfs)
+        messageFromIPFS.messageContent = 'hi'
+        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
+        msgIPFS = messageFromIPFS
       }
-      // console.log(getMessage, msgIPFS)
       setMessages((m) => [msgIPFS, ...m])
 
       const link = msgIPFS.link
@@ -90,9 +101,7 @@ const ChatBox = (): JSX.Element => {
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
-    console.log('fetching messages')
     let hasintent = false
-    console.log(currentChat)
     if (currentChat) {
       try {
         CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
@@ -107,7 +116,12 @@ const ChatBox = (): JSX.Element => {
 
       if (currentChat?.threadhash && hasintent) {
         const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-        await getMessagesFromCID(currentChat.threadhash, IPFSClient)
+        await getMessagesFromCID({
+          messageCID: currentChat.threadhash,
+          ipfs: IPFSClient,
+          did,
+          encryptedPrivateKey: connectedUser.pgp_priv_enc
+        })
       } else {
         setMessages([])
       }
@@ -160,8 +174,8 @@ const ChatBox = (): JSX.Element => {
     try {
       const { cipherText, encryptedSecret } = await encrypt({
         plainText: message,
-        encryptedFromPrivateKeyArmored: connectedUser.pgp_priv_enc,
-        toPublicKeyArmored: currentChat.pgp_pub,
+        encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        publicKeyArmored: currentChat.pgp_pub,
         did
       })
       const msg = await PushNodeClient.postMessage({
