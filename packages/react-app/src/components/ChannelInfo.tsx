@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Span, TextField } from "primaries/SharedStyling";
 import { FiLink } from "react-icons/fi";
 import styled, { useTheme } from "styled-components";
@@ -28,8 +28,10 @@ const ChannelInfo = ({
   setProcessingInfo,
   setProcessing,
   setChannelInfoDone,
+  setTxStatus
 }) => {
   const themes = useTheme();
+  const [info,setInfo] = useState("")
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
@@ -40,6 +42,7 @@ const ChannelInfo = ({
   };
 
   const isAllFilled = () => {
+    setInfo("")
     if (
       isEmpty(channelName) ||
       isEmpty(channelInfo) ||
@@ -52,13 +55,12 @@ const ChannelInfo = ({
           : isEmpty(channelAlias)
         : false)
     ) {
-      setProcessing(3);
-      setProcessingInfo("Channel Fields are Empty! Please retry!");
+      setInfo("Channel Fields are Empty! Please retry!");
 
-      setTimeout(() => {
-        setProcessing(2);
-        setProcessingInfo("");
-      }, 5000);
+      // setTimeout(() => {
+      //   setProcessing(2);
+      //   setProcessingInfo("");
+      // }, 5000);
 
       return false;
     }
@@ -161,6 +163,7 @@ const ChannelInfo = ({
                 height="25px"
                 margin="7px 0px 0px 0px"
                 border="1px solid #BAC4D6"
+                focusBorder="1px solid #657795"
                 radius="12px"
                 disabled={
                   chainDetails === "" || chainDetails === coreChain
@@ -205,6 +208,7 @@ const ChannelInfo = ({
               weight="400"
               margin="7px 0px 0px 0px"
               border="1px solid #BAC4D6"
+              focusBorder="1px solid #657795"
               radius="12px"
               bg="#fff"
               value={channelInfo}
@@ -239,7 +243,8 @@ const ChannelInfo = ({
                 bg="transparent"
                 height="25px"
                 margin="7px 0px 0px 0px"
-                border="1px solid #657795;"
+                border="1px solid #BAC4D6;"
+                focusBorder="1px solid #657795"
                 radius="12px"
                 value={channelURL}
                 onChange={(e) => {
@@ -247,22 +252,32 @@ const ChannelInfo = ({
                 }}
               />
           </Item>
+
+          {info?.length > 0 && (<Item 
+                margin="30px 0px 30px 0px"
+                flex="1"
+                padding="10px 5px"
+                radius="10px"
+                bg="#F5F5FA">
+                  <div style={{color:'#CF1C84'}}>{info}</div>
+                </Item>)}
         
           <Item width="12.2em" self="stretch" align="stretch" margin="70px auto 0px auto">
             <Button
-              bg="#F4DCEA"
+              bg="#CF1C84"
               color="#fff"
               flex="1"
               radius="15px"
               padding="20px 10px"
               onClick={() => {
                 if (!isAllFilled()) return;
+                setTxStatus(2)
                 setChannelInfoDone(true);
                 setStepFlow(3);
               }}
             >
                <Span
-              color="#CF1C84"
+              color="#fff"
               weight="600"
               textTransform="none"
               line="22px"

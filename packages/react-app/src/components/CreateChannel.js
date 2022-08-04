@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from "react";
 import styled, { css, useTheme } from "styled-components";
 import "react-dropdown/style.css";
-import { Section, Content, Item, H2, Span } from "../primaries/SharedStyling";
+import {
+  Section,
+  Content,
+  Item,
+  H2,
+  Span,
+  H3,
+} from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
-import Loader from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
+import ProcessingInfo from "./ProcessingInfo";
 import { envConfig } from "@project/contracts";
 import { MdCallMade } from "react-icons/md";
 import { useWeb3React } from "@web3-react/core";
@@ -27,18 +34,14 @@ const CORE_CHAIN_ID = envConfig.coreContractChain;
 // Create Header
 function CreateChannel() {
   const { account, library, chainId } = useWeb3React();
-
   const themes = useTheme();
-
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
 
   const [uploadDone, setUploadDone] = React.useState(false);
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
-
   const [chainDetails, setChainDetails] = React.useState(coreChain);
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
@@ -48,6 +51,8 @@ function CreateChannel() {
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
   const [daiAmountVal, setDaiAmountVal] = useState("");
   const [txStatus, setTxStatus] = useState(2);
+  const [progress, setProgress] = React.useState(0);
+  const [progressInfo, setProgressInfo] = React.useState("");
 
   //image upload states
   const [view, setView] = useState(false);
@@ -76,6 +81,23 @@ function CreateChannel() {
     };
     checkDaiFunc();
   }, []);
+
+  // timer
+  // React.useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setProgress((oldProgress) => {
+  //       if (oldProgress === 100) {
+  //         return 0;
+  //       }
+  //       const diff = Math.random() * 10;
+  //       return Math.min(oldProgress + diff, 100);
+  //     });
+  //   }, 500);
+
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, []);
 
   const proceed = () => {
     setStepFlow(3);
@@ -125,8 +147,8 @@ function CreateChannel() {
     e.preventDefault();
 
     if (!channelFile) {
-      setProcessing(3);
-      setProcessingInfo("Please upload logo of the channel");
+      // setProcessing(3);
+      // setProcessingInfo("Please upload logo of the channel");
 
       return false;
     }
@@ -158,14 +180,18 @@ function CreateChannel() {
     }
 
     input = JSON.stringify(input);
-
+    setProgress(0);
     console.log(`input is ${input}`);
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
-    setProcessingInfo("Uploading Payload...");
+    setProcessingInfo("Payload Uploaded");
+    setProgressInfo(
+      "Please complete the transaction in your wallet to continue."
+    );
+    setProgress(10);
     var storagePointer = (storagePointer = await ipfs.add(input));
     console.log("IPFS storagePointer:", storagePointer);
-    setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
+    // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
 
     // Send Transaction
@@ -186,7 +212,8 @@ function CreateChannel() {
 
       console.log(tx);
       console.log("waiting for tx to finish");
-      setProcessingInfo("Waiting for Approval TX to finish...");
+      setProgress(30);
+
       await library.waitForTransaction(tx.hash);
     }
 
@@ -209,7 +236,11 @@ function CreateChannel() {
       }
     );
 
-    setProcessingInfo("Creating Channel TX in progress");
+    // setProcessingInfo("Creating Channel TX in progress");
+
+    // setProcessingInfo("Transaction Confirmed");
+    // setProgressInfo("Please wait while we confirm the transaction.");
+    setProgress(50);
     anotherSendTxPromise
       .then(async function(tx) {
         console.log(tx);
@@ -222,16 +253,24 @@ function CreateChannel() {
           setStepFlow(2);
           setChannelInfoDone(false);
           setUploadDone(false);
-          setProcessingInfo("Transaction Failed due to some error! Try again");
           setTimeout(() => {
             setProcessing(0);
-            setTxStatus(2);
-            // setChannelInfoDone(false);
-          }, 10000);
+          }, 500);
         } else {
           setProcessing(3);
-          setProcessingInfo("Channel Created! Reloading...");
+          setProgress(60);
+          setProgressInfo("Please wait while we confirm the transaction.");
+          setProcessingInfo("Transaction Confirmed");
           setTimeout(() => {
+            setProgress(80);
+            setProgressInfo(
+              "Creating your channel, Aligning pixels, adjusting padding... This may take some time."
+            );
+            setProcessingInfo("Redirecting... Please do not refresh");
+            setProgress(90);
+          }, 2000);
+          setTimeout(() => {
+            setProgress(100);
             window.location.reload();
           }, 2000);
         }
@@ -378,6 +417,7 @@ function CreateChannel() {
               setProcessing={setProcessing}
               setProcessingInfo={setProcessingInfo}
               setChannelInfoDone={setChannelInfoDone}
+              setTxStatus={setTxStatus}
             />
           )}
 
@@ -398,32 +438,11 @@ function CreateChannel() {
 
           {/* Channel Setup Progress */}
           {(processing === 1 || processing === 3) && (
-            <Section>
-              <Content padding="0px 0px 0px 0px">
-                {processing === 1 && (
-                  <Item margin="20px 0px 10px 0px">
-                    <Loader type="Oval" color="#000" height={24} width={24} />
-                  </Item>
-                )}
-
-                <Item
-                  color="#fff"
-                  bg={processing === 1 ? "#e1087f" : "#000"}
-                  padding="10px 15px"
-                  margin="15px 0px"
-                >
-                  <Span
-                    color="#fff"
-                    textTransform="uppercase"
-                    spacing="0.1em"
-                    weight="400"
-                    size="1em"
-                  >
-                    {processingInfo}
-                  </Span>
-                </Item>
-              </Content>
-            </Section>
+            <ProcessingInfo
+              progress={progress}
+              progressInfo={progressInfo}
+              processingInfo={processingInfo}
+            />
           )}
         </>
       )}

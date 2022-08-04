@@ -612,9 +612,12 @@ export const Input = styled.input`
   cursor: ${(props) => props.cursor || "initial"};
   pointer: ${(props) => props.hand || "initial"};
 
+  &:focus {
+    border: ${(props) => props.focusBorder || ""};
+  }
+
   &:focus + span {
     opacity: 0;
-
     -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
@@ -642,6 +645,10 @@ export const TextField = styled.textarea`
   overflow: ${(props) => props.overflow || "hidden"};
   position: relative;
   resize: vertical;
+
+  &:focus {
+    border: ${(props) => props.focusBorder || ""};
+  }
 
   &:focus + span {
     opacity: 0;

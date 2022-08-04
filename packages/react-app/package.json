@@ -85,7 +85,7 @@
     "react-router-dom": "6",
     "react-scripts": "^3.3.1",
     "react-select": "^5.2.2",
-    "react-spinners": "0.8.3",
+    "react-spinners": "^0.13.4",
     "react-stack-grid": "0.7.1",
     "react-time-picker": "^4.5.0",
     "react-toastify": "6.0.9",
