@@ -128,7 +128,7 @@ const UploadLogo = ({
                     </div>
                   ) : (
                     // <ImageIcon />
-                    <BsCloudUpload size={100} color='#8C99B0' />
+                    <BsCloudUpload size={100} color='#8C99B0' style={{marginTop:'30px'}} />
                   )}
 
                  
@@ -313,7 +313,7 @@ const Space = styled.div`
     display: flex;
     // height: 250px;
     justify-content: center;
-    border: 1px dotted #8C99B0;
+    border: 1px dashed #8C99B0;
     align-items: flex-end;
     border-radius: 12px;
     padding: 6px;
