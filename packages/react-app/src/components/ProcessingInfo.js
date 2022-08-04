@@ -3,8 +3,11 @@ import React from "react";
 import LinearProgress from "@mui/material/LinearProgress";
 import FadeLoader from "react-spinners/FadeLoader";
 import styled, { css, useTheme } from "styled-components";
+import { themeDark } from "config/Themization";
 
 const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
+  const themes = useTheme();
+
   return (
     <Section>
       <TabSpace>
@@ -18,6 +21,9 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
           color: "#cf1c84",
           height: "6px",
           borderRadius: "20px",
+          ["@media (max-width:600px)"]: {
+            width: "10em",
+          },
         }}
         color="inherit"
         variant="determinate"
@@ -30,7 +36,7 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
           margin="auto 15px"
           family="Manrope"
           textTransform="none"
-          color="#000"
+          color={themes.color}
           size="16px"
           weight="500"
         >

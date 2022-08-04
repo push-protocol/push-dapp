@@ -53,6 +53,7 @@ function CreateChannel() {
   const [txStatus, setTxStatus] = useState(2);
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState("");
+  const [logoInfo, setLogoInfo] = React.useState("");
 
   //image upload states
   const [view, setView] = useState(false);
@@ -147,8 +148,7 @@ function CreateChannel() {
     e.preventDefault();
 
     if (!channelFile) {
-      // setProcessing(3);
-      // setProcessingInfo("Please upload logo of the channel");
+      setLogoInfo("Please upload logo of the channel");
 
       return false;
     }
@@ -279,6 +279,8 @@ function CreateChannel() {
         console.log("Error --> %o", err);
         console.log({ err });
         setProcessing(3);
+        setProgress(0);
+        setProgressInfo("Contact support@epns.io to whitelist your wallet");
         setProcessingInfo(
           "!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet"
         );
@@ -433,6 +435,7 @@ function CreateChannel() {
               setImageSrc={setImageSrc}
               setProcessingInfo={setProcessingInfo}
               handleCreateChannel={handleCreateChannel}
+              logoInfo={logoInfo}
             />
           )}
 
@@ -588,6 +591,7 @@ const Body = styled.div`
     font-size: 16px;
     line-height: 21px;
     text-align: center;
+    color: #657795;
   }
   p {
     font-weight: 500;

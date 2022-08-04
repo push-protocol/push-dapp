@@ -80,7 +80,7 @@ const ChannelInfo = ({
           size="1.1rem"
           onSubmit={handleCreateChannel}
         > */}
-          <Label>Channel Name & Network</Label>
+          <Label style={{color:themes.color}}>Channel Name & Network</Label>
 
           <Item
             margin="7px 0px 0px 0px"
@@ -98,7 +98,8 @@ const ChannelInfo = ({
                 padding="12px"
                 weight="400"
                 size="16px"
-                bg="transparent"
+                bg="white"
+                radius='12px 12px 0px 0px'
                 height="25px"
                 value={channelName}
                 onChange={(e) => {
@@ -150,7 +151,7 @@ const ChannelInfo = ({
                 flex="1"
                 self="stretch"
                 align="stretch">
-              <Label>Channel Alias address</Label>
+              <Label style={{color:themes.color}}>Channel Alias address</Label>
               <Input
                 required
                 // placeholder="Your Channel Address"
@@ -159,7 +160,7 @@ const ChannelInfo = ({
                 padding="12px"
                 weight="400"
                 size="16px"
-                bg="transparent"
+                bg="white"
                 height="25px"
                 margin="7px 0px 0px 0px"
                 border="1px solid #BAC4D6"
@@ -196,7 +197,7 @@ const ChannelInfo = ({
             // style={{marginTop: `${chainDetails === coreChain ? "55px" : "20px"}`, position: "relative"}}
           >
             <Item display='flex' direction="row" align="center" flex="1" self="stretch" justify="space-between">
-              <Label>Channel Description</Label>
+              <Label style={{color:themes.color}}>Channel Description</Label>
               <Span color="#657795" size="13px" margin="0px 10px 0px 0px" weight='700'>{250 - channelInfo.length}</Span>
             </Item>
             <TextField
@@ -231,7 +232,7 @@ const ChannelInfo = ({
                 flex="1"
                 self="stretch"
                 align="stretch">
-              <Label>Channel Website URL</Label>
+              <Label style={{color:themes.color}}>Channel Website URL</Label>
               <Input
                 required
                 // placeholder="Your Channel Address"
@@ -240,7 +241,7 @@ const ChannelInfo = ({
                 padding="12px"
                 weight="400"
                 size="16px"
-                bg="transparent"
+                bg="white"
                 height="25px"
                 margin="7px 0px 0px 0px"
                 border="1px solid #BAC4D6;"
@@ -373,7 +374,7 @@ flex:1;
 
 const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
-      background-color: transparent;
+      background-color: white;
       color: #000;
       border: 1px solid #BAC4D6;
       border-radius: 0px 0px 12px 12px;

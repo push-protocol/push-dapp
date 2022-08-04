@@ -17,7 +17,7 @@ import { ethers } from "ethers";
 import { addresses, abis } from "@project/contracts";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 import Loader from "react-loader-spinner";
-import {BsCloudUploadFill} from 'react-icons/bs'
+import {BsCloudUpload} from 'react-icons/bs'
 
 const UploadLogo = ({
   croppedImage,
@@ -28,7 +28,8 @@ const UploadLogo = ({
   setView,
   setImageSrc,
   setProcessingInfo,
-  handleCreateChannel
+  handleCreateChannel,
+  logoInfo
 }) => {
   const childRef = useRef();
   const { chainId, library, account } = useWeb3React();
@@ -127,7 +128,7 @@ const UploadLogo = ({
                     </div>
                   ) : (
                     // <ImageIcon />
-                    <BsCloudUploadFill size={100} color='#8C99B0' />
+                    <BsCloudUpload size={100} color='#8C99B0' />
                   )}
 
                  
@@ -173,6 +174,15 @@ const UploadLogo = ({
           ) : (
             <></>
           )} */}
+
+        {logoInfo?.length > 0 && (<Item 
+            margin="30px 0px 30px 0px"
+            flex="1"
+            padding="10px 5px"
+            radius="10px"
+            bg="#F5F5FA">
+              <div style={{color:'#CF1C84'}}>{logoInfo}</div>
+            </Item>)}
 
         {view && (!croppedImage ? (
         <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 0px auto">
