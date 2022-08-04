@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
+import { Item, Section, Content, H2, H3 } from "primaries/SharedStyling";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
@@ -19,7 +18,6 @@ const ShowDelegates = () => {
   const { account, chainId } = useWeb3React();
   const [delegatees, setDelegatees] = React.useState([account]);
   const theme = useTheme();
-  const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(true);
   const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
   const [delegateToBeRemoved, setDelegateToBeRemoved] = React.useState('');
   const { epnsCommWriteProvider } = useSelector(
@@ -69,7 +67,7 @@ const ShowDelegates = () => {
         radius="10px"
         border="1px solid rgba(169, 169, 169, 0.5)"
       >
-      {isActiveDelegateDropdown && delegatees && 
+      {delegatees && 
         <Item
           flex="5"
           justify="flex-start"

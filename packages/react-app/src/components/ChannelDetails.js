@@ -189,25 +189,30 @@ const Subscribers = styled.div`
   height: fit-content;
   display: flex;
   align-items: center;
+  margin-top: 6px;
 `;
 
-const ChanneStateText = styled.span`
-  color: #2DBD81;
+const BaseChannelStateText = styled.span`
   font-family: Source Sans Pro;
   font-style: normal;
   font-weight: normal;
-  font-size: 18px;
   line-height: 23px;
-  letter-spacing: 0.1em;
-  color: ${(props) => (props.active ? "#2DBD81" : "red")};
-  margin-bottom: 8px;
-  display: flex;
+  font-weight: bolder;
   align-items: center;
-  background-color: #C6EFD1;
   padding:4px 12px;
   border-radius:16px;
   margin-top:10px;
-  margin-bottom:14px;
+  display: flex;
+`
+
+const ChanneStateText = styled(BaseChannelStateText)`
+  color: #2DBD81;
+  font-size: 18px;
+  letter-spacing: 0.1em;
+  color: ${(props) => (props.active ? "#2DBD81" : "red")};
+  margin-bottom: 8px;
+  align-items: center;
+  background-color: #C6EFD1;
 
   ${(props) =>
     props.active &&
@@ -225,23 +230,12 @@ const ChanneStateText = styled.span`
     `}
 `;
 
-const AliasStateText = styled.span`
+const AliasStateText = styled(BaseChannelStateText)`
   color: #E3B61C;
-  font-family: Source Sans Pro;
-  font-style: normal;
-  font-weight: normal;
   font-size: 14px;
-  line-height: 23px;
-  font-weight: bolder;
   color: #E3B61C;
-  display: flex;
-  align-items: center;
   background-color: #E9EEC4;
-  padding:4px 12px;
-  border-radius:16px;
-  margin-top:10px;
-  margin-bottom:14px;
- 
+
   &::before {
       width:16px;
       height: 16px;
