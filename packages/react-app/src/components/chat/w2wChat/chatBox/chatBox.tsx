@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef, ChangeEvent } from 'rea
 import './chatBox.css'
 // @ts-ignore
 import epnsLogo from '../w2wAsset/epnsLogo.png'
-import { Context } from '../w2wIndex'
+import { Context, ToastPosition } from '../w2wIndex'
 import Chats from '../chats/chats'
 import { envConfig } from '@project/contracts'
 import 'font-awesome/css/font-awesome.min.css'
@@ -26,6 +26,7 @@ import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
+import { toast } from 'react-toastify'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -62,19 +63,30 @@ const ChatBox = (): JSX.Element => {
     if (!messageCID) {
       return
     }
+
+    console.log('MessageCID: ', messageCID)
+
+    if (messages.length > 0) {
+      console.log('Messages', messages)
+    }
+
     setMessages([])
     while (messageCID) {
+      // TODO: Fix Cache logic
       const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
-
       let msgIPFS: MessageIPFS
       if (getMessage !== undefined) {
+        console.log('This getMessage ran and got details from cached')
         msgIPFS = getMessage.body
       } else {
+        console.log('This getMessage ran and got details not from cached')
         const current = await IPFSHelper.get(messageCID, ipfs) // {}
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
         msgIPFS = current as MessageIPFS
       }
       // console.log(getMessage, msgIPFS)
+
+      // This setMessages sets the Message for displaying when the user clicks on a user in the Inbox
       setMessages((m) => [msgIPFS, ...m])
 
       const link = msgIPFS.link
@@ -86,8 +98,14 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
+  console.log('Data from useQuery In Chatbox', data)
+  console.log('Messages', messages)
+
   useEffect(() => {
+    console.log('This UseEffect is running multiple times')
+
     function updateData(): void {
+      console.log('Current Chat Wallets', currentChat?.wallets)
       if (data !== undefined && currentChat?.wallets) {
         const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
         if (newData?.intent === 'Approved') {
@@ -102,6 +120,8 @@ const ChatBox = (): JSX.Element => {
   }, [data, currentChat?.wallets])
 
   useEffect(() => {
+    console.log('This is running')
+
     const getMessagesFromIPFS = async (): Promise<void> => {
       setNewMessage('')
       setLoading(true)
@@ -173,11 +193,14 @@ const ChatBox = (): JSX.Element => {
       renderInbox(inbox)
     } catch (error) {
       console.log(error)
+      toast.error(error.message, ToastPosition)
     }
   }
 
   const handleSubmit = _.debounce((e: { preventDefault: () => void }): void => {
     e.preventDefault()
+    console.log('This is New Message that is sent to user')
+
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
         sendMessage({

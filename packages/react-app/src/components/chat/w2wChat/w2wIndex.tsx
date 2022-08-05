@@ -52,6 +52,16 @@ export interface AppContext {
   connectedUser: ConnectedUser
 }
 
+export const ToastPosition = {
+  position: 'top-right',
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: false
+}
+
 export const Context = React.createContext<AppContext | null>(null)
 
 function App() {

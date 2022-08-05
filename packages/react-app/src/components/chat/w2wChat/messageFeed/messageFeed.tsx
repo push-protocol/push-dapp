@@ -29,20 +29,26 @@ const MessageFeed = (props: MessageFeedProps) => {
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
 
-  const getInbox = async (): Promise<void> => {
+  const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       const inbox: Feeds[] = await fetchInbox(did)
+      console.log('Inbox', inbox)
       setFeeds(inbox)
+      // setCurrentChat(inbox)
+      return inbox
     } else {
       const inbox: Feeds[] = await fetchInbox(did)
       setFeeds(inbox)
+      return inbox
     }
   }
 
-  const { data, error, isError, isLoading } = useQuery('current', getInbox, {
+  const data = useQuery('current', getInbox, {
     refetchInterval: 5000
   })
+
+  console.log('Data from useQuery', data)
 
   useEffect(() => {
     setFeeds(renderInboxFeed)

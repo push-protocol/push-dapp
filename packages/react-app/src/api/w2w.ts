@@ -1,5 +1,6 @@
-import { InboxChat } from 'components/chat/w2wChat/w2wIndex'
+import { InboxChat, ToastPosition } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
+import { toast } from 'react-toastify'
 
 const BASE_URL = envConfig.w2wApiUrl
 
@@ -34,39 +35,95 @@ export interface User {
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
-  const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
-    method: 'POST'
-  })
-  const inbox: Feeds[] = await response.json()
-  return inbox
+  // const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
+  //   method: 'POST'
+  // })
+
+  // const data: Feeds[] = await response.json()
+  // console.log('Data', data)
+  // return data
+
+  let retry = 0
+
+  for (let i = 0; i < 3; i++) {
+    try {
+      const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
+        method: 'POST'
+      })
+      if (response.status >= 500) continue
+      console.log('Response', response)
+      const data: Feeds[] = await response.json()
+      console.log('Data', data)
+      return data
+    } catch (err) {
+      console.log('Retry', retry)
+      if (retry > 1) {
+        console.log('This ran')
+        toast.error('Inbox cannot be loaded! Please try again later', ToastPosition)
+      }
+      console.log('Error in the API call', err)
+      retry++
+      continue
+    }
+  }
 }
 
 export const getIntents = async (did: string): Promise<Feeds[]> => {
-  const response = await fetch(BASE_URL + '/w2w/getIntents', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      did
-    })
-  })
-  const intents: Feeds[] = await response.json()
-  return intents
+  let retry = 0
+
+  for (let i = 0; i < 3; i++) {
+    try {
+      const response = await fetch(BASE_URL + '/w2w/getIntents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          did
+        })
+      })
+      const intents: Feeds[] = await response.json()
+      return intents
+    } catch (err) {
+      console.log('Retry', retry)
+      if (retry > 1) {
+        console.log('This ran')
+        toast.error('Intent cannot be loaded! Please try again later', ToastPosition)
+      }
+      console.log('Error in the API call', err)
+      retry++
+      continue
+    }
+  }
 }
 
 export const getUser = async (did: string) => {
-  const response = await fetch(BASE_URL + '/w2w/getUser', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      did
-    })
-  })
-  const data = await response.json()
-  return data
+  let retry = 0
+
+  for (let i = 0; i < 3; i++) {
+    try {
+      const response = await fetch(BASE_URL + '/w2w/getUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          did
+        })
+      })
+      const data = await response.json()
+      return data
+    } catch (err) {
+      console.log('Retry', retry)
+      if (retry > 1) {
+        console.log('This ran')
+        toast.error('Users cannot be loaded! Please try again later', ToastPosition)
+      }
+      console.log('Error in the API call', err)
+      retry++
+      continue
+    }
+  }
 }
 
 export const updateWalletIfNotExist = async (did: string, caip10: string) => {
