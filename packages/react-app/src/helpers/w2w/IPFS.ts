@@ -10,7 +10,7 @@ export interface MessageIPFS {
   signature: string
   sigType: string
   link: string | null
-  time: number
+  time?: number
   timestamp?: number
   enc_type: string
 }

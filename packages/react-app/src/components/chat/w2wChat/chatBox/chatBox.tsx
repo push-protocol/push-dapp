@@ -28,6 +28,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
 import { toast } from 'react-toastify'
+import { fetchInbox } from '../w2wUtils'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -73,7 +74,6 @@ const ChatBox = (): JSX.Element => {
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
         msgIPFS = current as MessageIPFS
       }
-      // console.log(getMessage, msgIPFS)
       setMessages((m) => [msgIPFS, ...m])
 
       const link = msgIPFS.link
@@ -87,9 +87,7 @@ const ChatBox = (): JSX.Element => {
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
-    console.log('fetching messages')
     let hasintent = false
-    console.log(currentChat)
     if (currentChat) {
       try {
         CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
@@ -154,11 +152,26 @@ const ChatBox = (): JSX.Element => {
     sigType: string
     encType: string
   }): Promise<void> => {
+    let msg: MessageIPFS
     try {
       // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
       // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
       const cipherText = message
-      const msg = await PushNodeClient.postMessage({
+      msg = {
+        fromWallet: account,
+        fromDID: fromDid,
+        toDID: toDid,
+        messageContent: cipherText,
+        messageType,
+        signature,
+        enc_type: encType,
+        sigType: sigType,
+        timestamp: Date.now(),
+        link: ''
+      }
+      setNewMessage('')
+      setMessages([...messages, msg])
+      const savedMsg = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
         toDID: toDid,
@@ -168,10 +181,13 @@ const ChatBox = (): JSX.Element => {
         encType,
         sigType
       })
-      setMessages([...messages, msg])
-      setNewMessage('')
-      const threadhash = await PushNodeClient.getLatestThreadhash({ firstDID: currentChat.did, secondDID: did.id })
-      await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', threadhash, msg, 'cid')
+      // const inbox = await fetchInbox(did)
+      // renderInbox(inbox)
+      const latesThreadhash: string = await PushNodeClient.getLatestThreadhash({
+        firstDID: currentChat.did,
+        secondDID: did.id
+      })
+      await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', latesThreadhash, savedMsg, 'cid')
     } catch (error) {
       console.log(error)
       toast.error('Cannot send Message, Try again later', ToastPosition)
@@ -260,14 +276,12 @@ const ChatBox = (): JSX.Element => {
       const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
       const type = file.type.startsWith('image') ? 'Image' : 'File'
       let content: string
-      console.log(file)
       if (type === 'File') {
         const reader = new FileReader()
         let resultingfile
         reader.readAsDataURL(file)
         reader.onloadend = async (e): Promise<void> => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
-          console.log(resultingfile)
           if (!hasIntent && intentSentandPending === 'Pending') {
             sendIntent(JSON.stringify(resultingfile), type)
           } else {
@@ -317,7 +331,6 @@ const ChatBox = (): JSX.Element => {
   }
 
   const sendGif = (url: string): void => {
-    console.log(url)
     if (!hasIntent && intentSentandPending === 'Pending') {
       sendIntent(url, 'GIF')
     } else {
