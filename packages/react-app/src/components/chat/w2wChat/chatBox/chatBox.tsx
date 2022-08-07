@@ -4,6 +4,7 @@ import './chatBox.css'
 import epnsLogo from '../w2wAsset/epnsLogo.png'
 import { Context, ToastPosition } from '../w2wIndex'
 import Chats from '../chats/chats'
+// @ts-ignore
 import { envConfig } from '@project/contracts'
 import 'font-awesome/css/font-awesome.min.css'
 import Picker from 'emoji-picker-react'
@@ -25,7 +26,6 @@ import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
-import _ from 'lodash'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
 import { toast } from 'react-toastify'
 
@@ -178,7 +178,7 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const handleSubmit = _.debounce((e: { preventDefault: () => void }): void => {
+  const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault()
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
@@ -196,7 +196,7 @@ const ChatBox = (): JSX.Element => {
         sendIntent(newMessage, 'Text')
       }
     }
-  }, 2000)
+  }
 
   const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
