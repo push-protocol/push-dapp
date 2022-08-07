@@ -27,7 +27,7 @@ export interface User {
   pgp_priv_enc: string
   pgp_enc_type: string
   signature: string
-  sig_type: string
+  sigType: string
   about: string | null
   num_msg: number
   allowed_num_msg: number
@@ -170,7 +170,7 @@ export const postMessage = async ({
       messageType,
       signature,
       enc_type: encType,
-      sig_type: sigType
+      sigType: sigType
     })
   })
   if (response.status > 299) {
@@ -202,7 +202,7 @@ export const createUser = async ({
   pgp_priv_enc,
   pgp_enc_type,
   signature,
-  sig_type
+  sigType
 }: {
   wallet: string
   did: string
@@ -210,7 +210,7 @@ export const createUser = async ({
   pgp_priv_enc: string
   pgp_enc_type: string
   signature: string
-  sig_type: string
+  sigType: string
 }) => {
   const response = await fetch(BASE_URL + '/w2w/createUser', {
     method: 'POST',
@@ -224,7 +224,7 @@ export const createUser = async ({
       pgp_priv_enc,
       pgp_enc_type,
       signature,
-      sig_type
+      sigType
     })
   })
   const data = await response.json()
@@ -272,7 +272,7 @@ export const approveIntent = async (
       fromDID,
       status,
       signature,
-      sig_type: sigType
+      sigType
     })
   })
   const data = await response.json()
@@ -302,7 +302,7 @@ export const createIntent = async (
         message,
         messageType,
         signature,
-        sig_type: sigType,
+        sigType,
         encType
       })
     })

@@ -20,7 +20,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
         timestamp: msgIPFS.timestamp,
         messageType: msgIPFS.messageType,
         signature: msgIPFS.signature,
-        signatureType: msgIPFS.sig_type
+        signatureType: msgIPFS.sigType
       }
       if (msg.lastMessage.length > 25) {
         msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'

@@ -103,7 +103,7 @@ function App() {
         pgp_priv_enc: JSON.stringify(encryptedPrivateKey),
         pgp_enc_type: 'pgp',
         signature: 'xyz',
-        sig_type: 'a'
+        sigType: 'a'
       })
       const connectedUser: ConnectedUser = { ...createdUser, privateKey: keyPairs.privateKey }
       setConnectedUser(connectedUser)

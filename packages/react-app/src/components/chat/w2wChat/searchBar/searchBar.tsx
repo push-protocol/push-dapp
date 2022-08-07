@@ -45,7 +45,7 @@ const SearchBar = () => {
             pgp_priv_enc: 'temp',
             pgp_enc_type: 'temp',
             signature: 'temp',
-            sig_type: 'temp',
+            sigType: 'temp',
             about: null,
             num_msg: 1,
             allowed_num_msg: 100,
