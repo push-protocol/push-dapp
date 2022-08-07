@@ -91,7 +91,7 @@ function App() {
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
     const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
     setDid(did)
-    const user: User = await PushNodeClient.getUser(did.id)
+    const user: User = await PushNodeClient.getUser({ did: did.id, wallet: '' })
     if (!user) {
       toast.error('No User found', ToastPosition)
       const keyPairs = await generateKeyPair()

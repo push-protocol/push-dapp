@@ -36,7 +36,6 @@ export interface User {
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   let retry = 0
-
   for (let i = 0; i < 3; i++) {
     try {
       const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
@@ -70,7 +69,7 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
   return intents
 }
 
-export const getUser = async (did: string) => {
+export const getUser = async ({ did, wallet }: { did: string; wallet: string }) => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
@@ -81,7 +80,8 @@ export const getUser = async (did: string) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          did
+          did,
+          wallet
         })
       })
       const data = await response.json()
@@ -192,18 +192,6 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
     })
   })
   const data = await response.json()
-  return data
-}
-
-export const getAllUsers = async (): Promise<User[]> => {
-  const response = await fetch(BASE_URL + '/w2w/getAllUsers', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json'
-    }
-  })
-  const data = await response.json()
-  console.log('All Users: ', data)
   return data
 }
 
@@ -331,7 +319,8 @@ export const createIntent = async (
         fromDID,
         fromWallet,
         messageType,
-        signature
+        signature,
+        encType
       })
     })
     const data = await response.json()

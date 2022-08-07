@@ -14,41 +14,20 @@ import { User } from '../../../../api'
 const SearchBar = () => {
   const { chainId } = useWeb3React<Web3Provider>()
   const [wordEntered, setWordEntered] = useState<string>('')
-  const [allUsers, setAllUsers] = useState<User[]>([])
   const [filteredUserData, setFilteredUserData] = useState<User[]>([])
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const { setSearchedUser }: AppContext = useContext<AppContext>(Context)
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
-  const getAllUsers = useCallback(async () => {
-    const users = await PushNodeClient.getAllUsers()
-    setAllUsers(users)
-  }, [])
-
-  useEffect(() => {
-    // Get all the users
-    getAllUsers()
-  }, [])
-
-  const searchUser = async (searchedUser: string) => {
+  const searchUser = async (searchedUser: string): Promise<void> => {
     searchedUser = w2wChatHelper.caip10ToWallet(searchedUser)
-    let filteredData = []
+    let filteredData: User
     setHasUserBeenSearched(true)
     if (searchedUser.length) {
-      loopSearchForUser: for (let userIndex in allUsers) {
-        let userWallets: string[] = allUsers[userIndex].wallets.split(',')
-        // Convert caip10 addresses to wallets
-        userWallets.forEach((userWallet, index) => (userWallets[index] = w2wChatHelper.caip10ToWallet(userWallet)))
-        for (let walletUserIndex in userWallets) {
-          if (userWallets[walletUserIndex] === searchedUser) {
-            filteredData = [allUsers[userIndex]]
-            break loopSearchForUser
-          }
-        }
-      }
-      if (filteredData.length) {
-        setFilteredUserData(filteredData)
+      filteredData = await PushNodeClient.getUser({ did: '', wallet: searchedUser })
+      if (filteredData !== null) {
+        setFilteredUserData([filteredData])
       }
       // User is not in the protocol. Create new user
       else {
