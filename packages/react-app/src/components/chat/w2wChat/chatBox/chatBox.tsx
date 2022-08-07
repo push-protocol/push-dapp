@@ -211,7 +211,7 @@ const ChatBox = (): JSX.Element => {
             pgp_priv_enc: 'temp',
             pgp_enc_type: 'pgp',
             signature: 'temp',
-            sig_type: 'temp'
+            sigType: 'temp'
           })
         }
         const msg = await PushNodeClient.createIntent(
@@ -278,7 +278,7 @@ const ChatBox = (): JSX.Element => {
               message: JSON.stringify(resultingfile),
               messageType: type,
               signature: 'sig',
-              sigType: 'sig_type',
+              sigType: 'sigType',
               encType: 'enc_type'
             })
           }
@@ -297,7 +297,7 @@ const ChatBox = (): JSX.Element => {
             message: content.toString(),
             messageType: type,
             signature: 'sig',
-            sigType: 'sig_type',
+            sigType: 'sigType',
             encType: 'enc_type'
           })
         }
@@ -328,7 +328,7 @@ const ChatBox = (): JSX.Element => {
         message: url,
         messageType: 'GIF',
         signature: 'signature',
-        sigType: 'sig_type',
+        sigType: 'sigType',
         encType: 'enc_type'
       })
     }
