@@ -35,19 +35,10 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
   const { did, setChat }: AppContext = useContext<AppContext>(Context)
   const [receivedIntents, setReceivedIntents] = useState([])
   const [open, setOpen] = useState(false)
-  const [receivedIntentFrom, setReceivedIntentFrom] = useState()
-  const [intentMessage, setIntentMessage] = useState()
+  const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
   const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false)
   const [toDID, settoDID] = useState<string>()
-
-  const handleClose = (): void => {
-    setOpen(false)
-  }
-
-  const handleOpen = (): void => {
-    setOpen(true)
-  }
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent
@@ -68,19 +59,15 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
     resolveThreadhash()
   }, [props.AllIntents])
 
-  const setCurrentChat = (feed: any): void => {
-    setChat(feed)
+  function showModal({ intentFrom, todid }: { intentFrom: string; todid: string }): void {
+    setReceivedIntentFrom(intentFrom)
+    settoDID(todid)
+    setOpen(true)
   }
 
-  function showModal(intentFrom, intentMsg, todid): void {
-    setReceivedIntentFrom(intentFrom)
-    setIntentMessage(intentMsg)
-    settoDID(todid)
-    handleOpen()
-  }
   async function ApproveIntent(status: string): Promise<void> {
     await approveIntent(did.id, toDID, status, '1', 'sigType')
-    handleClose()
+    setOpen(false)
     if (status === 'Approved') setOpenSuccessSnackBar(true)
     else setOpenReprovalSnackBar(true)
     await resolveThreadhash()
@@ -102,8 +89,11 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
                 <div
                   key={intent.threadhash}
                   onClick={(): void => {
-                    setCurrentChat(intent)
-                    showModal(intent.wallets, intent.msg.lastMessage, intent.intent_sent_by)
+                    setChat(intent)
+                    showModal({
+                      intentFrom: intent.wallets[0],
+                      todid: intent.intentSentBy
+                    })
                   }}
                 >
                   <DefaultIntent inbox={intent} />
@@ -137,13 +127,13 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
       <section className="messageFeed_body">
         <Modal
           open={open}
-          onClose={handleClose}
+          onClose={() => setOpen(false)}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Approve or Reject your Intent
+              Approve Intent
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               You have received an intent from {receivedIntentFrom}.
@@ -155,13 +145,6 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
               }}
             >
               Approve
-            </Button>
-            <Button
-              onClick={(): void => {
-                ApproveIntent('Reproved')
-              }}
-            >
-              Reject
             </Button>
           </Box>
         </Modal>

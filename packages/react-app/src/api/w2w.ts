@@ -15,7 +15,7 @@ export interface Feeds {
   about: string | null
   threadhash: string | null
   intent: string | null
-  intent_sent_by: string | null
+  intentSentBy: string | null
   intent_timestamp: Date
 }
 
@@ -275,6 +275,9 @@ export const approveIntent = async (
       sigType
     })
   })
+  if (response.status < 200 || response.status > 299) {
+    throw new Error('Error changing intent status')
+  }
   const data = await response.json()
   return data
 }
