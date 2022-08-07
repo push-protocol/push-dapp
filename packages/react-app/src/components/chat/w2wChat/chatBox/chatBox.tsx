@@ -201,7 +201,7 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
-        const user = await PushNodeClient.getUser(currentChat.did)
+        const user = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
         if (!user) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           await PushNodeClient.createUser({
