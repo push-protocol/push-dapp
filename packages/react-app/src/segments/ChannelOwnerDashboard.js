@@ -71,7 +71,7 @@ const ChannelOwnerDashboard = () => {
       <Section>
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
+          {!channelDetails && aliasEthAccount === null ? <ChannelDetails /> : ""}
           
           {aliasEthAccount !== null && aliasVerified === false &&
         <>

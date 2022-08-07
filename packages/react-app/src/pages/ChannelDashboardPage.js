@@ -51,6 +51,7 @@ function ChannelDashboardPage() {
     epnsCommReadProvider,
   } = useSelector((state) => state.contracts);
 
+
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
@@ -158,42 +159,44 @@ function ChannelDashboardPage() {
    * When we instantiate the contract instances, fetch basic information about the user
    * Corresponding channel owned.
    */
-  React.useEffect(async () => {
-    if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
-    // Reset when account refreshes
-    setChannelAdmin(false);
-    dispatch(setUserChannelDetails(null));
-    setAdminStatusLoaded(false);
-    userClickedAt(INITIAL_OPEN_TAB);
-    setChannelJson([]);
-    // save push admin to global state
-    epnsReadProvider.pushChannelAdmin()
-      .then((response) => {
-        dispatch(setPushAdmin(response));
-      })
-      .catch(err => {
-        console.log({ err })
-      });
-
-    // EPNS Read Provider Set
-    if (epnsReadProvider != null && epnsCommReadProvider != null) {
-      // Instantiate Data Stores
-      UsersDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider
-      );
-      ChannelsDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider,
-        chainId
-      );
-      
-      await checkUserForAlias();
-      await checkUserForChannelOwnership();
-      fetchDelegators();
-    }
+  React.useEffect(() => {
+    (async()=>{
+      if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
+      // Reset when account refreshes
+      setChannelAdmin(false);
+      dispatch(setUserChannelDetails(null));
+      setAdminStatusLoaded(false);
+      userClickedAt(INITIAL_OPEN_TAB);
+      setChannelJson([]);
+      // save push admin to global state
+      epnsReadProvider.pushChannelAdmin()
+        .then((response) => {
+          dispatch(setPushAdmin(response));
+        })
+        .catch(err => {
+          console.log({ err })
+        });
+  
+      // EPNS Read Provider Set
+      if (epnsReadProvider != null && epnsCommReadProvider != null) {
+        // Instantiate Data Stores
+        UsersDataStore.instance.init(
+          account,
+          epnsReadProvider,
+          epnsCommReadProvider
+        );
+        ChannelsDataStore.instance.init(
+          account,
+          epnsReadProvider,
+          epnsCommReadProvider,
+          chainId
+        );
+        
+        await checkUserForAlias();
+        await checkUserForChannelOwnership();
+        fetchDelegators();
+      }
+    })()
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   // handle user action at control center
@@ -319,7 +322,7 @@ function ChannelDashboardPage() {
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <ViewChannels />}
-        {controlAt == 2 && adminStatusLoaded ? 
+        {controlAt == 2 ? //adminStatusLoaded ? 
             <ChannelOwnerDashboard /> 
             // <ChannelLoadingMessage>
             //   Channel details are being loaded, please wait…

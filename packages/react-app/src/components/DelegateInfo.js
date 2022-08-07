@@ -14,7 +14,6 @@ const DelegateInfo = ({ delegateAddress }) => {
     }else{
       // clip address
       const clippedAddrs = `${delegateAddress.substring(0, 6)}.....${delegateAddress.substring(delegateAddress.length - 6)}`
-      alert(clippedAddrs)
       setAddressText(clippedAddrs)
     }
   },[isMobile])
@@ -25,8 +24,9 @@ const DelegateInfo = ({ delegateAddress }) => {
       onMouseLeave={() => setIsCopied(false)}
       minWidth={!isMobile ? '350px' : '120px'}
     >
-      <div style={{display:'flex',justifyContent:'space-between'}}>
-        {addressText}
+        <div> 
+          {addressText}  
+        </div>
         <div 
           style={{marginLeft:'10px',cursor:'pointer'}} 
           onClick={() => {
@@ -40,18 +40,19 @@ const DelegateInfo = ({ delegateAddress }) => {
               <AiOutlineCopy size={18} color="white"/>
           }
         </div>
-      </div>
     </Wallet>
   )
 }
 
 const Wallet = styled.span`
-  margin: 0px 10px;
-  padding: 10px 30px;
-  height: 16px;
+  flex: 3;
+  margin-right:30px;
+  margin-left: 10px;
+  padding: 16px 30px;
+  max-height: 30px; 
   display: flex;
   align-items: baseline;
-  justify-content: center;
+  justify-content: space-between;
   font-weight: bold;
   min-width: ${props => props.minWidth || 'fit-content'};
   font-size: 16px;

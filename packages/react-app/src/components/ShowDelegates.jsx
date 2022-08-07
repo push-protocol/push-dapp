@@ -52,12 +52,13 @@ const ShowDelegates = () => {
   return (
     <>
     <Section>
-      <Content padding="10px 0px 20px">
+      <Content padding="20px 0px">
       <Item align="flex-start">
-          <H2 style={{color : theme.color}}>Channel Delegates </H2>
-          <H3 style={{color : theme.color, marginTop:'2px'}}>
+          <DelegatesInfoHeader style={{color : theme.color}}>Channel Delegates </DelegatesInfoHeader>
+          <div style={{height:'4px'}}/>
+          <DelegatesInfoLabel>
             Delegates that can send notifications on behalf of this channel.
-          </H3>
+          </DelegatesInfoLabel>
       </Item>
       </Content>
     </Section>
@@ -78,7 +79,7 @@ const ShowDelegates = () => {
           {delegatees.map((delegate,idx) => {
             return (
               <Item
-                padding="8px 5px"
+                padding="15px 12px"
                 direction="row"
                 justify="space-between"
                 key={delegate}
@@ -86,9 +87,7 @@ const ShowDelegates = () => {
                   borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
                 }}
               >
-                <Item direction="row" justify="flex-start">
-                  <DelegateInfo delegateAddress={delegate} />
-                </Item>
+                <DelegateInfo delegateAddress={delegate}/>
                 {(account.toLowerCase() !== delegate.toLowerCase()) ?
                   <RemoveButton onClick={() => {
                     setDelegateToBeRemoved(delegate);
@@ -161,11 +160,38 @@ const ChannelActionButton = styled.button`
 
 const RemoveButton = styled(ChannelActionButton)`
   background: #e20880;
-  min-width: 80px;
+  height: 50px;
+  width: 150px;
+  flex:1
+  
 `;
 
 const OwnerButton = styled(ChannelActionButton)`
   background: #35c5f3;
+  height: 50px;
+  width: 150px;
+  flex:1
+`;
+
+
+const DelegatesInfoHeader = styled.div`
+font-family: 'Source Sans Pro';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 141%;
+display: flex;
+align-items: center;
+color: ${(props) => props.theme.color};
+`;
+const DelegatesInfoLabel = styled.div`
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 150%;
+  letter-spacing: 0.03em;
+  color: #657795;
 `;
 
 export default ShowDelegates;
