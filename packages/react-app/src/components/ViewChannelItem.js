@@ -28,6 +28,7 @@ import { cacheChannelInfo } from "redux/slices/channelSlice";
 import { envConfig } from "@project/contracts";
 import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
 import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
+import { showToastNotification, updateToastNotification } from "primaries/toastNotification";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -76,7 +77,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const clearToast = () => showToast(null);
 
   let isOwner;
-  if(!onCoreNetwork) {
+  if (!onCoreNetwork) {
     isOwner = channelObject.alias_address === account;
   } else {
     isOwner = channelObject.addr === account;
@@ -169,7 +170,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       Boolean(
         (channelObject.verifiedBy &&
           channelObject.verifiedBy !== ZERO_ADDRESS) ||
-          channelObject.addr === pushAdminAddress
+        channelObject.addr === pushAdminAddress
       )
     )
     setCanUnverify(channelObject.verifiedBy == account)
@@ -300,7 +301,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const subscribeAction = async () => {
     setTxInProgress(true);
-    let txToast;
+    // let txToast;
+    let toastId;
     try {
       const type = {
         Subscribe: [
@@ -324,26 +326,30 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       const signature = await library
         .getSigner(account)
         ._signTypedData(EPNS_DOMAIN, type, message);
-      txToast = toaster.dark(
-        <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-        {
-          position: "bottom-right",
-          autoClose: false,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      // txToast = toaster.dark(
+      //   <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+      //   {
+      //     position: "bottom-right",
+      //     autoClose: false,
+      //     hideProgressBar: true,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //   }
+      // );
 
-      if(run) {
+      toastId = showToastNotification("Waiting for Confirmation...");
+
+      if (run) {
         console.log("in run");
-        toaster.update(txToast, {
-          render: "Successfully opted into channel !",
-          type: toaster.TYPE.SUCCESS,
-          autoClose: 5000,
-        });
+        // toaster.update(txToast, {
+        //   render: "Successfully opted into channel !",
+        //   type: toaster.TYPE.SUCCESS,
+        //   autoClose: 5000,
+        // });
+        updateToastNotification(toastId, "Successfully opted into channel !", "SUCCESS");
+
         dispatch(addNewWelcomeNotif({
           cta: "",
           title: channelJson.info,
@@ -354,9 +360,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           app: channelJson.name,
           image: ""
         }))
-        setTxInProgress(false); 
+        setTxInProgress(false);
         setSubscribed(true);
-        if(stepIndex === 5) {console.log("this is working"); dispatch(incrementStepIndex());}
+        if (stepIndex === 5) { console.log("this is working"); dispatch(incrementStepIndex()); }
         return;
       }
 
@@ -370,20 +376,25 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
         setSubscribed(true);
         setMemberCount(memberCount + 1);
-        toaster.update(txToast, {
-          render: "Successfully opted into channel !",
-          type: toaster.TYPE.SUCCESS,
-          autoClose: 5000,
-        });
+
+        // toaster.update(txToast, {
+        //   render: "Successfully opted into channel !",
+        //   type: toaster.TYPE.SUCCESS,
+        //   autoClose: 5000,
+        // });
+        updateToastNotification(toastId, "Successfully opted into channel !", "SUCCESS");
+
         console.log(res);
         setTxInProgress(false);
       });
     } catch (err) {
-      toaster.update(txToast, {
-        render: "There was an error opting into channel (" + err.message + ")",
-        type: toaster.TYPE.ERROR,
-        autoClose: 5000,
-      });
+      // toaster.update(txToast, {
+      //   render: "There was an error opting into channel (" + err.message + ")",
+      //   type: toaster.TYPE.ERROR,
+      //   autoClose: 5000,
+      // });
+      updateToastNotification(toastId, `There was an error opting into channel ( ${err.message} )`, "ERROR");
+
       console.log(err);
     } finally {
       setTxInProgress(false);
@@ -414,7 +425,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
 
   const unsubscribeAction = async () => {
-    let txToast;
+    // let txToast;
+    let toastId;
     try {
       const type = {
         Unsubscribe: [
@@ -438,18 +450,20 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         .getSigner(account)
         ._signTypedData(EPNS_DOMAIN, type, message);
 
-      txToast = toaster.dark(
-        <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-        {
-          position: "bottom-right",
-          autoClose: false,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      // txToast = toaster.dark(
+      //   <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
+      //   {
+      //     position: "bottom-right",
+      //     autoClose: false,
+      //     hideProgressBar: true,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     progress: undefined,
+      //   }
+      // );
+
+      toastId = showToastNotification("Waiting for Confirmation...");
 
       postReq("/channels/unsubscribe_offchain", {
         signature,
@@ -462,20 +476,25 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
           setSubscribed(false);
           setMemberCount(memberCount - 1);
-          toaster.update(txToast, {
-            render: "Successfully opted out of channel !",
-            type: toaster.TYPE.SUCCESS,
-            autoClose: 5000,
-          });
+
+          // toaster.update(txToast, {
+          //   render: "Successfully opted out of channel !",
+          //   type: toaster.TYPE.SUCCESS,
+          //   autoClose: 5000,
+          // });
+          updateToastNotification(toastId, "Successfully opted out of channel !", "SUCCESS");
+
           console.log(res);
         })
         .catch((err) => {
-          toaster.update(txToast, {
-            render:
-              "There was an error opting into channel (" + err.message + ")",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-          });
+          // toaster.update(txToast, {
+          //   render:
+          //     "There was an error opting into channel (" + err.message + ")",
+          //   type: toaster.TYPE.ERROR,
+          //   autoClose: 5000,
+          // });
+          updateToastNotification(toastId, `There was an error opting into channel ( ${err.message} )`, "ERROR");
+
           console.log(err);
         })
         .finally(() => {
@@ -501,7 +520,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         <ChannelLogoOuter>
           <ChannelLogoInner>
             {loading ? (
-              <Skeleton color={themes.interfaceSkeleton}  height="100%" />
+              <Skeleton color={themes.interfaceSkeleton} height="100%" />
             ) : (
               <ChannelLogoImg src={`${channelJson.icon}`} />
             )}
@@ -522,10 +541,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <Span>
                 {channelJson.name}
                 {isVerified && (
-                  <Span 
+                  <Span
                     margin="0px 5px"
                   >
-                  <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
+                    <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
                   </Span>
                 )}
               </Span>
@@ -590,15 +609,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }}
               />
 
-              {isChannelTutorialized(channelObject.addr) && 
-                <ChannelTutorial 
+              {isChannelTutorialized(channelObject.addr) &&
+                <ChannelTutorial
                   addr={channelObject.addr}
                   bgColor={themes.viewChannelSecondaryBG}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
                 />
               }
-                  
+
               {verifierDetails && (
                 <Subscribers>
                   <VerifiedBy>Verified by:</VerifiedBy>
