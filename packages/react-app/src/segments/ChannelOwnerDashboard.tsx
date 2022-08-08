@@ -17,6 +17,7 @@ import { getCAIP } from "helpers/CaipHelper";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setAliasAddress } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
+import AliasProcessing from "components/AliasProcessing"
 
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL = 10;
@@ -135,6 +136,8 @@ const ChannelOwnerDashboard = () => {
     }
   })
 
+  // console.log(aliasDetails,processingState)
+
   return (
     <Fragment>
       <Section>
@@ -145,7 +148,7 @@ const ChannelOwnerDashboard = () => {
           {aliasEthAccount !== null && aliasVerified === false &&
         <>
         <ThemeProvider theme={theme}>
-          <Section padding="30px">
+          {/* <Section padding="30px">
             <Content padding="10px 0px 20px">
               <Item align="flex-start">
                 <H2 textTransform="uppercase" spacing="0.1em">
@@ -170,7 +173,8 @@ const ChannelOwnerDashboard = () => {
                 </Button>      
               </Item>
             </Content>
-          </Section>
+          </Section> */}
+          <AliasProcessing aliasVerified={aliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
         </ThemeProvider>
         </>
       }

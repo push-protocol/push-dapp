@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
-import styled , {useTheme} from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
@@ -13,8 +13,8 @@ const DATE_FORMAT = "DD/MM/YYYY";
 
 const networkName = {
   42: "Polygon Mumbai",
-  1: "Polygon Mainnet"
-}
+  1: "Polygon Mainnet",
+};
 
 export default function ChannelDetails() {
   const theme = useTheme();
@@ -49,9 +49,11 @@ export default function ChannelDetails() {
       const bn = channelDetails.channelStartBlock.toString();
 
       // using ethers jsonRpcProvider instead of library bcz channels are created on only core chain, that's why block can be fetched from that only
-      const block = await (new ethers.providers.JsonRpcProvider(envConfig.coreRPC)).getBlock(+bn);
-      const date = moment(block.timestamp * 1000);//convert from millisecs
-      setCreationDate(date.format(DATE_FORMAT))
+      const block = await new ethers.providers.JsonRpcProvider(
+        envConfig.coreRPC
+      ).getBlock(+bn);
+      const date = moment(block.timestamp * 1000); //convert from millisecs
+      setCreationDate(date.format(DATE_FORMAT));
     })();
   }, [channelDetails]);
 
@@ -60,28 +62,30 @@ export default function ChannelDetails() {
 
     (async function() {
       await postReq("/channels/get_alias_details", {
-        channel : account,
+        channel: account,
         op: "read",
       }).then(async ({ data }) => {
         const aliasAccount = data;
         console.log(aliasAccount);
         if (aliasAccount.aliasAddress) {
           const { aliasAddress } = aliasAccount;
-            await postReq("/channels/get_alias_verification_status", {
-              aliasAddress: aliasAddress,
-              op: "read",
-            }).then(({ data }) => {
-              if (!data) {
-                return;
-              }
-              const { status } = data;
-              setAliasVerified(status || false);
-              return data;
-            });
+          await postReq("/channels/get_alias_verification_status", {
+            aliasAddress: aliasAddress,
+            op: "read",
+          }).then(({ data }) => {
+            if (!data) {
+              return;
+            }
+            const { status } = data;
+            setAliasVerified(status || false);
+            return data;
+          });
         }
       });
     })();
   }, [account, chainId]);
+
+  console.log(aliasVerified);
 
   return (
     <ChannelDetailsWrapper>
@@ -109,13 +113,20 @@ export default function ChannelDetails() {
         </Details>
       </SectionTop>
 
-      <SectionDes style={{ color: theme.color }}>{channelDetails.info}</SectionDes>
-      
-      {aliasVerified === false &&
-        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
-          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+      <SectionDes style={{ color: theme.color }}>
+        {channelDetails.info}
+      </SectionDes>
+
+      {/* {aliasVerified === false && (
+        <Item
+          size="20px"
+          align="flex-start"
+          style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}
+        >
+          Please verify the Channel Alias Address to use the Channel on{" "}
+          {networkName[chainId]} Network.
         </Item>
-      }
+      )} */}
 
       <SectionDate>
         {canVerify && (
