@@ -70,7 +70,7 @@ function MasterInterfacePage() {
       </Interface>
 
       {/* For Channels Opt-in / Opt-out */}
-      <StyledToastContainer
+      <ToastContainer
         position="top-right"
         autoClose={false}
         newestOnTop
@@ -78,7 +78,7 @@ function MasterInterfacePage() {
         rtl={false}
         pauseOnFocusLoss
         draggable
-        closeButton={false}
+      // closeButton={false}
       />
 
       {/* To play youtube video from anywhere */}
@@ -178,20 +178,19 @@ const PreviewClose = styled(Anchor)`
   margin-bottom: -40px;
 `
 
-const StyledToastContainer = styled(ToastContainer)`
-  &&&.Toastify__toast-container {
-  }
-  .Toastify__toast {
-  }
-  .Toastify__toast-body {}
-  .Toastify__progress-bar {}
-  .Toastify__toast-container--top-right {
-    
-  }
-  .Toastify__close-button {
-    padding:3px;
-  }  
-`;
+// const StyledToastContainer = styled(ToastContainer)`
+//   &&&.Toastify__toast-container {
+//   }
+//   .Toastify__toast {
+//   }
+//   .Toastify__toast-body {}
+//   .Toastify__progress-bar {}
+//   .Toastify__toast-container--top-right {
+
+//   }
+//   .Toastify__close-button {
+//   }  
+// `;
 
 // Export Default
 export default MasterInterfacePage;

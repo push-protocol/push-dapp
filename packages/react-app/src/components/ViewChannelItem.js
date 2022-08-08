@@ -28,7 +28,7 @@ import { cacheChannelInfo } from "redux/slices/channelSlice";
 import { envConfig } from "@project/contracts";
 import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
 import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
-import { showToastNotification, updateToastNotification } from "primaries/toastNotification";
+import useToast from "primaries/hooks/useToast";
 
 import { MdCheckCircle, MdError } from "react-icons/md";
 
@@ -301,10 +301,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       });
   };
 
+  const subscribeToast = useToast();
   const subscribeAction = async () => {
     setTxInProgress(true);
     // let txToast;
-    let toastId;
     try {
       const type = {
         Subscribe: [
@@ -340,8 +340,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //     progress: undefined,
       //   }
       // );
+      subscribeToast.showToast("Waiting for Confirmation...");
 
-      toastId = showToastNotification("Waiting for Confirmation...");
       if (run) {
         console.log("in run");
         // toaster.update(txToast, {
@@ -349,7 +349,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         //   type: toaster.TYPE.SUCCESS,
         //   autoClose: 5000,
         // });
-        updateToastNotification(toastId, "Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
+        subscribeToast.updateToast("Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
 
         dispatch(addNewWelcomeNotif({
           cta: "",
@@ -383,7 +383,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         //   type: toaster.TYPE.SUCCESS,
         //   autoClose: 5000,
         // });
-        updateToastNotification(toastId, "Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
+        subscribeToast.updateToast("Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
 
         console.log(res);
         setTxInProgress(false);
@@ -394,7 +394,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   type: toaster.TYPE.ERROR,
       //   autoClose: 5000,
       // });
-      updateToastNotification(toastId, "Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />);
+      subscribeToast.updateToast("Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />)
 
       console.log(err);
     } finally {
@@ -424,10 +424,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   };
 
-
+  const unsubscribeToast = useToast();
   const unsubscribeAction = async () => {
     // let txToast;
-    let toastId;
     try {
       const type = {
         Unsubscribe: [
@@ -463,8 +462,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //     progress: undefined,
       //   }
       // );
-
-      toastId = showToastNotification("Waiting for Confirmation...");
+      unsubscribeToast.showToast("Waiting for Confirmation...");
 
       postReq("/channels/unsubscribe_offchain", {
         signature,
@@ -483,7 +481,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           //   type: toaster.TYPE.SUCCESS,
           //   autoClose: 5000,
           // });
-          updateToastNotification(toastId, "Success", "Successfully opted out of channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
+          unsubscribeToast.updateToast("Success", "Successfully opted out of channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
 
           console.log(res);
         })
@@ -494,7 +492,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           //   type: toaster.TYPE.ERROR,
           //   autoClose: 5000,
           // });
-          updateToastNotification(toastId, "Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />);
+          unsubscribeToast.updateToast("Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />)
 
           console.log(err);
         })
