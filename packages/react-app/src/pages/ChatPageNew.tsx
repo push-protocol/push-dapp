@@ -1,0 +1,44 @@
+import React from 'react'
+import ReactGA from 'react-ga'
+
+import styled, { useTheme, ThemeProvider } from 'styled-components'
+import { Section } from 'components/SharedStyling'
+import ChatSidebar from 'segments/ChatSidebar'
+import ChatMainSection from 'segments/ChatMainSection'
+
+import GLOBALS from 'config/Globals'
+//
+
+function ChatPage(): JSX.Element {
+  // React GA Analytics
+  ReactGA.pageview('/chat')
+
+  const themes = useTheme()
+
+  return (
+    <ThemeProvider theme={themes}>
+      <Container>
+        <ChatSidebar />
+        <ChatMainSection />
+      </Container>
+    </ThemeProvider>
+  )
+}
+
+const Container = styled(Section)`
+  display: flex;
+  flex-direction: row;
+  position: 'fixed';
+  height: calc(
+    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${(props: { theme }) => props.theme.interfaceTopPadding}
+  );
+  align-items: stretch;
+  align-self: stretch;
+  justify-content: unset;
+  background: #fff;
+  padding: 20px;
+  height: 83.6vh;
+`
+
+// Export Default
+export default ChatPage

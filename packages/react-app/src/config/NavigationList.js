@@ -31,13 +31,13 @@ const NavigationList = {
             title: 'Inbox',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         chat: {
           src: 'svg/communicate.svg',
@@ -53,13 +53,35 @@ const NavigationList = {
             title: 'Chat',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
+        chatNewUI: {
+          src: 'svg/communicate.svg',
+          iconFactory: null,
+          name: 'Chat(New)',
+          title: 'Chat(New)',
+          alt: 'Open Chat',
+          href: '/chat-new',
+          newTab: false,
+          isRoute: true,
+          hasMenuLogic: true,
+          headerTag: {
+            title: 'Chat',
+            light: {
+              bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+              fg: themeLight.headerTagFg,
+            },
+            dark: {
+              bg: themeDark.headerTagBg,
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         spam: {
           src: 'svg/spam.svg',
@@ -75,13 +97,13 @@ const NavigationList = {
             title: 'Spam',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         channels: {
           src: 'svg/channel.svg',
@@ -97,13 +119,13 @@ const NavigationList = {
             title: 'View Channels',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         receiveNotifs: {
           src: 'svg/share.svg',
@@ -119,15 +141,15 @@ const NavigationList = {
             title: 'Receive Notifications',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_THIRD,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
-        }
-      }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
+      },
     },
     developer: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.DEVELOPER_TAB,
@@ -158,13 +180,13 @@ const NavigationList = {
             title: 'Channel Dashboard',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         developerGuide: {
           uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.DEVELOPER_GUIDE,
@@ -181,13 +203,13 @@ const NavigationList = {
             title: "Developer's Guide",
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         dynamicEnviroment: {
           src: 'svg/network.svg',
@@ -223,14 +245,14 @@ const NavigationList = {
             title: 'Various dApp Enviroments',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
-        }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
         // createTestChannel: {
         //   uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_TEST_CHANNEL,
         //   src: "svg/news.svg",
@@ -254,7 +276,7 @@ const NavigationList = {
         //     }
         //   }
         // },
-      }
+      },
     },
     govern: {
       src: 'svg/govern.svg',
@@ -284,13 +306,13 @@ const NavigationList = {
             title: 'Governance',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         governanceGuide: {
           uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE_GUIDE,
@@ -307,15 +329,15 @@ const NavigationList = {
             title: 'Learn to Govern',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
-        }
-      }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
+      },
     },
     incentives: {
       src: 'svg/incentive.svg',
@@ -344,13 +366,13 @@ const NavigationList = {
             title: 'Yield Farming',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         rockstars: {
           src: 'svg/rockstars.svg',
@@ -366,13 +388,13 @@ const NavigationList = {
             title: 'Rockstars NFTs',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         airdrop: {
           src: 'svg/gratitude.svg',
@@ -388,15 +410,15 @@ const NavigationList = {
             title: 'Gratitude Drop',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_THIRD,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
-        }
-      }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
+      },
     },
     walkthrough: {
       src: 'svg/walkthrough.svg',
@@ -425,13 +447,13 @@ const NavigationList = {
             title: 'Live Walkthrough',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         faq: {
           src: 'svg/qna.svg',
@@ -447,16 +469,16 @@ const NavigationList = {
             title: 'FAQ',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
-        }
-      }
-    }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
+      },
+    },
   },
   secondary: {
     latest: {
@@ -470,7 +492,7 @@ const NavigationList = {
       newTab: false,
       opened: false,
       isRoute: true,
-      isMenuLogic: false
+      isMenuLogic: false,
     },
     support: {
       src: 'svg/support.svg',
@@ -482,9 +504,9 @@ const NavigationList = {
       newTab: false,
       opened: false,
       isRoute: true,
-      isMenuLogic: false
-    }
-  }
+      isMenuLogic: false,
+    },
+  },
 }
 
 export default NavigationList

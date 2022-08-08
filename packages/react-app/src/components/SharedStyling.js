@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components';
-import { Link } from "react-router-dom";
+import styled, { css } from 'styled-components'
+import { Link } from 'react-router-dom'
 
 export const Section = styled.section`
   display: flex;
@@ -34,7 +34,7 @@ export const SectionHero = styled(Section)`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: ${props => props.padding || "40px 0px"};
+  padding: ${props => props.padding || '40px 0px'};
   background: ${props => props.theme || 'transparent'};
   background: ${props => props.gradient || 'undefined'};
   position: relative;
@@ -57,36 +57,36 @@ export const Item = styled.div`
   align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
-  padding: ${props => props.padding || "0px"};
+  padding: ${props => props.padding || '0px'};
   margin: ${props => props.margin || '0px'};
   min-width: ${props => props.minWidth || 'auto'};
   max-width: ${props => props.maxWidth || 'initial'};
-  font-size: ${props => props.size || "inherit"};
-  text-align: ${props => props.textAlign || "inherit"};
-  filter: ${props => props.filter || "none"};
+  font-size: ${props => props.size || 'inherit'};
+  text-align: ${props => props.textAlign || 'inherit'};
+  filter: ${props => props.filter || 'none'};
 
   top: ${props => props.top || 'auto'};
   bottom: ${props => props.bottom || 'auto'};
   left: ${props => props.left || 'auto'};
   right: ${props => props.right || 'auto'};
 
-  width: ${props => props.width || "auto" };
-  height: ${props => props.height || "auto" };
+  width: ${props => props.width || 'auto'};
+  height: ${props => props.height || 'auto'};
 
-  border: ${props => props.border || "none"};
+  border: ${props => props.border || 'none'};
 
-  border-radius: ${props => props.radius || "0px"};
-  overflow: ${props => props.overflow || "initial"};
+  border-radius: ${props => props.radius || '0px'};
+  overflow: ${props => props.overflow || 'initial'};
 
-  z-index: ${props => props.zIndex || "auto"};
+  z-index: ${props => props.zIndex || 'auto'};
 
   &:hover & {
-    filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : "none")) || "none"};
+    filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : 'none')) || 'none'};
   }
 
   @media (max-width: 768px) {
-    align-items: ${props => (props.tabletAlign ? props.tabletAlign : (props.align ? props.align : "center")) || "center"};
-    text-align: ${props => (props.tabletTextAlign ? props.tabletTextAlign : (props.textAlign ? props.textAlign : "inherit")) || "inherit"};
+    align-items: ${props => (props.tabletAlign ? props.tabletAlign : (props.align ? props.align : 'center')) || 'center'};
+    text-align: ${props => (props.tabletTextAlign ? props.tabletTextAlign : (props.textAlign ? props.textAlign : 'inherit')) || 'inherit'};
   }
 
   ${ItemBreak} {
@@ -111,7 +111,7 @@ export const WaveOuter = styled.div`
   bottom: ${props => props.bottom || '-70px'};
   top: ${props => props.top || 'auto'};
   transform: ${props => props.transform || 'initial'};
-`;
+`
 
 export const WaveInner = styled.div`
   position: absolute;
@@ -119,7 +119,7 @@ export const WaveInner = styled.div`
   left: 0;
   bottom: 0;
   transform: ${props => props.transform || 'initial'};
-`;
+`
 
 export const Arc = styled.div`
   position: absolute;
@@ -139,7 +139,7 @@ export const Arc = styled.div`
   	left: -100%;
 
 
-    ${ props => props.arcRGB && css`
+    ${props => props.arcRGB && css`
       	background: radial-gradient(ellipse at center, ${props.arcRGB}00 0%, ${props.arcRGB}00 50%, ${props.arcRGB}ff 50%, ${props.arcRGB}ff 100%);
     `};
   }
@@ -154,25 +154,25 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
   color: ${props => props.color || '#000'};
   font-weight: ${props => props.weight || 600};
-  font-size: ${props => props.size || "2rem"};
-  text-transform: ${props => props.textTransform || "inherit"};
-  margin: ${props => props.margin || "20px 0px"};
-  padding: ${props => props.padding || "0px"};
-  letter-spacing: ${props => props.spacing || "inherit"};
+  font-size: ${props => props.size || '2rem'};
+  text-transform: ${props => props.textTransform || 'inherit'};
+  margin: ${props => props.margin || '20px 0px'};
+  padding: ${props => props.padding || '0px'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
   font-family: ${props => props.family || "'Source Sans Pro', Helvetica, sans-serif"};
-  text-align: ${props => props.textAlign || "inherit"};
+  text-align: ${props => props.textAlign || 'inherit'};
 `
 
 export const H3 = styled.h3`
   color: ${props => props.color || 'rgb(0 0 0 / 0.5)'};
   font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || "1rem"};
-  text-transform: ${props => props.textTransform || "uppercase"};
-  margin: ${props => props.margin || "-15px 0px 20px 0px"};
-  padding: ${props => props.padding || "0px"};
-  letter-spacing: ${props => props.spacing || "0.1em"};
+  font-size: ${props => props.size || '1rem'};
+  text-transform: ${props => props.textTransform || 'uppercase'};
+  margin: ${props => props.margin || '-15px 0px 20px 0px'};
+  padding: ${props => props.padding || '0px'};
+  letter-spacing: ${props => props.spacing || '0.1em'};
   font-family: ${props => props.family || "'Source Sans Pro', Helvetica, sans-serif"};
-  text-align: ${props => props.textAlign || "inherit"};
+  text-align: ${props => props.textAlign || 'inherit'};
   max-width: ${props => props.maxWidth || 'initial'};
 `
 
@@ -189,19 +189,19 @@ export const P = styled.p`
   color: ${props => props.color || '#000'};
   background: ${props => props.bg || 'transparent'};
   font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || "inherit"};
-  text-transform: ${props => props.textTransform || "inherit"};
-  margin: ${props => props.margin || "20px 0px"};
-  padding: ${props => props.padding || "0px"};
-  letter-spacing: ${props => props.spacing || "inherit"};
-  text-align: ${props => props.textAlign || "initial"};
+  font-size: ${props => props.size || 'inherit'};
+  text-transform: ${props => props.textTransform || 'inherit'};
+  margin: ${props => props.margin || '20px 0px'};
+  padding: ${props => props.padding || '0px'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
+  text-align: ${props => props.textAlign || 'initial'};
 `
 
 export const Para = styled(P)`
   font-weight: ${props => props.weight || 300};
-  letter-spacing: ${props => props.spacing || "0.02em"};
-  font-size: ${props => props.size || "1.1em"};
-  color: ${props => props.color || "#000000ee"};
+  letter-spacing: ${props => props.spacing || '0.02em'};
+  font-size: ${props => props.size || '1.1em'};
+  color: ${props => props.color || '#000000ee'};
 `
 
 export const Span = styled.span`
@@ -211,12 +211,12 @@ export const Span = styled.span`
   color: ${props => props.color || '#000'};
   background: ${props => props.bg || 'transparent'};
   font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || "inherit"};
-  text-transform: ${props => props.textTransform || "inherit"};
-  margin: ${props => props.margin || "0px"};
-  padding: ${props => props.padding || "0px"};
-  letter-spacing: ${props => props.spacing || "inherit"};
-  text-align: ${props => props.textAlign || "initial"};
+  font-size: ${props => props.size || 'inherit'};
+  text-transform: ${props => props.textTransform || 'inherit'};
+  margin: ${props => props.margin || '0px'};
+  padding: ${props => props.padding || '0px'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
+  text-align: ${props => props.textAlign || 'initial'};
 
   position: ${props => props.pos || 'initial'};
   right: ${props => props.right || 'auto'};
@@ -248,28 +248,28 @@ export const Anchor = styled.a`
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
   font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || "inherit"};
-  color: ${props => props.color || "#fff"};
-  background: ${props => props.bg || "transparent"};
-  margin: ${props => props.margin || "0"};
-  padding: ${props => props.padding || "10px 15px"};
-  letter-spacing: ${props => props.spacing || "0.2em"};
-  border: ${props => props.border || "none"};
-  border-radius: ${props => props.radius || "0px"};
-  width: ${props => props.width || "initial" };
+  font-size: ${props => props.size || 'inherit'};
+  color: ${props => props.color || '#fff'};
+  background: ${props => props.bg || 'transparent'};
+  margin: ${props => props.margin || '0'};
+  padding: ${props => props.padding || '10px 15px'};
+  letter-spacing: ${props => props.spacing || '0.2em'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
+  width: ${props => props.width || 'initial'};
 
   position: relative;
   text-decoration: none;
-  overflow: ${props => props.overflow || "hidden"};
+  overflow: ${props => props.overflow || 'hidden'};
   z-index: 3;
 
-  filter: ${props => props.filter || "none"};
+  filter: ${props => props.filter || 'none'};
 
   cursor: pointer;
   pointer: hand;
 
   &:hover & {
-    filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : "none")) || "none"};
+    filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : 'none')) || 'none'};
   }
 
   &:before {
@@ -279,7 +279,7 @@ export const Anchor = styled.a`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.hover || (props.bg ? props.bg : "transparent")};
+    background: ${props => props.hover || (props.bg ? props.bg : 'transparent')};
     display: none;
     z-index: -1;
   }
@@ -291,7 +291,7 @@ export const Anchor = styled.a`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.hoverBG || "#000"};
+    background: ${props => props.hoverBG || '#000'};
     opacity: 0;
     z-index: -1;
   }
@@ -309,7 +309,7 @@ export const Anchor = styled.a`
 `
 
 export const AnchorLink = styled(Anchor)`
-  background-color:${props => props.theme.scheme === "dark" ? props.bg :"#d1cdcd"};
+  background-color:${props => props.theme.scheme === 'dark' ? props.bg : '#d1cdcd'};
 `
 
 export const RouterLink = styled(Link)`
@@ -320,28 +320,28 @@ export const RouterLink = styled(Link)`
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
   font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || "inherit"};
-  color: ${props => props.color || "#fff"};
-  background: ${props => props.bg || "transparent"};
-  margin: ${props => props.margin || "0"};
-  padding: ${props => props.padding || "10px 15px"};
-  letter-spacing: ${props => props.spacing || "0.2em"};
-  border: ${props => props.border || "none"};
-  border-radius: ${props => props.radius || "0px"};
-  width: ${props => props.width || "initial" };
+  font-size: ${props => props.size || 'inherit'};
+  color: ${props => props.color || '#fff'};
+  background: ${props => props.bg || 'transparent'};
+  margin: ${props => props.margin || '0'};
+  padding: ${props => props.padding || '10px 15px'};
+  letter-spacing: ${props => props.spacing || '0.2em'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
+  width: ${props => props.width || 'initial'};
 
   position: relative;
   text-decoration: none;
-  overflow: ${props => props.overflow || "hidden"};
+  overflow: ${props => props.overflow || 'hidden'};
   z-index: 3;
 
-  filter: ${props => props.filter || "none"};
+  filter: ${props => props.filter || 'none'};
 
   cursor: pointer;
   pointer: hand;
 
   &:hover & {
-    filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : "none")) || "none"};
+    filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : 'none')) || 'none'};
   }
 
   &:before {
@@ -351,7 +351,7 @@ export const RouterLink = styled(Link)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.hover || (props.bg ? props.bg : "transparent")};
+    background: ${props => props.hover || (props.bg ? props.bg : 'transparent')};
     display: none;
     z-index: -1;
   }
@@ -363,7 +363,7 @@ export const RouterLink = styled(Link)`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.hoverBG || "#000"};
+    background: ${props => props.hoverBG || '#000'};
     opacity: 0;
     z-index: -1;
   }
@@ -405,19 +405,19 @@ export const Button = styled.button`
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
   font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || "inherit"};
-  color: ${props => props.color || "#fff"};
-  background: ${props => props.bg || "tranparent"};
-  margin: ${props => props.margin || "0"};
-  padding: ${props => props.padding || "10px 15px"};
-  letter-spacing: ${props => props.spacing || "initial"};
-  border: ${props => props.border || "none"};
-  border-radius: ${props => props.radius || "0px"};
-  text-transform: ${props => props.textTransform || "initial"};
+  font-size: ${props => props.size || 'inherit'};
+  color: ${props => props.color || '#fff'};
+  background: ${props => props.bg || 'tranparent'};
+  margin: ${props => props.margin || '0'};
+  padding: ${props => props.padding || '10px 15px'};
+  letter-spacing: ${props => props.spacing || 'initial'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
+  text-transform: ${props => props.textTransform || 'initial'};
 
   position: relative;
   text-decoration: none;
-  overflow: ${props => props.overflow || "hidden"};
+  overflow: ${props => props.overflow || 'hidden'};
   z-index: 3;
 
   cursor: pointer;
@@ -430,7 +430,7 @@ export const Button = styled.button`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.hover || (props.bg ? props.bg : "transparent")};
+    background: ${props => props.hover || (props.bg ? props.bg : 'transparent')};
     display: none;
     z-index: -1;
   }
@@ -442,7 +442,7 @@ export const Button = styled.button`
     left: 0;
     right: 0;
     bottom: 0;
-    background: ${props => props.hoverBG || "#000"};
+    background: ${props => props.hoverBG || '#000'};
     opacity: 0;
     z-index: -1;
   }
@@ -473,16 +473,16 @@ export const Showoff = styled.div`
   opacity: ${props => props.opacity || 'initial'};
 
   @media (max-width: 768px) {
-    align-items: ${props => (props.tabletAlign ? props.tabletAlign : (props.align ? props.align : "center")) || "center"};
+    align-items: ${props => (props.tabletAlign ? props.tabletAlign : (props.align ? props.align : 'center')) || 'center'};
 
-    right: ${props => (props.tabletRight ? props.tabletRight : (props.right ? props.right : "auto")) || "auto"};
-    left: ${props => (props.tabletLeft ? props.tabletLeft : (props.left ? props.left : "auto")) || "auto"};
-    top: ${props => (props.tabletTop ? props.tabletTop : (props.top ? props.top : "auto")) || "auto"};
-    bottom: ${props => (props.tabletBottom ? props.tabletBottom : (props.bottom ? props.bottom : "auto")) || "auto"};
+    right: ${props => (props.tabletRight ? props.tabletRight : (props.right ? props.right : 'auto')) || 'auto'};
+    left: ${props => (props.tabletLeft ? props.tabletLeft : (props.left ? props.left : 'auto')) || 'auto'};
+    top: ${props => (props.tabletTop ? props.tabletTop : (props.top ? props.top : 'auto')) || 'auto'};
+    bottom: ${props => (props.tabletBottom ? props.tabletBottom : (props.bottom ? props.bottom : 'auto')) || 'auto'};
 
-    transform: ${props => (props.tabletTransform ? props.tabletTransform : (props.transform ? props.transform : "auto")) || "auto"};
+    transform: ${props => (props.tabletTransform ? props.tabletTransform : (props.transform ? props.transform : 'auto')) || 'auto'};
 
-    opacity: ${props => (props.tabletOpacity ? props.tabletOpacity : (props.opacity ? props.opacity : "auto")) || "initial"};
+    opacity: ${props => (props.tabletOpacity ? props.tabletOpacity : (props.opacity ? props.opacity : 'auto')) || 'initial'};
   }
 `
 
@@ -496,14 +496,14 @@ export const FormSubmision = styled.form`
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
   font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || "inherit"};
-  text-transform: ${props => props.textTransform || "inherit"};
-  color: ${props => props.color || "#fff"};
-  background: ${props => props.bg || "transparent"};
-  margin: ${props => props.margin || "0px"};
-  padding: ${props => props.padding || "0px"};
-  border: ${props => props.border || "none"};
-  border-radius: ${props => props.radius || "0px"};
+  font-size: ${props => props.size || 'inherit'};
+  text-transform: ${props => props.textTransform || 'inherit'};
+  color: ${props => props.color || '#fff'};
+  background: ${props => props.bg || 'transparent'};
+  margin: ${props => props.margin || '0px'};
+  padding: ${props => props.padding || '0px'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
   position: relative;
 `
 
@@ -514,21 +514,21 @@ export const Input = styled.input`
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
   font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || "inherit"};
-  text-transform: ${props => props.textTransform || "inherit"};
-  color: ${props => props.color || "#000"};
-  background: ${props => props.bg || "transparent"};
-  margin: ${props => props.margin || "0px"};
-  padding: ${props => props.padding || "0px"};
-  letter-spacing: ${props => props.spacing || "inherit"};
-  border: ${props => props.border || "none"};
-  border-radius: ${props => props.radius || "0px"};
-  outline: ${props => props.outline || "none"};
-  overflow: ${props => props.overflow || "hidden"};
+  font-size: ${props => props.size || 'inherit'};
+  text-transform: ${props => props.textTransform || 'inherit'};
+  color: ${props => props.color || '#000'};
+  background: ${props => props.bg || 'transparent'};
+  margin: ${props => props.margin || '0px'};
+  padding: ${props => props.padding || '0px'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
+  outline: ${props => props.outline || 'none'};
+  overflow: ${props => props.overflow || 'hidden'};
   position: relative;
 
-  cursor: ${props => props.cursor || "initial"};
-  pointer: ${props => props.hand || "initial"};
+  cursor: ${props => props.cursor || 'initial'};
+  pointer: ${props => props.hand || 'initial'};
 
   &:focus + span {
     opacity: 0;
@@ -547,17 +547,17 @@ export const TextField = styled.textarea`
   align-items: ${props => props.align || 'center'};
   justify-content: ${props => props.justify || 'center'};
   font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || "inherit"};
-  text-transform: ${props => props.textTransform || "inherit"};
-  color: ${props => props.color || "#000"};
-  background: ${props => props.bg || "transparent"};
-  margin: ${props => props.margin || "0px"};
-  padding: ${props => props.padding || "0px"};
-  letter-spacing: ${props => props.spacing || "inherit"};
-  border: ${props => props.border || "none"};
-  border-radius: ${props => props.radius || "0px"};
-  outline: ${props => props.outline || "none"};
-  overflow: ${props => props.overflow || "hidden"};
+  font-size: ${props => props.size || 'inherit'};
+  text-transform: ${props => props.textTransform || 'inherit'};
+  color: ${props => props.color || '#000'};
+  background: ${props => props.bg || 'transparent'};
+  margin: ${props => props.margin || '0px'};
+  padding: ${props => props.padding || '0px'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
+  outline: ${props => props.outline || 'none'};
+  overflow: ${props => props.overflow || 'hidden'};
   position: relative;
   resize: vertical;
 
