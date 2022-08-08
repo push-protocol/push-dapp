@@ -26,7 +26,7 @@ import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
-import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
+import _ from 'lodash'
 import { toast } from 'react-toastify'
 import { fetchInbox } from '../w2wUtils'
 
@@ -62,10 +62,12 @@ const ChatBox = (): JSX.Element => {
     if (!messageCID) {
       return
     }
-    setMessages([])
-    while (messageCID) {
-      const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
 
+    setMessages([])
+
+    while (messageCID) {
+      // TODO: Fix Cache logic
+      const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
       let msgIPFS: MessageIPFS
       if (getMessage !== undefined) {
         msgIPFS = getMessage.body
@@ -116,6 +118,7 @@ const ChatBox = (): JSX.Element => {
 
   useEffect(() => {
     function updateData(): void {
+      // console.log('Current Chat Wallets', currentChat?.wallets)
       if (data !== undefined && currentChat?.wallets) {
         const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
         if (newData?.intent === 'Approved') {
@@ -196,6 +199,7 @@ const ChatBox = (): JSX.Element => {
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault()
+
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
         sendMessage({
@@ -377,13 +381,6 @@ const ChatBox = (): JSX.Element => {
               {SnackbarText}
             </Alert>
           </Snackbar>
-
-          <ReactSnackbar
-            open={openReprovalSnackbar}
-            handleClose={handleCloseSuccessSnackbar}
-            text={SnackbarText}
-            severity={'error'}
-          />
 
           <div className="chatBoxNavBar">
             <div className="chatBoxUserName">

@@ -56,17 +56,32 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
 }
 
 export const getIntents = async (did: string): Promise<Feeds[]> => {
-  const response = await fetch(BASE_URL + '/w2w/getIntents', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      did
-    })
-  })
-  const intents: Feeds[] = await response.json()
-  return intents
+  let retry = 0
+
+  for (let i = 0; i < 3; i++) {
+    try {
+      const response = await fetch(BASE_URL + '/w2w/getIntents', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          did
+        })
+      })
+      const intents: Feeds[] = await response.json()
+      return intents
+    } catch (err) {
+      console.log('Retry', retry)
+      if (retry > 1) {
+        console.log('This ran')
+        toast.error('Intent cannot be loaded! Please try again later', ToastPosition)
+      }
+      console.log('Error in the API call', err)
+      retry++
+      continue
+    }
+  }
 }
 
 export const getUser = async ({ did, wallet }: { did: string; wallet: string }) => {

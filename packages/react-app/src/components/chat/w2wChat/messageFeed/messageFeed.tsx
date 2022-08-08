@@ -26,30 +26,28 @@ const MessageFeed = (props: MessageFeedProps) => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [stopApi, setStopApi] = useState<boolean>(true)
 
-  const getInbox = async (): Promise<void> => {
+  const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
-      setFeeds(getInbox.body)
+      const inbox: Feeds[] = await fetchInbox(did)
+      console.log('Inbox', inbox)
+      setFeeds(inbox)
+      // setCurrentChat(inbox)
+      return inbox
+    } else {
+      const inbox: Feeds[] = await fetchInbox(did)
+      setFeeds(inbox)
+      return inbox
     }
     const inbox: Feeds[] = await fetchInbox(did)
     setFeeds(inbox)
   }
 
   const data = useQuery('current', getInbox, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false)
-      toast.error('Error! Please Try Again later', ToastPosition)
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5, // 5 seconds,
-    retryDelay: 1000 * 5 // 5 seconds
+    refetchInterval: 5000
   })
+
+  console.log('Data from useQuery', data)
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {

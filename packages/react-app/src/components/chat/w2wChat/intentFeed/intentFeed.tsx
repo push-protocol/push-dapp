@@ -44,15 +44,22 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
     let getIntent
     getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
 
-    if (getIntent === undefined) {
-      getIntent = await fetchIntent(did)
-      setReceivedIntents(getIntent)
-    } else {
+    // if (getIntent === undefined) {
+    //   getIntent = await fetchIntent(did)
+    //   setReceivedIntents(getIntent)
+    // } else {
+    //   getIntent = getIntent.body
+    //   setReceivedIntents(getIntent)
+    //   getIntent = await fetchIntent(did)
+    //   setReceivedIntents(getIntent)
+    // }
+
+    if (getIntent !== undefined) {
       getIntent = getIntent.body
       setReceivedIntents(getIntent)
-      getIntent = await fetchIntent(did)
-      setReceivedIntents(getIntent)
     }
+    // getIntent = await fetchIntent(did)
+    setReceivedIntents(props.AllIntents)
   }
 
   useEffect(() => {
