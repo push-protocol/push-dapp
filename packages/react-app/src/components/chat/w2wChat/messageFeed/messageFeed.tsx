@@ -47,8 +47,8 @@ const MessageFeed = (props: MessageFeedProps) => {
       toast.error('Error! Please Try Again later', ToastPosition)
     },
     retry: 3,
-    refetchInterval: 1000 * 5, // 5 seconds,
-    retryDelay: 1000 * 5 // 5 seconds
+    refetchInterval: 1000 * 5,
+    retryDelay: 1000 * 5
   })
 
   useEffect(() => {
@@ -105,10 +105,6 @@ const MessageFeed = (props: MessageFeedProps) => {
     setMessagesLoading(false)
   }, [props.hasUserBeenSearched, props.filteredUserData])
 
-  const setCurrentChat = (feed: Feeds) => {
-    setChat(feed)
-  }
-
   const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
@@ -148,7 +144,7 @@ const MessageFeed = (props: MessageFeedProps) => {
               <div
                 key={feed.threadhash || i}
                 onClick={() => {
-                  setCurrentChat(feed)
+                  setChat(feed)
                 }}
               >
                 <DefaultMessage inbox={feed} />
