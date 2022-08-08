@@ -85,8 +85,6 @@ export default function ChannelDetails() {
     })();
   }, [account, chainId]);
 
-  console.log(aliasVerified);
-
   return (
     <ChannelDetailsWrapper>
       <SectionTop>

@@ -118,6 +118,7 @@ const ChannelOwnerDashboard = () => {
 
       if (ethAccount) {
         const { aliasVerified } = await fetchChannelDetails(ethAccount);
+        console.log(aliasVerified)
         if (!aliasVerified) {
           dispatch(setProcessingState(3));
           dispatch(setAliasVerified(false));
@@ -129,7 +130,6 @@ const ChannelOwnerDashboard = () => {
     })()
   });
 
-  // console.log(aliasDetails,processingState)
 
   return (
     <Fragment>
@@ -138,36 +138,11 @@ const ChannelOwnerDashboard = () => {
           {/* display the create channel page if there are no details */}
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
           
+          {/* {aliasEthAccount !== null && isAliasVerified === false && */}
           {aliasEthAccount !== null && isAliasVerified === false &&
         <>
         <ThemeProvider theme={theme}>
-          {/* <Section padding="30px">
-            <Content padding="10px 0px 20px">
-              <Item align="flex-start">
-                <H2 textTransform="uppercase" spacing="0.1em">
-                  <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-                    Verify
-                  </Span>
-                  <Span weight="200" color={theme.color}> Your Channel Alias!</Span>
-                </H2>
-                <H3 color={theme.color} padding="10px 0px">
-                  Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
-                </H3>
-                <Button
-                  bg="#e20880"
-                  color="#fff"
-                  flex="1"
-                  padding="20px 10px"
-                  textTransform="uppercase"
-                  style={{width: "100%"}}
-                  onClick={() => setModalOpen(true)}
-                >
-                    Verify Channel Alias
-                </Button>      
-              </Item>
-            </Content>
-          </Section> */}
-          {/* <AliasProcessing aliasVerified={aliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} /> */}
+          <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
         </ThemeProvider>
         </>
       }

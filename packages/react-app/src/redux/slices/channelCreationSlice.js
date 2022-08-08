@@ -14,7 +14,7 @@ processingState {
 */
 
 const initialState = {
-  processingState: null
+  processingState: null,
 };
 
 export const channelCreationSlice = createSlice({
@@ -28,8 +28,6 @@ export const channelCreationSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  setProcessingState
-} = channelCreationSlice.actions;
+export const { setProcessingState } = channelCreationSlice.actions;
 
 export default channelCreationSlice.reducer;
