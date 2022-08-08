@@ -3,6 +3,11 @@ import { useClickAway } from "react-use";
 import styled from "styled-components";
 import ChannelSettingsDropdown from "./ChannelSettingsDropdown";
 
+import {
+  AiOutlineEllipsis,
+} from 'react-icons/ai';
+
+
 export default function ChannelSettings() {
   const [active, setActive] = React.useState(false);
   const modalRef = React.useRef(null);
@@ -17,9 +22,7 @@ export default function ChannelSettings() {
       <Settings
         active={active}
         onClick={toggleActive}
-        src="/Settings.svg"
-        alt=""
-      ></Settings>
+      />
       {active && <ChannelSettingsDropdown />}
     </SettingsWrapper>
   );
@@ -31,12 +34,13 @@ const SettingsWrapper = styled.div`
   right: 30px;
 `;
 
-const Settings = styled.img`
+const Settings = styled(AiOutlineEllipsis)`
+  position: relative;
   width: 40px;
-  height: 40px;
-  margin-left: auto;
-  margin-right: 30px;
+  height: 36px;
+  border: 1px solid #DFDEE9;
+  border-radius: 8px;
   cursor: pointer;
   transition: 400ms;
-  transform: ${(props) => (props.active ? "rotateZ(35deg)" : "none")};
+  transform: ${(props) => (props.active ? "rotateZ(90deg)" : "none")};
 `;
