@@ -7,6 +7,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     channelDetails: null,
     canVerify: false,
+    aliasDetails: {
+        aliasAddress: null,
+        aliasVerified: null,
+    },
     delegatees: []
 };
 
@@ -22,6 +26,12 @@ export const contractSlice = createSlice({
         },
         setDelegatees: (state, action) => {
             state.delegatees = action.payload;
+        },
+        setAliasAddress: (state, action) => {
+            state.aliasDetails['aliasAddress'] = action.payload;
+        },
+        setAliasVerified: (state, action) => {
+            state.aliasDetails['aliasVerified'] = action.payload;
         }
     }
 });
@@ -29,7 +39,9 @@ export const contractSlice = createSlice({
 export const {
     setUserChannelDetails,
     setCanVerify,
-    setDelegatees
+    setDelegatees,
+    setAliasAddress,
+    setAliasVerified
 } = contractSlice.actions;
 
 export default contractSlice.reducer;
