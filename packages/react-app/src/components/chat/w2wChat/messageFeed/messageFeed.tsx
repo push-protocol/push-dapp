@@ -30,7 +30,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       const inbox: Feeds[] = await fetchInbox(did)
-      console.log('Inbox', inbox)
       setFeeds(inbox)
       // setCurrentChat(inbox)
       return inbox
