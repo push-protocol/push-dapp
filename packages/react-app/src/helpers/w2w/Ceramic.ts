@@ -13,11 +13,11 @@ export async function getDIDFromWallet(
   chainId: number
 ): Promise<string | null> {
   // Use later CAIP library to allow other chainIds
-  if (chainId != 1) {
+  if (chainId !== 1) {
     console.error('Wrong chainId!!!')
   }
   const link: Caip10Link = await Caip10Link.fromAccount(
-    //@ts-ignore
+    // @ts-ignore
     ceramicClient as CeramicApi,
     walletAddress + '@eip155:1'
   )

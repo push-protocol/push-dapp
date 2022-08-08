@@ -16,7 +16,7 @@ interface MessageFeedProps {
   isInvalidAddress: boolean
 }
 
-const MessageFeed = (props: MessageFeedProps) => {
+const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const { did, setChat }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
@@ -35,7 +35,7 @@ const MessageFeed = (props: MessageFeedProps) => {
     setFeeds(inbox)
   }
 
-  const data = useQuery('current', getInbox, {
+  useQuery('current', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -124,7 +124,7 @@ const MessageFeed = (props: MessageFeedProps) => {
           <p
             style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
           >
-            You can't send intent to yourself
+            You can&apos;t send intent to yourself
           </p>
         ) : !feeds?.length && isInValidAddress ? (
           <p
@@ -143,7 +143,7 @@ const MessageFeed = (props: MessageFeedProps) => {
             {feeds.map((feed: Feeds, i) => (
               <div
                 key={feed.threadhash || i}
-                onClick={() => {
+                onClick={(): void => {
                   setChat(feed)
                 }}
               >

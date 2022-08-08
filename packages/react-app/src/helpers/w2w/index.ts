@@ -15,7 +15,7 @@ export const walletToCAIP10 = (account: string, chainId: number): string => {
   } else throw new Error()
 }
 
-export const caip10ToWallet = (wallet: string) => {
+export const caip10ToWallet = (wallet: string): string => {
   wallet = wallet.replace('eip155:1:', '')
   wallet = wallet.replace('eip155:42:', '')
   return wallet
