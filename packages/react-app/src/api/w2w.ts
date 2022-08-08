@@ -15,7 +15,7 @@ export interface Feeds {
   about: string | null
   threadhash: string | null
   intent: string | null
-  intent_sent_by: string | null
+  intentSentBy: string | null
   intent_timestamp: Date
 }
 
@@ -27,7 +27,7 @@ export interface User {
   pgp_priv_enc: string
   pgp_enc_type: string
   signature: string
-  sig_type: string
+  sigType: string
   about: string | null
   num_msg: number
   allowed_num_msg: number
@@ -36,7 +36,6 @@ export interface User {
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   let retry = 0
-
   for (let i = 0; i < 3; i++) {
     try {
       const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
@@ -85,7 +84,7 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
   }
 }
 
-export const getUser = async (did: string) => {
+export const getUser = async ({ did, wallet }: { did: string; wallet: string }) => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
@@ -96,7 +95,8 @@ export const getUser = async (did: string) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          did
+          did,
+          wallet
         })
       })
       const data = await response.json()
@@ -185,7 +185,7 @@ export const postMessage = async ({
       messageType,
       signature,
       enc_type: encType,
-      sig_type: sigType
+      sigType: sigType
     })
   })
   if (response.status > 299) {
@@ -210,18 +210,6 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
   return data
 }
 
-export const getAllUsers = async (): Promise<User[]> => {
-  const response = await fetch(BASE_URL + '/w2w/getAllUsers', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json'
-    }
-  })
-  const data = await response.json()
-  console.log('All Users: ', data)
-  return data
-}
-
 export const createUser = async ({
   wallet,
   did,
@@ -229,7 +217,7 @@ export const createUser = async ({
   pgp_priv_enc,
   pgp_enc_type,
   signature,
-  sig_type
+  sigType
 }: {
   wallet: string
   did: string
@@ -237,7 +225,7 @@ export const createUser = async ({
   pgp_priv_enc: string
   pgp_enc_type: string
   signature: string
-  sig_type: string
+  sigType: string
 }) => {
   const response = await fetch(BASE_URL + '/w2w/createUser', {
     method: 'POST',
@@ -251,7 +239,7 @@ export const createUser = async ({
       pgp_priv_enc,
       pgp_enc_type,
       signature,
-      sig_type
+      sigType
     })
   })
   const data = await response.json()
@@ -299,9 +287,12 @@ export const approveIntent = async (
       fromDID,
       status,
       signature,
-      sig_type: sigType
+      sigType
     })
   })
+  if (response.status < 200 || response.status > 299) {
+    throw new Error('Error changing intent status')
+  }
   const data = await response.json()
   return data
 }
@@ -329,7 +320,7 @@ export const createIntent = async (
         message,
         messageType,
         signature,
-        sig_type: sigType,
+        sigType,
         encType
       })
     })
@@ -346,7 +337,8 @@ export const createIntent = async (
         fromDID,
         fromWallet,
         messageType,
-        signature
+        signature,
+        encType
       })
     })
     const data = await response.json()

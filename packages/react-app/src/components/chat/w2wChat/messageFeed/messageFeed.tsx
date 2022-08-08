@@ -7,7 +7,6 @@ import { Feeds, getLatestThreadhash, User } from '../../../../api'
 import { fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
 import { toast } from 'react-toastify'
 
@@ -16,10 +15,6 @@ interface MessageFeedProps {
   hasUserBeenSearched: boolean
   isInvalidAddress: boolean
 }
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
 
 const MessageFeed = (props: MessageFeedProps) => {
   const { did, setChat }: AppContext = useContext<AppContext>(Context)
@@ -87,7 +82,7 @@ const MessageFeed = (props: MessageFeedProps) => {
               profile_picture: user.profile_picture,
               about: user.about,
               intent: null,
-              intent_sent_by: null,
+              intentSentBy: null,
               intent_timestamp: null,
               pgp_pub: user.pgp_pub
             }
