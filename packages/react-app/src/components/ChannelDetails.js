@@ -81,7 +81,7 @@ export default function ChannelDetails() {
         }
       });
     })();
-  }, [account , chainId]);
+  }, [account, chainId]);
 
   return (
     <ChannelDetailsWrapper>

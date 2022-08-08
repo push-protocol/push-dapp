@@ -1,5 +1,3 @@
-import { envConfig } from "@project/contracts";
-
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet : (chainId: number) => {
@@ -21,26 +19,9 @@ export const networkName = {
   80001: "Polygon Mumbai"
 }
 
-export const Eip155EnableIds = [137, 80001];
-
-type CAIPProps = {
-  chainId: number;
-  address: string;
-}
-
-// return caip obj from chainId and address
-export const getCAIP = ({ chainId, address }: CAIPProps) => {
-  if (chainId === envConfig.coreContractChain) return {};
-
-  if (Eip155EnableIds.includes(chainId)) {
-    const caip = 'eip155:' + chainId;
-
-    return {
-      [caip]: address
-    }
-  } else {
-    return {};
-  }
-}
+export const aliasChainIdsMapping = {
+  1: 137,
+  42: 80001
+};
 
 export default UtilityHelper;

@@ -5,15 +5,10 @@ import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
 import { envConfig } from "@project/contracts";
 import "./createChannel.css";
-import { networkName } from "helpers/UtilityHelper";
-
-const aliasChainMapping = {
-  1: 137,
-  42: 80001
-}
+import { aliasChainIdsMapping, networkName } from "helpers/UtilityHelper";
 
 const coreChainId = envConfig.coreContractChain;
-const aliasChainId = aliasChainMapping[coreChainId];
+const aliasChainId = aliasChainIdsMapping[coreChainId];
 
 const ALIAS_CHAINS = [
   { value: coreChainId, label: networkName[coreChainId] },

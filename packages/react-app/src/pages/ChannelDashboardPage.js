@@ -55,7 +55,7 @@ function ChannelDashboardPage() {
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
-  const [controlAt, setControlAt] = React.useState(1);
+  const [controlAt, setControlAt] = React.useState(2);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
@@ -244,7 +244,6 @@ function ChannelDashboardPage() {
     }
     // Check if account is admin or not and handle accordingly
     const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
-    console.log(ownerAccount);
     EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
       .then(async (response) => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel

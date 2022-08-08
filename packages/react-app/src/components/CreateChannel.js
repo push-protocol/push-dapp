@@ -20,7 +20,8 @@ import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis, envConfig } from "@project/contracts";
 import "./createChannel.css";
-import { getCAIP, networkName } from "helpers/UtilityHelper";
+import { networkName } from "helpers/UtilityHelper";
+import { getCAIPObj } from "helpers/CaipHelper";
 
 const ethers = require("ethers");
 
@@ -149,7 +150,7 @@ function CreateChannel() {
       info: channelInfo,
       url: channelURL,
       icon: channelFile,
-      aliasDetails: getCAIP({chainId: aliaschainId, address: aliasAddress})
+      aliasDetails: getCAIPObj({chainId: aliaschainId, address: aliasAddress})
     };
 
     console.log(input);
