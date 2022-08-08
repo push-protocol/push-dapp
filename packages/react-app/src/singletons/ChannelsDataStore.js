@@ -348,8 +348,8 @@ export default class ChannelsDataStore {
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
       postReq("/channels/get_eth_address", {
-        aliasAddress: account,
-          op: "read",
+        aliasAddress: channel,
+        op: "read",
       })
         .then(({ data }) => {
           if (enableLogs) console.log("getEthAddressFromAlias() --> %o", data?.ethAddress);
