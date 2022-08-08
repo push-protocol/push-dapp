@@ -8,9 +8,8 @@ export interface MessageIPFS {
   messageType: string
   messageContent: string
   signature: string
-  sig_type: string
+  sigType: string
   link: string | null
-  time: number
   timestamp?: number
   enc_type: string
   encryptedSecret: string

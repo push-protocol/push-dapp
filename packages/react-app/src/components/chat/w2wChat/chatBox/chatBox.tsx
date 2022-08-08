@@ -4,6 +4,7 @@ import './chatBox.css'
 import epnsLogo from '../w2wAsset/epnsLogo.png'
 import { Context, ToastPosition } from '../w2wIndex'
 import Chats from '../chats/chats'
+// @ts-ignore
 import { envConfig } from '@project/contracts'
 import 'font-awesome/css/font-awesome.min.css'
 import Picker from 'emoji-picker-react'
@@ -26,10 +27,10 @@ import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
-import _ from 'lodash'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
+import { fetchInbox } from '../w2wUtils'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -171,14 +172,30 @@ const ChatBox = (): JSX.Element => {
     sigType: string
     encType: string
   }): Promise<void> => {
+    let msg: MessageIPFS
     try {
+      msg = {
+        fromWallet: account,
+        fromDID: fromDid,
+        toDID: toDid,
+        messageContent: message,
+        messageType,
+        signature,
+        enc_type: encType,
+        sigType: sigType,
+        timestamp: Date.now(),
+        encryptedSecret: '',
+        link: ''
+      }
+      setNewMessage('')
+      setMessages([...messages, msg])
       const { cipherText, encryptedSecret } = await encrypt({
         plainText: message,
         encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
         publicKeyArmored: currentChat.pgp_pub,
         did
       })
-      const msg = await PushNodeClient.postMessage({
+      const savedMsg = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
         toDID: toDid,
@@ -189,17 +206,20 @@ const ChatBox = (): JSX.Element => {
         sigType,
         encryptedSecret
       })
-      setMessages([...messages, msg])
-      setNewMessage('')
-      const threadhash = await PushNodeClient.getLatestThreadhash({ firstDID: currentChat.did, secondDID: did.id })
-      await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', threadhash, msg, 'cid')
+      // const inbox = await fetchInbox(did)
+      // renderInbox(inbox)
+      const latesThreadhash: string = await PushNodeClient.getLatestThreadhash({
+        firstDID: currentChat.did,
+        secondDID: did.id
+      })
+      await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', latesThreadhash, savedMsg, 'cid')
     } catch (error) {
       console.log(error)
       toast.error('Cannot send Message, Try again later', ToastPosition)
     }
   }
 
-  const handleSubmit = _.debounce((e: { preventDefault: () => void }): void => {
+  const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault()
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
@@ -211,18 +231,18 @@ const ChatBox = (): JSX.Element => {
           messageType: 'Text',
           signature: 'signature',
           sigType: 'sigType',
-          encType: 'encType'
+          encType: 'pgp'
         })
       } else {
         sendIntent(newMessage, 'Text')
       }
     }
-  }, 2000)
+  }
 
   const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
-        const user = await PushNodeClient.getUser(currentChat.did)
+        const user = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
         if (!user) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           await PushNodeClient.createUser({
@@ -232,7 +252,7 @@ const ChatBox = (): JSX.Element => {
             pgp_priv_enc: 'temp',
             pgp_enc_type: 'pgp',
             signature: 'temp',
-            sig_type: 'temp'
+            sigType: 'temp'
           })
         }
         //////// FIX ENCRYPTED SECRET HERE ///////////
@@ -288,14 +308,12 @@ const ChatBox = (): JSX.Element => {
       const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
       const type = file.type.startsWith('image') ? 'Image' : 'File'
       let content: string
-      console.log(file)
       if (type === 'File') {
         const reader = new FileReader()
         let resultingfile
         reader.readAsDataURL(file)
         reader.onloadend = async (e): Promise<void> => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
-          console.log(resultingfile)
           if (!hasIntent && intentSentandPending === 'Pending') {
             sendIntent(JSON.stringify(resultingfile), type)
           } else {
@@ -306,8 +324,8 @@ const ChatBox = (): JSX.Element => {
               message: JSON.stringify(resultingfile),
               messageType: type,
               signature: 'sig',
-              sigType: 'sig_type',
-              encType: 'enc_type'
+              sigType: 'sigType',
+              encType: 'pgp'
             })
           }
           setFileUploading(false)
@@ -325,8 +343,8 @@ const ChatBox = (): JSX.Element => {
             message: content.toString(),
             messageType: type,
             signature: 'sig',
-            sigType: 'sig_type',
-            encType: 'enc_type'
+            sigType: 'sigType',
+            encType: 'pgp'
           })
         }
         setFileUploading(false)
@@ -345,7 +363,6 @@ const ChatBox = (): JSX.Element => {
   }
 
   const sendGif = (url: string): void => {
-    console.log(url)
     if (!hasIntent && intentSentandPending === 'Pending') {
       sendIntent(url, 'GIF')
     } else {
@@ -356,8 +373,8 @@ const ChatBox = (): JSX.Element => {
         message: url,
         messageType: 'GIF',
         signature: 'signature',
-        sigType: 'sig_type',
-        encType: 'enc_type'
+        sigType: 'sigType',
+        encType: 'pgp'
       })
     }
   }
