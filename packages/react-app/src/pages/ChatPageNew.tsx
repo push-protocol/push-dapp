@@ -2,7 +2,6 @@ import React from 'react'
 import ReactGA from 'react-ga'
 
 import styled, { useTheme, ThemeProvider } from 'styled-components'
-import { Section } from 'components/SharedStyling'
 import ChatSidebar from 'segments/ChatSidebar'
 import ChatMainSection from 'segments/ChatMainSection'
 
@@ -25,12 +24,12 @@ function ChatPage(): JSX.Element {
   )
 }
 
-const Container = styled(Section)`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   position: 'fixed';
   height: calc(
-    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${(props: { theme }) => props.theme.interfaceTopPadding}
+    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 150px - ${(props: { theme }) => props.theme.interfaceTopPadding}
   );
   align-items: stretch;
   align-self: stretch;
