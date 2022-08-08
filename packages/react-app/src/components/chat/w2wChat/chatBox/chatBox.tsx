@@ -63,23 +63,15 @@ const ChatBox = (): JSX.Element => {
       return
     }
 
-    // console.log('MessageCID: ', messageCID)
-    // console.log('Messages in the if else', messages)
-
     setMessages([])
-
-    // const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
-    // console.log('Message from cached', getMessage.body)
 
     while (messageCID) {
       // TODO: Fix Cache logic
       const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
       let msgIPFS: MessageIPFS
       if (getMessage !== undefined) {
-        // console.log('This getMessage ran and got details from cached')
         msgIPFS = getMessage.body
       } else {
-        // console.log('This getMessage ran and got details not from cached')
         const current = await IPFSHelper.get(messageCID, ipfs) // {}
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
         msgIPFS = current as MessageIPFS
@@ -122,42 +114,9 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  // const fetchNewMessages = async (messageCID: string, ipfs: IPFSHTTPClient) => {
-  //   const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
-  //   console.log('Latest Message from cached', getMessage)
-  //   let msgIPFS: MessageIPFS
-  //   if (getMessage !== undefined) {
-  //     console.log('This getMessage ran and got details from cached')
-  //     msgIPFS = getMessage.body
-  //   } else {
-  //     console.log('This getMessage ran and got details not from cached')
-  //     const current = await IPFSHelper.get(messageCID, ipfs) // {}
-  //     await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
-  //     msgIPFS = current as MessageIPFS
-  //   }
-  //   console.log(getMessage, msgIPFS)
-
-  //   // if(messages[messages.length-1])
-  //   setMessages((m) => [msgIPFS, ...m])
-  // }
-
   const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
 
-  // useEffect(() => {
-  //   console.log('Hey ABHishekkkkk>>>>>>>>>>>>>>>>>>', currentChat)
-  //   if (currentChat) {
-  //     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-  //     fetchNewMessages(currentChat?.threadhash, IPFSClient)
-  //   }
-  // }, [currentChat?.threadhash, data])
-
-  // console.log('Data from useQuery In Chatbox', data)
-  // console.log('Messages', messages)
-  // console.log('CUrrent Chat In Chatbox', currentChat)
-
   useEffect(() => {
-    console.log('This UseEffect is running multiple times')
-
     function updateData(): void {
       // console.log('Current Chat Wallets', currentChat?.wallets)
       if (data !== undefined && currentChat?.wallets) {
@@ -174,7 +133,6 @@ const ChatBox = (): JSX.Element => {
   }, [data, currentChat?.wallets])
 
   useEffect(() => {
-    // console.log('Current Chat', currentChat)
     getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
@@ -241,7 +199,6 @@ const ChatBox = (): JSX.Element => {
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault()
-    console.log('This is New Message that is sent to user')
 
     if (newMessage.trim() !== '') {
       if (hasIntent && intentSentandPending === 'Approved') {
