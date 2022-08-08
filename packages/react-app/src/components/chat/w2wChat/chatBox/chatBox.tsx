@@ -14,12 +14,12 @@ import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/IPFS'
 import Loader from 'react-loader-spinner'
+import * as w2wChatHelper from '../../../../helpers/w2w'
 import GifIcon from '../W2WIcons/GifIcon'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { fetchInbox } from '../w2wUtils'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
 import { caip10ToWallet } from '../../../../helpers/w2w'
@@ -36,25 +36,22 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, renderInbox, connectedUser, setChat }: AppContext = useContext<AppContext>(
-    Context
-  )
+  const { currentChat, viewChatBox, did, setChat, searchedUser }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
+  const { chainId } = useWeb3React<Web3Provider>()
   const [Loading, setLoading] = useState<boolean>(true)
   const [messages, setMessages] = useState<MessageIPFS[]>([])
   const [imageSource, setImageSource] = useState<string>('')
   const [hasIntent, setHasIntent] = useState<boolean>(true)
   const [wallets, setWallets] = useState<string[]>([])
-  const [blockUserOpt, setBlockUserOpt] = useState<boolean>(false)
   const [filesUploading, setFileUploading] = useState<boolean>(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
   const [intentSentandPending, setIntentSentandPending] = useState<string>('')
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
-  const { data } = useQuery<any>('current')
   const [SnackbarText, setSnackbarText] = useState<string>('')
   let showTime = false
   let time = ''
@@ -64,27 +61,28 @@ const ChatBox = (): JSX.Element => {
       return
     }
 
-    console.log('MessageCID: ', messageCID)
-
-    if (messages.length > 0) {
-      console.log('Messages', messages)
-    }
+    // console.log('MessageCID: ', messageCID)
+    // console.log('Messages in the if else', messages)
 
     setMessages([])
+
+    // const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
+    // console.log('Message from cached', getMessage.body)
+
     while (messageCID) {
       // TODO: Fix Cache logic
       const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
       let msgIPFS: MessageIPFS
       if (getMessage !== undefined) {
-        console.log('This getMessage ran and got details from cached')
+        // console.log('This getMessage ran and got details from cached')
         msgIPFS = getMessage.body
       } else {
-        console.log('This getMessage ran and got details not from cached')
+        // console.log('This getMessage ran and got details not from cached')
         const current = await IPFSHelper.get(messageCID, ipfs) // {}
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
         msgIPFS = current as MessageIPFS
       }
-      // console.log(getMessage, msgIPFS)
+      console.log(getMessage, msgIPFS)
 
       // This setMessages sets the Message for displaying when the user clicks on a user in the Inbox
       setMessages((m) => [msgIPFS, ...m])
@@ -97,15 +95,74 @@ const ChatBox = (): JSX.Element => {
       }
     }
   }
+  const getMessagesFromIPFS = async (): Promise<void> => {
+    setNewMessage('')
+    setLoading(true)
+    console.log('fetching messages')
+    let hasintent = false
+    console.log(currentChat)
+    if (currentChat) {
+      try {
+        CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
+        setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
+      } catch (err) {
+        setImageSource(currentChat.profile_picture)
+      }
+      const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
+      setIntentSentandPending(intentStatus.intent)
+      hasintent = intentStatus.hasIntent
+      setHasIntent(intentStatus.hasIntent)
 
-  console.log('Data from useQuery In Chatbox', data)
-  console.log('Messages', messages)
+      if (currentChat?.threadhash && hasintent) {
+        const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
+        await getMessagesFromCID(currentChat.threadhash, IPFSClient)
+      } else {
+        setMessages([])
+      }
+      const walletsResult: string[] = await PushNodeClient.getDidLinkWallets(currentChat.did)
+      setWallets(walletsResult)
+      setLoading(false)
+    }
+  }
+
+  // const fetchNewMessages = async (messageCID: string, ipfs: IPFSHTTPClient) => {
+  //   const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
+  //   console.log('Latest Message from cached', getMessage)
+  //   let msgIPFS: MessageIPFS
+  //   if (getMessage !== undefined) {
+  //     console.log('This getMessage ran and got details from cached')
+  //     msgIPFS = getMessage.body
+  //   } else {
+  //     console.log('This getMessage ran and got details not from cached')
+  //     const current = await IPFSHelper.get(messageCID, ipfs) // {}
+  //     await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
+  //     msgIPFS = current as MessageIPFS
+  //   }
+  //   console.log(getMessage, msgIPFS)
+
+  //   // if(messages[messages.length-1])
+  //   setMessages((m) => [msgIPFS, ...m])
+  // }
+
+  const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+
+  // useEffect(() => {
+  //   console.log('Hey ABHishekkkkk>>>>>>>>>>>>>>>>>>', currentChat)
+  //   if (currentChat) {
+  //     const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
+  //     fetchNewMessages(currentChat?.threadhash, IPFSClient)
+  //   }
+  // }, [currentChat?.threadhash, data])
+
+  // console.log('Data from useQuery In Chatbox', data)
+  // console.log('Messages', messages)
+  // console.log('CUrrent Chat In Chatbox', currentChat)
 
   useEffect(() => {
     console.log('This UseEffect is running multiple times')
 
     function updateData(): void {
-      console.log('Current Chat Wallets', currentChat?.wallets)
+      // console.log('Current Chat Wallets', currentChat?.wallets)
       if (data !== undefined && currentChat?.wallets) {
         const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
         if (newData?.intent === 'Approved') {
@@ -120,35 +177,7 @@ const ChatBox = (): JSX.Element => {
   }, [data, currentChat?.wallets])
 
   useEffect(() => {
-    console.log('This is running')
-
-    const getMessagesFromIPFS = async (): Promise<void> => {
-      setNewMessage('')
-      setLoading(true)
-      let hasintent = false
-      if (currentChat) {
-        try {
-          CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
-        } catch (err) {
-          setImageSource(currentChat.profile_picture)
-        }
-        const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
-        setIntentSentandPending(intentStatus.intent)
-        hasintent = intentStatus.hasIntent
-        setHasIntent(intentStatus.hasIntent)
-
-        if (currentChat?.threadhash && hasintent) {
-          const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-          await getMessagesFromCID(currentChat.threadhash, IPFSClient)
-        } else {
-          setMessages([])
-        }
-        const walletsResult: string[] = await PushNodeClient.getDidLinkWallets(currentChat.did)
-        setWallets(walletsResult)
-        setLoading(false)
-      }
-    }
+    // console.log('Current Chat', currentChat)
     getMessagesFromIPFS().catch((err) => console.error(err))
   }, [currentChat])
 
@@ -187,13 +216,11 @@ const ChatBox = (): JSX.Element => {
       })
       setMessages([...messages, msg])
       setNewMessage('')
-      const threadhash = await PushNodeClient.getLatestThreadhash(currentChat.did, did.id)
+      const threadhash = await PushNodeClient.getLatestThreadhash({ firstDID: currentChat.did, secondDID: did.id })
       await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', threadhash, msg, 'cid')
-      const inbox = await fetchInbox(did)
-      renderInbox(inbox)
     } catch (error) {
       console.log(error)
-      toast.error(error.message, ToastPosition)
+      toast.error('Cannot send Message, Try again later', ToastPosition)
     }
   }
 
@@ -222,6 +249,19 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async (content: string, contentType: string): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
+        const user = await PushNodeClient.getUser(currentChat.did)
+        if (!user) {
+          const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
+          await PushNodeClient.createUser({
+            wallet: caip10,
+            did: caip10,
+            pgp_pub: 'temp',
+            pgp_priv_enc: 'temp',
+            pgp_enc_type: 'pgp',
+            signature: 'temp',
+            sig_type: 'temp'
+          })
+        }
         const msg = await PushNodeClient.createIntent(
           currentChat.did,
           did.id,
@@ -367,11 +407,12 @@ const ChatBox = (): JSX.Element => {
         </div>
       ) : (
         <>
-          <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
+          <Snackbar open={openReprovalSnackbar} autoHideDuration={10000} onClose={handleCloseSuccessSnackbar}>
             <Alert onClose={handleCloseSuccessSnackbar} severity="error" sx={{ width: '100%' }}>
               {SnackbarText}
             </Alert>
           </Snackbar>
+
           <div className="chatBoxNavBar">
             <div className="chatBoxUserName">
               <img src={imageSource} alt="" />
@@ -379,10 +420,6 @@ const ChatBox = (): JSX.Element => {
                 <p className="chatBoxWallet">{caip10ToWallet(currentChat.msg.name)}</p>
                 <div>{hasIntent ? <Dropdown wallets={wallets} /> : null}</div>
               </div>
-            </div>
-            <div className="chatBoxEpnsLogo">
-              <i className="fa fa-ellipsis-v" aria-hidden="true" onClick={() => setBlockUserOpt(!blockUserOpt)}></i>
-              {blockUserOpt ? <div className="blockUserDropdown">Block User</div> : null}
             </div>
           </div>
 
@@ -471,15 +508,17 @@ const ChatBox = (): JSX.Element => {
                 value={newMessage}
               ></textarea>
             ) : (
-              <textarea
-                disabled={textAreaDisabled}
-                className="chatMessageInput"
-                placeholder={placeholderTextArea()}
-                onKeyDown={handleKeyPress}
-                onChange={textOnChange}
-                value={newMessage}
-                autoFocus
-              ></textarea>
+              <>
+                <textarea
+                  disabled={textAreaDisabled}
+                  className="chatMessageInput"
+                  placeholder={placeholderTextArea()}
+                  onKeyDown={handleKeyPress}
+                  onChange={textOnChange}
+                  value={newMessage}
+                  autoFocus
+                ></textarea>
+              </>
             )}
             {(!hasIntent && intentSentandPending === 'Pending') ||
             (hasIntent && intentSentandPending === 'Approved') ? (

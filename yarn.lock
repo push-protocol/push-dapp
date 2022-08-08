@@ -21166,7 +21166,7 @@ scryptsy@^2.1.0:
 
 "secp256k1-v4@https://github.com/HarshRajat/secp256k1-node":
   version "4.0.1"
-  resolved "git+ssh://git@github.com/HarshRajat/secp256k1-node.git#90a04a2e1127f4c1bfd7015aa5a7b22d08edb811"
+  resolved "https://github.com/HarshRajat/secp256k1-node#90a04a2e1127f4c1bfd7015aa5a7b22d08edb811"
   dependencies:
     elliptic "^6.5.2"
     node-addon-api "^2.0.0"

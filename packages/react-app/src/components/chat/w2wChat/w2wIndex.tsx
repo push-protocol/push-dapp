@@ -27,6 +27,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 import { Feeds, User } from '../../../api'
 
 import './w2wIndex.css'
+import { toast, ToastOptions } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export interface InboxChat {
   name: string
@@ -46,20 +48,20 @@ export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
-  renderInboxFeed: Array<{}> | null
+  setSearchedUser: any
+  searchedUser: string
   setChat: (text: Feeds) => void
-  renderInbox: (args: Array<{}>) => void
   connectedUser: ConnectedUser
 }
 
-export const ToastPosition = {
+export const ToastPosition: ToastOptions = {
   position: 'top-right',
   autoClose: 5000,
-  hideProgressBar: false,
+  hideProgressBar: true,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
-  progress: false
+  progress: 0
 }
 
 export const Context = React.createContext<AppContext | null>(null)
@@ -70,8 +72,8 @@ function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
+  const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>()
-  const [renderInboxFeed, setRenderInboxFeed] = useState<Array<{}> | null>()
 
   const queryClient = new QueryClient({})
 
@@ -91,6 +93,7 @@ function App() {
     setDid(did)
     const user: User = await PushNodeClient.getUser(did.id)
     if (!user) {
+      toast.error('No User found', ToastPosition)
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did)
       const createdUser = await PushNodeClient.createUser({
@@ -119,10 +122,6 @@ function App() {
     setCurrentChat(text)
   }
 
-  const renderInbox = (args: Array<{}>): void => {
-    setRenderInboxFeed(args)
-  }
-
   return (
     <>
       <div className="w2wIndex">
@@ -133,9 +132,9 @@ function App() {
                 currentChat,
                 viewChatBox,
                 did,
-                renderInboxFeed,
                 setChat,
-                renderInbox,
+                setSearchedUser,
+                searchedUser,
                 connectedUser
               }}
             >

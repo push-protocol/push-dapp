@@ -2,13 +2,14 @@ import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
+import { AppContext, Context, ToastPosition } from '../w2wIndex'
 import { Feeds, getLatestThreadhash, User } from '../../../../api'
-import { AppContext, Context } from '../w2wIndex'
-import { fetchMessagesFromIPFS, fetchInbox } from '../w2wUtils'
+import { fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
-import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
+import { toast } from 'react-toastify'
 
 interface MessageFeedProps {
   filteredUserData: User[]
@@ -21,13 +22,14 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const MessageFeed = (props: MessageFeedProps) => {
-  const { did, renderInboxFeed, setChat }: AppContext = useContext<AppContext>(Context)
-  const [feeds, setFeeds] = useState<Array<{}>>([])
+  const { did, setChat }: AppContext = useContext<AppContext>(Context)
+  const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [stopApi, setStopApi] = useState<boolean>(true)
 
   const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
@@ -42,6 +44,8 @@ const MessageFeed = (props: MessageFeedProps) => {
       setFeeds(inbox)
       return inbox
     }
+    const inbox: Feeds[] = await fetchInbox(did)
+    setFeeds(inbox)
   }
 
   const data = useQuery('current', getInbox, {
@@ -49,10 +53,6 @@ const MessageFeed = (props: MessageFeedProps) => {
   })
 
   console.log('Data from useQuery', data)
-
-  useEffect(() => {
-    setFeeds(renderInboxFeed)
-  }, [renderInboxFeed])
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
@@ -64,12 +64,34 @@ const MessageFeed = (props: MessageFeedProps) => {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
             setErrorMessage("You can't send intent to yourself")
+            toast.error("You can't send intent to yourself", ToastPosition)
             setFeeds([])
           } else {
-            let inbox: Feeds[] = await fetchMessagesFromIPFS(props.filteredUserData)
-            const threadhash = await getLatestThreadhash(inbox[0].did, did.id)
-            inbox = [{ ...inbox[0], threadhash }]
-            setFeeds(inbox)
+            // When searching as of now the search will always result in only one user being displayed.
+            // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
+            const user: User = props.filteredUserData[0]
+            const threadhash: string = await getLatestThreadhash({ firstDID: user.did, secondDID: did.id })
+            const inbox: Feeds = {
+              msg: {
+                name: user.wallets.split(',')[0].toString(),
+                profile_picture: user.profile_picture,
+                lastMessage: null,
+                timestamp: null,
+                messageType: null,
+                signature: null,
+                signatureType: null
+              },
+              wallets: user.wallets,
+              did: user.did,
+              threadhash: threadhash,
+              profile_picture: user.profile_picture,
+              about: user.about,
+              intent: null,
+              intent_sent_by: null,
+              intent_timestamp: null,
+              pgp_pub: user.pgp_pub
+            }
+            setFeeds([inbox])
           }
         } else {
           if (props.isInvalidAddress) {
@@ -86,7 +108,7 @@ const MessageFeed = (props: MessageFeedProps) => {
     setMessagesLoading(false)
   }, [props.hasUserBeenSearched, props.filteredUserData])
 
-  const setCurrentChat = (feed: any) => {
+  const setCurrentChat = (feed: Feeds) => {
     setChat(feed)
   }
 
@@ -137,11 +159,13 @@ const MessageFeed = (props: MessageFeedProps) => {
             ))}
           </div>
         ) : null}
-        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-            {errorMessage}
-          </Alert>
-        </Snackbar>
+
+        <ReactSnackbar
+          text={errorMessage}
+          open={openReprovalSnackbar}
+          handleClose={handleCloseReprovalSnackbar}
+          severity={'error'}
+        />
       </section>
     </>
   )

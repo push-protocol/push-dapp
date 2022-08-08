@@ -1,4 +1,4 @@
-import { InboxChat, ToastPosition } from 'components/chat/w2wChat/w2wIndex'
+import { ToastPosition, InboxChat } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
 
@@ -35,14 +35,6 @@ export interface User {
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
-  // const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
-  //   method: 'POST'
-  // })
-
-  // const data: Feeds[] = await response.json()
-  // console.log('Data', data)
-  // return data
-
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
@@ -51,15 +43,11 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
         method: 'POST'
       })
       if (response.status >= 500) continue
-      console.log('Response', response)
       const data: Feeds[] = await response.json()
-      console.log('Data', data)
       return data
     } catch (err) {
-      console.log('Retry', retry)
       if (retry > 1) {
-        console.log('This ran')
-        toast.error('Inbox cannot be loaded! Please try again later', ToastPosition)
+        toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
       }
       console.log('Error in the API call', err)
       retry++
@@ -114,10 +102,8 @@ export const getUser = async (did: string) => {
       const data = await response.json()
       return data
     } catch (err) {
-      console.log('Retry', retry)
       if (retry > 1) {
-        console.log('This ran')
-        toast.error('Users cannot be loaded! Please try again later', ToastPosition)
+        toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
       }
       console.log('Error in the API call', err)
       retry++
@@ -272,7 +258,13 @@ export const createUser = async ({
   return data
 }
 
-export const getLatestThreadhash = async (firstDID: string, secondDID: string) => {
+export const getLatestThreadhash = async ({
+  firstDID,
+  secondDID
+}: {
+  firstDID: string
+  secondDID: string
+}): Promise<string> => {
   const response = await fetch(BASE_URL + '/w2w/getMessages', {
     method: 'POST',
     headers: {
@@ -286,7 +278,7 @@ export const getLatestThreadhash = async (firstDID: string, secondDID: string) =
   if (response.status === 400) {
     throw new Error('Error fetching threadhash')
   }
-  const data = await response.json()
+  const data: string = await response.json()
   return data
 }
 
@@ -360,4 +352,17 @@ export const createIntent = async (
     const data = await response.json()
     return data
   }
+}
+export const getRandomProfile = async (wallet: string) => {
+  const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      wallet
+    })
+  })
+  const data = await response.json()
+  return data
 }
