@@ -16,7 +16,7 @@ interface MessageFeedProps {
   isInvalidAddress: boolean
 }
 
-const MessageFeed = (props: MessageFeedProps) => {
+const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const { did, setChat }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
@@ -39,15 +39,23 @@ const MessageFeed = (props: MessageFeedProps) => {
       setFeeds(inbox)
       return inbox
     }
-    const inbox: Feeds[] = await fetchInbox(did)
-    setFeeds(inbox)
   }
 
-  const data = useQuery('current', getInbox, {
-    refetchInterval: 5000
+  useQuery('current', getInbox, {
+    enabled: !props.hasUserBeenSearched && stopApi,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+    suspense: false,
+    onError: () => {
+      setStopApi(false)
+      toast.error('Error! Please Try Again later', ToastPosition)
+    },
+    retry: 3,
+    refetchInterval: 1000 * 5,
+    retryDelay: 1000 * 5
   })
-
-  console.log('Data from useQuery', data)
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
@@ -103,10 +111,6 @@ const MessageFeed = (props: MessageFeedProps) => {
     setMessagesLoading(false)
   }, [props.hasUserBeenSearched, props.filteredUserData])
 
-  const setCurrentChat = (feed: Feeds) => {
-    setChat(feed)
-  }
-
   const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return
@@ -126,7 +130,7 @@ const MessageFeed = (props: MessageFeedProps) => {
           <p
             style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
           >
-            You can't send intent to yourself
+            You can&apos;t send intent to yourself
           </p>
         ) : !feeds?.length && isInValidAddress ? (
           <p
@@ -145,8 +149,8 @@ const MessageFeed = (props: MessageFeedProps) => {
             {feeds.map((feed: Feeds, i) => (
               <div
                 key={feed.threadhash || i}
-                onClick={() => {
-                  setCurrentChat(feed)
+                onClick={(): void => {
+                  setChat(feed)
                 }}
               >
                 <DefaultMessage inbox={feed} />

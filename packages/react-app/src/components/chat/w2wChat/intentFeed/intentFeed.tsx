@@ -33,7 +33,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const IntentFeed = (props: IntentFeedProps): JSX.Element => {
   const { did, setChat }: AppContext = useContext<AppContext>(Context)
-  const [receivedIntents, setReceivedIntents] = useState([])
+  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
   const [open, setOpen] = useState(false)
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
   const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
@@ -44,22 +44,15 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
     let getIntent
     getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
 
-    // if (getIntent === undefined) {
-    //   getIntent = await fetchIntent(did)
-    //   setReceivedIntents(getIntent)
-    // } else {
-    //   getIntent = getIntent.body
-    //   setReceivedIntents(getIntent)
-    //   getIntent = await fetchIntent(did)
-    //   setReceivedIntents(getIntent)
-    // }
-
-    if (getIntent !== undefined) {
+    if (getIntent === undefined) {
+      getIntent = await fetchIntent(did)
+      setReceivedIntents(getIntent)
+    } else {
       getIntent = getIntent.body
       setReceivedIntents(getIntent)
+      getIntent = await fetchIntent(did)
+      setReceivedIntents(getIntent)
     }
-    // getIntent = await fetchIntent(did)
-    setReceivedIntents(props.AllIntents)
   }
 
   useEffect(() => {
@@ -92,7 +85,7 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
         ) : (
           <>
             <div>
-              {receivedIntents.map((intent: any) => (
+              {receivedIntents.map((intent: Feeds) => (
                 <div
                   key={intent.threadhash}
                   onClick={(): void => {

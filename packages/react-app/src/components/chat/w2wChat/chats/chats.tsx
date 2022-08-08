@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import './w2wchats.css'
-import { MessageIPFS } from '../../../../helpers/w2w/IPFS'
+import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import cn from 'classnames'
 import { DID } from 'dids'
 import Modal from '../Modal/Modal'

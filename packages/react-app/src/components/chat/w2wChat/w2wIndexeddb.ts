@@ -7,7 +7,7 @@ export const intitializeDb = async <T>(
   key: string,
   message: T,
   index: string
-) => {
+): Promise<any> => {
   return await new Promise((resolve, reject) => {
     const openRequest = window.indexedDB.open('w2w_idxDb', version)
     openRequest.onupgradeneeded = (e: any) => {
@@ -69,7 +69,7 @@ export const viewData = async (db: IDBDatabase, key: string, dbName: string, ind
     const objStore: IDBObjectStore = tx.objectStore(dbName)
     const idx: IDBIndex = objStore.index(index)
     const query = idx.get(key)
-    query.onsuccess = e => {
+    query.onsuccess = (e) => {
       return resolve(query.result)
     }
     query.onerror = (e: any) => {

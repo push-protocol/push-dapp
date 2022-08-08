@@ -10,9 +10,9 @@ export interface MessageIPFS {
   signature: string
   sigType: string
   link: string | null
-  time?: number
   timestamp?: number
   enc_type: string
+  encryptedSecret: string
 }
 
 export function createIPFSClient(): IPFSHTTPClient {
@@ -23,9 +23,9 @@ export async function store(content: JWE, ipfs: IPFSHTTPClient): Promise<CID> {
   return await ipfs.dag.put(content, { storeCodec: 'dag-jose', hashAlg: 'sha2-256' })
 }
 
-export async function get(cid: string, ipfs: IPFSHTTPClient): Promise<any> {
+export async function get(cid: string, ipfs: IPFSHTTPClient): Promise<MessageIPFS> {
   const cidObject = CID.parse(cid)
-  const content: any = (await ipfs.dag.get(cidObject)).value
+  const content: MessageIPFS = (await ipfs.dag.get(cidObject)).value
   return content
 }
 

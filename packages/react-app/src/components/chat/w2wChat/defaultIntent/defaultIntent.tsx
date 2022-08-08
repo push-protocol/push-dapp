@@ -1,7 +1,12 @@
+import { Feeds } from 'api'
 import React from 'react'
 import './defaultIntent.css'
 
-const DefaultIntent = (props: any): JSX.Element => {
+interface DefaultIntentProps {
+  inbox: Feeds
+}
+
+const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
   let date = null
 
   if (props.inbox?.intent_timestamp !== null) {

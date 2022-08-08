@@ -11,9 +11,10 @@ import Picker from 'emoji-picker-react'
 import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
-import * as IPFSHelper from '../../../../helpers/w2w/IPFS'
+import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
+import { encrypt } from '../../../../helpers/w2w'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
-import { MessageIPFS } from '../../../../helpers/w2w/IPFS'
+import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
 import * as w2wChatHelper from '../../../../helpers/w2w'
 import GifIcon from '../W2WIcons/GifIcon'
@@ -28,6 +29,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import _ from 'lodash'
 import { toast } from 'react-toastify'
+import { DID } from 'dids'
 import { fetchInbox } from '../w2wUtils'
 
 const INFURA_URL = envConfig.infuraApiUrl
@@ -38,7 +40,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, setChat, searchedUser }: AppContext = useContext<AppContext>(Context)
+  const { currentChat, viewChatBox, did, setChat, searchedUser, connectedUser }: AppContext = useContext<AppContext>(
+    Context
+  )
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -58,7 +62,17 @@ const ChatBox = (): JSX.Element => {
   let showTime = false
   let time = ''
 
-  const getMessagesFromCID = async (messageCID: string, ipfs: IPFSHTTPClient): Promise<void> => {
+  const getMessagesFromCID = async ({
+    messageCID,
+    ipfs,
+    encryptedPrivateKey,
+    did
+  }: {
+    messageCID: string
+    ipfs: IPFSHTTPClient
+    encryptedPrivateKey: string
+    did: DID
+  }): Promise<void> => {
     if (!messageCID) {
       return
     }
@@ -66,15 +80,16 @@ const ChatBox = (): JSX.Element => {
     setMessages([])
 
     while (messageCID) {
-      // TODO: Fix Cache logic
-      const getMessage: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
+      const messageFromIndexDB: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
+
       let msgIPFS: MessageIPFS
-      if (getMessage !== undefined) {
-        msgIPFS = getMessage.body
+      if (messageFromIndexDB !== undefined) {
+        msgIPFS = messageFromIndexDB.body
       } else {
-        const current = await IPFSHelper.get(messageCID, ipfs) // {}
-        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, current, 'cid')
-        msgIPFS = current as MessageIPFS
+        const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID, ipfs)
+        messageFromIPFS.messageContent = 'hi'
+        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
+        msgIPFS = messageFromIPFS
       }
       setMessages((m) => [msgIPFS, ...m])
 
@@ -104,7 +119,12 @@ const ChatBox = (): JSX.Element => {
 
       if (currentChat?.threadhash && hasintent) {
         const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-        await getMessagesFromCID(currentChat.threadhash, IPFSClient)
+        await getMessagesFromCID({
+          messageCID: currentChat.threadhash,
+          ipfs: IPFSClient,
+          did,
+          encryptedPrivateKey: connectedUser.pgp_priv_enc
+        })
       } else {
         setMessages([])
       }
@@ -157,23 +177,27 @@ const ChatBox = (): JSX.Element => {
   }): Promise<void> => {
     let msg: MessageIPFS
     try {
-      // const fromPGPPrivateKey: string = await DIDHelper.decrypt(JSON.parse(connectedUser.pgp_priv_enc), did);
-      // const cipherText: string = await PGP.encryptMessage(message, currentChat.public_key, fromPGPPrivateKey) as string;
-      const cipherText = message
       msg = {
         fromWallet: account,
         fromDID: fromDid,
         toDID: toDid,
-        messageContent: cipherText,
+        messageContent: message,
         messageType,
         signature,
         enc_type: encType,
         sigType: sigType,
         timestamp: Date.now(),
+        encryptedSecret: '',
         link: ''
       }
       setNewMessage('')
       setMessages([...messages, msg])
+      const { cipherText, encryptedSecret } = await encrypt({
+        plainText: message,
+        encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        publicKeyArmored: currentChat.pgp_pub,
+        did
+      })
       const savedMsg = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
@@ -182,7 +206,8 @@ const ChatBox = (): JSX.Element => {
         messageType,
         signature,
         encType,
-        sigType
+        sigType,
+        encryptedSecret
       })
       // const inbox = await fetchInbox(did)
       // renderInbox(inbox)
@@ -210,7 +235,7 @@ const ChatBox = (): JSX.Element => {
           messageType: 'Text',
           signature: 'signature',
           sigType: 'sigType',
-          encType: 'encType'
+          encType: 'pgp'
         })
       } else {
         sendIntent(newMessage, 'Text')
@@ -234,16 +259,23 @@ const ChatBox = (): JSX.Element => {
             sigType: 'temp'
           })
         }
-        const msg = await PushNodeClient.createIntent(
-          currentChat.did,
-          did.id,
-          account,
-          content,
-          contentType,
-          'signature',
-          'myencryptiontype',
-          'mysignaturetype'
-        )
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        //////// FIX ENCRYPTED SECRET HERE ///////////
+        const msg = await PushNodeClient.createIntent({
+          toDID: currentChat.did,
+          fromDID: did.id,
+          fromWallet: account,
+          message: content,
+          messageType: contentType,
+          signature: 'signature',
+          encType: 'myencryptiontype',
+          sigType: 'mysignaturetype',
+          encryptedSecret: 'abc'
+        })
         setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')
@@ -297,7 +329,7 @@ const ChatBox = (): JSX.Element => {
               messageType: type,
               signature: 'sig',
               sigType: 'sigType',
-              encType: 'enc_type'
+              encType: 'pgp'
             })
           }
           setFileUploading(false)
@@ -316,7 +348,7 @@ const ChatBox = (): JSX.Element => {
             messageType: type,
             signature: 'sig',
             sigType: 'sigType',
-            encType: 'enc_type'
+            encType: 'pgp'
           })
         }
         setFileUploading(false)
@@ -346,7 +378,7 @@ const ChatBox = (): JSX.Element => {
         messageType: 'GIF',
         signature: 'signature',
         sigType: 'sigType',
-        encType: 'enc_type'
+        encType: 'pgp'
       })
     }
   }
