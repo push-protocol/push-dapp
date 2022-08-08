@@ -193,6 +193,34 @@ const EPNSCoreHelper = {
         });
     });
   },
+  // Helper to get Channel Alias from Channel's address
+  getChannelDetailsFromAddress: async (channel) => {
+    if (channel === null) return;
+    const enableLogs = 0;
+
+    return new Promise ((resolve, reject) => {
+      // To get channel info from a channel address
+      postReq("/channels/search", {
+        page: 1,
+        pageSize: 1,
+        query: channel,
+        op: "read",
+      })
+        .then(response => {
+          let output;
+          output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber, verified_status }) => {
+            this.state.subscribersCount[channel] = memberCount;
+            return { addr: channel, aliasAddress: alias_address, memberCount: memberCount, isSubscriber: isSubscriber, isAliasVerified: verified_status }
+          });
+          if (enableLogs) console.log("getChannelDetailsFromAddress() --> %o", response);
+          resolve(output);
+        })
+        .catch(err => {
+          console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);
+          reject(err);
+        });
+    });
+  },
   // Helper to get Channel from Channel's address
   getChannelJsonFromChannelAddress: async (channel, contract) => {
     if (channel === null) return;
