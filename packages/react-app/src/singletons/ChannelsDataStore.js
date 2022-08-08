@@ -340,6 +340,54 @@ export default class ChannelsDataStore {
       return output;
     })
   };
+  //Helper to get eth address of an alias when in alias network
+  getEthAddressFromAlias = async (channel) => {
+    if (channel === null) return;
+    const enableLogs = 0;
+
+    return new Promise((resolve, reject) => {
+      // To get channel info from a channel address
+      postReq("/channels/get_eth_address", {
+        aliasAddress: account,
+          op: "read",
+      })
+        .then(({ data }) => {
+          if (enableLogs) console.log("getEthAddressFromAlias() --> %o", data?.ethAddress);
+          resolve(data?.ethAddress);
+        })
+        .catch(err => {
+          console.log("!!!Error, getEthAddressFromAlias() --> %o", err);
+          reject(err);
+        });
+    });
+  };
+  // Helper to get Channel Alias from Channel's address
+  getChannelDetailsFromAddress = async (channel) => {
+    if (channel === null) return;
+    const enableLogs = 0;
+
+    return new Promise((resolve, reject) => {
+      // To get channel info from a channel address
+      postReq("/channels/search", {
+        page: 1,
+        pageSize: 1,
+        query: channel,
+        op: "read",
+      })
+        .then(response => {
+          let output;
+          output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber, verified_status }) => {
+            return { addr: channel, aliasAddress: alias_address, memberCount: memberCount, isSubscriber: isSubscriber, isAliasVerified: verified_status }
+          });
+          if (enableLogs) console.log("getChannelDetailsFromAddress() --> %o", response);
+          resolve(output);
+        })
+        .catch(err => {
+          console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);
+          reject(err);
+        });
+    });
+  };
   // CHANNELS META FUNCTIONS
   // To get channels meta
   // get channels meta in a paginated format

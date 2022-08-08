@@ -8,8 +8,8 @@ const initialState = {
     channelDetails: null,
     canVerify: false,
     aliasDetails: {
-        aliasAddress: null,
-        aliasVerified: null,
+        aliasAddr: null,
+        isAliasVerified: null,
     },
     delegatees: []
 };
