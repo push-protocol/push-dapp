@@ -3,6 +3,16 @@
  */
 import { createSlice } from "@reduxjs/toolkit";
 
+/*
+processingState {
+  0: complete
+  1: 1st state (processing alias state)
+  2: 2nd state (change network state)
+  3: 3rd state (verify alias state)
+  null: nothing
+}
+*/
+
 const initialState = {
   processingState: null
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Fragment} from "react";
 import styled from "styled-components";
 import { Section, Content, Button, Item, H2, Span, H3 } from "../primaries/SharedStyling";
 
@@ -7,28 +7,33 @@ import ChannelSettings from "components/ChannelSettings";
 import ChannelDetails from "components/ChannelDetails";
 import CreateChannel from "components/CreateChannel";
 import AliasVerificationModal from "components/AliasVerificationModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 import { postReq } from "api";
 import { ThemeProvider, useTheme } from "styled-components";
+import { aliasChainIdsMapping, networkName } from "helpers/UtilityHelper";
+import { getCAIP } from "helpers/CaipHelper";
+import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+import { setAliasAddress } from "redux/slices/adminSlice";
+import { setProcessingState } from "redux/slices/channelCreationSlice";
 
-const networkName = {
-  80001: "Polygon Mumbai",
-  137: "Polygon Mainnet"
-}
+// interval after which alias details api will be called, in seconds
+const ALIAS_API_CALL_INTERVAL = 10;
 
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { channelDetails, delegatees } = useSelector((state) => state.admin);
+  const { channelDetails, delegatees, aliasDetails } = useSelector((state: any) => state.admin);
+  const { processingState } = useSelector((state: any) => state.channelCreation);
 
-  const themes = useTheme();
+  const dispatch = useDispatch();
 
   const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
   const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
+  const [aliasAddressFromContract, setAliasAddressFromContract] = React.useState(null);
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -69,8 +74,69 @@ const ChannelOwnerDashboard = () => {
     })();
     }, [account, chainId]);
 
+  /*
+    onCoreNetwork :- 
+      1> Alias from Contract hai -> 
+        1> alias from api nhi hai -> Processing 1st
+        2> alias from api hai -> 
+          1> alias verified hai -> channel dashboard
+          2> alias verified nhi hai -> Processing 2nd
+      2> Alias from Contract nhi hai -> Create Channel
+
+    !onCoreNetwork :-
+      1> Eth account hai ->
+        1> Alias hai ->
+          1> Alias verified hai -> dashboard
+          2> Alias verified nhi hai -> Processing 3rd
+      2> Eth account nhi hai -> Create Channel
+  */
+  
+  React.useEffect(() => {
+    if (!onCoreNetwork || !channelDetails) return;
+
+    if (channelDetails['aliasDetails']) {
+      if (!onCoreNetwork) return;
+      const aliasDetails = channelDetails['aliasDetails'];
+      const aliasChainId = aliasChainIdsMapping[CORE_CHAIN_ID];
+      const caip = getCAIP(aliasChainId);
+      if (aliasDetails[`${caip}:${aliasChainId}`]) {
+        setAliasAddressFromContract(aliasDetails[`${caip}:${aliasChainId}`]);
+      }
+    }
+  }, []);
+
+  const fetchChannelDetails = async (address: string) => {
+    let { aliasAddress, isAliasVerified } = await EPNSCoreHelper.getChannelDetailsFromAddress(address);
+    if (aliasAddress == "NULL") aliasAddress = null;
+
+    return { aliasAddress: null, isAliasVerified: isAliasVerified };
+  }
+
+  React.useEffect(() => {
+    if (!onCoreNetwork || !aliasAddressFromContract) return;
+
+    const intervalID = setInterval(async () => {
+      const { aliasAddress, isAliasVerified } = await fetchChannelDetails(account);
+      if (aliasAddress) {
+        dispatch(setAliasAddress(aliasAddress));
+        if (isAliasVerified) {
+          dispatch(setProcessingState(0));
+        } else {
+          dispatch(setProcessingState(2));
+        }
+      } else {
+        if (processingState != 0)
+          dispatch(setProcessingState(1));
+      }
+    }, ALIAS_API_CALL_INTERVAL * 1000);
+
+    if (aliasDetails['aliasAddress'] != null) {
+      clearInterval(intervalID);
+    }
+  })
+
   return (
-    <>
+    <Fragment>
       <Section>
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
@@ -107,7 +173,6 @@ const ChannelOwnerDashboard = () => {
           </Section>
         </ThemeProvider>
         </>
-
       }
 
       {modalOpen &&
@@ -131,7 +196,7 @@ const ChannelOwnerDashboard = () => {
           {/* display the notifications settings */}
         </ModifiedContent>
       </Section>
-    </>
+    </Fragment>
   );
 }
 
