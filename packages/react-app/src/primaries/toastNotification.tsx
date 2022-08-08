@@ -6,10 +6,10 @@ import styled from "styled-components";
 type LoaderToastType = { msg: string, color: string }
 
 const LoaderToast = ({ msg, color }: LoaderToastType) => (
-  <Toaster>
+  <LoaderNotification>
     <Loader type="Oval" color={color} height={30} width={30} />
     <ToasterMsg>{msg}</ToasterMsg>
-  </Toaster>
+  </LoaderNotification>
 );
 
 export const showToastNotification = (loaderMessage: string) => {
@@ -29,26 +29,73 @@ export const showToastNotification = (loaderMessage: string) => {
   return toastId;
 }
 
-export const updateToastNotification = (toastId: React.ReactText, toastMessage: string, toastType: "SUCCESS" | "ERROR") => {
+export const updateToastNotification = (toastId: React.ReactText, toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon: (size: number) => JSX.Element = null) => {
+  const successBgGradient = "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)";
+  const errorBgGradient = "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)";
+
   toast.update(toastId, {
-    render: <Toaster>{toastMessage}</Toaster>,
+    render: <ToastNotification>
+      <ToastIcon>
+        {getToastIcon ? getToastIcon(30) : ""}
+      </ToastIcon>
+      <ToastContent>
+        <ToastTitle>
+          {toastTitle}
+        </ToastTitle>
+        <ToastMessage>
+          {toastMessage}
+        </ToastMessage>
+      </ToastContent>
+    </ToastNotification>,
+    type: toastType === "SUCCESS" ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
     style: {
-      // width:"10vw",
-      // height: "20vh",
-      background: "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)",
+      background: toastType === "SUCCESS" ? successBgGradient : errorBgGradient,
       boxShadow: "0px 0px 10px 0px #00000005",
       borderRadius: "20px",
-      padding: "2% 5%",
     },
     autoClose: 5000,
   });
 }
 
-const Toaster = styled.div`
+const LoaderNotification = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: 0px 10px;
+`;
+const ToastNotification = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 3% 3%;
+`;
+const ToastIcon = styled.div`
+  width:15%;
+  margin-right: 2%;
+`;
+const ToastContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+const ToastTitle = styled.div`
+  color: black;
+  font-family: Manrope;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-bottom: 1%;
+`;
+const ToastMessage = styled.div`
+  color: #657795;
+  font-family: Manrope;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
 `;
 const ToasterMsg = styled.div`
   margin: 0px 10px;

@@ -78,6 +78,7 @@ function MasterInterfacePage() {
         rtl={false}
         pauseOnFocusLoss
         draggable
+        closeButton={false}
       />
 
       {/* To play youtube video from anywhere */}
@@ -188,7 +189,7 @@ const StyledToastContainer = styled(ToastContainer)`
     
   }
   .Toastify__close-button {
-    padding:2px;
+    padding:3px;
   }  
 `;
 

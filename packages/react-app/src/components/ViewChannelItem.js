@@ -30,6 +30,8 @@ import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourney
 import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 import { showToastNotification, updateToastNotification } from "primaries/toastNotification";
 
+import { MdCheckCircle, MdError } from "react-icons/md";
+
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
@@ -340,7 +342,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // );
 
       toastId = showToastNotification("Waiting for Confirmation...");
-
       if (run) {
         console.log("in run");
         // toaster.update(txToast, {
@@ -348,7 +349,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         //   type: toaster.TYPE.SUCCESS,
         //   autoClose: 5000,
         // });
-        updateToastNotification(toastId, "Successfully opted into channel !", "SUCCESS");
+        updateToastNotification(toastId, "Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
 
         dispatch(addNewWelcomeNotif({
           cta: "",
@@ -382,7 +383,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         //   type: toaster.TYPE.SUCCESS,
         //   autoClose: 5000,
         // });
-        updateToastNotification(toastId, "Successfully opted into channel !", "SUCCESS");
+        updateToastNotification(toastId, "Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
 
         console.log(res);
         setTxInProgress(false);
@@ -393,7 +394,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   type: toaster.TYPE.ERROR,
       //   autoClose: 5000,
       // });
-      updateToastNotification(toastId, `There was an error opting into channel ( ${err.message} )`, "ERROR");
+      updateToastNotification(toastId, "Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />);
 
       console.log(err);
     } finally {
@@ -482,7 +483,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           //   type: toaster.TYPE.SUCCESS,
           //   autoClose: 5000,
           // });
-          updateToastNotification(toastId, "Successfully opted out of channel !", "SUCCESS");
+          updateToastNotification(toastId, "Success", "Successfully opted out of channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
 
           console.log(res);
         })
@@ -493,7 +494,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           //   type: toaster.TYPE.ERROR,
           //   autoClose: 5000,
           // });
-          updateToastNotification(toastId, `There was an error opting into channel ( ${err.message} )`, "ERROR");
+          updateToastNotification(toastId, "Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />);
 
           console.log(err);
         })
