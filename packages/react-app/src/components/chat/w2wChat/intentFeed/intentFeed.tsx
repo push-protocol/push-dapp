@@ -33,7 +33,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const IntentFeed = (props: IntentFeedProps): JSX.Element => {
   const { did, setChat }: AppContext = useContext<AppContext>(Context)
-  const [receivedIntents, setReceivedIntents] = useState([])
+  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
   const [open, setOpen] = useState(false)
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
   const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
@@ -41,14 +41,17 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
   const [toDID, settoDID] = useState<string>()
 
   async function resolveThreadhash(): Promise<void> {
-    // To-Do: As of now the cache is not being used
-    const intentsFromIndexDB = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
-    if (intentsFromIndexDB === undefined) {
-      const intents: Feeds[] = await fetchIntent(did)
-      setReceivedIntents(intents)
+    let getIntent
+    getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
+
+    if (getIntent === undefined) {
+      getIntent = await fetchIntent(did)
+      setReceivedIntents(getIntent)
     } else {
-      const intents: Feeds[] = await fetchIntent(did)
-      setReceivedIntents(intents)
+      getIntent = getIntent.body
+      setReceivedIntents(getIntent)
+      getIntent = await fetchIntent(did)
+      setReceivedIntents(getIntent)
     }
   }
 

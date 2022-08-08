@@ -26,13 +26,19 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [stopApi, setStopApi] = useState<boolean>(true)
 
-  const getInbox = async (): Promise<void> => {
+  const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
-      setFeeds(getInbox.body)
+      const inbox: Feeds[] = await fetchInbox(did)
+      console.log('Inbox', inbox)
+      setFeeds(inbox)
+      // setCurrentChat(inbox)
+      return inbox
+    } else {
+      const inbox: Feeds[] = await fetchInbox(did)
+      setFeeds(inbox)
+      return inbox
     }
-    const inbox: Feeds[] = await fetchInbox(did)
-    setFeeds(inbox)
   }
 
   useQuery('current', getInbox, {
