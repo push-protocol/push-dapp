@@ -93,7 +93,6 @@ function App() {
     setDid(did)
     const user: User = await PushNodeClient.getUser({ did: did.id, wallet: '' })
     if (!user) {
-      toast.error('No User found', ToastPosition)
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKey, did)
       const createdUser = await PushNodeClient.createUser({
