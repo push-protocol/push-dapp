@@ -28,6 +28,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
+import { User } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -195,7 +196,7 @@ const ChatBox = (): JSX.Element => {
         publicKeyArmored: currentChat.pgp_pub,
         did
       })
-      const savedMsg = await PushNodeClient.postMessage({
+      const savedMsg: MessageIPFS = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
         toDID: toDid,
@@ -243,36 +244,52 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
-        const user = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
+        const user: User = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
+        let messageContent: string, encryptionType: string, aesEncryptedSecret: string
         if (!user) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           await PushNodeClient.createUser({
             wallet: caip10,
             did: caip10,
-            pgp_pub: 'temp',
-            pgp_priv_enc: 'temp',
-            pgp_enc_type: 'pgp',
-            signature: 'temp',
-            sigType: 'temp'
+            pgp_pub: '',
+            pgp_priv_enc: '',
+            pgp_enc_type: '',
+            signature: 'pgp',
+            sigType: 'pgp'
           })
+          // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
+          messageContent = message
+          encryptionType = 'PlainText'
+          aesEncryptedSecret = ''
+        } else {
+          // It's possible for a user to be created but the PGP keys still not created
+          if (!user.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+            messageContent = message
+            encryptionType = 'PlainText'
+            aesEncryptedSecret = ''
+          } else {
+            const { cipherText, encryptedSecret } = await encrypt({
+              plainText: message,
+              encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+              publicKeyArmored: currentChat.pgp_pub,
+              did
+            })
+            messageContent = cipherText
+            encryptionType = 'pgp'
+            aesEncryptedSecret = encryptedSecret
+          }
         }
 
-        const { cipherText, encryptedSecret } = await encrypt({
-          plainText: message,
-          encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-          publicKeyArmored: currentChat.pgp_pub,
-          did
-        })
-        const msg = await PushNodeClient.createIntent({
+        const msg: MessageIPFS = await PushNodeClient.createIntent({
           toDID: currentChat.did,
           fromDID: did.id,
           fromWallet: account,
-          message: cipherText,
+          message: messageContent,
           messageType,
           signature: 'signature',
-          encType: 'pgp',
+          encType: encryptionType,
           sigType: 'mysignaturetype',
-          encryptedSecret
+          encryptedSecret: aesEncryptedSecret
         })
         setHasIntent(true)
         setMessages([...messages, msg])
