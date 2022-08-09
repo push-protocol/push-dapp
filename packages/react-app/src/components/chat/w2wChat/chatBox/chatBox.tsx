@@ -12,11 +12,10 @@ import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
-import { encrypt, caip10ToWallet } from '../../../../helpers/w2w'
+import { encrypt, decrypt, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
-import * as w2wChatHelper from '../../../../helpers/w2w'
 import GifIcon from '../W2WIcons/GifIcon'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
@@ -89,6 +88,17 @@ const ChatBox = (): JSX.Element => {
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
         msgIPFS = messageFromIPFS
       }
+
+      // // Decrypt message
+      // if (msgIPFS.enc_type !== 'PlainText') {
+      //   msgIPFS.messageContent = await decrypt({
+      //     cipherText: msgIPFS.messageContent,
+      //     did: did,
+      //     encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+      //     publicKeyArmored: currentChat.pgp_pub
+      //   })
+      // }
+
       setMessages((m) => [msgIPFS, ...m])
 
       const link = msgIPFS.link
@@ -192,8 +202,9 @@ const ChatBox = (): JSX.Element => {
       setMessages([...messages, msg])
       const { cipherText, encryptedSecret } = await encrypt({
         plainText: message,
-        encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-        publicKeyArmored: currentChat.pgp_pub,
+        fromEncryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        fromPublicKeyArmored: connectedUser.pgp_pub,
+        toPublicKeyArmored: currentChat.pgp_pub,
         did
       })
       const savedMsg: MessageIPFS = await PushNodeClient.postMessage({
@@ -247,7 +258,7 @@ const ChatBox = (): JSX.Element => {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string
         if (!user) {
-          const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
+          const caip10: string = walletToCAIP10(searchedUser, chainId)
           await PushNodeClient.createUser({
             wallet: caip10,
             did: caip10,
@@ -270,8 +281,9 @@ const ChatBox = (): JSX.Element => {
           } else {
             const { cipherText, encryptedSecret } = await encrypt({
               plainText: message,
-              encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-              publicKeyArmored: currentChat.pgp_pub,
+              fromEncryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+              toPublicKeyArmored: currentChat.pgp_pub,
+              fromPublicKeyArmored: connectedUser.pgp_pub,
               did
             })
             messageContent = cipherText
