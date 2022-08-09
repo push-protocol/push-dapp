@@ -83,38 +83,6 @@ function ChannelDashboardPage() {
       const coreProvider = onCoreNetwork
         ? library
         : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
-      // if we are not on the core network then check for if this account is an alias for another channel
-      if (!onCoreNetwork) {
-        // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/get_eth_address", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-        if (aliasEth) {
-          // if an alias exists, check if its verified.
-          await postReq("/channels/get_alias_verification_status", {
-            aliasAddress: account,
-            op: "read",
-          }).then(({ data }) => {
-            // if it returns undefined then we need to let them know to verify their channel
-            console.log(data);
-            if (!data) {
-              setAliasVerified(null);
-              return;
-            }
-            const { status } = data;
-            setAliasVerified(status);
-            return data;
-          });
-        }
-      }
       // if we are not on the core network then fetch if there is an alias address from the api
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(
@@ -190,7 +158,6 @@ function ChannelDashboardPage() {
         chainId
       );
       
-      await checkUserForAlias();
       await checkUserForChannelOwnership();
       fetchDelegators();
     }
@@ -279,39 +246,6 @@ function ChannelDashboardPage() {
       });
   };
 
-  // Check if a user is a channel or not
-  const checkUserForAlias = async () => {
-    // Check if account is admin or not and handle accordingly
-    const aliasEth = await postReq("/channels/get_eth_address", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-    if (aliasEth) {
-      // if an alias exists, check if its verified.
-      await postReq("/channels/get_alias_verification_status", {
-        aliasAddress: account,
-        op: "read",
-      }).then(({ data }) => {
-        // if it returns undefined then we need to let them know to verify their channel
-        console.log(data);
-        if (!data) {
-          setAliasVerified(null);
-          return;
-        }
-        const { status } = data;
-        setAliasVerified(status);
-        return data;
-      });
-    }
-  };
-
   // Render
   return (
     <Container>
@@ -332,13 +266,7 @@ function ChannelDashboardPage() {
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}
-        {modalOpen && (
-          <AliasVerificationodal
-            onClose={() => setModalOpen(false)}
-            onSuccess={() => setAliasVerified(true)}
-            verificationStatus={aliasVerified}
-          />
-        )}
+        
       </Interface>
     </Container>
   );
@@ -353,7 +281,7 @@ font-size: 1.5em;
 font-weight: 300;
 text-align: center;
 color: ${props => props.theme.color};
-`
+`;
 
 const Container = styled.div`
   flex: 1;

@@ -1,18 +1,16 @@
 import React, {Fragment} from "react";
 import styled from "styled-components";
-import { Section, Content, Button, Item, H2, Span, H3 } from "../primaries/SharedStyling";
+import { Section, Content } from "../primaries/SharedStyling";
 
 import SendNotifications from "components/SendNotifications";
 import ChannelSettings from "components/ChannelSettings";
 import ChannelDetails from "components/ChannelDetails";
 import CreateChannel from "components/CreateChannel";
-import AliasVerificationModal from "components/AliasVerificationModal";
 import { useDispatch, useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
-import { postReq } from "api";
 import { ThemeProvider, useTheme } from "styled-components";
-import { aliasChainIdsMapping, networkName } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping } from "helpers/UtilityHelper";
 import { getCAIP } from "helpers/CaipHelper";
 import { setAliasAddress, setAliasVerified } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
@@ -20,13 +18,12 @@ import AliasProcessing from "components/AliasProcessing"
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 
 // interval after which alias details api will be called, in seconds
-const ALIAS_API_CALL_INTERVAL = 10;
+const ALIAS_API_CALL_INTERVAL = 15;
 
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
-  const [modalOpen, setModalOpen] = React.useState(false);
   const { channelDetails, delegatees, aliasDetails: {aliasAddr, isAliasVerified} } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
 
@@ -73,7 +70,7 @@ const ChannelOwnerDashboard = () => {
     let { aliasAddress, isAliasVerified } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
     if (aliasAddress == "NULL") aliasAddress = null;
 
-    return { aliasAddress: null, aliasVerified: isAliasVerified };
+    return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
   }
 
   const fetchEthAccount = async (address: string) => {
@@ -84,7 +81,7 @@ const ChannelOwnerDashboard = () => {
   }
 
   React.useEffect(() => {
-    if (!onCoreNetwork || !aliasAddressFromContract) return;
+    if (!onCoreNetwork || !aliasAddressFromContract || processingState === 0) return;
 
     const intervalID = setInterval(async () => {
       const { aliasAddress, aliasVerified } = await fetchChannelDetails(account);
@@ -98,7 +95,7 @@ const ChannelOwnerDashboard = () => {
           dispatch(setAliasVerified(false));
         }
       } else {
-        if (processingState != 0)
+        if (processingState != 0 && processingState != 1)
           dispatch(setProcessingState(1));
       }
     }, ALIAS_API_CALL_INTERVAL * 1000);
@@ -110,7 +107,7 @@ const ChannelOwnerDashboard = () => {
 
   React.useEffect(() => {
     if (onCoreNetwork) return;
-    if (isAliasVerified && processingState === 0) return;
+    if (isAliasVerified || processingState === 0) return;
 
     (async function process() {
       const ethAccount = await fetchEthAccount(account);
@@ -129,11 +126,14 @@ const ChannelOwnerDashboard = () => {
     })()
   });
 
-
-
   return (
     <Fragment>
       <Section>
+        {processingState === null &&
+          <ChannelLoadingMessage>
+            Channel details are being loaded, please wait…
+          </ChannelLoadingMessage>
+        }
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
@@ -144,16 +144,7 @@ const ChannelOwnerDashboard = () => {
               <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
             </ThemeProvider>
           )}
-          {/* } */}
-
-      {/* {modalOpen &&
-            <AliasVerificationModal
-              onClose={(val) => setModalOpen(val)}
-              onSuccess={() => dispatch(setAliasVerified(true))}
-              verificationStatus={isAliasVerified}
-              aliasEthAccount={aliasEthAccount}
-            />
-          } */}
+      
           {processingState === 0 && (<>
           {/* display the create channel page if there are no details */}
           {/* display the channel settings */}
@@ -176,6 +167,15 @@ const ChannelOwnerDashboard = () => {
 const ModifiedContent = styled(Content)`
   padding: 0px;
   position: relative;
+`;
+
+const ChannelLoadingMessage = styled.div`
+  width: 100%;
+  padding: 40px;
+  font-size: 1.5em;
+  font-weight: 300;
+  text-align: center;
+  color: ${props => props.theme.color};
 `;
 
 // Export Default
