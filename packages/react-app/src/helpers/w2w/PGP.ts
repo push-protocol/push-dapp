@@ -23,17 +23,20 @@ const privateKeyObject = async (privateKeyArmored: string): Promise<openpgp.Priv
 export const encrypt = async ({
   plainText,
   toPublicKeyArmored,
+  fromPublicKeyArmored,
   fromPrivateKeyArmored
 }: {
   plainText: string
   toPublicKeyArmored: string
+  fromPublicKeyArmored: string
   fromPrivateKeyArmored: string
 }): Promise<string> => {
-  const publicKey: openpgp.Key = await publicKeyObject(toPublicKeyArmored)
+  const toPublicKey: openpgp.Key = await publicKeyObject(toPublicKeyArmored)
+  const fromPublicKey: openpgp.Key = await publicKeyObject(fromPublicKeyArmored)
   const privateKey: openpgp.PrivateKey = await privateKeyObject(fromPrivateKeyArmored)
   const encrypted = await openpgp.encrypt({
     message: await openpgp.createMessage({ text: plainText }),
-    encryptionKeys: publicKey,
+    encryptionKeys: [toPublicKey, fromPublicKey],
     signingKeys: privateKey
   })
   return encrypted as string

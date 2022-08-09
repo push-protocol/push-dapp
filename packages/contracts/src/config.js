@@ -7,7 +7,7 @@ const config = {
     80001, //for mumbai polygon
   ],
   w2wApiUrl: 'http://localhost:4000/apis',
-  infuraApiUrl: 'https://127.0.0.1:5001/ipfs/',
+  infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
   coreContractChain: 42, //the chain id of the network which the core contract relies on
   coreRPC: 'https://kovan.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   googleAnalyticsId: 'UA-165415629-5',
