@@ -12,7 +12,7 @@ import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
-import { encrypt } from '../../../../helpers/w2w'
+import { encrypt, caip10ToWallet } from '../../../../helpers/w2w'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
@@ -24,13 +24,10 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
-import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
-import _ from 'lodash'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
-import { fetchInbox } from '../w2wUtils'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -101,6 +98,7 @@ const ChatBox = (): JSX.Element => {
       }
     }
   }
+
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
@@ -134,11 +132,10 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
 
   useEffect(() => {
     function updateData(): void {
-      // console.log('Current Chat Wallets', currentChat?.wallets)
       if (data !== undefined && currentChat?.wallets) {
         const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
         if (newData?.intent === 'Approved') {
@@ -185,7 +182,7 @@ const ChatBox = (): JSX.Element => {
         messageType,
         signature,
         enc_type: encType,
-        sigType: sigType,
+        sigType,
         timestamp: Date.now(),
         encryptedSecret: '',
         link: ''
@@ -271,11 +268,11 @@ const ChatBox = (): JSX.Element => {
           fromDID: did.id,
           fromWallet: account,
           message: cipherText,
-          messageType: messageType,
+          messageType,
           signature: 'signature',
           encType: 'pgp',
           sigType: 'mysignaturetype',
-          encryptedSecret: encryptedSecret
+          encryptedSecret
         })
         setHasIntent(true)
         setMessages([...messages, msg])
