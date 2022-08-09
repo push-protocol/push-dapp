@@ -20,31 +20,57 @@ import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommuni
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 
+
+import { postReq } from "api";
+
 // Create Header
 function Navigation() {
     const { channelDetails, aliasVerified, delegatees } = useSelector((state: any) => state.admin);
     const [loading, setLoading] = useState(true);
+    const [canSendNotification, setCanSendNotification] = React.useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
 
-    const { chainId } = useWeb3React();
     const CORE_CHAIN_ID = envConfig.coreContractChain;
+    const { account, chainId } = useWeb3React();
     const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
     const theme = useTheme();
     const location = useLocation();
     const dispatch = useDispatch();
 
-    useEffect(()=>{
-      // alert("I was called");
 
-    },[loading])
+    // useEffect(()=>{
+    //   (async()=>{
+    //     const res = await postReq("/channels/search", {
+    //       query:account,
+    //       op: "read",
+    //       page: 1,
+    //       address:account,
+    //       pageSize: 1000,
+    //       chainId: chainId,
+    //     }).then(({data}) => data.channels[0]).catch(e=>console.log(e))
+    //     console.log(res,"it ma");
+        
+    //     if(res && (res.addr === account || res.alias_address === account)){
+    //       setCanSendNotification(true)
+    //       ("dadda")
+    //     }else{
+    //       setCanSendNotification(false)
+    //       setLoading(false)
+    //     }
+    //   })()
+
+    // },[account,chainId])
     
-
+    // TODO:
+    // get the owner info
+    // store in redux
+    // create new slice
     useEffect(()=>{
-
+      
       if(!run && navigationSetup !== null && channelDetails!==null){
         navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
@@ -523,14 +549,12 @@ function Navigation() {
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
-                    // console.log();
                     if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ||  (stepIndex === 16 && data.name === "Create Channel") ||  (stepIndex === 17 && data.name === "Developer's Guide")))
                     { 
                       if(stepIndex === 10)dispatch(setTutorialContinous(true));
                       dispatch(incrementStepIndex())
                     }
-                    // console.log(`Clicked  button`);
-                    // mutateTransformedList(item)
+                    
                   }}
                   >
                   <NavigationButton
@@ -546,14 +570,13 @@ function Navigation() {
         </SectionGroup>
       );
 
-      // const item = drilldown[0];      
       const item = {
         "data": {
-            "src": "svg/governalt.svg",
+            "src": "loading.png",
             "name": "Loading ...",
             "title": "Loading ...",
             "alt": "Loader",
-            "href": "#",
+            "href": "/#/dashboard",
         }
       }
       const data = item.data

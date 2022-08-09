@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useDeviceWidthCheck } from "hooks";
 import {AiFillCopy,AiOutlineCopy } from 'react-icons/ai';
 
-const DelegateInfo = ({ delegateAddress }) => {
+const DelegateInfo = ({ delegateAddress, isDelegate }) => {
   const [addressText,setAddressText] = useState(delegateAddress);
   const [isCopied, setIsCopied] = useState(false)
   const isMobile = useDeviceWidthCheck(700);
@@ -19,36 +19,54 @@ const DelegateInfo = ({ delegateAddress }) => {
   },[isMobile])
 
   return (
-    <Wallet
-      // onMouseEnter={() => setAddressText("Click to Copy")}
-      onMouseLeave={() => setIsCopied(false)}
-      minWidth={!isMobile ? '350px' : '120px'}
-    >
-        <div> 
-          {addressText}  
-        </div>
-        <div 
-          style={{marginLeft:'10px',cursor:'pointer'}} 
-          onClick={() => {
-            navigator.clipboard.writeText(delegateAddress)
-            setIsCopied(true)
-          }}>
-          {
-            isCopied ? 
-              <AiFillCopy size={18} color="white"/>
-            :  
-              <AiOutlineCopy size={18} color="white"/>
-          }
-        </div>
-    </Wallet>
+    <>
+    {!isDelegate ? 
+      <Wallet
+        onMouseLeave={() => setIsCopied(false)}
+        minWidth={!isMobile ? '350px' : '120px'}
+      >
+        <WalletInfoContent {...{addressText,isCopied,setIsCopied,delegateAddress}}/>
+      </Wallet>
+    :
+      <HoverWallet
+        onMouseLeave={() => setIsCopied(false)}
+        minWidth={!isMobile ? '350px' : '120px'}
+      >
+        <WalletInfoContent {...{addressText,isCopied,setIsCopied,delegateAddress}}/>
+      </HoverWallet>
+    }
+    </>
   )
 }
 
-const Wallet = styled.span`
+const WalletInfoContent = ({addressText,isCopied,setIsCopied,delegateAddress})=>{
+  return(
+    <div style={{display:'flex',justifyContent:'space-between',width:'100%'}}>
+      <div style={{paddingTop:3}}> 
+        {addressText}  
+      </div>
+      <div 
+        style={{marginLeft:'10px',cursor:'pointer'}} 
+        onClick={() => {
+          navigator.clipboard.writeText(delegateAddress)
+          setIsCopied(true)
+        }}>
+        {
+          isCopied ? 
+          <AiFillCopy size={18} color="white" style={{paddingTop:4}}/>
+          :  
+          <AiOutlineCopy size={18} color="white" style={{paddingTop:4}}/>
+        }
+      </div>
+    </div>
+  )
+}
+
+const WalletAddressDisplay = styled.span`
   flex: 3;
   margin-right:30px;
   margin-left: 10px;
-  padding: 16px 30px;
+  padding: 8px 30px;
   max-height: 30px; 
   display: flex;
   align-items: baseline;
@@ -56,17 +74,36 @@ const Wallet = styled.span`
   font-weight: bold;
   min-width: ${props => props.minWidth || 'fit-content'};
   font-size: 16px;
-  color: #fff;
   border-radius: 15px;
+
+  &:active {
+    opacity: 0.75;
+    cursor: pointer;
+    pointer: hand;
+  }
+
+`
+
+const HoverWallet = styled(WalletAddressDisplay)`
+  color: ${props => props.theme.color};
+
+  &:hover {
+    background: rgb(226,8,128);
+    background: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
+    opacity: 0.9;
+    color: #fff;
+    cursor: pointer;
+    pointer: hand;
+  }
+  
+`
+
+const Wallet = styled(WalletAddressDisplay)`
+  color: #fff;
   background: rgb(226,8,128);
   background: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
   &:hover {
     opacity: 0.9;
-    cursor: pointer;
-    pointer: hand;
-  }
-  &:active {
-    opacity: 0.75;
     cursor: pointer;
     pointer: hand;
   }

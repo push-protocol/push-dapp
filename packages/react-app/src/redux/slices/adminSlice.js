@@ -5,7 +5,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    channelDetails: null,
+    channelDetails: 'unfetched',
     aliasVerified: null,
     canVerify: false,
     delegatees: []

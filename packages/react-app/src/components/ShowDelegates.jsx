@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { postReq } from "api";
@@ -8,12 +8,21 @@ import { useSelector } from "react-redux";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import DelegateInfo from "./DelegateInfo";
 
+import {
+  AiOutlineUserDelete
+} from 'react-icons/ai';
+
+
 const blockchainName = {
   1: "ETH_MAINNET",
   137: "POLYGON_MAINNET",
   42: "ETH_TEST_KOVAN",
   80001: "POLYGON_TEST_MUMBAI",
 };
+
+const isOnwer=(account,delegate)=>{
+  return account.toLowerCase() !== delegate.toLowerCase() 
+}
 
 const ShowDelegates = () => {
   const { account, chainId } = useWeb3React();
@@ -79,7 +88,7 @@ const ShowDelegates = () => {
           {delegatees.map((delegate,idx) => {
             return (
               <Item
-                padding="15px 12px"
+                padding="6px 12px"
                 direction="row"
                 justify="space-between"
                 key={delegate}
@@ -87,13 +96,12 @@ const ShowDelegates = () => {
                   borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
                 }}
               >
-                <DelegateInfo delegateAddress={delegate}/>
-                {(account.toLowerCase() !== delegate.toLowerCase()) ?
+                <DelegateInfo delegateAddress={delegate} isDelegate={isOnwer(account,delegate)}/>
+                {isOnwer(account,delegate) ?
                   <RemoveButton onClick={() => {
                     setDelegateToBeRemoved(delegate);
                     setRemoveModalOpen(true);
                   }}>
-                    Remove Delegate
                   </RemoveButton> : 
                   <OwnerButton disabled={true}>
                     Channel Creator
@@ -116,6 +124,35 @@ const ShowDelegates = () => {
         )}
       </Item>
     </>
+  )
+}
+
+const RemoveButton = ()=>{
+  const [isHovered,setIsHovered] = useState(false)
+  
+  const handleMouseOver = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovered(false);
+  };
+
+  return(
+      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut}>
+        {
+        isHovered ?
+        <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
+          <AiOutlineUserDelete fontSize={15}/>
+          <div style={{padding:'1px'}}/>
+          <div>
+            Remove Delegate 
+          </div>
+        </div>
+          :
+            "Delegate"
+        }
+      </RemoveButtonUI>
   )
 }
 
@@ -158,19 +195,44 @@ const ChannelActionButton = styled.button`
     `}
 `;
 
-const RemoveButton = styled(ChannelActionButton)`
-  background: #e20880;
+const RemoveButtonUI = styled(ChannelActionButton)`
+  background: ${props => props.theme.backgroundBG};
+  color: ${props => props.theme.color};
   height: 50px;
   width: 150px;
-  flex:1
+  flex:1; 
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 141%;
+  display: flex;
+  align-items: center;
+  text-align: right;
   
+  &:hover {
+    opacity: 0.9;
+    background: #E93636
+;
+    color: #fff;
+    cursor: pointer;
+  }
 `;
 
 const OwnerButton = styled(ChannelActionButton)`
-  background: #35c5f3;
+  /* background-color: red; */
+  background: ${props => props.theme.backgroundBG};
   height: 50px;
   width: 150px;
-  flex:1
+  flex:1;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 141%;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  cursor: pointer;
+  color: #CF1C84;
 `;
 
 

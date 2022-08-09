@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Section, Content, Button, Item, H2, Span, H3 } from "../primaries/SharedStyling";
 
+import SendNotifications from "components/SendNotifications";
 import ChannelSettings from "components/ChannelSettings";
 import ChannelDetails from "components/ChannelDetails";
 import CreateChannel from "components/CreateChannel";
@@ -22,10 +23,12 @@ const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
   const [modalOpen, setModalOpen] = React.useState(false);
-  const { channelDetails } = useSelector((state) => state.admin);
+  const { channelDetails, delegatees } = useSelector((state) => state.admin);
 
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null); 
-  const [aliasVerified, setAliasVerified] = React.useState(null); 
+  const themes = useTheme();
+
+  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
+  const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -71,41 +74,40 @@ const ChannelOwnerDashboard = () => {
       <Section>
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && aliasEthAccount === null ? <ChannelDetails /> : ""}
+          {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
           
           {aliasEthAccount !== null && aliasVerified === false &&
-        <>
-        <ThemeProvider theme={theme}>
-          <Section padding="30px">
-            <Content padding="10px 0px 20px">
-              <Item align="flex-start">
-                <H2 textTransform="uppercase" spacing="0.1em">
-                  <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-                    Verify
-                  </Span>
-                  <Span weight="200" color={theme.color}> Your Channel Alias!</Span>
-                </H2>
-                <H3 color={theme.color} padding="10px 0px">
-                  Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
-                </H3>
-                <Button
-                  bg="#e20880"
-                  color="#fff"
-                  flex="1"
-                  padding="20px 10px"
-                  textTransform="uppercase"
-                  style={{width: "100%"}}
-                  onClick={() => setModalOpen(true)}
-                >
-                    Verify Channel Alias
-                </Button>      
-              </Item>
-            </Content>
-          </Section>
-        </ThemeProvider>
-        </>
-
-      }
+            <>
+            <ThemeProvider theme={theme}>
+              <Section padding="30px">
+                <Content padding="10px 0px 20px">
+                  <Item align="flex-start">
+                    <H2 textTransform="uppercase" spacing="0.1em">
+                      <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
+                        Verify
+                      </Span>
+                      <Span weight="200" color={theme.color}> Your Channel Alias!</Span>
+                    </H2>
+                    <H3 color={theme.color} padding="10px 0px">
+                      Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+                    </H3>
+                    <Button
+                      bg="#e20880"
+                      color="#fff"
+                      flex="1"
+                      padding="20px 10px"
+                      textTransform="uppercase"
+                      style={{width: "100%"}}
+                      onClick={() => setModalOpen(true)}
+                    >
+                        Verify Channel Alias
+                    </Button>      
+                  </Item>
+                </Content>
+              </Section>
+            </ThemeProvider>
+            </>
+          }
 
       {modalOpen &&
             <AliasVerificationModal
@@ -124,8 +126,8 @@ const ChannelOwnerDashboard = () => {
           {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
           {/* display the details about the profile of the channel */}
           {/* display the notifications settings */}
-          
-          
+          {/* {(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""} */}
+          {/* display the notifications settings */}
         </ModifiedContent>
       </Section>
     </>

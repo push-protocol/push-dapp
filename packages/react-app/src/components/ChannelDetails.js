@@ -95,8 +95,8 @@ export default function ChannelDetails() {
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
           <div style={{display:'flex'}}>
-              <Subscribers>
-              <img style={{paddingTop:'5px',paddingLeft:'6px'}} src="/people.svg" alt="subscount"></img>
+            <Subscribers>
+              <img style={{paddingLeft:'6px'}} src="/people.svg" alt="subscount"></img>
               <SubscribersCount>
                 {channelDetails.subscribers.length}
               </SubscribersCount>
@@ -189,6 +189,10 @@ const Subscribers = styled.div`
   background: #FFDBF0;
   border-radius: 25px;
   margin-top: 10px;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  
 `;
 
 const ChanneStateText = styled.span`
@@ -260,7 +264,7 @@ const SubscribersCount = styled.span`
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   color: #CF1C84;
 ;
 `;

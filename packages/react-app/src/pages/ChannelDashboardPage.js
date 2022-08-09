@@ -320,9 +320,9 @@ function ChannelDashboardPage() {
   return (
     <Container>
       <Interface>
-        {controlAt == 0 && <Feedbox />}
-        {controlAt == 1 && <ViewChannels />}
-        {controlAt == 2 ? //adminStatusLoaded ? 
+        {controlAt === 0 && <Feedbox />}
+        {controlAt === 1 && <ViewChannels />}
+        {controlAt === 2 && adminStatusLoaded ? 
             <ChannelOwnerDashboard /> 
             // <ChannelLoadingMessage>
             //   Channel details are being loaded, please wait…
@@ -332,7 +332,7 @@ function ChannelDashboardPage() {
               Channel details are being loaded, please wait…
             </ChannelLoadingMessage>
         }
-        {controlAt == 3 && <Info />}
+        {controlAt === 3 && <Info />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}
@@ -375,3 +375,5 @@ const Interface = styled.div`
 
 // Export Default
 export default ChannelDashboardPage;
+
+// 26b95508947ad2bdf7c5b943ead2acab59319cd1 5d7a11d2f8b6bc4e053ebdea2bdb3fb57c345cc9

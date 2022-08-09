@@ -314,7 +314,7 @@ function ChannelDashboardPage() {
       {controlAt === 2 && adminStatusLoaded ? 
         <>
         {/* redirect if not admin */}
-        {!channelAdmin && <Navigate replace to="/#/dashboard" /> }
+        {!channelAdmin && <Navigate replace to="/dashboard" /> }
         {channelAdmin && <SendNotifications/>}
         </>
         : 
