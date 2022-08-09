@@ -12,7 +12,7 @@ import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
-import { encrypt } from '../../../../helpers/w2w'
+import { encrypt, caip10ToWallet } from '../../../../helpers/w2w'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
@@ -24,13 +24,11 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import GifPicker from '../Gifs/gifPicker'
 import { useQuery } from 'react-query'
-import { caip10ToWallet } from '../../../../helpers/w2w'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
-import _ from 'lodash'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
-import { fetchInbox } from '../w2wUtils'
+import { User } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -101,6 +99,7 @@ const ChatBox = (): JSX.Element => {
       }
     }
   }
+
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
@@ -134,11 +133,10 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const { data, error, isError, isLoading } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
 
   useEffect(() => {
     function updateData(): void {
-      // console.log('Current Chat Wallets', currentChat?.wallets)
       if (data !== undefined && currentChat?.wallets) {
         const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
         if (newData?.intent === 'Approved') {
@@ -185,7 +183,7 @@ const ChatBox = (): JSX.Element => {
         messageType,
         signature,
         enc_type: encType,
-        sigType: sigType,
+        sigType,
         timestamp: Date.now(),
         encryptedSecret: '',
         link: ''
@@ -198,7 +196,7 @@ const ChatBox = (): JSX.Element => {
         publicKeyArmored: currentChat.pgp_pub,
         did
       })
-      const savedMsg = await PushNodeClient.postMessage({
+      const savedMsg: MessageIPFS = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
         toDID: toDid,
@@ -238,43 +236,60 @@ const ChatBox = (): JSX.Element => {
           encType: 'pgp'
         })
       } else {
-        sendIntent(newMessage, 'Text')
+        sendIntent({ message: newMessage, messageType: 'Text' })
       }
     }
   }
 
-  const sendIntent = async (content: string, contentType: string): Promise<void> => {
+  const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
-        const user = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
+        const user: User = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
+        let messageContent: string, encryptionType: string, aesEncryptedSecret: string
         if (!user) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           await PushNodeClient.createUser({
             wallet: caip10,
             did: caip10,
-            pgp_pub: 'temp',
-            pgp_priv_enc: 'temp',
-            pgp_enc_type: 'pgp',
-            signature: 'temp',
-            sigType: 'temp'
+            pgp_pub: '',
+            pgp_priv_enc: '',
+            pgp_enc_type: '',
+            signature: 'pgp',
+            sigType: 'pgp'
           })
+          // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
+          messageContent = message
+          encryptionType = 'PlainText'
+          aesEncryptedSecret = ''
+        } else {
+          // It's possible for a user to be created but the PGP keys still not created
+          if (!user.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+            messageContent = message
+            encryptionType = 'PlainText'
+            aesEncryptedSecret = ''
+          } else {
+            const { cipherText, encryptedSecret } = await encrypt({
+              plainText: message,
+              encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+              publicKeyArmored: currentChat.pgp_pub,
+              did
+            })
+            messageContent = cipherText
+            encryptionType = 'pgp'
+            aesEncryptedSecret = encryptedSecret
+          }
         }
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        const msg = await PushNodeClient.createIntent({
+
+        const msg: MessageIPFS = await PushNodeClient.createIntent({
           toDID: currentChat.did,
           fromDID: did.id,
           fromWallet: account,
-          message: content,
-          messageType: contentType,
+          message: messageContent,
+          messageType,
           signature: 'signature',
-          encType: 'myencryptiontype',
+          encType: encryptionType,
           sigType: 'mysignaturetype',
-          encryptedSecret: 'abc'
+          encryptedSecret: aesEncryptedSecret
         })
         setHasIntent(true)
         setMessages([...messages, msg])
@@ -319,7 +334,7 @@ const ChatBox = (): JSX.Element => {
         reader.onloadend = async (e): Promise<void> => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
           if (!hasIntent && intentSentandPending === 'Pending') {
-            sendIntent(JSON.stringify(resultingfile), type)
+            sendIntent({ message: JSON.stringify(resultingfile), messageType: type })
           } else {
             sendMessage({
               account,
@@ -338,7 +353,7 @@ const ChatBox = (): JSX.Element => {
         const cid = await IPFSHelper.uploadImage(file, IPFSClient)
         content = cid
         if (!hasIntent && intentSentandPending === 'Pending') {
-          sendIntent(content.toString(), type)
+          sendIntent({ message: content.toString(), messageType: type })
         } else {
           sendMessage({
             account,
@@ -368,7 +383,7 @@ const ChatBox = (): JSX.Element => {
 
   const sendGif = (url: string): void => {
     if (!hasIntent && intentSentandPending === 'Pending') {
-      sendIntent(url, 'GIF')
+      sendIntent({ message: url, messageType: 'GIF' })
     } else {
       sendMessage({
         account,
