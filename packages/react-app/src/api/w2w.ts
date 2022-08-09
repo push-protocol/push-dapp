@@ -1,6 +1,7 @@
 import { ToastPosition, InboxChat } from 'components/chat/w2wChat/w2wIndex'
 import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
+import { MessageIPFS } from 'helpers/w2w/ipfs'
 
 const BASE_URL = envConfig.w2wApiUrl
 
@@ -84,7 +85,7 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
   }
 }
 
-export const getUser = async ({ did, wallet }: { did: string; wallet: string }) => {
+export const getUser = async ({ did, wallet }: { did: string; wallet: string }): Promise<User> => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
@@ -99,7 +100,7 @@ export const getUser = async ({ did, wallet }: { did: string; wallet: string }) 
           wallet
         })
       })
-      const data = await response.json()
+      const data: User = await response.json()
       return data
     } catch (err) {
       if (retry > 1) {
@@ -112,7 +113,7 @@ export const getUser = async ({ did, wallet }: { did: string; wallet: string }) 
   }
 }
 
-export const updateWalletIfNotExist = async (did: string, caip10: string) => {
+export const updateWalletIfNotExist = async (did: string, caip10: string): Promise<string> => {
   const response = await fetch(BASE_URL + '/w2w/updateWalletIfNotExist', {
     method: 'POST',
     headers: {
@@ -141,8 +142,8 @@ export const getDidLinkWallets = async (did: string): Promise<string[]> => {
   return data
 }
 
-export const uploadUserProfileImage = async (did: string, image: string) => {
-  const response = await fetch(BASE_URL + '/w2w/updateProfilePicture/' + did, {
+export const uploadUserProfileImage = async (did: string, image: string): Promise<void> => {
+  await fetch(BASE_URL + '/w2w/updateProfilePicture/' + did, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -173,7 +174,7 @@ export const postMessage = async ({
   encType: string
   sigType: string
   encryptedSecret: string
-}) => {
+}): Promise<MessageIPFS> => {
   const response = await fetch(BASE_URL + '/w2w/sendMessage', {
     method: 'POST',
     headers: {
@@ -194,11 +195,14 @@ export const postMessage = async ({
   if (response.status > 299) {
     throw new Error('Error posting message')
   }
-  const data: any = await response.json()
+  const data: MessageIPFS = await response.json()
   return data
 }
 
-export const getIntent = async (firstDID: string, secondDID: string) => {
+export const getIntent = async (
+  firstDID: string,
+  secondDID: string
+): Promise<{ hasIntent: boolean; intent: string }> => {
   const response = await fetch(BASE_URL + '/w2w/getIntent', {
     method: 'POST',
     headers: {
@@ -209,7 +213,7 @@ export const getIntent = async (firstDID: string, secondDID: string) => {
       secondDID
     })
   })
-  const data = await response.json()
+  const data: { hasIntent: boolean; intent: string } = await response.json()
   return data
 }
 
@@ -229,7 +233,7 @@ export const createUser = async ({
   pgp_enc_type: string
   signature: string
   sigType: string
-}) => {
+}): Promise<User> => {
   const response = await fetch(BASE_URL + '/w2w/createUser', {
     method: 'POST',
     headers: {
@@ -245,7 +249,7 @@ export const createUser = async ({
       sigType
     })
   })
-  const data = await response.json()
+  const data: User = await response.json()
   return data
 }
 
@@ -320,7 +324,7 @@ export const createIntent = async ({
   encType: string
   sigType: string
   encryptedSecret: string
-}) => {
+}): Promise<MessageIPFS> => {
   if (message.length > 0) {
     const response = await fetch(BASE_URL + '/w2w/createIntent', {
       method: 'POST',
@@ -360,7 +364,7 @@ export const createIntent = async ({
     return data
   }
 }
-export const getRandomProfile = async (wallet: string) => {
+export const getRandomProfile = async (wallet: string): Promise<{ uniqueName: string; uniqueAvatar: string }> => {
   const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
     method: 'POST',
     headers: {
@@ -370,6 +374,6 @@ export const getRandomProfile = async (wallet: string) => {
       wallet
     })
   })
-  const data = await response.json()
+  const data: { uniqueName: string; uniqueAvatar: string } = await response.json()
   return data
 }
