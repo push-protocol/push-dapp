@@ -129,7 +129,6 @@ const ChannelOwnerDashboard = () => {
     })()
   });
 
-  console.log(isAliasVerified,processingState,aliasEthAccount)
 
 
   return (
@@ -140,7 +139,7 @@ const ChannelOwnerDashboard = () => {
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
           
           {/* {aliasEthAccount !== null && isAliasVerified === false && */}
-          {processingState !== 0 && (
+          {processingState !== 0 && aliasEthAccount !== null && isAliasVerified === false && (
             <ThemeProvider theme={theme}>
               <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
             </ThemeProvider>
