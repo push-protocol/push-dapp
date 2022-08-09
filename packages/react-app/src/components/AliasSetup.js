@@ -33,7 +33,7 @@ const AliasSetup = () => {
         This usually takes around 5 minutes.
       </Span>
       <Item display="flex" direction="row" align="center" margin="50px 0px">
-        <FadeLoader color="#cf1c84" loading={true} height={13} width={2.5} />
+        <FadeLoader color="#cf1c84" loading={true} height={13} width={4} />
         <H3
           margin="auto 15px"
           family="Manrope"
