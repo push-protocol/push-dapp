@@ -139,7 +139,7 @@ const ChannelOwnerDashboard = () => {
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
           
           {/* {aliasEthAccount !== null && isAliasVerified === false && */}
-          {processingState !== 0 && aliasEthAccount !== null && isAliasVerified === false && (
+          {processingState !== 0 && processingState !== null && (
             <ThemeProvider theme={theme}>
               <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
             </ThemeProvider>

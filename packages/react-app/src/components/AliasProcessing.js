@@ -33,9 +33,9 @@ const AliasProcessing = ({
         <Line />
       </ItemHere>
 
-      {processingState === 3 && <AliasSetup />}
+      {processingState === 1 && <AliasSetup />}
       {processingState === 2 && <ChangeNetwork />}
-      {processingState === 1 && (
+      {processingState === 3 && (
         <VerifyAlias
           aliasVerified={aliasVerified}
           aliasEthAccount={aliasEthAccount}
