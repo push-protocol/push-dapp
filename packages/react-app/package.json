@@ -78,7 +78,7 @@
     "react-icons": "^4.3.1",
     "react-image-file-resizer": "^0.4.7",
     "react-joyride": "^2.4.0",
-    "react-loader-spinner": "3.1.14",
+    "react-loader-spinner": "^5.1.7-beta.1",
     "react-multi-select-component": "^4.2.3",
     "react-player": "2.9.0",
     "react-redux": "^7.2.6",

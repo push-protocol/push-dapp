@@ -15,7 +15,7 @@ import styled from "styled-components";
 import { ethers } from "ethers";
 import { addresses, abis } from "@project/contracts";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 const UploadLogo = ({
   croppedImage,
@@ -52,7 +52,7 @@ const UploadLogo = ({
       var reader = new FileReader();
       reader.readAsDataURL(file?.files[0]);
 
-      reader.onloadend = function(e) {
+      reader.onloadend = function (e) {
         setImageSrc(reader.result);
       };
     } else {
@@ -94,97 +94,97 @@ const UploadLogo = ({
             resize to 128x128px.
           </H3>
         </Item>
-        
-          <Space className="">
-            <div>
-              <div
-                onDragOver={(e) => handleDragOver(e)}
-                onDrop={(e) => handleOnDrop(e)}
-                className="bordered"
-              >
-                <div className="inner">
-                  {view ? (
-                    <div className="crop-div">
-                      {croppedImage ? (
-                        <div>
-                          <img
-                            alt="Cropped Img"
-                            src={croppedImage}
-                            className="croppedImage"
-                          />
-                        </div>
-                      ) : (
-                        <ImageClipper
-                          className="cropper"
-                          imageSrc={imageSrc}
-                          onImageCropped={(croppedImage) =>
-                            setCroppedImage(croppedImage)
-                          }
-                          ref={childRef}
+
+        <Space className="">
+          <div>
+            <div
+              onDragOver={(e) => handleDragOver(e)}
+              onDrop={(e) => handleOnDrop(e)}
+              className="bordered"
+            >
+              <div className="inner">
+                {view ? (
+                  <div className="crop-div">
+                    {croppedImage ? (
+                      <div>
+                        <img
+                          alt="Cropped Img"
+                          src={croppedImage}
+                          className="croppedImage"
                         />
-                      )}
-                    </div>
-                  ) : (
-                    <ImageIcon />
-                  )}
-
-                  <ButtonSpace>
-                    <div className="crop-button">
-                      {view &&
-                        (!croppedImage && (
-                          <Button
-                            bg="#1C4ED8"
-                            onClick={() => {
-                              childRef.current.showCroppedImage();
-                            }}
-                          >
-                            Clip Image
-                          </Button>
-                        )
-                      )}
-                    </div>
-                  </ButtonSpace>
-
-                  <div className="text-div">
-                    <label htmlFor="file-upload" className="labeled">
-                      <div>Upload a file</div>
-                      <input
-                        id="file-upload"
-                        accept="image/*"
-                        name="file-upload"
-                        hidden
-                        onChange={(e) => handleFile(e.target, "target")}
-                        type="file"
-                        className="sr-only"
-                        readOnly
+                      </div>
+                    ) : (
+                      <ImageClipper
+                        className="cropper"
+                        imageSrc={imageSrc}
+                        onImageCropped={(croppedImage) =>
+                          setCroppedImage(croppedImage)
+                        }
+                        ref={childRef}
                       />
-                    </label>
-                    <div className="">- or drag and drop</div>
+                    )}
                   </div>
-                  <p className="text-below">
-                    PNG, JPG.Proceed to clip and submit final
-                  </p>
+                ) : (
+                  <ImageIcon />
+                )}
+
+                <ButtonSpace>
+                  <div className="crop-button">
+                    {view &&
+                      (!croppedImage && (
+                        <Button
+                          bg="#1C4ED8"
+                          onClick={() => {
+                            childRef.current.showCroppedImage();
+                          }}
+                        >
+                          Clip Image
+                        </Button>
+                      )
+                      )}
+                  </div>
+                </ButtonSpace>
+
+                <div className="text-div">
+                  <label htmlFor="file-upload" className="labeled">
+                    <div>Upload a file</div>
+                    <input
+                      id="file-upload"
+                      accept="image/*"
+                      name="file-upload"
+                      hidden
+                      onChange={(e) => handleFile(e.target, "target")}
+                      type="file"
+                      className="sr-only"
+                      readOnly
+                    />
+                  </label>
+                  <div className="">- or drag and drop</div>
                 </div>
+                <p className="text-below">
+                  PNG, JPG.Proceed to clip and submit final
+                </p>
               </div>
             </div>
-          </Space>
+          </div>
+        </Space>
 
-          {!UtilityHelper.isMainnet(chainId) ? (
-            <Item align="flex-end">
-              <Minter
-                onClick={() => {
-                  mintDai();
-                }}
-              >
-                <Pool>
-                  <br></br>
-                  <PoolShare>Get Free DAI for Channel</PoolShare>
-                </Pool>
-              </Minter>
-            </Item>
-          ) : (
-            <></>
-          )}
+        {!UtilityHelper.isMainnet(chainId) ? (
+          <Item align="flex-end">
+            <Minter
+              onClick={() => {
+                mintDai();
+              }}
+            >
+              <Pool>
+                <br></br>
+                <PoolShare>Get Free DAI for Channel</PoolShare>
+              </Pool>
+            </Minter>
+          </Item>
+        ) : (
+          <></>
+        )}
 
         <FormSubmision
           flex="1"
@@ -209,8 +209,7 @@ const UploadLogo = ({
               disabled={processing == 1 ? true : false}
             >
               {processing == 1 && (
-                <Loader
-                  type="Oval"
+                <Oval
                   color="#fff"
                   height={24}
                   width={24}

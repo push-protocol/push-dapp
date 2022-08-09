@@ -1,13 +1,19 @@
 import React from "react";
 import { toast } from "react-toastify";
-import Loader from "react-loader-spinner";
+import { RotatingLines } from "react-loader-spinner";
 import styled from "styled-components";
 
 type LoaderToastType = { msg: string, color: string }
 
 const LoaderToast = ({ msg, color }: LoaderToastType) => (
   <LoaderNotification>
-    <Loader type="Oval" color={color} height={30} width={30} />
+    <RotatingLines
+      strokeColor={color}
+      strokeWidth="5"
+      animationDuration="0.75"
+      width="30"
+      visible={true}
+    />
     <ToasterMsg>{msg}</ToasterMsg>
   </LoaderNotification>
 );
@@ -17,7 +23,7 @@ const useToast = () => {
 
   const showToast = (loaderMessage: string) =>
     toastId.current = toast(
-      <LoaderToast msg={loaderMessage} color="#35c5f3" />,
+      <LoaderToast msg={loaderMessage} color="#CF1C84" />,
       {
         position: "top-right",
         autoClose: false,
@@ -26,6 +32,11 @@ const useToast = () => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        // style: {
+        //   border: "1px solid #F4F3FF",
+        //   boxShadow: "0px 0px 10px 0px #00000005",
+        //   borderRadius: "20px",
+        // }
       }
     );
 
@@ -47,8 +58,8 @@ const useToast = () => {
           </ToastMessage>
         </ToastContent>
       </ToastNotification>,
-      
-      type: toastType === "SUCCESS" ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
+      // type: toastType === "SUCCESS" ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
+      type: toast.TYPE.DEFAULT,
       style: {
         background: toastType === "SUCCESS" ? successBgGradient : errorBgGradient,
         boxShadow: "0px 0px 10px 0px #00000005",
@@ -67,7 +78,7 @@ const LoaderNotification = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0px 10px;
+  margin: 3% 3%;
 `;
 const ToastNotification = styled.div`
   display: flex;

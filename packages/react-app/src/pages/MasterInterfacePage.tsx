@@ -178,19 +178,18 @@ const PreviewClose = styled(Anchor)`
   margin-bottom: -40px;
 `
 
-// const StyledToastContainer = styled(ToastContainer)`
-//   &&&.Toastify__toast-container {
-//   }
-//   .Toastify__toast {
-//   }
-//   .Toastify__toast-body {}
-//   .Toastify__progress-bar {}
-//   .Toastify__toast-container--top-right {
-
-//   }
-//   .Toastify__close-button {
-//   }  
-// `;
+const StyledToastContainer = styled(ToastContainer)`
+  // &&&.Toastify__toast-container {
+  // }
+  // .Toastify__toast {
+  // }
+  // .Toastify__toast-body {}
+  // .Toastify__progress-bar {}
+  // .Toastify__toast-container--top-right {}
+  .Toastify__close-button {
+    padding: 3%
+  }  
+`;
 
 // Export Default
 export default MasterInterfacePage;

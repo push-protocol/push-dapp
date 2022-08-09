@@ -4,7 +4,7 @@ import { Device } from "assets/Device";
 
 import { toast as toaster } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import Skeleton from "@yisheng90/react-loading";
 import { IoMdPeople } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
@@ -28,7 +28,7 @@ import { cacheChannelInfo } from "redux/slices/channelSlice";
 import { envConfig } from "@project/contracts";
 import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
 import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
-import useToast from "primaries/hooks/useToast";
+import useToast from "hooks/useToast";
 
 import { MdCheckCircle, MdError } from "react-icons/md";
 
@@ -181,7 +181,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
+      <Oval color={color} height={30} width={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -642,7 +642,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <SubscribeButton onClick={blockChannel} disabled={bLoading}>
                 {bLoading && (
                   <ActionLoader>
-                    <Loader type="Oval" color="#FFF" height={16} width={16} />
+                    <Oval color="#FFF" height={16} width={16} />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={bLoading}>Block channel</ActionTitle>
@@ -652,7 +652,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <SubscribeButton onClick={verifyChannel} disabled={vLoading}>
                 {vLoading && (
                   <ActionLoader>
-                    <Loader type="Oval" color="#FFF" height={16} width={16} />
+                    <Oval color="#FFF" height={16} width={16} />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Verify Channel</ActionTitle>
@@ -662,7 +662,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <UnsubscribeButton onClick={unverifyChannel} disabled={vLoading}>
                 {vLoading && (
                   <ActionLoader>
-                    <Loader type="Oval" color="#FFF" height={16} width={16} />
+                    <Oval color="#FFF" height={16} width={16} />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Unverify Channel</ActionTitle>
@@ -672,7 +672,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <SubscribeButton onClick={subscribe} disabled={txInProgress} className="optin" >
                 {txInProgress && (
                   <ActionLoader>
-                    <Loader type="Oval" color="#FFF" height={16} width={16} />
+                    <Oval color="#FFF" height={16} width={16} />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
@@ -688,8 +688,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   >
                     {txInProgress && (
                       <ActionLoader>
-                        <Loader
-                          type="Oval"
+                        <Oval
                           color="#FFF"
                           height={16}
                           width={16}

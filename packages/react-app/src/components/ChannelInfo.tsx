@@ -3,7 +3,7 @@ import { Button, Content, FormSubmision, H3, Input, Item, ItemH, Section, Span, 
 import { FiLink } from "react-icons/fi";
 import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import "./createChannel.css";
 
 const coreChain = "Ethereum Kovan";
@@ -45,12 +45,12 @@ const ChannelInfo = ({
       isEmpty(channelInfo) ||
       isEmpty(channelURL) ||
       (channelAlias
-      ? isEmpty(chainDetails)
-      : chainDetails
-        ? chainDetails == coreChain
-          ? false
-          : isEmpty(channelAlias)
-        : false)
+        ? isEmpty(chainDetails)
+        : chainDetails
+          ? chainDetails == coreChain
+            ? false
+            : isEmpty(channelAlias)
+          : false)
     ) {
       setProcessing(3);
       setProcessingInfo("Channel Fields are Empty! Please retry!");
@@ -81,30 +81,217 @@ const ChannelInfo = ({
           size="1.1rem"
           onSubmit={handleCreateChannel}
         > */}
+        <Item
+          margin="-10px 20px 15px 20px"
+          flex="1"
+          self="stretch"
+          align="stretch"
+        >
+          <InputDiv border="1px solid black">
+            <Input
+              required
+              placeholder="Your Channel Name"
+              maxlength="40"
+              maxllength="100%"
+              padding="12px"
+              weight="400"
+              size="1em"
+              bg="#fff"
+              value={channelName}
+              onChange={(e) => {
+                setChannelName(e.target.value);
+              }}
+            />
+          </InputDiv>
+
+          {channelName.trim().length == 0 && (
+            <Span
+              padding="4px 10px"
+              right="0px"
+              top="0px"
+              pos="absolute"
+              color="#fff"
+              bg="#000"
+              size="0.7rem"
+              z="1"
+            >
+              Channel's Name
+            </Span>
+          )}
+        </Item>
+
+        <Item
+          margin="15px 20px 15px 20px"
+          flex="1"
+          self="stretch"
+          align="stretch"
+          direction="row"
+          height="20px"
+          style={{ position: "relative" }}
+        >
+
+          {/* dropdown */}
+          <DropdownStyledParent>
+            <DropdownStyled
+              options={ALIAS_CHAINS}
+              onChange={(option) => {
+                setChainDetails(option.value);
+                console.log(option);
+              }}
+              value={chainDetails}
+            />
+          </DropdownStyledParent>
+
+          <span
+            className="imgSpan"
+            data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
+          >
+            <img
+              className="iImage"
+              src="/svg/info.svg"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginTop: "0px",
+                marginBottom: "-2px",
+              }}
+            />
+
+            {/* <span className="test">When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain <a href="">read more</a></span> */}
+          </span>
+          <Span
+            padding="4px 10px"
+            right="0px"
+            top="0px"
+            pos="absolute"
+            color="#fff"
+            bg="#000"
+            size="0.7rem"
+            z="1"
+          >
+            Choose Channel's Activation Network
+          </Span>
+
+        </Item>
+
+        {chainDetails != coreChain &&
           <Item
-            margin="-10px 20px 15px 20px"
+            margin="55px 20px 15px 20px"
             flex="1"
             self="stretch"
             align="stretch"
+            style={{ position: "relative" }}
           >
-            <InputDiv border="1px solid black">
+            <InputDiv
+              border={() => {
+                if (themes.scheme == "dark") return "1px solid white";
+                else return "1px solid black";
+              }}
+            >
               <Input
-                required
-                placeholder="Your Channel Name"
+                placeholder="Your Channel's Alias address"
                 maxlength="40"
                 maxllength="100%"
                 padding="12px"
                 weight="400"
-                size="1em"
-                bg="#fff"
-                value={channelName}
+                size="1rem"
+                bg="white"
+                disabled={
+                  chainDetails === "" || chainDetails === coreChain
+                    ? true
+                    : false
+                }
+                visibility={
+                  chainDetails === coreChain ? "hidden" : "visible"
+                }
+                value={channelAlias}
                 onChange={(e) => {
-                  setChannelName(e.target.value);
+                  setChannelAlias(e.target.value);
                 }}
               />
             </InputDiv>
+            <Span
+              padding="4px 10px"
+              right="0px"
+              top="0px"
+              pos="absolute"
+              color="#fff"
+              bg="#000"
+              size="0.7rem"
+            >
+              Make sure you own this address as verification will take place.
+            </Span>
+          </Item>
+        }
 
-            {channelName.trim().length == 0 && (
+        <Item
+          margin="0px 20px 15px 20px"
+          flex="1"
+          self="stretch"
+          align="stretch"
+          style={{ marginTop: `${chainDetails === coreChain ? "55px" : "20px"}`, position: "relative" }}
+        >
+          <TextField
+            required
+            placeholder="Your Channel's Short Description (250 Characters)"
+            rows="4"
+            maxlength="250"
+            radius="4px"
+            padding="12px"
+            weight="400"
+            border="1px solid #000"
+            bg="#fff"
+            value={channelInfo}
+            onChange={(e) => {
+              setChannelInfo(e.target.value.slice(0, 250));
+            }}
+            autocomplete="off"
+          />
+
+          <SpanR>
+            <span
+              style={{ padding: "15px" }}
+            >
+              {250 - channelInfo.length} characters remains
+            </span>
+          </SpanR>
+          <Span
+            padding="4px 10px"
+            right="0px"
+            top="0px"
+            pos="absolute"
+            color="#fff"
+            bg="#000"
+            size="0.7rem"
+          >
+            Channel's Description
+          </Span>
+        </Item>
+
+        <ItemH
+          margin="15px 20px 15px 20px"
+          flex="1"
+          self="stretch"
+          align="center"
+        >
+          <Item flex="0" margin="0px 5px 0px 0px">
+            <FiLink size={24} color={themes.color} />
+          </Item>
+          <Item flex="1" margin="0px 0px 0px 5px" align="stretch">
+            <Input
+              required
+              placeholder="Call to Action Link"
+              padding="12px"
+              border="1px solid #000"
+              radius="4px"
+              weight="400"
+              bg="#f1f1f1"
+              value={channelURL}
+              onChange={(e) => {
+                setChannelURL(e.target.value);
+              }}
+            />
+            {channelURL.trim().length == 0 && (
               <Span
                 padding="4px 10px"
                 right="0px"
@@ -115,224 +302,37 @@ const ChannelInfo = ({
                 size="0.7rem"
                 z="1"
               >
-                Channel's Name
+                Channel's Website URL
               </Span>
             )}
           </Item>
-
-          <Item
-            margin="15px 20px 15px 20px"
-            flex="1"
-            self="stretch"
-            align="stretch"
-            direction="row"
-            height="20px"
-            style={{ position: "relative" }}
-          >
-            
-            {/* dropdown */}
-            <DropdownStyledParent>
-              <DropdownStyled
-                options={ALIAS_CHAINS}
-                onChange={(option) => {
-                    setChainDetails(option.value);
-                    console.log(option);
-                }}
-                value={chainDetails}
-              />
-            </DropdownStyledParent>
-
-            <span
-              className="imgSpan"
-              data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
-            >
-              <img
-                className="iImage"
-                src="/svg/info.svg"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  marginTop: "0px",
-                  marginBottom: "-2px",
-                }}
-              />
-
-              {/* <span className="test">When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your channel on that Blockchain <a href="">read more</a></span> */}
-              </span>
-              <Span
-                padding="4px 10px"
-                right="0px"
-                top="0px"
-                pos="absolute"
-                color="#fff"
-                bg="#000"
-                size="0.7rem"
-                z="1"
-              >
-                Choose Channel's Activation Network
-              </Span>
-
-          </Item>
-            
-            {chainDetails != coreChain &&
-              <Item
-                margin="55px 20px 15px 20px"
-                flex="1"
-                self="stretch"
-                align="stretch"
-                style={{ position: "relative" }}
-              >
-                <InputDiv
-                  border={() => {
-                    if (themes.scheme == "dark") return "1px solid white";
-                    else return "1px solid black";
-                  }}
-                >
-                  <Input
-                    placeholder="Your Channel's Alias address"
-                    maxlength="40"
-                    maxllength="100%"
-                    padding="12px"
-                    weight="400"
-                    size="1rem"
-                    bg="white"
-                    disabled={
-                      chainDetails === "" || chainDetails === coreChain
-                        ? true
-                        : false
-                    }
-                    visibility={
-                      chainDetails === coreChain ? "hidden" : "visible"
-                    }
-                    value={channelAlias}
-                    onChange={(e) => {
-                      setChannelAlias(e.target.value);
-                    }}
-                  />
-                </InputDiv>
-                <Span
-                  padding="4px 10px"
-                  right="0px"
-                  top="0px"
-                  pos="absolute"
-                  color="#fff"
-                  bg="#000"
-                  size="0.7rem"
-                >
-                  Make sure you own this address as verification will take place.
-                </Span>
-              </Item>
-            }
-
-          <Item
-            margin="0px 20px 15px 20px"
-            flex="1"
-            self="stretch"
-            align="stretch"
-            style={{marginTop: `${chainDetails === coreChain ? "55px" : "20px"}`, position: "relative"}}
-          >
-            <TextField
-              required
-              placeholder="Your Channel's Short Description (250 Characters)"
-              rows="4"
-              maxlength="250"
-              radius="4px"
-              padding="12px"
-              weight="400"
-              border="1px solid #000"
-              bg="#fff"
-              value={channelInfo}
-              onChange={(e) => {
-                setChannelInfo(e.target.value.slice(0, 250));
-              }}
-              autocomplete="off"
-            />
-
-            <SpanR>
-              <span
-                style={{padding: "15px"}}
-              >
-                {250 - channelInfo.length} characters remains
-              </span>
-            </SpanR>
-            <Span
-                padding="4px 10px"
-                right="0px"
-                top="0px"
-                pos="absolute"
-                color="#fff"
-                bg="#000"
-                size="0.7rem"
-              >
-                Channel's Description
-              </Span>
-          </Item>
-
-          <ItemH
-            margin="15px 20px 15px 20px"
-            flex="1"
-            self="stretch"
-            align="center"
-          >
-            <Item flex="0" margin="0px 5px 0px 0px">
-              <FiLink size={24} color={themes.color} />
-            </Item>
-            <Item flex="1" margin="0px 0px 0px 5px" align="stretch">
-              <Input
-                required
-                placeholder="Call to Action Link"
-                padding="12px"
-                border="1px solid #000"
-                radius="4px"
-                weight="400"
-                bg="#f1f1f1"
-                value={channelURL}
-                onChange={(e) => {
-                  setChannelURL(e.target.value);
-                }}
-              />
-              {channelURL.trim().length == 0 && (
-                <Span
-                  padding="4px 10px"
-                  right="0px"
-                  top="0px"
-                  pos="absolute"
-                  color="#fff"
-                  bg="#000"
-                  size="0.7rem"
-                  z="1"
-                >
-                  Channel's Website URL
-                </Span>
-              )}
-            </Item>
         </ItemH>
-        
-          <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
-            <Button
-              bg="#e20880"
-              color="#fff"
-              flex="1"
-              radius="0px"
-              padding="20px 10px"
-              onClick={() => {
-                if (!isAllFilled()) return;
-                setChannelInfoDone(true);
-                setStepFlow(3);
-              }}
-            >
-              <Span
-                color="#fff"
-                weight="400"
-                textTransform="uppercase"
-                spacing="0.1em"
-              >
-                Continue
-              </Span>
-            </Button>
-          </Item>
 
-          {/* <Item
+        <Item self="stretch" align="stretch" margin="20px 0px 0px 0px">
+          <Button
+            bg="#e20880"
+            color="#fff"
+            flex="1"
+            radius="0px"
+            padding="20px 10px"
+            onClick={() => {
+              if (!isAllFilled()) return;
+              setChannelInfoDone(true);
+              setStepFlow(3);
+            }}
+          >
+            <Span
+              color="#fff"
+              weight="400"
+              textTransform="uppercase"
+              spacing="0.1em"
+            >
+              Continue
+            </Span>
+          </Button>
+        </Item>
+
+        {/* <Item
             margin="15px 0px 0px 0px"
             flex="1"
             self="stretch"
@@ -347,8 +347,7 @@ const ChannelInfo = ({
               disabled={processing == 1 ? true : false}
             >
               {processing == 1 && (
-                <Loader
-                  type="Oval"
+                <Oval
                   color="#fff"
                   height={24}
                   width={24}

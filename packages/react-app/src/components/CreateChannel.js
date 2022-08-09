@@ -3,7 +3,7 @@ import styled, { css, useTheme } from "styled-components";
 import "react-dropdown/style.css";
 import { Section, Content, Item, H2, Span } from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
@@ -211,7 +211,7 @@ function CreateChannel() {
 
     setProcessingInfo("Creating Channel TX in progress");
     anotherSendTxPromise
-      .then(async function(tx) {
+      .then(async function (tx) {
         console.log(tx);
         console.log("Check: " + account);
         let txCheck = await library.waitForTransaction(tx.hash);
@@ -245,7 +245,7 @@ function CreateChannel() {
 
   useEffect(() => {
     if (croppedImage) {
-      toDataURL(croppedImage, function(dataUrl) {
+      toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
         if (response.success) {
           setChannelFile(croppedImage);
@@ -258,9 +258,9 @@ function CreateChannel() {
 
   function toDataURL(url, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
+    xhr.onload = function () {
       var reader = new FileReader();
-      reader.onloadend = function() {
+      reader.onloadend = function () {
         callback(reader.result);
       };
       reader.readAsDataURL(xhr.response);
@@ -389,7 +389,7 @@ function CreateChannel() {
               <Content padding="0px 0px 0px 0px">
                 {processing === 1 && (
                   <Item margin="20px 0px 10px 0px">
-                    <Loader type="Oval" color="#000" height={24} width={24} />
+                    <Oval color="#000" height={24} width={24} />
                   </Item>
                 )}
 

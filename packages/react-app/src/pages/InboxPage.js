@@ -11,7 +11,7 @@ import { postReq } from "api";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 import Feedbox from "segments/Feedbox";
 
@@ -60,10 +60,10 @@ function InboxPage() {
 		const fetchEncryptionKey = async () => {
 			// get public key from Backend API
 			let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-					address: account,
-					op: "read"
+				address: account,
+				op: "read"
 			}).then(res => {
-					return res.data?.encryption_key;
+				return res.data?.encryption_key;
 			});
 
 			if (encryptionKey != null) {
@@ -100,31 +100,31 @@ function InboxPage() {
 	}, [account, chainId]);
 
 	// toast customize
-  const LoaderToast = ({ msg, color }) => (
-    <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
+	const LoaderToast = ({ msg, color }) => (
+		<Toaster>
+			<Oval color={color} height={30} width={30} />
+			<ToasterMsg>{msg}</ToasterMsg>
+		</Toaster>
 	);
 
 	const NormalToast = ({ msg }) => (
 		<Toaster>
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
+			<ToasterMsg>{msg}</ToasterMsg>
+		</Toaster>
 	)
 
 	// notification toast
 	let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: "bottom-right",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
+		toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
+			position: "bottom-right",
+			autoClose: false,
+			hideProgressBar: true,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
 		});
-	
+
 
 	/**
 	 * When we instantiate the contract instances, fetch basic information about the user
@@ -222,7 +222,7 @@ function InboxPage() {
 				type: toaster.TYPE.SUCCESS,
 				autoClose: 5000,
 			});
-			
+
 			setEnabledSecretNotif(true);
 		} catch (err) {
 			if (err.code === 4001) {
@@ -290,7 +290,7 @@ function InboxPage() {
 							progress: undefined,
 						}
 					);
-				} else if(error.code === -32601) {
+				} else if (error.code === -32601) {
 					console.error(error);
 					txToast = toaster.dark(
 						<NormalToast msg="Your wallet doesn't support providing public encryption key." />,

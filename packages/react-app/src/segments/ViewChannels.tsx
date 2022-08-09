@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { useTheme } from "styled-components";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useDispatch, useSelector } from "react-redux";
 import { postReq } from "api";
@@ -246,7 +246,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             loading ||
             loadingChannel) && (
               <CenterContainer>
-                <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                <Oval color="#35c5f3" height={40} width={40} />
               </CenterContainer>
             )}
         </ScrollItem>
@@ -364,5 +364,5 @@ const SearchContainer = styled(Item)`
 `;
 
 // Export Default
-export default ViewChannels; 
+export default ViewChannels;
 export { ScrollItem };

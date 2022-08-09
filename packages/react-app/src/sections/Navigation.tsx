@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 
-import Loader from 'react-loader-spinner';
+import {Oval} from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
@@ -528,7 +528,7 @@ function Navigation() {
       <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
         {!navigationSetup &&
           <Item padding="20px" justify="flex-start">
-            <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
+            <Oval color={theme.leftBarLoaderBg} height={20} width={20} />
           </Item>
         }
         {navigationSetup && Object.keys(navigationSetup).length > 0 &&
