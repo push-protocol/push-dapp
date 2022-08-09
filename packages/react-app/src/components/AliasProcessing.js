@@ -4,36 +4,38 @@ import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
 import AliasSetup from "./AliasSetup";
 import ChangeNetwork from "./ChangeNetwork";
 import VerifyAlias from "./VerifyAlias";
+import { useDispatch, useSelector } from "react-redux";
 
 const AliasProcessing = ({
   aliasVerified,
   aliasEthAccount,
   setAliasVerified,
 }) => {
-  const [stepFlow, setStepFlow] = React.useState(1);
+  //   const [processingState, setStepFlow] = React.useState(1);
   const themes = useTheme();
+  const { processingState } = useSelector((state) => state.channelCreation);
 
   return (
     <Section>
       <ItemHere>
-        <Tab type={stepFlow >= 1 ? "active" : "inactive"}>
+        <Tab type={processingState >= 1 ? "active" : "inactive"}>
           <div>Waiting for Setup</div>
-          <Step type={stepFlow >= 1 ? "active" : "inactive"} />
+          <Step type={processingState >= 1 ? "active" : "inactive"} />
         </Tab>
-        <Tab type={stepFlow >= 2 ? "active" : "inactive"}>
+        <Tab type={processingState >= 2 ? "active" : "inactive"}>
           <div>Change Network</div>
-          <Step type={stepFlow >= 2 ? "active" : "inactive"} />
+          <Step type={processingState >= 2 ? "active" : "inactive"} />
         </Tab>
-        <Tab type={stepFlow >= 3 ? "active" : "inactive"}>
+        <Tab type={processingState >= 3 ? "active" : "inactive"}>
           <div>Verify Alias Network</div>
-          <Step type={stepFlow >= 3 ? "active" : "inactive"} />
+          <Step type={processingState >= 3 ? "active" : "inactive"} />
         </Tab>
         <Line />
       </ItemHere>
 
-      {stepFlow === 1 && <AliasSetup />}
-      {stepFlow === 2 && <ChangeNetwork />}
-      {stepFlow === 3 && (
+      {processingState === 1 && <AliasSetup />}
+      {processingState === 2 && <ChangeNetwork />}
+      {processingState === 3 && (
         <VerifyAlias
           aliasVerified={aliasVerified}
           aliasEthAccount={aliasEthAccount}

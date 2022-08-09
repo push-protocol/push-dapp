@@ -118,7 +118,6 @@ const ChannelOwnerDashboard = () => {
 
       if (ethAccount) {
         const { aliasVerified } = await fetchChannelDetails(ethAccount);
-        console.log(aliasVerified)
         if (!aliasVerified) {
           dispatch(setProcessingState(3));
           dispatch(setAliasVerified(false));
@@ -130,6 +129,8 @@ const ChannelOwnerDashboard = () => {
     })()
   });
 
+  console.log(isAliasVerified,processingState,aliasEthAccount)
+
 
   return (
     <Fragment>
@@ -139,23 +140,22 @@ const ChannelOwnerDashboard = () => {
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
           
           {/* {aliasEthAccount !== null && isAliasVerified === false && */}
-          {aliasEthAccount !== null && isAliasVerified === false &&
-        <>
-        <ThemeProvider theme={theme}>
-          <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
-        </ThemeProvider>
-        </>
-      }
+          {processingState !== 0 && (
+            <ThemeProvider theme={theme}>
+              <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
+            </ThemeProvider>
+          )}
+          {/* } */}
 
-      {modalOpen &&
+      {/* {modalOpen &&
             <AliasVerificationModal
               onClose={(val) => setModalOpen(val)}
               onSuccess={() => dispatch(setAliasVerified(true))}
               verificationStatus={isAliasVerified}
               aliasEthAccount={aliasEthAccount}
             />
-          }
-
+          } */}
+          {processingState === 0 && (<>
           {/* display the create channel page if there are no details */}
           {/* display the channel settings */}
           {channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork) ? <ChannelSettings /> : ""}
@@ -166,6 +166,7 @@ const ChannelOwnerDashboard = () => {
           {/* display the notifications settings */}
           {(channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""}
           {/* display the notifications settings */}
+          </>)}
         </ModifiedContent>
       </Section>
     </Fragment>
