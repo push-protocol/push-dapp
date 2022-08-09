@@ -51,18 +51,20 @@ export const encrypt = async ({
 
 export const decrypt = async ({
   cipherText,
+  encryptedSecretKey,
   encryptedPrivateKeyArmored,
   publicKeyArmored,
   did
 }: {
   cipherText: string
+  encryptedSecretKey: string
   encryptedPrivateKeyArmored: string
   publicKeyArmored: string
   did: DID
 }): Promise<string> => {
   const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(encryptedPrivateKeyArmored), did)
   const secretKey: string = await PGP.decrypt({
-    cipherText: cipherText,
+    cipherText: encryptedSecretKey,
     fromPublicKeyArmored: publicKeyArmored,
     toPrivateKeyArmored: privateKeyArmored
   })

@@ -89,15 +89,23 @@ const ChatBox = (): JSX.Element => {
         msgIPFS = messageFromIPFS
       }
 
-      // // Decrypt message
-      // if (msgIPFS.enc_type !== 'PlainText') {
-      //   msgIPFS.messageContent = await decrypt({
-      //     cipherText: msgIPFS.messageContent,
-      //     did: did,
-      //     encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-      //     publicKeyArmored: currentChat.pgp_pub
-      //   })
-      // }
+      // Decrypt message
+      if (msgIPFS.enc_type !== 'PlainText') {
+        // To do signature verification it depends on who has sent the message
+        let signatureValidationPubliKey: string
+        if (msgIPFS.fromDID === connectedUser.did) {
+          signatureValidationPubliKey = connectedUser.pgp_pub
+        } else {
+          signatureValidationPubliKey = currentChat.pgp_pub
+        }
+        msgIPFS.messageContent = await decrypt({
+          cipherText: msgIPFS.messageContent,
+          encryptedSecretKey: msgIPFS.encryptedSecret,
+          did: did,
+          encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+          publicKeyArmored: signatureValidationPubliKey
+        })
+      }
 
       setMessages((m) => [msgIPFS, ...m])
 
