@@ -238,12 +238,12 @@ const ChatBox = (): JSX.Element => {
           encType: 'pgp'
         })
       } else {
-        sendIntent(newMessage, 'Text')
+        sendIntent({ message: newMessage, messageType: 'Text' })
       }
     }
   }
 
-  const sendIntent = async (content: string, contentType: string): Promise<void> => {
+  const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
         const user = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
@@ -259,22 +259,23 @@ const ChatBox = (): JSX.Element => {
             sigType: 'temp'
           })
         }
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
-        //////// FIX ENCRYPTED SECRET HERE ///////////
+
+        const { cipherText, encryptedSecret } = await encrypt({
+          plainText: message,
+          encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+          publicKeyArmored: currentChat.pgp_pub,
+          did
+        })
         const msg = await PushNodeClient.createIntent({
           toDID: currentChat.did,
           fromDID: did.id,
           fromWallet: account,
-          message: content,
-          messageType: contentType,
+          message: cipherText,
+          messageType: messageType,
           signature: 'signature',
-          encType: 'myencryptiontype',
+          encType: 'pgp',
           sigType: 'mysignaturetype',
-          encryptedSecret: 'abc'
+          encryptedSecret: encryptedSecret
         })
         setHasIntent(true)
         setMessages([...messages, msg])
@@ -319,7 +320,7 @@ const ChatBox = (): JSX.Element => {
         reader.onloadend = async (e): Promise<void> => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
           if (!hasIntent && intentSentandPending === 'Pending') {
-            sendIntent(JSON.stringify(resultingfile), type)
+            sendIntent({ message: JSON.stringify(resultingfile), messageType: type })
           } else {
             sendMessage({
               account,
@@ -338,7 +339,7 @@ const ChatBox = (): JSX.Element => {
         const cid = await IPFSHelper.uploadImage(file, IPFSClient)
         content = cid
         if (!hasIntent && intentSentandPending === 'Pending') {
-          sendIntent(content.toString(), type)
+          sendIntent({ message: content.toString(), messageType: type })
         } else {
           sendMessage({
             account,
@@ -368,7 +369,7 @@ const ChatBox = (): JSX.Element => {
 
   const sendGif = (url: string): void => {
     if (!hasIntent && intentSentandPending === 'Pending') {
-      sendIntent(url, 'GIF')
+      sendIntent({ message: url, messageType: 'GIF' })
     } else {
       sendMessage({
         account,
