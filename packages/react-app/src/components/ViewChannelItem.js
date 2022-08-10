@@ -360,7 +360,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         return;
       }
 
-      postReq("/channels/subscribe_offchain", {
+      postReq("/channels/subscribe", {
         signature,
         message,
         op: "write",
@@ -451,7 +451,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         }
       );
 
-      postReq("/channels/unsubscribe_offchain", {
+      postReq("/channels/unsubscribe", {
         signature,
         message,
         op: "write",
