@@ -97,14 +97,14 @@ const ChatBox = (): JSX.Element => {
         } else {
           signatureValidationPubliKey = currentChat.pgp_pub
         }
-        // msgIPFS.messageContent = await decryptAndVerifySignature({
-        //   cipherText: msgIPFS.messageContent,
-        //   encryptedSecretKey: msgIPFS.encryptedSecret,
-        //   did: did,
-        //   encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-        //   publicKeyArmored: signatureValidationPubliKey,
-        //   signatureArmored: msgIPFS.signature
-        // })
+        msgIPFS.messageContent = await decryptAndVerifySignature({
+          cipherText: msgIPFS.messageContent,
+          encryptedSecretKey: msgIPFS.encryptedSecret,
+          did: did,
+          encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+          publicKeyArmored: signatureValidationPubliKey,
+          signatureArmored: msgIPFS.signature
+        })
       }
 
       setMessages((m) => [msgIPFS, ...m])
