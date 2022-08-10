@@ -16353,14 +16353,12 @@ react-time-picker@^4.5.0:
     react-fit "^1.4.0"
     update-input-width "^1.2.2"
 
-react-toastify@6.0.9:
-  version "6.0.9"
-  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-6.0.9.tgz#2a65e5ad9e05f3ee47664cbc69441498b9d694ce"
-  integrity sha512-StHXv+4kezHUnPyoILlvygSptQ79bxVuvKcC05yXP0FlqQgPA1ue+80BqxZZiCw2jWDGiY2MHyqBfFKf5YzZbA==
+react-toastify@9.0.3:
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.0.3.tgz#8e6d22651c85cb584c5ebd0b5e2c3bf0d7ec06ee"
+  integrity sha512-0QZJk0SqYBxouRBGCFU3ymvjlwimRRhVH7SzqGRiVrQ001KSoUNbGKx9Yq42aoPv18n45yJzEFG82zqv3HnASg==
   dependencies:
-    classnames "^2.2.6"
-    prop-types "^15.7.2"
-    react-transition-group "^4.4.1"
+    clsx "^1.1.1"
 
 react-toggle-dark-mode@1.0.4:
   version "1.0.4"
@@ -16369,7 +16367,7 @@ react-toggle-dark-mode@1.0.4:
   dependencies:
     react-spring "^9.0.0-rc.3"
 
-react-transition-group@4.4.2, react-transition-group@^4.3.0, react-transition-group@^4.4.0, react-transition-group@^4.4.1, react-transition-group@^4.4.2:
+react-transition-group@4.4.2, react-transition-group@^4.3.0, react-transition-group@^4.4.0, react-transition-group@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-4.4.2.tgz#8b59a56f09ced7b55cbd53c36768b922890d5470"
   integrity sha512-/RNYfRAMlZwDSr6z4zNKV6xu53/e2BuaBbGhbyYIXTrmgu/bGHzmqOs7mJSJBHy9Ud+ApHx3QjrkKSp1pxvlFg==
