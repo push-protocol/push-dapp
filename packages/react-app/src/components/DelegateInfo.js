@@ -53,9 +53,9 @@ const WalletInfoContent = ({addressText,isCopied,setIsCopied,delegateAddress})=>
         }}>
         {
           isCopied ? 
-          <AiFillCopy size={18} color="white" style={{paddingTop:4}}/>
+          <AiFillCopy size={18} color="white" style={{paddingTop:6}}/>
           :  
-          <AiOutlineCopy size={18} color="white" style={{paddingTop:4}}/>
+          <AiOutlineCopy size={18} color="white" style={{paddingTop:6}}/>
         }
       </div>
     </div>
@@ -71,15 +71,17 @@ const WalletAddressDisplay = styled.span`
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  font-weight: bold;
   min-width: ${props => props.minWidth || 'fit-content'};
-  font-size: 16px;
-  border-radius: 15px;
+  
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 164%;
+  border-radius: 13px;
 
   &:active {
     opacity: 0.75;
     cursor: pointer;
-    pointer: hand;
   }
 
 `

@@ -94,16 +94,16 @@ export default function ChannelDetails() {
             {channelDetails.name}
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
-          <div style={{display:'flex'}}>
+          <ChannelStatusContainer>
             <Subscribers>
               <img style={{paddingLeft:'6px'}} src="/people.svg" alt="subscount"></img>
               <SubscribersCount>
                 {channelDetails.subscribers.length}
               </SubscribersCount>
             </Subscribers>
-            <div style={{width:'14px'}}/>
+            <div style={{width:'8px'}}/>
             {
-              aliasVerified === false
+              !aliasVerified 
                 ?
                   <AliasStateText>
                     Alias Network Setup Pending
@@ -117,7 +117,7 @@ export default function ChannelDetails() {
                       : "Blocked"}
                   </ChanneStateText>
             }
-          </div>
+          </ChannelStatusContainer>
           <Date>
             {creationDate && <>Created {creationDate}</>}
           </Date>
@@ -127,7 +127,7 @@ export default function ChannelDetails() {
       <SectionDes>{channelDetails.info}</SectionDes>
       
       {aliasVerified === false &&
-        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
+        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A",marginTop:"18px" }}>
           Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
         </Item>
       }
@@ -158,11 +158,19 @@ const SectionTop = styled.div`
 `;
 
 const ImageSection = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 10%;
+  width: 128px;
+  height: 128px;
   margin-right: 20px;
+  border-radius: 32px;
 `;
+
+const ChannelStatusContainer = styled.div`
+  display:flex;
+  align-items:center;
+  justify-content:start;
+  margin-bottom:8px;
+`
+
 const VerifyImage = styled.img`
   width: 20px;
   height: 25px;
@@ -184,35 +192,35 @@ const VerifyingName = styled.div``;
 const Subscribers = styled.div`
   width: 58px;
   height: 28px;
-  left: 586px;
-  top: 282px;
+  
+
   background: #FFDBF0;
   border-radius: 25px;
-  margin-top: 10px;
   display: flex;
   align-items:center;
   justify-content:center;
   
 `;
 
-const ChanneStateText = styled.span`
-  color: #2DBD81;
-  font-family: Source Sans Pro;
+const StateText = styled.div`
+  font-family: 'Source Sans Pro';
   font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 23px;
-  letter-spacing: 0.1em;
-  color: ${(props) => (props.active ? "#2DBD81" : "red")};
-  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 150%;
   display: flex;
   align-items: center;
-  background-color: #C6EFD1;
-  padding:4px 12px;
+  padding:2px 12px;
   border-radius:16px;
-  margin-top:10px;
-  margin-bottom:14px;
+  height: 28px;
+  align-self: center;
+  background-color: pink;
+`
 
+const ChanneStateText = styled(StateText)`
+  color: #2DBD81;
+  color: ${(props) => (props.active ? "#2DBD81" : "red")};
+  background-color: #C6EFD1;
   ${(props) =>
     props.active &&
     `
@@ -229,21 +237,9 @@ const ChanneStateText = styled.span`
     `}
 `;
 
-const AliasStateText = styled.span`
+const AliasStateText = styled(StateText)`
   color: #E3B61C;
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  color: #E3B61C;
-  display: flex;
-  align-items: center;
   background-color: #E9EEC4;
-  padding:4px 12px;
-  border-radius:16px;
-  margin-top:10px;
-  margin-bottom:14px;
- 
   &::before {
       width:16px;
       height: 16px;
@@ -303,6 +299,7 @@ const ChannelName = styled.div`
   font-weight: 700;
   font-size: 30px;
   line-height: 150%;
+  height: 45px;
   color: ${props => props.theme.color};
 `;
 
@@ -316,7 +313,7 @@ const SectionDate = styled.div`
   line-height: 25px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 `;
 
 const SectionDes = styled.div`

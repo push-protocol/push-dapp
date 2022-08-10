@@ -88,7 +88,7 @@ const ShowDelegates = () => {
           {delegatees.map((delegate,idx) => {
             return (
               <Item
-                padding="6px 12px"
+                padding="12px"
                 direction="row"
                 justify="space-between"
                 key={delegate}
@@ -144,13 +144,15 @@ const RemoveButton = ()=>{
         isHovered ?
         <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
           <AiOutlineUserDelete fontSize={15}/>
-          <div style={{padding:'1px'}}/>
+          <div style={{padding:'3px'}}/>
           <div>
             Remove Delegate 
           </div>
         </div>
           :
-            "Delegate"
+            <div style={{color:"#657795"}}>
+              Delegate
+            </div>
         }
       </RemoveButtonUI>
   )
@@ -198,8 +200,8 @@ const ChannelActionButton = styled.button`
 const RemoveButtonUI = styled(ChannelActionButton)`
   background: ${props => props.theme.backgroundBG};
   color: ${props => props.theme.color};
-  height: 50px;
-  width: 150px;
+  height: 36px;
+  max-width: 165px;
   flex:1; 
   font-style: normal;
   font-weight: 700;
@@ -208,14 +210,18 @@ const RemoveButtonUI = styled(ChannelActionButton)`
   display: flex;
   align-items: center;
   text-align: right;
+  padding: 6px 10px 6px 9px;
+  gap: 5px;
   
   &:hover {
     opacity: 0.9;
-    background: #E93636
-;
+    background: #E93636;
+    max-width: 165px;
+    border-radius: 8px;
+  };
     color: #fff;
     cursor: pointer;
-  }
+  
 `;
 
 const OwnerButton = styled(ChannelActionButton)`

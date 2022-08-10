@@ -20,14 +20,14 @@ import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommuni
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 
-
+import {setCanSend} from "redux/slices/sendNotificationSlice";
 import { postReq } from "api";
+
 
 // Create Header
 function Navigation() {
     const { channelDetails, aliasVerified, delegatees } = useSelector((state: any) => state.admin);
     const [loading, setLoading] = useState(true);
-    const [canSendNotification, setCanSendNotification] = React.useState(false);
     const [ refresh, setRefresh ] = useState(false);
 
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
@@ -41,48 +41,36 @@ function Navigation() {
     const location = useLocation();
     const dispatch = useDispatch();
 
-
-    // useEffect(()=>{
-    //   (async()=>{
-    //     const res = await postReq("/channels/search", {
-    //       query:account,
-    //       op: "read",
-    //       page: 1,
-    //       address:account,
-    //       pageSize: 1000,
-    //       chainId: chainId,
-    //     }).then(({data}) => data.channels[0]).catch(e=>console.log(e))
-    //     console.log(res,"it ma");
-        
-    //     if(res && (res.addr === account || res.alias_address === account)){
-    //       setCanSendNotification(true)
-    //       ("dadda")
-    //     }else{
-    //       setCanSendNotification(false)
-    //       setLoading(false)
-    //     }
-    //   })()
-
-    // },[account,chainId])
-    
-    // TODO:
-    // get the owner info
-    // store in redux
-    // create new slice
     useEffect(()=>{
-      
-      if(!run && navigationSetup !== null && channelDetails!==null){
+      if(!navigationSetup) return 
+      navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+      if (channelDetails ==='unfetched') return
+
+      if(channelDetails!==null){
         navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-      } else if(run && navigationSetup !== null) {
+        dispatch(setCanSend(true))
+      } else{
         navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-      }
-      if(!run && navigationSetup !== null && !(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+        dispatch(setCanSend(false))
       }
-      else if(!run && navigationSetup !== null && (channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) || delegatees?.length)){
-        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-      }  
+    },[channelDetails])
+
+    useEffect(()=>{
+      (async()=>{
+        console.log("doing req abi");
+        
+        await postReq("/channels/get_eth_address", {
+          aliasAddress: account,
+          op: "read",
+        }).then(({ data }) => {
+          console.log("ab data was",data);
+          if (!data.ethAddress) {
+            setLoading(false)
+          }
+        });
+      })()
     },[channelDetails])
     
     // Similar to componentDidMount and componentDidUpdate:
@@ -572,11 +560,13 @@ function Navigation() {
 
       const item = {
         "data": {
-            "src": "loading.png",
-            "name": "Loading ...",
-            "title": "Loading ...",
-            "alt": "Loader",
-            "href": "/#/dashboard",
+          "src": "loading.png",
+          "name": "Loading ...",
+          "title": "Loading ...",
+          "alt": "Loader",
+          "href": "/#/dashboard",
+          "newTab": false,
+          "isRoute": false,
         }
       }
       const data = item.data
@@ -586,7 +576,7 @@ function Navigation() {
           align="stretch"
           opened={opened}
           refresh={refresh}
-          style={{"pointer-events":"unset"}}
+          style={{"pointerEvents":"unset"}}
         >
             <SectionItem
                 flex="1"
