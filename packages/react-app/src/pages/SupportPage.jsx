@@ -83,7 +83,7 @@ const SupportPage = () => {
         };
 
         fetch(
-          "https://backend-kovan.epns.io/apis/mailing/send_mail",
+          "https://backend-kovan.epns.io/apis/mailing/sendMail",
           requestOptions
         )
           .then((response) => response.json())
