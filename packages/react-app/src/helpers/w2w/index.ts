@@ -37,12 +37,12 @@ export const encryptAndSign = async ({
   const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(fromEncryptedPrivateKeyArmored), did)
   const secretKey: string = AES.generateRandomSecret(15)
   const cipherText: string = AES.encrypt({ plainText, secretKey })
-  const { cipherText: encryptedSecret, signature } = await PGP.encryptAndSign({
-    fromPublicKeyArmored,
+  const encryptedSecret = await PGP.encrypt({
     plainText: secretKey,
-    fromPrivateKeyArmored: privateKeyArmored,
+    fromPublicKeyArmored,
     toPublicKeyArmored
   })
+  const signature: string = await PGP.sign({ message: cipherText, signingKey: privateKeyArmored })
   return {
     cipherText,
     encryptedSecret,
@@ -68,12 +68,12 @@ export const decryptAndVerifySignature = async ({
   signatureArmored: string
 }): Promise<string> => {
   const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(encryptedPrivateKeyArmored), did)
-  const secretKey: string = await PGP.decryptAndVerifySignature({
+  const secretKey: string = await PGP.decrypt({
     cipherText: encryptedSecretKey,
     fromPublicKeyArmored: publicKeyArmored,
-    toPrivateKeyArmored: privateKeyArmored,
-    signatureArmored
+    toPrivateKeyArmored: privateKeyArmored
   })
+  await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored })
   return AES.decrypt({ cipherText, secretKey })
 }
 
