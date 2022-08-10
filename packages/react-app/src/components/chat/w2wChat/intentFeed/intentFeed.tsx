@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import './intentFeed.css'
 import DefaultIntent from '../defaultIntent/defaultIntent'
 import { AppContext, Context } from '../w2wIndex'
-import { fetchIntent } from '../w2wUtils'
+import { decryptFeeds, fetchIntent } from '../w2wUtils'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
@@ -32,7 +32,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const IntentFeed = (props: IntentFeedProps): JSX.Element => {
-  const { did, setChat }: AppContext = useContext<AppContext>(Context)
+  const { did, setChat, connectedUser }: AppContext = useContext<AppContext>(Context)
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
   const [open, setOpen] = useState(false)
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
@@ -41,17 +41,16 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
   const [toDID, settoDID] = useState<string>()
 
   async function resolveThreadhash(): Promise<void> {
-    let getIntent
-    getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
+    const getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
 
     if (getIntent === undefined) {
-      getIntent = await fetchIntent(did)
-      setReceivedIntents(getIntent)
+      let intents = await fetchIntent(did)
+      // intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      setReceivedIntents(intents)
     } else {
-      getIntent = getIntent.body
-      setReceivedIntents(getIntent)
-      getIntent = await fetchIntent(did)
-      setReceivedIntents(getIntent)
+      let intents = await fetchIntent(did)
+      // intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      setReceivedIntents(intents)
     }
   }
 

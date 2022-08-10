@@ -4,7 +4,7 @@ import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { AppContext, Context, ToastPosition } from '../w2wIndex'
 import { Feeds, getLatestThreadhash, User } from '../../../../api'
-import { fetchInbox } from '../w2wUtils'
+import { decryptFeeds, fetchInbox } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
@@ -17,7 +17,7 @@ interface MessageFeedProps {
 }
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
-  const { did, setChat }: AppContext = useContext<AppContext>(Context)
+  const { did, setChat, connectedUser }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
@@ -29,14 +29,15 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const getInbox = async (): Promise<Feeds[]> => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-      // setCurrentChat(inbox)
-      return inbox
+      let inboxes: Feeds[] = await fetchInbox(did)
+      // inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
+      setFeeds(inboxes)
+      return inboxes
     } else {
-      const inbox: Feeds[] = await fetchInbox(did)
-      setFeeds(inbox)
-      return inbox
+      let inboxes: Feeds[] = await fetchInbox(did)
+      // inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
+      setFeeds(inboxes)
+      return inboxes
     }
   }
 
@@ -81,7 +82,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 timestamp: null,
                 messageType: null,
                 signature: null,
-                signatureType: null
+                signatureType: null,
+                encType: null,
+                encryptedSecret: null,
+                fromDID: null,
+                toDID: null
               },
               wallets: user.wallets,
               did: user.did,

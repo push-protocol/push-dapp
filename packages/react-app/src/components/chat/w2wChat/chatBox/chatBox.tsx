@@ -12,7 +12,7 @@ import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
-import { encrypt, decrypt, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
+import { encryptAndSign, decryptAndVerifySignature, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
 import { CID, IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
@@ -84,13 +84,12 @@ const ChatBox = (): JSX.Element => {
         msgIPFS = messageFromIndexDB.body
       } else {
         const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID, ipfs)
-        messageFromIPFS.messageContent = 'hi'
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
         msgIPFS = messageFromIPFS
       }
 
       // Decrypt message
-      if (msgIPFS.enc_type !== 'PlainText') {
+      if (msgIPFS.enc_type !== 'PlainText' && msgIPFS.enc_type !== null) {
         // To do signature verification it depends on who has sent the message
         let signatureValidationPubliKey: string
         if (msgIPFS.fromDID === connectedUser.did) {
@@ -98,13 +97,14 @@ const ChatBox = (): JSX.Element => {
         } else {
           signatureValidationPubliKey = currentChat.pgp_pub
         }
-        msgIPFS.messageContent = await decrypt({
-          cipherText: msgIPFS.messageContent,
-          encryptedSecretKey: msgIPFS.encryptedSecret,
-          did: did,
-          encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-          publicKeyArmored: signatureValidationPubliKey
-        })
+        // msgIPFS.messageContent = await decryptAndVerifySignature({
+        //   cipherText: msgIPFS.messageContent,
+        //   encryptedSecretKey: msgIPFS.encryptedSecret,
+        //   did: did,
+        //   encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        //   publicKeyArmored: signatureValidationPubliKey,
+        //   signatureArmored: msgIPFS.signature
+        // })
       }
 
       setMessages((m) => [msgIPFS, ...m])
@@ -151,22 +151,22 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  // const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
 
-  useEffect(() => {
-    function updateData(): void {
-      if (data !== undefined && currentChat?.wallets) {
-        const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-        if (newData?.intent === 'Approved') {
-          setChat(newData)
-        }
-      }
-    }
-    const interval = setInterval(() => updateData(), 2000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [data, currentChat?.wallets])
+  // useEffect(() => {
+  //   function updateData(): void {
+  //     if (data !== undefined && currentChat?.wallets) {
+  //       const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+  //       if (newData?.intent === 'Approved') {
+  //         setChat(newData)
+  //       }
+  //     }
+  //   }
+  //   const interval = setInterval(() => updateData(), 2000)
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+  // }, [data, currentChat?.wallets])
 
   useEffect(() => {
     getMessagesFromIPFS().catch((err) => console.error(err))
@@ -177,20 +177,20 @@ const ChatBox = (): JSX.Element => {
     fromDid,
     toDid,
     message,
-    messageType,
-    signature,
-    sigType,
-    encType
+    messageType
   }: {
     account: string
     fromDid: string
     toDid: string
     message: string
     messageType: string
-    signature: string
-    sigType: string
-    encType: string
   }): Promise<void> => {
+    if (
+      !connectedUser.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----') ||
+      !currentChat.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')
+    ) {
+      throw "User doesn't have public key"
+    }
     let msg: MessageIPFS
     try {
       msg = {
@@ -199,16 +199,16 @@ const ChatBox = (): JSX.Element => {
         toDID: toDid,
         messageContent: message,
         messageType,
-        signature,
-        enc_type: encType,
-        sigType,
+        signature: '',
+        enc_type: '',
+        sigType: '',
         timestamp: Date.now(),
         encryptedSecret: '',
         link: ''
       }
       setNewMessage('')
       setMessages([...messages, msg])
-      const { cipherText, encryptedSecret } = await encrypt({
+      const { cipherText, encryptedSecret, signature, sigType, encType } = await encryptAndSign({
         plainText: message,
         fromEncryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
         fromPublicKeyArmored: connectedUser.pgp_pub,
@@ -249,10 +249,7 @@ const ChatBox = (): JSX.Element => {
           fromDid: did.id,
           toDid: currentChat.did,
           message: newMessage,
-          messageType: 'Text',
-          signature: 'signature',
-          sigType: 'sigType',
-          encType: 'pgp'
+          messageType: 'Text'
         })
       } else {
         sendIntent({ message: newMessage, messageType: 'Text' })
@@ -264,7 +261,7 @@ const ChatBox = (): JSX.Element => {
     try {
       if (!hasIntent && intentSentandPending === 'Pending') {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
-        let messageContent: string, encryptionType: string, aesEncryptedSecret: string
+        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
         if (!user) {
           const caip10: string = walletToCAIP10(searchedUser, chainId)
           await PushNodeClient.createUser({
@@ -280,14 +277,16 @@ const ChatBox = (): JSX.Element => {
           messageContent = message
           encryptionType = 'PlainText'
           aesEncryptedSecret = ''
+          signature = ''
         } else {
           // It's possible for a user to be created but the PGP keys still not created
           if (!user.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
             messageContent = message
             encryptionType = 'PlainText'
             aesEncryptedSecret = ''
+            signature = ''
           } else {
-            const { cipherText, encryptedSecret } = await encrypt({
+            const { cipherText, encryptedSecret, signature: pgpSignature } = await encryptAndSign({
               plainText: message,
               fromEncryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
               toPublicKeyArmored: currentChat.pgp_pub,
@@ -297,6 +296,7 @@ const ChatBox = (): JSX.Element => {
             messageContent = cipherText
             encryptionType = 'pgp'
             aesEncryptedSecret = encryptedSecret
+            signature = pgpSignature
           }
         }
 
@@ -306,9 +306,9 @@ const ChatBox = (): JSX.Element => {
           fromWallet: account,
           message: messageContent,
           messageType,
-          signature: 'signature',
+          signature: signature,
           encType: encryptionType,
-          sigType: 'mysignaturetype',
+          sigType: 'pgp',
           encryptedSecret: aesEncryptedSecret
         })
         setHasIntent(true)
@@ -361,10 +361,7 @@ const ChatBox = (): JSX.Element => {
               fromDid: did.id,
               toDid: currentChat.did,
               message: JSON.stringify(resultingfile),
-              messageType: type,
-              signature: 'sig',
-              sigType: 'sigType',
-              encType: 'pgp'
+              messageType: type
             })
           }
           setFileUploading(false)
@@ -380,10 +377,7 @@ const ChatBox = (): JSX.Element => {
             fromDid: did.id,
             toDid: currentChat.did,
             message: content.toString(),
-            messageType: type,
-            signature: 'sig',
-            sigType: 'sigType',
-            encType: 'pgp'
+            messageType: type
           })
         }
         setFileUploading(false)
@@ -410,10 +404,7 @@ const ChatBox = (): JSX.Element => {
         fromDid: did.id,
         toDid: currentChat.did,
         message: url,
-        messageType: 'GIF',
-        signature: 'signature',
-        sigType: 'sigType',
-        encType: 'pgp'
+        messageType: 'GIF'
       })
     }
   }

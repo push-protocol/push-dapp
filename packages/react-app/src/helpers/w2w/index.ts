@@ -21,7 +21,7 @@ export const caip10ToWallet = (wallet: string): string => {
   return wallet
 }
 
-export const encrypt = async ({
+export const encryptAndSign = async ({
   plainText,
   fromEncryptedPrivateKeyArmored,
   fromPublicKeyArmored,
@@ -33,11 +33,11 @@ export const encrypt = async ({
   fromPublicKeyArmored: string
   toPublicKeyArmored: string
   did: DID
-}): Promise<{ cipherText: string; encryptedSecret: string }> => {
+}): Promise<{ cipherText: string; encryptedSecret: string; signature: string; sigType: string; encType: string }> => {
   const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(fromEncryptedPrivateKeyArmored), did)
   const secretKey: string = AES.generateRandomSecret(15)
   const cipherText: string = AES.encrypt({ plainText, secretKey })
-  const encryptedSecret: string = await PGP.encrypt({
+  const { cipherText: encryptedSecret, signature } = await PGP.encryptAndSign({
     fromPublicKeyArmored,
     plainText: secretKey,
     fromPrivateKeyArmored: privateKeyArmored,
@@ -45,28 +45,34 @@ export const encrypt = async ({
   })
   return {
     cipherText,
-    encryptedSecret
+    encryptedSecret,
+    signature,
+    sigType: 'pgp',
+    encType: 'pgp'
   }
 }
 
-export const decrypt = async ({
+export const decryptAndVerifySignature = async ({
   cipherText,
   encryptedSecretKey,
   encryptedPrivateKeyArmored,
   publicKeyArmored,
-  did
+  did,
+  signatureArmored
 }: {
   cipherText: string
   encryptedSecretKey: string
   encryptedPrivateKeyArmored: string
   publicKeyArmored: string
   did: DID
+  signatureArmored: string
 }): Promise<string> => {
   const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(encryptedPrivateKeyArmored), did)
-  const secretKey: string = await PGP.decrypt({
+  const secretKey: string = await PGP.decryptAndVerifySignature({
     cipherText: encryptedSecretKey,
     fromPublicKeyArmored: publicKeyArmored,
-    toPrivateKeyArmored: privateKeyArmored
+    toPrivateKeyArmored: privateKeyArmored,
+    signatureArmored
   })
   return AES.decrypt({ cipherText, secretKey })
 }
