@@ -88,7 +88,7 @@ const LoaderNotification = styled.div`
   margin: 3% 3%;
 `;
 const LoaderMessage = styled.div`
-  margin-left: 4%;
+  margin-left: 6%;
   color: black;
   font-family: Manrope;
   font-size: 1rem;
