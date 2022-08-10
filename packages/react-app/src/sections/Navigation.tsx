@@ -43,48 +43,44 @@ function Navigation() {
 
     const {canSend} = useSelector(
       (state:any) => {
-        console.log("state was",state);
         return state.canSend
       }
     );
-    console.log("res was",canSend);
     
-
     useEffect(()=>{
-      if(!navigationSetup) return 
-      navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-      if (channelDetails ==='unfetched') return
+      if(canSend === SEND_NOTIFICATION_STATES.LOADING) return
+      if (!navigationSetup) return
 
-      if(channelDetails!==null){
-        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
-      } else{
-        dispatch(setCanSend(setCanSend(SEND_NOTIFICATION_STATES.SEND)))
-      }
-    },[channelDetails])
-
-    useEffect(()=>{
       if(canSend === SEND_NOTIFICATION_STATES.HIDE){
         navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
       }else if(canSend === SEND_NOTIFICATION_STATES.SEND){
-        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+        if(channelDetails && channelDetails.name) {
+          navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+        }else{
+          navigationSetup.primary[1].data.drilldown[0].data.name = "Channel Info";
+        }
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
       }
-    },[canSend])
+    },[canSend,channelDetails,navigationSetup])
 
     useEffect(()=>{
       (async()=>{
-        console.log("doing req abi");
-        
-        await postReq("/channels/get_eth_address", {
-          aliasAddress: account, // connected user address 
-          op: "read",
-        }).then(({ data }) => {
-          console.log("ab data was",data); // not null yes | no 
-          if (!data.ethAddress) {
-            setLoading(false)
-          }
-        });
+        const channelAddress = await postReq("/channels/search", {
+          "page": 1,
+          "pageSize": 1,
+          "address":account,
+          "chainId": chainId,
+          "query":account,
+          "op": "read"          
+        }).then(({data}) => data.channels)
+
+        if(channelAddress.length === 0){
+          setLoading(false)
+          dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE))
+        }else{
+          dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
+        }
       })()
     },[channelDetails])
     
