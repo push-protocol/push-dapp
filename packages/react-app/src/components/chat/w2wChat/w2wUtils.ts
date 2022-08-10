@@ -1,5 +1,4 @@
 import * as IPFSHelper from '../../../helpers/w2w/ipfs'
-import { IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../helpers/w2w/ipfs'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
@@ -10,8 +9,7 @@ import { decryptAndVerifySignature } from 'helpers/w2w'
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {
     if (inbox[i]?.threadhash) {
-      const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-      const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient)
+      const current = await IPFSHelper.get(inbox[i].threadhash)
       const msgIPFS: MessageIPFS = current as MessageIPFS
 
       const msg: InboxChat = {
@@ -27,9 +25,9 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
         toDID: msgIPFS.toDID,
         encryptedSecret: msgIPFS.encryptedSecret
       }
-      if (msg.lastMessage.length > 25) {
-        msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'
-      }
+      // if (msg.lastMessage.length > 25) {
+      //   msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'
+      // }
       inbox[i] = { ...inbox[i], msg }
     } else {
       const msg: InboxChat = {
@@ -89,7 +87,8 @@ export const decryptFeeds = async ({
       } else {
         signatureValidationPubliKey = feed.pgp_pub
       }
-      const plaintext: string = await decryptAndVerifySignature({
+
+      feed.msg.lastMessage = await decryptAndVerifySignature({
         cipherText: feed.msg.lastMessage,
         encryptedSecretKey: feed.msg.encryptedSecret,
         did: did,
@@ -97,8 +96,6 @@ export const decryptFeeds = async ({
         publicKeyArmored: signatureValidationPubliKey,
         signatureArmored: feed.msg.signature
       })
-      feed.msg.lastMessage = plaintext
-      console.log(plaintext)
     }
   }
   return feeds

@@ -45,11 +45,11 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
 
     if (getIntent === undefined) {
       let intents = await fetchIntent(did)
-      // intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
       setReceivedIntents(intents)
     } else {
       let intents = await fetchIntent(did)
-      // intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
       setReceivedIntents(intents)
     }
   }

@@ -364,6 +364,7 @@ export const createIntent = async ({
     return data
   }
 }
+
 export const getRandomProfile = async (wallet: string): Promise<{ uniqueName: string; uniqueAvatar: string }> => {
   const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
     method: 'POST',
@@ -376,4 +377,17 @@ export const getRandomProfile = async (wallet: string): Promise<{ uniqueName: st
   })
   const data: { uniqueName: string; uniqueAvatar: string } = await response.json()
   return data
+}
+
+export const getFromIPFS = async (cid: string): Promise<MessageIPFS> => {
+  const response: any = await fetch(BASE_URL + '/w2w/getIPFS', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      cid
+    })
+  })
+  return await response.json()
 }

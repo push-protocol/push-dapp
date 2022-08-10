@@ -83,8 +83,7 @@ const Profile = (props: profilePropsType): JSX.Element => {
 
   const changeHandler = async (event) => {
     const file = event.target.files[0]
-    const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-    const cid = await IPFSHelper.uploadImage(file, IPFSClient)
+    const cid = await IPFSHelper.uploadImage(file)
     setProfile(INFURA_URL + `${cid}`)
     props.updateProfile(cid)
     await uploadUserProfileImage(did.id, cid)
