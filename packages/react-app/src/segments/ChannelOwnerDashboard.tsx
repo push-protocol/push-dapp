@@ -18,7 +18,10 @@ import AliasProcessing from "components/AliasProcessing"
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 
 // interval after which alias details api will be called, in seconds
-const ALIAS_API_CALL_INTERVAL = 15;
+const ALIAS_API_CALL_INTERVAL = 5;
+
+// interval id for calling search api
+let intervalID = null;
 
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
@@ -83,7 +86,7 @@ const ChannelOwnerDashboard = () => {
   React.useEffect(() => {
     if (!onCoreNetwork || !aliasAddressFromContract || processingState === 0) return;
 
-    const intervalID = setInterval(async () => {
+    intervalID = setInterval(async () => {
       const { aliasAddress, aliasVerified } = await fetchChannelDetails(account);
       if (aliasAddress) {
         dispatch(setAliasAddress(aliasAddress));
@@ -98,12 +101,13 @@ const ChannelOwnerDashboard = () => {
         if (processingState != 0 && processingState != 1)
           dispatch(setProcessingState(1));
       }
-    }, ALIAS_API_CALL_INTERVAL * 1000);
 
-    if (aliasAddr != null) {
-      clearInterval(intervalID);
-    }
-  });
+    }, ALIAS_API_CALL_INTERVAL * 1000);
+  }, [aliasAddressFromContract]);
+
+  if (aliasAddr !== null) {
+    clearInterval(intervalID);
+  }
 
   React.useEffect(() => {
     if (onCoreNetwork) return;
@@ -136,7 +140,7 @@ const ChannelOwnerDashboard = () => {
         }
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
+          {!channelDetails && aliasEthAccount === null && processingState === 0 ? <CreateChannel /> : ""}
           
           {/* {aliasEthAccount !== null && isAliasVerified === false && */}
           {processingState !== 0 && processingState !== null && (

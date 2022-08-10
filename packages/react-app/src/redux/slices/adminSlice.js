@@ -28,10 +28,10 @@ export const contractSlice = createSlice({
             state.delegatees = action.payload;
         },
         setAliasAddress: (state, action) => {
-            state.aliasDetails['aliasAddress'] = action.payload;
+            state.aliasDetails['aliasAddr'] = action.payload;
         },
         setAliasVerified: (state, action) => {
-            state.aliasDetails['aliasVerified'] = action.payload;
+            state.aliasDetails['isAliasVerified'] = action.payload;
         }
     }
 });

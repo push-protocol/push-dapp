@@ -380,7 +380,7 @@ export default class ChannelsDataStore {
             return { addr: channel, aliasAddress: alias_address, memberCount: memberCount, isSubscriber: isSubscriber, isAliasVerified: verified_status }
           });
           if (enableLogs) console.log("getChannelDetailsFromAddress() --> %o", response);
-          resolve(output);
+          resolve(output[0]);
         })
         .catch(err => {
           console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);
