@@ -38,7 +38,7 @@ const DefaultMessage = (props: { inbox: Feeds }): JSX.Element => {
         <div className="defaultMessage_3">
           <div className="defaultMessage_lastMsg">
             {props.inbox.msg.messageType === 'Text' ? (
-              props.inbox.msg.lastMessage
+              (props.inbox.msg.lastMessage = props.inbox.msg.lastMessage.slice(0, 25) + '...')
             ) : props.inbox.msg.messageType === 'Image' ? (
               <div>
                 <i className="fa fa-picture-o" aria-hidden="true"></i>

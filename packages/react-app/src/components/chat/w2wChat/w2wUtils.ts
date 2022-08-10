@@ -27,9 +27,9 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
         toDID: msgIPFS.toDID,
         encryptedSecret: msgIPFS.encryptedSecret
       }
-      if (msg.lastMessage.length > 25) {
-        msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'
-      }
+      // if (msg.lastMessage.length > 25) {
+      //   msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'
+      // }
       inbox[i] = { ...inbox[i], msg }
     } else {
       const msg: InboxChat = {
@@ -89,7 +89,8 @@ export const decryptFeeds = async ({
       } else {
         signatureValidationPubliKey = feed.pgp_pub
       }
-      const plaintext: string = await decryptAndVerifySignature({
+
+      feed.msg.lastMessage = await decryptAndVerifySignature({
         cipherText: feed.msg.lastMessage,
         encryptedSecretKey: feed.msg.encryptedSecret,
         did: did,
@@ -97,8 +98,6 @@ export const decryptFeeds = async ({
         publicKeyArmored: signatureValidationPubliKey,
         signatureArmored: feed.msg.signature
       })
-      feed.msg.lastMessage = plaintext
-      console.log(plaintext)
     }
   }
   return feeds

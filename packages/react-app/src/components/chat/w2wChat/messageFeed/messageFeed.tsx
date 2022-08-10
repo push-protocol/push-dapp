@@ -30,12 +30,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
     if (getInbox !== undefined) {
       let inboxes: Feeds[] = await fetchInbox(did)
-      // inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
+      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
       setFeeds(inboxes)
       return inboxes
     } else {
       let inboxes: Feeds[] = await fetchInbox(did)
-      // inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
+      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
       setFeeds(inboxes)
       return inboxes
     }
