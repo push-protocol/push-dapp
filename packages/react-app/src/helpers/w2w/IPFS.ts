@@ -1,5 +1,7 @@
 import { JWE } from 'did-jwt'
 import { CID, create, IPFSHTTPClient } from 'ipfs-http-client'
+import { envConfig } from '@project/contracts'
+import * as PushNodeClient from '../../api'
 
 export interface MessageIPFS {
   fromWallet: string
@@ -15,21 +17,26 @@ export interface MessageIPFS {
   encryptedSecret: string
 }
 
-export function createIPFSClient(): IPFSHTTPClient {
-  return create({ host: 'infura-ipfs.io', port: 5001, protocol: 'https' })
+function createIPFSClient(): IPFSHTTPClient {
+  return create({ host: 'https://epns-gateway.infura-ipfs.io', port: 5001, protocol: 'https' })
 }
 
-export async function store(content: JWE, ipfs: IPFSHTTPClient): Promise<CID> {
-  return await ipfs.dag.put(content, { storeCodec: 'dag-jose', hashAlg: 'sha2-256' })
-}
-
-export async function get(cid: string, ipfs: IPFSHTTPClient): Promise<MessageIPFS> {
-  const cidObject = CID.parse(cid)
-  const content: MessageIPFS = (await ipfs.dag.get(cidObject)).value
+// We try to get the cid from Push Node. If not success, we get from IPFS directly
+export async function get(cid: string): Promise<MessageIPFS> {
+  let content: MessageIPFS
+  try {
+    content = await PushNodeClient.getFromIPFS(cid)
+  } catch (e) {
+    const ipfsHttpClient: IPFSHTTPClient = createIPFSClient()
+    const cidObject = CID.parse(cid)
+    content = (await ipfsHttpClient.dag.get(cidObject)).value
+  }
   return content
 }
 
-export async function uploadImage(image, ipfs: IPFSHTTPClient): Promise<string> {
-  const cid = await ipfs.add(image)
+// TODO: Change this to make request to Push Node instead
+export async function uploadImage(image): Promise<string> {
+  const ipfsHttpClient: IPFSHTTPClient = createIPFSClient()
+  const cid = await ipfsHttpClient.add(image)
   return cid.path
 }

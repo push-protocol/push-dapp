@@ -61,12 +61,10 @@ const ChatBox = (): JSX.Element => {
 
   const getMessagesFromCID = async ({
     messageCID,
-    ipfs,
     encryptedPrivateKey,
     did
   }: {
     messageCID: string
-    ipfs: IPFSHTTPClient
     encryptedPrivateKey: string
     did: DID
   }): Promise<void> => {
@@ -83,7 +81,7 @@ const ChatBox = (): JSX.Element => {
       if (messageFromIndexDB !== undefined) {
         msgIPFS = messageFromIndexDB.body
       } else {
-        const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID, ipfs)
+        const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID)
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
         msgIPFS = messageFromIPFS
       }
@@ -135,10 +133,8 @@ const ChatBox = (): JSX.Element => {
       setHasIntent(intentStatus.hasIntent)
 
       if (currentChat?.threadhash && hasintent) {
-        const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
         await getMessagesFromCID({
           messageCID: currentChat.threadhash,
-          ipfs: IPFSClient,
           did,
           encryptedPrivateKey: connectedUser.pgp_priv_enc
         })
@@ -344,7 +340,6 @@ const ChatBox = (): JSX.Element => {
         return
       }
       setFileUploading(true)
-      const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
       const type = file.type.startsWith('image') ? 'Image' : 'File'
       let content: string
       if (type === 'File') {
@@ -367,7 +362,7 @@ const ChatBox = (): JSX.Element => {
           setFileUploading(false)
         }
       } else {
-        const cid = await IPFSHelper.uploadImage(file, IPFSClient)
+        const cid = await IPFSHelper.uploadImage(file)
         content = cid
         if (!hasIntent && intentSentandPending === 'Pending') {
           sendIntent({ message: content.toString(), messageType: type })

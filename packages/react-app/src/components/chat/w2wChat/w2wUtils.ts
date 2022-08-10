@@ -1,5 +1,4 @@
 import * as IPFSHelper from '../../../helpers/w2w/ipfs'
-import { IPFSHTTPClient } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../helpers/w2w/ipfs'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
@@ -10,8 +9,7 @@ import { decryptAndVerifySignature } from 'helpers/w2w'
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {
     if (inbox[i]?.threadhash) {
-      const IPFSClient: IPFSHTTPClient = IPFSHelper.createIPFSClient()
-      const current = await IPFSHelper.get(inbox[i].threadhash, IPFSClient)
+      const current = await IPFSHelper.get(inbox[i].threadhash)
       const msgIPFS: MessageIPFS = current as MessageIPFS
 
       const msg: InboxChat = {
