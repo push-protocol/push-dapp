@@ -6,7 +6,7 @@ const TOOLING_BASE_URL = envConfig.toolingApiUrl
 
 /**
  * A function used to make get requests throughout the entire application
- * @param {String} path e.g /feeds/get_feeds, this represents the route of the enpoint to call
+ * @param {String} path e.g /feeds/getFeeds, this represents the route of the enpoint to call
  * @returns {Promise}
  */
 export const getReq = async (path) => {
@@ -20,7 +20,7 @@ export const getReq = async (path) => {
 
 /**
  * A function used to make post requests to the backend
- * @param {String} path e.g /feeds/get_feeds, this represents the route of the enpoint to call
+ * @param {String} path e.g /feeds/getFeeds, this represents the route of the enpoint to call
  * @param {Object} obj
  * @returns {Promise}
  */

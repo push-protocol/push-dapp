@@ -41,7 +41,7 @@ const ShowDelegates = () => {
 
   const fetchDelegatees = async () => {
     try {
-      const { data } = await postReq("/channels/delegatee/get_delegate", {
+      const { data } = await postReq("/channels/getChannelDelegates", {
         channelAddress: account,
         blockchain: blockchainName[chainId]
       });

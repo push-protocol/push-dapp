@@ -168,7 +168,7 @@ function ChannelSettings() {
     const amountToBeConverted = parseInt("" + poolContrib) - 10;
     console.log("Amount To be converted==>", amountToBeConverted);
 
-    const { data: response } = await postReq("/channels/get_dai_to_push", {
+    const { data: response } = await postReq("/channels/getDaiToPush", {
       value: amountToBeConverted,
     });
 

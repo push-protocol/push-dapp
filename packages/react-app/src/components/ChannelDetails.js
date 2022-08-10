@@ -61,7 +61,7 @@ export default function ChannelDetails() {
     if (!onCoreNetwork) return;
 
     (async function() {
-      await postReq("/channels/get_alias_details", {
+      await postReq("/channels/getAliasDetails", {
         channel: account,
         op: "read",
       }).then(async ({ data }) => {
@@ -69,7 +69,7 @@ export default function ChannelDetails() {
         console.log(aliasAccount);
         if (aliasAccount.aliasAddress) {
           const { aliasAddress } = aliasAccount;
-          await postReq("/channels/get_alias_verification_status", {
+          await postReq("/channels/getAliasVerification", {
             aliasAddress: aliasAddress,
             op: "read",
           }).then(({ data }) => {
