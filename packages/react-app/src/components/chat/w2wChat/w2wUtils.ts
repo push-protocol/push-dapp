@@ -2,8 +2,8 @@ import * as IPFSHelper from '../../../helpers/w2w/ipfs'
 import { MessageIPFS } from '../../../helpers/w2w/ipfs'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
-import { Feeds, getInbox, getIntents } from '../../../api'
-import { ConnectedUser, InboxChat } from './w2wIndex'
+import { Feeds, getInbox, getIntents, User } from '../../../api'
+import { InboxChat } from './w2wIndex'
 import { decryptAndVerifySignature } from 'helpers/w2w'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
@@ -75,7 +75,7 @@ export const decryptFeeds = async ({
   did
 }: {
   feeds: Feeds[]
-  connectedUser: ConnectedUser
+  connectedUser: User
   did: DID
 }): Promise<Feeds[]> => {
   for (let feed of feeds) {
