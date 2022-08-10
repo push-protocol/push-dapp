@@ -185,7 +185,7 @@ const UploadLogo = ({
             </Item>)}
 
         {view && (!croppedImage ? (
-        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 0px auto">
+        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto">
           <Button
             bg="#e20880"
             color="#fff"
@@ -217,7 +217,7 @@ const UploadLogo = ({
               onSubmit={handleCreateChannel}
               >
               <Item
-                width="12.2em" self="stretch" align="stretch" margin="100px auto 0px auto"
+                width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto"
               >
                 <Button
                   bg="#e20880"

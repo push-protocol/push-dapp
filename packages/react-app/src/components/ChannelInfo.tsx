@@ -263,7 +263,7 @@ const ChannelInfo = ({
                   <div style={{color:'#CF1C84'}}>{info}</div>
                 </Item>)}
         
-          <Item width="12.2em" self="stretch" align="stretch" margin="70px auto 0px auto">
+          <Item width="12.2em" self="stretch" align="stretch" margin="70px auto 50px auto">
             <Button
               bg="#CF1C84"
               color="#fff"
