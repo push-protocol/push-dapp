@@ -70,7 +70,6 @@ export const decryptAndVerifySignature = async ({
   const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(encryptedPrivateKeyArmored), did)
   const secretKey: string = await PGP.decrypt({
     cipherText: encryptedSecretKey,
-    fromPublicKeyArmored: publicKeyArmored,
     toPrivateKeyArmored: privateKeyArmored
   })
   await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored })
