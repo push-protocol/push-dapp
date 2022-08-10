@@ -44,10 +44,6 @@ export interface InboxChat {
   encryptedSecret: string
 }
 
-export interface ConnectedUser extends User {
-  privateKey: string
-}
-
 export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
@@ -55,7 +51,7 @@ export interface AppContext {
   setSearchedUser: any
   searchedUser: string
   setChat: (feed: Feeds) => void
-  connectedUser: ConnectedUser
+  connectedUser: User
 }
 
 export const ToastPosition: ToastOptions = {
@@ -77,7 +73,7 @@ function App() {
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
   const [did, setDid] = useState<DID>()
   const [searchedUser, setSearchedUser] = useState<string>('')
-  const [connectedUser, setConnectedUser] = useState<ConnectedUser>()
+  const [connectedUser, setConnectedUser] = useState<User>()
 
   const queryClient = new QueryClient({})
 
@@ -109,14 +105,11 @@ function App() {
         signature: 'xyz',
         sigType: 'a'
       })
-      const connectedUser: ConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored }
-      setConnectedUser(connectedUser)
+      setConnectedUser(createdUser)
     } else {
-      const privateKey: string = await DIDHelper.decrypt(JSON.parse(user.pgp_priv_enc), did)
-      const connectedUser: ConnectedUser = { ...user, privateKey }
       const wallets: string = await PushNodeClient.updateWalletIfNotExist(did.id, caip10)
       user.wallets = wallets
-      setConnectedUser(connectedUser)
+      setConnectedUser(user)
     }
     setIsLoading(false)
   }

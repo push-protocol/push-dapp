@@ -13,7 +13,7 @@ import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
 import { encryptAndSign, decryptAndVerifySignature, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
-import { CID, IPFSHTTPClient } from 'ipfs-http-client'
+import { CID } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Loader from 'react-loader-spinner'
 import GifIcon from '../W2WIcons/GifIcon'
@@ -59,15 +59,7 @@ const ChatBox = (): JSX.Element => {
   let showTime = false
   let time = ''
 
-  const getMessagesFromCID = async ({
-    messageCID,
-    encryptedPrivateKey,
-    did
-  }: {
-    messageCID: string
-    encryptedPrivateKey: string
-    did: DID
-  }): Promise<void> => {
+  const getMessagesFromCID = async ({ messageCID, did }: { messageCID: string; did: DID }): Promise<void> => {
     if (!messageCID) {
       return
     }
@@ -135,8 +127,7 @@ const ChatBox = (): JSX.Element => {
       if (currentChat?.threadhash && hasintent) {
         await getMessagesFromCID({
           messageCID: currentChat.threadhash,
-          did,
-          encryptedPrivateKey: connectedUser.pgp_priv_enc
+          did
         })
       } else {
         setMessages([])
