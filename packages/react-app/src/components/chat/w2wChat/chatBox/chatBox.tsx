@@ -295,9 +295,11 @@ const ChatBox = (): JSX.Element => {
           messageType,
           signature: signature,
           encType: encryptionType,
-          sigType: 'pgp',
+          sigType: signature,
           encryptedSecret: aesEncryptedSecret
         })
+        // We store the message in state decrypted so we display to the user the intent message
+        msg.messageContent = message
         setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')
