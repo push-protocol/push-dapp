@@ -55,7 +55,7 @@ export default function AliasVerificationModal({
                 }, 2000);
 
                 const intervalId = setInterval(async () => {
-                    const response = await postReq("/channels/get_alias_verification_status", {
+                    const response = await postReq("/channels/getAliasVerification", {
                         aliasAddress: account,
                         op: "read",
                     })
