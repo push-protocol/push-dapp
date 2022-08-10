@@ -1,8 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const SEND_NOTIFICATION_STATES = {
+    LOADING:0,
+    SEND:1,
+    HIDE:2
+}
+
 const initialState = {
-    canSend: null,
+    canSend: SEND_NOTIFICATION_STATES.LOADING,
 };
+
 
 export const contractSlice = createSlice({
     name: "canSend",
@@ -19,3 +26,4 @@ export const {
 } = contractSlice.actions;
 
 export default contractSlice.reducer;
+export {SEND_NOTIFICATION_STATES}

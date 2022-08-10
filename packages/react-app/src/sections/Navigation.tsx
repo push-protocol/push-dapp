@@ -20,7 +20,7 @@ import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommuni
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 
-import {setCanSend} from "redux/slices/sendNotificationSlice";
+import {setCanSend,SEND_NOTIFICATION_STATES} from "redux/slices/sendNotificationSlice";
 import { postReq } from "api";
 
 
@@ -41,31 +41,46 @@ function Navigation() {
     const location = useLocation();
     const dispatch = useDispatch();
 
+    const {canSend} = useSelector(
+      (state:any) => {
+        console.log("state was",state);
+        return state.canSend
+      }
+    );
+    console.log("res was",canSend);
+    
+
     useEffect(()=>{
       if(!navigationSetup) return 
       navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
       if (channelDetails ==='unfetched') return
 
       if(channelDetails!==null){
-        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
-        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-        dispatch(setCanSend(true))
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
       } else{
-        navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-        navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-        dispatch(setCanSend(false))
+        dispatch(setCanSend(setCanSend(SEND_NOTIFICATION_STATES.SEND)))
       }
     },[channelDetails])
+
+    useEffect(()=>{
+      if(canSend === SEND_NOTIFICATION_STATES.HIDE){
+        navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+      }else if(canSend === SEND_NOTIFICATION_STATES.SEND){
+        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+      }
+    },[canSend])
 
     useEffect(()=>{
       (async()=>{
         console.log("doing req abi");
         
         await postReq("/channels/get_eth_address", {
-          aliasAddress: account,
+          aliasAddress: account, // connected user address 
           op: "read",
         }).then(({ data }) => {
-          console.log("ab data was",data);
+          console.log("ab data was",data); // not null yes | no 
           if (!data.ethAddress) {
             setLoading(false)
           }
