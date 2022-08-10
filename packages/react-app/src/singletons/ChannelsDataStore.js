@@ -41,7 +41,7 @@ export default class ChannelsDataStore {
 
     // set chainId
     this.state.chainId = chainId;
-    this.state.onCoreNetwork = (chainId === envConfig.coreContractChain);
+    this.state.onCoreNetwork = chainId === envConfig.coreContractChain;
 
     // First attach listeners then overwrite the old one if any
     this.resetChannelsListeners();
@@ -333,12 +333,19 @@ export default class ChannelsDataStore {
       op: "read",
     }).then((response) => {
       let output;
-      output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber }) => {
-        this.state.subscribersCount[channel] = memberCount;
-        return { addr: channel, alias_address: alias_address, memberCount: memberCount, isSubscriber: isSubscriber }
-      });
+      output = response.data.channels.map(
+        ({ alias_address, channel, memberCount, isSubscriber }) => {
+          this.state.subscribersCount[channel] = memberCount;
+          return {
+            addr: channel,
+            alias_address: alias_address,
+            memberCount: memberCount,
+            isSubscriber: isSubscriber,
+          };
+        }
+      );
       return output;
-    })
+    });
   };
   //Helper to get eth address of an alias when in alias network
   getEthAddressFromAlias = async (channel) => {
@@ -347,15 +354,16 @@ export default class ChannelsDataStore {
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      postReq("/channels/get_eth_address", {
+      postReq("/channels/getCoreAddress", {
         aliasAddress: channel,
         op: "read",
       })
         .then(({ data }) => {
-          if (enableLogs) console.log("getEthAddressFromAlias() --> %o", data?.ethAddress);
+          if (enableLogs)
+            console.log("getEthAddressFromAlias() --> %o", data?.ethAddress);
           resolve(data?.ethAddress);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("!!!Error, getEthAddressFromAlias() --> %o", err);
           reject(err);
         });
@@ -374,15 +382,30 @@ export default class ChannelsDataStore {
         query: channel,
         op: "read",
       })
-        .then(response => {
+        .then((response) => {
           let output;
-          output = response.data.channels.map(({ alias_address, channel, memberCount, isSubscriber, verified_status }) => {
-            return { addr: channel, aliasAddress: alias_address, memberCount: memberCount, isSubscriber: isSubscriber, isAliasVerified: verified_status }
-          });
-          if (enableLogs) console.log("getChannelDetailsFromAddress() --> %o", response);
+          output = response.data.channels.map(
+            ({
+              alias_address,
+              channel,
+              memberCount,
+              isSubscriber,
+              verified_status,
+            }) => {
+              return {
+                addr: channel,
+                aliasAddress: alias_address,
+                memberCount: memberCount,
+                isSubscriber: isSubscriber,
+                isAliasVerified: verified_status,
+              };
+            }
+          );
+          if (enableLogs)
+            console.log("getChannelDetailsFromAddress() --> %o", response);
           resolve(output[0]);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("!!!Error, getChannelDetailsFromAddress() --> %o", err);
           reject(err);
         });
@@ -393,7 +416,12 @@ export default class ChannelsDataStore {
   // get channels meta in a paginated format
   // by passing in the starting index and the number of items per page
   getChannelsMetaAsync = async (startIndex, pageCount) => {
-    this.getChannelFromApi(startIndex, pageCount, this.state.account, this.state.chainId)
+    this.getChannelFromApi(
+      startIndex,
+      pageCount,
+      this.state.account,
+      this.state.chainId
+    );
     return new Promise(async (resolve, reject) => {
       // get total number of channels
       const channelsCount = await this.getChannelsCountAsync();
@@ -505,13 +533,14 @@ export default class ChannelsDataStore {
   };
 
   getChannelSubscribers = async (channelAddress) => {
+    return ["0x849435", "0x9839"];
     if (!channelAddress) return;
     const cachedSubscribers = this.state.subscribers[channelAddress];
     if (cachedSubscribers) {
       return cachedSubscribers;
     }
     let address = channelAddress;
-    
+
     return postReq("/channels/get_subscribers", {
       channel: address,
       blockchain: this.state.chainId,
@@ -535,7 +564,7 @@ export default class ChannelsDataStore {
       return cachedSubscribersCount;
     }
     let address = channelAddress;
-    
+
     return postReq("/channels/get_subscribers", {
       channel: address,
       blockchain: this.state.chainId,
@@ -565,8 +594,7 @@ export default class ChannelsDataStore {
           const getChannelJson = await EPNSCoreHelper.getChannelJsonFromChannelAddress(
             channelAddress,
             this.state.epnsReadProvider
-          )
-          .then((response) => {
+          ).then((response) => {
             return response;
           });
           // console.log(await this.state.channelsMeta, channelAddress);
@@ -576,16 +604,19 @@ export default class ChannelsDataStore {
           // .then((response) => {
           //   objResponse.alias_address = response;
           // });
-          
+
           // await Promise.all([getAliasAddress, getChannelJson]);
 
-          console.log("getChannelJsonAsync() [Address: %s] --> %o", getChannelJson);
+          console.log(
+            "getChannelJsonAsync() [Address: %s] --> %o",
+            getChannelJson
+          );
           this.state.channelsJson[channelAddress] = getChannelJson;
           resolve(getChannelJson);
-        } catch(err) {
+        } catch (err) {
           console.log("!!!Error, getChannelJsonAsync() --> %o", err);
           reject(err);
-        };
+        }
       }
     });
   };

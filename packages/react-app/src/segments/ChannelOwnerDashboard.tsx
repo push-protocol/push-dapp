@@ -112,11 +112,9 @@ const ChannelOwnerDashboard = () => {
   React.useEffect(() => {
     if (onCoreNetwork) return;
     if (isAliasVerified || processingState === 0) return;
-
     (async function process() {
       const ethAccount = await fetchEthAccount(account);
       setAliasEthAccount(ethAccount);
-
       if (ethAccount) {
         const { aliasVerified } = await fetchChannelDetails(ethAccount);
         if (!aliasVerified) {
@@ -126,6 +124,8 @@ const ChannelOwnerDashboard = () => {
           dispatch(setProcessingState(0));
           dispatch(setAliasVerified(true));
         }
+      } else {
+        dispatch(setProcessingState(0));
       }
     })()
   });
