@@ -20,7 +20,7 @@ const privateKeyObject = async (privateKeyArmored: string): Promise<openpgp.Priv
   return await openpgp.readPrivateKey({ armoredKey: privateKeyArmored })
 }
 
-export const encrypt = async ({
+export const encryptAndSign = async ({
   plainText,
   toPublicKeyArmored,
   fromPublicKeyArmored,
@@ -30,30 +30,65 @@ export const encrypt = async ({
   toPublicKeyArmored: string
   fromPublicKeyArmored: string
   fromPrivateKeyArmored: string
-}): Promise<string> => {
+}): Promise<{ cipherText: string; signature: string }> => {
   const toPublicKey: openpgp.Key = await publicKeyObject(toPublicKeyArmored)
   const fromPublicKey: openpgp.Key = await publicKeyObject(fromPublicKeyArmored)
   const privateKey: openpgp.PrivateKey = await privateKeyObject(fromPrivateKeyArmored)
-  const encrypted = await openpgp.encrypt({
-    message: await openpgp.createMessage({ text: plainText }),
+  const message: openpgp.Message<string> = await openpgp.createMessage({ text: plainText })
+  const encrypted: string = <string>await openpgp.encrypt({
+    message: message,
     encryptionKeys: [toPublicKey, fromPublicKey],
     signingKeys: privateKey
   })
-  return encrypted as string
+  const signature: string = await sign({ message, signingKey: privateKey })
+  return {
+    cipherText: encrypted,
+    signature
+  }
 }
 
-export const decrypt = async ({
+const sign = async ({
+  message,
+  signingKey
+}: {
+  message: openpgp.Message<string>
+  signingKey: openpgp.PrivateKey
+}): Promise<string> => {
+  return <string>await openpgp.sign({ message, signingKeys: signingKey, detached: true })
+}
+
+export const decryptAndVerifySignature = async ({
   cipherText,
   fromPublicKeyArmored,
-  toPrivateKeyArmored
+  toPrivateKeyArmored,
+  signatureArmored
 }: {
   cipherText: any
   fromPublicKeyArmored: string
   toPrivateKeyArmored: string
+  signatureArmored: string
 }): Promise<string> => {
   const message = await openpgp.readMessage({ armoredMessage: cipherText })
   const publicKey: openpgp.PublicKey = await publicKeyObject(fromPublicKeyArmored)
   const privateKey: openpgp.PrivateKey = await privateKeyObject(toPrivateKeyArmored)
+
+  ////////
+  const signature: openpgp.Signature = await openpgp.readSignature({
+    armoredSignature: signatureArmored
+  })
+  const verificationResult = await openpgp.verify({
+    message,
+    signature,
+    verificationKeys: publicKey
+  })
+  const { verified, keyID } = verificationResult.signatures[0]
+  try {
+    await verified
+    console.log('========> The signature is valid! <========')
+  } catch (e) {
+    throw new Error('Signature could not be verified: ' + e)
+  }
+  ////////
 
   const { data: decrypted, signatures } = await openpgp.decrypt({
     message,

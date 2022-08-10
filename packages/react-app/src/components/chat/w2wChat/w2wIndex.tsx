@@ -34,10 +34,14 @@ export interface InboxChat {
   name: string
   profile_picture: string
   timestamp: number
+  fromDID: string
+  toDID: string
   lastMessage: string
   messageType: string
+  encType: string
   signature: string
   signatureType: string
+  encryptedSecret: string
 }
 
 export interface ConnectedUser extends User {
