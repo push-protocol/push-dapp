@@ -179,7 +179,7 @@ const EPNSCoreHelper = {
 
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
-      postReq("/channels/get_alias_details", {
+      postReq("/channels/getAliasDetails", {
         channel : channel,
         op: "read",
       })

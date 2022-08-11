@@ -87,7 +87,7 @@ function ChannelDashboardPage() {
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/get_eth_address", {
+        const aliasEth = await postReq("/channels/getCoreAddress", {
           aliasAddress: account,
           op: "read",
         }).then(({ data }) => {
@@ -100,7 +100,7 @@ function ChannelDashboardPage() {
         });
         if (aliasEth) {
           // if an alias exists, check if its verified.
-          await postReq("/channels/get_alias_verification_status", {
+          await postReq("/channels/getAliasVerification", {
             aliasAddress: account,
             op: "read",
           }).then(({ data }) => {
@@ -206,7 +206,7 @@ function ChannelDashboardPage() {
 
   // fetch all the channels who have delegated to this account
   const fetchDelegators = () => {
-    postReq("/channels/delegatee/get_channels", {
+    postReq("/channels/getUserDelegations", {
       delegateAddress: account,
       blockchain: blockchainName[chainId],
       op: "read",
@@ -286,7 +286,7 @@ function ChannelDashboardPage() {
   // Check if a user is a channel or not
   const checkUserForAlias = async () => {
     // Check if account is admin or not and handle accordingly
-    const aliasEth = await postReq("/channels/get_eth_address", {
+    const aliasEth = await postReq("/channels/getCoreAddress", {
           aliasAddress: account,
           op: "read",
         }).then(({ data }) => {
@@ -299,7 +299,7 @@ function ChannelDashboardPage() {
         });
     if (aliasEth) {
       // if an alias exists, check if its verified.
-      await postReq("/channels/get_alias_verification_status", {
+      await postReq("/channels/getAliasVerification", {
         aliasAddress: account,
         op: "read",
       }).then(({ data }) => {

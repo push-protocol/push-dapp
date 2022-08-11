@@ -139,7 +139,7 @@ function SpamBox({ currentTab }) {
             
             const {
               data: { subscribers },
-            } = await postReq("/channels/get_subscribers", {
+            } = await postReq("/channels/_get_subscribers", {
               channel: address,
               blockchain: chainId,
               op: "read",
@@ -186,7 +186,7 @@ function SpamBox({ currentTab }) {
 
           const {
             data: { subscribers },
-          } = await postReq("/channels/get_subscribers", {
+          } = await postReq("/channels/_get_subscribers", {
             channel: address,
             blockchain: chainId,
             op: "read",
@@ -236,7 +236,7 @@ function SpamBox({ currentTab }) {
           
           const {
             data: { subscribers },
-          } = await postReq("/channels/get_subscribers", {
+          } = await postReq("/channels/_get_subscribers", {
             channel: address,
             op: "read",
           });
@@ -269,7 +269,7 @@ function SpamBox({ currentTab }) {
 
   const fetchAliasAddress = async (channelAddress) => {
     if (channelAddress === null) return;
-    const ethAlias = await postReq("/channels/get_alias_details", {
+    const ethAlias = await postReq("/channels/getAliasDetails", {
       channel: channelAddress,
       op: "read",
     }).then(({ data }) => {
@@ -286,7 +286,7 @@ function SpamBox({ currentTab }) {
 
   const fetchEthAddress = async (channelAddress) => {
     if (channelAddress === null) return;
-    const aliasEth = await postReq("/channels/get_eth_address", {
+    const aliasEth = await postReq("/channels/getCoreAddress", {
       aliasAddress: channelAddress,
       op: "read",
     }).then(({ data }) => {
@@ -345,7 +345,7 @@ function SpamBox({ currentTab }) {
     const signature = await library
       .getSigner(account)
       ._signTypedData(EPNS_DOMAIN, type, message);
-    return postReq("/channels/subscribe_offchain", {
+    return postReq("/channels/subscribe", {
       signature,
       message,
       op: "write",
