@@ -1,13 +1,7 @@
 import React from "react";
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
+import { useTheme } from "styled-components";
+import {ItemH, Span }from 'primaries/SharedStyling';
 
-import styled, { useTheme, css } from "styled-components";
-import {ItemH, Span, Anchor, RouterLink, Image} from 'primaries/SharedStyling';
-import FadeLoader from "react-spinners/FadeLoader";
-
-import { themeDark } from "config/Themization";
-
-// Create Header
 function NavigationLoaderButton() {
   const theme = useTheme();
   return (
@@ -35,6 +29,4 @@ function NavigationLoaderButton() {
   );
 }
 
-
-// Export Default
 export {NavigationLoaderButton};
