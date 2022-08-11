@@ -464,7 +464,7 @@ export default class ChannelsDataStore {
     }
     let address = channelAddress;
     
-    return postReq("/channels/get_subscribers", {
+    return postReq("/channels/_get_subscribers", {
       channel: address,
       blockchain: this.state.chainId,
       op: "read",
@@ -488,7 +488,7 @@ export default class ChannelsDataStore {
     }
     let address = channelAddress;
     
-    return postReq("/channels/get_subscribers", {
+    return postReq("/channels/_get_subscribers", {
       channel: address,
       blockchain: this.state.chainId,
       op: "read",
