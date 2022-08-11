@@ -9,6 +9,8 @@ import ShowDelegates from "./ShowDelegates";
 import { Item } from "../primaries/SharedStyling";
 import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
+import {AiOutlineUser} from "react-icons/ai"
+
 const DATE_FORMAT = "MMMM Do YYYY";
 
 const networkName = {
@@ -96,7 +98,7 @@ export default function ChannelDetails() {
           </ChannelName>
           <ChannelStatusContainer>
             <Subscribers>
-              <img style={{paddingLeft:'6px'}} src="/people.svg" alt="subscount"></img>
+              <img style={{paddingLeft:'6px'}} src="/subcount.svg" alt="subscount"></img>
               <SubscribersCount>
                 {channelDetails.subscribers.length}
               </SubscribersCount>
@@ -192,9 +194,8 @@ const VerifyingName = styled.div``;
 const Subscribers = styled.div`
   width: 58px;
   height: 28px;
-  
-
   background: #FFDBF0;
+  color: #CF1C84;
   border-radius: 25px;
   display: flex;
   align-items:center;
@@ -261,7 +262,6 @@ const SubscribersCount = styled.span`
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
-  color: #CF1C84;
 ;
 `;
 

@@ -22,7 +22,7 @@ import { envConfig } from "@project/contracts";
 
 import {setCanSend,SEND_NOTIFICATION_STATES} from "redux/slices/sendNotificationSlice";
 import { postReq } from "api";
-
+import {NavigationLoaderButton} from 'components/NavigationLoaderButton';
 
 // Create Header
 function Navigation() {
@@ -568,20 +568,7 @@ function Navigation() {
           })}
         </SectionGroup>
       );
-
-      const item = {
-        "data": {
-          "src": "loading.png",
-          "name": "Loading ...",
-          "title": "Loading ...",
-          "alt": "Loader",
-          "href": "/#/dashboard",
-          "newTab": false,
-          "isRoute": false,
-        }
-      }
-      const data = item.data
-
+      
       let renderedLoading = (
         <SectionGroup
           align="stretch"
@@ -601,12 +588,7 @@ function Navigation() {
                 zIndex={1}
                 refresh={refresh}
                 >
-                <NavigationButton
-                  item={item}
-                  data={data}
-                  sectionID={sectionID}
-                  active={false}
-                  />
+                <NavigationLoaderButton/>
               </SectionInnerItemContainer>
             </SectionItem>
           

@@ -398,7 +398,7 @@ const DropdownWrapper = styled.div`
   right: 20px;
   display: flex;
   flex-direction: column-reverse;
-  width: 220px;
+  width: 240px;
   height: 200px;
   padding: 20px 4px;
 

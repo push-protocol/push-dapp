@@ -150,7 +150,7 @@ const RemoveButton = ()=>{
           </div>
         </div>
           :
-            <div style={{color:"#657795"}}>
+            <div style={{color:"#657795",textAlign:'right',width:'100%'}}>
               Delegate
             </div>
         }
@@ -201,7 +201,7 @@ const RemoveButtonUI = styled(ChannelActionButton)`
   background: ${props => props.theme.backgroundBG};
   color: ${props => props.theme.color};
   height: 36px;
-  max-width: 165px;
+  max-width: 164px;
   flex:1; 
   font-style: normal;
   font-weight: 700;
@@ -216,7 +216,6 @@ const RemoveButtonUI = styled(ChannelActionButton)`
   &:hover {
     opacity: 0.9;
     background: #E93636;
-    max-width: 165px;
     border-radius: 8px;
   };
     color: #fff;
@@ -228,17 +227,14 @@ const OwnerButton = styled(ChannelActionButton)`
   /* background-color: red; */
   background: ${props => props.theme.backgroundBG};
   height: 50px;
-  width: 150px;
-  flex:1;
-  font-style: normal;
+  width: 164px;
   font-weight: 700;
   font-size: 15px;
-  line-height: 141%;
-  display: flex;
-  align-items: center;
+  justify-content: end;
   text-align: right;
   cursor: pointer;
   color: #CF1C84;
+  padding: 6px 10px 6px 9px;
 `;
 
 
