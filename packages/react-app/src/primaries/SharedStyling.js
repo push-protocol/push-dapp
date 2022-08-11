@@ -122,6 +122,9 @@ export const Item = styled.div`
 export const ItemH = styled(Item)`
   flex-direction: row;
   flex: ${(props) => props.flex || "1"};
+  background: ${(props) => props.bg || "transparent"};
+  padding: ${(props) => props.padding || "0px"};
+  margin: ${(props) => props.margin || "0px"};
 
   ${ItemBreak} {
     width: auto;

@@ -68,7 +68,7 @@ function SendNotifications() {
   const [nfRecipient, setNFRecipient] = React.useState("");
   const [multipleRecipients, setMultipleRecipients] = React.useState([]);
   const [tempRecipeint, setTempRecipient] = React.useState(""); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
-  const [nfType, setNFType] = React.useState("");
+  const [nfType, setNFType] = React.useState("Broadcast (IPFS Payload)");
   const [nfSub, setNFSub] = React.useState("");
   const [nfSubEnabled, setNFSubEnabled] = React.useState(false);
   const [nfMsg, setNFMsg] = React.useState("");
@@ -723,7 +723,27 @@ function SendNotifications() {
   return (
       <>
           <Section>
-              <Content padding="10px 30px 20px">
+        <Content padding="10px 20px 10px">
+          <Item align="center">
+            <H2 textTransform="uppercase" spacing="0.075em">
+              <Span weight="400" size="32px" color={theme.color}>
+                SEND NOTIFICATION
+              </Span>
+            </H2>
+            <Span
+              color="#657795"
+              weight="400"
+              size="16px"
+              textTransform="none"
+              spacing="0.03em"
+              margin="0px 0px"
+            >
+              EPNS makes it extremely easy to open and maintain a genuine
+              channel of communication with your users.
+            </Span>
+          </Item>
+        </Content>
+              {/* <Content padding="10px 30px 20px">
                   <Item align="flex-start">
                       <H2 textTransform="uppercase" spacing="0.1em">
                           <Span weight="200" style={{color : theme.color}}>Send </Span>
@@ -740,8 +760,6 @@ function SendNotifications() {
                           <H3 style={{color : theme.color}}>
                               EPNS supports three types of notifications (for
                               now!). <b>Groups</b>, <b>Subsets</b>, and{" "}<b>Targeted</b>
-                              {/* <b>Secret</b> */}
-                              {/* and{" "} <b>Subsets</b>. */}
                           </H3>
                       ) : (
                           <H3>
@@ -750,7 +768,7 @@ function SendNotifications() {
                           </H3>
                       )}
                   </Item>
-              </Content>
+              </Content> */}
           </Section>
 
           {!isChannelDeactivated && (
@@ -810,10 +828,10 @@ function SendNotifications() {
                                   />
 
                                   <Item
-                                      flex="5"
+                                      flex="1"
                                       justify="flex-start"
                                       align="stretch"
-                                      minWidth="280px"
+                                    //   minWidth="280px"
                                   >
                                       <DropdownStyledParent>
                                           <DropdownStyled
@@ -823,7 +841,6 @@ function SendNotifications() {
                                                   console.log(option);
                                               }}
                                               value={nfType}
-                                              placeholder="Select Type of Notification to Send"
                                           />
                                       </DropdownStyledParent>
                                   </Item>
@@ -837,28 +854,33 @@ function SendNotifications() {
 
                                   {nfType && (
                                       <ItemH
-                                          margin="0px 15px 15px 15px"
-                                          bg="#f1f1f1"
+                                          margin="40px 0px 15px 0px"
                                           flex="1"
                                           self="stretch"
                                           justify="space-between"
                                       >
                                           <ItemH
-                                              margin="15px 10px"
-                                              flex="inital"
+                                              margin="15px 0px"
+                                              width="10em"
+                                              bg="#F4F5FA"
+                                              flex="none"
+                                              padding="15px"
+                                              radius="20px"
+                                              display="flex"
+                                              direction="row"
+                                              justify="space-between"
+                                              
                                           >
                                               <Span
-                                                  margin="0px 10px 0px 0px"
-                                                  weight="400"
+                                                  weight="700"
                                                   spacing="0.1em"
-                                                  textTransform="uppercase"
-                                                  size="0.8em"
-                                                  bg="#e20880"
-                                                  color="#fff"
+                                                  textTransform="none"
+                                                  size="14px"
+                                                  color="#1E1E1E"
                                                   padding="5px 15px"
                                                   radius="30px"
                                               >
-                                                  Enable Subject
+                                                  Subject
                                               </Span>
                                               <Switch
                                                   color="primary"
@@ -873,21 +895,26 @@ function SendNotifications() {
                                           </ItemH>
 
                                           <ItemH
-                                              margin="15px 10px"
-                                              flex="inital"
+                                              margin="15px 0px"
+                                              width="10em"
+                                              bg="#F4F5FA"
+                                              flex="none"
+                                              padding="15px"
+                                              radius="20px"
+                                              display="flex"
+                                              direction="row"
+                                              justify="space-between"
                                           >
                                               <Span
-                                                  margin="0px 10px 0px 0px"
-                                                  weight="400"
-                                                  spacing="0.1em"
-                                                  textTransform="uppercase"
-                                                  size="0.8em"
-                                                  bg="#e20880"
-                                                  color="#fff"
-                                                  padding="5px 15px"
-                                                  radius="30px"
+                                                 weight="700"
+                                                 spacing="0.1em"
+                                                 textTransform="none"
+                                                 size="14px"
+                                                 color="#1E1E1E"
+                                                 padding="5px 15px"
+                                                 radius="30px"
                                               >
-                                                  Enable Media
+                                                  Media
                                               </Span>
                                               <Switch
                                                   color="primary"
@@ -902,21 +929,26 @@ function SendNotifications() {
                                           </ItemH>
 
                                           <ItemH
-                                              margin="15px 10px"
-                                              flex="inital"
+                                              margin="15px 0px"
+                                              width="10em"
+                                              bg="#F4F5FA"
+                                              flex="none"
+                                              padding="15px"
+                                              radius="20px"
+                                              display="flex"
+                                              direction="row"
+                                              justify="space-between"
                                           >
                                               <Span
-                                                  margin="0px 10px 0px 0px"
-                                                  weight="400"
-                                                  spacing="0.1em"
-                                                  textTransform="uppercase"
-                                                  size="0.8em"
-                                                  bg="#e20880"
-                                                  color="#fff"
-                                                  padding="5px 15px"
-                                                  radius="30px"
+                                                    weight="700"
+                                                    spacing="0.1em"
+                                                    textTransform="none"
+                                                    size="14px"
+                                                    color="#1E1E1E"
+                                                    padding="5px 15px"
+                                                    radius="30px"
                                               >
-                                                  Enable CTA
+                                                   CTA Link
                                               </Span>
                                               <Switch
                                                   color="primary"
@@ -942,32 +974,25 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
+                                     <Label style={{color:theme.color}}>Recipient Wallet Address</Label>
                                       <Input
                                           required
-                                          placeholder="Enter recipient wallet address"
-                                          radius="4px"
+                                          maxlength="40"
+                                          flex="1"
                                           padding="12px"
-                                          border="1px solid #674c9f"
-                                          bg="#fff"
+                                          weight="400"
+                                          size="16px"
+                                          bg="white"
+                                          height="25px"
+                                          margin="7px 0px 0px 0px"
+                                          border="1px solid #BAC4D6"
+                                          focusBorder="1px solid #657795"
+                                          radius="12px"
                                           value={nfRecipient}
                                           onChange={(e) => {
                                               setNFRecipient(e.target.value);
                                           }}
                                       />
-                                      {nfRecipient.trim().length == 0 && (
-                                          <Span
-                                              padding="4px 10px"
-                                              right="0px"
-                                              top="0px"
-                                              pos="absolute"
-                                              color="#fff"
-                                              bg="#000"
-                                              size="0.7rem"
-                                              z="1"
-                                          >
-                                              Recipient Wallet
-                                          </Span>
-                                      )}
                                   </Item>
                               )}
 
@@ -997,16 +1022,23 @@ function SendNotifications() {
                                           self="stretch"
                                           align="stretch"
                                       >
+                                     <Label style={{color:theme.color}}>Enter Recipients Wallet Addresses</Label>
                                           <Input
                                               required={
                                                   multipleRecipients.length ===
                                                   0
                                               }
-                                              placeholder="Enter recipients wallet addresses separated by a comma or by pressing the enter key"
-                                              radius="4px"
-                                              padding="12px"
-                                              border="1px solid #674c9f"
-                                              bg="#fff"
+                                          maxlength="40"
+                                          flex="1"
+                                          padding="12px"
+                                          weight="400"
+                                          size="16px"
+                                          bg="white"
+                                          height="25px"
+                                          margin="7px 0px 0px 0px"
+                                          border="1px solid #BAC4D6"
+                                          focusBorder="1px solid #657795"
+                                          radius="12px"
                                               value={tempRecipeint}
                                               onKeyPress={
                                                   handleSubsetInputChange
@@ -1023,20 +1055,13 @@ function SendNotifications() {
                                                   // }
                                               }}
                                           />
-                                          {nfRecipient.trim().length == 0 && (
-                                              <Span
-                                                  padding="4px 10px"
-                                                  right="0px"
-                                                  top="0px"
-                                                  pos="absolute"
-                                                  color="#fff"
-                                                  bg="#000"
-                                                  size="0.7rem"
-                                                  z="1"
-                                              >
-                                                  Recipient Wallet
-                                              </Span>
-                                          )}
+                                           <Span
+                                                size="13px"
+                                                margin="7px 0px 0px 0px"
+                                                color="#657795"
+                                                >
+                                                Enter recipients wallet addresses separated by a comma or by pressing the enter key
+                                                </Span>
                                       </Item>
                                   </>
                               )}
@@ -1048,33 +1073,25 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
+                                     <Label style={{color:theme.color}}>Subject</Label>
                                       <Input
                                           required
-                                          placeholder="Subject of Notification"
+                                          maxlength="40"
+                                          flex="1"
                                           padding="12px"
-                                          borderBottom="1px solid #000"
                                           weight="400"
-                                          size="1.2em"
-                                          bg="#fff"
+                                          size="16px"
+                                          bg="white"
+                                          height="25px"
+                                          margin="7px 0px 0px 0px"
+                                          border="1px solid #BAC4D6"
+                                          focusBorder="1px solid #657795"
+                                          radius="12px"
                                           value={nfSub}
                                           onChange={(e) => {
                                               setNFSub(e.target.value);
                                           }}
                                       />
-                                      {nfSub.trim().length == 0 && (
-                                          <Span
-                                              padding="4px 10px"
-                                              right="0px"
-                                              top="0px"
-                                              pos="absolute"
-                                              color="#fff"
-                                              bg="#000"
-                                              size="0.7rem"
-                                              z="1"
-                                          >
-                                              Subject
-                                          </Span>
-                                      )}
                                   </Item>
                               )}
 
@@ -1085,14 +1102,18 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
+                                    <Label style={{color:theme.color}}>Notification Message</Label>
                                       <TextField
                                           required
-                                          placeholder="Notification Message"
-                                          rows="6"
-                                          radius="4px"
+                                          // placeholder="Your Channel's Short Description (250 Characters)"
+                                          rows="4"
+                                          maxlength="250"
                                           padding="12px"
                                           weight="400"
-                                          border="1px solid #000"
+                                          margin="7px 0px 0px 0px"
+                                          border="1px solid #BAC4D6"
+                                          focusBorder="1px solid #657795"
+                                          radius="12px"
                                           bg="#fff"
                                           overflow="auto"
                                           value={nfMsg}
@@ -1105,98 +1126,62 @@ function SendNotifications() {
                               )}
 
                               {nfType && nfMediaEnabled && (
-                                  <ItemH
-                                      padding="15px 20px 15px 20px"
+                                      <Item
+                                      margin="15px 20px 15px 20px"
                                       flex="1"
                                       self="stretch"
-                                      align="center"
-                                  >
-                                      <Item flex="0" margin="0px 5px 0px 0px">
-                                          <BsFillImageFill
-                                              size={24}
-                                              color={theme.color}
-                                          />
-                                      </Item>
-                                      <Item
-                                          flex="1"
-                                          margin="0px 0px 0px 5px"
-                                          align="stretch"
+                                      align="stretch"
                                       >
+                                    <Label style={{color:theme.color}}>Media URL</Label>
                                           <Input
-                                              required
-                                              placeholder="Media URL for Notification"
-                                              padding="12px"
-                                              border="1px solid #000"
-                                              radius="4px"
-                                              weight="400"
-                                              bg="#f1f1f1"
+                                                required
+                                                maxlength="40"
+                                                flex="1"
+                                                padding="12px"
+                                                weight="400"
+                                                size="16px"
+                                                bg="white"
+                                                height="25px"
+                                                margin="7px 0px 0px 0px"
+                                                border="1px solid #BAC4D6"
+                                                focusBorder="1px solid #657795"
+                                              radius="12px"
                                               value={nfMedia}
                                               onChange={(e) => {
                                                   setNFMedia(e.target.value);
                                               }}
                                           />
-                                          {nfMedia.trim().length == 0 && (
-                                              <Span
-                                                  padding="4px 10px"
-                                                  right="0px"
-                                                  top="0px"
-                                                  pos="absolute"
-                                                  color="#fff"
-                                                  bg="#000"
-                                                  size="0.7rem"
-                                                  z="1"
-                                              >
-                                                  Media URL
-                                              </Span>
-                                          )}
                                       </Item>
-                                  </ItemH>
                               )}
 
                               {nfType && nfCTAEnabled && (
-                                  <ItemH
+                                      <Item
                                       margin="15px 20px 15px 20px"
                                       flex="1"
                                       self="stretch"
-                                      align="center"
-                                  >
-                                      <Item flex="0" margin="0px 5px 0px 0px">
-                                          <FiLink size={24} color={theme.color} />
-                                      </Item>
-                                      <Item
-                                          flex="1"
-                                          margin="0px 0px 0px 5px"
-                                          align="stretch"
+                                      align="stretch"
                                       >
+                                    <Label style={{color:theme.color}}>Media URL</Label>
+
                                           <Input
-                                              required
-                                              placeholder="Call to Action Link"
-                                              padding="12px"
-                                              border="1px solid #000"
-                                              radius="4px"
-                                              weight="400"
-                                              bg="#f1f1f1"
+                                            required
+                                            maxlength="40"
+                                            flex="1"
+                                            padding="12px"
+                                            weight="400"
+                                            size="16px"
+                                            bg="white"
+                                            height="25px"
+                                            margin="7px 0px 0px 0px"
+                                            border="1px solid #BAC4D6"
+                                            radius="12px"
+                                            focusBorder="1px solid #657795"
                                               value={nfCTA}
                                               onChange={(e) => {
                                                   setNFCTA(e.target.value);
                                               }}
                                           />
-                                          {nfCTA.trim().length == 0 && (
-                                              <Span
-                                                  padding="4px 10px"
-                                                  right="0px"
-                                                  top="0px"
-                                                  pos="absolute"
-                                                  color="#fff"
-                                                  bg="#000"
-                                                  size="0.7rem"
-                                                  z="1"
-                                              >
-                                                  Call to Action URL
-                                              </Span>
-                                          )}
                                       </Item>
-                                  </ItemH>
                               )}
 
                               {nfInfo && nfProcessing != 1 && (
@@ -1231,33 +1216,13 @@ function SendNotifications() {
                                     />)}
 
                               {nfType && (
-                                  <Item
-                                      margin="15px 0px 0px 0px"
-                                      flex="1"
-                                      direction="row"
-                                      self="stretch"
-                                      align="stretch"
+                                  <Item width="15em" self="stretch" align="stretch" margin="70px auto 50px auto"
                                   >
-                                      {/* <Button
-                                          bg="#35C5F3"
-                                          color="#fff"
-                                          flex="0.5"
-                                          radius="0px"
-                                          weight="400"
-                                          size="0.8em"
-                                          spacing="0.2em"
-                                          padding="20px 10px"
-                                          textTransform="uppercase"
-                                          onClick={(e) => previewNotif(e)}
-                                      >
-                                        Preview Notification
-                                      </Button> */}
-
                                       <Button
-                                          bg="#e20880"
+                                          bg="#CF1C84"
                                           color="#fff"
                                           flex="1"
-                                          radius="0px"
+                                          radius="15px"
                                           padding="20px 10px"
                                           disabled={
                                               nfProcessing == 1 ? true : false
@@ -1274,11 +1239,10 @@ function SendNotifications() {
                                           {nfProcessing != 1 && (
                                               <Input
                                                   cursor="hand"
-                                                  textTransform="uppercase"
+                                                  textTransform="none"
                                                   color="#fff"
-                                                  weight="400"
-                                                  size="0.8em"
-                                                  spacing="0.2em"
+                                                  weight="600"
+                                                  size="16px"
                                                   type="submit"
                                                   value="Send Notification"
                                               />
@@ -1346,47 +1310,98 @@ function SendNotifications() {
   font-size: 14px;
   `;
 
-  const DropdownStyled = styled(Dropdown)`
+  const Label = styled.div`
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: -0.011em;
+  color: #1E1E1E;
+`;
+
+//   const DropdownStyled = styled(Dropdown)`
+//   .Dropdown-control {
+//       background-color: #000;
+//       color: #fff;
+//       padding: 12px 52px 12px 10px;
+//       border: 1px solid #000;
+//       border-radius: 4px;
+//   }
+//   .Dropdown-placeholder {
+//       text-transform: uppercase;
+//       font-weight: 400;
+//       letter-spacing: 0.2em;
+//       font-size: 0.8em;
+//   }
+//   .Dropdown-arrow {
+//       top: 18px;
+//       bottom: 0;
+//       border-color: #fff transparent transparent;
+//   }
+//   .Dropdown-menu {
+//       border: 1px solid #000;
+//       box-shadow: none;
+//       background-color: #000;
+//       border-radius: 0px;
+//       margin-top: -2px;
+//       border-bottom-right-radius: 4px;
+//       border-bottom-left-radius: 4px;
+//   }
+//   .Dropdown-option {
+//       background-color: rgb(35 35 35);
+//       color: #ffffff99;
+//       text-transform: uppercase;
+//       letter-spacing: 0.2em;
+//       font-size: 0.7em;
+//       padding: 15px 20px;
+//   }
+//   .Dropdown-option:hover {
+//       background-color: #000000;
+//       color: #fff;
+//   }
+//   `;
+
+const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
-      background-color: #000;
-      color: #fff;
-      padding: 12px 52px 12px 10px;
-      border: 1px solid #000;
-      border-radius: 4px;
-  }
-  .Dropdown-placeholder {
-      text-transform: uppercase;
-      font-weight: 400;
-      letter-spacing: 0.2em;
-      font-size: 0.8em;
+      background-color: white;
+      color: #000;
+      border: 1px solid #BAC4D6;
+      border-radius: 12px;
+      flex:1;
+      outline: none;
+      height: 50px;
+      display: flex;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 150%;
+      align-items: center;
+      padding: 10px;
   }
   .Dropdown-arrow {
-      top: 18px;
+      top: 20px;
       bottom: 0;
-      border-color: #fff transparent transparent;
+      border-color: #f #000 #000;
   }
   .Dropdown-menu {
-      border: 1px solid #000;
-      box-shadow: none;
-      background-color: #000;
-      border-radius: 0px;
-      margin-top: -2px;
-      border-bottom-right-radius: 4px;
-      border-bottom-left-radius: 4px;
+    border-color: #BAC4D6;
+      .is-selected {
+      background-color: #D00775;
+      color:#fff;
+    }
   }
+ 
   .Dropdown-option {
-      background-color: rgb(35 35 35);
-      color: #ffffff99;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      font-size: 0.7em;
-      padding: 15px 20px;
+      background-color: #fff;
+      color: #000;
+      font-size: 14px;
+
   }
   .Dropdown-option:hover {
-      background-color: #000000;
-      color: #fff;
+      background-color: #D00775;
+      color: #000;
   }
-  `;
+`
 
   const DropdownStyledWhite = styled(DropdownStyled)`
   .Dropdown-control {
