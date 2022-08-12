@@ -138,26 +138,31 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  // const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  console.log('Data in chatbox after 5 seconds', data)
 
-  // useEffect(() => {
-  //   function updateData(): void {
-  //     if (data !== undefined && currentChat?.wallets) {
-  //       const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-  //       if (newData?.intent === 'Approved') {
-  //         setChat(newData)
-  //       }
-  //     }
-  //   }
-  //   const interval = setInterval(() => updateData(), 2000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // }, [data, currentChat?.wallets])
+  useEffect(() => {
+    function updateData(): void {
+      if (data !== undefined && currentChat?.wallets) {
+        const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+        if (newData?.intent === 'Approved') {
+          setChat(newData)
+        }
+      }
+    }
+    const interval = setInterval(() => updateData(), 2000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [data, currentChat?.wallets])
 
   useEffect(() => {
     getMessagesFromIPFS().catch((err) => console.error(err))
-  }, [currentChat])
+  }, [currentChat?.did])
+
+  useEffect(() => {
+    console.log('Current Chat Threadhash changed', currentChat?.threadhash)
+  }, [currentChat?.threadhash])
 
   const sendMessage = async ({
     account,
