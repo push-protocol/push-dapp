@@ -29,13 +29,14 @@ const Container = styled.div`
   flex-direction: row;
   position: 'fixed';
   height: calc(
-    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 150px - ${(props: { theme }) => props.theme.interfaceTopPadding}
+    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 150px -
+      ${(props: { theme }): void => props.theme.interfaceTopPadding}
   );
   align-items: stretch;
   align-self: stretch;
   justify-content: unset;
   background: #fff;
-  padding: 20px;
+  padding: 20px 20px 20px 0px;
   height: 83.6vh;
 `
 
