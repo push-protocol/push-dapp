@@ -128,25 +128,25 @@ function SpamBox({ currentTab }) {
         chainId,
         dev: true,
       });
-      let parsedResponse = EpnsAPI.parseApiResponse(results);
-      parsedResponse.forEach((each, i) => {
-        each['date'] = results[i].epoch;
-        each['epoch'] = (new Date(each['date']).getTime() / 1000);
-      })
-      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-        elem.channel = results[i].channel;
-        let address = results[i].channel;
-
-        const {
-          data: { subscribers },
-        } = await postReq("/channels/get_subscribers", {
-          channel: address,
-          blockchain: chainId,
-          op: "read",
+        let parsedResponse = EpnsAPI.parseApiResponse(results);
+          parsedResponse.forEach( (each,i) => {
+              each['date'] = results[i].epoch;
+              each['epoch'] = (new Date(each['date']).getTime() / 1000);
+          })
+          const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+            elem.channel = results[i].channel;
+            let address = results[i].channel;
+            
+            const {
+              data: { subscribers },
+            } = await postReq("/channels/_get_subscribers", {
+              channel: address,
+              blockchain: chainId,
+              op: "read",
+            });
+            elem.subscribers = subscribers;
+            return { ...elem };
         });
-        elem.subscribers = subscribers;
-        return { ...elem };
-      });
       parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (count === 0) {
@@ -184,16 +184,16 @@ function SpamBox({ currentTab }) {
         elem.channel = results[i].channel;
         let address = results[i].channel;
 
-        const {
-          data: { subscribers },
-        } = await postReq("/channels/get_subscribers", {
-          channel: address,
-          blockchain: chainId,
-          op: "read",
+          const {
+            data: { subscribers },
+          } = await postReq("/channels/_get_subscribers", {
+            channel: address,
+            blockchain: chainId,
+            op: "read",
+          });
+          elem.subscribers = subscribers;
+          return { ...elem };
         });
-        elem.subscribers = subscribers;
-        return { ...elem };
-      });
       parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(
         updateTopNotifications({
@@ -226,23 +226,23 @@ function SpamBox({ currentTab }) {
         dispatch(incrementPage());
       }
       let parsedResponse = EpnsAPI.parseApiResponse(results);
-      parsedResponse.forEach((each, i) => {
-        each['date'] = results[i].epoch;
-        each['epoch'] = (new Date(each['date']).getTime() / 1000);
-      })
-      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-        elem.channel = results[i].channel;
-        let address = results[i].channel;
-
-        const {
-          data: { subscribers },
-        } = await postReq("/channels/get_subscribers", {
-          channel: address,
-          op: "read",
+        parsedResponse.forEach( (each,i) => {
+            each['date'] = results[i].epoch;
+            each['epoch'] = (new Date(each['date']).getTime() / 1000);
+        })
+        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+          elem.channel = results[i].channel;
+          let address = results[i].channel;
+          
+          const {
+            data: { subscribers },
+          } = await postReq("/channels/_get_subscribers", {
+            channel: address,
+            op: "read",
+          });
+          elem.subscribers = subscribers;
+          return { ...elem };
         });
-        elem.subscribers = subscribers;
-        return { ...elem };
-      });
       parsedResponse = await Promise.all(parsedResponsePromise);
       let res = parsedResponse.filter(notif => !isSubscribedFn(notif['subscribers']));
       setNotif(res);
