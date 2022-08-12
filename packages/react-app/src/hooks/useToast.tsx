@@ -1,18 +1,24 @@
 import React from "react";
 import { toast } from "react-toastify";
-import { RotatingLines } from "react-loader-spinner";
+import FadeLoader from "react-spinners/FadeLoader";
 import styled from "styled-components";
 import { MdOutlineClose } from "react-icons/md";
 
 type LoaderToastType = { msg: string, color: string }
 
+const override: React.CSSProperties = {
+  // width: "fit-content",
+  height: "45px",
+};
+
 const LoaderToast = ({ msg, color }: LoaderToastType) => (
   <LoaderNotification>
-    <RotatingLines
-      strokeColor={color}
-      strokeWidth="1.5"
-      animationDuration="1"
-      width="30"
+    <FadeLoader
+      color={color}
+      height={9}
+      width={2.5}
+      margin={0}
+      css={override}
     />
     <LoaderMessage>{msg}</LoaderMessage>
   </LoaderNotification>
@@ -85,10 +91,10 @@ const LoaderNotification = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 3% 3%;
+  margin: 1% 3%;
 `;
 const LoaderMessage = styled.div`
-  margin-left: 6%;
+  margin-left: 3%;
   color: black;
   font-family: Manrope;
   font-size: 1rem;
