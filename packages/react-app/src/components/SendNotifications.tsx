@@ -4,7 +4,6 @@
   import { FiLink } from "react-icons/fi";
   import Loader from "react-loader-spinner";
   import styled , {useTheme} from "styled-components";
-  import { BsFillImageFill } from "react-icons/bs";
   import { useSelector } from "react-redux";
   import { postReq } from "api";
   import {
@@ -20,13 +19,13 @@
   Input,
   TextField,
 } from "primaries/SharedStyling";
-
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
-
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import Switch from "@material-ui/core/Switch";
 import { useWeb3React } from "@web3-react/core";
-
 import { CloseIcon } from "assets/icons";
 import PreviewNotif from "./PreviewNotif";
 import CryptoHelper from "helpers/CryptoHelper";
@@ -720,6 +719,78 @@ function SendNotifications() {
 
   let showPreview = nfSub !== '' || nfMsg !== '' || nfCTA !== '' || nfMedia !== ''
 
+  const Android12Switch = styled(Switch)(({ theme }) => ({
+    // padding: 8,
+    '& .MuiSwitch-track': {
+      borderRadius: 22 / 2,
+      '&:before, &:after': {
+        content: '""',
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        width: 16,
+        height: 16,
+      },
+      '&:before': {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"></svg>')`,
+        left: 12,
+      },
+      '&:after': {
+        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"></svg>')`,
+        right: 12,
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxShadow: 'none',
+      width: 16,
+      height: 16,
+      margin: 2,
+    },
+  }));
+
+
+  const AntSwitch = styled(Switch)(({ theme }) => ({
+    width: 28,
+    height: 16,
+    padding: 0,
+    display: 'flex',
+    '&:active': {
+      '& .MuiSwitch-thumb': {
+        width: 15,
+      },
+      '& .MuiSwitch-switchBase.Mui-checked': {
+        transform: 'translateX(9px)',
+      },
+    },
+    '& .MuiSwitch-switchBase': {
+      padding: 2,
+      '&.Mui-checked': {
+        transform: 'translateX(12px)',
+        color: '#fff',
+        '& + .MuiSwitch-track': {
+          opacity: 1,
+          backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
+        },
+      },
+    },
+    '& .MuiSwitch-thumb': {
+      boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      transition: theme.transitions.create(['width'], {
+        duration: 200,
+      }),
+    },
+    '& .MuiSwitch-track': {
+      borderRadius: 16 / 2,
+      opacity: 1,
+      backgroundColor:
+        theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
+      boxSizing: 'border-box',
+    },
+  }));
+
   return (
       <>
           <Section>
@@ -873,7 +944,6 @@ function SendNotifications() {
                                           >
                                               <Span
                                                   weight="700"
-                                                  spacing="0.1em"
                                                   textTransform="none"
                                                   size="14px"
                                                   color="#1E1E1E"
@@ -882,7 +952,7 @@ function SendNotifications() {
                                               >
                                                   Subject
                                               </Span>
-                                              <Switch
+                                              {/* <Switch
                                                   color="primary"
                                                   size="small"
                                                   checked={nfSubEnabled}
@@ -891,7 +961,12 @@ function SendNotifications() {
                                                           !nfSubEnabled
                                                       )
                                                   }
-                                              />
+                                              /> */}
+                                                <Stack direction="row" spacing={1} alignItems="center">
+                                                    <Typography>Off</Typography>
+                                                    <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
+                                                    <Typography>On</Typography>
+                                                </Stack>
                                           </ItemH>
 
                                           <ItemH
@@ -907,7 +982,6 @@ function SendNotifications() {
                                           >
                                               <Span
                                                  weight="700"
-                                                 spacing="0.1em"
                                                  textTransform="none"
                                                  size="14px"
                                                  color="#1E1E1E"
@@ -941,7 +1015,6 @@ function SendNotifications() {
                                           >
                                               <Span
                                                     weight="700"
-                                                    spacing="0.1em"
                                                     textTransform="none"
                                                     size="14px"
                                                     color="#1E1E1E"
