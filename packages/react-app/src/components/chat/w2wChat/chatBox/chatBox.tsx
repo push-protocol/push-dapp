@@ -48,7 +48,6 @@ const ChatBox = (): JSX.Element => {
   const [messages, setMessages] = useState<MessageIPFS[]>([])
   const [imageSource, setImageSource] = useState<string>('')
   const [hasIntent, setHasIntent] = useState<boolean>(true)
-  const [wallets, setWallets] = useState<string[]>([])
   const [filesUploading, setFileUploading] = useState<boolean>(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -132,8 +131,6 @@ const ChatBox = (): JSX.Element => {
       } else {
         setMessages([])
       }
-      const walletsResult: string[] = await PushNodeClient.getDidLinkWallets(currentChat.did)
-      setWallets(walletsResult)
       setLoading(false)
     }
   }
@@ -433,7 +430,7 @@ const ChatBox = (): JSX.Element => {
               <img src={imageSource} alt="" />
               <div className="chatBoxNavDetail">
                 <p className="chatBoxWallet">{caip10ToWallet(currentChat.msg.name)}</p>
-                <div>{hasIntent ? <Dropdown wallets={wallets} /> : null}</div>
+                <div>{hasIntent ? <Dropdown wallets={currentChat.wallets.split(',')} /> : null}</div>
               </div>
             </div>
           </div>
