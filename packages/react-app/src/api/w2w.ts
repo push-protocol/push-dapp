@@ -113,21 +113,6 @@ export const getUser = async ({ did, wallet }: { did: string; wallet: string }):
   }
 }
 
-export const updateWalletIfNotExist = async (did: string, caip10: string): Promise<string> => {
-  const response = await fetch(BASE_URL + '/w2w/updateWalletIfNotExist', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      did,
-      caip10
-    })
-  })
-  const data = await response.json()
-  return data
-}
-
 export const getDidLinkWallets = async (did: string): Promise<string[]> => {
   const response = await fetch(BASE_URL + '/w2w/getDidLinkWallets/', {
     method: 'POST',
@@ -387,6 +372,20 @@ export const getFromIPFS = async (cid: string): Promise<MessageIPFS> => {
     },
     body: JSON.stringify({
       cid
+    })
+  })
+  return await response.json()
+}
+
+export const updateUser = async ({ did, wallet = '' }: { did: string; wallet: string }): Promise<User> => {
+  const response: any = await fetch(BASE_URL + '/w2w/updateUser', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      did,
+      wallet
     })
   })
   return await response.json()
