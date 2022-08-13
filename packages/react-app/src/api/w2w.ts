@@ -113,20 +113,6 @@ export const getUser = async ({ did, wallet }: { did: string; wallet: string }):
   }
 }
 
-export const getDidLinkWallets = async (did: string): Promise<string[]> => {
-  const response = await fetch(BASE_URL + '/w2w/getDidLinkWallets/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      did
-    })
-  })
-  const data = await response.json()
-  return data
-}
-
 export const uploadUserProfileImage = async (did: string, image: string): Promise<void> => {
   await fetch(BASE_URL + '/w2w/updateProfilePicture/' + did, {
     method: 'POST',
