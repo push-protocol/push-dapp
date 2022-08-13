@@ -91,7 +91,7 @@ function App() {
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
     const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
     setDid(did)
-    const user: User = await PushNodeClient.getUser({ did: did.id, wallet: '' })
+    let user: User = await PushNodeClient.getUser({ did: did.id, wallet: '' })
     if (!user) {
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, did)
@@ -106,8 +106,9 @@ function App() {
       })
       setConnectedUser(createdUser)
     } else {
-      const wallets: string = await PushNodeClient.updateWalletIfNotExist(did.id, caip10)
-      user.wallets = wallets
+      if (!user.wallets.includes(caip10)) {
+        user = await PushNodeClient.updateUser({ did: did.id, wallet: caip10 })
+      }
       setConnectedUser(user)
     }
     setIsLoading(false)
