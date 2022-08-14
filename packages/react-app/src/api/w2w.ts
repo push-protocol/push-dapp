@@ -18,6 +18,7 @@ export interface Feeds {
   intent: string | null
   intentSentBy: string | null
   intent_timestamp: Date
+  combinedDID: string
 }
 
 export interface User {
@@ -61,7 +62,7 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
 
   for (let i = 0; i < 3; i++) {
     try {
-      const response = await fetch(BASE_URL + '/w2w/getIntents', {
+      const response = await fetch(BASE_URL + '/w2w/inbox/did', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -75,7 +76,6 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
     } catch (err) {
       console.log('Retry', retry)
       if (retry > 1) {
-        console.log('This ran')
         toast.error('Intent cannot be loaded! Please try again later', ToastPosition)
       }
       console.log('Error in the API call', err)
@@ -170,24 +170,6 @@ export const postMessage = async ({
   return data
 }
 
-export const getIntent = async (
-  firstDID: string,
-  secondDID: string
-): Promise<{ hasIntent: boolean; intent: string }> => {
-  const response = await fetch(BASE_URL + '/w2w/getIntent', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      firstDID,
-      secondDID
-    })
-  })
-  const data: { hasIntent: boolean; intent: string } = await response.json()
-  return data
-}
-
 export const createUser = async ({
   wallet,
   did,
@@ -254,7 +236,7 @@ export const approveIntent = async (
   status: string,
   signature: string,
   sigType: string
-) => {
+): Promise<void> => {
   const response = await fetch(BASE_URL + '/w2w/updateIntent', {
     method: 'PUT',
     headers: {
@@ -271,8 +253,6 @@ export const approveIntent = async (
   if (response.status < 200 || response.status > 299) {
     throw new Error('Error changing intent status')
   }
-  const data = await response.json()
-  return data
 }
 
 export const createIntent = async ({

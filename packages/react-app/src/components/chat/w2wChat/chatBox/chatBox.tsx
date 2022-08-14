@@ -27,7 +27,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
-import { User } from '../../../../api'
+import { Feeds, User } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -37,9 +37,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, setChat, searchedUser, connectedUser }: AppContext = useContext<AppContext>(
-    Context
-  )
+  const { currentChat, viewChatBox, did, setChat, searchedUser, connectedUser, intents }: AppContext = useContext<
+    AppContext
+  >(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -110,7 +110,7 @@ const ChatBox = (): JSX.Element => {
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
-    let hasintent = false
+    let chatHasIntent: boolean = true
     if (currentChat) {
       try {
         CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
@@ -118,17 +118,33 @@ const ChatBox = (): JSX.Element => {
       } catch (err) {
         setImageSource(currentChat.profile_picture)
       }
-      const intentStatus = await PushNodeClient.getIntent(currentChat.did, did.id)
-      setIntentSentandPending(intentStatus.intent)
-      hasintent = intentStatus.hasIntent
-      setHasIntent(intentStatus.hasIntent)
+      const intentResult: Feeds[] = intents.filter(
+        (intent) => intent.combinedDID.includes(currentChat.did) && intent.combinedDID.includes(did.id)
+      )
+      const result1 = intents.filter((intent) => intent.combinedDID.includes(currentChat.did))
+      const result2 = intents.filter((intent) => intent.combinedDID.includes(did.id))
+      if (intentResult.length === 0) {
+        setIntentSentandPending('Approved')
+        chatHasIntent = true
+        setHasIntent(chatHasIntent)
+      } else {
+        // We should only have one intent
+        if (intentResult.length !== 1) {
+          throw new Error('Invalid Intents')
+        }
+        setIntentSentandPending(intentResult[0].intent)
+        chatHasIntent = false
+        setHasIntent(chatHasIntent)
+      }
 
-      if (currentChat?.threadhash && hasintent) {
+      if (currentChat?.threadhash && chatHasIntent) {
         await getMessagesFromCID({
           messageCID: currentChat.threadhash,
           did
         })
       } else {
+        setHasIntent(false)
+        setIntentSentandPending('Pending')
         setMessages([])
       }
       setLoading(false)

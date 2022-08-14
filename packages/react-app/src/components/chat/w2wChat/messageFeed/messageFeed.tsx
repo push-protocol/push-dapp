@@ -4,7 +4,7 @@ import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
 import { AppContext, Context, ToastPosition } from '../w2wIndex'
 import { Feeds, getLatestThreadhash, User } from '../../../../api'
-import { decryptFeeds, fetchInbox } from '../w2wUtils'
+import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
@@ -17,7 +17,7 @@ interface MessageFeedProps {
 }
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
-  const { did, setChat, connectedUser }: AppContext = useContext<AppContext>(Context)
+  const { did, setChat, connectedUser, setIntents }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
@@ -57,9 +57,14 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     retryDelay: 1000 * 5
   })
 
+  const updateInboxAndIntents = async (): Promise<void> => {
+    getInbox()
+    setIntents(await fetchIntent({ did }))
+  }
+
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      getInbox()
+      updateInboxAndIntents()
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
@@ -96,7 +101,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               intent: null,
               intentSentBy: null,
               intent_timestamp: null,
-              pgp_pub: user.pgp_pub
+              pgp_pub: user.pgp_pub,
+              combinedDID: null
             }
             setFeeds([inbox])
           }
