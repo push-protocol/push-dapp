@@ -52,16 +52,29 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
 
 export const fetchInbox = async (did: DID): Promise<Feeds[]> => {
   let inbox: Feeds[] = await getInbox(did.id)
+  inbox = inbox.filter(
+    (inbx) => inbx.intent === 'Approved' || (inbx.intent === 'Pending' && inbx.intentSentBy === did.id)
+  )
   inbox = await fetchMessagesFromIPFS(inbox)
   await intitializeDb<Array<{}>>('Insert', 2, 'Inbox', did.id, inbox, 'did')
   return inbox
 }
 
-export const fetchIntent = async (did: DID): Promise<Feeds[]> => {
-  let Intents: Feeds[] = await getIntents(did.id)
-  Intents = await fetchMessagesFromIPFS(Intents)
-  await intitializeDb<Array<{}>>('Insert', 2, 'Intent', did.id, Intents, 'did')
-  return Intents
+export const fetchIntent = async ({
+  did,
+  intentStatus = ''
+}: {
+  did: DID
+  intentStatus?: string
+}): Promise<Feeds[]> => {
+  let intents: Feeds[] = await getInbox(did.id)
+  intents = intents.filter((intent) => intent.intent === 'Pending' && intent.intentSentBy !== did.id)
+  if (intentStatus !== '') {
+    intents = intents.filter((intent) => intent.intent === intentStatus)
+  }
+  intents = await fetchMessagesFromIPFS(intents)
+  await intitializeDb<Array<{}>>('Insert', 2, 'Intent', did.id, intents, 'did')
+  return intents
 }
 
 export const formatFileSize = (size: number): string => {

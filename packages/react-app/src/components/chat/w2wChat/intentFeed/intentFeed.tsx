@@ -23,16 +23,12 @@ const style = {
   p: 4
 }
 
-interface IntentFeedProps {
-  AllIntents: Feeds[]
-}
-
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const IntentFeed = (props: IntentFeedProps): JSX.Element => {
-  const { did, setChat, connectedUser }: AppContext = useContext<AppContext>(Context)
+const IntentFeed = (): JSX.Element => {
+  const { did, setChat, connectedUser, intents }: AppContext = useContext<AppContext>(Context)
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
   const [open, setOpen] = useState(false)
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
@@ -44,11 +40,11 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
     const getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
 
     if (getIntent === undefined) {
-      let intents = await fetchIntent(did)
+      let intents = await fetchIntent({ did, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
       setReceivedIntents(intents)
     } else {
-      let intents = await fetchIntent(did)
+      let intents = await fetchIntent({ did, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
       setReceivedIntents(intents)
     }
@@ -56,7 +52,7 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
 
   useEffect(() => {
     resolveThreadhash()
-  }, [props.AllIntents])
+  }, [intents])
 
   function showModal({ intentFrom, todid }: { intentFrom: string; todid: string }): void {
     setReceivedIntentFrom(intentFrom)
@@ -90,7 +86,7 @@ const IntentFeed = (props: IntentFeedProps): JSX.Element => {
                   onClick={(): void => {
                     setChat(intent)
                     showModal({
-                      intentFrom: intent.wallets[0],
+                      intentFrom: intent.wallets.split(',')[0],
                       todid: intent.intentSentBy
                     })
                   }}

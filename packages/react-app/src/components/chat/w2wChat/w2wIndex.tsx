@@ -52,6 +52,8 @@ export interface AppContext {
   searchedUser: string
   setChat: (feed: Feeds) => void
   connectedUser: User
+  intents: Feeds[]
+  setIntents: (intents: Feeds[]) => void
 }
 
 export const ToastPosition: ToastOptions = {
@@ -74,6 +76,7 @@ function App() {
   const [did, setDid] = useState<DID>()
   const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
+  const [intents, setIntents] = useState<Feeds[]>([])
 
   const queryClient = new QueryClient({})
 
@@ -132,7 +135,9 @@ function App() {
                 setChat,
                 setSearchedUser,
                 searchedUser,
-                connectedUser
+                connectedUser,
+                intents,
+                setIntents
               }}
             >
               <Sidebar />
