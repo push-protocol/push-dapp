@@ -18,7 +18,7 @@ export interface MessageIPFS {
 }
 
 function createIPFSClient(): IPFSHTTPClient {
-  return create({ host: 'https://epns-gateway.infura-ipfs.io', port: 5001, protocol: 'https' })
+  return create({ host: 'epns-gateway.infura-ipfs.io', port: 5001, protocol: 'https' })
 }
 
 // We try to get the cid from Push Node. If not success, we get from IPFS directly
