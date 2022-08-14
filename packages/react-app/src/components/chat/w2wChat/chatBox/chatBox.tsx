@@ -121,8 +121,6 @@ const ChatBox = (): JSX.Element => {
       const intentResult: Feeds[] = intents.filter(
         (intent) => intent.combinedDID.includes(currentChat.did) && intent.combinedDID.includes(did.id)
       )
-      const result1 = intents.filter((intent) => intent.combinedDID.includes(currentChat.did))
-      const result2 = intents.filter((intent) => intent.combinedDID.includes(did.id))
       if (intentResult.length === 0) {
         setIntentSentandPending('Approved')
         chatHasIntent = true
