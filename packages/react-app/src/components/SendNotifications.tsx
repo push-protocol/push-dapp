@@ -4,6 +4,7 @@
   import { FiLink } from "react-icons/fi";
   import Loader from "react-loader-spinner";
   import styled , {useTheme} from "styled-components";
+  import { BsFillImageFill } from "react-icons/bs";
   import { useSelector } from "react-redux";
   import { postReq } from "api";
   import {
@@ -19,11 +20,9 @@
   Input,
   TextField,
 } from "primaries/SharedStyling";
+
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
 import Switch from "@material-ui/core/Switch";
 import { useWeb3React } from "@web3-react/core";
 import { CloseIcon } from "assets/icons";
@@ -34,6 +33,65 @@ import { envConfig } from "@project/contracts";
 const ethers = require("ethers");
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
+
+export const IOSSwitch = styled(Switch).attrs(() => ({
+    classes: {
+      root: "root",
+      switchBase: "switchBase",
+      thumb: "thumb",
+      track: "track",
+      checked: "checked",
+      focusVisible: "focusVisible"
+    },
+    disableRipple: true,
+    focusVisibleClassName: "focusVisible"
+  }))`
+    &.root {
+      width: 42px;
+      height: 20px;
+      padding: 0px;
+    }
+  
+    .switchBase {
+      padding: 0px;
+      margin: 4px;
+      transition-duration: 300ms;
+  
+      &.checked {
+        transform: translateX(22px);
+        color: white;
+        & + .track {
+          background-color: #cf1c84;
+          opacity: 1;
+          border: none;
+        }
+      }
+  
+      &.focusVisible &.thumb {
+        color: #52d869;
+      }
+    }
+  
+    .thumb {
+      box-sizing: border-box;
+      width: 12px;
+      height: 12px;
+    }
+  
+    & .track {
+      border-radius: 13px;
+      background-color: #a0a3b1;
+      opacity: 1;
+      transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1),
+        border 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  
+    .checked {
+    }
+    .focusVisible {
+    }
+  `;
+  
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
@@ -719,78 +777,6 @@ function SendNotifications() {
 
   let showPreview = nfSub !== '' || nfMsg !== '' || nfCTA !== '' || nfMedia !== ''
 
-  const Android12Switch = styled(Switch)(({ theme }) => ({
-    // padding: 8,
-    '& .MuiSwitch-track': {
-      borderRadius: 22 / 2,
-      '&:before, &:after': {
-        content: '""',
-        position: 'absolute',
-        top: '50%',
-        transform: 'translateY(-50%)',
-        width: 16,
-        height: 16,
-      },
-      '&:before': {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"></svg>')`,
-        left: 12,
-      },
-      '&:after': {
-        backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 24 24"></svg>')`,
-        right: 12,
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      boxShadow: 'none',
-      width: 16,
-      height: 16,
-      margin: 2,
-    },
-  }));
-
-
-  const AntSwitch = styled(Switch)(({ theme }) => ({
-    width: 28,
-    height: 16,
-    padding: 0,
-    display: 'flex',
-    '&:active': {
-      '& .MuiSwitch-thumb': {
-        width: 15,
-      },
-      '& .MuiSwitch-switchBase.Mui-checked': {
-        transform: 'translateX(9px)',
-      },
-    },
-    '& .MuiSwitch-switchBase': {
-      padding: 2,
-      '&.Mui-checked': {
-        transform: 'translateX(12px)',
-        color: '#fff',
-        '& + .MuiSwitch-track': {
-          opacity: 1,
-          backgroundColor: theme.palette.mode === 'dark' ? '#177ddc' : '#1890ff',
-        },
-      },
-    },
-    '& .MuiSwitch-thumb': {
-      boxShadow: '0 2px 4px 0 rgb(0 35 11 / 20%)',
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      transition: theme.transitions.create(['width'], {
-        duration: 200,
-      }),
-    },
-    '& .MuiSwitch-track': {
-      borderRadius: 16 / 2,
-      opacity: 1,
-      backgroundColor:
-        theme.palette.mode === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.25)',
-      boxSizing: 'border-box',
-    },
-  }));
-
   return (
       <>
           <Section>
@@ -952,21 +938,14 @@ function SendNotifications() {
                                               >
                                                   Subject
                                               </Span>
-                                              {/* <Switch
-                                                  color="primary"
-                                                  size="small"
+                                              <IOSSwitch
                                                   checked={nfSubEnabled}
                                                   onChange={() =>
                                                       setNFSubEnabled(
                                                           !nfSubEnabled
                                                       )
                                                   }
-                                              /> */}
-                                                <Stack direction="row" spacing={1} alignItems="center">
-                                                    <Typography>Off</Typography>
-                                                    <AntSwitch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
-                                                    <Typography>On</Typography>
-                                                </Stack>
+                                              />
                                           </ItemH>
 
                                           <ItemH
@@ -990,9 +969,7 @@ function SendNotifications() {
                                               >
                                                   Media
                                               </Span>
-                                              <Switch
-                                                  color="primary"
-                                                  size="small"
+                                              <IOSSwitch
                                                   checked={nfMediaEnabled}
                                                   onChange={() =>
                                                       setNFMediaEnabled(
@@ -1023,9 +1000,7 @@ function SendNotifications() {
                                               >
                                                    CTA Link
                                               </Span>
-                                              <Switch
-                                                  color="primary"
-                                                  size="small"
+                                              <IOSSwitch
                                                   checked={nfCTAEnabled}
                                                   onChange={() =>
                                                       setNFCTAEnabled(
