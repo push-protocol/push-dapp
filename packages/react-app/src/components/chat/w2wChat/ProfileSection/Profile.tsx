@@ -86,7 +86,7 @@ const Profile = (props: profilePropsType): JSX.Element => {
     const cid = await IPFSHelper.uploadImage(file)
     setProfile(INFURA_URL + `${cid}`)
     props.updateProfile(cid)
-    await uploadUserProfileImage(did.id, cid)
+    await uploadUserProfileImage({ did: did.id, imageCID: cid })
   }
 
   return (

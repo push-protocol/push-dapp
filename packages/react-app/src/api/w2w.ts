@@ -113,14 +113,15 @@ export const getUser = async ({ did, wallet }: { did: string; wallet: string }):
   }
 }
 
-export const uploadUserProfileImage = async (did: string, image: string): Promise<void> => {
-  await fetch(BASE_URL + '/w2w/updateProfilePicture/' + did, {
+export const uploadUserProfileImage = async ({ did, imageCID }: { did: string; imageCID: string }): Promise<void> => {
+  await fetch(BASE_URL + '/w2w/updateUser', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      image
+      did,
+      imageCID
     })
   })
 }
