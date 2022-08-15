@@ -32,7 +32,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 export interface InboxChat {
   name: string
-  profile_picture: string
+  profilePicture: string
   timestamp: number
   fromDID: string
   toDID: string

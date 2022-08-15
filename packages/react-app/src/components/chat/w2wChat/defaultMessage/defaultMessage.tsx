@@ -16,10 +16,10 @@ const DefaultMessage = (props: { inbox: Feeds }): JSX.Element => {
   }
   useEffect(() => {
     try {
-      CID.parse(props.inbox.profile_picture)
-      setImageSource(INFURA_URL + `${props.inbox.profile_picture}`)
+      CID.parse(props.inbox.profilePicture)
+      setImageSource(INFURA_URL + `${props.inbox.profilePicture}`)
     } catch (err) {
-      setImageSource(props.inbox.profile_picture)
+      setImageSource(props.inbox.profilePicture)
     }
   }, [])
 
