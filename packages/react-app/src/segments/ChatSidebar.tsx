@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-// import { Content } from 'components/SharedStyling'
 import MuiTabs from '@mui/material/Tabs'
 import MuiTab from '@mui/material/Tab'
 import Typography from '@mui/material/Typography'
@@ -10,7 +9,7 @@ import Stack from '@mui/material/Stack'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import IconButton from '@mui/material/IconButton'
 import SearchIcon from '@mui/icons-material/Search'
-// import ChatMainSection from './ChatMainSection'
+import { makeStyles } from '@material-ui/core'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -18,9 +17,16 @@ interface TabPanelProps {
   value: number
 }
 
-// const Label = (value): JSX.Element => {
-//   return <LabelContainer>{value}</LabelContainer>
-// }
+const useStyles = makeStyles({
+  tabs: {
+    '& .MuiTabs-indicator': {
+      backgroundColor: '#CF1C84'
+    },
+    '& .MuiTab-root.Mui-selected': {
+      color: '#CF1C84'
+    }
+  }
+})
 
 const Search = (): JSX.Element => {
   const handleSearch = (event: React.SyntheticEvent): void => {
@@ -64,7 +70,7 @@ const UserProfiles = (): JSX.Element => {
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
-          <LabelContainer>3</LabelContainer>
+          <Badge>3</Badge>
         </MessageData>
       </ProfileCard>
       <ProfileCard>
@@ -77,7 +83,6 @@ const UserProfiles = (): JSX.Element => {
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
-          {/* <LabelContainer>3</LabelContainer> */}
         </MessageData>
       </ProfileCard>
     </>
@@ -94,55 +99,9 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
   )
 }
 
-// const ChatPanel = (props: TabPanelProps): JSX.Element => {
-//   const { children, value, index, ...other } = props
-
-//   return (
-//     <div role="chatpanel" hidden={value !== index} id={`${index}`} {...other}>
-//       {value === index && <Box sx={{ p: 3, padding: '0px' }}>{children}</Box>}
-//     </div>
-//   )
-// }
-
-// const ChatList = (): JSX.Element => {
-//   const [value, setValue] = React.useState(0)
-
-//   const handleChange = (event: React.SyntheticEvent, newValue: number): void => {
-//     setValue(newValue)
-//   }
-
-//   return (
-//     <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 224 }}>
-//       <Tabs
-//         orientation="vertical"
-//         variant="scrollable"
-//         value={value}
-//         onChange={handleChange}
-//         aria-label="Vertical tabs example"
-//         sx={{ borderRight: 1, borderColor: 'divider' }}
-//       >
-//         <Tab label={<UserProfiles />}></Tab>
-//         <Tab label="Item Two" />
-//         <Tab label="Item Three" />
-//         <Tab label="Item Four" />
-//       </Tabs>
-//       <ChatMainSection value={value} index={0}>
-//         ITem one
-//       </ChatMainSection>
-//       <ChatMainSection value={value} index={1}>
-//         Item Two
-//       </ChatMainSection>
-//       <ChatMainSection value={value} index={2}>
-//         Item Three
-//       </ChatMainSection>
-//       <ChatMainSection value={value} index={3}>
-//         Item Four
-//       </ChatMainSection>
-//     </Box>
-//   )
-// }
-
 const ChatSidebar = (): JSX.Element => {
+  const requests = 2
+  const classes = useStyles()
   const [value, setValue] = React.useState(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number): void => {
@@ -150,21 +109,18 @@ const ChatSidebar = (): JSX.Element => {
   }
 
   return (
-    // <Box sx={{ width: '336px', position: 'relative' }}>
     <Container>
       <TabContainer>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            TabIndicatorProps={{
-              style: {
-                backgroundColor: '#CF1C84'
-              }
-            }}
-          >
+          <Tabs value={value} onChange={handleChange} className={classes.tabs}>
             <Tab label="Chats" />
-            <Tab label="Requests" />
+            <Tab
+              label={
+                <span style={{ fontSize: '17px', display: 'flex', gap: '6px' }}>
+                  Requests<Badge>{requests}</Badge>
+                </span>
+              }
+            />
           </Tabs>
         </Box>
       </TabContainer>
@@ -231,11 +187,7 @@ const AvatarContainer = styled.div`
   margin-left: 18px;
 `
 
-// position: absolute;
-// right: 15px;
-// bottom: 38px;
-
-const LabelContainer = styled.div`
+const Badge = styled.div`
   width: 26px;
   height: 21px;
   background: #cf1c84;

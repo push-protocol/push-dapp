@@ -4,30 +4,36 @@ import { Content } from 'components/SharedStyling'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt'
 import Avatar from '@mui/material/Avatar'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 const ChatMainSection = (): JSX.Element => {
+  const [showOption, setShowOption] = React.useState(false)
+  const [message, setMessage] = React.useState('')
   const themes = useTheme()
+  const msgcount = 2
   const count = 2
 
   const TypeBar = (): JSX.Element => {
     return (
       <TypeBarContainer>
-        <IconButton>
-          <SentimentSatisfiedAltIcon />
-        </IconButton>
-        <TextInput type="text" placeholder="Type your message" />
-        <IconButton>
-          <img src="/svg/chats/gif.svg" height="27px" width="27px" />
-        </IconButton>
-        <IconButton>
-          <img src="/svg/chats/attachment.svg" height="27px" width="27px" />
-        </IconButton>
-        <IconButton>
+        <Icon>
+          <img src="/svg/chats/smiley.svg" height="24px" width="24px" />
+        </Icon>
+        <TextInput
+          type="text"
+          placeholder="Type your message"
+          onChange={(event): void => setMessage(event.target.value)}
+        />
+        <Icon>
+          <img src="/svg/chats/gif.svg" height="18px" width="22px" />
+        </Icon>
+        <Icon>
+          <img src="/svg/chats/attachment.svg" height="24px" width="20px" />
+        </Icon>
+        <Icon>
           <img src="/svg/chats/send.svg" height="27px" width="27px" />
-        </IconButton>
+        </Icon>
       </TypeBarContainer>
     )
   }
@@ -45,53 +51,89 @@ const ChatMainSection = (): JSX.Element => {
                   Adam.eth
                 </Typography>
               </UserInfo>
-              <IconButton aria-label="more">
-                <MoreVertIcon />
-              </IconButton>
+              <MoreOptions>
+                <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
+                  <MoreVertIcon />
+                </IconButton>
+                {showOption && (
+                  <OptionContainer>
+                    <Option>
+                      <Icon>
+                        <img src="/svg/chats/nickname.svg" height="24px" width="24px" />
+                      </Icon>
+                      <Typography ml={1} variant="subtitle2">
+                        Give Nickname
+                      </Typography>
+                    </Option>
+                    <Option>
+                      <Icon>
+                        <img src="/svg/chats/block.svg" height="24px" width="24px" />
+                      </Icon>
+                      <Typography ml={1} variant="subtitle2">
+                        Block User
+                      </Typography>
+                    </Option>
+                  </OptionContainer>
+                )}
+              </MoreOptions>
             </ChatHeader>
             <MessageContainer>
-              <FirstConversation>
-                This is your first conversation with the receipent, you will be able to continue the conversation once
-                the receipent accepts the intent
-              </FirstConversation>
-              <MessageTime>July 26, 2022</MessageTime>
-              <MessageWrapper>
-                <ReceivedMessage>
-                  <Message>Hi, Good Morning</Message>
-                  <TimeStamp>12.44</TimeStamp>
-                </ReceivedMessage>
-              </MessageWrapper>
-              <MessageWrapper>
-                <SenderMessage>
-                  <Message>Hello how are you, what are you doing?</Message>
-                  <TimeStamp>12.44</TimeStamp>
-                </SenderMessage>
-              </MessageWrapper>
-              <MessageTime>Today</MessageTime>
-              <MessageWrapper>
-                <ReceivedMessage>
-                  <Message>Hi, Good Morning</Message>
-                  <TimeStamp>12.44</TimeStamp>
-                </ReceivedMessage>
-              </MessageWrapper>
-              <MessageWrapper>
-                <SenderMessage>
-                  <Message>Hello how are you</Message>
-                  <TimeStamp>12.44</TimeStamp>
-                </SenderMessage>
-              </MessageWrapper>
-              <MessageWrapper>
-                <ReceivedMessage>
-                  <Message>Hi, Good Morning</Message>
-                  <TimeStamp>12.44</TimeStamp>
-                </ReceivedMessage>
-              </MessageWrapper>
-              <MessageWrapper>
-                <SenderMessage>
-                  <Message>Hello how are you</Message>
-                  <TimeStamp>12.44</TimeStamp>
-                </SenderMessage>
-              </MessageWrapper>
+              {msgcount !== 2 ? (
+                <FirstConversation>
+                  This is your first conversation with the receipent, you will be able to continue the conversation once
+                  the receipent accepts the intent
+                </FirstConversation>
+              ) : (
+                <>
+                  <MessageTime>July 26, 2022</MessageTime>
+                  {/* <MessageWrapper>
+                    <ReceivedMessage>
+                      <Message>Hi, Good Morning</Message>
+                      <TimeStamp>12.44</TimeStamp>
+                    </ReceivedMessage>
+                  </MessageWrapper>
+                  <MessageWrapper>
+                    <SenderMessage>
+                      <Message>Hello how are you, what are you doing?</Message>
+                      <TimeStamp>12.44</TimeStamp>
+                    </SenderMessage>
+                  </MessageWrapper>
+                  <MessageTime>Today</MessageTime>
+                  <MessageWrapper>
+                    <ReceivedMessage>
+                      <Message>Hi, Good Morning</Message>
+                      <TimeStamp>12.44</TimeStamp>
+                    </ReceivedMessage>
+                  </MessageWrapper>
+                  <MessageWrapper>
+                    <SenderMessage>
+                      <Message>Hello how are you</Message>
+                      <TimeStamp>12.44</TimeStamp>
+                    </SenderMessage>
+                  </MessageWrapper> */}
+                  <MessageWrapper>
+                    <ReceivedMessage>
+                      <Message>Hi, Good Morning</Message>
+                      <TimeStamp>12.44</TimeStamp>
+                    </ReceivedMessage>
+                  </MessageWrapper>
+                  <MessageWrapper>
+                    <ReceivedMessage>
+                      <Message>
+                        This is your first conversation with the sender, please accept to continue or reject to decline
+                      </Message>
+                      <DecisionContainer>
+                        <Icon>
+                          <img src="/svg/chats/cancel.svg" height="39px" width="39px" />
+                        </Icon>
+                        <Icon>
+                          <img src="/svg/chats/accept.svg" height="39px" width="39px" />
+                        </Icon>
+                      </DecisionContainer>
+                    </ReceivedMessage>
+                  </MessageWrapper>
+                </>
+              )}
             </MessageContainer>
             <TypeBar />
           </Box>
@@ -108,6 +150,44 @@ const ChatMainSection = (): JSX.Element => {
     </ThemeProvider>
   )
 }
+
+const Option = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const OptionContainer = styled.div`
+  position: absolute;
+  top: 55px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 19px;
+  width: 193px;
+  background: #ffffff;
+  border-radius: 16px;
+  z-index: 100;
+`
+
+const MoreOptions = styled.div`
+  position: relative;
+`
+
+const Icon = styled(IconButton)`
+  && {
+    padding: 0px;
+  }
+`
+
+const DecisionContainer = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 
 const FirstConversation = styled.div`
   width: 100%;
@@ -133,6 +213,7 @@ const TimeStamp = styled.span`
 const Message = styled.span`
   height: 100%;
   padding-bottom: 10px;
+  font-size: 14px;
 `
 
 const MessageTime = styled.div`
@@ -147,17 +228,22 @@ const MessageTime = styled.div`
 
 const MessageContainer = styled.div`
   position: absolute;
-  top: 80px;
+  top: 65px;
   left: 0;
+  right: 0;
+  margin: 0;
   width: 100%;
-  height: 701px;
-  overflow-y: scroll;
+  height: 420px;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: space-around;
   gap: 10px;
-  border:1px solid black;
+  &&::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 `
 
 const MessageWrapper = styled.div`
@@ -179,7 +265,7 @@ const ReceivedMessage = styled.div`
   text-align: left;
   border-radius: 2px 16px 16px 16px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   color: #000000;
 `
@@ -223,7 +309,7 @@ const ChatHeader = styled.div`
 
 const TextInput = styled.textarea`
   font-size: 16px;
-  width: 70%;
+  width: 75%;
   height: 25px;
   outline: none;
   border: none;
@@ -240,6 +326,7 @@ const TypeBarContainer = styled.div`
   left: 9px;
   right: 9px;
   height: 55px;
+  padding: 16px;
   border-radius: 13px;
   color: black;
   background: #ffffff;
