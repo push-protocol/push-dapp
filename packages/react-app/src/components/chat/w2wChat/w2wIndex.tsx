@@ -101,9 +101,9 @@ function App() {
       const createdUser = await PushNodeClient.createUser({
         wallet: caip10,
         did: did.id,
-        pgp_pub: keyPairs.publicKeyArmored,
-        pgp_priv_enc: JSON.stringify(encryptedPrivateKey),
-        pgp_enc_type: 'pgp',
+        publicKey: keyPairs.publicKeyArmored,
+        encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
+        encryptionType: 'pgp',
         signature: 'xyz',
         sigType: 'a'
       })

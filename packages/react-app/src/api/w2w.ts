@@ -12,12 +12,12 @@ export interface Feeds {
   did: string
   wallets: string
   profile_picture: string | null
-  pgp_pub: string | null
+  publicKey: string | null
   about: string | null
   threadhash: string | null
   intent: string | null
   intentSentBy: string | null
-  intent_timestamp: Date
+  intentTimestamp: Date
   combinedDID: string
 }
 
@@ -25,15 +25,15 @@ export interface User {
   did: string
   wallets: string
   profile_picture: string | null
-  pgp_pub: string
-  pgp_priv_enc: string
-  pgp_enc_type: string
+  publicKey: string
+  encryptedPrivateKey: string
+  encryptionType: string
   signature: string
   sigType: string
   about: string | null
-  num_msg: number
-  allowed_num_msg: number
-  linked_list_hash?: string | null
+  numMsg: number
+  allowedNumMsg: number
+  linkedListHash?: string | null
 }
 
 export const getInbox = async (did: string): Promise<Feeds[]> => {
@@ -174,17 +174,17 @@ export const postMessage = async ({
 export const createUser = async ({
   wallet,
   did,
-  pgp_pub,
-  pgp_priv_enc,
-  pgp_enc_type,
+  publicKey,
+  encryptedPrivateKey,
+  encryptionType,
   signature,
   sigType
 }: {
   wallet: string
   did: string
-  pgp_pub: string
-  pgp_priv_enc: string
-  pgp_enc_type: string
+  publicKey: string
+  encryptedPrivateKey: string
+  encryptionType: string
   signature: string
   sigType: string
 }): Promise<User> => {
@@ -196,9 +196,9 @@ export const createUser = async ({
     body: JSON.stringify({
       wallet,
       did,
-      pgp_pub,
-      pgp_priv_enc,
-      pgp_enc_type,
+      publicKey,
+      encryptedPrivateKey,
+      encryptionType,
       signature,
       sigType
     })

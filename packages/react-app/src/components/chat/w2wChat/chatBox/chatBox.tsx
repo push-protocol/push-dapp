@@ -82,15 +82,15 @@ const ChatBox = (): JSX.Element => {
         // To do signature verification it depends on who has sent the message
         let signatureValidationPubliKey: string
         if (msgIPFS.fromDID === connectedUser.did) {
-          signatureValidationPubliKey = connectedUser.pgp_pub
+          signatureValidationPubliKey = connectedUser.publicKey
         } else {
-          signatureValidationPubliKey = currentChat.pgp_pub
+          signatureValidationPubliKey = currentChat.publicKey
         }
         msgIPFS.messageContent = await decryptAndVerifySignature({
           cipherText: msgIPFS.messageContent,
           encryptedSecretKey: msgIPFS.encryptedSecret,
           did: did,
-          encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+          encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           publicKeyArmored: signatureValidationPubliKey,
           signatureArmored: msgIPFS.signature
         })
@@ -184,8 +184,8 @@ const ChatBox = (): JSX.Element => {
     messageType: string
   }): Promise<void> => {
     if (
-      !connectedUser.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----') ||
-      !currentChat.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')
+      !connectedUser.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----') ||
+      !currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')
     ) {
       throw "User doesn't have public key"
     }
@@ -208,9 +208,9 @@ const ChatBox = (): JSX.Element => {
       setMessages([...messages, msg])
       const { cipherText, encryptedSecret, signature, sigType, encType } = await encryptAndSign({
         plainText: message,
-        fromEncryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-        fromPublicKeyArmored: connectedUser.pgp_pub,
-        toPublicKeyArmored: currentChat.pgp_pub,
+        fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+        fromPublicKeyArmored: connectedUser.publicKey,
+        toPublicKeyArmored: currentChat.publicKey,
         did
       })
       const savedMsg: MessageIPFS = await PushNodeClient.postMessage({
@@ -265,9 +265,9 @@ const ChatBox = (): JSX.Element => {
           await PushNodeClient.createUser({
             wallet: caip10,
             did: caip10,
-            pgp_pub: '',
-            pgp_priv_enc: '',
-            pgp_enc_type: '',
+            publicKey: '',
+            encryptedPrivateKey: '',
+            encryptionType: '',
             signature: 'pgp',
             sigType: 'pgp'
           })
@@ -278,7 +278,7 @@ const ChatBox = (): JSX.Element => {
           signature = ''
         } else {
           // It's possible for a user to be created but the PGP keys still not created
-          if (!user.pgp_pub.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+          if (!user.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
             messageContent = message
             encryptionType = 'PlainText'
             aesEncryptedSecret = ''
@@ -286,9 +286,9 @@ const ChatBox = (): JSX.Element => {
           } else {
             const { cipherText, encryptedSecret, signature: pgpSignature } = await encryptAndSign({
               plainText: message,
-              fromEncryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
-              toPublicKeyArmored: currentChat.pgp_pub,
-              fromPublicKeyArmored: connectedUser.pgp_pub,
+              fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+              toPublicKeyArmored: currentChat.publicKey,
+              fromPublicKeyArmored: connectedUser.publicKey,
               did
             })
             messageContent = cipherText
