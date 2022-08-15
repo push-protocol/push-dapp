@@ -82,7 +82,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const inbox: Feeds = {
               msg: {
                 name: user.wallets.split(',')[0].toString(),
-                profile_picture: user.profile_picture,
+                profilePicture: user.profilePicture,
                 lastMessage: null,
                 timestamp: null,
                 messageType: null,
@@ -96,7 +96,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               wallets: user.wallets,
               did: user.did,
               threadhash: threadhash,
-              profile_picture: user.profile_picture,
+              profilePicture: user.profilePicture,
               about: user.about,
               intent: null,
               intentSentBy: null,

@@ -26,7 +26,7 @@ const INFURA_URL = envConfig.infuraApiUrl
 import styles from './styles'
 
 interface profilePropsType {
-  profile_picture: string
+  profilePicture: string
   updateProfile: (image: string) => void
   setValue: (number: number) => void
 }
@@ -46,12 +46,12 @@ const Profile = (props: profilePropsType): JSX.Element => {
 
   useEffect(() => {
     try {
-      CID.parse(props.profile_picture)
-      setProfile(INFURA_URL + `${props.profile_picture}`)
+      CID.parse(props.profilePicture)
+      setProfile(INFURA_URL + `${props.profilePicture}`)
     } catch (err) {
-      setProfile(props.profile_picture)
+      setProfile(props.profilePicture)
     }
-  }, [props.profile_picture])
+  }, [props.profilePicture])
 
   async function copyTextToClipboard(text: string) {
     if ('clipboard' in navigator) {

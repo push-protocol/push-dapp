@@ -11,7 +11,7 @@ export interface Feeds {
   msg: InboxChat
   did: string
   wallets: string
-  profile_picture: string | null
+  profilePicture: string | null
   publicKey: string | null
   about: string | null
   threadhash: string | null
@@ -24,7 +24,7 @@ export interface Feeds {
 export interface User {
   did: string
   wallets: string
-  profile_picture: string | null
+  profilePicture: string | null
   publicKey: string
   encryptedPrivateKey: string
   encryptionType: string

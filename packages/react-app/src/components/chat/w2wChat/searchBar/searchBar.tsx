@@ -40,16 +40,16 @@ const SearchBar = () => {
           const userCreated: User = {
             did: caip10,
             wallets: caip10,
-            pgp_pub: 'temp',
-            profile_picture: profile.uniqueAvatar,
-            pgp_priv_enc: 'temp',
-            pgp_enc_type: 'temp',
+            publicKey: 'temp',
+            profilePicture: profile.uniqueAvatar,
+            encryptedPrivateKey: 'temp',
+            encryptionType: 'temp',
             signature: 'temp',
             sigType: 'temp',
             about: null,
-            num_msg: 1,
-            allowed_num_msg: 100,
-            linked_list_hash: null
+            numMsg: 1,
+            allowedNumMsg: 100,
+            linkedListHash: null
           }
           setFilteredUserData([userCreated])
         } else {

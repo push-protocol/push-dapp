@@ -9,8 +9,8 @@ interface DefaultIntentProps {
 const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
   let date = null
 
-  if (props.inbox?.intent_timestamp !== null) {
-    const time = new Date(props.inbox?.intent_timestamp)
+  if (props.inbox?.intentTimestamp !== null) {
+    const time = new Date(props.inbox?.intentTimestamp)
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2)
   }
 
@@ -25,7 +25,7 @@ const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
   return (
     <div className="message_body">
       <div className="message_content">
-        <img src={props.inbox.profile_picture} className="message_content_img"></img>
+        <img src={props.inbox.profilePicture} className="message_content_img"></img>
 
         <div className="message_content_body">
           <div className="message_name">{final}</div>
@@ -38,7 +38,7 @@ const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
 
       {/* <div className='defaultMessage_1'>
                 <div className='defaultMessage_2'>
-                    <div className='defaultMessage_img'><img src={props.inbox.profile_picture}></img></div>
+                    <div className='defaultMessage_img'><img src={props.inbox.profilePicture}></img></div>
 
                     <div className='defaultMessage_name'>{props.inbox.msg.name.split(':').at(-1).slice(0, 19) + '...'}</div>
                     <div className='defaultMessage_time'>{date}</div>

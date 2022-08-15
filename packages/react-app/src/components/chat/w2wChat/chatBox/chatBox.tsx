@@ -113,10 +113,10 @@ const ChatBox = (): JSX.Element => {
     let chatHasIntent: boolean = true
     if (currentChat) {
       try {
-        CID.parse(currentChat.profile_picture) // Will throw exception if invalid CID
-        setImageSource(INFURA_URL + `${currentChat.profile_picture}`)
+        CID.parse(currentChat.profilePicture) // Will throw exception if invalid CID
+        setImageSource(INFURA_URL + `${currentChat.profilePicture}`)
       } catch (err) {
-        setImageSource(currentChat.profile_picture)
+        setImageSource(currentChat.profilePicture)
       }
       const intentResult: Feeds[] = intents.filter(
         (intent) => intent.combinedDID.includes(currentChat.did) && intent.combinedDID.includes(did.id)

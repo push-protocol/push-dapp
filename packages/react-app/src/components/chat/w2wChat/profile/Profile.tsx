@@ -12,7 +12,7 @@ const Profile = ({ setValue }: any): JSX.Element => {
   return (
     <Box sx={styles.container} onClick={(): void => setValue(2)}>
       <Tooltip title="Profile" placement="top-start">
-        <Avatar alt="profile image" src={connectedUser.profile_picture} sx={styles.profileImage} />
+        <Avatar alt="profile image" src={connectedUser.profilePicture} sx={styles.profileImage} />
       </Tooltip>
     </Box>
   )
