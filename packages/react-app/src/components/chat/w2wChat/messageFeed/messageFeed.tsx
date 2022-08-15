@@ -100,8 +100,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               about: user.about,
               intent: null,
               intentSentBy: null,
-              intent_timestamp: null,
-              pgp_pub: user.pgp_pub,
+              intentTimestamp: null,
+              publicKey: user.publicKey,
               combinedDID: null
             }
             setFeeds([inbox])

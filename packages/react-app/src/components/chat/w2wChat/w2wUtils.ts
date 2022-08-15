@@ -96,16 +96,16 @@ export const decryptFeeds = async ({
       // To do signature verification it depends on who has sent the message
       let signatureValidationPubliKey: string
       if (feed.msg.fromDID === connectedUser.did) {
-        signatureValidationPubliKey = connectedUser.pgp_pub
+        signatureValidationPubliKey = connectedUser.publicKey
       } else {
-        signatureValidationPubliKey = feed.pgp_pub
+        signatureValidationPubliKey = feed.publicKey
       }
 
       feed.msg.lastMessage = await decryptAndVerifySignature({
         cipherText: feed.msg.lastMessage,
         encryptedSecretKey: feed.msg.encryptedSecret,
         did: did,
-        encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
         publicKeyArmored: signatureValidationPubliKey,
         signatureArmored: feed.msg.signature
       })
