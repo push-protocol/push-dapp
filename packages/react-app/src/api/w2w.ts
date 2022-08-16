@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
 
 const BASE_URL = envConfig.w2wApiUrl
+export const WHITELIST_ERROR_MESSAGE = 'Your wallet is not whitelisted'
 
 export interface Feeds {
   // This property contains all the info to be displayed on the sidebar for the other peer's information
@@ -147,7 +148,7 @@ export const postMessage = async ({
   encType: string
   sigType: string
   encryptedSecret: string
-}): Promise<MessageIPFS> => {
+}): Promise<MessageIPFS | string> => {
   const response = await fetch(BASE_URL + '/w2w/sendMessage', {
     method: 'POST',
     headers: {
@@ -168,7 +169,7 @@ export const postMessage = async ({
   if (response.status > 299) {
     throw new Error('Error posting message')
   }
-  const data: MessageIPFS = await response.json()
+  const data: MessageIPFS | string = await response.json()
   return data
 }
 
@@ -277,7 +278,8 @@ export const createIntent = async ({
   encType: string
   sigType: string
   encryptedSecret: string
-}): Promise<MessageIPFS> => {
+}): Promise<MessageIPFS | string> => {
+  let data: MessageIPFS | string
   if (messageContent.length > 0) {
     const response = await fetch(BASE_URL + '/w2w/createIntent', {
       method: 'POST',
@@ -296,8 +298,7 @@ export const createIntent = async ({
         sigType
       })
     })
-    const data = await response.json()
-    return data
+    data = await response.json()
   } else {
     const response = await fetch(BASE_URL + '/w2w/createIntent', {
       method: 'POST',
@@ -313,9 +314,9 @@ export const createIntent = async ({
         encType
       })
     })
-    const data = await response.json()
-    return data
+    data = await response.json()
   }
+  return data
 }
 
 export const getRandomProfile = async (wallet: string): Promise<{ uniqueName: string; uniqueAvatar: string }> => {

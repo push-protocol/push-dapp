@@ -27,7 +27,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
-import { Feeds, User } from '../../../../api'
+import { Feeds, User, WHITELIST_ERROR_MESSAGE } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -199,7 +199,7 @@ const ChatBox = (): JSX.Element => {
         toPublicKeyArmored: currentChat.publicKey,
         did
       })
-      const savedMsg: MessageIPFS = await PushNodeClient.postMessage({
+      const savedMsg: MessageIPFS | string = await PushNodeClient.postMessage({
         fromWallet: account,
         fromDID: fromDid,
         toDID: toDid,
@@ -210,13 +210,18 @@ const ChatBox = (): JSX.Element => {
         sigType,
         encryptedSecret
       })
-      // const inbox = await fetchInbox(did)
-      // renderInbox(inbox)
-      const latesThreadhash: string = await PushNodeClient.getLatestThreadhash({
-        firstDID: currentChat.did,
-        secondDID: did.id
-      })
-      await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', latesThreadhash, savedMsg, 'cid')
+
+      if (typeof savedMsg === 'string') {
+        toast.error(WHITELIST_ERROR_MESSAGE)
+      } else {
+        // const inbox = await fetchInbox(did)
+        // renderInbox(inbox)
+        const latesThreadhash: string = await PushNodeClient.getLatestThreadhash({
+          firstDID: currentChat.did,
+          secondDID: did.id
+        })
+        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', latesThreadhash, savedMsg, 'cid')
+      }
     } catch (error) {
       console.log(error)
       toast.error('Cannot send Message, Try again later', ToastPosition)
@@ -284,7 +289,7 @@ const ChatBox = (): JSX.Element => {
           }
         }
 
-        const msg: MessageIPFS = await PushNodeClient.createIntent({
+        const msg: MessageIPFS | string = await PushNodeClient.createIntent({
           toDID: currentChat.did,
           fromDID: did.id,
           fromWallet: account,
@@ -295,10 +300,15 @@ const ChatBox = (): JSX.Element => {
           sigType: signature,
           encryptedSecret: aesEncryptedSecret
         })
-        // We store the message in state decrypted so we display to the user the intent message
-        msg.messageContent = message
-        setMessages([...messages, msg])
-        setNewMessage('')
+        if (typeof msg === 'string') {
+          // Display toaster
+          toast.error(WHITELIST_ERROR_MESSAGE)
+        } else {
+          // We store the message in state decrypted so we display to the user the intent message
+          msg.messageContent = message
+          setMessages([...messages, msg])
+          setNewMessage('')
+        }
       } else {
         setNewMessage('')
         setOpenSuccessSnackBar(true)
