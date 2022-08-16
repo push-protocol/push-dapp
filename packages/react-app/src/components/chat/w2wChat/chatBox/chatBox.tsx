@@ -22,12 +22,12 @@ import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import GifPicker from '../Gifs/gifPicker'
-import { useQuery } from 'react-query'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
 import { Feeds, User } from '../../../../api'
+import { useQuery } from 'react-query'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -57,8 +57,6 @@ const ChatBox = (): JSX.Element => {
   const [SnackbarText, setSnackbarText] = useState<string>('')
   let showTime = false
   let time = ''
-
-  // const [latestMessage, setLatestMessage] = useState<MessageIPFS[]>([])
 
   const getMessagesFromCID = async ({ messageCID, did }: { messageCID: string; did: DID }): Promise<void> => {
     if (!messageCID) {
@@ -91,7 +89,7 @@ const ChatBox = (): JSX.Element => {
         msgIPFS.messageContent = await decryptAndVerifySignature({
           cipherText: msgIPFS.messageContent,
           encryptedSecretKey: msgIPFS.encryptedSecret,
-          did: did,
+          did,
           encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           publicKeyArmored: signatureValidationPubliKey,
           signatureArmored: msgIPFS.signature
@@ -112,7 +110,7 @@ const ChatBox = (): JSX.Element => {
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
-    let chatHasIntent: boolean = true
+    let chatHasIntent = true
     if (currentChat) {
       try {
         CID.parse(currentChat.profilePicture) // Will throw exception if invalid CID
@@ -166,15 +164,15 @@ const ChatBox = (): JSX.Element => {
       // To do signature verification it depends on who has sent the message
       let signatureValidationPubliKey: string
       if (msgIPFS.fromDID === connectedUser.did) {
-        signatureValidationPubliKey = connectedUser.pgp_pub
+        signatureValidationPubliKey = connectedUser.publicKey
       } else {
-        signatureValidationPubliKey = currentChat.pgp_pub
+        signatureValidationPubliKey = currentChat.publicKey
       }
       msgIPFS.messageContent = await decryptAndVerifySignature({
         cipherText: msgIPFS.messageContent,
         encryptedSecretKey: msgIPFS.encryptedSecret,
         did: did,
-        encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
         publicKeyArmored: signatureValidationPubliKey,
         signatureArmored: msgIPFS.signature
       })
@@ -258,9 +256,7 @@ const ChatBox = (): JSX.Element => {
         link: ''
       }
       setNewMessage('')
-
-      // TODO: By commenting this we will add a delay when sending a message
-      // setMessages([...messages, msg])
+      setMessages([...messages, msg])
       const { cipherText, encryptedSecret, signature, sigType, encType } = await encryptAndSign({
         plainText: message,
         fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
@@ -359,7 +355,7 @@ const ChatBox = (): JSX.Element => {
           fromWallet: account,
           message: messageContent,
           messageType,
-          signature: signature,
+          signature,
           encType: encryptionType,
           sigType: signature,
           encryptedSecret: aesEncryptedSecret
