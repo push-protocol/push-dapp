@@ -86,7 +86,7 @@ const ChatMainSection = (): JSX.Element => {
               ) : (
                 <>
                   <MessageTime>July 26, 2022</MessageTime>
-                  {/* <MessageWrapper>
+                  <MessageWrapper>
                     <ReceivedMessage>
                       <Message>Hi, Good Morning</Message>
                       <TimeStamp>12.44</TimeStamp>
@@ -110,7 +110,7 @@ const ChatMainSection = (): JSX.Element => {
                       <Message>Hello how are you</Message>
                       <TimeStamp>12.44</TimeStamp>
                     </SenderMessage>
-                  </MessageWrapper> */}
+                  </MessageWrapper>
                   <MessageWrapper>
                     <ReceivedMessage>
                       <Message>Hi, Good Morning</Message>

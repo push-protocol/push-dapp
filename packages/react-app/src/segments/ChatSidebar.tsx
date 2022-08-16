@@ -44,48 +44,111 @@ const Search = (): JSX.Element => {
 
 const Requests = (): JSX.Element => {
   return (
-    <ProfileCard>
-      <AvatarContainer>
-        <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
-      </AvatarContainer>
-      <UserData>
-        <Typography variant="subtitle2">Adam.eth</Typography>
-        <Typography variant="caption">Are you there?</Typography>
-      </UserData>
-      <RequestTime>12.34</RequestTime>
-    </ProfileCard>
+    <UserProfileContainer width={'388px'}>
+      <ProfileCard>
+        <AvatarContainer>
+          <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
+        </AvatarContainer>
+        <UserData>
+          <Typography variant="subtitle2">Adam.eth</Typography>
+          <Typography variant="caption">Are you there?</Typography>
+        </UserData>
+        <RequestTime>12.34</RequestTime>
+      </ProfileCard>
+    </UserProfileContainer>
   )
 }
 
 const UserProfiles = (): JSX.Element => {
+  const [unread, setUnread] = React.useState(true)
   return (
-    <>
-      <ProfileCard>
+    <UserProfileContainer width={'302px'}>
+      <ProfileCard selected={true}>
         <AvatarContainer>
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Typography variant="subtitle2">Adam.eth</Typography>
-          <Typography variant="caption">Are you there?</Typography>
+          <Text color="#1E1E1E" weight="600" size="16px">
+            Adam.eth
+          </Text>
+          <Text color={unread ? '#D53A94' : '#657795'}>Are you there?</Text>
         </UserData>
         <MessageData>
-          <MessageTime>12.34</MessageTime>
+          <MessageTime color={unread ? '#D53A94' : '#657795'}>12.34</MessageTime>
           <Badge>3</Badge>
         </MessageData>
       </ProfileCard>
-      <ProfileCard>
+      <ProfileCard selected={false}>
         <AvatarContainer>
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Typography variant="subtitle2">Adam.eth</Typography>
-          <Typography variant="caption">Are you there?</Typography>
+          <Text color="#1E1E1E" weight="600" size="16px">
+            Adam.eth
+          </Text>
+          <Text color="#657795">Are you there?</Text>
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
         </MessageData>
       </ProfileCard>
-    </>
+      <ProfileCard selected={false}>
+        <AvatarContainer>
+          <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
+        </AvatarContainer>
+        <UserData>
+          <Text color="#1E1E1E" weight="600" size="16px">
+            Adam.eth
+          </Text>
+          <Text color="#657795">Are you there?</Text>
+        </UserData>
+        <MessageData>
+          <MessageTime>12.34</MessageTime>
+        </MessageData>
+      </ProfileCard>
+      <ProfileCard selected={false}>
+        <AvatarContainer>
+          <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
+        </AvatarContainer>
+        <UserData>
+          <Text color="#1E1E1E" weight="600" size="16px">
+            Adam.eth
+          </Text>
+          <Text color="#657795">Are you there?</Text>
+        </UserData>
+        <MessageData>
+          <MessageTime>12.34</MessageTime>
+        </MessageData>
+      </ProfileCard>
+      <ProfileCard selected={false}>
+        <AvatarContainer>
+          <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
+        </AvatarContainer>
+        <UserData>
+          <Text color="#1E1E1E" weight="600" size="16px">
+            Adam.eth
+          </Text>
+          <Text color="#657795">Are you there?</Text>
+        </UserData>
+        <MessageData>
+          <MessageTime>12.34</MessageTime>
+        </MessageData>
+      </ProfileCard>
+      <ProfileCard selected={false}>
+        <AvatarContainer>
+          <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
+        </AvatarContainer>
+        <UserData>
+          <Text color="#1E1E1E" weight="600" size="16px">
+            Adam.eth
+          </Text>
+          <Text color="#657795">Are you there?</Text>
+        </UserData>
+        <MessageData>
+          <MessageTime>12.34</MessageTime>
+        </MessageData>
+      </ProfileCard>
+    </UserProfileContainer>
   )
 }
 
@@ -131,9 +194,7 @@ const ChatSidebar = (): JSX.Element => {
         <Typography variant="subtitle1" ml={2}>
           CHAT
         </Typography>
-        <UserProfileContainer>
-          <UserProfiles />
-        </UserProfileContainer>
+        <UserProfiles />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Typography variant="subtitle1" ml={2} mt={2}>
@@ -154,6 +215,14 @@ const ChatSidebar = (): JSX.Element => {
     </Container>
   )
 }
+
+const Text = styled(Typography)`
+  && {
+    color: ${(props): string => props.color || '#000000'};
+    font-size: ${(props): string => props.size || '14px'};
+    font-weight: ${(props): string => props.weight || '500'};
+  }
+`
 
 const SearchBarContainer = styled.div`
   width: 100%;
@@ -188,14 +257,16 @@ const AvatarContainer = styled.div`
 `
 
 const Badge = styled.div`
-  width: 26px;
-  height: 21px;
+  box-sizing: border-box;
+  width: 30px;
+  height: 23px;
   background: #cf1c84;
   color: white;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 12px;
 `
 
 const RequestTime = styled.div`
@@ -207,6 +278,7 @@ const RequestTime = styled.div`
 
 const MessageTime = styled.div`
   font-size: 14px;
+  color: ${(props): string => props.color || '#657795'};
 `
 
 const MessageData = styled.div`
@@ -232,8 +304,8 @@ const UserData = styled.div`
 
 const ProfileCard = styled.div`
   width: 336px;
-  height: 73px;
-  // background: #f4f5fa;
+  min-height: 73px;
+  background:${(props): string => (props.selected ? '#f4f5fa' : 'transparent')};
   position: relative;
   left:0;
   right:0;
@@ -246,10 +318,19 @@ const ProfileCard = styled.div`
 const UserProfileContainer = styled.div`
   margin-top: 14px;
   width: 100%;
+  height: ${(props): string => props.width || '302px'};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+  }
 `
 
 const WalletDetailsContainer = styled(Stack)`
