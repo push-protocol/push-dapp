@@ -1,4 +1,5 @@
 import { ToastPosition, InboxChat } from 'components/chat/w2wChat/w2wIndex'
+// @ts-ignore
 import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
@@ -159,9 +160,9 @@ export const postMessage = async ({
       messageContent,
       messageType,
       signature,
-      enc_type: encType,
+      encType,
       encryptedSecret,
-      sigType: sigType
+      sigType
     })
   })
   if (response.status > 299) {
@@ -260,7 +261,7 @@ export const createIntent = async ({
   toDID,
   fromDID,
   fromWallet,
-  message,
+  messageContent,
   messageType,
   signature,
   encType,
@@ -270,14 +271,14 @@ export const createIntent = async ({
   toDID: string
   fromDID: string
   fromWallet: string
-  message: string
+  messageContent: string
   messageType: string
   signature: string
   encType: string
   sigType: string
   encryptedSecret: string
 }): Promise<MessageIPFS> => {
-  if (message.length > 0) {
+  if (messageContent.length > 0) {
     const response = await fetch(BASE_URL + '/w2w/createIntent', {
       method: 'POST',
       headers: {
@@ -287,7 +288,7 @@ export const createIntent = async ({
         toDID,
         fromDID,
         fromWallet,
-        message,
+        messageContent,
         messageType,
         signature,
         encType,

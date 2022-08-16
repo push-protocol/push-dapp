@@ -20,7 +20,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
         messageType: msgIPFS.messageType,
         signature: msgIPFS.signature,
         signatureType: msgIPFS.sigType,
-        encType: msgIPFS.enc_type,
+        encType: msgIPFS.encType,
         fromDID: msgIPFS.fromDID,
         toDID: msgIPFS.toDID,
         encryptedSecret: msgIPFS.encryptedSecret
