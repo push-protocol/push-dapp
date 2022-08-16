@@ -58,6 +58,8 @@ const ChatBox = (): JSX.Element => {
   let showTime = false
   let time = ''
 
+  // const [latestMessage, setLatestMessage] = useState<MessageIPFS[]>([])
+
   const getMessagesFromCID = async ({ messageCID, did }: { messageCID: string; did: DID }): Promise<void> => {
     if (!messageCID) {
       return
@@ -149,26 +151,77 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  // const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+  // getting Instant Message from IPFS via currentChat Threadhash
+  const getInstantMessage = async ({ messageCID }: { messageCID: string }): Promise<void> => {
+    if (!messageCID) {
+      return
+    }
+    let msgIPFS: MessageIPFS
+    const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID)
+    await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
+    msgIPFS = messageFromIPFS
+    console.log('New Message from currentChat.threadhash', messageFromIPFS)
 
-  // useEffect(() => {
-  //   function updateData(): void {
-  //     if (data !== undefined && currentChat?.wallets) {
-  //       const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-  //       if (newData?.intent === 'Approved') {
-  //         setChat(newData)
-  //       }
-  //     }
-  //   }
-  //   const interval = setInterval(() => updateData(), 2000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // }, [data, currentChat?.wallets])
+    if (msgIPFS.enc_type !== 'PlainText' && msgIPFS.enc_type !== null) {
+      // To do signature verification it depends on who has sent the message
+      let signatureValidationPubliKey: string
+      if (msgIPFS.fromDID === connectedUser.did) {
+        signatureValidationPubliKey = connectedUser.pgp_pub
+      } else {
+        signatureValidationPubliKey = currentChat.pgp_pub
+      }
+      msgIPFS.messageContent = await decryptAndVerifySignature({
+        cipherText: msgIPFS.messageContent,
+        encryptedSecretKey: msgIPFS.encryptedSecret,
+        did: did,
+        encryptedPrivateKeyArmored: connectedUser.pgp_priv_enc,
+        publicKeyArmored: signatureValidationPubliKey,
+        signatureArmored: msgIPFS.signature
+      })
+    }
+    if (messages?.length != 0) {
+      const index = messages?.findIndex((m) => {
+        return m.link == msgIPFS?.link
+      })
+
+      setMessages((m) => [...m, msgIPFS])
+    }
+  }
+
+  const RefetchingMessages = async (): Promise<void> => {
+    if (currentChat?.threadhash) {
+      await getInstantMessage({
+        messageCID: currentChat.threadhash
+      })
+    } else {
+      setMessages([])
+    }
+  }
+
+  const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
+
+  useEffect(() => {
+    function updateData(): void {
+      if (data !== undefined && currentChat?.wallets) {
+        const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+        if (newData?.intent === 'Approved') {
+          setChat(newData)
+        }
+      }
+    }
+    const interval = setInterval(() => updateData(), 2000)
+    return () => {
+      clearInterval(interval)
+    }
+  }, [data, currentChat?.wallets])
 
   useEffect(() => {
     getMessagesFromIPFS().catch((err) => console.error(err))
-  }, [currentChat])
+  }, [currentChat?.did])
+
+  useEffect(() => {
+    RefetchingMessages().catch((err) => console.error(err))
+  }, [currentChat?.threadhash])
 
   const sendMessage = async ({
     account,
@@ -205,7 +258,9 @@ const ChatBox = (): JSX.Element => {
         link: ''
       }
       setNewMessage('')
-      setMessages([...messages, msg])
+
+      // TODO: By commenting this we will add a delay when sending a message
+      // setMessages([...messages, msg])
       const { cipherText, encryptedSecret, signature, sigType, encType } = await encryptAndSign({
         plainText: message,
         fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
