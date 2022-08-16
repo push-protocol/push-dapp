@@ -1,6 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { Section, Content, Button, Item, H2, Span, H3 } from "../primaries/SharedStyling";
+import {
+  Section,
+  Content,
+  Button,
+  Item,
+  H2,
+  Span,
+  H3,
+} from "../primaries/SharedStyling";
 
 import SendNotifications from "components/SendNotifications";
 import ChannelSettings from "components/ChannelSettings";
@@ -15,8 +23,8 @@ import { ThemeProvider, useTheme } from "styled-components";
 
 const networkName = {
   80001: "Polygon Mumbai",
-  137: "Polygon Mainnet"
-}
+  137: "Polygon Mainnet",
+};
 
 // CREATE CHANNEL OWNER DASHBOARD
 const ChannelOwnerDashboard = () => {
@@ -67,7 +75,7 @@ const ChannelOwnerDashboard = () => {
         }
       }
     })();
-    }, [account, chainId]);
+  }, [account, chainId]);
 
   return (
     <>
@@ -75,65 +83,89 @@ const ChannelOwnerDashboard = () => {
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
           {!channelDetails && aliasEthAccount === null ? <CreateChannel /> : ""}
-          
-          {aliasEthAccount !== null && aliasVerified === false &&
-        <>
-        <ThemeProvider theme={theme}>
-          <Section padding="30px">
-            <Content padding="10px 0px 20px">
-              <Item align="flex-start">
-                <H2 textTransform="uppercase" spacing="0.1em">
-                  <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-                    Verify
-                  </Span>
-                  <Span weight="200" color={theme.color}> Your Channel Alias!</Span>
-                </H2>
-                <H3 color={theme.color} padding="10px 0px">
-                  Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
-                </H3>
-                <Button
-                  bg="#e20880"
-                  color="#fff"
-                  flex="1"
-                  padding="20px 10px"
-                  textTransform="uppercase"
-                  style={{width: "100%"}}
-                  onClick={() => setModalOpen(true)}
-                >
-                    Verify Channel Alias
-                </Button>      
-              </Item>
-            </Content>
-          </Section>
-        </ThemeProvider>
-        </>
 
-      }
+          {aliasEthAccount !== null && aliasVerified === false && (
+            <>
+              <ThemeProvider theme={theme}>
+                <Section padding="30px">
+                  <Content padding="10px 0px 20px">
+                    <Item align="flex-start">
+                      <H2 textTransform="uppercase" spacing="0.1em">
+                        <Span
+                          bg="#674c9f"
+                          color="#fff"
+                          weight="600"
+                          padding="0px 8px"
+                        >
+                          Verify
+                        </Span>
+                        <Span weight="200" color={theme.color}>
+                          {" "}
+                          Your Channel Alias!
+                        </Span>
+                      </H2>
+                      <H3 color={theme.color} padding="10px 0px">
+                        Please verify the Channel Alias Address to use the
+                        Channel on {networkName[chainId]} Network.
+                      </H3>
+                      <Button
+                        bg="#e20880"
+                        color="#fff"
+                        flex="1"
+                        padding="20px 10px"
+                        textTransform="uppercase"
+                        style={{ width: "100%" }}
+                        onClick={() => setModalOpen(true)}
+                      >
+                        Verify Channel Alias
+                      </Button>
+                    </Item>
+                  </Content>
+                </Section>
+              </ThemeProvider>
+            </>
+          )}
 
-      {modalOpen &&
+          {modalOpen && (
             <AliasVerificationModal
               onClose={(val) => setModalOpen(val)}
               onSuccess={() => setAliasVerified(true)}
               verificationStatus={aliasVerified}
               aliasEthAccount={aliasEthAccount}
             />
-          }
+          )}
 
           {/* display the create channel page if there are no details */}
           {/* display the channel settings */}
-          {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelSettings /> : ""}
+          {channelDetails &&
+          ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? (
+            <ChannelSettings />
+          ) : (
+            ""
+          )}
           {/* display the channel settings */}
           {/* display the details about the profile of the channel */}
-          {channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
+          {channelDetails &&
+          ((!onCoreNetwork && aliasVerified) || onCoreNetwork) ? (
+            <ChannelDetails />
+          ) : (
+            ""
+          )}
           {/* display the details about the profile of the channel */}
           {/* display the notifications settings */}
-          {(channelDetails && ((!onCoreNetwork && aliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""}
+          {(channelDetails &&
+            ((!onCoreNetwork && aliasVerified) || onCoreNetwork)) ||
+          delegatees?.length ? (
+            <SendNotifications />
+          ) : (
+            ""
+          )}
           {/* display the notifications settings */}
         </ModifiedContent>
       </Section>
     </>
   );
-}
+};
 
 // css styles
 const ModifiedContent = styled(Content)`

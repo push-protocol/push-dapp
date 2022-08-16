@@ -829,7 +829,7 @@ function SendNotifications() {
           </Section>
 
           {!isChannelDeactivated && (
-              <Section>
+              <Section >
                   <ModifiedContent>
                       <Item align="stretch">
                           <FormSubmision
@@ -1349,6 +1349,8 @@ function SendNotifications() {
   const ModifiedContent = styled(Content)`
   padding-top: 20px;
   font-weight: 400;
+  width: 80%;
+  margin: 0 auto;
   `;
 
   const DropdownHeader = styled.div`
