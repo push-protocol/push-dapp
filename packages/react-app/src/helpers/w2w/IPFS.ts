@@ -1,6 +1,4 @@
-import { JWE } from 'did-jwt'
 import { CID, create, IPFSHTTPClient } from 'ipfs-http-client'
-import { envConfig } from '@project/contracts'
 import * as PushNodeClient from '../../api'
 
 export interface MessageIPFS {
@@ -13,7 +11,7 @@ export interface MessageIPFS {
   sigType: string
   link: string | null
   timestamp?: number
-  enc_type: string
+  encType: string
   encryptedSecret: string
 }
 

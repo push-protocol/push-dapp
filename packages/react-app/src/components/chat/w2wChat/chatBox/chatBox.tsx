@@ -22,12 +22,12 @@ import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import GifPicker from '../Gifs/gifPicker'
+import { useQuery } from 'react-query'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
 import { Feeds, User } from '../../../../api'
-import { useQuery } from 'react-query'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -47,12 +47,10 @@ const ChatBox = (): JSX.Element => {
   const [Loading, setLoading] = useState<boolean>(true)
   const [messages, setMessages] = useState<MessageIPFS[]>([])
   const [imageSource, setImageSource] = useState<string>('')
-  const [hasIntent, setHasIntent] = useState<boolean>(true)
   const [filesUploading, setFileUploading] = useState<boolean>(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
-  const [intentSentandPending, setIntentSentandPending] = useState<string>('')
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
   const [SnackbarText, setSnackbarText] = useState<string>('')
   let showTime = false
@@ -78,7 +76,7 @@ const ChatBox = (): JSX.Element => {
       }
 
       // Decrypt message
-      if (msgIPFS.enc_type !== 'PlainText' && msgIPFS.enc_type !== null) {
+      if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
         // To do signature verification it depends on who has sent the message
         let signatureValidationPubliKey: string
         if (msgIPFS.fromDID === connectedUser.did) {
@@ -89,7 +87,7 @@ const ChatBox = (): JSX.Element => {
         msgIPFS.messageContent = await decryptAndVerifySignature({
           cipherText: msgIPFS.messageContent,
           encryptedSecretKey: msgIPFS.encryptedSecret,
-          did,
+          did: did,
           encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           publicKeyArmored: signatureValidationPubliKey,
           signatureArmored: msgIPFS.signature
@@ -110,7 +108,6 @@ const ChatBox = (): JSX.Element => {
   const getMessagesFromIPFS = async (): Promise<void> => {
     setNewMessage('')
     setLoading(true)
-    let chatHasIntent = true
     if (currentChat) {
       try {
         CID.parse(currentChat.profilePicture) // Will throw exception if invalid CID
@@ -121,105 +118,43 @@ const ChatBox = (): JSX.Element => {
       const intentResult: Feeds[] = intents.filter(
         (intent) => intent.combinedDID.includes(currentChat.did) && intent.combinedDID.includes(did.id)
       )
-      if (intentResult.length === 0) {
-        setIntentSentandPending('Approved')
-        chatHasIntent = true
-        setHasIntent(chatHasIntent)
-      } else {
-        // We should only have one intent
-        if (intentResult.length !== 1) {
-          throw new Error('Invalid Intents')
-        }
-        setIntentSentandPending(intentResult[0].intent)
-        chatHasIntent = false
-        setHasIntent(chatHasIntent)
+      // We should only have one intent
+      if (intentResult.length > 1) {
+        throw new Error('Invalid Intents')
       }
 
-      if (currentChat?.threadhash && chatHasIntent) {
+      if (currentChat?.threadhash) {
         await getMessagesFromCID({
           messageCID: currentChat.threadhash,
           did
         })
       } else {
-        setHasIntent(false)
-        setIntentSentandPending('Pending')
         setMessages([])
       }
       setLoading(false)
     }
   }
 
-  // getting Instant Message from IPFS via currentChat Threadhash
-  const getInstantMessage = async ({ messageCID }: { messageCID: string }): Promise<void> => {
-    if (!messageCID) {
-      return
-    }
-    let msgIPFS: MessageIPFS
-    const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID)
-    await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
-    msgIPFS = messageFromIPFS
-    console.log('New Message from currentChat.threadhash', messageFromIPFS)
+  // const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
 
-    if (msgIPFS.enc_type !== 'PlainText' && msgIPFS.enc_type !== null) {
-      // To do signature verification it depends on who has sent the message
-      let signatureValidationPubliKey: string
-      if (msgIPFS.fromDID === connectedUser.did) {
-        signatureValidationPubliKey = connectedUser.publicKey
-      } else {
-        signatureValidationPubliKey = currentChat.publicKey
-      }
-      msgIPFS.messageContent = await decryptAndVerifySignature({
-        cipherText: msgIPFS.messageContent,
-        encryptedSecretKey: msgIPFS.encryptedSecret,
-        did: did,
-        encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
-        publicKeyArmored: signatureValidationPubliKey,
-        signatureArmored: msgIPFS.signature
-      })
-    }
-    if (messages?.length != 0) {
-      const index = messages?.findIndex((m) => {
-        return m.link == msgIPFS?.link
-      })
-
-      setMessages((m) => [...m, msgIPFS])
-    }
-  }
-
-  const RefetchingMessages = async (): Promise<void> => {
-    if (currentChat?.threadhash) {
-      await getInstantMessage({
-        messageCID: currentChat.threadhash
-      })
-    } else {
-      setMessages([])
-    }
-  }
-
-  const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
-
-  useEffect(() => {
-    function updateData(): void {
-      if (data !== undefined && currentChat?.wallets) {
-        const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-        if (newData?.intent === 'Approved') {
-          setChat(newData)
-        }
-      }
-    }
-    const interval = setInterval(() => updateData(), 2000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [data, currentChat?.wallets])
+  // useEffect(() => {
+  //   function updateData(): void {
+  //     if (data !== undefined && currentChat?.wallets) {
+  //       const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
+  //       if (newData?.intent === 'Approved') {
+  //         setChat(newData)
+  //       }
+  //     }
+  //   }
+  //   const interval = setInterval(() => updateData(), 2000)
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+  // }, [data, currentChat?.wallets])
 
   useEffect(() => {
     getMessagesFromIPFS().catch((err) => console.error(err))
-  }, [currentChat?.did])
-
-  useEffect(() => {
-    RefetchingMessages().catch((err) => console.error(err))
-  }, [currentChat?.threadhash])
+  }, [currentChat])
 
   const sendMessage = async ({
     account,
@@ -249,7 +184,7 @@ const ChatBox = (): JSX.Element => {
         messageContent: message,
         messageType,
         signature: '',
-        enc_type: '',
+        encType: '',
         sigType: '',
         timestamp: Date.now(),
         encryptedSecret: '',
@@ -292,7 +227,7 @@ const ChatBox = (): JSX.Element => {
     e.preventDefault()
 
     if (newMessage.trim() !== '') {
-      if (hasIntent && intentSentandPending === 'Approved') {
+      if (currentChat.intent === 'Approved') {
         sendMessage({
           account,
           fromDid: did.id,
@@ -308,7 +243,7 @@ const ChatBox = (): JSX.Element => {
 
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
-      if (!hasIntent && intentSentandPending === 'Pending') {
+      if (currentChat.intent === null || currentChat.intent === '' || currentChat.intent === 'Pending') {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
         if (!user) {
@@ -353,7 +288,7 @@ const ChatBox = (): JSX.Element => {
           toDID: currentChat.did,
           fromDID: did.id,
           fromWallet: account,
-          message: messageContent,
+          messageContent,
           messageType,
           signature,
           encType: encryptionType,
@@ -362,7 +297,6 @@ const ChatBox = (): JSX.Element => {
         })
         // We store the message in state decrypted so we display to the user the intent message
         msg.messageContent = message
-        setHasIntent(true)
         setMessages([...messages, msg])
         setNewMessage('')
       } else {
@@ -403,7 +337,7 @@ const ChatBox = (): JSX.Element => {
         reader.readAsDataURL(file)
         reader.onloadend = async (e): Promise<void> => {
           resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
-          if (!hasIntent && intentSentandPending === 'Pending') {
+          if (currentChat.intent === 'Pending') {
             sendIntent({ message: JSON.stringify(resultingfile), messageType: type })
           } else {
             sendMessage({
@@ -419,7 +353,7 @@ const ChatBox = (): JSX.Element => {
       } else {
         const cid = await IPFSHelper.uploadImage(file)
         content = cid
-        if (!hasIntent && intentSentandPending === 'Pending') {
+        if (currentChat.intent === 'Pending') {
           sendIntent({ message: content.toString(), messageType: type })
         } else {
           sendMessage({
@@ -446,7 +380,7 @@ const ChatBox = (): JSX.Element => {
   }
 
   const sendGif = (url: string): void => {
-    if (!hasIntent && intentSentandPending === 'Pending') {
+    if (currentChat.intent === 'Pending') {
       sendIntent({ message: url, messageType: 'GIF' })
     } else {
       sendMessage({
@@ -465,10 +399,10 @@ const ChatBox = (): JSX.Element => {
     setOpenSuccessSnackBar(false)
   }
   const placeholderTextArea = (): string => {
-    if (intentSentandPending === 'Pending' && hasIntent === true) {
+    if (currentChat.intent === 'Pending') {
       return "Can't send any messages until intent is accepted !"
     }
-    if (hasIntent === true && intentSentandPending === 'Approved') return 'New Text Message'
+    if (currentChat.intent === 'Approved') return 'New Text Message'
     else return 'Intent Message'
   }
 
@@ -495,7 +429,9 @@ const ChatBox = (): JSX.Element => {
               <img src={imageSource} alt="" />
               <div className="chatBoxNavDetail">
                 <p className="chatBoxWallet">{caip10ToWallet(currentChat.msg.name)}</p>
-                <div>{hasIntent ? <Dropdown wallets={currentChat.wallets.split(',')} /> : null}</div>
+                <div>
+                  <Dropdown wallets={currentChat.wallets.split(',')} />{' '}
+                </div>
               </div>
             </div>
           </div>
@@ -507,7 +443,7 @@ const ChatBox = (): JSX.Element => {
               </div>
             ) : (
               <>
-                {hasIntent ? (
+                {currentChat.intent === 'Approved' || currentChat.threadhash ? (
                   messages?.map((msg, i) => {
                     const isLast = i === messages.length - 1
                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -542,8 +478,7 @@ const ChatBox = (): JSX.Element => {
           </ScrollToBottom>
 
           <div className="chatBoxBottom">
-            {(!hasIntent && intentSentandPending === 'Pending') ||
-            (hasIntent && intentSentandPending === 'Approved') ? (
+            {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
               <>
                 <label>
                   <i className="fa fa-2x fa-camera"></i>
@@ -575,7 +510,7 @@ const ChatBox = (): JSX.Element => {
                 </div>
               </>
             ) : null}
-            {hasIntent && intentSentandPending === 'Pending' ? (
+            {currentChat.intent === 'Pending' ? (
               <textarea
                 disabled
                 className="chatMessageInput"
@@ -597,8 +532,7 @@ const ChatBox = (): JSX.Element => {
                 ></textarea>
               </>
             )}
-            {(!hasIntent && intentSentandPending === 'Pending') ||
-            (hasIntent && intentSentandPending === 'Approved') ? (
+            {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
               <button
                 disabled={textAreaDisabled}
                 className="emojiButton"
