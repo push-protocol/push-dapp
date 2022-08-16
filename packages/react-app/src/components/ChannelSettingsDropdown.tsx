@@ -256,7 +256,7 @@ function ChannelSettings({props}) {
               disabled={channelInactive}
               onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
             >
-              <ActionTitle>
+              <div>
                 {addSubgraphDetailsLoading ? (
                   <Loader type="Oval" color="#FFF" height={16} width={16} />
                 ) : (
@@ -266,7 +266,7 @@ function ChannelSettings({props}) {
                   Add SubGraph Details
                   </div>
                 )}
-              </ActionTitle>
+              </div>
             </ChannelActionButton>
           }
 
@@ -274,7 +274,7 @@ function ChannelSettings({props}) {
             disabled={channelInactive}
             onClick={() => !channelInactive && setAddModalOpen(true)}
           >
-            <ActionTitle>
+            <div>
               {addDelegateLoading ? (
                 <Loader type="Oval" color="#FFF" height={16} width={16} />
               ) : (
@@ -284,14 +284,14 @@ function ChannelSettings({props}) {
                   Add Delegate
                 </div>
               )}
-            </ActionTitle>
+            </div>
           </ChannelActionButton>
 
           <ChannelActionButton
             disabled={channelInactive}
             onClick={() => !channelInactive && setRemoveModalOpen(true)}
           >
-            <ActionTitle>
+            <div>
               {removeDelegateLoading ? (
                 <Loader type="Oval" color="#FFF" height={16} width={16} />
               ) : (
@@ -301,14 +301,14 @@ function ChannelSettings({props}) {
                   Remove Delegate
                 </div>
               )}
-            </ActionTitle>
+            </div>
           </ChannelActionButton>
 
         <ChannelActionButton
           isChannelDeactivated={isChannelDeactivated}
           onClick={toggleChannelActivationState}
         >
-          <ActionTitle style={{color:'red'}}>
+          <div style={{color:'red'}}>
           <div style={{display:'flex',justifyContent:'start'}}>
             <AiTwotoneDelete fontSize={20}/>
             <div style={{width:'10px',color:'red'}}/>                  
@@ -324,7 +324,7 @@ function ChannelSettings({props}) {
                       "Deactivate Channel"
                       )}
             </div>
-          </ActionTitle>
+          </div>
         </ChannelActionButton>
 
           
@@ -398,11 +398,11 @@ const DropdownWrapper = styled.div`
   right: 20px;
   display: flex;
   flex-direction: column-reverse;
+  align-items: center;
   width: 240px;
-  height: 200px;
+  height: 190px;
   padding: 20px 4px;
-
-  background: ${props => props.background.mainBg};
+  background: ${props => props.background.backgroundBG};
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid #E5E8F7;
@@ -423,16 +423,6 @@ const Toaster = styled.div`
   margin: 0px 10px;
 `;
 
-const ActionTitle = styled.span`
-  ${(props: any) =>
-    props.hideit &&
-    css`
-      visibility: hidden
-    `};
-;
-
-
-`;
 
 const ToasterMsg = styled.div`
   margin: 0px 10px;
