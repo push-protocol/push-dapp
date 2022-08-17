@@ -59,7 +59,7 @@ export interface AppContext {
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
   autoClose: 5000,
-  hideProgressBar: true,
+  hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,

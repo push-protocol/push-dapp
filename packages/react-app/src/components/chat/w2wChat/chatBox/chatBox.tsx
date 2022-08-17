@@ -27,7 +27,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
-import { Feeds, User, WHITELIST_ERROR_MESSAGE } from '../../../../api'
+import { Feeds, User } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -212,7 +212,7 @@ const ChatBox = (): JSX.Element => {
       })
 
       if (typeof savedMsg === 'string') {
-        toast.error(WHITELIST_ERROR_MESSAGE)
+        toast.error(savedMsg, ToastPosition)
       } else {
         // const inbox = await fetchInbox(did)
         // renderInbox(inbox)
@@ -302,12 +302,13 @@ const ChatBox = (): JSX.Element => {
         })
         if (typeof msg === 'string') {
           // Display toaster
-          toast.error(WHITELIST_ERROR_MESSAGE)
+          toast.error(msg, ToastPosition)
         } else {
           // We store the message in state decrypted so we display to the user the intent message
           msg.messageContent = message
           setMessages([...messages, msg])
           setNewMessage('')
+          toast.success('Intent sent!', ToastPosition)
         }
       } else {
         setNewMessage('')
