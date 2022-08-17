@@ -8,7 +8,6 @@ import Avatar from '@mui/material/Avatar'
 import Stack from '@mui/material/Stack'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import IconButton from '@mui/material/IconButton'
-import SearchIcon from '@mui/icons-material/Search'
 import { makeStyles } from '@material-ui/core'
 
 interface TabPanelProps {
@@ -33,12 +32,7 @@ const Search = (): JSX.Element => {
     console.log(event.target)
   }
   return (
-    <SearchBar>
-      <input type="text" id="search" onChange={(e): void => handleSearch(e)} placeholder="Search name.eth or 0x123" />
-      <SearchButton>
-        <SearchIcon />
-      </SearchButton>
-    </SearchBar>
+    <Input type="text" rows="1" onChange={(e): void => handleSearch(e)} placeholder="Search name.eth or 0x123..." />
   )
 }
 
@@ -68,10 +62,10 @@ const UserProfiles = (): JSX.Element => {
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Text color="#1E1E1E" weight="600" size="16px">
+          <DisplayText color="#1E1E1E" weight="600" size="16px">
             Adam.eth
-          </Text>
-          <Text color={unread ? '#D53A94' : '#657795'}>Are you there?</Text>
+          </DisplayText>
+          <DisplayText color={unread ? '#D53A94' : '#657795'}>Are you there?</DisplayText>
         </UserData>
         <MessageData>
           <MessageTime color={unread ? '#D53A94' : '#657795'}>12.34</MessageTime>
@@ -83,10 +77,10 @@ const UserProfiles = (): JSX.Element => {
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Text color="#1E1E1E" weight="600" size="16px">
+          <DisplayText color="#1E1E1E" weight="600" size="16px">
             Adam.eth
-          </Text>
-          <Text color="#657795">Are you there?</Text>
+          </DisplayText>
+          <DisplayText color="#657795">Are you there?</DisplayText>
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
@@ -97,10 +91,10 @@ const UserProfiles = (): JSX.Element => {
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Text color="#1E1E1E" weight="600" size="16px">
+          <DisplayText color="#1E1E1E" weight="600" size="16px">
             Adam.eth
-          </Text>
-          <Text color="#657795">Are you there?</Text>
+          </DisplayText>
+          <DisplayText color="#657795">Are you there?</DisplayText>
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
@@ -111,10 +105,10 @@ const UserProfiles = (): JSX.Element => {
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Text color="#1E1E1E" weight="600" size="16px">
+          <DisplayText color="#1E1E1E" weight="600" size="16px">
             Adam.eth
-          </Text>
-          <Text color="#657795">Are you there?</Text>
+          </DisplayText>
+          <DisplayText color="#657795">Are you there?</DisplayText>
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
@@ -125,10 +119,10 @@ const UserProfiles = (): JSX.Element => {
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Text color="#1E1E1E" weight="600" size="16px">
+          <DisplayText color="#1E1E1E" weight="600" size="16px">
             Adam.eth
-          </Text>
-          <Text color="#657795">Are you there?</Text>
+          </DisplayText>
+          <DisplayText color="#657795">Are you there?</DisplayText>
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
@@ -139,10 +133,10 @@ const UserProfiles = (): JSX.Element => {
           <Avatar alt="Remy Sharp" src="/svg/chats/user.svg" />
         </AvatarContainer>
         <UserData>
-          <Text color="#1E1E1E" weight="600" size="16px">
+          <DisplayText color="#1E1E1E" weight="600" size="16px">
             Adam.eth
-          </Text>
-          <Text color="#657795">Are you there?</Text>
+          </DisplayText>
+          <DisplayText color="#657795">Are you there?</DisplayText>
         </UserData>
         <MessageData>
           <MessageTime>12.34</MessageTime>
@@ -176,10 +170,17 @@ const ChatSidebar = (): JSX.Element => {
       <TabContainer>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={value} onChange={handleChange} className={classes.tabs}>
-            <Tab label="Chats" />
+            <Tab label={<span style={{ textTransform: 'capitalize', fontSize: '17px' }}>chats</span>} />
             <Tab
               label={
-                <span style={{ fontSize: '17px', display: 'flex', gap: '6px' }}>
+                <span
+                  style={{
+                    textTransform: 'capitalize',
+                    fontSize: '17px',
+                    display: 'flex',
+                    gap: '6px'
+                  }}
+                >
                   Requests<Badge>{requests}</Badge>
                 </span>
               }
@@ -190,6 +191,7 @@ const ChatSidebar = (): JSX.Element => {
       <TabPanel value={value} index={0}>
         <SearchBarContainer>
           <Search />
+          <Image src="/svg/chats/search.svg" />
         </SearchBarContainer>
         <Typography variant="subtitle1" ml={2}>
           CHAT
@@ -216,7 +218,56 @@ const ChatSidebar = (): JSX.Element => {
   )
 }
 
-const Text = styled(Typography)`
+// background: url('/svg/chats/search.svg') no-repeat;
+//   background-position: 258px 13px;
+//   background-size: 20px;
+// &:focus {
+//   outline: none;
+//   border-width: 1px;
+//   border-style: solid;
+//   border-image: linear-gradient(to right, #cf1c84 0%, #8ed6ff 50%);
+//   border-image-slice: 1;
+// }
+// outline: none;
+// background-image: linear-gradient(white, white), linear-gradient(to right, #cf1c84 0%, #8ed6ff 100%);
+// background-origin: border-box;
+// background-clip: content-box, border-box;
+// padding: 11px 74px 13px 21px;
+// box-sizing: border-box;
+//   border-radius: 99px;
+//   width: 294px;
+//   height: 48px;
+//   background-color: #f4f5fa;
+//   margin: 37px 0px 17px 0px;
+//   resize: none;
+//   border: 1px solid transparent;
+
+const Image = styled.img`
+  position: absolute;
+  top: 48px;
+  right: 35px;
+  height: 25px;
+  width: 20px;
+`
+
+const Input = styled.input`
+  box-sizing: border-box;
+  width: 294px;
+  height: 48px;
+  resize: none;
+  margin: 37px 0px 17px 0px;
+  background-color: #f4f5fa;
+  border: 2px solid transparent;
+  border-radius: 99px;
+  &:focus {
+    outline: none;
+    background-image: linear-gradient(#f4f5fa, #f4f5fa), linear-gradient(to right, #cf1c84 0%, #8ed6ff 100%);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+  }
+`
+
+const DisplayText = styled(Typography)`
   && {
     color: ${(props): string => props.color || '#000000'};
     font-size: ${(props): string => props.size || '14px'};
@@ -228,24 +279,7 @@ const SearchBarContainer = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-`
-
-const SearchButton = styled.button`
-  border: none;
-  background-color: transparent;
-`
-
-const SearchBar = styled.div`
-  box-sizing: border-box;
-  border-radius: 99px;
-  width: 300px;
-  height: 48px;
-  background: #f4f5fa;
-  padding: 5px 11px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 37px 0px 17px 0px;
+  position: relative;
 `
 
 const AvatarContainer = styled.div`
@@ -336,7 +370,7 @@ const UserProfileContainer = styled.div`
 const WalletDetailsContainer = styled(Stack)`
   display: flex;
   align-items: center;
-  text-align: center;
+  displaytext-align: center;
   height: 100%;
 `
 
@@ -358,14 +392,14 @@ const TabContainer = styled(Box)`
 `
 
 const Tabs = styled(MuiTabs)`
-  text-transform: unset;
+  displaytext-transform: unset;
 `
 const Tab = styled(MuiTab)`
   && {
-    text-transform: unset;
+    displaytext-transform: unset;
     width: 150px;
     font-size: 16px;
-    color: #657795;
+    color: #000000;
   }
 `
 
@@ -379,7 +413,7 @@ const BottomBar = styled(Box)`
   padding-top: 10px;
   justify-content: space-between;
   align-items: center;
-  text-align: center;
+  displaytext-align: center;
 `
 
 export default ChatSidebar
