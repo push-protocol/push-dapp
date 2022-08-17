@@ -180,8 +180,8 @@ const EPNSCoreHelper = {
       if (ids[0] == 1) {
         // IPFS HASH
         // Form Gateway URL
-        // const url = "https://ipfs.io/ipfs/" + ids[1];
-        const url = "https://epns-gateway.infura-ipfs.io/ipfs/" + ids[1];
+        const url = "https://ipfs.io/ipfs/" + ids[1];
+        // const url = "https://epns-gateway.infura-ipfs.io/ipfs/" + ids[1];
         fetch(url)
           .then((response) => response.json())
           .then((response) => {

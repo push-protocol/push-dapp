@@ -1,4 +1,4 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useState} from "react";
 import styled from "styled-components";
 import { Section, Content } from "../primaries/SharedStyling";
 
@@ -12,7 +12,7 @@ import { envConfig } from "@project/contracts";
 import { ThemeProvider, useTheme } from "styled-components";
 import { aliasChainIdsMapping } from "helpers/UtilityHelper";
 import { getCAIP } from "helpers/CaipHelper";
-import { setAliasAddress, setAliasVerified } from "redux/slices/adminSlice";
+import { setAliasAddress, setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import AliasProcessing from "components/AliasProcessing"
 import ChannelsDataStore from "singletons/ChannelsDataStore";
@@ -27,13 +27,13 @@ let intervalID = null;
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
-  const { channelDetails, delegatees, aliasDetails: {aliasAddr, isAliasVerified} } = useSelector((state: any) => state.admin);
+  const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified} } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
 
   const dispatch = useDispatch();
 
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
-  const [aliasAddressFromContract, setAliasAddressFromContract] = React.useState(null);
+  const [aliasAddressFromContract, setAliasAddressFromContract] = useState(null);
+  const [channelDetailsLoading, setChannelDetailsLoading] = useState(true); 
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -59,13 +59,14 @@ const ChannelOwnerDashboard = () => {
     if (!onCoreNetwork || !channelDetails) return;
 
     if (channelDetails['aliasDetails']) {
-      if (!onCoreNetwork) return;
       const aliasDetails = channelDetails['aliasDetails'];
       const aliasChainId = aliasChainIdsMapping[CORE_CHAIN_ID];
       const caip = getCAIP(aliasChainId);
       if (aliasDetails[`${caip}:${aliasChainId}`]) {
         setAliasAddressFromContract(aliasDetails[`${caip}:${aliasChainId}`]);
       }
+    } else {
+      dispatch(setProcessingState(0));
     }
   }, []);
 
@@ -77,6 +78,7 @@ const ChannelOwnerDashboard = () => {
   }
 
   const fetchEthAccount = async (address: string) => {
+    if (aliasEthAddr) return aliasEthAddr;
     let ethAccount = await ChannelsDataStore.instance.getEthAddressFromAlias(address);
     if (ethAccount == "NULL") ethAccount = null;
 
@@ -86,22 +88,25 @@ const ChannelOwnerDashboard = () => {
   React.useEffect(() => {
     if (!onCoreNetwork || !aliasAddressFromContract || processingState === 0) return;
 
+    setChannelDetailsLoading(true);
     intervalID = setInterval(async () => {
       const { aliasAddress, aliasVerified } = await fetchChannelDetails(account);
       if (aliasAddress) {
         dispatch(setAliasAddress(aliasAddress));
         if (aliasVerified) {
-          dispatch(setProcessingState(0));
+          setChannelDetailsLoading(false);
           dispatch(setAliasVerified(true));
+          dispatch(setProcessingState(0));
         } else {
+          setChannelDetailsLoading(false);
           dispatch(setProcessingState(2));
           dispatch(setAliasVerified(false));
         }
       } else {
         if (processingState != 0 && processingState != 1)
           dispatch(setProcessingState(1));
+        setChannelDetailsLoading(false);
       }
-
     }, ALIAS_API_CALL_INTERVAL * 1000);
   }, [aliasAddressFromContract]);
 
@@ -114,17 +119,19 @@ const ChannelOwnerDashboard = () => {
     if (isAliasVerified || processingState === 0) return;
     (async function process() {
       const ethAccount = await fetchEthAccount(account);
-      setAliasEthAccount(ethAccount);
       if (ethAccount) {
+        dispatch(setAliasEthAddress(ethAccount));
+        setChannelDetailsLoading(false);
         const { aliasVerified } = await fetchChannelDetails(ethAccount);
         if (!aliasVerified) {
           dispatch(setProcessingState(3));
           dispatch(setAliasVerified(false));
         } else {
-          dispatch(setProcessingState(0));
           dispatch(setAliasVerified(true));
+          dispatch(setProcessingState(0));
         }
       } else {
+        setChannelDetailsLoading(false);
         dispatch(setProcessingState(0));
       }
     })()
@@ -133,19 +140,19 @@ const ChannelOwnerDashboard = () => {
   return (
     <Fragment>
       <Section>
-        {processingState === null &&
+        {channelDetailsLoading &&
           <ChannelLoadingMessage>
             Channel details are being loaded, please wait…
           </ChannelLoadingMessage>
         }
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && aliasEthAccount === null && processingState === 0 ? <CreateChannel /> : ""}
+          {!channelDetails && aliasEthAddr === null && !channelDetailsLoading ? <CreateChannel /> : ""}
           
           {/* {aliasEthAccount !== null && isAliasVerified === false && */}
           {processingState !== 0 && processingState !== null && (
             <ThemeProvider theme={theme}>
-              <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAccount} setAliasVerified={setAliasVerified} />
+              <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
             </ThemeProvider>
           )}
       
