@@ -129,7 +129,7 @@ export const getUser = async ({ did = '', wallet = '' }: { did?: string; wallet?
 }
 
 export const postMessage = async ({
-  fromWallet,
+  fromCAIP10,
   fromDID,
   toDID,
   messageContent,
@@ -139,7 +139,7 @@ export const postMessage = async ({
   sigType,
   encryptedSecret
 }: {
-  fromWallet: string
+  fromCAIP10: string
   fromDID: string
   toDID: string
   messageContent: string
@@ -155,7 +155,7 @@ export const postMessage = async ({
       'content-Type': 'application/json'
     },
     body: JSON.stringify({
-      fromWallet,
+      fromCAIP10,
       fromDID,
       toDID,
       messageContent,
@@ -174,7 +174,7 @@ export const postMessage = async ({
 }
 
 export const createUser = async ({
-  wallet,
+  caip10,
   did,
   publicKey,
   encryptedPrivateKey,
@@ -182,7 +182,7 @@ export const createUser = async ({
   signature,
   sigType
 }: {
-  wallet: string
+  caip10: string
   did: string
   publicKey: string
   encryptedPrivateKey: string
@@ -196,7 +196,7 @@ export const createUser = async ({
       'content-Type': 'application/json'
     },
     body: JSON.stringify({
-      wallet,
+      caip10,
       did,
       publicKey,
       encryptedPrivateKey,
@@ -261,7 +261,7 @@ export const approveIntent = async (
 export const createIntent = async ({
   toDID,
   fromDID,
-  fromWallet,
+  fromCAIP10,
   messageContent,
   messageType,
   signature,
@@ -271,7 +271,7 @@ export const createIntent = async ({
 }: {
   toDID: string
   fromDID: string
-  fromWallet: string
+  fromCAIP10: string
   messageContent: string
   messageType: string
   signature: string
@@ -289,7 +289,7 @@ export const createIntent = async ({
       body: JSON.stringify({
         toDID,
         fromDID,
-        fromWallet,
+        fromCAIP10,
         messageContent,
         messageType,
         signature,
@@ -308,7 +308,7 @@ export const createIntent = async ({
       body: JSON.stringify({
         toDID,
         fromDID,
-        fromWallet,
+        fromCAIP10,
         messageType,
         signature,
         encType
@@ -321,11 +321,11 @@ export const createIntent = async ({
 
 export const updateUser = async ({
   did,
-  wallet = '',
+  caip10 = '',
   profilePictureCID = ''
 }: {
   did: string
-  wallet?: string
+  caip10?: string
   profilePictureCID?: string
 }): Promise<User> => {
   const response: any = await fetch(BASE_URL + '/v1/w2w/users', {
@@ -335,7 +335,7 @@ export const updateUser = async ({
     },
     body: JSON.stringify({
       did,
-      wallet,
+      caip10,
       profilePictureCID
     })
   })

@@ -99,7 +99,7 @@ function App() {
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, did)
       const createdUser = await PushNodeClient.createUser({
-        wallet: caip10,
+        caip10,
         did: did.id,
         publicKey: keyPairs.publicKeyArmored,
         encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
@@ -110,7 +110,7 @@ function App() {
       setConnectedUser(createdUser)
     } else {
       if (!user.wallets.includes(caip10)) {
-        user = await PushNodeClient.updateUser({ did: did.id, wallet: caip10 })
+        user = await PushNodeClient.updateUser({ did: did.id, caip10 })
       }
       setConnectedUser(user)
     }
