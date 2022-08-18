@@ -177,7 +177,8 @@ function InboxPage({ loadTeaser, playTeaser }) {
 
   // fetch all the channels who have delegated to this account
   const fetchDelegators = () => {
-    getReq(`/channels/_getUserDelegations/eip155:42:0x778D3206374f8AC265728E18E3fE2Ae6b93E4ce4`)
+    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
       .then(async ({ data: delegators }) => {
         console.log(delegators);
         // if there are actual delegators
