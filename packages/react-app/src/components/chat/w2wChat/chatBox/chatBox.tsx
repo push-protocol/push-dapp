@@ -70,7 +70,7 @@ const ChatBox = (): JSX.Element => {
       if (messageFromIndexDB !== undefined) {
         msgIPFS = messageFromIndexDB.body
       } else {
-        const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID)
+        const messageFromIPFS: MessageIPFS = await PushNodeClient.getFromIPFS(messageCID)
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
         msgIPFS = messageFromIPFS
       }

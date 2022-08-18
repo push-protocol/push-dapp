@@ -3,6 +3,7 @@ import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'
 import * as AES from './aes'
 import { DID } from 'dids'
+import blockies from 'components/blockies'
 
 export const walletToCAIP10 = (account: string, chainId: number): string => {
   if (account.includes('eip155:1') || account.includes('eip155:42')) {
@@ -74,6 +75,10 @@ export const decryptAndVerifySignature = async ({
   })
   await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored })
   return AES.decrypt({ cipherText, secretKey })
+}
+
+export const createRandomProfilePicture = (wallet: string): string => {
+  return blockies.createDataURL({ seed: caip10ToWallet(wallet) })
 }
 
 export default {

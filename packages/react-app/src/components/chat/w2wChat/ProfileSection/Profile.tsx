@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react'
 import './Profile.css'
 import { AppContext, Context } from '../w2wIndex'
-import { uploadUserProfileImage } from '../../../../api/w2w'
+import { updateUser } from '../../../../api/w2w'
 import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
 import { IPFSHTTPClient } from 'ipfs-http-client'
 import { CID } from 'ipfs-http-client'
@@ -86,7 +86,7 @@ const Profile = (props: profilePropsType): JSX.Element => {
     const cid = await IPFSHelper.uploadImage(file)
     setProfile(INFURA_URL + `${cid}`)
     props.updateProfile(cid)
-    await uploadUserProfileImage({ did: did.id, imageCID: cid })
+    await updateUser({ did: did.id, profilePictureCID: cid })
   }
 
   return (

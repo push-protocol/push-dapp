@@ -9,7 +9,7 @@ const TOOLING_BASE_URL = envConfig.toolingApiUrl
  * @param {String} path e.g /feeds/get_feeds, this represents the route of the enpoint to call
  * @returns {Promise}
  */
-export const getReq = async path => {
+export const getReq = async (path) => {
   try {
     const response = await axios.get(BASE_URL + path)
     return response
@@ -52,3 +52,4 @@ export const toolingPostReq = async (path, obj) => {
 }
 
 export * from './w2w'
+export * from './ipfs'

@@ -35,13 +35,13 @@ const SearchBar = () => {
         if (web3.utils.isAddress(wordEntered)) {
           const caip10: string = w2wChatHelper.walletToCAIP10(searchedUser, chainId)
           setSearchedUser(caip10)
-          const profile = await PushNodeClient.getRandomProfile(caip10)
+          const profilePicture: string = w2wChatHelper.createRandomProfilePicture(caip10)
 
           const userCreated: User = {
             did: caip10,
             wallets: caip10,
             publicKey: 'temp',
-            profilePicture: profile.uniqueAvatar,
+            profilePicture: profilePicture,
             encryptedPrivateKey: 'temp',
             encryptionType: 'temp',
             signature: 'temp',
