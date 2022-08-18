@@ -10,7 +10,7 @@ import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 import SendNotifications from "components/SendNotifications";
-import { postReq } from "api";
+import { getReq,postReq } from "api";
 import {
   setCoreReadProvider,
   setCoreWriteProvider,
@@ -24,6 +24,7 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import  { Navigate } from 'react-router-dom'
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
@@ -275,38 +276,18 @@ function ChannelDashboardPage() {
       });
   };
 
-  // Check if a user is a channel or not
-  const checkUserForAlias = async () => {
-    // Check if account is admin or not and handle accordingly
-    const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-    if (aliasEth) {
-      // if an alias exists, check if its verified.
-      await postReq("/channels/getAliasVerification", {
-        aliasAddress: account,
-        op: "read",
-      }).then(({ data }) => {
-        // if it returns undefined then we need to let them know to verify their channel
-        console.log(data);
-        if (!data) {
-          setAliasVerified(null);
-          return;
+    // Check if a user is a channel or not
+    const checkUserForAlias = async () => {
+      // Check if account is admin or not and handle accordingly
+      const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+      await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+        if (data) {
+          setAliasEthAccount(data.channel);
+          setAliasVerified(data.is_alias_verified);
         }
-        const { status } = data;
-        setAliasVerified(status);
         return data;
       });
-    }
-  };
+    };
 
   // Render
   return (
