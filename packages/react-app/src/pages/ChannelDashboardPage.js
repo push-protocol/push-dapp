@@ -3,7 +3,7 @@ import ReactGA from "react-ga";
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { addresses, abis , envConfig } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
@@ -15,7 +15,7 @@ import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
-import { postReq } from "api";
+import { postReq, getReq } from "api";
 import {
   setCoreReadProvider,
   setCoreWriteProvider,
@@ -29,6 +29,7 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 
@@ -50,7 +51,6 @@ function ChannelDashboardPage() {
     epnsWriteProvider,
     epnsCommReadProvider,
   } = useSelector((state) => state.contracts);
-
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -83,38 +83,20 @@ function ChannelDashboardPage() {
     (async function init() {
       const coreProvider = onCoreNetwork
         ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
+        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-        if (aliasEth) {
-          // if an alias exists, check if its verified.
-          await postReq("/channels/getAliasVerification", {
-            aliasAddress: account,
-            op: "read",
-          }).then(({ data }) => {
-            // if it returns undefined then we need to let them know to verify their channel
-            console.log(data);
-            if (!data) {
-              setAliasVerified(null);
-              return;
+        const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(
+          ({ data }) => {
+            if (data) {
+              setAliasEthAccount(data.channel);
+              setAliasVerified(data.is_alias_verified);
             }
-            const { status } = data;
-            setAliasVerified(status);
             return data;
-          });
-        }
+          }
+        );
       }
       // if we are not on the core network then fetch if there is an alias address from the api
       // inititalise the read contract for the core network
@@ -160,8 +142,9 @@ function ChannelDashboardPage() {
    * Corresponding channel owned.
    */
   React.useEffect(() => {
-    (async()=>{
-      if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
+    (async () => {
+      if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider)
+        return;
       // Reset when account refreshes
       setChannelAdmin(false);
       dispatch(setUserChannelDetails(null));
@@ -169,14 +152,15 @@ function ChannelDashboardPage() {
       userClickedAt(INITIAL_OPEN_TAB);
       setChannelJson([]);
       // save push admin to global state
-      epnsReadProvider.pushChannelAdmin()
+      epnsReadProvider
+        .pushChannelAdmin()
         .then((response) => {
           dispatch(setPushAdmin(response));
         })
-        .catch(err => {
-          console.log({ err })
+        .catch((err) => {
+          console.log({ err });
         });
-  
+
       // EPNS Read Provider Set
       if (epnsReadProvider != null && epnsCommReadProvider != null) {
         // Instantiate Data Stores
@@ -191,12 +175,12 @@ function ChannelDashboardPage() {
           epnsCommReadProvider,
           chainId
         );
-        
+
         await checkUserForAlias();
         await checkUserForChannelOwnership();
         fetchDelegators();
       }
-    })()
+    })();
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   // handle user action at control center
@@ -206,24 +190,20 @@ function ChannelDashboardPage() {
 
   // fetch all the channels who have delegated to this account
   const fetchDelegators = () => {
-    postReq("/channels/getUserDelegations", {
-      delegateAddress: account,
-      blockchain: blockchainName[chainId],
-      op: "read",
-    })
+    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
       .then(async ({ data: delegators }) => {
         // if there are actual delegators
         // fetch basic information abouot the channels and store it to state
         if (delegators && delegators.channelOwners) {
           const channelInformationPromise = [
-            ...new Set([account, ...delegators.channelOwners])//make the accounts unique
+            ...new Set([account, ...delegators.channelOwners]), //make the accounts unique
           ].map((channelAddress) => {
             return ChannelsDataStore.instance
               .getChannelJsonAsync(channelAddress)
               .then((res) => ({ ...res, address: channelAddress }))
-              .catch(() => false)
-          }
-          );
+              .catch(() => false);
+          });
           const channelInformation = await Promise.all(
             channelInformationPromise
           );
@@ -252,8 +232,8 @@ function ChannelDashboardPage() {
       .then(async (response) => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(
-            ownerAccount
-          );
+          ownerAccount
+        );
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
         const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
           account
@@ -286,34 +266,14 @@ function ChannelDashboardPage() {
   // Check if a user is a channel or not
   const checkUserForAlias = async () => {
     // Check if account is admin or not and handle accordingly
-    const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-    if (aliasEth) {
-      // if an alias exists, check if its verified.
-      await postReq("/channels/getAliasVerification", {
-        aliasAddress: account,
-        op: "read",
-      }).then(({ data }) => {
-        // if it returns undefined then we need to let them know to verify their channel
-        console.log(data);
-        if (!data) {
-          setAliasVerified(null);
-          return;
-        }
-        const { status } = data;
-        setAliasVerified(status);
-        return data;
-      });
-    }
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+      if (data) {
+        setAliasEthAccount(data.channel);
+        setAliasVerified(data.is_alias_verified);
+      }
+      return data;
+    });
   };
 
   // Render
@@ -322,16 +282,16 @@ function ChannelDashboardPage() {
       <Interface>
         {controlAt === 0 && <Feedbox />}
         {controlAt === 1 && <ViewChannels />}
-        {controlAt === 2 && adminStatusLoaded ? 
-            <ChannelOwnerDashboard /> 
-            // <ChannelLoadingMessage>
-            //   Channel details are being loaded, please wait…
-            // </ChannelLoadingMessage>
-          : 
-            <ChannelLoadingMessage>
-              Channel details are being loaded, please wait…
-            </ChannelLoadingMessage>
-        }
+        {controlAt === 2 && adminStatusLoaded ? (
+          <ChannelOwnerDashboard />
+        ) : (
+          // <ChannelLoadingMessage>
+          //   Channel details are being loaded, please wait…
+          // </ChannelLoadingMessage>
+          <ChannelLoadingMessage>
+            Channel details are being loaded, please wait…
+          </ChannelLoadingMessage>
+        )}
         {controlAt === 3 && <Info />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
@@ -350,14 +310,14 @@ function ChannelDashboardPage() {
 
 // css style
 const ChannelLoadingMessage = styled.div`
-width: 100%;
-/* background-color: red; */
-padding: 40px;
-font-size: 1.5em;
-font-weight: 300;
-text-align: center;
-color: ${props => props.theme.color};
-`
+  width: 100%;
+  /* background-color: red; */
+  padding: 40px;
+  font-size: 1.5em;
+  font-weight: 300;
+  text-align: center;
+  color: ${(props) => props.theme.color};
+`;
 
 const Container = styled.div`
   flex: 1;

@@ -2,21 +2,22 @@ import React from "react";
 import moment from "moment";
 import { ethers } from "ethers";
 import { envConfig } from "@project/contracts";
-import styled , {useTheme} from "styled-components";
+import styled, { useTheme } from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
 import { Item } from "../primaries/SharedStyling";
-import { postReq } from "api";
+import { getReq, postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
-import {AiOutlineUser} from "react-icons/ai"
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { AiOutlineUser } from "react-icons/ai";
 
 const DATE_FORMAT = "MMMM Do YYYY";
 
 const networkName = {
   42: "Polygon Mumbai",
-  1: "Polygon Mainnet"
-}
+  1: "Polygon Mainnet",
+};
 
 export default function ChannelDetails() {
   const theme = useTheme();
@@ -52,9 +53,11 @@ export default function ChannelDetails() {
       const bn = channelDetails.channelStartBlock.toString();
 
       // using ethers jsonRpcProvider instead of library bcz channels are created on only core chain, that's why block can be fetched from that only
-      const block = await (new ethers.providers.JsonRpcProvider(envConfig.coreRPC)).getBlock(+bn);
-      const date = moment(block.timestamp * 1000);//convert from millisecs
-      setCreationDate(date.format(DATE_FORMAT))
+      const block = await new ethers.providers.JsonRpcProvider(
+        envConfig.coreRPC
+      ).getBlock(+bn);
+      const date = moment(block.timestamp * 1000); //convert from millisecs
+      setCreationDate(date.format(DATE_FORMAT));
     })();
   }, [channelDetails]);
 
@@ -62,29 +65,17 @@ export default function ChannelDetails() {
     if (!onCoreNetwork) return;
 
     (async function() {
-      await postReq("/channels/getAliasDetails", {
-        channel : account,
-        op: "read",
-      }).then(async ({ data }) => {
-        const aliasAccount = data;
-        console.log(aliasAccount);
-        if (aliasAccount.aliasAddress) {
-          const { aliasAddress } = aliasAccount;
-            await postReq("/channels/getAliasVerification", {
-              aliasAddress: aliasAddress,
-              op: "read",
-            }).then(({ data }) => {
-              if (!data) {
-                return;
-              }
-              const { status } = data;
-              setAliasVerified(status || false);
-              return data;
-            });
+      const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+      await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(
+        ({ data }) => {
+          if (data) {
+            setAliasVerified(data.is_alias_verified);
+          }
+          return data;
         }
-      });
+      );
     })();
-  }, [account , chainId]);
+  }, [account, chainId]);
 
   return (
     <ChannelDetailsWrapper>
@@ -98,41 +89,44 @@ export default function ChannelDetails() {
           </ChannelName>
           <ChannelStatusContainer>
             <Subscribers>
-              <img style={{paddingLeft:'6px'}} src="/subcount.svg" alt="subscount"></img>
+              <img
+                style={{ paddingLeft: "6px" }}
+                src="/subcount.svg"
+                alt="subscount"
+              ></img>
               <SubscribersCount>
                 {channelDetails.subscribers.length}
               </SubscribersCount>
             </Subscribers>
-            <div style={{width:'8px'}}/>
-            {
-              !aliasVerified 
-                ?
-                  <AliasStateText>
-                    Alias Network Setup Pending
-                  </AliasStateText>
-                :
-                  <ChanneStateText active={channelIsActive}>
-                    {channelIsActive
-                      ? "Active"
-                      : channelIsDeactivated
-                      ? "Deactivated"
-                      : "Blocked"}
-                  </ChanneStateText>
-            }
+            <div style={{ width: "8px" }} />
+            {!aliasVerified ? (
+              <AliasStateText>Alias Network Setup Pending</AliasStateText>
+            ) : (
+              <ChanneStateText active={channelIsActive}>
+                {channelIsActive
+                  ? "Active"
+                  : channelIsDeactivated
+                  ? "Deactivated"
+                  : "Blocked"}
+              </ChanneStateText>
+            )}
           </ChannelStatusContainer>
-          <Date>
-            {creationDate && <>Created {creationDate}</>}
-          </Date>
+          <Date>{creationDate && <>Created {creationDate}</>}</Date>
         </Details>
       </SectionTop>
 
       <SectionDes>{channelDetails.info}</SectionDes>
-      
-      {aliasVerified === false &&
-        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A",marginTop:"18px" }}>
-          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+
+      {aliasVerified === false && (
+        <Item
+          size="20px"
+          align="flex-start"
+          style={{ fontWeight: 800, color: "#D6097A", marginTop: "18px" }}
+        >
+          Please verify the Channel Alias Address to use the Channel on{" "}
+          {networkName[chainId]} Network.
         </Item>
-      }
+      )}
       <SectionDate>
         {canVerify && (
           <Verified>
@@ -167,11 +161,11 @@ const ImageSection = styled.img`
 `;
 
 const ChannelStatusContainer = styled.div`
-  display:flex;
-  align-items:center;
-  justify-content:start;
-  margin-bottom:8px;
-`
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  margin-bottom: 8px;
+`;
 
 const VerifyImage = styled.img`
   width: 20px;
@@ -194,34 +188,33 @@ const VerifyingName = styled.div``;
 const Subscribers = styled.div`
   width: 58px;
   height: 28px;
-  background: #FFDBF0;
-  color: #CF1C84;
+  background: #ffdbf0;
+  color: #cf1c84;
   border-radius: 25px;
   display: flex;
-  align-items:center;
-  justify-content:center;
-  
+  align-items: center;
+  justify-content: center;
 `;
 
 const StateText = styled.div`
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
   line-height: 150%;
   display: flex;
   align-items: center;
-  padding:2px 12px;
-  border-radius:16px;
+  padding: 2px 12px;
+  border-radius: 16px;
   height: 28px;
   align-self: center;
   background-color: pink;
-`
+`;
 
 const ChanneStateText = styled(StateText)`
-  color: #2DBD81;
+  color: #2dbd81;
   color: ${(props) => (props.active ? "#2DBD81" : "red")};
-  background-color: #C6EFD1;
+  background-color: #c6efd1;
   ${(props) =>
     props.active &&
     `
@@ -239,30 +232,28 @@ const ChanneStateText = styled(StateText)`
 `;
 
 const AliasStateText = styled(StateText)`
-  color: #E3B61C;
-  background-color: #E9EEC4;
+  color: #e3b61c;
+  background-color: #e9eec4;
   &::before {
-      width:16px;
-      height: 16px;
-      background: #E3B61C;
-      border-radius: 50%;
-      content: "";
-      display: inline-flex;
-      align-items: center;
-      margin-right: 6px;
+    width: 16px;
+    height: 16px;
+    background: #e3b61c;
+    border-radius: 50%;
+    content: "";
+    display: inline-flex;
+    align-items: center;
+    margin-right: 6px;
   }
-    
 `;
 
 const SubscribersCount = styled.span`
   margin-top: 0px;
   margin-left: 6px;
   width: 20px;
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;
-;
 `;
 
 const Details = styled.div`
@@ -294,13 +285,13 @@ const ChannelName = styled.div`
   display: flex;
   flex-direction: row;
   margin-right: 8px;
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 700;
   font-size: 30px;
   line-height: 150%;
   height: 45px;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
 `;
 
 const SectionDate = styled.div`
@@ -319,7 +310,7 @@ const SectionDate = styled.div`
 const SectionDes = styled.div`
   letter-spacing: 0.1em;
   text-transform: none;
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 500;
   font-size: 16px;

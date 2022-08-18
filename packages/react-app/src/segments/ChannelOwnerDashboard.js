@@ -10,8 +10,9 @@ import AliasVerificationModal from "components/AliasVerificationModal";
 import { useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
-import { postReq } from "api";
+import { postReq, getReq } from "api";
 import { ThemeProvider, useTheme } from "styled-components";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const networkName = {
   80001: "Polygon Mumbai",
@@ -38,33 +39,14 @@ const ChannelOwnerDashboard = () => {
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
+        const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+          if (data) {
+            setAliasEthAccount(data.channel);
+            setAliasVerified(data.is_alias_verified);
           }
           return data;
         });
-        if (aliasEth) {
-          // if an alias exists, check if its verified.
-          await postReq("/channels/getAliasVerification", {
-            aliasAddress: account,
-            op: "read",
-          }).then(({ data }) => {
-            console.log(data);
-            // if it returns undefined then we need to let them know to verify their channel
-            if (!data) {
-              setAliasVerified(null);
-              return;
-            }
-            const { status } = data;
-            setAliasVerified(status);
-            return data;
-          });
-        }
       }
     })();
     }, [account, chainId]);
