@@ -15,12 +15,13 @@ import {
   updateTopNotifications
 } from "redux/slices/spamSlice";
 import { cacheSubscribe } from "redux/slices/channelSlice";
-import { postReq } from "api";
+import { getReq, postReq } from "api";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { ThemeProvider } from "styled-components";
 import CryptoHelper from "helpers/CryptoHelper";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -269,14 +270,11 @@ function SpamBox({ currentTab }) {
 
   const fetchAliasAddress = async (channelAddress) => {
     if (channelAddress === null) return;
-    const ethAlias = await postReq("/channels/getAliasDetails", {
-      channel: channelAddress,
-      op: "read",
-    }).then(({ data }) => {
-      console.log({ data });
+    const userAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
+    const ethAlias = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
       let aliasAccount;
       if (data) {
-        aliasAccount = data.aliasAddress
+        aliasAccount = data.alias_address;
       }
       return aliasAccount;
     });
@@ -286,14 +284,11 @@ function SpamBox({ currentTab }) {
 
   const fetchEthAddress = async (channelAddress) => {
     if (channelAddress === null) return;
-    const aliasEth = await postReq("/channels/getCoreAddress", {
-      aliasAddress: channelAddress,
-      op: "read",
-    }).then(({ data }) => {
-      console.log({ data });
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    const aliasEth = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
       let ethAccount;
       if (data) {
-        ethAccount = data.ethAddress
+        ethAccount = data.channel;
       }
       return ethAccount;
     });
