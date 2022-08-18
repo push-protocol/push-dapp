@@ -4,7 +4,12 @@ import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
 
-const BASE_URL = envConfig.apiUrl
+let BASE_URL = envConfig.apiUrl
+if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+  BASE_URL = envConfig.w2wApiUrl
+} else {
+  BASE_URL = envConfig.apiUrl
+}
 
 export interface Feeds {
   // This property contains all the info to be displayed on the sidebar for the other peer's information
@@ -32,6 +37,7 @@ export interface User {
   signature: string
   sigType: string
   about: string | null
+  name: string | null
   numMsg: number
   allowedNumMsg: number
   linkedListHash?: string | null
@@ -89,20 +95,25 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
   }
 }
 
-export const getUser = async ({ did, wallet }: { did: string; wallet: string }): Promise<User> => {
+export const getUser = async ({ did = '', wallet = '' }: { did?: string; wallet?: string }): Promise<User> => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
     try {
-      const response = await fetch(BASE_URL + '/v1/w2w/getUser', {
-        method: 'POST',
+      if (did && wallet) {
+        throw new Error("Both properties can't be at the same time")
+      }
+      let path = '/v1/w2w/users'
+      if (did) {
+        path += `?did=${did}`
+      } else if (wallet) {
+        path += `?wallet=${wallet}`
+      }
+      const response = await fetch(BASE_URL + path, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          did,
-          wallet
-        })
+        }
       })
       const data: User = await response.json()
       return data

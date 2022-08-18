@@ -6863,12 +6863,12 @@ blob-to-it@^1.0.1:
 
 blockies-identicon@0.1.0:
   version "0.1.0"
-  resolved "https://registry.npmjs.org/blockies-identicon/-/blockies-identicon-0.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/blockies-identicon/-/blockies-identicon-0.1.0.tgz#d0b2fd221a18f09c9adc606de8c1adb73ac50638"
   integrity sha512-gjm7IfqMbJuFKxtoFeeVC5inZgSRsyzVzlbwAqZxb5B/TU88BcEyyj3vOlcfClYCSLzTBfcogM45xU9otIoeaQ==
 
 blockies@0.0.2:
   version "0.0.2"
-  resolved "https://registry.npmjs.org/blockies/-/blockies-0.0.2.tgz"
+  resolved "https://registry.yarnpkg.com/blockies/-/blockies-0.0.2.tgz#22ad58da4f6b382bc79bf4386c5820c70047e4ed"
   integrity sha512-D9kUW071jJxjp+8w99Bcf7TxJAnhoNfglLHAVHn2dmacbZcULCq4Zi2w8/NZpPQ8lsiX1E+LiEhZITJhxNmo6g==
 
 blockstore-core@^1.0.0, blockstore-core@^1.0.2:
@@ -7138,6 +7138,13 @@ browserify-sign@^4.0.0:
     parse-asn1 "^5.1.5"
     readable-stream "^3.6.0"
     safe-buffer "^5.2.0"
+
+browserify-zlib@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/browserify-zlib/-/browserify-zlib-0.2.0.tgz#2869459d9aa3be245fe8fe2ca1f46e2e7f54d73f"
+  integrity sha512-Z942RysHXmJrhqk88FmKBVq/v5tqmSkDz7p54G/MGyjMnCFFnC79XWNbg+Vta8W6Wb2qtSZTSxIGkJrRpCFEiA==
+  dependencies:
+    pako "~1.0.5"
 
 browserslist@4.14.6:
   version "4.14.6"
@@ -17822,7 +17829,7 @@ p-try@^2.0.0, p-try@^2.2.0:
   resolved "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-pako@^1.0.2:
+pako@^1.0.2, pako@~1.0.5:
   version "1.0.11"
   resolved "https://registry.npmjs.org/pako/-/pako-1.0.11.tgz"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==

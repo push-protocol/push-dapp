@@ -48,7 +48,7 @@ export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
-  setSearchedUser: any
+  setSearchedUser: (searched: string) => void
   searchedUser: string
   setChat: (feed: Feeds) => void
   connectedUser: User
@@ -94,7 +94,7 @@ function App() {
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
     const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
     setDid(did)
-    let user: User = await PushNodeClient.getUser({ did: did.id, wallet: '' })
+    let user: User = await PushNodeClient.getUser({ did: did.id })
     if (!user) {
       const keyPairs = await generateKeyPair()
       const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, did)
@@ -149,7 +149,6 @@ function App() {
         ) : (
           <div className="w2wIndexLoaderContainer">
             <Loader className="w2wLoader" type="Oval" />
-            <p>Fetching Did</p>
           </div>
         )}
       </div>
