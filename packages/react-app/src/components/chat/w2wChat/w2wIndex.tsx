@@ -92,7 +92,7 @@ function App() {
     const ceramic: CeramicClient = createCeramic()
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account)
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
-    const caip10: string = w2wHelper.walletToCAIP10(account, chainId) // the useState does not update state immediately
+    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId }) // the useState does not update state immediately
     setDid(did)
     let user: User = await PushNodeClient.getUser({ did: did.id })
     if (!user) {

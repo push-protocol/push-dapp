@@ -20,11 +20,11 @@ const SearchBar = () => {
   const provider = new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a')
 
   const searchUser = async (searchedUserInput: string): Promise<void> => {
-    searchedUserInput = w2wChatHelper.caip10ToWallet(searchedUser)
+    searchedUserInput = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId })
     let filteredData: User
     setHasUserBeenSearched(true)
     if (searchedUserInput.length) {
-      filteredData = await PushNodeClient.getUser({ wallet: searchedUserInput })
+      filteredData = await PushNodeClient.getUser({ caip10: searchedUserInput })
       if (filteredData !== null) {
         setFilteredUserData([filteredData])
       }
@@ -32,7 +32,7 @@ const SearchBar = () => {
       else {
         var web3 = new Web3(provider)
         if (web3.utils.isAddress(searchedUserInput)) {
-          const caip10: string = w2wChatHelper.walletToCAIP10(searchedUserInput, chainId)
+          const caip10: string = w2wChatHelper.walletToCAIP10({ account: searchedUserInput, chainId })
           const profilePicture = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==`
 
           const userCreated: User = {

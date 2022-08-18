@@ -95,19 +95,19 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
   }
 }
 
-export const getUser = async ({ did = '', wallet = '' }: { did?: string; wallet?: string }): Promise<User> => {
+export const getUser = async ({ did = '', caip10 = '' }: { did?: string; caip10?: string }): Promise<User> => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
     try {
-      if (did && wallet) {
+      if (did && caip10) {
         throw new Error("Both properties can't be at the same time")
       }
       let path = '/v1/w2w/users'
       if (did) {
         path += `?did=${did}`
-      } else if (wallet) {
-        path += `?wallet=${wallet}`
+      } else if (caip10) {
+        path += `?caip10=${caip10}`
       }
       const response = await fetch(BASE_URL + path, {
         method: 'GET',

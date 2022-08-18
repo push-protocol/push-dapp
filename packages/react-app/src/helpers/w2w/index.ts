@@ -4,7 +4,7 @@ import * as Ceramic from './ceramic'
 import * as AES from './aes'
 import { DID } from 'dids'
 
-export const walletToCAIP10 = (account: string, chainId: number): string => {
+export const walletToCAIP10 = ({ account, chainId }: { account: string; chainId: number }): string => {
   if (account.includes('eip155:1') || account.includes('eip155:42')) {
     return account
   }
