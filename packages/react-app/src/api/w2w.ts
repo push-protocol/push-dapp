@@ -4,7 +4,7 @@ import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
 
-const BASE_URL = envConfig.w2wApiUrl
+const BASE_URL = envConfig.apiUrl
 
 export interface Feeds {
   // This property contains all the info to be displayed on the sidebar for the other peer's information
