@@ -23,7 +23,6 @@ const ChatMainSection = (): JSX.Element => {
         <TextInput
           type="text"
           placeholder="Type your message"
-          onChange={(event): void => setMessage(event.target.value)}
         />
         <Icon>
           <img src="/svg/chats/gif.svg" height="18px" width="22px" />
@@ -322,6 +321,7 @@ const TypeBarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap:10px;
   bottom: 9px;
   left: 9px;
   right: 9px;
