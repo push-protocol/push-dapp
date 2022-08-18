@@ -1,7 +1,7 @@
 import { CID, create, IPFSHTTPClient } from 'ipfs-http-client'
 
 export interface MessageIPFS {
-  fromWallet: string
+  fromCAIP10: string
   fromDID: string
   toDID: string
   messageType: string

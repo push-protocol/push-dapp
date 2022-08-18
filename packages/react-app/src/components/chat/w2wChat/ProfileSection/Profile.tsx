@@ -19,6 +19,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import { showCharacters } from './helpers'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
+// @ts-ignore
 import { envConfig } from '@project/contracts'
 
 const INFURA_URL = envConfig.infuraApiUrl
