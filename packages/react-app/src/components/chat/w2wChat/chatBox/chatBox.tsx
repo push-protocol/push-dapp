@@ -178,7 +178,7 @@ const ChatBox = (): JSX.Element => {
     let msg: MessageIPFS
     try {
       msg = {
-        fromCAIP10: account,
+        fromCAIP10: walletToCAIP10({ account, chainId }),
         fromDID: fromDid,
         toDID: toDid,
         messageContent: message,
@@ -200,7 +200,7 @@ const ChatBox = (): JSX.Element => {
         did
       })
       const savedMsg: MessageIPFS | string = await PushNodeClient.postMessage({
-        fromCAIP10: account,
+        fromCAIP10: walletToCAIP10({ account, chainId }),
         fromDID: fromDid,
         toDID: toDid,
         messageContent: cipherText,
@@ -252,7 +252,7 @@ const ChatBox = (): JSX.Element => {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
         if (!user) {
-          const caip10: string = walletToCAIP10(searchedUser, chainId)
+          const caip10: string = walletToCAIP10({ account: searchedUser, chainId })
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -292,7 +292,7 @@ const ChatBox = (): JSX.Element => {
         const msg: MessageIPFS | string = await PushNodeClient.createIntent({
           toDID: currentChat.did,
           fromDID: did.id,
-          fromCAIP10: account,
+          fromCAIP10: walletToCAIP10({ account, chainId }),
           messageContent,
           messageType,
           signature,
