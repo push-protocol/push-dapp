@@ -1209,7 +1209,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                       >
-                                    <Label style={{color:theme.color}}>Media URL</Label>
+                                    <Label style={{color:theme.color}}>CTA Link</Label>
 
                                           <Input
                                             required
