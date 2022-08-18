@@ -4,7 +4,12 @@ import { envConfig } from '@project/contracts'
 import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
 
-const BASE_URL = envConfig.apiUrl
+let BASE_URL = envConfig.apiUrl
+if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+  BASE_URL = envConfig.w2wApiUrl
+} else {
+  BASE_URL = envConfig.apiUrl
+}
 
 export interface Feeds {
   // This property contains all the info to be displayed on the sidebar for the other peer's information
@@ -32,16 +37,18 @@ export interface User {
   signature: string
   sigType: string
   about: string | null
+  name: string | null
   numMsg: number
   allowedNumMsg: number
   linkedListHash?: string | null
 }
 
+// Done
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   let retry = 0
   for (let i = 0; i < 3; i++) {
     try {
-      const response = await fetch(BASE_URL + '/w2w/inbox/did/' + did, {
+      const response = await fetch(BASE_URL + '/v1/w2w/inbox/did/' + did, {
         method: 'POST'
       })
       if (response.status >= 500) continue
@@ -58,12 +65,14 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
   }
 }
 
+// TODO: Delete this function since it's calling the same endpoint as the `getInbox` above.
+// Done
 export const getIntents = async (did: string): Promise<Feeds[]> => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
     try {
-      const response = await fetch(BASE_URL + '/w2w/inbox/did', {
+      const response = await fetch(BASE_URL + '/v1/w2w/inbox/did', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -86,20 +95,25 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
   }
 }
 
-export const getUser = async ({ did, wallet }: { did: string; wallet: string }): Promise<User> => {
+export const getUser = async ({ did = '', wallet = '' }: { did?: string; wallet?: string }): Promise<User> => {
   let retry = 0
 
   for (let i = 0; i < 3; i++) {
     try {
-      const response = await fetch(BASE_URL + '/w2w/getUser', {
-        method: 'POST',
+      if (did && wallet) {
+        throw new Error("Both properties can't be at the same time")
+      }
+      let path = '/v1/w2w/users'
+      if (did) {
+        path += `?did=${did}`
+      } else if (wallet) {
+        path += `?wallet=${wallet}`
+      }
+      const response = await fetch(BASE_URL + path, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          did,
-          wallet
-        })
+        }
       })
       const data: User = await response.json()
       return data
@@ -112,19 +126,6 @@ export const getUser = async ({ did, wallet }: { did: string; wallet: string }):
       continue
     }
   }
-}
-
-export const uploadUserProfileImage = async ({ did, imageCID }: { did: string; imageCID: string }): Promise<void> => {
-  await fetch(BASE_URL + '/w2w/updateUser', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      did,
-      imageCID
-    })
-  })
 }
 
 export const postMessage = async ({
@@ -148,7 +149,7 @@ export const postMessage = async ({
   sigType: string
   encryptedSecret: string
 }): Promise<MessageIPFS | string> => {
-  const response = await fetch(BASE_URL + '/w2w/sendMessage', {
+  const response = await fetch(BASE_URL + '/v1/w2w/messages', {
     method: 'POST',
     headers: {
       'content-Type': 'application/json'
@@ -189,7 +190,7 @@ export const createUser = async ({
   signature: string
   sigType: string
 }): Promise<User> => {
-  const response = await fetch(BASE_URL + '/w2w/createUser', {
+  const response = await fetch(BASE_URL + '/v1/w2w/users', {
     method: 'POST',
     headers: {
       'content-Type': 'application/json'
@@ -215,7 +216,7 @@ export const getLatestThreadhash = async ({
   firstDID: string
   secondDID: string
 }): Promise<string> => {
-  const response = await fetch(BASE_URL + '/w2w/getMessages', {
+  const response = await fetch(BASE_URL + '/v1/w2w/getMessages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -228,8 +229,8 @@ export const getLatestThreadhash = async ({
   if (response.status === 400) {
     throw new Error('Error fetching threadhash')
   }
-  const data: string = await response.json()
-  return data
+  const data: { linkedlist: string } = await response.json()
+  return data.linkedlist
 }
 
 export const approveIntent = async (
@@ -239,7 +240,7 @@ export const approveIntent = async (
   signature: string,
   sigType: string
 ): Promise<void> => {
-  const response = await fetch(BASE_URL + '/w2w/updateIntent', {
+  const response = await fetch(BASE_URL + '/v1/w2w/intents', {
     method: 'PUT',
     headers: {
       'content-Type': 'application/json'
@@ -280,7 +281,7 @@ export const createIntent = async ({
 }): Promise<MessageIPFS | string> => {
   let data: MessageIPFS | string
   if (messageContent.length > 0) {
-    const response = await fetch(BASE_URL + '/w2w/createIntent', {
+    const response = await fetch(BASE_URL + '/v1/w2w/intents', {
       method: 'POST',
       headers: {
         'content-Type': 'application/json'
@@ -299,7 +300,7 @@ export const createIntent = async ({
     })
     data = await response.json()
   } else {
-    const response = await fetch(BASE_URL + '/w2w/createIntent', {
+    const response = await fetch(BASE_URL + '/v1/w2w/intents', {
       method: 'POST',
       headers: {
         'content-Type': 'application/json'
@@ -318,42 +319,24 @@ export const createIntent = async ({
   return data
 }
 
-export const getRandomProfile = async (wallet: string): Promise<{ uniqueName: string; uniqueAvatar: string }> => {
-  const response = await fetch(BASE_URL + '/w2w/getRandomProfile', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      wallet
-    })
-  })
-  const data: { uniqueName: string; uniqueAvatar: string } = await response.json()
-  return data
-}
-
-export const getFromIPFS = async (cid: string): Promise<MessageIPFS> => {
-  const response: any = await fetch(BASE_URL + '/w2w/getIPFS', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      cid
-    })
-  })
-  return await response.json()
-}
-
-export const updateUser = async ({ did, wallet = '' }: { did: string; wallet: string }): Promise<User> => {
-  const response: any = await fetch(BASE_URL + '/w2w/updateUser', {
-    method: 'POST',
+export const updateUser = async ({
+  did,
+  wallet = '',
+  profilePictureCID = ''
+}: {
+  did: string
+  wallet?: string
+  profilePictureCID?: string
+}): Promise<User> => {
+  const response: any = await fetch(BASE_URL + '/v1/w2w/users', {
+    method: 'PUT',
     headers: {
       'content-Type': 'application/json'
     },
     body: JSON.stringify({
       did,
-      wallet
+      wallet,
+      profilePictureCID
     })
   })
   return await response.json()

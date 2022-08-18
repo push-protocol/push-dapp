@@ -11,6 +11,7 @@ import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import { approveIntent, Feeds } from '../../../../api'
 import { intitializeDb } from '../w2wIndexeddb'
+import { caip10ToWallet } from 'helpers/w2w'
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -131,7 +132,7 @@ const IntentFeed = (): JSX.Element => {
               Approve Intent
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              You have received an intent from {receivedIntentFrom}.
+              You have received an intent from {receivedIntentFrom ? caip10ToWallet(receivedIntentFrom) : ''}.
             </Typography>
             <br />
             <Button

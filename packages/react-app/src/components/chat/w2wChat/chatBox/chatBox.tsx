@@ -37,9 +37,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, setChat, searchedUser, connectedUser, intents }: AppContext = useContext<
-    AppContext
-  >(Context)
+  const { currentChat, viewChatBox, did, searchedUser, connectedUser, intents }: AppContext = useContext<AppContext>(
+    Context
+  )
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -70,7 +70,7 @@ const ChatBox = (): JSX.Element => {
       if (messageFromIndexDB !== undefined) {
         msgIPFS = messageFromIndexDB.body
       } else {
-        const messageFromIPFS: MessageIPFS = await IPFSHelper.get(messageCID)
+        const messageFromIPFS: MessageIPFS = await PushNodeClient.getFromIPFS(messageCID)
         await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
         msgIPFS = messageFromIPFS
       }
@@ -249,7 +249,7 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       if (currentChat.intent === null || currentChat.intent === '' || currentChat.intent === 'Pending') {
-        const user: User = await PushNodeClient.getUser({ did: currentChat.did, wallet: '' })
+        const user: User = await PushNodeClient.getUser({ did: currentChat.did })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
         if (!user) {
           const caip10: string = walletToCAIP10(searchedUser, chainId)
