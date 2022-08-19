@@ -15,7 +15,7 @@ import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
-import { postReq } from "api";
+import { postReq, getReq } from "api";
 import {
   setCoreReadProvider,
   setCoreWriteProvider,
@@ -30,6 +30,8 @@ import {
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
 import ChannelLoading from "components/ChannelLoading";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 
@@ -87,34 +89,14 @@ function ChannelDashboardPage() {
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
+        const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+          if (data) {
+            setAliasEthAccount(data.channel);
+            setAliasVerified(data.is_alias_verified);
           }
           return data;
         });
-        if (aliasEth) {
-          // if an alias exists, check if its verified.
-          await postReq("/channels/getAliasVerification", {
-            aliasAddress: account,
-            op: "read",
-          }).then(({ data }) => {
-            // if it returns undefined then we need to let them know to verify their channel
-            console.log(data);
-            if (!data) {
-              setAliasVerified(null);
-              return;
-            }
-            const { status } = data;
-            setAliasVerified(status);
-            return data;
-          });
-        }
       }
       // if we are not on the core network then fetch if there is an alias address from the api
       // inititalise the read contract for the core network
@@ -204,11 +186,8 @@ function ChannelDashboardPage() {
 
   // fetch all the channels who have delegated to this account
   const fetchDelegators = () => {
-    postReq("/channels/getUserDelegations", {
-      delegateAddress: account,
-      blockchain: blockchainName[chainId],
-      op: "read",
-    })
+    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
       .then(async ({ data: delegators }) => {
         // if there are actual delegators
         // fetch basic information abouot the channels and store it to state
@@ -284,34 +263,14 @@ function ChannelDashboardPage() {
   // Check if a user is a channel or not
   const checkUserForAlias = async () => {
     // Check if account is admin or not and handle accordingly
-    const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-    if (aliasEth) {
-      // if an alias exists, check if its verified.
-      await postReq("/channels/getAliasVerification", {
-        aliasAddress: account,
-        op: "read",
-      }).then(({ data }) => {
-        // if it returns undefined then we need to let them know to verify their channel
-        console.log(data);
-        if (!data) {
-          setAliasVerified(null);
-          return;
-        }
-        const { status } = data;
-        setAliasVerified(status);
-        return data;
-      });
-    }
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+      if (data) {
+        setAliasEthAccount(data.channel);
+        setAliasVerified(data.is_alias_verified);
+      }
+      return data;
+    });
   };
 
   // Render
