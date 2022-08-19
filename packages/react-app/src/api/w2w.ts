@@ -25,6 +25,7 @@ export interface Feeds {
   intentSentBy: string | null
   intentTimestamp: Date
   combinedDID: string
+  cid: string
 }
 
 export interface User {
@@ -43,13 +44,18 @@ export interface User {
   linkedListHash?: string | null
 }
 
+export interface MessageIPFSWithCID extends MessageIPFS {
+  cid: string
+}
+
 // Done
 export const getInbox = async (did: string): Promise<Feeds[]> => {
   let retry = 0
   for (let i = 0; i < 3; i++) {
     try {
-      const response = await fetch(BASE_URL + '/v1/w2w/inbox/did/' + did, {
-        method: 'POST'
+      const path = BASE_URL + '/v1/w2w/users/' + did + '/messages'
+      const response = await fetch(path, {
+        method: 'GET'
       })
       if (response.status >= 500) continue
       const data: Feeds[] = await response.json()
@@ -148,7 +154,7 @@ export const postMessage = async ({
   encType: string
   sigType: string
   encryptedSecret: string
-}): Promise<MessageIPFS | string> => {
+}): Promise<MessageIPFSWithCID | string> => {
   const response = await fetch(BASE_URL + '/v1/w2w/messages', {
     method: 'POST',
     headers: {
@@ -169,7 +175,7 @@ export const postMessage = async ({
   if (response.status > 299) {
     throw new Error('Error posting message')
   }
-  const data: MessageIPFS | string = await response.json()
+  const data: MessageIPFSWithCID | string = await response.json()
   return data
 }
 
@@ -207,30 +213,6 @@ export const createUser = async ({
   })
   const data: User = await response.json()
   return data
-}
-
-export const getLatestThreadhash = async ({
-  firstDID,
-  secondDID
-}: {
-  firstDID: string
-  secondDID: string
-}): Promise<string> => {
-  const response = await fetch(BASE_URL + '/v1/w2w/getMessages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      firstDID,
-      secondDID
-    })
-  })
-  if (response.status === 400) {
-    throw new Error('Error fetching threadhash')
-  }
-  const data: { linkedlist: string } = await response.json()
-  return data.linkedlist
 }
 
 export const approveIntent = async (

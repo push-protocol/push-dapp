@@ -27,7 +27,7 @@ import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { DID } from 'dids'
-import { Feeds, User } from '../../../../api'
+import { Feeds, MessageIPFSWithCID, User } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -199,7 +199,7 @@ const ChatBox = (): JSX.Element => {
         toPublicKeyArmored: currentChat.publicKey,
         did
       })
-      const savedMsg: MessageIPFS | string = await PushNodeClient.postMessage({
+      const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
         fromDID: fromDid,
         toDID: toDid,
@@ -214,13 +214,7 @@ const ChatBox = (): JSX.Element => {
       if (typeof savedMsg === 'string') {
         toast.error(savedMsg, ToastPosition)
       } else {
-        // const inbox = await fetchInbox(did)
-        // renderInbox(inbox)
-        const latesThreadhash: string = await PushNodeClient.getLatestThreadhash({
-          firstDID: currentChat.did,
-          secondDID: did.id
-        })
-        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', latesThreadhash, savedMsg, 'cid')
+        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', savedMsg.cid, savedMsg, 'cid')
       }
     } catch (error) {
       console.log(error)
