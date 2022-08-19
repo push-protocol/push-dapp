@@ -1,9 +1,8 @@
 import React from 'react'
-import ReactGA from 'react-ga'
-import { Navigate, Routes, Route, Link } from 'react-router-dom'
+import { Navigate, Routes, Route } from 'react-router-dom'
 
 import styled from 'styled-components'
-import { Content, Item, ItemH, Span, H2, B, Anchor } from 'components/SharedStyling'
+import { Item, Anchor } from 'components/SharedStyling'
 
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
@@ -12,6 +11,7 @@ import { VscClose } from 'react-icons/vsc'
 
 import InboxPage from 'pages/InboxPage'
 import ChatPage from 'pages/ChatPage'
+import NewChatPage from 'pages/ChatPageNew'
 import SpamPage from 'pages/SpamPage'
 import ViewChannelsPage from 'pages/ViewChannelsPage'
 import ChannelDashboardPage from 'pages/ChannelDashboardPage'
@@ -36,7 +36,7 @@ function MasterInterfacePage() {
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false)
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null)
 
-  const runYoutube = flag => {
+  const runYoutube = (flag) => {
     setPlayTeaserVideo(flag)
     console.log('here')
   }
@@ -48,6 +48,7 @@ function MasterInterfacePage() {
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
           <Route path="chat" element={<ChatPage />} />
+          <Route path="chat-new" element={<NewChatPage />} />
           <Route
             path="channels"
             element={<ViewChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
@@ -86,7 +87,7 @@ function MasterInterfacePage() {
           <PreviewBG
             href="#"
             bg="transparent"
-            onClick={e => {
+            onClick={(e) => {
               e.preventDefault()
               setPlayTeaserVideo(!playTeaserVideo)
             }}
@@ -97,7 +98,7 @@ function MasterInterfacePage() {
                 bg="transparent"
                 hover="transparent"
                 hoverBG="transparent"
-                onClick={e => {
+                onClick={(e) => {
                   e.preventDefault()
                   setPlayTeaserVideo(!playTeaserVideo)
                 }}
@@ -127,8 +128,8 @@ function MasterInterfacePage() {
 const Container = styled.div`
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${(props) => props.theme.interfaceTopPadding});
+  padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px;
   align-items: stretch;
 `
 
@@ -139,7 +140,7 @@ const Interface = styled(Item)`
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  border: 1px solid ${props => props.theme.interfaceBorder};
+  border: 1px solid ${(props) => props.theme.interfaceBorder};
 
   margin: 15px 15px 15px 0px;
   overflow: hidden;

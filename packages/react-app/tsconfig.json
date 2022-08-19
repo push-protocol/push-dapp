@@ -28,6 +28,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/segments/ViewChannels.jsx",
-    "src/components/SearchFilter.jsx"
-, "src/components/chat/w2wChat/indexeddb.js"  ]
+    "src/components/SearchFilter.jsx",
+    "src/components/chat/w2wChat/indexeddb.js"
+  ]
 }

@@ -1,34 +1,32 @@
-import React, {useState} from "react";
-import ReactGA from "react-ga";
+import React, { useState } from 'react'
+import ReactGA from 'react-ga'
 
-import { Web3Provider } from "ethers/providers";
-import { useWeb3React } from "@web3-react/core";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener } from "hooks";
-import { injected, walletconnect, portis, ledger } from "connectors";
-import { envConfig } from "@project/contracts";
-import Joyride, { ACTIONS, CallBackProps, EVENTS, STATUS, Step } from "react-joyride";
+import { Web3Provider } from 'ethers/providers'
+import { useWeb3React } from '@web3-react/core'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { useEagerConnect, useInactiveListener } from 'hooks'
+import { injected, walletconnect, portis, ledger } from 'connectors'
+import { envConfig } from '@project/contracts'
+import { CallBackProps } from 'react-joyride'
 
-import styled, {useTheme} from "styled-components";
-import { Item, ItemH, Span, H2, H3, B, A, C, Button } from "components/SharedStyling";
-import Header from "sections/Header";
-import Navigation from "sections/Navigation";
+import styled, { useTheme, ThemeProvider } from 'styled-components'
+import { Item, ItemH, Span, H2, B, A, C } from 'components/SharedStyling'
+import Header from 'sections/Header'
+import Navigation from 'sections/Navigation'
 
-import NavigationContextProvider from "contexts/NavigationContext";
-import MasterInterfacePage from "pages/MasterInterfacePage";
+import NavigationContextProvider from 'contexts/NavigationContext'
+import MasterInterfacePage from 'pages/MasterInterfacePage'
 
-import {ThemeProvider} from "styled-components";
+import { themeLight, themeDark } from 'config/Themization'
+import GLOBALS from 'config/Globals'
 
-import { themeLight, themeDark } from "config/Themization";
-import GLOBALS from "config/Globals";
+import { setRun, setIndex, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice'
+import { useSelector, useDispatch } from 'react-redux'
+import UserJourneySteps from 'segments/userJourneySteps'
+import { getPushToken, onMessageListener } from './firebase'
 
-import {setRun, setIndex, setWelcomeNotifsEmpty} from "./redux/slices/userJourneySlice";
-import { useSelector, useDispatch } from "react-redux";
-import UserJourneySteps from "segments/userJourneySteps";
-import { getPushToken, onMessageListener } from "./firebase";
-
-import { postReq } from "api";
-import { toast } from "react-toastify";
+import { postReq } from 'api'
+import { toast } from 'react-toastify'
 
 declare global {
   interface Window {
@@ -40,168 +38,164 @@ declare global {
 const web3Connectors = {
   Injected: {
     obj: injected,
-    logo: "./svg/login/metamask.svg",
-    title: "MetaMask",
+    logo: './svg/login/metamask.svg',
+    title: 'MetaMask'
   },
   WalletConnect: {
     obj: walletconnect,
-    logo: "./svg/login/walletconnect.svg",
-    title: "Wallet Connect",
+    logo: './svg/login/walletconnect.svg',
+    title: 'Wallet Connect'
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
-  Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
-};
-const CACHEPREFIX = "PUSH_TOKEN_";
+  Ledger: { obj: ledger, logo: './svg/login/ledger.svg', title: 'Ledger' },
+  Portis: { obj: portis, logo: './svg/login/portis.svg', title: 'Portis' }
+}
+const CACHEPREFIX = 'PUSH_TOKEN_'
 export default function App() {
+  const dispatch = useDispatch()
 
-  const dispatch = useDispatch();
-
-  const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
+  const { connector, activate, active, error, account } = useWeb3React<Web3Provider>()
   const [activatingConnector, setActivatingConnector] = React.useState<
     AbstractConnector
-  >();
-  const [currentTime, setcurrentTime] = React.useState(0);
+  >()
+  const [currentTime, setcurrentTime] = React.useState(0)
 
-  const themes = useTheme();
+  const themes = useTheme()
 
   const {
     run,
     stepIndex,
-    tutorialContinous,
-  } = useSelector((state: any) => state.userJourney);
-  const [triggerNotification, setTriggerNotification] = React.useState(false);
+    tutorialContinous
+  } = useSelector((state: any) => state.userJourney)
+  const [triggerNotification, setTriggerNotification] = React.useState(false)
   React.useEffect(() => {
-    if(!account) return;
-    (async function(){
-      const tokenKey = `${CACHEPREFIX}${account}`;
-      const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
-      if(!tokenExists){
-        const response = await getPushToken();
+    if (!account) return;
+    (async function() {
+      const tokenKey = `${CACHEPREFIX}${account}`
+      const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX) // temp to prevent more than 1 account to register
+      if (!tokenExists) {
+        const response = await getPushToken()
         const object = {
           op: 'register',
           wallet: account.toLowerCase(),
           device_token: response,
-          platform: 'dapp',
-        };
-        await postReq('/pushtokens/register_no_auth',object);
-        localStorage.setItem(tokenKey, response);
-        localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
+          platform: 'dapp'
+        }
+        await postReq('/pushtokens/register_no_auth', object)
+        localStorage.setItem(tokenKey, response)
+        localStorage.setItem(CACHEPREFIX, 'response') // temp to prevent more than 1 account to register
       }
-    })();
-  }, [account]);
+    })()
+  }, [account])
 
   React.useEffect(() => {
     onMessageListener().then(payload => {
-      if (!("Notification" in window)) {
-        toast.dark(`${payload.notification.body} from: ${payload.notification.title}`,{
+      if (!('Notification' in window)) {
+        toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
           type: toast.TYPE.DARK,
           autoClose: 5000,
-          position: "top-right"
-        });
-      }else{
+          position: 'top-right'
+        })
+      } else {
         console.log('\n\n\n\n\n')
-        console.log("revieced push notification")
+        console.log('revieced push notification')
         console.log('\n\n\n\n\n')
-        const notificationTitle = payload.notification.title;
+        const notificationTitle = payload.notification.title
         const notificationOptions = {
           title: payload.data.app,
           body: payload.notification.body,
           image: payload.data.aimg,
           icon: payload?.data?.icon,
           data: {
-            url: payload?.data?.acta || payload?.data?.url,
-          },
-        };
-        var notification = new Notification(notificationTitle,notificationOptions );
+            url: payload?.data?.acta || payload?.data?.url
+          }
+        }
+        const notification = new Notification(notificationTitle, notificationOptions)
       }
     }).catch(err => console.log('failed: ', err))
-    .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
-  }, [triggerNotification]);
-  
+      .finally(() => setTriggerNotification(!triggerNotification)) // retrigger the listener after it has been used once
+  }, [triggerNotification])
 
-  React.useEffect(()=>{
-    const now = Date.now()/ 1000;
+  React.useEffect(() => {
+    const now = Date.now() / 1000
     setcurrentTime(now)
-  },[])
+  }, [])
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
-      setActivatingConnector(undefined);
+      setActivatingConnector(undefined)
     }
-  }, [activatingConnector, connector]);
+  }, [activatingConnector, connector])
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
-  const triedEager = useEagerConnect();
+  const triedEager = useEagerConnect()
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector);
+  useInactiveListener(!triedEager || !!activatingConnector)
 
   // Initialize GA
-  ReactGA.initialize(envConfig.googleAnalyticsId);
-  ReactGA.pageview("/login");
+  ReactGA.initialize(envConfig.googleAnalyticsId)
+  ReactGA.pageview('/login')
   // Initialize GA
 
   // Initialize Theme
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(false)
 
   const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
+    setDarkMode(!darkMode)
   }
 
   React.useEffect(() => {
     const data = localStorage.getItem('theme')
-    if(data){
+    if (data) {
       setDarkMode(JSON.parse(data))
     }
-  },[])
+  }, [])
 
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode))
   })
 
-  React.useEffect(()=>{
-    document.body.style.backgroundColor = darkMode ? "#000" : "#fff";
-  },[darkMode])
+  React.useEffect(() => {
+    document.body.style.backgroundColor = darkMode ? '#000' : '#fff'
+  }, [darkMode])
 
-
-  React.useEffect(()=> {
+  React.useEffect(() => {
     if (window && window.Olvy) {
       window?.Olvy?.init({
-        organisation: "epns",
-        target: "#olvy-target",
-        type: "sidebar",
+        organisation: 'epns',
+        target: '#olvy-target',
+        type: 'sidebar',
         view: {
           showSearch: false,
           compact: false,
           showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
           showUnreadIndicator: true,
-          unreadIndicatorColor: "#cc1919",
-          unreadIndicatorPosition: "top-right"
+          unreadIndicatorColor: '#cc1919',
+          unreadIndicatorPosition: 'top-right'
         }
-      });
+      })
     }
-    
-    return function cleanup() {
-      window?.Olvy?.teardown();
-    };
-  }, []);
 
-  const steps = UserJourneySteps({darkMode});
+    return function cleanup() {
+      window?.Olvy?.teardown()
+    }
+  }, [])
+
+  const steps = UserJourneySteps({ darkMode })
 
   const handleJoyrideCallback = (data: CallBackProps) => {
     // console.log(data)
     // console.log(STATUS);
     const { action, lifecycle, status, index } = data
-    if (lifecycle === "ready") {
+    if (lifecycle === 'ready') {
       setTimeout(() => {
-        document.querySelector("div > section > div").scrollTop = 0
+        document.querySelector('div > section > div').scrollTop = 0
       }, 100)
     }
-    
-    
-    if ( action === "close" || index === 20 ) { //action === "close" ||
+
+    if (action === 'close' || index === 20) { // action === "close" ||
       dispatch(setRun(false))
       dispatch(setIndex(0))
-      dispatch(setWelcomeNotifsEmpty());
+      dispatch(setWelcomeNotifsEmpty())
     }
     // else if (action === 'next' && status === 'running') {
     //   dispatch(incrementStepIndex());
@@ -212,12 +206,12 @@ export default function App() {
     <>
     <ThemeProvider theme={darkMode ? themeDark : themeLight }>
       <NavigationContextProvider>
-        
+
         <HeaderContainer>
           <Header
             isDarkMode={darkMode}
             darkModeToggle={toggleDarkMode}
-          />  
+          />
         </HeaderContainer>
 
         <ParentContainer
@@ -248,9 +242,9 @@ export default function App() {
             >
               <ProviderLogo
                 src="./epnshomelogo.png"
-                srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"}
+                srcSet={'./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x'}
               />
-              
+
               <Item
                 bg={darkMode ? themeDark : themeLight}
                 border="1px solid #ddd"
@@ -267,23 +261,23 @@ export default function App() {
 
                 <ItemH maxWidth="700px" align="stretch">
                   {Object.keys(web3Connectors).map((name) => {
-                    const currentConnector = web3Connectors[name].obj;
-                    const connected = currentConnector === connector;
+                    const currentConnector = web3Connectors[name].obj
+                    const connected = currentConnector === connector
                     const disabled =
                       !triedEager ||
                       !!activatingConnector ||
                       connected ||
-                      !!error;
-                    const image = web3Connectors[name].logo;
-                    const title = web3Connectors[name].title;
+                      !!error
+                    const image = web3Connectors[name].logo
+                    const title = web3Connectors[name].title
 
                     return (
                       <ProviderButton
                         disabled={disabled}
                         key={name}
                         onClick={() => {
-                          setActivatingConnector(currentConnector);
-                          activate(currentConnector);
+                          setActivatingConnector(currentConnector)
+                          activate(currentConnector)
                         }}
                         border="#35c5f3"
                       >
@@ -302,17 +296,17 @@ export default function App() {
                           {title}
                         </Span>
                       </ProviderButton>
-                    );
+                    )
                   })}
                 </ItemH>
               </Item>
 
               <Span margin="30px 0px 0px 0px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor }>
-                By unlocking your wallet, <B>You agree</B> to our{" "}
+                By unlocking your wallet, <B>You agree</B> to our{' '}
                 <A href="https://epns.io/tos" target="_blank">
                   Terms of Service
-                </A>{" "}
-                and our{" "}
+                </A>{' '}
+                and our{' '}
                 <A href="https://epns.io/privacy" target="_blank">
                   Privacy Policy
                 </A>
@@ -334,9 +328,9 @@ export default function App() {
       </NavigationContextProvider>
     </ThemeProvider>
     </>
-  );
+  )
 }
-/* <Joyride 
+/* <Joyride
           run={run}
           steps={steps}
           continuous={tutorialContinous}
@@ -363,7 +357,7 @@ export default function App() {
               zIndex: 1000,
             },
           }}
-        />*/
+        /> */
 // CSS STYLES
 const StyledItem = styled(Item)`
   font-size: 14px;
@@ -385,8 +379,7 @@ const StyledItem = styled(Item)`
   @media(max-width:400px){
     width: auto;
   }
-`;
-
+`
 
 const HeaderContainer = styled.header`
   left: 0;
@@ -395,7 +388,7 @@ const HeaderContainer = styled.header`
   position: fixed;
   top: 0;
   z-index: 999;
-`;
+`
 
 const ParentContainer = styled.div`
   flex-wrap: wrap;
@@ -406,7 +399,7 @@ const ParentContainer = styled.div`
   background: ${props => props.theme.backgroundBG};
   margin: ${props => props.headerHeight}px 0px 0px 0px;
   min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px);
-`;
+`
 
 const LeftBarContainer = styled.div`
   left: 0;
@@ -433,7 +426,7 @@ const ContentContainer = styled.div`
   @media (max-width: 992px) {
     margin: 0px;
   }
-`;
+`
 
 const ProviderLogo = styled.img`
   width: 15vw;
@@ -441,7 +434,7 @@ const ProviderLogo = styled.img`
   display: flex;
   margin: 10px 20px 20px 20px;
   min-width: 200px;
-`;
+`
 
 const ProviderButton = styled.button`
   flex: 1 1 0;
@@ -474,13 +467,13 @@ const ProviderButton = styled.button`
     cursor: pointer;
     border: 1px solid ${(props) => props.border};
   }
-`;
+`
 
 const ProviderImage = styled.img`
   width: 32px;
   max-height: 32px;
   padding: 10px;
-`;
+`
 
 const BeaconExample = styled.span`
   height: 10px;
@@ -492,7 +485,7 @@ const BeaconExample = styled.span`
   border-radius: 100%;
   position: relative;
   margin: 0px 10px;
-`;
+`
 
 const BeaconExamplePulse = styled.span`
   animation: 1.2s ease-in-out 0s infinite normal none running joyride-beacon-outer;
@@ -508,4 +501,4 @@ const BeaconExamplePulse = styled.span`
   opacity: 0.9;
   position: absolute;
   transform-origin: center center;
-`;
+`
