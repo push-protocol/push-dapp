@@ -7,8 +7,9 @@ import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import ShowDelegates from "./ShowDelegates";
 import { Item } from "../primaries/SharedStyling";
-import { postReq } from "api";
+import { getReq, postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const DATE_FORMAT = "DD/MM/YYYY";
 
 const networkName = {
@@ -58,29 +59,15 @@ export default function ChannelDetails() {
   React.useEffect(() => {
     if (!onCoreNetwork) return;
 
-    (async function() {
-      await postReq("/channels/getAliasDetails", {
-        channel : account,
-        op: "read",
-      }).then(async ({ data }) => {
-        const aliasAccount = data;
-        console.log(aliasAccount);
-        if (aliasAccount.aliasAddress) {
-          const { aliasAddress } = aliasAccount;
-            await postReq("/channels/getAliasVerification", {
-              aliasAddress: aliasAddress,
-              op: "read",
-            }).then(({ data }) => {
-              if (!data) {
-                return;
-              }
-              const { status } = data;
-              setAliasVerified(status || false);
-              return data;
-            });
-        }
-      });
-    })();
+    (async function () {
+      const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+          if (data) {
+            setAliasVerified(data.is_alias_verified);
+          }
+          return data;
+        });
+      })();
   }, [account , chainId]);
 
   return (

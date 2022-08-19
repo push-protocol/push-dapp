@@ -324,7 +324,7 @@ export default class ChannelsDataStore {
    * @returns
    */
   getChannelFromApi = async (startIndex, pageCount, account, chainId) => {
-    return postReq("/channels/search", {
+    return postReq("/channels/_search", {
       page: Math.ceil(startIndex / pageCount) || 1,
       pageSize: pageCount,
       address: account,
@@ -523,7 +523,7 @@ export default class ChannelsDataStore {
           });
           // console.log(await this.state.channelsMeta, channelAddress);
           // const getAliasAddress = EPNSCoreHelper.getAliasAddressFromChannelAddress(
-          //   channelAddress
+          //   channelAddress, this.state.chainId
           // )
           // .then((response) => {
           //   objResponse.alias_address = response;
