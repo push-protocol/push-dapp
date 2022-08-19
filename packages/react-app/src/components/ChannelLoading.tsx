@@ -63,6 +63,7 @@ const ChannelLoading = () => {
 }
 
 const ChannelLoadingContainer = styled.div`
+    width:100%;
     padding: 4.6rem;
     height: 60vh;
     border-radius: 20px;
