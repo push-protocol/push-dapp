@@ -1,191 +1,179 @@
-import React, { useState, useRef, useEffect } from "react";
-import Select from "react-select";
-import styled, { css, useTheme } from "styled-components";
+import React, { useState, useRef, useEffect } from 'react'
+import Select from 'react-select'
+import styled, { css, useTheme, ThemeProvider } from 'styled-components'
 import {
   Section,
   Content,
   Item,
   ItemH,
-  ItemBreak,
-  H1,
   H2,
   H3,
-  Image,
-  P,
   Span,
-  Anchor,
   Button,
-  Showoff,
   FormSubmision,
   Input,
-  TextField,
-} from "components/SharedStyling";
-import { FiLink } from "react-icons/fi";
-import "react-dropzone-uploader/dist/styles.css";
-import Dropzone from "react-dropzone-uploader";
-import { makeStyles } from "@material-ui/core/styles";
-import Slider from "@material-ui/core/Slider";
-import Loader from "react-loader-spinner";
+  TextField
+} from 'components/SharedStyling'
+import { FiLink } from 'react-icons/fi'
+import 'react-dropzone-uploader/dist/styles.css'
+import Loader from 'react-loader-spinner'
 
-import { envConfig } from "@project/contracts";
+import { envConfig, addresses, abis } from '@project/contracts'
 
-import { useWeb3React, UnsupportedChainIdError } from "@web3-react/core";
-import { ThemeProvider } from "styled-components";
-import { themeLight, themeDark } from "config/Themization";
-import { addresses, abis } from "@project/contracts";
-import ImageClipper from "./ImageClipper";
-import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+import { useWeb3React } from '@web3-react/core'
+import ImageClipper from './ImageClipper'
+import { ReactComponent as ImageIcon } from '../assets/Image.svg'
 
-const ethers = require("ethers");
+const ethers = require('ethers')
 
-const ipfs = require("ipfs-api")();
+const ipfs = require('ipfs-api')()
 
-const minStakeFees = 50;
-const ALIAS_CHAINS = [{ value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" }];
+const minStakeFees = 50
+const ALIAS_CHAINS = [{ value: 'POLYGON_TEST_MUMBAI:80001', label: 'Polygon' }]
 
-const CORE_CHAIN_ID = envConfig.coreContractChain;
+const CORE_CHAIN_ID = envConfig.coreContractChain
 
 // Create Header
 function CreateChannel() {
-  const { active, error, account, library, chainId } = useWeb3React();
+  const { active, error, account, library, chainId } = useWeb3React()
 
-  const themes = useTheme();
+  const themes = useTheme()
 
-  const [darkMode, setDarkMode] = useState(false);
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const [darkMode, setDarkMode] = useState(false)
+  const onCoreNetwork = CORE_CHAIN_ID === chainId
 
-  const [processing, setProcessing] = React.useState(0);
-  const [processingInfo, setProcessingInfo] = React.useState("");
+  const [processing, setProcessing] = React.useState(0)
+  const [processingInfo, setProcessingInfo] = React.useState('')
 
-  const [uploadDone, setUploadDone] = React.useState(false);
-  const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
-  const [channelInfoDone, setChannelInfoDone] = React.useState(false);
+  const [uploadDone, setUploadDone] = React.useState(false)
+  const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false)
+  const [channelInfoDone, setChannelInfoDone] = React.useState(false)
 
-  const [chainDetails, setChainDetails] = React.useState("");
-  const [channelName, setChannelName] = React.useState("");
-  const [channelAlias, setChannelAlias] = React.useState("");
-  const [channelInfo, setChannelInfo] = React.useState("");
-  const [channelURL, setChannelURL] = React.useState("");
-  const [channelFile, setChannelFile] = React.useState(undefined);
-  const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
-  const [daiAmountVal, setDaiAmountVal] = useState("");
+  const [chainDetails, setChainDetails] = React.useState('')
+  const [channelName, setChannelName] = React.useState('')
+  const [channelAlias, setChannelAlias] = React.useState('')
+  const [channelInfo, setChannelInfo] = React.useState('')
+  const [channelURL, setChannelURL] = React.useState('')
+  const [channelFile, setChannelFile] = React.useState(undefined)
+  const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees)
+  const [daiAmountVal, setDaiAmountVal] = useState('')
 
-  //image upload states
-  const childRef = useRef();
-  const [view, setView] = useState(false);
-  const [final, setFinal] = useState(false);
-  const [imageSrc, setImageSrc] = useState(undefined);
-  const [croppedImage, setCroppedImage] = useState(undefined);
+  // image upload states
+  const childRef = useRef()
+  const [view, setView] = useState(false)
+  const [final, setFinal] = useState(false)
+  const [imageSrc, setImageSrc] = useState(undefined)
+  const [croppedImage, setCroppedImage] = useState(undefined)
 
-  const [stepFlow, setStepFlow] = React.useState(1);
+  const [stepFlow, setStepFlow] = React.useState(1)
 
-  //checking DAI for user
+  // checking DAI for user
   React.useEffect(() => {
     const checkDaiFunc = async () => {
-        let checkDaiAmount = new ethers.Contract(
-            addresses.dai,
-            abis.dai,
-            library
-        );
+      const checkDaiAmount = new ethers.Contract(
+        addresses.dai,
+        abis.dai,
+        library
+      )
 
-        let value = await checkDaiAmount.allowance(
-            account,
-            addresses.epnscore
-        );
-        value = value?.toString();
-        const convertedVal = ethers.utils.formatEther(value);
-        setDaiAmountVal(convertedVal);
-        if (convertedVal >= 50.0) {
-            setChannelStakeFees(convertedVal);
-        }
-    };
-    checkDaiFunc();
-  }, []);
+      let value = await checkDaiAmount.allowance(
+        account,
+        addresses.epnscore
+      )
+      value = value?.toString()
+      const convertedVal = ethers.utils.formatEther(value)
+      setDaiAmountVal(convertedVal)
+      if (convertedVal >= 50.0) {
+        setChannelStakeFees(convertedVal)
+      }
+    }
+    checkDaiFunc()
+  }, [])
 
   // called every time a file's `status` changes
   const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file);
-  };
+    console.log(status, meta, file)
+  }
 
   const onDropHandler = (files) => {
-  };
+  }
 
   // receives array of files that are done uploading when submit button is clicked
   const handleLogoSubmit = (files, allFiles) => {
     // console.log(files.map(f => f.meta))
     allFiles.forEach((f) => {
-      var file = f.file;
-      var reader = new FileReader();
-      reader.readAsDataURL(file);
+      const file = f.file
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
       // console.log(f.file);
 
       reader.onloadend = function(e) {
         // console.log(reader.result);
-        const response = handleLogoSizeLimitation(reader.result);
+        const response = handleLogoSizeLimitation(reader.result)
         if (response.success) {
-          setStepFlow(2);
-          setProcessing(0);
-          setUploadDone(true);
-          setChannelFile(reader.result);
+          setStepFlow(2)
+          setProcessing(0)
+          setUploadDone(true)
+          setChannelFile(reader.result)
         } else {
-          setProcessing(3);
-          setProcessingInfo(response.info);
+          setProcessing(3)
+          setProcessingInfo(response.info)
         }
-      };
-    });
-  };
+      }
+    })
+  }
 
   const proceed = () => {
-    setStepFlow(2);
-    setProcessing(0);
-    setUploadDone(true);
-    console.log(channelFile);
-  };
+    setStepFlow(2)
+    setProcessing(0)
+    setUploadDone(true)
+    console.log(channelFile)
+  }
 
   const handleLogoSizeLimitation = (base64) => {
     // Setup Error on higher size of 128px
-    var sizeOf = require("image-size");
-    var base64Data = base64.split(";base64,").pop();
-    var img = Buffer.from(base64Data, "base64");
-    var dimensions = sizeOf(img);
+    const sizeOf = require('image-size')
+    const base64Data = base64.split(';base64,').pop()
+    const img = Buffer.from(base64Data, 'base64')
+    const dimensions = sizeOf(img)
 
     // Only proceed if image is equal to or less than 128
     if (dimensions.width > 128 || dimensions.height > 128) {
-      console.log("Image size check failed... returning");
+      console.log('Image size check failed... returning')
       return {
         success: 0,
-        info: "Image size check failed, Image should be 128X128PX",
-      };
+        info: 'Image size check failed, Image should be 128X128PX'
+      }
     }
 
     // only proceed if png or jpg
     // This is brilliant: https://stackoverflow.com/questions/27886677/javascript-get-extension-from-base64-image
     // char(0) => '/' : jpg
     // char(0) => 'i' : png
-    let fileext;
-    console.log(base64Data.charAt(0));
-    if (base64Data.charAt(0) == "/") {
+    let fileext
+    console.log(base64Data.charAt(0))
+    if (base64Data.charAt(0) == '/') {
       return {
         success: 1,
-        info: "Image checks passed",
-      };
-    } else if (base64Data.charAt(0) == "i") {
+        info: 'Image checks passed'
+      }
+    } else if (base64Data.charAt(0) == 'i') {
       return {
         success: 1,
-        info: "Image checks passed",
-      };
+        info: 'Image checks passed'
+      }
     } else {
       return {
         success: 0,
-        info: "Image extension should be jpg or png",
-      };
+        info: 'Image extension should be jpg or png'
+      }
     }
-  };
+  }
 
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
-    e.preventDefault();
+    e.preventDefault()
 
     if (
       isEmpty(channelName) ||
@@ -195,195 +183,195 @@ function CreateChannel() {
       channelAlias
         ? isEmpty(chainDetails)
         : chainDetails
-        ? isEmpty(channelAlias)
-        : false
+          ? isEmpty(channelAlias)
+          : false
     ) {
-      setProcessing(3);
-      setProcessingInfo("Channel Fields are Empty! Please retry!");
+      setProcessing(3)
+      setProcessingInfo('Channel Fields are Empty! Please retry!')
 
-      return false;
+      return false
     }
 
     // Check complete, start logic
-    setChannelInfoDone(true);
-    setProcessing(1);
+    setChannelInfoDone(true)
+    setProcessing(1)
 
     console.log({
       chainDetails,
-      channelAlias,
-    });
-    var chainDetailsSplit = chainDetails.split(":");
-    var blockchain = chainDetailsSplit[0];
-    var chain_id = chainDetailsSplit[1];
-    var address = channelAlias;
+      channelAlias
+    })
+    const chainDetailsSplit = chainDetails.split(':')
+    const blockchain = chainDetailsSplit[0]
+    const chain_id = chainDetailsSplit[1]
+    const address = channelAlias
 
     const input = JSON.stringify({
       name: channelName,
       info: channelInfo,
       url: channelURL,
       icon: channelFile,
-      blockchain: blockchain,
-      chain_id: chain_id,
-      address: address,
-    });
+      blockchain,
+      chain_id,
+      address
+    })
 
-    const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
+    const ipfs = require('nano-ipfs-store').at('https://ipfs.infura.io:5001')
 
-    setProcessingInfo("Uploading Payload...");
-    const storagePointer = await ipfs.add(input);
-    console.log("IPFS storagePointer:", storagePointer);
-    setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
-    //console.log(await ipfs.cat(storagePointer));
+    setProcessingInfo('Uploading Payload...')
+    const storagePointer = await ipfs.add(input)
+    console.log('IPFS storagePointer:', storagePointer)
+    setProcessingInfo('Payload Uploaded, Approval to transfer DAI...')
+    // console.log(await ipfs.cat(storagePointer));
 
     // Send Transaction
     // First Approve DAI
-    var signer = library.getSigner(account);
+    const signer = library.getSigner(account)
 
-    let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
+    const daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer)
 
     // Pick between 50 DAI AND 25K DAI
-    const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
+    const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18)
 
-    if(daiAmountVal < 50.0){
-      var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
-      const tx = await sendTransactionPromise;
-  
-      console.log(tx);
-      console.log("waiting for tx to finish");
-      setProcessingInfo("Waiting for Approval TX to finish...");
-      await library.waitForTransaction(tx.hash);
+    if (daiAmountVal < 50.0) {
+      const sendTransactionPromise = daiContract.approve(addresses.epnscore, fees)
+      const tx = await sendTransactionPromise
+
+      console.log(tx)
+      console.log('waiting for tx to finish')
+      setProcessingInfo('Waiting for Approval TX to finish...')
+      await library.waitForTransaction(tx.hash)
     }
 
-    let contract = new ethers.Contract(
+    const contract = new ethers.Contract(
       addresses.epnscore,
       abis.epnscore,
       signer
-    );
+    )
 
-    const channelType = 2; // Open Channel
-    const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
-    const identityBytes = ethers.utils.toUtf8Bytes(identity);
+    const channelType = 2 // Open Channel
+    const identity = '1+' + storagePointer // IPFS Storage Type and HASH
+    const identityBytes = ethers.utils.toUtf8Bytes(identity)
 
-    var anotherSendTxPromise = contract.createChannelWithFees(
+    const anotherSendTxPromise = contract.createChannelWithFees(
       channelType,
       identityBytes,
       fees,
       {
         gasLimit: 1000000
       }
-    );
+    )
 
-    setProcessingInfo("Creating Channel TX in progress");
+    setProcessingInfo('Creating Channel TX in progress')
     anotherSendTxPromise
       .then(async function(tx) {
-        console.log(tx);
-        console.log("Check: " + account);
-        await library.waitForTransaction(tx.hash);
-        setProcessing(3);
-        setProcessingInfo("Channel Created! Reloading...");
+        console.log(tx)
+        console.log('Check: ' + account)
+        await library.waitForTransaction(tx.hash)
+        setProcessing(3)
+        setProcessingInfo('Channel Created! Reloading...')
 
         setTimeout(() => {
-          window.location.reload();
-        }, 2000);
+          window.location.reload()
+        }, 2000)
       })
       .catch((err) => {
-        console.log("Error --> %o", err);
-        console.log({ err });
-        setProcessing(3);
+        console.log('Error --> %o', err)
+        console.log({ err })
+        setProcessing(3)
         setProcessingInfo(
-          "!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet"
-        );
-      });
-  };
+          '!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet'
+        )
+      })
+  }
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
-      return true;
+      return true
     }
 
-    return false;
-  };
+    return false
+  }
 
-  //mind Dai
+  // mind Dai
   const mintDai = async () => {
     try {
-      var signer = library.getSigner(account);
-      let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
+      const signer = library.getSigner(account)
+      const daiContract = new ethers.Contract(addresses.dai, abis.dai, signer)
       console.log({
-        daiContract,
-      });
-      console.log(1);
-      let daiAmount = 1000;
-      const amount = ethers.utils.parseUnits(daiAmount.toString(), 18);
-      console.log(2);
-      var mintTransactionPromise = daiContract.mint(amount);
-      console.log(3);
-      const tx = await mintTransactionPromise;
-      console.log(tx);
-      await library.waitForTransaction(tx.hash);
-      console.log(4);
-      setProcessingInfo("1000 Dai minted successfully!");
-      console.log("Transaction Completed");
+        daiContract
+      })
+      console.log(1)
+      const daiAmount = 1000
+      const amount = ethers.utils.parseUnits(daiAmount.toString(), 18)
+      console.log(2)
+      const mintTransactionPromise = daiContract.mint(amount)
+      console.log(3)
+      const tx = await mintTransactionPromise
+      console.log(tx)
+      await library.waitForTransaction(tx.hash)
+      console.log(4)
+      setProcessingInfo('1000 Dai minted successfully!')
+      console.log('Transaction Completed')
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   const handleDragOver = (e) => {
-    e.preventDefault();
-  };
+    e.preventDefault()
+  }
 
   const handleOnDrop = (e) => {
-    //prevent the browser from opening the image
-    e.preventDefault();
-    e.stopPropagation();
-    //let's grab the image file
-    handleFile(e.dataTransfer, "transfer");
-  };
+    // prevent the browser from opening the image
+    e.preventDefault()
+    e.stopPropagation()
+    // let's grab the image file
+    handleFile(e.dataTransfer, 'transfer')
+  }
 
   const handleFile = async (file, path) => {
-    setCroppedImage(undefined);
-    setView(true);
-    setFinal(false);
+    setCroppedImage(undefined)
+    setView(true)
+    setFinal(false)
 
-    //you can carry out any file validations here...
+    // you can carry out any file validations here...
     if (file?.files[0]) {
-      var reader = new FileReader();
-      reader.readAsDataURL(file?.files[0]);
+      const reader = new FileReader()
+      reader.readAsDataURL(file?.files[0])
 
       reader.onloadend = function(e) {
-        setImageSrc(reader.result);
-      };
+        setImageSrc(reader.result)
+      }
     } else {
-      return "Nothing....";
+      return 'Nothing....'
     }
-  };
+  }
 
   useEffect(() => {
     if (croppedImage) {
       toDataURL(croppedImage, function(dataUrl) {
-        const response = handleLogoSizeLimitation(dataUrl);
+        const response = handleLogoSizeLimitation(dataUrl)
         if (response.success) {
-          setChannelFile(croppedImage);
+          setChannelFile(croppedImage)
         }
-      });
+      })
     } else {
-      return "Nothing";
+      return 'Nothing'
     }
-  }, [croppedImage]);
+  }, [croppedImage])
 
   function toDataURL(url, callback) {
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest()
     xhr.onload = function() {
-      var reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = function() {
-        callback(reader.result);
-      };
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.open("GET", url);
-    xhr.responseType = "blob";
-    xhr.send();
+        callback(reader.result)
+      }
+      reader.readAsDataURL(xhr.response)
+    }
+    xhr.open('GET', url)
+    xhr.responseType = 'blob'
+    xhr.send()
   }
 
   return (
@@ -396,14 +384,14 @@ function CreateChannel() {
                 Create
               </Span>
               <Span weight="200" color={themes.color}>
-                {" "}
+                {' '}
                 Your Channel!
               </Span>
             </H2>
             <H3 color={themes.createColor}>
               <b color={themes.createColor}>
                 Ethereum Push Notification Service
-              </b>{" "}
+              </b>{' '}
               (EPNS) makes it extremely easy to open and maintain a genuine
               channel of communication with your users.
             </H3>
@@ -411,8 +399,8 @@ function CreateChannel() {
         </Content>
       </Section>
 
-      {!onCoreNetwork ? 
-      <>
+      {!onCoreNetwork
+        ? <>
         <Section>
           <Content padding="50px 20px 20px">
             <Item align="flex-start">
@@ -423,25 +411,24 @@ function CreateChannel() {
           </Content>
         </Section>
       </>
-      :
-      <>
+        : <>
       <Section>
         <Content padding="0px 20px 20px">
           <ItemH justify="space-between">
             <Step
               bg="#fff"
               activeBG="#e20880"
-              type={stepFlow >= 1 ? "active" : "inactive"}
+              type={stepFlow >= 1 ? 'active' : 'inactive'}
             />
             <Step
               bg="#fff"
               activeBG="#e20880"
-              type={stepFlow >= 2 ? "active" : "inactive"}
+              type={stepFlow >= 2 ? 'active' : 'inactive'}
             />
             <Step
               bg="#fff"
               activeBG="#e20880"
-              type={stepFlow >= 3 ? "active" : "inactive"}
+              type={stepFlow >= 3 ? 'active' : 'inactive'}
             />
             <Line />
           </ItemH>
@@ -499,7 +486,7 @@ function CreateChannel() {
                             <Button
                               bg="#1C4ED8"
                               onClick={() => {
-                                childRef.current.showCroppedImage();
+                                childRef.current.showCroppedImage()
                               }}
                             >
                               Clip Image
@@ -522,7 +509,7 @@ function CreateChannel() {
                           accept="image/*"
                           name="file-upload"
                           hidden
-                          onChange={(e) => handleFile(e.target, "target")}
+                          onChange={(e) => handleFile(e.target, 'target')}
                           type="file"
                           className="sr-only"
                           readOnly
@@ -552,7 +539,7 @@ function CreateChannel() {
               <Item align="flex-end">
                 <Minter
                   onClick={() => {
-                    mintDai();
+                    mintDai()
                   }}
                 >
                   <Pool>
@@ -609,8 +596,8 @@ function CreateChannel() {
                 radius="0px"
                 padding="20px 10px"
                 onClick={() => {
-                  setStakeFeesChoosen(true);
-                  setStepFlow(3);
+                  setStakeFeesChoosen(true)
+                  setStepFlow(3)
                 }}
               >
                 <Span
@@ -660,7 +647,7 @@ function CreateChannel() {
                   bg="#fff"
                   value={channelName}
                   onChange={(e) => {
-                    setChannelName(e.target.value);
+                    setChannelName(e.target.value)
                   }}
                 />
                 {channelName.trim().length == 0 && (
@@ -684,7 +671,7 @@ function CreateChannel() {
                 flex="1"
                 self="stretch"
                 align="stretch"
-                style={{ position: "relative" }}
+                style={{ position: 'relative' }}
               >
                 <Select
                   className="basic-single"
@@ -697,26 +684,26 @@ function CreateChannel() {
                     borderRadius: 0,
                     colors: {
                       ...theme.colors,
-                      primary25: "#e20880",
-                      primary: "#e20880",
-                    },
+                      primary25: '#e20880',
+                      primary: '#e20880'
+                    }
                   })}
                   onChange={(selectedOption) => {
-                    setChainDetails(selectedOption.value);
+                    setChainDetails(selectedOption.value)
                   }}
                 />
                 <Input
                   placeholder="Your Channel's Alias address"
                   maxlength="40"
                   padding="12px"
-                  style={{ paddingLeft: "22%" }}
+                  style={{ paddingLeft: '22%' }}
                   border="1px solid #000"
                   weight="400"
                   size="1rem"
                   bg="#fff"
                   value={channelAlias}
                   onChange={(e) => {
-                    setChannelAlias(e.target.value);
+                    setChannelAlias(e.target.value)
                   }}
                 />
               </Item>
@@ -738,13 +725,13 @@ function CreateChannel() {
                   bg="#fff"
                   value={channelInfo}
                   onChange={(e) => {
-                    setChannelInfo(e.target.value.slice(0,250));
+                    setChannelInfo(e.target.value.slice(0, 250))
                   }}
                   autocomplete="off"
                 />
-                
+
                 <SpanR>
-                  {250-channelInfo.length} characters remains
+                  {250 - channelInfo.length} characters remains
                 </SpanR>
               </Item>
 
@@ -768,7 +755,7 @@ function CreateChannel() {
                     bg="#f1f1f1"
                     value={channelURL}
                     onChange={(e) => {
-                      setChannelURL(e.target.value);
+                      setChannelURL(e.target.value)
                     }}
                   />
                   {channelURL.trim().length == 0 && (
@@ -800,7 +787,7 @@ function CreateChannel() {
                   flex="1"
                   radius="0px"
                   padding="20px 10px"
-                  disabled={processing == 1 ? true : false}
+                  disabled={processing == 1}
                 >
                   {processing == 1 && (
                     <Loader type="Oval" color="#fff" height={24} width={24} />
@@ -836,7 +823,7 @@ function CreateChannel() {
 
             <Item
               color="#fff"
-              bg={processing == 1 ? "#e1087f" : "#000"}
+              bg={processing == 1 ? '#e1087f' : '#000'}
               padding="10px 15px"
               margin="15px 0px"
             >
@@ -852,11 +839,11 @@ function CreateChannel() {
             </Item>
           </Content>
         </Section>
-        )}
+      )}
         </>
       }
     </ThemeProvider>
-  );
+  )
 }
 
 // css styles
@@ -867,21 +854,21 @@ position: absolute;
 bottom: 0px;
 right: 0.8rem;
 z-index: 1;
-`;
+`
 const Step = styled.div`
   height: 12px;
   width: 12px;
-  background: ${(props) => props.bg || "#fff"};
-  border: 4px solid ${(props) => props.activeBG || "#000"};
+  background: ${(props) => props.bg || '#fff'};
+  border: 4px solid ${(props) => props.activeBG || '#000'};
   border-radius: 100%;
 
   ${({ type }) =>
-    type == "active" &&
+    type == 'active' &&
     css`
-      background: ${(props) => props.activeBG || "#ddd"};
+      background: ${(props) => props.activeBG || '#ddd'};
       border: 4px solid #00000022;
     `};
-`;
+`
 
 const Line = styled.div`
   position: absolute;
@@ -891,19 +878,19 @@ const Line = styled.div`
   left: 0;
   margin: 0px 10px;
   z-index: -1;
-`;
+`
 
 const Channel = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
-`;
+`
 
 const Notice = styled.div`
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-`;
+`
 
 const Title = styled.h1`
   color: #674c9f;
@@ -911,19 +898,19 @@ const Title = styled.h1`
   font-weight: 300;
   margin-top: 0px;
   margin-bottom: 30px;
-`;
+`
 
 const Info = styled.label`
   padding-bottom: 20px;
   font-size: 14px;
   color: #000;
-`;
+`
 
-const Info2 = styled(Info)``;
+const Info2 = styled(Info)``
 const Name = styled(Input)`
   border-bottom: 1px solid #e20880;
   font-size: 24px;
-`;
+`
 
 const ShortInfo = styled.textarea`
   outline: 0;
@@ -933,14 +920,14 @@ const ShortInfo = styled.textarea`
   font-size: 18px;
   min-height: 80px;
   color: #111;
-`;
+`
 
 const Url = styled(Input)`
   border-bottom: 1px solid #674c9f;
   font-size: 1=8px;
-`;
+`
 
-const Text = styled.span``;
+const Text = styled.span``
 
 const Continue = styled.button`
   border: 0;
@@ -951,18 +938,18 @@ const Continue = styled.button`
   color: #fff;
   border-radius: 20px;
   font-size: 14px;
-  background: ${(props) => props.theme || "#674c9f"};
+  background: ${(props) => props.theme || '#674c9f'};
   margin: 30px 0px 0px 0px;
   border-radius: 8px;
   padding: 16px;
   font-size: 16px;
   font-weight: 400;
-`;
+`
 const Minter = styled.div`
   display: flex;
   flex-direction: row;
   font-size: 13px;
-`;
+`
 
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
@@ -972,24 +959,24 @@ const ChannelMetaBox = styled.label`
   border-radius: 10px;
   font-size: 15px;
   // font-size: 11px;
-`;
+`
 const Pool = styled.div`
   margin: 0px 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
+`
 
 const PoolShare = styled(ChannelMetaBox)`
   background: #e20880;
   // background: #674c9f;
-`;
+`
 
 const ButtonSpace = styled.div`
   width: 40%;
   align-items: center;
   margin: 1rem auto;
-`;
+`
 
 const Space = styled.div`
   width: 100%;
@@ -1106,14 +1093,14 @@ const Space = styled.div`
       }
     }
   }
-`;
+`
 
 const Field = styled.div`
   margin: 20px 0px 5px 0px;
   color: #4b5563;
   font-size: small;
   text-transform: uppercase;
-`;
+`
 
 // Export Default
-export default CreateChannel;
+export default CreateChannel
