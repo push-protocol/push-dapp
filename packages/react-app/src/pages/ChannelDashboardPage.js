@@ -29,6 +29,7 @@ import {
   setDelegatees,
 } from "redux/slices/adminSlice";
 import { addNewNotification } from "redux/slices/notificationSlice";
+import ChannelLoading from "components/ChannelLoading";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 
@@ -321,13 +322,8 @@ function ChannelDashboardPage() {
         {controlAt == 1 && <ViewChannels />}
         {controlAt == 2 && adminStatusLoaded ? 
             <ChannelOwnerDashboard /> 
-            // <ChannelLoadingMessage>
-            //   Channel details are being loaded, please wait…
-            // </ChannelLoadingMessage>
           : 
-            <ChannelLoadingMessage>
-              Channel details are being loaded, please wait…
-            </ChannelLoadingMessage>
+            <ChannelLoading />
         }
         {controlAt == 3 && <Info />}
         {toast && (
