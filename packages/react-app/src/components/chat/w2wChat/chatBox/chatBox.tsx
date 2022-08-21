@@ -26,7 +26,6 @@ import { useQuery } from 'react-query'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
-import { DID } from 'dids'
 import { Feeds, MessageIPFSWithCID, User } from '../../../../api'
 
 const INFURA_URL = envConfig.infuraApiUrl
@@ -37,7 +36,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = (): JSX.Element => {
   const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, searchedUser, connectedUser, intents }: AppContext = useContext<AppContext>(
+  const { currentChat, viewChatBox, did, searchedUser, connectedUser, inbox }: AppContext = useContext<AppContext>(
     Context
   )
   const [newMessage, setNewMessage] = useState<string>('')
@@ -45,7 +44,7 @@ const ChatBox = (): JSX.Element => {
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
   const { chainId } = useWeb3React<Web3Provider>()
   const [Loading, setLoading] = useState<boolean>(true)
-  const [messages, setMessages] = useState<MessageIPFS[]>([])
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
   const [imageSource, setImageSource] = useState<string>('')
   const [filesUploading, setFileUploading] = useState<boolean>(false)
   const imageInputRef = useRef<HTMLInputElement>(null)
@@ -53,81 +52,89 @@ const ChatBox = (): JSX.Element => {
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
   const [SnackbarText, setSnackbarText] = useState<string>('')
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
   let showTime = false
   let time = ''
 
-  const getMessagesFromCID = async ({ messageCID, did }: { messageCID: string; did: DID }): Promise<void> => {
-    if (!messageCID) {
-      return
-    }
-
-    setMessages([])
-
-    while (messageCID) {
-      const messageFromIndexDB: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
-
-      let msgIPFS: MessageIPFS
-      if (messageFromIndexDB !== undefined) {
-        msgIPFS = messageFromIndexDB.body
-      } else {
-        const messageFromIPFS: MessageIPFS = await PushNodeClient.getFromIPFS(messageCID)
-        await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
-        msgIPFS = messageFromIPFS
-      }
-
-      // Decrypt message
-      if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
-        // To do signature verification it depends on who has sent the message
-        let signatureValidationPubliKey: string
-        if (msgIPFS.fromDID === connectedUser.did) {
-          signatureValidationPubliKey = connectedUser.publicKey
-        } else {
-          signatureValidationPubliKey = currentChat.publicKey
-        }
-        msgIPFS.messageContent = await decryptAndVerifySignature({
-          cipherText: msgIPFS.messageContent,
-          encryptedSecretKey: msgIPFS.encryptedSecret,
-          did: did,
-          encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
-          publicKeyArmored: signatureValidationPubliKey,
-          signatureArmored: msgIPFS.signature
-        })
-      }
-
-      setMessages((m) => [msgIPFS, ...m])
-
-      const link = msgIPFS.link
-      if (link) {
-        messageCID = link
-      } else {
-        break
-      }
-    }
-  }
-
-  const getMessagesFromIPFS = async (): Promise<void> => {
-    setNewMessage('')
+  const getMessagesFromCID = async (): Promise<void> => {
     setLoading(true)
     if (currentChat) {
-      try {
-        CID.parse(currentChat.profilePicture) // Will throw exception if invalid CID
-        setImageSource(INFURA_URL + `${currentChat.profilePicture}`)
-      } catch (err) {
-        setImageSource(currentChat.profilePicture)
-      }
-      const intentResult: Feeds[] = intents.filter(
-        (intent) => intent.combinedDID.includes(currentChat.did) && intent.combinedDID.includes(did.id)
-      )
-      // We should only have one intent
-      if (intentResult.length > 1) {
-        throw new Error('Invalid Intents')
-      }
+      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
+      let messageCID = latestThreadhash
+      if (latestThreadhash) {
+        // Check if cid is present in messages state. If yes, ignore, if not, append to array
+        while (messageCID) {
+          if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
+            break
+          } else {
+            const messageFromIndexDB: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
 
-      if (currentChat?.threadhash) {
-        await getMessagesFromCID({
-          messageCID: currentChat.threadhash,
-          did
-        })
+            let msgIPFS: MessageIPFSWithCID
+            if (messageFromIndexDB !== undefined) {
+              msgIPFS = messageFromIndexDB.body
+            } else {
+              const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+              await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
+              msgIPFS = messageFromIPFS
+            }
+
+            // Decrypt message
+            if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
+              // To do signature verification it depends on who has sent the message
+              let signatureValidationPubliKey: string
+              if (msgIPFS.fromDID === connectedUser.did) {
+                signatureValidationPubliKey = connectedUser.publicKey
+              } else {
+                signatureValidationPubliKey = currentChat.publicKey
+              }
+              msgIPFS.messageContent = await decryptAndVerifySignature({
+                cipherText: msgIPFS.messageContent,
+                encryptedSecretKey: msgIPFS.encryptedSecret,
+                did: did,
+                encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+                publicKeyArmored: signatureValidationPubliKey,
+                signatureArmored: msgIPFS.signature
+              })
+            }
+
+            const messagesSentInChat: MessageIPFS = messages.find(
+              (msg) =>
+                msg.link === '' &&
+                msg.encType === '' &&
+                msg.cid === '' &&
+                msg.messageContent === msgIPFS.messageContent &&
+                msg.messageType === msgIPFS.messageType
+            )
+            // Replace message that was inserted when sending a message
+            if (messagesSentInChat) {
+              const newMessages = messages.map((x) => x)
+              const index = newMessages.findIndex(
+                (msg) =>
+                  msg.link === '' &&
+                  msg.encType === '' &&
+                  msg.cid === '' &&
+                  msg.messageContent === msgIPFS.messageContent &&
+                  msg.messageType === msgIPFS.messageType
+              )
+              newMessages[index] = msgIPFS
+              setMessages(newMessages)
+            }
+            // Display messages for the first time
+            else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+              setMessages((m) => [msgIPFS, ...m])
+            }
+            // Messages got from useQuery
+            else {
+              setMessages((m) => [...m, msgIPFS])
+            }
+            const link = msgIPFS.link
+            if (link) {
+              messageCID = link
+            } else {
+              break
+            }
+          }
+        }
       } else {
         setMessages([])
       }
@@ -135,25 +142,25 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  // const { data } = useQuery<any>('current', getMessagesFromIPFS, { refetchInterval: 5000 })
-
-  // useEffect(() => {
-  //   function updateData(): void {
-  //     if (data !== undefined && currentChat?.wallets) {
-  //       const newData = data?.filter((x: any) => x?.wallets === currentChat?.wallets)[0]
-  //       if (newData?.intent === 'Approved') {
-  //         setChat(newData)
-  //       }
-  //     }
-  //   }
-  //   const interval = setInterval(() => updateData(), 2000)
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // }, [data, currentChat?.wallets])
+  useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 })
 
   useEffect(() => {
-    getMessagesFromIPFS().catch((err) => console.error(err))
+    if (currentChat) {
+      if (currentChat.combinedDID !== chatCurrentCombinedDID) {
+        setChatCurrentCombinedDID(currentChat.combinedDID)
+        // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
+        // even though the user was still on the same chat.
+        setMessages([])
+        try {
+          CID.parse(currentChat.profilePicture) // Will throw exception if invalid CID
+          setImageSource(INFURA_URL + `${currentChat.profilePicture}`)
+        } catch (err) {
+          setImageSource(currentChat.profilePicture)
+        }
+      }
+      // Fetch new messages
+      getMessagesFromCID().catch((err) => console.error(err))
+    }
   }, [currentChat])
 
   const sendMessage = async ({
@@ -175,7 +182,7 @@ const ChatBox = (): JSX.Element => {
     ) {
       throw "User doesn't have public key"
     }
-    let msg: MessageIPFS
+    let msg: MessageIPFSWithCID
     try {
       msg = {
         fromCAIP10: walletToCAIP10({ account, chainId }),
@@ -188,7 +195,8 @@ const ChatBox = (): JSX.Element => {
         sigType: '',
         timestamp: Date.now(),
         encryptedSecret: '',
-        link: ''
+        link: '',
+        cid: ''
       }
       setNewMessage('')
       setMessages([...messages, msg])
@@ -283,7 +291,7 @@ const ChatBox = (): JSX.Element => {
           }
         }
 
-        const msg: MessageIPFS | string = await PushNodeClient.createIntent({
+        const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
           toDID: currentChat.did,
           fromDID: did.id,
           fromCAIP10: walletToCAIP10({ account, chainId }),
