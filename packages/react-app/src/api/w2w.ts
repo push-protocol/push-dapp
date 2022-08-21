@@ -260,8 +260,8 @@ export const createIntent = async ({
   encType: string
   sigType: string
   encryptedSecret: string
-}): Promise<MessageIPFS | string> => {
-  let data: MessageIPFS | string
+}): Promise<MessageIPFSWithCID | string> => {
+  let data: MessageIPFSWithCID | string
   if (messageContent.length > 0) {
     const response = await fetch(BASE_URL + '/v1/w2w/intents', {
       method: 'POST',
