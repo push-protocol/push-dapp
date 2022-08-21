@@ -41,7 +41,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
   }
 
-  useQuery('current', getInbox, {
+  useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
