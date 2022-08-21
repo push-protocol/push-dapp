@@ -17,7 +17,7 @@ interface MessageFeedProps {
 }
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
-  const { did, setChat, connectedUser, setIntents }: AppContext = useContext<AppContext>(Context)
+  const { did, setChat, connectedUser, setIntents, setInbox }: AppContext = useContext<AppContext>(Context)
   const [feeds, setFeeds] = useState<Feeds[]>([])
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true)
   const [isSameUser, setIsSameUser] = useState<boolean>(false)
@@ -32,11 +32,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       let inboxes: Feeds[] = await fetchInbox(did)
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
       setFeeds(inboxes)
+      setInbox(inboxes)
       return inboxes
     } else {
       let inboxes: Feeds[] = await fetchInbox(did)
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
       setFeeds(inboxes)
+      setInbox(inboxes)
       return inboxes
     }
   }
@@ -58,7 +60,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   })
 
   const updateInboxAndIntents = async (): Promise<void> => {
-    getInbox()
+    await getInbox()
     setIntents(await fetchIntent({ did }))
   }
 

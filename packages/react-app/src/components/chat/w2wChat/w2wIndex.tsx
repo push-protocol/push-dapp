@@ -54,6 +54,8 @@ export interface AppContext {
   connectedUser: User
   intents: Feeds[]
   setIntents: (intents: Feeds[]) => void
+  inbox: Feeds[]
+  setInbox: (inbox: Feeds[]) => void
 }
 
 export const ToastPosition: ToastOptions = {
@@ -77,6 +79,7 @@ function App() {
   const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
   const [intents, setIntents] = useState<Feeds[]>([])
+  const [inbox, setInbox] = useState<Feeds[]>([])
 
   const queryClient = new QueryClient({})
 
@@ -137,7 +140,9 @@ function App() {
                 searchedUser,
                 connectedUser,
                 intents,
-                setIntents
+                setIntents,
+                inbox,
+                setInbox
               }}
             >
               <Sidebar />
