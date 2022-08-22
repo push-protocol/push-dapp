@@ -177,6 +177,7 @@ function ChannelDashboardPage() {
         chainId
       );
 
+      await checkUserForAlias();
       await checkUserForChannelOwnership();
       fetchDelegators();
     }

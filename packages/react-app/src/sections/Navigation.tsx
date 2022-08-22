@@ -17,50 +17,102 @@ import GLOBALS from "config/Globals";
 import { useDispatch, useSelector } from "react-redux";
 import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
 
+import { useWeb3React } from "@web3-react/core";
+import { envConfig } from "@project/contracts";
+
+import {setCanSend,SEND_NOTIFICATION_STATES} from "redux/slices/sendNotificationSlice";
+import { postReq } from "api";
+import {NavigationLoaderButton} from 'components/NavigationLoaderButton';
+
 // Create Header
 function Navigation() {
-    const { channelDetails } = useSelector((state: any) => state.admin);
-    const [loading, setLoading] = useState(false);
+    const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified}  } = useSelector((state: any) => state.admin);
+    const [loading, setLoading] = useState(true);
     const [ refresh, setRefresh ] = useState(false);
 
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
-    const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
-    if(!run && navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
-    } else if(run && navigationSetup !== null) {
-      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-    }
+    const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
+
+    const CORE_CHAIN_ID = envConfig.coreContractChain;
+    const { account, chainId } = useWeb3React();
+    const onCoreNetwork = CORE_CHAIN_ID === chainId;
+
     const theme = useTheme();
     const location = useLocation();
     const dispatch = useDispatch();
-    // Similar to componentDidMount and componentDidUpdate:
 
-  
-    useEffect(() => {
-      if (!loading) {
-          setLoading(true);
-
-          // Set Primary List
-          const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
-  
-          // Set Secondary List
-          const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
-
-          // Set Nav List
-          let count = -1;
-          let navList = returnNavList(navigationList.primary, count);
-          navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
-          
-          const finalList = {
-            primary: primaryList,
-            secondary: secondaryList,
-            navigation: navList
-          };
-          
-          setNavigationSetup(finalList);
+    const {canSend} = useSelector(
+      (state:any) => {
+        return state.canSend
       }
-        
+    );
+    
+    useEffect(()=>{
+      if(canSend === SEND_NOTIFICATION_STATES.LOADING) return
+      if (!navigationSetup) return
+
+      if(canSend === SEND_NOTIFICATION_STATES.HIDE){
+        navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+      }else if(canSend === SEND_NOTIFICATION_STATES.SEND){
+        if(channelDetails && channelDetails.name) {
+          navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+        }else{
+          navigationSetup.primary[1].data.drilldown[0].data.name = "Channel Info";
+        }
+        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+      }
+    },[canSend,channelDetails,navigationSetup])
+
+    useEffect(()=>{
+      (async()=>{
+        const channelAddress = await postReq("/channels/_search", {
+          "page": 1,
+          "pageSize": 1,
+          "address":account,
+          "chainId": chainId,
+          "query":account,
+          "op": "read"          
+        }).then(({data}) => data.channels)
+
+        if(channelAddress.length === 0){
+          setLoading(false)
+          dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE))
+        }else{
+          dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
+        }
+      })()
+    },[channelDetails])
+    
+    // Similar to componentDidMount and componentDidUpdate:
+    useEffect(() => {
+      // Set Primary List
+      const primaryList = returnTransformedList(navigationList.primary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY);
+
+      // Set Secondary List
+      const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+
+      // Set Nav List
+      let count = -1;
+      let navList = returnNavList(navigationList.primary, count);
+      navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
+      
+      const finalList = {
+        primary: primaryList,
+        secondary: secondaryList,
+        navigation: navList
+      };
+      
+      setNavigationSetup(finalList);
     }, []);
+
+    useEffect(()=>{
+      if(channelDetails !== null){
+        setLoading(false)
+      }else{
+        setLoading(true)
+      }
+    },[channelDetails])
     
     const returnTransformedList = (lists, identity) => {
       let transformedList = [];
@@ -316,7 +368,7 @@ function Navigation() {
       }
 
       let rendered = (
-        Object.keys(items).map(function(key) {
+        Object.keys(items).map(function(key,index) {
           const section = items[key];
           // console.log(section)
           const data = section.data;
@@ -377,7 +429,7 @@ function Navigation() {
                       ? renderChildItems(
                           data.drilldown, 
                           section.opened,
-                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY,
                         )
                       : null
                     }
@@ -391,7 +443,7 @@ function Navigation() {
                       direction="row"
                       overflow="hidden"
                     >
-                        <SectionInnerGroupContainer
+                      <SectionInnerGroupContainer
                           flex="1"
                           align="stretch"
                           bg={theme.leftBarButtonBg}
@@ -416,14 +468,12 @@ function Navigation() {
                             // console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
-                        if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3)))
-                        {
-
-                          setTimeout(() => {
-                            dispatch(incrementStepIndex())
-                            // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
-                          }, 500);
-                        }
+                            if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3))){
+                              setTimeout(() => {
+                                dispatch(incrementStepIndex())
+                                // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
+                              }, 500);
+                            }
                           }}              
                         >
                         <NavigationButton
@@ -433,13 +483,13 @@ function Navigation() {
                           active={section.active}
                         />
                       </SectionInnerGroupContainer>
-                    
                       { 
-                      section.hasItems 
+                        section.hasItems 
                         ? renderChildItems(
                             data.drilldown, 
                             section.opened,
-                            GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                            GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY,
+                            index === 1 // send true if this one in Developer Section
                           )
                         : null
                       }
@@ -461,7 +511,7 @@ function Navigation() {
     }
 
     // Render Child Items
-    const renderChildItems = (drilldown, opened, sectionID) => {
+    const renderChildItems = (drilldown, opened, sectionID, isDevBar=false) => {
       let SectionGroup;
       let SectionItem;
 
@@ -498,38 +548,75 @@ function Navigation() {
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
-                    // console.log();
                     if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ||  (stepIndex === 16 && data.name === "Create Channel") ||  (stepIndex === 17 && data.name === "Developer's Guide")))
                     { 
                       if(stepIndex === 10)dispatch(setTutorialContinous(true));
                       dispatch(incrementStepIndex())
                     }
-                    // console.log(`Clicked  button`);
-                    // mutateTransformedList(item)
+                    
                   }}
-                >
+                  >
                   <NavigationButton
                     item={item}
                     data={data}
                     sectionID={sectionID}
                     active={item.active}
-                  />
+                    />
                 </SectionInnerItemContainer>
               </SectionItem>
             )
           })}
         </SectionGroup>
       );
-
-      return rendered;
+      
+      let renderedLoading = (
+        <SectionGroup
+          align="stretch"
+          opened={opened}
+          refresh={refresh}
+          style={{"pointerEvents":"unset"}}
+        >
+            <SectionItem
+                flex="1"
+                align="stretch"
+                size="small" 
+            >
+              <SectionInnerItemContainer
+                flex="1"
+                align="stretch"
+                bg={theme.leftBarButtonBg}
+                zIndex={1}
+                refresh={refresh}
+                >
+                <NavigationLoaderButton/>
+              </SectionInnerItemContainer>
+            </SectionItem>
+          
+        </SectionGroup>
+      );
+      
+      return <>
+        {!isDevBar ? 
+          rendered
+        :
+          loading ? renderedLoading : rendered
+        }
+      </>;
     }
     
     return (
       <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-        {!navigationSetup &&
-          <Item padding="20px" justify="flex-start">
-            <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
-          </Item>
+        {(!navigationSetup) &&
+          <Primary>
+            <Section 
+              flex="1"
+              align="centre"
+            >
+              <Item>
+                <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
+              </Item>
+            </Section>
+          </Primary>
         }
         {navigationSetup && Object.keys(navigationSetup).length > 0 &&
           <>
@@ -637,6 +724,8 @@ function Navigation() {
       </Container>
     );
 }
+
+
 
 // CSS Styles
 const Container = styled(Section)`
