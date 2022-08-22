@@ -7,11 +7,16 @@ import { RiNotificationOffLine } from "react-icons/ri";
 
 import { ModalInnerComponentType } from "hooks/useModal";
 
-const ChannelDeactivateModalContent = ({modalMessage, onClose, onConfirm}:ModalInnerComponentType)=>{
+const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
+    const deactivateChannelHandler = ()=>{
+        onClose();
+        // deactivate channel logic comes here
+    }
+
     return(
         <>
             <ModalMessage>
-                {modalMessage}
+                Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
             </ModalMessage>
             <ButtonContainer>
                 <IconButton
@@ -31,7 +36,7 @@ const ChannelDeactivateModalContent = ({modalMessage, onClose, onConfirm}:ModalI
                         <RiNotificationOffLine size="1.4rem" style={{
                             color: "white", background: "red", borderRadius: "50%", padding: "8px"
                         }} />}
-                        onClick={onConfirm}
+                        onClick={deactivateChannelHandler}
                 />
             </ButtonContainer>
         </>

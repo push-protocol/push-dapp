@@ -4,12 +4,12 @@ import styled from "styled-components";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
-export type ModalInnerComponentType = {modalMessage: string, onClose:()=>void, onConfirm:()=>void};
+export type ModalInnerComponentType = {onClose:()=>void,};
 
 export type ModalType = {
     modalMessage:string,
     onConfirm: () => any,
-    InnerComponent:({modalMessage, onClose, onConfirm}:ModalInnerComponentType)=>JSX.Element,
+    InnerComponent:({ onClose }:ModalInnerComponentType)=>JSX.Element,
 }
 
 const useModal = () => {
@@ -19,14 +19,10 @@ const useModal = () => {
         setOpen(true);
     };
 
-    const ModalComponent = ({modalMessage, onConfirm, InnerComponent}:ModalType)=>{
+    const ModalComponent = ({InnerComponent}:ModalType)=>{
         const handleClose = () => {
             setOpen(false);
         };
-        const handleConfirm = () => {
-            handleClose();
-            onConfirm();
-        }
         return(
             <CustomDialog
                 onClose={handleClose}
@@ -34,7 +30,7 @@ const useModal = () => {
                 maxWidth="xs"
             >
                 <DialogContent style={{ display: "flex", justifyContent: "space-between" }}>
-                    <InnerComponent modalMessage={modalMessage} onClose={handleClose} onConfirm={handleConfirm}  />
+                    <InnerComponent onClose={handleClose}  />
                 </DialogContent>
             </CustomDialog>
         )
