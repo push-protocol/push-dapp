@@ -405,6 +405,11 @@ template {
  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap');
 
+ @font-face {
+  font-family: 'Strawford';
+  src: url('assets/fonts/Strawford-Regular.otf');  
+}
+
  span, p, label, div {
   font-family: 'Manrope', sans-serif;
 }

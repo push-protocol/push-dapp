@@ -34,11 +34,11 @@ const InputTitle =  styled.h4`
     color: ${(props) => props.fontColor || "#000"};
     font-family: Strawford;
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0em;
     margin:0;
     padding:0;
-    margin-bottom: 2%;
+    margin-bottom: 3%;
 `
 
 const CustomInput = styled(Input)`

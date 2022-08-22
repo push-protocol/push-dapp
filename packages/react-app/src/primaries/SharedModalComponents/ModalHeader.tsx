@@ -28,7 +28,7 @@ const ModalHeading = styled.h1`
     color: ${(props) => props.fontColor || "#000"};
     font-family: Strawford;
     font-size: 2rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0em;
     text-align: center;
     margin:0;
