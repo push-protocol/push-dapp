@@ -3,12 +3,12 @@ import styled from "styled-components";
 import SpamBox from "segments/spam";
 
 // Create Header
-function Spambox() {
+function Spambox(props) {
 
   // Render
   return (
     <FullWidth>
-      <SpamBox currentTab="inbox" />
+      <SpamBox currentTab="inbox" showFilter={props.showFilter}/>
     </FullWidth>
   );
 }

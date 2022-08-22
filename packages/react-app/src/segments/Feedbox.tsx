@@ -25,7 +25,7 @@ import { Item } from "../primaries/SharedStyling";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-function Feedbox() {
+function Feedbox(props) {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
   const { notifications, page, finishedFetching, toggle } = useSelector(
@@ -312,6 +312,7 @@ function Feedbox() {
           filter={filter}
           reset={reset}
           loadFilter={loadFilter}
+          showFilter={props.showFilter}
         />
         <ScrollItem>
           {((!run && !notifications.length) ||

@@ -25,6 +25,8 @@ import {
 } from "redux/slices/contractSlice";
 
 import GLOBALS from "config/Globals";
+import InboxComponent from "components/InboxComponent";
+
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
 // Create Header
@@ -328,7 +330,7 @@ function InboxPage() {
 	return (
 		<ThemeProvider theme={themes}>
 			<Container>
-				<Item>
+				{/* <Item>
 					<Item margin="16px 20px 0px 0px" self="self-end">
 						<Button
 							padding="12px"
@@ -349,9 +351,10 @@ function InboxPage() {
 							<></>
 						</Button>
 					</Item>
-				</Item>
+				</Item> */}
 				<div className="joyride"></div>
-				<Feedbox />
+				<InboxComponent/>
+				{/* <Feedbox /> */}
 				{toast && (
 					<NotificationToast
 						notification={toast}
@@ -382,6 +385,8 @@ const Toaster = styled.div`
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `;
+
+
 
 // Export Default
 export default InboxPage;

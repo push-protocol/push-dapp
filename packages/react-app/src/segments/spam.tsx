@@ -25,7 +25,7 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-function SpamBox({ currentTab }) {
+function SpamBox(props) {
   const dispatch = useDispatch();
   const { account, chainId, library } = useWeb3React();
   const { epnsCommReadProvider } = useSelector(
@@ -429,7 +429,13 @@ function SpamBox({ currentTab }) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <SearchFilter notifications={allNotif} filterNotifications={filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter} />
+        <SearchFilter 
+          notifications={allNotif} 
+          filterNotifications={filterNotifications} 
+          filter={filter} reset={reset} 
+          loadFilter={loadFilter} 
+          showFilter={props.showFilter}
+        />
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
             <Loader type="Oval" color="#35c5f3" height={40} width={40} />
