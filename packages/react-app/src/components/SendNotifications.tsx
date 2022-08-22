@@ -20,6 +20,7 @@
   Input,
   TextField,
 } from "primaries/SharedStyling";
+import { IPFSupload } from "helpers/UtilityHelper";
 
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -440,12 +441,13 @@ function SendNotifications() {
               render: "Preparing Payload for upload",
           });
 
-          const ipfs = require("nano-ipfs-store").at(
-              "https://ipfs.infura.io:5001"
-          );
+        //   const ipfs = require("nano-ipfs-store").at(
+        //       "https://ipfs.infura.io:5001"
+        //   );
 
           try {
-              storagePointer = await ipfs.add(input);
+            //   storagePointer = await ipfs.add(input);
+              storagePointer = await IPFSupload(input);
           } catch (e) {
               setNFProcessing(2);
               setNFInfo("IPFS Upload Error");
