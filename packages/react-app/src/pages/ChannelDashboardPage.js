@@ -3,7 +3,7 @@ import ReactGA from "react-ga";
 import { ethers } from "ethers";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { addresses, abis , envConfig } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
@@ -83,18 +83,20 @@ function ChannelDashboardPage() {
     (async function init() {
       const coreProvider = onCoreNetwork
         ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
+        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
         const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-          if (data) {
-            setAliasEthAccount(data.channel);
-            setAliasVerified(data.is_alias_verified);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(
+          ({ data }) => {
+            if (data) {
+              setAliasEthAccount(data.channel);
+              setAliasVerified(data.is_alias_verified);
+            }
+            return data;
           }
-          return data;
-        });
+        );
       }
       // if we are not on the core network then fetch if there is an alias address from the api
       // inititalise the read contract for the core network
@@ -140,7 +142,8 @@ function ChannelDashboardPage() {
    * Corresponding channel owned.
    */
   React.useEffect(async () => {
-    if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
+    if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider)
+      return;
     // Reset when account refreshes
     setChannelAdmin(false);
     dispatch(setUserChannelDetails(null));
@@ -148,12 +151,13 @@ function ChannelDashboardPage() {
     userClickedAt(INITIAL_OPEN_TAB);
     setChannelJson([]);
     // save push admin to global state
-    epnsReadProvider.pushChannelAdmin()
+    epnsReadProvider
+      .pushChannelAdmin()
       .then((response) => {
         dispatch(setPushAdmin(response));
       })
-      .catch(err => {
-        console.log({ err })
+      .catch((err) => {
+        console.log({ err });
       });
 
     // EPNS Read Provider Set
@@ -170,7 +174,7 @@ function ChannelDashboardPage() {
         epnsCommReadProvider,
         chainId
       );
-      
+
       await checkUserForAlias();
       await checkUserForChannelOwnership();
       fetchDelegators();
@@ -191,14 +195,13 @@ function ChannelDashboardPage() {
         // fetch basic information abouot the channels and store it to state
         if (delegators && delegators.channelOwners) {
           const channelInformationPromise = [
-            ...new Set([account, ...delegators.channelOwners])//make the accounts unique
+            ...new Set([account, ...delegators.channelOwners]), //make the accounts unique
           ].map((channelAddress) => {
             return ChannelsDataStore.instance
               .getChannelJsonAsync(channelAddress)
               .then((res) => ({ ...res, address: channelAddress }))
-              .catch(() => false)
-          }
-          );
+              .catch(() => false);
+          });
           const channelInformation = await Promise.all(
             channelInformationPromise
           );
@@ -227,8 +230,8 @@ function ChannelDashboardPage() {
       .then(async (response) => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(
-            ownerAccount
-          );
+          ownerAccount
+        );
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
         const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
           account
@@ -277,16 +280,16 @@ function ChannelDashboardPage() {
       <Interface>
         {controlAt == 0 && <Feedbox />}
         {controlAt == 1 && <ViewChannels />}
-        {controlAt == 2 && adminStatusLoaded ? 
-            <ChannelOwnerDashboard /> 
-            // <ChannelLoadingMessage>
-            //   Channel details are being loaded, please wait…
-            // </ChannelLoadingMessage>
-          : 
-            <ChannelLoadingMessage>
-              Channel details are being loaded, please wait…
-            </ChannelLoadingMessage>
-        }
+        {controlAt == 2 && adminStatusLoaded ? (
+          <ChannelOwnerDashboard />
+        ) : (
+          // <ChannelLoadingMessage>
+          //   Channel details are being loaded, please wait…
+          // </ChannelLoadingMessage>
+          <ChannelLoadingMessage>
+            Channel details are being loaded, please wait…
+          </ChannelLoadingMessage>
+        )}
         {controlAt == 3 && <Info />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
@@ -305,14 +308,14 @@ function ChannelDashboardPage() {
 
 // css style
 const ChannelLoadingMessage = styled.div`
-width: 100%;
-/* background-color: red; */
-padding: 40px;
-font-size: 1.5em;
-font-weight: 300;
-text-align: center;
-color: ${props => props.theme.color};
-`
+  width: 100%;
+  /* background-color: red; */
+  padding: 40px;
+  font-size: 1.5em;
+  font-weight: 300;
+  text-align: center;
+  color: ${(props) => props.theme.color};
+`;
 
 const Container = styled.div`
   flex: 1;
