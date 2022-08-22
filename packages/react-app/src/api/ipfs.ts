@@ -3,7 +3,12 @@ import { MessageIPFS } from 'helpers/w2w/ipfs'
 import { envConfig } from '@project/contracts'
 import { MessageIPFSWithCID } from './w2w'
 
-const BASE_URL = envConfig.w2wApiUrl
+let BASE_URL = envConfig.apiUrl
+if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+  BASE_URL = envConfig.w2wApiUrl
+} else {
+  BASE_URL = envConfig.apiUrl
+}
 
 export const getFromIPFS = async (cid: string): Promise<MessageIPFSWithCID> => {
   const response: any = await fetch(BASE_URL + '/v1/ipfs/' + cid, {
