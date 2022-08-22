@@ -135,7 +135,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
           op: "read",
         };
       }
-      postReq("/channels/search", payloadToSearchApiObj)
+      postReq("/channels/_search", payloadToSearchApiObj)
         .then((data) => {
           setChannelToShow(data.data.channels || []);
           setLoadingChannel(false);
