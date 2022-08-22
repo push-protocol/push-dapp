@@ -73,7 +73,7 @@ function Navigation() {
           "chainId": chainId,
           "query":account,
           "op": "read"          
-        }).then(({data}) => data.channels)
+        }).then(({ data }) => data.channels);
 
         if(channelAddress.length === 0){
           setLoading(false)

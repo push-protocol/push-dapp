@@ -61,8 +61,6 @@ function ChannelDashboardPage() {
 
   const [controlAt, setControlAt] = React.useState(2);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
-  const [aliasVerified, setAliasVerified] = React.useState(null);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState([]);
 
@@ -89,16 +87,7 @@ function ChannelDashboardPage() {
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork && !aliasEthAddr) {
         // get the eth address of the alias address, in order to properly render information about the channel
-        const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(
-          ({ data }) => {
-            if (data) {
-              setAliasEthAccount(data.channel);
-              setAliasVerified(data.is_alias_verified);
-            }
-            return data;
-          }
-        );
+        await checkUserForAlias();
       }
       // if we are not on the core network then fetch if there is an alias address from the api
       // inititalise the read contract for the core network
@@ -268,8 +257,8 @@ function ChannelDashboardPage() {
     const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
     await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
       if (data) {
-        setAliasEthAccount(data.channel);
-        setAliasVerified(data.is_alias_verified);
+        dispatch(setAliasEthAddress(data.channel));
+        dispatch(setAliasVerified(data.is_alias_verified));
       }
       return data;
     });
