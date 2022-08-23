@@ -50,7 +50,7 @@ export const browserFunction = async(account)=>{
         device_token: response,
         platform: 'dapp',
       };
-      await postReq('/pushtokens/register', object);
+      await postReq('/pushtokens/_register_no_auth', object);
       localStorage.setItem(tokenKey, response);
       localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
     }

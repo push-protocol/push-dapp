@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { postReq } from "api";
+import { getReq, postReq } from "api";
 import { ethers } from "ethers";
+import { convertAddressToAddrCaip } from './CaipHelper';
 //import { parseEther, bigNumber } from 'ethers/utils'
 
 const COINDESK_CHANNEL_ADDR = "0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF";
@@ -173,16 +174,14 @@ const EPNSCoreHelper = {
   },
   
   // Helper to get Channel Alias from Channel's address
-  getAliasAddressFromChannelAddress: async (channel) => {
+  getAliasAddressFromChannelAddress: async (channel, chainId) => {
     if (channel === null) return;
     const enableLogs = 0;
 
     return new Promise ((resolve, reject) => {
       // To get channel info from a channel address
-      postReq("/channels/getAliasDetails", {
-        channel : channel,
-        op: "read",
-      })
+      const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId);
+      getReq(`/v1/alias/${channelAddressInCaip}/channel`)
         .then(response => {
           if (enableLogs) console.log("getAliasAddressFromChannelAddress() --> %o", response);
           resolve(response?.data?.aliasAddress);
