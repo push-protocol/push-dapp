@@ -13,6 +13,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
 import "./createChannel.css";
+import { IPFSupload } from "helpers/IpfsHelper";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -163,7 +164,8 @@ function CreateChannel() {
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     setProcessingInfo("Uploading Payload...");
-    var storagePointer = (storagePointer = await ipfs.add(input));
+    // var storagePointer = (storagePointer = await ipfs.add(input));
+    let storagePointer = await IPFSupload(input);
     console.log("IPFS storagePointer:", storagePointer);
     setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
