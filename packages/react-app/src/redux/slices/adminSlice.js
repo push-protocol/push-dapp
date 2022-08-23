@@ -6,14 +6,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   channelDetails: "unfetched",
-  //   aliasVerified: null,
   canVerify: false,
   aliasDetails: {
     aliasAddr: null,
     aliasEthAddr: null,
     isAliasVerified: null,
   },
-  delegatees: [],
+  delegatees: null,
 };
 
 export const contractSlice = createSlice({

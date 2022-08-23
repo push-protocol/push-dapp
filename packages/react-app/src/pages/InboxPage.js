@@ -73,32 +73,6 @@ function InboxPage() {
 		fetchEncryptionKey();
 	}, [enabledSecretNotif])
 
-	React.useEffect(() => {
-		(async function init() {
-			const coreProvider = onCoreNetwork
-				? library
-				: new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
-
-			// inititalise the read contract for the core network
-			const coreContractInstance = new ethers.Contract(
-				addresses.epnscore,
-				abis.epnscore,
-				coreProvider
-			);
-			// initialise the read contract for the communicator function
-			const commAddress = onCoreNetwork
-				? addresses.epnsEthComm
-				: addresses.epnsPolyComm;
-			const commContractInstance = new ethers.Contract(
-				commAddress,
-				abis.epnsComm,
-				library
-			);
-			dispatch(setCommunicatorReadProvider(commContractInstance));
-			dispatch(setCoreReadProvider(coreContractInstance));
-		})();
-	}, [account, chainId]);
-
 	// toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
@@ -112,19 +86,6 @@ function InboxPage() {
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
 	)
-
-	// notification toast
-	let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: "bottom-right",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-		});
-	
 
 	/**
 	 * When we instantiate the contract instances, fetch basic information about the user
