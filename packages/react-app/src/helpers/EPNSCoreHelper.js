@@ -1,7 +1,8 @@
-import axios from "axios";
-import { getReq, postReq } from "api";
+import axios from 'axios';
+import { getReq } from "api";
 import { ethers } from "ethers";
-import { convertAddressToAddrCaip } from "./CaipHelper";
+import { convertAddressToAddrCaip } from './CaipHelper';
+import { IPFSGateway } from './IpfsHelper';
 //import { parseEther, bigNumber } from 'ethers/utils'
 
 const COINDESK_CHANNEL_ADDR = "0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF";
@@ -181,8 +182,8 @@ const EPNSCoreHelper = {
       if (ids[0] == 1) {
         // IPFS HASH
         // Form Gateway URL
-        const url = "https://ipfs.io/ipfs/" + ids[1];
-        // const url = "https://epns-gateway.infura-ipfs.io/ipfs/" + ids[1];
+        const IPFS_GATEWAY = IPFSGateway;
+        const url = IPFS_GATEWAY + ids[1];
         fetch(url)
           .then((response) => response.json())
           .then((response) => {
