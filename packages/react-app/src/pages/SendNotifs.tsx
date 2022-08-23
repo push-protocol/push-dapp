@@ -45,7 +45,8 @@ function ChannelDashboardPage() {
     epnsReadProvider,
     epnsWriteProvider,
     epnsCommReadProvider,
-  } = useSelector((state) => state.contracts);
+  } = useSelector((state: any) => state.contracts);
+  const { channelDetails } = useSelector((state: any) => state.admin);
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -158,7 +159,7 @@ function ChannelDashboardPage() {
       if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
       // Reset when account refreshes
       setChannelAdmin(false);
-      dispatch(setUserChannelDetails(null));
+      dispatch(setUserChannelDetails('unfetched'));
       setAdminStatusLoaded(false);
       userClickedAt(INITIAL_OPEN_TAB);
       setChannelJson([]);
@@ -233,6 +234,7 @@ function ChannelDashboardPage() {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
+    if (channelDetails != 'unfetched') return;
     if (!onCoreNetwork && aliasEthAccount == null) {
       setChannelAdmin(false);
       setAdminStatusLoaded(true);

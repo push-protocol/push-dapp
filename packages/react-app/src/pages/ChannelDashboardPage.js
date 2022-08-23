@@ -2,18 +2,14 @@ import React from "react";
 import ReactGA from "react-ga";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { addresses, abis, envConfig } from "@project/contracts";
+import { envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "primaries/NotificationToast";
-import Info from "segments/Info";
-import Feedbox from "segments/Feedbox";
-import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import UsersDataStore from "singletons/UsersDataStore";
-import { postReq, getReq } from "api";
+import { getReq } from "api";
 import {
   setPushAdmin,
 } from "redux/slices/contractSlice";
@@ -22,17 +18,9 @@ import {
   setCanVerify,
   setDelegatees,
 } from "redux/slices/adminSlice";
-import { addNewNotification } from "redux/slices/notificationSlice";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
-
-const blockchainName = {
-  1: "ETH_MAINNET",
-  137: "POLYGON_MAINNET",
-  42: "ETH_TEST_KOVAN",
-  80001: "POLYGON_TEST_MUMBAI",
-};
 
 // Create Header
 function ChannelDashboardPage() {
@@ -49,15 +37,13 @@ function ChannelDashboardPage() {
     aliasDetails: { aliasEthAddr },
   } = useSelector((state) => state.admin);
 
-  const { delegatees } = useSelector((state) => state.admin);
+  const { delegatees, channelDetails } = useSelector((state) => state.admin);
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
-  const [controlAt, setControlAt] = React.useState(2);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
-  const [channelJson, setChannelJson] = React.useState([]);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -80,17 +66,8 @@ function ChannelDashboardPage() {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider)
       return;
     // Reset when account refreshes
-    dispatch(setUserChannelDetails(null));
+    dispatch(setUserChannelDetails('unfetched'));
     setAdminStatusLoaded(false);
-    // save push admin to global state
-    epnsReadProvider
-      .pushChannelAdmin()
-      .then((response) => {
-        dispatch(setPushAdmin(response));
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
 
     // EPNS Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
@@ -134,6 +111,7 @@ function ChannelDashboardPage() {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
+    if (channelDetails != 'unfetched') return;
     if (!onCoreNetwork && aliasEthAddr == null) {
       setChannelAdmin(false);
       setAdminStatusLoaded(true);
