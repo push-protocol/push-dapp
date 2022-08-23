@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from "styled-components";
+import styled, {useTheme, ThemeProvider } from "styled-components";
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -20,37 +20,37 @@ const useModal = () => {
     };
 
     const ModalComponent = ({InnerComponent}:ModalType)=>{
+        const themes = useTheme();
         const handleClose = () => {
             setOpen(false);
         };
         return(
-            <CustomDialog
-                onClose={handleClose}
-                open={open}
-                maxWidth="xs"
-            >
-                <DialogContent style={{ display: "flex", justifyContent: "space-between" }}>
-                    <InnerComponent onClose={handleClose}  />
-                </DialogContent>
-            </CustomDialog>
+            <ThemeProvider theme={themes}>
+                <Dialog
+                    onClose={handleClose}
+                    open={open}
+                    maxWidth="xs"
+                    style={{background:themes.scheme === "dark" ? `rgba(0,0,0,0.6)` :`rgba(255,255,255,0.6)`}}
+                    sx={{
+                        '& .MuiPaper-root': {
+                            background:themes.scheme === "dark" ? `rgb(0,0,0)` :`rgb(255,255,255)`,
+                            border: `1px solid ${themes.scheme === "dark" ? "#4A4F67" : "#E5E8F6"}`,
+                            borderRadius: "1rem",
+                            padding: "0.1% 0.62%",
+                            boxShadow: "none"
+                        },
+                    }}
+                >
+                    <DialogContent style={{ display: "flex", justifyContent: "space-between" }}>
+                        <InnerComponent onClose={handleClose}  />
+                    </DialogContent>
+                </Dialog>
+            </ThemeProvider>
         )
     
     }
 
     return { showModal: handleOpen, ModalComponent }
 }
-
-const CustomDialog = styled(Dialog)(() => ({
-    '& .MuiPaper-root': {
-        background: "#FFFFFF",
-        border: "1px solid #E5E8F6",
-        borderRadius: "1rem",
-        padding: "0.1% 0.62%",
-        boxShadow: "none"
-    },
-    '& .MuiBackdrop-root': {
-        background: "rgba(255,255,255,0.7)",
-    },
-}));
 
 export default useModal

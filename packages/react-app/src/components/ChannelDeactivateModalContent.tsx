@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from "styled-components";
+import styled, {useTheme, ThemeProvider } from "styled-components";
 
 import IconButton from '@mui/material/IconButton';
 import { MdHighlightOff } from "react-icons/md";
@@ -8,14 +8,17 @@ import { RiNotificationOffLine } from "react-icons/ri";
 import { ModalInnerComponentType } from "hooks/useModal";
 
 const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
+    const themes = useTheme();
+
     const deactivateChannelHandler = ()=>{
         onClose();
         // deactivate channel logic comes here
     }
-
     return(
-        <>
-            <ModalMessage>
+        <ThemeProvider theme={themes}>
+            <ModalMessage style={{
+                color:themes.scheme==="dark"?"#B6BCD6":"#000",
+            }}>
                 Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
             </ModalMessage>
             <ButtonContainer>
@@ -24,7 +27,7 @@ const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
                     sx={{ "&:hover": { backgroundColor: "transparent" } }}
                     children={
                         <MdHighlightOff size="2.6rem" style={{
-                            color: "#657795",
+                            color:themes.scheme==="dark"?"#787E99":"#657795",
                         }} />}
                         autoFocus
                     onClick={ onClose}
@@ -37,9 +40,9 @@ const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
                             color: "white", background: "red", borderRadius: "50%", padding: "8px"
                         }} />}
                         onClick={deactivateChannelHandler}
-                />
+                        />
             </ButtonContainer>
-        </>
+        </ThemeProvider>
     )
 }
 
@@ -50,7 +53,6 @@ const ModalMessage = styled.div`
     font-weight: 500;
     line-height: 20px;
     text-align: left;
-    color: #000000;
 `
 
 const ButtonContainer = styled.div`
