@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import {useTheme, ThemeProvider } from "styled-components";
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -30,11 +30,11 @@ const useModal = () => {
                     onClose={handleClose}
                     open={open}
                     maxWidth="xs"
-                    style={{background:themes.scheme === "dark" ? `rgba(0,0,0,0.6)` :`rgba(255,255,255,0.6)`}}
+                    style={{background:themes.modalBackdropBackground}}
                     sx={{
                         '& .MuiPaper-root': {
-                            background:themes.scheme === "dark" ? `rgb(0,0,0)` :`rgb(255,255,255)`,
-                            border: `1px solid ${themes.scheme === "dark" ? "#4A4F67" : "#E5E8F6"}`,
+                            background:themes.modalContentBackground,
+                            border: `1px solid ${themes.modalBorderColor}`,
                             borderRadius: "1rem",
                             padding: "0.1% 0.62%",
                             boxShadow: "none"

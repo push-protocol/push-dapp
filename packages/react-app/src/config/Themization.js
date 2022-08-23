@@ -93,6 +93,13 @@ const themeLight = {
   buttonColor: "#fff",
 
   createColor: "#808080",
+
+  // Modals
+  modalContentBackground: "white",
+  modalBackdropBackground: `rgba(255,255,255,0.6)`,
+  modalBorderColor: "#E5E8F6",
+  modalMessageColor: "black",
+  modalIconColor: "#657795",
 };
 
 const themeDark = {
@@ -192,6 +199,13 @@ const themeDark = {
   buttonBd: "1px solid #fff",
 
   createColor: "#fff",
+
+  // Modals
+  modalContentBackground: "black",
+  modalBackdropBackground: `rgba(0,0,0,0.6)`,
+  modalBorderColor: "#4A4F67",
+  modalMessageColor: "#B6BCD6",
+  modalIconColor: "#787E99",
 };
 
 module.exports = {

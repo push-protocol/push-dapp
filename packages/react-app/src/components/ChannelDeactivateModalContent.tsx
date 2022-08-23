@@ -17,7 +17,7 @@ const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
     return(
         <ThemeProvider theme={themes}>
             <ModalMessage style={{
-                color:themes.scheme==="dark"?"#B6BCD6":"#000",
+                color:themes.modalMessageColor,
             }}>
                 Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
             </ModalMessage>
@@ -27,7 +27,7 @@ const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
                     sx={{ "&:hover": { backgroundColor: "transparent" } }}
                     children={
                         <MdHighlightOff size="2.6rem" style={{
-                            color:themes.scheme==="dark"?"#787E99":"#657795",
+                            color:themes.modalIconColor,
                         }} />}
                         autoFocus
                     onClick={ onClose}
