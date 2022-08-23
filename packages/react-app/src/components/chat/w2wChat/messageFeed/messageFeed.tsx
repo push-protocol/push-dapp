@@ -8,7 +8,6 @@ import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
-import { toast } from 'react-toastify'
 
 interface MessageFeedProps {
   filteredUserData: User[]
@@ -52,7 +51,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     suspense: false,
     onError: () => {
       setStopApi(false)
-      toast.error('Error! Please Try Again later', ToastPosition)
+      setErrorMessage("You can't send intent to yourself")
     },
     retry: 3,
     refetchInterval: 1000 * 5,
@@ -74,7 +73,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
             setErrorMessage("You can't send intent to yourself")
-            toast.error("You can't send intent to yourself", ToastPosition)
             setFeeds([])
           } else {
             // When searching as of now the search will always result in only one user being displayed.
