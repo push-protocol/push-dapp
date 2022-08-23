@@ -13,7 +13,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
 import "./createChannel.css";
-import { IPFSupload } from "helpers/UtilityHelper";
+import { IPFSupload } from "helpers/IpfsHelper";
 
 const ethers = require("ethers");
 const minStakeFees = 50;

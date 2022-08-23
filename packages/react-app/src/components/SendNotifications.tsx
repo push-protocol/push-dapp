@@ -20,7 +20,6 @@
   Input,
   TextField,
 } from "primaries/SharedStyling";
-import { IPFSupload } from "helpers/UtilityHelper";
 
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -32,6 +31,7 @@ import { CloseIcon } from "assets/icons";
 import PreviewNotif from "./PreviewNotif";
 import CryptoHelper from "helpers/CryptoHelper";
 import { envConfig } from "@project/contracts";
+import { IPFSupload } from "helpers/IpfsHelper";
 
 const ethers = require("ethers");
 
