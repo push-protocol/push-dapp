@@ -2,7 +2,7 @@ import { EnvHelper } from "./UtilityHelper";
 import ipfsClient from 'ipfs-http-client';
 
 export const productionIpfsGateway: string = 'https://epns-gateway.infura-ipfs.io/ipfs/';
-export const developmentIpfsGateway: string = 'https://epns-testing.infura-ipfs.io/ipfs';
+export const developmentIpfsGateway: string = 'https://epns-testing.infura-ipfs.io/ipfs/';
 
 export const IPFSGateway = EnvHelper.isProduction() ? productionIpfsGateway : developmentIpfsGateway;
 
