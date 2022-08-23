@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { postReq } from "api";
@@ -8,6 +8,11 @@ import { useSelector } from "react-redux";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import DelegateInfo from "./DelegateInfo";
 
+import {
+  AiOutlineUserDelete
+} from 'react-icons/ai';
+
+
 const blockchainName = {
   1: "ETH_MAINNET",
   137: "POLYGON_MAINNET",
@@ -15,11 +20,15 @@ const blockchainName = {
   80001: "POLYGON_TEST_MUMBAI",
 };
 
+const isOnwer=(account,delegate)=>{
+  return account.toLowerCase() !== delegate.toLowerCase() 
+}
+
 const ShowDelegates = () => {
   const { account, chainId } = useWeb3React();
   const [delegatees, setDelegatees] = React.useState([account]);
   const theme = useTheme();
-  const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(false);
+  const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(true);
   const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
   const [delegateToBeRemoved, setDelegateToBeRemoved] = React.useState('');
   const { epnsCommWriteProvider } = useSelector(
@@ -30,18 +39,13 @@ const ShowDelegates = () => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
   };
 
-  const showList = async () => {
-    if (isActiveDelegateDropdown) {
-      setIsActiveDelegateDropdown(false);
-      return;
-    }
-    setIsActiveDelegateDropdown(true);
-    fetchDelegatees();
-  }
+  useEffect(()=>{
+    fetchDelegatees()
+  },[])
 
   const fetchDelegatees = async () => {
     try {
-      const { data } = await postReq("/channels/delegatee/get_delegate", {
+      const { data } = await postReq("/channels/getChannelDelegates", {
         channelAddress: account,
         blockchain: blockchainName[chainId]
       });
@@ -57,22 +61,13 @@ const ShowDelegates = () => {
   return (
     <>
     <Section>
-      <Content padding="10px 0px 20px">
+      <Content padding="20px 0px">
       <Item align="flex-start">
-        <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200" style={{color : theme.color}}>Channel </Span>
-            <Span
-                bg="#674c9f"
-                color="#fff"
-                weight="600"
-                padding="0px 8px"
-            >
-                Delegates
-            </Span>
-          </H2>
-          <H3 style={{color : theme.color}}>
+          <DelegatesInfoHeader style={{color : theme.color}}>Channel Delegates </DelegatesInfoHeader>
+          <div style={{height:'4px'}}/>
+          <DelegatesInfoLabel>
             Delegates that can send notifications on behalf of this channel.
-          </H3>
+          </DelegatesInfoLabel>
       </Item>
       </Content>
     </Section>
@@ -81,63 +76,41 @@ const ShowDelegates = () => {
         minWidth="280px"
         align="stretch"
         margin="10px 0px 30px 0px"
+        radius="10px"
         border="1px solid rgba(169, 169, 169, 0.5)"
       >
+      {isActiveDelegateDropdown && delegatees && 
         <Item
-          direction="row"
-          justify="space-between"
+          flex="5"
+          justify="flex-start"
+          align="stretch"
         >
-          <Span
-            textTransform="uppercase"
-            padding="10px"
-            spacing="3px"
-            size="14px"
-            color={theme.color}
-            weight="500"
-          >
-            List of Delegate Addresses
-          </Span>
-          <Span
-            padding="10px"
-            onClick={showList}
-          >
-            {!isActiveDelegateDropdown ? <GoTriangleDown color={theme.headerTagBg}/> : <GoTriangleUp color={theme.headerTagBg}/>}
-            </Span>
-          </Item>
-          {
-            isActiveDelegateDropdown && delegatees && 
+          {delegatees.map((delegate,idx) => {
+            return (
               <Item
-                flex="5"
-                justify="flex-start"
-                align="stretch"
+                padding="12px"
+                direction="row"
+                justify="space-between"
+                key={delegate}
+                style={{
+                  borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
+                }}
               >
-                {delegatees.map((delegate) => {
-                  return (
-                    <Item
-                      border="1px solid rgba(169, 169, 169, 0.5)"
-                      padding="5px"
-                      direction="row"
-                      justify="space-between"
-                      key={delegate}
-                    >
-                      <Item direction="row" justify="flex-start">
-                        <DelegateInfo delegateAddress={delegate} />
-                      </Item>
-                      {(account.toLowerCase() != delegate.toLowerCase()) ?
-                        <RemoveButton onClick={() => {
-                          setDelegateToBeRemoved(delegate);
-                          setRemoveModalOpen(true);
-                        }}>
-                          Remove Delegate
-                        </RemoveButton> : 
-                        <OwnerButton disabled={true}>
-                          Owner
-                        </OwnerButton>
-                      }
-                    </Item>
-                  )
-                })}
+                <DelegateInfo delegateAddress={delegate} isDelegate={isOnwer(account,delegate)}/>
+                {isOnwer(account,delegate) ?
+                  <RemoveButton onClick={() => {
+                    setDelegateToBeRemoved(delegate);
+                    setRemoveModalOpen(true);
+                  }}>
+                  </RemoveButton> : 
+                  <OwnerButton disabled={true}>
+                    Channel Creator
+                  </OwnerButton>
+                }
               </Item>
+            )
+          })}
+        </Item>
         }
         {removeModalOpen && (
           <RemoveDelegateModal
@@ -151,6 +124,37 @@ const ShowDelegates = () => {
         )}
       </Item>
     </>
+  )
+}
+
+const RemoveButton = ()=>{
+  const [isHovered,setIsHovered] = useState(false)
+  
+  const handleMouseOver = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovered(false);
+  };
+
+  return(
+      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut}>
+        {
+        isHovered ?
+        <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
+          <AiOutlineUserDelete fontSize={15}/>
+          <div style={{padding:'3px'}}/>
+          <div>
+            Remove Delegate 
+          </div>
+        </div>
+          :
+            <div style={{color:"#657795",textAlign:'right',width:'100%'}}>
+              Delegate
+            </div>
+        }
+      </RemoveButtonUI>
   )
 }
 
@@ -193,13 +197,65 @@ const ChannelActionButton = styled.button`
     `}
 `;
 
-const RemoveButton = styled(ChannelActionButton)`
-  background: #e20880;
-  min-width: 80px;
+const RemoveButtonUI = styled(ChannelActionButton)`
+  background: ${props => props.theme.backgroundBG};
+  color: ${props => props.theme.color};
+  height: 36px;
+  max-width: 164px;
+  flex:1; 
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 141%;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  padding: 6px 10px 6px 9px;
+  gap: 5px;
+  
+  &:hover {
+    opacity: 0.9;
+    background: #E93636;
+    border-radius: 8px;
+  };
+    color: #fff;
+    cursor: pointer;
+  
 `;
 
 const OwnerButton = styled(ChannelActionButton)`
-  background: #35c5f3;
+  /* background-color: red; */
+  background: ${props => props.theme.backgroundBG};
+  height: 50px;
+  width: 164px;
+  font-weight: 700;
+  font-size: 15px;
+  justify-content: end;
+  text-align: right;
+  cursor: pointer;
+  color: #CF1C84;
+  padding: 6px 10px 6px 9px;
+`;
+
+
+const DelegatesInfoHeader = styled.div`
+font-family: 'Source Sans Pro';
+font-style: normal;
+font-weight: 700;
+font-size: 20px;
+line-height: 141%;
+display: flex;
+align-items: center;
+color: ${(props) => props.theme.color};
+`;
+const DelegatesInfoLabel = styled.div`
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 150%;
+  letter-spacing: 0.03em;
+  color: #657795;
 `;
 
 export default ShowDelegates;

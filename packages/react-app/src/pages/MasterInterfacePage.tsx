@@ -13,6 +13,7 @@ import InboxPage from "pages/InboxPage";
 import SpamPage from "pages/SpamPage";
 import ViewChannelsPage from "pages/ViewChannelsPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
+import SendNotifs from "pages/SendNotifs";
 import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
 
 import GovernancePage from "pages/GovernancePage";
@@ -49,6 +50,7 @@ function MasterInterfacePage() {
           />
           <Route path="inbox" element={<InboxPage />} />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
+          <Route path="send" element={<SendNotifs />} />
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
 
@@ -113,8 +115,8 @@ function MasterInterfacePage() {
 const Container = styled.div`
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px );
-  padding: 5px 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
+  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
   align-items: stretch;
 
 `;

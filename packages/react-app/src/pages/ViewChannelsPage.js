@@ -15,7 +15,7 @@ import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
-import { postReq } from "api";
+import { getReq } from "api";
 import {
   setCoreReadProvider,
   setCoreWriteProvider,
@@ -31,6 +31,7 @@ import {
 import { addNewNotification } from "redux/slices/notificationSlice";
 
 import GLOBALS from "config/Globals";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
@@ -78,33 +79,14 @@ function InboxPage({ loadTeaser, playTeaser }) {
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/get_eth_address", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
+        const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+          if (data) {
+            setAliasEthAccount(data.channel);
+            setAliasVerified(data.is_alias_verified);
           }
           return data;
         });
-        if (aliasEth) {
-          // if an alias exists, check if its verified.
-          await postReq("/channels/get_alias_verification_status", {
-            aliasAddress: account,
-            op: "read",
-          }).then(({ data }) => {
-            // if it returns undefined then we need to let them know to verify their channel
-            if (!data) {
-              setAliasVerified(false);
-              return;
-            }
-            const { status } = data;
-            setAliasVerified(status || null);
-            return data;
-          });
-        }
       }
     })();
   }, [account, chainId]);
@@ -156,11 +138,10 @@ function InboxPage({ loadTeaser, playTeaser }) {
 
   // fetch all the channels who have delegated to this account
   const fetchDelegators = () => {
-    postReq("/channels/delegatee/get_channels", {
-      delegateAddress: account,
-      op: "read",
-    })
+    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
       .then(async ({ data: delegators }) => {
+        console.log(delegators);
         // if there are actual delegators
         // fetch basic information abouot the channels and store it to state
         if (delegators && delegators.channelOwners) {
@@ -201,6 +182,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
         const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
           account
         );
+        console.log(response, channelJson, channelSubscribers);
         dispatch(
           setUserChannelDetails({
             ...response,

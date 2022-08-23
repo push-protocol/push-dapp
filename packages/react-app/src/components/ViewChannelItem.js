@@ -26,7 +26,8 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
 import { envConfig } from "@project/contracts";
-import { incrementStepIndex,addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -100,7 +101,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     } else {
       // if this key (verifiedBy) is not present it means we are searching and should fetch the channel object from chain again
       epnsReadProvider.channels(channelObject.addr).then((response) => {
-        setChannelObject({ ...response, addr: channelObject.addr, alias_address: channelObject.alias_address });
+        setChannelObject({ ...response, addr: channelObject.addr, alias_address: channelObject.alias_address, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
         fetchChannelJson();
       });
     }
@@ -151,29 +152,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress = channelObject.alias_address;
       }
       if (!channelAddress) return;
-      const channelSubscribers = await postReq("/channels/get_subscribers", {
-        channel: channelAddress,
-        blockchain: chainId,
-        op: "read",
-      })
-        .then(({ data }) => {
-          const subs = data.subscribers;
 
-          return subs;
-        })
-        .catch((err) => {
-          console.log(`getChannelSubscribers => ${err.message}`);
-          return [];
-        });
-        let subscribed = channelSubscribers.find((sub) => {
-        return sub.toLowerCase() === account.toLowerCase();
-      });
-
-      if (run) subscribed = false;
       setIsPushAdmin(pushAdminAddress === account);
-      setMemberCount(channelSubscribers.length);
-      setSubscribed(subscribed);
-      setChannelJson({ ...channelJson, addr: channelObject.addr });
+      setMemberCount(channelObject.memberCount);
+      setSubscribed(channelObject.isSubscriber);
+      setChannelJson({ ...channelJson, addr: channelObject.addr, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
@@ -377,13 +360,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         return;
       }
 
-      postReq("/channels/subscribe_offchain", {
+      postReq("/channels/subscribe", {
         signature,
         message,
         op: "write",
         chainId,
         contractAddress: epnsCommReadProvider.address,
       }).then((res) => {
+        dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
         setSubscribed(true);
         setMemberCount(memberCount + 1);
         toaster.update(txToast, {
@@ -467,7 +451,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         }
       );
 
-      postReq("/channels/unsubscribe_offchain", {
+      postReq("/channels/unsubscribe", {
         signature,
         message,
         op: "write",
@@ -475,6 +459,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         contractAddress: epnsCommReadProvider.address,
       })
         .then((res) => {
+          dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
           setSubscribed(false);
           setMemberCount(memberCount - 1);
           toaster.update(txToast, {

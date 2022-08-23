@@ -14,12 +14,14 @@ import {
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/spamSlice";
-import { postReq } from "api";
+import { cacheSubscribe } from "redux/slices/channelSlice";
+import { getReq, postReq } from "api";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { ThemeProvider } from "styled-components";
 import CryptoHelper from "helpers/CryptoHelper";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -138,7 +140,7 @@ function SpamBox({ currentTab }) {
             
             const {
               data: { subscribers },
-            } = await postReq("/channels/get_subscribers", {
+            } = await postReq("/channels/_get_subscribers", {
               channel: address,
               blockchain: chainId,
               op: "read",
@@ -185,7 +187,7 @@ function SpamBox({ currentTab }) {
 
           const {
             data: { subscribers },
-          } = await postReq("/channels/get_subscribers", {
+          } = await postReq("/channels/_get_subscribers", {
             channel: address,
             blockchain: chainId,
             op: "read",
@@ -235,7 +237,7 @@ function SpamBox({ currentTab }) {
           
           const {
             data: { subscribers },
-          } = await postReq("/channels/get_subscribers", {
+          } = await postReq("/channels/_get_subscribers", {
             channel: address,
             op: "read",
           });
@@ -268,14 +270,11 @@ function SpamBox({ currentTab }) {
 
   const fetchAliasAddress = async (channelAddress) => {
     if (channelAddress === null) return;
-    const ethAlias = await postReq("/channels/get_alias_details", {
-      channel: channelAddress,
-      op: "read",
-    }).then(({ data }) => {
-      console.log({ data });
+    const userAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
+    const ethAlias = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
       let aliasAccount;
       if (data) {
-        aliasAccount = data.aliasAddress
+        aliasAccount = data.alias_address;
       }
       return aliasAccount;
     });
@@ -285,14 +284,11 @@ function SpamBox({ currentTab }) {
 
   const fetchEthAddress = async (channelAddress) => {
     if (channelAddress === null) return;
-    const aliasEth = await postReq("/channels/get_eth_address", {
-      aliasAddress: channelAddress,
-      op: "read",
-    }).then(({ data }) => {
-      console.log({ data });
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    const aliasEth = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
       let ethAccount;
       if (data) {
-        ethAccount = data.ethAddress
+        ethAccount = data.channel;
       }
       return ethAccount;
     });
@@ -344,13 +340,15 @@ function SpamBox({ currentTab }) {
     const signature = await library
       .getSigner(account)
       ._signTypedData(EPNS_DOMAIN, type, message);
-    return postReq("/channels/subscribe_offchain", {
+    return postReq("/channels/subscribe", {
       signature,
       message,
       op: "write",
       chainId,
       contractAddress: epnsCommReadProvider.address,
-    });
+    }).then((res) => {
+        dispatch(cacheSubscribe({ channelAddress: channelAddress }));
+      });;
   };
 
   const isSubscribedFn = (subscribers: any) => {

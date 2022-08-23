@@ -4,7 +4,7 @@ import ReactGA from "react-ga";
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener } from "hooks";
+import { useEagerConnect, useInactiveListener, useBrowserNotification } from "hooks";
 import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
 import Joyride, { CallBackProps } from "react-joyride";
@@ -25,12 +25,11 @@ import GLOBALS from "config/Globals";
 import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
-import { getPushToken, onMessageListener } from "./firebase";
 
 import * as dotenv from "dotenv";
-import { postReq } from "api";
-import { toast } from "react-toastify";
 import InitState from "components/InitState";
+
+
 dotenv.config();
 
 // define the different type of connectors which we use
@@ -49,7 +48,7 @@ const web3Connectors = {
   Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
   Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
 };
-const CACHEPREFIX = "PUSH_TOKEN_";
+
 export default function App() {
 
   const dispatch = useDispatch();
@@ -65,55 +64,8 @@ export default function App() {
     stepIndex,
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
-  const [triggerNotification, setTriggerNotification] = React.useState(false);
-  React.useEffect(() => {
-    if (!account) return;
-    (async function () {
-      const tokenKey = `${CACHEPREFIX}${account}`;
-      const tokenExists = localStorage.getItem(tokenKey) || localStorage.getItem(CACHEPREFIX); //temp to prevent more than 1 account to register
-      if (!tokenExists) {
-        const response = await getPushToken();
-        const object = {
-          op: 'register',
-          wallet: account.toLowerCase(),
-          device_token: response,
-          platform: 'dapp',
-        };
-        await postReq('/pushtokens/register_no_auth', object);
-        localStorage.setItem(tokenKey, response);
-        localStorage.setItem(CACHEPREFIX, 'response'); //temp to prevent more than 1 account to register
-      }
-    })();
-  }, [account]);
 
-  // React.useEffect(() => {
-  onMessageListener().then(payload => {
-    if (!("Notification" in window)) {
-      toast.dark(`${payload.notification.body} from: ${payload.notification.title}`, {
-        type: toast.TYPE.DARK,
-        autoClose: 5000,
-        position: "top-right"
-      });
-    } else {
-      console.log('\n\n\n\n\n')
-      console.log("revieced push notification")
-      console.log('\n\n\n\n\n')
-      const notificationTitle = payload.notification.title;
-      const notificationOptions = {
-        title: payload.data.app,
-        body: payload.notification.body,
-        image: payload.data.aimg,
-        icon: payload?.data?.icon,
-        data: {
-          url: payload?.data?.acta || payload?.data?.url,
-        },
-      };
-      var notification = new Notification(notificationTitle, notificationOptions);
-    }
-  }).catch(err => console.log('failed: ', err))
-    .finally(() => setTriggerNotification(!triggerNotification)); //retrigger the listener after it has been used once
-  // }, [triggerNotification]);
-
+  
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
@@ -137,6 +89,9 @@ export default function App() {
 
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
+
+  // Enable browser notification
+  useBrowserNotification(account)
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
