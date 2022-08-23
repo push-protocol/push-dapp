@@ -96,7 +96,7 @@ const ShowDelegates = () => {
                   borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
                 }}
               >
-                <DelegateInfo delegateAddress={delegate} isDelegate={isOnwer(account,delegate)}/>
+                <DelegateInfo delegateAddress={delegate} isDelegate={isOnwer(account,delegate)} maxWidth={'200px'}/>
                 {isOnwer(account,delegate) ?
                   <RemoveButton onClick={() => {
                     setDelegateToBeRemoved(delegate);

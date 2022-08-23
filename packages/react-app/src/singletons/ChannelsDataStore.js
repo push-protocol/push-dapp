@@ -376,7 +376,7 @@ export default class ChannelsDataStore {
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      postReq("/channels/search", {
+      postReq("/channels/_search", {
         page: 1,
         pageSize: 1,
         query: channel,
