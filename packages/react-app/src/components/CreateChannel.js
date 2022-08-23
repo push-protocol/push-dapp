@@ -20,6 +20,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis } from "@project/contracts";
 import "./createChannel.css";
+import { IPFSupload } from "helpers/IpfsHelper";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -189,7 +190,8 @@ function CreateChannel() {
       "Please complete the transaction in your wallet to continue."
     );
     setProgress(10);
-    var storagePointer = (storagePointer = await ipfs.add(input));
+    // var storagePointer = (storagePointer = await ipfs.add(input));
+    let storagePointer = await IPFSupload(input);
     console.log("IPFS storagePointer:", storagePointer);
     // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
