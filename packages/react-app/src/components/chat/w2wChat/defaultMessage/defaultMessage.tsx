@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import './defaultMessage.css'
 import { CID } from 'ipfs-http-client'
+// @ts-ignore
 import { envConfig } from '@project/contracts'
 import { caip10ToWallet } from 'helpers/w2w'
 import { Feeds } from 'api'
