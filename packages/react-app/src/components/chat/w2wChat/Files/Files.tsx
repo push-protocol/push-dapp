@@ -2,19 +2,30 @@ import React from 'react'
 import './Files.css'
 import { FILE_ICON } from '../stickers/stickerHelper'
 import { formatFileSize } from '../w2wUtils'
+import { MessageIPFS } from 'helpers/w2w/ipfs'
 
-const Files = props => {
-  const fileContent = JSON.parse(props.msg.messageContent)
+interface FileProps {
+  msg: MessageIPFS
+}
+
+export interface FileMessageContent {
+  content: string
+  name: string
+  type: string
+  size: number
+}
+
+const Files = (props: FileProps) => {
+  const fileContent: FileMessageContent = JSON.parse(props.msg.messageContent)
   const name = fileContent.name
-  let modifiedName
+  let modifiedName: string
   if (name.length > 11) {
     modifiedName = name.slice(0, 11) + '...'
   } else {
     modifiedName = name
   }
-  const content = fileContent.content
+  const content = fileContent.content as string
   const size = fileContent.size
-  //console.log(fileContent.name, fileContent.size);
   return (
     <div className="w2w_FilesUpload_Container">
       <div className="w2w_FilesUpload_extention">
@@ -33,6 +44,3 @@ const Files = props => {
   )
 }
 export default Files
-/*
-
-*/

@@ -54,10 +54,10 @@ const DefaultMessage = (props: { inbox: Feeds }): JSX.Element => {
                 <i className="fa fa-file" aria-hidden="true"></i>
                 File
               </div>
-            ) : props.inbox.msg.messageType === 'Gif' ? (
+            ) : props.inbox.msg.messageType === 'GIF' ? (
               <div>
                 <i className="fa fa-picture-o" aria-hidden="true"></i>
-                Gif
+                GIF
               </div>
             ) : null}
           </div>

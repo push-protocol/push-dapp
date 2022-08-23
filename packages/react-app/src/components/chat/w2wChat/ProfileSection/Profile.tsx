@@ -2,8 +2,6 @@ import React, { useContext, useState, useEffect } from 'react'
 import './Profile.css'
 import { AppContext, Context } from '../w2wIndex'
 import { updateUser } from '../../../../api/w2w'
-import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
-import { IPFSHTTPClient } from 'ipfs-http-client'
 import { CID } from 'ipfs-http-client'
 import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
@@ -19,14 +17,13 @@ import CheckIcon from '@mui/icons-material/Check'
 import { showCharacters } from './helpers'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-// @ts-ignore
-import { envConfig } from '@project/contracts'
-
-const INFURA_URL = envConfig.infuraApiUrl
+import { postIPFS } from '../../../../api'
 
 import styles from './styles'
+import { FileMessageContent } from '../Files/Files'
+import { ChangeEvent } from 'react'
 
-interface profilePropsType {
+interface ProfilePropsType {
   profilePicture: string
   updateProfile: (image: string) => void
   setValue: (number: number) => void
@@ -36,7 +33,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 })
 
-const Profile = (props: profilePropsType): JSX.Element => {
+const Profile = (props: ProfilePropsType): JSX.Element => {
   const { did, connectedUser }: AppContext = useContext<AppContext>(Context)
 
   const wallets = connectedUser.wallets.split(',')
@@ -48,7 +45,7 @@ const Profile = (props: profilePropsType): JSX.Element => {
   useEffect(() => {
     try {
       CID.parse(props.profilePicture)
-      setProfile(INFURA_URL + `${props.profilePicture}`)
+      setProfile(props.profilePicture)
     } catch (err) {
       setProfile(props.profilePicture)
     }
@@ -82,12 +79,23 @@ const Profile = (props: profilePropsType): JSX.Element => {
     setMessage('Wallet copied successfully')
   }
 
-  const changeHandler = async (event) => {
-    const file = event.target.files[0]
-    const cid = await IPFSHelper.uploadImage(file)
-    setProfile(INFURA_URL + `${cid}`)
-    props.updateProfile(cid)
-    await updateUser({ did: did.id, profilePictureCID: cid })
+  const changeHandler = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file: File = event.target.files[0]
+    const reader = new FileReader()
+    let fileMessageContent: FileMessageContent
+    reader.readAsDataURL(file)
+    reader.onloadend = async (e): Promise<void> => {
+      fileMessageContent = {
+        content: e.target.result as string,
+        name: file.name,
+        type: file.type,
+        size: file.size
+      }
+      const cid: string = await postIPFS(JSON.stringify(fileMessageContent))
+      setProfile(fileMessageContent.content)
+      props.updateProfile(cid)
+      await updateUser({ did: did.id, profilePictureCID: cid })
+    }
   }
 
   return (
