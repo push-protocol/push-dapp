@@ -125,3 +125,8 @@
   position: relative;
   
 }
+
+.search-user-loader {
+  display: flex;
+  flex-direction: row;
+}

@@ -54,14 +54,20 @@ const SearchBar = () => {
   const submitSearch = async (event: React.FormEvent) => {
     event.preventDefault()
     if (!ethers.utils.isAddress(searchedUser)) {
+      setIsLoadingSearch(true)
       const ens: string = await provider.resolveName(searchedUser)
-      const resolvedENS: string = await provider.resolveName(ens)
-      if (!resolvedENS) {
+      let resolvedENS: string
+      try {
+        resolvedENS = await provider.resolveName(ens)
+      } catch (error) {
         setIsInvalidAddress(true)
         setFilteredUserData([])
-      } else {
+        setHasUserBeenSearched(true)
+      }
+      if (resolvedENS) {
         const caip10 = w2wChatHelper.walletToCAIP10({ account: resolvedENS, chainId })
         const displayUser = displayDefaultUser({ caip10 })
+        setHasUserBeenSearched(true)
         setFilteredUserData([displayUser])
       }
     } else {
@@ -77,6 +83,7 @@ const SearchBar = () => {
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             const displayUser = displayDefaultUser({ caip10 })
+            setHasUserBeenSearched(true)
             setFilteredUserData([displayUser])
           } else {
             setIsInvalidAddress(true)
@@ -87,12 +94,14 @@ const SearchBar = () => {
         setFilteredUserData([])
       }
     }
+    setIsLoadingSearch(false)
   }
 
   const clearInput = () => {
     setFilteredUserData([])
     setSearchedUser('')
     setHasUserBeenSearched(false)
+    setIsLoadingSearch(false)
   }
 
   return (
@@ -110,7 +119,10 @@ const SearchBar = () => {
               {searchedUser.length === 0 ? (
                 <SearchIcon />
               ) : isLoadingSearch ? (
-                <Loader type="oval" />
+                <div className="search-user-loader">
+                  <Loader type="Oval" color="#000" height={25} width={25} />
+                  <CloseIcon id="clearBtn" onClick={clearInput} />
+                </div>
               ) : (
                 <CloseIcon id="clearBtn" onClick={clearInput} />
               )}
