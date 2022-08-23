@@ -1,26 +1,28 @@
 import React from "react";
 import { toast } from "react-toastify";
 import FadeLoader from "react-spinners/FadeLoader";
-import styled from "styled-components";
+import styled, { ThemeProvider,useTheme } from "styled-components";
 import { MdOutlineClose } from "react-icons/md";
 
-type LoaderToastType = { msg: string, color: string }
+type LoaderToastType = { msg: string, loaderColor: string, textColor:string }
 
 const override: React.CSSProperties = {
   // width: "fit-content",
   height: "45px",
 };
 
-const LoaderToast = ({ msg, color }: LoaderToastType) => (
+const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
   <LoaderNotification>
     <FadeLoader
-      color={color}
+      color={loaderColor}
       height={9}
       width={2.5}
       margin={0}
       css={override}
     />
-    <LoaderMessage>{msg}</LoaderMessage>
+    <LoaderMessage style={{
+      color: textColor
+    }}>{msg}</LoaderMessage>
   </LoaderNotification>
 );
 
@@ -30,10 +32,13 @@ const CloseButton = ({ closeToast }) => (<Button onClick={closeToast}>
 
 const useToast = () => {
   const toastId = React.useRef(null);
+  const themes = useTheme();
 
   const showToast = (loaderMessage: string) =>
     toastId.current = toast(
-      <LoaderToast msg={loaderMessage} color="#CF1C84" />,
+      <ThemeProvider theme={themes}>
+        <LoaderToast msg={loaderMessage} loaderColor="#CF1C84" textColor={themes.toastTextColor} />
+      </ThemeProvider>,
       {
         position: "top-right",
         autoClose: false,
@@ -44,7 +49,8 @@ const useToast = () => {
         progress: undefined,
         closeButton: false,
         style: {
-          border: "1px solid #F4F3FF",
+          background: themes.mainBg,
+          border: `1px solid ${themes.toastBorderColor}`,
           boxShadow: "0px 0px 10px 0px #00000005",
           borderRadius: "20px",
         }
@@ -52,8 +58,14 @@ const useToast = () => {
     );
 
   const updateToast = (toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon: (size: number) => JSX.Element = null) => {
-    const successBgGradient = "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)";
-    const errorBgGradient = "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)";
+    const successBgGradient = themes.scheme==="dark"
+    ? "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #2F3137 42.81%)"
+    : "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)";
+
+    const errorBgGradient = themes.scheme==="dark"
+    ? "linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)"
+    : "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)";
+
 
     toast.update(toastId.current, {
       render:
@@ -62,10 +74,14 @@ const useToast = () => {
             {getToastIcon ? getToastIcon(30) : ""}
           </ToastIcon>
           <ToastContent>
-            <ToastTitle>
+            <ToastTitle style={{
+              color: themes.fontColor
+            }}>
               {toastTitle}
             </ToastTitle>
-            <ToastMessage>
+            <ToastMessage style={{
+              color: themes.toastTextColor
+            }}>
               {toastMessage}
             </ToastMessage>
           </ToastContent>
@@ -95,7 +111,6 @@ const LoaderNotification = styled.div`
 `;
 const LoaderMessage = styled.div`
   margin-left: 3%;
-  color: black;
   font-family: Manrope;
   font-size: 1rem;
   font-weight: 700;
@@ -120,7 +135,6 @@ const ToastContent = styled.div`
   align-items: flex-start;
 `;
 const ToastTitle = styled.div`
-  color: black;
   font-family: Manrope;
   font-size: 1.1rem;
   font-weight: 700;
