@@ -1,25 +1,16 @@
 import React from "react";
 import ReactGA from "react-ga";
-import { ethers } from "ethers";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { addresses, abis, envConfig } from "@project/contracts";
+import { envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "primaries/NotificationToast";
-import Info from "segments/Info";
-import Feedbox from "segments/Feedbox";
-import ViewChannels from "segments/ViewChannels";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import UsersDataStore from "singletons/UsersDataStore";
-import { postReq, getReq } from "api";
+import { getReq } from "api";
 import {
-  setCoreReadProvider,
-  setCoreWriteProvider,
-  setCommunicatorReadProvider,
-  setCommunicatorWriteProvider,
   setPushAdmin,
 } from "redux/slices/contractSlice";
 import {
@@ -27,25 +18,16 @@ import {
   setCanVerify,
   setDelegatees,
 } from "redux/slices/adminSlice";
-import { addNewNotification } from "redux/slices/notificationSlice";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
-const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
-
-const blockchainName = {
-  1: "ETH_MAINNET",
-  137: "POLYGON_MAINNET",
-  42: "ETH_TEST_KOVAN",
-  80001: "POLYGON_TEST_MUMBAI",
-};
 
 // Create Header
 function ChannelDashboardPage() {
   ReactGA.pageview("/channel_dashboard");
 
   const dispatch = useDispatch();
-  const { account, library, chainId } = useWeb3React();
+  const { account, chainId } = useWeb3React();
   const {
     epnsReadProvider,
     epnsWriteProvider,
@@ -55,14 +37,13 @@ function ChannelDashboardPage() {
     aliasDetails: { aliasEthAddr },
   } = useSelector((state) => state.admin);
 
+  const { delegatees, channelDetails } = useSelector((state) => state.admin);
+
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-  const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
-  const [controlAt, setControlAt] = React.useState(2);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
   const [channelAdmin, setChannelAdmin] = React.useState(false);
-  const [channelJson, setChannelJson] = React.useState([]);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -77,58 +58,7 @@ function ChannelDashboardPage() {
   // toast related section
 
   /**
-   * Logic to get channel alias and alias verification status as well as create instances of core and comunicator contract
-   */
-  React.useEffect(() => {
-    (async function init() {
-      const coreProvider = onCoreNetwork
-        ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
-      // if we are not on the core network then check for if this account is an alias for another channel
-      if (!onCoreNetwork && !aliasEthAddr) {
-        // get the eth address of the alias address, in order to properly render information about the channel
-        await checkUserForAlias();
-      }
-      // if we are not on the core network then fetch if there is an alias address from the api
-      // inititalise the read contract for the core network
-      const coreContractInstance = new ethers.Contract(
-        addresses.epnscore,
-        abis.epnscore,
-        coreProvider
-      );
-      // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork
-        ? addresses.epnsEthComm
-        : addresses.epnsPolyComm;
-      const commContractInstance = new ethers.Contract(
-        commAddress,
-        abis.epnsComm,
-        library
-      );
-      dispatch(setCommunicatorReadProvider(commContractInstance));
-      dispatch(setCoreReadProvider(coreContractInstance));
-      // initialise the read contract for the communicator function
-      if (!!(library && account)) {
-        let signer = library.getSigner(account);
-        let coreSigner = coreProvider.getSigner(account);
 
-        const coreSignerInstance = new ethers.Contract(
-          addresses.epnscore,
-          abis.epnscore,
-          coreSigner
-        );
-        const communicatorSignerInstance = new ethers.Contract(
-          commAddress,
-          abis.epnsComm,
-          signer
-        );
-        dispatch(setCoreWriteProvider(coreSignerInstance));
-        dispatch(setCommunicatorWriteProvider(communicatorSignerInstance));
-      }
-    })();
-  }, [account, chainId]);
-
-  /**
    * When we instantiate the contract instances, fetch basic information about the user
    * Corresponding channel owned.
    */
@@ -136,46 +66,18 @@ function ChannelDashboardPage() {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider)
       return;
     // Reset when account refreshes
-    setChannelAdmin(false);
-    dispatch(setUserChannelDetails(null));
+    dispatch(setUserChannelDetails('unfetched'));
     setAdminStatusLoaded(false);
-    userClickedAt(INITIAL_OPEN_TAB);
-    setChannelJson([]);
-    // save push admin to global state
-    epnsReadProvider
-      .pushChannelAdmin()
-      .then((response) => {
-        dispatch(setPushAdmin(response));
-      })
-      .catch((err) => {
-        console.log({ err });
-      });
 
     // EPNS Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
-      // Instantiate Data Stores
-      UsersDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider
-      );
-      ChannelsDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider,
-        chainId
-      );
-
       await checkUserForAlias();
       await checkUserForChannelOwnership();
-      fetchDelegators();
+
+      if (delegatees === null)
+        fetchDelegators();
     }
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
-
-  // handle user action at control center
-  const userClickedAt = (controlIndex) => {
-    setControlAt(controlIndex);
-  };
 
   // fetch all the channels who have delegated to this account
   const fetchDelegators = () => {
@@ -209,6 +111,7 @@ function ChannelDashboardPage() {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async () => {
+    if (channelDetails != 'unfetched') return;
     if (!onCoreNetwork && aliasEthAddr == null) {
       setChannelAdmin(false);
       setAdminStatusLoaded(true);
@@ -234,8 +137,6 @@ function ChannelDashboardPage() {
           })
         );
         dispatch(setCanVerify(Boolean(verificationStatus)));
-        setChannelJson(response);
-        setChannelAdmin(true);
         setAdminStatusLoaded(true);
       })
       .catch((err) => {
@@ -243,7 +144,6 @@ function ChannelDashboardPage() {
           "There was an error [checkUserForChannelOwnership]:",
           err.message
         );
-        setChannelAdmin(false);
         setAdminStatusLoaded(true);
       })
       .finally(() => {
@@ -268,19 +168,13 @@ function ChannelDashboardPage() {
   return (
     <Container>
       <Interface>
-        {controlAt == 0 && <Feedbox />}
-        {controlAt == 1 && <ViewChannels />}
-        {controlAt == 2 && adminStatusLoaded ? (
-          <ChannelOwnerDashboard />
-        ) : (
-          // <ChannelLoadingMessage>
-          //   Channel details are being loaded, please wait…
-          // </ChannelLoadingMessage>
-          <ChannelLoadingMessage>
-            Channel details are being loaded, please wait…
-          </ChannelLoadingMessage>
-        )}
-        {controlAt == 3 && <Info />}
+        {adminStatusLoaded ? 
+            <ChannelOwnerDashboard />
+          : 
+            <ChannelLoadingMessage>
+              Channel details are being loaded, please wait…
+            </ChannelLoadingMessage>
+        }
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}

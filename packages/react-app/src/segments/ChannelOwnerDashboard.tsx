@@ -37,23 +37,6 @@ const ChannelOwnerDashboard = () => {
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-
-  /*
-    onCoreNetwork :- 
-      1> Alias from Contract hai -> 
-        1> alias from api nhi hai -> Processing 1st
-        2> alias from api hai -> 
-          1> alias verified hai -> channel dashboard
-          2> alias verified nhi hai -> Processing 2nd
-      2> Alias from Contract nhi hai -> Create Channel
-
-    !onCoreNetwork :-
-      1> Eth account hai ->
-        1> Alias hai ->
-          1> Alias verified hai -> dashboard
-          2> Alias verified nhi hai -> Processing 3rd
-      2> Eth account nhi hai -> Create Channel
-  */
   
   React.useEffect(() => {
     if (!onCoreNetwork || !channelDetails) return;
@@ -165,7 +148,7 @@ const ChannelOwnerDashboard = () => {
           {channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
           {/* display the details about the profile of the channel */}
           {/* display the notifications settings */}
-          {(channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""}
+          {/* {(channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""} */}
           {/* display the notifications settings */}
           </>)}
         </ModifiedContent>

@@ -26,11 +26,11 @@ import {NavigationLoaderButton} from 'components/NavigationLoaderButton';
 
 // Create Header
 function Navigation() {
-    const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified}  } = useSelector((state: any) => state.admin);
+    const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified } } = useSelector((state: any) => state.admin);
     const [loading, setLoading] = useState(true);
     const [ refresh, setRefresh ] = useState(false);
 
-    const { run, stepIndex } = useSelector((state: any) => state.userJourney);
+    const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
 
     const CORE_CHAIN_ID = envConfig.coreContractChain;
@@ -54,10 +54,11 @@ function Navigation() {
       if(canSend === SEND_NOTIFICATION_STATES.HIDE){
         navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-      }else if(canSend === SEND_NOTIFICATION_STATES.SEND){
-        if(channelDetails && channelDetails.name) {
+      } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
+        console.log(channelDetails, 'djcxx');
+        if(channelDetails !== 'unfetched' && channelDetails != null && channelDetails.name) {
           navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
-        }else{
+        } else {
           navigationSetup.primary[1].data.drilldown[0].data.name = "Channel Info";
         }
         navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
@@ -126,7 +127,7 @@ function Navigation() {
         transformedList[identifier] = {};
         transformedList[identifier].active = false;
         transformedList[identifier].isSection = true;
-        transformedList[identifier].hasMenuLogic = value.hasMenuLogic;
+        transformedList[identifier].hasMenuLogic = value['hasMenuLogic'];
 
         transformedList[identifier].id = identity + "_" + key;
         transformedList[identifier].parent = null;
@@ -150,7 +151,7 @@ function Navigation() {
             drilldownModified[drillIdentifier] = {};
             drilldownModified[drillIdentifier].active = false;
             drilldownModified[drillIdentifier].isSection = false;
-            drilldownModified[drillIdentifier].hasMenuLogic = drillvalue.hasMenuLogic;
+            drilldownModified[drillIdentifier].hasMenuLogic = drillvalue['hasMenuLogic'];
 
             drilldownModified[drillIdentifier].id = drillkey;
             drilldownModified[drillIdentifier].parent = transformedList[identifier].id;
@@ -211,7 +212,7 @@ function Navigation() {
       }
     }, [location, navigationSetup])
 
-    const mutateTransformedList = (item, onlyDrilldown) => {
+    const mutateTransformedList = (item, onlyDrilldown?) => {
       // Finally transform the json menulist
       let transformedMenuList = navigationSetup; 
 
@@ -328,7 +329,7 @@ function Navigation() {
             if (location.pathname === item.href) {
               transformedList[identifier].active = true;
             }
-            transformedList[identifier].data = drillvalue.data;
+            transformedList[identifier].data = drillvalue['data'];
           })
         }
         else {
@@ -373,18 +374,12 @@ function Navigation() {
           // console.log(section)
           const data = section.data;
           const uid = section.data.uid;
-          if(uid === 2 ){
-            if(section.opened)
-            dispatch(setCommunicateOpen(true))
-            else
-            dispatch(setCommunicateOpen(false))
-          }
-          else if(uid === 3){
-            if(section.opened)
-            dispatch(setDeveloperOpen(true))
-            else
-            dispatch(setDeveloperOpen(false))
-          }
+          
+          if (uid === 2 && section.opened != isCommunicateOpen)
+            dispatch(setCommunicateOpen(section.opened));
+          if (uid === 3 && section.opened != isDeveloperOpen)
+            dispatch(setDeveloperOpen(section.opened));
+          
           let innerRendered = (
             <Section 
                 key={key}
@@ -392,7 +387,6 @@ function Navigation() {
                 align="stretch"
                 size={fontSize}
             >
-
               {
                 (secondaryButton)?
                   (
