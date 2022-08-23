@@ -1,64 +1,68 @@
 import React from "react";
-import styled from "styled-components";
+import styled,{ ThemeProvider, useTheme } from "styled-components";
 import { Skeleton } from "@mui/material"
 
 import LoaderSpinner from "primaries/LoaderSpinner";
 
 const ChannelLoading = () => {
+    const themes = useTheme();
     return (
-        <ChannelLoadingContainer>
-            <SkeletonContainerOuter>
-                <SkeletonContainerUpperRow>
+        <ThemeProvider theme={themes}>
+            <ChannelLoadingContainer>
+                <SkeletonContainerOuter>
+                    <SkeletonContainerUpperRow>
+                        <Skeleton
+                            variant="rectangular"
+                            sx={{ bgcolor: '#F4F5FA' }}
+                            style={{
+                                width: "8rem",
+                                height: "8rem",
+                                borderRadius: "32px",
+                                marginRight: "2%"
+                            }} />
+
+                        <SkeletonContainerUpperCol>
+                            <Skeleton
+                                variant="rectangular"
+                                sx={{ bgcolor: '#F4F5FA' }}
+                                style={{
+                                    width: "40%",
+                                    height: "2.2rem",
+                                    borderRadius: "5px",
+                                    marginTop: "3%"
+                                }} />
+                            <Skeleton
+                                variant="rectangular"
+                                sx={{ bgcolor: '#F4F5FA' }}
+                                style={{
+                                    width: "20%",
+                                    height: "1.1rem",
+                                    borderRadius: "5px",
+                                    marginTop: "2%"
+                                }} />
+                        </SkeletonContainerUpperCol>
+                    </SkeletonContainerUpperRow>
                     <Skeleton
                         variant="rectangular"
                         sx={{ bgcolor: '#F4F5FA' }}
                         style={{
-                            width: "8rem",
-                            height: "8rem",
-                            borderRadius: "32px",
-                            marginRight: "2%"
+                            width: "100%",
+                            height: "2.7rem",
+                            borderRadius: "9px",
+                            marginTop: "4%"
                         }} />
+                </SkeletonContainerOuter>
 
-                    <SkeletonContainerUpperCol>
-                        <Skeleton
-                            variant="rectangular"
-                            sx={{ bgcolor: '#F4F5FA' }}
-                            style={{
-                                width: "40%",
-                                height: "2.2rem",
-                                borderRadius: "5px",
-                                marginTop: "3%"
-                            }} />
-                        <Skeleton
-                            variant="rectangular"
-                            sx={{ bgcolor: '#F4F5FA' }}
-                            style={{
-                                width: "20%",
-                                height: "1.1rem",
-                                borderRadius: "5px",
-                                marginTop: "2%"
-                            }} />
-                    </SkeletonContainerUpperCol>
-                </SkeletonContainerUpperRow>
-                <Skeleton
-                    variant="rectangular"
-                    sx={{ bgcolor: '#F4F5FA' }}
-                    style={{
-                        width: "100%",
-                        height: "2.7rem",
-                        borderRadius: "9px",
-                        marginTop: "4%"
-                    }} />
-            </SkeletonContainerOuter>
-
-            <LoaderContainer>
-                <LoaderSpinner />
-                <LoaderText>
-                    Loading Channel Details. Please wait...
-                </LoaderText>
-            </LoaderContainer>
-
-        </ChannelLoadingContainer>
+                <LoaderContainer>
+                    <LoaderSpinner />
+                    <LoaderText style={{
+                        color: themes.fontColor
+                    }}>
+                        Loading Channel Details. Please wait...
+                    </LoaderText>
+                </LoaderContainer>
+            </ChannelLoadingContainer>
+        </ThemeProvider>
     )
 }
 
@@ -98,7 +102,6 @@ const LoaderContainer = styled.div`
 
 const LoaderText = styled.div`
   margin-left: 3%;
-  color: black;
   font-family: Manrope;
   font-size: 1.25rem;
   font-weight: 600;
