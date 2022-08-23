@@ -11,7 +11,6 @@ import Picker from 'emoji-picker-react'
 import * as PushNodeClient from '../../../../api'
 import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
-import * as IPFSHelper from '../../../../helpers/w2w/ipfs'
 import { encryptAndSign, decryptAndVerifySignature, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
 import { CID } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
@@ -26,7 +25,8 @@ import { useQuery } from 'react-query'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
-import { Feeds, MessageIPFSWithCID, User } from '../../../../api'
+import { MessageIPFSWithCID, User } from '../../../../api'
+import { FileMessageContent } from '../Files/Files'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -333,60 +333,47 @@ const ChatBox = (): JSX.Element => {
     setNewMessage(e.target.value)
   }
 
-  const uploadFile = async (file: File): Promise<void> => {
-    try {
-      const TWO_MB = 1024 * 1024 * 2
-      if (file.size > TWO_MB) {
-        setOpenSuccessSnackBar(true)
-        setSnackbarText('Files larger than 2mb is now allowed')
-        return
-      }
-      setFileUploading(true)
-      const type = file.type.startsWith('image') ? 'Image' : 'File'
-      let content: string
-      if (type === 'File') {
+  const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const file: File = e.target.files?.[0]
+    if (file) {
+      try {
+        const TWO_MB = 1024 * 1024 * 2
+        if (file.size > TWO_MB) {
+          setOpenSuccessSnackBar(true)
+          setSnackbarText('Files larger than 2mb is now allowed')
+          return
+        }
+        setFileUploading(true)
+        const messageType = file.type.startsWith('image') ? 'Image' : 'File'
         const reader = new FileReader()
-        let resultingfile
+        let fileMessageContent: FileMessageContent
         reader.readAsDataURL(file)
         reader.onloadend = async (e): Promise<void> => {
-          resultingfile = { content: e.target.result, name: file.name, type: file.type, size: file.size }
+          fileMessageContent = {
+            content: e.target.result as string,
+            name: file.name,
+            type: file.type,
+            size: file.size
+          }
           if (currentChat.intent === 'Pending') {
-            sendIntent({ message: JSON.stringify(resultingfile), messageType: type })
+            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType })
           } else {
             sendMessage({
               account,
               fromDid: did.id,
               toDid: currentChat.did,
-              message: JSON.stringify(resultingfile),
-              messageType: type
+              message: JSON.stringify(fileMessageContent),
+              messageType
             })
           }
           setFileUploading(false)
         }
-      } else {
-        const cid = await IPFSHelper.uploadImage(file)
-        content = cid
-        if (currentChat.intent === 'Pending') {
-          sendIntent({ message: content.toString(), messageType: type })
-        } else {
-          sendMessage({
-            account,
-            fromDid: did.id,
-            toDid: currentChat.did,
-            message: content.toString(),
-            messageType: type
-          })
-        }
-        setFileUploading(false)
+      } catch (err) {
+        console.log(err)
       }
-    } catch (err) {
-      console.log(err)
     }
   }
-  const handleFileInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const file = e.target.files?.[0]
-    if (file) uploadFile(file)
-  }
+
   const addEmoji = (e, emojiObject: { emoji: any }): void => {
     setNewMessage(newMessage + emojiObject.emoji)
     setShowEmojis(false)
@@ -494,24 +481,13 @@ const ChatBox = (): JSX.Element => {
             {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
               <>
                 <label>
-                  <i className="fa fa-2x fa-camera"></i>
-                  <input
-                    type="file"
-                    id="inputTag"
-                    className="chatBoxBottomInput"
-                    ref={imageInputRef}
-                    accept="image/*"
-                    onChange={handleFileInputChange}
-                  />
-                </label>
-                <label>
                   <i className="fa fa-link" aria-hidden="true"></i>
                   <input
                     type="file"
                     id="inputTag"
                     className="chatBoxBottomInput"
                     ref={fileInputRef}
-                    onChange={handleFileInputChange}
+                    onChange={uploadFile}
                   />
                 </label>
 

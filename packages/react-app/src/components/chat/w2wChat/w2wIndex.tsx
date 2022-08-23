@@ -114,6 +114,10 @@ function App() {
     } else {
       if (!user.wallets.includes(caip10)) {
         user = await PushNodeClient.updateUser({ did: did.id, caip10 })
+        // @@@ GET PROFILE PICTURE FROM HERE
+        // @@@ GET PROFILE PICTURE FROM HERE
+        // @@@ GET PROFILE PICTURE FROM HERE
+        // @@@ GET PROFILE PICTURE FROM HERE
       }
       setConnectedUser(user)
     }

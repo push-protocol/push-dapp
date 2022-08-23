@@ -4,7 +4,7 @@ import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import cn from 'classnames'
 import { DID } from 'dids'
 import Modal from '../Modal/Modal'
-import Files from '../Files/Files'
+import Files, { FileMessageContent } from '../Files/Files'
 // @ts-ignore
 import { envConfig } from '@project/contracts'
 
@@ -74,10 +74,10 @@ export default function Chats({ msg, did, noTail }: chatProps) {
             )}
           >
             <img
-              src={infura_URL + `${msg.messageContent}`}
+              src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
               onClick={() => {
                 setShowImageModal(true)
-                setImageUrl(infura_URL + `${msg.messageContent}`)
+                setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content)
               }}
             />
           </div>
@@ -91,7 +91,7 @@ export default function Chats({ msg, did, noTail }: chatProps) {
             />
           )}
         </>
-      ) : msg.messageType === 'Gif' ? (
+      ) : msg.messageType === 'GIF' ? (
         <>
           <div
             key={msg.link}
