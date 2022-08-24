@@ -179,7 +179,7 @@ const PreviewClose = styled(Anchor)`
 
 const StyledToastContainer = styled(ToastContainer)`
   &&&.Toastify__toast-container {
-    top: 11vh;
+    top: 7vh;
     right: 2vw;
   }
   // .Toastify__toast {}

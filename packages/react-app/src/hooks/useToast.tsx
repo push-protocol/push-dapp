@@ -51,7 +51,8 @@ const useToast = () => {
         style: {
           background: themes.mainBg,
           border: `1px solid ${themes.toastBorderColor}`,
-          boxShadow: "0px 0px 10px 0px #00000005",
+          // boxShadow: "0px 0px 10px 0px #00000005",
+  boxShadow: "10px 10px 10px #ccc",
           borderRadius: "20px",
         }
       }
@@ -90,7 +91,8 @@ const useToast = () => {
       type: toast.TYPE.DEFAULT,
       style: {
         background: toastType === "SUCCESS" ? successBgGradient : errorBgGradient,
-        boxShadow: "0px 0px 10px 0px #00000005",
+        // boxShadow: "0px 0px 10px 0px #00000005",
+  boxShadow: "10px 10px 10px #ccc",
         borderRadius: "20px",
       },
       closeButton: CloseButton,
