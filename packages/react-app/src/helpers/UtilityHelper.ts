@@ -1,3 +1,6 @@
+import { envConfig } from "@project/contracts";
+import { convertChainIdToChainCaip } from "./CaipHelper";
+
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet : (chainId: number) => {
@@ -40,5 +43,27 @@ export const aliasChainIdsMapping = {
   1: 137,
   42: 80001
 };
+
+export const CORE_CHAIN_ID: number = envConfig.coreContractChain;
+
+export const getAliasFromChannelDetails = (channelDetails: Object | null | string): (string | null) => {
+  if (!channelDetails || channelDetails === 'unfetched')
+    return null;
+  
+  if (channelDetails['aliasDetails']) {
+    const aliasDetails = channelDetails['aliasDetails'];
+    const aliasChainId = aliasChainIdsMapping[CORE_CHAIN_ID];
+    const caipChainId = convertChainIdToChainCaip(aliasChainId);
+    if (aliasDetails[caipChainId]) {
+      return aliasDetails[caipChainId];
+    }
+  } else if (channelDetails['address'] != null && channelDetails['address'] != "") {
+    if (channelDetails['chain_id'] === aliasChainIdsMapping[CORE_CHAIN_ID].toString()) {
+      return channelDetails['address'];
+    }
+  } 
+
+  return null;
+}
 
 export default UtilityHelper;

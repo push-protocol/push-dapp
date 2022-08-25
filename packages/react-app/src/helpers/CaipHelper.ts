@@ -1,6 +1,6 @@
 import { envConfig } from "@project/contracts";
 
-export const Eip155EnabledIds = [137, 80001];
+export const Eip155EnabledIds: Array<Number> = [137, 80001];
 
 type CAIPProps = {
   chainId: number;
@@ -44,7 +44,10 @@ export const convertAddrCaipToAddress = (addressInCaip: string) => {
 }
 
 export const convertChainIdToChainCaip = (chainId: number) => {
-  return `eip155:${chainId}`;
+  if (Eip155EnabledIds.includes(chainId))
+    return `eip155:${chainId}`;
+  else
+    return null;
 }
 
 export const convertChainCaipToChainId = (chainInCaip: string) => {
