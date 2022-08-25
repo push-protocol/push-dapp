@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ethers } from "ethers";
 import { useDispatch, useSelector } from "react-redux";
 import { addresses, abis , envConfig } from "@project/contracts";
@@ -16,6 +16,11 @@ import {
 import {
   setPushAdmin,
 } from "redux/slices/contractSlice";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { getReq } from "api";
+import { setAliasEthAddress, setAliasVerified, setCanVerify, setCoreChannelAdmin, setDelegatees, setUserChannelDetails } from "redux/slices/adminSlice";
+import { setProcessingState } from "redux/slices/channelCreationSlice";
+import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
@@ -27,10 +32,11 @@ const InitState = () => {
     epnsWriteProvider,
     epnsCommReadProvider,
   } = useSelector((state: any) => state.contracts);
+  const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified } } = useSelector((state: any) => state.admin);
 
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!library) return;
     
     (async function init() {
@@ -79,7 +85,7 @@ const InitState = () => {
     })();
   }, [account, chainId]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
     // save push admin to global state
     epnsReadProvider.pushChannelAdmin()
@@ -106,6 +112,168 @@ const InitState = () => {
       );
     }
   }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
+
+  // Check if a user is a channel or not
+  const checkUserForChannelOwnership = async (channelAddress: string) => {
+    // Check if account is admin or not and handle accordingly
+    const ownerAccount = channelAddress;
+    EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
+      .then(async (response) => {
+        // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
+        const verificationStatus = await epnsWriteProvider.getChannelVerfication(
+          ownerAccount
+        );
+        const channelJson = await epnsWriteProvider.channels(ownerAccount);
+        const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
+          account
+        );
+        dispatch(
+          setUserChannelDetails({
+            ...response,
+            ...channelJson,
+            subscribers: channelSubscribers,
+          })
+        );
+        dispatch(setCoreChannelAdmin(ownerAccount));
+        dispatch(setCanVerify(Boolean(verificationStatus)));
+      })
+      .catch((err) => {
+        console.log(
+          "There was an error [checkUserForChannelOwnership]:",
+          err.message
+        );
+        dispatch(setUserChannelDetails(null));
+        dispatch(setProcessingState(0));
+      })
+  };
+
+  // fetch all the channels who have delegated to this account
+  // const fetchDelegators = () => {
+  //   const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
+  //   getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
+  //     .then(async ({ data: delegators }) => {
+  //       // if there are actual delegators
+  //       // fetch basic information abouot the channels and store it to state
+  //       if (delegators && delegators.channelOwners) {
+  //         let delegateeList: Array<string> = delegators.channelOwners;
+  //         const channelInformationPromise = [...delegateeList].map((channelAddress) => {
+  //           return ChannelsDataStore.instance
+  //             .getChannelJsonAsync(channelAddress)
+  //             .then((res) => ({ ...res, address: channelAddress }))
+  //             .catch(() => false);
+  //         });
+  //         const channelInformation = await Promise.all(
+  //           channelInformationPromise
+  //         );
+  //         console.log(channelInformation, delegatees);
+  //         if (delegatees) dispatch(setDelegatees([...channelInformation, ...delegatees]));
+  //         else
+  //           dispatch(setDelegatees(channelInformation));
+  //       } else {
+  //         dispatch(setDelegatees([]));
+  //       }
+  //     })
+  //     .catch(async (err) => {
+  //       console.log({ err });
+  //     });
+  // };
+
+  const checkUserForEthAlias = async () => {
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    const { aliasEth, aliasVerified} = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+      if (data) {
+        dispatch(setAliasEthAddress(data.channel));
+        dispatch(setCoreChannelAdmin(data.channel));
+        dispatch(setAliasVerified(data.is_alias_verified));
+        return {aliasEth: data['channel'], aliasVerified: data['is_alias_verified']};
+      }
+      return { aliasEth: null, aliasVerified: null };
+    });
+    return {aliasEth, aliasVerified};
+  };
+
+  // const checkUserForAlias = async () => {
+  //   let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(account);
+  //   if (aliasAddress == "NULL") aliasAddress = null;
+    
+  //   if (aliasAddress) {
+  //     dispatch(setAliasAddress(aliasAddress));
+  //     dispatch(setAliasVerified(isAliasVerified));
+  //   }
+  //   return;
+  // }
+
+  // useEffect(() => {
+  //   if (!account || !delegatees) return;
+  //   (async function () {
+  //     if ((aliasAddr || aliasEthAddr) && isAliasVerified) {
+  //       const channelInfo = await ChannelsDataStore.instance
+  //         .getChannelJsonAsync(account)
+  //         .then((res) => ({ ...res, address: account }))
+  //         .catch(() => false);
+  //       if (delegatees) {
+  //         dispatch(setDelegatees([channelInfo, ...delegatees]));
+  //       }
+  //       else
+  //         dispatch(setDelegatees([channelInfo]));
+  //     }
+  //   })()
+  // }, [isAliasVerified, account]);
+
+  // useEffect(() => {
+  //   if (!account) return;
+  //   (async function () {
+  //     if (!onCoreNetwork) {
+  //       await checkUserForEthAlias();
+  //     } else {
+  //       await checkUserForAlias();
+  //     }
+  //     fetchDelegators();
+  //   })();
+  // }, [account, chainId]);
+
+  // useEffect(() => {
+  //   if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider || channelDetails !== 'unfetched' || !account)
+  //     return;
+    
+  //   (async function () {
+  //     // EPNS Read Provider Set
+  //     if (epnsReadProvider != null && epnsCommReadProvider != null) {
+
+  //       if (!onCoreNetwork) await checkUserForEthAlias();
+  //       else await checkUserForAlias();
+  //       await checkUserForChannelOwnership();
+        
+  //       if (delegatees === null)
+  //         fetchDelegators();
+  //     }
+  //   })()
+  // }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider, aliasEthAddr, account]);
+
+  useEffect(() => {
+    if (!epnsReadProvider || !epnsCommReadProvider || channelDetails !== 'unfetched' || !account)
+      return;
+    
+    (async function () {
+      if (onCoreNetwork) {
+        await checkUserForChannelOwnership(account);
+      } else {
+        const { aliasEth, aliasVerified } = await checkUserForEthAlias();
+        console.log(aliasEth);
+        if (aliasEth) {
+          await checkUserForChannelOwnership(aliasEth);
+          if (!aliasVerified) {
+            dispatch(setProcessingState(3));
+          } else {
+            dispatch(setProcessingState(0));
+          }
+        } else {
+          dispatch(setUserChannelDetails(null));
+          dispatch(setProcessingState(0));
+        }
+      }
+    })();
+  }, [epnsReadProvider, epnsCommReadProvider, channelDetails, account]);
 
   return <></>;
 };
