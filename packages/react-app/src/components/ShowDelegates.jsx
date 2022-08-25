@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from "react";
 import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { postReq } from "api";
+import { getReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
 import { useSelector } from "react-redux";
@@ -11,14 +11,7 @@ import DelegateInfo from "./DelegateInfo";
 import {
   AiOutlineUserDelete
 } from 'react-icons/ai';
-
-
-const blockchainName = {
-  1: "ETH_MAINNET",
-  137: "POLYGON_MAINNET",
-  42: "ETH_TEST_KOVAN",
-  80001: "POLYGON_TEST_MUMBAI",
-};
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const isOnwer=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
@@ -45,13 +38,12 @@ const ShowDelegates = () => {
 
   const fetchDelegatees = async () => {
     try {
-      const { data } = await postReq("/channels/getChannelDelegates", {
-        channelAddress: account,
-        blockchain: blockchainName[chainId]
-      });
-
-      if (data?.delegateAddress) {
-        setDelegatees([account, ...data.delegateAddress]);
+      const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
+      const { data } = await getReq(`/v1/channels/${channelAddressinCAIP}/delegates`);
+      if (data?.delegates) {
+        const delegateeList = data.delegates.map((delegate) => delegate.delegate);
+        delegateeList.unshift(account);
+        setDelegatees(delegateeList);
       }
     } catch (err) {
       console.error(err);
