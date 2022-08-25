@@ -27,7 +27,6 @@ import {NavigationLoaderButton} from 'components/NavigationLoaderButton';
 // Create Header
 function Navigation() {
     const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified } } = useSelector((state: any) => state.admin);
-    const [loading, setLoading] = useState(true);
     const [ refresh, setRefresh ] = useState(false);
 
     const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
@@ -47,43 +46,51 @@ function Navigation() {
       }
     );
     
-    useEffect(()=>{
-      if(canSend === SEND_NOTIFICATION_STATES.LOADING) return
-      if (!navigationSetup) return
+  useEffect(() => {
+    if (canSend === SEND_NOTIFICATION_STATES.LOADING) return
+    if (!navigationSetup) return
 
-      if(canSend === SEND_NOTIFICATION_STATES.HIDE){
-        navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-        navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-      } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
-        console.log(channelDetails, 'djcxx');
-        if(channelDetails !== 'unfetched' && channelDetails != null && channelDetails.name) {
-          navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
-        } else {
-          navigationSetup.primary[1].data.drilldown[0].data.name = "Channel Info";
-        }
-        navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+    if (canSend === SEND_NOTIFICATION_STATES.HIDE) {
+      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+      navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+    } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
+      if (channelDetails !== 'unfetched' && channelDetails != null && channelDetails.name) {
+        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+        console.log(navigationSetup);
+      } else {
+        navigationSetup.primary[1].data.drilldown[0].data.name = "Channel Info";
       }
-    },[canSend,channelDetails,navigationSetup])
+      navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+    }
+  }, [canSend, channelDetails, navigationSetup]);
 
-    useEffect(()=>{
-      (async()=>{
-        const channelAddress = await postReq("/channels/_search", {
-          "page": 1,
-          "pageSize": 1,
-          "address":account,
-          "chainId": chainId,
-          "query":account,
-          "op": "read"          
-        }).then(({ data }) => data.channels);
+  useEffect(() => {
+    if (((aliasAddr || aliasEthAddr) && isAliasVerified) || delegatees) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+    } else {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+    }
+  }, [channelDetails, aliasAddr, isAliasVerified, delegatees])
 
-        if(channelAddress.length === 0){
-          setLoading(false)
-          dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE))
-        }else{
-          dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
-        }
-      })()
-    },[channelDetails])
+    // useEffect(()=>{
+    //   (async()=>{
+    //     const channelAddress = await postReq("/channels/_search", {
+    //       "page": 1,
+    //       "pageSize": 1,
+    //       "address":account,
+    //       "chainId": chainId,
+    //       "query":account,
+    //       "op": "read"          
+    //     }).then(({ data }) => data.channels);
+
+    //     if(channelAddress.length === 0){
+    //       setLoading(false)
+    //       dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE))
+    //     }else{
+    //       dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
+    //     }
+    //   })()
+    // },[channelDetails])
     
     // Similar to componentDidMount and componentDidUpdate:
     useEffect(() => {
@@ -106,14 +113,6 @@ function Navigation() {
       
       setNavigationSetup(finalList);
     }, []);
-
-    useEffect(()=>{
-      if(channelDetails !== null){
-        setLoading(false)
-      }else{
-        setLoading(true)
-      }
-    },[channelDetails])
     
     const returnTransformedList = (lists, identity) => {
       let transformedList = [];
@@ -444,28 +443,12 @@ function Navigation() {
                           margintop="-10px"
                           zIndex={2}
                           refresh={refresh}
-                          // id={section.data.name}
                           onClick={() => {
-                            // const uid = section.data.uid;
-                            // if(uid === 2 ){
-                            //   if(!section.opened)
-                            //   dispatch(setCommunicateOpen(true))
-                            //   else
-                            //   dispatch(setCommunicateOpen(false))
-                            // }
-                            // else if(uid === 3){
-                            //   if(!section.opened)
-                            //   dispatch(setDeveloperOpen(true))
-                            //   else
-                            //   dispatch(setDeveloperOpen(false))
-                            // }
-                            // console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
                             if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3))){
                               setTimeout(() => {
                                 dispatch(incrementStepIndex())
-                                // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
                               }, 500);
                             }
                           }}              
@@ -562,40 +545,8 @@ function Navigation() {
           })}
         </SectionGroup>
       );
-      
-      let renderedLoading = (
-        <SectionGroup
-          align="stretch"
-          opened={opened}
-          refresh={refresh}
-          style={{"pointerEvents":"unset"}}
-        >
-            <SectionItem
-                flex="1"
-                align="stretch"
-                size="small" 
-            >
-              <SectionInnerItemContainer
-                flex="1"
-                align="stretch"
-                bg={theme.leftBarButtonBg}
-                zIndex={1}
-                refresh={refresh}
-                >
-                <NavigationLoaderButton/>
-              </SectionInnerItemContainer>
-            </SectionItem>
-          
-        </SectionGroup>
-      );
-      
-      return <>
-        {!isDevBar ? 
-          rendered
-        :
-          loading ? renderedLoading : rendered
-        }
-      </>;
+
+      return rendered;
     }
     
     return (

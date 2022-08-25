@@ -1,7 +1,7 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 
 import { envConfig } from "@project/contracts";
-import { postReq } from "api";
+import { postReq, getReq } from "api";
 
 // STATIC SINGLETON
 export const ChannelEvents = {
@@ -376,28 +376,17 @@ export default class ChannelsDataStore {
 
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
-      postReq("/channels/_search", {
-        page: 1,
-        pageSize: 1,
-        query: channel,
-        op: "read",
-      })
+      getReq(`/v1/channels/search?query=${channel}`)
         .then((response) => {
           let output;
           output = response.data.channels.map(
             ({
               alias_address,
-              channel,
-              memberCount,
-              isSubscriber,
-              verified_status,
+              is_alias_verified,
             }) => {
               return {
-                addr: channel,
                 aliasAddress: alias_address,
-                memberCount: memberCount,
-                isSubscriber: isSubscriber,
-                isAliasVerified: verified_status,
+                isAliasVerified: is_alias_verified,
               };
             }
           );
@@ -533,7 +522,6 @@ export default class ChannelsDataStore {
   };
 
   getChannelSubscribers = async (channelAddress) => {
-    return ["0x849435", "0x9839"];
     if (!channelAddress) return;
     const cachedSubscribers = this.state.subscribers[channelAddress];
     if (cachedSubscribers) {

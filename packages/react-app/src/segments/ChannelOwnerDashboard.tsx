@@ -1,8 +1,6 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useEffect, useState} from "react";
 import styled from "styled-components";
 import { Section, Content } from "../primaries/SharedStyling";
-
-import SendNotifications from "components/SendNotifications";
 import ChannelSettings from "components/ChannelSettings";
 import ChannelDetails from "components/ChannelDetails";
 import CreateChannel from "components/CreateChannel";
@@ -10,15 +8,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
 import { ThemeProvider, useTheme } from "styled-components";
-import { aliasChainIdsMapping } from "helpers/UtilityHelper";
-import { getCAIP } from "helpers/CaipHelper";
-import { setAliasAddress, setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
+import { aliasChainIdsMapping, getAliasFromChannelDetails } from "helpers/UtilityHelper";
+import { convertChainIdToChainCaip, getCAIP } from "helpers/CaipHelper";
+import { setAliasAddress, setAliasEthAddress, setAliasVerified, setAliasAddressFromContract } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import AliasProcessing from "components/AliasProcessing"
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 
 // interval after which alias details api will be called, in seconds
-const ALIAS_API_CALL_INTERVAL = 5;
+const ALIAS_API_CALL_INTERVAL:number = 10;
 
 // interval id for calling search api
 let intervalID = null;
@@ -27,130 +25,93 @@ let intervalID = null;
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
-  const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified} } = useSelector((state: any) => state.admin);
+  const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract} } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
+
+  const isChannelDetails = (channelDetails && channelDetails !== 'unfetched');
 
   const dispatch = useDispatch();
 
-  const [aliasAddressFromContract, setAliasAddressFromContract] = useState(null);
-  const [channelDetailsLoading, setChannelDetailsLoading] = useState(true); 
+  const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true); 
 
-  const CORE_CHAIN_ID = envConfig.coreContractChain;
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const CORE_CHAIN_ID: number = envConfig.coreContractChain;
+  const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
   
-  React.useEffect(() => {
-    if (!onCoreNetwork || !channelDetails) return;
+  useEffect(() => {
+    if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    if (channelDetails['aliasDetails']) {
-      const aliasDetails = channelDetails['aliasDetails'];
-      const aliasChainId = aliasChainIdsMapping[CORE_CHAIN_ID];
-      const caip = getCAIP(aliasChainId);
-      if (aliasDetails[`${caip}:${aliasChainId}`]) {
-        setAliasAddressFromContract(aliasDetails[`${caip}:${aliasChainId}`]);
-      }
+    const aliasAddress: (string | null) = getAliasFromChannelDetails(channelDetails);
+    if (aliasAddress) {
+      dispatch(setAliasAddressFromContract(aliasAddress));
+      // dispatch(setAliasAddress(aliasAddress));
     } else {
       dispatch(setProcessingState(0));
+      // setChannelDetailsLoading(false);
     }
-  }, []);
+  }, [channelDetails, aliasAddrFromContract]);
 
   const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress, isAliasVerified } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
+    let { aliasAddress=null, isAliasVerified=null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
     if (aliasAddress == "NULL") aliasAddress = null;
 
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
   }
 
-  const fetchEthAccount = async (address: string) => {
-    if (aliasEthAddr) return aliasEthAddr;
-    let ethAccount = await ChannelsDataStore.instance.getEthAddressFromAlias(address);
-    if (ethAccount == "NULL") ethAccount = null;
-
-    return ethAccount;
-  }
-
   React.useEffect(() => {
-    if (!onCoreNetwork || !aliasAddressFromContract || processingState === 0) return;
+    if (!onCoreNetwork || !aliasAddrFromContract || processingState === 0) return;
 
-    setChannelDetailsLoading(true);
     intervalID = setInterval(async () => {
       const { aliasAddress, aliasVerified } = await fetchChannelDetails(account);
       if (aliasAddress) {
         dispatch(setAliasAddress(aliasAddress));
         if (aliasVerified) {
-          setChannelDetailsLoading(false);
+          // setChannelDetailsLoading(false);
           dispatch(setAliasVerified(true));
           dispatch(setProcessingState(0));
         } else {
-          setChannelDetailsLoading(false);
+          // setChannelDetailsLoading(false);
           dispatch(setProcessingState(2));
           dispatch(setAliasVerified(false));
         }
       } else {
         if (processingState != 0 && processingState != 1)
           dispatch(setProcessingState(1));
-        setChannelDetailsLoading(false);
+        // setChannelDetailsLoading(false);
       }
     }, ALIAS_API_CALL_INTERVAL * 1000);
-  }, [aliasAddressFromContract]);
+  }, [aliasAddrFromContract]);
 
   if (aliasAddr !== null) {
     clearInterval(intervalID);
   }
 
-  React.useEffect(() => {
-    if (onCoreNetwork) return;
-    if (isAliasVerified || processingState === 0) return;
-    (async function process() {
-      const ethAccount = await fetchEthAccount(account);
-      if (ethAccount) {
-        dispatch(setAliasEthAddress(ethAccount));
-        setChannelDetailsLoading(false);
-        const { aliasVerified } = await fetchChannelDetails(ethAccount);
-        if (!aliasVerified) {
-          dispatch(setProcessingState(3));
-          dispatch(setAliasVerified(false));
-        } else {
-          dispatch(setAliasVerified(true));
-          dispatch(setProcessingState(0));
-        }
-      } else {
-        setChannelDetailsLoading(false);
-        dispatch(setProcessingState(0));
-      }
-    })()
-  });
-
   return (
     <Fragment>
       <Section>
-        {channelDetailsLoading &&
+        {((channelDetails === 'unfetched') || processingState === null) &&
           <ChannelLoadingMessage>
             Channel details are being loaded, please wait…
           </ChannelLoadingMessage>
         }
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && aliasEthAddr === null && !channelDetailsLoading ? <CreateChannel /> : ""}
+          {(!channelDetails && processingState === 0) ? <CreateChannel /> : ""}
+      
+          {isChannelDetails && processingState !== null &&
+            (
+              <>
+                {channelDetails ? <ChannelSettings /> : ""}
+                {channelDetails ? <ChannelDetails /> : ""}
+              </>
+            )
+          }
           
-          {/* {aliasEthAccount !== null && isAliasVerified === false && */}
-          {processingState !== 0 && processingState !== null && (
+          {/* processing box */}
+          {processingState !== 0 && processingState !== null && isChannelDetails && (
             <ThemeProvider theme={theme}>
-              <AliasProcessing aliasVerified={isAliasVerified} aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
+              <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
             </ThemeProvider>
           )}
-      
-          {processingState === 0 && (<>
-          {/* display the create channel page if there are no details */}
-          {/* display the channel settings */}
-          {channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork) ? <ChannelSettings /> : ""}
-          {/* display the channel settings */}
-          {/* display the details about the profile of the channel */}
-          {channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork) ? <ChannelDetails /> : ""}
-          {/* display the details about the profile of the channel */}
-          {/* display the notifications settings */}
-          {/* {(channelDetails && ((!onCoreNetwork && isAliasVerified) || onCoreNetwork)) || delegatees?.length ? <SendNotifications /> : ""} */}
-          {/* display the notifications settings */}
-          </>)}
         </ModifiedContent>
       </Section>
     </Fragment>

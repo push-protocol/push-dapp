@@ -52,11 +52,11 @@ function ChannelDashboardPage() {
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
-  const [controlAt, setControlAt] = React.useState(1);
-  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
+  const [controlAt, setControlAt] = React.useState(2);
+  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(true);
   const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
   const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
-  const [channelAdmin, setChannelAdmin] = React.useState(false);
+  const [channelAdmin, setChannelAdmin] = React.useState(true);
   const [channelJson, setChannelJson] = React.useState([]);
 
   // toast related section
@@ -72,126 +72,27 @@ function ChannelDashboardPage() {
   // toast related section
 
   /**
-   * Logic to get channel alias and alias verification status as well as create instances of core and comunicator contract
-   */
-  React.useEffect(() => {
-    (async function init() {
-      const coreProvider = onCoreNetwork
-        ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
-      // if we are not on the core network then check for if this account is an alias for another channel
-      if (!onCoreNetwork) {
-        // get the eth address of the alias address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/getCoreAddress", {
-          aliasAddress: account,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const ethAccount = data;
-          if (ethAccount) {
-            setAliasEthAccount(ethAccount.ethAddress);
-          }
-          return data;
-        });
-        if (aliasEth) {
-          // if an alias exists, check if its verified.
-          await postReq("/channels/getAliasVerification", {
-            aliasAddress: account,
-            op: "read",
-          }).then(({ data }) => {
-            // if it returns undefined then we need to let them know to verify their channel
-            console.log(data);
-            if (!data) {
-              setAliasVerified(null);
-              return;
-            }
-            const { status } = data;
-            setAliasVerified(status);
-            return data;
-          });
-        }
-      }
-      // if we are not on the core network then fetch if there is an alias address from the api
-      // inititalise the read contract for the core network
-      const coreContractInstance = new ethers.Contract(
-        addresses.epnscore,
-        abis.epnscore,
-        coreProvider
-      );
-      // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork
-        ? addresses.epnsEthComm
-        : addresses.epnsPolyComm;
-      const commContractInstance = new ethers.Contract(
-        commAddress,
-        abis.epnsComm,
-        library
-      );
-      dispatch(setCommunicatorReadProvider(commContractInstance));
-      dispatch(setCoreReadProvider(coreContractInstance));
-      // initialise the read contract for the communicator function
-      if (!!(library && account)) {
-        let signer = library.getSigner(account);
-        let coreSigner = coreProvider.getSigner(account);
-
-        const coreSignerInstance = new ethers.Contract(
-          addresses.epnscore,
-          abis.epnscore,
-          coreSigner
-        );
-        const communicatorSignerInstance = new ethers.Contract(
-          commAddress,
-          abis.epnsComm,
-          signer
-        );
-        dispatch(setCoreWriteProvider(coreSignerInstance));
-        dispatch(setCommunicatorWriteProvider(communicatorSignerInstance));
-      }
-    })();
-  }, [account, chainId]);
-
-  /**
    * When we instantiate the contract instances, fetch basic information about the user
    * Corresponding channel owned.
    */
-  React.useEffect(() => {
-    (async ()=>{
-      if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
-      // Reset when account refreshes
-      setChannelAdmin(false);
-      dispatch(setUserChannelDetails('unfetched'));
-      setAdminStatusLoaded(false);
-      userClickedAt(INITIAL_OPEN_TAB);
-      setChannelJson([]);
-      // save push admin to global state
-      epnsReadProvider.pushChannelAdmin()
-        .then((response) => {
-          dispatch(setPushAdmin(response));
-        })
-        .catch(err => {
-          console.log({ err })
-        });
+  // React.useEffect(() => {
+  //   (async ()=>{
+  //     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
+  //     // Reset when account refreshes
+  //     setChannelAdmin(false);
+  //     dispatch(setUserChannelDetails('unfetched'));
+  //     setAdminStatusLoaded(false);
+  //     userClickedAt(INITIAL_OPEN_TAB);
+  //     setChannelJson([]);
   
-      // EPNS Read Provider Set
-      if (epnsReadProvider != null && epnsCommReadProvider != null) {
-        // Instantiate Data Stores
-        UsersDataStore.instance.init(
-          account,
-          epnsReadProvider,
-          epnsCommReadProvider
-        );
-        ChannelsDataStore.instance.init(
-          account,
-          epnsReadProvider,
-          epnsCommReadProvider,
-          chainId
-        );
-        await checkUserForAlias();
-        await checkUserForChannelOwnership();
-        fetchDelegators();
-      }
-    })()
-  }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
+  //     // EPNS Read Provider Set
+  //     if (epnsReadProvider != null && epnsCommReadProvider != null) {
+  //       await checkUserForAlias();
+  //       await checkUserForChannelOwnership();
+  //       fetchDelegators();
+  //     }
+  //   })()
+  // }, [epnsReadProvider, epnsCommReadProvider, epnsWriteProvider]);
 
   // handle user action at control center
   const userClickedAt = (controlIndex) => {
