@@ -13,6 +13,7 @@ const themeLight = {
 
   // Nav Menu
   navMenuBg: "#00000066",
+  navText: "#000",
 
   // Left Bar Theme
   leftBarLoaderBg: "#ddd",
@@ -109,6 +110,7 @@ const themeDark = {
 
   // Nav Menu
   navMenuBg: "#00000066",
+  navText: "#B6BCD6",
 
   // Left Bar Theme
   leftBarLoaderBg: "#ddd",

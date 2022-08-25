@@ -26,9 +26,9 @@ function Navigation() {
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(!run && navigationSetup !== null && channelDetails!==null){
-      navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+      // navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
     } else if(run && navigationSetup !== null) {
-      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+      // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
     }
     const theme = useTheme();
     const location = useLocation();
@@ -351,7 +351,7 @@ function Navigation() {
                     direction="row"
                     overflow="hidden"
                   >
-                    <SectionInnerGroupContainer
+                    {/* <SectionInnerGroupContainer
                       flex="1"
                       align="stretch"
                       bg={theme.leftBarButtonBg}
@@ -380,7 +380,7 @@ function Navigation() {
                           GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                         )
                       : null
-                    }
+                    } */}
                   </Item>
                   ):
                   (
@@ -541,11 +541,7 @@ function Navigation() {
                 )
               }
             </Primary>
-            <Footer
-              justify="flex-end"
-              align="strecth"
-            >
-              <Secondary
+            <Secondary
                 align="stretch"
                 justify="flex-end"
                 margin="10px 0px 10px 0px"
@@ -557,6 +553,11 @@ function Navigation() {
                   )
                 }
               </Secondary>
+            <Footer
+              justify="flex-end"
+              align="strecth"
+            >
+              
 
               {/* Put social */}
               <ItemH
@@ -644,7 +645,8 @@ const Container = styled(Section)`
   flex: 1;
   height: calc(100% - ${props => props.headerHeight}px);
   margin: ${props => props.headerHeight}px 0px 0px 0px;
-  border-right: 1px solid ${props => props.theme.sectionBorderBg};
+  // border-right: 1px solid ${props => props.theme.sectionBorderBg};
+  border-right: 1px solid #ccc;
 `
 
 const Primary = styled(Item)`

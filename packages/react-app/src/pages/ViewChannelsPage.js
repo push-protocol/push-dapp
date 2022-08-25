@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import hex2ascii from "hex2ascii";
-import { addresses, abis , envConfig } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import NotificationToast from "../primaries/NotificationToast";
@@ -78,18 +78,20 @@ function InboxPage({ loadTeaser, playTeaser }) {
     (async function init() {
       const coreProvider = onCoreNetwork
         ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
+        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
       // if we are not on the core network then check for if this account is an alias for another channel
       if (!onCoreNetwork) {
         // get the eth address of the alias address, in order to properly render information about the channel
         const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-          if (data) {
-            setAliasEthAccount(data.channel);
-            setAliasVerified(data.is_alias_verified);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(
+          ({ data }) => {
+            if (data) {
+              setAliasEthAccount(data.channel);
+              setAliasVerified(data.is_alias_verified);
+            }
+            return data;
           }
-          return data;
-        });
+        );
       }
       // if we are not on the core network then fetch if there is an alias address from the api
       // inititalise the read contract for the core network
@@ -143,13 +145,14 @@ function InboxPage({ loadTeaser, playTeaser }) {
     userClickedAt(INITIAL_OPEN_TAB);
     setChannelJson([]);
     // save push admin to global state
-    epnsReadProvider.pushChannelAdmin()
-    .then((response) => {
-      dispatch(setPushAdmin(response));
-    })
-    .catch(err =>{
-      console.log({err})
-    });
+    epnsReadProvider
+      .pushChannelAdmin()
+      .then((response) => {
+        dispatch(setPushAdmin(response));
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
 
     // EPNS Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
@@ -185,7 +188,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
         // fetch basic information abouot the channels and store it to state
         if (delegators && delegators.channelOwners) {
           const channelInformationPromise = [
-            ...new Set([account, ...delegators.channelOwners])//make the accounts unique
+            ...new Set([account, ...delegators.channelOwners]), //make the accounts unique
           ].map((channelAddress) =>
             ChannelsDataStore.instance
               .getChannelJsonAsync(channelAddress)
@@ -249,33 +252,38 @@ function InboxPage({ loadTeaser, playTeaser }) {
   // Render
   return (
     <>
-    <Container>
-      <Interface>
-        {controlAt == 0 && <Feedbox />}
-        {controlAt == 1 && <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} />}
-        {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
-        {controlAt == 3 && <Info />}
-        {toast && (
-          <NotificationToast notification={toast} clearToast={clearToast} />
-        )}
-        {modalOpen && (
-          <AliasVerificationodal
-            onClose={() => setModalOpen(false)}
-            onSuccess={() => setAliasVerified(true)}
-            verificationStatus={aliasVerified}
-          />
-        )}
-      </Interface>
-    </Container>
+      <Container>
+        <Interface>
+          {controlAt == 0 && <Feedbox />}
+          {controlAt == 1 && (
+            <ViewChannels loadTeaser={loadTeaser} playTeaser={playTeaser} />
+          )}
+          {controlAt == 2 && adminStatusLoaded && <ChannelOwnerDashboard />}
+          {controlAt == 3 && <Info />}
+          {toast && (
+            <NotificationToast notification={toast} clearToast={clearToast} />
+          )}
+          {modalOpen && (
+            <AliasVerificationodal
+              onClose={() => setModalOpen(false)}
+              onSuccess={() => setAliasVerified(true)}
+              verificationStatus={aliasVerified}
+            />
+          )}
+        </Interface>
+      </Container>
     </>
   );
 }
 
-// css style 
+// css style
 const Container = styled.div`
   display: flex;
-  background: ${props => props.theme.mainBg};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
+  background: ${(props) => props.theme.mainBg};
+  height: calc(
+    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px -
+      ${(props) => props.theme.interfaceTopPadding}
+  );
   align-self: stretch;
 `;
 
