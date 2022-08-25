@@ -2,19 +2,21 @@ import React, { useRef, useState } from "react";
 import styled, { css, useTheme } from "styled-components";
 import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
 import { useWeb3React } from "@web3-react/core";
-import AliasVerificationModal from "./AliasVerificationModal";
+import { useDispatch } from "react-redux";
 import { addresses, abis } from "@project/contracts";
 import { useClickAway } from "react-use";
-import { postReq } from "../api";
+import { getReq, postReq } from "../api";
 import FadeLoader from "react-spinners/FadeLoader";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { setProcessingState } from "redux/slices/channelCreationSlice";
 
 const ethers = require("ethers");
 
-const VerifyAlias = ({ aliasVerified, aliasEthAccount, setAliasVerified }) => {
+const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const themes = useTheme();
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
   const signer = library.getSigner(account);
+  const dispatch = useDispatch();
 
   // const modalRef = useRef(null);
   const polygonCommsContract = new ethers.Contract(
@@ -39,6 +41,18 @@ const VerifyAlias = ({ aliasVerified, aliasEthAccount, setAliasVerified }) => {
     }
   };
 
+  const checkAliasVerification = async () => {
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    const { aliasVerified } = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+      if (data) {
+        dispatch(setAliasVerified(data.is_alias_verified));
+        return {aliasVerified: data['is_alias_verified']};
+      }
+      return { aliasVerified: null };
+    });
+    return { aliasVerified };
+  };
+
   const submitAlias = () => {
     setLoading("loading");
     const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(
@@ -59,18 +73,10 @@ const VerifyAlias = ({ aliasVerified, aliasEthAccount, setAliasVerified }) => {
         }, 2000);
 
         const intervalId = setInterval(async () => {
-          const response = await postReq(
-            "/channels/get_alias_verification_status",
-            {
-              aliasAddress: account,
-              op: "read",
-            }
-          );
-          const status = response?.data?.status;
-          if (status == true) {
+          const { aliasVerified } = await checkAliasVerification();
+          if (aliasVerified) {
             clearInterval(intervalId);
-            // onSuccess();
-            // onClose();
+            dispatch(setProcessingState(0));
           }
         }, 5000);
       })
