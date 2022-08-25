@@ -55,10 +55,11 @@ function NavigationButton({ item, data, sectionID, active }) {
       target={data.isRoute ? null : data.newTab ? "_blank" : "self"}
       disabled={data.disabled}
       hoverBG={theme.leftBarHoverColor}
-      radius="12px"
+      radius="16px"
       align="stretch"
-      padding="10px"
+      padding="12px"
       margin={definedMargin}
+      bg={!active ? "transparent" : "#F9EBF3;"}
       active={active}
       className={data?.name?.toLowerCase()}
     >
@@ -81,12 +82,12 @@ function NavigationButton({ item, data, sectionID, active }) {
 
         <Span
           flex="1"
-          weight="400"
+          weight={!active ? "300" : "600"}
           spacing="0"
           margin="0 5px"
           // color={theme.leftBarFontColor}
           color={theme.navText}
-          size="18px"
+          size="14px"
         >
           {data.name}
         </Span>
@@ -139,8 +140,8 @@ const InheritedSectionGroupIcon = styled(Image)`
 `;
 
 const InheritedSectionItemIcon = styled(Image)`
-  height: 16px;
-  width: 16px;
+  height: 25px;
+  width: 25px;
   margin: 0 5px;
 
   ${(props) =>
@@ -155,8 +156,8 @@ const LeftBarPrimarySectionIcon = styled(InheritedSectionGroupIcon)``;
 const LeftBarPrimaryItemIcon = styled(InheritedSectionItemIcon)``;
 
 const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
-  height: 16px;
-  width: 16px;
+  height: 25px;
+  width: 25px;
 `;
 
 const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;

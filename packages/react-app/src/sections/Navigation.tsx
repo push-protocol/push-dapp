@@ -5,7 +5,7 @@ import Loader from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, AnchorLink as Anchor } from 'primaries/SharedStyling';
+import {Section, Item, ItemH, AnchorLink as Anchor, Span } from 'primaries/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
 import navigationList from "config/NavigationList";
@@ -26,16 +26,18 @@ function Navigation() {
     const { run, stepIndex } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext)
     if(!run && navigationSetup !== null && channelDetails!==null){
-      // navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+      navigationSetup.secondary[0].data.name = channelDetails.name;
+      navigationSetup.secondary[0].data.src = 'svg/Home-off.svg';
+      navigationSetup.secondary[0].data.activeSrc = 'svg/Home-on.svg';
     } else if(run && navigationSetup !== null) {
-      // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+      navigationSetup.secondary[0].data.name = 'Create Channel';
     }
     const theme = useTheme();
     const location = useLocation();
     const dispatch = useDispatch();
     // Similar to componentDidMount and componentDidUpdate:
 
-  
+
     useEffect(() => {
       if (!loading) {
           setLoading(true);
@@ -345,19 +347,19 @@ function Navigation() {
                 (secondaryButton)?
                   (
                     <Item
-                    padding="10px"
+                    padding="5px 10px"
                     flexBasis="100%"
                     align="stretch"
                     direction="row"
                     overflow="hidden"
                   >
-                    {/* <SectionInnerGroupContainer
+                    <SectionInnerGroupContainer
                       flex="1"
                       align="stretch"
                       bg={theme.leftBarButtonBg}
                       zIndex={2}
                       refresh={refresh}
-                      margintop="15px"
+                      // margintop="15px"
                       onClick={() => {
                         // console.log(`Clicked secondary button`);
                         mutateTransformedList(section, true)
@@ -372,7 +374,7 @@ function Navigation() {
                       />
                     </SectionInnerGroupContainer>
                     
-                    { 
+                    {/* { 
                     section.hasItems 
                       ? renderChildItems(
                           data.drilldown, 
@@ -385,7 +387,7 @@ function Navigation() {
                   ):
                   (
                     <Item
-                      padding="10px"
+                      padding="5px 10px"
                       flexBasis="100%"
                       align="stretch"
                       direction="row"
@@ -434,7 +436,7 @@ function Navigation() {
                         />
                       </SectionInnerGroupContainer>
                     
-                      { 
+                      {/* { 
                       section.hasItems 
                         ? renderChildItems(
                             data.drilldown, 
@@ -442,7 +444,7 @@ function Navigation() {
                             GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                           )
                         : null
-                      }
+                      } */}
                     </Item>
                   )
                 
@@ -540,19 +542,22 @@ function Navigation() {
                   GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                 )
               }
-            </Primary>
-            <Secondary
-                align="stretch"
-                justify="flex-end"
-                margin="10px 0px 10px 0px"
-              >
+
+              <Span textTransform="uppercase" weight="700" size="11px" margin="20px 0px 0px 0px" padding="15px 30px" color='#575D73' spacing="0.16em">Developers</Span>
                 {
                   renderMainItems(
                     navigationSetup.secondary,
                     GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY
                   )
                 }
-              </Secondary>
+            </Primary>
+            {/* <Secondary
+                align="stretch"
+                justify="flex-end"
+                margin="10px 0px 10px 0px"
+              >
+              
+              </Secondary> */}
             <Footer
               justify="flex-end"
               align="strecth"
@@ -645,8 +650,7 @@ const Container = styled(Section)`
   flex: 1;
   height: calc(100% - ${props => props.headerHeight}px);
   margin: ${props => props.headerHeight}px 0px 0px 0px;
-  // border-right: 1px solid ${props => props.theme.sectionBorderBg};
-  border-right: 1px solid #ccc;
+  border-right: 1px solid ${props => props.theme.sectionBorderBg};
 `
 
 const Primary = styled(Item)`

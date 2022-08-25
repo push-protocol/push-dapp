@@ -2,7 +2,30 @@ import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
 
 const NavigationList = {
-  secondary: {
+  third: {
+    createChannel: {
+      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
+      src: "svg/channeladmin.svg",
+      iconFactory: null,
+      name: "Create Channel",
+      title: "Create Channel",
+      alt: "Create Channels / Dashboard",
+      href: "/dashboard",
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      headerTag: {
+        title: "Channel Dashboard",
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
     // communicate: {
     //   uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.COMMUNICATE_TAB,
     //   src: "svg/communicate.svg",
@@ -519,6 +542,32 @@ const NavigationList = {
     //   isRoute: true,
     //   isMenuLogic: false,
     // },
+  },
+  secondary: {
+    createChannel: {
+      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
+      src: "svg/create-channel-icon.svg",
+      activeSrc: "svg/create-channel-icon.svg",
+      iconFactory: null,
+      name: "Create Channel",
+      title: "Create Channel",
+      alt: "Create Channels / Dashboard",
+      href: "/dashboard",
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      headerTag: {
+        title: "Channel Dashboard",
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
   },
 };
 
