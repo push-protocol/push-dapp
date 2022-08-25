@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from "react";
-import { Item, Span, Section, Content, H2, H3 } from "primaries/SharedStyling";
+import { Item, Span, Section, Content, H2, H3, Button } from "primaries/SharedStyling";
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { getReq } from "api";
 import { useWeb3React } from "@web3-react/core";
@@ -7,11 +7,11 @@ import styled, { useTheme, css } from "styled-components";
 import { useSelector } from "react-redux";
 import RemoveDelegateModal from "./RemoveDelegateModal";
 import DelegateInfo from "./DelegateInfo";
-
 import {
   AiOutlineUserDelete
 } from 'react-icons/ai';
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { useDeviceWidthCheck } from "hooks";
 
 const isOnwer=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
@@ -27,6 +27,8 @@ const ShowDelegates = () => {
   const { epnsCommWriteProvider } = useSelector(
     (state) => state.contracts
   );
+  const isMobile = useDeviceWidthCheck(700);
+
 
   const removeDelegate = (walletAddress) => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
@@ -68,8 +70,8 @@ const ShowDelegates = () => {
         minWidth="280px"
         align="stretch"
         margin="10px 0px 30px 0px"
-        radius="10px"
-        border="1px solid rgba(169, 169, 169, 0.5)"
+        radius="20px"
+        border="1px solid #D4DCEA;"
       >
       {isActiveDelegateDropdown && delegatees && 
         <Item
@@ -80,7 +82,7 @@ const ShowDelegates = () => {
           {delegatees.map((delegate,idx) => {
             return (
               <Item
-                padding="12px"
+                padding={!isMobile ? "25px":"12px"}
                 direction="row"
                 justify="space-between"
                 key={delegate}
@@ -215,38 +217,37 @@ const RemoveButtonUI = styled(ChannelActionButton)`
   
 `;
 
-const OwnerButton = styled(ChannelActionButton)`
-  /* background-color: red; */
-  background: ${props => props.theme.backgroundBG};
-  height: 50px;
-  width: 164px;
-  font-weight: 700;
-  font-size: 15px;
-  justify-content: end;
-  text-align: right;
+const OwnerButton = styled(Button)`
+  background: transparent;
+  // height: 50px;
+  // width: 164px;
+  font-weight: 500;
+  font-size: 16px;
+  // justify-content: end;
+  // text-align: right;
   cursor: pointer;
   color: #CF1C84;
-  padding: 6px 10px 6px 9px;
+  // padding: 6px 10px 6px 9px;
+  &:hover {
+    background: transparent;
+  }
+  
 `;
 
 
 const DelegatesInfoHeader = styled.div`
-font-family: 'Source Sans Pro';
-font-style: normal;
-font-weight: 700;
-font-size: 20px;
-line-height: 141%;
+font-weight: 600;
+font-size: 18px;
+line-height: 150%;
 display: flex;
 align-items: center;
 color: ${(props) => props.theme.color};
 `;
+
 const DelegatesInfoLabel = styled.div`
-  font-family: 'Source Sans Pro';
-  font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 15px;
-  line-height: 150%;
-  letter-spacing: 0.03em;
+  line-height: 140%;
   color: #657795;
 `;
 

@@ -32,6 +32,13 @@ const SettingsWrapper = styled.div`
   position: absolute;
   top: 30px;
   right: 30px;
+  @media (max-width: 600px) {
+    position: inherit;
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin: 0 auto;
+  }
 `;
 
 const Settings = styled(AiOutlineEllipsis)`

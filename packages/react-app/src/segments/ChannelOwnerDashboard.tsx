@@ -14,6 +14,7 @@ import { setAliasAddress, setAliasEthAddress, setAliasVerified, setAliasAddressF
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import AliasProcessing from "components/AliasProcessing"
 import ChannelsDataStore from "singletons/ChannelsDataStore";
+import { useDeviceWidthCheck } from "hooks";
 
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL:number = 10;
@@ -36,6 +37,8 @@ const ChannelOwnerDashboard = () => {
 
   const CORE_CHAIN_ID: number = envConfig.coreContractChain;
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
+  const isMobile = useDeviceWidthCheck(600);
+
   
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
@@ -100,7 +103,7 @@ const ChannelOwnerDashboard = () => {
           {isChannelDetails && processingState !== null &&
             (
               <>
-                {channelDetails ? <ChannelSettings /> : ""}
+                {channelDetails && !isMobile ? <ChannelSettings /> : ""}
                 {channelDetails ? <ChannelDetails /> : ""}
               </>
             )

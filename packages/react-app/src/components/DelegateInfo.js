@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDeviceWidthCheck } from "hooks";
 import { AiFillCopy, AiOutlineCopy } from "react-icons/ai";
+import { Item } from "primaries/SharedStyling";
 
 const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
   const [addressText, setAddressText] = useState(delegateAddress);
   const [isCopied, setIsCopied] = useState(false);
-  const isMobile = useDeviceWidthCheck(700);
+  const isMobile = useDeviceWidthCheck(1200);
 
   useEffect(() => {
     if (!isMobile) {
@@ -15,8 +16,8 @@ const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
       // clip address
       const clippedAddrs = `${delegateAddress.substring(
         0,
-        6
-      )}.....${delegateAddress.substring(delegateAddress.length - 6)}`;
+        5
+      )}.....${delegateAddress.substring(delegateAddress.length - 5)}`;
       setAddressText(clippedAddrs);
     }
   }, [isMobile]);
@@ -52,17 +53,20 @@ const WalletInfoContent = ({
   setIsCopied,
   delegateAddress,
 }) => {
+  const isMobile = useDeviceWidthCheck(1000);
+
   return (
     <div
       style={{
         display: "flex",
+        flexDirection: "row",
         justifyContent: "space-between",
         width: "100%",
       }}
     >
       <div style={{ paddingTop: 3 }}>{addressText}</div>
-      <div
-        style={{ marginLeft: "100px", cursor: "pointer" }}
+      <ItemHere
+        isMobile={isMobile ? "10px" : "50px"}
         onClick={() => {
           navigator.clipboard.writeText(delegateAddress);
           setIsCopied(true);
@@ -73,16 +77,21 @@ const WalletInfoContent = ({
         ) : (
           <AiOutlineCopy size={18} color="white" style={{ paddingTop: 6 }} />
         )}
-      </div>
+      </ItemHere>
     </div>
   );
 };
 
+const ItemHere = styled.div`
+  cursor: pointer;
+  margin-left: ${(props) => props.isMobile || ""};
+`;
+
 const WalletAddressDisplay = styled.span`
   flex: 3;
-  margin-right: 30px;
-  margin-left: 10px;
-  padding: 8px 30px;
+  // margin-right: 30px;
+  // margin-left: 10px;
+  padding: 6px 25px;
   max-height: 30px;
   display: flex;
   align-items: baseline;
@@ -98,6 +107,9 @@ const WalletAddressDisplay = styled.span`
   &:active {
     opacity: 0.75;
     cursor: pointer;
+  }
+  @media (max-width: 700px) {
+    padding: 4px 15px;
   }
 `;
 

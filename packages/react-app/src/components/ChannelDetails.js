@@ -11,6 +11,8 @@ import { getReq, postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { AiOutlineUser } from "react-icons/ai";
+import { useDeviceWidthCheck } from "hooks";
+import ChannelSettings from "./ChannelSettings";
 
 const DATE_FORMAT = "MMMM Do YYYY";
 
@@ -21,7 +23,11 @@ const networkName = {
 
 export default function ChannelDetails() {
   const { chainId } = useWeb3React();
-  const { channelDetails, canVerify, aliasDetails: { isAliasVerified, aliasAddrFromContract } } = useSelector((state) => state.admin);
+  const {
+    channelDetails,
+    canVerify,
+    aliasDetails: { isAliasVerified, aliasAddrFromContract },
+  } = useSelector((state) => state.admin);
 
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
     (state) => state.channels
@@ -35,6 +41,7 @@ export default function ChannelDetails() {
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const isMobile = useDeviceWidthCheck(600);
 
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
@@ -71,21 +78,22 @@ export default function ChannelDetails() {
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
           <ChannelStatusContainer>
-            <div style={{ width: "8px" }} />
-            {((onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified)) ? (
+            {/* <div style={{ width: "8px" }} /> */}
+            {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) ||
+            (!onCoreNetwork && !isAliasVerified) ? (
               <AliasStateText>Alias Network Setup Pending</AliasStateText>
             ) : (
               <>
                 <Subscribers>
-                <img
-                  style={{ paddingLeft: "6px" }}
-                  src="/subcount.svg"
-                  alt="subscount"
-                ></img>
-                <SubscribersCount>
-                  {channelDetails.subscribers.length}
-                </SubscribersCount>
-              </Subscribers>
+                  <img
+                    style={{ width: "15px" }}
+                    src="/subcount.svg"
+                    alt="subscount"
+                  ></img>
+                  <SubscribersCount>
+                    {channelDetails.subscribers.length}
+                  </SubscribersCount>
+                </Subscribers>
                 <ChanneStateText active={channelIsActive}>
                   {channelIsActive
                     ? "Active"
@@ -100,6 +108,8 @@ export default function ChannelDetails() {
         </Details>
       </SectionTop>
 
+      {!isMobile ? "" : <ChannelSettings />}
+
       <SectionDes>{channelDetails.info}</SectionDes>
 
       <SectionDate>
@@ -111,10 +121,7 @@ export default function ChannelDetails() {
           </Verified>
         )}
       </SectionDate>
-      {
-        processingState === 0 && 
-        <ShowDelegates />
-      }
+      {processingState === 0 && <ShowDelegates />}
     </ChannelDetailsWrapper>
   );
 }
@@ -122,6 +129,9 @@ export default function ChannelDetails() {
 const ChannelDetailsWrapper = styled.div`
   padding: 64px 74px;
   padding-bottom: 0;
+  @media (max-width: 600px) {
+    padding: 30px 20px;
+  }
 `;
 
 const SectionTop = styled.div`
@@ -129,6 +139,9 @@ const SectionTop = styled.div`
   flex-direction: row;
   align-items: center;
   margin-bottom: 30px;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 const ImageSection = styled.img`
@@ -136,13 +149,21 @@ const ImageSection = styled.img`
   height: 128px;
   margin-right: 20px;
   border-radius: 32px;
+  @media (max-width: 600px) {
+    width: 70px;
+    height: 70px;
+    margin-right: 0px;
+    border-radius: 20px;
+  }
 `;
 
 const ChannelStatusContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: start;
-  margin-bottom: 8px;
+  flex-direction: row;
+  // justify-content: center;
+  margin: 10px 0px;
+  // height: 26px;
 `;
 
 const VerifyImage = styled.img`
@@ -165,27 +186,27 @@ const VerifyingName = styled.div``;
 
 const Subscribers = styled.div`
   width: 58px;
-  height: 28px;
+  height: 26px;
   background: #ffdbf0;
   color: #cf1c84;
   border-radius: 25px;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
+  padding: 2px;
 `;
 
 const StateText = styled.div`
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 14px;
   line-height: 150%;
   display: flex;
   align-items: center;
-  padding: 2px 12px;
-  border-radius: 16px;
-  height: 28px;
-  align-self: center;
+  justify-content: space-evenly;
+  padding: 2px 8px;
+  border-radius: 25px;
+  height: 26px;
   background-color: pink;
 `;
 
@@ -193,6 +214,7 @@ const ChanneStateText = styled(StateText)`
   color: #2dbd81;
   color: ${(props) => (props.active ? "#2DBD81" : "red")};
   background-color: #c6efd1;
+  margin-left: 10px;
   ${(props) =>
     props.active &&
     `
@@ -225,27 +247,32 @@ const AliasStateText = styled(StateText)`
 `;
 
 const SubscribersCount = styled.span`
-  margin-top: 0px;
-  margin-left: 6px;
-  width: 20px;
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 400;
+  font-size: 14px;
 `;
 
 const Details = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Date = styled.div`
   display: flex;
   flex-direction: row;
   width: 340px;
-  font-size: 15px;
   color: #657795;
   text-transform: none;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 150%;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Verified = styled.div`
@@ -263,13 +290,15 @@ const ChannelName = styled.div`
   display: flex;
   flex-direction: row;
   margin-right: 8px;
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 30px;
-  line-height: 150%;
-  height: 45px;
+  line-height: 141%;
   color: ${(props) => props.theme.color};
+  @media (max-width: 600px) {
+    flex-direction: column;
+    margin-top: 10px;
+    font-size: 20px;
+  }
 `;
 
 const SectionDate = styled.div`
@@ -287,7 +316,16 @@ const SectionDate = styled.div`
 
 const SectionDes = styled.div`
   letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #000000;
+  text-transform: none;
+  color: #657795;
   margin-bottom: 40px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 140%;
+  padding: 0px 20px;
+  text-align: left;
+  @media (max-width: 600px) {
+    text-align: center;
+    margin-top: 10px;
+  }
 `;
