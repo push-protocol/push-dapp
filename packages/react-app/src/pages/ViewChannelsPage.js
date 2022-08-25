@@ -54,10 +54,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
   const [controlAt, setControlAt] = React.useState(1);
   const [modalOpen, setModalOpen] = React.useState(false);
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(false);
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
   const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
-  const [channelAdmin, setChannelAdmin] = React.useState(false);
-  const [channelJson, setChannelJson] = React.useState([]);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -71,142 +68,7 @@ function InboxPage({ loadTeaser, playTeaser }) {
   }, [toast]);
   // toast related section
 
-  /**
-   * Logic to get channel alias and alias verification status as well as create instances of core and comunicator contract
-   */
-  React.useEffect(() => {
-    (async function init() {
-      // if we are not on the core network then check for if this account is an alias for another channel
-      if (!onCoreNetwork) {
-        // get the eth address of the alias address, in order to properly render information about the channel
-        const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-          if (data) {
-            setAliasEthAccount(data.channel);
-            setAliasVerified(data.is_alias_verified);
-          }
-          return data;
-        });
-      }
-    })();
-  }, [account, chainId]);
 
-  /**
-   * When we instantiate the contract instances, fetch basic information about the user
-   * Corresponding channel owned.
-   */
-  React.useEffect(() => {
-    if (!epnsReadProvider || !epnsCommReadProvider) return;
-    // Reset when account refreshes
-    setChannelAdmin(false);
-    dispatch(setUserChannelDetails(null));
-    setAdminStatusLoaded(false);
-    userClickedAt(INITIAL_OPEN_TAB);
-    setChannelJson([]);
-    // save push admin to global state
-    epnsReadProvider.pushChannelAdmin()
-    .then((response) => {
-      dispatch(setPushAdmin(response));
-    })
-    .catch(err =>{
-      console.log({err})
-    });
-
-    // EPNS Read Provider Set
-    if (epnsReadProvider != null && epnsCommReadProvider != null) {
-      // Instantiate Data Stores
-      UsersDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider
-      );
-      ChannelsDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider,
-        chainId
-      );
-      checkUserForChannelOwnership();
-      fetchDelegators();
-    }
-  }, [epnsReadProvider, epnsCommReadProvider]);
-
-  // handle user action at control center
-  const userClickedAt = (controlIndex) => {
-    setControlAt(controlIndex);
-  };
-
-  // fetch all the channels who have delegated to this account
-  const fetchDelegators = () => {
-    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
-      .then(async ({ data: delegators }) => {
-        console.log(delegators);
-        // if there are actual delegators
-        // fetch basic information abouot the channels and store it to state
-        if (delegators && delegators.channelOwners) {
-          const channelInformationPromise = [
-            ...new Set([account, ...delegators.channelOwners])//make the accounts unique
-          ].map((channelAddress) =>
-            ChannelsDataStore.instance
-              .getChannelJsonAsync(channelAddress)
-              .then((res) => ({ ...res, address: channelAddress }))
-              .catch(() => false)
-          );
-          const channelInformation = await Promise.all(
-            channelInformationPromise
-          );
-          dispatch(setDelegatees(channelInformation.filter(Boolean)));
-          // fetch the json information about this delegatee channel and add to global state
-        } else {
-          dispatch(setDelegatees([]));
-        }
-      })
-      .catch(async (err) => {
-        console.log({ err });
-      });
-  };
-
-  // Check if a user is a channel or not
-  const checkUserForChannelOwnership = async () => {
-    if (!onCoreNetwork && !aliasEthAccount) return;
-    // Check if account is admin or not and handle accordingly
-    const ownerAccount = !onCoreNetwork ? aliasEthAccount : account;
-    EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
-      .then(async (response) => {
-        // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
-        const verificationStatus = await epnsWriteProvider.getChannelVerfication(
-          ownerAccount
-        );
-        const channelJson = await epnsWriteProvider.channels(ownerAccount);
-        const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(
-          account
-        );
-        console.log(response, channelJson, channelSubscribers);
-        dispatch(
-          setUserChannelDetails({
-            ...response,
-            ...channelJson,
-            subscribers: channelSubscribers,
-          })
-        );
-        dispatch(setCanVerify(Boolean(verificationStatus)));
-        setChannelJson(response);
-        setChannelAdmin(true);
-        setAdminStatusLoaded(true);
-      })
-      .catch((err) => {
-        console.log(
-          "There was an error [checkUserForChannelOwnership]:",
-          err.message
-        );
-        setChannelAdmin(false);
-        setAdminStatusLoaded(true);
-      })
-      .finally(() => {
-        setAdminStatusLoaded(true);
-      });
-  };
 
   // Render
   return (

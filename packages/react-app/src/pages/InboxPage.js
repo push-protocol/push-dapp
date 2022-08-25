@@ -1,11 +1,10 @@
 import React from "react";
 import ReactGA from "react-ga";
-import { ethers } from "ethers";
 import styled, { useTheme, ThemeProvider } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Item, Button } from "../primaries/SharedStyling";
-import { addresses, abis, envConfig } from "@project/contracts";
+import { envConfig } from "@project/contracts";
 import { postReq } from "api";
 
 import { toast as toaster } from "react-toastify";
@@ -15,14 +14,6 @@ import Loader from "react-loader-spinner";
 
 import Feedbox from "segments/Feedbox";
 
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import UsersDataStore from "singletons/UsersDataStore";
-
-import {
-	setPushAdmin,
-	setCoreReadProvider,
-	setCommunicatorReadProvider,
-} from "redux/slices/contractSlice";
 
 import GLOBALS from "config/Globals";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
@@ -86,40 +77,6 @@ function InboxPage() {
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
 	)
-
-	/**
-	 * When we instantiate the contract instances, fetch basic information about the user
-	 * Corresponding channel owned.
-	 */
-	React.useEffect(() => {
-		if (!epnsReadProvider || !epnsCommReadProvider) return;
-
-		// save push admin to global state
-		epnsReadProvider
-			.pushChannelAdmin()
-			.then((response) => {
-				dispatch(setPushAdmin(response));
-			})
-			.catch((err) => {
-				console.log({ err });
-			});
-
-		// EPNS Read Provider Set
-		if (epnsReadProvider != null && epnsCommReadProvider != null) {
-			// Instantiate Data Stores
-			UsersDataStore.instance.init(
-				account,
-				epnsReadProvider,
-				epnsCommReadProvider
-			);
-			ChannelsDataStore.instance.init(
-				account,
-				epnsReadProvider,
-				epnsCommReadProvider,
-				chainId
-			);
-		}
-	}, [epnsReadProvider, epnsCommReadProvider]);
 
 	const registerPubKey = async (encryptionPublicKey) => {
 		let txToast;
