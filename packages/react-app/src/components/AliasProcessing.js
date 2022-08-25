@@ -1,18 +1,15 @@
-import React, { useEffect } from "react";
-import styled, { css, useTheme } from "styled-components";
-import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
+import React from "react";
+import styled, { css } from "styled-components";
+import { Section } from "../primaries/SharedStyling";
 import AliasSetup from "./AliasSetup";
 import ChangeNetwork from "./ChangeNetwork";
 import VerifyAlias from "./VerifyAlias";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const AliasProcessing = ({
-  aliasVerified,
   aliasEthAccount,
   setAliasVerified,
 }) => {
-  //   const [processingState, setStepFlow] = React.useState(1);
-  const themes = useTheme();
   const { processingState } = useSelector((state) => state.channelCreation);
 
   return (
@@ -37,7 +34,6 @@ const AliasProcessing = ({
       {processingState === 2 && <ChangeNetwork />}
       {processingState === 3 && (
         <VerifyAlias
-          aliasVerified={aliasVerified}
           aliasEthAccount={aliasEthAccount}
           setAliasVerified={setAliasVerified}
         />

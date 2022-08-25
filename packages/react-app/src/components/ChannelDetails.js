@@ -20,16 +20,15 @@ const networkName = {
 };
 
 export default function ChannelDetails() {
-  const theme = useTheme();
-  const { chainId, account } = useWeb3React();
-  const { channelDetails, canVerify } = useSelector((state) => state.admin);
+  const { chainId } = useWeb3React();
+  const { channelDetails, canVerify, aliasDetails: { isAliasVerified, aliasAddrFromContract } } = useSelector((state) => state.admin);
 
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
     (state) => state.channels
   );
+  const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
   const [creationDate, setCreationDate] = React.useState("");
-  const [aliasVerified, setAliasVerified] = React.useState(null);
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
@@ -61,22 +60,6 @@ export default function ChannelDetails() {
     })();
   }, [channelDetails]);
 
-  React.useEffect(() => {
-    if (!onCoreNetwork) return;
-
-    (async function() {
-      const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-      await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(
-        ({ data }) => {
-          if (data) {
-            setAliasVerified(data.is_alias_verified);
-          }
-          return data;
-        }
-      );
-    })();
-  }, [account, chainId]);
-
   return (
     <ChannelDetailsWrapper>
       <SectionTop>
@@ -88,27 +71,29 @@ export default function ChannelDetails() {
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
           <ChannelStatusContainer>
-            <Subscribers>
-              <img
-                style={{ paddingLeft: "6px" }}
-                src="/subcount.svg"
-                alt="subscount"
-              ></img>
-              <SubscribersCount>
-                {channelDetails.subscribers.length}
-              </SubscribersCount>
-            </Subscribers>
             <div style={{ width: "8px" }} />
-            {!aliasVerified ? (
+            {((onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified)) ? (
               <AliasStateText>Alias Network Setup Pending</AliasStateText>
             ) : (
-              <ChanneStateText active={channelIsActive}>
-                {channelIsActive
-                  ? "Active"
-                  : channelIsDeactivated
-                  ? "Deactivated"
-                  : "Blocked"}
-              </ChanneStateText>
+              <>
+                <Subscribers>
+                <img
+                  style={{ paddingLeft: "6px" }}
+                  src="/subcount.svg"
+                  alt="subscount"
+                ></img>
+                <SubscribersCount>
+                  {channelDetails.subscribers.length}
+                </SubscribersCount>
+              </Subscribers>
+                <ChanneStateText active={channelIsActive}>
+                  {channelIsActive
+                    ? "Active"
+                    : channelIsDeactivated
+                    ? "Deactivated"
+                    : "Blocked"}
+                </ChanneStateText>
+              </>
             )}
           </ChannelStatusContainer>
           <Date>{creationDate && <>Created {creationDate}</>}</Date>
@@ -117,16 +102,6 @@ export default function ChannelDetails() {
 
       <SectionDes>{channelDetails.info}</SectionDes>
 
-      {aliasVerified === false && (
-        <Item
-          size="20px"
-          align="flex-start"
-          style={{ fontWeight: 800, color: "#D6097A", marginTop: "18px" }}
-        >
-          Please verify the Channel Alias Address to use the Channel on{" "}
-          {networkName[chainId]} Network.
-        </Item>
-      )}
       <SectionDate>
         {canVerify && (
           <Verified>
@@ -136,7 +111,10 @@ export default function ChannelDetails() {
           </Verified>
         )}
       </SectionDate>
-      <ShowDelegates />
+      {
+        processingState === 0 && 
+        <ShowDelegates />
+      }
     </ChannelDetailsWrapper>
   );
 }
