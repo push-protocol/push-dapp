@@ -6,9 +6,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   channelDetails: "unfetched",
+  coreChannelAdmin: null,
   canVerify: false,
   aliasDetails: {
     aliasAddr: null,
+    aliasAddrFromContract: null,
     aliasEthAddr: null,
     isAliasVerified: null,
   },
@@ -22,9 +24,9 @@ export const contractSlice = createSlice({
     setUserChannelDetails: (state, action) => {
       state.channelDetails = action.payload;
     },
-    // setAliasVerified: (state, action) => {
-    //   state.aliasVerified = action.payload;
-    // },
+    setCoreChannelAdmin: (state, action) => {
+      state.coreChannelAdmin = action.payload;
+    },
     setCanVerify: (state, action) => {
       state.canVerify = action.payload;
     },
@@ -33,6 +35,9 @@ export const contractSlice = createSlice({
     },
     setAliasAddress: (state, action) => {
       state.aliasDetails["aliasAddr"] = action.payload;
+    },
+    setAliasAddressFromContract: (state, action) => {
+      state.aliasDetails['aliasAddrFromContract'] = action.payload;
     },
     setAliasEthAddress: (state, action) => {
       state.aliasDetails["aliasEthAddr"] = action.payload;
@@ -45,10 +50,12 @@ export const contractSlice = createSlice({
 
 export const {
   setUserChannelDetails,
+  setCoreChannelAdmin,
   setAliasVerified,
   setCanVerify,
   setDelegatees,
   setAliasAddress,
+  setAliasAddressFromContract,
   setAliasEthAddress,
 } = contractSlice.actions;
 
