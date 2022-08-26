@@ -31,14 +31,14 @@ const ChangeNetwork = () => {
         width="12.2em"
         self="stretch"
         align="stretch"
-        margin="100px auto 0px auto"
+        margin="100px auto 50px auto"
       >
         <Button
           bg="#e20880"
           color="#fff"
           flex="1"
           radius="15px"
-          padding="20px 10px"
+          padding="20px 20px"
           onClick={() => {
             //   setStakeFeesChoosen(true);
             //   setStepFlow(2);

@@ -29,9 +29,12 @@ export default function ChannelSettings() {
 }
 
 const SettingsWrapper = styled.div`
-  position: absolute;
-  top: 30px;
-  right: 30px;
+  flex:1;
+  display:flex;
+  justify-content: flex-end;
+  position: relative;
+  top: 70px;
+  left:-50px;
   @media (max-width: 600px) {
     position: inherit;
     width:100%;

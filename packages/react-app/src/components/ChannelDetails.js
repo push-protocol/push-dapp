@@ -127,10 +127,10 @@ export default function ChannelDetails() {
 }
 
 const ChannelDetailsWrapper = styled.div`
-  padding: 64px 74px;
+  padding: 20px 30px;
   padding-bottom: 0;
   @media (max-width: 600px) {
-    padding: 30px 20px;
+    padding: 20px 10px;
   }
 `;
 

@@ -99,7 +99,6 @@ const ChannelOwnerDashboard = () => {
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
           {(!channelDetails && processingState === 0) ? <CreateChannel /> : ""}
-      
           {isChannelDetails && processingState !== null &&
             (
               <>
@@ -115,7 +114,7 @@ const ChannelOwnerDashboard = () => {
               <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
             </ThemeProvider>
           )}
-        </ModifiedContent>
+          </ModifiedContent>
       </Section>
     </Fragment>
   );
@@ -125,7 +124,40 @@ const ChannelOwnerDashboard = () => {
 const ModifiedContent = styled(Content)`
   padding: 0px;
   position: relative;
+    @media (min-width: 800px) and (max-width: 1600px) {
+      padding: 20px 30px;
+   }
+
+   @media (min-width: 1601px) and (max-width: 2200px) {
+    padding: 20px 70px;
+ }
+  @media (min-width: 2201px) and (max-width: 2900px) {
+    padding: 30px 220px;
+  }
+  @media (min-width: 2901px) {
+    padding: 30px 550px;
+  }
+
+  @media (min-width: 3501px) {
+    padding: 30px 1000px;
+  }
 `;
+
+  //   @media screen and (max-width: 1200px) {
+  //   min-width: 700px;
+  //  }
+
+  //  @media screen and (max-width: 1600px) {
+  //   min-width: 900px;
+  // }
+
+  // @media screen and (max-width: 2000px) {
+  //   min-width: 1300px;
+  // }
+
+  // @media screen and (max-width: 2100px) {
+  //    min-width: 1200px;
+  // }
 
 const ChannelLoadingMessage = styled.div`
   width: 100%;

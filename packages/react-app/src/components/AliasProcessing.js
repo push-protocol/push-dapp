@@ -6,10 +6,7 @@ import ChangeNetwork from "./ChangeNetwork";
 import VerifyAlias from "./VerifyAlias";
 import { useSelector } from "react-redux";
 
-const AliasProcessing = ({
-  aliasEthAccount,
-  setAliasVerified,
-}) => {
+const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
   const { processingState } = useSelector((state) => state.channelCreation);
 
   return (

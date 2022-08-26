@@ -70,7 +70,7 @@ const ShowDelegates = () => {
         minWidth="280px"
         align="stretch"
         margin="10px 0px 30px 0px"
-        radius="20px"
+        radius={isMobile ? "10px" : "20px"}
         border="1px solid #D4DCEA;"
       >
       {isActiveDelegateDropdown && delegatees && 
