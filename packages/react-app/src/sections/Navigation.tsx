@@ -54,11 +54,11 @@ function Navigation() {
       navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
       navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
     } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
-      if (channelDetails !== 'unfetched' && channelDetails != null && channelDetails.name) {
-        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails.name;
+      if (channelDetails !== 'unfetched' && channelDetails != null) {
+        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails['name'];
         console.log(navigationSetup);
       } else {
-        navigationSetup.primary[1].data.drilldown[0].data.name = "Channel Info";
+        navigationSetup.primary[1].data.drilldown[0].data.name = "Create Channel";
       }
       navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
     }
