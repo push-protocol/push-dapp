@@ -9,6 +9,7 @@ import { getReq, postReq } from "../api";
 import FadeLoader from "react-spinners/FadeLoader";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
+import { BsFillCheckCircleFill } from "react-icons/bs";
 
 const ethers = require("ethers");
 
@@ -25,6 +26,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     signer
   );
   const [loading, setLoading] = useState("");
+  const [success, setSuccess] = useState(false);
   const mainAddress = aliasEthAccount;
 
   // Form signer and contract connection
@@ -33,20 +35,17 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const checkAlias = async () => {
     if (mainAddress == aliasEthAccount) {
       submitAlias();
-    } else {
-      setLoading("Enter Correct Eth Channel Address");
-      setTimeout(() => {
-        setLoading("");
-      }, 4000);
     }
   };
 
   const checkAliasVerification = async () => {
     const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    const { aliasVerified } = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+    const { aliasVerified } = await getReq(
+      `/v1/alias/${userAddressInCaip}/channel`
+    ).then(({ data }) => {
       if (data) {
         dispatch(setAliasVerified(data.is_alias_verified));
-        return {aliasVerified: data['is_alias_verified']};
+        return { aliasVerified: data["is_alias_verified"] };
       }
       return { aliasVerified: null };
     });
@@ -54,7 +53,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   };
 
   const submitAlias = () => {
-    setLoading("loading");
+    setLoading("Processing");
     const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(
       mainAddress
     );
@@ -75,6 +74,9 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         const intervalId = setInterval(async () => {
           const { aliasVerified } = await checkAliasVerification();
           if (aliasVerified) {
+            setTimeout(() => {
+              setSuccess(true);
+            }, 1000);
             clearInterval(intervalId);
             dispatch(setProcessingState(0));
           }
@@ -109,27 +111,77 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         Notifications from it.
       </Span>
 
-      <Span
-        textAlign="center"
-        margin="60px 0px 0px 0px"
-        color={"#CF1C84"}
-        size="16px"
-        textTransform="none"
-        weight="500"
-        line="24px"
-      >
-        {account}
-      </Span>
+      {loading === "" && (
+        <Span
+          textAlign="center"
+          margin="60px 0px 0px 0px"
+          color={"#CF1C84"}
+          size="16px"
+          textTransform="none"
+          weight="500"
+          line="24px"
+        >
+          {account}
+        </Span>
+      )}
 
-      {loading ? (
+      {!success &&
+        (loading ? (
+          <Item
+            display="flex"
+            direction="row"
+            align="center"
+            margin="60px 0px 0px 0px"
+          >
+            <FadeLoader color="#cf1c84" loading={true} height={13} width={4} />
+
+            <Span
+              color={themes.color}
+              weight="600"
+              textTransform="none"
+              line="22px"
+              size="16px"
+              margin="0px 10px"
+            >
+              {loading}
+            </Span>
+          </Item>
+        ) : (
+          <Item
+            width="15em"
+            self="stretch"
+            align="stretch"
+            margin="60px auto 0px auto"
+          >
+            <Button
+              bg="#e20880"
+              color="#fff"
+              flex="1"
+              radius="15px"
+              padding="20px 10px"
+              onClick={checkAlias}
+            >
+              <Span
+                color="#fff"
+                weight="600"
+                textTransform="none"
+                line="22px"
+                size="16px"
+              >
+                Verify Alias Address
+              </Span>
+            </Button>
+          </Item>
+        ))}
+
+      {success && (
         <Item
           display="flex"
           direction="row"
           align="center"
           margin="60px 0px 0px 0px"
         >
-          <FadeLoader color="#cf1c84" loading={true} height={13} width={4} />
-
+          <BsFillCheckCircleFill color="#30CC8B" size={30} />
           <Span
             color={themes.color}
             weight="600"
@@ -138,34 +190,8 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
             size="16px"
             margin="0px 10px"
           >
-            {loading}
+            Verification Complete
           </Span>
-        </Item>
-      ) : (
-        <Item
-          width="15em"
-          self="stretch"
-          align="stretch"
-          margin="60px auto 0px auto"
-        >
-          <Button
-            bg="#e20880"
-            color="#fff"
-            flex="1"
-            radius="15px"
-            padding="20px 10px"
-            onClick={checkAlias}
-          >
-            <Span
-              color="#fff"
-              weight="600"
-              textTransform="none"
-              line="22px"
-              size="16px"
-            >
-              Verify Alias Address
-            </Span>
-          </Button>
         </Item>
       )}
     </Item>

@@ -3,14 +3,8 @@ import React from "react";
 import styled, { css, useTheme } from "styled-components";
 import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
 
-const networkName = {
-  80001: "Polygon Mumbai",
-  137: "Polygon Mainnet",
-};
-
 const ChangeNetwork = () => {
   const themes = useTheme();
-  const { account, chainId } = useWeb3React();
 
   return (
     <Item
@@ -28,8 +22,8 @@ const ChangeNetwork = () => {
         weight="500"
         line="24px"
       >
-        Change your wallet network to{" "}
-        <TextPink>{networkName[chainId]}</TextPink> to start <br></br>
+        Change your wallet network to <TextPink>Mumbai Polygon</TextPink> to
+        start <br></br>
         verifying your Channel Alias.
       </Span>
 
