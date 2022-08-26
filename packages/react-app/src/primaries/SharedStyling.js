@@ -211,9 +211,11 @@ export const H3 = styled.h3`
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: ${(props) => props.width || "100%"};
+  cursor: ${(props) => props.cursor || "default"};
   height: auto;
   display: flex;
+  filter: ${(props) => props.filter || "initial"};
 `;
 
 export const P = styled.p`
@@ -258,7 +260,7 @@ export const Span = styled.span`
   left: ${(props) => props.left || "auto"};
   bottom: ${(props) => props.bottom || "auto"};
   top: ${(props) => props.top || "auto"};
-
+  cursor: ${(props) => props.cursor || "default"};
   z-index: ${(props) => props.z || "auto"};
 `;
 
@@ -428,7 +430,10 @@ export const RouterLink = styled(Link)`
 
 export const A = styled(Anchor)`
   display: inline;
-  color: #e1087f;
+  color: ${(props) => props.color || "#e1087f"};
+  font-weight: ${(props) => props.weight || "300"};
+  font-size: ${(props) => props.size || "initial"};
+  margin: ${(props) => props.margin || "initial"};
   background: transparent;
   padding: 0px;
   letter-spacing: inherit;
@@ -437,7 +442,7 @@ export const A = styled(Anchor)`
 
 export const C = styled(Anchor)`
   display: inline;
-  color: #4292e4;
+  color: "#4292e4";
   background: transparent;
   padding: 0px;
   letter-spacing: inherit;

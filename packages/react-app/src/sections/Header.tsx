@@ -5,8 +5,7 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
-} from '@web3-react/injected-connector';
-import { Web3Provider } from 'ethers/providers';
+} from '@web3-react/injected-connector'
 import { hexlify } from "ethers/utils";
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -32,12 +31,11 @@ function Header({ isDarkMode, darkModeToggle }) {
   const theme = useTheme();
 
   // Get Web3 Context
-  const context = useWeb3React<Web3Provider>()
+  // const context = useWeb3React<Web3Provider>()
 
   const { navigationSetup } = useContext(NavigationContext)
 
   const { active, error } = useWeb3React();
-  const { deactivate } = context
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
@@ -111,65 +109,42 @@ const chainIds = envConfig.allowedNetworks;
     setShowLoginControls(!showLoginControls);
   }
 
-  const disconnect = () => {
-    setShowLoginControls(false);
-    deactivate();
-  }
-
   return (
-    <Container
-      direction="row"
-      padding="0px 15px"
-    >
-      
-      <ItemH
-        justify="flex-start"
-        flex="0"
-      >
-        <RightBarContainer
-          justify="flex-start"
-          flex="0"
-        >
-          <RightBarDesktop
-            justify="flex-start"
-            flex="0"
-          >
-            {active && !error &&
-              <Profile />
-            }
-            {!active &&
+    <Container direction="row" padding="0px 15px">
+      <ItemH justify="flex-start" flex="0">
+        <RightBarContainer justify="flex-start" flex="0">
+          <RightBarDesktop justify="flex-start" flex="0">
               <Logo src="epns.png" />
-            }
           </RightBarDesktop>
           
-          {active && !error &&
+          {active && !error && (
             <RightBarMobile>
               <Button
                 bg="transparent"
                 padding="5px"
                 radius="4px"
-                onClick={() => {setShowNavBar(!showNavBar)}}
+                onClick={() => {
+                  setShowNavBar(!showNavBar);
+                }}
               >
-                <AiOutlineMenu size={30} color={theme.headerIconsBg}/>
+                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
               </Button>
             </RightBarMobile>
-          }
+          )}
         </RightBarContainer>
         
-        {navigationSetup && showNavBar && active && !error &&
-          <NavMenuContainer
-            tabletAlign="flex-start"
-          >
+        {navigationSetup && showNavBar && active && !error && (
+          <NavMenuContainer tabletAlign="flex-start">
             <NavMenu>
               <Profile />
 
-              <NavMenuInner
-                tabletAlign="flex-start"
-              >
+              <NavMenuInner tabletAlign="flex-start">
                 {Object.keys(navigationSetup.navigation).map(function(key) {
                   return (
                     <Item
-                      onClick={() => {setShowNavBar(!showNavBar)}}
+                      onClick={() => {
+                        setShowNavBar(!showNavBar);
+                      }}
                     >
                       <NavigationButton
                         item={navigationSetup.navigation[key]}
@@ -183,95 +158,60 @@ const chainIds = envConfig.allowedNetworks;
               </NavMenuInner>
             </NavMenu>
 
-            <Item
-              position="absolute"
-              top="15px"
-              right="5px"
-            >
+            <Item position="absolute" top="15px" right="5px">
               <Button
                 bg="transparent"
                 padding="5px"
                 radius="4px"
-                onClick={() => {setShowNavBar(!showNavBar)}}
+                onClick={() => {
+                  setShowNavBar(!showNavBar);
+                }}
               >
-                <AiOutlineClose size={30} color={theme.headerIconsBg}/>
+                <AiOutlineClose size={30} color={theme.headerIconsBg} />
               </Button>
             </Item>
-
           </NavMenuContainer>
-        }
+        )}
       </ItemH>
 
-      <ItemH
-        justify="flex-end"
-      >
-        {headerTag && active && !error &&
-          <HeaderTag
-            align="flex-start"
-            overflow="hidden"
-            margin="0px 5px"
-          >
+      <ItemH justify="flex-end">
+        {headerTag && active && !error && (
+          <HeaderTag align="flex-start" overflow="hidden" margin="0px 5px">
             <Span
-              textTransform="uppercase"
+              textTransform="capitalize"
               spacing="0.1em"
               weight="normal"
               padding="8px 15px"
-              bg={!isDarkMode ? headerTag.light.bg : headerTag.dark.bg}
+              size="22px"
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
             >
               {headerTag.title}
             </Span>
           </HeaderTag>
-        }
-        
-
-       
+        )}
            
-        {active && !error &&
-          <Bell
-            badgeCount={0}
-            bellPressedCB={bellPressed}
-            width={32}
-            height={32}
-          />
-        }
-         <DarkModeSwitch
-              style={{ margin: '0 1rem' }}
+        {active && !showLoginControls && !error && (
+          
+          <DarkModeSwitch
+            style={{ margin: "0 1rem" }}
               checked={isDarkMode}
               onChange={darkModeToggle}
-              size={24}
-              sunColor="#ddd"
-            />
+            size={30}
+            sunColor="#494D5F"
+          />
+        )}
+       
 
-        {showLoginControls &&
-          <Item
-            position="absolute"
-          >
-            <Button
-              bg="#000"
-              size="12px"
-              spacing="0.2em"
-              textTransform="uppercase"
-              weight="600"
-              radius="20px"
-              onClick={disconnect}
-            >
-              Disconnect
-            </Button>
-          </Item>
-        }
-
-        <ItemH
-          justify="flex-end"
-          flex="initial"
-        >
-          {!!error &&
-            <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>
-          }
-          {!active && !error &&
+        <ItemH justify="flex-end" flex="initial">
+          {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
+          {!active && !error && (
             <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>
-          }
-          <Connection phase={active ? 'active' : error ? 'error' : 'waiting'} />
+          )}
+          {active && !showLoginControls && !error && (
+            <RightBarDesktop justify="flex-end" flex="initial">
+              <Profile />
+            </RightBarDesktop>
+          )}{" "}
         </ItemH>
       </ItemH>
     </Container>
@@ -283,6 +223,7 @@ const Container = styled(Section)`
   background: ${props => props.theme.headerBg};
   border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
+  padding: 0 2rem;
 `
 
 const Logo = styled.img`
@@ -359,25 +300,6 @@ const PrimaryTheme = styled(Notice)`
 
 const ThirdTheme = styled(Notice)`
   background: #674c9f;
-`
-
-const Connection = styled.span`
-  height: 10px;
-  width: 10px;
-  border-radius: 100%;
-  flex-shrink: 0;
-
-  ${props => props.phase === 'active' && css`
-    background: #77DD77;
-  `};
-
-  ${props => props.phase === 'waiting' && css`
-    background: #FFAE42;
-  `};
-
-  ${props => props.phase === 'error' && css`
-    background: #DC143C;
-  `};
 `
 
 const HeaderTag = styled(Item)`
