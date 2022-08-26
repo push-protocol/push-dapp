@@ -1,7 +1,7 @@
-import { useWeb3React } from "@web3-react/core";
+import { networkName, CORE_CHAIN_ID, aliasChainIdsMapping } from "helpers/UtilityHelper";
 import React from "react";
-import styled, { css, useTheme } from "styled-components";
-import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
+import styled, { useTheme } from "styled-components";
+import { Item, Span, Button } from "../primaries/SharedStyling";
 
 const ChangeNetwork = () => {
   const themes = useTheme();
@@ -22,7 +22,7 @@ const ChangeNetwork = () => {
         weight="500"
         line="24px"
       >
-        Change your wallet network to <TextPink>Mumbai Polygon</TextPink> to
+        Change your wallet network to <TextPink>{networkName[aliasChainIdsMapping[CORE_CHAIN_ID]]}</TextPink> to
         start <br></br>
         verifying your Channel Alias.
       </Span>
