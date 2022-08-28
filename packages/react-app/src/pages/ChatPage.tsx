@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import styled, { useTheme } from 'styled-components';
 import { Section } from 'components/SharedStyling';
-import Chat from "segments/Chat";
+import ChatSegment from "segments/chat/ChatSegment";
 
 import GLOBALS from "config/Globals";
 //
@@ -10,7 +10,7 @@ import GLOBALS from "config/Globals";
 function ChatPage(props) {
   return (
     <Container>
-      <Chat />
+      <ChatSegment />
     </Container>
   );
 }

@@ -2,8 +2,8 @@ import React from 'react'
 import ReactGA from 'react-ga'
 
 import styled, { useTheme, ThemeProvider } from 'styled-components'
-import ChatSidebar from 'segments/ChatSidebar'
-import ChatMainSection from 'segments/ChatMainSection'
+import ChatSidebar from 'components/chat/ChatSidebar'
+import ChatMainSection from 'components/chat/ChatMainSection'
 
 import GLOBALS from 'config/Globals'
 //

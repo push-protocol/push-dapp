@@ -4,11 +4,11 @@ import ChatBox from './chatBox/chatBox'
 import Loader from 'react-loader-spinner'
 
 // Helper
-import { createCeramic } from '../../../helpers/w2w/ceramic'
-import { generateKeyPair } from '../../../helpers/w2w/pgp'
-import * as DIDHelper from '../../../helpers/w2w/did'
-import * as w2wHelper from '../../../helpers/w2w'
-import * as PushNodeClient from '../../../api'
+import { createCeramic } from 'helpers/w2w/ceramic'
+import { generateKeyPair } from 'helpers/w2w/pgp'
+import * as DIDHelper from 'helpers/w2w/did'
+import * as w2wHelper from 'helpers/w2w'
+import * as PushNodeClient from 'api'
 
 // DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
@@ -24,7 +24,7 @@ import { CeramicClient } from '@ceramicnetwork/http-client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { Feeds, User } from '../../../api'
+import { Feeds, User } from 'api'
 
 import './w2wIndex.css'
 import { toast, ToastOptions } from 'react-toastify'
@@ -65,7 +65,7 @@ export const ToastPosition: ToastOptions = {
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
-  progress: 0
+  progress: 0,
 }
 
 export const Context = React.createContext<AppContext | null>(null)
@@ -108,7 +108,7 @@ function App() {
         encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
         encryptionType: 'pgp',
         signature: 'xyz',
-        sigType: 'a'
+        sigType: 'a',
       })
       setConnectedUser(createdUser)
     } else {
@@ -146,7 +146,7 @@ function App() {
                 intents,
                 setIntents,
                 inbox,
-                setInbox
+                setInbox,
               }}
             >
               <Sidebar />

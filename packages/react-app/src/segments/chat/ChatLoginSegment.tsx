@@ -3,7 +3,7 @@ import styled, { useTheme } from 'styled-components'
 
 import { ThemeProvider } from 'styled-components'
 
-import W2wIndex from 'components/chat/w2wChat/w2wIndex'
+import W2wIndex from 'components/chat/w2wIndex'
 import { Item, ItemH } from 'components/SharedStyling'
 
 // Create Header
@@ -31,13 +31,14 @@ function Chat() {
 const Container = styled.div`
   display: flex;
   flex: 1;
-  position: 'fixed';
-  background: 'blue';
+  flex-direction: column;
+  background: ${props => props.theme.mainBg};
+
   font-weight: 200;
   align-content: center;
   align-items: stretch;
   justify-content: center;
-  height: 83.6vh;
+  height: inherit;
 `
 
 // Export Default

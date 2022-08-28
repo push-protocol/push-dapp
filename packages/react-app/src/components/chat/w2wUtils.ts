@@ -1,7 +1,7 @@
-import { MessageIPFS } from '../../../helpers/w2w/ipfs'
+import { MessageIPFS } from 'helpers/w2w/ipfs'
 import { intitializeDb } from './w2wIndexeddb'
 import { DID } from 'dids'
-import { Feeds, getInbox, getFromIPFS, User } from '../../../api'
+import { Feeds, getInbox, getFromIPFS, User } from 'api'
 import { InboxChat } from './w2wIndex'
 import { decryptAndVerifySignature } from 'helpers/w2w'
 

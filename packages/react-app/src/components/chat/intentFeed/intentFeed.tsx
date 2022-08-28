@@ -9,7 +9,7 @@ import Modal from '@mui/material/Modal'
 import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { approveIntent, Feeds } from '../../../../api'
+import { approveIntent, Feeds } from 'api'
 import { intitializeDb } from '../w2wIndexeddb'
 import { caip10ToWallet } from 'helpers/w2w'
 const style = {
