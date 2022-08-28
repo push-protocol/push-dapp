@@ -19,7 +19,7 @@
   FormSubmision,
   Input,
   TextField,
-} from "components/SharedStyling";
+} from "primaries/SharedStyling";
 
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -28,17 +28,23 @@ import Switch from "@material-ui/core/Switch";
 import { useWeb3React } from "@web3-react/core";
 
 import { CloseIcon } from "assets/icons";
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+import PreviewNotif from "./PreviewNotif";
 import CryptoHelper from "helpers/CryptoHelper";
+import { envConfig } from "@project/contracts";
+import { IPFSupload } from "helpers/IpfsHelper";
+
 const ethers = require("ethers");
+
+const CORE_CHAIN_ID = envConfig.coreContractChain;
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
   { value: "1", label: "Broadcast (IPFS Payload)" },
-  // { value: "2", label: "Secret (IPFS Payload)" },
-  { value: "3", label: "Targetted (IPFS Payload)" },
+  // { value: "2", label: "Old Secret (IPFS Payload)" },
+  { value: "3", label: "Targeted (IPFS Payload)" },
   { value: "4", label: "Subset (IPFS Payload)" },
-  // { value: "5", label: "Offchain (Push)" },
+//   { value: "5", label: "Secret (IPFS Payload)" },
+  // { value: "6", label: "Offchain (Push)" },
 ];
 const LIMITER_KEYS = ["Enter", ","];
 
@@ -56,6 +62,8 @@ function SendNotifications() {
     (state: any) => state.channels
   );
 
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+    
   const [nfProcessing, setNFProcessing] = React.useState(0);
   const [channelAddress, setChannelAddress] = React.useState("");
   const [nfRecipient, setNFRecipient] = React.useState("");
@@ -74,10 +82,16 @@ function SendNotifications() {
 
   const isChannelDeactivated = channelDetails
       ? channelDetails.channelState === CHANNNEL_DEACTIVATED_STATE
-      : false;
-  const cannotDisplayDelegatees =
-      (delegatees.length === 1 && delegatees[0].address === account) ||
-      !delegatees.length; //do not display delegatees dropdown if you are the only delegatee to yourself or there are no delegatess
+        : false;
+    // console.log(delegatees);
+    let cannotDisplayDelegatees;
+    if (onCoreNetwork)
+        cannotDisplayDelegatees = (delegatees.length === 1 && delegatees[0].address === account) ||
+            !delegatees.length; //do not display delegatees dropdown if you are the only delegatee to yourself or there are no delegatess
+    else 
+        cannotDisplayDelegatees = (delegatees.length === 1 && delegatees[0].alias_address === account) ||
+            !delegatees.length;
+    
   // construct a list of channel delegators
   React.useEffect(() => {
       if (!account) return;
@@ -99,6 +113,31 @@ function SendNotifications() {
           setChannelAddress(delegatees[0].address);
       }
   }, [delegatees, account]);
+    
+    const isAllFieldsFilled = () => {
+        if (nfRecipient == "" ||
+            nfType == "" ||
+            nfMsg == "" ||
+            (nfSubEnabled && nfSub == "") ||
+            (nfCTAEnabled && nfCTA == "") ||
+            (nfMediaEnabled && nfMedia == "")
+        ) {
+            return false;
+        }
+        return true;
+    };
+
+    // const previewNotif = (e: any) => {
+    //     e.preventDefault();
+    //     if(isAllFieldsFilled())
+    //         setPreviewNotifModalOpen(true)
+    //     else {
+    //         setNFInfo("Please fill all fields to preview");
+    //         setTimeout(() => {
+    //             setNFInfo('');
+    //         }, 2000);
+    //     }
+    // }
 
   // on change for the subset type notifications input
   const handleSubsetInputChange = (e: any) => {
@@ -197,25 +236,75 @@ function SendNotifications() {
           case "1":
               break;
 
-          // Targetted Notification
+          // Targeted Notification
           case "3":
               break;
 
+          // Old Secret Notification
+        //   case "2":
+        //       // Create secret
+        //       let secret = CryptoHelper.makeid(14);
+
+        //       // Encrypt payload and change sub and nfMsg in notification
+        //       nsub = "You have a secret message!";
+        //       nmsg = "Open the app to see your secret message!";
+
+        //       // get public key from EPNSCoreHelper
+        //       let k = await EPNSCoreHelper.getPublicKey(
+        //           nfRecipient,
+        //           epnsCommWriteProvider
+        //       );
+        //       if (k == null) {
+        //           // No public key, can't encrypt
+        //           setNFInfo(
+        //               "Public Key Registration is required for encryption!"
+        //           );
+        //           setNFProcessing(2);
+
+        //           toast.update(notificationToast, {
+        //               render: "Unable to encrypt for this user, no public key registered",
+        //               type: toast.TYPE.ERROR,
+        //               autoClose: 5000,
+        //           });
+
+        //           return;
+        //       }
+
+        //       let publickey = k.toString().substring(2);
+        //       //console.log("This is public Key: " + publickey);
+
+        //       secretEncrypted = await CryptoHelper.encryptWithECIES(
+        //           secret,
+        //           publickey
+        //       );
+        //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
+        //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
+        //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+        //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
+        //       break;
+
+          // Targeted Notification
+          case "4":
+              break;
+                
           // Secret Notification
-          case "2":
-              // Create secret
-              let secret = CryptoHelper.makeid(14);
+          case "5":
+                // Create secret
+              let secret = CryptoHelper.makeid(8);
 
               // Encrypt payload and change sub and nfMsg in notification
               nsub = "You have a secret message!";
-              nmsg = "Open the app to see your secret message!";
+              nmsg = "Click on Decrypt button to see your secret message!";
 
-              // get public key from EPNSCoreHelper
-              let k = await EPNSCoreHelper.getPublicKey(
-                  nfRecipient,
-                  epnsCommWriteProvider
-              );
-              if (k == null) {
+              // get public key from Backend API
+              let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
+                  address: nfRecipient,
+                  op: "read"
+              }).then(res => {
+                  return res.data?.encryption_key;
+              });
+
+              if (encryptionKey == null) {
                   // No public key, can't encrypt
                   setNFInfo(
                       "Public Key Registration is required for encryption!"
@@ -231,25 +320,21 @@ function SendNotifications() {
                   return;
               }
 
-              let publickey = k.toString().substring(2);
-              //console.log("This is public Key: " + publickey);
+              let publickey = encryptionKey;
 
-              secretEncrypted = await CryptoHelper.encryptWithECIES(
+              secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
                   secret,
                   publickey
               );
-              asub = CryptoHelper.encryptWithAES(nfSub, secret);
+            //   console.log(secretEncrypted);
+              if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
               amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-              acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-              aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-              break;
-
-          // Targetted Notification
-          case "4":
+              if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+              if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
               break;
 
           // Offchain Notification
-          case "5":
+          case "6":
               console.log(
                   nsub,
                   nmsg,
@@ -262,6 +347,7 @@ function SendNotifications() {
               );
 
               break;
+          
           default:
               break;
       }
@@ -274,7 +360,8 @@ function SendNotifications() {
           nfType === "1" ||
           nfType === "2" ||
           nfType === "3" ||
-          nfType === "4"
+          nfType === "4" ||
+          nfType === "5"
       ) {
           // Checks for optional fields
           if (nfSubEnabled && isEmpty(nfSub)) {
@@ -354,12 +441,13 @@ function SendNotifications() {
               render: "Preparing Payload for upload",
           });
 
-          const ipfs = require("nano-ipfs-store").at(
-              "https://ipfs.infura.io:5001"
-          );
+        //   const ipfs = require("nano-ipfs-store").at(
+        //       "https://ipfs.infura.io:5001"
+        //   );
 
           try {
-              storagePointer = await ipfs.add(input);
+            //   storagePointer = await ipfs.add(input);
+              storagePointer = await IPFSupload(input);
           } catch (e) {
               setNFProcessing(2);
               setNFInfo("IPFS Upload Error");
@@ -371,7 +459,8 @@ function SendNotifications() {
           nfType === "1" ||
           nfType === "2" ||
           nfType === "3" ||
-          nfType === "4"
+          nfType === "4" ||
+          nfType === "5"
       ) {
           // Prepare Identity and send notification
           const identity = nfType + "+" + storagePointer;
@@ -411,6 +500,14 @@ function SendNotifications() {
                   title: asub,
               },
           };
+
+          if (nfType === "5" || nfType === "2") {
+              payload.notification = {
+                  body: nmsg,
+                  title: nsub
+              };
+              payload.data.secret = secretEncrypted;
+          }
 
           const message = payload.data;
           console.log(payload, "payload");
@@ -509,7 +606,7 @@ function SendNotifications() {
           //     setNFProcessing(0);
           //   });
       }
-      if (nfType === "5") {
+      if (nfType === "6") {
           // const jsonPayload = {
           //   notification: {
           //     title: nsub,
@@ -623,10 +720,12 @@ function SendNotifications() {
       </Toaster>
   );
 
+  let showPreview = nfSub !== '' || nfMsg !== '' || nfCTA !== '' || nfMedia !== ''
+
   return (
       <>
           <Section>
-              <Content padding="10px 20px 20px">
+              <Content padding="10px 30px 20px">
                   <Item align="flex-start">
                       <H2 textTransform="uppercase" spacing="0.1em">
                           <Span weight="200" style={{color : theme.color}}>Send </Span>
@@ -642,8 +741,8 @@ function SendNotifications() {
                       {!isChannelDeactivated ? (
                           <H3 style={{color : theme.color}}>
                               EPNS supports three types of notifications (for
-                              now!). <b>Groups</b>, <b>Subsets</b>, and{" "}
-                              <b>Targetted</b>
+                              now!). <b>Groups</b>, <b>Subsets</b>, and{" "}<b>Targeted</b>
+                              {/* <b>Secret</b> */}
                               {/* and{" "} <b>Subsets</b>. */}
                           </H3>
                       ) : (
@@ -669,11 +768,12 @@ function SendNotifications() {
                               onSubmit={handleSendMessage}
                           >
                               <Item
-                                  margin="0px 20px"
+                                  margin="0px 30px"
                                   flex="1"
                                   self="stretch"
                                   align="stretch"
                               >
+                                  {console.log(cannotDisplayDelegatees)}
                                   {!cannotDisplayDelegatees && (
                                       <Item
                                           flex="5"
@@ -996,6 +1096,7 @@ function SendNotifications() {
                                           weight="400"
                                           border="1px solid #000"
                                           bg="#fff"
+                                          overflow="auto"
                                           value={nfMsg}
                                           onChange={(e) => {
                                               setNFMsg(e.target.value);
@@ -1015,7 +1116,7 @@ function SendNotifications() {
                                       <Item flex="0" margin="0px 5px 0px 0px">
                                           <BsFillImageFill
                                               size={24}
-                                              color="#000"
+                                              color={theme.color}
                                           />
                                       </Item>
                                       <Item
@@ -1062,7 +1163,7 @@ function SendNotifications() {
                                       align="center"
                                   >
                                       <Item flex="0" margin="0px 5px 0px 0px">
-                                          <FiLink size={24} color="#000" />
+                                          <FiLink size={24} color={theme.color} />
                                       </Item>
                                       <Item
                                           flex="1"
@@ -1119,13 +1220,41 @@ function SendNotifications() {
                                   </Item>
                               )}
 
+                                
+                                    {showPreview && (<PreviewNotif
+                                        details={{
+                                            channelAddress: channelAddress,
+                                            acta: nfCTA,
+                                            aimg: nfMedia,
+                                            amsg: nfMsg,
+                                            asub: nfSub,
+                                            type: nfType,
+                                        }}
+                                    />)}
+
                               {nfType && (
                                   <Item
                                       margin="15px 0px 0px 0px"
                                       flex="1"
+                                      direction="row"
                                       self="stretch"
                                       align="stretch"
                                   >
+                                      {/* <Button
+                                          bg="#35C5F3"
+                                          color="#fff"
+                                          flex="0.5"
+                                          radius="0px"
+                                          weight="400"
+                                          size="0.8em"
+                                          spacing="0.2em"
+                                          padding="20px 10px"
+                                          textTransform="uppercase"
+                                          onClick={(e) => previewNotif(e)}
+                                      >
+                                        Preview Notification
+                                      </Button> */}
+
                                       <Button
                                           bg="#e20880"
                                           color="#fff"
@@ -1162,6 +1291,7 @@ function SendNotifications() {
                           </FormSubmision>
                       </Item>
                   </ModifiedContent>
+                  
               </Section>
           )}
       </>
@@ -1212,7 +1342,7 @@ function SendNotifications() {
   `;
 
   const DropdownHeader = styled.div`
-  color: black;
+  color: ${props => props.theme.color || "#000"};
   padding: 10px;
   letter-spacing: 3px;
   font-size: 14px;

@@ -1,8 +1,6 @@
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { ethers } from "ethers";
-// import { bigNumber } from "ethers/utils";
 
-import { addresses, abis , envConfig } from "@project/contracts";
+import { addresses, envConfig } from "@project/contracts";
 
 const ONE_PUSH = ethers.BigNumber.from(1).mul(
   ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18))

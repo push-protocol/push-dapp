@@ -1,45 +1,41 @@
-import React from 'react'
-import { Navigate, Routes, Route } from 'react-router-dom'
+import React from "react";
+import { Navigate, Routes, Route } from "react-router-dom";
 
-import styled from 'styled-components'
-import { Item, Anchor } from 'components/SharedStyling'
+import styled from "styled-components";
+import { Item, Anchor } from "../primaries/SharedStyling";
 
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.min.css'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
-import { VscClose } from 'react-icons/vsc'
+import { VscClose } from 'react-icons/vsc';
 
-import InboxPage from 'pages/InboxPage'
+import InboxPage from "pages/InboxPage";
 import ChatPage from 'pages/ChatPage'
 import NewChatPage from 'pages/ChatPageNew'
-import SpamPage from 'pages/SpamPage'
-import ViewChannelsPage from 'pages/ViewChannelsPage'
-import ChannelDashboardPage from 'pages/ChannelDashboardPage'
-import ReceiveNotifsPage from 'pages/ReceiveNotifsPage'
+import SpamPage from "pages/SpamPage";
+import ViewChannelsPage from "pages/ViewChannelsPage";
+import ChannelDashboardPage from "pages/ChannelDashboardPage";
+import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
 
-import GovernancePage from 'pages/GovernancePage'
+import GovernancePage from "pages/GovernancePage";
 
-import YieldFarmingPage from 'pages/YieldFarmingPage'
-import NFTPage from 'pages/NFTPage'
-import AirdropPage from 'pages/AirdropPage'
-import ComingSoonPage from 'pages/ComingSoonPage'
-import TutorialPage from 'pages/TutorialPage'
-import FAQPage from 'pages/FAQPage'
+import YieldFarmingPage from "pages/YieldFarmingPage";
+import NFTPage from "pages/NFTPage";
+import AirdropPage from "pages/AirdropPage";
+import ComingSoonPage from "pages/ComingSoonPage";
+import NotAvailablePage from "./NotAvailablePage";
+import TutorialPage from "pages/TutorialPage";
+import FAQPage from "pages/FAQPage";
 
-import { SupportPage } from 'pages/SupportPage'
+import { SupportPage } from "pages/SupportPage";
 
-import GLOBALS from 'config/Globals'
+import GLOBALS from "config/Globals";
 
 // Create Header
 function MasterInterfacePage() {
   // Master Interface controls settings
-  const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false)
-  const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null)
-
-  const runYoutube = (flag) => {
-    setPlayTeaserVideo(flag)
-    console.log('here')
-  }
+  const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
+  const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
 
   // Render
   return (
@@ -49,9 +45,13 @@ function MasterInterfacePage() {
           <Route path="inbox" element={<InboxPage />} />
           <Route path="chat" element={<ChatPage />} />
           <Route path="chat-new" element={<NewChatPage />} />
-          <Route
-            path="channels"
-            element={<ViewChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
+
+          <Route path="channels" element={
+            <ViewChannelsPage
+              loadTeaser={setLoadTeaserVideo}
+              playTeaser={setPlayTeaserVideo}
+            />
+          }
           />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
           <Route path="spam" element={<SpamPage />} />
@@ -64,8 +64,12 @@ function MasterInterfacePage() {
           <Route path="gratitude" element={<AirdropPage />} />
           <Route path="live_walkthrough" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
+          <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
-          <Route path="/" element={<Navigate to="/channels" />} />
+          <Route
+            path="/"
+            element={<Navigate to="/channels" />}
+          />
           <Route path="support" element={<SupportPage />} />
         </Routes>
       </Interface>
@@ -82,15 +86,12 @@ function MasterInterfacePage() {
       />
 
       {/* To play youtube video from anywhere */}
-      {playTeaserVideo && (
+      {playTeaserVideo &&
         <PreviewOuter>
           <PreviewBG
             href="#"
             bg="transparent"
-            onClick={(e) => {
-              e.preventDefault()
-              setPlayTeaserVideo(!playTeaserVideo)
-            }}
+            onClick={(e) => { e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo) }}
           >
             <PreviewContent className="contentBox">
               <PreviewClose
@@ -98,40 +99,30 @@ function MasterInterfacePage() {
                 bg="transparent"
                 hover="transparent"
                 hoverBG="transparent"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setPlayTeaserVideo(!playTeaserVideo)
-                }}
+                onClick={(e) => { e.preventDefault(); setPlayTeaserVideo(!playTeaserVideo) }}
               >
                 <VscClose size={40} color="#fff" />
               </PreviewClose>
               <Preview>
-                <div className="videoWrapper">
-                  <iframe
-                    title="Video"
-                    src={loadTeaserVideo}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+                <div className='videoWrapper'><iframe src={loadTeaserVideo} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
               </Preview>
             </PreviewContent>
           </PreviewBG>
         </PreviewOuter>
-      )}
+      }
     </Container>
-  )
+  );
 }
 
 // css style
 const Container = styled.div`
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${(props) => props.theme.interfaceTopPadding});
-  padding: ${(props) => props.theme.interfaceTopPadding} 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
+  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
   align-items: stretch;
-`
+
+`;
 
 const Interface = styled(Item)`
   flex: 1;
@@ -140,7 +131,7 @@ const Interface = styled(Item)`
 
   box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  border: 1px solid ${(props) => props.theme.interfaceBorder};
+  border: 1px solid ${props => props.theme.interfaceBorder};
 
   margin: 15px 15px 15px 0px;
   overflow: hidden;
@@ -191,4 +182,4 @@ const PreviewClose = styled(Anchor)`
 `
 
 // Export Default
-export default MasterInterfacePage
+export default MasterInterfacePage;

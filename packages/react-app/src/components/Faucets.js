@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useTheme } from 'styled-components';
-import { Item, ItemH, Span, Anchor} from 'components/SharedStyling';
+import { Item, ItemH, Span, Anchor} from '../primaries/SharedStyling';
 
 import { FaGasPump } from 'react-icons/fa';
 

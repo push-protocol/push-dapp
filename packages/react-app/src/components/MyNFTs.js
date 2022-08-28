@@ -1,20 +1,19 @@
 import React from "react";
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Loader from 'react-loader-spinner'
-import { Waypoint } from "react-waypoint";
+import { envConfig } from "@project/contracts";
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
 import NFTHelper from 'helpers/NFTHelper';
 import { ethers } from "ethers";
 
-import DisplayNotice from "components/DisplayNotice";
+import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTItem from "components/ViewNFTItem";
-
 
 // Create Header
 function MyNFTs({controlAt, setControlAt, setTokenId}) {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
@@ -23,18 +22,23 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
 
   const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(() => {
+  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
 
-    if (!!(library && account)) {
-      const contractInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, library);
+  const mainnetCoreProvider = onMainnetCore
+    ? library
+    : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC);
+
+  React.useEffect(() => {
+    if (!!(mainnetCoreProvider && account)) {
+      const contractInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, mainnetCoreProvider);
       setNftReadProvider(contractInstance);
-      let signer = library.getSigner(account);
+      let signer = mainnetCoreProvider.getSigner(account);
       const signerInstance = new ethers.Contract(addresses.rockstar, abis.rockstar, signer);
       setNftWriteProvider(signerInstance);
       const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       setNFTRewardsContract(NFTRewardsInstance);
     }
-  }, [account,library]);
+  }, [account]);
 
   React.useEffect(() => {
     if(nftReadProvider && NFTRewardsContract){
@@ -102,18 +106,6 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
 }
 
 // css styles
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  font-weight: 200;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-
-  max-height: 80vh;
-`
 const ContainerInfo = styled.div`
   padding: 20px;
 `

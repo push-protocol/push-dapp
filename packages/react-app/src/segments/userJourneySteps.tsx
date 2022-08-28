@@ -2,7 +2,7 @@ import React from "react";
 
 import styled from "styled-components";
 import { themeLight, themeDark } from "config/Themization";
-import { Item, ItemH, Span, H3, B, A, Button } from "components/SharedStyling";
+import { Item, ItemH, Span, H3, B, A, Button } from "primaries/SharedStyling";
 
 import {incrementStepIndex, setRun, setIndex, setWelcomeNotifsEmpty , setTutorialContinous} from "../redux/slices/userJourneySlice";
 import { useSelector, useDispatch } from "react-redux";

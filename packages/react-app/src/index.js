@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, HashRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import { ethers } from "ethers";
 import { Provider } from "react-redux";
@@ -15,7 +15,6 @@ import "./index.css";
 
 // enable environmental variables across the entire application
 dotenv.config();
-
 // You should replace this uri with your own and put it into a .env file
 const client = new ApolloClient({
   uri: "https://api.thegraph.com/subgraphs/name/epnsproject/epnsstaging",

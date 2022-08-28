@@ -22,7 +22,7 @@ function Templater() {
 }
 
 // css styles
-const Container = styled(Section)`
+const Container = styled.div`
 
 `
 

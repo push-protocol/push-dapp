@@ -1,17 +1,9 @@
 import React, { createContext, useState } from 'react'
 
-export interface NavigationContextInterface {
-  navigationSetup: unknown;
-  setNavigationSetup: (unknown) => void;
-}
-
-const initialState = {
+export const NavigationContext = createContext({
   navigationSetup: null,
-  setNavigationSetup: () => {}
-};
-
-export const NavigationContext = createContext<NavigationContextInterface>(initialState);
-
+  setNavigationSetup: (value: any) => {}
+});
 
 const NavigationContextProvider = (props) => {
   const [navigationSetup, setNavigationSetup] = useState(null);
