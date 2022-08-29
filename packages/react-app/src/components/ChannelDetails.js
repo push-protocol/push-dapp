@@ -173,7 +173,7 @@ const Subscribers = styled.div`
 
 const ChanneStateText = styled.span`
   color: #57c255;
-  font-family: Source Sans Pro;
+  font-family: Strawford, Source Sans Pro;
   font-style: normal;
   font-weight: normal;
   font-size: 18px;
@@ -240,7 +240,7 @@ const Verified = styled.div`
 const ChannelName = styled.div`
   display: flex;
   flex-direction: row;
-  font-family: Source Sans Pro;
+  font-family: Strawford, Source Sans Pro;
   font-style: normal;
   font-weight: normal;
   font-size: 30px;
@@ -264,7 +264,7 @@ const SectionDate = styled.div`
 `;
 
 const SectionDes = styled.div`
-  font-family: Source Sans Pro;
+  font-family: Strawford, Source Sans Pro;
   font-style: normal;
   font-weight: 300;
   font-size: 24px;
