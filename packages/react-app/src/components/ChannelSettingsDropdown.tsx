@@ -17,7 +17,7 @@ import { setUserChannelDetails } from "redux/slices/adminSlice";
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import Loader from "react-loader-spinner";
+import {Oval} from "react-loader-spinner";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
@@ -62,7 +62,7 @@ function ChannelSettings() {
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
+      <Oval color={color} height={30} width={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -269,7 +269,7 @@ function ChannelSettings() {
             >
               <ActionTitle>
                 {addSubgraphDetailsLoading ? (
-                  <Loader type="Oval" color="#FFF" height={16} width={16} />
+                  <Oval color="#FFF" height={16} width={16} />
                 ) : (
                   "Add SubGraph Details"
                 )}
@@ -283,7 +283,7 @@ function ChannelSettings() {
           >
             <ActionTitle>
               {addDelegateLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
+                <Oval color="#FFF" height={16} width={16} />
               ) : (
                 "Add Delegate"
               )}
@@ -296,7 +296,7 @@ function ChannelSettings() {
           >
             <ActionTitle>
               {removeDelegateLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
+                <Oval color="#FFF" height={16} width={16} />
               ) : (
                 "Remove Delegate"
               )}

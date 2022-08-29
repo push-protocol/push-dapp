@@ -16,7 +16,7 @@ import styled from "styled-components";
 import { ethers } from "ethers";
 import { addresses, abis } from "@project/contracts";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import {BsCloudUpload} from 'react-icons/bs'
 
 const UploadLogo = ({
@@ -55,7 +55,7 @@ const UploadLogo = ({
       var reader = new FileReader();
       reader.readAsDataURL(file?.files[0]);
 
-      reader.onloadend = function(e) {
+      reader.onloadend = function (e) {
         setImageSrc(reader.result);
       };
     } else {
@@ -228,8 +228,7 @@ const UploadLogo = ({
                   disabled={processing == 1 ? true : false}
                 >
                   {processing == 1 && (
-                    <Loader
-                      type="Oval"
+                    <Oval
                       color="#fff"
                       height={24}
                       width={24}

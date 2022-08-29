@@ -93,6 +93,10 @@ const themeLight = {
   buttonColor: "#fff",
 
   createColor: "#808080",
+
+  // Toast Notifications
+  toastTextColor: "#000",
+  toastBorderColor: "#F4F3FF",
 };
 
 const themeDark = {
@@ -192,6 +196,10 @@ const themeDark = {
   buttonBd: "1px solid #fff",
 
   createColor: "#fff",
+
+  // Toast Notifications
+  toastTextColor: "#B6BCD6",
+  toastBorderColor: "#4A4F67",
 };
 
 module.exports = {

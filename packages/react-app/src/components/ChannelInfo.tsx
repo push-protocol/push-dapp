@@ -3,7 +3,7 @@ import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Spa
 import { FiLink } from "react-icons/fi";
 import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import "./createChannel.css";
 
 const coreChain = "Ethereum Kovan";
@@ -48,12 +48,12 @@ const ChannelInfo = ({
       isEmpty(channelInfo) ||
       isEmpty(channelURL) ||
       (channelAlias
-      ? isEmpty(chainDetails)
-      : chainDetails
-        ? chainDetails == coreChain
-          ? false
-          : isEmpty(channelAlias)
-        : false)
+        ? isEmpty(chainDetails)
+        : chainDetails
+          ? chainDetails == coreChain
+            ? false
+            : isEmpty(channelAlias)
+          : false)
     ) {
       setInfo("Channel Fields are Empty! Please retry!");
 
@@ -127,22 +127,22 @@ const ChannelInfo = ({
               />
             </DropdownStyledParent>
 
-            {/* <span
-              className="imgSpan"
-              data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
-            >
-              <img
-                className="iImage"
-                src="/svg/info.svg"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  marginTop: "0px",
-                  marginBottom: "-2px",
-                }}
-              />
+          {/* <span
+            className="imgSpan"
+            data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
+          >
+            <img
+              className="iImage"
+              src="/svg/info.svg"
+              style={{
+                width: "20px",
+                height: "20px",
+                marginTop: "0px",
+                marginBottom: "-2px",
+              }}
+            />
 
-              </span> */}
+              </span>  */}
           </Item>
 
           {chainDetails != coreChain &&
@@ -289,7 +289,7 @@ const ChannelInfo = ({
             </Button>
           </Item>
 
-          {/* <Item
+        {/* <Item
             margin="15px 0px 0px 0px"
             flex="1"
             self="stretch"
@@ -304,8 +304,7 @@ const ChannelInfo = ({
               disabled={processing == 1 ? true : false}
             >
               {processing == 1 && (
-                <Loader
-                  type="Oval"
+                <Oval
                   color="#fff"
                   height={24}
                   width={24}

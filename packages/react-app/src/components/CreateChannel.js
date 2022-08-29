@@ -10,6 +10,7 @@ import {
   H3,
 } from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
+import { Oval } from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";

@@ -1,11 +1,11 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import styled, {ThemeProvider, useTheme} from 'styled-components';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
-import Loader from 'react-loader-spinner';
+import { Oval } from 'react-loader-spinner';
 import { postReq } from "../api";
-import {Item, H2, H3, Span, Button, Input} from '../primaries/SharedStyling';
+import { Item, H2, H3, Span, Button, Input } from '../primaries/SharedStyling';
 
 const ethers = require('ethers');
 
@@ -111,8 +111,7 @@ export default function AliasVerificationModal({
                                 </Item>
                                 {loading && (
                                     <Item margin="20px 0px 10px 0px">
-                                        <Loader
-                                            type="Oval"
+                                        <Oval
                                             color="black"
                                             height={16}
                                             width={16}
