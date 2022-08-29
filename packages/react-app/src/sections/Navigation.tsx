@@ -8,6 +8,7 @@ import styled, { useTheme, css } from "styled-components";
 import {Section, Item, ItemH, AnchorLink as Anchor, Span } from 'primaries/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
+import NavButton from 'components/NavButton';
 import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
@@ -47,18 +48,21 @@ function Navigation() {
   
           // Set Secondary List
           const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+          const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
 
           // Set Nav List
           let count = -1;
           let navList = returnNavList(navigationList.primary, count);
           navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
+          navList = Object.assign(navList, returnNavList(navigationList.third, Object.keys(navList).length));
           
           const finalList = {
             primary: primaryList,
             secondary: secondaryList,
+            third: thirdList,
             navigation: navList
           };
-          
+          console.log(navList)
           setNavigationSetup(finalList);
       }
         
@@ -129,7 +133,7 @@ function Navigation() {
       if (navigationSetup) {
         // loop and find the item in question
         Object.entries(navigationSetup).forEach(([key, value]) => {
-          if (key === "primary" || key === "secondary") {
+          if (key === "primary" || key === "secondary" || key === "third") {
             const topSection = navigationSetup[key];
 
             Object.entries(topSection).forEach(([key, value]) => {
@@ -191,7 +195,7 @@ function Navigation() {
 
       if (activeDrilldownId == null) {
         Object.keys(transformedMenuList).forEach(key => {
-          if (key === 'primary' || key === 'secondary') {
+          if (key === 'primary' || key === 'secondary' || key === 'third') {
             Object.keys(transformedMenuList[key]).forEach(sectionkey => {
               const section = transformedMenuList[key][sectionkey];
               
@@ -214,7 +218,7 @@ function Navigation() {
       else {
         // menu item is getting selected
         Object.keys(transformedMenuList).forEach(key => {
-          if (key === 'primary' || key === 'secondary') {
+          if (key === 'primary' || key === 'secondary' || key === "third") {
             Object.keys(transformedMenuList[key]).forEach(sectionkey => {
               const section = transformedMenuList[key][sectionkey];
 
@@ -312,29 +316,33 @@ function Navigation() {
           fontSize = "small";
           secondaryButton=1;
           break;
+        case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
+          Section = SecondarySection;
+          fontSize = "small";
+          secondaryButton=1;
+          break;
         default:
           Section = PrimarySection;
           fontSize = "normal";
       }
-
       let rendered = (
         Object.keys(items).map(function(key) {
           const section = items[key];
           // console.log(section)
           const data = section.data;
           const uid = section.data.uid;
-          if(uid === 2 ){
-            if(section.opened)
-            dispatch(setCommunicateOpen(true))
-            else
-            dispatch(setCommunicateOpen(false))
-          }
-          else if(uid === 3){
-            if(section.opened)
-            dispatch(setDeveloperOpen(true))
-            else
-            dispatch(setDeveloperOpen(false))
-          }
+          // if(uid === 2 ){
+          //   if(section.opened)
+          //   dispatch(setCommunicateOpen(true))
+          //   else
+          //   dispatch(setCommunicateOpen(false))
+          // }
+          // else if(uid === 3){
+          //   if(section.opened)
+          //   dispatch(setDeveloperOpen(true))
+          //   else
+          //   dispatch(setDeveloperOpen(false))
+          // }
           let innerRendered = (
             <Section 
                 key={key}
@@ -353,6 +361,17 @@ function Navigation() {
                     direction="row"
                     overflow="hidden"
                   >
+
+                    { 
+                    section.hasItems 
+                      ? renderChildItems(
+                          data.drilldown, 
+                          section.opened,
+                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
+                        )
+                      : null
+                    }
+                    
                     <SectionInnerGroupContainer
                       flex="1"
                       align="stretch"
@@ -374,15 +393,7 @@ function Navigation() {
                       />
                     </SectionInnerGroupContainer>
                     
-                    {/* { 
-                    section.hasItems 
-                      ? renderChildItems(
-                          data.drilldown, 
-                          section.opened,
-                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
-                        )
-                      : null
-                    } */}
+                    
                   </Item>
                   ):
                   (
@@ -428,7 +439,7 @@ function Navigation() {
                         }
                           }}              
                         >
-                        <NavigationButton
+                        <NavButton
                           item={section}
                           data={data}
                           sectionID={sectionID}
@@ -480,6 +491,7 @@ function Navigation() {
       let rendered = (
         <SectionGroup
           align="stretch"
+          margin="10px 0px"
           opened={opened}
           refresh={refresh}
         >
@@ -496,7 +508,7 @@ function Navigation() {
                 <SectionInnerItemContainer
                   flex="1"
                   align="stretch"
-                  bg={theme.leftBarButtonBg}
+                  // bg={theme.leftBarButtonBg}
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
@@ -510,7 +522,7 @@ function Navigation() {
                     // mutateTransformedList(item)
                   }}
                 >
-                  <NavigationButton
+                  <NavButton
                     item={item}
                     data={data}
                     sectionID={sectionID}
@@ -560,12 +572,19 @@ function Navigation() {
               </Secondary> */}
             <Footer
               justify="flex-end"
-              align="strecth"
+              align="stretch"
+              margin="0px 0px 10px 0px"
             >
+              {
+                  renderMainItems(
+                    navigationSetup.third,
+                    GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD
+                  )
+                }
               
 
               {/* Put social */}
-              <ItemH
+              {/* <ItemH
                 flex="initial"
                 padding="10px"
                 radius="0px 12px 0px 0px"
@@ -636,7 +655,7 @@ function Navigation() {
                 >
                   <FaGithub size={15} color={"#fff"}/>
                 </Anchor>
-              </ItemH>
+              </ItemH> */}
             </Footer>
           </>
         }
@@ -716,14 +735,16 @@ const SectionInnerItemContainer = styled(Item)`
 
 `
 
-const PrimarySectionGroup = styled(InheritedSectionGroup)`
+const PrimarySectionGroup = styled(Item)`
+  border: 1px solid #E5E8F6;
+  border-radius: 16px;
   transition: margin .1s ease-out;
   ${ props => !props.opened && css`
     margin-top: -100%;
   `};
 `
 
-const PrimarySectionItem = styled(InheritedSectionItem)`
+const PrimarySectionItem = styled(Item)`
   
 `
 

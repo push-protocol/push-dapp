@@ -17,6 +17,7 @@ export default {
       PRIMARY: 1,
       SECONDARY: 2,
       MOBILE: 3,
+      THIRD: 4,
     },
 
     NAVBAR_IDENTIFIERS: {
