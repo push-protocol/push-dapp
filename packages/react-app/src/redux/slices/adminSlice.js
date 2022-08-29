@@ -15,6 +15,7 @@ const initialState = {
     isAliasVerified: null,
   },
   delegatees: null,
+  canVerify: false,
 };
 
 export const contractSlice = createSlice({

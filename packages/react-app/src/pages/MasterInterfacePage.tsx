@@ -72,8 +72,8 @@ function MasterInterfacePage() {
       </Interface>
 
       {/* For Channels Opt-in / Opt-out */}
-      <ToastContainer
-        position="bottom-right"
+      <StyledToastContainer
+        position="top-right"
         autoClose={false}
         newestOnTop
         closeOnClick
@@ -178,6 +178,17 @@ const PreviewClose = styled(Anchor)`
   align-self: flex-end;
   margin-bottom: -40px;
 `
+
+const StyledToastContainer = styled(ToastContainer)`
+  &&&.Toastify__toast-container {
+    top: 7vh;
+    right: 2vw;
+  }
+  // .Toastify__toast {}
+  // .Toastify__toast-body {}
+  // .Toastify__progress-bar {}
+  // .Toastify__toast-container--top-right {}
+`;
 
 // Export Default
 export default MasterInterfacePage;

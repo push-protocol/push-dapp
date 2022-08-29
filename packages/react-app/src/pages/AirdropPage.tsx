@@ -6,7 +6,7 @@ import { Section, Content, Item, Para, A, B, H2, H3, Span, Button } from '../pri
 
 import { BsChevronExpand } from 'react-icons/bs';
 
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 import { toast } from 'react-toastify';
 
 import { useWeb3React } from '@web3-react/core'
@@ -122,8 +122,7 @@ function AirdropPage() {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-        type="Oval"
+      <Oval
         color={color}
         height={30}
         width={30}
@@ -154,8 +153,7 @@ function AirdropPage() {
 
           <Item padding="40px 0px 20px 0px">
             {loading &&
-              <Loader
-                type="Oval"
+              <Oval
                 color="#35c5f3"
                 height={40}
                 width={40}

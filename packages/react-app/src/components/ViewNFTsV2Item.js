@@ -7,7 +7,7 @@ import { Device } from 'assets/Device';
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import Loader from 'react-loader-spinner';
+import { Oval } from 'react-loader-spinner';
 
 import Skeleton from '@yisheng90/react-loading';
 import { IoIosGift } from 'react-icons/io';
@@ -20,12 +20,12 @@ import { envConfig } from "@project/contracts";
 import ReactPlayer from 'react-player';
 
 // Create Header
-function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
+function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
   const { account, library, chainId } = useWeb3React();
 
   const [NFTRewardsV2Contract, setNFTRewardsV2Contract] = React.useState(null);
-  const [ loading, setLoading ] = React.useState(true);
-  const [ txInProgress, setTxInProgress ] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  const [txInProgress, setTxInProgress] = React.useState(false);
 
 
   const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
@@ -33,21 +33,21 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
   React.useEffect(() => {
     if (!!(library && account)) {
       let signer = library.getSigner(account);
-    
+
       const NFTRewardsV2Instance = new ethers.Contract(addresses.NFTRewardsV2, abis.NFTRewardsV2, signer);
       setNFTRewardsV2Contract(NFTRewardsV2Instance);
     }
-  }, [account,library]);
+  }, [account, library]);
 
   React.useEffect(() => {
-    if(NFTObject){
+    if (NFTObject) {
       setLoading(false);
     }
   }, [account, NFTObject]);
 
   // to claim
   const handleClaim = async (tokenId) => {
-    if(NFTRewardsV2Contract){
+    if (NFTRewardsV2Contract) {
       setTxInProgress(true)
       let sendWithTxPromise
       sendWithTxPromise = await NFTRewardsV2Contract.claimReward(tokenId)
@@ -55,7 +55,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
 
       console.log(tx);
       console.log("waiting for tx to finish");
-      let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3"/>, {
+      let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
         position: "bottom-right",
         autoClose: false,
         hideProgressBar: true,
@@ -75,7 +75,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
 
         setTxInProgress(false);
       }
-      catch(e) {
+      catch (e) {
         toast.update(txToast, {
           render: "Transaction Failed! (" + e.name + ")",
           type: toast.TYPE.ERROR,
@@ -91,17 +91,16 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-       type="Oval"
-       color={color}
-       height={30}
-       width={30}
+      <Oval
+        color={color}
+        height={30}
+        width={30}
       />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
 
-  let newIp = (NFTObject.nftInfo.animation_url).replace('https://epns.mypinata.cloud/ipfs/','https://ipfs.io/ipfs/')
+  let newIp = (NFTObject.nftInfo.animation_url).replace('https://epns.mypinata.cloud/ipfs/', 'https://ipfs.io/ipfs/')
 
   // render
   return (
@@ -123,11 +122,11 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
               <Skeleton color="#eee" width="100%" height="100%" />
             }
             {!loading &&
-              <ReactPlayer url={`${newIp}`} controls={true} playing={false} loop={true}/>
+              <ReactPlayer url={`${newIp}`} controls={true} playing={false} loop={true} />
             }
             {!!account && !!library && NFTObject.owner != 0xce5febfD9Eb155dd7d996FC04F1d763A3a9E0020 &&
               <NFTStatus>
-                <IoIosGift size={20} color="#fff"/>
+                <IoIosGift size={20} color="#fff" />
                 <NFTStatusTitle>
                   Gifted
                 </NFTStatusTitle>
@@ -144,47 +143,46 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId}) {
           </ChannelLogoInner>
         </ChannelLogoOuter>
 
-      {!!account && !!library &&
-        <ItemH>
+        {!!account && !!library &&
+          <ItemH>
 
-          <ChannelActions>
-            {loading &&
-              <SkeletonButton>
-                <Skeleton />
-              </SkeletonButton>
-            }
-            {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
-              <UnsubscribeButton >
-                <ActionTitle onClick={() => {
-                  setTokenId(NFTObject.id)
-                  setControlAt(3)
-                }}
+            <ChannelActions>
+              {loading &&
+                <SkeletonButton>
+                  <Skeleton />
+                </SkeletonButton>
+              }
+              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+                <UnsubscribeButton >
+                  <ActionTitle onClick={() => {
+                    setTokenId(NFTObject.id)
+                    setControlAt(3)
+                  }}
                   >Transfer</ActionTitle>
-              </UnsubscribeButton>
-            }
-            {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
-                <UnsubscribeButton disabled = {!NFTObject.claimable}>
+                </UnsubscribeButton>
+              }
+              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+                <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
-                      <Loader
-                       type="Oval"
-                       color="#FFF"
-                       height={16}
-                       width={16}
+                      <Oval
+                        color="#FFF"
+                        height={16}
+                        width={16}
                       />
                     </ActionLoader>
                   }
                   {NFTObject.claimable &&
-                    <ActionTitle hideit={txInProgress} onClick={() => {handleClaim(NFTObject.id)}}>Claim $PUSH</ActionTitle>
+                    <ActionTitle hideit={txInProgress} onClick={() => { handleClaim(NFTObject.id) }}>Claim $PUSH</ActionTitle>
                   }
                   {!NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} >Rewards Claimed</ActionTitle>
                   }
                 </UnsubscribeButton>
-            }
-          </ChannelActions>
-        </ItemH>
-      }
+              }
+            </ChannelActions>
+          </ItemH>
+        }
       </ChannelLogo>
     </Item>
   );
@@ -294,7 +292,7 @@ const ChannelActionButton = styled.button`
     cursor: pointer;
     pointer: hand;
   }
-  ${ props => props.disabled && css`
+  ${props => props.disabled && css`
     background: #e20880;
     &:hover {
       opacity: 1;
@@ -311,7 +309,7 @@ const ChannelActionButton = styled.button`
 
 const ActionTitle = styled.span`
   font-size: 12px;
-  ${ props => props.hideit && css`
+  ${props => props.hideit && css`
     visibility: hidden;
   `};
 `

@@ -3,7 +3,7 @@ import ReactGA from "react-ga";
 
 import styled, { css, useTheme } from 'styled-components';
 import { Section, Content, Item, ItemH, A, B, H2, H3, LI, Span, Button, Input, UL } from '../primaries/SharedStyling';
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 import { BsChevronExpand } from 'react-icons/bs';
 import { toast } from 'react-toastify';
 import InfoTooltip from "../primaries/InfoTooltip";
@@ -316,8 +316,7 @@ function GovernancePage() {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-        type="Oval"
+      <Oval
         color={color}
         height={30}
         width={30}
@@ -333,7 +332,7 @@ function GovernancePage() {
           <Item align="stretch" justify="flex-start" margin="0px 15px 15px 15px">
             {(dashboardLoading || !prettyTokenBalance || !selfVotingPower) &&
               <Item padding="20px">
-                <Loader type="Oval" color="#e20880" height={40} width={40} />
+                <Oval color="#e20880" height={40} width={40} />
               </Item>
             }
 
@@ -357,8 +356,7 @@ function GovernancePage() {
                         </Blocky>
                         <Wallet>
                           {!ensFetched &&
-                            <Loader
-                              type="Oval"
+                            <Oval
                               color="#FFF"
                               height={16}
                               width={16}
@@ -502,8 +500,7 @@ function GovernancePage() {
                         >{
                             txInProgress ? (
                               <ActionTitle>
-                                <Loader
-                                  type="Oval"
+                                <Oval
                                   color="#35c5f3"
                                   height={20}
                                   width={20}
@@ -545,8 +542,7 @@ function GovernancePage() {
               <NomineeContainer>
                 {delegateesLoading ? (
                   <ContainerInfo>
-                    <Loader
-                      type="Oval"
+                    <Oval
                       color="#35c5f3"
                       height={40}
                       width={40}
@@ -589,8 +585,7 @@ function GovernancePage() {
           <Item>
             {dashboardLoading &&
               <ContainerInfo>
-                <Loader
-                  type="Oval"
+                <Oval
                   color="#35c5f3"
                   height={40}
                   width={40}

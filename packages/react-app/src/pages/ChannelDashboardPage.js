@@ -2,7 +2,7 @@ import React from "react";
 import ReactGA from "react-ga";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { envConfig } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
@@ -22,6 +22,9 @@ import {
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
+import { addNewNotification } from "redux/slices/notificationSlice";
+import ChannelLoading from "components/ChannelLoading";
+
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 
 // Create Header
@@ -181,13 +184,11 @@ function ChannelDashboardPage() {
   return (
     <Container>
       <Interface>
-        {adminStatusLoaded ? 
-            <ChannelOwnerDashboard />
-          : 
-            <ChannelLoadingMessage>
-              Channel details are being loaded, please wait…
-            </ChannelLoadingMessage>
-        }
+        {adminStatusLoaded ? (
+          <ChannelOwnerDashboard />
+        ) : (
+          <ChannelLoading />
+        )}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}

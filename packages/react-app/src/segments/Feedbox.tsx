@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { useTheme } from "styled-components";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
@@ -86,12 +86,12 @@ function Feedbox() {
         const matches = notif.message.match(/\[timestamp:(.*?)\]/);
         if (matches) {
           timestamp = matches[1];
-        } 
+        }
         else timestamp = notif.epoch;
         if (
           ((Filter.channels === undefined ? true : (Filter.channels.includes(notif.channel))) &&
-          timestamp >= startDate && timestamp <= endDate
-          && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
+            timestamp >= startDate && timestamp <= endDate
+            && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
         )
           filterNotif.push(notif);
       }
@@ -143,15 +143,15 @@ function Feedbox() {
       const parsedResponse = EpnsAPI.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
-      results.forEach( each => {
-        map1.set(each.payload.data.sid , each.epoch);
-        map2.set(each.payload.data.sid , each.channel);
-    })
-    parsedResponse.forEach( each => {
+      results.forEach(each => {
+        map1.set(each.payload.data.sid, each.epoch);
+        map2.set(each.payload.data.sid, each.channel);
+      })
+      parsedResponse.forEach(each => {
         each['date'] = map1.get(each.sid);
         each['epoch'] = (new Date(each['date']).getTime() / 1000);
         each['channel'] = map2.get(each.sid);
-    })
+      })
       dispatch(
         updateTopNotifications({
           notifs: parsedResponse,
@@ -185,15 +185,15 @@ function Feedbox() {
       const parsedResponse = EpnsAPI.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
-      results.forEach( each => {
-        map1.set(each.payload.data.sid , each.epoch);
-        map2.set(each.payload.data.sid , each.channel);
-    })
-    parsedResponse.forEach( each => {
+      results.forEach(each => {
+        map1.set(each.payload.data.sid, each.epoch);
+        map2.set(each.payload.data.sid, each.channel);
+      })
+      parsedResponse.forEach(each => {
         each['date'] = map1.get(each.sid);
         each['epoch'] = (new Date(each['date']).getTime() / 1000);
         each['channel'] = map2.get(each.sid);
-    })
+      })
       setNotif(parsedResponse);
     } catch (err) {
       console.log(err);
@@ -211,7 +211,7 @@ function Feedbox() {
   const handlePagination = async () => {
     if (filter) {
       setLimit(limit + 10);
-    } 
+    }
     else {
       loadNotifications();
       dispatch(incrementPage());
@@ -225,10 +225,10 @@ function Feedbox() {
         !finishedFetching &&
         !bgUpdateLoading
       );
-    } 
+    }
     else {
       return (
-      Number(index) === limit - 1
+        Number(index) === limit - 1
       );
     }
 
@@ -329,7 +329,7 @@ function Feedbox() {
             <Notifs id="scrollstyle-secondary">
               {bgUpdateLoading && (
                 <Item padding="10px 20px">
-                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                  <Oval color="#35c5f3" height={40} width={40} />
                 </Item>
               )}
               {run &&
@@ -406,7 +406,7 @@ function Feedbox() {
 
               {loading && !bgUpdateLoading && (
                 <Item padding="10px 20px">
-                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                  <Oval color="#35c5f3" height={40} width={40} />
                 </Item>
               )}
             </Notifs>

@@ -134,6 +134,7 @@ const ImageClipper = forwardRef((props, ref) => {
               width: "250px",
               height: "250px",
               position: "relative",
+              borderRadius: "12px",
             },
           }}
         />

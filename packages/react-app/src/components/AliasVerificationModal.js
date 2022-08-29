@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
-import { useClickAway } from "react-use";
-import styled, { ThemeProvider, useTheme } from "styled-components";
-import { useWeb3React } from "@web3-react/core";
+import React, { useRef, useState } from 'react';
+import { useClickAway } from 'react-use';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
-import Loader from "react-loader-spinner";
+import { Oval } from 'react-loader-spinner';
 import { postReq } from "../api";
-import { Item, H2, H3, Span, Button, Input } from "../primaries/SharedStyling";
+import { Item, H2, H3, Span, Button, Input } from '../primaries/SharedStyling';
 
 const ethers = require("ethers");
 
@@ -83,84 +83,76 @@ export default function AliasVerificationModal({
     };
 
     return (
-      <ThemeProvider theme={themes}>
-        <Overlay>
-          <AliasModal ref={modalRef}>
-            <Item align="flex-start">
-              <H2 textTransform="uppercase" spacing="0.1em">
-                <Span weight="200" color={themes.color}>
-                  {" "}
-                  Verify
-                </Span>
-                <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-                  Alias
-                </Span>
-              </H2>
-              {verificationStatus === null ? (
-                <H3 color={themes.color}>
-                  There has been an error in the verification of your alias,
-                  Please contact the admin
-                </H3>
-              ) : (
-                <H3 color={themes.color}>
-                  Before you can use this channel on this chain, you first need
-                  to verify your Alias.
-                </H3>
-              )}
-            </Item>
-            {verificationStatus !== null && (
-              <>
-                <Item align="flex-start">
-                  <CustomInput
-                    placeholder={aliasEthAccount}
-                    radius="4px"
-                    padding="12px"
-                    border="1px solid #674c9f"
-                    bg="#fff"
-                    disabled
-                    readOnly={true}
-                  />
-                </Item>
-                {loading && (
-                  <Item margin="20px 0px 10px 0px">
-                    <Loader type="Oval" color="black" height={16} width={16} />
-                  </Item>
-                )}
-                <Item
-                  margin="15px 0px 0px 0px"
-                  flex="1"
-                  self="stretch"
-                  align="stretch"
-                >
-                  <Button
-                    bg="#e20880"
-                    color="#fff"
-                    flex="1"
-                    radius="0px"
-                    padding="20px 10px"
-                    disabled={mainAddress.length !== 42 || loading !== ""}
-                    onClick={checkAlias}
-                  >
-                    <StyledInput
-                      cursor="hand"
-                      textTransform="uppercase"
-                      color="#fff"
-                      weight="400"
-                      size="0.8em"
-                      spacing="0.2em"
-                      value={loading ? loading : "Verify Alias"}
-                    />
-                  </Button>
-                </Item>
-              </>
-            )}
-          </AliasModal>
-        </Overlay>
-      </ThemeProvider>
-    );
-  };
+        <ThemeProvider theme={themes}>
+            <Overlay>
+                <AliasModal ref={modalRef}>
+                    <Item align="flex-start">
+                        <H2 textTransform="uppercase" spacing="0.1em">
+                            <Span weight="200" color={themes.color}> Verify</Span><Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
+                                Alias
+                            </Span>
+                        </H2>
+                        {
+                            verificationStatus === null ?
+                                (
+                                    <H3 color={themes.color}>There has been an error in the verification of your alias, Please contact the admin</H3>
+                                ) : (
+                                    <H3 color={themes.color}>Before you can use this channel on this chain, you first need to verify your Alias.</H3>
+                                )
+                        }
+                    </Item>
+                    {
+                        verificationStatus !== null && (
+                            <>
+                                <Item align="flex-start">
+                                    <CustomInput
+                                        placeholder={aliasEthAccount}
+                                        radius="4px"
+                                        padding="12px"
+                                        border="1px solid #674c9f"
+                                        bg="#fff"
+                                        disabled
+                                        readOnly={true}
+                                    />
+                                </Item>
+                                {loading && (
+                                    <Item margin="20px 0px 10px 0px">
+                                        <Oval
+                                            color="black"
+                                            height={16}
+                                            width={16}
+                                        />
+                                    </Item>
+                                )}
+                                <Item margin="15px 0px 0px 0px" flex="1" self="stretch" align="stretch">
+                                    <Button
+                                        bg='#e20880'
+                                        color='#fff'
+                                        flex="1"
+                                        radius="0px"
+                                        padding="20px 10px"
+                                        disabled={mainAddress.length !== 42 || loading !== ''}
+                                        onClick={checkAlias}
+                                    >
+                                        <StyledInput
+                                            cursor="hand"
+                                            textTransform="uppercase"
+                                            color="#fff" weight="400"
+                                            size="0.8em" spacing="0.2em"
+                                            value={loading ? loading : "Verify Alias"}
+                                        />
+                                    </Button>
+                                </Item>
+                            </>
+                        )
+                    }
+                </AliasModal>
+            </Overlay>
+        </ThemeProvider>
+    )
+}
 
-  const StyledInput = styled(Input)`
+const StyledInput = styled(Input)`
     width: 100%;
     text-align: center;
     caret-color: transparent;

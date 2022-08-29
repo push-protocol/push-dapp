@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 
 import styled, { useTheme } from "styled-components";
-import {Section, Content, Item, ItemH, Span } from '../primaries/SharedStyling';
+import { Section, Content, Item, ItemH, Span } from '../primaries/SharedStyling';
 
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 import { addresses, abis } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
 import PoolCard from "components/PoolCard";
 
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
 
 import { envConfig } from "@project/contracts";
 
@@ -87,7 +87,7 @@ function YieldFarmingPage() {
 
       const duration = epochEndTimestamp - Math.floor(new Date() / 1000);
 
-      if(duration < 0) {
+      if (duration < 0) {
         getPoolStats()
       }
 
@@ -174,7 +174,7 @@ function YieldFarmingPage() {
       setYieldFarmingPUSH(yieldFarmingPUSH);
       setYieldFarmingLP(yieldFarmingLP);
       setUniswapV2Router02(uniswapV2Router02Instance);
-  }
+    }
   }, [account]);
 
   React.useEffect(() => {
@@ -216,102 +216,102 @@ function YieldFarmingPage() {
 
   return (
     <ThemeProvider theme={themes}>
-    <Section>
-      {poolStats ? (
-        <>
-          <Content themes={themes.yieldBg}>
-            <ItemH margin="0px 15px 0px 15px" align="stretch">
-              <StatsCard
-                bg={themes.mainBg} 
-              >
-                <StatsHeading bg="#e20880">Total Value Locked</StatsHeading>
-                <StatsContent>
-                  <StatsInnerTitle>{`$ ${numberWithCommas(poolStats.totalValueLocked.toFixed(2))}`}</StatsInnerTitle>
-                </StatsContent>
-                <StatsPreview color="#e20880">TVL</StatsPreview>
-              </StatsCard>
+      <Section>
+        {poolStats ? (
+          <>
+            <Content themes={themes.yieldBg}>
+              <ItemH margin="0px 15px 0px 15px" align="stretch">
+                <StatsCard
+                  bg={themes.mainBg}
+                >
+                  <StatsHeading bg="#e20880">Total Value Locked</StatsHeading>
+                  <StatsContent>
+                    <StatsInnerTitle>{`$ ${numberWithCommas(poolStats.totalValueLocked.toFixed(2))}`}</StatsInnerTitle>
+                  </StatsContent>
+                  <StatsPreview color="#e20880">TVL</StatsPreview>
+                </StatsCard>
 
-              <StatsCard
-                bg={themes.mainBg}
-              >
-                <StatsHeading bg="#35c5f3">PUSH Rewards Given</StatsHeading>
-                <StatsContent>
-                  <StatsInnerTitle>{numberWithCommas(formatTokens(poolStats.pushRewardsDistributed))}</StatsInnerTitle>
-                  <StatsInnerSub>out of {numberWithCommas(formatTokens(poolStats.totalDistributedAmount))}</StatsInnerSub>
-                </StatsContent>
-                <StatsPreview color="#35c5f3">Rewarded</StatsPreview>
-              </StatsCard>
+                <StatsCard
+                  bg={themes.mainBg}
+                >
+                  <StatsHeading bg="#35c5f3">PUSH Rewards Given</StatsHeading>
+                  <StatsContent>
+                    <StatsInnerTitle>{numberWithCommas(formatTokens(poolStats.pushRewardsDistributed))}</StatsInnerTitle>
+                    <StatsInnerSub>out of {numberWithCommas(formatTokens(poolStats.totalDistributedAmount))}</StatsInnerSub>
+                  </StatsContent>
+                  <StatsPreview color="#35c5f3">Rewarded</StatsPreview>
+                </StatsCard>
 
-              <StatsCard
-                bg={themes.mainBg}
-              >
-                <StatsHeading bg="#674c9f">Time Left</StatsHeading>
-                <StatsContent>
-                  <StatsInnerTitle>{formattedDuration}</StatsInnerTitle>
-                  <StatsInnerSub>until next epoch</StatsInnerSub>
-                </StatsContent>
-                <StatsPreview color="#674c9f">time left</StatsPreview>
-              </StatsCard>
+                <StatsCard
+                  bg={themes.mainBg}
+                >
+                  <StatsHeading bg="#674c9f">Time Left</StatsHeading>
+                  <StatsContent>
+                    <StatsInnerTitle>{formattedDuration}</StatsInnerTitle>
+                    <StatsInnerSub>until next epoch</StatsInnerSub>
+                  </StatsContent>
+                  <StatsPreview color="#674c9f">time left</StatsPreview>
+                </StatsCard>
 
-              <StatsCard
-                bg={themes.mainBg}
-              >
-                <StatsHeading bg={themes.pushPriceBg}>PUSH Price</StatsHeading>
-                <StatsContent>
-                  <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
-                  <StatsInnerSub>
-                    <a target="_blank" href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}>Uniswap</a>
-                  </StatsInnerSub>
-                </StatsContent>
-                <StatsPreview color="#000">UNISWAP</StatsPreview>
-              </StatsCard>
-            </ItemH>
-          </Content>
-
-          {!(lpPoolStats && userDataLP) && !(pushPoolStats && userDataPUSH)
-            ? <Item padding="20px">
-                <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-              </Item>
-            : <Content padding="25px 0px">
-              <ItemH margin="0px 10px 0px 10px" align="stretch">
-                {
-                  lpPoolStats && userDataLP ? (
-                    <PoolCard
-                      poolName={'Uniswap LP Pool (UNI-V2)'}
-                      poolAddress={addresses.yieldFarmLP}
-                      tokenAddress={addresses.epnsLPToken}
-                      getPoolStats={getPoolStats}
-                      getPUSHPoolStats={getLPPoolStats}
-                      getUserData={getUserDataLP}
-                      pushPoolStats={lpPoolStats}
-                      userData={userDataLP}
-                    />
-                  ) : null
-                }
-                {
-                  pushPoolStats && userDataPUSH ? (
-                    <PoolCard
-                      poolName={'Staking Pool (PUSH)'}
-                      poolAddress={addresses.yieldFarmPUSH}
-                      tokenAddress={addresses.epnsToken}
-                      getPoolStats={getPoolStats}
-                      getPUSHPoolStats={getPUSHPoolStats}
-                      getUserData={getUserDataPUSH}
-                      pushPoolStats={pushPoolStats}
-                      userData={userDataPUSH}
-                    />
-                  ) : null
-                }
+                <StatsCard
+                  bg={themes.mainBg}
+                >
+                  <StatsHeading bg={themes.pushPriceBg}>PUSH Price</StatsHeading>
+                  <StatsContent>
+                    <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
+                    <StatsInnerSub>
+                      <a target="_blank" href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}>Uniswap</a>
+                    </StatsInnerSub>
+                  </StatsContent>
+                  <StatsPreview color="#000">UNISWAP</StatsPreview>
+                </StatsCard>
               </ItemH>
             </Content>
-          }
-        </>
-      ) : (
-        <Item padding="20px">
-          <Loader type="Oval" color="#e20880" height={40} width={40} />
-        </Item>
-      )}
-    </Section>
+
+            {!(lpPoolStats && userDataLP) && !(pushPoolStats && userDataPUSH)
+              ? <Item padding="20px">
+                <Oval color="#35c5f3" height={40} width={40} />
+              </Item>
+              : <Content padding="25px 0px">
+                <ItemH margin="0px 10px 0px 10px" align="stretch">
+                  {
+                    lpPoolStats && userDataLP ? (
+                      <PoolCard
+                        poolName={'Uniswap LP Pool (UNI-V2)'}
+                        poolAddress={addresses.yieldFarmLP}
+                        tokenAddress={addresses.epnsLPToken}
+                        getPoolStats={getPoolStats}
+                        getPUSHPoolStats={getLPPoolStats}
+                        getUserData={getUserDataLP}
+                        pushPoolStats={lpPoolStats}
+                        userData={userDataLP}
+                      />
+                    ) : null
+                  }
+                  {
+                    pushPoolStats && userDataPUSH ? (
+                      <PoolCard
+                        poolName={'Staking Pool (PUSH)'}
+                        poolAddress={addresses.yieldFarmPUSH}
+                        tokenAddress={addresses.epnsToken}
+                        getPoolStats={getPoolStats}
+                        getPUSHPoolStats={getPUSHPoolStats}
+                        getUserData={getUserDataPUSH}
+                        pushPoolStats={pushPoolStats}
+                        userData={userDataPUSH}
+                      />
+                    ) : null
+                  }
+                </ItemH>
+              </Content>
+            }
+          </>
+        ) : (
+          <Item padding="20px">
+            <Oval color="#e20880" height={40} width={40} />
+          </Item>
+        )}
+      </Section>
     </ThemeProvider>
   );
 }
