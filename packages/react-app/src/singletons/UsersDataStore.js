@@ -1,7 +1,4 @@
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import { ethers } from "ethers";
-
-import { addresses, abis } from "@project/contracts";
 
 // STATIC SINGLETON
 export const UserEvents = {

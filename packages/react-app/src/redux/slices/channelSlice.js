@@ -13,7 +13,7 @@ const initialState = {
   channelsCache: {}, // a mapping of channel address to channel details
 };
 
-export const contractSlice = createSlice({
+export const channelSlice = createSlice({
   name: "channels",
   initialState,
   reducers: {
@@ -27,6 +27,18 @@ export const contractSlice = createSlice({
       const { address, meta } = action.payload;
       state.channelsCache[address] = meta;
     },
+    cacheSubscribe: (state, action) => {
+      const { channelAddress } = action.payload;
+      const channelIndex = state.channels.findIndex((channelInfo) => channelInfo.addr === channelAddress);
+      state.channels[channelIndex].memberCount++;
+      state.channels[channelIndex].isSubscriber = true;
+    },
+    cacheUnsubscribe: (state, action) => {
+      const { channelAddress } = action.payload;
+      const channelIndex = state.channels.findIndex((channelInfo) => channelInfo.addr === channelAddress);
+      state.channels[channelIndex].memberCount--;
+      state.channels[channelIndex].isSubscriber = false;
+    }
   },
 });
 
@@ -35,6 +47,8 @@ export const {
   setChannelMeta,
   incrementPage,
   cacheChannelInfo,
-} = contractSlice.actions;
+  cacheSubscribe,
+  cacheUnsubscribe
+} = channelSlice.actions;
 
-export default contractSlice.reducer;
+export default channelSlice.reducer;

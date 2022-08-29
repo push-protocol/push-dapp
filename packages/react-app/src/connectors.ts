@@ -6,13 +6,14 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 // import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { LedgerConnector } from '@web3-react/ledger-connector'
 import { TrezorConnector } from '@web3-react/trezor-connector'
+import { LedgerHQFrameConnector } from "@epnsproject/sdk-ledgerlive";
 // import { FrameConnector } from '@web3-react/frame-connector'
 // import { AuthereumConnector } from '@web3-react/authereum-connector'
 // import { FortmaticConnector } from '@web3-react/fortmatic-connector'
 // import { SquarelinkConnector } from '@web3-react/squarelink-connector'
 // import { TorusConnector } from '@web3-react/torus-connector'
-require('dotenv').config();
 
+require('dotenv').config();
 const SUPPORTED_CHAIN_IDS = [...envConfig.allowedNetworks];
 const POLLING_INTERVAL = 12000;
 const CORE_CHAIN_ID = envConfig.coreContractChain;
@@ -24,6 +25,9 @@ const RPC_URLS: { [chainId: number]: string } = {
 
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS })
 
+
+// Only receive messages from platform.apps.ledger.com
+export const ledgerLiveConnector = new LedgerHQFrameConnector();
 
 export const walletconnect = new WalletConnectConnector({
   rpc: { ...RPC_URLS },

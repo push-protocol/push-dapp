@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled, { css, useTheme } from "styled-components";
 import { Device } from "assets/Device";
 
@@ -12,15 +12,13 @@ import { FaRegAddressCard } from "react-icons/fa";
 import { AiOutlineShareAlt } from "react-icons/ai";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-import {ThemeProvider} from "styled-components";
-import { Item, ItemH, Span, H2, B, A } from "components/SharedStyling";
+import { ItemH, Span } from "../primaries/SharedStyling";
 
 import { postReq } from "api";
 
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
-import NotificationToast from "components/NotificationToast";
+import NotificationToast from "../primaries/NotificationToast";
 
 import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial";
 
@@ -28,16 +26,14 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
 import { envConfig } from "@project/contracts";
-import { incrementStepIndex,addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const dispatch = useDispatch();
 
   const themes = useTheme();
-  const [darkMode, setDarkMode] = useState(false);
-
-  const navigate = useNavigate();
 
   const {
     run,
@@ -60,7 +56,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const onCoreNetwork = (chainId === envConfig.coreContractChain);
 
   const [channelObject, setChannelObject] = React.useState({});
-  const [isOwner, setIsOwner] = React.useState(false);
   const [channelJson, setChannelJson] = React.useState({});
   const [subscribed, setSubscribed] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
@@ -74,12 +69,18 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(null);
-  const [ethAliasAccount, setEthAliasAccount] = React.useState(null);
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
+
+  let isOwner;
+  if(!onCoreNetwork) {
+    isOwner = channelObject.alias_address === account;
+  } else {
+    isOwner = channelObject.addr === account;
+  }
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -100,36 +101,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     } else {
       // if this key (verifiedBy) is not present it means we are searching and should fetch the channel object from chain again
       epnsReadProvider.channels(channelObject.addr).then((response) => {
-        setChannelObject({ ...response, addr: channelObject.addr });
+        setChannelObject({ ...response, addr: channelObject.addr, alias_address: channelObject.alias_address, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
         fetchChannelJson();
       });
     }
   }, [account, channelObject, chainId]);
-
-  React.useEffect(() => {
-    (async function init() {
-      if (!channelObject.addr) return;
-      // if we are not on the core network then check for if this account is an alias for another channel
-      if (!onCoreNetwork) {
-        // get the alias address of the eth address, in order to properly render information about the channel
-        const aliasEth = await postReq("/channels/get_alias_details", {
-          channel: channelObject.addr,
-          op: "read",
-        }).then(({ data }) => {
-          console.log({ data });
-          const aliasAccount = data;
-          if (aliasAccount) {
-            setEthAliasAccount(aliasAccount.aliasAddress);
-            setIsOwner(account === aliasAccount.aliasAddress);
-            fetchChannelJson();
-          }
-          return data;
-        });
-      } else {
-        setIsOwner(account === channelObject.addr);
-      }
-    })();
-    }, [account, channelObject, chainId]);
 
   React.useEffect(() => {
     if (!channelObjectProp) return;
@@ -173,33 +149,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       }
       let channelAddress = channelObject.addr;
       if (!onCoreNetwork) {
-        if (ethAliasAccount == 'NULL') return;
-        channelAddress = ethAliasAccount;
+        channelAddress = channelObject.alias_address;
       }
       if (!channelAddress) return;
-      const channelSubscribers = await postReq("/channels/get_subscribers", {
-        channel: channelAddress,
-        blockchain: chainId,
-        op: "read",
-      })
-        .then(({ data }) => {
-          const subs = data.subscribers;
 
-          return subs;
-        })
-        .catch((err) => {
-          console.log(`getChannelSubscribers => ${err.message}`);
-          return [];
-        });
-        let subscribed = channelSubscribers.find((sub) => {
-        return sub.toLowerCase() === account.toLowerCase();
-      });
-
-      if (run) subscribed = false;
       setIsPushAdmin(pushAdminAddress === account);
-      setMemberCount(channelSubscribers.length);
-      setSubscribed(subscribed);
-      setChannelJson({ ...channelJson, addr: channelObject.addr });
+      setMemberCount(channelObject.memberCount);
+      setSubscribed(channelObject.isSubscriber);
+      setChannelJson({ ...channelJson, addr: channelObject.addr, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
@@ -355,7 +312,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
       let channelAddress = channelObject.addr;
       if (!onCoreNetwork) {
-        channelAddress = ethAliasAccount;
+        channelAddress = channelObject.alias_address;
       }
 
       const message = {
@@ -403,13 +360,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         return;
       }
 
-      postReq("/channels/subscribe_offchain", {
+      postReq("/channels/subscribe", {
         signature,
         message,
         op: "write",
         chainId,
         contractAddress: epnsCommReadProvider.address,
       }).then((res) => {
+        dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
         setSubscribed(true);
         setMemberCount(memberCount + 1);
         toaster.update(txToast, {
@@ -468,7 +426,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
       let channelAddress = channelObject.addr;
       if (!onCoreNetwork) {
-        channelAddress = ethAliasAccount;
+        channelAddress = channelObject.alias_address;
       }
 
       const message = {
@@ -493,7 +451,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         }
       );
 
-      postReq("/channels/unsubscribe_offchain", {
+      postReq("/channels/unsubscribe", {
         signature,
         message,
         op: "write",
@@ -501,6 +459,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         contractAddress: epnsCommReadProvider.address,
       })
         .then((res) => {
+          dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
           setSubscribed(false);
           setMemberCount(memberCount - 1);
           toaster.update(txToast, {
@@ -527,6 +486,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     }
   };
 
+  const CTA_OVERRIDE_CACHE = {
+    "0xb1676B5Ab63F01F154bb9938F5e8999d9Da5444B": "https://boardroom.io/",
+    "0x7DA9A33d15413F499299687cC9d81DE84684E28E": "https://rmm.realtoken.network/dashboard",
+    "0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be": "https://shapeshift.com"
+  }
   if (isBlocked) return <></>;
   if (isChannelBlacklisted) return <></>;
 
@@ -551,7 +515,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             <Skeleton color={themes.interfaceSkeleton} width="50%" height={24} />
           ) : (
             <ChannelTitleLink
-              href={channelJson.url}
+              href={CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url}
               target="_blank"
               rel="nofollow"
             >

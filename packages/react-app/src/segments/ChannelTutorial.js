@@ -1,7 +1,7 @@
 import React from "react";
 
 import styled, { useTheme } from 'styled-components';
-import { Item, ItemH, Image, Span, Anchor, Button} from 'components/SharedStyling';
+import { Item, ItemH, Image, Span, Button} from 'primaries/SharedStyling';
 
 import { FaPlay, FaShareSquare, FaYoutube } from 'react-icons/fa';
 

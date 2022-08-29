@@ -6,7 +6,7 @@ const config = {
     42, //for ropsten
     80001, //for mumbai polygon
   ],
-  w2wApiUrl: 'http://localhost:4000/apis',
+  w2wApiUrl: 'https://backend-dev.epns.io/apis',
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
   coreContractChain: 42, //the chain id of the network which the core contract relies on
   coreRPC: 'https://kovan.infura.io/v3/4ff53a5254144d988a8318210b56f47a',

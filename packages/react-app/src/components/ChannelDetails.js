@@ -5,21 +5,34 @@ import { envConfig } from "@project/contracts";
 import styled , {useTheme} from "styled-components";
 import { useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
+import ShowDelegates from "./ShowDelegates";
+import { Item } from "../primaries/SharedStyling";
+import { getReq, postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const DATE_FORMAT = "DD/MM/YYYY";
+
+const networkName = {
+  42: "Polygon Mumbai",
+  1: "Polygon Mainnet"
+}
 
 export default function ChannelDetails() {
   const theme = useTheme();
-  const { library } = useWeb3React();
+  const { chainId, account } = useWeb3React();
   const { channelDetails, canVerify } = useSelector((state) => state.admin);
   const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
     (state) => state.channels
   );
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
   const [creationDate, setCreationDate] = React.useState("");
+  const [aliasVerified, setAliasVerified] = React.useState(null);
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
+
+  const CORE_CHAIN_ID = envConfig.coreContractChain;
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
 
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
@@ -42,7 +55,20 @@ export default function ChannelDetails() {
       setCreationDate(date.format(DATE_FORMAT))
     })();
   }, [channelDetails]);
-  
+
+  React.useEffect(() => {
+    if (!onCoreNetwork) return;
+
+    (async function () {
+      const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+          if (data) {
+            setAliasVerified(data.is_alias_verified);
+          }
+          return data;
+        });
+      })();
+  }, [account , chainId]);
 
   return (
     <ChannelDetailsWrapper>
@@ -70,7 +96,13 @@ export default function ChannelDetails() {
         </Details>
       </SectionTop>
 
-      <SectionDes style={{color : theme.color}}>{channelDetails.info}</SectionDes>
+      <SectionDes style={{ color: theme.color }}>{channelDetails.info}</SectionDes>
+      
+      {aliasVerified === false &&
+        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
+          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
+        </Item>
+      }
 
       <SectionDate>
         {canVerify && (
@@ -87,6 +119,10 @@ export default function ChannelDetails() {
           <span style={{ marginLeft: "10px" }}>{creationDate}</span>
         </Date>
       </SectionDate>
+
+      <hr />
+
+      <ShowDelegates />
 
       <hr />
     </ChannelDetailsWrapper>
@@ -135,13 +171,6 @@ const Subscribers = styled.div`
   align-items: center;
 `;
 
-const ActiveIcon = styled.span`
-  width: 8px;
-  height: 8px;
-  background: #57c255;
-  border-radius: 50%;
-`;
-
 const ChanneStateText = styled.span`
   color: #57c255;
   font-family: Source Sans Pro;
@@ -155,7 +184,6 @@ const ChanneStateText = styled.span`
   margin-bottom: 8px;
   display: flex;
   align-items: center;
-
   ${(props) =>
     props.active &&
     `
@@ -190,10 +218,6 @@ const Details = styled.div`
   display: flex;
   flex-direction: column;
 `;
-const SectionLine = styled.div`
-  margin-left: 30px;
-  margin-right: 30px;
-`;
 
 const Date = styled.div`
   display: flex;
@@ -206,7 +230,6 @@ const Verified = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-
   & > span {
     color: #ec008c;
     fontsize: 1em;
@@ -217,7 +240,6 @@ const Verified = styled.div`
 const ChannelName = styled.div`
   display: flex;
   flex-direction: row;
-
   font-family: Source Sans Pro;
   font-style: normal;
   font-weight: normal;

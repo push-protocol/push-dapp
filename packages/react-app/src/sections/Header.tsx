@@ -14,13 +14,13 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
 
 import styled, { css, useTheme } from "styled-components";
-import {Section, Item, ItemH, Button, Span} from 'components/SharedStyling';
+import {Section, Item, ItemH, Button, Span} from 'primaries/SharedStyling';
 
-import Profile from 'components/Profile';
-import Bell from 'components/Bell';
+import Profile from 'primaries/Profile';
+import Bell from 'primaries/Bell';
 import NavigationButton from 'components/NavigationButton';
 
-import { NavigationContext, NavigationContextInterface } from "contexts/NavigationContext";
+import { NavigationContext } from "contexts/NavigationContext";
 
 import GLOBALS from "config/Globals";
 import { envConfig } from "@project/contracts";
@@ -34,7 +34,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
 
-  const { navigationSetup } : NavigationContextInterface = useContext(NavigationContext);
+  const { navigationSetup } = useContext(NavigationContext)
 
   const { active, error } = useWeb3React();
   const { deactivate } = context
@@ -64,8 +64,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   // handle header tag update
   const updateHeaderTag = (location) => {
     if (navigationSetup) {
-      Object.entries(navigationSetup['navigation']).forEach(([key, value]) => {
-        const item = navigationSetup['navigation'][key];
+      Object.entries(navigationSetup.navigation).forEach(([key, value]) => {
+        const item = navigationSetup.navigation[key];
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
         }
@@ -166,16 +166,16 @@ const chainIds = envConfig.allowedNetworks;
               <NavMenuInner
                 tabletAlign="flex-start"
               >
-                {Object.keys(navigationSetup['navigation']).map(function(key) {
+                {Object.keys(navigationSetup.navigation).map(function(key) {
                   return (
                     <Item
                       onClick={() => {setShowNavBar(!showNavBar)}}
                     >
                       <NavigationButton
-                        item={navigationSetup['navigation'][key]}
-                        data={navigationSetup['navigation'][key].data}
+                        item={navigationSetup.navigation[key]}
+                        data={navigationSetup.navigation[key].data}
                         sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
-                        active={navigationSetup['navigation'][key].active}
+                        active={navigationSetup.navigation[key].active}
                       />
                     </Item>
                   );

@@ -17,11 +17,15 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
+    // "jsx": "react", // From w2w
+    // "baseUrl": "src",
+    // "noImplicitAny": false,
+    // "checkJs": false,
+    // "noFallthroughCasesInSwitch": true // from w2w ends
+    "jsx": "preserve",
     "baseUrl": "src",
-    "noImplicitAny": false,
-    "checkJs": false,
-    "noFallthroughCasesInSwitch": true
+    "noImplicitAny": true,
+    "checkJs": false
   },
   "include": [
     "next-env.d.ts",

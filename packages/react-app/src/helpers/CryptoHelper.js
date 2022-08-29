@@ -1,6 +1,7 @@
 import EthCrypto from 'eth-crypto';
 import {encrypt, decrypt} from 'eccrypto';
-import { publicKeyConvert, publicKeyVerify } from 'secp256k1-v4';
+import { publicKeyConvert } from 'secp256k1-v4';
+import * as metamaskSigUtil from "@metamask/eth-sig-util";
 
 var CryptoJS = require("crypto-js");
 
@@ -14,8 +15,29 @@ const CryptoHelper = {
     let bytes  = CryptoJS.AES.decrypt(message, key);
     return bytes.toString(CryptoJS.enc.Utf8);
   },
+  // To Encrypt Secret with Public key
+  encryptWithRPCEncryptionPublicKey: function (text, encryptionPublicKey) {
+    const encryptedSecret = metamaskSigUtil.encrypt({
+      publicKey: encryptionPublicKey,
+      data: text,
+      version: 'x25519-xsalsa20-poly1305'
+    });
+
+    const bufferRes = Buffer.from(JSON.stringify(encryptedSecret), 'utf8');
+    const result = bufferRes.toString('hex');
+
+    return result;
+  },
+  decryptWithWalletRPCMethod: async function (provider, encryptedMessage, account) {
+    const result = await provider.request({
+      method: 'eth_decrypt',
+      params: [encryptedMessage, account],
+    });
+
+    return result;
+  },
   // To Form Encryted Secret, no more than 15 characters supported
-  encryptWithECIES: async function(message, publicKey) {
+  encryptWithECIES: async function (message, publicKey) {
     const compressedKey = EthCrypto.publicKey.compress(publicKey);
 
     const encryptedSecret = await this.encryptWithPublicKey(message, compressedKey);

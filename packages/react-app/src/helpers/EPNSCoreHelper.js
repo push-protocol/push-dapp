@@ -1,8 +1,8 @@
-import React from "react";
-
 import axios from 'axios';
-import { addresses, abis } from "@project/contracts";
+import { getReq } from "api";
 import { ethers } from "ethers";
+import { convertAddressToAddrCaip } from './CaipHelper';
+import { IPFSGateway } from './IpfsHelper';
 //import { parseEther, bigNumber } from 'ethers/utils'
 
 const COINDESK_CHANNEL_ADDR = "0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF";
@@ -158,7 +158,8 @@ const EPNSCoreHelper = {
       if (ids[0] == 1) {
         // IPFS HASH
         // Form Gateway URL
-        const url = "https://ipfs.io/ipfs/" + ids[1];
+        const IPFS_GATEWAY = IPFSGateway;
+        const url = IPFS_GATEWAY + ids[1];
         fetch(url)
           .then(response => response.json())
           .then(response => {
@@ -173,6 +174,26 @@ const EPNSCoreHelper = {
 
     });
   },
+  
+  // Helper to get Channel Alias from Channel's address
+  getAliasAddressFromChannelAddress: async (channel, chainId) => {
+    if (channel === null) return;
+    const enableLogs = 0;
+
+    return new Promise ((resolve, reject) => {
+      // To get channel info from a channel address
+      const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId);
+      getReq(`/v1/alias/${channelAddressInCaip}/channel`)
+        .then(response => {
+          if (enableLogs) console.log("getAliasAddressFromChannelAddress() --> %o", response);
+          resolve(response?.data?.aliasAddress);
+        })
+        .catch(err => {
+          console.log("!!!Error, getAliasAddressFromChannelAddress() --> %o", err);
+          reject(err);
+        });
+    });
+  },
   // Helper to get Channel from Channel's address
   getChannelJsonFromChannelAddress: async (channel, contract) => {
     if (channel === null) return;
@@ -184,7 +205,7 @@ const EPNSCoreHelper = {
         .then(response => EPNSCoreHelper.getChannelEvent(channel, response.channelStartBlock.toNumber(), response.channelUpdateBlock.toNumber(), contract))
         .then(response => {
           // add little hack for now to change coindesk's descriptioon
-          const hash = channel === COINDESK_CHANNEL_ADDR ? COINDESK_HASH  : (channel === ENS_CHANNEL_ADDR ? ENS_HASH : response);
+          const hash = channel === COINDESK_CHANNEL_ADDR ? COINDESK_HASH : (channel === ENS_CHANNEL_ADDR ? ENS_HASH : response);
           return EPNSCoreHelper.getJsonFileFromIdentity(hash, channel)
           // return EPNSCoreHelper.getJsonFileFromIdentity(response, channel)
         })
