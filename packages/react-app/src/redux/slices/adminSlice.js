@@ -5,31 +5,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    channelDetails: null,
-    canVerify: false,
-    delegatees: []
+  channelDetails: null,
+  canVerify: false,
+  delegatees: [],
 };
 
 export const contractSlice = createSlice({
-    name: "admin",
-    initialState,
-    reducers: {
-        setUserChannelDetails: (state, action) => {
-            state.channelDetails = action.payload;
-        },
-        setCanVerify: (state, action) => {
-            state.canVerify = action.payload;
-        },
-        setDelegatees: (state, action) => {
-            state.delegatees = action.payload;
-        }
-    }
+  name: "admin",
+  initialState,
+  reducers: {
+    setUserChannelDetails: (state, action) => {
+      state.channelDetails = action.payload;
+    },
+    setCanVerify: (state, action) => {
+      state.canVerify = action.payload;
+    },
+    setDelegatees: (state, action) => {
+      state.delegatees = action.payload;
+    },
+  },
 });
 
 export const {
-    setUserChannelDetails,
-    setCanVerify,
-    setDelegatees
+  setUserChannelDetails,
+  setCanVerify,
+  setDelegatees,
 } = contractSlice.actions;
 
 export default contractSlice.reducer;
