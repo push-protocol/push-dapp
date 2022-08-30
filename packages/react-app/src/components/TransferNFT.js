@@ -21,7 +21,6 @@ function TransferNFT({ tokenId }) {
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState('');
 
-
   React.useEffect(() => {
     if (!!(library && account)) {
       let signer = library.getSigner(account);
@@ -168,47 +167,6 @@ function TransferNFT({ tokenId }) {
     </>
   );
 }
-
-// css styles
-const Step = styled.div`
-  height: 12px;
-  width: 12px;
-  background: ${props => props.bg || "#fff"};
-  border: 4px solid ${props => props.activeBG || "#000"};
-  border-radius: 100%;
-
-  ${({ type }) => type == "active" && css`
-    background: ${props => props.activeBG || "#ddd"};
-    border: 4px solid #00000022;
-  `};
-`
-const Info = styled.label`
-  padding-bottom: 20px;
-  font-size: 14px;
-  color: #000;
-`
-
-const ChannelMetaBox = styled.label`
-  margin: 0px 5px;
-  color: #fff;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-size: 15px;
-  // font-size: 11px;
-`
-const Pool = styled.div`
-  margin: 0px 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
-
-const PoolShare = styled(ChannelMetaBox)`
-  background: #e20880;
-  // background: #674c9f;
-`
-
 
 // Export Default
 export default TransferNFT;

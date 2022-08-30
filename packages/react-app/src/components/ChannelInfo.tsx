@@ -5,12 +5,15 @@ import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
 import { Oval } from "react-loader-spinner";
 import "./createChannel.css";
+import { envConfig } from "@project/contracts";
+import { aliasChainIdsMapping, networkName } from "helpers/UtilityHelper";
 
-const coreChain = "Ethereum Kovan";
+const coreChainId = envConfig.coreContractChain;
+const aliasChainId = aliasChainIdsMapping[coreChainId];
 
 const ALIAS_CHAINS = [
-  { value: coreChain, label: coreChain },
-  { value: "POLYGON_TEST_MUMBAI:80001", label: "Polygon" },
+  { value: coreChainId, label: networkName[coreChainId] },
+  { value: aliasChainId, label: networkName[aliasChainId] },
 ];
 
 const ChannelInfo = ({
@@ -47,13 +50,7 @@ const ChannelInfo = ({
       isEmpty(channelName) ||
       isEmpty(channelInfo) ||
       isEmpty(channelURL) ||
-      (channelAlias
-        ? isEmpty(chainDetails)
-        : chainDetails
-          ? chainDetails == coreChain
-            ? false
-            : isEmpty(channelAlias)
-          : false)
+      (isEmpty(channelAlias) && chainDetails !== coreChainId)
     ) {
       setInfo("Channel Fields are Empty! Please retry!");
 
@@ -123,7 +120,7 @@ const ChannelInfo = ({
                     setChainDetails(option.value);
                     console.log(option);
                 }}
-                value={chainDetails}
+                value={networkName[chainDetails]}
               />
             </DropdownStyledParent>
 
@@ -144,49 +141,55 @@ const ChannelInfo = ({
 
               </span>  */}
           </Item>
-
-          {chainDetails != coreChain &&
-          (<Item 
-                margin="30px 0px 0px 0px"
+            
+            {chainDetails != coreChainId &&
+              <Item
+                margin="55px 20px 15px 20px"
                 flex="1"
                 self="stretch"
-                align="stretch">
-              <Label style={{color:themes.color}}>Channel Alias address</Label>
-              <Input
-                required
-                // placeholder="Your Channel Address"
-                maxlength="40"
-                flex="1"
-                padding="12px"
-                weight="400"
-                size="16px"
-                bg="white"
-                height="25px"
-                margin="7px 0px 0px 0px"
-                border="1px solid #BAC4D6"
-                focusBorder="1px solid #657795"
-                radius="12px"
-                disabled={
-                  chainDetails === "" || chainDetails === coreChain
-                    ? true
-                    : false
-                }
-                visibility={
-                  chainDetails === coreChain ? "hidden" : "visible"
-                }
-                value={channelAlias}
-                onChange={(e) => {
-                  setChannelAlias(e.target.value);
-                }}
-              />
-              <Span
-                  size="13px"
-                  margin="7px 0px 0px 0px"
-                  color="#657795"
+                align="stretch"
+                style={{ position: "relative" }}
+              >
+                <InputDiv
+                  border={() => {
+                    if (themes.scheme == "dark") return "1px solid white";
+                    else return "1px solid black";
+                  }}
+                >
+                  <Input
+                    placeholder="Your Channel's Alias address"
+                    maxlength="40"
+                    maxllength="100%"
+                    padding="12px"
+                    weight="400"
+                    size="1rem"
+                    bg="white"
+                    disabled={
+                      chainDetails === "" || chainDetails === coreChainId
+                        ? true
+                        : false
+                    }
+                    visibility={
+                      chainDetails === coreChainId ? "hidden" : "visible"
+                    }
+                    value={channelAlias}
+                    onChange={(e) => {
+                      setChannelAlias(e.target.value);
+                    }}
+                  />
+                </InputDiv>
+                <Span
+                  padding="4px 10px"
+                  right="0px"
+                  top="0px"
+                  pos="absolute"
+                  color="#fff"
+                  bg="#000"
+                  size="0.7rem"
                 >
                   Make sure you own this address as verification will take place.
                 </Span>
-          </Item>)}
+          </Item>}
             
 
           <Item
@@ -194,7 +197,7 @@ const ChannelInfo = ({
             flex="1"
             self="stretch"
             align="stretch"
-            // style={{marginTop: `${chainDetails === coreChain ? "55px" : "20px"}`, position: "relative"}}
+            style={{marginTop: `${chainDetails === coreChainId ? "55px" : "20px"}`, position: "relative"}}
           >
             <Item display='flex' direction="row" align="center" flex="1" self="stretch" justify="space-between">
               <Label style={{color:themes.color}}>Channel Description</Label>

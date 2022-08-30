@@ -60,8 +60,6 @@ function AirdropPage() {
       console.log(abis.distributor)
       const signerInstance = new ethers.Contract(addresses.distributor, abis.distributor, signer);
       setDistributorContract(signerInstance);
-      // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
-      // setNFTRewardsContract(NFTRewardsInstance);
     }
   }, [account, library]);
 
@@ -132,9 +130,6 @@ function AirdropPage() {
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
-
-  const [darkMode, setDarkMode] = useState(false);
-
 
   return (
     <ThemeProvider theme={themes}>
@@ -293,88 +288,6 @@ function AirdropPage() {
     </ThemeProvider>
   );
 }
-
-// css styles
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  font-weight: 200;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-
-  max-height: 80vh;
-  background: ${props => props.theme.mainBg};
-`
-
-const ContainerInfo = styled.div`
-  padding: 20px;
-`
-const InfoBox = styled.div`
-  padding: 10px 20px;
-  display: block;
-  align-self: stretch;
-  background: #fafafa;
-`
-const Continue = styled.button`
-  border: 0;
-  outline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  border-radius: 20px;
-  font-size: 14px;
-  background: ${props => props.theme || '#674c9f'};
-  margin: 30px 0px 0px 0px;
-  border-radius: 8px;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 400;
-`
-
-const ChannelTitleLink = styled.a`
-  text-decoration: none;
-  font-weight: 600;
-  color: #e20880;
-  font-size: 20px;
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-    pointer: hand;
-  }
-`
-const AppLink = styled.a`
-  text-decoration: none;
-  font-weight: 600;
-  color: #e20880;
-  font-size: 20px;
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-    pointer: hand;
-  }
-`
-const AppLinkText = styled.div`
-  text-decoration: none;
-  font-weight: 600;
-  color: #e20880;
-  font-size: 20px;
-`
-const ChannelInfo = styled.div`
-  flex: 1;
-  margin: 5px 10px;
-  min-width: 120px;
-  flex-grow: 4;
-  flex-direction: column;
-  display: flex;
-`
-
-const ChannelTitle = styled.div`
-  margin-bottom: 5px;
-`
 
 const Toaster = styled.div`
   display: flex;

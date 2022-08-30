@@ -223,30 +223,6 @@ const NFTClaimTitle = styled(NFTTextStyle)`
   background: #e20880;
 `
 
-const Container = styled.div`
-  flex: 1;
-  // display: inline;
-  display: flex;
-  flex-wrap: wrap;
-
-  background: #fff;
-  border-radius: 10px;
-  border: 1px solid rgb(237, 237, 237);
-
-  margin: 15px 0px;
-  justify-content: center;
-  padding: 10px;
-`
-
-const SkeletonWrapper = styled.div`
-  overflow: hidden;
-  width: ${props => props.atW + '%' || '100%'};
-  height: ${props => props.atH}px;
-  border-radius: ${props => props.borderRadius || 10}px;
-  margin-bottom: ${props => props.marginBottom || 5}px;
-  margin-right: ${props => props.marginRight || 0}px;
-`
-
 const ChannelLogo = styled.div`
   background: ${props => props.theme || '#fff'};
   max-width: 25%;
@@ -281,57 +257,6 @@ const ChannelLogoInner = styled.div`
   align-items: center;
 `
 
-const ChannelLogoImg = styled.img`
-  object-fit: contain;
-  width: 100%;
-  border-radius: 20px;
-  overflow: hidden;
-`
-
-const ChannelInfo = styled.div`
-  flex: 1;
-  margin: 5px 10px;
-  min-width: 120px;
-  flex-grow: 4;
-  flex-direction: column;
-  display: flex;
-`
-
-const ChannelTitle = styled.div`
-  margin-bottom: 5px;
-`
-
-const ChannelTitleLink = styled.div`
-  text-decoration: none;
-  font-weight: 600;
-  color: #e20880;
-  font-size: 20px;
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-    pointer: hand;
-  }
-`
-
-const ChannelDesc = styled.div`
-  flex: 1;
-  display: flex;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.75);
-  font-weight: 400;
-  flex-direction: column;
-`
-
-const ChannelDescLabel = styled.label`
-  flex: 1;
-`
-
-const ChannelMeta = styled.div`
-  display: flex;
-  flex-direction: row;
-  font-size: 13px;
-`
-
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
   color: #fff;
@@ -339,37 +264,6 @@ const ChannelMetaBox = styled.label`
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 11px;
-`
-
-const Subscribers = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
-
-const SubscribersCount = styled(ChannelMetaBox)`
-  background: #35c4f3;
-`
-
-const Pool = styled.div`
-  margin: 0px 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`
-
-const PoolShare = styled(ChannelMetaBox)`
-  background: #674c9f;
-`
-
-const LineBreak = styled.div`
-  display: none;
-  flex-basis: 100%;
-  height: 0;
-
-  @media ${Device.tablet} {
-    display: block;
-  }
 `
 
 const ChannelActions = styled.div`
@@ -449,16 +343,8 @@ const SkeletonButton = styled.div`
   flex: 1;
 `
 
-const SubscribeButton = styled(ChannelActionButton)`
-  background: #e20880;
-`
-
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: #000;
-`
-
-const OwnerButton = styled(ChannelActionButton)`
-  background: #35c5f3;
 `
 
 const Toaster = styled.div`

@@ -15,12 +15,12 @@ import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
 import ProcessingInfo from "./ProcessingInfo";
-import { envConfig } from "@project/contracts";
 import { MdCallMade } from "react-icons/md";
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import "./createChannel.css";
+import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
 
 const ethers = require("ethers");
@@ -44,7 +44,7 @@ function CreateChannel() {
   const [uploadDone, setUploadDone] = React.useState(false);
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
-  const [chainDetails, setChainDetails] = React.useState(coreChain);
+  const [chainDetails, setChainDetails] = React.useState(CORE_CHAIN_ID);
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -160,26 +160,21 @@ function CreateChannel() {
     proceed();
     setProcessing(1);
 
-    var chainDetailsSplit = chainDetails.split(":");
-    var blockchain = chainDetailsSplit[0];
-    var chain_id = chainDetailsSplit[1];
-    var address = channelAlias;
+    const aliaschainId = chainDetails;
+    const aliasAddress = channelAlias;
 
     let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
       icon: channelFile,
-      blockchain: blockchain,
-      chain_id: chain_id,
-      address: address,
+      aliasDetails: getCAIPObj({
+        chainId: aliaschainId,
+        address: aliasAddress,
+      }),
     };
 
     console.log(input);
-
-    if (blockchain === coreChain) {
-      input.blockchain = "";
-    }
 
     input = JSON.stringify(input);
     setProgress(0);
