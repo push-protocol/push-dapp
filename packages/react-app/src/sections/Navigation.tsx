@@ -70,7 +70,7 @@ function Navigation() {
     } else {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees])
+  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend])
 
     // useEffect(()=>{
     //   (async()=>{
