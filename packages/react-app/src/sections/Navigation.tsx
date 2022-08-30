@@ -439,7 +439,7 @@ function Navigation() {
                         }
                           }}              
                         >
-                        <NavButton
+                        <NavigationButton
                           item={section}
                           data={data}
                           sectionID={sectionID}
