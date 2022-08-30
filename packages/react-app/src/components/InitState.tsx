@@ -33,7 +33,7 @@ const InitState = () => {
     epnsCommReadProvider,
   } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified } } = useSelector((state: any) => state.admin);
-  const { processingInfo } = useSelector((state: any) => state.channelCreation);
+  const { processingState } = useSelector((state: any) => state.channelCreation);
 
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
 
@@ -160,7 +160,7 @@ const InitState = () => {
         // fetch basic information abouot the channels and store it to state
         const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
         let delegateeList: Array<string> = [];
-        if (((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) || (processingInfo === 0 && isChannelDetails)) {
+        if (((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) || (processingState === 0 && isChannelDetails)) {
           if(onCoreNetwork)
             delegateeList.push(account);
           else {
@@ -199,7 +199,7 @@ const InitState = () => {
     (async function () {
       await fetchDelegators(aliasAddr, aliasEthAddr, isAliasVerified);
     })()
-  }, [aliasAddr, aliasEthAddr, isAliasVerified, account, processingInfo, channelDetails]);
+  }, [aliasAddr, aliasEthAddr, isAliasVerified, account, processingState, channelDetails]);
 
   // get core address of alias
   const checkUserForEthAlias = async () => {
