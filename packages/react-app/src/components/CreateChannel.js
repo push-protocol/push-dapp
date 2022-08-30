@@ -65,6 +65,7 @@ function CreateChannel() {
 
   const [stepFlow, setStepFlow] = React.useState(1);
   const channelToast = useToast();
+  const channelToastNotif = useToast();
 
   //checking DAI for user
   React.useEffect(() => {
@@ -250,15 +251,16 @@ function CreateChannel() {
         let txCheck = await library.waitForTransaction(tx.hash);
 
         if (txCheck.status === 0) {
-          setProcessing(3);
-          setTxStatus(0);
-          setStepFlow(2);
           channelToast.updateToast(
             "Error",
             `There was an error creating the channel`,
             "ERROR",
             (size) => <MdError size={size} color="red" />
           );
+
+          setProcessing(3);
+          setTxStatus(0);
+          setStepFlow(2);
           setChannelInfoDone(false);
           setUploadDone(false);
           setTimeout(() => {
@@ -284,6 +286,13 @@ function CreateChannel() {
         }
       })
       .catch((err) => {
+        channelToast.updateToast(
+          "Error",
+          `There was an error creating the channel`,
+          "ERROR",
+          (size) => <MdError size={size} color="red" />
+        );
+
         console.log("Error --> %o", err);
         console.log({ err });
         setProcessing(3);
@@ -291,12 +300,6 @@ function CreateChannel() {
         setProgressInfo("Contact support@epns.io to whitelist your wallet");
         setProcessingInfo(
           "!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet"
-        );
-        channelToast.updateToast(
-          "Error",
-          `There was an error creating the channel`,
-          "ERROR",
-          (size) => <MdError size={size} color="red" />
         );
       });
   };

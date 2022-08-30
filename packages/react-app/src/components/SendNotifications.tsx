@@ -863,12 +863,28 @@ return (
                                 {console.log(cannotDisplayDelegatees)}
                                 {!cannotDisplayDelegatees && (
                                     <Item
-                                        flex="5"
+                                        flex="1"
                                         justify="flex-start"
                                         align="stretch"
-                                        minWidth="280px"
+
                                     >
-                                        <DropdownStyledParentWhite>
+                                         <DropdownStyledParent>
+                                        <DropdownStyled
+                                            options={delegateeOptions}
+                                                onChange={(option: any) => {
+                                                    setChannelAddress(
+                                                        option.value
+                                                    );
+                                                }}
+                                                placeholder="Select a Channel"
+                                                // value={delegateeOptions.find(
+                                                //     (d) =>
+                                                //         d.value ==
+                                                //         channelAddress
+                                                // )}
+                                        />
+                                    </DropdownStyledParent>
+                                        {/* <DropdownStyledParentWhite>
                                             <DropdownHeader>
                                                 SEND NOTIFICATION ON BEHALF
                                                 OF
@@ -886,7 +902,7 @@ return (
                                                         channelAddress
                                                 )}
                                             />
-                                        </DropdownStyledParentWhite>
+                                        </DropdownStyledParentWhite> */}
                                     </Item>
                                 )}
 
@@ -902,6 +918,7 @@ return (
                                     flex="1"
                                     justify="flex-start"
                                     align="stretch"
+                                    margin="40px 0px 0px 0px"
                                   //   minWidth="280px"
                                 >
                                     <DropdownStyledParent>
@@ -1335,7 +1352,7 @@ margin: 0px 10px;
 
 const DropdownStyledParent = styled.div`
 .is-open {
-    margin-bottom: 130px;
+    // margin-bottom: 130px;
 }
 `;
 
@@ -1495,7 +1512,7 @@ const DropdownStyledWhite = styled(DropdownStyled)`
 `;
 
 const DropdownStyledParentWhite = styled(DropdownStyledParent)`
-margin-bottom: 20px;
+// margin-bottom: 20px;
 border: 1px solid rgba(169, 169, 169, 0.5);
 `;
 
