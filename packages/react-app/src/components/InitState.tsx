@@ -161,7 +161,13 @@ const InitState = () => {
         const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
         let delegateeList: Array<string> = [];
         if (((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) || (processingInfo === 0 && isChannelDetails)) {
-          delegateeList.push(account);
+          if(onCoreNetwork)
+            delegateeList.push(account);
+          else {
+            if (aliasEthAddr) {
+              delegateeList.push(aliasEthAddr);
+            }
+          }
         }
         if (delegators && delegators.channelOwners) {
           console.log(delegators.channelOwners, delegators);
