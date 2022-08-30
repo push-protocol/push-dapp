@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { toast } from "react-toastify";
 import Dropdown from "react-dropdown";
 import { FiLink } from "react-icons/fi";
@@ -118,7 +118,11 @@ const { channelDetails, delegatees } = useSelector(
 const { CHANNNEL_DEACTIVATED_STATE } = useSelector(
   (state: any) => state.channels
 );
-
+const { canSend } = useSelector(
+    (state:any) => {
+    return state.canSend
+    }
+);
 const onCoreNetwork = CORE_CHAIN_ID === chainId;
   
 const [nfProcessing, setNFProcessing] = React.useState(0);
@@ -137,15 +141,22 @@ const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
 const [nfInfo, setNFInfo] = React.useState("");
 const [delegateeOptions, setDelegateeOptions] = React.useState([]);
 
+useEffect(() => {
+    if (canSend !== 1) {
+        const url = window.location.origin;
+        window.location.replace(`${url}/#/channels`);
+    }
+});
+
 const isChannelDeactivated = channelDetails
     ? channelDetails.channelState === CHANNNEL_DEACTIVATED_STATE
       : false;
   // console.log(delegatees);
   let cannotDisplayDelegatees;
-  if (onCoreNetwork)
+  if (onCoreNetwork && delegatees)
       cannotDisplayDelegatees = (delegatees.length === 1 && delegatees[0].address === account) ||
           !delegatees.length; //do not display delegatees dropdown if you are the only delegatee to yourself or there are no delegatess
-  else 
+  else if(!onCoreNetwork && delegatees)
       cannotDisplayDelegatees = (delegatees.length === 1 && delegatees[0].alias_address === account) ||
           !delegatees.length;
   
