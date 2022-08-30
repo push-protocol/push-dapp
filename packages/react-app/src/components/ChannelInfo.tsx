@@ -142,54 +142,48 @@ const ChannelInfo = ({
               </span>  */}
           </Item>
             
-            {chainDetails != coreChainId &&
-              <Item
-                margin="55px 20px 15px 20px"
+          {chainDetails != coreChainId &&
+          (<Item 
+                margin="30px 0px 0px 0px"
                 flex="1"
                 self="stretch"
-                align="stretch"
-                style={{ position: "relative" }}
-              >
-                <InputDiv
-                  border={() => {
-                    if (themes.scheme == "dark") return "1px solid white";
-                    else return "1px solid black";
-                  }}
-                >
-                  <Input
-                    placeholder="Your Channel's Alias address"
-                    maxlength="40"
-                    maxllength="100%"
-                    padding="12px"
-                    weight="400"
-                    size="1rem"
-                    bg="white"
-                    disabled={
-                      chainDetails === "" || chainDetails === coreChainId
-                        ? true
-                        : false
-                    }
-                    visibility={
-                      chainDetails === coreChainId ? "hidden" : "visible"
-                    }
-                    value={channelAlias}
-                    onChange={(e) => {
-                      setChannelAlias(e.target.value);
-                    }}
-                  />
-                </InputDiv>
-                <Span
-                  padding="4px 10px"
-                  right="0px"
-                  top="0px"
-                  pos="absolute"
-                  color="#fff"
-                  bg="#000"
-                  size="0.7rem"
+                align="stretch">
+              <Label style={{color:themes.color}}>Channel Alias address</Label>
+              <Input
+                required
+                // placeholder="Your Channel Address"
+                maxlength="40"
+                flex="1"
+                padding="12px"
+                weight="400"
+                size="16px"
+                bg="white"
+                height="25px"
+                margin="7px 0px 0px 0px"
+                border="1px solid #BAC4D6"
+                focusBorder="1px solid #657795"
+                radius="12px"
+                disabled={
+                  chainDetails === "" || chainDetails === coreChainId
+                    ? true
+                    : false
+                }
+                visibility={
+                  chainDetails === coreChainId ? "hidden" : "visible"
+                }
+                value={channelAlias}
+                onChange={(e) => {
+                  setChannelAlias(e.target.value);
+                }}
+              />
+              <Span
+                  size="13px"
+                  margin="7px 0px 0px 0px"
+                  color="#657795"
                 >
                   Make sure you own this address as verification will take place.
                 </Span>
-          </Item>}
+          </Item>)}
             
 
           <Item

@@ -15,6 +15,7 @@ import { setProcessingState } from "redux/slices/channelCreationSlice";
 import AliasProcessing from "components/AliasProcessing"
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { useDeviceWidthCheck } from "hooks";
+import ChannelLoading from "components/ChannelLoading";
 
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL:number = 10;
@@ -92,9 +93,7 @@ const ChannelOwnerDashboard = () => {
     <Fragment>
       <Section>
         {((channelDetails === 'unfetched') || processingState === null) &&
-          <ChannelLoadingMessage>
-            Channel details are being loaded, please wait…
-          </ChannelLoadingMessage>
+          <ChannelLoading />
         }
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
