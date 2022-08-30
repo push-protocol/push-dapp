@@ -7,10 +7,15 @@ import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
 
 import { envConfig } from "@project/contracts";
-import AddDelegateModal from "./AddDelegateModal";
-import RemoveDelegateModal from "./RemoveDelegateModal";
+
+// modals
+import useModal from "hooks/useModal";
+import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
+import AddDelegateModalContent from "./AddDelegateModalContent";
+import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
+import AddSubgraphModalContent from "./AddSubgraphModalContent";
+
 import ActivateChannelModal from "./ActivateChannelModal";
-import AddSubGraphIdModal from "./AddSubGraphIdModal";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 
@@ -41,6 +46,12 @@ function ChannelSettings() {
   const { channelState } = channelDetails;
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
 
+  // modals
+  const {showModal:showDeactivateChannelModal, ModalComponent:DeactivateChannelModalComponent} = useModal();
+  const {showModal:showAddDelegateModal, ModalComponent:AddDelegateModalComponent} = useModal();
+  const {showModal: showRemoveDelegateModal, ModalComponent: RemoveDelegateModalComponent} = useModal();
+  const {showModal: showAddSubgraphModal, ModalComponent: AddSubgraphModalComponent} = useModal();
+  
   const [loading, setLoading] = React.useState(false);
   const [
     showActivateChannelPopup,
@@ -51,13 +62,10 @@ function ChannelSettings() {
   );
   const [poolContrib, setPoolContrib] = React.useState(0);
   const [addDelegateLoading, setAddDelegateLoading] = React.useState(false);
-  const [addModalOpen, setAddModalOpen] = React.useState(false);
-  const [addSubGraphIdOpen, setAddSubGraphIdOpen] = React.useState(false);
   const [addSubgraphDetailsLoading, setAddSubgraphDetailsLoading] = React.useState(false);
   const [removeDelegateLoading, setRemoveDelegateLoading] = React.useState(
     false
   );
-  const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
 
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
@@ -99,7 +107,8 @@ function ChannelSettings() {
     if (isChannelDeactivated) {
       setShowActivateChannelPopup(true);
     } else {
-      deactivateChannel();
+      // deactivateChannel();
+      showDeactivateChannelModal();
     }
   };
 
@@ -261,11 +270,10 @@ function ChannelSettings() {
           </ActionTitle>
         </DeactivateButton>
         <ActiveChannelWrapper>
-        
           {onCoreNetwork &&
             <ChannelActionButton
               disabled={channelInactive}
-              onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
+              onClick={() => !channelInactive && showAddSubgraphModal()}
             >
               <ActionTitle>
                 {addSubgraphDetailsLoading ? (
@@ -279,7 +287,7 @@ function ChannelSettings() {
 
           <ChannelActionButton
             disabled={channelInactive}
-            onClick={() => !channelInactive && setAddModalOpen(true)}
+            onClick={() => !channelInactive && showAddDelegateModal()}
           >
             <ActionTitle>
               {addDelegateLoading ? (
@@ -292,7 +300,7 @@ function ChannelSettings() {
 
           <ChannelActionButton
             disabled={channelInactive}
-            onClick={() => !channelInactive && setRemoveModalOpen(true)}
+            onClick={() => !channelInactive && showRemoveDelegateModal()}
           >
             <ActionTitle>
               {removeDelegateLoading ? (
@@ -302,10 +310,9 @@ function ChannelSettings() {
               )}
             </ActionTitle>
           </ChannelActionButton>
-
-          
         </ActiveChannelWrapper>
       </DropdownWrapper>
+
       {/* modal to display the activate channel popup */}
       {showActivateChannelPopup && (
         <ActivateChannelModal
@@ -320,50 +327,30 @@ function ChannelSettings() {
           channelStakeFees={channelStakeFees}
         />
       )}
-      {/* modal to add a delegate */}
-      {addModalOpen && (
-        <AddDelegateModal
-          onClose={() => setAddModalOpen(false)}
-          onSuccess={() => {
-            toaster.update(notificationToast(), {
-              render: "Delegate Added",
-              type: toaster.TYPE.INFO,
-              autoClose: 5000,
-            });
-          }}
-          addDelegate={addDelegate}
-        />
-      )}
-      {/* modal to remove a delegate */}
-      {removeModalOpen && (
-        <RemoveDelegateModal
-          onClose={() => {
-            setRemoveModalOpen(false);
-          }}
-          onSuccess={() => {
-            toaster.update(notificationToast(), {
-              render: "Delegate Removed",
-              type: toaster.TYPE.INFO,
-              autoClose: 5000,
-            });
-          }}
-          removeDelegate={removeDelegate}
-        />
-      )}
 
-      {addSubGraphIdOpen && (
-        <AddSubGraphIdModal
-        onClose={(val) => setAddSubGraphIdOpen(val)}
-        onSuccess={() => {
-          toaster.update(notificationToast(), {
-            render: "SubGraph Details Added",
-            type: toaster.TYPE.INFO,
-            autoClose: 5000,
-          });
-        }}
-        addSubGraphDetails={addSubgraphDetails}
-        />
-      ) }
+      {/* deactivate channel modal */}
+      <DeactivateChannelModalComponent
+          InnerComponent={ChannelDeactivateModalContent}
+          onConfirm={deactivateChannel}
+      />      
+      
+      {/* modal to add a delegate */}
+      <AddDelegateModalComponent
+          InnerComponent={AddDelegateModalContent}
+          onConfirm={addDelegate}
+      />      
+
+      {/* modal to remove a delegate */}
+      <RemoveDelegateModalComponent
+          InnerComponent={RemoveDelegateModalContent}
+          onConfirm={removeDelegate}
+      />
+
+      {/* modal to add a subgraph */}
+      <AddSubgraphModalComponent
+          InnerComponent={AddSubgraphModalContent}
+          onConfirm={addSubgraphDetails}
+      />
     </div>
   );
 }
