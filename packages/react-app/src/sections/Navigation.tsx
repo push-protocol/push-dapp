@@ -209,7 +209,7 @@ function Navigation() {
           }
         });
       }
-    }, [location, navigationSetup])
+    }, [location, navigationSetup, canSend])
 
     const mutateTransformedList = (item, onlyDrilldown?) => {
       // Finally transform the json menulist
