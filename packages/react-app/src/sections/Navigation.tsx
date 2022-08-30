@@ -65,7 +65,7 @@ function Navigation() {
   }, [canSend, channelDetails, navigationSetup]);
 
   useEffect(() => {
-    if (((aliasAddr || aliasEthAddr) && isAliasVerified) || delegatees) {
+    if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
     } else {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
@@ -551,17 +551,10 @@ function Navigation() {
     
     return (
       <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-        {(!navigationSetup) &&
-          <Primary>
-            <Section 
-              flex="1"
-              align="centre"
-            >
-              <Item>
-                <Loader type="Oval" color={theme.leftBarLoaderBg} height={20} width={20} />
-              </Item>
-            </Section>
-          </Primary>
+        {!navigationSetup &&
+          <Item padding="20px" justify="flex-start">
+            <Oval color={theme.leftBarLoaderBg} height={20} width={20} />
+          </Item>
         }
         {navigationSetup && Object.keys(navigationSetup).length > 0 &&
           <>

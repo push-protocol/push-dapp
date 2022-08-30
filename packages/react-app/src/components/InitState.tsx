@@ -116,6 +116,7 @@ const InitState = () => {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async (channelAddress: string) => {
+    if (!channelAddress) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = channelAddress;
     EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
@@ -157,26 +158,30 @@ const InitState = () => {
       .then(async ({ data: delegators }) => {
         // if there are actual delegators
         // fetch basic information abouot the channels and store it to state
+        const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
+        let delegateeList: Array<string> = [];
+        if (((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) || (processingInfo === 0 && isChannelDetails)) {
+          delegateeList.push(account);
+        }
         if (delegators && delegators.channelOwners) {
-          if (delegators && delegators.channelOwners) {
-            let delegateeList: Array<string> = delegators.channelOwners;
-            if (((aliasAddress || aliasEthAddress) && aliasVerified) || (processingInfo === 0 && channelDetails && channelDetails !== 'unfetched')) {
-              delegateeList.unshift(account);
-            }
-            console.log(aliasAddr, aliasEthAddr, isAliasVerified, account, delegateeList);
-            const channelInformationPromise = [...delegateeList].map((channelAddress) => {
-              return ChannelsDataStore.instance
-                .getChannelJsonAsync(channelAddress)
-                .then((res) => ({ ...res, address: channelAddress }))
-                .catch(() => false);
-            });
-            const channelInformation = await Promise.all(
-              channelInformationPromise
-            );
-            dispatch(setDelegatees(channelInformation));
-          } else {
-            dispatch(setDelegatees([]));
-          }
+          console.log(delegators.channelOwners, delegators);
+          delegateeList.push(...delegators.channelOwners);
+          console.log(delegateeList);
+        }
+        console.log(delegateeList);
+        if (delegateeList.length > 0) {
+          const channelInformationPromise = [...delegateeList].map((channelAddress) => {
+            return ChannelsDataStore.instance
+              .getChannelJsonAsync(channelAddress)
+              .then((res) => ({ ...res, address: channelAddress }))
+              .catch(() => false);
+          });
+          const channelInformation = await Promise.all(
+            channelInformationPromise
+          );
+          dispatch(setDelegatees(channelInformation));
+        } else {
+          dispatch(setDelegatees([]));
         }})
       .catch(async (err) => {
         console.log({ err });
@@ -188,7 +193,7 @@ const InitState = () => {
     (async function () {
       await fetchDelegators(aliasAddr, aliasEthAddr, isAliasVerified);
     })()
-  }, [aliasAddr, aliasEthAddr, isAliasVerified, account, processingInfo]);
+  }, [aliasAddr, aliasEthAddr, isAliasVerified, account, processingInfo, channelDetails]);
 
   // get core address of alias
   const checkUserForEthAlias = async () => {

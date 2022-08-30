@@ -7,7 +7,7 @@ import { Oval } from 'react-loader-spinner'
 import Blockies from "primaries/BlockiesIdenticon";
 
 // Create Header
-function Profile() {
+const Profile = () => {
   const { error, account, library } = useWeb3React();
 
   const [address, setAddress] = React.useState('');

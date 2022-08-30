@@ -15,7 +15,6 @@ import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
 import ProcessingInfo from "./ProcessingInfo";
-import { envConfig } from "@project/contracts";
 import { MdCallMade } from "react-icons/md";
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";

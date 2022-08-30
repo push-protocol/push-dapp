@@ -392,6 +392,9 @@ export default class ChannelsDataStore {
           );
           if (enableLogs)
             console.log("getChannelDetailsFromAddress() --> %o", response);
+          if (output.length === 0) {
+            output.push({ alias_address: null, isAliasVerified: null });
+          }
           resolve(output[0]);
         })
         .catch((err) => {

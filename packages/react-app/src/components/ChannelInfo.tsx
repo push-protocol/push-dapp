@@ -5,6 +5,7 @@ import styled, { useTheme } from "styled-components";
 import Dropdown from "react-dropdown";
 import { Oval } from "react-loader-spinner";
 import "./createChannel.css";
+import { envConfig } from "@project/contracts";
 import { aliasChainIdsMapping, networkName } from "helpers/UtilityHelper";
 
 const coreChainId = envConfig.coreContractChain;
@@ -188,7 +189,7 @@ const ChannelInfo = ({
                 >
                   Make sure you own this address as verification will take place.
                 </Span>
-          </Item>)}
+          </Item>}
             
 
           <Item
