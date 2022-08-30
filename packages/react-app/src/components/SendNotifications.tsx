@@ -2,7 +2,7 @@ import React,{useEffect} from "react";
 import { toast } from "react-toastify";
 import Dropdown from "react-dropdown";
 import { FiLink } from "react-icons/fi";
-// import Loader from "react-loader-spinner";
+import {Oval} from "react-loader-spinner";
 import styled , {useTheme} from "styled-components";
 import { BsFillImageFill } from "react-icons/bs";
 import { useSelector } from "react-redux";
@@ -783,7 +783,7 @@ const isEmpty = (field: any) => {
 // toast customize
 const LoaderToast = ({ msg, color }) => (
     <Toaster>
-        {/* <Loader type="Oval" color={color} height={30} width={30} /> */}
+        <Oval color={color} height={30} width={30} />
         <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
 );
@@ -1291,13 +1291,11 @@ return (
                                         }
                                     >
                                         {nfProcessing == 1 && (
-                                            // <Loader
-                                            //     type="Oval"
-                                            //     color="#fff"
-                                            //     height={24}
-                                            //     width={24}
-                                            // />
-                                            <div></div>
+                                            <Oval
+                                                color="#fff"
+                                                height={24}
+                                                width={24}
+                                            />
                                         )}
                                         {nfProcessing != 1 && (
                                             <Input

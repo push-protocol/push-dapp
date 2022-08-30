@@ -15,13 +15,14 @@ import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
 import ProcessingInfo from "./ProcessingInfo";
-import { MdCallMade } from "react-icons/md";
+import { MdCallMade, MdError } from "react-icons/md";
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
 import { addresses, abis, envConfig } from "@project/contracts";
 import "./createChannel.css";
 import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
+import useToast from "hooks/useToast";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -63,6 +64,7 @@ function CreateChannel() {
   const [croppedImage, setCroppedImage] = useState(undefined);
 
   const [stepFlow, setStepFlow] = React.useState(1);
+  const channelToast = useToast();
 
   //checking DAI for user
   React.useEffect(() => {
@@ -180,6 +182,7 @@ function CreateChannel() {
     setProgress(0);
     console.log(`input is ${input}`);
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
+    channelToast.showToast("Waiting for Confirmation...");
 
     setProcessingInfo("Payload Uploaded");
     setProgressInfo(
@@ -195,6 +198,7 @@ function CreateChannel() {
     // Send Transaction
     // First Approve DAI
     var signer = library.getSigner(account);
+    console.log(signer);
 
     let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
 
@@ -249,6 +253,12 @@ function CreateChannel() {
           setProcessing(3);
           setTxStatus(0);
           setStepFlow(2);
+          channelToast.updateToast(
+            "Error",
+            `There was an error creating the channel`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
           setChannelInfoDone(false);
           setUploadDone(false);
           setTimeout(() => {
@@ -281,6 +291,12 @@ function CreateChannel() {
         setProgressInfo("Contact support@epns.io to whitelist your wallet");
         setProcessingInfo(
           "!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet"
+        );
+        channelToast.updateToast(
+          "Error",
+          `There was an error creating the channel`,
+          "ERROR",
+          (size) => <MdError size={size} color="red" />
         );
       });
   };
