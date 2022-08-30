@@ -784,15 +784,15 @@ function SendNotifications() {
           <Section>
         <Content padding="10px 20px 10px">
           <Item align="center">
-            <H2 textTransform="uppercase" spacing="0.075em">
+            <H2 textTransform="none">
               <Span weight="400" size="32px" color={theme.color}>
-                SEND NOTIFICATION
+                Send Notification
               </Span>
             </H2>
             <Span
               color="#657795"
               weight="400"
-              size="16px"
+              size="15px"
               textTransform="none"
               spacing="0.03em"
               margin="0px 0px"
@@ -843,7 +843,7 @@ function SendNotifications() {
                               onSubmit={handleSendMessage}
                           >
                               <Item
-                                  margin="0px 30px"
+                                  margin="0px 20px"
                                   flex="1"
                                   self="stretch"
                                   align="stretch"
@@ -1024,7 +1024,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
-                                     <Label style={{color:theme.color}}>Recipient Wallet Address</Label>
+                                     <Label style={{color: '#1E1E1E'}} >Recipient Wallet Address</Label>
                                       <Input
                                           required
                                           maxlength="40"
@@ -1072,7 +1072,7 @@ function SendNotifications() {
                                           self="stretch"
                                           align="stretch"
                                       >
-                                     <Label style={{color:theme.color}}>Enter Recipients Wallet Addresses</Label>
+                                     <Label style={{color: '#1E1E1E'}} >Enter Recipients Wallet Addresses</Label>
                                           <Input
                                               required={
                                                   multipleRecipients.length ===
@@ -1123,7 +1123,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
-                                     <Label style={{color:theme.color}}>Subject</Label>
+                                     <Label style={{color: '#1E1E1E'}} >Subject</Label>
                                       <Input
                                           required
                                           maxlength="40"
@@ -1152,7 +1152,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                   >
-                                    <Label style={{color:theme.color}}>Notification Message</Label>
+                                    <Label style={{color: '#1E1E1E'}} >Notification Message</Label>
                                       <TextField
                                           required
                                           // placeholder="Your Channel's Short Description (250 Characters)"
@@ -1182,7 +1182,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                       >
-                                    <Label style={{color:theme.color}}>Media URL</Label>
+                                    <Label style={{color: '#1E1E1E'}} >Media URL</Label>
                                           <Input
                                                 required
                                                 maxlength="40"
@@ -1211,7 +1211,7 @@ function SendNotifications() {
                                       self="stretch"
                                       align="stretch"
                                       >
-                                    <Label style={{color:theme.color}}>CTA Link</Label>
+                                    <Label style={{color: '#1E1E1E'}} >CTA Link</Label>
 
                                           <Input
                                             required
