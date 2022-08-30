@@ -17,8 +17,10 @@ export default function PreviewNotif({ details }) {
   const { chainId } = useWeb3React();
 
   let channelDetail;
-  channelDetail = delegatees.filter(delegateeInfo => delegateeInfo.address == details.channelAddress)[0];
-  if(!channelDetail) channelDetail = channelDetails; 
+  channelDetail = delegatees.filter(
+    (delegateeInfo) => delegateeInfo.address == details.channelAddress
+  )[0];
+  if (!channelDetail) channelDetail = channelDetails;
 
   const themes = useTheme();
   const NotifItem = ({ test }) => {
@@ -41,15 +43,16 @@ export default function PreviewNotif({ details }) {
   return (
     <ThemeProvider theme={themes}>
       <PreviewSpace>
-        <Item align="flex-start">
-          <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200" style={{ color: themes.color }}>
-              Notification
-            </Span>
-            <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">
-              Preview
-            </Span>
-          </H2>
+        <Item align="flex-start" margin="30px 0px 10px 0px">
+          <Span
+            weight="700"
+            size="12px"
+            spacing="0.2em"
+            color="#575D73"
+            // style={{ color: themes.color }}
+          >
+            PREVIEW NOTIFICATION
+          </Span>
         </Item>
         <NotifItem test={details} />
       </PreviewSpace>
@@ -73,7 +76,7 @@ const Overlay = styled.div`
 `;
 
 const PreviewSpace = styled.div`
-  //   padding: 20px 30px;
-  width: 95%;
+  margin: 20px 20px;
+  width: 100%;
   background: ${(props) => props.theme.backgroundBG};
 `;
