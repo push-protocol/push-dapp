@@ -28,7 +28,10 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose } : ModalInnerCompon
                         }} />}
                     />
                 <IconButton
-                    onClick={onConfirm}
+                    onClick={()=>{
+                        onConfirm();
+                        onClose();
+                    }}
                     style={{ padding: "0" }}
                     sx={{ "&:hover": { backgroundColor: "transparent" } }}
                     children={

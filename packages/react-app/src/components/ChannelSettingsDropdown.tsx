@@ -10,6 +10,8 @@ import { envConfig } from "@project/contracts";
 
 import { useClickAway } from "react-use";
 
+import useToast from "hooks/useToast";
+
 // modals
 import useModal from "hooks/useModal";
 import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
@@ -33,6 +35,7 @@ import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import {Oval} from "react-loader-spinner";
+import { MdError } from "react-icons/md";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
@@ -201,10 +204,11 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
         setShowActivateChannelPopup(false);
       });
   };
-
+  
   /**
    * Function to deactivate a channel that has been deactivated
    */
+  const deactivateChannelToast = useToast();
   const deactivateChannel = async () => {
     setLoading(true);
     if (!poolContrib) return;
@@ -218,6 +222,7 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
 
     const pushValue = response.response.data.quote.PUSH.price;
 
+
     await epnsWriteProvider
       // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
       .deactivateChannel(Math.floor(pushValue)) 
@@ -225,12 +230,9 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
         console.log(tx);
         console.log("Transaction Sent!");
 
-        toaster.update(notificationToast(), {
-          render: "Transaction sending",
-          type: toaster.TYPE.INFO,
-          autoClose: 5000,
-        });
-
+        deactivateChannelToast.showToast("")
+        deactivateChannelToast.updateToast("Channel Deactivated","Please Activate Channel to Send Notifications from it", "ERROR", (size) => <MdError size={size} color="red" />)
+        
         await tx.wait(1);
         console.log("Transaction Mined!");
         dispatch(
@@ -245,19 +247,17 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
         console.log({
           err,
         });
-        toaster.update(notificationToast(), {
-          render: "Transacion Failed: " + err.error?.message || err,
-          type: toaster.TYPE.ERROR,
-          autoClose: 5000,
-        });
+        
+        deactivateChannelToast.showToast("")
+        deactivateChannelToast.updateToast("Transaction Failed", "Channel deactivation failed.", "ERROR", (size) => <MdError size={size} color="red" />)
       })
       .finally(() => {
         // post op
         setLoading(false);
       });
-  };
-
-  const addDelegate = async (walletAddress: string) => {
+    };
+    
+    const addDelegate = async (walletAddress: string) => {
     setAddDelegateLoading(true);
     return epnsCommWriteProvider.addDelegate(walletAddress).finally(() => {
       setAddDelegateLoading(false);

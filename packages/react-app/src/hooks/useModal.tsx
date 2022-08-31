@@ -4,10 +4,10 @@ import {useTheme, ThemeProvider } from "styled-components";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
-export type ModalInnerComponentType = { onConfirm: (value:any)=>any, onClose?:()=>void};
+export type ModalInnerComponentType = { onConfirm: (value?:any) => any, onClose?:()=>void};
 
 export type ModalType = {
-    onConfirm: (value:any) => any,
+    onConfirm: (value?:any) => any,
     InnerComponent:({ onConfirm, onClose }:ModalInnerComponentType)=>JSX.Element,
 }
 
