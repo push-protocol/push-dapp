@@ -165,15 +165,9 @@ const ChatBox = (): JSX.Element => {
   }, [currentChat])
 
   const sendMessage = async ({
-    account,
-    fromDid,
-    toDid,
     message,
     messageType
   }: {
-    account: string
-    fromDid: string
-    toDid: string
     message: string
     messageType: string
   }): Promise<void> => {
@@ -187,8 +181,8 @@ const ChatBox = (): JSX.Element => {
     try {
       msg = {
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        fromDID: fromDid,
-        toDID: toDid,
+        fromDID: did.id,
+        toDID: currentChat.did,
         messageContent: message,
         messageType,
         signature: '',
@@ -210,8 +204,8 @@ const ChatBox = (): JSX.Element => {
       })
       const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        fromDID: fromDid,
-        toDID: toDid,
+        fromDID: did.id,
+        toDID: currentChat.did,
         messageContent: cipherText,
         messageType,
         signature,
@@ -237,9 +231,6 @@ const ChatBox = (): JSX.Element => {
     if (newMessage.trim() !== '') {
       if (currentChat.intent === 'Approved') {
         sendMessage({
-          account,
-          fromDid: did.id,
-          toDid: currentChat.did,
           message: newMessage,
           messageType: 'Text'
         })
@@ -360,9 +351,6 @@ const ChatBox = (): JSX.Element => {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType })
           } else {
             sendMessage({
-              account,
-              fromDid: did.id,
-              toDid: currentChat.did,
               message: JSON.stringify(fileMessageContent),
               messageType
             })
@@ -385,9 +373,6 @@ const ChatBox = (): JSX.Element => {
       sendIntent({ message: url, messageType: 'GIF' })
     } else {
       sendMessage({
-        account,
-        fromDid: did.id,
-        toDid: currentChat.did,
         message: url,
         messageType: 'GIF'
       })
