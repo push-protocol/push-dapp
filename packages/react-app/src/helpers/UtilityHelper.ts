@@ -1,5 +1,6 @@
 import { envConfig } from "@project/contracts";
 import { convertChainIdToChainCaip } from "./CaipHelper";
+import { utils } from "ethers";
 
 // Utility Helper Functions
 const UtilityHelper = {
@@ -44,6 +45,23 @@ export const aliasChainIdsMapping = {
   42: 80001
 };
 
+export const PolygonNetworks = {
+  MUMBAI_TESTNET: {
+    chainId: utils.hexValue(80001),
+    chainName: 'Polygon Mumbai Testnet',
+    nativeCurrency: { name: 'tMATIC', symbol: 'tMATIC', decimals: 18 },
+    rpcUrls: ['https://matic-mumbai.chainstacklabs.com', 'https://rpc-mumbai.maticvigil.com'],
+    blockExplorerUrls: ["https://mumbai.polygonscan.com/"],
+  },
+  POLYGON_MAINNET: {
+    chainId: utils.hexValue(137), 
+    chainName: "Polygon Mainnet", 
+    nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
+    rpcUrls: ["https://polygon-rpc.com"],
+    blockExplorerUrls: ["https://www.polygonscan.com/"],
+  },
+}
+
 export const CORE_CHAIN_ID: number = envConfig.coreContractChain;
 
 export const getAliasFromChannelDetails = (channelDetails: Object | null | string): (string | null) => {
@@ -65,5 +83,31 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
 
   return null;
 }
+
+export const switchToPolygonNetwork = async (chainId: number, provider: any) => {
+  const polygonChainId = aliasChainIdsMapping[chainId];
+
+  try {
+    await provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: utils.hexValue(polygonChainId) }],
+    });
+  } catch (switchError) {
+    // This error code indicates that the chain has not been added to MetaMask.
+    if (switchError.code === 4902) {
+      try {
+        await provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [polygonChainId === 80001 ? PolygonNetworks.MUMBAI_TESTNET : PolygonNetworks.POLYGON_MAINNET],
+        });
+      } catch (addError) {
+        console.error("Unable to add Polygon Network in wallet");
+      }
+    }
+    // error toast - Your wallet doesn't support switch network. Kindly, switch the network to Polygon manually.
+    console.error("Unable to switch chains");
+  }
+}
+
 
 export default UtilityHelper;
