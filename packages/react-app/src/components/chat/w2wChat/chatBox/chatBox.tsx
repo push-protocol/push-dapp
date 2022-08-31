@@ -14,6 +14,7 @@ import { intitializeDb } from '../w2wIndexeddb'
 import { encryptAndSign, decryptAndVerifySignature, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
 import { CID } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
+// @ts-ignore
 import Loader from 'react-loader-spinner'
 import GifIcon from '../W2WIcons/GifIcon'
 import { Web3Provider } from 'ethers/providers'
@@ -164,15 +165,9 @@ const ChatBox = (): JSX.Element => {
   }, [currentChat])
 
   const sendMessage = async ({
-    account,
-    fromDid,
-    toDid,
     message,
     messageType
   }: {
-    account: string
-    fromDid: string
-    toDid: string
     message: string
     messageType: string
   }): Promise<void> => {
@@ -186,8 +181,8 @@ const ChatBox = (): JSX.Element => {
     try {
       msg = {
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        fromDID: fromDid,
-        toDID: toDid,
+        fromDID: did.id,
+        toDID: currentChat.did,
         messageContent: message,
         messageType,
         signature: '',
@@ -209,8 +204,8 @@ const ChatBox = (): JSX.Element => {
       })
       const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        fromDID: fromDid,
-        toDID: toDid,
+        fromDID: did.id,
+        toDID: currentChat.did,
         messageContent: cipherText,
         messageType,
         signature,
@@ -236,9 +231,6 @@ const ChatBox = (): JSX.Element => {
     if (newMessage.trim() !== '') {
       if (currentChat.intent === 'Approved') {
         sendMessage({
-          account,
-          fromDid: did.id,
-          toDid: currentChat.did,
           message: newMessage,
           messageType: 'Text'
         })
@@ -322,14 +314,14 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const handleKeyPress = (e): void => {
+  const handleKeyPress = (e: any): void => {
     const x = e.keyCode
     if (x === 13) {
       handleSubmit(e)
     }
   }
 
-  const textOnChange = (e): void => {
+  const textOnChange = (e: any): void => {
     setNewMessage(e.target.value)
   }
 
@@ -359,9 +351,6 @@ const ChatBox = (): JSX.Element => {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType })
           } else {
             sendMessage({
-              account,
-              fromDid: did.id,
-              toDid: currentChat.did,
               message: JSON.stringify(fileMessageContent),
               messageType
             })
@@ -374,7 +363,7 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const addEmoji = (e, emojiObject: { emoji: any }): void => {
+  const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
     setNewMessage(newMessage + emojiObject.emoji)
     setShowEmojis(false)
   }
@@ -384,9 +373,6 @@ const ChatBox = (): JSX.Element => {
       sendIntent({ message: url, messageType: 'GIF' })
     } else {
       sendMessage({
-        account,
-        fromDid: did.id,
-        toDid: currentChat.did,
         message: url,
         messageType: 'GIF'
       })
