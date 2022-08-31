@@ -1,26 +1,33 @@
 import React from "react";
-import { useClickAway } from "react-use";
 import styled from "styled-components";
 import ChannelSettingsDropdown from "./ChannelSettingsDropdown";
 
 export default function ChannelSettings() {
-  const [active, setActive] = React.useState(false);
-  const modalRef = React.useRef(null);
-  const toggleActive = () => {
-    setActive((a) => !a);
+  const DropdownRef = React.useRef(null);
+  const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  
+  const toggleDropdownHandler = () => {
+      setIsDropdownOpen((prevVal) => !prevVal);
   };
 
-  useClickAway(modalRef, () => active && setActive(false));
+  const closeDropdownHandler = ()=>{
+    setIsDropdownOpen(false);
+  }
 
   return (
-    <SettingsWrapper ref={modalRef}>
+    <SettingsWrapper ref={DropdownRef}>
       <Settings
-        active={active}
-        onClick={toggleActive}
+        active={isDropdownOpen}
+        onClick={toggleDropdownHandler}
         src="/Settings.svg"
         alt=""
       ></Settings>
-      {active && <ChannelSettingsDropdown />}
+      {isDropdownOpen && 
+      <ChannelSettingsDropdown 
+        DropdownRef={DropdownRef}
+        isDropdownOpen={isDropdownOpen} 
+        closeDropdown={closeDropdownHandler} 
+      />}
     </SettingsWrapper>
   );
 }

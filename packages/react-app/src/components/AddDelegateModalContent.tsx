@@ -7,13 +7,31 @@ import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButt
 
 import { ModalInnerComponentType } from "hooks/useModal";
 
-const AddDelegateModalContent = ({onConfirm}:ModalInnerComponentType)=>{
+const AddDelegateModalContent = ({onConfirm : addDelegate}:ModalInnerComponentType)=>{
     const delegateAddressInputRef = React.useRef<HTMLInputElement>();
 
     const addDelegateHandler = ()=>{
         const delegateAddress = delegateAddressInputRef?.current?.value;
-        // add delegate logic comes here
-        onConfirm(delegateAddress);
+        addDelegate(delegateAddress)
+        .then(async (tx) => {
+            console.log(tx);
+            setLoading("Transaction Sent!");
+
+            setTimeout(() => {
+                onSuccess();
+                onClose();
+            }, 2000);
+
+        })
+        .catch((err) => {
+            console.log({
+                err
+            })
+            setLoading('There was an error');
+            setTimeout(() => {
+                setLoading('')
+            }, 2000)
+        });
     }
 
     return(

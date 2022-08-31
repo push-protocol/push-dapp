@@ -4,11 +4,11 @@ import {useTheme, ThemeProvider } from "styled-components";
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
-export type ModalInnerComponentType = { onConfirm: (value:any)=>any};
+export type ModalInnerComponentType = { onConfirm: (value:any)=>any, onClose?:()=>void};
 
 export type ModalType = {
     onConfirm: (value:any) => any,
-    InnerComponent:({ onConfirm }:ModalInnerComponentType)=>JSX.Element,
+    InnerComponent:({ onConfirm, onClose }:ModalInnerComponentType)=>JSX.Element,
 }
 
 const useModal = () => {
@@ -26,7 +26,6 @@ const useModal = () => {
         };
 
         const handleConfirm = (value) => {
-            handleClose();
             onConfirm(value);
         };
         return(
@@ -42,12 +41,12 @@ const useModal = () => {
                             border: `1px solid ${themes.modalBorderColor}`,
                             borderRadius: "1rem",
                             padding: "0.1% 0.62%",
-                            boxShadow: "none"
+                            boxShadow: "none",
                         },
                     }}
                 >
                     <DialogContent style={{ display: "flex", justifyContent: "space-between" }}>
-                        <InnerComponent onConfirm={handleConfirm}  />
+                        <InnerComponent onConfirm={handleConfirm} onClose={handleClose} />
                     </DialogContent>
                 </Dialog>
             </ThemeProvider>
@@ -55,7 +54,7 @@ const useModal = () => {
     
     }
 
-    return { showModal: handleOpen, ModalComponent }
+    return { isModalOpen: open, showModal: handleOpen, ModalComponent }
 }
 
 export default useModal

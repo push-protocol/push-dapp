@@ -7,13 +7,9 @@ import { RiNotificationOffLine } from "react-icons/ri";
 
 import { ModalInnerComponentType } from "hooks/useModal";
 
-const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
+const ChannelDeactivateModalContent = ({ onConfirm, onClose } : ModalInnerComponentType)=>{
     const themes = useTheme();
 
-    const deactivateChannelHandler = ()=>{
-        onClose();
-        // deactivate channel logic comes here
-    }
     return(
         <ThemeProvider theme={themes}>
             <ModalMessage style={{
@@ -23,24 +19,23 @@ const ChannelDeactivateModalContent = ({onClose }:ModalInnerComponentType)=>{
             </ModalMessage>
             <ButtonContainer>
                 <IconButton
+                    onClick={onClose}
                     style={{ padding: "0", marginRight: "0.5rem" }}
                     sx={{ "&:hover": { backgroundColor: "transparent" } }}
                     children={
                         <MdHighlightOff size="2.6rem" style={{
                             color:themes.modalIconColor,
                         }} />}
-                        autoFocus
-                    onClick={ onClose}
                     />
                 <IconButton
+                    onClick={onConfirm}
                     style={{ padding: "0" }}
                     sx={{ "&:hover": { backgroundColor: "transparent" } }}
                     children={
                         <RiNotificationOffLine size="1.4rem" style={{
                             color: "white", background: "red", borderRadius: "50%", padding: "8px"
                         }} />}
-                        onClick={deactivateChannelHandler}
-                        />
+                    />
             </ButtonContainer>
         </ThemeProvider>
     )

@@ -8,6 +8,8 @@ import { postReq } from "api";
 
 import { envConfig } from "@project/contracts";
 
+import { useClickAway } from "react-use";
+
 // modals
 import useModal from "hooks/useModal";
 import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
@@ -28,13 +30,19 @@ const ethers = require("ethers");
 const MIN_STAKE_FEES = 50;
 const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
+type ChannelSettingsType = {
+  DropdownRef:React.MutableRefObject<any>,
+  isDropdownOpen: boolean,
+  closeDropdown: () => void
+}
+
 // Create Header
-function ChannelSettings() {
+function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelSettingsType) {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector(
     (state: any) => state.contracts
-  );
+    );
   const { channelDetails } = useSelector((state: any) => state.admin);
   const {
     CHANNNEL_DEACTIVATED_STATE,
@@ -47,10 +55,30 @@ function ChannelSettings() {
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
 
   // modals
-  const {showModal:showDeactivateChannelModal, ModalComponent:DeactivateChannelModalComponent} = useModal();
-  const {showModal:showAddDelegateModal, ModalComponent:AddDelegateModalComponent} = useModal();
-  const {showModal: showRemoveDelegateModal, ModalComponent: RemoveDelegateModalComponent} = useModal();
-  const {showModal: showAddSubgraphModal, ModalComponent: AddSubgraphModalComponent} = useModal();
+  const {
+    isModalOpen: isDeactivateChannelModalOpen, 
+    showModal: showDeactivateChannelModal, 
+    ModalComponent:DeactivateChannelModalComponent} = useModal();
+  const {
+    isModalOpen: isAddDelegateModalOpen, 
+    showModal: showAddDelegateModal, 
+    ModalComponent:AddDelegateModalComponent} = useModal();
+  const {
+    isModalOpen: isRemoveDelegateModalOpen, 
+    showModal: showRemoveDelegateModal, 
+    ModalComponent: RemoveDelegateModalComponent} = useModal();
+  const {
+    isModalOpen: isAddSubgraphModalOpen, 
+    showModal: showAddSubgraphModal, 
+    ModalComponent: AddSubgraphModalComponent} = useModal();
+
+  // for closing the ChannelSettings Dropdown upon outside click
+  const closeDropdownCondition = isDropdownOpen && 
+                                !isDeactivateChannelModalOpen &&
+                                !isAddDelegateModalOpen && 
+                                !isRemoveDelegateModalOpen && 
+                                !isAddSubgraphModalOpen;
+  useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
   
   const [loading, setLoading] = React.useState(false);
   const [
@@ -107,7 +135,6 @@ function ChannelSettings() {
     if (isChannelDeactivated) {
       setShowActivateChannelPopup(true);
     } else {
-      // deactivateChannel();
       showDeactivateChannelModal();
     }
   };
@@ -249,96 +276,98 @@ function ChannelSettings() {
   // }
 
   return (
-    <div>
-      <DropdownWrapper background ={theme}>
-        <DeactivateButton
-          isChannelDeactivated={isChannelDeactivated}
-          onClick={toggleChannelActivationState}
-        >
-          <ActionTitle>
-            {!onCoreNetwork ? (
-              ""
-            ) : loading ? (
-              "Loading ..."
-            ) : isChannelBlocked ? (
-              "Channel Blocked"
-            ) : isChannelDeactivated ? (
-              "Activate Channel"
-            ) : (
-              "Deactivate Channel"
-            )}
-          </ActionTitle>
-        </DeactivateButton>
-        <ActiveChannelWrapper>
-          {onCoreNetwork &&
+    <>
+      <div>
+        <DropdownWrapper background ={theme}>
+          <DeactivateButton
+            isChannelDeactivated={isChannelDeactivated}
+            onClick={toggleChannelActivationState}
+          >
+            <ActionTitle>
+              {!onCoreNetwork ? (
+                ""
+              ) : loading ? (
+                "Loading ..."
+              ) : isChannelBlocked ? (
+                "Channel Blocked"
+              ) : isChannelDeactivated ? (
+                "Activate Channel"
+              ) : (
+                "Deactivate Channel"
+              )}
+            </ActionTitle>
+          </DeactivateButton>
+          <ActiveChannelWrapper>
+            {onCoreNetwork &&
+              <ChannelActionButton
+                disabled={channelInactive}
+                onClick={() => !channelInactive && showAddSubgraphModal()}
+              >
+                <ActionTitle>
+                  {addSubgraphDetailsLoading ? (
+                    <Loader type="Oval" color="#FFF" height={16} width={16} />
+                  ) : (
+                    "Add SubGraph Details"
+                  )}
+                </ActionTitle>
+              </ChannelActionButton>
+            }
+
             <ChannelActionButton
               disabled={channelInactive}
-              onClick={() => !channelInactive && showAddSubgraphModal()}
+              onClick={() => !channelInactive && showAddDelegateModal()}
             >
               <ActionTitle>
-                {addSubgraphDetailsLoading ? (
+                {addDelegateLoading ? (
                   <Loader type="Oval" color="#FFF" height={16} width={16} />
                 ) : (
-                  "Add SubGraph Details"
+                  "Add Delegate"
                 )}
               </ActionTitle>
             </ChannelActionButton>
-          }
 
-          <ChannelActionButton
-            disabled={channelInactive}
-            onClick={() => !channelInactive && showAddDelegateModal()}
-          >
-            <ActionTitle>
-              {addDelegateLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
-              ) : (
-                "Add Delegate"
-              )}
-            </ActionTitle>
-          </ChannelActionButton>
+            <ChannelActionButton
+              disabled={channelInactive}
+              onClick={() => !channelInactive && showRemoveDelegateModal()}
+            >
+              <ActionTitle>
+                {removeDelegateLoading ? (
+                  <Loader type="Oval" color="#FFF" height={16} width={16} />
+                  ) : (
+                  "Remove Delegate"
+                )}
+              </ActionTitle>
+            </ChannelActionButton>
+          </ActiveChannelWrapper>
+        </DropdownWrapper>
 
-          <ChannelActionButton
-            disabled={channelInactive}
-            onClick={() => !channelInactive && showRemoveDelegateModal()}
-          >
-            <ActionTitle>
-              {removeDelegateLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
-              ) : (
-                "Remove Delegate"
-              )}
-            </ActionTitle>
-          </ChannelActionButton>
-        </ActiveChannelWrapper>
-      </DropdownWrapper>
-
-      {/* modal to display the activate channel popup */}
-      {showActivateChannelPopup && (
-        <ActivateChannelModal
+        {/* modal to display the activate channel popup */}
+        {showActivateChannelPopup && (
+          <ActivateChannelModal
           onClose={() => {
             if (showActivateChannelPopup) {
               setShowActivateChannelPopup(false);
-            }
-          }}
-          activateChannel={activateChannel}
-          loading={loading}
-          setChannelStakeFees={setChannelStakeFees}
-          channelStakeFees={channelStakeFees}
-        />
-      )}
+              }
+            }}
+            activateChannel={activateChannel}
+            loading={loading}
+            setChannelStakeFees={setChannelStakeFees}
+            channelStakeFees={channelStakeFees}
+            />
+        )}
+      </div>
 
       {/* deactivate channel modal */}
       <DeactivateChannelModalComponent
           InnerComponent={ChannelDeactivateModalContent}
           onConfirm={deactivateChannel}
-      />      
+          />      
       
       {/* modal to add a delegate */}
       <AddDelegateModalComponent
           InnerComponent={AddDelegateModalContent}
           onConfirm={addDelegate}
-      />      
+          />      
 
       {/* modal to remove a delegate */}
       <RemoveDelegateModalComponent
@@ -351,7 +380,7 @@ function ChannelSettings() {
           InnerComponent={AddSubgraphModalContent}
           onConfirm={addSubgraphDetails}
       />
-    </div>
+    </>
   );
 }
 
