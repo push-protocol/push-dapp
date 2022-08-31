@@ -89,14 +89,14 @@ const useToast = () => {
         </Toast>
       ,
       type: toast.TYPE.DEFAULT,
+      closeButton: CloseButton,
+      autoClose: 3000,
       style: {
         background: toastType === "SUCCESS" ? successBgGradient : errorBgGradient,
         // boxShadow: "0px 0px 10px 0px #00000005",
         boxShadow: "10px 10px 10px #ccc",
         borderRadius: "20px",
       },
-      closeButton: CloseButton,
-      autoClose: 5000,
     });
   }
 
