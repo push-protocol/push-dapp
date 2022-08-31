@@ -1,13 +1,17 @@
 
+import { useState } from 'react';
+import ReactGA from "react-ga";
+
 import { Section } from 'components/SharedStyling';
 import ChatModule from "modules/chat/ChatModule";
-import ChatSignInModule from "modules/chat/ChatSignInModule";
-import { useState } from 'react';
 import styled from 'styled-components';
 
 import GLOBALS from "config/Globals";
 
 const ChatPage = (props) => {
+  // React GA Analytics
+  ReactGA.pageview("/chat");
+
   // SET LOADING
   const [loading, setLoading] = useState(true);
 
