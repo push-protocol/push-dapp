@@ -5,6 +5,7 @@ import GLOBALS from 'config/Globals';
 import styled from 'styled-components';
 
 
+import LoaderSpinner, { LOADERTYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ProgressBar from 'components/reusables/progress/ProgressBarUnit';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 
@@ -37,6 +38,39 @@ const InternalDevModule = () => {
         caption="components/reusables/spinner/SpinnerUnit"
       >
         <Spinner />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps
+        caption="omponents/reusables/loaders/LoaderSpinner"
+      >
+        <LoaderSpinner 
+          type={LOADERTYPE.SEAMLESS}
+          title="Randomized With Long Text, Very Long"
+          completed={false}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps
+        caption="omponents/reusables/loaders/LoaderSpinner"
+      >
+        <LoaderSpinner 
+          type={LOADERTYPE.STANDALONE}
+          title="Randomized"
+          completed={false}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps
+        caption="omponents/reusables/loaders/LoaderSpinner"
+      >
+        <LoaderSpinner 
+          type={LOADERTYPE.SEAMLESS}
+          title="This time it's done"
+          completed={true}
+        />
       </IndividualComps>
     </Container>
   );

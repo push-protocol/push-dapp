@@ -10,7 +10,6 @@ interface ProgressBarPropsI {
 
 // Create Progress Bar
 const ProgressBar = ({ percent, color }: ProgressBarPropsI) => {
-  console.log(percent, color);
   return (
     <Progress 
       percent={percent}

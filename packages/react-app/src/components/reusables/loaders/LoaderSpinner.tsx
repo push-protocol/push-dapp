@@ -1,29 +1,40 @@
+import { ReactComponent as CheckmarkSVG } from 'assets/reusables/loaders/checkmark.svg';
 
-import { Image, Item, Section } from 'components/SharedStyling';
-import GLOBALS from "config/Globals";
+import Spinner from 'components/reusables/spinners/SpinnerUnit';
+import { Image, Item, ItemH, Section, Span } from 'components/SharedStyling';
 import styled, { css, keyframes } from 'styled-components';
+
+import GLOBALS from "config/Globals";
 
 export const LOADERTYPE = {
   STANDALONE: 1,
   SEAMLESS: 2
 }
 
-interface SpinnerLoaderI {
-  loading: boolean;
+interface LoaderSpinnerI {
+  type: number;
   title: string;
+  completed: boolean;
 }
 
 // Create Progress Bar
-const ProgressBar = ({ loading, title }: SpinnerLoaderI) => {
-  console.log(percent, color);
+const LoaderSpinner = ({ type, title, completed }: LoaderSpinnerI) => {
   return (
-    <Progress 
-      percent={percent}
-      color={color}
-    />
+    <ItemH>
+      {!completed && 
+        <Spinner />
+      }
+      {completed &&
+        <CheckmarkSVG />
+      }
+      <Span 
+        padding="10px"
+        weight="500"
+      >{title}</Span>
+    </ItemH>
   );
 }
-export default ProgressBar;
+export default LoaderSpinner;
 
 const Progress = styled.div`
 	background: ${GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};

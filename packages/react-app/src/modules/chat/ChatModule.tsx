@@ -1,3 +1,4 @@
+import W2wIndex from 'components/chat/w2wIndex';
 import { Item, Section } from 'components/SharedStyling';
 import styled from 'styled-components';
 
@@ -15,7 +16,7 @@ const ChatModule = () => {
   return (
     <Container>
       <Item>
-        What's my purpose a
+        <W2wIndex />
       </Item>
     </Container>
   );

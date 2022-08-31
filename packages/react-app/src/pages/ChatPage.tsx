@@ -14,12 +14,12 @@ const ChatPage = (props) => {
   // RENDER
   return (
     <Container>
-      {loading && 
+      {/* {loading && 
         <ChatSignInModule />
       }
-      {!loading && 
+      {!loading &&  */}
         <ChatModule />
-      }
+      {/* } */}
     </Container>
   );
 }
