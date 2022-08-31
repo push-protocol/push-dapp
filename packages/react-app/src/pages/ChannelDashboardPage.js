@@ -10,9 +10,7 @@ import NotificationToast from "primaries/NotificationToast";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { getReq } from "api";
-import {
-  setPushAdmin,
-} from "redux/slices/contractSlice";
+import { setPushAdmin } from "redux/slices/contractSlice";
 import {
   setUserChannelDetails,
   setCanVerify,
@@ -173,7 +171,7 @@ function ChannelDashboardPage() {
   // const checkUserForAlias = async () => {
   //   let { aliasAddress, isAliasVerified } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(account);
   //   if (aliasAddress == "NULL") aliasAddress = null;
-    
+
   //   if (aliasAddress)
   //     dispatch(setAliasAddress(aliasAddress));
   //   dispatch(setAliasVerified(isAliasVerified));
@@ -184,11 +182,7 @@ function ChannelDashboardPage() {
   return (
     <Container>
       <Interface>
-        {adminStatusLoaded ? (
-          <ChannelOwnerDashboard />
-        ) : (
-          <ChannelLoading />
-        )}
+        {adminStatusLoaded ? <ChannelOwnerDashboard /> : <ChannelLoading />}
         {toast && (
           <NotificationToast notification={toast} clearToast={clearToast} />
         )}

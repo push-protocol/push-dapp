@@ -1,6 +1,6 @@
 import React, {Fragment, useEffect, useState} from "react";
 import styled from "styled-components";
-import { Section, Content } from "../primaries/SharedStyling";
+import { Section, Content, Item } from "../primaries/SharedStyling";
 import ChannelSettings from "components/ChannelSettings";
 import ChannelDetails from "components/ChannelDetails";
 import CreateChannel from "components/CreateChannel";
@@ -90,11 +90,12 @@ const ChannelOwnerDashboard = () => {
   }
 
   return (
-    <Fragment>
-      <Section>
+    <Container>
+      <Interface>
         {((channelDetails === 'unfetched') || processingState === null) &&
           <ChannelLoading />
-        }
+        } 
+      </Interface>
         <ModifiedContent>
           {/* display the create channel page if there are no details */}
           {(!channelDetails && processingState === 0) ? <CreateChannel /> : ""}
@@ -114,13 +115,13 @@ const ChannelOwnerDashboard = () => {
             </ThemeProvider>
           )}
           </ModifiedContent>
-      </Section>
-    </Fragment>
+    </Container>
   );
 }
 
 // css styles
 const ModifiedContent = styled(Content)`
+  flex: 1;
   padding: 0px;
   position: relative;
     @media (min-width: 800px) and (max-width: 1600px) {
@@ -128,7 +129,7 @@ const ModifiedContent = styled(Content)`
    }
 
    @media (min-width: 1601px) and (max-width: 2200px) {
-    padding: 20px 70px;
+    padding: 20px 50px;
  }
   @media (min-width: 2201px) and (max-width: 2900px) {
     padding: 30px 220px;
@@ -140,6 +141,20 @@ const ModifiedContent = styled(Content)`
   @media (min-width: 3501px) {
     padding: 30px 1000px;
   }
+`;
+
+const Container = styled.div`
+  flex: 1;
+  display: block;
+  flex-direction: column;
+`;
+
+const Interface = styled.div`
+  flex: 1;
+  display: flex;
+
+  margin-bottom: 15px;
+  overflow: hidden;
 `;
 
   //   @media screen and (max-width: 1200px) {

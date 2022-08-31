@@ -101,7 +101,7 @@ const LoaderContainer = styled.div`
 `
 
 const LoaderText = styled.div`
-  margin-left: 3%;
+//   margin-left: 3%;
   font-family: Manrope;
   font-size: 1.25rem;
   font-weight: 600;
