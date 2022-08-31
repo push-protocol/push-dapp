@@ -1053,7 +1053,7 @@ return (
                                     self="stretch"
                                     align="stretch"
                                 >
-                                   <Label style={{color: '#1E1E1E'}} >Recipient Wallet Address</Label>
+                                   <Label style={{color:theme.color}}>Recipient Wallet Address</Label>
                                     <Input
                                         required
                                         maxlength="40"
@@ -1101,7 +1101,7 @@ return (
                                         self="stretch"
                                         align="stretch"
                                     >
-                                   <Label style={{color: '#1E1E1E'}} >Enter Recipients Wallet Addresses</Label>
+                                   <Label style={{color:theme.color}}>Enter Recipients Wallet Addresses</Label>
                                         <Input
                                             required={
                                                 multipleRecipients.length ===
@@ -1152,7 +1152,7 @@ return (
                                     self="stretch"
                                     align="stretch"
                                 >
-                                   <Label style={{color: '#1E1E1E'}} >Subject</Label>
+                                   <Label style={{color:theme.color}}>Subject</Label>
                                     <Input
                                         required
                                         maxlength="40"
@@ -1181,7 +1181,7 @@ return (
                                     self="stretch"
                                     align="stretch"
                                 >
-                                  <Label style={{color: '#1E1E1E'}} >Notification Message</Label>
+                                  <Label style={{color:theme.color}}>Notification Message</Label>
                                     <TextField
                                         required
                                         // placeholder="Your Channel's Short Description (250 Characters)"
@@ -1211,7 +1211,7 @@ return (
                                     self="stretch"
                                     align="stretch"
                                     >
-                                  <Label style={{color: '#1E1E1E'}} >Media URL</Label>
+                                  <Label style={{color:theme.color}}>Media URL</Label>
                                         <Input
                                               required
                                               maxlength="40"
@@ -1240,7 +1240,7 @@ return (
                                     self="stretch"
                                     align="stretch"
                                     >
-                                  <Label style={{color: '#1E1E1E'}} >CTA Link</Label>
+                                  <Label style={{color:theme.color}}>CTA Link</Label>
 
                                         <Input
                                           required
