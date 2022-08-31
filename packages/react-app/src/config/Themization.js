@@ -100,6 +100,10 @@ const themeLight = {
   modalBorderColor: "#E5E8F6",
   modalMessageColor: "black",
   modalIconColor: "#657795",
+
+  // Toast Notifications
+  toastTextColor: "#000",
+  toastBorderColor: "#F4F3FF",
 };
 
 const themeDark = {
@@ -206,6 +210,10 @@ const themeDark = {
   modalBorderColor: "#4A4F67",
   modalMessageColor: "#B6BCD6",
   modalIconColor: "#787E99",
+
+  // Toast Notifications
+  toastTextColor: "#B6BCD6",
+  toastBorderColor: "#4A4F67",
 };
 
 module.exports = {

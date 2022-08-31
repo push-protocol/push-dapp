@@ -3,11 +3,11 @@ import { useWeb3React } from '@web3-react/core'
 
 import styled from 'styled-components';
 
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 import Blockies from "primaries/BlockiesIdenticon";
 
 // Create Header
-function Profile() {
+const Profile = () => {
   const { error, account, library } = useWeb3React();
 
   const [address, setAddress] = React.useState('');
@@ -23,7 +23,7 @@ function Profile() {
 
         // get ens
         library
-          .lookupAddress(account).then(function(name) {
+          .lookupAddress(account).then(function (name) {
             setENS(name);
             setENSFetched(true);
             setAddress(account);
@@ -41,31 +41,30 @@ function Profile() {
 
   return (
     <>
-    {account && account !== '' && !error &&
-      <Container>
-        <Blocky>
-          <BlockyInner>
-             <Blockies seed={account.toLowerCase()} opts={{seed: account.toLowerCase(), size: 7, scale: 7}}/>
-          </BlockyInner>
-        </Blocky>
-        <Wallet>
-        {!ensFetched &&
-          <Loader
-      	     type="Oval"
-      	     color="#FFF"
-      	     height={16}
-      	     width={16}
-      	  />
-        }
-        {ensFetched && ens &&
-          <>{ens}</>
-        }
-        {ensFetched && !ens &&
-          <>{account.substring(0, 6)}.....{account.substring(account.length - 6)}</>
-        }
-        </Wallet>
-      </Container>
-    }
+      {account && account !== '' && !error &&
+        <Container>
+          <Blocky>
+            <BlockyInner>
+              <Blockies seed={account.toLowerCase()} opts={{ seed: account.toLowerCase(), size: 7, scale: 7 }} />
+            </BlockyInner>
+          </Blocky>
+          <Wallet>
+            {!ensFetched &&
+              <Oval
+                color="#FFF"
+                height={16}
+                width={16}
+              />
+            }
+            {ensFetched && ens &&
+              <>{ens}</>
+            }
+            {ensFetched && !ens &&
+              <>{account.substring(0, 6)}.....{account.substring(account.length - 6)}</>
+            }
+          </Wallet>
+        </Container>
+      }
     </>
   );
 }

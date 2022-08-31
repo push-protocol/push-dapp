@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { useTheme } from 'styled-components';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
@@ -177,13 +177,13 @@ function SpamBox({ currentTab }) {
         dispatch(incrementPage());
       }
       let parsedResponse = EpnsAPI.parseApiResponse(results);
-        parsedResponse.forEach( (each,i) => {
-            each['date'] = results[i].epoch;
-            each['epoch'] = (new Date(each['date']).getTime() / 1000);
-        })
-        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-          elem.channel = results[i].channel;
-          let address = results[i].channel;
+      parsedResponse.forEach((each, i) => {
+        each['date'] = results[i].epoch;
+        each['epoch'] = (new Date(each['date']).getTime() / 1000);
+      })
+      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+        elem.channel = results[i].channel;
+        let address = results[i].channel;
 
           const {
             data: { subscribers },
@@ -347,8 +347,8 @@ function SpamBox({ currentTab }) {
       chainId,
       contractAddress: epnsCommReadProvider.address,
     }).then((res) => {
-        dispatch(cacheSubscribe({ channelAddress: channelAddress }));
-      });;
+      dispatch(cacheSubscribe({ channelAddress: channelAddress }));
+    });;
   };
 
   const isSubscribedFn = (subscribers: any) => {
@@ -432,7 +432,7 @@ function SpamBox({ currentTab }) {
         <SearchFilter notifications={allNotif} filterNotifications={filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter} />
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
-            <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+            <Oval color="#35c5f3" height={40} width={40} />
           </div>
         )}
         {notifications && (
@@ -481,7 +481,7 @@ function SpamBox({ currentTab }) {
           </Items>
         )}
         {loading && !bgUpdateLoading && (
-          <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+          <Oval color="#35c5f3" height={40} width={40} />
         )}
         {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
           <CenteredContainerInfo>

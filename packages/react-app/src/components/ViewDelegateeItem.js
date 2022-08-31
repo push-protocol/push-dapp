@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import {toolingPostReq} from "../api/index"
 import 'react-toastify/dist/ReactToastify.min.css';
-import Loader from 'react-loader-spinner';
+import {Oval} from 'react-loader-spinner';
 
 import Skeleton from '@yisheng90/react-loading';
 import { FiTwitter } from 'react-icons/fi';
@@ -138,8 +138,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-        type="Oval"
+      <Oval
         color={color}
         height={30}
         width={30}
@@ -231,8 +230,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
               
               txLoading ? (
                 <ActionTitle>
-                 <Loader
-                   type="Oval"
+                 <Oval
                    color="#35c5f3"
                    height={20}
                    width={20}

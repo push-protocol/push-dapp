@@ -1,28 +1,19 @@
 import React from "react";
 import ReactGA from "react-ga";
-import { ethers } from "ethers";
 import styled, { useTheme, ThemeProvider } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useWeb3React } from "@web3-react/core";
 import { Item, Button } from "../primaries/SharedStyling";
-import { addresses, abis, envConfig } from "@project/contracts";
+import { envConfig } from "@project/contracts";
 import { postReq } from "api";
 
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 import Feedbox from "segments/Feedbox";
 
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import UsersDataStore from "singletons/UsersDataStore";
-
-import {
-	setPushAdmin,
-	setCoreReadProvider,
-	setCommunicatorReadProvider,
-} from "redux/slices/contractSlice";
 
 import GLOBALS from "config/Globals";
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
@@ -60,10 +51,10 @@ function InboxPage() {
 		const fetchEncryptionKey = async () => {
 			// get public key from Backend API
 			let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-					address: account,
-					op: "read"
+				address: account,
+				op: "read"
 			}).then(res => {
-					return res.data?.encryption_key;
+				return res.data?.encryption_key;
 			});
 
 			if (encryptionKey != null) {
@@ -73,92 +64,19 @@ function InboxPage() {
 		fetchEncryptionKey();
 	}, [enabledSecretNotif])
 
-	React.useEffect(() => {
-		(async function init() {
-			const coreProvider = onCoreNetwork
-				? library
-				: new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
-
-			// inititalise the read contract for the core network
-			const coreContractInstance = new ethers.Contract(
-				addresses.epnscore,
-				abis.epnscore,
-				coreProvider
-			);
-			// initialise the read contract for the communicator function
-			const commAddress = onCoreNetwork
-				? addresses.epnsEthComm
-				: addresses.epnsPolyComm;
-			const commContractInstance = new ethers.Contract(
-				commAddress,
-				abis.epnsComm,
-				library
-			);
-			dispatch(setCommunicatorReadProvider(commContractInstance));
-			dispatch(setCoreReadProvider(coreContractInstance));
-		})();
-	}, [account, chainId]);
-
 	// toast customize
-  const LoaderToast = ({ msg, color }) => (
-    <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
+	const LoaderToast = ({ msg, color }) => (
+		<Toaster>
+			<Oval color={color} height={30} width={30} />
+			<ToasterMsg>{msg}</ToasterMsg>
+		</Toaster>
 	);
 
 	const NormalToast = ({ msg }) => (
 		<Toaster>
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
+			<ToasterMsg>{msg}</ToasterMsg>
+		</Toaster>
 	)
-
-	// notification toast
-	let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: "bottom-right",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-		});
-	
-
-	/**
-	 * When we instantiate the contract instances, fetch basic information about the user
-	 * Corresponding channel owned.
-	 */
-	React.useEffect(() => {
-		if (!epnsReadProvider || !epnsCommReadProvider) return;
-
-		// save push admin to global state
-		epnsReadProvider
-			.pushChannelAdmin()
-			.then((response) => {
-				dispatch(setPushAdmin(response));
-			})
-			.catch((err) => {
-				console.log({ err });
-			});
-
-		// EPNS Read Provider Set
-		if (epnsReadProvider != null && epnsCommReadProvider != null) {
-			// Instantiate Data Stores
-			UsersDataStore.instance.init(
-				account,
-				epnsReadProvider,
-				epnsCommReadProvider
-			);
-			ChannelsDataStore.instance.init(
-				account,
-				epnsReadProvider,
-				epnsCommReadProvider,
-				chainId
-			);
-		}
-	}, [epnsReadProvider, epnsCommReadProvider]);
 
 	const registerPubKey = async (encryptionPublicKey) => {
 		let txToast;
@@ -222,7 +140,7 @@ function InboxPage() {
 				type: toaster.TYPE.SUCCESS,
 				autoClose: 5000,
 			});
-			
+
 			setEnabledSecretNotif(true);
 		} catch (err) {
 			if (err.code === 4001) {
@@ -290,7 +208,7 @@ function InboxPage() {
 							progress: undefined,
 						}
 					);
-				} else if(error.code === -32601) {
+				} else if (error.code === -32601) {
 					console.error(error);
 					txToast = toaster.dark(
 						<NormalToast msg="Your wallet doesn't support providing public encryption key." />,

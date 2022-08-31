@@ -1,9 +1,9 @@
 import React from "react";
 
 import styled from 'styled-components';
-import {Section, ItemH} from 'primaries/SharedStyling';
+import { Section, ItemH } from 'primaries/SharedStyling';
 
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 import { envConfig } from "@project/contracts";
 
 import { useWeb3React } from '@web3-react/core'
@@ -14,7 +14,7 @@ import { ethers } from "ethers";
 import ViewNFTItem from "components/ViewNFTItem";
 
 // Create Header
-function AllNFTs({controlAt, setControlAt, setTokenId}) {
+function AllNFTs({ controlAt, setControlAt, setTokenId }) {
   const { account, chainId, library } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
@@ -27,8 +27,8 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
   const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
 
   const mainnetCoreProvider = onMainnetCore
-        ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
+    ? library
+    : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {
@@ -43,7 +43,7 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
   }, [account]);
 
   React.useEffect(() => {
-    if(nftReadProvider && NFTRewardsContract){
+    if (nftReadProvider && NFTRewardsContract) {
       fetchNFTDetails();
     }
   }, [account, nftReadProvider, nftWriteProvider, NFTRewardsContract]);
@@ -52,7 +52,7 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
   const fetchNFTDetails = async () => {
     let totalSupply = await NFTHelper.getTotalSupply(nftReadProvider);
     setLoading(false);
-    for(let i=0; i<totalSupply; i++){
+    for (let i = 0; i < totalSupply; i++) {
       let tokenId = await NFTHelper.getTokenByIndex(i, nftReadProvider)
       let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract)
       await setNFTObjects(prev => [...prev, NFTObject])
@@ -63,19 +63,17 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
     <Section align="center">
       {loading &&
         <ContainerInfo>
-          <Loader
-           type="Oval"
-           color="#674c9f"
-           height={40}
-           width={40}
+          <Oval
+            color="#674c9f"
+            height={40}
+            width={40}
           />
         </ContainerInfo>
       }
 
       {/* {!loading && NFTObjects.length == 0 &&
         <ContainerInfo>
-          <Loader
-           type="Oval"
+          <Oval
            color="#674c9f"
            height={40}
            width={40}
@@ -89,15 +87,15 @@ function AllNFTs({controlAt, setControlAt, setTokenId}) {
             if (NFTObjects) {
               return (
                 <>
-                <ViewNFTItem
-                  key={NFTObjects[index].id}
-                  NFTObject={NFTObjects[index]}
-                  nftReadProvider={nftReadProvider}
-                  nftWriteProvider={nftWriteProvider}
-                  controlAt={controlAt}
-                  setControlAt={setControlAt}
-                  setTokenId={setTokenId}
-                />
+                  <ViewNFTItem
+                    key={NFTObjects[index].id}
+                    NFTObject={NFTObjects[index]}
+                    nftReadProvider={nftReadProvider}
+                    nftWriteProvider={nftWriteProvider}
+                    controlAt={controlAt}
+                    setControlAt={setControlAt}
+                    setTokenId={setTokenId}
+                  />
                 </>
               );
             }
