@@ -96,7 +96,7 @@ const themeLight = {
 
   // Modals
   modalContentBackground: "white",
-  modalBackdropBackground: `rgba(255,255,255,0.6)`,
+  modalBackdropBackground: `rgba(255,255,255,0.4)`,
   modalBorderColor: "#E5E8F6",
   modalMessageColor: "black",
   modalIconColor: "#657795",
@@ -205,8 +205,8 @@ const themeDark = {
   createColor: "#fff",
 
   // Modals
-  modalContentBackground: "black",
-  modalBackdropBackground: `rgba(0,0,0,0.6)`,
+  modalContentBackground: "#282a2e",
+  modalBackdropBackground: `rgba(0,0,0,0.4)`,
   modalBorderColor: "#4A4F67",
   modalMessageColor: "#B6BCD6",
   modalIconColor: "#787E99",

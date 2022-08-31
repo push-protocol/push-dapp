@@ -29,8 +29,10 @@ const AddSubgraphModalContent = ({onClose, onConfirm: addSubgraph}:ModalInnerCom
 }
 
 const ModalContainer = styled.div`
+    width:30vw;
     display:flex;
     flex-direction: column;
+    box-sizing: border-box;
     margin: 6% 1%;
 `
 

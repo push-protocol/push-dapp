@@ -12,12 +12,19 @@ const ModalInput = React.forwardRef<HTMLInputElement,  ModalInputType>(({title},
     return(
         <ThemeProvider theme={themes}>
             <ModalInputContainer>
-                <InputTitle>{title}</InputTitle>
+                <InputTitle style={{
+                    color:themes.modalMessageColor,
+                }}>
+                    {title}
+                </InputTitle>
                 <CustomInput
                     ref={ref}
                     radius="12px"
                     padding="0.8rem"
                     border="1px solid #BAC4D6"
+                    style={{
+                        color:themes.modalMessageColor,
+                    }}
                 />
             </ModalInputContainer>
         </ThemeProvider>
@@ -31,7 +38,6 @@ const ModalInputContainer = styled.div`
 `
 
 const InputTitle =  styled.h4`
-    color: ${(props) => props.fontColor || "#000"};
     font-family: Strawford;
     font-size: 0.95rem;
     font-weight: 600;

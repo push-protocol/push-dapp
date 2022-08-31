@@ -10,8 +10,16 @@ const ModalHeader = ({heading, subHeading}:ModalHeaderType)=>{
     return(
         <ThemeProvider theme={themes}>
             <ModalHeaderContainer>
-                <ModalHeading>{heading}</ModalHeading>
-                <ModalSubHeading>{subHeading}</ModalSubHeading>
+                <ModalHeading style={{
+                    color:themes.fontColor,
+                }}>
+                    {heading}
+                </ModalHeading>
+                <ModalSubHeading style={{
+                    color:themes.modalMessageColor,
+                }}>
+                    {subHeading}
+                </ModalSubHeading>
             </ModalHeaderContainer>
         </ThemeProvider>
     )
@@ -25,7 +33,6 @@ const ModalHeaderContainer = styled.div`
 `
 
 const ModalHeading = styled.h1`
-    color: ${(props) => props.fontColor || "#000"};
     font-family: Strawford;
     font-size: 2rem;
     font-weight: 600;
@@ -34,11 +41,13 @@ const ModalHeading = styled.h1`
     margin:0;
     padding:0;
     margin-bottom: 1.5%;
+    text-shadow: none;
 `
 
 const ModalSubHeading = styled.h4`
+    text-shadow: none;
     width: 90%;
-    color: ${(props) => props.greyText || "#657795"};
+    color: ${(props) => props.modalMessageColor || "#657795"};
     font-family: Strawford;
     font-size: 0.95rem;
     font-weight: 400;

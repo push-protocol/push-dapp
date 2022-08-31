@@ -34,9 +34,10 @@ const useModal = () => {
                     onClose={handleClose}
                     open={open}
                     maxWidth="xs"
-                    style={{background:themes.modalBackdropBackground}}
+                    style={{background:themes.modalBackdropBackground, backdropFilter: "blur(3px)",}}
                     sx={{
                         '& .MuiPaper-root': {
+                            backdropFilter: "blur(10px)",
                             background:themes.modalContentBackground,
                             border: `1px solid ${themes.modalBorderColor}`,
                             borderRadius: "1rem",
