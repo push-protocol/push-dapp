@@ -84,30 +84,4 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
   return null;
 }
 
-export const switchToPolygonNetwork = async (chainId: number, provider: any) => {
-  const polygonChainId = aliasChainIdsMapping[chainId];
-
-  try {
-    await provider.request({
-      method: 'wallet_switchEthereumChain',
-      params: [{ chainId: utils.hexValue(polygonChainId) }],
-    });
-  } catch (switchError) {
-    // This error code indicates that the chain has not been added to MetaMask.
-    if (switchError.code === 4902) {
-      try {
-        await provider.request({
-          method: 'wallet_addEthereumChain',
-          params: [polygonChainId === 80001 ? PolygonNetworks.MUMBAI_TESTNET : PolygonNetworks.POLYGON_MAINNET],
-        });
-      } catch (addError) {
-        console.error("Unable to add Polygon Network in wallet");
-      }
-    }
-    // error toast - Your wallet doesn't support switch network. Kindly, switch the network to Polygon manually.
-    console.error("Unable to switch chains");
-  }
-}
-
-
 export default UtilityHelper;
