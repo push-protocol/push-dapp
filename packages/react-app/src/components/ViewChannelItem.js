@@ -20,13 +20,18 @@ import { postReq } from "api";
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 import NotificationToast from "../primaries/NotificationToast";
 
-import ChannelTutorial, { isChannelTutorialized } from "segments/ChannelTutorial";
+import ChannelTutorial, {
+  isChannelTutorialized,
+} from "segments/ChannelTutorial";
 
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
 
 import { envConfig } from "@project/contracts";
-import { incrementStepIndex, addNewWelcomeNotif } from "redux/slices/userJourneySlice";
+import {
+  incrementStepIndex,
+  addNewWelcomeNotif,
+} from "redux/slices/userJourneySlice";
 import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 import useToast from "hooks/useToast";
 
@@ -38,10 +43,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const themes = useTheme();
 
-  const {
-    run,
-    stepIndex
-  } = useSelector((state) => state.userJourney);
+  const { run, stepIndex } = useSelector((state) => state.userJourney);
 
   const {
     epnsReadProvider,
@@ -56,7 +58,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   );
   const { account, library, chainId } = useWeb3React();
 
-  const onCoreNetwork = (chainId === envConfig.coreContractChain);
+  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const [channelObject, setChannelObject] = React.useState({});
   const [channelJson, setChannelJson] = React.useState({});
@@ -104,7 +106,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     } else {
       // if this key (verifiedBy) is not present it means we are searching and should fetch the channel object from chain again
       epnsReadProvider.channels(channelObject.addr).then((response) => {
-        setChannelObject({ ...response, addr: channelObject.addr, alias_address: channelObject.alias_address, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
+        setChannelObject({
+          ...response,
+          addr: channelObject.addr,
+          alias_address: channelObject.alias_address,
+          memberCount: channelObject.memberCount,
+          isSubscriber: channelObject.isSubscriber,
+        });
         fetchChannelJson();
       });
     }
@@ -159,7 +167,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       setIsPushAdmin(pushAdminAddress === account);
       setMemberCount(channelObject.memberCount);
       setSubscribed(channelObject.isSubscriber);
-      setChannelJson({ ...channelJson, addr: channelObject.addr, memberCount: channelObject.memberCount, isSubscriber: channelObject.isSubscriber });
+      setChannelJson({
+        ...channelJson,
+        addr: channelObject.addr,
+        memberCount: channelObject.memberCount,
+        isSubscriber: channelObject.isSubscriber,
+      });
       setLoading(false);
     } catch (err) {
       setIsBlocked(true);
@@ -167,16 +180,16 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   };
 
   React.useEffect(() => {
-    if (!channelObject) return
+    if (!channelObject) return;
     setIsVerified(
       Boolean(
         (channelObject.verifiedBy &&
           channelObject.verifiedBy !== ZERO_ADDRESS) ||
-        channelObject.addr === pushAdminAddress
+          channelObject.addr === pushAdminAddress
       )
-    )
-    setCanUnverify(channelObject.verifiedBy == account)
-  }, [channelObject])
+    );
+    setCanUnverify(channelObject.verifiedBy == account);
+  }, [channelObject]);
 
   // toast customize
   const LoaderToast = ({ msg, color }) => (
@@ -188,7 +201,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   // to subscribe
   const subscribe = async () => {
-    console.log("click executed")
+    console.log("click executed");
     subscribeAction(false);
   };
   const formatAddress = (addressText) => {
@@ -349,21 +362,31 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         //   type: toaster.TYPE.SUCCESS,
         //   autoClose: 5000,
         // });
-        subscribeToast.updateToast("Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+        subscribeToast.updateToast(
+          "Success",
+          "Successfully opted into channel !",
+          "SUCCESS",
+          (size) => <MdCheckCircle size={size} color="green" />
+        );
 
-        dispatch(addNewWelcomeNotif({
-          cta: "",
-          title: channelJson.info,
-          message: `Welcome to ${channelJson.name} Channel. From now onwards, you'll be getting notifications from this channel`,
-          icon: channelJson.icon,
-          url: channelJson.url,
-          sid: "",
-          app: channelJson.name,
-          image: ""
-        }))
+        dispatch(
+          addNewWelcomeNotif({
+            cta: "",
+            title: channelJson.info,
+            message: `Welcome to ${channelJson.name} Channel. From now onwards, you'll be getting notifications from this channel`,
+            icon: channelJson.icon,
+            url: channelJson.url,
+            sid: "",
+            app: channelJson.name,
+            image: "",
+          })
+        );
         setTxInProgress(false);
         setSubscribed(true);
-        if (stepIndex === 5) { console.log("this is working"); dispatch(incrementStepIndex()); }
+        if (stepIndex === 5) {
+          console.log("this is working");
+          dispatch(incrementStepIndex());
+        }
         return;
       }
 
@@ -383,7 +406,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         //   type: toaster.TYPE.SUCCESS,
         //   autoClose: 5000,
         // });
-        subscribeToast.updateToast("Success", "Successfully opted into channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+        subscribeToast.updateToast(
+          "Success",
+          "Successfully opted into channel !",
+          "SUCCESS",
+          (size) => <MdCheckCircle size={size} color="green" />
+        );
 
         console.log(res);
         setTxInProgress(false);
@@ -394,7 +422,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   type: toaster.TYPE.ERROR,
       //   autoClose: 5000,
       // });
-      subscribeToast.updateToast("Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />)
+      subscribeToast.updateToast(
+        "Error",
+        `There was an error opting into channel ( ${err.message} )`,
+        "ERROR",
+        (size) => <MdError size={size} color="red" />
+      );
 
       console.log(err);
     } finally {
@@ -420,8 +453,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       document.execCommand("copy");
       document.body.removeChild(el);
     }
-
-
   };
 
   const unsubscribeToast = useToast();
@@ -481,7 +512,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           //   type: toaster.TYPE.SUCCESS,
           //   autoClose: 5000,
           // });
-          unsubscribeToast.updateToast("Success", "Successfully opted out of channel !", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />);
+          unsubscribeToast.updateToast(
+            "Success",
+            "Successfully opted out of channel !",
+            "SUCCESS",
+            (size) => <MdCheckCircle size={size} color="green" />
+          );
 
           console.log(res);
         })
@@ -492,7 +528,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           //   type: toaster.TYPE.ERROR,
           //   autoClose: 5000,
           // });
-          unsubscribeToast.updateToast("Error", `There was an error opting into channel ( ${err.message} )`, "ERROR", (size) => <MdError size={size} color="red" />)
+          unsubscribeToast.updateToast(
+            "Error",
+            `There was an error opting into channel ( ${err.message} )`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
 
           console.log(err);
         })
@@ -506,9 +547,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const CTA_OVERRIDE_CACHE = {
     "0xb1676B5Ab63F01F154bb9938F5e8999d9Da5444B": "https://boardroom.io/",
-    "0x7DA9A33d15413F499299687cC9d81DE84684E28E": "https://rmm.realtoken.network/dashboard",
-    "0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be": "https://shapeshift.com"
-  }
+    "0x7DA9A33d15413F499299687cC9d81DE84684E28E":
+      "https://rmm.realtoken.network/dashboard",
+    "0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be": "https://shapeshift.com",
+  };
   if (isBlocked) return <></>;
   if (isChannelBlacklisted) return <></>;
 
@@ -530,7 +572,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       <ChannelInfo>
         <ChannelTitle>
           {loading ? (
-            <Skeleton color={themes.interfaceSkeleton} width="50%" height={24} />
+            <Skeleton
+              color={themes.interfaceSkeleton}
+              width="50%"
+              height={24}
+            />
           ) : (
             <ChannelTitleLink
               href={CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url}
@@ -540,10 +586,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <Span>
                 {channelJson.name}
                 {isVerified && (
-                  <Span
-                    margin="0px 5px"
-                  >
-                    <GoVerified size={18} color={themes.viewChannelVerifiedBadge} />
+                  <Span margin="0px 5px">
+                    <GoVerified
+                      size={18}
+                      color={themes.viewChannelVerifiedBadge}
+                    />
                   </Span>
                 )}
               </Span>
@@ -555,15 +602,27 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           {loading ? (
             <>
               <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color={themes.interfaceSkeleton} width="100%" height={5} />
+                <Skeleton
+                  color={themes.interfaceSkeleton}
+                  width="100%"
+                  height={5}
+                />
               </SkeletonWrapper>
 
               <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color={themes.interfaceSkeleton} width="100%" height={5} />
+                <Skeleton
+                  color={themes.interfaceSkeleton}
+                  width="100%"
+                  height={5}
+                />
               </SkeletonWrapper>
 
               <SkeletonWrapper atH={5} atW={100}>
-                <Skeleton color={themes.interfaceSkeleton} width="40%" height={5} />
+                <Skeleton
+                  color={themes.interfaceSkeleton}
+                  width="40%"
+                  height={5}
+                />
               </SkeletonWrapper>
             </>
           ) : (
@@ -579,20 +638,26 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               </SkeletonWrapper>
             </>
           ) : (
-            <ItemH
-              align="center"
-              justify="flex-start"
-              margin="0px -5px"
-            >
+            <ItemH align="center" justify="flex-start" margin="0px -5px">
               <MetaInfoDisplayer
-                externalIcon={<IoMdPeople size={20} color={themes.viewChannelSecondaryIcon} />}
+                externalIcon={
+                  <IoMdPeople
+                    size={20}
+                    color={themes.viewChannelSecondaryIcon}
+                  />
+                }
                 internalIcon={null}
                 text={memberCount}
                 bgColor={themes.viewChannelSecondaryBG}
               />
 
               <MetaInfoDisplayer
-                externalIcon={<FaRegAddressCard size={20} color={themes.viewChannelSecondaryIcon} />}
+                externalIcon={
+                  <FaRegAddressCard
+                    size={20}
+                    color={themes.viewChannelSecondaryIcon}
+                  />
+                }
                 internalIcon={<AiOutlineShareAlt />}
                 text={formatAddress(copyText)}
                 bgColor={themes.viewChannelSecondaryBG}
@@ -608,14 +673,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }}
               />
 
-              {isChannelTutorialized(channelObject.addr) &&
+              {isChannelTutorialized(channelObject.addr) && (
                 <ChannelTutorial
                   addr={channelObject.addr}
                   bgColor={themes.viewChannelSecondaryBG}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
                 />
-              }
+              )}
 
               {verifierDetails && (
                 <Subscribers>
@@ -624,7 +689,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   <VerifierName>{verifierDetails.name}</VerifierName>
                 </Subscribers>
               )}
-
             </ItemH>
           )}
         </ChannelMeta>
@@ -668,8 +732,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 <ActionTitle hideit={vLoading}>Unverify Channel</ActionTitle>
               </UnsubscribeButton>
             )}
-            {!loading && (!subscribed) && (
-              <SubscribeButton onClick={subscribe} disabled={txInProgress} className="optin" >
+            {!loading && !subscribed && (
+              <SubscribeButton
+                onClick={subscribe}
+                disabled={txInProgress}
+                className="optin"
+              >
                 {txInProgress && (
                   <ActionLoader>
                     <Oval color="#FFF" height={16} width={16} />
@@ -688,11 +756,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   >
                     {txInProgress && (
                       <ActionLoader>
-                        <Oval
-                          color="#FFF"
-                          height={16}
-                          width={16}
-                        />
+                        <Oval color="#FFF" height={16} width={16} />
                       </ActionLoader>
                     )}
                     <ActionTitle hideit={txInProgress}>Opt-Out</ActionTitle>
@@ -723,9 +787,9 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
 
-  background: ${props => props.theme.mainBg};
+  background: ${(props) => props.theme.mainBg};
   border-radius: 10px;
-  border: 1px solid ${props => props.theme.viewChannelOuterBorder};
+  border: 1px solid ${(props) => props.theme.viewChannelOuterBorder};
 
   margin: 15px 0px;
   justify-content: center;
@@ -749,14 +813,13 @@ const ChannelLogo = styled.div`
   flex: 1;
   margin: 5px;
   padding: 10px;
-  border: 2px solid ${props => props.theme.viewChannelIconBorder};
+  border: 2px solid ${(props) => props.theme.viewChannelIconBorder};
   overflow: hidden;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-self: flex-start;
-
 `;
 
 const ChannelLogoOuter = styled.div`
@@ -816,16 +879,15 @@ const ChannelTitleLink = styled.a`
     pointer: hand;
   }
 
-  & > Span {
+  & > span {
     font-weight: 600;
-    color: ${props => props.theme.viewChannelLink};
+    color: ${(props) => props.theme.viewChannelLink};
     font-size: 20px;
   }
 
-  & > Span > Span {
+  & > span > span {
     vertical-align: middle;
   }
-
 `;
 
 const VerifiedBy = styled.span`
@@ -846,7 +908,7 @@ const VerifierIcon = styled.img`
 
 const VerifierName = styled.span`
   font-weight: 400;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   font-size: 16px;
   letter-spacing: 0em;
 `;
@@ -859,8 +921,7 @@ const ChannelDesc = styled.div`
   padding: 5px 0px 10px 0px;
   font-weight: 400;
   flex-direction: column;
-  color: ${props => props.theme.color};
-
+  color: ${(props) => props.theme.color};
 `;
 
 const ChannelDescLabel = styled.label`
@@ -877,7 +938,7 @@ const ChannelMeta = styled.div`
 
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
-  color: #fff; 
+  color: #fff;
   font-weight: 600;
   padding: 5px 10px;
   display: flex;
@@ -894,7 +955,7 @@ const Subscribers = styled.div`
 `;
 
 const SubscribersCount = styled(ChannelMetaBox)`
-  background: ${props => props.theme.viewChannelSecondaryBG};
+  background: ${(props) => props.theme.viewChannelSecondaryBG};
   transition: 300ms;
 `;
 

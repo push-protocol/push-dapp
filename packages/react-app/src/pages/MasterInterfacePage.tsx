@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Routes, Route } from "react-router-dom";
+import { Navigate, Routes, Route,useLocation } from "react-router-dom";
 
 import styled from "styled-components";
 import { Item, Anchor } from "../primaries/SharedStyling";
@@ -35,11 +35,12 @@ function MasterInterfacePage() {
   // Master Interface controls settings
   const [playTeaserVideo, setPlayTeaserVideo] = React.useState(false);
   const [loadTeaserVideo, setLoadTeaserVideo] = React.useState(null);
+  const location = useLocation()
 
   // Render
   return (
     <Container>
-      <Interface>
+      <Interface location={location.pathname}>
         <Routes>
           <Route path="channels" element={
             <ViewChannelsPage
@@ -122,7 +123,9 @@ const Container = styled.div`
 `;
 
 const Interface = styled(Item)`
-  flex: 1;
+  // flex: 1;
+  // width:50%;
+  width: ${props => props.location === '/send' ? '70%' : '100%'};
   display: flex;
   align-items: stretch;
 
@@ -130,12 +133,15 @@ const Interface = styled(Item)`
   border-radius: 20px;
   border: 1px solid ${props => props.theme.interfaceBorder};
 
-  margin: 15px 15px 15px 0px;
+  // margin: 15px 15px 15px 0px;
+  margin: ${props => props.location === '/send' ? '15px auto' : '15px 15px 15px 0px'};
   overflow: hidden;
 
 
   @media (max-width: 992px) {
-    margin: 15px 0px;
+    // margin: 15px 0px;
+    width:100%;
+    margin: ${props => props.location === '/send' ? '15px auto' : '15px 0px'};
   }
 `
 
