@@ -16,9 +16,7 @@ function Chat() {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <ItemH>
-          <W2wIndex />
-        </ItemH>
+        <W2wIndex />
       </Container>
     </ThemeProvider>
   )

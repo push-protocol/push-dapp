@@ -15,9 +15,7 @@ const ChatModule = () => {
 
   return (
     <Container>
-      <Item>
-        <W2wIndex />
-      </Item>
+      <W2wIndex />
     </Container>
   );
 }
@@ -27,7 +25,8 @@ export default ChatModule;
 // Define height: inherit to cover entire height
 const Container = styled(Section)`
 	align-items: center;
-	align-self: center;
+	align-self: stretch;
+  height: inherit;
 	background: ${(props) => props.theme.mainBg};
 	border-radius: ${GLOBALS.CONSTANTS.MODULE.BORDER_RADIUS}px;
 	box-shadow: ${GLOBALS.CONSTANTS.MODULE.BOX_SHADOW};
