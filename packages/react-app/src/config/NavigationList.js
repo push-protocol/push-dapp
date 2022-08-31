@@ -1,5 +1,5 @@
-import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+import { themeDark, themeLight } from "config/Themization";
 
 const NavigationList = {
     primary: {
@@ -509,6 +509,32 @@ const NavigationList = {
         isMenuLogic: false,
       },
     },
+  }
+
+  // Add Navigation Item only if dapp environment is dev
+  if (process.env.REACT_APP_DAPP_ENV == 'dev') {
+    NavigationList.primary.developer.drilldown.internal = {
+      src: "svg/tutorial.svg",
+      iconFactory: null,
+      name: "Internal Dev",
+      title: "Internal Dev Tools",
+      alt: "Internal Dev Tools",
+      href: '/internal',
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      headerTag: {
+        title: "Internal Dev",
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        }
+      }
+    }
   }
   
   export default NavigationList;

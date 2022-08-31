@@ -21,7 +21,12 @@ export default {
       CREATE_CHANNEL: 1,
       COMMUNICATE_TAB: 2,
       DEVELOPER_TAB: 3
-    }
+    },
+
+    MODULE: {
+      BOX_SHADOW: 'rgb(0 0 0 / 10%) 0px 15px 20px -5px',
+      BORDER_RADIUS: 32,
+    },
   },
 
   ADJUSTMENTS: {},
@@ -30,6 +35,9 @@ export default {
     PRIMARY: 'rgba(27.0, 150.0, 227.0, 1.0)',
 
     LINKS: 'rgba(20.0, 126.0, 251.0, 1.0)',
+
+    PRIMARY_PINK: '#CF1C84',
+    PLACEHOLDER_DARK_GRAY: '#D9D9D9',
 
     GRADIENT_PRIMARY: 'rgba(226.0, 8.0, 128.0, 1.0)',
     GRADIENT_SECONDARY: 'rgba(53.0, 197.0, 243.0, 1.0)',

@@ -1,8 +1,10 @@
-import { ToastPosition, InboxChat } from 'components/chat/w2wIndex'
+import { ToastPosition } from 'components/chat/w2wIndex'
+import { InboxChatI } from 'interfaces/chat/InboxChatI'
+
 // @ts-ignore
 import { envConfig } from '@project/contracts'
-import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
+import { toast } from 'react-toastify'
 
 let BASE_URL = envConfig.apiUrl
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -14,7 +16,7 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
 export interface Feeds {
   // This property contains all the info to be displayed on the sidebar for the other peer's information
   // Such as the decrypted message content and peer's profilePicture
-  msg: InboxChat
+  msg: InboxChatI
   did: string
   wallets: string
   profilePicture: string | null

@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 import Loader from 'react-loader-spinner';
-import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
-import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, AnchorLink as Anchor } from 'primaries/SharedStyling';
+import { AnchorLink as Anchor, Item, ItemH, Section } from 'primaries/SharedStyling';
+import styled, { css, useTheme } from "styled-components";
 
 import NavigationButton from 'components/NavigationButton';
 import navigationList from "config/NavigationList";
@@ -15,7 +15,7 @@ import { NavigationContext } from "contexts/NavigationContext";
 import GLOBALS from "config/Globals";
 
 import { useDispatch, useSelector } from "react-redux";
-import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
+import { incrementStepIndex, setCommunicateOpen, setDeveloperOpen, setTutorialContinous } from "../redux/slices/userJourneySlice";
 
 // Create Header
 function Navigation() {

@@ -1,33 +1,31 @@
 import React from "react";
-import { Navigate, Routes, Route } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import styled from "styled-components";
-import { Item, Anchor } from "../primaries/SharedStyling";
+import { Anchor, Item } from "../primaries/SharedStyling";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import { VscClose } from 'react-icons/vsc';
 
-import InboxPage from "pages/InboxPage";
-import ChatPage from 'pages/ChatPage'
-import NewChatPage from 'pages/ChatPageNew'
-import SpamPage from "pages/SpamPage";
-import ViewChannelsPage from "pages/ViewChannelsPage";
-import ChannelDashboardPage from "pages/ChannelDashboardPage";
-import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
-
-import GovernancePage from "pages/GovernancePage";
-
-import YieldFarmingPage from "pages/YieldFarmingPage";
-import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
+import ChannelDashboardPage from "pages/ChannelDashboardPage";
+import ChatPage from 'pages/ChatPage';
+import NewChatPage from 'pages/ChatPageNew';
 import ComingSoonPage from "pages/ComingSoonPage";
-import NotAvailablePage from "./NotAvailablePage";
-import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
-
+import GovernancePage from "pages/GovernancePage";
+import InboxPage from "pages/InboxPage";
+import InternalDevPage from "pages/InternalDevPage";
+import NFTPage from "pages/NFTPage";
+import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
+import SpamPage from "pages/SpamPage";
 import { SupportPage } from "pages/SupportPage";
+import TutorialPage from "pages/TutorialPage";
+import ViewChannelsPage from "pages/ViewChannelsPage";
+import YieldFarmingPage from "pages/YieldFarmingPage";
+import NotAvailablePage from "./NotAvailablePage";
 
 import GLOBALS from "config/Globals";
 
@@ -65,12 +63,13 @@ function MasterInterfacePage() {
           <Route path="live_walkthrough" element={<TutorialPage />} />
           <Route path="comingsoon" element={<ComingSoonPage />} />
           <Route path="notavailable" element={<NotAvailablePage />} />
+          <Route path="support" element={<SupportPage />} />
           <Route path="faq" element={<FAQPage />} />
+          <Route path="internal" element={<InternalDevPage />} />
           <Route
             path="/"
             element={<Navigate to="/channels" />}
           />
-          <Route path="support" element={<SupportPage />} />
         </Routes>
       </Interface>
 
@@ -116,12 +115,17 @@ function MasterInterfacePage() {
 
 // css style
 const Container = styled.div`
+  display: flex;
   flex: 1;
   flex-direction: column;
   min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
   padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
   align-items: stretch;
 
+  background-image: url('./svg/${props => props.theme.scheme === "dark" ? "dark" : "light"}bg.svg');
+  background-size: 100% 100%;
+
+  position: relative;
 `;
 
 const Interface = styled(Item)`
@@ -129,12 +133,12 @@ const Interface = styled(Item)`
   display: flex;
   align-items: stretch;
 
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  border: 1px solid ${props => props.theme.interfaceBorder};
+  // box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
+  // border-radius: 20px;
+  // border: 1px solid ${props => props.theme.interfaceBorder};
 
   margin: 15px 15px 15px 0px;
-  overflow: hidden;
+  overflow: visible;
 
   @media (max-width: 992px) {
     margin: 15px 0px;

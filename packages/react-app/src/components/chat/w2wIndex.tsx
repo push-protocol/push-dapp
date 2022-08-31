@@ -1,48 +1,35 @@
-import React, { useState, useEffect } from 'react'
-import Sidebar from './sidebar/sidebar'
-import ChatBox from './chatBox/chatBox'
-import Loader from 'react-loader-spinner'
+import React, { useContext, useEffect, useState } from 'react';
+import Loader from 'react-loader-spinner';
+import ChatBox from './chatBox/chatBox';
+import Sidebar from './sidebar/sidebar';
 
 // Helper
-import { createCeramic } from 'helpers/w2w/ceramic'
-import { generateKeyPair } from 'helpers/w2w/pgp'
-import * as DIDHelper from 'helpers/w2w/did'
-import * as w2wHelper from 'helpers/w2w'
-import * as PushNodeClient from 'api'
+import * as PushNodeClient from 'api';
+import { UserContext } from "contexts/UserContext";
+import * as w2wHelper from 'helpers/w2w';
+import { createCeramic } from 'helpers/w2w/ceramic';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
 
 // DID and ceramic
-import { ThreeIdConnect } from '@3id/connect'
-import { DID } from 'dids'
-import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver'
-import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
+import { ThreeIdConnect } from '@3id/connect';
+import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
+import { DID } from 'dids';
+import { getResolver as keyDIDGetResolver } from 'key-did-resolver';
 
 // Web3
-import { Web3Provider } from 'ethers/providers'
-import { useWeb3React } from '@web3-react/core'
-import { CeramicClient } from '@ceramicnetwork/http-client'
+import { CeramicClient } from '@ceramicnetwork/http-client';
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from 'ethers/providers';
 // @ts-ignore
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query';
 // @ts-ignore
-import { ReactQueryDevtools } from 'react-query/devtools'
-import { Feeds, User } from 'api'
+import { Feeds, User } from 'api';
+import { ReactQueryDevtools } from 'react-query/devtools';
 
-import './w2wIndex.css'
-import { toast, ToastOptions } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
-export interface InboxChat {
-  name: string
-  profilePicture: string
-  timestamp: number
-  fromDID: string
-  toDID: string
-  lastMessage: string
-  messageType: string
-  encType: string
-  signature: string
-  signatureType: string
-  encryptedSecret: string
-}
+import { ToastOptions } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './w2wIndex.css';
 
 export interface AppContext {
   currentChat: Feeds
@@ -70,12 +57,15 @@ export const ToastPosition: ToastOptions = {
 
 export const Context = React.createContext<AppContext | null>(null)
 
+
 function App() {
+
+  const { did, setDid } = useContext(UserContext);
+
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
   const [currentChat, setCurrentChat] = useState<Feeds>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
-  const [did, setDid] = useState<DID>()
   const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
   const [intents, setIntents] = useState<Feeds[]>([])

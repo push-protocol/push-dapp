@@ -1,9 +1,10 @@
-import { MessageIPFS } from 'helpers/w2w/ipfs'
-import { intitializeDb } from './w2wIndexeddb'
+import { Feeds, getFromIPFS, getInbox, User } from 'api'
 import { DID } from 'dids'
-import { Feeds, getInbox, getFromIPFS, User } from 'api'
-import { InboxChat } from './w2wIndex'
 import { decryptAndVerifySignature } from 'helpers/w2w'
+import { MessageIPFS } from 'helpers/w2w/ipfs'
+import { InboxChatI } from 'interfaces/chat/InboxChatI'
+
+import { intitializeDb } from './w2wIndexeddb'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {
@@ -11,7 +12,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
       const current = await getFromIPFS(inbox[i].threadhash)
       const msgIPFS: MessageIPFS = current as MessageIPFS
 
-      const msg: InboxChat = {
+      const msg: InboxChatI = {
         name: inbox[i].wallets.split(',')[0].toString(),
         profilePicture: inbox[i].profilePicture,
         lastMessage: msgIPFS.messageContent,
@@ -29,7 +30,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
       // }
       inbox[i] = { ...inbox[i], msg }
     } else {
-      const msg: InboxChat = {
+      const msg: InboxChatI = {
         name: inbox[i].wallets.split(',')[0].toString(),
         profilePicture: inbox[i].profilePicture,
         lastMessage: null,

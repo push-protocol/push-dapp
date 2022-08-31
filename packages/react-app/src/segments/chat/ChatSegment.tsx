@@ -1,15 +1,12 @@
-import React from 'react'
-import styled, { useTheme } from 'styled-components'
-
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider, useTheme } from 'styled-components'
 
 import W2wIndex from 'components/chat/w2wIndex'
-import { Item, ItemH } from 'components/SharedStyling'
+import { ItemH } from 'components/SharedStyling'
 
 // Create Header
 function Chat() {
   const themes = useTheme()
-  window.ethereum.on('accountsChanged', account => {
+  window.ethereum.on('accountsChanged', (account) => {
     window.location.reload()
   })
   window.ethereum.on('networksChanged', () => {
@@ -32,7 +29,7 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  background: ${props => props.theme.mainBg};
+  background: ${(props) => props.theme.mainBg};
 
   font-weight: 200;
   align-content: center;
