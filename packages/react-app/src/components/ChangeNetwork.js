@@ -1,10 +1,12 @@
-import { networkName, CORE_CHAIN_ID, aliasChainIdsMapping } from "helpers/UtilityHelper";
+import { networkName, CORE_CHAIN_ID, aliasChainIdsMapping, switchToPolygonNetwork } from "helpers/UtilityHelper";
 import React from "react";
 import styled, { useTheme } from "styled-components";
 import { Item, Span, Button } from "../primaries/SharedStyling";
+import { useWeb3React } from '@web3-react/core';
 
 const ChangeNetwork = () => {
   const themes = useTheme();
+  const { chainId, library } = useWeb3React();
 
   return (
     <Item
@@ -39,10 +41,7 @@ const ChangeNetwork = () => {
           flex="1"
           radius="15px"
           padding="20px 20px"
-          onClick={() => {
-            //   setStakeFeesChoosen(true);
-            //   setStepFlow(2);
-          }}
+          onClick={() => switchToPolygonNetwork(chainId, library.provider)}
         >
           <Span
             color="#fff"
