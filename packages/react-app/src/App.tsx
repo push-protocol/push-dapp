@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
+import { useLocation } from "react-router-dom";
 import { Web3Provider } from "ethers/providers";
 import { useWeb3React } from "@web3-react/core";
 import { AbstractConnector } from "@web3-react/abstract-connector";
@@ -8,9 +9,10 @@ import { useEagerConnect, useInactiveListener, useBrowserNotification } from "ho
 import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
 import Joyride, { CallBackProps } from "react-joyride";
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 import styled from "styled-components";
-import { Item, ItemH, Span, H2, B, A, C } from "./primaries/SharedStyling";
+import { Item, ItemH, Span, H2, B, A, C, P,Image } from "./primaries/SharedStyling";
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 
@@ -37,7 +39,7 @@ const web3Connectors = {
   Injected: {
     obj: injected,
     logo: "./svg/login/metamask.svg",
-    title: "MetaMask",
+    title: "Metamask",
   },
   WalletConnect: {
     obj: walletconnect,
@@ -64,8 +66,7 @@ export default function App() {
     stepIndex,
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
-
-  
+  const location = useLocation();
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
@@ -177,68 +178,107 @@ export default function App() {
           callback={handleJoyrideCallback}
           styles={{
             options: {
-              arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-              primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-              textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+              arrowColor: darkMode
+                ? themeDark.dynamicTutsBg
+                : themeLight.dynamicTutsBg,
+              backgroundColor: darkMode
+                ? themeDark.dynamicTutsBg
+                : themeLight.dynamicTutsBg,
+              overlayColor: darkMode
+                ? themeDark.dynamicTutsBgOverlay
+                : themeLight.dynamicTutsBgOverlay,
+              primaryColor: darkMode
+                ? themeDark.dynamicTutsPrimaryColor
+                : themeLight.dynamicTutsPrimaryColor,
+              textColor: darkMode
+                ? themeDark.dynamicTutsFontColor
+                : themeLight.dynamicTutsFontColor,
               zIndex: 1000,
             },
           }}
         />
-        <HeaderContainer>
-          <Header
-            isDarkMode={darkMode}
-            darkModeToggle={toggleDarkMode}
-          />
-        </HeaderContainer>
+        {active && (
+          <HeaderContainer>
+            <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
+          </HeaderContainer>
+        )}
 
-        <ParentContainer
-          headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-        >
-
-          {(active) && !error && (
+        <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
+          {active && !error && (
             <>
-              <LeftBarContainer
-                leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
-              >
+              <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                 <Navigation />
               </LeftBarContainer>
 
-              <ContentContainer
-                leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
-              >
+              <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                 {/* Shared among all pages, load universal things here */}
                 <MasterInterfacePage />
               </ContentContainer>
             </>
           )}
 
-          {(!active) && (
-            <Item
-              justify="flex-start"
-              padding="15px"
-            >
+          {!active && (
+            <Item justify="flex-start" padding="0 15px">
+            
+                <Item
+                  padding="15px 0"
+                  position="absolute"
+                  top="-5%"
+                  right="2%"
+                  width="fit-content"
+                  radius="100%"
+                  bg="rgba(0,0,0,0.5)"
+                >
+                  <DarkModeSwitch
+                    style={{ margin: "0 1rem" }}
+                    checked={darkMode}
+                    onChange={toggleDarkMode}
+                    size={24}
+                    sunColor="#fff"
+                  />
+                </Item>
+           
+              {/* {!activatingConnector && (
+                <ItemH
+                  bg={darkMode ? themeDark : themeLight}
+                  border="1px solid #ddd"
+                  padding="25px 15px"
+                  radius="12px"
+                  position="absolute"
+                  top="5%"
+                  right="2%"
+                >
+                  <Image width="15%" src="./epns-dapp-loader.gif" alt="loader"/>
+                  <Span weight="500" size="18px" margin="0 0 0 28px">
+                    Waiting for Confirmation
+                  </Span>
+                </ItemH>
+              )} */}
               <ProviderLogo
-                src="./epnshomelogo.png"
-                srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"}
+                src="./epns-logo.png"
+                srcSet={"./epns-logo@2x.png 2x, ./epns-logo@2x.png 3x"}
               />
 
               <Item
                 bg={darkMode ? themeDark : themeLight}
                 border="1px solid #ddd"
-                padding="15px"
-                radius="12px"
+                padding="33px 20px"
+                radius="32px"
+                tabletMaxWidth="350px"
+                margin="0 0 60px 0"
                 flex="initial"
               >
-                <H2 textTransform="uppercase" spacing="0.1em">
-                  <Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">
-                    Connect
-                  </Span>
-                  <Span weight="200" color={darkMode ? themeDark : themeLight}> Your Wallet</Span>
+                <H2
+                  textTransform="none"
+                  weight="500"
+                  size="32px"
+                  margin="0px"
+                  color={darkMode ? themeDark : themeLight}
+                >
+                  Connect a Wallet
                 </H2>
 
-                <ItemH maxWidth="700px" align="stretch">
+                <ItemH maxWidth="430px" align="stretch" >
                   {Object.keys(web3Connectors).map((name) => {
                     const currentConnector = web3Connectors[name].obj;
                     const connected = currentConnector === connector;
@@ -258,19 +298,24 @@ export default function App() {
                           setActivatingConnector(currentConnector);
                           activate(currentConnector);
                         }}
-                        border="#35c5f3"
                       >
                         <ProviderImage src={image} />
 
                         <Span
                           spacing="0.1em"
-                          textTransform="uppercase"
-                          size="12px"
-                          weight="600"
-                          padding="20px"
-                          background={darkMode ? themeDark.backgroundBG : themeLight.backgroundBG}
-                          color={darkMode ? themeDark.fontColor : themeLight.fontColor}
-
+                          textTransform="Capitalize"
+                          size="20px"
+                          weight="500"
+                          background={
+                            darkMode
+                              ? themeDark.backgroundBG
+                              : themeLight.backgroundBG
+                          }
+                          color={
+                            darkMode
+                              ? themeDark.fontColor
+                              : themeLight.fontColor
+                          }
                         >
                           {title}
                         </Span>
@@ -278,29 +323,59 @@ export default function App() {
                     );
                   })}
                 </ItemH>
+                <Item width="24rem" tabletMaxWidth="20rem">
+                  <P
+                    weight="400"
+                    margin="30px 0px 0px 0px"
+                    textAlign="center"
+                    size="14px"
+                    color={
+                      darkMode ? themeDark.fontColor : themeLight.fontColor
+                    }
+                  >
+                    By connecting your wallet, <B>You agree</B> to our{" "}
+                    <A href="https://epns.io/tos" target="_blank">
+                      Terms of Service
+                    </A>{" "}
+                    and our{" "}
+                    <A href="https://epns.io/privacy" target="_blank">
+                      Privacy Policy
+                    </A>
+                    .
+                  </P>
+                </Item>
               </Item>
 
-              <Span margin="30px 0px 0px 0px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor}>
-                By unlocking your wallet, <B>You agree</B> to our{" "}
-                <A href="https://epns.io/tos" target="_blank">
-                  Terms of Service
-                </A>{" "}
-                and our{" "}
-                <A href="https://epns.io/privacy" target="_blank">
-                  Privacy Policy
-                </A>
-                .
-              </Span>
-              <Item
-                flex="initial"
-                padding="30px 15px"
-                radius="12px"
-              >
+              <Item flex="initial" padding="25px 15px">
                 <StyledItem>
-                  <span> Note: </span> The EPNS protocol has been under development for 1+ year,  and completed a <C href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank"> ChainSafe audit </C> in October 2021. However, the mainnet is still a new product milestone.  Always DYOR, and anticipate bugs and UI improvements.  Learn how to report any bugs in our  <C href="https://discord.com/invite/YVPB99F9W5" target="_blank">Discord.</C>
+                  Note: The EPNS protocol has been under development for 1+
+                  year, and completed a{" "}
+                  <A
+                    color={
+                      darkMode ? themeDark.fontColor : themeLight.fontColor
+                    }
+                    href="https://epns.io/EPNS-Protocol-Audit2021.pdf"
+                    target="_blank"
+                  >
+                    {" "}
+                    ChainSafe audit{" "}
+                  </A>{" "}
+                  in October 2021. However, the mainnet is still a new product
+                  milestone. Always DYOR, and anticipate bugs and UI
+                  improvements. Learn how to report any bugs in our{" "}
+                  <A
+                    href="https://discord.com/invite/YVPB99F9W5"
+                    target="_blank"
+                  >
+                    Discord.
+                  </A>
                 </StyledItem>
               </Item>
-
+              <Item flex="initial" padding="25px 15px" margin="20px 0 0 0">
+                <StyledItem>
+                  © 2022 Ethereum Push Notification Service (EPNS)
+                </StyledItem>
+              </Item>
             </Item>
           )}
         </ParentContainer>
@@ -312,23 +387,21 @@ export default function App() {
 // CSS STYLES
 const StyledItem = styled(Item)`
   font-size: 14px;
+  font-weight:400;
   letter-spacing: 0.4px;
   display: block;
   background: ${props => props.theme.backgroundBG};
   color: ${props => props.theme.color};
-  border:1px solid #ddd;
-  padding:30px 15px;
-  border-radius:12px;
+  width: 60rem;
+  text-align:center;
   line-height: 18px;
   align-items: center;
-  width:44rem;
 
-  span{
-    color: #e20880;
-  }
+ 
 
   @media(max-width:400px){
     width: auto;
+    text-align:center;
   }
 `;
 
@@ -381,48 +454,40 @@ const ContentContainer = styled.div`
 `;
 
 const ProviderLogo = styled.img`
-  width: 15vw;
+  width: 13vw;
   align-self: center;
   display: flex;
-  margin: 10px 20px 20px 20px;
+  margin: -5px 20px 20px 20px;
   min-width: 200px;
 `;
 
 const ProviderButton = styled.button`
-  flex: 1 1 0;
-  min-width: 280px;
+  flex: none;
+  min-width: 179px;
   background: ${props => props.theme.mainBg};
-  outline: 0;ProviderButton
-
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  border: 1px solid rgb(225, 225, 225);
-
-  margin: 20px;
+  margin: 20px 15px;
   overflow: hidden;
-
+  padding: 20px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-
+  border-radius: 24px;
   display: flex;
-  flex-direction: row;
-  padding: 10px;
+  flex-direction: column;
 
   &:hover {
-    opacity: 0.9;
     cursor: pointer;
-    border: 1px solid ${(props) => props.border};
+    background: rgba(207, 206, 255, 0.24);
   }
   &:active {
-    opacity: 0.75;
     cursor: pointer;
-    border: 1px solid ${(props) => props.border};
+    background: rgba(207, 206, 255, 0.24);
   }
 `;
 
 const ProviderImage = styled.img`
-  width: 32px;
-  max-height: 32px;
-  padding: 10px;
+  width: 73px;
+  height: 69px;
+  max-height: 69px;
+  padding-bottom: 18px;
 `;

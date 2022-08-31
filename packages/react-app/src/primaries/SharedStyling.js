@@ -100,6 +100,7 @@ export const Item = styled.div`
   }
 
   @media (max-width: 768px) {
+    max-width: ${(props) => props.tabletMaxWidth || "auto"};
     align-items: ${(props) =>
       (props.tabletAlign
         ? props.tabletAlign
@@ -211,7 +212,7 @@ export const H3 = styled.h3`
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: ${(props) => props.width || "100%"};
   height: auto;
   display: flex;
 `;
