@@ -14,6 +14,7 @@ import { intitializeDb } from '../w2wIndexeddb'
 import { encryptAndSign, decryptAndVerifySignature, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
 import { CID } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
+// @ts-ignore
 import Loader from 'react-loader-spinner'
 import GifIcon from '../W2WIcons/GifIcon'
 import { Web3Provider } from 'ethers/providers'
@@ -322,14 +323,14 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const handleKeyPress = (e): void => {
+  const handleKeyPress = (e: any): void => {
     const x = e.keyCode
     if (x === 13) {
       handleSubmit(e)
     }
   }
 
-  const textOnChange = (e): void => {
+  const textOnChange = (e: any): void => {
     setNewMessage(e.target.value)
   }
 
@@ -374,7 +375,7 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
-  const addEmoji = (e, emojiObject: { emoji: any }): void => {
+  const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
     setNewMessage(newMessage + emojiObject.emoji)
     setShowEmojis(false)
   }
