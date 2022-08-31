@@ -7,16 +7,15 @@ import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButt
 
 import { ModalInnerComponentType } from "hooks/useModal";
 
-const AddSubgraphModalContent = ({onClose}:ModalInnerComponentType)=>{
+const AddSubgraphModalContent = ({onClose, onConfirm: addSubgraph}:ModalInnerComponentType)=>{
     const subgraphIdInputRef = React.useRef<HTMLInputElement>();
     const pollTimeInputRef = React.useRef<HTMLInputElement>();
 
     const addSubgraphHandler = ()=>{
-        onClose();
-
-        const subgraphId = subgraphIdInputRef?.current?.value;
         const pollTime = pollTimeInputRef?.current?.value;
-        // add subgraph logic comes here
+        const subgraphId = subgraphIdInputRef?.current?.value;
+        addSubgraph(pollTime, subgraphId);
+        onClose();
     }
 
     return(

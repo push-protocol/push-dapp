@@ -35,7 +35,7 @@ import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import {Oval} from "react-loader-spinner";
-import { MdError } from "react-icons/md";
+import { MdCheckCircle, MdError } from "react-icons/md";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
@@ -205,10 +205,10 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
       });
   };
   
+  const deactivateChannelToast = useToast();
   /**
    * Function to deactivate a channel that has been deactivated
    */
-  const deactivateChannelToast = useToast();
   const deactivateChannel = async () => {
     setLoading(true);
     if (!poolContrib) return;
@@ -255,33 +255,95 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
         // post op
         setLoading(false);
       });
-    };
-    
-    const addDelegate = async (walletAddress: string) => {
-    setAddDelegateLoading(true);
-    return epnsCommWriteProvider.addDelegate(walletAddress).finally(() => {
-      setAddDelegateLoading(false);
-    });
   };
 
+  const addDelegateToast = useToast();  
+  const addDelegate = async (walletAddress: string) => {
+    setAddDelegateLoading(true);
+    epnsCommWriteProvider.addDelegate(walletAddress).then(async (tx) => {
+        console.log(tx);
+    
+        addDelegateToast.showToast("");
+        addDelegateToast.updateToast("Delegate Added", "Delegate has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+    })
+    .catch((err) => {
+        console.log({err})
+        
+        addDelegateToast.showToast("");
+        addDelegateToast.updateToast("Transaction Failed", "Adding a delegate failed.", "ERROR", (size) => <MdError size={size} color="red" />)
+    }).finally(() => {
+        setAddDelegateLoading(false);
+      });
+  };
+
+  const removeDelegateToast = useToast();
   const removeDelegate = (walletAddress: string) => {
     setRemoveDelegateLoading(true);
-    return epnsCommWriteProvider.removeDelegate(walletAddress).finally(() => {
+    epnsCommWriteProvider.removeDelegate(walletAddress).finally(() => {
       setRemoveDelegateLoading(false);
+    })
+    .then(async (tx) => {
+      console.log(tx);
+
+      removeDelegateToast.showToast("");
+      removeDelegateToast.updateToast("Delegate Removed", "Delegate has been removed successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+    })
+    .catch((err) => {
+      console.log({err})
+
+      removeDelegateToast.showToast("");
+      removeDelegateToast.updateToast("Transaction Failed", "Removing a delegate failed.", "ERROR", (size) => <MdError size={size} color="red" />)
     });
   };
 
-  const addSubgraphDetails = (input: any) => {
-    setAddSubgraphDetailsLoading(true);
-    return epnsWriteProvider.addSubGraph(input).finally(() => {
-      setAddSubgraphDetailsLoading(false);
-    });
-  };
+  const addSubgraphToast = useToast();
+  const addSubgraphDetails = async (pollTime, subGraphId) => {
+    // design not present to show below cases
+    if (pollTime == '' || subGraphId == '') {
+        // setLoading('Fields are empty! Retry');
+        // setTimeout(() => {
+        //     setLoading('')
+        // }, 2000);
+        return;
+    } else if (pollTime < 60) {
+        // setLoading('Poll Time must be at least 60 sec');
+        // setTimeout(() => {
+        //     setLoading('')
+        // }, 2000);
+        return;
+    }
 
-  // if (!onCoreNetwork) {
-  //   //temporarily deactivate the deactivate button if not on core network
-  //   return <></>;
-  //
+    try {
+        const input = pollTime + "+" + subGraphId;
+
+        // Prepare Identity bytes
+        const identityBytes = ethers.utils.toUtf8Bytes(input);
+
+        setAddSubgraphDetailsLoading(true);
+        epnsWriteProvider.addSubGraph(identityBytes)
+        .then(async (tx) => {
+          console.log(tx);
+
+          addSubgraphToast.showToast("");
+          addSubgraphToast.updateToast("Subgraph Added", "Subgraph has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+        }).catch((err) => {
+          console.log(err);
+
+          addSubgraphToast.showToast("");
+          addSubgraphToast.updateToast("Transaction Failed", "Adding a subgraph failed.", "ERROR", (size) => <MdError size={size} color="red" />)
+        })
+        .finally(() => {
+          setAddSubgraphDetailsLoading(false);
+        });
+      } catch (err) {
+        console.log(err)
+      }
+  };
+    
+    // if (!onCoreNetwork) {
+    //   //temporarily deactivate the deactivate button if not on core network
+    //   return <></>;
+    //
 
   return (
     <>
@@ -405,7 +467,7 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
       <AddSubgraphModalComponent
           InnerComponent={AddSubgraphModalContent}
           onConfirm={addSubgraphDetails}
-          />
+      />
     </>
   );
 }

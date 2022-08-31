@@ -7,12 +7,13 @@ import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButt
 
 import { ModalInnerComponentType } from "hooks/useModal";
 
-const RemoveDelegateModalContent = ({onConfirm}:ModalInnerComponentType)=>{
+const RemoveDelegateModalContent = ({onConfirm: removeDelegate, onClose}:ModalInnerComponentType)=>{
     const delegateAddressInputRef = React.useRef<HTMLInputElement>();
 
     const removeDelegateHandler = ()=>{
         const delegateAddress = delegateAddressInputRef?.current?.value;
-        onConfirm(delegateAddress)
+        removeDelegate(delegateAddress);
+        onClose();
     }
 
     return(
