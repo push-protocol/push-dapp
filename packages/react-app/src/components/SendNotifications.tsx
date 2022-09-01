@@ -1471,6 +1471,7 @@ const DropdownStyled = styled(Dropdown)`
 }
 .Dropdown-menu {
   border-color: #BAC4D6;
+  border-radius: 12px;
     .is-selected {
     background-color: #D00775;
     color:#fff;
@@ -1481,6 +1482,7 @@ const DropdownStyled = styled(Dropdown)`
     background-color: #fff;
     color: #000;
     font-size: 14px;
+    padding: 20px 20px;
 
 }
 .Dropdown-option:hover {
