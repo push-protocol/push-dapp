@@ -759,15 +759,24 @@ const handleSendMessage = async (e) => {
               console.log(res);
           });
       } catch (err) {
-          setNFInfo("Offchain Notification Failed, please try again");
+          if (err.code === 4001) {
+            // EIP-1193 userRejectedRequest error
+            toast.update(notificationToast, {
+                render: "User denied message signature.",
+                type: toast.TYPE.ERROR,
+                autoClose: 5000,
+            });
+          } else {
+            setNFInfo("Offchain Notification Failed, please try again");
 
-          toast.update(notificationToast, {
-              render: "Offchain Notification Failed: " + err,
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
+            toast.update(notificationToast, {
+                render: "Offchain Notification Failed: " + err,
+                type: toast.TYPE.ERROR,
+                autoClose: 5000,
+            });  
+          }
           setNFProcessing(0);
-          console.log(err);
+          console.log(err); 
       }
   }
 };
@@ -1471,6 +1480,7 @@ const DropdownStyled = styled(Dropdown)`
 }
 .Dropdown-menu {
   border-color: #BAC4D6;
+  border-radius: 12px;
     .is-selected {
     background-color: #D00775;
     color:#fff;
@@ -1480,7 +1490,8 @@ const DropdownStyled = styled(Dropdown)`
 .Dropdown-option {
     background-color: #fff;
     color: #000;
-    font-size: 14px;
+    font-size: 16px;
+    padding: 20px 20px;
 
 }
 .Dropdown-option:hover {
