@@ -26,12 +26,14 @@ export type ModalType = {
 const useModal = () => {
     const [open, setOpen] = React.useState(false);
     
-    // prevent background scroll when modal is open
+    // hacky fix to prevent background scroll when modal is open
     React.useEffect(() => {
         if (open) {
           document.body.style.overflow = 'hidden';
+          document.body.style.paddingRight = '1rem';
         } else {
           document.body.style.overflow = 'unset';
+          document.body.style.paddingRight = '0px';
         }
       }, [open]);
 
@@ -68,7 +70,7 @@ const useModal = () => {
     
     }
 
-    return { isModalOpen: open, showModal: handleOpen, hideModal: handleClose, ModalComponent }
+    return { isModalOpen: open, showModal: handleOpen, ModalComponent }
 }
 
 const ModalBody = styled.div`

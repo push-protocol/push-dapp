@@ -35,7 +35,6 @@ import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import {Oval} from "react-loader-spinner";
-import { MdCheckCircle, MdError } from "react-icons/md";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
@@ -69,7 +68,6 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
   const {
     isModalOpen: isDeactivateChannelModalOpen, 
     showModal: showDeactivateChannelModal, 
-    hideModal: hideDeactivateChannelModal,
     ModalComponent:DeactivateChannelModalComponent} = useModal();
   const {
     isModalOpen: isAddDelegateModalOpen, 
@@ -102,11 +100,6 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
     MIN_STAKE_FEES
   );
   const [poolContrib, setPoolContrib] = React.useState(0);
-  const [addDelegateLoading, setAddDelegateLoading] = React.useState(false);
-  const [addSubgraphDetailsLoading, setAddSubgraphDetailsLoading] = React.useState(false);
-  const [removeDelegateLoading, setRemoveDelegateLoading] = React.useState(
-    false
-  );
 
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
@@ -230,41 +223,12 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
 
   const addDelegateToast = useToast();  
   const addDelegate = async (walletAddress: string) => {
-    setAddDelegateLoading(true);
-    epnsCommWriteProvider.addDelegate(walletAddress).then(async (tx) => {
-        console.log(tx);
-    
-        addDelegateToast.showToast("");
-        addDelegateToast.updateToast("Delegate Added", "Delegate has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
-    })
-    .catch((err) => {
-        console.log({err})
-        
-        addDelegateToast.showToast("");
-        addDelegateToast.updateToast("Transaction Failed", "Adding a delegate failed.", "ERROR", (size) => <MdError size={size} color="red" />)
-    }).finally(() => {
-        setAddDelegateLoading(false);
-      });
+    return epnsCommWriteProvider.addDelegate(walletAddress)
   };
 
   const removeDelegateToast = useToast();
   const removeDelegate = (walletAddress: string) => {
-    setRemoveDelegateLoading(true);
-    epnsCommWriteProvider.removeDelegate(walletAddress).finally(() => {
-      setRemoveDelegateLoading(false);
-    })
-    .then(async (tx) => {
-      console.log(tx);
-
-      removeDelegateToast.showToast("");
-      removeDelegateToast.updateToast("Delegate Removed", "Delegate has been removed successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
-    })
-    .catch((err) => {
-      console.log({err})
-
-      removeDelegateToast.showToast("");
-      removeDelegateToast.updateToast("Transaction Failed", "Removing a delegate failed.", "ERROR", (size) => <MdError size={size} color="red" />)
-    });
+    return epnsCommWriteProvider.removeDelegate(walletAddress);
   };
 
   const addSubgraphToast = useToast();
@@ -290,31 +254,15 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
         // Prepare Identity bytes
         const identityBytes = ethers.utils.toUtf8Bytes(input);
 
-        setAddSubgraphDetailsLoading(true);
-        epnsWriteProvider.addSubGraph(identityBytes)
-        .then(async (tx) => {
-          console.log(tx);
-
-          addSubgraphToast.showToast("");
-          addSubgraphToast.updateToast("Subgraph Added", "Subgraph has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
-        }).catch((err) => {
-          console.log(err);
-
-          addSubgraphToast.showToast("");
-          addSubgraphToast.updateToast("Transaction Failed", "Adding a subgraph failed.", "ERROR", (size) => <MdError size={size} color="red" />)
-        })
-        .finally(() => {
-          setAddSubgraphDetailsLoading(false);
-        });
+        return epnsWriteProvider.addSubGraph(identityBytes)
       } catch (err) {
         console.log(err)
       }
   };
     
-    // if (!onCoreNetwork) {
-    //   //temporarily deactivate the deactivate button if not on core network
-    //   return <></>;
-    //
+  // if (!onCoreNetwork) {
+  //   //temporarily deactivate the deactivate button if not on core network
+  //   return <></>;
 
   return (
     <>
@@ -326,16 +274,10 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
               disabled={channelInactive}
               onClick={() => !channelInactive && showAddSubgraphModal()}
             >
-              <div>
-                {addSubgraphDetailsLoading ? (
-                  <Oval color="#FFF" height={16} width={16} />
-                ) : (
-                  <div style={{display:'flex',justifyContent:'start'}}>
-                  <AiOutlineDropbox fontSize={20}/>
-                  <div style={{width:'10px'}}/>                  
-                  Add SubGraph Details
-                  </div>
-                )}
+              <div style={{display:'flex',justifyContent:'start'}}>
+                <AiOutlineDropbox fontSize={20}/>
+                <div style={{width:'10px'}}/>                  
+                Add SubGraph Details
               </div>
             </ChannelActionButton>
           }
@@ -344,16 +286,10 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
             disabled={channelInactive}
             onClick={() => !channelInactive && showAddDelegateModal()}
           >
-            <div>
-              {addDelegateLoading ? (
-                <Oval color="#FFF" height={16} width={16} />
-              ) : (
-                <div style={{display:'flex',justifyContent:'start'}}>
-                  <AiOutlineUserAdd fontSize={20}/>
-                  <div style={{width:'10px'}}/>                  
-                  Add Delegate
-                </div>
-              )}
+            <div style={{display:'flex',justifyContent:'start'}}>
+              <AiOutlineUserAdd fontSize={20}/>
+              <div style={{width:'10px'}}/>                  
+              Add Delegate
             </div>
           </ChannelActionButton>
 
@@ -361,16 +297,11 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
             disabled={channelInactive}
             onClick={() => !channelInactive && showRemoveDelegateModal()}
           >
-            <div>
-              {removeDelegateLoading ? (
-                <Oval color="#FFF" height={16} width={16} />
-              ) : (
-                <div style={{display:'flex',justifyContent:'start'}}>
-                  <AiOutlineUserDelete fontSize={20}/>
-                  <div style={{width:'10px'}}/>                  
-                  Remove Delegate
-                </div>
-              )}
+            
+            <div style={{display:'flex',justifyContent:'start'}}>
+              <AiOutlineUserDelete fontSize={20}/>
+              <div style={{width:'10px'}}/>                  
+              Remove Delegate
             </div>
           </ChannelActionButton>
 
@@ -395,7 +326,6 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
           </div>
         </ChannelActionButton>
 
-          
         </ActiveChannelWrapper>
       </DropdownWrapper>
 
@@ -423,22 +353,25 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
       />      
       
       {/* modal to add a delegate */}
-      {/* <AddDelegateModalComponent
+      <AddDelegateModalComponent
           InnerComponent={AddDelegateModalContent}
           onConfirm={addDelegate}
-      />       */}
+          toastObject={addDelegateToast}
+      />      
 
       {/* modal to remove a delegate */}
-      {/* <RemoveDelegateModalComponent
+      <RemoveDelegateModalComponent
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
-      /> */}
+          toastObject={removeDelegateToast}
+      />
 
       {/* modal to add a subgraph */}
-      {/* <AddSubgraphModalComponent
+      <AddSubgraphModalComponent
           InnerComponent={AddSubgraphModalContent}
           onConfirm={addSubgraphDetails}
-      /> */}
+          toastObject={addSubgraphToast}
+      />
     </>
   );
 }
