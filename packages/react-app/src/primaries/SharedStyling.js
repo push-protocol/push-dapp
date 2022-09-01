@@ -74,7 +74,7 @@ export const Item = styled.div`
   font-size: ${(props) => props.size || "inherit"};
   text-align: ${(props) => props.textAlign || "inherit"};
   filter: ${(props) => props.filter || "none"};
-
+  box-shadow: ${(props) => props.shadow || "none"};
   top: ${(props) => props.top || "auto"};
   bottom: ${(props) => props.bottom || "auto"};
   left: ${(props) => props.left || "auto"};

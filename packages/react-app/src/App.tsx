@@ -274,7 +274,7 @@ export default function App() {
 
               <Item
                 bg={darkMode ? themeDark : "#fff"}
-                // border="1px solid #ddd"
+                shadow= "0px 0px 9px rgba(18, 8, 46, 0.04)"
                 padding="33px 20px"
                 radius="32px"
                 tabletMaxWidth="350px"
