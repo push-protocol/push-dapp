@@ -1,6 +1,6 @@
 import React from "react";
 import styled from 'styled-components';
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 import { envConfig } from "@project/contracts";
 
 import { useWeb3React } from '@web3-react/core'
@@ -12,7 +12,7 @@ import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTItem from "components/ViewNFTItem";
 
 // Create Header
-function MyNFTs({controlAt, setControlAt, setTokenId}) {
+function MyNFTs({ controlAt, setControlAt, setTokenId }) {
   const { account, library, chainId } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
@@ -41,7 +41,7 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
   }, [account]);
 
   React.useEffect(() => {
-    if(nftReadProvider && NFTRewardsContract){
+    if (nftReadProvider && NFTRewardsContract) {
       fetchNFTDetails();
     }
   }, [account, nftReadProvider, nftWriteProvider, NFTRewardsContract]);
@@ -50,7 +50,7 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
   const fetchNFTDetails = async () => {
     let balance = await NFTHelper.getNFTBalance(account, nftReadProvider);
     setLoading(false);
-    for(let i=0; i<balance; i++){
+    for (let i = 0; i < balance; i++) {
       let tokenId = await NFTHelper.getTokenOfOwnerByIndex(account, i, nftReadProvider)
       let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsContract)
       await setNFTObjects(prev => [...prev, NFTObject])
@@ -61,11 +61,10 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
     <>
       {loading &&
         <ContainerInfo>
-          <Loader
-           type="Oval"
-           color="#35c5f3"
-           height={40}
-           width={40}
+          <Oval
+            color="#35c5f3"
+            height={40}
+            width={40}
           />
         </ContainerInfo>
       }

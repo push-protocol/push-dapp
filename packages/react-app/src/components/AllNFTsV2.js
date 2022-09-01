@@ -6,7 +6,7 @@ import {
   ItemH,
 } from "../primaries/SharedStyling";
 
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 import { useWeb3React } from "@web3-react/core";
 import { addresses, abis } from "@project/contracts";
@@ -29,8 +29,8 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
   const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
 
   const mainnetCoreProvider = onMainnetCore
-  ? library
-  : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
+    ? library
+    : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {
@@ -74,7 +74,7 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
         nftReadProvider,
         NFTRewardsV2Contract
       );
-    let tokenUrl = NFTObject.metadata.replace('ipfs://','https://ipfs.io/ipfs/')
+      let tokenUrl = NFTObject.metadata.replace('ipfs://', 'https://ipfs.io/ipfs/')
       let response = await fetch(`${tokenUrl}`);
       let data = await response.json()
       NFTObject['nftInfo'] = data
@@ -87,14 +87,13 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
     <Section align="center">
       {loading && (
         <ContainerInfo>
-          <Loader type="Oval" color="#674c9f" height={40} width={40} />
+          <Oval color="#674c9f" height={40} width={40} />
         </ContainerInfo>
       )}
 
       {/* {!loading && NFTObjects.length == 0 &&
         <ContainerInfo>
-          <Loader
-           type="Oval"
+          <Oval
            color="#674c9f"
            height={40}
            width={40}
