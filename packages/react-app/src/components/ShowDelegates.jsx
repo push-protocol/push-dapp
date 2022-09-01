@@ -222,22 +222,13 @@ const RemoveButtonUI = styled(ChannelActionButton)`
 `;
 
 const OwnerButton = styled(Button)`
+  all: unset;
   background: transparent;
-  // height: 50px;
-  // width: 164px;
   font-weight: 500;
   font-size: 16px;
-  // justify-content: end;
-  // text-align: right;
-  cursor: pointer;
   color: #CF1C84;
-  // padding: 6px 10px 6px 9px;
-  &:hover {
-    background: transparent;
-  }
-  
+  cursor: auto;
 `;
-
 
 const DelegatesInfoHeader = styled.div`
 font-weight: 600;
