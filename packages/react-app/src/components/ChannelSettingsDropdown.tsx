@@ -69,6 +69,7 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
   const {
     isModalOpen: isDeactivateChannelModalOpen, 
     showModal: showDeactivateChannelModal, 
+    hideModal: hideDeactivateChannelModal,
     ModalComponent:DeactivateChannelModalComponent} = useModal();
   const {
     isModalOpen: isAddDelegateModalOpen, 
@@ -90,6 +91,7 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
                                 !isRemoveDelegateModalOpen && 
                                 !isAddSubgraphModalOpen;
   useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
+
   
   const [loading, setLoading] = React.useState(false);
   const [
@@ -210,7 +212,6 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
    * Function to deactivate a channel that has been deactivated
    */
   const deactivateChannel = async () => {
-    setLoading(true);
     if (!poolContrib) return;
 
     const amountToBeConverted = parseInt("" + poolContrib) - 10;
@@ -222,39 +223,9 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
 
     const pushValue = response.response.data.quote.PUSH.price;
 
-
-    await epnsWriteProvider
+    return epnsWriteProvider
       // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
       .deactivateChannel(Math.floor(pushValue)) 
-      .then(async (tx: any) => {
-        console.log(tx);
-        console.log("Transaction Sent!");
-
-        deactivateChannelToast.showToast("")
-        deactivateChannelToast.updateToast("Channel Deactivated","Please Activate Channel to Send Notifications from it", "ERROR", (size) => <MdError size={size} color="red" />)
-        
-        await tx.wait(1);
-        console.log("Transaction Mined!");
-        dispatch(
-          setUserChannelDetails({
-            ...channelDetails,
-            channelState: CHANNNEL_DEACTIVATED_STATE,
-          })
-        );
-      })
-      .catch((err: any) => {
-        console.log("!!!Error deactivateChannel() --> %o", err);
-        console.log({
-          err,
-        });
-        
-        deactivateChannelToast.showToast("")
-        deactivateChannelToast.updateToast("Transaction Failed", "Channel deactivation failed.", "ERROR", (size) => <MdError size={size} color="red" />)
-      })
-      .finally(() => {
-        // post op
-        setLoading(false);
-      });
   };
 
   const addDelegateToast = useToast();  
@@ -413,8 +384,6 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
             <div style={{width:'10px',color:'red'}}/>                  
             {!onCoreNetwork ? (
               ""
-              ) : loading ? (
-                "Loading ..."
                 ) : isChannelBlocked ? (
                   "Channel Blocked"
                   ) : isChannelDeactivated ? (
@@ -429,6 +398,7 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
           
         </ActiveChannelWrapper>
       </DropdownWrapper>
+
       {/* modal to display the activate channel popup */}
       {showActivateChannelPopup && (
         <ActivateChannelModal
@@ -449,25 +419,26 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
       <DeactivateChannelModalComponent
           InnerComponent={ChannelDeactivateModalContent}
           onConfirm={deactivateChannel}
-          />      
+          toastObject={deactivateChannelToast}
+      />      
       
       {/* modal to add a delegate */}
-      <AddDelegateModalComponent
+      {/* <AddDelegateModalComponent
           InnerComponent={AddDelegateModalContent}
           onConfirm={addDelegate}
-          />      
+      />       */}
 
       {/* modal to remove a delegate */}
-      <RemoveDelegateModalComponent
+      {/* <RemoveDelegateModalComponent
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
-      />
+      /> */}
 
       {/* modal to add a subgraph */}
-      <AddSubgraphModalComponent
+      {/* <AddSubgraphModalComponent
           InnerComponent={AddSubgraphModalContent}
           onConfirm={addSubgraphDetails}
-      />
+      /> */}
     </>
   );
 }

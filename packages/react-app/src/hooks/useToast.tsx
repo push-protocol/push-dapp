@@ -51,8 +51,7 @@ const useToast = () => {
         style: {
           background: themes.mainBg,
           border: `1px solid ${themes.toastBorderColor}`,
-          // boxShadow: "0px 0px 10px 0px #00000005",
-          boxShadow: "10px 10px 10px #ccc",
+          boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
           borderRadius: "20px",
         }
       }
@@ -93,8 +92,7 @@ const useToast = () => {
       autoClose: 3000,
       style: {
         background: toastType === "SUCCESS" ? successBgGradient : errorBgGradient,
-        // boxShadow: "0px 0px 10px 0px #00000005",
-        boxShadow: "10px 10px 10px #ccc",
+        boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
         borderRadius: "20px",
       },
     });
@@ -104,6 +102,10 @@ const useToast = () => {
     showToast, updateToast
   }
 }
+
+export type ShowToastType = (loaderMessage: string) => React.ReactText;
+
+export type UpdateToastType = (toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon?: (size: number) => JSX.Element) => void
 
 const LoaderNotification = styled.div`
   display: flex;
