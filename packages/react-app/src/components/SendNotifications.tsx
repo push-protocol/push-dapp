@@ -130,7 +130,7 @@ const [channelAddress, setChannelAddress] = React.useState("");
 const [nfRecipient, setNFRecipient] = React.useState("");
 const [multipleRecipients, setMultipleRecipients] = React.useState([]);
 const [tempRecipeint, setTempRecipient] = React.useState(""); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
-const [nfType, setNFType] = React.useState("Broadcast (IPFS Payload)");
+const [nfType, setNFType] = React.useState("1");
 const [nfSub, setNFSub] = React.useState("");
 const [nfSubEnabled, setNFSubEnabled] = React.useState(false);
 const [nfMsg, setNFMsg] = React.useState("");
@@ -877,6 +877,7 @@ return (
                                                     );
                                                 }}
                                                 placeholder="Select a Channel"
+                                                value={delegateeOptions[0]}
                                                 // value={delegateeOptions.find(
                                                 //     (d) =>
                                                 //         d.value ==
