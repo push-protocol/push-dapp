@@ -388,6 +388,7 @@ const DropdownStyled = styled(Dropdown)`
   }
   .Dropdown-menu {
     border-color: #BAC4D6;
+    border-radius: 12px;
       .is-selected {
       background-color: #D00775;
       color:#fff;

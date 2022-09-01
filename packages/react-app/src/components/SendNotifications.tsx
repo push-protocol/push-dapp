@@ -1481,7 +1481,7 @@ const DropdownStyled = styled(Dropdown)`
 .Dropdown-option {
     background-color: #fff;
     color: #000;
-    font-size: 14px;
+    font-size: 16px;
     padding: 20px 20px;
 
 }
