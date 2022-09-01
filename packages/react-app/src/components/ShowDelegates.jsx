@@ -13,7 +13,7 @@ import {
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { useDeviceWidthCheck } from "hooks";
 
-const isOnwer=(account,delegate)=>{
+const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
 }
 
@@ -50,6 +50,11 @@ const ShowDelegates = () => {
     } catch (err) {
       console.error(err);
     }
+  }
+
+  const removeDelegateModalOpen = (delegateAddress) => {
+    setDelegateToBeRemoved(delegateAddress);
+    setRemoveModalOpen(true);
   }
   
   return (
@@ -90,13 +95,12 @@ const ShowDelegates = () => {
                   borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
                 }}
               >
-                <DelegateInfo delegateAddress={delegate} isDelegate={isOnwer(account,delegate)} maxWidth={'200px'}/>
-                {isOnwer(account,delegate) ?
-                  <RemoveButton onClick={() => {
-                    setDelegateToBeRemoved(delegate);
-                    setRemoveModalOpen(true);
-                  }}>
-                  </RemoveButton> : 
+                <DelegateInfo delegateAddress={delegate} isDelegate={isOwner(account,delegate)} maxWidth={'200px'}/>
+                {isOwner(account,delegate) ?
+                  <RemoveButton
+                    delegateAddress={delegate}
+                    removeDelegateModalOpen={removeDelegateModalOpen}
+                  /> : 
                   <OwnerButton disabled={true}>
                     Channel Creator
                   </OwnerButton>
@@ -121,7 +125,7 @@ const ShowDelegates = () => {
   )
 }
 
-const RemoveButton = ()=>{
+const RemoveButton = ({ delegateAddress, removeDelegateModalOpen }) => {
   const [isHovered,setIsHovered] = useState(false)
   
   const handleMouseOver = () => {
@@ -131,9 +135,9 @@ const RemoveButton = ()=>{
   const handleMouseOut = () => {
     setIsHovered(false);
   };
-
-  return(
-      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut}>
+  return (
+    
+      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => removeDelegateModalOpen(delegateAddress)}>
         {
         isHovered ?
         <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
