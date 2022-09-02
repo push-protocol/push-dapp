@@ -443,8 +443,8 @@ const Container = styled.div`
   align-content: center;
   align-items: stretch;
   justify-content: center;
-  height: inherit;
-  margin: 10px 10px;
+  height: auto;
+  // margin: 0px 10px;
 `;
 
 const Notifs = styled.div`

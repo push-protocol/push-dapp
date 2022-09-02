@@ -33,6 +33,8 @@ function SpamBox(props) {
   );
 
   const themes = useTheme();
+  let user = convertAddressToAddrCaip(account,chainId)
+
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -122,14 +124,14 @@ function SpamBox(props) {
     if (loading || finishedFetching || run) return;
     setLoading(true);
     try {
-      const { count, results } = await EpnsAPI.fetchSpamNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
-        page,
-        chainId,
-        dev: true,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user,
+        limit: NOTIFICATIONS_PER_PAGE,
+        page: page,
+        env: 'dev',
+        spam: true
       });
-        let parsedResponse = EpnsAPI.parseApiResponse(results);
+        let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
           parsedResponse.forEach( (each,i) => {
               each['date'] = results[i].epoch;
               each['epoch'] = (new Date(each['date']).getTime() / 1000);
@@ -150,7 +152,7 @@ function SpamBox(props) {
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (count === 0) {
+      if (results.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -166,17 +168,17 @@ function SpamBox(props) {
     setLoading(true);
 
     try {
-      const { count, results } = await EpnsAPI.fetchSpamNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user,
+        limit: NOTIFICATIONS_PER_PAGE,
         page: 1,
-        chainId,
-        dev: true,
+        env: 'dev',
+        spam: true
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = EpnsAPI.parseApiResponse(results);
+      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
         parsedResponse.forEach( (each,i) => {
             each['date'] = results[i].epoch;
             each['epoch'] = (new Date(each['date']).getTime() / 1000);
@@ -202,7 +204,7 @@ function SpamBox(props) {
           pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
-      if (count === 0) {
+      if (results.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -216,17 +218,18 @@ function SpamBox(props) {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await EpnsAPI.fetchSpamNotifications({
-        user: account,
-        pageSize: 100000,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user,
+        limit: 10000,
         page: 1,
-        chainId,
-        dev: true,
+        env: 'dev',
+        spam: true
       });
+
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = EpnsAPI.parseApiResponse(results);
+      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
         parsedResponse.forEach( (each,i) => {
             each['date'] = results[i].epoch;
             each['epoch'] = (new Date(each['date']).getTime() / 1000);
