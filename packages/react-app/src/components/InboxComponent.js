@@ -20,7 +20,7 @@ const InboxComponent = () => {
   };
 
   return (
-    <Container>
+    <>
       {/* <Item margin="16px 20px 0px 0px" self="self-end"> */}
       {/* <NavHolder>
           <NavTitleButton isActive={showInbox} onClick={handleToggle}>
@@ -56,7 +56,7 @@ const InboxComponent = () => {
       ) : (
         <Spambox showFilter={showFilter} />
       )}
-    </Container>
+    </>
   );
 };
 
@@ -65,7 +65,6 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
   width: 100%;
-  // background: red;
   align-items: stretch;
   align-self: stretch;
 `;

@@ -443,7 +443,7 @@ const Container = styled.div`
   align-content: center;
   align-items: stretch;
   justify-content: center;
-  height: auto;
+  height: inherit;
   // margin: 0px 10px;
 `;
 
