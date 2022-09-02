@@ -21,16 +21,16 @@ const InboxComponent = () => {
 
   return (
     <>
-      {/* <Item margin="16px 20px 0px 0px" self="self-end"> */}
-      {/* <NavHolder>
+      <NavBoxHolder>
+        <NavHolder>
           <NavTitleButton isActive={showInbox} onClick={handleToggle}>
             Inbox
           </NavTitleButton>
           <NavTitleButton isActive={!showInbox} onClick={handleToggle}>
             Spam
           </NavTitleButton>
-        </NavHolder> */}
-      {/* <SearchContainer>
+        </NavHolder>
+        <SearchContainer>
           <SearchBar
             type="text"
             className="input"
@@ -49,21 +49,32 @@ const InboxComponent = () => {
           >
             <FiSliders size={18} style={{ color: "#657795" }} />
           </ItemIconRotate>
-        </SearchContainer> */}
-      {/* </Item> */}
-      {showInbox ? (
-        <Feedbox showFilter={showFilter} />
-      ) : (
-        <Spambox showFilter={showFilter} />
-      )}
+        </SearchContainer>
+      </NavBoxHolder>
+      <Container>
+        {showInbox ? (
+          <Feedbox showFilter={showFilter} />
+        ) : (
+          <Spambox showFilter={showFilter} />
+        )}
+      </Container>
     </>
   );
 };
 
-const Container = styled.div`
+const Cont = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  align-items: stretch;
+  align-self: stretch;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 95%;
   width: 100%;
   align-items: stretch;
   align-self: stretch;
@@ -75,8 +86,8 @@ const NavBoxHolder = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  // height: 80px;
-  height: 100%;
+  min-height: 80px;
+  // height: 100%;
   position: relative;
   @media (max-width: 768px) {
     flex-direction: column-reverse;
@@ -84,15 +95,15 @@ const NavBoxHolder = styled.div`
     margin: 40px 30px;
   }
 
-  // :after {
-  //   position: absolute;
-  //   height: 2px;
-  //   left: 0;
-  //   bottom: 0;
-  //   width: 100%;
-  //   content: "";
-  //   background-color: #e4e8ef;
-  // }
+  :after {
+    position: absolute;
+    height: 2px;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    content: "";
+    background-color: #e4e8ef;
+  }
 `;
 
 const NavHolder = styled.div`
