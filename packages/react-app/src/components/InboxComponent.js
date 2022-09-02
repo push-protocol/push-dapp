@@ -21,14 +21,14 @@ const InboxComponent = () => {
   return (
     <>
       <NavBoxHolder>
-        <div style={{ display: "flex" }}>
+        <NavHolder>
           <NavTitleButton isActive={showInbox} onClick={handleToggle}>
             Inbox
           </NavTitleButton>
           <NavTitleButton isActive={!showInbox} onClick={handleToggle}>
             Spam
           </NavTitleButton>
-        </div>
+        </NavHolder>
         <SearchContainer>
           <SearchBar
             type="text"
@@ -61,10 +61,19 @@ const InboxComponent = () => {
 };
 
 const NavBoxHolder = styled.div`
-  margin: 30px 30px;
+  margin: 0px 30px;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  height: 80px;
   position: relative;
+  @media (max-width: 768px) {
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    margin: 40px 30px;
+  }
+
   :after {
     position: absolute;
     height: 2px;
@@ -76,12 +85,22 @@ const NavBoxHolder = styled.div`
   }
 `;
 
+const NavHolder = styled.div`
+  display: flex;
+  align-self: flex-end;
+  padding-bottom: 15px;
+  padding-top: 0px;
+
+  @media (max-width: 768px) {
+    align-self: flex-start;
+    padding-top: 15px;
+  }
+`;
+
 const NavTitleButton = styled.div`
   width: 48;
   height: 25px;
   padding: 0 25px;
-  padding-bottom: 13px;
-
   font-style: normal;
   font-weight: 500;
   font-size: 18px;
@@ -97,7 +116,7 @@ const NavTitleButton = styled.div`
             position: absolute;
             height: 2px;
             left: 0;
-            bottom: -10px;
+            bottom: -15px;
             width: 100%;
             content: '';
             background-color: #CF1C84;
@@ -109,25 +128,25 @@ const NavTitleButton = styled.div`
 // css styles
 const SearchContainer = styled(Item)`
   position: relative;
-  top: -14px;
   max-width: 496px;
   min-width: 320px;
   @media (max-width: 768px) {
-    min-width: 320px;
+    // min-width: 320px;
+    width: 100%;
   }
 
   @media (max-width: 480px) {
-    min-width: 210px;
+    // min-width: 210px;
+    width: 100%;
   }
 `;
 
 const SearchBar = styled.input`
   width: 100%;
-  height: 48px;
+  height: 44px;
   padding-left: 50px;
   border-radius: 99px;
   border: none;
-
   background: #F4F5FA;
   // background: ${(props) => props.theme.viewChannelSearchBg};
   // color: ${(props) => props.theme.viewChannelSearchText};
