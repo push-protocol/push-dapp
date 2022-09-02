@@ -228,6 +228,7 @@ export const P = styled.p`
   text-transform: ${(props) => props.textTransform || "inherit"};
   margin: ${(props) => props.margin || "20px 0px"};
   padding: ${(props) => props.padding || "0px"};
+  line-height:${(props) => props.lineHeight || "auto"};
   letter-spacing: ${(props) => props.spacing || "inherit"};
   text-align: ${(props) => props.textAlign || "initial"};
 `;

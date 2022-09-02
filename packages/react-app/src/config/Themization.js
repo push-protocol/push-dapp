@@ -97,6 +97,8 @@ const themeLight = {
   // Toast Notifications
   toastTextColor: "#000",
   toastBorderColor: "#F4F3FF",
+  
+  connectWalletBg: "url('./connectWalletBG.png')",
 };
 
 const themeDark = {
@@ -131,6 +133,7 @@ const themeDark = {
   interfaceSkeleton: "#414141",
 
   // Main Theme
+  connectWalletBg: "#222",
   backgroundBG: "#222",
   backgroundBGLucid: "#000000cc",
   mainBg: "#000",

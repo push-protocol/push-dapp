@@ -203,7 +203,16 @@ export default function App() {
           </HeaderContainer>
         )}
 
-        <ParentContainer headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
+        <ParentContainer
+          bg={
+            darkMode
+              ? themeDark.backgroundBG
+              : !active
+              ? themeLight.connectWalletBg
+              : themeLight.backgroundBG
+          }
+          headerHeight={!active ? 0 : GLOBALS.CONSTANTS.HEADER_HEIGHT}
+        >
           {active && !error && (
             <>
               <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
@@ -218,26 +227,30 @@ export default function App() {
           )}
 
           {!active && (
-            <Item justify="flex-start" padding="0 15px">
-            
-                <Item
-                  padding="15px 0"
-                  position="absolute"
-                  top="-5%"
-                  right="2%"
-                  width="fit-content"
-                  radius="100%"
-                  bg="rgba(0,0,0,0.5)"
-                >
-                  <DarkModeSwitch
-                    style={{ margin: "0 1rem" }}
-                    checked={darkMode}
-                    onChange={toggleDarkMode}
-                    size={24}
-                    sunColor="#fff"
-                  />
-                </Item>
-           
+            <Item
+              justify="flex-start"
+              margin="75px 0 0 0"
+              padding="0 15px"
+              bg={darkMode ? themeDark : themeLight}
+            >
+              <Item
+                padding="16px 0"
+                position="absolute"
+                top="-5%"
+                right="2%"
+                width="fit-content"
+                radius="99px"
+                bg="rgba(179, 178, 236, 0.5)"
+              >
+                <DarkModeSwitch
+                  style={{ margin: "0 1rem" }}
+                  checked={darkMode}
+                  onChange={toggleDarkMode}
+                  size={24}
+                  sunColor="#fff"
+                />
+              </Item>
+
               {/* {!activatingConnector && (
                 <ItemH
                   bg={darkMode ? themeDark : themeLight}
@@ -260,8 +273,8 @@ export default function App() {
               />
 
               <Item
-                bg={darkMode ? themeDark : themeLight}
-                border="1px solid #ddd"
+                bg={darkMode ? themeDark : "#fff"}
+                // border="1px solid #ddd"
                 padding="33px 20px"
                 radius="32px"
                 tabletMaxWidth="350px"
@@ -278,7 +291,7 @@ export default function App() {
                   Connect a Wallet
                 </H2>
 
-                <ItemH maxWidth="430px" align="stretch" >
+                <ItemH maxWidth="430px" align="stretch">
                   {Object.keys(web3Connectors).map((name) => {
                     const currentConnector = web3Connectors[name].obj;
                     const connected = currentConnector === connector;
@@ -328,6 +341,7 @@ export default function App() {
                     weight="400"
                     margin="30px 0px 0px 0px"
                     textAlign="center"
+                    lineHeight="20px"
                     size="14px"
                     color={
                       darkMode ? themeDark.fontColor : themeLight.fontColor
@@ -346,7 +360,12 @@ export default function App() {
                 </Item>
               </Item>
 
-              <Item flex="initial" padding="25px 15px">
+              <Item
+                flex="initial"
+                padding="25px 15px"
+                margin="30px 0 0 0"
+                color={darkMode ? themeDark.fontColor : themeLight.fontColor}
+              >
                 <StyledItem>
                   Note: The EPNS protocol has been under development for 1+
                   year, and completed a{" "}
@@ -371,7 +390,7 @@ export default function App() {
                   </A>
                 </StyledItem>
               </Item>
-              <Item flex="initial" padding="25px 15px" margin="20px 0 0 0">
+              <Item flex="initial" padding="25px 15px" margin="50px 0 0 0">
                 <StyledItem>
                   © 2022 Ethereum Push Notification Service (EPNS)
                 </StyledItem>
@@ -390,11 +409,11 @@ const StyledItem = styled(Item)`
   font-weight:400;
   letter-spacing: 0.4px;
   display: block;
-  background: ${props => props.theme.backgroundBG};
+  background: transparent;
   color: ${props => props.theme.color};
   width: 60rem;
   text-align:center;
-  line-height: 18px;
+  line-height: 20px;
   align-items: center;
 
  
@@ -421,9 +440,13 @@ const ParentContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   flex: 1;
-  background: ${props => props.theme.backgroundBG};
+  background: ${props => props.bg};
+  background-position: center center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  // background: ${props => props.bg};
   margin: ${props => props.headerHeight}px 0px 0px 0px;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px);
+  min-height: calc(100vh - ${props => props.headerHeight}px);
 `;
 
 const LeftBarContainer = styled.div`
@@ -457,7 +480,7 @@ const ProviderLogo = styled.img`
   width: 13vw;
   align-self: center;
   display: flex;
-  margin: -5px 20px 20px 20px;
+  margin: -5px 20px 30px 20px;
   min-width: 200px;
 `;
 
