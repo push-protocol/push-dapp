@@ -22,6 +22,7 @@ import NotificationToast from "../primaries/NotificationToast";
 import CryptoHelper from "helpers/CryptoHelper";
 
 import { Item } from "../primaries/SharedStyling";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
@@ -33,6 +34,7 @@ function Feedbox(props) {
   );
 
   const themes = useTheme();
+  let user = convertAddressToAddrCaip(account,chainId)
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -107,16 +109,24 @@ function Feedbox(props) {
     if (loading || finishedFetching) return;
     setLoading(true);
     try {
-      const { count, results } = await EpnsAPI.fetchNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
-        page,
-        chainId,
-        dev: true,
+      // const { count, results } = await EpnsAPI.fetchNotifications({
+      //   user: account,
+      //   pageSize: NOTIFICATIONS_PER_PAGE,
+      //   page,
+      //   chainId,
+      //   dev: true,
+      // });
+      const results = await EpnsAPI.user.getFeeds({
+        user: user, // user address in CAIP
+        raw: true,
+        env: 'dev',
+        page: page,
+        limit: NOTIFICATIONS_PER_PAGE
       });
-      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      console.log(results)
+      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (count === 0) {
+      if (results.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -130,17 +140,17 @@ function Feedbox(props) {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const { count, results } = await EpnsAPI.fetchNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user, // user address in CAIP
+        env: 'dev',
+        raw: true,
         page: 1,
-        chainId,
-        dev: true,
+        limit: NOTIFICATIONS_PER_PAGE
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
@@ -158,7 +168,7 @@ function Feedbox(props) {
           pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
-      if (count === 0) {
+      if (results.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -172,17 +182,17 @@ function Feedbox(props) {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await EpnsAPI.fetchNotifications({
-        user: account,
-        pageSize: 100000,
-        page: 1,
-        chainId,
-        dev: true,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user, // user address in CAIP
+        env: 'dev',
+        limit: 1000,
+        page: page,
+        raw:true
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
@@ -434,6 +444,7 @@ const Container = styled.div`
   align-items: stretch;
   justify-content: center;
   height: inherit;
+  margin: 10px 10px;
 `;
 
 const Notifs = styled.div`
