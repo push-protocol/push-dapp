@@ -1,10 +1,10 @@
 // environmental configurations for the dapp for different environments
 const config = {
     apiUrl: "https://backend-dev.epns.io/apis",
-    // apiUrl: "https://backend-kovan.epns.io/apis",
+    env: 'dev',
     toolingApiUrl: "https://tooling.epns.io/apis",
     allowedNetworks: [
-        42, //for ropsten
+        42, //for kovan
         80001 //for mumbai polygon
     ],
     coreContractChain: 42, //the chain id of the network which the core contract relies on
