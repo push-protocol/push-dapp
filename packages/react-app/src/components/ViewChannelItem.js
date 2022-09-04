@@ -345,6 +345,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ._signTypedData(EPNS_DOMAIN, type, message);
       // subscribeToast.showToast("Waiting for Confirmation...");
 
+      subscribeToast.showToast("Waiting for Confirmation...");
+
       if (run) {
         const type = {
           Subscribe: [
@@ -363,8 +365,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         await library
           .getSigner(account)
           ._signTypedData(EPNS_DOMAIN, type, message);
-        
-        subscribeToast.showToast("Waiting for Confirmation...");
         
         console.log("in run");
         subscribeToast.updateToast(
