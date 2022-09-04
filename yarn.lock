@@ -1557,10 +1557,10 @@
     tiny-invariant "^1.2.0"
     tslib "^2.3.0"
 
-"@epnsproject/sdk-restapi@^0.1.9":
-  version "0.1.10"
-  resolved "https://registry.yarnpkg.com/@epnsproject/sdk-restapi/-/sdk-restapi-0.1.10.tgz#78a438eb308887e0d2d3f483f9c59efe98bf20ea"
-  integrity sha512-bTChEshDK4NiDnXcURxoTtWhUNEVvkoKN3/0Bd64TSxuvceek1ttag0veShOjDlD5p+gvDq+FCsBL4uihVVWpA==
+"@epnsproject/sdk-restapi@^0.1.12":
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/@epnsproject/sdk-restapi/-/sdk-restapi-0.1.12.tgz#edc6ede6affc7339612aaaa3e33d072c601114a2"
+  integrity sha512-9U3x1g7gfi4CScDt/kJCypt49khcxESqa624cBrQRV9VxiWCRnG556MaG3ZZDnxBB7ueh2NOmMTgD46m4TshMQ==
   dependencies:
     axios "^0.27.2"
     tslib "^2.3.0"
