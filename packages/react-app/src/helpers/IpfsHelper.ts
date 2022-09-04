@@ -1,5 +1,5 @@
+import { create } from 'ipfs-http-client';
 import { EnvHelper } from "./UtilityHelper";
-import ipfsClient from 'ipfs-http-client';
 
 export const productionIpfsGateway: string = 'https://epns-gateway.infura-ipfs.io/ipfs/';
 export const developmentIpfsGateway: string = 'https://epns-testing.infura-ipfs.io/ipfs/';
@@ -12,7 +12,7 @@ export const IPFSupload = async (input: string) => {
   const projectSecret = process.env.REACT_APP_IPFS_PROJECT_SECRET;
   const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
 
-  const client = ipfsClient({
+  const client = create({
     host: 'ipfs.infura.io',
     port: 5001,
     protocol: 'https',

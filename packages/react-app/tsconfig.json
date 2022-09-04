@@ -25,6 +25,9 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
-, "src/segments/ViewChannels.jsx", "src/components/SearchFilter.jsx"  ]
+    "**/*.tsx",
+    "src/segments/ViewChannels.jsx",
+    "src/components/SearchFilter.jsx",
+    "src/components/chat/w2wChat/indexeddb.js"
+  ]
 }
