@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import './searchBar.css'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
@@ -7,10 +7,10 @@ import CloseIcon from '@material-ui/icons/Close'
 import MessageFeed from '../messageFeed/messageFeed'
 import { AppContext, Context } from '../w2wIndex'
 import * as w2wChatHelper from '../../../../helpers/w2w'
-import Web3 from 'web3'
 import { ethers } from 'ethers'
 import * as PushNodeClient from '../../../../api'
 import { User } from '../../../../api'
+// @ts-ignore
 import Loader from 'react-loader-spinner'
 
 const SearchBar = () => {
