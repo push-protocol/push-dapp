@@ -16,16 +16,18 @@ import {
   setFinishedFetching,
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
+import { envConfig } from "@project/contracts";
 
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 import CryptoHelper from "helpers/CryptoHelper";
 
 import { Item } from "../primaries/SharedStyling";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-function Feedbox() {
+function Feedbox(props) {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
   const { notifications, page, finishedFetching, toggle } = useSelector(
@@ -33,6 +35,7 @@ function Feedbox() {
   );
 
   const themes = useTheme();
+  let user = convertAddressToAddrCaip(account,chainId)
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -86,12 +89,12 @@ function Feedbox() {
         const matches = notif.message.match(/\[timestamp:(.*?)\]/);
         if (matches) {
           timestamp = matches[1];
-        }
+        } 
         else timestamp = notif.epoch;
         if (
           ((Filter.channels === undefined ? true : (Filter.channels.includes(notif.channel))) &&
-            timestamp >= startDate && timestamp <= endDate
-            && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
+          timestamp >= startDate && timestamp <= endDate
+          && (query === "" || notif.message.toLowerCase().includes(query.toLowerCase())))
         )
           filterNotif.push(notif);
       }
@@ -107,16 +110,24 @@ function Feedbox() {
     if (loading || finishedFetching) return;
     setLoading(true);
     try {
-      const { count, results } = await EpnsAPI.fetchNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
-        page,
-        chainId,
-        dev: true,
+      // const { count, results } = await EpnsAPI.fetchNotifications({
+      //   user: account,
+      //   pageSize: NOTIFICATIONS_PER_PAGE,
+      //   page,
+      //   chainId,
+      //   dev: true,
+      // });
+      const results = await EpnsAPI.user.getFeeds({
+        user: user, // user address in CAIP
+        raw: true,
+        env: envConfig['env'],
+        page: page,
+        limit: NOTIFICATIONS_PER_PAGE
       });
-      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      console.log(results)
+      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (count === 0) {
+      if (results.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -130,35 +141,35 @@ function Feedbox() {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const { count, results } = await EpnsAPI.fetchNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user, // user address in CAIP
+        env: envConfig['env'],
+        raw: true,
         page: 1,
-        chainId,
-        dev: true,
+        limit: NOTIFICATIONS_PER_PAGE
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
-      results.forEach(each => {
-        map1.set(each.payload.data.sid, each.epoch);
-        map2.set(each.payload.data.sid, each.channel);
-      })
-      parsedResponse.forEach(each => {
+      results.forEach( each => {
+        map1.set(each.payload.data.sid , each.epoch);
+        map2.set(each.payload.data.sid , each.sender);
+    })
+    parsedResponse.forEach( each => {
         each['date'] = map1.get(each.sid);
         each['epoch'] = (new Date(each['date']).getTime() / 1000);
         each['channel'] = map2.get(each.sid);
-      })
+    })
       dispatch(
         updateTopNotifications({
           notifs: parsedResponse,
           pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
-      if (count === 0) {
+      if (results.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -172,28 +183,28 @@ function Feedbox() {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await EpnsAPI.fetchNotifications({
-        user: account,
-        pageSize: 100000,
-        page: 1,
-        chainId,
-        dev: true,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user, // user address in CAIP
+        env: envConfig['env'],
+        limit: 100000,
+        page: page,
+        raw:true
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = EpnsAPI.parseApiResponse(results);
+      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
-      results.forEach(each => {
-        map1.set(each.payload.data.sid, each.epoch);
-        map2.set(each.payload.data.sid, each.channel);
-      })
-      parsedResponse.forEach(each => {
+      results.forEach( each => {
+        map1.set(each.payload.data.sid , each.epoch);
+        map2.set(each.payload.data.sid , each.sender);
+    })
+    parsedResponse.forEach( each => {
         each['date'] = map1.get(each.sid);
         each['epoch'] = (new Date(each['date']).getTime() / 1000);
         each['channel'] = map2.get(each.sid);
-      })
+    })
       setNotif(parsedResponse);
     } catch (err) {
       console.log(err);
@@ -211,7 +222,7 @@ function Feedbox() {
   const handlePagination = async () => {
     if (filter) {
       setLimit(limit + 10);
-    }
+    } 
     else {
       loadNotifications();
       dispatch(incrementPage());
@@ -225,10 +236,10 @@ function Feedbox() {
         !finishedFetching &&
         !bgUpdateLoading
       );
-    }
+    } 
     else {
       return (
-        Number(index) === limit - 1
+      Number(index) === limit - 1
       );
     }
 
@@ -312,6 +323,7 @@ function Feedbox() {
           filter={filter}
           reset={reset}
           loadFilter={loadFilter}
+          showFilter={props.showFilter}
         />
         <ScrollItem>
           {((!run && !notifications.length) ||
@@ -427,12 +439,12 @@ const Container = styled.div`
   flex: 1;
   flex-direction: column;
   background: ${props => props.theme.mainBg};
-
   font-weight: 200;
   align-content: center;
   align-items: stretch;
   justify-content: center;
   height: inherit;
+  // margin: 0px 10px;
 `;
 
 const Notifs = styled.div`
