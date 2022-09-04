@@ -1,162 +1,75 @@
-{
-  "name": "@project/react-app",
-  "version": "0.3.3",
-  "homepage": "https://dev.epns.io",
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "dependencies": {
-    "@3id/connect": "0.4.1",
-    "@apollo/client": "^3.3.7",
-    "@ceramicnetwork/3id-did-resolver": "2.0.4",
-    "@ceramicnetwork/http-client": "2.0.4",
-    "@ceramicstudio/idx": "0.12.2",
-    "@emotion/react": "^11.8.2",
-    "@emotion/styled": "^11.8.1",
-    "@epnsproject/frontend-sdk-staging": "^1.7.8",
-    "@epnsproject/sdk-ledgerlive": "^0.1.2",
-    "@epnsproject/sdk-restapi": "^0.1.3",
-    "@epnsproject/sdk-uiweb": "^0.1.8",
-    "@ethersproject/providers": "^5.0.0-beta.151",
-    "@ethersproject/units": "^5.0.0-beta.132",
-    "@firebase/app": "^0.7.24",
-    "@firebase/messaging": "^0.9.13",
-    "@material-ui/core": "4.11.0",
-    "@material-ui/icons": "^4.11.3",
-    "@metamask/eth-sig-util": "^4.0.0",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/lab": "^5.0.0-alpha.72",
-    "@mui/material": "^5.5.0",
-    "@reduxjs/toolkit": "^1.7.1",
-    "@syncfusion/ej2-react-calendars": "^19.4.56",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "@types/dotenv": "8.2.0",
-    "@web3-react/core": "6.1.9",
-    "@web3-react/injected-connector": "6.0.7",
-    "@web3-react/ledger-connector": "6.1.9",
-    "@web3-react/network-connector": "6.1.9",
-    "@web3-react/portis-connector": "6.0.9",
-    "@web3-react/trezor-connector": "6.1.9",
-    "@web3-react/types": "6.0.7",
-    "@web3-react/walletconnect-connector": "6.2.0",
-    "@yisheng90/react-loading": "1.2.3",
-    "antd": "^4.19.2",
-    "assert": "2.0.0",
-    "babel-plugin-styled-components": "1.10.7",
-    "blockies": "0.0.2",
-    "blockies-identicon": "0.1.0",
-    "browserslist": "4.14.6",
-    "buffer": "6.0.3",
-    "classnames": "^2.3.1",
-    "constants-browserify": "1.0.0",
-    "crypto-js": "4.0.0",
-    "customized-multiselect-dropdown": "^1.0.3",
-    "date-fns": "^2.28.0",
-    "dids": "3.1.0",
-    "dotenv": "8.2.0",
-    "eccrypto": "^1.1.3",
-    "emoji-picker-react": "^3.5.1",
-    "eth-crypto": "1.6.0",
-    "eth-sig-util": "^3.0.1",
-    "ethereum-blockies-png": "^0.1.3",
-    "ethers": "^5.5.1",
-    "font-awesome": "^4.7.0",
-    "framer-motion": "^6.3.11",
-    "gh-pages": "^2.2.0",
-    "graphql": "^15.4.0",
-    "graphql-request": "^3.4.0",
-    "hex2ascii": "^0.0.3",
-    "https-browserify": "1.0.0",
-    "image-size": "0.9.3",
-    "ipfs-api": "26.1.2",
-    "ipfs-core": "0.14.3",
-    "ipfs-http-client": "^57.0.3",
-    "key-did-resolver": "2.0.4",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.1",
-    "nano-ipfs-store": "0.1.3",
-    "openpgp": "^5.2.1",
-    "os-browserify": "0.3.0",
-    "path-browserify": "1.0.1",
-    "process": "0.11.10",
-    "react": "17.0.2",
-    "react-animation": "1.2.2",
-    "react-animations": "1.0.0",
-    "react-cookie": "4.1.1",
-    "react-datetime-picker": "^3.5.0",
-    "react-dom": "17.0.2",
-    "react-dotenv": "0.1.3",
-    "react-dropdown": "1.9.0",
-    "react-dropzone-uploader": "2.11.0",
-    "react-easy-crop": "^4.1.4",
-    "react-ga": "2.7.0",
-    "react-icons": "^4.3.1",
-    "react-image-file-resizer": "^0.4.7",
-    "react-images-upload": "^1.2.8",
-    "react-joyride": "^2.4.0",
-    "react-loader-spinner": "3.1.14",
-    "react-multi-select-component": "^4.2.3",
-    "react-player": "2.9.0",
-    "react-query": "^3.39.1",
-    "react-redux": "^7.2.6",
-    "react-router-dom": "6",
-    "react-scripts": "^5.0.1",
-    "react-scroll-to-bottom": "^4.2.0",
-    "react-select": "^5.2.2",
-    "react-spinners": "0.8.3",
-    "react-stack-grid": "0.7.1",
-    "react-time-picker": "^4.5.0",
-    "react-toastify": "6.0.9",
-    "react-toggle-dark-mode": "1.0.4",
-    "react-transition-group": "4.4.2",
-    "react-use": "^17.3.2",
-    "react-wavify": "^1.5.4",
-    "react-waypoint": "^9.0.3",
-    "secp256k1-v4": "https://github.com/HarshRajat/secp256k1-node",
-    "stream-browserify": "3.0.0",
-    "styled-components": "5.1.0",
-    "timeago.js": "^4.0.2",
-    "typescript": "^3.7.5",
-    "url": "0.11.0",
-    "web3modal": "1.9.7"
-  },
-  "devDependencies": {
-    "@3id/connect": "0.4.1",
-    "@ceramicnetwork/ceramic-core": "0.12.4",
-    "@testing-library/dom": "^6.12.2",
-    "@types/crypto-js": "^4.1.1",
-    "@types/lodash": "^4.14.182",
-    "@types/openpgp": "^4.4.18",
-    "@types/react": "^16.9.19",
-    "@types/react-loader-spinner": "^4.0.0",
-    "@types/react-scroll-to-bottom": "^4.2.0",
-    "customize-cra": "1.0.0",
-    "eslint": "^6.8.0",
-    "eslint-plugin-flowtype": "^4.6.0",
-    "process": "0.11.10",
-    "react-app-rewired": "2.2.1",
-    "typescript": "^4.7.4"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
-  }
-}
+## @project/react-app
+
+This package is a fork of the default template provided by [Create React App](https://github.com/facebook/create-react-app).
+
+## Available Scripts
+
+In the project directory, you can run:
+
+### `yarn start`
+
+Runs the app in development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will automatically reload if you make changes to the code.<br>
+You will see the build errors and lint warnings in the console.
+
+### `yarn test`
+
+Runs the test watcher in an interactive mode.<br>
+By default, runs tests related to files changed since the last commit.
+
+[Read more about testing.](https://facebook.github.io/create-react-app/docs/running-tests)
+
+### `yarn build`
+
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
+
+See the React documentation on [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### `yarn react-app:eject`
+
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` the React app at any time. This command will
+remove the single build dependency from your React package.
+
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right
+into your project so you have full control over them. All of the commands except `eject` will still work, but
+they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+
+### Analyzing the Bundle Size
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+
+### Making a Progressive Web App
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+
+### Advanced Configuration
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+
+### Deployment
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+
+### `yarn build` fails to minify
+
+This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
