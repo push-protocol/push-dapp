@@ -346,6 +346,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // subscribeToast.showToast("Waiting for Confirmation...");
 
       if (run) {
+        const type = {
+          Subscribe: [
+            { name: "channel", type: "address" },
+            { name: "subscriber", type: "address" },
+            { name: "action", type: "string" },
+          ],
+        };
+        
         const message = {
           channel: channelAddress,
           subscriber: account,
@@ -408,7 +416,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           console.error('opt in error');
           subscribeToast.updateToast(
             "Error",
-            `There was an error opting into channel ( ${err.message} )`,
+            `There was an error opting into channel`,
             "ERROR",
             (size) => <MdError size={size} color="red" />
           );
@@ -520,7 +528,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           console.error('opt out error');
           unsubscribeToast.updateToast(
             "Error",
-            `There was an error opting out of channel ( ${err.message} )`,
+            `There was an error opting out of channel`,
             "ERROR",
             (size) => <MdError size={size} color="red" />
           );

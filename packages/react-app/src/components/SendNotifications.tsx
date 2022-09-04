@@ -636,7 +636,7 @@ const handleSendMessage = async (e) => {
             });
 
             setNFProcessing(2);
-            setNFType("");
+            setNFType("1");
             setNFInfo("Offchain Notification Sent");
 
             toast.update(notificationToast, {
@@ -917,6 +917,7 @@ return (
                                                     setChannelAddress(
                                                         option.value
                                                     );
+                                                    setNFRecipient(option.value)
                                                 }}
                                                 placeholder="Select a Channel"
                                                 value={delegateeOptions[0]}
