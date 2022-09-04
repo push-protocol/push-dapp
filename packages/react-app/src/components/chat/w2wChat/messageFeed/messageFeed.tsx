@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react'
 import './messageFeed.css'
 import DefaultMessage from '../defaultMessage/defaultMessage'
 import Loader from '../Loader/Loader'
-import { AppContext, Context, ToastPosition } from '../w2wIndex'
+import { AppContext, Context } from '../w2wIndex'
 import { Feeds, User } from '../../../../api'
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
@@ -26,19 +26,21 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [stopApi, setStopApi] = useState<boolean>(true)
 
   const getInbox = async (): Promise<Feeds[]> => {
-    const getInbox: any = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
-    if (getInbox !== undefined) {
-      let inboxes: Feeds[] = await fetchInbox(did)
-      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
-      setFeeds(inboxes)
-      setInbox(inboxes)
-      return inboxes
-    } else {
-      let inboxes: Feeds[] = await fetchInbox(did)
-      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
-      setFeeds(inboxes)
-      setInbox(inboxes)
-      return inboxes
+    if (did) {
+      const getInbox = await intitializeDb<string>('Read', 2, 'Inbox', did.id, '', 'did')
+      if (getInbox !== undefined) {
+        let inboxes: Feeds[] = await fetchInbox(did)
+        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
+        setFeeds(inboxes)
+        setInbox(inboxes)
+        return inboxes
+      } else {
+        let inboxes: Feeds[] = await fetchInbox(did)
+        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did })
+        setFeeds(inboxes)
+        setInbox(inboxes)
+        return inboxes
+      }
     }
   }
 
@@ -59,8 +61,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   })
 
   const updateInboxAndIntents = async (): Promise<void> => {
-    await getInbox()
-    setIntents(await fetchIntent({ did }))
+    if (did) {
+      await getInbox()
+      setIntents(await fetchIntent({ did: did.id }))
+    }
   }
 
   useEffect(() => {
@@ -69,7 +73,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).did === did.id) {
+          if (Object(props.filteredUserData[0]).did === did?.id) {
             setIsSameUser(true)
             setOpenReprovalSnackBar(true)
             setErrorMessage("You can't send intent to yourself")
@@ -162,6 +166,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 onClick={(): void => {
                   setChat(feed)
                 }}
+                onDoubleClick={() => ''}
               >
                 <DefaultMessage inbox={feed} />
               </div>

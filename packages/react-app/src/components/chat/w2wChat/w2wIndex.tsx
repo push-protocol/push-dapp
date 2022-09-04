@@ -6,7 +6,6 @@ import Loader from 'react-loader-spinner'
 
 // Helper
 import { createCeramic } from '../../../helpers/w2w/ceramic'
-import { generateKeyPair } from '../../../helpers/w2w/pgp'
 import * as DIDHelper from '../../../helpers/w2w/did'
 import * as w2wHelper from '../../../helpers/w2w'
 import * as PushNodeClient from '../../../api'
@@ -21,14 +20,13 @@ import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import { CeramicClient } from '@ceramicnetwork/http-client'
-// @ts-ignore
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Feeds, User } from '../../../api'
 
 import './w2wIndex.css'
-import { toast, ToastOptions } from 'react-toastify'
+import { ToastOptions } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 export interface InboxChat {
@@ -49,10 +47,13 @@ export interface AppContext {
   currentChat: Feeds
   viewChatBox: boolean
   did: DID
+  setDID: (did: DID) => void
+  connectAndSetDID: () => Promise<DID>
   setSearchedUser: (searched: string) => void
   searchedUser: string
   setChat: (feed: Feeds) => void
   connectedUser: User
+  setConnectedUser: (user: User) => void
   intents: Feeds[]
   setIntents: (intents: Feeds[]) => void
   inbox: Feeds[]
@@ -76,7 +77,7 @@ function App() {
   const [currentChat, setCurrentChat] = useState<Feeds>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const { connector, account, chainId } = useWeb3React<Web3Provider>()
-  const [did, setDid] = useState<DID>()
+  const [did, setDID] = useState<DID>()
   const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()
   const [intents, setIntents] = useState<Feeds[]>([])
@@ -90,34 +91,47 @@ function App() {
     }
   }, [])
 
-  const connectToCeramic = async (): Promise<void> => {
+  const connectAndSetDID = async (): Promise<DID> => {
     const provider: Promise<any> = await connector.getProvider()
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic()
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account)
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
-    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId }) // the useState does not update state immediately
-    setDid(did)
-    let user: User = await PushNodeClient.getUser({ did: did.id })
-    if (!user) {
-      const keyPairs = await generateKeyPair()
-      const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, did)
-      const createdUser = await PushNodeClient.createUser({
-        caip10,
-        did: did.id,
-        publicKey: keyPairs.publicKeyArmored,
-        encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
-        encryptionType: 'pgp',
-        signature: 'xyz',
-        sigType: 'a'
-      })
-      setConnectedUser(createdUser)
-    } else {
+    setDID(did)
+    return did
+  }
+
+  const connectToCeramic = async (): Promise<void> => {
+    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId })
+    let user: User = await PushNodeClient.getUser({ caip10 })
+    // TODO: Change this to do verification on ceramic to validate if did is valid
+    if (user?.did.includes('did:3:')) {
+      await connectAndSetDID()
+    }
+    if (user) {
       if (!user.wallets.includes(caip10)) {
         user = await PushNodeClient.updateUser({ did: did.id, caip10 })
       }
-      setConnectedUser(user)
+    } else {
+      user = {
+        // We only need to provide this information when it's a new user
+        name: 'john-snow',
+        profilePicture: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
+        wallets: caip10,
+        ///
+        about: '',
+        allowedNumMsg: 0,
+        did: '',
+        encryptedPrivateKey: '',
+        encryptionType: '',
+        numMsg: 0,
+        publicKey: '',
+        sigType: '',
+        signature: '',
+        linkedListHash: ''
+      }
     }
+    setConnectedUser(user)
     setIsLoading(false)
   }
 
@@ -136,10 +150,13 @@ function App() {
                 currentChat,
                 viewChatBox,
                 did,
+                setDID,
+                connectAndSetDID,
                 setChat,
                 setSearchedUser,
                 searchedUser,
                 connectedUser,
+                setConnectedUser,
                 intents,
                 setIntents,
                 inbox,

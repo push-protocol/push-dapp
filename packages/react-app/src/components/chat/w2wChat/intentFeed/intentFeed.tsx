@@ -9,9 +9,19 @@ import Modal from '@mui/material/Modal'
 import Button from '@mui/material/Button'
 import Snackbar from '@mui/material/Snackbar'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import { approveIntent, Feeds } from '../../../../api'
+import { approveIntent, Feeds, User } from '../../../../api'
 import { intitializeDb } from '../w2wIndexeddb'
 import { caip10ToWallet } from 'helpers/w2w'
+import { generateKeyPair } from 'helpers/w2w/pgp'
+import { Web3Provider } from 'ethers/providers'
+import { useWeb3React } from '@web3-react/core'
+import * as DIDHelper from 'helpers/w2w/did'
+import * as w2wHelper from 'helpers/w2w/'
+import * as PushNodeClient from '../../../../api'
+import { DID } from 'dids'
+// @ts-ignore
+import Loader from 'react-loader-spinner'
+
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -29,23 +39,29 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents }: AppContext = useContext<AppContext>(Context)
+  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<AppContext>(Context)
+  const { chainId, account } = useWeb3React<Web3Provider>()
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
   const [open, setOpen] = useState(false)
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
   const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false)
   const [toDID, settoDID] = useState<string>()
+  const [isLoading, setIsLoading] = useState<boolean>()
 
   async function resolveThreadhash(): Promise<void> {
-    const getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
-
+    let getIntent
+    if (did) {
+      getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
+    }
+    // If the user is not registered in the protocol yet, his did will be his wallet address
+    const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0]
     if (getIntent === undefined) {
-      let intents = await fetchIntent({ did, intentStatus: 'Pending' })
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
       setReceivedIntents(intents)
     } else {
-      let intents = await fetchIntent({ did, intentStatus: 'Pending' })
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
       setReceivedIntents(intents)
     }
@@ -61,12 +77,43 @@ const IntentFeed = (): JSX.Element => {
     setOpen(true)
   }
 
+  const createUserIfNecessary = async (): Promise<{ didCreated: DID, createdUser: User }> => {
+    try {
+      if (!did) {
+        const createdDID: DID = await connectAndSetDID()
+        // This is a new user
+        const keyPairs = await generateKeyPair()
+        const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID)
+        const caip10: string = w2wHelper.walletToCAIP10({ account, chainId })
+        const createdUser = await PushNodeClient.createUser({
+          caip10,
+          did: createdDID.id,
+          publicKey: keyPairs.publicKeyArmored,
+          encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
+          encryptionType: 'pgp',
+          signature: 'xyz',
+          sigType: 'a'
+        })
+        setConnectedUser(createdUser)
+        setDID(createdDID)
+        return { didCreated: createdDID, createdUser }
+      } else {
+        return { didCreated: did, createdUser: connectedUser }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   async function ApproveIntent(status: string): Promise<void> {
-    await approveIntent(did.id, toDID, status, '1', 'sigType')
+    setIsLoading(true)
+    const { didCreated } = await createUserIfNecessary()
+    await approveIntent(didCreated.id, toDID, status, '1', 'sigType')
     setOpen(false)
     if (status === 'Approved') setOpenSuccessSnackBar(true)
     else setOpenReprovalSnackBar(true)
     await resolveThreadhash()
+    setIsLoading(false)
   }
 
   function displayReceivedIntents(): JSX.Element {
@@ -135,13 +182,15 @@ const IntentFeed = (): JSX.Element => {
               You have received an intent from {receivedIntentFrom ? caip10ToWallet(receivedIntentFrom) : ''}.
             </Typography>
             <br />
-            <Button
-              onClick={(): void => {
-                ApproveIntent('Approved')
-              }}
-            >
-              Approve
-            </Button>
+            {isLoading ? <Loader type="oval" /> : (
+              <Button
+                onClick={(): void => {
+                  ApproveIntent('Approved')
+                }}
+              >
+                Approve
+              </Button>
+            )}
           </Box>
         </Modal>
 

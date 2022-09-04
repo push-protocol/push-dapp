@@ -28,6 +28,10 @@ import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
 import { MessageIPFSWithCID, User } from '../../../../api'
 import { FileMessageContent } from '../Files/Files'
+import { generateKeyPair } from 'helpers/w2w/pgp'
+import * as DIDHelper from 'helpers/w2w/did'
+import * as w2wHelper from 'helpers/w2w/'
+import { DID } from 'dids'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -36,15 +40,15 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const ChatBox = (): JSX.Element => {
-  const { account } = useWeb3React<Web3Provider>()
-  const { currentChat, viewChatBox, did, searchedUser, connectedUser, inbox }: AppContext = useContext<AppContext>(
+  const { currentChat, viewChatBox, did, searchedUser, connectedUser, inbox, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<AppContext>(
     Context
   )
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
-  const { chainId } = useWeb3React<Web3Provider>()
+  const { chainId, account } = useWeb3React<Web3Provider>()
   const [Loading, setLoading] = useState<boolean>(true)
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
   const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
   const [imageSource, setImageSource] = useState<string>('')
   const [filesUploading, setFileUploading] = useState<boolean>(false)
@@ -171,12 +175,7 @@ const ChatBox = (): JSX.Element => {
     message: string
     messageType: string
   }): Promise<void> => {
-    if (
-      !connectedUser.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----') ||
-      !currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')
-    ) {
-      throw "User doesn't have public key"
-    }
+    setMessageBeingSent(true)
     let msg: MessageIPFSWithCID
     try {
       msg = {
@@ -223,6 +222,7 @@ const ChatBox = (): JSX.Element => {
       console.log(error)
       toast.error('Cannot send Message, Try again later', ToastPosition)
     }
+    setMessageBeingSent(false)
   }
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
@@ -240,8 +240,38 @@ const ChatBox = (): JSX.Element => {
     }
   }
 
+  const createUserIfNecessary = async (): Promise<{ didCreated: DID, createdUser: User }> => {
+    try {
+      if (!did) {
+        const createdDID: DID = await connectAndSetDID()
+        // This is a new user
+        const keyPairs = await generateKeyPair()
+        const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID)
+        const caip10: string = w2wHelper.walletToCAIP10({ account, chainId })
+        const createdUser = await PushNodeClient.createUser({
+          caip10,
+          did: createdDID.id,
+          publicKey: keyPairs.publicKeyArmored,
+          encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
+          encryptionType: 'pgp',
+          signature: 'xyz',
+          sigType: 'a'
+        })
+        setConnectedUser(createdUser)
+        setDID(createdDID)
+        return { didCreated: createdDID, createdUser }
+      } else {
+        return { didCreated: did, createdUser: connectedUser }
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
+      setMessageBeingSent(true)
+      const { didCreated, createdUser } = await createUserIfNecessary()
       if (currentChat.intent === null || currentChat.intent === '' || currentChat.intent === 'Pending') {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
@@ -271,10 +301,10 @@ const ChatBox = (): JSX.Element => {
           } else {
             const { cipherText, encryptedSecret, signature: pgpSignature } = await encryptAndSign({
               plainText: message,
-              fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+              fromEncryptedPrivateKeyArmored: createdUser.encryptedPrivateKey,
               toPublicKeyArmored: currentChat.publicKey,
-              fromPublicKeyArmored: connectedUser.publicKey,
-              did
+              fromPublicKeyArmored: createdUser.publicKey,
+              did: didCreated
             })
             messageContent = cipherText
             encryptionType = 'pgp'
@@ -285,7 +315,7 @@ const ChatBox = (): JSX.Element => {
 
         const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
           toDID: currentChat.did,
-          fromDID: did.id,
+          fromDID: didCreated.id,
           fromCAIP10: walletToCAIP10({ account, chainId }),
           messageContent,
           messageType,
@@ -312,6 +342,7 @@ const ChatBox = (): JSX.Element => {
     } catch (error) {
       console.log(error)
     }
+    setMessageBeingSent(false)
   }
 
   const handleKeyPress = (e: any): void => {
@@ -463,75 +494,79 @@ const ChatBox = (): JSX.Element => {
             )}
           </ScrollToBottom>
 
-          <div className="chatBoxBottom">
-            {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
-              <>
-                <label>
-                  <i className="fa fa-link" aria-hidden="true"></i>
-                  <input
-                    type="file"
-                    id="inputTag"
-                    className="chatBoxBottomInput"
-                    ref={fileInputRef}
-                    onChange={uploadFile}
-                  />
-                </label>
+          {
+            messageBeingSent ? <Loader type="Oval" /> : (
+              <div className="chatBoxBottom">
+                {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
+                  <>
+                    <label>
+                      <i className="fa fa-link" aria-hidden="true"></i>
+                      <input
+                        type="file"
+                        id="inputTag"
+                        className="chatBoxBottomInput"
+                        ref={fileInputRef}
+                        onChange={uploadFile}
+                      />
+                    </label>
 
-                <div className="gifPicker">
-                  {isGifPickerOpened ? <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} /> : null}
-                  <button className="GifIcon_btn" onClick={() => setIsGifPickerOpened(true)}>
-                    <GifIcon />
+                    <div className="gifPicker">
+                      {isGifPickerOpened ? <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} /> : null}
+                      <button className="GifIcon_btn" onClick={() => setIsGifPickerOpened(true)}>
+                        <GifIcon />
+                      </button>
+                    </div>
+                  </>
+                ) : null}
+                {currentChat.intent === 'Pending' ? (
+                  <textarea
+                    disabled
+                    className="chatMessageInput"
+                    placeholder={placeholderTextArea()}
+                    onKeyDown={handleKeyPress}
+                    onChange={textOnChange}
+                    value={newMessage}
+                  ></textarea>
+                ) : (
+                  <>
+                    <textarea
+                      disabled={textAreaDisabled}
+                      className="chatMessageInput"
+                      placeholder={placeholderTextArea()}
+                      onKeyDown={handleKeyPress}
+                      onChange={textOnChange}
+                      value={newMessage}
+                      autoFocus
+                    ></textarea>
+                  </>
+                )}
+                {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
+                  <button
+                    disabled={textAreaDisabled}
+                    className="emojiButton"
+                    onClick={(): void => setShowEmojis(!showEmojis)}
+                  >
+                    <i className="fa fa-smile" aria-hidden="true"></i>
                   </button>
-                </div>
-              </>
-            ) : null}
-            {currentChat.intent === 'Pending' ? (
-              <textarea
-                disabled
-                className="chatMessageInput"
-                placeholder={placeholderTextArea()}
-                onKeyDown={handleKeyPress}
-                onChange={textOnChange}
-                value={newMessage}
-              ></textarea>
-            ) : (
-              <>
-                <textarea
-                  disabled={textAreaDisabled}
-                  className="chatMessageInput"
-                  placeholder={placeholderTextArea()}
-                  onKeyDown={handleKeyPress}
-                  onChange={textOnChange}
-                  value={newMessage}
-                  autoFocus
-                ></textarea>
-              </>
-            )}
-            {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
-              <button
-                disabled={textAreaDisabled}
-                className="emojiButton"
-                onClick={(): void => setShowEmojis(!showEmojis)}
-              >
-                <i className="fa fa-smile" aria-hidden="true"></i>
-              </button>
-            ) : null}
-            {showEmojis && (
-              <Picker
-                onEmojiClick={addEmoji}
-                pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
-              />
-            )}
-            {filesUploading ? (
-              <div className="imageloader">
-                <Loader type="Oval" color="#3467eb" height={20} width={20} />
+                ) : null}
+                {showEmojis && (
+                  <Picker
+                    onEmojiClick={addEmoji}
+                    pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
+                  />
+                )}
+                {filesUploading ? (
+                  <div className="imageloader">
+                    <Loader type="Oval" color="#3467eb" height={20} width={20} />
+                  </div>
+                ) : (
+                  <button className="chatSubmitButton" onClick={handleSubmit}>
+                    <i className="fa fa-paper-plane" aria-hidden="true"></i>
+                  </button>
+                )}
               </div>
-            ) : (
-              <button className="chatSubmitButton" onClick={handleSubmit}>
-                <i className="fa fa-paper-plane" aria-hidden="true"></i>
-              </button>
-            )}
-          </div>
+            )
+          }
         </>
       )}
     </div>
