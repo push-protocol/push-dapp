@@ -838,9 +838,7 @@ const Container = styled.div`
   flex-wrap: wrap;
 
   background: ${(props) => props.theme.mainBg};
-  border-radius: 10px;
   border: 1px solid ${(props) => props.theme.viewChannelOuterBorder};
-
   margin: 15px 0px;
   justify-content: center;
   padding: 10px;
@@ -930,9 +928,9 @@ const ChannelTitleLink = styled.a`
   }
 
   & > span {
-    font-weight: 600;
+    font-weight: 500;
     color: ${(props) => props.theme.viewChannelLink};
-    font-size: 20px;
+    font-size: 18px;
   }
 
   & > span > span {
@@ -966,7 +964,7 @@ const VerifierName = styled.span`
 const ChannelDesc = styled.div`
   flex: 1;
   display: flex;
-  font-size: 14px;
+  font-size: 15px;
   color: rgba(0, 0, 0, 0.75);
   padding: 5px 0px 10px 0px;
   font-weight: 400;
@@ -1080,6 +1078,9 @@ const ChannelActionButton = styled.button`
 `;
 
 const ActionTitle = styled.span`
+  font-weight: 500;
+  font-size: 14px;
+
   ${(props) =>
     props.hideit &&
     css`
@@ -1112,11 +1113,17 @@ const SkeletonButton = styled.div`
 
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
+  border-radius: 8px;
+  padding:9px 20px;
   min-width: 80px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
-  background: #674c9f;
+  background: #fff;
+  color:#657795;
+  border:1px solid #657795; 
+  border-radius: 8px;
+  padding:9px 20px;
   min-width: 80px;
 `;
 

@@ -8,22 +8,23 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
 
   // render
   return (
-    <MetaContainer>
-      {externalIcon &&
-        <Item
-          margin="0px 4px 0px 0px"
-        >
-          {externalIcon}
-        </Item>
-      }
+    <ItemH  bg={bgColor}>
+     
       <MetaContent
         hoverBG="transparent"
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
+        {externalIcon &&
+          <Item
+            margin="0px 4px 0px 0px"
+          >
+            {externalIcon}
+          </Item>
+        }
         <Span
-          bg={bgColor}
+         
         >
           {internalIcon && 
             <IconContainer>
@@ -33,15 +34,17 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
           {text}
         </Span>
       </MetaContent>
-    </MetaContainer>
+    </ItemH>
   );
 }
 
-const MetaContainer = styled(ItemH)`
-  flex-wrap: initial;
-  flex: initial;
-  padding: 5px;
-`
+// const MetaContainer = styled(ItemH)`
+//   flex-wrap: initial;
+//   flex: initial;
+//   & > ItemH {
+   
+//   }
+// `
 
 const MetaContent = styled(A)`
   display: flex;
@@ -50,15 +53,15 @@ const MetaContent = styled(A)`
   align-items: center;
   
   & > Span {
+    padding: 5px;
     background: ${props => props.bgColor};
+    border-radius: 10px;
+    gap: 3px;
     margin: 0px 5px;
     color: #fff;
     font-weight: 600;
-    padding: 5px 10px;
     display: flex;
-    border-radius: 10px;
     font-size: 11px;
-    gap: 3px;
     transition: 300ms;
   }
 `

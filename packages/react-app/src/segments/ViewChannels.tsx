@@ -193,7 +193,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   value={search}
                   onChange={(e: any) => setSearch(e.target.value)}
                   className="input"
-                  placeholder="Search By Name/Address"
+                  placeholder={`Search by Name or ${account.slice(0,6)}`}
                 />
                 <Item
                   position="absolute"
@@ -206,9 +206,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 </Item>
               </SearchContainer>
 
-              {!UtilityHelper.isMainnet(chainId) &&
+              {/* {!UtilityHelper.isMainnet(chainId) &&
                 <Faucets chainId={chainId} />
-              }
+              } */}
 
             </ItemH>
           )}
@@ -261,14 +261,14 @@ const SearchBar = styled.input`
   padding-right: 50px;
   height: 60px;
   padding-left: 40px;
-
+  border: none;
   background: ${props => props.theme.viewChannelSearchBg};
-  border: 1px solid ${props => props.theme.viewChannelSearchBorder} !important;
   color: ${props => props.theme.viewChannelSearchText};
   box-sizing: border-box;
-  border-radius: 10px;
-  text-transform: capitalize;
+  border-radius: 99px;
+  text-transform: none;
   font-size: 16px;
+  font-weight: 400;
 
   input[type="reset"] {
     display: none;

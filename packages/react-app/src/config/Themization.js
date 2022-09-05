@@ -32,7 +32,7 @@ const themeLight = {
   interfaceSkeleton: "#eee",
 
   // Main Theme
-  backgroundBG: "#fff",
+  backgroundBG: "#F4F5FA",
   backgroundBGLucid: "#00000099",
   mainBg: "#fff",
   fontColor: "#000",
@@ -43,10 +43,9 @@ const themeLight = {
   // View Channels Theme
   // -- View Channel Header Theme
   // -- -- Search Bar
-  viewChannelSearchBg: "#fff",
-  viewChannelSearchBorder: "#f1f1f1",
-  viewChannelSearchText: "#000",
-  viewChannelSearchIcon: "#333",
+  viewChannelSearchBg: "#F4F5FA",
+  viewChannelSearchText: "#657795",
+  viewChannelSearchIcon: "#657795",
 
   // -- -- Faucet Theme
   faucetBg: "#fff",
@@ -59,8 +58,8 @@ const themeLight = {
   viewChannelLink: "#e20880",
   viewChannelVerifiedBadge: "#ec008c",
   viewChannelIconBorder: "#fafafa",
-  viewChannelSecondaryBG: "#35c5f3",
-  viewChannelSecondaryIcon: "#ccc",
+  viewChannelSecondaryBG: "#FFDBF0",
+  viewChannelSecondaryIcon: "#D53893",
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: "#000",
