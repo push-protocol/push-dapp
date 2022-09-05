@@ -563,13 +563,6 @@ function Navigation() {
                   )
                 }
             </Primary>
-            {/* <Secondary
-                align="stretch"
-                justify="flex-end"
-                margin="10px 0px 10px 0px"
-              >
-              
-              </Secondary> */}
             <Footer
               justify="flex-end"
               align="stretch"
@@ -705,8 +698,6 @@ const InheritedSection = styled(Item)`
 `
 
 const PrimarySection = styled(InheritedSection)`
-  border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
-  border-top: 1px solid ${props => props.theme.sectionBorderBg};
   margin-top: -1px;
 `
 

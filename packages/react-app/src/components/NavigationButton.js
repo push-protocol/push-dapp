@@ -59,7 +59,7 @@ function NavigationButton({ item, data, sectionID, active }) {
       align="stretch"
       padding="12px"
       margin={definedMargin}
-      bg={!active ? "transparent" : "#F9EBF3;"}
+      bg={!active ? "transparent" : theme.activeNav}
       active={active}
       className={data?.name?.toLowerCase()}
     >
