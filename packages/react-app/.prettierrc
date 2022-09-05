@@ -2,9 +2,9 @@
     "semi": true,
     "singleQuote": true,
     "printWidth": 120,
-    "prettier.trailingComma" : "none",
+    "prettier.trailingComma" : "all",
     "tabWidth": 2,
-    "bracketSameLine": false,
+    "bracketSameLine": true,
     "useTabs": false,
     "arrowParens": "always"
 }
