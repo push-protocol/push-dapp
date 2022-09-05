@@ -43,7 +43,7 @@ const ShowDelegates = () => {
       const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
       const { data } = await getReq(`/v1/channels/${channelAddressinCAIP}/delegates`);
       if (data?.delegates) {
-        const delegateeList = data.delegates.map((delegate) => delegate.delegate);
+        const delegateeList = data.delegates.map((delegate) => delegate);
         delegateeList.unshift(account);
         setDelegatees(delegateeList);
       }
