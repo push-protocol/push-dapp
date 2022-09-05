@@ -1,17 +1,17 @@
-import React, { useEffect,useState } from "react";
-import { Item, Span, Section, Content, H2, H3, Button } from "primaries/SharedStyling";
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { getReq } from "api";
 import { useWeb3React } from "@web3-react/core";
-import styled, { useTheme, css } from "styled-components";
-import { useSelector } from "react-redux";
-import RemoveDelegateModal from "./RemoveDelegateModal";
-import DelegateInfo from "./DelegateInfo";
+import { getReq } from "api";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { useDeviceWidthCheck } from "hooks";
+import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
+import React, { useEffect, useState } from "react";
 import {
   AiOutlineUserDelete
 } from 'react-icons/ai';
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { useDeviceWidthCheck } from "hooks";
+import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
+import { useSelector } from "react-redux";
+import styled, { css, useTheme } from "styled-components";
+import DelegateInfo from "./DelegateInfo";
+import RemoveDelegateModal from "./RemoveDelegateModal";
 
 const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
