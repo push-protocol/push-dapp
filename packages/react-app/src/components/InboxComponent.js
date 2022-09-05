@@ -20,7 +20,7 @@ const InboxComponent = () => {
   };
 
   return (
-    <>
+    <Container>
       <NavBoxHolder>
         <NavHolder>
           <NavTitleButton isActive={showInbox} onClick={handleToggle}>
@@ -51,30 +51,19 @@ const InboxComponent = () => {
           </ItemIconRotate>
         </SearchContainer>
       </NavBoxHolder>
-      <Container>
-        {showInbox ? (
-          <Feedbox showFilter={showFilter} />
-        ) : (
-          <Spambox showFilter={showFilter} />
-        )}
-      </Container>
-    </>
+      {showInbox ? (
+        <Feedbox showFilter={showFilter} />
+      ) : (
+        <Spambox showFilter={showFilter} />
+      )}
+    </Container>
   );
 };
-
-const Cont = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  align-items: stretch;
-  align-self: stretch;
-`;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  height: 95%;
+  height: 100%;
   width: 100%;
   align-items: stretch;
   align-self: stretch;

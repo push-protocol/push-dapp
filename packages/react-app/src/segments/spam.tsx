@@ -546,6 +546,7 @@ const Container = styled.div`
   justify-content: center;
   max-height: 100vh;
   background: ${props => props.theme.mainBg};
+  margin: 0px 0px 0px 10px;
 
   // padding: 20px;
   // font-size: 16px;
