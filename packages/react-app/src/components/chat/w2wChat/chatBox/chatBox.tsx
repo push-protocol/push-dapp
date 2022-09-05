@@ -26,12 +26,13 @@ import { useQuery } from 'react-query'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { toast } from 'react-toastify'
-import { MessageIPFSWithCID, User } from '../../../../api'
+import { Feeds, MessageIPFSWithCID, User } from '../../../../api'
 import { FileMessageContent } from '../Files/Files'
 import { generateKeyPair } from 'helpers/w2w/pgp'
 import * as DIDHelper from 'helpers/w2w/did'
 import * as w2wHelper from 'helpers/w2w/'
 import { DID } from 'dids'
+import { decryptFeeds, fetchInbox } from '../w2wUtils'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -40,7 +41,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const ChatBox = (): JSX.Element => {
-  const { currentChat, viewChatBox, did, searchedUser, connectedUser, inbox, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<AppContext>(
+  const { currentChat, viewChatBox, did, searchedUser, connectedUser, inbox, setConnectedUser, connectAndSetDID, setDID, setChat, setInbox }: AppContext = useContext<AppContext>(
     Context
   )
   const [newMessage, setNewMessage] = useState<string>('')
@@ -177,6 +178,7 @@ const ChatBox = (): JSX.Element => {
   }): Promise<void> => {
     setMessageBeingSent(true)
     let msg: MessageIPFSWithCID
+    let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string, sigType: string
     try {
       msg = {
         fromCAIP10: walletToCAIP10({ account, chainId }),
@@ -194,23 +196,36 @@ const ChatBox = (): JSX.Element => {
       }
       setNewMessage('')
       setMessages([...messages, msg])
-      const { cipherText, encryptedSecret, signature, sigType, encType } = await encryptAndSign({
-        plainText: message,
-        fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat.publicKey,
-        did
-      })
+      if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+        messageContent = message
+        encryptionType = 'PlainText'
+        aesEncryptedSecret = ''
+        signature = ''
+        sigType = ''
+      } else {
+        const { cipherText, encryptedSecret, signature: pgpSignature, sigType: pgpSignatureType, encType: pgpEncryptionType } = await encryptAndSign({
+          plainText: message,
+          fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+          fromPublicKeyArmored: connectedUser.publicKey,
+          toPublicKeyArmored: currentChat.publicKey,
+          did
+        })
+        messageContent = cipherText
+        encryptionType = pgpEncryptionType
+        aesEncryptedSecret = encryptedSecret
+        signature = pgpSignature
+        sigType = pgpSignatureType
+      }
       const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
         fromDID: did.id,
         toDID: currentChat.did,
-        messageContent: cipherText,
+        messageContent,
         messageType,
         signature,
-        encType,
+        encType: encryptionType,
         sigType,
-        encryptedSecret
+        encryptedSecret: aesEncryptedSecret
       })
 
       if (typeof savedMsg === 'string') {
@@ -229,12 +244,13 @@ const ChatBox = (): JSX.Element => {
     e.preventDefault()
 
     if (newMessage.trim() !== '') {
-      if (currentChat.intent === 'Approved') {
+      if (currentChat.threadhash) {
         sendMessage({
           message: newMessage,
           messageType: 'Text'
         })
-      } else {
+      }
+      else {
         sendIntent({ message: newMessage, messageType: 'Text' })
       }
     }
@@ -332,6 +348,13 @@ const ChatBox = (): JSX.Element => {
           msg.messageContent = message
           setMessages([...messages, msg])
           setNewMessage('')
+          // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
+          // will be undefined since it was not updated right after the intent was sent
+          let inboxes: Feeds[] = await fetchInbox(didCreated)
+          inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser, did: didCreated })
+          setInbox(inboxes)
+          const result = inboxes.find(x => x.did === currentChat.did)
+          setChat(result)
           toast.success('Intent sent!', ToastPosition)
         }
       } else {
@@ -453,7 +476,7 @@ const ChatBox = (): JSX.Element => {
               </div>
             ) : (
               <>
-                {currentChat.intent === 'Approved' || currentChat.threadhash ? (
+                {
                   messages?.map((msg, i) => {
                     const isLast = i === messages.length - 1
                     const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -478,11 +501,7 @@ const ChatBox = (): JSX.Element => {
                       </div>
                     )
                   })
-                ) : (
-                  <div className="askForIntent">
-                    <p>Ask for Intent to send messages</p>
-                  </div>
-                )}
+                }
               </>
             )}
           </ScrollToBottom>
