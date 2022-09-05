@@ -415,13 +415,6 @@ const ChatBox = (): JSX.Element => {
     }
     setOpenSuccessSnackBar(false)
   }
-  const placeholderTextArea = (): string => {
-    if (currentChat.intent === 'Pending') {
-      return "Can't send any messages until intent is accepted !"
-    }
-    if (currentChat.intent === 'Approved') return 'New Text Message'
-    else return 'Intent Message'
-  }
 
   return (
     <div className="chatBox_body">
@@ -518,28 +511,19 @@ const ChatBox = (): JSX.Element => {
                     </div>
                   </>
                 ) : null}
-                {currentChat.intent === 'Pending' ? (
-                  <textarea
-                    disabled
-                    className="chatMessageInput"
-                    placeholder={placeholderTextArea()}
-                    onKeyDown={handleKeyPress}
-                    onChange={textOnChange}
-                    value={newMessage}
-                  ></textarea>
-                ) : (
+                {
                   <>
                     <textarea
                       disabled={textAreaDisabled}
                       className="chatMessageInput"
-                      placeholder={placeholderTextArea()}
+                      placeholder={'New Text Message'}
                       onKeyDown={handleKeyPress}
                       onChange={textOnChange}
                       value={newMessage}
                       autoFocus
                     ></textarea>
                   </>
-                )}
+                }
                 {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
                   <button
                     disabled={textAreaDisabled}
