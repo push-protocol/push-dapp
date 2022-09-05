@@ -50,6 +50,7 @@ const Feedbox = ({showFilter,setShowFilter}) => {
   const [allNotf, setNotif] = React.useState([]);
   const [filteredNotifications, setFilteredNotifications] = React.useState([]);
   const [filter, setFilter] = React.useState(false);
+  const [allFilter, setAllFilter] = React.useState([]);
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -101,7 +102,9 @@ const Feedbox = ({showFilter,setShowFilter}) => {
         )
           filterNotif.push(notif);
       }
-      await setFilteredNotifications(filterNotif);
+      const newNotifs = filterNotif
+      setAllFilter(newNotifs)
+      // setFilteredNotifications([...newNotifs]);
     } catch (err) {
       console.log(err);
     } finally {
@@ -109,6 +112,11 @@ const Feedbox = ({showFilter,setShowFilter}) => {
       setBgUpdateLoading(false);
     }
   }
+
+  React.useEffect(() => {
+    console.log(filteredNotifications,allFilter)
+    setFilteredNotifications(allFilter)
+  }, [allFilter])
 
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
@@ -315,8 +323,6 @@ const Feedbox = ({showFilter,setShowFilter}) => {
       }
     }
   };
-  console.log(welcomeNotifs,filteredNotifications.slice(0, limit),notifications,limit)
-
   // Render
   return (
     <ThemeProvider theme={themes}>

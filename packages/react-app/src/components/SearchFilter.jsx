@@ -21,12 +21,12 @@ const SearchFilter = ({
 
   const applySearch = async () => {
     var channels = [];
-    // setShowFilter(false)
+    setShowFilter(false)
+      reset()
     selectedOption.length
       ? selectedOption.map((each) => channels.push(each.value))
       : (channels = []);
     await filterNotifications(search, channels, startDate, endDate);
-    console.log(search,channels)
   };
 
   var options = [];
