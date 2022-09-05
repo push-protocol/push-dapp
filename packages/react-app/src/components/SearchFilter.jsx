@@ -33,8 +33,6 @@ const SearchFilter = ({
 
   const applySearch = async () => {
     var channels = [];
-    setShowFilter(false)
-      reset()
     selectedOption.length
       ? selectedOption.map((each) => channels.push(each.value))
       : (channels = []);
