@@ -182,7 +182,7 @@ function CreateChannel() {
     input = JSON.stringify(input);
     setProgress(0);
     console.log(`input is ${input}`);
-    const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
+    // const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
     channelToast.showToast("Waiting for Confirmation...");
 
     setProcessingInfo("Payload Uploaded");
@@ -206,86 +206,47 @@ function CreateChannel() {
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
-    if (daiAmountVal < 50.0) {
-      var sendTransactionPromise = daiContract.approve(
+    try {
+      if (daiAmountVal < 50.0) {
+        var sendTransactionPromise = daiContract.approve(
+          addresses.epnscore,
+          fees
+        );
+        const tx = await sendTransactionPromise;
+
+        console.log(tx);
+        console.log("waiting for tx to finish");
+        setProgress(30);
+
+        await library.waitForTransaction(tx.hash);
+      }
+
+      let contract = new ethers.Contract(
         addresses.epnscore,
-        fees
+        abis.epnscore,
+        signer
       );
-      const tx = await sendTransactionPromise;
+
+      const channelType = 2; // Open Channel
+      const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
+      const identityBytes = ethers.utils.toUtf8Bytes(identity);
+
+      setProgress(50);
+    
+      const tx = await contract.createChannelWithFees(
+        channelType,
+        identityBytes,
+        fees,
+        {
+          gasLimit: 1000000,
+        }
+      );
 
       console.log(tx);
-      console.log("waiting for tx to finish");
-      setProgress(30);
+      console.log("Check: " + account);
+      let txCheck = await library.waitForTransaction(tx.hash);
 
-      await library.waitForTransaction(tx.hash);
-    }
-
-    let contract = new ethers.Contract(
-      addresses.epnscore,
-      abis.epnscore,
-      signer
-    );
-
-    const channelType = 2; // Open Channel
-    const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
-    const identityBytes = ethers.utils.toUtf8Bytes(identity);
-
-    var anotherSendTxPromise = contract.createChannelWithFees(
-      channelType,
-      identityBytes,
-      fees,
-      {
-        gasLimit: 1000000,
-      }
-    );
-
-    // setProcessingInfo("Creating Channel TX in progress");
-
-    // setProcessingInfo("Transaction Confirmed");
-    // setProgressInfo("Please wait while we confirm the transaction.");
-    setProgress(50);
-    anotherSendTxPromise
-      .then(async function(tx) {
-        console.log(tx);
-        console.log("Check: " + account);
-        let txCheck = await library.waitForTransaction(tx.hash);
-
-        if (txCheck.status === 0) {
-          channelToast.updateToast(
-            "Error",
-            `There was an error creating the channel`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
-
-          setProcessing(3);
-          setTxStatus(0);
-          setStepFlow(2);
-          setChannelInfoDone(false);
-          setUploadDone(false);
-          setTimeout(() => {
-            setProcessing(0);
-          }, 500);
-        } else {
-          setProcessing(3);
-          setProgress(60);
-          setProgressInfo("Please wait while we confirm the transaction.");
-          setProcessingInfo("Transaction Confirmed");
-          setTimeout(() => {
-            setProgress(80);
-            setProgressInfo(
-              "Creating your channel, Aligning pixels, adjusting padding... This may take some time."
-            );
-            setProcessingInfo("Redirecting... Please do not refresh");
-            setProgress(90);
-          }, 2000);
-          setTimeout(() => {
-            setProgress(100);
-            window.location.reload();
-          }, 2000);
-        }
-      })
-      .catch((err) => {
+      if (txCheck.status === 0) {
         channelToast.updateToast(
           "Error",
           `There was an error creating the channel`,
@@ -293,15 +254,63 @@ function CreateChannel() {
           (size) => <MdError size={size} color="red" />
         );
 
-        console.log("Error --> %o", err);
-        console.log({ err });
         setProcessing(3);
-        setProgress(0);
-        setProgressInfo("Contact support@epns.io to whitelist your wallet");
-        setProcessingInfo(
-          "!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet"
-        );
-      });
+        setTxStatus(0);
+        setStepFlow(2);
+        setChannelInfoDone(false);
+        setUploadDone(false);
+        setTimeout(() => {
+          setProcessing(0);
+        }, 500);
+      } else {
+        setProcessing(3);
+        setProgress(60);
+        setProgressInfo("Please wait while we confirm the transaction.");
+        setProcessingInfo("Transaction Confirmed");
+        setTimeout(() => {
+          setProgress(80);
+          setProgressInfo(
+            "Creating your channel, Aligning pixels, adjusting padding... This may take some time."
+          );
+          setProcessingInfo("Redirecting... Please do not refresh");
+          setProgress(90);
+        }, 2000);
+        setTimeout(() => {
+          setProgress(100);
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (err) {
+      console.log("hello", err);
+        if (err.code === 4001) {
+          // EIP-1193 userRejectedRequest error
+          channelToast.updateToast(
+            "Error",
+            `User denied message signature.`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
+          setStepFlow(3);
+          setProcessing(0);
+          setUploadDone(false);
+        } else {
+          channelToast.updateToast(
+            "Error",
+            `There was an error creating the channel`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
+
+          console.log("Error --> %o", err);
+          console.log({ err });
+          setProcessing(3);
+          setProgress(0);
+          setProgressInfo("There was an error creating the Channel");
+          setProcessingInfo(
+            "Kindly Contact support@epns.io to resolve the issue."
+          );
+        }
+      };
   };
 
   useEffect(() => {
@@ -346,6 +355,7 @@ function CreateChannel() {
               weight="400"
               size="16px"
               textTransform="none"
+              textAlign="center"
               spacing="0.03em"
               margin="0px 0px"
             >

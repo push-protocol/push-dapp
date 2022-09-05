@@ -1,19 +1,19 @@
-import React, { useEffect,useState } from "react";
-import { Item, Span, Section, Content, H2, H3, Button } from "primaries/SharedStyling";
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { getReq } from "api";
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
-import { useSelector } from "react-redux";
 import RemoveDelegateModal from "./RemoveDelegateModal_OLD";
-import DelegateInfo from "./DelegateInfo";
+import { getReq } from "api";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { useDeviceWidthCheck } from "hooks";
+import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
+import React, { useEffect, useState } from "react";
 import {
   AiOutlineUserDelete
 } from 'react-icons/ai';
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { useDeviceWidthCheck } from "hooks";
+import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
+import { useSelector } from "react-redux";
+import DelegateInfo from "./DelegateInfo";
 
-const isOnwer=(account,delegate)=>{
+const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
 }
 
@@ -43,13 +43,18 @@ const ShowDelegates = () => {
       const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
       const { data } = await getReq(`/v1/channels/${channelAddressinCAIP}/delegates`);
       if (data?.delegates) {
-        const delegateeList = data.delegates.map((delegate) => delegate.delegate);
+        const delegateeList = data.delegates.map((delegate) => delegate);
         delegateeList.unshift(account);
         setDelegatees(delegateeList);
       }
     } catch (err) {
       console.error(err);
     }
+  }
+
+  const removeDelegateModalOpen = (delegateAddress) => {
+    setDelegateToBeRemoved(delegateAddress);
+    setRemoveModalOpen(true);
   }
   
   return (
@@ -90,13 +95,12 @@ const ShowDelegates = () => {
                   borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
                 }}
               >
-                <DelegateInfo delegateAddress={delegate} isDelegate={isOnwer(account,delegate)} maxWidth={'200px'}/>
-                {isOnwer(account,delegate) ?
-                  <RemoveButton onClick={() => {
-                    setDelegateToBeRemoved(delegate);
-                    setRemoveModalOpen(true);
-                  }}>
-                  </RemoveButton> : 
+                <DelegateInfo delegateAddress={delegate} isDelegate={isOwner(account,delegate)} maxWidth={'200px'}/>
+                {isOwner(account,delegate) ?
+                  <RemoveButton
+                    delegateAddress={delegate}
+                    removeDelegateModalOpen={removeDelegateModalOpen}
+                  /> : 
                   <OwnerButton disabled={true}>
                     Channel Creator
                   </OwnerButton>
@@ -121,7 +125,7 @@ const ShowDelegates = () => {
   )
 }
 
-const RemoveButton = ()=>{
+const RemoveButton = ({ delegateAddress, removeDelegateModalOpen }) => {
   const [isHovered,setIsHovered] = useState(false)
   
   const handleMouseOver = () => {
@@ -131,9 +135,9 @@ const RemoveButton = ()=>{
   const handleMouseOut = () => {
     setIsHovered(false);
   };
-
-  return(
-      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut}>
+  return (
+    
+      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => removeDelegateModalOpen(delegateAddress)}>
         {
         isHovered ?
         <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
@@ -218,22 +222,13 @@ const RemoveButtonUI = styled(ChannelActionButton)`
 `;
 
 const OwnerButton = styled(Button)`
+  all: unset;
   background: transparent;
-  // height: 50px;
-  // width: 164px;
   font-weight: 500;
   font-size: 16px;
-  // justify-content: end;
-  // text-align: right;
-  cursor: pointer;
   color: #CF1C84;
-  // padding: 6px 10px 6px 9px;
-  &:hover {
-    background: transparent;
-  }
-  
+  cursor: auto;
 `;
-
 
 const DelegatesInfoHeader = styled.div`
 font-weight: 600;

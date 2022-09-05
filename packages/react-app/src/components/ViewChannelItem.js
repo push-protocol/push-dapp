@@ -36,6 +36,8 @@ import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 import useToast from "hooks/useToast";
 
 import { MdCheckCircle, MdError } from "react-icons/md";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -319,49 +321,52 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     setTxInProgress(true);
     // let txToast;
     try {
-      const type = {
-        Subscribe: [
-          { name: "channel", type: "address" },
-          { name: "subscriber", type: "address" },
-          { name: "action", type: "string" },
-        ],
-      };
+      // const type = {
+      //   Subscribe: [
+      //     { name: "channel", type: "address" },
+      //     { name: "subscriber", type: "address" },
+      //     { name: "action", type: "string" },
+      //   ],
+      // };
 
       let channelAddress = channelObject.addr;
-      if (!onCoreNetwork) {
-        channelAddress = channelObject.alias_address;
-      }
+      // if (!onCoreNetwork) {
+      //   channelAddress = channelObject.alias_address;
+      // }
 
-      const message = {
-        channel: channelAddress,
-        subscriber: account,
-        action: "Subscribe",
-      };
+      // const message = {
+      //   channel: channelAddress,
+      //   subscriber: account,
+      //   action: "Subscribe",
+      // };
 
-      const signature = await library
-        .getSigner(account)
-        ._signTypedData(EPNS_DOMAIN, type, message);
-      // txToast = toaster.dark(
-      //   <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-      //   {
-      //     position: "bottom-right",
-      //     autoClose: false,
-      //     hideProgressBar: true,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //   }
-      // );
+      // const signature = await library
+      //   .getSigner(account)
+      //   ._signTypedData(EPNS_DOMAIN, type, message);
+      // subscribeToast.showToast("Waiting for Confirmation...");
+
       subscribeToast.showToast("Waiting for Confirmation...");
 
       if (run) {
+        const type = {
+          Subscribe: [
+            { name: "channel", type: "address" },
+            { name: "subscriber", type: "address" },
+            { name: "action", type: "string" },
+          ],
+        };
+        
+        const message = {
+          channel: channelAddress,
+          subscriber: account,
+          action: "Subscribe",
+        };
+
+        await library
+          .getSigner(account)
+          ._signTypedData(EPNS_DOMAIN, type, message);
+        
         console.log("in run");
-        // toaster.update(txToast, {
-        //   render: "Successfully opted into channel !",
-        //   type: toaster.TYPE.SUCCESS,
-        //   autoClose: 5000,
-        // });
         subscribeToast.updateToast(
           "Success",
           "Successfully opted into channel !",
@@ -390,38 +395,57 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         return;
       }
 
-      postReq("/channels/subscribe", {
-        signature,
-        message,
-        op: "write",
-        chainId,
-        contractAddress: epnsCommReadProvider.address,
-      }).then((res) => {
-        dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
-        setSubscribed(true);
-        setMemberCount(memberCount + 1);
+      const _signer = await library.getSigner(account);
+      await EpnsAPI.channels.subscribe({
+        signer: _signer,
+        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
+        userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
+        onSuccess: () => {
+          dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
+          setSubscribed(true);
+          setMemberCount(memberCount + 1);
 
-        // toaster.update(txToast, {
-        //   render: "Successfully opted into channel !",
-        //   type: toaster.TYPE.SUCCESS,
-        //   autoClose: 5000,
-        // });
-        subscribeToast.updateToast(
-          "Success",
-          "Successfully opted into channel !",
-          "SUCCESS",
-          (size) => <MdCheckCircle size={size} color="green" />
-        );
+          subscribeToast.updateToast(
+            "Success",
+            "Successfully opted into channel !",
+            "SUCCESS",
+            (size) => <MdCheckCircle size={size} color="green" />
+          );
+        },
+        onError: () => {
+          console.error('opt in error');
+          subscribeToast.updateToast(
+            "Error",
+            `There was an error opting into channel`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
+        },
+        env: envConfig['env']
+      })
 
-        console.log(res);
-        setTxInProgress(false);
-      });
-    } catch (err) {
-      // toaster.update(txToast, {
-      //   render: "There was an error opting into channel (" + err.message + ")",
-      //   type: toaster.TYPE.ERROR,
-      //   autoClose: 5000,
+      // postReq("/channels/subscribe", {
+      //   signature,
+      //   message,
+      //   op: "write",
+      //   chainId,
+      //   contractAddress: epnsCommReadProvider.address,
+      // }).then((res) => {
+      //   dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
+      //   setSubscribed(true);
+      //   setMemberCount(memberCount + 1);
+
+      //   subscribeToast.updateToast(
+      //     "Success",
+      //     "Successfully opted into channel !",
+      //     "SUCCESS",
+      //     (size) => <MdCheckCircle size={size} color="green" />
+      //   );
+
+      //   console.log(res);
+      //   setTxInProgress(false);
       // });
+    } catch (err) {
       subscribeToast.updateToast(
         "Error",
         `There was an error opting into channel ( ${err.message} )`,
@@ -459,87 +483,113 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const unsubscribeAction = async () => {
     // let txToast;
     try {
-      const type = {
-        Unsubscribe: [
-          { name: "channel", type: "address" },
-          { name: "unsubscriber", type: "address" },
-          { name: "action", type: "string" },
-        ],
-      };
+      // const type = {
+      //   Unsubscribe: [
+      //     { name: "channel", type: "address" },
+      //     { name: "unsubscriber", type: "address" },
+      //     { name: "action", type: "string" },
+      //   ],
+      // };
 
       let channelAddress = channelObject.addr;
-      if (!onCoreNetwork) {
-        channelAddress = channelObject.alias_address;
-      }
+      // if (!onCoreNetwork) {
+      //   channelAddress = channelObject.alias_address;
+      // }
 
-      const message = {
-        channel: channelAddress,
-        unsubscriber: account,
-        action: "Unsubscribe",
-      };
-      const signature = await library
-        .getSigner(account)
-        ._signTypedData(EPNS_DOMAIN, type, message);
+      // const message = {
+      //   channel: channelAddress,
+      //   unsubscriber: account,
+      //   action: "Unsubscribe",
+      // };
+      // const signature = await library
+      //   .getSigner(account)
+      //   ._signTypedData(EPNS_DOMAIN, type, message);
 
-      // txToast = toaster.dark(
-      //   <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-      //   {
-      //     position: "bottom-right",
-      //     autoClose: false,
-      //     hideProgressBar: true,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //     progress: undefined,
-      //   }
-      // );
       unsubscribeToast.showToast("Waiting for Confirmation...");
 
-      postReq("/channels/unsubscribe", {
-        signature,
-        message,
-        op: "write",
-        chainId,
-        contractAddress: epnsCommReadProvider.address,
-      })
-        .then((res) => {
+      const _signer = await library.getSigner(account);
+      await EpnsAPI.channels.unsubscribe({
+        signer: _signer,
+        channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
+        userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
+        onSuccess: () => {
           dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
           setSubscribed(false);
           setMemberCount(memberCount - 1);
 
-          // toaster.update(txToast, {
-          //   render: "Successfully opted out of channel !",
-          //   type: toaster.TYPE.SUCCESS,
-          //   autoClose: 5000,
-          // });
           unsubscribeToast.updateToast(
             "Success",
             "Successfully opted out of channel !",
             "SUCCESS",
             (size) => <MdCheckCircle size={size} color="green" />
           );
-
-          console.log(res);
-        })
-        .catch((err) => {
-          // toaster.update(txToast, {
-          //   render:
-          //     "There was an error opting into channel (" + err.message + ")",
-          //   type: toaster.TYPE.ERROR,
-          //   autoClose: 5000,
-          // });
+        },
+        onError: () => {
+          console.error('opt out error');
           unsubscribeToast.updateToast(
             "Error",
-            `There was an error opting into channel ( ${err.message} )`,
+            `There was an error opting out of channel`,
             "ERROR",
             (size) => <MdError size={size} color="red" />
           );
+        },
+        env: envConfig['env']
+      })
 
-          console.log(err);
-        })
-        .finally(() => {
-          setTxInProgress(false);
-        });
+      // postReq("/channels/unsubscribe", {
+      //   signature,
+      //   message,
+      //   op: "write",
+      //   chainId,
+      //   contractAddress: epnsCommReadProvider.address,
+      // })
+      //   .then((res) => {
+      //     dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
+      //     setSubscribed(false);
+      //     setMemberCount(memberCount - 1);
+
+      //     // toaster.update(txToast, {
+      //     //   render: "Successfully opted out of channel !",
+      //     //   type: toaster.TYPE.SUCCESS,
+      //     //   autoClose: 5000,
+      //     // });
+      //     unsubscribeToast.updateToast(
+      //       "Success",
+      //       "Successfully opted out of channel !",
+      //       "SUCCESS",
+      //       (size) => <MdCheckCircle size={size} color="green" />
+      //     );
+
+      //     console.log(res);
+      //   })
+      //   .catch((err) => {
+      //     // toaster.update(txToast, {
+      //     //   render:
+      //     //     "There was an error opting into channel (" + err.message + ")",
+      //     //   type: toaster.TYPE.ERROR,
+      //     //   autoClose: 5000,
+      //     // });
+      //     unsubscribeToast.updateToast(
+      //       "Error",
+      //       `There was an error opting into channel ( ${err.message} )`,
+      //       "ERROR",
+      //       (size) => <MdError size={size} color="red" />
+      //     );
+
+      //     console.log(err);
+      //   })
+      //   .finally(() => {
+      //     setTxInProgress(false);
+      //   });
+    } catch (err) {
+      unsubscribeToast.updateToast(
+        "Error",
+        `There was an error opting out of channel ( ${err.message} )`,
+        "ERROR",
+        (size) => <MdError size={size} color="red" />
+      );
+
+      console.log(err);
     } finally {
       setTxInProgress(false);
     }

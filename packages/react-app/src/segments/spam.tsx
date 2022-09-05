@@ -25,7 +25,7 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-function SpamBox({ currentTab }) {
+function SpamBox(props) {
   const dispatch = useDispatch();
   const { account, chainId, library } = useWeb3React();
   const { epnsCommReadProvider } = useSelector(
@@ -33,6 +33,7 @@ function SpamBox({ currentTab }) {
   );
 
   const themes = useTheme();
+  let user = convertAddressToAddrCaip(account,chainId)
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -122,26 +123,27 @@ function SpamBox({ currentTab }) {
     if (loading || finishedFetching || run) return;
     setLoading(true);
     try {
-      const { count, results } = await EpnsAPI.fetchSpamNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
-        page,
-        chainId,
-        dev: true,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user,
+        limit: NOTIFICATIONS_PER_PAGE,
+        page: page,
+        env: envConfig['env'],
+        spam: true,
+        raw:true
       });
-        let parsedResponse = EpnsAPI.parseApiResponse(results);
+        let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
           parsedResponse.forEach( (each,i) => {
               each['date'] = results[i].epoch;
               each['epoch'] = (new Date(each['date']).getTime() / 1000);
           })
-          const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-            elem.channel = results[i].channel;
-            let address = results[i].channel;
+          const parsedResponsePromise = results.map(async (elem: any, i: any) => {
+            elem.channel = results[i].sender;
+            let address = results[i].sender;
             
             const {
               data: { subscribers },
             } = await postReq("/channels/_get_subscribers", {
-              channel: address,
+              channel: account,
               blockchain: chainId,
               op: "read",
             });
@@ -150,7 +152,7 @@ function SpamBox({ currentTab }) {
         });
       parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (count === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -166,43 +168,44 @@ function SpamBox({ currentTab }) {
     setLoading(true);
 
     try {
-      const { count, results } = await EpnsAPI.fetchSpamNotifications({
-        user: account,
-        pageSize: NOTIFICATIONS_PER_PAGE,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user,
+        limit: NOTIFICATIONS_PER_PAGE,
         page: 1,
-        chainId,
-        dev: true,
+        env: envConfig['env'],
+        spam: true,
+        raw:true
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = EpnsAPI.parseApiResponse(results);
-      parsedResponse.forEach((each, i) => {
-        each['date'] = results[i].epoch;
-        each['epoch'] = (new Date(each['date']).getTime() / 1000);
-      })
-      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-        elem.channel = results[i].channel;
-        let address = results[i].channel;
+      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+        parsedResponse.forEach( (each,i) => {
+            each['date'] = results[i].epoch;
+            each['epoch'] = (new Date(each['date']).getTime() / 1000);
+        })
+        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+          elem.channel = results[i].sender;
+          let address = results[i].sender;
 
           const {
             data: { subscribers },
           } = await postReq("/channels/_get_subscribers", {
-            channel: address,
+            channel: account,
             blockchain: chainId,
             op: "read",
           });
           elem.subscribers = subscribers;
           return { ...elem };
-        });
+      });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      dispatch(
-        updateTopNotifications({
-          notifs: parsedResponse,
-          pageSize: NOTIFICATIONS_PER_PAGE,
-        })
-      );
-      if (count === 0) {
+      // dispatch(
+      //   updateTopNotifications({
+      //     notifs: parsedResponse,
+      //     pageSize: NOTIFICATIONS_PER_PAGE,
+      //   })
+      // );
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -216,36 +219,45 @@ function SpamBox({ currentTab }) {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const { count, results } = await EpnsAPI.fetchSpamNotifications({
-        user: account,
-        pageSize: 100000,
+      const results = await EpnsAPI.user.getFeeds({
+        user: user,
+        limit: 100000,
         page: 1,
-        chainId,
-        dev: true,
+        env: envConfig['env'],
+        spam: true,
+        raw:true
       });
+
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = EpnsAPI.parseApiResponse(results);
+      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
         parsedResponse.forEach( (each,i) => {
             each['date'] = results[i].epoch;
             each['epoch'] = (new Date(each['date']).getTime() / 1000);
         })
         const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-          elem.channel = results[i].channel;
-          let address = results[i].channel;
+          elem.channel = results[i].sender;
+          let address = results[i].sender;
           
           const {
             data: { subscribers },
           } = await postReq("/channels/_get_subscribers", {
-            channel: address,
+            channel: account,
+            blockchain: chainId,
             op: "read",
           });
           elem.subscribers = subscribers;
           return { ...elem };
-        });
+      });
       parsedResponse = await Promise.all(parsedResponsePromise);
       let res = parsedResponse.filter(notif => !isSubscribedFn(notif['subscribers']));
+      dispatch(
+        updateTopNotifications({
+          notifs: res,
+          pageSize: NOTIFICATIONS_PER_PAGE,
+        })
+      );
       setNotif(res);
 
     } catch (err) {
@@ -347,8 +359,8 @@ function SpamBox({ currentTab }) {
       chainId,
       contractAddress: epnsCommReadProvider.address,
     }).then((res) => {
-      dispatch(cacheSubscribe({ channelAddress: channelAddress }));
-    });;
+        dispatch(cacheSubscribe({ channelAddress: channelAddress }));
+      });;
   };
 
   const isSubscribedFn = (subscribers: any) => {
@@ -429,7 +441,13 @@ function SpamBox({ currentTab }) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <SearchFilter notifications={allNotif} filterNotifications={filterNotifications} filter={filter} reset={reset} loadFilter={loadFilter} />
+        <SearchFilter 
+          notifications={allNotif} 
+          filterNotifications={filterNotifications} 
+          filter={filter} reset={reset} 
+          loadFilter={loadFilter} 
+          showFilter={props.showFilter}
+        />
         {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
             <Oval color="#35c5f3" height={40} width={40} />
@@ -520,14 +538,12 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
   max-height: 100vh;
   background: ${props => props.theme.mainBg};
-
   // padding: 20px;
   // font-size: 16px;
   // display: flex;

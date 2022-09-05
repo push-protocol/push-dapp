@@ -29,7 +29,9 @@ import { CloseIcon } from "assets/icons";
 import PreviewNotif from "./PreviewNotif";
 import CryptoHelper from "helpers/CryptoHelper";
 import { envConfig } from "@project/contracts";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { IPFSupload } from "helpers/IpfsHelper";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 const ethers = require("ethers");
 
@@ -182,18 +184,18 @@ React.useEffect(() => {
     }
 }, [delegatees, account]);
   
-const isAllFieldsFilled = () => {
-    if (nfRecipient == "" ||
-        nfType == "" ||
-        nfMsg == "" ||
-        (nfSubEnabled && nfSub == "") ||
-        (nfCTAEnabled && nfCTA == "") ||
-        (nfMediaEnabled && nfMedia == "")
-    ) {
-        return false;
-    }
-    return true;
-};
+// const isAllFieldsFilled = () => {
+//     if (nfRecipient == "" ||
+//         nfType == "" ||
+//         nfMsg == "" ||
+//         (nfSubEnabled && nfSub == "") ||
+//         (nfCTAEnabled && nfCTA == "") ||
+//         (nfMediaEnabled && nfMedia == "")
+//     ) {
+//         return false;
+//     }
+//     return true;
+// };
 
 // const previewNotif = (e: any) => {
 //     e.preventDefault();
@@ -285,7 +287,7 @@ const handleSendMessage = async (e) => {
   setNFProcessing(1);
 
   // Form signer and contract connection
-  const communicatorContract = epnsCommWriteProvider;
+//   const communicatorContract = epnsCommWriteProvider;
   // define the epns comms contracts
 
   // For payload basic
@@ -299,126 +301,126 @@ const handleSendMessage = async (e) => {
   let aimg = nfMedia;
 
   // Decide type and storage
-  switch (nfType) {
-      // Broadcast Notification
-      case "1":
-          break;
+//   switch (nfType) {
+//       // Broadcast Notification
+//       case "1":
+//           break;
 
-      // Targeted Notification
-      case "3":
-          break;
+//       // Targeted Notification
+//       case "3":
+//           break;
 
-      // Old Secret Notification
-    //   case "2":
-    //       // Create secret
-    //       let secret = CryptoHelper.makeid(14);
+//       // Old Secret Notification
+//     //   case "2":
+//     //       // Create secret
+//     //       let secret = CryptoHelper.makeid(14);
 
-    //       // Encrypt payload and change sub and nfMsg in notification
-    //       nsub = "You have a secret message!";
-    //       nmsg = "Open the app to see your secret message!";
+//     //       // Encrypt payload and change sub and nfMsg in notification
+//     //       nsub = "You have a secret message!";
+//     //       nmsg = "Open the app to see your secret message!";
 
-    //       // get public key from EPNSCoreHelper
-    //       let k = await EPNSCoreHelper.getPublicKey(
-    //           nfRecipient,
-    //           epnsCommWriteProvider
-    //       );
-    //       if (k == null) {
-    //           // No public key, can't encrypt
-    //           setNFInfo(
-    //               "Public Key Registration is required for encryption!"
-    //           );
-    //           setNFProcessing(2);
+//     //       // get public key from EPNSCoreHelper
+//     //       let k = await EPNSCoreHelper.getPublicKey(
+//     //           nfRecipient,
+//     //           epnsCommWriteProvider
+//     //       );
+//     //       if (k == null) {
+//     //           // No public key, can't encrypt
+//     //           setNFInfo(
+//     //               "Public Key Registration is required for encryption!"
+//     //           );
+//     //           setNFProcessing(2);
 
-    //           toast.update(notificationToast, {
-    //               render: "Unable to encrypt for this user, no public key registered",
-    //               type: toast.TYPE.ERROR,
-    //               autoClose: 5000,
-    //           });
+//     //           toast.update(notificationToast, {
+//     //               render: "Unable to encrypt for this user, no public key registered",
+//     //               type: toast.TYPE.ERROR,
+//     //               autoClose: 5000,
+//     //           });
 
-    //           return;
-    //       }
+//     //           return;
+//     //       }
 
-    //       let publickey = k.toString().substring(2);
-    //       //console.log("This is public Key: " + publickey);
+//     //       let publickey = k.toString().substring(2);
+//     //       //console.log("This is public Key: " + publickey);
 
-    //       secretEncrypted = await CryptoHelper.encryptWithECIES(
-    //           secret,
-    //           publickey
-    //       );
-    //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
-    //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-    //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-    //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-    //       break;
+//     //       secretEncrypted = await CryptoHelper.encryptWithECIES(
+//     //           secret,
+//     //           publickey
+//     //       );
+//     //       asub = CryptoHelper.encryptWithAES(nfSub, secret);
+//     //       amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
+//     //       acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+//     //       aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
+//     //       break;
 
-      // Targeted Notification
-      case "4":
-          break;
+//       // Targeted Notification
+//       case "4":
+//           break;
             
-      // Secret Notification
-      case "5":
-            // Create secret
-          let secret = CryptoHelper.makeid(8);
+//       // Secret Notification
+//       case "5":
+//             // Create secret
+//           let secret = CryptoHelper.makeid(8);
 
-          // Encrypt payload and change sub and nfMsg in notification
-          nsub = "You have a secret message!";
-          nmsg = "Click on Decrypt button to see your secret message!";
+//           // Encrypt payload and change sub and nfMsg in notification
+//           nsub = "You have a secret message!";
+//           nmsg = "Click on Decrypt button to see your secret message!";
 
-          // get public key from Backend API
-          let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-              address: nfRecipient,
-              op: "read"
-          }).then(res => {
-              return res.data?.encryption_key;
-          });
+//           // get public key from Backend API
+//           let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
+//               address: nfRecipient,
+//               op: "read"
+//           }).then(res => {
+//               return res.data?.encryption_key;
+//           });
 
-          if (encryptionKey == null) {
-              // No public key, can't encrypt
-              setNFInfo(
-                  "Public Key Registration is required for encryption!"
-              );
-              setNFProcessing(2);
+//           if (encryptionKey == null) {
+//               // No public key, can't encrypt
+//               setNFInfo(
+//                   "Public Key Registration is required for encryption!"
+//               );
+//               setNFProcessing(2);
 
-              toast.update(notificationToast, {
-                  render: "Unable to encrypt for this user, no public key registered",
-                  type: toast.TYPE.ERROR,
-                  autoClose: 5000,
-              });
+//               toast.update(notificationToast, {
+//                   render: "Unable to encrypt for this user, no public key registered",
+//                   type: toast.TYPE.ERROR,
+//                   autoClose: 5000,
+//               });
 
-              return;
-          }
+//               return;
+//           }
 
-          let publickey = encryptionKey;
+//           let publickey = encryptionKey;
 
-          secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
-              secret,
-              publickey
-          );
-        //   console.log(secretEncrypted);
-          if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
-          amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
-          if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
-          if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
-          break;
+//           secretEncrypted = await CryptoHelper.encryptWithRPCEncryptionPublicKey(
+//               secret,
+//               publickey
+//           );
+//         //   console.log(secretEncrypted);
+//           if(nfSubEnabled) asub = CryptoHelper.encryptWithAES(nfSub, secret);
+//           amsg = CryptoHelper.encryptWithAES(nfMsg, secret);
+//           if(nfCTAEnabled) acta = CryptoHelper.encryptWithAES(nfCTA, secret);
+//           if(nfMediaEnabled) aimg = CryptoHelper.encryptWithAES(nfMedia, secret);
+//           break;
 
-      // Offchain Notification
-      case "6":
-          console.log(
-              nsub,
-              nmsg,
-              nfType,
-              asub,
-              amsg,
-              acta,
-              aimg,
-              "case 5"
-          );
+//       // Offchain Notification
+//       case "6":
+//           console.log(
+//               nsub,
+//               nmsg,
+//               nfType,
+//               asub,
+//               amsg,
+//               acta,
+//               aimg,
+//               "case 5"
+//           );
 
-          break;
+//           break;
       
-      default:
-          break;
-  }
+//       default:
+//           break;
+//   }
 
   // Handle Storage
   let storagePointer = "";
@@ -481,47 +483,47 @@ const handleSendMessage = async (e) => {
           return;
       }
 
-      const jsonPayload = {
-          notification: {
-              title: nsub,
-              body: nmsg,
-          },
-          data: {
-              type: nfType,
-              secret: secretEncrypted,
-              asub: asub,
-              amsg: amsg,
-              acta: acta,
-              aimg: aimg,
-          },
-      };
+    //   const jsonPayload = {
+    //       notification: {
+    //           title: nsub,
+    //           body: nmsg,
+    //       },
+    //       data: {
+    //           type: nfType,
+    //           secret: secretEncrypted,
+    //           asub: asub,
+    //           amsg: amsg,
+    //           acta: acta,
+    //           aimg: aimg,
+    //       },
+    //   };
 
-      // if we are sending a subset type, then include recipients
-      if (nfType === "4") {
-          jsonPayload["recipients"] = [...multipleRecipients];
-      }
+    //   // if we are sending a subset type, then include recipients
+    //   if (nfType === "4") {
+    //       jsonPayload["recipients"] = [...multipleRecipients];
+    //   }
 
-      const input = JSON.stringify(jsonPayload);
-      console.log(input);
+    //   const input = JSON.stringify(jsonPayload);
+    //   console.log(input);
 
-      console.log("Uploding to IPFS...");
-      toast.update(notificationToast, {
-          render: "Preparing Payload for upload",
-      });
+    //   console.log("Uploding to IPFS...");
+    //   toast.update(notificationToast, {
+    //       render: "Preparing Payload for upload",
+    //   });
 
     //   const ipfs = require("nano-ipfs-store").at(
     //       "https://ipfs.infura.io:5001"
     //   );
 
-      try {
-        //   storagePointer = await ipfs.add(input);
-          storagePointer = await IPFSupload(input);
-      } catch (e) {
-          setNFProcessing(2);
-          setNFInfo("IPFS Upload Error");
-      }
+    //   try {
+    //     //   storagePointer = await ipfs.add(input);
+    //       storagePointer = await IPFSupload(input);
+    //   } catch (e) {
+    //       setNFProcessing(2);
+    //       setNFInfo("IPFS Upload Error");
+    //   }
 
-      console.log("IPFS cid: %o", storagePointer);
+    //   console.log("IPFS cid: %o", storagePointer);
   }
   if (
       nfType === "1" ||
@@ -531,88 +533,119 @@ const handleSendMessage = async (e) => {
       nfType === "5"
   ) {
       // Prepare Identity and send notification
-      const identity = nfType + "+" + storagePointer;
-      const identityBytes = ethers.utils.toUtf8Bytes(identity);
-      console.log({
-          identityBytes,
-      });
-      const EPNS_DOMAIN = {
-          name: "EPNS COMM V1",
-          chainId: chainId,
-          verifyingContract: epnsCommReadProvider.address,
-      };
+    //   const identity = nfType + "+" + storagePointer;
+    //   const identityBytes = ethers.utils.toUtf8Bytes(identity);
+    //   console.log({
+    //       identityBytes,
+    //   });
+    //   const EPNS_DOMAIN = {
+    //       name: "EPNS COMM V1",
+    //       chainId: chainId,
+    //       verifyingContract: epnsCommReadProvider.address,
+    //   };
 
-      const type = {
-          Data: [
-              { name: "acta", type: "string" },
-              { name: "aimg", type: "string" },
-              { name: "amsg", type: "string" },
-              { name: "asub", type: "string" },
-              { name: "type", type: "string" },
-              { name: "secret", type: "string" },
-          ],
-      };
+    //   const type = {
+    //       Data: [
+    //           { name: "acta", type: "string" },
+    //           { name: "aimg", type: "string" },
+    //           { name: "amsg", type: "string" },
+    //           { name: "asub", type: "string" },
+    //           { name: "type", type: "string" },
+    //           { name: "secret", type: "string" },
+    //       ],
+    //   };
 
-      const payload = {
-          data: {
-              acta: acta,
-              aimg: aimg,
-              amsg: amsg,
-              asub: asub,
-              type: nfType,
-              secret: "",
-          },
+    //   const payload = {
+    //       data: {
+    //           acta: acta,
+    //           aimg: aimg,
+    //           amsg: amsg,
+    //           asub: asub,
+    //           type: nfType,
+    //           secret: "",
+    //       },
 
-          notification: {
-              body: amsg,
-              title: asub,
-          },
-      };
+    //       notification: {
+    //           body: amsg,
+    //           title: asub,
+    //       },
+    //   };
 
-      if (nfType === "5" || nfType === "2") {
-          payload.notification = {
-              body: nmsg,
-              title: nsub
-          };
-          payload.data.secret = secretEncrypted;
-      }
+    //   if (nfType === "5" || nfType === "2") {
+    //       payload.notification = {
+    //           body: nmsg,
+    //           title: nsub
+    //       };
+    //       payload.data.secret = secretEncrypted;
+    //   }
 
-      const message = payload.data;
-      console.log(payload, "payload");
-      console.log("chainId", chainId);
-      const signature = await library
-          .getSigner(account)
-          ._signTypedData(EPNS_DOMAIN, type, message);
-      console.log("case5 signature", signature);
-      try {
-          console.log(nfRecipient);
-          postReq("/payloads/add_manual_payload", {
-              signature,
-              op: "write",
-              chainId: chainId.toString(),
-              channel: channelAddress,
-              recipient: nfRecipient,
-              deployedContract: epnsCommReadProvider.address,
-              payload: payload,
-              type: nfType,
-          }).then(async (res) => {
-              toast.update(notificationToast, {
-                  render: "Notification Sent",
-                  type: toast.TYPE.INFO,
-                  autoClose: 5000,
-              });
+    //   const message = payload.data;
+    //   console.log(payload, "payload");
+    //   console.log("chainId", chainId);
+    //   const signature = await library
+    //       .getSigner(account)
+    //       ._signTypedData(EPNS_DOMAIN, type, message);
+    //   console.log("case5 signature", signature);
+      
+        try {
+          // apiResponse?.status === 204, if sent successfully!
+            
+            let notifRecipients: string | Array<string>;
+            if (nfType === "4") {
+                notifRecipients = multipleRecipients.map((recipient) => convertAddressToAddrCaip(recipient, chainId));
+            } else {
+                notifRecipients = convertAddressToAddrCaip(nfRecipient, chainId);
+            }
 
-              setNFProcessing(2);
-              setNFType("");
-              setNFInfo("Offchain Notification Sent");
+            const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
+            
+            const _signer = await library.getSigner(account);
+            await EpnsAPI.payloads.sendNotification({
+                signer: _signer,
+                type: parseInt(nfType), // target
+                identityType: 2, // direct payload
+                notification: {
+                    title: asub,
+                    body: amsg
+                },
+                payload: {
+                    title: asub,
+                    body: amsg,
+                    cta: acta,
+                    img: aimg
+                },
+                recipients: notifRecipients, // recipient address
+                channel: channelAddressInCaip, // your channel address
+                env: envConfig['env']
+            });
+        //   console.log(nfRecipient);
+        //   postReq("/payloads/add_manual_payload", {
+        //       signature,
+        //       op: "write",
+        //       chainId: chainId.toString(),
+        //       channel: channelAddress,
+        //       recipient: nfRecipient,
+        //       deployedContract: epnsCommReadProvider.address,
+        //       payload: payload,
+        //       type: nfType,
+        //   }).then(async (res) => {
+            toast.update(notificationToast, {
+                render: "Notification Sent",
+                type: toast.TYPE.INFO,
+                autoClose: 5000,
+            });
 
-              toast.update(notificationToast, {
-                  render: "Offchain Notification Sent",
-                  type: toast.TYPE.SUCCESS,
-                  autoClose: 5000,
-              });
-              console.log(res);
-          });
+            setNFProcessing(2);
+            setNFType("1");
+            setNFInfo("Offchain Notification Sent");
+
+            toast.update(notificationToast, {
+                render: "Offchain Notification Sent",
+                type: toast.TYPE.SUCCESS,
+                autoClose: 5000,
+            });
+        //       console.log(res);
+        //   });
       } catch (err) {
           setNFInfo("Offchain Notification Failed, please try again");
 
@@ -674,102 +707,111 @@ const handleSendMessage = async (e) => {
       //     setNFProcessing(0);
       //   });
   }
-  if (nfType === "6") {
-      // const jsonPayload = {
-      //   notification: {
-      //     title: nsub,
-      //     body: nmsg,
-      //   },
-      //   data: {
-      //     type: nfType,
-      //     secret: secretEncrypted,
-      //     asub: asub,
-      //     amsg: amsg,
-      //     acta: acta,
-      //     aimg: aimg,
-      //   },
-      // };
+//   if (nfType === "6") {
+//       // const jsonPayload = {
+//       //   notification: {
+//       //     title: nsub,
+//       //     body: nmsg,
+//       //   },
+//       //   data: {
+//       //     type: nfType,
+//       //     secret: secretEncrypted,
+//       //     asub: asub,
+//       //     amsg: amsg,
+//       //     acta: acta,
+//       //     aimg: aimg,
+//       //   },
+//       // };
 
-      const EPNS_DOMAIN = {
-          name: "EPNS COMM V1",
-          chainId: chainId,
-          verifyingContract: epnsCommReadProvider.address,
-      };
+//       const EPNS_DOMAIN = {
+//           name: "EPNS COMM V1",
+//           chainId: chainId,
+//           verifyingContract: epnsCommReadProvider.address,
+//       };
 
-      const type = {
-          Data: [
-              { name: "acta", type: "string" },
-              { name: "aimg", type: "string" },
-              { name: "amsg", type: "string" },
-              { name: "asub", type: "string" },
-              { name: "type", type: "string" },
-              { name: "secret", type: "string" },
-          ],
-      };
+//       const type = {
+//           Data: [
+//               { name: "acta", type: "string" },
+//               { name: "aimg", type: "string" },
+//               { name: "amsg", type: "string" },
+//               { name: "asub", type: "string" },
+//               { name: "type", type: "string" },
+//               { name: "secret", type: "string" },
+//           ],
+//       };
 
-      const payload = {
-          data: {
-              acta: acta,
-              aimg: aimg,
-              amsg: amsg,
-              asub: asub,
-              type: nfType,
-              secret: "",
-          },
+//       const payload = {
+//           data: {
+//               acta: acta,
+//               aimg: aimg,
+//               amsg: amsg,
+//               asub: asub,
+//               type: nfType,
+//               secret: "",
+//           },
 
-          notification: {
-              body: amsg,
-              title: asub,
-          },
-      };
+//           notification: {
+//               body: amsg,
+//               title: asub,
+//           },
+//       };
 
-      const message = payload.data;
-      console.log(payload, "payload");
-      console.log("chainId", chainId);
-      const signature = await library
-          .getSigner(account)
-          ._signTypedData(EPNS_DOMAIN, type, message);
-      console.log("case5 signature", signature);
-      try {
-          postReq("/payloads/add_manual_payload", {
-              signature,
-              op: "write",
-              chainId: chainId.toString(),
-              channel: channelAddress,
-              recipient: nfRecipient,
-              deployedContract: epnsCommReadProvider.address,
-              payload: payload,
-              type: "3",
-          }).then(async (res) => {
-              toast.update(notificationToast, {
-                  render: "Notification Sent",
-                  type: toast.TYPE.INFO,
-                  autoClose: 5000,
-              });
+//       const message = payload.data;
+//       console.log(payload, "payload");
+//       console.log("chainId", chainId);
+//       const signature = await library
+//           .getSigner(account)
+//           ._signTypedData(EPNS_DOMAIN, type, message);
+//       console.log("case5 signature", signature);
+//       try {
+//           postReq("/payloads/add_manual_payload", {
+//               signature,
+//               op: "write",
+//               chainId: chainId.toString(),
+//               channel: channelAddress,
+//               recipient: nfRecipient,
+//               deployedContract: epnsCommReadProvider.address,
+//               payload: payload,
+//               type: "3",
+//           }).then(async (res) => {
+//               toast.update(notificationToast, {
+//                   render: "Notification Sent",
+//                   type: toast.TYPE.INFO,
+//                   autoClose: 5000,
+//               });
 
-              setNFProcessing(2);
-              setNFType("");
-              setNFInfo("Offchain Notification Sent");
+//               setNFProcessing(2);
+//               setNFType("");
+//               setNFInfo("Offchain Notification Sent");
 
-              toast.update(notificationToast, {
-                  render: "Offchain Notification Sent",
-                  type: toast.TYPE.SUCCESS,
-                  autoClose: 5000,
-              });
-              console.log(res);
-          });
-      } catch (err) {
-          setNFInfo("Offchain Notification Failed, please try again");
+//               toast.update(notificationToast, {
+//                   render: "Offchain Notification Sent",
+//                   type: toast.TYPE.SUCCESS,
+//                   autoClose: 5000,
+//               });
+//               console.log(res);
+//           });
+//       } catch (err) {
+//           if (err.code === 4001) {
+//             // EIP-1193 userRejectedRequest error
+//             toast.update(notificationToast, {
+//                 render: "User denied message signature.",
+//                 type: toast.TYPE.ERROR,
+//                 autoClose: 5000,
+//             });
+//           } else {
+//             setNFInfo("Offchain Notification Failed, please try again");
 
-          toast.update(notificationToast, {
-              render: "Offchain Notification Failed: " + err,
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
-          setNFProcessing(0);
-          console.log(err);
-      }
-  }
+//             toast.update(notificationToast, {
+//                 render: "Offchain Notification Failed: " + err,
+//                 type: toast.TYPE.ERROR,
+//                 autoClose: 5000,
+//             });  
+//           }
+//           setNFProcessing(0);
+//           console.log(err); 
+//       }
+//   }
 };
 
 const isEmpty = (field: any) => {
@@ -875,6 +917,7 @@ return (
                                                     setChannelAddress(
                                                         option.value
                                                     );
+                                                    setNFRecipient(option.value)
                                                 }}
                                                 placeholder="Select a Channel"
                                                 value={delegateeOptions[0]}
@@ -1471,6 +1514,7 @@ const DropdownStyled = styled(Dropdown)`
 }
 .Dropdown-menu {
   border-color: #BAC4D6;
+  border-radius: 12px;
     .is-selected {
     background-color: #D00775;
     color:#fff;
@@ -1480,7 +1524,8 @@ const DropdownStyled = styled(Dropdown)`
 .Dropdown-option {
     background-color: #fff;
     color: #000;
-    font-size: 14px;
+    font-size: 16px;
+    padding: 20px 20px;
 
 }
 .Dropdown-option:hover {
