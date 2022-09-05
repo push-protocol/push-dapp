@@ -699,18 +699,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 internalIcon={null}
                 text={memberCount}
                 bgColor={themes.viewChannelSecondaryBG}
+                color={themes.viewChannelSecondaryBG}
               />
 
               <MetaInfoDisplayer
-                externalIcon={
-                  <FaRegAddressCard
-                    size={20}
-                    color={themes.viewChannelSecondaryIcon}
-                  />
-                }
-                internalIcon={<AiOutlineShareAlt />}
                 text={formatAddress(copyText)}
                 bgColor={themes.viewChannelSecondaryBG}
+                color={themes.viewChannelPrimaryText}
                 onClick={() => {
                   copyToClipboard(channelJson.addr);
                   setCopyText("copied");
@@ -1120,7 +1115,7 @@ const SubscribeButton = styled(ChannelActionButton)`
 
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: #fff;
-  color:#657795;
+  color:${(props) => props.theme.viewChannelPrimaryText};
   border:1px solid #657795; 
   border-radius: 8px;
   padding:9px 20px;

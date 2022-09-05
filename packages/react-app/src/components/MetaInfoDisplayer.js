@@ -8,7 +8,11 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
 
   // render
   return (
-    <ItemH  bg={bgColor}>
+    <ItemH bg={bgColor} 
+     margin="0 20px"
+     radius="10px"
+     padding="6px 0"
+     maxWidth="8rem">
      
       <MetaContent
         hoverBG="transparent"
@@ -53,12 +57,8 @@ const MetaContent = styled(A)`
   align-items: center;
   
   & > Span {
-    padding: 5px;
-    background: ${props => props.bgColor};
-    border-radius: 10px;
     gap: 3px;
-    margin: 0px 5px;
-    color: #fff;
+    color: #D53893;
     font-weight: 600;
     display: flex;
     font-size: 11px;

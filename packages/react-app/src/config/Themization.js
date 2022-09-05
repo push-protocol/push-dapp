@@ -60,6 +60,7 @@ const themeLight = {
   viewChannelIconBorder: "#fafafa",
   viewChannelSecondaryBG: "#FFDBF0",
   viewChannelSecondaryIcon: "#D53893",
+  viewChannelPrimaryText: "#657795",
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: "#000",
