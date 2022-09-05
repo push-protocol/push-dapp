@@ -45,6 +45,7 @@ const SearchFilter = ({
     setSearch("");
     setSelectedOption(uniqueOptions);
     reset();
+    setShowFilter(false)
   };
 
   if(!showFilter) return <></>

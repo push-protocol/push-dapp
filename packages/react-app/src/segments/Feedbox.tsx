@@ -104,7 +104,6 @@ const Feedbox = ({showFilter,setShowFilter}) => {
       }
       const newNotifs = filterNotif
       setAllFilter(newNotifs)
-      // setFilteredNotifications([...newNotifs]);
     } catch (err) {
       console.log(err);
     } finally {

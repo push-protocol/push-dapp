@@ -22,11 +22,15 @@ import CryptoHelper from "helpers/CryptoHelper";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { useClickAway } from "react-use";
+import { Item } from "primaries/SharedStyling";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-function SpamBox(props) {
+const SpamBox = ({showFilter,setShowFilter}) => {
   const dispatch = useDispatch();
+  const modalRef = React.useRef(null);
+  useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, library } = useWeb3React();
   const { epnsCommReadProvider } = useSelector(
     (state: any) => state.contracts
@@ -52,6 +56,7 @@ function SpamBox(props) {
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [filteredNotifications, setFilteredNotifications] = React.useState([]);
   const [filter, setFilter] = React.useState(false);
+  const [allFilter, setAllFilter] = React.useState([]);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -114,11 +119,17 @@ function SpamBox(props) {
       )
         filterNotif.push(notif);
     }
-    setFilteredNotifications(filterNotif);
+    const newNotifs = filterNotif
+    setAllFilter(newNotifs)
     // }
     setLoading(false);
     setBgUpdateLoading(false);
   }
+
+  React.useEffect(() => {
+    console.log(filteredNotifications,allFilter)
+    setFilteredNotifications(allFilter)
+  }, [allFilter])
 
   const loadNotifications = async () => {
     if (loading || finishedFetching || run) return;
@@ -442,17 +453,20 @@ function SpamBox(props) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
+      <div ref={modalRef}>
         <SearchFilter 
           notifications={allNotif} 
           filterNotifications={filterNotifications} 
           filter={filter} reset={reset} 
           loadFilter={loadFilter} 
-          showFilter={props.showFilter}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
         />
+      </div>
         {bgUpdateLoading && (
-          <div style={{ marginTop: "10px" }}>
+          <Item padding="10px 20px">
             <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-          </div>
+          </Item>
         )}
         {notifications && (
           <Items id="scrollstyle-secondary">
@@ -499,9 +513,11 @@ function SpamBox(props) {
             })}
           </Items>
         )}
-        {loading && !bgUpdateLoading && (
-          <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-        )}
+          {loading && !bgUpdateLoading && (
+                <Item padding="10px 20px" flex='1' margin="0 auto">
+                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                </Item>
+              )}
         {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
           <CenteredContainerInfo>
             <DisplayNotice
@@ -539,24 +555,23 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-
+  background: ${props => props.theme.mainBg};
   font-weight: 200;
   align-content: center;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
-  max-height: 100vh;
-  background: ${props => props.theme.mainBg};
-  margin: 0px 0px 0px 10px;
-
-  // padding: 20px;
-  // font-size: 16px;
+  height: 100%;
+  margin: 0px 10px;
+  overflow:scroll;
   // display: flex;
+  // flex: 1;
+  // flex-direction: column;
   // font-weight: 200;
   // align-content: center;
   // align-items: center;
   // justify-content: center;
-  // width: 100%;
-  // min-height: 40vh;
+  // max-height: 100vh;
+  // margin: 0px 0px 0px 10px;
 `;
 
 const Toaster = styled.div`

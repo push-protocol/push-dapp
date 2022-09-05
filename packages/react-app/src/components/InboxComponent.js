@@ -5,12 +5,10 @@ import { FiSearch, FiSliders } from "react-icons/fi";
 import Feedbox from "segments/Feedbox";
 import Spambox from "segments/Spambox";
 import GLOBALS from "config/Globals";
-import { useClickAway } from "react-use";
 
 const InboxComponent = () => {
   const [showInbox, setShowInbox] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
-  const modalRef = React.useRef(null);
   const themes = useTheme();
 
   const toggleShowInbox = () => setShowInbox((prev) => !prev);
@@ -56,7 +54,7 @@ const InboxComponent = () => {
       {showInbox ? (
         <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} />
       ) : (
-        <Spambox showFilter={showFilter} />
+        <Spambox showFilter={showFilter} setShowFilter={setShowFilter} />
       )}
     </Container>
   );
