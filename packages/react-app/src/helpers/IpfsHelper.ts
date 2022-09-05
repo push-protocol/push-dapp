@@ -16,7 +16,7 @@ export const IPFSupload = async (input: string) => {
     host: 'ipfs.infura.io',
     port: 5001,
     protocol: 'https',
-    apiPath: '/api/v0/add',
+    apiPath: '/api/v0',
     headers: {
       authorization: auth
     }
@@ -24,7 +24,7 @@ export const IPFSupload = async (input: string) => {
 
   try {
     const storagePointer = await client.add(bufferInput, {pin: true});
-    return storagePointer[0]['hash'];
+    return storagePointer?.path;
   } catch (err) {
     throw Error(err);
   }
