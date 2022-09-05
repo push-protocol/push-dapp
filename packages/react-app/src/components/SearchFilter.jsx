@@ -258,7 +258,7 @@ const LabelText = styled.div`
     font-weight: 500;
     font-size: 16px;
     line-height: 150%;
-    color: #1E1E1E;
+    color:  ${props => props.theme.color};
     margin-bottom: 10px;
     
 `;
@@ -287,11 +287,13 @@ const Input = styled.input`
     background-color: inherit;
     border: 1px solid #BAC4D6;
     border-radius: 8px;
+    color:  ${props => props.theme.color};
     &::placeholder {
         opacity: 1;
         font-weight: 400;
         font-family: Source Sans Pro;
-        color: #B0B0B0 !important;
+        // color: #B0B0B0 !important;
+       color:  ${props => props.theme.color};
     }
 `;
 
