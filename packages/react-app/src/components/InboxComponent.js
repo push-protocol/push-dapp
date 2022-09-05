@@ -9,6 +9,7 @@ import GLOBALS from "config/Globals";
 const InboxComponent = () => {
   const [showInbox, setShowInbox] = useState(true);
   const [showFilter, setShowFilter] = useState(false);
+  const [search, setSearch] = useState("");
   const themes = useTheme();
 
   const toggleShowInbox = () => setShowInbox((prev) => !prev);
@@ -17,6 +18,7 @@ const InboxComponent = () => {
   const handleToggle = () => {
     toggleShowInbox();
     setShowFilter(false);
+    setSearch("");
   };
 
   return (
@@ -35,6 +37,10 @@ const InboxComponent = () => {
             type="text"
             className="input"
             placeholder="Search Notification"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
           />
           <ItemIcon position="absolute" top="0" bottom="0" left="22px">
             <FiSearch size={18} style={{ color: "#657795" }} />
@@ -52,9 +58,19 @@ const InboxComponent = () => {
         </SearchContainer>
       </NavBoxHolder>
       {showInbox ? (
-        <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} />
+        <Feedbox
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
       ) : (
-        <Spambox showFilter={showFilter} setShowFilter={setShowFilter} />
+        <Spambox
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
       )}
     </Container>
   );

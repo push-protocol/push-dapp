@@ -27,7 +27,7 @@ import { Item } from "primaries/SharedStyling";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-const SpamBox = ({showFilter,setShowFilter}) => {
+const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
@@ -461,6 +461,8 @@ const SpamBox = ({showFilter,setShowFilter}) => {
           loadFilter={loadFilter} 
           showFilter={showFilter}
           setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
         />
       </div>
         {bgUpdateLoading && (

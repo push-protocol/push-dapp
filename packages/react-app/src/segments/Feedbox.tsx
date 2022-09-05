@@ -27,7 +27,7 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-const Feedbox = ({showFilter,setShowFilter}) => {
+const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
@@ -113,7 +113,6 @@ const Feedbox = ({showFilter,setShowFilter}) => {
   }
 
   React.useEffect(() => {
-    console.log(filteredNotifications,allFilter)
     setFilteredNotifications(allFilter)
   }, [allFilter])
 
@@ -335,6 +334,8 @@ const Feedbox = ({showFilter,setShowFilter}) => {
           loadFilter={loadFilter}
           showFilter={showFilter}
           setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
         />
         </div>
         <ScrollItem>

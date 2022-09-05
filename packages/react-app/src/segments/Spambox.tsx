@@ -8,7 +8,8 @@ function Spambox(props) {
   // Render
   return (
     <FullWidth>
-      <SpamBox currentTab="inbox" showFilter={props.showFilter} setShowFilter={props.setShowFilter} />
+      <SpamBox showFilter={props.showFilter} setShowFilter={props.setShowFilter} search={props.search}
+          setSearch={props.setSearch} />
     </FullWidth>
   );
 }

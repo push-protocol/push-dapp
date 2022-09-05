@@ -12,12 +12,24 @@ const SearchFilter = ({
           reset,
           loadFilter,
           showFilter,
-          setShowFilter
+          setShowFilter,
+          search,
+          setSearch
 }) =>{
-  const [search, setSearch] = useState("");
+  // const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const themes = useTheme();
+
+  React.useEffect(() => {
+    if(search){
+      if(search.length > 0){
+      applySearch()
+      }
+    }else{
+      reset()
+    }
+  }, [search])
 
   const applySearch = async () => {
     var channels = [];
