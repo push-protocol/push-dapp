@@ -1,35 +1,46 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import { useLocation } from "react-router-dom";
-import { Web3Provider } from "ethers/providers";
-import { useWeb3React } from "@web3-react/core";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener, useBrowserNotification } from "hooks";
-import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useWeb3React } from "@web3-react/core";
+import { injected, ledger, portis, walletconnect } from "connectors";
+import { Web3Provider } from "ethers/providers";
+import { useBrowserNotification, useEagerConnect, useInactiveListener } from "hooks";
 import Joyride, { CallBackProps } from "react-joyride";
+import { useLocation } from "react-router-dom";
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
-import styled from "styled-components";
-import { Item, ItemH, Span, H2, B, A, C, P,Image } from "./primaries/SharedStyling";
+import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
+import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
+import LedgerLogoDark from './assets/login/ledgerDark.svg';
+import LedgerLogoLight from './assets/login/ledgerLight.svg';
+import MMLogoDark from './assets/login/metamaskDark.svg';
+import MMLogoLight from './assets/login/metamaskLight.svg';
+import PortisLogoDark from './assets/login/portisDark.svg';
+import PortisLogoLight from './assets/login/portisLight.svg';
+import WCLogoDark from './assets/login/wcDark.svg';
+import WCLogoLight from './assets/login/wcLight.svg';
+
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
+import styled from "styled-components";
+import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyling";
 
 import NavigationContextProvider from "contexts/NavigationContext";
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
 import { ThemeProvider } from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+import { themeDark, themeLight } from "config/Themization";
 
-import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
+import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 
-import * as dotenv from "dotenv";
 import InitState from "components/InitState";
+import * as dotenv from "dotenv";
 
 
 dotenv.config();
@@ -38,17 +49,19 @@ dotenv.config();
 const web3Connectors = {
   Injected: {
     obj: injected,
-    logo: "./svg/login/metamask.svg",
+    logolight: MMLogoLight,
+    logodark: MMLogoDark,
     title: "Metamask",
   },
   WalletConnect: {
     obj: walletconnect,
-    logo: "./svg/login/walletconnect.svg",
+    logolight: WCLogoLight,
+    logodark: WCLogoDark,
     title: "Wallet Connect",
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
-  Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
+  Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: "Ledger" },
+  Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: "Portis" },
 };
 
 export default function App() {
@@ -267,10 +280,15 @@ export default function App() {
                   </Span>
                 </ItemH>
               )} */}
-              <ProviderLogo
-                src="./epns-logo.png"
-                srcSet={"./epns-logo@2x.png 2x, ./epns-logo@2x.png 3x"}
-              />
+              <PushLogo>
+                {darkMode && 
+                  <EPNSLogoDark />
+                }
+
+                {!darkMode && 
+                  <EPNSLogoLight />
+                }
+              </PushLogo>
 
               <Item
                 bg={darkMode ? themeDark : "#fff"}
@@ -300,7 +318,7 @@ export default function App() {
                       !!activatingConnector ||
                       connected ||
                       !!error;
-                    const image = web3Connectors[name].logo;
+                    const image = darkMode ? web3Connectors[name].logodark : web3Connectors[name].logolight;
                     const title = web3Connectors[name].title;
 
                     return (
@@ -476,12 +494,9 @@ const ContentContainer = styled.div`
   }
 `;
 
-const ProviderLogo = styled.img`
-  width: 13vw;
-  align-self: center;
-  display: flex;
-  margin: -5px 20px 30px 20px;
-  min-width: 200px;
+const PushLogo = styled.div`
+  width: 200px;
+  padding-bottom: 20px;
 `;
 
 const ProviderButton = styled.button`

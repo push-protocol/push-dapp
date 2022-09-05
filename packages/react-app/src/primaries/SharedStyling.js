@@ -1,5 +1,5 @@
-import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 export const Section = styled.section`
   display: flex;
@@ -14,31 +14,6 @@ export const Section = styled.section`
   overflow: ${(props) => props.overflow || "initial"};
   flex: 1;
   position: relative;
-`;
-
-export const SectionFS = styled(Section)`
-  min-height: 100vh;
-`;
-
-export const SectionFSHero = styled(Section)`
-  min-height: 100vh;
-  background: rgb(31, 23, 47);
-  background: linear-gradient(
-    283deg,
-    rgba(31, 23, 47, 1) 0%,
-    rgba(62, 9, 40, 1) 45%,
-    rgba(17, 58, 72, 1) 100%
-  );
-`;
-
-export const SectionHero = styled(Section)`
-  background: rgb(31, 23, 47);
-  background: linear-gradient(
-    283deg,
-    rgba(31, 23, 47, 1) 0%,
-    rgba(62, 9, 40, 1) 45%,
-    rgba(17, 58, 72, 1) 100%
-  );
 `;
 
 export const Content = styled.div`
