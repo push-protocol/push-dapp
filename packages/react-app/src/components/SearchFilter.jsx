@@ -5,23 +5,32 @@ import styled, { useTheme } from "styled-components";
 import { ThemeProvider } from "styled-components";
 import DateTimePicker from "react-datetime-picker";
 
-export default function SearchFilter(props) {
+const SearchFilter = ({
+         notifications,
+          filterNotifications,
+          filter,
+          reset,
+          loadFilter,
+          showFilter,
+          setShowFilter
+}) =>{
   const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const themes = useTheme();
-  const { showFilter } = props;
 
   const applySearch = async () => {
     var channels = [];
+    // setShowFilter(false)
     selectedOption.length
       ? selectedOption.map((each) => channels.push(each.value))
       : (channels = []);
-    await props.filterNotifications(search, channels, startDate, endDate);
+    await filterNotifications(search, channels, startDate, endDate);
+    console.log(search,channels)
   };
 
   var options = [];
-  props.notifications.map((each) =>
+  notifications.map((each) =>
     options.push({ label: each.app, value: each.channel })
   );
   var uniqueOptions = [
@@ -29,12 +38,13 @@ export default function SearchFilter(props) {
   ];
   const [selectedOption, setSelectedOption] = useState(uniqueOptions);
 
-  const reset = async () => {
+
+  const resetIt = async () => {
     setStartDate(null);
     setEndDate(null);
     setSearch("");
     setSelectedOption(uniqueOptions);
-    props.reset();
+    reset();
   };
 
   if(!showFilter) return <></>
@@ -91,7 +101,7 @@ export default function SearchFilter(props) {
           </SearchOptions>
         <ButtonBar>
             <Buttons>
-                <ResetButton onClick={reset}>
+                <ResetButton onClick={resetIt}>
                     Reset
                 </ResetButton>
                 <ButtonFeed bgColor="#e20880" onClick={applySearch}>
@@ -410,3 +420,6 @@ const InputWrapper = styled.div`
         margin-bottom: 1rem;
     }
 `;
+
+
+export default SearchFilter;

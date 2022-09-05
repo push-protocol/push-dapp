@@ -16,6 +16,7 @@ import {
   setFinishedFetching,
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
+import { useClickAway } from "react-use";
 
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
@@ -26,8 +27,11 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-function Feedbox(props) {
+const Feedbox = ({showFilter,setShowFilter}) => {
   const dispatch = useDispatch();
+  const modalRef = React.useRef(null);
+  useClickAway(modalRef, () => showFilter && setShowFilter(false));
+
   const { account, library, chainId } = useWeb3React();
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
@@ -105,6 +109,7 @@ function Feedbox(props) {
       setBgUpdateLoading(false);
     }
   }
+
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
     setLoading(true);
@@ -123,10 +128,9 @@ function Feedbox(props) {
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
-      console.log(results)
       const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (results.length === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -168,7 +172,7 @@ function Feedbox(props) {
           pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
-      if (results.length === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -185,7 +189,7 @@ function Feedbox(props) {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
         env: 'dev',
-        limit: 1000,
+        limit: 100000,
         page: page,
         raw:true
       });
@@ -311,19 +315,23 @@ function Feedbox(props) {
       }
     }
   };
+  console.log(welcomeNotifs,filteredNotifications.slice(0, limit),notifications,limit)
 
   // Render
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <SearchFilter
+      <div ref={modalRef}>
+        <SearchFilter 
           notifications={allNotf}
           filterNotifications={filterNotifications}
           filter={filter}
           reset={reset}
           loadFilter={loadFilter}
-          showFilter={props.showFilter}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
         />
+        </div>
         <ScrollItem>
           {((!run && !notifications.length) ||
             (!run && filter && !filteredNotifications.length) ||

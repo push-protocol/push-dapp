@@ -52,7 +52,7 @@ const InboxComponent = () => {
         </SearchContainer>
       </NavBoxHolder>
       {showInbox ? (
-        <Feedbox showFilter={showFilter} />
+        <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} />
       ) : (
         <Spambox showFilter={showFilter} />
       )}
