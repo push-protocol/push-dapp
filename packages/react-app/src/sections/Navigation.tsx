@@ -5,9 +5,10 @@ import {Oval} from 'react-loader-spinner';
 import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
 
 import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, AnchorLink as Anchor } from 'primaries/SharedStyling';
+import {Section, Item, ItemH, AnchorLink as Anchor, Span } from 'primaries/SharedStyling';
 
 import NavigationButton from 'components/NavigationButton';
+import NavButton from 'components/NavButton';
 import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
@@ -51,16 +52,23 @@ function Navigation() {
     if (!navigationSetup) return
 
     if (canSend === SEND_NOTIFICATION_STATES.HIDE) {
-      navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-      navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
+      // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
+      navigationSetup.secondary[0].data.name = 'Create Channel';
+      // navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
     } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
       if (channelDetails !== 'unfetched' && channelDetails != null) {
-        navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails['name'];
-        console.log(navigationSetup);
+        // navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails['name'];
+        navigationSetup.secondary[0].data.name = channelDetails.name;
+        navigationSetup.secondary[0].data.src = 'svg/Home-off.svg';
+        navigationSetup.secondary[0].data.activeSrc = 'svg/Home-on.svg';
+        // console.log(navigationSetup);
       } else {
-        navigationSetup.primary[1].data.drilldown[0].data.name = "Create Channel";
+        // navigationSetup.primary[1].data.drilldown[0].data.name = "Create Channel";
+        navigationSetup.secondary[0].data.name = 'Create Channel';
       }
-      navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+      // navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
+      navigationSetup.secondary[1].data.name = 'Send Notifications'
+
     }
   }, [canSend, channelDetails, navigationSetup]);
 
@@ -99,15 +107,18 @@ function Navigation() {
 
       // Set Secondary List
       const secondaryList = returnTransformedList(navigationList.secondary, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
+      const thirdList = returnTransformedList(navigationList.third, GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY);
 
       // Set Nav List
       let count = -1;
       let navList = returnNavList(navigationList.primary, count);
       navList = Object.assign(navList, returnNavList(navigationList.secondary, Object.keys(navList).length));
+      navList = Object.assign(navList, returnNavList(navigationList.third, Object.keys(navList).length));
       
       const finalList = {
         primary: primaryList,
         secondary: secondaryList,
+        third: thirdList,
         navigation: navList
       };
       
@@ -179,7 +190,7 @@ function Navigation() {
       if (navigationSetup) {
         // loop and find the item in question
         Object.entries(navigationSetup).forEach(([key, value]) => {
-          if (key === "primary" || key === "secondary") {
+          if (key === "primary" || key === "secondary" || key === "third") {
             const topSection = navigationSetup[key];
 
             Object.entries(topSection).forEach(([key, value]) => {
@@ -241,7 +252,7 @@ function Navigation() {
 
       if (activeDrilldownId == null) {
         Object.keys(transformedMenuList).forEach(key => {
-          if (key === 'primary' || key === 'secondary') {
+          if (key === 'primary' || key === 'secondary' || key === "third") {
             Object.keys(transformedMenuList[key]).forEach(sectionkey => {
               const section = transformedMenuList[key][sectionkey];
               
@@ -264,7 +275,7 @@ function Navigation() {
       else {
         // menu item is getting selected
         Object.keys(transformedMenuList).forEach(key => {
-          if (key === 'primary' || key === 'secondary') {
+          if (key === 'primary' || key === 'secondary' || key === "third") {
             Object.keys(transformedMenuList[key]).forEach(sectionkey => {
               const section = transformedMenuList[key][sectionkey];
 
@@ -374,10 +385,10 @@ function Navigation() {
           const data = section.data;
           const uid = section.data.uid;
           
-          if (uid === 2 && section.opened != isCommunicateOpen)
-            dispatch(setCommunicateOpen(section.opened));
-          if (uid === 3 && section.opened != isDeveloperOpen)
-            dispatch(setDeveloperOpen(section.opened));
+          // if (uid === 2 && section.opened != isCommunicateOpen)
+          //   dispatch(setCommunicateOpen(section.opened));
+          // if (uid === 3 && section.opened != isDeveloperOpen)
+          //   dispatch(setDeveloperOpen(section.opened));
           
           let innerRendered = (
             <Section 
@@ -390,24 +401,33 @@ function Navigation() {
                 (secondaryButton)?
                   (
                     <Item
-                    padding="10px"
+                    padding="5px 10px"
                     flexBasis="100%"
                     align="stretch"
                     direction="row"
                     overflow="hidden"
                   >
+                     { 
+                    section.hasItems 
+                      ? renderChildItems(
+                          data.drilldown, 
+                          section.opened,
+                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY,
+                        )
+                      : null
+                    }
                     <SectionInnerGroupContainer
-                      flex="1"
-                      align="stretch"
-                      bg={theme.leftBarButtonBg}
-                      zIndex={2}
-                      refresh={refresh}
-                      margintop="15px"
-                      onClick={() => {
-                        // console.log(`Clicked secondary button`);
-                        mutateTransformedList(section, true)
-                      }}      
-                      id={data.id}          
+                     flex="1"
+                     align="stretch"
+                     bg={theme.leftBarButtonBg}
+                     zIndex={2}
+                     refresh={refresh}
+                     // margintop="15px"
+                     onClick={() => {
+                       // console.log(`Clicked secondary button`);
+                       mutateTransformedList(section, true)
+                     }}      
+                     id={data.id} 
                     >
                       <NavigationButton
                         item={section}
@@ -417,24 +437,16 @@ function Navigation() {
                       />
                     </SectionInnerGroupContainer>
                     
-                    { 
-                    section.hasItems 
-                      ? renderChildItems(
-                          data.drilldown, 
-                          section.opened,
-                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY,
-                        )
-                      : null
-                    }
+                   
                   </Item>
                   ):
                   (
                     <Item
-                      padding="10px"
-                      flexBasis="100%"
-                      align="stretch"
-                      direction="row"
-                      overflow="hidden"
+                    padding="5px 10px"
+                    flexBasis="100%"
+                    align="stretch"
+                    direction="row"
+                    overflow="hidden"
                     >
                       <SectionInnerGroupContainer
                           flex="1"
@@ -460,7 +472,7 @@ function Navigation() {
                           active={section.active}
                         />
                       </SectionInnerGroupContainer>
-                      { 
+                      {/* { 
                         section.hasItems 
                         ? renderChildItems(
                             data.drilldown, 
@@ -469,7 +481,7 @@ function Navigation() {
                             index === 1 // send true if this one in Developer Section
                           )
                         : null
-                      }
+                      } */}
                     </Item>
                   )
                 
@@ -504,9 +516,10 @@ function Navigation() {
 
       let rendered = (
         <SectionGroup
-          align="stretch"
-          opened={opened}
-          refresh={refresh}
+        align="stretch"
+        margin="10px 0px"
+        opened={opened}
+        refresh={refresh}
         >
           {Object.keys(drilldown).map(function(key) {
             const item = drilldown[key];
@@ -533,7 +546,7 @@ function Navigation() {
                     
                   }}
                   >
-                  <NavigationButton
+                  <NavButton
                     item={item}
                     data={data}
                     sectionID={sectionID}
@@ -558,33 +571,35 @@ function Navigation() {
         }
         {navigationSetup && Object.keys(navigationSetup).length > 0 &&
           <>
-            <Primary>
+              <Primary>
               {
                 renderMainItems(
                   navigationSetup.primary,
                   GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                 )
               }
-            </Primary>
-            <Footer
-              justify="flex-end"
-              align="strecth"
-            >
-              <Secondary
-                align="stretch"
-                justify="flex-end"
-                margin="10px 0px 10px 0px"
-              >
+
+              <Span textTransform="uppercase" weight="700" size="11px" margin="20px 0px 0px 0px" padding="15px 30px" color='#575D73' spacing="0.16em">Developers</Span>
                 {
                   renderMainItems(
                     navigationSetup.secondary,
                     GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY
                   )
                 }
-              </Secondary>
+            </Primary>
+            <Footer
+              justify="flex-end"
+              align="strecth"
+            >
+               {
+                  renderMainItems(
+                    navigationSetup.third,
+                    GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD
+                  )
+                }
 
               {/* Put social */}
-              <ItemH
+              {/* <ItemH
                 flex="initial"
                 padding="10px"
                 radius="0px 12px 0px 0px"
@@ -655,7 +670,7 @@ function Navigation() {
                 >
                   <FaGithub size={15} color={"#fff"}/>
                 </Anchor>
-              </ItemH>
+              </ItemH> */}
             </Footer>
           </>
         }
@@ -684,11 +699,9 @@ const Primary = styled(Item)`
   &::-webkit-scrollbar-track {
     border-radius: 10px;
   }
-
   &::-webkit-scrollbar {
     width: 6px;
   }
-
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-image: -webkit-gradient(linear,
@@ -707,8 +720,6 @@ const InheritedSection = styled(Item)`
 `
 
 const PrimarySection = styled(InheritedSection)`
-  border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
-  border-top: 1px solid ${props => props.theme.sectionBorderBg};
   margin-top: -1px;
 `
 
@@ -734,17 +745,18 @@ const SectionInnerGroupContainer = styled(Item)`
 `
 
 const SectionInnerItemContainer = styled(Item)`
-
 `
 
-const PrimarySectionGroup = styled(InheritedSectionGroup)`
+const PrimarySectionGroup = styled(Item)`
+  border: 1px solid #E5E8F6;
+  border-radius: 16px;
   transition: margin .1s ease-out;
   ${ props => !props.opened && css`
     margin-top: -100%;
   `};
 `
 
-const PrimarySectionItem = styled(InheritedSectionItem)`
+const PrimarySectionItem = styled(Item)`
   
 `
 
@@ -757,11 +769,9 @@ const Secondary = styled(Item)`
 `
 
 const SecondarySection = styled(InheritedSection)`
-
 `
 
 const Social = styled(Item)`
-
 `
 
 // Export Default
