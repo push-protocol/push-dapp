@@ -1,44 +1,38 @@
-import React from "react";
-import ReactGA from "react-ga";
-import { ethers } from "ethers";
-import styled, { useTheme, ThemeProvider } from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import { useWeb3React } from "@web3-react/core";
-import { Item, Button } from "../primaries/SharedStyling";
-import { addresses, abis, envConfig } from "@project/contracts";
-import { postReq } from "api";
+import React from 'react';
+import ReactGA from 'react-ga';
+import { ethers } from 'ethers';
+import styled, { useTheme, ThemeProvider } from 'styled-components';
+import { useSelector, useDispatch } from 'react-redux';
+import { useWeb3React } from '@web3-react/core';
+import { Item, Button } from '../primaries/SharedStyling';
+import { addresses, abis, envConfig } from '@project/contracts';
+import { postReq } from 'api';
 
-import { toast as toaster } from "react-toastify";
-import NotificationToast from "../primaries/NotificationToast";
+import { toast as toaster } from 'react-toastify';
+import NotificationToast from '../primaries/NotificationToast';
 
-import Loader from "react-loader-spinner";
+import Loader from 'react-loader-spinner';
 
-import Feedbox from "segments/Feedbox";
+import Feedbox from 'segments/Feedbox';
 
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import UsersDataStore from "singletons/UsersDataStore";
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import UsersDataStore from 'singletons/UsersDataStore';
 
-import {
-  setPushAdmin,
-  setCoreReadProvider,
-  setCommunicatorReadProvider,
-} from "redux/slices/contractSlice";
+import { setPushAdmin, setCoreReadProvider, setCommunicatorReadProvider } from 'redux/slices/contractSlice';
 
-import GLOBALS from "config/Globals";
-import InboxComponent from "components/InboxComponent";
+import GLOBALS from 'config/Globals';
+import InboxComponent from 'components/InboxComponent';
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
 // Create Header
 function InboxPage() {
   // React GA Analytics
-  ReactGA.pageview("/inbox");
+  ReactGA.pageview('/inbox');
 
   const dispatch = useDispatch();
   const { account, chainId, library } = useWeb3React();
-  const { epnsReadProvider, epnsCommReadProvider } = useSelector(
-    (state) => state.contracts
-  );
+  const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -61,9 +55,9 @@ function InboxPage() {
   React.useEffect(() => {
     const fetchEncryptionKey = async () => {
       // get public key from Backend API
-      let encryptionKey = await postReq("/encryption_key/get_encryption_key", {
+      let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
         address: account,
-        op: "read",
+        op: 'read'
       }).then((res) => {
         return res.data?.encryption_key;
       });
@@ -77,25 +71,13 @@ function InboxPage() {
 
   React.useEffect(() => {
     (async function init() {
-      const coreProvider = onCoreNetwork
-        ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
+      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
 
       // inititalise the read contract for the core network
-      const coreContractInstance = new ethers.Contract(
-        addresses.epnscore,
-        abis.epnscore,
-        coreProvider
-      );
+      const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
       // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork
-        ? addresses.epnsEthComm
-        : addresses.epnsPolyComm;
-      const commContractInstance = new ethers.Contract(
-        commAddress,
-        abis.epnsComm,
-        library
-      );
+      const commAddress = onCoreNetwork ? addresses.epnsEthComm : addresses.epnsPolyComm;
+      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
     })();
@@ -118,13 +100,13 @@ function InboxPage() {
   // notification toast
   let notificationToast = () =>
     toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: "bottom-right",
+      position: 'bottom-right',
       autoClose: false,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      progress: undefined
     });
 
   /**
@@ -147,17 +129,8 @@ function InboxPage() {
     // EPNS Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
       // Instantiate Data Stores
-      UsersDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider
-      );
-      ChannelsDataStore.instance.init(
-        account,
-        epnsReadProvider,
-        epnsCommReadProvider,
-        chainId
-      );
+      UsersDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider);
+      ChannelsDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider, chainId);
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
 
@@ -166,59 +139,54 @@ function InboxPage() {
     try {
       const type = {
         Register: [
-          { name: "user", type: "address" },
-          { name: "encryptionKey", type: "string" },
-          { name: "action", type: "string" },
-        ],
+          { name: 'user', type: 'address' },
+          { name: 'encryptionKey', type: 'string' },
+          { name: 'action', type: 'string' }
+        ]
       };
 
       const message = {
         user: account,
         encryptionKey: encryptionPublicKey,
-        action: "Register",
+        action: 'Register'
       };
 
       let EPNS_DOMAIN = {
-        name: "EPNS COMM V1",
+        name: 'EPNS COMM V1',
         chainId: chainId,
-        verifyingContract: epnsCommReadProvider?.address,
+        verifyingContract: epnsCommReadProvider?.address
       };
 
       // loader toast
-      txToast = toaster.dark(
-        <LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />,
-        {
-          position: "bottom-right",
-          autoClose: false,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      txToast = toaster.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
+        position: 'bottom-right',
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
 
-      const signature = await library
-        .getSigner(account)
-        ._signTypedData(EPNS_DOMAIN, type, message);
+      const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
 
       const objPayload = {
         address: account,
         encryptionKey: encryptionPublicKey,
         signature,
         message,
-        op: "write",
+        op: 'write',
         chainId,
-        contractAddress: epnsCommReadProvider.address,
+        contractAddress: epnsCommReadProvider.address
       };
 
-      const result = await postReq("/encryption_key/register", objPayload);
+      const result = await postReq('/encryption_key/register', objPayload);
       console.log(result);
 
       toaster.update(txToast, {
-        render: "Successfully enabled secret notifications !",
+        render: 'Successfully enabled secret notifications !',
         type: toaster.TYPE.SUCCESS,
-        autoClose: 5000,
+        autoClose: 5000
       });
 
       setEnabledSecretNotif(true);
@@ -226,15 +194,15 @@ function InboxPage() {
       if (err.code === 4001) {
         // EIP-1193 userRejectedRequest error
         toaster.update(txToast, {
-          render: "User denied message signature.",
+          render: 'User denied message signature.',
           type: toaster.TYPE.ERROR,
-          autoClose: 5000,
+          autoClose: 5000
         });
       } else {
         toaster.update(txToast, {
-          render: "There was an error registering the public key",
+          render: 'There was an error registering the public key',
           type: toaster.TYPE.ERROR,
-          autoClose: 5000,
+          autoClose: 5000
         });
         console.log(err);
       }
@@ -244,27 +212,24 @@ function InboxPage() {
   const enableSecretNotif = async () => {
     let txToast;
     if (enabledSecretNotif) {
-      txToast = toaster.dark(
-        <NormalToast msg="Secret Notifications are already enabled." />,
-        {
-          position: "bottom-right",
-          type: toaster.TYPE.SUCCESS,
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        }
-      );
+      txToast = toaster.dark(<NormalToast msg="Secret Notifications are already enabled." />, {
+        position: 'bottom-right',
+        type: toaster.TYPE.SUCCESS,
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      });
       return;
     }
     if (!epnsCommReadProvider?.address) return;
     let encryptionPublicKey;
     await library.provider
       .request({
-        method: "eth_getEncryptionPublicKey",
-        params: [account], // you must have access to the specified account
+        method: 'eth_getEncryptionPublicKey',
+        params: [account] // you must have access to the specified account
       })
       .then((result) => {
         encryptionPublicKey = result;
@@ -274,50 +239,41 @@ function InboxPage() {
       .catch((error) => {
         if (error.code === 4001) {
           // EIP-1193 userRejectedRequest error
-          console.log("User Rejected the Request to the Key");
-          txToast = toaster.dark(
-            <NormalToast msg="User denied message EncryptionPublicKey" />,
-            {
-              position: "bottom-right",
-              type: toaster.TYPE.ERROR,
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
-          );
+          console.log('User Rejected the Request to the Key');
+          txToast = toaster.dark(<NormalToast msg="User denied message EncryptionPublicKey" />, {
+            position: 'bottom-right',
+            type: toaster.TYPE.ERROR,
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined
+          });
         } else if (error.code === -32601) {
           console.error(error);
-          txToast = toaster.dark(
-            <NormalToast msg="Your wallet doesn't support providing public encryption key." />,
-            {
-              position: "bottom-right",
-              type: toaster.TYPE.ERROR,
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
-          );
+          txToast = toaster.dark(<NormalToast msg="Your wallet doesn't support providing public encryption key." />, {
+            position: 'bottom-right',
+            type: toaster.TYPE.ERROR,
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined
+          });
         } else {
           console.error(error);
-          txToast = toaster.dark(
-            <NormalToast msg="There was an error getting public encryption key." />,
-            {
-              position: "bottom-right",
-              type: toaster.TYPE.ERROR,
-              autoClose: 5000,
-              hideProgressBar: true,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            }
-          );
+          txToast = toaster.dark(<NormalToast msg="There was an error getting public encryption key." />, {
+            position: 'bottom-right',
+            type: toaster.TYPE.ERROR,
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined
+          });
         }
       });
   };
@@ -351,9 +307,7 @@ function InboxPage() {
         <div className="joyride"></div>
         <InboxComponent />
         {/* <Feedbox /> */}
-        {toast && (
-          <NotificationToast notification={toast} clearToast={clearToast} />
-        )}
+        {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
       </Container>
     </ThemeProvider>
   );
@@ -363,10 +317,7 @@ function InboxPage() {
 const Container = styled.div`
   flex-direction: column;
   background: ${(props) => props.theme.mainBg};
-  height: calc(
-    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px -
-      ${(props) => props.theme.interfaceTopPadding}
-  );
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${(props) => props.theme.interfaceTopPadding});
   align-items: stretch;
   align-self: stretch;
 `;

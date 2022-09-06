@@ -1,10 +1,10 @@
 import React from "react";
 
 import styled from 'styled-components';
-import {Section, Content, Item, Para, A, B, H2, H3, Span, Button } from 'primaries/SharedStyling';
+import { Section, Content, Item, Para, A, B, H2, H3, Span, Button } from 'primaries/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 import { toast } from 'react-toastify';
 
 import { useWeb3React } from '@web3-react/core'
@@ -21,7 +21,7 @@ function Airdrop() {
 
   const [controlAt, setControlAt] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
-  const [ txInProgress, setTxInProgress ] = React.useState(false);
+  const [txInProgress, setTxInProgress] = React.useState(false);
   const [distributorContract, setDistributorContract] = React.useState(null);
   const [user, setUser] = React.useState(null);
 
@@ -42,10 +42,10 @@ function Airdrop() {
       // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       // setNFTRewardsContract(NFTRewardsInstance);
     }
-  }, [account,library]);
+  }, [account, library]);
 
   React.useEffect(() => {
-    if(distributorContract){
+    if (distributorContract) {
       checkClaim();
     }
   }, [account, distributorContract]);
@@ -54,20 +54,20 @@ function Airdrop() {
   const checkClaim = async () => {
     let user = await AirdropHelper.verifyAddress(account, distributorContract);
     setUser(user)
-    if(user)
-    setLoading(false)
+    if (user)
+      setLoading(false)
   }
 
   // to claim
   const handleClaim = async (user) => {
-    if(distributorContract){
+    if (distributorContract) {
       setTxInProgress(true)
       let sendWithTxPromise
       sendWithTxPromise = await distributorContract.claim(user.index, user.account, user.amount, user.proof)
       const tx = await sendWithTxPromise;
       console.log(tx);
       console.log("waiting for tx to finish");
-      let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3"/>, {
+      let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
         position: "bottom-right",
         autoClose: false,
         hideProgressBar: true,
@@ -87,7 +87,7 @@ function Airdrop() {
 
         setTxInProgress(false);
       }
-      catch(e) {
+      catch (e) {
         toast.update(txToast, {
           render: "Transaction Failed! (" + e.name + ")",
           type: toast.TYPE.ERROR,
@@ -103,11 +103,10 @@ function Airdrop() {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-       type="Oval"
-       color={color}
-       height={30}
-       width={30}
+      <Oval
+        color={color}
+        height={30}
+        width={30}
       />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
@@ -135,40 +134,39 @@ function Airdrop() {
 
           <Item padding="40px 0px 20px 0px">
             {loading &&
-              <Loader
-               type="Oval"
-               color="#35c5f3"
-               height={40}
-               width={40}
+              <Oval
+                color="#35c5f3"
+                height={40}
+                width={40}
               />
             }
 
             {!loading && controlAt == 0 &&
               <>
-              {user.verified && user.claimable &&
-                <EpicButton
-                  onClick={() => {handleClaim(user)}}
-                >
-                  Claim $PUSH Tokens
-                </EpicButton>
-              }
-              {user.verified && !user.claimable &&
+                {user.verified && user.claimable &&
+                  <EpicButton
+                    onClick={() => { handleClaim(user) }}
+                  >
+                    Claim $PUSH Tokens
+                  </EpicButton>
+                }
+                {user.verified && !user.claimable &&
 
-                <EpicButton
-                  theme="claimed"
-                  disabled={true}
-                >
-                  $PUSH Tokens Claimed
-                </EpicButton>
-              }
-              {!user.verified &&
+                  <EpicButton
+                    theme="claimed"
+                    disabled={true}
+                  >
+                    $PUSH Tokens Claimed
+                  </EpicButton>
+                }
+                {!user.verified &&
                   <EpicButton
                     theme="noteligible"
                     disabled={true}
                   >
                     Not eligible for Gratitude Drop
                   </EpicButton>
-              }
+                }
               </>
             }
           </Item>
@@ -185,13 +183,13 @@ function Airdrop() {
             <Item align="stretch" margin="0px 0px 0px 0px">
               <QnAItem>
                 <Question
-                  onClick={() => {toggleShowAnswer(1)}}
+                  onClick={() => { toggleShowAnswer(1) }}
                   hover="#e20880"
                 >
                   <Span>
                     What is $PUSH contract address?
                   </Span>
-                  <BsChevronExpand size={20} color={"#ddd"}/>
+                  <BsChevronExpand size={20} color={"#ddd"} />
                 </Question>
 
                 {showAnswers[1] &&
@@ -203,13 +201,13 @@ function Airdrop() {
 
               <QnAItem>
                 <Question
-                  onClick={() => {toggleShowAnswer(2)}}
+                  onClick={() => { toggleShowAnswer(2) }}
                   hover="#e20880"
                 >
                   <Span>
                     What is EPNS?
                   </Span>
-                  <BsChevronExpand size={20} color={"#ddd"}/>
+                  <BsChevronExpand size={20} color={"#ddd"} />
                 </Question>
 
                 {showAnswers[2] &&
@@ -223,13 +221,13 @@ function Airdrop() {
 
               <QnAItem>
                 <Question
-                  onClick={() => {toggleShowAnswer(3)}}
+                  onClick={() => { toggleShowAnswer(3) }}
                   hover="#e20880"
                 >
                   <Span>
                     Why are push notifications important for Web3?
                   </Span>
-                  <BsChevronExpand size={20} color={"#ddd"}/>
+                  <BsChevronExpand size={20} color={"#ddd"} />
                 </Question>
 
                 {showAnswers[3] &&
@@ -247,13 +245,13 @@ function Airdrop() {
 
               <QnAItem>
                 <Question
-                  onClick={() => {toggleShowAnswer(4)}}
+                  onClick={() => { toggleShowAnswer(4) }}
                   hover="#e20880"
                 >
                   <Span>
                     How can I keep up with EPNS?
                   </Span>
-                  <BsChevronExpand size={20} color={"#ddd"}/>
+                  <BsChevronExpand size={20} color={"#ddd"} />
                 </Question>
 
                 {showAnswers[4] &&

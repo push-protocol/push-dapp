@@ -1,18 +1,28 @@
 import React, { useState, useEffect } from "react";
 import styled, { css, useTheme } from "styled-components";
 import "react-dropdown/style.css";
-import { Section, Content, Item, H2, Span } from "../primaries/SharedStyling";
+import {
+  Section,
+  Content,
+  Item,
+  H2,
+  Span,
+  H3,
+} from "../primaries/SharedStyling";
 import "react-dropzone-uploader/dist/styles.css";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import UploadLogo from "./UploadLogo";
 import StakingInfo from "./StakingInfo";
 import ChannelInfo from "./ChannelInfo";
-import { envConfig } from "@project/contracts";
-import { MdCallMade } from "react-icons/md";
+import ProcessingInfo from "./ProcessingInfo";
+import { MdCallMade, MdError } from "react-icons/md";
 import { useWeb3React } from "@web3-react/core";
 import { ThemeProvider } from "styled-components";
-import { addresses, abis } from "@project/contracts";
+import { addresses, abis, envConfig } from "@project/contracts";
 import "./createChannel.css";
+import { getCAIPObj } from "helpers/CaipHelper";
+import { IPFSupload } from "helpers/IpfsHelper";
+import useToast from "hooks/useToast";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -27,19 +37,15 @@ const CORE_CHAIN_ID = envConfig.coreContractChain;
 // Create Header
 function CreateChannel() {
   const { account, library, chainId } = useWeb3React();
-
   const themes = useTheme();
-
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
-
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
 
   const [uploadDone, setUploadDone] = React.useState(false);
   const [stakeFeesChoosen, setStakeFeesChoosen] = React.useState(false);
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
-
-  const [chainDetails, setChainDetails] = React.useState(coreChain);
+  const [chainDetails, setChainDetails] = React.useState(CORE_CHAIN_ID);
   const [channelName, setChannelName] = React.useState("");
   const [channelAlias, setChannelAlias] = React.useState("");
   const [channelInfo, setChannelInfo] = React.useState("");
@@ -48,6 +54,9 @@ function CreateChannel() {
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
   const [daiAmountVal, setDaiAmountVal] = useState("");
   const [txStatus, setTxStatus] = useState(2);
+  const [progress, setProgress] = React.useState(0);
+  const [progressInfo, setProgressInfo] = React.useState("");
+  const [logoInfo, setLogoInfo] = React.useState("");
 
   //image upload states
   const [view, setView] = useState(false);
@@ -55,6 +64,8 @@ function CreateChannel() {
   const [croppedImage, setCroppedImage] = useState(undefined);
 
   const [stepFlow, setStepFlow] = React.useState(1);
+  const channelToast = useToast();
+  const channelToastNotif = useToast();
 
   //checking DAI for user
   React.useEffect(() => {
@@ -76,6 +87,23 @@ function CreateChannel() {
     };
     checkDaiFunc();
   }, []);
+
+  // timer
+  // React.useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setProgress((oldProgress) => {
+  //       if (oldProgress === 100) {
+  //         return 0;
+  //       }
+  //       const diff = Math.random() * 10;
+  //       return Math.min(oldProgress + diff, 100);
+  //     });
+  //   }, 500);
+
+  //   return () => {
+  //     clearInterval(timer);
+  //   };
+  // }, []);
 
   const proceed = () => {
     setStepFlow(3);
@@ -125,8 +153,7 @@ function CreateChannel() {
     e.preventDefault();
 
     if (!channelFile) {
-      setProcessing(3);
-      setProcessingInfo("Please upload logo of the channel");
+      setLogoInfo("Please upload logo of the channel");
 
       return false;
     }
@@ -136,111 +163,154 @@ function CreateChannel() {
     proceed();
     setProcessing(1);
 
-    var chainDetailsSplit = chainDetails.split(":");
-    var blockchain = chainDetailsSplit[0];
-    var chain_id = chainDetailsSplit[1];
-    var address = channelAlias;
+    const aliaschainId = chainDetails;
+    const aliasAddress = channelAlias;
 
     let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
       icon: channelFile,
-      blockchain: blockchain,
-      chain_id: chain_id,
-      address: address,
+      aliasDetails: getCAIPObj({
+        chainId: aliaschainId,
+        address: aliasAddress,
+      }),
     };
 
     console.log(input);
 
-    if (blockchain === coreChain) {
-      input.blockchain = "";
-    }
-
     input = JSON.stringify(input);
-
+    setProgress(0);
     console.log(`input is ${input}`);
-    const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
+    // const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
+    channelToast.showToast("Waiting for Confirmation...");
 
-    setProcessingInfo("Uploading Payload...");
-    var storagePointer = (storagePointer = await ipfs.add(input));
+    setProcessingInfo("Payload Uploaded");
+    setProgressInfo(
+      "Please complete the transaction in your wallet to continue."
+    );
+    setProgress(10);
+    // var storagePointer = (storagePointer = await ipfs.add(input));
+    let storagePointer = await IPFSupload(input);
     console.log("IPFS storagePointer:", storagePointer);
-    setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
+    // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
 
     // Send Transaction
     // First Approve DAI
     var signer = library.getSigner(account);
+    console.log(signer);
 
     let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
 
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
-    if (daiAmountVal < 50.0) {
-      var sendTransactionPromise = daiContract.approve(
+    try {
+      if (daiAmountVal < 50.0) {
+        var sendTransactionPromise = daiContract.approve(
+          addresses.epnscore,
+          fees
+        );
+        const tx = await sendTransactionPromise;
+
+        console.log(tx);
+        console.log("waiting for tx to finish");
+        setProgress(30);
+
+        await library.waitForTransaction(tx.hash);
+      }
+
+      let contract = new ethers.Contract(
         addresses.epnscore,
-        fees
+        abis.epnscore,
+        signer
       );
-      const tx = await sendTransactionPromise;
+
+      const channelType = 2; // Open Channel
+      const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
+      const identityBytes = ethers.utils.toUtf8Bytes(identity);
+
+      setProgress(50);
+    
+      const tx = await contract.createChannelWithFees(
+        channelType,
+        identityBytes,
+        fees,
+        {
+          gasLimit: 1000000,
+        }
+      );
 
       console.log(tx);
-      console.log("waiting for tx to finish");
-      setProcessingInfo("Waiting for Approval TX to finish...");
-      await library.waitForTransaction(tx.hash);
-    }
+      console.log("Check: " + account);
+      let txCheck = await library.waitForTransaction(tx.hash);
 
-    let contract = new ethers.Contract(
-      addresses.epnscore,
-      abis.epnscore,
-      signer
-    );
-
-    const channelType = 2; // Open Channel
-    const identity = "1+" + storagePointer; // IPFS Storage Type and HASH
-    const identityBytes = ethers.utils.toUtf8Bytes(identity);
-
-    var anotherSendTxPromise = contract.createChannelWithFees(
-      channelType,
-      identityBytes,
-      fees,
-      {
-        gasLimit: 1000000,
-      }
-    );
-
-    setProcessingInfo("Creating Channel TX in progress");
-    anotherSendTxPromise
-      .then(async function(tx) {
-        console.log(tx);
-        console.log("Check: " + account);
-        let txCheck = await library.waitForTransaction(tx.hash);
-
-        if (txCheck.status === 0) {
-          setProcessing(3);
-          setTxStatus(0);
-          setProcessingInfo("Transaction Failed due to some error! Try again");
-          setTimeout(() => {
-            setProcessing(0);
-            setTxStatus(2);
-            setChannelInfoDone(false);
-          }, 10000);
-        } else {
-          setProcessing(3);
-          setProcessingInfo("Channel Created! Reloading...");
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
-        }
-      })
-      .catch((err) => {
-        console.log("Error --> %o", err);
-        console.log({ err });
-        setProcessing(3);
-        setProcessingInfo(
-          "!!!PRODUCTION ENV!!! Contact support@epns.io to whitelist your wallet"
+      if (txCheck.status === 0) {
+        channelToast.updateToast(
+          "Error",
+          `There was an error creating the channel`,
+          "ERROR",
+          (size) => <MdError size={size} color="red" />
         );
-      });
+
+        setProcessing(3);
+        setTxStatus(0);
+        setStepFlow(2);
+        setChannelInfoDone(false);
+        setUploadDone(false);
+        setTimeout(() => {
+          setProcessing(0);
+        }, 500);
+      } else {
+        setProcessing(3);
+        setProgress(60);
+        setProgressInfo("Please wait while we confirm the transaction.");
+        setProcessingInfo("Transaction Confirmed");
+        setTimeout(() => {
+          setProgress(80);
+          setProgressInfo(
+            "Creating your channel, Aligning pixels, adjusting padding... This may take some time."
+          );
+          setProcessingInfo("Redirecting... Please do not refresh");
+          setProgress(90);
+        }, 2000);
+        setTimeout(() => {
+          setProgress(100);
+          window.location.reload();
+        }, 2000);
+      }
+    } catch (err) {
+      console.log("hello", err);
+        if (err.code === 4001) {
+          // EIP-1193 userRejectedRequest error
+          channelToast.updateToast(
+            "Error",
+            `User denied message signature.`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
+          setStepFlow(3);
+          setProcessing(0);
+          setUploadDone(false);
+        } else {
+          channelToast.updateToast(
+            "Error",
+            `There was an error creating the channel`,
+            "ERROR",
+            (size) => <MdError size={size} color="red" />
+          );
+
+          console.log("Error --> %o", err);
+          console.log({ err });
+          setProcessing(3);
+          setProgress(0);
+          setProgressInfo("There was an error creating the Channel");
+          setProcessingInfo(
+            "Kindly Contact support@epns.io to resolve the issue."
+          );
+        }
+      };
   };
 
   useEffect(() => {
@@ -285,6 +355,7 @@ function CreateChannel() {
               weight="400"
               size="16px"
               textTransform="none"
+              textAlign="center"
               spacing="0.03em"
               margin="0px 0px"
             >
@@ -292,6 +363,16 @@ function CreateChannel() {
               channel of communication with your users.
             </Span>
           </Item>
+          {txStatus === 0 && (
+            <Body>
+              <div>Transaction failed due to one of the following reasons:</div>
+              <p>1. There is not enough DAI in your wallet.</p>
+              <p>
+                2. Gas price increased due to network congestion. Adjust gas
+                limit manually.
+              </p>
+            </Body>
+          )}
         </Content>
       </Section>
 
@@ -365,6 +446,7 @@ function CreateChannel() {
               setProcessing={setProcessing}
               setProcessingInfo={setProcessingInfo}
               setChannelInfoDone={setChannelInfoDone}
+              setTxStatus={setTxStatus}
             />
           )}
 
@@ -380,55 +462,17 @@ function CreateChannel() {
               setImageSrc={setImageSrc}
               setProcessingInfo={setProcessingInfo}
               handleCreateChannel={handleCreateChannel}
+              logoInfo={logoInfo}
             />
           )}
 
           {/* Channel Setup Progress */}
           {(processing === 1 || processing === 3) && (
-            <Section>
-              <Content padding="0px 0px 0px 0px">
-                {processing === 1 && (
-                  <Item margin="20px 0px 10px 0px">
-                    <Loader type="Oval" color="#000" height={24} width={24} />
-                  </Item>
-                )}
-
-                <Item
-                  color="#fff"
-                  bg={processing === 1 ? "#e1087f" : "#000"}
-                  padding="10px 15px"
-                  margin="15px 0px"
-                >
-                  <Span
-                    color="#fff"
-                    textTransform="uppercase"
-                    spacing="0.1em"
-                    weight="400"
-                    size="1em"
-                  >
-                    {processingInfo}
-                    {txStatus === 0 && (
-                      <div
-                        style={{
-                          textTransform: "none",
-                          padding: "10px 0px",
-                        }}
-                      >
-                        <div style={{ paddingBottom: "5px" }}>
-                          It may be possible due to one of the following
-                          reasons:
-                        </div>
-                        <div>1. There is not enough DAI in your wallet.</div>
-                        <div>
-                          2. Network may be congested, due to that gas price
-                          increased. Try by increasing gas limit manually.
-                        </div>
-                      </div>
-                    )}
-                  </Span>
-                </Item>
-              </Content>
-            </Section>
+            <ProcessingInfo
+              progress={progress}
+              progressInfo={progressInfo}
+              processingInfo={processingInfo}
+            />
           )}
         </>
       )}
@@ -562,4 +606,31 @@ const ItemHere = styled.div`
   }
 `;
 
+const Body = styled.div`
+  margin: 10px auto 0px auto;
+  width: 55%;
+  padding: 30px;
+  background-color: #f5f5fa;
+  border-radius: 20px;
+  div {
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 21px;
+    text-align: center;
+    color: #657795;
+  }
+  p {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+    color: #cf1c84;
+  }
+  @media (max-width: 600px) {
+    width: 95%;
+  }
+  @media (max-width: 1224px) {
+    width: 75%;
+  }
+`;
 export default CreateChannel;

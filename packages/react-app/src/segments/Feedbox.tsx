@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { useTheme } from "styled-components";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
@@ -114,6 +114,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   }
 
   React.useEffect(() => {
+    // console.log(allFilter)
     setFilteredNotifications(allFilter)
   }, [allFilter])
 
@@ -166,7 +167,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       const map2 = new Map();
       results.forEach( each => {
         map1.set(each.payload.data.sid , each.epoch);
-        map2.set(each.payload.data.sid , each.channel);
+        map2.set(each.payload.data.sid , each.sender);
     })
     parsedResponse.forEach( each => {
         each['date'] = map1.get(each.sid);
@@ -208,7 +209,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       const map2 = new Map();
       results.forEach( each => {
         map1.set(each.payload.data.sid , each.epoch);
-        map2.set(each.payload.data.sid , each.channel);
+        map2.set(each.payload.data.sid , each.sender);
     })
     parsedResponse.forEach( each => {
         each['date'] = map1.get(each.sid);
@@ -355,7 +356,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
             <Notifs id="scrollstyle-secondary">
               {bgUpdateLoading && (
                 <Item padding="10px 20px">
-                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                  <Oval color="#35c5f3" height={40} width={40} />
                 </Item>
               )}
               {run &&
@@ -389,7 +390,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                   );
                 })}
               {(filter
-                ? filteredNotifications.slice(0, limit)
+                ? filteredNotifications
                 : notifications
               ).map((oneNotification, index) => {
                 const {
@@ -432,7 +433,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
 
               {loading && !bgUpdateLoading && (
                 <Item padding="10px 20px">
-                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                  <Oval color="#35c5f3" height={40} width={40} />
                 </Item>
               )}
             </Notifs>
@@ -453,7 +454,6 @@ const Container = styled.div`
   flex: 1;
   flex-direction: column;
   background: ${props => props.theme.mainBg};
-
   font-weight: 200;
   align-content: center;
   align-items: stretch;

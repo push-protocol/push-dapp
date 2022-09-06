@@ -1,80 +1,86 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import { useClickAway } from 'react-use';
-import styled, {ThemeProvider, useTheme} from 'styled-components';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useWeb3React } from '@web3-react/core';
 import { addresses, abis } from "@project/contracts";
-import Loader from 'react-loader-spinner';
+import { Oval } from 'react-loader-spinner';
 import { postReq } from "../api";
-import {Item, H2, H3, Span, Button, Input} from '../primaries/SharedStyling';
+import { Item, H2, H3, Span, Button, Input } from '../primaries/SharedStyling';
 
-const ethers = require('ethers');
-
+const ethers = require("ethers");
 
 export default function AliasVerificationModal({
-    onClose, onSuccess, verificationStatus, aliasEthAccount
+  onClose,
+  onSuccess,
+  verificationStatus,
+  aliasEthAccount,
 }) {
-    const { account, library } = useWeb3React();
-    const signer = library.getSigner(account);
+  const { account, library } = useWeb3React();
+  const signer = library.getSigner(account);
 
-    const themes = useTheme();
+  const themes = useTheme();
 
-    const modalRef = useRef(null);
-    const polygonCommsContract = new ethers.Contract(addresses.epnsPolyComm, abis.epnsComm, signer);
-    const [loading, setLoading] = useState('');
-    const mainAddress = aliasEthAccount;
+  const modalRef = useRef(null);
+  const polygonCommsContract = new ethers.Contract(
+    addresses.epnsPolyComm,
+    abis.epnsComm,
+    signer
+  );
+  const [loading, setLoading] = useState("");
+  const mainAddress = aliasEthAccount;
 
-    // Form signer and contract connection
-    useClickAway(modalRef, () => onClose(loading !== ''));
+  // Form signer and contract connection
+  useClickAway(modalRef, () => onClose(loading !== ""));
 
-    const checkAlias = async () => {
-        if (mainAddress == aliasEthAccount) {
-            submitAlias();
-        } else {
-            setLoading('Enter Correct Eth Channel Address');
-            setTimeout(() => {
-                setLoading('')
-            }, 4000)
-        }
+  const checkAlias = async () => {
+    if (mainAddress == aliasEthAccount) {
+      submitAlias();
+    } else {
+      setLoading("Enter Correct Eth Channel Address");
+      setTimeout(() => {
+        setLoading("");
+      }, 4000);
     }
 
     const submitAlias = () => {
-        setLoading('loading')
-        const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(mainAddress);
-        anotherSendTxPromise
-            .then(async (tx) => {
-                console.log(tx);
-                setLoading("Transaction Sent! It usually takes 5mins to verify.");
+      setLoading("loading");
+      const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(
+        mainAddress
+      );
+      anotherSendTxPromise
+        .then(async (tx) => {
+          console.log(tx);
+          setLoading("Transaction Sent! It usually takes 5mins to verify.");
 
-                await tx.wait(1);
-                setTimeout(() => {
-                    setLoading("Transaction Mined!");
-                }, 2000);
+          await tx.wait(1);
+          setTimeout(() => {
+            setLoading("Transaction Mined!");
+          }, 2000);
 
-                setTimeout(() => {
-                    setLoading("Loading...");
-                }, 2000);
+          setTimeout(() => {
+            setLoading("Loading...");
+          }, 2000);
 
-                const intervalId = setInterval(async () => {
-                    const response = await postReq("/channels/getAliasVerification", {
-                        aliasAddress: account,
-                        op: "read",
-                    })
-                    const status = response?.data?.status;
-                    if (status == true) {
-                        clearInterval(intervalId);
-                        onSuccess();
-                        onClose();
-                    }
-                }, 5000);
-            })
-            .catch(() => {
-                setLoading('There was an error');
-                setTimeout(() => {
-                    setLoading('')
-                }, 2000)
-            })
+          const intervalId = setInterval(async () => {
+            const response = await postReq("/channels/getAliasVerification", {
+              aliasAddress: account,
+              op: "read",
+            });
+            const status = response?.data?.status;
+            if (status == true) {
+              clearInterval(intervalId);
+              onSuccess();
+              onClose();
+            }
+          }, 5000);
+        })
+        .catch(() => {
+          setLoading("There was an error");
+          setTimeout(() => {
+            setLoading("");
+          }, 2000);
+        });
     };
-
 
     return (
         <ThemeProvider theme={themes}>
@@ -111,8 +117,7 @@ export default function AliasVerificationModal({
                                 </Item>
                                 {loading && (
                                     <Item margin="20px 0px 10px 0px">
-                                        <Loader
-                                            type="Oval"
+                                        <Oval
                                             color="black"
                                             height={16}
                                             width={16}
@@ -151,19 +156,19 @@ const StyledInput = styled(Input)`
     width: 100%;
     text-align: center;
     caret-color: transparent;
-`
+  `;
 
-const CustomInput = styled(Input)`
+  const CustomInput = styled(Input)`
     box-sizing: border-box;
     width: 100%;
     margin: 20px 0px;
-`;
+  `;
 
-const Overlay = styled.div`
+  const Overlay = styled.div`
     top: 0;
     left: 0;
     right: 0;
-    background: ${props => props.theme.scrollBg};
+    background: ${(props) => props.theme.scrollBg};
     height: 100%;
     width: 100%;
     z-index: 1000;
@@ -172,9 +177,10 @@ const Overlay = styled.div`
     justify-content: center;
     align-items: center;
     overflow-y: scroll;
-`;
+  `;
 
-const AliasModal = styled.div`
+  const AliasModal = styled.div`
     padding: 20px 30px;
-    background: ${props => props.theme.backgroundBG};
-`;
+    background: ${(props) => props.theme.backgroundBG};
+  `;
+}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { useTheme } from 'styled-components';
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 import { Waypoint } from "react-waypoint";
 import { useWeb3React } from "@web3-react/core";
 import { useSelector, useDispatch } from "react-redux";
@@ -465,10 +465,10 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
           setSearch={setSearch}
         />
       </div>
-        {bgUpdateLoading && (
-          <Item padding="10px 20px">
-            <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-          </Item>
+      {bgUpdateLoading && (
+          <div style={{ marginTop: "10px" }}>
+            <Oval color="#35c5f3" height={40} width={40} />
+          </div>
         )}
         {notifications && (
           <Items id="scrollstyle-secondary">
@@ -515,11 +515,9 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
             })}
           </Items>
         )}
-          {loading && !bgUpdateLoading && (
-                <Item padding="10px 20px" flex='1' margin="0 auto">
-                  <Loader type="Oval" color="#35c5f3" height={40} width={40} />
-                </Item>
-              )}
+         {loading && !bgUpdateLoading && (
+          <Oval color="#35c5f3" height={40} width={40} />
+        )}
         {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
           <CenteredContainerInfo>
             <DisplayNotice
@@ -557,23 +555,21 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  background: ${props => props.theme.mainBg};
   font-weight: 200;
   align-content: center;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
-  height: 100%;
-  margin: 0px 10px;
-  overflow:scroll;
+  max-height: 100vh;
+  background: ${props => props.theme.mainBg};
+  // padding: 20px;
+  // font-size: 16px;
   // display: flex;
-  // flex: 1;
-  // flex-direction: column;
   // font-weight: 200;
   // align-content: center;
   // align-items: center;
   // justify-content: center;
-  // max-height: 100vh;
-  // margin: 0px 0px 0px 10px;
+  // width: 100%;
+  // min-height: 40vh;
 `;
 
 const Toaster = styled.div`
@@ -586,6 +582,7 @@ const Toaster = styled.div`
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `;
+
 
 // Export Default
 export default SpamBox;

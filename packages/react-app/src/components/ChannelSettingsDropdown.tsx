@@ -14,17 +14,25 @@ import AddSubGraphIdModal from "./AddSubGraphIdModal";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 
+
+import {
+  AiOutlineUserAdd,
+  AiOutlineUserDelete,
+  AiTwotoneDelete,
+  AiOutlineDropbox
+} from 'react-icons/ai';
+
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import Loader from "react-loader-spinner";
+import {Oval} from "react-loader-spinner";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
 const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
 // Create Header
-function ChannelSettings() {
+function ChannelSettings({props}) {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector(
@@ -62,7 +70,7 @@ function ChannelSettings() {
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
+      <Oval color={color} height={30} width={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -237,43 +245,28 @@ function ChannelSettings() {
   // if (!onCoreNetwork) {
   //   //temporarily deactivate the deactivate button if not on core network
   //   return <></>;
-  // }
+  //
 
   return (
     <div>
       <DropdownWrapper background ={theme}>
-        <DeactivateButton
-          isChannelDeactivated={isChannelDeactivated}
-          onClick={toggleChannelActivationState}
-        >
-          <ActionTitle>
-            {!onCoreNetwork ? (
-              ""
-            ) : loading ? (
-              "Loading ..."
-            ) : isChannelBlocked ? (
-              "Channel Blocked"
-            ) : isChannelDeactivated ? (
-              "Activate Channel"
-            ) : (
-              "Deactivate Channel"
-            )}
-          </ActionTitle>
-        </DeactivateButton>
         <ActiveChannelWrapper>
-        
           {onCoreNetwork &&
             <ChannelActionButton
               disabled={channelInactive}
               onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
             >
-              <ActionTitle>
+              <div>
                 {addSubgraphDetailsLoading ? (
-                  <Loader type="Oval" color="#FFF" height={16} width={16} />
+                  <Oval color="#FFF" height={16} width={16} />
                 ) : (
-                  "Add SubGraph Details"
+                  <div style={{display:'flex',justifyContent:'start'}}>
+                  <AiOutlineDropbox fontSize={20}/>
+                  <div style={{width:'10px'}}/>                  
+                  Add SubGraph Details
+                  </div>
                 )}
-              </ActionTitle>
+              </div>
             </ChannelActionButton>
           }
 
@@ -281,27 +274,58 @@ function ChannelSettings() {
             disabled={channelInactive}
             onClick={() => !channelInactive && setAddModalOpen(true)}
           >
-            <ActionTitle>
+            <div>
               {addDelegateLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
+                <Oval color="#FFF" height={16} width={16} />
               ) : (
-                "Add Delegate"
+                <div style={{display:'flex',justifyContent:'start'}}>
+                  <AiOutlineUserAdd fontSize={20}/>
+                  <div style={{width:'10px'}}/>                  
+                  Add Delegate
+                </div>
               )}
-            </ActionTitle>
+            </div>
           </ChannelActionButton>
 
           <ChannelActionButton
             disabled={channelInactive}
             onClick={() => !channelInactive && setRemoveModalOpen(true)}
           >
-            <ActionTitle>
+            <div>
               {removeDelegateLoading ? (
-                <Loader type="Oval" color="#FFF" height={16} width={16} />
+                <Oval color="#FFF" height={16} width={16} />
               ) : (
-                "Remove Delegate"
+                <div style={{display:'flex',justifyContent:'start'}}>
+                  <AiOutlineUserDelete fontSize={20}/>
+                  <div style={{width:'10px'}}/>                  
+                  Remove Delegate
+                </div>
               )}
-            </ActionTitle>
+            </div>
           </ChannelActionButton>
+
+        <ChannelActionButton
+          isChannelDeactivated={isChannelDeactivated}
+          onClick={toggleChannelActivationState}
+        >
+          <div style={{color:'red'}}>
+          <div style={{display:'flex',justifyContent:'start'}}>
+            <AiTwotoneDelete fontSize={20}/>
+            <div style={{width:'10px',color:'red'}}/>                  
+            {!onCoreNetwork ? (
+              ""
+              ) : loading ? (
+                "Loading ..."
+                ) : isChannelBlocked ? (
+                  "Channel Blocked"
+                  ) : isChannelDeactivated ? (
+                    "Activate Channel"
+                    ) : (
+                      "Deactivate Channel"
+                      )}
+            </div>
+          </div>
+        </ChannelActionButton>
 
           
         </ActiveChannelWrapper>
@@ -374,16 +398,15 @@ const DropdownWrapper = styled.div`
   right: 20px;
   display: flex;
   flex-direction: column-reverse;
-  width: 220px;
-  height: 230px;
-  padding: 20px;
-  padding-top: 30px;
-
-  background: ${props => props.background.mainBg};
-  border: 1px solid #a9a9a9;
+  align-items: center;
+  width: 240px;
+  height: 190px;
+  padding: 20px 4px;
+  background: ${props => props.background.backgroundBG};
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+  border: 1px solid #E5E8F7;
+  border-radius: 16px;
   justify-content: space-between;
 `;
 
@@ -400,13 +423,6 @@ const Toaster = styled.div`
   margin: 0px 10px;
 `;
 
-const ActionTitle = styled.span`
-  ${(props: any) =>
-    props.hideit &&
-    css`
-      visibility: hidden;
-    `};
-`;
 
 const ToasterMsg = styled.div`
   margin: 0px 10px;
@@ -424,16 +440,20 @@ const DeactivateButton = styled.div`
 const ChannelActionButton = styled.button`
   border: 0;
   outline: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 8px 15px;
-  color: #fff;
   border-radius: 5px;
-  font-size: 14px;
-  font-weight: 400;
   position: relative;
-  background-color: #674c9f;
+  background: ${props => props.theme.backgroundBG};
+  color: ${props => props.theme.color};
+  height: 23px;
+  font-family: 'monospace, monospace';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 141%;
+  align-items: center;
+;
+  
   &:hover {
     opacity: ${(props) => (props.disabled ? 0.5 : 0.9)};
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};

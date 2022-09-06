@@ -8,6 +8,7 @@ import {
   Button,
   Input,
   FormSubmision,
+  Span
 } from "primaries/SharedStyling";
 import ImageClipper from "primaries/ImageClipper";
 import { useWeb3React } from "@web3-react/core";
@@ -15,7 +16,8 @@ import styled from "styled-components";
 import { ethers } from "ethers";
 import { addresses, abis } from "@project/contracts";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
+import {BsCloudUpload} from 'react-icons/bs'
 
 const UploadLogo = ({
   croppedImage,
@@ -26,7 +28,8 @@ const UploadLogo = ({
   setView,
   setImageSrc,
   setProcessingInfo,
-  handleCreateChannel
+  handleCreateChannel,
+  logoInfo
 }) => {
   const childRef = useRef();
   const { chainId, library, account } = useWeb3React();
@@ -52,7 +55,7 @@ const UploadLogo = ({
       var reader = new FileReader();
       reader.readAsDataURL(file?.files[0]);
 
-      reader.onloadend = function(e) {
+      reader.onloadend = function (e) {
         setImageSrc(reader.result);
       };
     } else {
@@ -87,11 +90,10 @@ const UploadLogo = ({
 
   return (
     <Section>
-      <Content padding="50px 20px 20px">
-        <Item align="flex-start">
-          <H3 color="#e20880" margin="0px 0px">
-            Upload Channel Logo to start the process. Clip image to
-            resize to 128x128px.
+      <Body>
+        <Item align="center">
+          <H3 color=" #657795" margin="0px 0px" textTransform="none" weight="500" size="15px">
+          Please upload a PNG, JPG. Crop the image to resize to 128px.  
           </H3>
         </Item>
         
@@ -125,29 +127,19 @@ const UploadLogo = ({
                       )}
                     </div>
                   ) : (
-                    <ImageIcon />
+                    // <ImageIcon />
+                    <BsCloudUpload size={100} color='#8C99B0' style={{marginTop:'30px'}} />
                   )}
 
-                  <ButtonSpace>
-                    <div className="crop-button">
-                      {view &&
-                        (!croppedImage && (
-                          <Button
-                            bg="#1C4ED8"
-                            onClick={() => {
-                              childRef.current.showCroppedImage();
-                            }}
-                          >
-                            Clip Image
-                          </Button>
-                        )
-                      )}
-                    </div>
-                  </ButtonSpace>
+                 
 
+                  <Item display="flex" direction="row" align="center">
+                  <p className="text-below">
+                    Drag and Drop or 
+                  </p>
                   <div className="text-div">
                     <label htmlFor="file-upload" className="labeled">
-                      <div>Upload a file</div>
+                      <div>Browse to Choose</div>
                       <input
                         id="file-upload"
                         accept="image/*"
@@ -159,17 +151,14 @@ const UploadLogo = ({
                         readOnly
                       />
                     </label>
-                    <div className="">- or drag and drop</div>
                   </div>
-                  <p className="text-below">
-                    PNG, JPG.Proceed to clip and submit final
-                  </p>
+                  </Item>
                 </div>
               </div>
             </div>
           </Space>
 
-          {!UtilityHelper.isMainnet(chainId) ? (
+          {/* {!UtilityHelper.isMainnet(chainId) ? (
             <Item align="flex-end">
               <Minter
                 onClick={() => {
@@ -184,54 +173,87 @@ const UploadLogo = ({
             </Item>
           ) : (
             <></>
-          )}
+          )} */}
 
-        <FormSubmision
-          flex="1"
-          direction="column"
-          margin="0px"
-          justify="center"
-          size="1.1rem"
-          onSubmit={handleCreateChannel}
-        >
-          <Item
-            margin="15px 0px 0px 0px"
+        {logoInfo?.length > 0 && (<Item 
+            margin="30px 0px 30px 0px"
             flex="1"
-            self="stretch"
-            align="stretch"
+            padding="10px 5px"
+            radius="10px"
+            bg="#F5F5FA">
+              <div style={{color:'#CF1C84'}}>{logoInfo}</div>
+            </Item>)}
+
+        {view && (!croppedImage ? (
+        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto">
+          <Button
+            bg="#e20880"
+            color="#fff"
+            flex="1"
+            radius="15px"
+            padding="20px 10px"
+            onClick={() => {
+              childRef.current.showCroppedImage();
+            }}
           >
-            <Button
-              bg="#e20880"
+            <Span
               color="#fff"
-              flex="1"
-              radius="0px"
-              padding="20px 10px"
-              disabled={processing == 1 ? true : false}
+              weight="600"
+              textTransform="none"
+              line="22px"
+              size="16px"
             >
-              {processing == 1 && (
-                <Loader
-                  type="Oval"
+              Crop Image
+            </Span>
+          </Button>
+        </Item>): (
+
+              <FormSubmision
+              flex="1"
+              direction="column"
+              margin="0px"
+              justify="center"
+              size="1.1rem"
+              onSubmit={handleCreateChannel}
+              >
+              <Item
+                width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto"
+              >
+                <Button
+                  bg="#e20880"
                   color="#fff"
-                  height={24}
-                  width={24}
-                />
-              )}
-              {processing != 1 && (
-                <Input
-                  cursor="hand"
-                  textTransform="uppercase"
-                  color="#fff"
-                  weight="400"
-                  size="0.8em"
-                  spacing="0.2em"
-                  type="submit"
-                  value="Setup Channel"
-                />
-              )}
-            </Button>
-          </Item>
-        </FormSubmision>
-      </Content>
+                  flex="1"
+                  radius="15px"
+                  padding="20px 10px"
+                  disabled={processing == 1 ? true : false}
+                >
+                  {processing == 1 && (
+                    <Oval
+                      color="#fff"
+                      height={24}
+                      width={24}
+                    />
+                  )}
+                  {processing != 1 && (
+                    <Input
+                      cursor="hand"
+                      textTransform="none"
+                      color="#fff"
+                      weight="600"
+                      textTransform="none"
+                      line="22px"
+                      size="16px"
+                      type="submit"
+                      value="Create Channel"
+                    />
+                  )}
+                </Button>
+              </Item>
+              </FormSubmision> 
+        ))}
+
+
+      </Body>
     </Section>
   );
 };
@@ -269,20 +291,37 @@ const ButtonSpace = styled.div`
   margin: 1rem auto;
 `;
 
+const Body = styled.div`
+  margin: 50px auto 0px auto;
+  width: 55%; 
+  @media (max-width: 600px) {
+    width: 95%; 
+  }
+  @media (max-width: 1224px) {
+    width: 75%; 
+  }
+`
+
 const Space = styled.div`
   width: 100%;
   margin-bottom: 2rem;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 150%;
   .bordered {
     display: flex;
+    // height: 250px;
     justify-content: center;
-    border: 4px dotted #ccc;
-    border-radius: 10px;
+    border: 1px dashed #8C99B0;
+    align-items: flex-end;
+    border-radius: 12px;
     padding: 6px;
+    background-color: #F5F5FA;
     margin-top: 10px;
     .inner {
       margin-top: 0.25rem;
       text-align: center;
-      padding: 10px;
+      padding: 20px 10px 10px 10px;
       width: 100%;
       .crop-div {
         width: 100%;
@@ -296,6 +335,7 @@ const Space = styled.div`
         margin-right: auto;
         div {
           .croppedImage {
+            border-radius: 12px;
             @media (max-width: 768px) {
               margin-top: 1rem;
             }
@@ -337,22 +377,23 @@ const Space = styled.div`
         display: flex;
         font-size: 1rem;
         line-height: 1rem;
-        margin-top: 0.2rem;
         color: #ccc;
         justify-content: center;
         .labeled {
           position: relative;
           cursor: pointer;
-          background-color: white;
           border-radius: 4px;
-          color: #60a5fa;
+          color: #CF1C84;
+          &:hover {
+            text-decoration: underline;
+          }
         }
       }
       .text-below {
         font-size: 1rem;
         line-height: 1rem;
-        color: #ccc;
-        margin-top: 0.3rem;
+        color: #657795;
+        margin-right: 0.3rem;
       }
     }
   }

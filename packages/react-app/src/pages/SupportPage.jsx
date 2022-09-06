@@ -17,7 +17,7 @@ import {
 import Dropdown from "react-dropdown";
 import styled, { useTheme } from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
-import Loader from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 
 import { ThemeProvider } from "styled-components";
 
@@ -335,8 +335,7 @@ const SupportPage = () => {
                         padding="12px 15px"
                       >
                         {contactFormProcessing === 1 && (
-                          <Loader
-                            type="Oval"
+                          <Oval
                             color="#fff"
                             height={24}
                             width={24}
