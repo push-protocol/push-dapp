@@ -1,16 +1,6 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import { envConfig } from "@project/contracts";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useWeb3React } from "@web3-react/core";
-import { injected, ledger, portis, walletconnect } from "connectors";
-import { Web3Provider } from "ethers/providers";
-import { useBrowserNotification, useEagerConnect, useInactiveListener } from "hooks";
-import Joyride, { CallBackProps } from "react-joyride";
-import { useLocation } from "react-router-dom";
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
-
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
@@ -22,9 +12,19 @@ import PortisLogoLight from './assets/login/portisLight.svg';
 import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 
+import { envConfig } from "@project/contracts";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useWeb3React } from "@web3-react/core";
+import { injected, ledger, portis, walletconnect } from "connectors";
+import { Web3Provider } from "ethers/providers";
+import { useBrowserNotification, useEagerConnect, useInactiveListener } from "hooks";
+import Joyride, { CallBackProps } from "react-joyride";
+import { useLocation } from "react-router-dom";
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 import styled from "styled-components";
+import AppLogin from './AppLogin';
 import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyling";
 
 import NavigationContextProvider from "contexts/NavigationContext";
@@ -240,180 +240,7 @@ export default function App() {
           )}
 
           {!active && (
-            <Item
-              justify="flex-start"
-              margin="75px 0 0 0"
-              padding="0 15px"
-              bg={darkMode ? themeDark : themeLight}
-            >
-              <Item
-                padding="16px 0"
-                position="absolute"
-                top="-5%"
-                right="2%"
-                width="fit-content"
-                radius="99px"
-                bg="rgba(179, 178, 236, 0.5)"
-              >
-                <DarkModeSwitch
-                  style={{ margin: "0 1rem" }}
-                  checked={darkMode}
-                  onChange={toggleDarkMode}
-                  size={24}
-                  sunColor="#fff"
-                />
-              </Item>
-
-              {/* {!activatingConnector && (
-                <ItemH
-                  bg={darkMode ? themeDark : themeLight}
-                  border="1px solid #ddd"
-                  padding="25px 15px"
-                  radius="12px"
-                  position="absolute"
-                  top="5%"
-                  right="2%"
-                >
-                  <Image width="15%" src="./epns-dapp-loader.gif" alt="loader"/>
-                  <Span weight="500" size="18px" margin="0 0 0 28px">
-                    Waiting for Confirmation
-                  </Span>
-                </ItemH>
-              )} */}
-              <PushLogo>
-                {darkMode && 
-                  <EPNSLogoDark />
-                }
-
-                {!darkMode && 
-                  <EPNSLogoLight />
-                }
-              </PushLogo>
-
-              <Item
-                bg={darkMode ? themeDark : "#fff"}
-                shadow= "0px 0px 9px rgba(18, 8, 46, 0.04)"
-                padding="33px 20px"
-                radius="32px"
-                tabletMaxWidth="350px"
-                margin="0 0 60px 0"
-                flex="initial"
-              >
-                <H2
-                  textTransform="none"
-                  weight="500"
-                  size="32px"
-                  margin="0px"
-                  color={darkMode ? themeDark : themeLight}
-                >
-                  Connect a Wallet
-                </H2>
-
-                <ItemH maxWidth="430px" align="stretch">
-                  {Object.keys(web3Connectors).map((name) => {
-                    const currentConnector = web3Connectors[name].obj;
-                    const connected = currentConnector === connector;
-                    const disabled =
-                      !triedEager ||
-                      !!activatingConnector ||
-                      connected ||
-                      !!error;
-                    const image = darkMode ? web3Connectors[name].logodark : web3Connectors[name].logolight;
-                    const title = web3Connectors[name].title;
-
-                    return (
-                      <ProviderButton
-                        disabled={disabled}
-                        key={name}
-                        onClick={() => {
-                          setActivatingConnector(currentConnector);
-                          activate(currentConnector);
-                        }}
-                      >
-                        <ProviderImage src={image} />
-
-                        <Span
-                          spacing="0.1em"
-                          textTransform="Capitalize"
-                          size="20px"
-                          weight="500"
-                          background={
-                            darkMode
-                              ? themeDark.backgroundBG
-                              : themeLight.backgroundBG
-                          }
-                          color={
-                            darkMode
-                              ? themeDark.fontColor
-                              : themeLight.fontColor
-                          }
-                        >
-                          {title}
-                        </Span>
-                      </ProviderButton>
-                    );
-                  })}
-                </ItemH>
-                <Item width="24rem" tabletMaxWidth="20rem">
-                  <P
-                    weight="400"
-                    margin="30px 0px 0px 0px"
-                    textAlign="center"
-                    lineHeight="20px"
-                    size="14px"
-                    color={
-                      darkMode ? themeDark.fontColor : themeLight.fontColor
-                    }
-                  >
-                    By connecting your wallet, <B>You agree</B> to our{" "}
-                    <A href="https://epns.io/tos" target="_blank">
-                      Terms of Service
-                    </A>{" "}
-                    and our{" "}
-                    <A href="https://epns.io/privacy" target="_blank">
-                      Privacy Policy
-                    </A>
-                    .
-                  </P>
-                </Item>
-              </Item>
-
-              <Item
-                flex="initial"
-                padding="25px 15px"
-                margin="30px 0 0 0"
-                color={darkMode ? themeDark.fontColor : themeLight.fontColor}
-              >
-                <StyledItem>
-                  Note: The EPNS protocol has been under development for 1+
-                  year, and completed a{" "}
-                  <A
-                    color={
-                      darkMode ? themeDark.fontColor : themeLight.fontColor
-                    }
-                    href="https://epns.io/EPNS-Protocol-Audit2021.pdf"
-                    target="_blank"
-                  >
-                    {" "}
-                    ChainSafe audit{" "}
-                  </A>{" "}
-                  in October 2021. However, the mainnet is still a new product
-                  milestone. Always DYOR, and anticipate bugs and UI
-                  improvements. Learn how to report any bugs in our{" "}
-                  <A
-                    href="https://discord.com/invite/YVPB99F9W5"
-                    target="_blank"
-                  >
-                    Discord.
-                  </A>
-                </StyledItem>
-              </Item>
-              <Item flex="initial" padding="25px 15px" margin="50px 0 0 0">
-                <StyledItem>
-                  © 2022 Ethereum Push Notification Service (EPNS)
-                </StyledItem>
-              </Item>
-            </Item>
+            <AppLogin />
           )}
         </ParentContainer>
       </NavigationContextProvider>

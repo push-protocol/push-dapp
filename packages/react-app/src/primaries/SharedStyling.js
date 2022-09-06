@@ -34,7 +34,6 @@ export const Item = styled.div`
   flex-direction: column;
   flex-wrap: ${(props) => props.wrap || "wrap"};
   position: ${(props) => props.position || "relative"};
-  justify-content: center;
   background: ${(props) => props.bg || "transparent"};
   flex: ${(props) => props.flex || "1"};
   flex-direction: ${(props) => props.direction || "column"};

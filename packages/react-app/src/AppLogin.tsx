@@ -22,28 +22,26 @@ import PortisLogoLight from './assets/login/portisLight.svg';
 import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 
+import { ItemHV2, ItemVV2, SectionV2 } from "components/reusables/SharedStylingV2";
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 import styled from "styled-components";
-import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyling";
+import { A, B, C, H2, Image, Item, ItemH, P, Section, Span } from "./primaries/SharedStyling";
 
 import NavigationContextProvider from "contexts/NavigationContext";
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
-import { ThemeProvider } from "styled-components";
-
-import GLOBALS from "config/Globals";
 import { themeDark, themeLight } from "config/Themization";
+import { ThemeProvider } from "styled-components";
 
 import { useDispatch, useSelector } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
 import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 
 import InitState from "components/InitState";
-import * as dotenv from "dotenv";
+import BlurBG from "components/reusables/blurs/BlurBG";
 
-
-dotenv.config();
+import GLOBALS, { device } from "config/Globals";
 
 // define the different type of connectors which we use
 const web3Connectors = {
@@ -65,8 +63,37 @@ const web3Connectors = {
 };
 
 const AppLogin = () => {
-  
-}
-export deafult AppLogin;
+  // React GA Analytics
+  ReactGA.pageview("/chat");
 
-// CSS STYLES
+  // SET LOADING
+  const [loading, setLoading] = useState(true);
+
+  // RENDER
+  return (
+    <Container
+      alignItems='center'
+    >
+      <BlurBG />
+      <ItemHV2>
+        Login Me
+      </ItemHV2>
+    </Container>
+  );
+}
+export default AppLogin;
+
+// This defines the page settings, toggle align-self to center if not covering entire stuff
+const Container = styled(SectionV2)`
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
+
+  @media ${device.laptop} { 
+    padding-top: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+  }
+
+  @media ${device.mobileM} {
+    padding-top: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
+  }
+`;
+
+

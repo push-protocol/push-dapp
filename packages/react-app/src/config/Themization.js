@@ -1,6 +1,14 @@
 // Define what props.theme will look like
 const themeLight = {
   scheme: "light",
+
+  // Login Theme
+  loginBG: {
+    bg: '#DBEBFF',
+    blur1: '#F6E4FF',
+    blur2: '#CECDFF'
+  },
+
   // Section Theme
   sectionBorderBg: "transparent",
 
@@ -103,6 +111,14 @@ const themeLight = {
 
 const themeDark = {
   scheme: "dark",
+  
+  // Login Theme
+  loginBG: {
+    bg: '#DBEBFF',
+    blur1: '#F6E4FF',
+    blur2: '#CECDFF'
+  },
+  
   // Section Theme
   sectionBorderBg: "#333",
 
