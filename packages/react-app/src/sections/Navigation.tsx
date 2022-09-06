@@ -54,6 +54,7 @@ function Navigation() {
     if (canSend === SEND_NOTIFICATION_STATES.HIDE) {
       // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
       navigationSetup.secondary[0].data.name = 'Create Channel';
+      navigationSetup.secondary[1].data.name = 'Hide';
       // navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
     } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
       if (channelDetails !== 'unfetched' && channelDetails != null) {
@@ -362,8 +363,8 @@ function Navigation() {
       return transformedList;
     }
 
-    // Render main items
-    const renderMainItems = (items, sectionID) => {
+     // Render main items
+     const renderMainItems = (items, sectionID) => {
       let Section;
       let fontSize;
       let secondaryButton=0;
@@ -373,23 +374,33 @@ function Navigation() {
           fontSize = "small";
           secondaryButton=1;
           break;
+        case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
+          Section = SecondarySection;
+          fontSize = "small";
+          secondaryButton=1;
+          break;
         default:
           Section = PrimarySection;
           fontSize = "normal";
       }
-
       let rendered = (
-        Object.keys(items).map(function(key,index) {
+        Object.keys(items).map(function(key) {
           const section = items[key];
           // console.log(section)
           const data = section.data;
           const uid = section.data.uid;
-          
-          // if (uid === 2 && section.opened != isCommunicateOpen)
-          //   dispatch(setCommunicateOpen(section.opened));
-          // if (uid === 3 && section.opened != isDeveloperOpen)
-          //   dispatch(setDeveloperOpen(section.opened));
-          
+          // if(uid === 2 ){
+          //   if(section.opened)
+          //   dispatch(setCommunicateOpen(true))
+          //   else
+          //   dispatch(setCommunicateOpen(false))
+          // }
+          // else if(uid === 3){
+          //   if(section.opened)
+          //   dispatch(setDeveloperOpen(true))
+          //   else
+          //   dispatch(setDeveloperOpen(false))
+          // }
           let innerRendered = (
             <Section 
                 key={key}
@@ -397,6 +408,7 @@ function Navigation() {
                 align="stretch"
                 size={fontSize}
             >
+
               {
                 (secondaryButton)?
                   (
@@ -407,27 +419,29 @@ function Navigation() {
                     direction="row"
                     overflow="hidden"
                   >
-                     { 
+
+                    { 
                     section.hasItems 
                       ? renderChildItems(
                           data.drilldown, 
                           section.opened,
-                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY,
+                          GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                         )
                       : null
                     }
+                    
                     <SectionInnerGroupContainer
-                     flex="1"
-                     align="stretch"
-                     bg={theme.leftBarButtonBg}
-                     zIndex={2}
-                     refresh={refresh}
-                     // margintop="15px"
-                     onClick={() => {
-                       // console.log(`Clicked secondary button`);
-                       mutateTransformedList(section, true)
-                     }}      
-                     id={data.id} 
+                      flex="1"
+                      align="stretch"
+                      bg={theme.leftBarButtonBg}
+                      zIndex={2}
+                      refresh={refresh}
+                      // margintop="15px"
+                      onClick={() => {
+                        // console.log(`Clicked secondary button`);
+                        mutateTransformedList(section, true)
+                      }}      
+                      id={data.id}          
                     >
                       <NavigationButton
                         item={section}
@@ -437,32 +451,50 @@ function Navigation() {
                       />
                     </SectionInnerGroupContainer>
                     
-                   
+                    
                   </Item>
                   ):
                   (
                     <Item
-                    padding="5px 10px"
-                    flexBasis="100%"
-                    align="stretch"
-                    direction="row"
-                    overflow="hidden"
+                      padding="5px 10px"
+                      flexBasis="100%"
+                      align="stretch"
+                      direction="row"
+                      overflow="hidden"
                     >
-                      <SectionInnerGroupContainer
+                        <SectionInnerGroupContainer
                           flex="1"
                           align="stretch"
                           bg={theme.leftBarButtonBg}
                           margintop="-10px"
                           zIndex={2}
                           refresh={refresh}
+                          // id={section.data.name}
                           onClick={() => {
+                            // const uid = section.data.uid;
+                            // if(uid === 2 ){
+                            //   if(!section.opened)
+                            //   dispatch(setCommunicateOpen(true))
+                            //   else
+                            //   dispatch(setCommunicateOpen(false))
+                            // }
+                            // else if(uid === 3){
+                            //   if(!section.opened)
+                            //   dispatch(setDeveloperOpen(true))
+                            //   else
+                            //   dispatch(setDeveloperOpen(false))
+                            // }
+                            // console.log(`Clicked primary button`);
                             mutateTransformedList(section, true)
     
-                            if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3))){
-                              setTimeout(() => {
-                                dispatch(incrementStepIndex())
-                              }, 500);
-                            }
+                        if(run && ((stepIndex === 1 && uid === 2) || (stepIndex === 16 && uid === 3)))
+                        {
+
+                          setTimeout(() => {
+                            dispatch(incrementStepIndex())
+                            // if (stepIndex === 1 && uid === 2)dispatch(setTutorialContinous(true));
+                          }, 500);
+                        }
                           }}              
                         >
                         <NavigationButton
@@ -472,13 +504,13 @@ function Navigation() {
                           active={section.active}
                         />
                       </SectionInnerGroupContainer>
+                    
                       {/* { 
-                        section.hasItems 
+                      section.hasItems 
                         ? renderChildItems(
                             data.drilldown, 
                             section.opened,
-                            GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY,
-                            index === 1 // send true if this one in Developer Section
+                            GLOBALS.CONSTANTS.NAVBAR_SECTIONS.PRIMARY
                           )
                         : null
                       } */}
@@ -499,8 +531,8 @@ function Navigation() {
       return rendered;
     }
 
-    // Render Child Items
-    const renderChildItems = (drilldown, opened, sectionID, isDevBar=false) => {
+     // Render Child Items
+     const renderChildItems = (drilldown, opened, sectionID) => {
       let SectionGroup;
       let SectionItem;
 
@@ -516,10 +548,10 @@ function Navigation() {
 
       let rendered = (
         <SectionGroup
-        align="stretch"
-        margin="10px 0px"
-        opened={opened}
-        refresh={refresh}
+          align="stretch"
+          margin="10px 0px"
+          opened={opened}
+          refresh={refresh}
         >
           {Object.keys(drilldown).map(function(key) {
             const item = drilldown[key];
@@ -534,24 +566,26 @@ function Navigation() {
                 <SectionInnerItemContainer
                   flex="1"
                   align="stretch"
-                  bg={theme.leftBarButtonBg}
+                  // bg={theme.leftBarButtonBg}
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
+                    // console.log();
                     if(run && ((stepIndex=== 2 && data.name === "Channels") || (stepIndex === 6 && data.name === "Inbox")|| (stepIndex === 8 && data.name === "Spam") ||  (stepIndex === 10 && data.name === "Receive Notifs") ||  (stepIndex === 16 && data.name === "Create Channel") ||  (stepIndex === 17 && data.name === "Developer's Guide")))
                     { 
                       if(stepIndex === 10)dispatch(setTutorialContinous(true));
                       dispatch(incrementStepIndex())
                     }
-                    
+                    // console.log(`Clicked  button`);
+                    // mutateTransformedList(item)
                   }}
-                  >
+                >
                   <NavButton
                     item={item}
                     data={data}
                     sectionID={sectionID}
                     active={item.active}
-                    />
+                  />
                 </SectionInnerItemContainer>
               </SectionItem>
             )
@@ -589,7 +623,7 @@ function Navigation() {
             </Primary>
             <Footer
               justify="flex-end"
-              align="strecth"
+              align="stretch"
             >
                {
                   renderMainItems(
