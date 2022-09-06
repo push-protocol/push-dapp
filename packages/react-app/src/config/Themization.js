@@ -57,8 +57,9 @@ const themeLight = {
   viewChannelOuterBorder: "#eee",
   viewChannelLink: "#e20880",
   viewChannelVerifiedBadge: "#ec008c",
-  viewChannelIconBorder: "#fafafa",
+  viewChannelIconBorder: "#E6E7EC",
   viewChannelSecondaryBG: "#FFDBF0",
+  viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#657795",
 
@@ -159,7 +160,10 @@ const themeDark = {
   viewChannelVerifiedBadge: "#ccc",
   viewChannelIconBorder: "#222",
   viewChannelSecondaryBG: "#222",
-  viewChannelSecondaryIcon: "#414141",
+  viewChannelSecondaryText: "#D53893",
+  viewChannelSecondaryIcon: "#D53893",
+  viewChannelPrimaryText: "#fff",
+
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: "#000",

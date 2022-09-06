@@ -4,15 +4,15 @@ import styled from 'styled-components';
 import { Item, ItemH, Span, A} from '../primaries/SharedStyling';
 
 // Faucet URLs
-function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave }) {
+function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave, padding, color }) {
 
   // render
   return (
     <ItemH bg={bgColor} 
-     margin="0 20px"
+     margin="0 8px"
      radius="10px"
-     padding="6px 0"
-     maxWidth="8rem">
+     padding={padding}
+     maxWidth="7rem">
      
       <MetaContent
         hoverBG="transparent"
@@ -28,7 +28,7 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
           </Item>
         }
         <Span
-         
+         color={color}
         >
           {internalIcon && 
             <IconContainer>
@@ -58,7 +58,6 @@ const MetaContent = styled(A)`
   
   & > Span {
     gap: 3px;
-    color: #D53893;
     font-weight: 600;
     display: flex;
     font-size: 11px;

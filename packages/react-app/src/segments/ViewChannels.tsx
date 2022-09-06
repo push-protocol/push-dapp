@@ -327,7 +327,7 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
   
   flex: 1;
-  padding: 10px 20px;
+  padding:  5px 20px 10px 20px;
   overflow-y: scroll;
 
   &::-webkit-scrollbar-track {

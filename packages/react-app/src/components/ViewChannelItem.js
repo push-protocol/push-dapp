@@ -8,8 +8,6 @@ import { Oval } from "react-loader-spinner";
 import Skeleton from "@yisheng90/react-loading";
 import { IoMdPeople } from "react-icons/io";
 import { GoVerified } from "react-icons/go";
-import { FaRegAddressCard } from "react-icons/fa";
-import { AiOutlineShareAlt } from "react-icons/ai";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -698,13 +696,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }
                 internalIcon={null}
                 text={memberCount}
+                padding="2px 0"
                 bgColor={themes.viewChannelSecondaryBG}
-                color={themes.viewChannelSecondaryBG}
+                color={themes.viewChannelSecondaryText}
               />
 
               <MetaInfoDisplayer
                 text={formatAddress(copyText)}
-                bgColor={themes.viewChannelSecondaryBG}
+                bgColor={themes.viewChannelSearchBg}
+                padding="6px 0"
                 color={themes.viewChannelPrimaryText}
                 onClick={() => {
                   copyToClipboard(channelJson.addr);
@@ -804,7 +804,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         <Oval color="#FFF" height={16} width={16} />
                       </ActionLoader>
                     )}
-                    <ActionTitle hideit={txInProgress}>Opt-Out</ActionTitle>
+                    <ActionTitle hideit={txInProgress}>Opt-out</ActionTitle>
                   </UnsubscribeButton>
                 )}
               </>
@@ -834,9 +834,12 @@ const Container = styled.div`
 
   background: ${(props) => props.theme.mainBg};
   border: 1px solid ${(props) => props.theme.viewChannelOuterBorder};
-  margin: 15px 0px;
+  border-bottom:none;
+  border-left:none;
+  border-right:none;
+  margin: 0px 5px;
   justify-content: center;
-  padding: 10px;
+  padding: 25px 10px;
 
   align-self: stretch;
 `;
@@ -856,7 +859,7 @@ const ChannelLogo = styled.div`
   flex: 1;
   margin: 5px;
   padding: 10px;
-  border: 2px solid ${(props) => props.theme.viewChannelIconBorder};
+  border: 1px solid ${(props) => props.theme.viewChannelIconBorder};
   overflow: hidden;
   border-radius: 20px;
   display: flex;
@@ -1114,11 +1117,11 @@ const SubscribeButton = styled(ChannelActionButton)`
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
-  background: #fff;
+  background: transparent;
   color:${(props) => props.theme.viewChannelPrimaryText};
   border:1px solid #657795; 
   border-radius: 8px;
-  padding:9px 20px;
+  padding:9px 15px;
   min-width: 80px;
 `;
 
