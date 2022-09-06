@@ -12,6 +12,24 @@ import * as PushNodeClient from '../../../../api'
 import { User } from '../../../../api'
 // @ts-ignore
 import Loader from 'react-loader-spinner'
+import Box from '@mui/material/Box'
+import styled from 'styled-components'
+
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+const TabPanel = (props: TabPanelProps): JSX.Element => {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`${index}`} {...other}>
+      {value === index && <Box sx={{ p: 3, padding: '0px' }}>{children}</Box>}
+    </div>
+  )
+}
 
 const SearchBar = () => {
   const { setSearchedUser, searchedUser }: AppContext = useContext<AppContext>(Context)
@@ -21,6 +39,7 @@ const SearchBar = () => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
+  const [value, setValue] = React.useState(0)
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let searchAddress = event.target.value
@@ -105,42 +124,91 @@ const SearchBar = () => {
   }
 
   return (
-    <>
-      <div className="search">
+    // <>
+    //   <div className="search">
+    //     <form onSubmit={submitSearch}>
+    //       <div className="searchInputs">
+    //         <input
+    //           type="text"
+    //           placeholder="Search for addresses or ENS Domains"
+    //           value={searchedUser}
+    //           onChange={onChangeSearchBox}
+    //         />
+    //         <div className="searchIcon">
+    //           {searchedUser.length === 0 ? (
+    //             <SearchIcon />
+    //           ) : isLoadingSearch ? (
+    //             <div className="search-user-loader">
+    //               <Loader type="Oval" color="#000" height={25} width={25} />
+    //               <CloseIcon id="clearBtn" onClick={clearInput} />
+    //             </div>
+    //           ) : (
+    //             <CloseIcon id="clearBtn" onClick={clearInput} />
+    //           )}
+    //         </div>
+    //       </div>
+    //     </form>
+    //     <div className="sidebar_message">
+    //       {
+    //         <MessageFeed
+    //           hasUserBeenSearched={hasUserBeenSearched}
+    //           filteredUserData={filteredUserData}
+    //           isInvalidAddress={isInValidAddress}
+    //         />
+    //       }
+    //     </div>
+    //   </div>
+    // </>
+    <TabPanel value={value} index={0}>
+      <SearchBarContainer>
         <form onSubmit={submitSearch}>
-          <div className="searchInputs">
-            <input
-              type="text"
-              placeholder="Search for addresses or ENS Domains"
-              value={searchedUser}
-              onChange={onChangeSearchBox}
-            />
-            <div className="searchIcon">
-              {searchedUser.length === 0 ? (
-                <SearchIcon />
-              ) : isLoadingSearch ? (
-                <div className="search-user-loader">
-                  <Loader type="Oval" color="#000" height={25} width={25} />
-                  <CloseIcon id="clearBtn" onClick={clearInput} />
-                </div>
-              ) : (
-                <CloseIcon id="clearBtn" onClick={clearInput} />
-              )}
-            </div>
-          </div>
+          <Input type="text" onChange={onChangeSearchBox} placeholder="Search name.eth or 0x123..." />
         </form>
-        <div className="sidebar_message">
-          {
-            <MessageFeed
-              hasUserBeenSearched={hasUserBeenSearched}
-              filteredUserData={filteredUserData}
-              isInvalidAddress={isInValidAddress}
-            />
-          }
-        </div>
-      </div>
-    </>
+        <Image src="/svg/chats/search.svg" />
+      </SearchBarContainer>
+      <MessageFeed
+        hasUserBeenSearched={hasUserBeenSearched}
+        filteredUserData={filteredUserData}
+        isInvalidAddress={isInValidAddress}
+      />
+    </TabPanel>
   )
 }
+
+const SearchBarContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+`
+
+const Image = styled.img`
+  position: absolute;
+  top: 48px;
+  right: 35px;
+  height: 25px;
+  width: 20px;
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const Input = styled.input`
+  box-sizing: border-box;
+  width: 294px;
+  height: 48px;
+  padding: 13px 74px 13px 21px;
+  margin: 37px 0px 17px 0px;
+  border-radius: 99px;
+  border: 1px solid transparent !important;
+  background-color: #f4f5fa;
+  &:focus {
+    outline: none;
+    background-image: linear-gradient(#f4f5fa, #f4f5fa), linear-gradient(to right, #cf1c84, #8ed6ff);
+    background-origin: border;
+    border: 1px solid transparent !important;
+    background-clip: padding-box, border-box;
+  }
+`
 
 export default SearchBar

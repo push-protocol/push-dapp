@@ -21,6 +21,8 @@ import * as PushNodeClient from '../../../../api'
 import { DID } from 'dids'
 // @ts-ignore
 import Loader from 'react-loader-spinner'
+import styled from 'styled-components'
+import IntentCondition from '../IntentCondition'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -39,7 +41,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<AppContext>(Context)
+  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<
+    AppContext
+  >(Context)
   const { chainId, account } = useWeb3React<Web3Provider>()
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
   const [open, setOpen] = useState(false)
@@ -77,7 +81,7 @@ const IntentFeed = (): JSX.Element => {
     setOpen(true)
   }
 
-  const createUserIfNecessary = async (): Promise<{ didCreated: DID, createdUser: User }> => {
+  const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
     try {
       if (!did) {
         const createdDID: DID = await connectAndSetDID()
@@ -182,7 +186,9 @@ const IntentFeed = (): JSX.Element => {
               You have received an intent from {receivedIntentFrom ? caip10ToWallet(receivedIntentFrom) : ''}.
             </Typography>
             <br />
-            {isLoading ? <Loader type="oval" /> : (
+            {isLoading ? (
+              <Loader type="oval" />
+            ) : (
               <Button
                 onClick={(): void => {
                   ApproveIntent('Approved')
@@ -206,10 +212,29 @@ const IntentFeed = (): JSX.Element => {
             Intent was Reproved !
           </Alert>
         </Snackbar>
-        {displayReceivedIntents()}
+        <UserProfileContainer height={152}>{displayReceivedIntents()}</UserProfileContainer>
       </section>
     </>
   )
 }
+
+const UserProfileContainer = styled.div`
+  margin-top: 14px;
+  width: 100%;
+  max-height: calc(83.6vh - ${(props) => props.height || 238}px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+  }
+`
 
 export default IntentFeed
