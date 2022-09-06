@@ -533,12 +533,12 @@ const ChatBox = (): JSX.Element => {
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
                         <Chats msg={msg} did={did} />
-                        {messages.length === 1 ? (
+                        {/* {messages.length === 1 ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
                             conversation once the receipent accepts the intent
                           </FirstConversation>
-                        ) : null}
+                        ) : null} */}
                       </div>
                     )
                   })}
@@ -568,24 +568,14 @@ const ChatBox = (): JSX.Element => {
                   }}
                 />
               )}
-              {currentChat.intent === 'Pending' ? (
+              {
                 <TextInput
-                  disabled
                   placeholder="Type your message"
                   onKeyDown={handleKeyPress}
                   onChange={textOnChange}
                   value={newMessage}
                 />
-              ) : (
-                <TextInput
-                  disabled={textAreaDisabled}
-                  placeholder="Type your message"
-                  onKeyDown={handleKeyPress}
-                  onChange={textOnChange}
-                  value={newMessage}
-                  autoFocus
-                />
-              )}
+              }
               <>
                 {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
                   <>
