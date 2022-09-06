@@ -139,7 +139,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
         user: user,
         limit: NOTIFICATIONS_PER_PAGE,
         page: page,
-        env: 'dev',
+        env: envConfig['env'],
         spam: true,
         raw:true
       });
@@ -184,7 +184,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
         user: user,
         limit: NOTIFICATIONS_PER_PAGE,
         page: 1,
-        env: 'dev',
+        env: envConfig['env'],
         spam: true,
         raw:true
       });
@@ -235,7 +235,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
         user: user,
         limit: 100000,
         page: 1,
-        env: 'dev',
+        env: envConfig['env'],
         spam: true,
         raw:true
       });

@@ -10,6 +10,7 @@ import SearchFilter from "components/SearchFilter";
 import { ThemeProvider } from "styled-components";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { envConfig } from "@project/contracts";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -130,7 +131,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
         raw: true,
-        env: 'dev',
+        env: envConfig['env'],
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
@@ -152,7 +153,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     try {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
-        env: 'dev',
+        env: envConfig['env'],
         raw: true,
         page: 1,
         limit: NOTIFICATIONS_PER_PAGE
@@ -194,7 +195,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     try {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
-        env: 'dev',
+        env: envConfig['env'],
         limit: 100000,
         page: page,
         raw:true
