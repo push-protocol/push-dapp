@@ -38,6 +38,7 @@ import useToast from "hooks/useToast";
 import { MdCheckCircle, MdError } from "react-icons/md";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { isCommunityResourcable } from "@ethersproject/providers";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -595,6 +596,16 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     }
   };
 
+  const correctChannelTitleLink = () => {
+    const channelLink = CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url;
+    console.log(channelLink)
+    if(/(https):\/\//i.test(channelLink)) {
+      window.open(channelLink, '_blank', 'noopener,noreferrer');
+    }
+    else{
+      window.open(`https://${channelLink}`, '_blank', 'noopener,noreferrer');
+    }
+  }
   const CTA_OVERRIDE_CACHE = {
     "0xb1676B5Ab63F01F154bb9938F5e8999d9Da5444B": "https://boardroom.io/",
     "0x7DA9A33d15413F499299687cC9d81DE84684E28E":
@@ -629,7 +640,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             />
           ) : (
             <ChannelTitleLink
-              href={CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url}
+              onClick = {()=>correctChannelTitleLink()}
               target="_blank"
               rel="nofollow"
             >
