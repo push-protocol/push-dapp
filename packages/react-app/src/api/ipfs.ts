@@ -4,7 +4,7 @@ import { envConfig } from '@project/contracts'
 import { MessageIPFSWithCID } from './w2w'
 
 let BASE_URL = envConfig.apiUrl
-if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   BASE_URL = envConfig.w2wApiUrl
 } else {
   BASE_URL = envConfig.apiUrl

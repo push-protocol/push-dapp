@@ -1,17 +1,17 @@
+import { CID } from 'ipfs-http-client'
 import React, { useEffect, useState } from 'react'
 import './defaultMessage.css'
-import { CID } from 'ipfs-http-client'
 // @ts-ignore
-import { envConfig } from '@project/contracts'
-import { caip10ToWallet } from 'helpers/w2w'
-import { Feeds } from 'api'
-import styled from 'styled-components'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
+import { envConfig } from '@project/contracts'
+import { Feeds } from 'api'
+import { caip10ToWallet } from 'helpers/w2w'
+import styled from 'styled-components'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
-const DefaultMessage = (props: { inbox: Feeds }): JSX.Element => {
+const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Element => {
   // printing default message props
   let date = null
   const [imageSource, setImageSource] = useState<string>('')

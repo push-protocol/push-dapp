@@ -1,11 +1,11 @@
-import { ToastPosition, InboxChat } from 'components/chat/w2wChat/w2wIndex'
+import { InboxChat, ToastPosition } from 'components/chat/w2wChat/w2wIndex'
 // @ts-ignore
 import { envConfig } from '@project/contracts'
-import { toast } from 'react-toastify'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
+import { toast } from 'react-toastify'
 
 let BASE_URL = envConfig.apiUrl
-if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   BASE_URL = envConfig.w2wApiUrl
 } else {
   BASE_URL = envConfig.apiUrl
