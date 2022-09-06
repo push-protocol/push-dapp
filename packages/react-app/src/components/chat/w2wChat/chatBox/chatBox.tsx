@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect, useRef, ChangeEvent } from 'react'
 import './chatBox.css'
 // @ts-ignore
-import epnsLogo from '../w2wAsset/epnsLogo.png'
+//import epnsLogo from '../w2wAsset/epnsLogo.png'
 import { Context, ToastPosition } from '../w2wIndex'
 import Chats from '../chats/chats'
 // @ts-ignore
@@ -9,14 +9,13 @@ import { envConfig } from '@project/contracts'
 import 'font-awesome/css/font-awesome.min.css'
 import Picker from 'emoji-picker-react'
 import * as PushNodeClient from '../../../../api'
-import Dropdown from '../dropdown/dropdown'
+//import Dropdown from '../dropdown/dropdown'
 import { intitializeDb } from '../w2wIndexeddb'
 import { encryptAndSign, decryptAndVerifySignature, caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w'
 import { CID } from 'ipfs-http-client'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 // @ts-ignore
 import Loader from 'react-loader-spinner'
-import GifIcon from '../W2WIcons/GifIcon'
 import { Web3Provider } from 'ethers/providers'
 import { useWeb3React } from '@web3-react/core'
 import Snackbar from '@mui/material/Snackbar'
@@ -33,6 +32,14 @@ import * as DIDHelper from 'helpers/w2w/did'
 import * as w2wHelper from 'helpers/w2w/'
 import { DID } from 'dids'
 import { decryptFeeds, fetchInbox } from '../w2wUtils'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import styled from 'styled-components'
+import { Content } from 'components/SharedStyling'
+import IconButton from '@mui/material/IconButton'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import Avatar from '@mui/material/Avatar'
+import IntentCondition from '../IntentCondition/IntentCondition'
 
 const INFURA_URL = envConfig.infuraApiUrl
 
@@ -41,9 +48,19 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const ChatBox = (): JSX.Element => {
-  const { currentChat, viewChatBox, did, searchedUser, connectedUser, inbox, setConnectedUser, connectAndSetDID, setDID, setChat, setInbox }: AppContext = useContext<AppContext>(
-    Context
-  )
+  const {
+    currentChat,
+    viewChatBox,
+    did,
+    searchedUser,
+    connectedUser,
+    inbox,
+    setConnectedUser,
+    connectAndSetDID,
+    setDID,
+    setChat,
+    setInbox
+  }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
@@ -59,6 +76,7 @@ const ChatBox = (): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
   const [SnackbarText, setSnackbarText] = useState<string>('')
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
+  const [showOption, setShowOption] = useState<boolean>(false)
   let showTime = false
   let time = ''
 
@@ -169,13 +187,7 @@ const ChatBox = (): JSX.Element => {
     }
   }, [currentChat])
 
-  const sendMessage = async ({
-    message,
-    messageType
-  }: {
-    message: string
-    messageType: string
-  }): Promise<void> => {
+  const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true)
     let msg: MessageIPFSWithCID
     let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string, sigType: string
@@ -203,7 +215,13 @@ const ChatBox = (): JSX.Element => {
         signature = ''
         sigType = ''
       } else {
-        const { cipherText, encryptedSecret, signature: pgpSignature, sigType: pgpSignatureType, encType: pgpEncryptionType } = await encryptAndSign({
+        const {
+          cipherText,
+          encryptedSecret,
+          signature: pgpSignature,
+          sigType: pgpSignatureType,
+          encType: pgpEncryptionType
+        } = await encryptAndSign({
           plainText: message,
           fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           fromPublicKeyArmored: connectedUser.publicKey,
@@ -249,14 +267,13 @@ const ChatBox = (): JSX.Element => {
           message: newMessage,
           messageType: 'Text'
         })
-      }
-      else {
+      } else {
         sendIntent({ message: newMessage, messageType: 'Text' })
       }
     }
   }
 
-  const createUserIfNecessary = async (): Promise<{ didCreated: DID, createdUser: User }> => {
+  const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
     try {
       if (!did) {
         const createdDID: DID = await connectAndSetDID()
@@ -353,7 +370,7 @@ const ChatBox = (): JSX.Element => {
           let inboxes: Feeds[] = await fetchInbox(didCreated)
           inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser, did: didCreated })
           setInbox(inboxes)
-          const result = inboxes.find(x => x.did === currentChat.did)
+          const result = inboxes.find((x) => x.did === currentChat.did)
           setChat(result)
           toast.success('Intent sent!', ToastPosition)
         }
@@ -440,15 +457,15 @@ const ChatBox = (): JSX.Element => {
   }
 
   return (
-    <div className="chatBox_body">
+    <Container>
       {!viewChatBox ? (
-        <div className="defaultChatPage">
-          <div className="defaultChatPageText">
-            <img src={epnsLogo} alt="" />
-            <p>W2W DAPP</p>
-            <span>Start a conversation by clicking on any dicussion!</span>
-          </div>
-        </div>
+        <Box>
+          <HelloBox>
+            <Typography>Say Hello to Push Chat</Typography>
+          </HelloBox>
+          <HelloText>You haven’t started a conversation yet.</HelloText>
+          <HelloText>Begin by searching name.eth or 0x123...</HelloText>
+        </Box>
       ) : (
         <>
           <Snackbar open={openReprovalSnackbar} autoHideDuration={10000} onClose={handleCloseSuccessSnackbar}>
@@ -457,29 +474,51 @@ const ChatBox = (): JSX.Element => {
             </Alert>
           </Snackbar>
 
-          <div className="chatBoxNavBar">
-            <div className="chatBoxUserName">
-              <img src={imageSource} alt="" />
-              <div className="chatBoxNavDetail">
-                <p className="chatBoxWallet">{caip10ToWallet(currentChat.msg.name)}</p>
-                <div>
-                  <Dropdown wallets={currentChat.wallets.split(',')} />{' '}
-                </div>
-              </div>
-            </div>
-          </div>
+          <ChatHeader>
+            <UserInfo>
+              <Avatar alt="Profile Picture" src={imageSource} />
+              <Typography variant="body1" ml={1}>
+                {caip10ToWallet(currentChat.msg.name)}
+              </Typography>
+            </UserInfo>
+            <MoreOptions>
+              <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
+                <MoreVertIcon />
+              </IconButton>
+              {showOption && (
+                <OptionContainer>
+                  <Option>
+                    <Icon>
+                      <img src="/svg/chats/nickname.svg" height="24px" width="24px" alt="nickname" />
+                    </Icon>
+                    <Typography ml={1} variant="subtitle2">
+                      Give Nickname
+                    </Typography>
+                  </Option>
+                  <Option>
+                    <Icon>
+                      <img src="/svg/chats/block.svg" height="24px" width="24px" alt="block" />
+                    </Icon>
+                    <Typography ml={1} variant="subtitle2">
+                      Block User
+                    </Typography>
+                  </Option>
+                </OptionContainer>
+              )}
+            </MoreOptions>
+          </ChatHeader>
 
-          <ScrollToBottom className="chatBoxTop">
-            {Loading ? (
-              <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                <Loader type="Oval" color="#34C5F3" height={40} width={40} />
-              </div>
-            ) : (
-              <>
-                {
-                  messages?.map((msg, i) => {
-                    const isLast = i === messages.length - 1
-                    const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
+          <MessageContainer>
+            <ScrollToBottom>
+              {Loading ? (
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                  <Loader type="Oval" color="#34C5F3" height={40} width={40} />
+                </div>
+              ) : (
+                <>
+                  {messages?.map((msg, i) => {
+                    //const isLast = i === messages.length - 1
+                    //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
 
                     showTime = false
                     if (i >= 0) {
@@ -492,87 +531,243 @@ const ChatBox = (): JSX.Element => {
                     }
                     return (
                       <div key={i}>
-                        {!showTime ? null : (
-                          <div className="showDateInChat">
-                            <span>{time}</span>
-                          </div>
-                        )}
-                        <Chats msg={msg} did={did} noTail={noTail} />
+                        {!showTime ? null : <MessageTime>{time}</MessageTime>}
+                        <Chats msg={msg} did={did} />
+                        {/* {messages.length === 1 ? (
+                          <FirstConversation>
+                            This is your first conversation with the receipent, you will be able to continue the
+                            conversation once the receipent accepts the intent
+                          </FirstConversation>
+                        ) : null} */}
                       </div>
                     )
-                  })
-                }
-              </>
-            )}
-          </ScrollToBottom>
+                  })}
+                </>
+              )}
+            </ScrollToBottom>
+          </MessageContainer>
 
-          {
-            messageBeingSent ? <Loader type="Oval" /> : (
-              <div className="chatBoxBottom">
+          {messageBeingSent ? (
+            <Loader type="Oval" />
+          ) : (
+            <TypeBarContainer>
+              {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
+                <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
+                  <img src="/svg/chats/smiley.svg" height="24px" width="24px" alt="" />
+                </Icon>
+              ) : null}
+              {showEmojis && (
+                <Picker
+                  onEmojiClick={addEmoji}
+                  pickerStyle={{
+                    width: '300px',
+                    position: 'absolute',
+                    bottom: '2.5rem',
+                    zindex: '700',
+                    left: '2.5rem'
+                  }}
+                />
+              )}
+              {
+                <TextInput
+                  placeholder="Type your message"
+                  onKeyDown={handleKeyPress}
+                  onChange={textOnChange}
+                  value={newMessage}
+                />
+              }
+              <>
                 {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
                   <>
                     <label>
-                      <i className="fa fa-link" aria-hidden="true"></i>
-                      <input
-                        type="file"
-                        id="inputTag"
-                        className="chatBoxBottomInput"
-                        ref={fileInputRef}
-                        onChange={uploadFile}
-                      />
+                      <Icon onClick={() => setIsGifPickerOpened(true)}>
+                        <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
+                      </Icon>
+                      {isGifPickerOpened && <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} />}
                     </label>
+                    <label>
+                      <Icon>
+                        <img src="/svg/chats/attachment.svg" height="24px" width="20px" alt="" />
+                      </Icon>
+                      <FileInput type="file" ref={fileInputRef} onChange={uploadFile} />
+                    </label>
+                  </>
+                ) : null}
 
-                    <div className="gifPicker">
-                      {isGifPickerOpened ? <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} /> : null}
-                      <button className="GifIcon_btn" onClick={() => setIsGifPickerOpened(true)}>
-                        <GifIcon />
-                      </button>
-                    </div>
-                  </>
-                ) : null}
-                {
-                  <>
-                    <textarea
-                      disabled={textAreaDisabled}
-                      className="chatMessageInput"
-                      placeholder={'New Text Message'}
-                      onKeyDown={handleKeyPress}
-                      onChange={textOnChange}
-                      value={newMessage}
-                      autoFocus
-                    ></textarea>
-                  </>
-                }
-                {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
-                  <button
-                    disabled={textAreaDisabled}
-                    className="emojiButton"
-                    onClick={(): void => setShowEmojis(!showEmojis)}
-                  >
-                    <i className="fa fa-smile" aria-hidden="true"></i>
-                  </button>
-                ) : null}
-                {showEmojis && (
-                  <Picker
-                    onEmojiClick={addEmoji}
-                    pickerStyle={{ width: '20%', position: 'absolute', top: '13rem', zindex: '700', left: '60vw' }}
-                  />
-                )}
                 {filesUploading ? (
                   <div className="imageloader">
                     <Loader type="Oval" color="#3467eb" height={20} width={20} />
                   </div>
                 ) : (
-                  <button className="chatSubmitButton" onClick={handleSubmit}>
-                    <i className="fa fa-paper-plane" aria-hidden="true"></i>
-                  </button>
+                  <Icon onClick={handleSubmit}>
+                    <img src="/svg/chats/send.svg" height="27px" width="27px" alt="" />
+                  </Icon>
                 )}
-              </div>
-            )
-          }
+              </>
+            </TypeBarContainer>
+          )}
         </>
       )}
-    </div>
+    </Container>
   )
 }
+
+const FirstConversation = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #657795;
+  margin: 59px 0px 0px 0px;
+`
+
+const FileInput = styled.input`
+  display: none;
+`
+
+const MessageTime = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #000000;
+  margin: 15px 0px;
+`
+
+const MessageContainer = styled.div`
+  position: absolute;
+  top: 65px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  width: 100%;
+  max-height: calc(83.6vh - 130px);
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  &&::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+`
+
+const UserInfo = styled.div`
+  width: fit-content;
+  display: flex;
+  align-items: center;
+`
+
+const ChatHeader = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  top: 9px;
+  left: 9px;
+  right: 9px;
+  height: 55px;
+  border-radius: 29px;
+  color: black;
+  background: #ffffff;
+  padding: 6px;
+  font-weight: 500;
+`
+
+const Option = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`
+
+const OptionContainer = styled.div`
+  position: absolute;
+  top: 55px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 19px;
+  width: 193px;
+  background: #ffffff;
+  border-radius: 16px;
+  z-index: 100;
+`
+
+const MoreOptions = styled.div`
+  position: relative;
+`
+
+const Icon = styled.i`
+  padding: 0px;
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const TextInput = styled.textarea`
+  font-size: 16px;
+  width: 75%;
+  height: 25px;
+  outline: none;
+  border: none;
+  resize: none;
+  background: transparent;
+`
+
+const TypeBarContainer = styled.div`
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  bottom: 9px;
+  left: 9px;
+  right: 9px;
+  height: 55px;
+  padding: 16px;
+  border-radius: 13px;
+  color: black;
+  background: #ffffff;
+`
+
+const Container = styled(Content)`
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(179.97deg, #eef5ff 0.02%, rgba(236, 239, 255, 0) 123.25%);
+  border-radius: 13px;
+  height: inherit;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-weight: 400;
+  justify-content: center;
+  position: relative;
+`
+
+const HelloBox = styled(Box)`
+  width: 333px;
+  height: 75px;
+  background: #ffffff;
+  border-radius: 2px 16px 16px 16px;
+  color: #000000;
+  font-size: 24px;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  margin-bottom: 10px;
+`
+
+const HelloText = styled(Typography)`
+  color: #657795;
+  font-size: 14px;
+  margin-bottom: 5px;
+`
+
 export default ChatBox

@@ -7,12 +7,12 @@ import Modal from '../Modal/Modal'
 import Files, { FileMessageContent } from '../Files/Files'
 // @ts-ignore
 import { envConfig } from '@project/contracts'
+import styled from 'styled-components'
 
 const infura_URL = envConfig.infuraApiUrl
 interface chatProps {
   msg: MessageIPFS
   did: DID
-  noTail: boolean
 }
 interface TextProps {
   content: string
@@ -38,7 +38,7 @@ const Text = ({ content }: TextProps) => {
     </p>
   )
 }
-export default function Chats({ msg, did, noTail }: chatProps) {
+export default function Chats({ msg, did }: chatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const time: Date = new Date(msg?.timestamp)
@@ -48,39 +48,50 @@ export default function Chats({ msg, did, noTail }: chatProps) {
   return (
     <>
       {msg.messageType === 'Text' ? (
-        <div
-          key={msg.link}
-          className={cn(
-            'w2wmsgshared',
-            msg.fromDID === did.id ? 'w2wmsgsent' : 'w2wmsgreceived',
-            noTail && 'w2wnoTail'
+        <>
+          {msg.fromDID === did.id ? (
+            <MessageWrapper align="row-reverse">
+              <SenderMessage>
+                <TextMessage>{msg.messageContent}</TextMessage>
+                <TimeStamp>{date}</TimeStamp>
+              </SenderMessage>
+            </MessageWrapper>
+          ) : (
+            <MessageWrapper align="row">
+              <ReceivedMessage>
+                <TextMessage>{msg.messageContent}</TextMessage>
+                <TimeStamp>{date}</TimeStamp>
+              </ReceivedMessage>
+            </MessageWrapper>
           )}
-        >
-          <div className="chat">
-            <div className="chatText">
-              <Text content={msg.messageContent} />
-              <span>{date}</span>
-            </div>
-          </div>
-        </div>
+        </>
       ) : msg.messageType === 'Image' ? (
         <>
-          <div
-            key={msg.link}
-            className={cn(
-              'w2wmsgshared',
-              msg.fromDID === did.id ? 'w2wImgsent' : 'w2wImgreceived',
-              noTail && 'w2wnoTail'
-            )}
-          >
-            <img
-              src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
-              onClick={() => {
-                setShowImageModal(true)
-                setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content)
-              }}
-            />
-          </div>
+          {msg.fromDID === did.id ? (
+            <MessageWrapper height="138px" align="row-reverse">
+              <SenderMessage color="transparent" padding="0px">
+                <ImageMessage
+                  src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
+                  onClick={() => {
+                    setShowImageModal(true)
+                    setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content)
+                  }}
+                />
+              </SenderMessage>
+            </MessageWrapper>
+          ) : (
+            <MessageWrapper height="138px" align="row">
+              <ReceivedMessage color="transparent" padding="0px">
+                <ImageMessage
+                  src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
+                  onClick={() => {
+                    setShowImageModal(true)
+                    setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content)
+                  }}
+                />
+              </ReceivedMessage>
+            </MessageWrapper>
+          )}
 
           {showImageModal && (
             <Modal
@@ -93,22 +104,31 @@ export default function Chats({ msg, did, noTail }: chatProps) {
         </>
       ) : msg.messageType === 'GIF' ? (
         <>
-          <div
-            key={msg.link}
-            className={cn(
-              'w2wmsgshared',
-              msg.fromDID === did.id ? 'w2wImgsent' : 'w2wImgreceived',
-              noTail && 'w2wnoTail'
-            )}
-          >
-            <img
-              src={msg.messageContent}
-              onClick={() => {
-                setShowImageModal(true)
-                setImageUrl(msg.messageContent)
-              }}
-            />
-          </div>
+          {msg.fromDID === did.id ? (
+            <MessageWrapper height="170px" align="row-reverse">
+              <SenderMessage color="transparent" padding="0px">
+                <ImageMessage
+                  src={msg.messageContent}
+                  onClick={() => {
+                    setShowImageModal(true)
+                    setImageUrl(msg.messageContent)
+                  }}
+                />
+              </SenderMessage>
+            </MessageWrapper>
+          ) : (
+            <MessageWrapper height="170px" align="row">
+              <ReceivedMessage color="transparent" padding="0px">
+                <ImageMessage
+                  src={msg.messageContent}
+                  onClick={() => {
+                    setShowImageModal(true)
+                    setImageUrl(msg.messageContent)
+                  }}
+                />
+              </ReceivedMessage>
+            </MessageWrapper>
+          )}
           {showImageModal && (
             <Modal
               showImageModal={showImageModal}
@@ -120,18 +140,100 @@ export default function Chats({ msg, did, noTail }: chatProps) {
         </>
       ) : msg.messageType === 'File' ? (
         <>
-          <div
-            key={msg.link}
-            className={cn(
-              'w2wmsgshared',
-              msg.fromDID === did.id ? 'w2wImgsent' : 'w2wImgreceived',
-              noTail && 'w2wnoTail'
-            )}
-          >
-            <Files msg={msg} />
-          </div>
+          {msg.fromDID === did.id ? (
+            <MessageWrapper align="row-reverse">
+              <SenderMessage color="transparent" padding="0px">
+                <FileMessage>
+                  <Files msg={msg} />
+                </FileMessage>
+              </SenderMessage>
+            </MessageWrapper>
+          ) : (
+            <MessageWrapper align="row">
+              <ReceivedMessage color="transparent" padding="0px">
+                <FileMessage>
+                  <Files msg={msg} />
+                </FileMessage>
+              </ReceivedMessage>
+            </MessageWrapper>
+          )}
         </>
       ) : null}
     </>
   )
 }
+
+const FileMessage = styled.div`
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const ImageMessage = styled.img`
+  max-height: 170px;
+  max-width: 300px;
+  object-fit: contain;
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+const TextMessage = styled.p`
+  max-width: 300px;
+  padding: 0px 44px 10px 0px;
+  font-size: 14px;
+  word-wrap: break-word;
+  text-align: left;
+  margin: 0px;
+`
+
+const TimeStamp = styled.span`
+  min-width: 44px;
+  font-size: 13px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 5px 0px 0px 5px;
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+`
+
+const MessageWrapper = styled.div`
+  width: 100%;
+  min-height: ${(props: any): string => props.height || '48px'};
+  padding: 0;
+  margin-bottom: 5px;
+  display: flex;
+  flex-direction: ${(props: any): string => props.align || 'row'};
+`
+
+const ReceivedMessage = styled.div`
+  box-sizing: border-box;
+  position: relative;
+  left: 34px;
+  max-width: 419px;
+  padding: ${(props: any): string => props.padding || '11px 11px 5px 24px'};
+  background: ${(props: any): string => props.color || '#ffffff'};
+  text-align: left;
+  border-radius: 2px 16px 16px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000000;
+`
+
+const SenderMessage = styled.div`
+  box-sizing: border-box;
+  position: relative;
+  right: 34px;
+  max-width: 419px;
+  text-align: left;
+  padding: ${(props: any): string => props.padding || '11px 11px 5px 24px'};
+  background: ${(props: any): string => props.color || '#ca599b'};
+  border-radius: 16px 2px 16px 16px;
+  display: flex;
+  justify-content: flex-strt;
+  align-items: center;
+  color: #ffffff;
+`
