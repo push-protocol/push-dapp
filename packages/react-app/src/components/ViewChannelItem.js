@@ -598,7 +598,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const correctChannelTitleLink = () => {
     const channelLink = CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url;
-    console.log(channelLink)
     if(/(https):\/\//i.test(channelLink)) {
       window.open(channelLink, '_blank', 'noopener,noreferrer');
     }
@@ -641,8 +640,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           ) : (
             <ChannelTitleLink
               onClick = {()=>correctChannelTitleLink()}
-              target="_blank"
-              rel="nofollow"
             >
               <Span>
                 {channelJson.name}
