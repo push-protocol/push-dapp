@@ -8,6 +8,8 @@ import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils'
 import { intitializeDb } from '../w2wIndexeddb'
 import { useQuery } from 'react-query'
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar'
+import styled from 'styled-components'
+import Typography from '@mui/material/Typography'
 
 interface MessageFeedProps {
   filteredUserData: User[]
@@ -24,6 +26,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [stopApi, setStopApi] = useState<boolean>(true)
+  const [isSelected, setIsSelected] = useState<boolean>(false)
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (did) {
@@ -133,56 +136,80 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   }
 
   return (
-    <>
-      <section className="messageFeed_body">
-        {!feeds?.length && messagesLoading && (
-          <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
-            <Loader />
-          </div>
-        )}
-        {!feeds?.length && isSameUser ? (
-          <p
-            style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
-          >
-            You can&apos;t send intent to yourself
-          </p>
-        ) : !feeds?.length && isInValidAddress ? (
-          <p
-            style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
-          >
-            Invalid Address
-          </p>
-        ) : !feeds?.length && !messagesLoading ? (
-          <p
-            style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}
-          >
-            No Address found.
-          </p>
-        ) : !messagesLoading ? (
-          <div>
-            {feeds.map((feed: Feeds, i) => (
-              <div
-                key={feed.threadhash || i}
-                onClick={(): void => {
-                  setChat(feed)
-                }}
-                onDoubleClick={() => ''}
-              >
-                <DefaultMessage inbox={feed} />
-              </div>
-            ))}
-          </div>
-        ) : null}
+    <SidebarWrapper className="messageFeed_body">
+      <DisplayText color="#6D6B7A" size="14px" weight="700" ml={2}>
+        CHAT
+      </DisplayText>
+      {!feeds?.length && messagesLoading && (
+        <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
+          <Loader />
+        </div>
+      )}
+      {!feeds?.length && isSameUser ? (
+        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
+          You can&apos;t send intent to yourself
+        </p>
+      ) : !feeds?.length && isInValidAddress ? (
+        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
+          Invalid Address
+        </p>
+      ) : !feeds?.length && !messagesLoading ? (
+        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
+          No Address found.
+        </p>
+      ) : !messagesLoading ? (
+        <UserProfileContainer>
+          {feeds.map((feed: Feeds, i) => (
+            <div
+              key={feed.threadhash || i}
+              onClick={(): void => {
+                setChat(feed)
+              }}
+            >
+              <DefaultMessage inbox={feed} isSelected={isSelected} />
+            </div>
+          ))}
+        </UserProfileContainer>
+      ) : null}
 
-        <ReactSnackbar
-          text={errorMessage}
-          open={openReprovalSnackbar}
-          handleClose={handleCloseReprovalSnackbar}
-          severity={'error'}
-        />
-      </section>
-    </>
+      <ReactSnackbar
+        text={errorMessage}
+        open={openReprovalSnackbar}
+        handleClose={handleCloseReprovalSnackbar}
+        severity={'error'}
+      />
+    </SidebarWrapper>
   )
 }
+
+const SidebarWrapper = styled.section`
+  position: relative;
+`
+
+const DisplayText = styled(Typography)`
+  && {
+    color: ${(props): string => props.color || '#000000'};
+    font-size: ${(props): string => props.size || '14px'};
+    font-weight: ${(props): string => props.weight || '500'};
+  }
+`
+const UserProfileContainer = styled.div`
+  margin-top: 14px;
+  width: 100%;
+  height: calc(83.6vh - ${(props) => props.height || 238}px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  justify-content: flex-start;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+  }
+`
 
 export default MessageFeed
