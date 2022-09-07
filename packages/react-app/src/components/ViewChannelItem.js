@@ -696,7 +696,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }
                 internalIcon={null}
                 text={memberCount}
-                padding="2px 0"
+                padding="0px 10px"
                 bgColor={themes.viewChannelSecondaryBG}
                 color={themes.viewChannelSecondaryText}
               />
@@ -704,7 +704,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <MetaInfoDisplayer
                 text={formatAddress(copyText)}
                 bgColor={themes.viewChannelSearchBg}
-                padding="6px 0"
+                padding="6px 16px"
                 color={themes.viewChannelPrimaryText}
                 onClick={() => {
                   copyToClipboard(channelJson.addr);
@@ -972,6 +972,7 @@ const ChannelDesc = styled.div`
 
 const ChannelDescLabel = styled.label`
   flex: 1;
+  line-height: 165%;
 `;
 
 const ChannelMeta = styled.div`

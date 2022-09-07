@@ -117,31 +117,21 @@ const Container = styled.div`
   flex: 1;
   flex-direction: column;
   min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
+  padding: ${props => props.location === '/send' ? '15px auto' : '17px 0px 0px 16px'};
   align-items: stretch;
 
 `;
 
 const Interface = styled(Item)`
-  // flex: 1;
-  // width:50%;
   width: ${props => props.location === '/send' ? '70%' : '100%'};
   display: flex;
   align-items: stretch;
-
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  border: 1px solid ${props => props.theme.interfaceBorder};
-
-  // margin: 15px 15px 15px 0px;
-  margin: ${props => props.location === '/send' ? '15px auto' : '15px 15px 15px 0px'};
+  border-radius: 20px 0 0 0;
   overflow: hidden;
 
 
   @media (max-width: 992px) {
-    // margin: 15px 0px;
     width:100%;
-    margin: ${props => props.location === '/send' ? '15px auto' : '15px 0px'};
   }
 `
 

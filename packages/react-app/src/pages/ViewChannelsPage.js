@@ -99,7 +99,6 @@ function InboxPage({ loadTeaser, playTeaser }) {
 const Container = styled.div`
   display: flex;
   background: ${props => props.theme.mainBg};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
   align-self: stretch;
 `;
 

@@ -11,8 +11,8 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
     <ItemH bg={bgColor} 
      margin="0 8px"
      radius="10px"
-     padding={padding}
-     maxWidth="7rem">
+     maxWidth="fit-content"
+     padding={padding}>
      
       <MetaContent
         hoverBG="transparent"
@@ -20,23 +20,21 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        {externalIcon &&
-          <Item
-            margin="0px 4px 0px 0px"
-          >
-            {externalIcon}
-          </Item>
-        }
-        <Span
-         color={color}
-        >
-          {internalIcon && 
+          {externalIcon &&
+            <ItemH
+            >
+              {externalIcon}
+            </ItemH>
+          }
+
+          {internalIcon &&
             <IconContainer>
               {internalIcon}
             </IconContainer>
           }
-          {text}
-        </Span>
+          <ItemH>
+            {text}
+          </ItemH>
       </MetaContent>
     </ItemH>
   );
@@ -55,6 +53,7 @@ const MetaContent = styled(A)`
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
+  max-width: fit-content;
   
   & > Span {
     gap: 3px;
