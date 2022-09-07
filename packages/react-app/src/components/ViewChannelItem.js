@@ -696,7 +696,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }
                 internalIcon={null}
                 text={memberCount}
-                padding="0px 10px"
+                padding="1.5px 10px"
                 bgColor={themes.viewChannelSecondaryBG}
                 color={themes.viewChannelSecondaryText}
               />

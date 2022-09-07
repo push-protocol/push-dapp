@@ -20,6 +20,7 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
+        <Span color={color}>
           {externalIcon &&
             <ItemH
             >
@@ -32,9 +33,11 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
               {internalIcon}
             </IconContainer>
           }
-          <ItemH>
+           <ItemH
+            >
             {text}
-          </ItemH>
+            </ItemH>
+          </Span>
       </MetaContent>
     </ItemH>
   );
@@ -61,6 +64,9 @@ const MetaContent = styled(A)`
     display: flex;
     font-size: 11px;
     transition: 300ms;
+  }
+  & > Span:hover {
+    white-space: pre;
   }
 `
 
