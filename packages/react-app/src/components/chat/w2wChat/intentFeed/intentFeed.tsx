@@ -225,7 +225,6 @@ const UserProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
   justify-content: flex-start;
   overflow-y: auto;
   overflow-x: hidden;

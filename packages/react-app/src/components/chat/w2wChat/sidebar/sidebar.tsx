@@ -57,54 +57,6 @@ const Sidebar = () => {
   }
 
   return (
-    // <Box className="sidebar_body">
-    //   <Box sx={{ position: 'relative' }}>
-    //     <ProfileHeader setValue={setValue} />
-
-    //     <TabPanel value={value} index={0}>
-    //       <Box>
-    //         <div className="sidebar_search">
-    //           <SearchBar />
-    //         </div>
-    //       </Box>
-    //     </TabPanel>
-
-    //     <TabPanel value={value} index={1}>
-    //       <Box>
-    //         <div className="sidebar_search">
-    //           <IntentBar />
-    //         </div>
-    //       </Box>
-    //     </TabPanel>
-
-    //     <TabPanel value={value} index={2}>
-    //       <Box>
-    //         <div className="sidebar_profile">
-    //           <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setValue={setValue} />
-    //         </div>
-    //       </Box>
-    //     </TabPanel>
-    //   </Box>
-
-    //   <Box className="sidebar_bottom">
-    //     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-    //       <Tab
-    //         label="Chats"
-    //         icon={<ChatIcon fontSize="small" />}
-    //         iconPosition="start"
-    //         className="sidebar_bottom_button"
-    //         sx={{ fontSize: '12px' }}
-    //       />
-    //       <Tab
-    //         label="Intents"
-    //         icon={<PendingIcon fontSize="small" />}
-    //         iconPosition="start"
-    //         className="sidebar_bottom_button"
-    //         sx={{ fontSize: '12px' }}
-    //       />
-    //     </Tabs>
-    //   </Box>
-    // </Box>
     <Container>
       <TabContainer>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
