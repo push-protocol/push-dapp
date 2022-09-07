@@ -24,7 +24,7 @@
     // "noFallthroughCasesInSwitch": true // from w2w ends
     "jsx": "preserve",
     "baseUrl": "src",
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "checkJs": false
   },
   "include": [

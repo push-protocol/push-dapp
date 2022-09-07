@@ -1,33 +1,33 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import { Web3Provider } from "ethers/providers";
-import { useWeb3React } from "@web3-react/core";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener, useBrowserNotification } from "hooks";
-import { injected, walletconnect, portis, ledger } from "connectors";
 import { envConfig } from "@project/contracts";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useWeb3React } from "@web3-react/core";
+import { injected, ledger, portis, walletconnect } from "connectors";
+import { Web3Provider } from "ethers/providers";
+import { useBrowserNotification, useEagerConnect, useInactiveListener } from "hooks";
 import Joyride, { CallBackProps } from "react-joyride";
 
-import styled from "styled-components";
-import { Item, ItemH, Span, H2, B, A, C } from "./primaries/SharedStyling";
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
+import styled from "styled-components";
+import { A, B, C, H2, Item, ItemH, Span } from "./primaries/SharedStyling";
 
 import NavigationContextProvider from "contexts/NavigationContext";
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
 import { ThemeProvider } from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+import { themeDark, themeLight } from "config/Themization";
 
-import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
+import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 
-import * as dotenv from "dotenv";
 import InitState from "components/InitState";
+import * as dotenv from "dotenv";
 
 
 dotenv.config();
