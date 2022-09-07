@@ -27,9 +27,28 @@ const AddSubgraphModalContent = ({onClose, onConfirm: addSubgraph, toastObject}:
 
         setIsLoading(true);
 
+
+        if (pollTime == '' || subgraphId == '') {
+            toastObject.showToast("");
+            toastObject.updateToast("Transaction Failed", "Fields are empty! Retry", "ERROR", (size) => <MdError size={size} color="red" />)
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 500);
+            return;
+        } else if (parseInt(pollTime) < 60) {
+            toastObject.showToast("");
+            toastObject.updateToast("Transaction Failed", "Poll Time must be at least 60 sec", "ERROR", (size) => <MdError size={size} color="red" />)
+            setTimeout(() => {
+                setIsLoading(false)
+            }, 500);
+            return;
+        }
+
+
         addSubgraph(pollTime, subgraphId)
         .then(async (tx) => {
             console.log(tx);
+           
   
             toastObject.showToast("");
             toastObject.updateToast("Subgraph Added", "Subgraph has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
