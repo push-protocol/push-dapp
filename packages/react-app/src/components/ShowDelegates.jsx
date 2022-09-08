@@ -1,6 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme, css } from "styled-components";
-import RemoveDelegateModal from "./RemoveDelegateModal_OLD";
+import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
 import { getReq } from "api";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { useDeviceWidthCheck } from "hooks";
@@ -12,6 +12,8 @@ import {
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { useSelector } from "react-redux";
 import DelegateInfo from "./DelegateInfo";
+import useModal from "hooks/useModal";
+import useToast from "hooks/useToast";
 
 const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
@@ -29,7 +31,12 @@ const ShowDelegates = () => {
   );
   const isMobile = useDeviceWidthCheck(700);
 
+  const {
+    isModalOpen: isRemoveDelegateModalOpen, 
+    showModal: showRemoveDelegateModal, 
+    ModalComponent: RemoveDelegateModalComponent} = useModal();
 
+  const removeDelegateToast = useToast();
   const removeDelegate = (walletAddress) => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
   };
@@ -100,6 +107,7 @@ const ShowDelegates = () => {
                   <RemoveButton
                     delegateAddress={delegate}
                     removeDelegateModalOpen={removeDelegateModalOpen}
+                    showRemoveDelegateModal={showRemoveDelegateModal}
                   /> : 
                   <OwnerButton disabled={true}>
                     Channel Creator
@@ -110,22 +118,17 @@ const ShowDelegates = () => {
           })}
         </Item>
         }
-        {removeModalOpen && (
-          <RemoveDelegateModal
-            onClose={() => {
-              setRemoveModalOpen(false);
-            }}
-            onSuccess={() => setRemoveModalOpen(false)}
-            removeDelegate={removeDelegate}
-            address={delegateToBeRemoved}
-          />
-        )}
+           <RemoveDelegateModalComponent
+          InnerComponent={RemoveDelegateModalContent}
+          onConfirm={removeDelegate}
+          toastObject={removeDelegateToast}
+           />
       </Item>
     </>
   )
 }
 
-const RemoveButton = ({ delegateAddress, removeDelegateModalOpen }) => {
+const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDelegateModal }) => {
   const [isHovered,setIsHovered] = useState(false)
   
   const handleMouseOver = () => {
@@ -137,7 +140,7 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen }) => {
   };
   return (
     
-      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => removeDelegateModalOpen(delegateAddress)}>
+      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => showRemoveDelegateModal()}>
         {
         isHovered ?
         <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
