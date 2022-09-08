@@ -38,18 +38,8 @@ const Profile = ({isDarkMode}) => {
       icon: "./prod.svg",
     },
     {
-      id: "latestUpdates",
+      id: "olvy-target",
       value: "",
-      sideBarData: {
-        title: "Checkout latest news",
-        alt: "Open What's Latest",
-        id: "olvy-target",
-        isMenuLogic: false,
-        isRoute: true,
-        newTab: false,
-        opened: false,
-        active: false,       
-      },
       title: "Latest updates",
       icon: "./latest.svg",
     },
@@ -91,6 +81,7 @@ const Profile = ({isDarkMode}) => {
     <>
       {account && account !== "" && !error && (
         <Container>
+          <button id="olvy-target">test</button>
           <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
             {!ensFetched && (
               <Oval

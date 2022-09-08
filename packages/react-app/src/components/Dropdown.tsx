@@ -42,16 +42,16 @@ function Dropdown(props) {
               color="#fff"
               spacing="1px"
             >
-              {dropdownValue.title}
+              {dropdownValue?.title}
             </Span>
             <Image
-              src={dropdownValue.icon}
+              src={dropdownValue?.icon}
               alt="icon"
               width="auto"
               cursor="pointer"
               filter="brightness(0) invert(1)"
               onClick={() => {
-                copyToClipboard(dropdownValue.value);
+                copyToClipboard(dropdownValue?.value);
               }}
             />
           </ItemH>
@@ -64,7 +64,7 @@ function Dropdown(props) {
               spacing="1px"
               filter={theme.snackbarBorderIcon}
             />
-            {!dropdownValue.link && dropdownValue?.function && (
+            {!dropdownValue?.link && dropdownValue?.function && (
               <Span
                 color={theme.snackbarBorderText}
                 margin="10px 20px"
@@ -91,43 +91,46 @@ function Dropdown(props) {
               </A>
             )}
             {dropdownValue.sideBarData && (
-              <RouterLink
-                spacing="inherit"
-                color={theme.snackbarBorderText}
-                margin="10px 20px"
-                weight="400"
-                size="14px"
-                flex="1"
-                hoverBG="transparent"
-                title={`${dropdownValue.sideBarData.title}`}
-                to={`${
-                  dropdownValue.sideBarData.href
-                    ? dropdownValue.sideBarData.href
-                    : "#"
-                }`}
-                href={`${
-                  dropdownValue.sideBarData.href
-                    ? dropdownValue.sideBarData.href
-                    : "#"
-                }`}
-                alt={`${dropdownValue.sideBarData.alt}`}
-                target={
-                  dropdownValue.sideBarData.isRoute
-                    ? null
-                    : dropdownValue.sideBarData.newTab
-                    ? "_blank"
-                    : "self"
-                }
-                disabled={dropdownValue.sideBarData.disabled}
-                // hoverBG={theme.leftBarHoverColor}
-                radius="12px"
-                align="stretch"
-                padding="10px"
-                // margin={definedMargin}
-                active={dropdownValue.sideBarData.active}
-              >
-                {dropdownValue.title}
-              </RouterLink>
+              <button id="olvy-target">test latest</button>
+              // <RouterLink
+              //   id="olvy-target"
+              //   className={dropdownValue?.sideBarData?.name?.toLowerCase()}
+              //   spacing="inherit"
+              //   color={theme.snackbarBorderText}
+              //   margin="10px 20px"
+              //   weight="400"
+              //   size="14px"
+              //   flex="1"
+              //   hoverBG="transparent"
+              //   title={`${dropdownValue?.sideBarData?.title}`}
+              //   to={`${
+              //     dropdownValue?.sideBarData?.href
+              //       ? dropdownValue?.sideBarData?.href
+              //       : "#"
+              //   }`}
+              //   href={`${
+              //     dropdownValue?.sideBarData?.href
+              //       ? dropdownValue?.sideBarData?.href
+              //       : "#"
+              //   }`}
+              //   alt={`${dropdownValue?.sideBarData?.alt}`}
+              //   target={
+              //     dropdownValue?.sideBarData?.isRoute
+              //       ? null
+              //       : dropdownValue?.sideBarData?.newTab
+              //       ? "_blank"
+              //       : "self"
+              //   }
+              //   disabled={dropdownValue?.sideBarData?.disabled}
+              //   // hoverBG={theme.leftBarHoverColor}
+              //   radius="12px"
+              //   align="stretch"
+              //   padding="10px"
+              //   // margin={definedMargin}
+              //   active={dropdownValue?.sideBarData?.active}
+              // >
+              //   {dropdownValue?.title}
+              // </RouterLink>
             )}
           </ItemH>
         )

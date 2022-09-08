@@ -146,12 +146,12 @@ const chainIds = envConfig.allowedNetworks;
                         setShowNavBar(!showNavBar);
                       }}
                     >
-                      <NavigationButton
+                      {/* <NavigationButton
                         item={navigationSetup.navigation[key]}
                         data={navigationSetup.navigation[key].data}
                         sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
                         active={navigationSetup.navigation[key].active}
-                      />
+                      /> */}
                     </Item>
                   );
                 })}
