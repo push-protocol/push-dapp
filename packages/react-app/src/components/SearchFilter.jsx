@@ -4,7 +4,7 @@ import { MultiSelect } from "react-multi-select-component";
 import styled, { useTheme } from "styled-components";
 import { ThemeProvider } from "styled-components";
 import DateTimePicker from 'react-datetime-picker';
-import Loader from "react-loader-spinner";
+import {Oval} from "react-loader-spinner";
 import { Item } from '../primaries/SharedStyling';
 
 export default function SearchFilter(props) {
@@ -56,7 +56,7 @@ export default function SearchFilter(props) {
                                 <Item
                                     padding="10px 20px"
                                 >
-                                    <Loader type="Oval" color="#35c5f3" height={20} width={20} />
+                                    <Oval color="#35c5f3" height={20} width={20} />
                                 </Item>
                             </FilterShow>
                         }

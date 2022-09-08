@@ -1,45 +1,50 @@
-import React from "react";
-import moment from "moment";
-import { ethers } from "ethers";
-import { envConfig } from "@project/contracts";
-import styled , {useTheme} from "styled-components";
-import { useSelector } from "react-redux";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import ShowDelegates from "./ShowDelegates";
-import { Item } from "../primaries/SharedStyling";
-import { getReq, postReq } from "api";
-import { useWeb3React } from "@web3-react/core";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-const DATE_FORMAT = "DD/MM/YYYY";
+import React from 'react';
+import moment from 'moment';
+import { ethers } from 'ethers';
+import { envConfig } from '@project/contracts';
+import styled, { useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import ShowDelegates from './ShowDelegates';
+import { Item } from '../primaries/SharedStyling';
+import { getReq, postReq } from 'api';
+import { useWeb3React } from '@web3-react/core';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { AiOutlineUser } from 'react-icons/ai';
+import { useDeviceWidthCheck } from 'hooks';
+import ChannelSettings from './ChannelSettings';
+
+const DATE_FORMAT = 'MMMM Do YYYY';
 
 const networkName = {
-  42: "Polygon Mumbai",
-  1: "Polygon Mainnet"
-}
+  42: 'Polygon Mumbai',
+  1: 'Polygon Mainnet'
+};
 
 export default function ChannelDetails() {
-  const theme = useTheme();
-  const { chainId, account } = useWeb3React();
-  const { channelDetails, canVerify } = useSelector((state) => state.admin);
-  const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
-    (state) => state.channels
-  );
+  const { chainId } = useWeb3React();
+  const {
+    channelDetails,
+    canVerify,
+    aliasDetails: { isAliasVerified, aliasAddrFromContract }
+  } = useSelector((state) => state.admin);
+
+  const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
+  const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
-  const [creationDate, setCreationDate] = React.useState("");
-  const [aliasVerified, setAliasVerified] = React.useState(null);
+  const [creationDate, setCreationDate] = React.useState('');
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
 
   const CORE_CHAIN_ID = envConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const isMobile = useDeviceWidthCheck(600);
 
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
     (async function() {
-      let channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-        channelDetails.verifiedBy
-      );
+      let channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(channelDetails.verifiedBy);
       setVerifyingChannel(channelJson);
     })();
   }, [channelDetails, canVerify]);
@@ -50,25 +55,11 @@ export default function ChannelDetails() {
       const bn = channelDetails.channelStartBlock.toString();
 
       // using ethers jsonRpcProvider instead of library bcz channels are created on only core chain, that's why block can be fetched from that only
-      const block = await (new ethers.providers.JsonRpcProvider(envConfig.coreRPC)).getBlock(+bn);
-      const date = moment(block.timestamp * 1000);//convert from millisecs
-      setCreationDate(date.format(DATE_FORMAT))
+      const block = await new ethers.providers.JsonRpcProvider(envConfig.coreRPC).getBlock(+bn);
+      const date = moment(block.timestamp * 1000); //convert from millisecs
+      setCreationDate(date.format(DATE_FORMAT));
     })();
   }, [channelDetails]);
-
-  React.useEffect(() => {
-    if (!onCoreNetwork) return;
-
-    (async function () {
-      const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-        await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-          if (data) {
-            setAliasVerified(data.is_alias_verified);
-          }
-          return data;
-        });
-      })();
-  }, [account , chainId]);
 
   return (
     <ChannelDetailsWrapper>
@@ -80,58 +71,50 @@ export default function ChannelDetails() {
             {channelDetails.name}
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
-          <ChanneStateText active={channelIsActive}>
-            {channelIsActive
-              ? "ACTIVE"
-              : channelIsDeactivated
-              ? "DEACTIVATED"
-              : "BLOCKED"}
-          </ChanneStateText>
-          <Subscribers>
-            <img src="/people.svg"></img>
-            <SubscribersCount>
-              {channelDetails.subscribers.length}
-            </SubscribersCount>
-          </Subscribers>
+          <ChannelStatusContainer>
+            {/* <div style={{ width: "8px" }} /> */}
+            {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified) ? (
+              <AliasStateText>Alias Network Setup Pending</AliasStateText>
+            ) : (
+              <>
+                <Subscribers>
+                  <img style={{ width: '15px' }} src="/subcount.svg" alt="subscount"></img>
+                  <SubscribersCount>{channelDetails.subscribers.length}</SubscribersCount>
+                </Subscribers>
+                <ChanneStateText active={channelIsActive}>
+                  {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
+                </ChanneStateText>
+              </>
+            )}
+          </ChannelStatusContainer>
+          <Date>{creationDate && <>Created {creationDate}</>}</Date>
         </Details>
       </SectionTop>
 
-      <SectionDes style={{ color: theme.color }}>{channelDetails.info}</SectionDes>
-      
-      {aliasVerified === false &&
-        <Item size="20px" align="flex-start" style={{ fontWeight: 800, color: "#D6097A", marginBottom: "30px" }}>
-          Please verify the Channel Alias Address to use the Channel on {networkName[chainId]} Network.
-        </Item>
-      }
+      {!isMobile ? '' : <ChannelSettings />}
+
+      <SectionDes>{channelDetails.info}</SectionDes>
 
       <SectionDate>
         {canVerify && (
           <Verified>
             <span>verified by:</span>
-
             <VerifyingIcon src={verifyingChannel.icon}></VerifyingIcon>
             <VerifyingName>{verifyingChannel.name}</VerifyingName>
           </Verified>
         )}
-
-        <Date>
-          <span>created on:</span>
-          <span style={{ marginLeft: "10px" }}>{creationDate}</span>
-        </Date>
       </SectionDate>
-
-      <hr />
-
-      <ShowDelegates />
-
-      <hr />
+      {processingState === 0 && <ShowDelegates />}
     </ChannelDetailsWrapper>
   );
 }
 
 const ChannelDetailsWrapper = styled.div`
-  padding: 30px;
+  padding: 20px 30px;
   padding-bottom: 0;
+  @media (max-width: 600px) {
+    padding: 20px 10px;
+  }
 `;
 
 const SectionTop = styled.div`
@@ -139,14 +122,33 @@ const SectionTop = styled.div`
   flex-direction: row;
   align-items: center;
   margin-bottom: 30px;
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 const ImageSection = styled.img`
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
+  width: 128px;
+  height: 128px;
   margin-right: 20px;
+  border-radius: 32px;
+  @media (max-width: 600px) {
+    width: 70px;
+    height: 70px;
+    margin-right: 0px;
+    border-radius: 20px;
+  }
 `;
+
+const ChannelStatusContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  // justify-content: center;
+  margin: 10px 0px;
+  // height: 26px;
+`;
+
 const VerifyImage = styled.img`
   width: 20px;
   height: 25px;
@@ -166,64 +168,95 @@ const VerifyingIcon = styled.img`
 const VerifyingName = styled.div``;
 
 const Subscribers = styled.div`
-  height: fit-content;
+  width: 58px;
+  height: 26px;
+  background: #ffdbf0;
+  color: #cf1c84;
+  border-radius: 25px;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-evenly;
+  padding: 2px;
 `;
 
-const ChanneStateText = styled.span`
-  color: #57c255;
-  font-family: Strawford, Source Sans Pro;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 23px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: ${(props) => (props.active ? "#57c255" : "red")};
-  margin-bottom: 8px;
+const StateText = styled.div`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
   display: flex;
   align-items: center;
+  justify-content: space-evenly;
+  padding: 2px 8px;
+  border-radius: 25px;
+  height: 26px;
+  background-color: pink;
+  font-family: Strawford, Source Sans Pro;
+`;
+
+const ChanneStateText = styled(StateText)`
+  color: #2dbd81;
+  color: ${(props) => (props.active ? '#2DBD81' : 'red')};
+  background-color: #c6efd1;
+  margin-left: 10px;
   ${(props) =>
     props.active &&
     `
-        &::after {
-            width:8px;
-            height: 8px;
-            background: #57c255;
+        &::before {
+            width:16px;
+            height:16px;
+            background: #2DBD81;
             border-radius: 50%;
             content: "";
             display: inline-flex;
             align-items: center;
-            margin-left: 6px;
+            margin-right: 6px;
         }
     `}
 `;
 
+const AliasStateText = styled(StateText)`
+  color: #e3b61c;
+  background-color: #e9eec4;
+  &::before {
+    width: 16px;
+    height: 16px;
+    background: #e3b61c;
+    border-radius: 50%;
+    content: '';
+    display: inline-flex;
+    align-items: center;
+    margin-right: 6px;
+  }
+`;
+
 const SubscribersCount = styled.span`
-  margin-left: 5px;
-  padding-left: 8px;
-  padding-right: 8px;
-  height: 16px;
-  background: #35c5f3;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 17px;
-  display: inline-block;
-  color: #ffffff;
+  font-weight: 400;
+  font-size: 14px;
 `;
 
 const Details = styled.div`
   display: flex;
   flex-direction: column;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Date = styled.div`
   display: flex;
   flex-direction: row;
-  width: 240px;
-  color: #674c9f;
+  width: 340px;
+  color: #657795;
+  text-transform: none;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 150%;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Verified = styled.div`
@@ -239,15 +272,18 @@ const Verified = styled.div`
 
 const ChannelName = styled.div`
   display: flex;
-  flex-direction: row;
   font-family: Strawford, Source Sans Pro;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 30px;
-  line-height: 38px;
+  flex-direction: row;
   margin-right: 8px;
-  text-transform: capitalize;
-  color: #e20880;
+  font-weight: 500;
+  font-size: 30px;
+  line-height: 141%;
+  color: ${(props) => props.theme.color};
+  @media (max-width: 600px) {
+    flex-direction: column;
+    margin-top: 10px;
+    font-size: 20px;
+  }
 `;
 
 const SectionDate = styled.div`
@@ -260,17 +296,22 @@ const SectionDate = styled.div`
   line-height: 25px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-bottom: 30px;
+  margin-bottom: 18px;
 `;
 
 const SectionDes = styled.div`
-  font-family: Strawford, Source Sans Pro;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 24px;
-  line-height: 30px;
   letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #000000;
+  text-transform: none;
+  font-family: Strawford, Source Sans Pro;
+  color: #657795;
   margin-bottom: 40px;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 140%;
+  padding: 0px 20px;
+  text-align: left;
+  @media (max-width: 600px) {
+    text-align: center;
+    margin-top: 10px;
+  }
 `;

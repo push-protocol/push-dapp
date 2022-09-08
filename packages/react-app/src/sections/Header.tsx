@@ -1,29 +1,29 @@
 import React, { useContext } from "react";
 import { useLocation } from 'react-router-dom';
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
-} from '@web3-react/injected-connector'
-import { Web3Provider } from 'ethers/providers'
+} from '@web3-react/injected-connector';
+import { Web3Provider } from 'ethers/providers';
 import { hexlify } from "ethers/utils";
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
-import { AiOutlineMenu, AiOutlineClose } from 'react-icons/ai';
+import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 
+import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import styled, { css, useTheme } from "styled-components";
-import {Section, Item, ItemH, Button, Span} from 'primaries/SharedStyling';
 
-import Profile from 'primaries/Profile';
-import Bell from 'primaries/Bell';
 import NavigationButton from 'components/NavigationButton';
+import Bell from 'primaries/Bell';
+import Profile from 'primaries/Profile';
 
 import { NavigationContext } from "contexts/NavigationContext";
 
-import GLOBALS from "config/Globals";
 import { envConfig } from "@project/contracts";
+import GLOBALS from "config/Globals";
 
 
 // Create Header

@@ -1,6 +1,6 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import styled from 'styled-components';
-import Loader from 'react-loader-spinner'
+import { Oval } from 'react-loader-spinner'
 
 import { useWeb3React } from '@web3-react/core'
 import { addresses, abis } from "@project/contracts";
@@ -13,8 +13,8 @@ import ViewNFTV2Item from "components/ViewNFTsV2Item";
 import { ItemH } from "../primaries/SharedStyling";
 
 // Create Header
-function MyNFTs({controlAt, setControlAt, setTokenId}) {
-  const { account, library,chainId } = useWeb3React();
+function MyNFTs({ controlAt, setControlAt, setTokenId }) {
+  const { account, library, chainId } = useWeb3React();
 
   const [nftReadProvider, setNftReadProvider] = React.useState(null);
   const [nftWriteProvider, setNftWriteProvider] = React.useState(null);
@@ -64,32 +64,31 @@ function MyNFTs({controlAt, setControlAt, setTokenId}) {
   const fetchNFTDetails = async () => {
     let balance = await NFTHelper.getNFTBalance(account, nftReadProvider);
     setLoading(false);
-    for(let i= 0; i<balance; i++){
+    for (let i = 0; i < balance; i++) {
       let tokenId = await NFTHelper.getTokenOfOwnerByIndex(account, i, nftReadProvider)
       // let tokenURI = await NFTHelper.getTokenURIByIndex(tokenId, nftReadProvider);
-      let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider,NFTRewardsV2Contract)
+      let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsV2Contract)
       let url = await callFunction(NFTObject.metadata)
-      NFTObject['nftInfo']= url
+      NFTObject['nftInfo'] = url
       setNFTObjects((prev) => [...prev, NFTObject]);
     }
   }
 
-  const callFunction =  async (tokenURI) => {
-      let tokenUrl = tokenURI.replace('ipfs://','https://ipfs.io/ipfs/')
-      let response = await fetch(`${tokenUrl}`);
-      let data = await response.json()
-      return data
+  const callFunction = async (tokenURI) => {
+    let tokenUrl = tokenURI.replace('ipfs://', 'https://ipfs.io/ipfs/')
+    let response = await fetch(`${tokenUrl}`);
+    let data = await response.json()
+    return data
   }
 
   return (
     <>
       {loading &&
         <ContainerInfo>
-          <Loader
-           type="Oval"
-           color="#35c5f3"
-           height={40}
-           width={40}
+          <Oval
+            color="#35c5f3"
+            height={40}
+            width={40}
           />
         </ContainerInfo>
       }
