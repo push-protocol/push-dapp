@@ -5,6 +5,8 @@ import styled, { useTheme } from "styled-components";
 import { ThemeProvider } from "styled-components";
 import DateTimePicker from "react-datetime-picker";
 
+const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
+
 const SearchFilter = ({
          notifications,
           filterNotifications,
@@ -22,14 +24,26 @@ const SearchFilter = ({
   const themes = useTheme();
 
   React.useEffect(() => {
-    if(search){
-      if(search.length > 0){
-      applySearch()
-      }
-    }else{
-      reset()
+    const searchForChannel = () => {
+      if(search){
+        if(search.length > 0){
+        applySearch()
+        }
+      }else{
+        reset()
+      }  
     }
+    
+    const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [search])
+
+  React.useEffect(() => {
+    // this is done so that we only make a request after the user stops typing
+    
+  }, [search]);
 
   const applySearch = async () => {
     var channels = [];
