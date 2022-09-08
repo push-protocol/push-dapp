@@ -90,48 +90,6 @@ function Dropdown(props) {
                 {dropdownValue.title}
               </A>
             )}
-            {dropdownValue.sideBarData && (
-              <button id="olvy-target">test latest</button>
-              // <RouterLink
-              //   id="olvy-target"
-              //   className={dropdownValue?.sideBarData?.name?.toLowerCase()}
-              //   spacing="inherit"
-              //   color={theme.snackbarBorderText}
-              //   margin="10px 20px"
-              //   weight="400"
-              //   size="14px"
-              //   flex="1"
-              //   hoverBG="transparent"
-              //   title={`${dropdownValue?.sideBarData?.title}`}
-              //   to={`${
-              //     dropdownValue?.sideBarData?.href
-              //       ? dropdownValue?.sideBarData?.href
-              //       : "#"
-              //   }`}
-              //   href={`${
-              //     dropdownValue?.sideBarData?.href
-              //       ? dropdownValue?.sideBarData?.href
-              //       : "#"
-              //   }`}
-              //   alt={`${dropdownValue?.sideBarData?.alt}`}
-              //   target={
-              //     dropdownValue?.sideBarData?.isRoute
-              //       ? null
-              //       : dropdownValue?.sideBarData?.newTab
-              //       ? "_blank"
-              //       : "self"
-              //   }
-              //   disabled={dropdownValue?.sideBarData?.disabled}
-              //   // hoverBG={theme.leftBarHoverColor}
-              //   radius="12px"
-              //   align="stretch"
-              //   padding="10px"
-              //   // margin={definedMargin}
-              //   active={dropdownValue?.sideBarData?.active}
-              // >
-              //   {dropdownValue?.title}
-              // </RouterLink>
-            )}
           </ItemH>
         )
       )}

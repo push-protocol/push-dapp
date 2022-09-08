@@ -38,12 +38,6 @@ const Profile = ({isDarkMode}) => {
       icon: "./prod.svg",
     },
     {
-      id: "olvy-target",
-      value: "",
-      title: "Latest updates",
-      icon: "./latest.svg",
-    },
-    {
       id: "disconnect",
       value: "",
       function: ()=>deactivate(),
