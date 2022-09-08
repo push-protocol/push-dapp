@@ -1,18 +1,19 @@
 import { useWeb3React } from '@web3-react/core';
 import React,{useContext} from "react";
 import { Web3Provider } from 'ethers/providers'
-import styled from 'styled-components';
+import styled,{useTheme} from 'styled-components';
 import Dropdown from '../components/Dropdown';
-import {NavigationDropdownValues} from "../config/NavigationList.js";
 import { NavigationContext } from "../contexts/NavigationContext";
 import {Item} from "./SharedStyling.js";
 
 import { Oval } from 'react-loader-spinner';
 
 // Create Header
-const Profile = () => {
+const Profile = ({isDarkMode}) => {
   const { error, account, library } = useWeb3React();
-
+  // Get theme
+  const theme = useTheme();
+  console.log(theme)
   const [address, setAddress] = React.useState('');
   const [ens, setENS] = React.useState('');
   const [ensFetched, setENSFetched] = React.useState(false);
@@ -27,14 +28,14 @@ const Profile = () => {
       id: "walletAddress",
       value: account,
       title: account,
-      icon: "./copy.png",
+      icon: "./copy.svg",
     },
     {
       id: "prodDapp",
       value: "",
       link: "https://epns.io/",
       title: "Production dapp",
-      icon: "./prod.png",
+      icon: "./prod.svg",
     },
     {
       id: "latestUpdates",
@@ -50,14 +51,14 @@ const Profile = () => {
         active: false,       
       },
       title: "Latest updates",
-      icon: "./latest.png",
+      icon: "./latest.svg",
     },
     {
       id: "disconnect",
       value: "",
       function: ()=>deactivate(),
       title: "Logout",
-      icon: "./logout.png",
+      icon: "./logout.svg",
     },
   ];
   
@@ -86,14 +87,17 @@ const Profile = () => {
   }, [account]);
 
   // to create blockies
-
   return (
     <>
       {account && account !== "" && !error && (
         <Container>
-          <Wallet>
+          <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
             {!ensFetched && (
-              <Loader type="Oval" color="#FFF" height={16} width={16} />
+              <Oval
+              color="#FFF"
+              height={16}
+              width={16}
+            />
             )}
             {ensFetched && ens && <>{ens}</>}
             {ensFetched && !ens && (
@@ -102,7 +106,7 @@ const Profile = () => {
                 {account.substring(account.length - 6)}
               </>
             )}
-            <ToggleArrowImg onClick={() => setShowDropdown(!showDropdown)}>
+            <ToggleArrowImg onClick={() => setShowDropdown(!showDropdown)} filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
               <img
                 alt="arrow"
                 className={`${showDropdown ? "down" : "up"}`}
@@ -112,11 +116,11 @@ const Profile = () => {
           </Wallet>
           {showDropdown && (
             <Item
-              bg="#fff"
-              border="1px solid #E5E8F7"
+              bg={theme.headerBg}
+              border={`1px solid ${theme.snackbarBorderColor}`}
               radius="24px"
               align="flex-start"
-              padding="1.5rem"
+              padding="1.3rem"
               position="absolute"
               top="4.1rem"
               right="-0.5rem"
@@ -145,17 +149,24 @@ const Container = styled.button`
 `
 const Wallet = styled.span`
   margin: 0px 10px;
-  padding: 4px 16px;
+  padding: 3px 15px;
   height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 16px;
-  color: #fff;
+  font-size: 14px;
+  color: ${props => props.color};
   border-radius:17px;
-  background: rgb(226,8,128);
-  background: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
+  background: ${props => props.bg};
+  ${({ isDarkMode,bg }) => isDarkMode && `
+    border: solid 3px transparent;
+    background-image: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%), linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    box-shadow: 2px 1000px 1px ${bg} inset;
+  `}
+ 
   &:hover {
     opacity: 0.9;
     cursor: pointer;
@@ -169,7 +180,7 @@ const Wallet = styled.span`
 `
 const ToggleArrowImg = styled.div`
   margin-left: 2rem;
-  filter: brightness(0) invert(1);
+  filter:  ${props => props.filter};
   &:hover {
     cursor: pointer;
   }

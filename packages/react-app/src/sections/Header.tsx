@@ -114,7 +114,7 @@ const chainIds = envConfig.allowedNetworks;
       <ItemH justify="flex-start" flex="0">
         <RightBarContainer justify="flex-start" flex="0">
           <RightBarDesktop justify="flex-start" flex="0">
-              <Logo src="epns.png" />
+              <Logo src={!isDarkMode ? "epns.svg" : "epnsDark.svg"} />
           </RightBarDesktop>
           
           {active && !error && (
@@ -136,7 +136,7 @@ const chainIds = envConfig.allowedNetworks;
         {navigationSetup && showNavBar && active && !error && (
           <NavMenuContainer tabletAlign="flex-start">
             <NavMenu>
-              <Profile />
+              <Profile isDarkMode={isDarkMode}/>
 
               <NavMenuInner tabletAlign="flex-start">
                 {Object.keys(navigationSetup.navigation).map(function(key) {
@@ -181,8 +181,8 @@ const chainIds = envConfig.allowedNetworks;
               textTransform="capitalize"
               spacing="0.1em"
               weight="normal"
-              padding="8px 15px"
-              size="22px"
+              padding="8px 20px"
+              size="20px"
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
             >
               {headerTag.title}
@@ -196,8 +196,9 @@ const chainIds = envConfig.allowedNetworks;
             style={{ margin: "0 1rem" }}
               checked={isDarkMode}
               onChange={darkModeToggle}
-            size={30}
+            size={26}
             sunColor="#494D5F"
+            moonColor="#787E99"
           />
         )}
        
@@ -209,7 +210,7 @@ const chainIds = envConfig.allowedNetworks;
           )}
           {active && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
-              <Profile />
+              <Profile isDarkMode={isDarkMode}/>
             </RightBarDesktop>
           )}{" "}
         </ItemH>
@@ -223,7 +224,7 @@ const Container = styled(Section)`
   background: ${props => props.theme.headerBg};
   border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
 `
 
 const Logo = styled.img`

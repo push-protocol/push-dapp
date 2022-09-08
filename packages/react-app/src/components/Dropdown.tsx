@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled,{useTheme} from "styled-components";
 import {
   ItemH,
   Span,
@@ -10,6 +10,7 @@ import {
 
 // Create Dropdown
 function Dropdown(props) {
+  const theme = useTheme();
   const copyToClipboard = (address) => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(address);
@@ -29,14 +30,14 @@ function Dropdown(props) {
           <ItemH
             bg="linear-gradient(87.17deg, #F72C81 0%, #6C55AF 50%, #4FD5FF 100%)"
             radius="17px"
-            padding="4px 15px"
+            padding="2px 12px"
             wrap="nowrap"
-            margin="8px 0"
+            margin="0px 0 8px 0"
           >
             <Span
               margin="11px 22px 11px 2px"
               weight="400"
-              size="14px"
+              size="12px"
               textTransform="uppercase"
               color="#fff"
               spacing="1px"
@@ -61,12 +62,14 @@ function Dropdown(props) {
               alt="icon"
               width="auto"
               spacing="1px"
+              filter={theme.snackbarBorderIcon}
             />
             {!dropdownValue.link && dropdownValue?.function && (
               <Span
+                color={theme.snackbarBorderText}
                 margin="10px 20px"
                 weight="400"
-                size="16px"
+                size="14px"
                 cursor="pointer"
                 onClick={() => dropdownValue?.function()}
               >
@@ -80,8 +83,8 @@ function Dropdown(props) {
                 rel="nofollow"
                 margin="10px 20px"
                 weight="400"
-                size="16px"
-                color="#000"
+                size="14px"
+                color={theme.snackbarBorderText}
                 hoverBG="transparent"
               >
                 {dropdownValue.title}
@@ -89,7 +92,13 @@ function Dropdown(props) {
             )}
             {dropdownValue.sideBarData && (
               <RouterLink
+                spacing="inherit"
+                color={theme.snackbarBorderText}
+                margin="10px 20px"
+                weight="400"
+                size="14px"
                 flex="1"
+                hoverBG="transparent"
                 title={`${dropdownValue.sideBarData.title}`}
                 to={`${
                   dropdownValue.sideBarData.href
