@@ -2,12 +2,21 @@
 const themeLight = {
   scheme: "light",
 
+  // Default Theme
+  default: {
+    bg: '#FFF',
+    color: '#000'
+  },
+
   // Login Theme
-  loginBG: {
+  login: {
     bg: '#DBEBFF',
     blur1: '#F6E4FF',
     blur2: '#CECDFF'
   },
+
+  // Default Background Theme
+  defaultBG: '#FFFFFF',
 
   // Section Theme
   sectionBorderBg: "transparent",
@@ -112,13 +121,20 @@ const themeLight = {
 const themeDark = {
   scheme: "dark",
   
+  // Default Theme
+  default: {
+    bg: '#43485B',
+    color: '#FFF'
+  },
+
   // Login Theme
-  loginBG: {
-    bg: '#DBEBFF',
-    blur1: '#F6E4FF',
-    blur2: '#CECDFF'
+  login: {
+    bg: '#000000',
+    blur1: '#E845A322',
+    blur2: '#E845A322'
   },
   
+
   // Section Theme
   sectionBorderBg: "#333",
 

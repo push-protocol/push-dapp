@@ -1,3 +1,4 @@
+import { themeLight } from 'config/Themization';
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
@@ -70,4 +71,17 @@ export const ItemVV2 = styled(ItemHV2)`
     height: 0;
     width: auto;
   }
+`;
+
+export const H2V2 = styled.h2`
+  color: ${(props) => props.color || themeLight.default.color};
+  font-family: ${(props) =>
+    props.family || "'Strawford', Helvetica, sans-serif"};
+  font-size: ${(props) => props.fontSize || "initial"};
+  font-weight: ${(props) => props.fontWeight || "initial"};
+  letter-spacing: ${(props) => props.letterSpacing || "initial"};
+  margin: ${(props) => props.margin || "0px"};
+  padding: ${(props) => props.padding || "0px"};
+  text-align: ${(props) => props.textAlign || "inherit"};
+  text-transform: ${(props) => props.textTransform || "inherit"};
 `;

@@ -240,7 +240,9 @@ export default function App() {
           )}
 
           {!active && (
-            <AppLogin />
+            <AppLogin 
+              toggleDarkMode={toggleDarkMode}
+            />
           )}
         </ParentContainer>
       </NavigationContextProvider>

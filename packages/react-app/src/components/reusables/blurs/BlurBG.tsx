@@ -17,7 +17,7 @@ const BlurBG = () => {
 export default BlurBG;
 
 const Blurry = styled(ItemHV2)`
-  background: ${(props) => props.theme.loginBG.bg};
+  background: ${(props) => props.theme.login.bg};
   
   &:before {
     content: '';
@@ -27,7 +27,7 @@ const Blurry = styled(ItemHV2)`
     width: 40%;
     min-width: 812px;
     height: auto;
-    background: ${(props) => props.theme.loginBG.blur1};
+    background: ${(props) => props.theme.login.blur1};
     border-radius: 100%;
     aspect-ratio: 1;
     filter: blur(5pc);
@@ -41,7 +41,7 @@ const Blurry = styled(ItemHV2)`
     width: 50%;
     min-width: 812px;
     height: auto;
-    background: ${(props) => props.theme.loginBG.blur2};
+    background: ${(props) => props.theme.login.blur2};
     border-radius: 100%;
     aspect-ratio: 1;
     filter: blur(5pc);

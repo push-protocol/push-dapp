@@ -52,11 +52,15 @@ export default {
   
     ADJUSTMENTS: {
       PADDING: {
+        DEFAULT: '20px',
         MINI_MODULES: {
           DESKTOP: '48px 30px 30px 30px',
           TABLET: '25px',
           MOBILE: '20px',
         }
+      },
+      RADIUS: {
+        DEFAULT: '32px',
       }
     },
   
