@@ -598,7 +598,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const correctChannelTitleLink = () => {
     const channelLink = CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url;
-    if(/(https):\/\//i.test(channelLink)) {
+    if(/(?:http|https):\/\//i.test(channelLink)) {
       window.open(channelLink, '_blank', 'noopener,noreferrer');
     }
     else{
