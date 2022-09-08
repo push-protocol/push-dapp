@@ -62,7 +62,7 @@ hr {
  */
 
 pre {
-  font-family: monospace, monospace; /* 1 */
+  font-family: Strawford, monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -105,7 +105,7 @@ strong {
 code,
 kbd,
 samp {
-  font-family: monospace, monospace; /* 1 */
+  font-family: Strawford, monospace, monospace; /* 1 */
   font-size: 1em; /* 2 */
 }
 
@@ -411,11 +411,11 @@ template {
 }
 
  span, p, label, div {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Strawford", 'Manrope', sans-serif;
 }
 
 button, a, a:before, a:after {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Strawford", 'Manrope', sans-serif;
   border: 0;
   outline: 0;
 
@@ -427,7 +427,7 @@ button, a, a:before, a:after {
 
 
  h1 {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Strawford", 'Manrope', sans-serif;
    font-weight: 700;
    line-height: 1.25em;
    color: #fff;
@@ -438,7 +438,7 @@ button, a, a:before, a:after {
  }
 
  h2, h3, h4, h5, h6 {
-   font-family: 'Manrope', sans-serif;
+   font-family: "Strawford", 'Manrope', sans-serif;
    font-weight: 700;
    line-height: 1.25em;
  }
