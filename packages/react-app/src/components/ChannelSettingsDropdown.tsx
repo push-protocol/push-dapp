@@ -7,10 +7,19 @@ import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
 
 import { envConfig } from "@project/contracts";
-import AddDelegateModal from "./AddDelegateModal";
-import RemoveDelegateModal from "./RemoveDelegateModal";
+
+import { useClickAway } from "react-use";
+
+import useToast from "hooks/useToast";
+
+// modals
+import useModal from "hooks/useModal";
+import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
+import AddDelegateModalContent from "./AddDelegateModalContent";
+import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
+import AddSubgraphModalContent from "./AddSubgraphModalContent";
+
 import ActivateChannelModal from "./ActivateChannelModal";
-import AddSubGraphIdModal from "./AddSubGraphIdModal";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 
@@ -31,13 +40,19 @@ const ethers = require("ethers");
 const MIN_STAKE_FEES = 50;
 const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 
+type ChannelSettingsType = {
+  DropdownRef:React.MutableRefObject<any>,
+  isDropdownOpen: boolean,
+  closeDropdown: () => void
+}
+
 // Create Header
-function ChannelSettings({props}) {
+function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelSettingsType) {
   const dispatch = useDispatch();
   const { account, library, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector(
     (state: any) => state.contracts
-  );
+    );
   const { channelDetails } = useSelector((state: any) => state.admin);
   const {
     CHANNNEL_DEACTIVATED_STATE,
@@ -49,6 +64,33 @@ function ChannelSettings({props}) {
   const { channelState } = channelDetails;
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
 
+  // modals
+  const {
+    isModalOpen: isDeactivateChannelModalOpen, 
+    showModal: showDeactivateChannelModal, 
+    ModalComponent:DeactivateChannelModalComponent} = useModal();
+  const {
+    isModalOpen: isAddDelegateModalOpen, 
+    showModal: showAddDelegateModal, 
+    ModalComponent:AddDelegateModalComponent} = useModal();
+  const {
+    isModalOpen: isRemoveDelegateModalOpen, 
+    showModal: showRemoveDelegateModal, 
+    ModalComponent: RemoveDelegateModalComponent} = useModal();
+  const {
+    isModalOpen: isAddSubgraphModalOpen, 
+    showModal: showAddSubgraphModal, 
+    ModalComponent: AddSubgraphModalComponent} = useModal();
+
+  // for closing the ChannelSettings Dropdown upon outside click
+  const closeDropdownCondition = isDropdownOpen && 
+                                !isDeactivateChannelModalOpen &&
+                                !isAddDelegateModalOpen && 
+                                !isRemoveDelegateModalOpen && 
+                                !isAddSubgraphModalOpen;
+  useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
+
+  
   const [loading, setLoading] = React.useState(false);
   const [
     showActivateChannelPopup,
@@ -58,14 +100,6 @@ function ChannelSettings({props}) {
     MIN_STAKE_FEES
   );
   const [poolContrib, setPoolContrib] = React.useState(0);
-  const [addDelegateLoading, setAddDelegateLoading] = React.useState(false);
-  const [addModalOpen, setAddModalOpen] = React.useState(false);
-  const [addSubGraphIdOpen, setAddSubGraphIdOpen] = React.useState(false);
-  const [addSubgraphDetailsLoading, setAddSubgraphDetailsLoading] = React.useState(false);
-  const [removeDelegateLoading, setRemoveDelegateLoading] = React.useState(
-    false
-  );
-  const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
 
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
@@ -107,7 +141,7 @@ function ChannelSettings({props}) {
     if (isChannelDeactivated) {
       setShowActivateChannelPopup(true);
     } else {
-      deactivateChannel();
+      showDeactivateChannelModal();
     }
   };
 
@@ -165,12 +199,12 @@ function ChannelSettings({props}) {
         setShowActivateChannelPopup(false);
       });
   };
-
+  
+  const deactivateChannelToast = useToast();
   /**
    * Function to deactivate a channel that has been deactivated
    */
   const deactivateChannel = async () => {
-    setLoading(true);
     if (!poolContrib) return;
 
     const amountToBeConverted = parseInt("" + poolContrib) - 10;
@@ -182,125 +216,92 @@ function ChannelSettings({props}) {
 
     const pushValue = response.response.data.quote.PUSH.price;
 
-    await epnsWriteProvider
+    return epnsWriteProvider
       // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
       .deactivateChannel(Math.floor(pushValue)) 
-      .then(async (tx: any) => {
-        console.log(tx);
-        console.log("Transaction Sent!");
-
-        toaster.update(notificationToast(), {
-          render: "Transaction sending",
-          type: toaster.TYPE.INFO,
-          autoClose: 5000,
-        });
-
-        await tx.wait(1);
-        console.log("Transaction Mined!");
-        dispatch(
-          setUserChannelDetails({
-            ...channelDetails,
-            channelState: CHANNNEL_DEACTIVATED_STATE,
-          })
-        );
-      })
-      .catch((err: any) => {
-        console.log("!!!Error deactivateChannel() --> %o", err);
-        console.log({
-          err,
-        });
-        toaster.update(notificationToast(), {
-          render: "Transacion Failed: " + err.error?.message || err,
-          type: toaster.TYPE.ERROR,
-          autoClose: 5000,
-        });
-      })
-      .finally(() => {
-        // post op
-        setLoading(false);
-      });
   };
 
+  const addDelegateToast = useToast();  
   const addDelegate = async (walletAddress: string) => {
-    setAddDelegateLoading(true);
-    return epnsCommWriteProvider.addDelegate(walletAddress).finally(() => {
-      setAddDelegateLoading(false);
-    });
+    return epnsCommWriteProvider.addDelegate(walletAddress)
   };
 
+  const removeDelegateToast = useToast();
   const removeDelegate = (walletAddress: string) => {
-    setRemoveDelegateLoading(true);
-    return epnsCommWriteProvider.removeDelegate(walletAddress).finally(() => {
-      setRemoveDelegateLoading(false);
-    });
+    return epnsCommWriteProvider.removeDelegate(walletAddress);
   };
 
-  const addSubgraphDetails = (input: any) => {
-    setAddSubgraphDetailsLoading(true);
-    return epnsWriteProvider.addSubGraph(input).finally(() => {
-      setAddSubgraphDetailsLoading(false);
-    });
-  };
+  const addSubgraphToast = useToast();
+  const addSubgraphDetails = async (pollTime, subGraphId) => {
+    // design not present to show below cases
+    if (pollTime == '' || subGraphId == '') {
+        // setLoading('Fields are empty! Retry');
+        // setTimeout(() => {
+        //     setLoading('')
+        // }, 2000);
+        return;
+    } else if (pollTime < 60) {
+        // setLoading('Poll Time must be at least 60 sec');
+        // setTimeout(() => {
+        //     setLoading('')
+        // }, 2000);
+        return;
+    }
 
+    try {
+        const input = pollTime + "+" + subGraphId;
+
+        // Prepare Identity bytes
+        const identityBytes = ethers.utils.toUtf8Bytes(input);
+
+        return epnsWriteProvider.addSubGraph(identityBytes)
+      } catch (err) {
+        console.log(err)
+      }
+  };
+    
   // if (!onCoreNetwork) {
   //   //temporarily deactivate the deactivate button if not on core network
   //   return <></>;
-  //
 
   return (
+    <>
     <div>
       <DropdownWrapper background ={theme}>
         <ActiveChannelWrapper>
           {onCoreNetwork &&
             <ChannelActionButton
               disabled={channelInactive}
-              onClick={() => !channelInactive && setAddSubGraphIdOpen(true)}
+              onClick={() => !channelInactive && showAddSubgraphModal()}
             >
-              <div>
-                {addSubgraphDetailsLoading ? (
-                  <Oval color="#FFF" height={16} width={16} />
-                ) : (
-                  <div style={{display:'flex',justifyContent:'start'}}>
-                  <AiOutlineDropbox fontSize={20}/>
-                  <div style={{width:'10px'}}/>                  
-                  Add SubGraph Details
-                  </div>
-                )}
+              <div style={{display:'flex',justifyContent:'start'}}>
+                <AiOutlineDropbox fontSize={20}/>
+                <div style={{width:'10px'}}/>                  
+                Add SubGraph Details
               </div>
             </ChannelActionButton>
           }
 
           <ChannelActionButton
             disabled={channelInactive}
-            onClick={() => !channelInactive && setAddModalOpen(true)}
+            onClick={() => !channelInactive && showAddDelegateModal()}
           >
-            <div>
-              {addDelegateLoading ? (
-                <Oval color="#FFF" height={16} width={16} />
-              ) : (
-                <div style={{display:'flex',justifyContent:'start'}}>
-                  <AiOutlineUserAdd fontSize={20}/>
-                  <div style={{width:'10px'}}/>                  
-                  Add Delegate
-                </div>
-              )}
+            <div style={{display:'flex',justifyContent:'start'}}>
+              <AiOutlineUserAdd fontSize={20}/>
+              <div style={{width:'10px'}}/>                  
+              Add Delegate
             </div>
           </ChannelActionButton>
 
           <ChannelActionButton
             disabled={channelInactive}
-            onClick={() => !channelInactive && setRemoveModalOpen(true)}
+            onClick={() => !channelInactive && showRemoveDelegateModal()}
           >
-            <div>
-              {removeDelegateLoading ? (
-                <Oval color="#FFF" height={16} width={16} />
-              ) : (
-                <div style={{display:'flex',justifyContent:'start'}}>
-                  <AiOutlineUserDelete fontSize={20}/>
-                  <div style={{width:'10px'}}/>                  
-                  Remove Delegate
-                </div>
-              )}
+            
+            <div style={{display:'flex',justifyContent:'start'}}>
+              <AiOutlineUserDelete fontSize={20}/>
+              <div style={{width:'10px'}}/>                  
+              Remove Delegate
             </div>
           </ChannelActionButton>
 
@@ -314,8 +315,6 @@ function ChannelSettings({props}) {
             <div style={{width:'10px',color:'red'}}/>                  
             {!onCoreNetwork ? (
               ""
-              ) : loading ? (
-                "Loading ..."
                 ) : isChannelBlocked ? (
                   "Channel Blocked"
                   ) : isChannelDeactivated ? (
@@ -327,68 +326,53 @@ function ChannelSettings({props}) {
           </div>
         </ChannelActionButton>
 
-          
         </ActiveChannelWrapper>
       </DropdownWrapper>
+
       {/* modal to display the activate channel popup */}
       {showActivateChannelPopup && (
         <ActivateChannelModal
           onClose={() => {
             if (showActivateChannelPopup) {
               setShowActivateChannelPopup(false);
-            }
-          }}
-          activateChannel={activateChannel}
-          loading={loading}
-          setChannelStakeFees={setChannelStakeFees}
-          channelStakeFees={channelStakeFees}
-        />
-      )}
-      {/* modal to add a delegate */}
-      {addModalOpen && (
-        <AddDelegateModal
-          onClose={() => setAddModalOpen(false)}
-          onSuccess={() => {
-            toaster.update(notificationToast(), {
-              render: "Delegate Added",
-              type: toaster.TYPE.INFO,
-              autoClose: 5000,
-            });
-          }}
-          addDelegate={addDelegate}
-        />
-      )}
-      {/* modal to remove a delegate */}
-      {removeModalOpen && (
-        <RemoveDelegateModal
-          onClose={() => {
-            setRemoveModalOpen(false);
-          }}
-          onSuccess={() => {
-            toaster.update(notificationToast(), {
-              render: "Delegate Removed",
-              type: toaster.TYPE.INFO,
-              autoClose: 5000,
-            });
-          }}
-          removeDelegate={removeDelegate}
-        />
-      )}
-
-      {addSubGraphIdOpen && (
-        <AddSubGraphIdModal
-        onClose={(val) => setAddSubGraphIdOpen(val)}
-        onSuccess={() => {
-          toaster.update(notificationToast(), {
-            render: "SubGraph Details Added",
-            type: toaster.TYPE.INFO,
-            autoClose: 5000,
-          });
-        }}
-        addSubGraphDetails={addSubgraphDetails}
-        />
-      ) }
+              }
+            }}
+            activateChannel={activateChannel}
+            loading={loading}
+            setChannelStakeFees={setChannelStakeFees}
+            channelStakeFees={channelStakeFees}
+            />
+        )}
     </div>
+
+      {/* deactivate channel modal */}
+      <DeactivateChannelModalComponent
+          InnerComponent={ChannelDeactivateModalContent}
+          onConfirm={deactivateChannel}
+          toastObject={deactivateChannelToast}
+      />      
+      
+      {/* modal to add a delegate */}
+      <AddDelegateModalComponent
+          InnerComponent={AddDelegateModalContent}
+          onConfirm={addDelegate}
+          toastObject={addDelegateToast}
+      />      
+
+      {/* modal to remove a delegate */}
+      <RemoveDelegateModalComponent
+          InnerComponent={RemoveDelegateModalContent}
+          onConfirm={removeDelegate}
+          toastObject={removeDelegateToast}
+      />
+
+      {/* modal to add a subgraph */}
+      <AddSubgraphModalComponent
+          InnerComponent={AddSubgraphModalContent}
+          onConfirm={addSubgraphDetails}
+          toastObject={addSubgraphToast}
+      />
+    </>
   );
 }
 
