@@ -167,7 +167,7 @@ export const H2 = styled.h2`
   padding: ${(props) => props.padding || "0px"};
   letter-spacing: ${(props) => props.spacing || "inherit"};
   font-family: ${(props) =>
-    props.family || "'Source Sans Pro', Helvetica, sans-serif"};
+    props.family || "'Strawford', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || "inherit"};
 `;
 
@@ -180,7 +180,7 @@ export const H3 = styled.h3`
   padding: ${(props) => props.padding || "0px"};
   letter-spacing: ${(props) => props.spacing || "0.1em"};
   font-family: ${(props) =>
-    props.family || "'Source Sans Pro', Helvetica, sans-serif"};
+    props.family || "'Strawford', 'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${(props) => props.textAlign || "inherit"};
   max-width: ${(props) => props.maxWidth || "initial"};
 `;

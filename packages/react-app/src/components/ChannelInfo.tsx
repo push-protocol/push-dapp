@@ -6,7 +6,7 @@ import Dropdown from "react-dropdown";
 import { Oval } from "react-loader-spinner";
 import "./createChannel.css";
 import { envConfig } from "@project/contracts";
-import { aliasChainIdsMapping, networkName } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping, networkName, isValidUrl } from "helpers/UtilityHelper";
 
 const coreChainId = envConfig.coreContractChain;
 const aliasChainId = aliasChainIdsMapping[coreChainId];
@@ -43,8 +43,8 @@ const ChannelInfo = ({
 
     return false;
   };
-
-  const isAllFilled = () => {
+  
+  const isAllFilledAndValid = () => {
     setInfo("")
     if (
       isEmpty(channelName) ||
@@ -59,6 +59,12 @@ const ChannelInfo = ({
       //   setProcessingInfo("");
       // }, 5000);
 
+      return false;
+    }
+
+    if(!isValidUrl(channelURL))
+    {
+      setInfo("Channel Url is invalid! Please retry!");
       return false;
     }
 
@@ -268,7 +274,7 @@ const ChannelInfo = ({
               radius="15px"
               padding="20px 10px"
               onClick={() => {
-                if (!isAllFilled()) return;
+                if (!isAllFilledAndValid()) return;
                 setTxStatus(2)
                 setChannelInfoDone(true);
                 setStepFlow(3);
