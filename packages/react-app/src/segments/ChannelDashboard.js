@@ -1,14 +1,14 @@
 import React from "react";
 import styled, { css } from 'styled-components';
 
-import Loader from 'react-loader-spinner'
-import Switch from 'components/Switch'
+import Switch from 'components/Switch';
+import { Oval as Loader } from 'react-loader-spinner';
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 
-import { addresses, abis } from "@project/contracts";
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { abis, addresses } from "@project/contracts";
 import CryptoHelper from 'helpers/CryptoHelper';
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 const ethers = require('ethers');
 
 const ipfs = require('ipfs-api')()

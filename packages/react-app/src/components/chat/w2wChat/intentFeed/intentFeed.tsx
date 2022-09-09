@@ -20,7 +20,7 @@ import { intitializeDb } from '../w2wIndexeddb'
 import { decryptFeeds, fetchIntent } from '../w2wUtils'
 import './intentFeed.css'
 // @ts-ignore
-import Loader from 'react-loader-spinner'
+import { Oval as Loader } from 'react-loader-spinner'
 import styled from 'styled-components'
 import IntentCondition from '../IntentCondition/IntentCondition'
 

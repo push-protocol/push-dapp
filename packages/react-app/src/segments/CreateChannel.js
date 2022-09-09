@@ -1,18 +1,18 @@
 import React from "react";
 import styled, { css, useTheme } from "styled-components";
 
-import 'react-dropzone-uploader/dist/styles.css'
-import Dropzone from 'react-dropzone-uploader'
+import Dropzone from 'react-dropzone-uploader';
+import 'react-dropzone-uploader/dist/styles.css';
 
-import Loader from 'react-loader-spinner';
+import { Oval as Loader } from 'react-loader-spinner';
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 
-import { addresses, abis } from "@project/contracts";
+import { abis, addresses } from "@project/contracts";
 
-import {ThemeProvider} from "styled-components";
+import { ThemeProvider } from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
+import { themeDark, themeLight } from "config/Themization";
 
 const ethers = require('ethers');
 

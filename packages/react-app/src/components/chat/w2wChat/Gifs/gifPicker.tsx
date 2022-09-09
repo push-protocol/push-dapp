@@ -1,9 +1,8 @@
-import { FC, useRef, useState } from 'react'
-import configs from '../configs'
+import React, { FC, useRef, useState } from 'react'
+import { Oval as Loader } from 'react-loader-spinner'
 import ClickAwayListener from '../clickAwayListener'
-import Loader from 'react-loader-spinner'
+import configs from '../configs'
 import { useFetch } from '../stickers/useFetchHook'
-import React from 'react'
 import './gifPicker.css'
 
 interface GifPickerProps {

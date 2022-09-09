@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from 'react'
-import Sidebar from './sidebar/sidebar'
+import React, { useEffect, useState } from 'react'
 import ChatBox from './chatBox/chatBox'
+import Sidebar from './sidebar/sidebar'
 // @ts-ignore
-import Loader from 'react-loader-spinner'
+import { Oval as Loader } from 'react-loader-spinner'
 
 // Helper
+import * as PushNodeClient from '../../../api'
+import * as w2wHelper from '../../../helpers/w2w'
 import { createCeramic } from '../../../helpers/w2w/ceramic'
 import * as DIDHelper from '../../../helpers/w2w/did'
-import * as w2wHelper from '../../../helpers/w2w'
-import * as PushNodeClient from '../../../api'
 
 // DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
-import { DID } from 'dids'
 import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver'
+import { DID } from 'dids'
 import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
 
 // Web3
-import { Web3Provider } from 'ethers/providers'
-import { useWeb3React } from '@web3-react/core'
 import { CeramicClient } from '@ceramicnetwork/http-client'
+import { useWeb3React } from '@web3-react/core'
+import { Web3Provider } from 'ethers/providers'
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Feeds, User } from '../../../api'
 
-import './w2wIndex.css'
 import { ToastOptions } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import './w2wIndex.css'
 
 export interface InboxChat {
   name: string

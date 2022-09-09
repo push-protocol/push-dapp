@@ -138,7 +138,7 @@ const AppLogin = ({ toggleDarkMode }) => {
                   hover={theme.default.hover}
                   background={theme.default.bg}
                   borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-                  minWidth="180px"
+                  minWidth="140px"
                   alignSelf="stretch"
                   key={name}
                   onClick={() => {
