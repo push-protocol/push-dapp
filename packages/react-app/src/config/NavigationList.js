@@ -1,5 +1,5 @@
-import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+import { themeDark, themeLight } from "config/Themization";
 
 const NavigationList = {
     primary: {

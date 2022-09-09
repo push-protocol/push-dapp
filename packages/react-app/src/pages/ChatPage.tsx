@@ -1,9 +1,10 @@
+
 import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 
-import styled, { useTheme, ThemeProvider } from 'styled-components'
 import { Section } from 'components/SharedStyling'
 import Chat from 'segments/Chat'
+import styled, { useTheme } from 'styled-components'
 
 import GLOBALS from 'config/Globals'
 //
