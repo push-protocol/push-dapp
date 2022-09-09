@@ -9,7 +9,8 @@ import { Oval } from 'react-loader-spinner';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
-  const toggleArrowRef = useRef();
+  const toggleArrowRef = useRef<HTMLInputElement>(null);
+  const dropdownRef = useRef<HTMLInputElement>(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
@@ -45,9 +46,8 @@ const Profile = ({isDarkMode}) => {
   
   React.useEffect(() => {
     const closeDropdown = (e) => {
-      console.log(e)
-      console.log(toggleArrowRef)
-      if(e.path[1] !== toggleArrowRef.current)
+      if(toggleArrowRef.current && !toggleArrowRef?.current.contains(e.target) && 
+         dropdownRef.current && !dropdownRef?.current.contains(e.target))
       {
         setShowDropdown(false);
       }
@@ -113,6 +113,7 @@ const Profile = ({isDarkMode}) => {
           </Wallet>
           {showDropdown && (
             <Item
+              ref={dropdownRef}
               bg={theme.headerBg}
               border={`1px solid ${theme.snackbarBorderColor}`}
               radius="24px"
