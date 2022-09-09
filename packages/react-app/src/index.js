@@ -9,7 +9,6 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 import * as serviceWorker from "./serviceWorker";
 import * as dotenv from "dotenv";
-
 import App from "./App";
 import store from "./redux/store";
 import "./index.css";

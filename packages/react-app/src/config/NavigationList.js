@@ -1,5 +1,5 @@
-import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+import { themeDark, themeLight } from "config/Themization";
 
 const NavigationList = {
     primary: {
@@ -37,6 +37,50 @@ const NavigationList = {
               }
             }
           },
+          chat: {
+            src: 'svg/communicate.svg',
+            iconFactory: null,
+            name: 'Chat',
+            title: 'Chat',
+            alt: 'Open Chat',
+            href: '/chat',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Chat',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              },
+            },
+          },
+          chatNewUI: {
+            src: 'svg/communicate.svg',
+            iconFactory: null,
+            name: 'Chat(New)',
+            title: 'Chat(New)',
+            alt: 'Open Chat',
+            href: '/chat-new',
+            newTab: false,
+            isRoute: true,
+            hasMenuLogic: true,
+            headerTag: {
+              title: 'Chat',
+              light: {
+                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+                fg: themeLight.headerTagFg,
+              },
+              dark: {
+                bg: themeDark.headerTagBg,
+                fg: themeDark.headerTagFg,
+              },
+            },
+          },
           spam: {
             src: "svg/spam.svg",
             iconFactory: null,
@@ -56,7 +100,7 @@ const NavigationList = {
                 fg: themeDark.headerTagFg,
               }
             }
-          },  
+          }, 
           channels: {
             src: "svg/channel.svg",
             iconFactory: null,
