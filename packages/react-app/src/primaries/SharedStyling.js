@@ -1,5 +1,5 @@
-import styled, { css } from "styled-components";
 import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 export const Section = styled.section`
   display: flex;
@@ -14,31 +14,6 @@ export const Section = styled.section`
   overflow: ${(props) => props.overflow || "initial"};
   flex: 1;
   position: relative;
-`;
-
-export const SectionFS = styled(Section)`
-  min-height: 100vh;
-`;
-
-export const SectionFSHero = styled(Section)`
-  min-height: 100vh;
-  background: rgb(31, 23, 47);
-  background: linear-gradient(
-    283deg,
-    rgba(31, 23, 47, 1) 0%,
-    rgba(62, 9, 40, 1) 45%,
-    rgba(17, 58, 72, 1) 100%
-  );
-`;
-
-export const SectionHero = styled(Section)`
-  background: rgb(31, 23, 47);
-  background: linear-gradient(
-    283deg,
-    rgba(31, 23, 47, 1) 0%,
-    rgba(62, 9, 40, 1) 45%,
-    rgba(17, 58, 72, 1) 100%
-  );
 `;
 
 export const Content = styled.div`
@@ -59,7 +34,6 @@ export const Item = styled.div`
   flex-direction: column;
   flex-wrap: ${(props) => props.wrap || "wrap"};
   position: ${(props) => props.position || "relative"};
-  justify-content: center;
   background: ${(props) => props.bg || "transparent"};
   flex: ${(props) => props.flex || "1"};
   flex-direction: ${(props) => props.direction || "column"};
@@ -74,7 +48,7 @@ export const Item = styled.div`
   font-size: ${(props) => props.size || "inherit"};
   text-align: ${(props) => props.textAlign || "inherit"};
   filter: ${(props) => props.filter || "none"};
-
+  box-shadow: ${(props) => props.shadow || "none"};
   top: ${(props) => props.top || "auto"};
   bottom: ${(props) => props.bottom || "auto"};
   left: ${(props) => props.left || "auto"};
@@ -100,6 +74,7 @@ export const Item = styled.div`
   }
 
   @media (max-width: 768px) {
+    max-width: ${(props) => props.tabletMaxWidth || "auto"};
     align-items: ${(props) =>
       (props.tabletAlign
         ? props.tabletAlign
@@ -211,7 +186,7 @@ export const H3 = styled.h3`
 `;
 
 export const Image = styled.img`
-  width: 100%;
+  width: ${(props) => props.width || "100%"};
   height: auto;
   display: flex;
 `;
@@ -227,6 +202,7 @@ export const P = styled.p`
   text-transform: ${(props) => props.textTransform || "inherit"};
   margin: ${(props) => props.margin || "20px 0px"};
   padding: ${(props) => props.padding || "0px"};
+  line-height:${(props) => props.lineHeight || "auto"};
   letter-spacing: ${(props) => props.spacing || "inherit"};
   text-align: ${(props) => props.textAlign || "initial"};
 `;

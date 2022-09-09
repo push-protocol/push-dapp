@@ -1,6 +1,24 @@
 // Define what props.theme will look like
 const themeLight = {
   scheme: "light",
+
+  // Default Theme
+  default: {
+    bg: '#FFF',
+    color: '#000',
+    hover: '#F3F3FF',
+  },
+
+  // Login Theme
+  login: {
+    bg: '#DBEBFF',
+    blur1: '#F6E4FF',
+    blur2: '#CECDFF'
+  },
+
+  // Default Background Theme
+  defaultBG: '#FFFFFF',
+
   // Section Theme
   sectionBorderBg: "transparent",
 
@@ -112,6 +130,22 @@ const themeLight = {
 
 const themeDark = {
   scheme: "dark",
+  
+  // Default Theme
+  default: {
+    bg: '#43485B',
+    color: '#FFF',
+    hover: '#00000033',
+  },
+
+  // Login Theme
+  login: {
+    bg: '#000000',
+    blur1: '#E845A322',
+    blur2: '#E845A322'
+  },
+  
+
   // Section Theme
   sectionBorderBg: "#333",
 
@@ -142,6 +176,7 @@ const themeDark = {
   interfaceSkeleton: "#414141",
 
   // Main Theme
+  connectWalletBg: "#222",
   backgroundBG: "#222",
   backgroundBGLucid: "#000000cc",
   mainBg: "#000",
