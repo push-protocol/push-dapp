@@ -1,4 +1,5 @@
 {
+  "parser": "babel-eslint",
   "presets": ["@babel/preset-react", "@babel/preset-env"],
-  "plugins": ["babel-plugin-styled-components", "emotion"]
+  "plugins": ["babel-plugin-styled-components", "emotion", "better-styled-components"]
 }

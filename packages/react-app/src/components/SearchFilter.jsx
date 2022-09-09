@@ -102,7 +102,7 @@ export default function SearchFilter(props) {
                             </InputWrapper>
                         </SectionSearch>
                         <SectionSearch mleft='3.5rem'>
-                            <p style={{ fontSize: "1.2rem", color: "#B4B4B4", fontWeight: "500", "fontFamily": "Source Sans Pro" }}>By time of notification sent</p>
+                            <p style={{ fontSize: "1.2rem", color: "#B4B4B4", fontWeight: "500", "fontFamily": "Strawford" }}>By time of notification sent</p>
                             <RangeSection mtop="0.5rem">
                                 <TimeLabelDiv>
                                     <div>Start Date</div>
@@ -129,7 +129,7 @@ const SDateTimePicker = styled(DateTimePicker)`
     flex: 6;
     display: flex;
     align-items: center !important;
-    font-family: Source Sans Pro;
+    font-family: Strawford, Source Sans Pro;
     .react-datetime-picker__wrapper {
         border: 0px !important;
         border-radius: 5px !important;
@@ -191,7 +191,7 @@ const TimeLabelDiv = styled.div`
 
     div{
         margin-top: 10px;
-        font-family: Source Sans Pro;
+        font-family: Strawford, Source Sans Pro;
     }
 
     @media(max-width: 400px){
@@ -241,7 +241,7 @@ const SMultiSelect = styled(MultiSelect)`
     .dropdown-content {
         .panel-content {
             overflow: hidden;
-            font-family: Source Sans Pro;
+            font-family: Strawford, Source Sans Pro;
             font-weight:18px;
                 }
             }
@@ -275,7 +275,7 @@ const SMultiSelect = styled(MultiSelect)`
 const SelectChannel = styled.div`
 border: 1px solid ${props => props.theme.faucetBorder};
 border-radius: 5px;
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 `;
 
 const FilterShow = styled.span`
@@ -310,7 +310,7 @@ const Input = styled.input`
     &::placeholder {
         opacity: 1;
         font-weight: 400;
-        font-family: Source Sans Pro;
+        font-family: Strawford, Source Sans Pro;
         color: #B0B0B0 !important;
       }
 `;
@@ -375,13 +375,13 @@ border-bottom: 1px solid ${props => props.theme.faucetBorder};
 border-top-left-radius: 5px;
 border-top-right-radius: 5px;
 margin-bottom: ${(props) => (props.mbtm ? props.mbtm : "")};
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 `;
 
 const Left = styled.div`
 display: flex;
 flex-direction: row;
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 `;
 
 const Buttons = styled.div`
@@ -399,7 +399,7 @@ margin-bottom: 0.5rem;
     flex-direction: column;
     
 }
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 
 `;
 
@@ -424,7 +424,7 @@ margin-right:  ${(props) => (props.mright ? props.mright : "")};
 {
     margin-right:  ${(props) => (props.mright ? "1.5rem" : "")};
 }
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 `;
 
 
@@ -435,7 +435,7 @@ margin-left: 2rem;
 margin-right: 2rem;
 margin-bottom: 1rem;
 justify-content: space-between;
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 
 @media(max-width: 600px)
 {
