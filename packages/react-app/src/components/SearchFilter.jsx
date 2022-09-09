@@ -145,7 +145,7 @@ const SDateTimePicker = styled(DateTimePicker)`
     flex: 6;
     display: flex;
     align-items: center !important;
-    font-family: Source Sans Pro;
+    font-family: Strawford, Source Sans Pro;
     .react-datetime-picker__wrapper {
         border: 0px !important;
         border-radius: 5px !important;
@@ -195,6 +195,27 @@ const SDateTimePicker = styled(DateTimePicker)`
     }
 `
 
+const TimeLabelDiv = styled.div`
+    flex: 2;
+    padding: 0 10px;
+    background-color: #35c5f3;
+    align-self: stretch;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+
+
+    div{
+        margin-top: 10px;
+        font-family: Source Sans Pro;
+    }
+
+    @media(max-width: 400px){
+        padding: 0 4px;
+    }
+`
+
+
 const SMultiSelect = styled(MultiSelect)`
     font-style: normal;
     font-weight: 400;
@@ -236,7 +257,7 @@ const SMultiSelect = styled(MultiSelect)`
     .dropdown-content {
         .panel-content {
             overflow: hidden;
-            font-family: Source Sans Pro;
+            font-family: Strawford, Source Sans Pro;
             font-weight:18px;
                 }
             }
@@ -280,7 +301,7 @@ const LabelText = styled.div`
 const SelectChannel = styled.div`
     border: 1px solid ${props => props.theme.faucetBorder};
     border-radius: 5px;
-    font-family: Source Sans Pro;
+    font-family: Strawford, Source Sans Pro;
     font-style: normal;
     font-weight: 400;
     font-size: 15px;
@@ -305,7 +326,7 @@ const Input = styled.input`
     &::placeholder {
         opacity: 1;
         font-weight: 400;
-        font-family: Source Sans Pro;
+        font-family: Strawford, Source Sans Pro;
         // color: #B0B0B0 !important;
        color:  ${props => props.theme.color};
     }
@@ -355,7 +376,7 @@ const ButtonBar = styled.div`
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     margin-bottom: 19px;
-    font-family: Source Sans Pro;
+    font-family: Strawford, Source Sans Pro;
 `;
 
 const Buttons = styled.div`
@@ -373,7 +394,7 @@ margin-bottom: 0.5rem;
     flex-direction: column;
     
 }
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 
 `;
 
@@ -398,7 +419,7 @@ margin-right:  ${(props) => (props.mright ? props.mright : "")};
 {
     margin-right:  ${(props) => (props.mright ? "1.5rem" : "")};
 }
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
 `;
 
 const ResetButton = styled(ButtonFeed)`
@@ -413,7 +434,8 @@ display: flex;
 flex-direction: row;
 margin-left: 2rem;
 margin-right: 2rem;
-font-family: Source Sans Pro;
+font-family: Strawford, Source Sans Pro;
+
 
 @media(max-width: 600px)
 {

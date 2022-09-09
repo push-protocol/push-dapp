@@ -453,7 +453,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-      <div ref={modalRef}>
+      {/* <div ref={modalRef}>
         <SearchFilter 
           notifications={allNotif} 
           filterNotifications={filterNotifications} 
@@ -464,7 +464,20 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
           search={search}
           setSearch={setSearch}
         />
-      </div>
+      </div> */}
+      <div ref={modalRef}>
+        <SearchFilter 
+          notifications={allNotif}
+          filterNotifications={filterNotifications}
+          filter={filter}
+          reset={reset}
+          loadFilter={loadFilter}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
+        />
+        </div>
       {bgUpdateLoading && (
           <div style={{ marginTop: "10px" }}>
             <Oval color="#35c5f3" height={40} width={40} />

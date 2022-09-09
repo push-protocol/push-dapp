@@ -24,6 +24,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "src/config/custom.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "src/segments/ViewChannels.jsx",

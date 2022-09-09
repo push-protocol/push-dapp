@@ -1,33 +1,48 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import { Web3Provider } from "ethers/providers";
-import { useWeb3React } from "@web3-react/core";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useEagerConnect, useInactiveListener, useBrowserNotification } from "hooks";
-import { injected, walletconnect, portis, ledger } from "connectors";
-import { envConfig } from "@project/contracts";
-import Joyride, { CallBackProps } from "react-joyride";
+import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
+import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
+import LedgerLogoDark from './assets/login/ledgerDark.svg';
+import LedgerLogoLight from './assets/login/ledgerLight.svg';
+import MMLogoDark from './assets/login/metamaskDark.svg';
+import MMLogoLight from './assets/login/metamaskLight.svg';
+import PortisLogoDark from './assets/login/portisDark.svg';
+import PortisLogoLight from './assets/login/portisLight.svg';
+import WCLogoDark from './assets/login/wcDark.svg';
+import WCLogoLight from './assets/login/wcLight.svg';
 
-import styled from "styled-components";
-import { Item, ItemH, Span, H2, B, A, C } from "./primaries/SharedStyling";
+import { envConfig } from "@project/contracts";
+import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useWeb3React } from "@web3-react/core";
+import { injected, ledger, portis, walletconnect } from "connectors";
+import { Web3Provider } from "ethers/providers";
+import { useBrowserNotification, useEagerConnect, useInactiveListener } from "hooks";
+import Joyride, { CallBackProps } from "react-joyride";
+import { useLocation } from "react-router-dom";
+import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import Header from "sections/Header";
 import Navigation from "sections/Navigation";
+import styled from "styled-components";
+import AppLogin from './AppLogin';
+
+import { SectionV2 } from "./components/reusables/SharedStylingV2";
+import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyling";
 
 import NavigationContextProvider from "contexts/NavigationContext";
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
 import { ThemeProvider } from "styled-components";
 
-import { themeLight, themeDark } from "config/Themization";
 import GLOBALS from "config/Globals";
+import { themeDark, themeLight } from "config/Themization";
 
-import { setRun, setIndex, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserJourneySteps from "segments/userJourneySteps";
+import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 
-import * as dotenv from "dotenv";
 import InitState from "components/InitState";
+import * as dotenv from "dotenv";
 
 
 dotenv.config();
@@ -36,17 +51,19 @@ dotenv.config();
 const web3Connectors = {
   Injected: {
     obj: injected,
-    logo: "./svg/login/metamask.svg",
-    title: "MetaMask",
+    logolight: MMLogoLight,
+    logodark: MMLogoDark,
+    title: "Metamask",
   },
   WalletConnect: {
     obj: walletconnect,
-    logo: "./svg/login/walletconnect.svg",
+    logolight: WCLogoLight,
+    logodark: WCLogoDark,
     title: "Wallet Connect",
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  Ledger: { obj: ledger, logo: "./svg/login/ledger.svg", title: "Ledger" },
-  Portis: { obj: portis, logo: "./svg/login/portis.svg", title: "Portis" },
+  Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: "Ledger" },
+  Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: "Portis" },
 };
 
 export default function App() {
@@ -64,8 +81,7 @@ export default function App() {
     stepIndex,
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
-
-  
+  const location = useLocation();
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
@@ -79,6 +95,7 @@ export default function App() {
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
+  
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
@@ -157,181 +174,88 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      <InitState />
-      <NavigationContextProvider>
-        <Joyride
-          run={run}
-          steps={steps}
-          continuous={tutorialContinous}
-          stepIndex={stepIndex}
-          // hideFooter={true}
-          // primaryProps={false}
-          hideBackButton={true}
-          hideCloseButton={false}
-          disableScrolling={true}
-          disableScrollParentFix={true}
-          // disableFlip={true}
-          // showNextButton={false}
-          showSkipButton={false}
-          disableOverlayClose={true}
-          callback={handleJoyrideCallback}
-          styles={{
-            options: {
-              arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-              overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-              primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-              textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-              zIndex: 1000,
-            },
-          }}
-        />
-        <HeaderContainer>
-          <Header
-            isDarkMode={darkMode}
-            darkModeToggle={toggleDarkMode}
+
+      {!active && (
+        <SectionV2 minHeight="100vh">
+          <AppLogin 
+            toggleDarkMode={toggleDarkMode}
           />
-        </HeaderContainer>
+        </SectionV2>
+      )}
 
-        <ParentContainer
-          headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-        >
+      {active && !error && (
+        <>
+          <InitState />
+          <NavigationContextProvider>
+            <Joyride
+              run={run}
+              steps={steps}
+              continuous={tutorialContinous}
+              stepIndex={stepIndex}
+              // hideFooter={true}
+              // primaryProps={false}
+              hideBackButton={true}
+              hideCloseButton={false}
+              disableScrolling={true}
+              disableScrollParentFix={true}
+              // disableFlip={true}
+              // showNextButton={false}
+              showSkipButton={false}
+              disableOverlayClose={true}
+              callback={handleJoyrideCallback}
+              styles={{
+                options: {
+                  arrowColor: darkMode
+                    ? themeDark.dynamicTutsBg
+                    : themeLight.dynamicTutsBg,
+                  backgroundColor: darkMode
+                    ? themeDark.dynamicTutsBg
+                    : themeLight.dynamicTutsBg,
+                  overlayColor: darkMode
+                    ? themeDark.dynamicTutsBgOverlay
+                    : themeLight.dynamicTutsBgOverlay,
+                  primaryColor: darkMode
+                    ? themeDark.dynamicTutsPrimaryColor
+                    : themeLight.dynamicTutsPrimaryColor,
+                  textColor: darkMode
+                    ? themeDark.dynamicTutsFontColor
+                    : themeLight.dynamicTutsFontColor,
+                  zIndex: 1000,
+                },
+              }}
+            />
 
-          {(active) && !error && (
-            <>
-              <LeftBarContainer
-                leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
-              >
+            <HeaderContainer>
+              <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
+            </HeaderContainer>
+
+            <ParentContainer
+              bg={
+                darkMode
+                  ? themeDark.backgroundBG
+                  : !active
+                  ? themeLight.connectWalletBg
+                  : themeLight.backgroundBG
+              }
+              headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+            >
+              <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                 <Navigation />
               </LeftBarContainer>
 
-              <ContentContainer
-                leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}
-              >
+              <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                 {/* Shared among all pages, load universal things here */}
                 <MasterInterfacePage />
               </ContentContainer>
-            </>
-          )}
-
-          {(!active) && (
-            <Item
-              justify="flex-start"
-              padding="15px"
-            >
-              <ProviderLogo
-                src="./epnshomelogo.png"
-                srcSet={"./epnshomelogo@2x.png 2x, ./epnshomelogo@2x.png 3x"}
-              />
-
-              <Item
-                bg={darkMode ? themeDark : themeLight}
-                border="1px solid #ddd"
-                padding="15px"
-                radius="12px"
-                flex="initial"
-              >
-                <H2 textTransform="uppercase" spacing="0.1em">
-                  <Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">
-                    Connect
-                  </Span>
-                  <Span weight="200" color={darkMode ? themeDark : themeLight}> Your Wallet</Span>
-                </H2>
-
-                <ItemH maxWidth="700px" align="stretch">
-                  {Object.keys(web3Connectors).map((name) => {
-                    const currentConnector = web3Connectors[name].obj;
-                    const connected = currentConnector === connector;
-                    const disabled =
-                      !triedEager ||
-                      !!activatingConnector ||
-                      connected ||
-                      !!error;
-                    const image = web3Connectors[name].logo;
-                    const title = web3Connectors[name].title;
-
-                    return (
-                      <ProviderButton
-                        disabled={disabled}
-                        key={name}
-                        onClick={() => {
-                          setActivatingConnector(currentConnector);
-                          activate(currentConnector);
-                        }}
-                        border="#35c5f3"
-                      >
-                        <ProviderImage src={image} />
-
-                        <Span
-                          spacing="0.1em"
-                          textTransform="uppercase"
-                          size="12px"
-                          weight="600"
-                          padding="20px"
-                          background={darkMode ? themeDark.backgroundBG : themeLight.backgroundBG}
-                          color={darkMode ? themeDark.fontColor : themeLight.fontColor}
-
-                        >
-                          {title}
-                        </Span>
-                      </ProviderButton>
-                    );
-                  })}
-                </ItemH>
-              </Item>
-
-              <Span margin="30px 0px 0px 0px" size="14px" color={darkMode ? themeDark.fontColor : themeLight.fontColor}>
-                By unlocking your wallet, <B>You agree</B> to our{" "}
-                <A href="https://epns.io/tos" target="_blank">
-                  Terms of Service
-                </A>{" "}
-                and our{" "}
-                <A href="https://epns.io/privacy" target="_blank">
-                  Privacy Policy
-                </A>
-                .
-              </Span>
-              <Item
-                flex="initial"
-                padding="30px 15px"
-                radius="12px"
-              >
-                <StyledItem>
-                  <span> Note: </span> The EPNS protocol has been under development for 1+ year,  and completed a <C href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank"> ChainSafe audit </C> in October 2021. However, the mainnet is still a new product milestone.  Always DYOR, and anticipate bugs and UI improvements.  Learn how to report any bugs in our  <C href="https://discord.com/invite/YVPB99F9W5" target="_blank">Discord.</C>
-                </StyledItem>
-              </Item>
-
-            </Item>
-          )}
-        </ParentContainer>
-      </NavigationContextProvider>
+            </ParentContainer>
+          </NavigationContextProvider>
+        </>
+      )}
     </ThemeProvider>
   );
 }
 
-// CSS STYLES
-const StyledItem = styled(Item)`
-  font-size: 14px;
-  letter-spacing: 0.4px;
-  display: block;
-  background: ${props => props.theme.backgroundBG};
-  color: ${props => props.theme.color};
-  border:1px solid #ddd;
-  padding:30px 15px;
-  border-radius:12px;
-  line-height: 18px;
-  align-items: center;
-  width:44rem;
-
-  span{
-    color: #e20880;
-  }
-
-  @media(max-width:400px){
-    width: auto;
-  }
-`;
-
+// CSS STYLE
 
 const HeaderContainer = styled.header`
   left: 0;
@@ -348,9 +272,13 @@ const ParentContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   flex: 1;
-  background: ${props => props.theme.backgroundBG};
+  background: ${props => props.bg};
+  background-position: center center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  // background: ${props => props.bg};
   margin: ${props => props.headerHeight}px 0px 0px 0px;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px);
+  min-height: calc(100vh - ${props => props.headerHeight}px);
 `;
 
 const LeftBarContainer = styled.div`
@@ -380,49 +308,38 @@ const ContentContainer = styled.div`
   }
 `;
 
-const ProviderLogo = styled.img`
-  width: 15vw;
-  align-self: center;
-  display: flex;
-  margin: 10px 20px 20px 20px;
-  min-width: 200px;
+const PushLogo = styled.div`
+  width: 200px;
+  padding-bottom: 20px;
 `;
 
 const ProviderButton = styled.button`
-  flex: 1 1 0;
-  min-width: 280px;
+  flex: none;
+  min-width: 179px;
   background: ${props => props.theme.mainBg};
-  outline: 0;ProviderButton
-
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 15px;
-  border: 1px solid rgb(225, 225, 225);
-
-  margin: 20px;
+  margin: 20px 15px;
   overflow: hidden;
-
+  padding: 20px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-
+  border-radius: 24px;
   display: flex;
-  flex-direction: row;
-  padding: 10px;
+  flex-direction: column;
 
   &:hover {
-    opacity: 0.9;
     cursor: pointer;
-    border: 1px solid ${(props) => props.border};
+    background: rgba(207, 206, 255, 0.24);
   }
   &:active {
-    opacity: 0.75;
     cursor: pointer;
-    border: 1px solid ${(props) => props.border};
+    background: rgba(207, 206, 255, 0.24);
   }
 `;
 
 const ProviderImage = styled.img`
-  width: 32px;
-  max-height: 32px;
-  padding: 10px;
+  width: 73px;
+  height: 69px;
+  max-height: 69px;
+  padding-bottom: 18px;
 `;
