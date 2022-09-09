@@ -30,11 +30,9 @@ const NavigationList = {
             headerTag: {
               title: 'Inbox',
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -96,11 +94,9 @@ const NavigationList = {
             headerTag: {
               title: 'Spam',
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -118,11 +114,9 @@ const NavigationList = {
             headerTag: {
               title: 'View Channels',
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -140,11 +134,9 @@ const NavigationList = {
             headerTag: {
               title: 'Receive Notifications',
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_THIRD,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -177,13 +169,11 @@ const NavigationList = {
             isRoute: true,
             hasMenuLogic: true,
             headerTag: {
-              title: 'Channel Dashboard',
+              title: 'Channels',
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -225,11 +215,9 @@ const NavigationList = {
             headerTag: {
               title: "Developer's Guide",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -247,11 +235,9 @@ const NavigationList = {
             headerTag: {
               title: "Various dApp Enviroments",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -308,11 +294,9 @@ const NavigationList = {
             headerTag: {
               title: 'Governance',
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -331,11 +315,9 @@ const NavigationList = {
             headerTag: {
               title: "Learn to Govern",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -368,11 +350,9 @@ const NavigationList = {
             headerTag: {
               title: "Yield Farming",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -390,11 +370,9 @@ const NavigationList = {
             headerTag: {
               title: "Rockstars NFTs",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -412,11 +390,9 @@ const NavigationList = {
             headerTag: {
               title: "Gratitude Drop",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_THIRD,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -449,11 +425,9 @@ const NavigationList = {
             headerTag: {
               title: "Live Walkthrough",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -471,11 +445,9 @@ const NavigationList = {
             headerTag: {
               title: "FAQ",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }
@@ -493,11 +465,9 @@ const NavigationList = {
             headerTag: {
               title: "Quick Guide",
               light: {
-                bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
                 fg: themeLight.headerTagFg,
               },
               dark: {
-                bg: themeDark.headerTagBg,
                 fg: themeDark.headerTagFg,
               }
             }

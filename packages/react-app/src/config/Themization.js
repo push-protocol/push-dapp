@@ -23,9 +23,9 @@ const themeLight = {
   sectionBorderBg: 'transparent',
 
   // Header Theme
-  headerBg: '#fff',
-  headerTagBg: '#000',
-  headerTagFg: '#fff',
+  headerBg: "#fff",
+  headerTagBg: "#000",
+  headerTagFg: "#000",
 
   headerIconsBg: '#000',
 
@@ -126,6 +126,15 @@ const themeLight = {
   toastTextColor: "#000",
   toastBorderColor: "#F4F3FF",
   toastShadowColor: "#ccc",
+
+  // Profile
+  profileBG:"linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)",
+  profileText:"#fff",
+
+  //Snackbar
+  snackbarBorderColor:"#E5E8F7",
+  snackbarBorderText:"#000",
+  snackbarBorderIcon:"none",
 };
 
 const themeDark = {
@@ -150,9 +159,9 @@ const themeDark = {
   sectionBorderBg: '#333',
 
   // Header Theme
-  headerBg: '#000',
-  headerTagBg: '#fff',
-  headerTagFg: '#000',
+  headerBg: "#2F3137",
+  headerTagBg: "#fff",
+  headerTagFg: "#fff",
 
   headerIconsBg: '#fff',
 
@@ -257,6 +266,15 @@ const themeDark = {
   toastTextColor: "#B6BCD6",
   toastBorderColor: "#4A4F67",
   toastShadowColor: "#00000005",
+  
+  //Profile
+  profileBG:"#2F3137",
+  profileText:"#B6BCD6",
+
+  //Snackbar
+  snackbarBorderColor:"#4A4F67",
+  snackbarBorderText:"#B6BCD6",
+  snackbarBorderIcon:"brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)"
 };
 
 module.exports = {
