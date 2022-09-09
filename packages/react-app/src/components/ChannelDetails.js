@@ -1,18 +1,18 @@
-import React from 'react';
-import moment from 'moment';
-import { ethers } from 'ethers';
 import { envConfig } from '@project/contracts';
-import styled, { useTheme } from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
+import { getReq, postReq } from 'api';
+import { ethers } from 'ethers';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useDeviceWidthCheck } from 'hooks';
+import moment from 'moment';
+import React from 'react';
+import { AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import ShowDelegates from './ShowDelegates';
+import styled, { useTheme } from 'styled-components';
 import { Item } from '../primaries/SharedStyling';
-import { getReq, postReq } from 'api';
-import { useWeb3React } from '@web3-react/core';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { AiOutlineUser } from 'react-icons/ai';
-import { useDeviceWidthCheck } from 'hooks';
 import ChannelSettings from './ChannelSettings';
+import ShowDelegates from './ShowDelegates';
 
 const DATE_FORMAT = 'MMMM Do YYYY';
 

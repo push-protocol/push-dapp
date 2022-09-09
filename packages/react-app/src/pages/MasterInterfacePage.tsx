@@ -10,6 +10,8 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { VscClose } from 'react-icons/vsc';
 
 import InboxPage from "pages/InboxPage";
+import ChatPage from 'pages/ChatPage'
+import NewChatPage from 'pages/ChatPageNew'
 import SpamPage from "pages/SpamPage";
 import ViewChannelsPage from "pages/ViewChannelsPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
@@ -42,6 +44,10 @@ function MasterInterfacePage() {
     <Container>
       <Interface location={location.pathname}>
         <Routes>
+          <Route path="inbox" element={<InboxPage />} />
+          <Route path="chat" element={<ChatPage />} />
+          <Route path="chat-new" element={<NewChatPage />} />
+
           <Route path="channels" element={
             <ViewChannelsPage
               loadTeaser={setLoadTeaserVideo}
@@ -49,7 +55,6 @@ function MasterInterfacePage() {
             />
           }
           />
-          <Route path="inbox" element={<InboxPage />} />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
           <Route path="send" element={<SendNotifs />} />
           <Route path="spam" element={<SpamPage />} />
@@ -136,7 +141,6 @@ const Interface = styled(Item)`
   // margin: 15px 15px 15px 0px;
   margin: ${props => props.location === '/send' ? '15px auto' : '15px 15px 15px 0px'};
   overflow: hidden;
-
 
   @media (max-width: 992px) {
     // margin: 15px 0px;

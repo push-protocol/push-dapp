@@ -218,7 +218,6 @@ function GovernancePage() {
   const checkForDelegateError = async (gasEstimate) => {
     // return false if no error
     // otherwise return error message
-
     // get gas price
     const gasPrice = await EPNSCoreHelper.getGasPriceInDollars(library);
     const totalCost = gasPrice * gasEstimate;
@@ -230,7 +229,6 @@ function GovernancePage() {
 
 
   //execute delegate tx wth gas when tokenbalance < PUSH_BALANCE_TRESHOLD
-
 
   const delegateAction = async (newDelegatee) => {
     setTxInProgress(true);

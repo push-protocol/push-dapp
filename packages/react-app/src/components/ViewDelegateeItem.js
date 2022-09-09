@@ -393,6 +393,5 @@ const Toaster = styled.div`
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `
-
 // Export Default
 export default ViewDelegateeItem;
