@@ -75,7 +75,6 @@ const Profile = ({isDarkMode}) => {
     <>
       {account && account !== "" && !error && (
         <Container>
-          <button id="olvy-target">test</button>
           <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
             {!ensFetched && (
               <Oval
