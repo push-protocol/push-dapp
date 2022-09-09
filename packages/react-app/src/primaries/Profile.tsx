@@ -1,19 +1,18 @@
 import { useWeb3React } from '@web3-react/core';
-import React,{useContext} from "react";
+import React,{useRef} from "react";
 import { Web3Provider } from 'ethers/providers'
 import styled,{useTheme} from 'styled-components';
 import Dropdown from '../components/Dropdown';
-import { NavigationContext } from "../contexts/NavigationContext";
 import {Item} from "./SharedStyling.js";
 
 import { Oval } from 'react-loader-spinner';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
+  const toggleArrowRef = useRef();
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
-  console.log(theme)
   const [address, setAddress] = React.useState('');
   const [ens, setENS] = React.useState('');
   const [ensFetched, setENSFetched] = React.useState(false);
@@ -21,8 +20,6 @@ const Profile = ({isDarkMode}) => {
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
   const { deactivate } = context
-  const { navigationSetup } = useContext(NavigationContext)
-  console.log(navigationSetup)
   const dropdownValues = [
     {
       id: "walletAddress",
@@ -46,6 +43,20 @@ const Profile = ({isDarkMode}) => {
     },
   ];
   
+  React.useEffect(() => {
+    const closeDropdown = (e) => {
+      console.log(e)
+      console.log(toggleArrowRef)
+      if(e.path[1] !== toggleArrowRef.current)
+      {
+        setShowDropdown(false);
+      }
+    }
+
+    document.addEventListener('click',closeDropdown);
+
+    return () => document.removeEventListener('click',closeDropdown);
+  })
   
   React.useEffect(() => {
     if (account && account != '') {
@@ -90,7 +101,9 @@ const Profile = ({isDarkMode}) => {
                 {account.substring(account.length - 6)}
               </>
             )}
-            <ToggleArrowImg onClick={() => setShowDropdown(!showDropdown)} filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
+            <ToggleArrowImg ref={toggleArrowRef}
+              onClick={() => setShowDropdown(!showDropdown)} 
+              filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
               <img
                 alt="arrow"
                 className={`${showDropdown ? "down" : "up"}`}
