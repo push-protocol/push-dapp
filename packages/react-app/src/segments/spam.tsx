@@ -8,6 +8,7 @@ import { envConfig } from "@project/contracts";
 import SearchFilter from '../components/SearchFilter';
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { ScrollItem } from "./ViewChannels";
 import {
   addPaginatedNotifications,
   incrementPage,
@@ -453,18 +454,6 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   return (
     <ThemeProvider theme={themes}>
       <Container>
-      {/* <div ref={modalRef}>
-        <SearchFilter 
-          notifications={allNotif} 
-          filterNotifications={filterNotifications} 
-          filter={filter} reset={reset} 
-          loadFilter={loadFilter} 
-          showFilter={showFilter}
-          setShowFilter={setShowFilter}
-          search={search}
-          setSearch={setSearch}
-        />
-      </div> */}
       <div ref={modalRef}>
         <SearchFilter 
           notifications={allNotif}
@@ -478,13 +467,14 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
           setSearch={setSearch}
         />
         </div>
-      {bgUpdateLoading && (
-          <div style={{ marginTop: "10px" }}>
-            <Oval color="#35c5f3" height={40} width={40} />
-          </div>
-        )}
+      
         {notifications && (
           <Items id="scrollstyle-secondary">
+            {bgUpdateLoading && (
+                <Item padding="10px 20px">
+                   <Oval color="#35c5f3" height={40} width={40} />
+                </Item>
+              )}
             {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
               const {
                 cta,
@@ -565,24 +555,17 @@ const Items = styled.div`
 `;
 // css styles
 const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  font-weight: 200;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  max-height: 100vh;
-  background: ${props => props.theme.mainBg};
-  // padding: 20px;
-  // font-size: 16px;
-  // display: flex;
-  // font-weight: 200;
-  // align-content: center;
-  // align-items: center;
-  // justify-content: center;
-  // width: 100%;
-  // min-height: 40vh;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background: ${props => props.theme.mainBg};
+    font-weight: 200;
+    align-content: center;
+    align-items: stretch;
+    justify-content: center;
+    height: 100%;
+    // margin: 0px 10px;
+    overflow:scroll;
 `;
 
 const Toaster = styled.div`
