@@ -179,10 +179,10 @@ const chainIds = envConfig.allowedNetworks;
           <HeaderTag align="flex-start" overflow="hidden" margin="0px 5px">
             <Span
               textTransform="capitalize"
-              spacing="0.1em"
+              spacing="-0.02em"
               weight="normal"
               padding="8px 20px"
-              size="20px"
+              size="24px"
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
             >
               {headerTag.title}
@@ -196,7 +196,7 @@ const chainIds = envConfig.allowedNetworks;
             style={{ margin: "0 1rem" }}
               checked={isDarkMode}
               onChange={darkModeToggle}
-            size={26}
+            size={28}
             sunColor="#494D5F"
             moonColor="#787E99"
           />

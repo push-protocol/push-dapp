@@ -147,13 +147,13 @@ const Container = styled.button`
 `
 const Wallet = styled.span`
   margin: 0px 10px;
-  padding: 3px 15px;
+  padding: 4px 16px;
   height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   color: ${props => props.color};
   border-radius:17px;
   background: ${props => props.bg};

@@ -37,7 +37,7 @@ function Dropdown(props) {
             <Span
               margin="11px 22px 11px 2px"
               weight="400"
-              size="12px"
+              size="14px"
               textTransform="uppercase"
               color="#fff"
               spacing="1px"
@@ -69,7 +69,7 @@ function Dropdown(props) {
                 color={theme.snackbarBorderText}
                 margin="10px 20px"
                 weight="400"
-                size="14px"
+                size="16px"
                 cursor="pointer"
                 onClick={() => dropdownValue?.function()}
               >
@@ -83,7 +83,7 @@ function Dropdown(props) {
                 rel="nofollow"
                 margin="10px 20px"
                 weight="400"
-                size="14px"
+                size="16px"
                 color={theme.snackbarBorderText}
                 hoverBG="transparent"
               >
