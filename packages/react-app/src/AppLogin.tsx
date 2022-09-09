@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import ReactGA from 'react-ga';
 
-import { envConfig } from '@project/contracts';
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
 import { injected, ledger, portis, walletconnect } from 'connectors';
@@ -22,22 +21,9 @@ import PortisLogoLight from './assets/login/portisLight.svg';
 import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 
-import { H2V2, ItemHV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-import Header from 'sections/Header';
-import Navigation from 'sections/Navigation';
+import { AInlineV2, ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import styled, { useTheme } from 'styled-components';
-import { A, B, C, H2, Image, Item, ItemH, P, Section, Span } from './primaries/SharedStyling';
 
-import NavigationContextProvider from 'contexts/NavigationContext';
-import MasterInterfacePage from 'pages/MasterInterfacePage';
-
-import { themeDark, themeLight } from 'config/Themization';
-
-import { useDispatch, useSelector } from 'react-redux';
-import UserJourneySteps from 'segments/userJourneySteps';
-import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
-
-import InitState from 'components/InitState';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 
 import GLOBALS, { device } from 'config/Globals';
@@ -65,6 +51,16 @@ const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
   ReactGA.pageview('/login');
 
+  // Web3 React logic
+  const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
+  const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
+
+  React.useEffect(() => {
+    if (activatingConnector && activatingConnector === connector) {
+      setActivatingConnector(undefined);
+    }
+  }, [activatingConnector, connector]);
+
   // theme context
   const theme = useTheme();
 
@@ -76,14 +72,14 @@ const AppLogin = ({ toggleDarkMode }) => {
     <Container alignItems="center">
       <BlurBG />
 
-      <Item
+      <ItemHV2
         padding="16px 0"
         position="absolute"
         top="30px"
         right="30px"
         width="fit-content"
-        radius="99px"
-        bg="rgba(179, 178, 236, 0.5)"
+        borderRadius="100%"
+        background="rgba(179, 178, 236, 0.5)"
         zIndex="99"
       >
         <DarkModeSwitch
@@ -93,18 +89,28 @@ const AppLogin = ({ toggleDarkMode }) => {
           size={24}
           sunColor="#fff"
         />
-      </Item>
+      </ItemHV2>
 
       {/* Login Module */}
-      <ItemHV2 padding="30px">
-        <ItemHV2 width="200px" padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} alignSelf="center" flex="initial">
+      <ItemHV2 alignSelf="center" justifyContent="flex-start" flex="auto">
+        {/* Logo */}
+        <ItemHV2
+          width="200px"
+          margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} ${GLOBALS.ADJUSTMENTS.MARGIN.HORIZONTAL}`}
+          alignSelf="center"
+          flex="initial"
+        >
           {theme.scheme == 'light' && <EPNSLogoLight />}
           {theme.scheme == 'dark' && <EPNSLogoDark />}
         </ItemHV2>
+        
+        {/* Login Component */}
         <ItemHV2
           background={theme.default.bg}
+          maxWidth="480px"
           padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-          borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.DEFAULT}
+          borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+          alignSelf="center"
           flex="initial"
           shadow="0px 0px 9px rgba(18, 8, 46, 0.04)"
         >
@@ -112,56 +118,71 @@ const AppLogin = ({ toggleDarkMode }) => {
             textTransform="none"
             color={theme.default.color}
             fontSize="32px"
-            margin="0px"
+            margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0 0 0`}
           >
             Connect a Wallet
           </H2V2>
 
-          {/* <ItemH maxWidth="430px" align="stretch">
+          <ItemVV2 alignSelf="center" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             {Object.keys(web3Connectors).map((name) => {
               const currentConnector = web3Connectors[name].obj;
-              const connected = currentConnector === connector;
-              const disabled =
-                !triedEager ||
-                !!activatingConnector ||
-                connected ||
-                !!error;
-              const image = darkMode ? web3Connectors[name].logodark : web3Connectors[name].logolight;
+              const disabled = currentConnector === connector;
+              const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
               const title = web3Connectors[name].title;
 
               return (
-                <ProviderButton
+                <ButtonV2
                   disabled={disabled}
+                  margin="20px"
+                  padding="30px"
+                  hover={theme.default.hover}
+                  background={theme.default.bg}
+                  borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
+                  minWidth="180px"
+                  alignSelf="stretch"
                   key={name}
                   onClick={() => {
                     setActivatingConnector(currentConnector);
                     activate(currentConnector);
                   }}
                 >
-                  <ProviderImage src={image} />
+                  <ImageV2 src={image} height="68px" width="74px" padding="0px 0px 18px 0px"/>
 
-                  <Span
+                  <SpanV2
                     spacing="0.1em"
                     textTransform="Capitalize"
-                    size="20px"
-                    weight="500"
-                    background={
-                      darkMode
-                        ? themeDark.backgroundBG
-                        : themeLight.backgroundBG
-                    }
-                    color={
-                      darkMode
-                        ? themeDark.fontColor
-                        : themeLight.fontColor
-                    }
+                    fontSize="18px"
+                    fontWeight="500"
+                    color={theme.default.color}
                   >
                     {title}
-                  </Span>
-                </ProviderButton>
+                  </SpanV2>
+                </ButtonV2>
               );
             })}
-          </ItemH> */}
+          </ItemVV2>
+
+          {/* TOS and PRIVACY */}
+          <SpanV2
+            fontSize="14px"
+            padding="0px 20px 10px 20px"
+            color={theme.default.color}
+            lineHeight="140%"
+          >
+            By connecting your wallet, <b>You agree</b> to our <AInlineV2 href="https://epns.io/tos" target="_blank">Terms of Service</AInlineV2> and our <AInlineV2 href="https://epns.io/privacy" target="_blank">Privacy Policy</AInlineV2>.
+          </SpanV2>
+        </ItemHV2>
+
+        {/* Chainsafe Audit and Discord */}
+        <ItemHV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
+          <SpanV2
+            fontSize="14px"
+            padding="25px 15px"
+            lineHeight="140%"
+            color={theme.default.color}
+          >
+            Note: The EPNS protocol has been under development for 1+ year, and completed a <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank"> ChainSafe audit</AInlineV2> in October 2021. However, the mainnet is still a new product milestone. Always DYOR, and anticipate bugs and UI improvements. Learn how to report any bugs in our <AInlineV2 href="https://discord.com/invite/YVPB99F9W5" target="_blank">Discord</AInlineV2>.
+          </SpanV2>
         </ItemHV2>
       </ItemHV2>
     </Container>
@@ -174,15 +195,22 @@ const Container = styled(SectionV2)`
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
-    padding-top: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
   }
 
   @media ${device.mobileM} {
-    padding-top: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
   }
 `;
 
 const PushLogo = styled.div`
   width: 200px;
   padding-bottom: 20px;
+`;
+
+const ProviderImage = styled.img`
+  width: 73px;
+  height: 69px;
+  max-height: 69px;
+  padding-bottom: 18px;
 `;

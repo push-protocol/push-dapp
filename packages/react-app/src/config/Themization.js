@@ -5,7 +5,8 @@ const themeLight = {
   // Default Theme
   default: {
     bg: '#FFF',
-    color: '#000'
+    color: '#000',
+    hover: '#F3F3FF',
   },
 
   // Login Theme
@@ -124,7 +125,8 @@ const themeDark = {
   // Default Theme
   default: {
     bg: '#43485B',
-    color: '#FFF'
+    color: '#FFF',
+    hover: '#00000033',
   },
 
   // Login Theme

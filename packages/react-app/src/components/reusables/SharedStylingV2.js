@@ -12,6 +12,7 @@ export const SectionV2 = styled.section`
   flex-direction: ${(props) => props.flexDirection || 'column'};
   justify-content: ${(props) => props.justifyContent || 'center'};
   margin: ${(props) => props.margin || '0px'};
+  min-height: ${(props) => props.minHeight || 'auto'};
   overflow: ${(props) => props.overflow || 'initial'};
   padding: ${(props) => props.padding || '0px'};
   position: ${(props) => props.position || 'relative'};
@@ -82,6 +83,112 @@ export const H2V2 = styled.h2`
   letter-spacing: ${(props) => props.letterSpacing || "initial"};
   margin: ${(props) => props.margin || "0px"};
   padding: ${(props) => props.padding || "0px"};
-  text-align: ${(props) => props.textAlign || "inherit"};
+  text-align: ${(props) => props.textAlign || "center"};
   text-transform: ${(props) => props.textTransform || "inherit"};
 `;
+
+export const ButtonV2 = styled.button`
+  align-items: ${(props) => props.alignItems || 'center'};
+  align-self: ${(props) => props.alignSelf || 'auto'};
+  background: ${(props) => props.background || "tranparent"};
+  border: ${(props) => props.border || "initial"};
+  border-radius: ${(props) => props.borderRadius || "0px"};
+  color: ${(props) => props.color || themeLight.default.color};
+  cursor: ${(props) => props.color || "pointer"};
+  display: ${(props) => props.display || 'flex'};
+  flex: ${(props) => props.flex || "1"};
+  flex-direction: ${(props) => props.flexDirection || 'column'};
+  font-size: ${(props) => props.fontSize || "inherit"};
+  font-weight: ${(props) => props.fontWeight || "initial"};
+  justify-content: ${(props) => props.justifyContent || 'center'};
+  letter-spacing: ${(props) => props.letterSpacing || "initial"};
+  margin: ${(props) => props.margin || "0px"};
+  max-width: ${(props) => props.maxWidth || 'initial'};
+  min-width: ${(props) => props.minWidth || 'auto'};
+  overflow: ${(props) => props.overflow || "hidden"};
+  padding: ${(props) => props.padding || "0px"};
+  pointer: ${(props) => props.pointer || "hand"};
+  position: ${(props) => props.position || 'relative'};
+  text-decoration: ${(props) => props.textDecoration || 'none'};
+  text-transform: ${(props) => props.textTransform || "initial"};
+  z-index: ${(props) => props.zIndex || "3"};
+
+  &:before {
+    background: ${(props) =>
+      props.hover || (props.bg ? props.bg : "transparent")};
+    bottom: 0;
+    content: "";
+    display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  &:after {
+    background: ${(props) => props.hoverBG || "#000"};
+    bottom: 0;
+    content: "";
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  &:hover:before {
+    display: block;
+  }
+
+  &:hover:after {
+    opacity: 0.08;
+  }
+  &:active:after {
+    opacity: 0.15;
+  }
+
+  & > div {
+    display: flex;
+  }
+`;
+
+export const SpanV2 = styled.span`
+  align-self: ${(props) => props.alignSelf || "auto"};
+  background: ${(props) => props.background || "transparent"};
+  border-radius: ${(props) => props.borderRadius || "initial"};
+  bottom: ${(props) => props.bottom || "auto"};
+  color: ${(props) => props.color || themeLight.default.color};
+  flex: ${(props) => props.flex || "initial"};
+  font-size: ${(props) => props.fontSize || "inherit"};
+  font-weight: ${(props) => props.fontWeight || "300"};
+  left: ${(props) => props.left || "auto"};
+  letter-spacing: ${(props) => props.letterSpacing || "inherit"};
+  line-height: ${(props) => props.lineHeight || "initial"};
+  margin: ${(props) => props.margin || "0px"};
+  padding: ${(props) => props.padding || "0px"};
+  position: ${(props) => props.position || "initial"};
+  right: ${(props) => props.right || "auto"};
+  text-align: ${(props) => props.textAlign || "center"};
+  text-transform: ${(props) => props.textTransform || "inherit"};
+  top: ${(props) => props.top || "auto"};
+  z-index: ${(props) => props.zIndex || "auto"};
+`;
+
+export const ImageV2 = styled.img`
+  display: ${(props) => props.display || 'flex'};
+  height: ${(props) => props.height || "auto"};
+  max-height: ${(props) => props.maxHeight || "initial"};
+  padding: ${(props) => props.padding || "0px"};
+  width: ${(props) => props.width || "100%"};
+`;
+
+export const AInlineV2 = styled.a`
+  background: transparent;
+  color: #e1087f;
+  display: inline;
+  letter-spacing: inherit;
+  padding: 0px;
+  text-transform: initial;
+`

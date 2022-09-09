@@ -25,6 +25,8 @@ import Header from "sections/Header";
 import Navigation from "sections/Navigation";
 import styled from "styled-components";
 import AppLogin from './AppLogin';
+
+import { SectionV2 } from "./components/reusables/SharedStylingV2";
 import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyling";
 
 import NavigationContextProvider from "contexts/NavigationContext";
@@ -93,6 +95,7 @@ export default function App() {
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
+  
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
@@ -171,63 +174,71 @@ export default function App() {
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-      <InitState />
-      <NavigationContextProvider>
-        <Joyride
-          run={run}
-          steps={steps}
-          continuous={tutorialContinous}
-          stepIndex={stepIndex}
-          // hideFooter={true}
-          // primaryProps={false}
-          hideBackButton={true}
-          hideCloseButton={false}
-          disableScrolling={true}
-          disableScrollParentFix={true}
-          // disableFlip={true}
-          // showNextButton={false}
-          showSkipButton={false}
-          disableOverlayClose={true}
-          callback={handleJoyrideCallback}
-          styles={{
-            options: {
-              arrowColor: darkMode
-                ? themeDark.dynamicTutsBg
-                : themeLight.dynamicTutsBg,
-              backgroundColor: darkMode
-                ? themeDark.dynamicTutsBg
-                : themeLight.dynamicTutsBg,
-              overlayColor: darkMode
-                ? themeDark.dynamicTutsBgOverlay
-                : themeLight.dynamicTutsBgOverlay,
-              primaryColor: darkMode
-                ? themeDark.dynamicTutsPrimaryColor
-                : themeLight.dynamicTutsPrimaryColor,
-              textColor: darkMode
-                ? themeDark.dynamicTutsFontColor
-                : themeLight.dynamicTutsFontColor,
-              zIndex: 1000,
-            },
-          }}
-        />
-        {active && (
-          <HeaderContainer>
-            <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
-          </HeaderContainer>
-        )}
 
-        <ParentContainer
-          bg={
-            darkMode
-              ? themeDark.backgroundBG
-              : !active
-              ? themeLight.connectWalletBg
-              : themeLight.backgroundBG
-          }
-          headerHeight={!active ? 0 : GLOBALS.CONSTANTS.HEADER_HEIGHT}
-        >
-          {active && !error && (
-            <>
+      {!active && (
+        <SectionV2 minHeight="100vh">
+          <AppLogin 
+            toggleDarkMode={toggleDarkMode}
+          />
+        </SectionV2>
+      )}
+
+      {active && !error && (
+        <>
+          <InitState />
+          <NavigationContextProvider>
+            <Joyride
+              run={run}
+              steps={steps}
+              continuous={tutorialContinous}
+              stepIndex={stepIndex}
+              // hideFooter={true}
+              // primaryProps={false}
+              hideBackButton={true}
+              hideCloseButton={false}
+              disableScrolling={true}
+              disableScrollParentFix={true}
+              // disableFlip={true}
+              // showNextButton={false}
+              showSkipButton={false}
+              disableOverlayClose={true}
+              callback={handleJoyrideCallback}
+              styles={{
+                options: {
+                  arrowColor: darkMode
+                    ? themeDark.dynamicTutsBg
+                    : themeLight.dynamicTutsBg,
+                  backgroundColor: darkMode
+                    ? themeDark.dynamicTutsBg
+                    : themeLight.dynamicTutsBg,
+                  overlayColor: darkMode
+                    ? themeDark.dynamicTutsBgOverlay
+                    : themeLight.dynamicTutsBgOverlay,
+                  primaryColor: darkMode
+                    ? themeDark.dynamicTutsPrimaryColor
+                    : themeLight.dynamicTutsPrimaryColor,
+                  textColor: darkMode
+                    ? themeDark.dynamicTutsFontColor
+                    : themeLight.dynamicTutsFontColor,
+                  zIndex: 1000,
+                },
+              }}
+            />
+
+            <HeaderContainer>
+              <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
+            </HeaderContainer>
+
+            <ParentContainer
+              bg={
+                darkMode
+                  ? themeDark.backgroundBG
+                  : !active
+                  ? themeLight.connectWalletBg
+                  : themeLight.backgroundBG
+              }
+              headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
+            >
               <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                 <Navigation />
               </LeftBarContainer>
@@ -236,41 +247,15 @@ export default function App() {
                 {/* Shared among all pages, load universal things here */}
                 <MasterInterfacePage />
               </ContentContainer>
-            </>
-          )}
-
-          {!active && (
-            <AppLogin 
-              toggleDarkMode={toggleDarkMode}
-            />
-          )}
-        </ParentContainer>
-      </NavigationContextProvider>
+            </ParentContainer>
+          </NavigationContextProvider>
+        </>
+      )}
     </ThemeProvider>
   );
 }
 
-// CSS STYLES
-const StyledItem = styled(Item)`
-  font-size: 14px;
-  font-weight:400;
-  letter-spacing: 0.4px;
-  display: block;
-  background: transparent;
-  color: ${props => props.theme.color};
-  width: 60rem;
-  text-align:center;
-  line-height: 20px;
-  align-items: center;
-
- 
-
-  @media(max-width:400px){
-    width: auto;
-    text-align:center;
-  }
-`;
-
+// CSS STYLE
 
 const HeaderContainer = styled.header`
   left: 0;

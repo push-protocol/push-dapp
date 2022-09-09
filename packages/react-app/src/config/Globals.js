@@ -59,8 +59,15 @@ export default {
           MOBILE: '20px',
         }
       },
+      MARGIN: {
+        VERTICAL: '30px',
+        HORIZONTAL: '20px'
+      },
       RADIUS: {
-        DEFAULT: '32px',
+        LARGE: '32px',
+        MID: '24px',
+        SMALL: '16px',
+        MINI: '12px'
       }
     },
   
