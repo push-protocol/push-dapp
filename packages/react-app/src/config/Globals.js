@@ -51,10 +51,12 @@ export default {
     },
   
     ADJUSTMENTS: {
+      MODULE_BOX_SHADOW: 'rgb(0 0 0 / 10%) 0px 15px 20px -5px',
+
       PADDING: {
         DEFAULT: '20px',
         MINI_MODULES: {
-          DESKTOP: '48px 30px 30px 30px',
+          DESKTOP: '48px 30px 48px 30px',
           TABLET: '25px',
           MOBILE: '20px',
         }

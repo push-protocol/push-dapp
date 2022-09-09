@@ -1,30 +1,30 @@
 import React from "react";
-import { Navigate, Routes, Route,useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import styled from "styled-components";
-import { Item, Anchor } from "../primaries/SharedStyling";
+import { Anchor, Item } from "../primaries/SharedStyling";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 
 import { VscClose } from 'react-icons/vsc';
 
+import ChannelDashboardPage from "pages/ChannelDashboardPage";
 import InboxPage from "pages/InboxPage";
+import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
+import SendNotifs from "pages/SendNotifs";
 import SpamPage from "pages/SpamPage";
 import ViewChannelsPage from "pages/ViewChannelsPage";
-import ChannelDashboardPage from "pages/ChannelDashboardPage";
-import SendNotifs from "pages/SendNotifs";
-import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
 
-import GovernancePage from "pages/GovernancePage";
+import GovPage from "pages/GovPage";
 
-import YieldFarmingPage from "pages/YieldFarmingPage";
-import NFTPage from "pages/NFTPage";
 import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
-import NotAvailablePage from "./NotAvailablePage";
-import TutorialPage from "pages/TutorialPage";
 import FAQPage from "pages/FAQPage";
+import NFTPage from "pages/NFTPage";
+import TutorialPage from "pages/TutorialPage";
+import YieldFarmingPage from "pages/YieldFarmingPage";
+import NotAvailablePage from "./NotAvailablePage";
 
 import { SupportPage } from "pages/SupportPage";
 
@@ -55,7 +55,7 @@ function MasterInterfacePage() {
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
 
-          <Route path="govern" element={<GovernancePage />} />
+          <Route path="govern" element={<GovPage />} />
 
           <Route path="yield" element={<YieldFarmingPage />} />
           <Route path="rockstar" element={<NFTPage />} />
@@ -114,35 +114,30 @@ function MasterInterfacePage() {
 
 // css style
 const Container = styled.div`
+  display: flex;
   flex: 1;
   flex-direction: column;
-  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 20px - ${props => props.theme.interfaceTopPadding});
-  padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px;
+  min-height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${props => props.theme.interfaceTopPadding});
+  /* Padding to be handled by Modules individually */
+  /* padding: ${props => props.theme.interfaceTopPadding} 20px 20px 20px; */
   align-items: stretch;
 
+  background-image: url('./svg/${props => props.theme.scheme === "dark" ? "dark" : "light"}bg.svg');
+  background-size: 100% 100%;
+
+  position: relative;
 `;
 
 const Interface = styled(Item)`
-  // flex: 1;
-  // width:50%;
-  width: ${props => props.location === '/send' ? '70%' : '100%'};
+  flex: 1;
   display: flex;
   align-items: stretch;
 
-  box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  border: 1px solid ${props => props.theme.interfaceBorder};
+  // box-shadow: 0px 15px 20px -5px rgba(0, 0, 0, 0.1);
+  // border-radius: 20px;
+  // border: 1px solid ${props => props.theme.interfaceBorder};
 
-  // margin: 15px 15px 15px 0px;
-  margin: ${props => props.location === '/send' ? '15px auto' : '15px 15px 15px 0px'};
-  overflow: hidden;
-
-
-  @media (max-width: 992px) {
-    // margin: 15px 0px;
-    width:100%;
-    margin: ${props => props.location === '/send' ? '15px auto' : '15px 0px'};
-  }
+  overflow: visible;
 `
 
 const PreviewOuter = styled.div`
