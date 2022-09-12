@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import {Oval} from 'react-loader-spinner';
-import { FaGithub, FaTelegramPlane, FaMedium, FaDiscord, FaTwitter } from 'react-icons/fa';
+import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
+import { Oval } from 'react-loader-spinner';
 
-import styled, { useTheme, css } from "styled-components";
-import {Section, Item, ItemH, AnchorLink as Anchor, Span } from 'primaries/SharedStyling';
+import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import styled, { css, useTheme } from "styled-components";
 
-import NavigationButton from 'components/NavigationButton';
 import NavButton from 'components/NavButton';
+import NavigationButton from 'components/NavigationButton';
 import navigationList from "config/NavigationList";
 
 import { NavigationContext } from "contexts/NavigationContext";
@@ -16,14 +16,14 @@ import { NavigationContext } from "contexts/NavigationContext";
 import GLOBALS from "config/Globals";
 
 import { useDispatch, useSelector } from "react-redux";
-import {incrementStepIndex, setDeveloperOpen , setTutorialContinous , setCommunicateOpen} from "../redux/slices/userJourneySlice";
+import { incrementStepIndex, setCommunicateOpen, setDeveloperOpen, setTutorialContinous } from "../redux/slices/userJourneySlice";
 
-import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
 
-import {setCanSend,SEND_NOTIFICATION_STATES} from "redux/slices/sendNotificationSlice";
 import { postReq } from "api";
-import {NavigationLoaderButton} from 'components/NavigationLoaderButton';
+import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
+import { SEND_NOTIFICATION_STATES, setCanSend } from "redux/slices/sendNotificationSlice";
 
 // Create Header
 function Navigation() {
@@ -60,8 +60,8 @@ function Navigation() {
       if (channelDetails !== 'unfetched' && channelDetails != null) {
         // navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails['name'];
         navigationSetup.secondary[0].data.name = channelDetails.name;
-        navigationSetup.secondary[0].data.src = 'svg/Home-off.svg';
-        navigationSetup.secondary[0].data.activeSrc = 'svg/Home-on.svg';
+        navigationSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
+        navigationSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
         // console.log(navigationSetup);
       } else {
         // navigationSetup.primary[1].data.drilldown[0].data.name = "Create Channel";

@@ -1,11 +1,11 @@
-import { themeLight, themeDark } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import { themeDark, themeLight } from 'config/Themization';
 
 const NavigationList = {
   primary: {
     inbox: {
-      src: 'svg/Inbox-off.svg',
-      activeSrc: 'svg/Inbox-on.svg',
+      src: 'navigation/inboxOffIcon.svg',
+      activeSrc: 'navigation/inboxOnIcon.svg',
       iconFactory: null,
       name: 'Inbox',
       title: 'Inbox',
@@ -27,8 +27,8 @@ const NavigationList = {
       }
     },
     channels: {
-      src: 'svg/Channels-off.svg',
-      activeSrc: 'svg/Channels-on.svg',
+      src: 'navigation/channelsOffIcon.svg',
+      activeSrc: 'navigation/channelsOnIcon.svg',
       iconFactory: null,
       name: 'Channels',
       title: 'Browse Channels',
@@ -54,8 +54,8 @@ const NavigationList = {
   secondary: {
     createChannel: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.CREATE_CHANNEL,
-      src: 'svg/create-channel-icon.svg',
-      activeSrc: 'svg/create-channel-icon.svg',
+      src: 'navigation/createChannelIcon.svg',
+      activeSrc: 'navigation/createChannelIcon.svg',
       iconFactory: null,
       name: 'Create Channel',
       title: 'Create Channel',
@@ -78,8 +78,8 @@ const NavigationList = {
     },
     sendNotifs: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.SEND_NOTIFS,
-      src: 'svg/Send-off.svg',
-      activeSrc: 'svg/Send-on.svg',
+      src: 'navigation/sendNotifOffIcon.svg',
+      activeSrc: 'navigation/sendNotifOnIcon.svg',
       iconFactory: null,
       name: 'Send Notifications',
       title: 'Send Notifications',
@@ -103,8 +103,8 @@ const NavigationList = {
   },
   third: {
     receiveNotifs: {
-      src: 'svg/Notifs-off.svg',
-      activeSrc: 'svg/Notifs-on.svg',
+      src: 'navigation/receiveNotifOffIcon.svg',
+      activeSrc: 'navigation/receiveNotifOnIcon.svg',
       iconFactory: null,
       name: 'Receive Notifications',
       title: 'Receive Notifications',
@@ -127,8 +127,8 @@ const NavigationList = {
     },
     governance: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
-      src: 'svg/Gov-off.svg',
-      activeSrc: 'svg/Gov-on.svg',
+      src: 'navigation/govOffIcon.svg',
+      activeSrc: 'navigation/govOnIcon.svg',
       iconFactory: null,
       name: 'Governance',
       title: 'Governance',
@@ -150,8 +150,8 @@ const NavigationList = {
       }
     },
     incentives: {
-      src: 'svg/inc-off.svg',
-      activeSrc: 'svg/inc-on.svg',
+      src: 'navigation/incentivesOffIcon.svg',
+      activeSrc: 'navigation/incentivesOnIcon.svg',
       iconFactory: null,
       name: 'Incentives',
       title: 'Check Incentives Tab',
@@ -163,8 +163,8 @@ const NavigationList = {
       hasMenuLogic: true,
       drilldown: {
         yield: {
-          src: 'svg/yield-icon.svg',
-          activeSrc: 'svg/yield-icon.svg',
+          src: 'navigation/yieldIcon.svg',
+          activeSrc: 'navigation/yieldIcon.svg',
           iconFactory: null,
           name: 'Yield Farming',
           title: 'Yield Farming',
@@ -186,8 +186,8 @@ const NavigationList = {
           }
         },
         rockstars: {
-          src: 'svg/rockstars-icon.svg',
-          activeSrc: 'svg/rockstars-icon.svg',
+          src: 'navigation/rockstarsIcon.svg',
+          activeSrc: 'navigation/rockstarsIcon.svg',
           iconFactory: null,
           name: 'Rockstars of EPNS',
           title: 'Check Rockstars of EPNS',
@@ -209,8 +209,8 @@ const NavigationList = {
           }
         },
         airdrop: {
-          src: 'svg/airdrop-icon.svg',
-          activeSrc: 'svg/airdrop-icon.svg',
+          src: 'navigation/airdropIcon.svg',
+          activeSrc: 'navigation/airdropIcon.svg',
           iconFactory: null,
           name: 'Gratitude Drops',
           title: 'Check Gratitude Drop',
@@ -234,8 +234,8 @@ const NavigationList = {
       }
     },
     more: {
-      src: 'svg/More-off.svg',
-      activeSrc: 'svg/More-on.svg',
+      src: 'navigation/moreOffIcon.svg',
+      activeSrc: 'navigation/moreOnIcon.svg',
       iconFactory: null,
       name: 'More',
       title: 'More',
@@ -247,8 +247,8 @@ const NavigationList = {
       hasMenuLogic: true,
       drilldown: {
         faq: {
-          src: 'svg/faq-icon.svg',
-          activeSrc: 'svg/faq-icon.svg',
+          src: 'navigation/faqIcon.svg',
+          activeSrc: 'navigation/faqIcon.svg',
           iconFactory: null,
           name: 'FAQs',
           title: 'Checkout Frequently Asked Questions',
@@ -270,8 +270,8 @@ const NavigationList = {
           }
         },
         livewalkthrough: {
-          src: 'svg/walkthrough-icon.svg',
-          activeSrc: 'svg/walkthrough-icon.svg',
+          src: 'navigation/walkthroughIcon.svg',
+          activeSrc: 'navigation/walkthroughIcon.svg',
           iconFactory: null,
           name: 'Live Walkthrough',
           title: 'Live Walkthrough',
@@ -293,8 +293,8 @@ const NavigationList = {
           }
         },
         support: {
-          src: 'svg/support-icon.svg',
-          activeSrc: 'svg/support-icon.svg',
+          src: 'navigation/supportIcon.svg',
+          activeSrc: 'navigation/supportIcon.svg',
           iconFactory: null,
           name: 'Support',
           title: 'Open a support ticket',

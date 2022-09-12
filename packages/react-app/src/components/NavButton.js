@@ -1,11 +1,11 @@
 import React from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
-import styled, { useTheme, css } from 'styled-components';
-import { ItemH, Span, Anchor, RouterLink, Image } from 'primaries/SharedStyling';
+import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
+import styled, { css, useTheme } from 'styled-components';
 
-import { themeDark } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import { themeDark } from 'config/Themization';
 
 // Create Header
 function NavButton({ item, data, sectionID, active }) {
@@ -59,9 +59,9 @@ function NavButton({ item, data, sectionID, active }) {
     >
       <ItemH align="center">
         {!active ? (
-          <SelectedIcon src={`./${data.src}`} margin="0 5px" alt={`${data.alt}`} active={active} />
+          <SelectedIcon src={require(`../assets/${data.src}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
         ) : (
-          <SelectedIcon src={`./${data.activeSrc}`} margin="0 5px" alt={`${data.alt}`} active={active} />
+          <SelectedIcon src={require(`../assets/${data.activeSrc}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
         )}
 
         <Span
