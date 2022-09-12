@@ -346,7 +346,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ._signTypedData(EPNS_DOMAIN, type, message);
       // subscribeToast.showToast("Waiting for Confirmation...");
 
-      subscribeToast.showToast("Waiting for Confirmation...");
+      subscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
 
       if (run) {
         const type = {
@@ -368,12 +368,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           ._signTypedData(EPNS_DOMAIN, type, message);
         
         console.log("in run");
-        subscribeToast.updateToast(
-          "Success",
-          "Successfully opted into channel !",
-          "SUCCESS",
-          (size) => <MdCheckCircle size={size} color="green" />
-        );
+        subscribeToast.showMessageToast({
+          toastTitle:"Success", 
+          toastMessage: "Successfully opted into channel !", 
+          toastType: "SUCCESS", 
+          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+        })
 
         dispatch(
           addNewWelcomeNotif({
@@ -406,21 +406,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           setSubscribed(true);
           setMemberCount(memberCount + 1);
 
-          subscribeToast.updateToast(
-            "Success",
-            "Successfully opted into channel !",
-            "SUCCESS",
-            (size) => <MdCheckCircle size={size} color="green" />
-          );
+          subscribeToast.showMessageToast({
+            toastTitle:"Success", 
+            toastMessage: "Successfully opted into channel !", 
+            toastType: "SUCCESS", 
+            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+        })
         },
         onError: () => {
           console.error('opt in error');
-          subscribeToast.updateToast(
-            "Error",
-            `There was an error opting into channel`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
+          subscribeToast.showMessageToast({
+            toastTitle:"Error", 
+            toastMessage: `There was an error opting into channel`, 
+            toastType:  "ERROR", 
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
         },
         env: envConfig['env']
       })
@@ -447,12 +447,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   setTxInProgress(false);
       // });
     } catch (err) {
-      subscribeToast.updateToast(
-        "Error",
-        `There was an error opting into channel ( ${err.message} )`,
-        "ERROR",
-        (size) => <MdError size={size} color="red" />
-      );
+      subscribeToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `There was an error opting into channel ( ${err.message} )`, 
+        toastType: "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+      })
 
       console.log(err);
     } finally {
@@ -506,7 +506,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   .getSigner(account)
       //   ._signTypedData(EPNS_DOMAIN, type, message);
 
-      unsubscribeToast.showToast("Waiting for Confirmation...");
+      unsubscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
 
       const _signer = await library.getSigner(account);
       await EpnsAPI.channels.unsubscribe({
@@ -518,21 +518,21 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           setSubscribed(false);
           setMemberCount(memberCount - 1);
 
-          unsubscribeToast.updateToast(
-            "Success",
-            "Successfully opted out of channel !",
-            "SUCCESS",
-            (size) => <MdCheckCircle size={size} color="green" />
-          );
+          unsubscribeToast.showMessageToast({
+            toastTitle:"Success", 
+            toastMessage: "Successfully opted out of channel !", 
+            toastType: "SUCCESS", 
+            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+          })
         },
         onError: () => {
           console.error('opt out error');
-          unsubscribeToast.updateToast(
-            "Error",
-            `There was an error opting out of channel`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
+          unsubscribeToast.showMessageToast({
+            toastTitle:"Error", 
+            toastMessage: `There was an error opting out of channel`, 
+            toastType: "ERROR", 
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
         },
         env: envConfig['env']
       })
@@ -583,12 +583,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //     setTxInProgress(false);
       //   });
     } catch (err) {
-      unsubscribeToast.updateToast(
-        "Error",
-        `There was an error opting out of channel ( ${err.message} )`,
-        "ERROR",
-        (size) => <MdError size={size} color="red" />
-      );
+      unsubscribeToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `There was an error opting out of channel ( ${err.message} )`, 
+        toastType: "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+      })
 
       console.log(err);
     } finally {

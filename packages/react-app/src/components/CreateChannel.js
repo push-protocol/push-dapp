@@ -183,7 +183,7 @@ function CreateChannel() {
     setProgress(0);
     console.log(`input is ${input}`);
     // const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
-    channelToast.showToast("Waiting for Confirmation...");
+    channelToast.showLoaderToast({ loaderMessage: "Waiting for Confirmation..."});
 
     setProcessingInfo("Payload Uploaded");
     setProgressInfo(
@@ -247,12 +247,12 @@ function CreateChannel() {
       let txCheck = await library.waitForTransaction(tx.hash);
 
       if (txCheck.status === 0) {
-        channelToast.updateToast(
-          "Error",
-          `There was an error creating the channel`,
-          "ERROR",
-          (size) => <MdError size={size} color="red" />
-        );
+        channelToast.showMessageToast({
+          toastTitle:"Error", 
+          toastMessage: `There was an error creating the channel`, 
+          toastType:  "ERROR", 
+          getToastIcon: (size) => <MdError size={size} color="red" />
+        })
 
         setProcessing(3);
         setTxStatus(0);
@@ -284,22 +284,22 @@ function CreateChannel() {
       console.log("hello", err);
         if (err.code === 4001) {
           // EIP-1193 userRejectedRequest error
-          channelToast.updateToast(
-            "Error",
-            `User denied message signature.`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
+          channelToast.showMessageToast({
+            toastTitle:"Error", 
+            toastMessage: `User denied message signature.`, 
+            toastType:  "ERROR", 
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
           setStepFlow(3);
           setProcessing(0);
           setUploadDone(false);
         } else {
-          channelToast.updateToast(
-            "Error",
-            `There was an error creating the channel`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
+          channelToast.showMessageToast({
+            toastTitle:"Error", 
+            toastMessage: `There was an error creating the channel`, 
+            toastType:  "ERROR", 
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
 
           console.log("Error --> %o", err);
           console.log({ err });

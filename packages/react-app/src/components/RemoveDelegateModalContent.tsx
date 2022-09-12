@@ -29,15 +29,23 @@ const RemoveDelegateModalContent = ({onConfirm: removeDelegate, onClose, toastOb
         .then(async (tx) => {
             console.log(tx);
       
-            toastObject.showToast("");
-            toastObject.updateToast("Delegate Removed", "Delegate has been removed successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+            toastObject.showMessageToast({
+                toastTitle:"Delegate Removed", 
+                toastMessage: "Delegate has been removed successfully", 
+                toastType: "SUCCESS", 
+                getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+            })
             onClose();
           })
           .catch((err) => {
             console.log({err})
-      
-            toastObject.showToast("");
-            toastObject.updateToast("Transaction Failed", "Removing a delegate failed.", "ERROR", (size) => <MdError size={size} color="red" />)
+            
+            toastObject.showMessageToast({
+                toastTitle:"Transaction Failed", 
+                toastMessage: "Removing a delegate failed.", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            })
           }).finally(()=>{
             setIsLoading(false);
         });
