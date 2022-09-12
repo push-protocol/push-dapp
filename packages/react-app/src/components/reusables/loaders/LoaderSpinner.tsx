@@ -1,7 +1,7 @@
 import { ReactComponent as CheckmarkSVG } from 'assets/reusables/loaders/checkmark.svg';
 
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
-import { Image, Item, ItemH, Section, Span } from 'components/SharedStyling';
+import { Image, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import styled, { css, keyframes } from 'styled-components';
 
 import GLOBALS from "config/Globals";

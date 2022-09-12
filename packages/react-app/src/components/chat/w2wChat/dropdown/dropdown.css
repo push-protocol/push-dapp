@@ -1,0 +1,71 @@
+.dropdown_container{
+    z-index: 800;
+}
+.dropdownIcon{
+    overflow: hidden;
+    cursor: pointer;
+}
+.dropdown_menu{
+    position: absolute;
+   
+    background-color: white;
+   
+    color: black;
+    left: 6rem;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 2px solid black;
+    opacity: 0;
+    top: 2rem;
+    visibility: hidden;
+    
+
+}
+.dropdown_menu span{
+    font: 0.9;
+    width: 100%;
+    display: flex;
+    font-weight: bold;
+    justify-content: center;
+    position: relative;
+}
+.dropdown_menu.active{
+    visibility: visible;
+    opacity: 1;
+}
+.dropdown_menu ul li{
+    list-style: none;
+    position: relative;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    color: rgb(59, 69, 141);
+    overflow: hidden;
+    position: relative;
+    font-size: 0.8rem;
+    width: 100%;
+    text-align: center;
+    left: -1.5rem;
+    font-family: sans-serif;
+}
+.dropdown_menu ul li i{
+    font-size: 0.9rem;
+}
+.Copied li{
+    color: green;   
+}
+
+.dropdown_menu ul img{
+    width: 100%;
+    left: 0.2rem;
+    top: 1rem;
+    position: relative;
+    background: white;
+}
+
+.dropdown_menu ul li:hover{
+    color: rgb(42, 50, 109);
+    cursor: pointer;
+}

@@ -1,17 +1,6 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
-import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
-import LedgerLogoDark from './assets/login/ledgerDark.svg';
-import LedgerLogoLight from './assets/login/ledgerLight.svg';
-import MMLogoDark from './assets/login/metamaskDark.svg';
-import MMLogoLight from './assets/login/metamaskLight.svg';
-import PortisLogoDark from './assets/login/portisDark.svg';
-import PortisLogoLight from './assets/login/portisLight.svg';
-import WCLogoDark from './assets/login/wcDark.svg';
-import WCLogoLight from './assets/login/wcLight.svg';
-
 import { envConfig } from "@project/contracts";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
@@ -46,25 +35,6 @@ import * as dotenv from "dotenv";
 
 
 dotenv.config();
-
-// define the different type of connectors which we use
-const web3Connectors = {
-  Injected: {
-    obj: injected,
-    logolight: MMLogoLight,
-    logodark: MMLogoDark,
-    title: "Metamask",
-  },
-  WalletConnect: {
-    obj: walletconnect,
-    logolight: WCLogoLight,
-    logodark: WCLogoDark,
-    title: "Wallet Connect",
-  },
-  // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
-  Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: "Ledger" },
-  Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: "Portis" },
-};
 
 export default function App() {
 

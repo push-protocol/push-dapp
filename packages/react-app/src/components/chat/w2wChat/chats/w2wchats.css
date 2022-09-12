@@ -1,0 +1,207 @@
+.chatsBody {
+  background-color: aquamarine;
+}
+.chat {
+  display: flex;
+  border-radius: 15px;
+  flex-direction: column;
+  margin: 7px 0px;
+}
+
+.sent {
+  flex-direction: row-reverse;
+}
+.received {
+  flex-direction: row;
+}
+.chatTop {
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+}
+.chatTop img {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+.chatImg {
+  width: 10%;
+  border-radius: 20%;
+  margin-left: 10px;
+}
+.replyIconBody {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  background: transparent;
+}
+.w2wchatContent {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+.chatText {
+  max-width: 600px;
+  margin-left: 10px;
+  font-weight: 400;
+  /* display: flex; */
+  flex-direction: row;
+  position: relative;
+  font-family: Helvetica Neue;
+  font-size: 1rem;
+}
+.chatText a {
+  color: white;
+}
+.chatText p {
+  /* max-width: 80%; */
+  position: relative;
+  word-wrap: break-word;
+  left: -0.5rem;
+  margin-bottom: 6px;
+}
+.chatText span {
+  font-size: 0.8rem;
+  color: black;
+  /* width: 6rem; */
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  align-items: flex-end;
+  top: -1rem;
+  opacity: 0.8;
+  align-self: flex-end;
+}
+.chatDetail {
+  display: flex;
+  flex-direction: row;
+}
+
+.chatOwner {
+  font-weight: 450;
+  font-size: 1.2rem;
+  margin-left: 10px;
+  position: relative;
+  top: -1.2rem;
+}
+.chatTime {
+  font-size: 0.9rem;
+  margin-left: 10px;
+  margin-top: 1px;
+  font-weight: 350;
+}
+
+.w2wmsgshared {
+  position: relative; /* Setup a relative container for our psuedo elements */
+  max-width: 300px;
+  padding-right: 8px;
+  word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
+  border-radius: 25px;
+}
+
+.w2wmsgsharedspan {
+  position: relative; /* Setup a relative container for our psuedo elements */
+  max-width: 300px;
+
+  word-wrap: break-word; /* Make sure the text wraps to multiple lines if long */
+}
+.w2wnoTail {
+  margin-bottom: 2px;
+}
+.w2wnoTail::before {
+  opacity: 0;
+}
+.w2wnoTail::after {
+  opacity: 0;
+}
+.w2wmsgshared::before {
+  width: 20px;
+}
+
+.w2wmsgshared:after {
+  width: 26px;
+  /* All tails have the same bg cutout */
+}
+
+.w2wmsgshared:before,
+.w2wmsgshared:after {
+  position: absolute;
+  bottom: 0;
+  height: 25px; /* height of our bubble "tail" - should match the border-radius above */
+  content: '';
+}
+
+.w2wmsgsent {
+  margin-left: auto;
+  margin-right: 0;
+  color: white;
+  background-color: #0b93f6;
+}
+.w2wImgsent {
+  margin-left: auto;
+  margin-right: 0;
+}
+.w2wReactionSent {
+  opacity: 0;
+  visibility: hidden;
+}
+.w2wReactionReceived {
+  align-items: flex-start;
+  color: gray;
+  opacity: 0;
+  visibility: hidden;
+}
+.w2wmsg:hover .w2wReactionSent {
+  opacity: 1;
+
+  visibility: visible;
+}
+.w2wImgsent img:hover,
+.w2wImgreceived img:hover {
+  background-color: black;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.w2wImgreceived {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.w2wmsgsent::before {
+  right: -7px;
+  background-color: #0b93f6;
+  border-bottom-left-radius: 26px 24px;
+}
+.w2wImgsent::before,
+.w2wReactionSent::before {
+  right: -7px;
+  border-bottom-left-radius: 36px 34px;
+}
+.w2wmsgsent::after {
+  right: -26px;
+  border-bottom-left-radius: 20px;
+}
+.w2wImgsent::after,
+.w2wReactionSent::after {
+  right: -26px;
+  border-bottom-left-radius: 20px;
+}
+.w2wmsgreceived {
+  margin-left: 0;
+  margin-right: auto;
+  color: black;
+  background: #e5e5ea;
+}
+.w2wmsgreceived::before {
+  left: -10px;
+  background-color: #e5e5ea;
+  border-bottom-right-radius: 16px 14px;
+}
+.w2wImgreceived::before {
+  left: -10px;
+  border-bottom-right-radius: 16px 14px;
+}
+.w2wmsgreceived::after {
+  left: -29px;
+
+  border-bottom-right-radius: 10px;
+}

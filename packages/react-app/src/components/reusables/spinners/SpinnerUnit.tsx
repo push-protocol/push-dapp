@@ -1,5 +1,5 @@
 import { ReactComponent as SpinnerSVG } from 'assets/reusables/spinners/spinner.svg';
-import { Image, Item, Section } from 'components/SharedStyling';
+import { Image, Item, Section } from 'primaries/SharedStyling';
 import styled, { keyframes } from 'styled-components';
 
 // Create Spinner

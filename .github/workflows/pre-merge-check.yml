@@ -1,0 +1,14 @@
+name: pre-merge-check
+on: 
+  pull_request:
+    types: [opened, unopened]
+jobs:
+  pull-tester:
+    runs-on: ubuntu-18.04
+    steps:
+
+      - name: check out git repo
+        uses: actions/checkout@v3
+
+      - name: run version compare script
+        run: bash ./.github/workflows/scripts/version-check.sh 
