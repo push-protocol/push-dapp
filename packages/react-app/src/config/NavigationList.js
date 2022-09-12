@@ -49,7 +49,30 @@ const NavigationList = {
           fg: themeDark.headerTagFg
         }
       }
-    }
+    },
+    chat: {
+      src: 'navigation/chatOffIcon.svg',
+      activeSrc: 'navigation/chatOnIcon.svg',
+      iconFactory: null,
+      name: 'Chat',
+      title: 'Chat',
+      alt: 'Open Chat',
+      href: '/chat',
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      headerTag: {
+        title: 'Chat',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
   },
   secondary: {
     createChannel: {

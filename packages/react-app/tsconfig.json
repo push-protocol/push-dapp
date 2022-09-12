@@ -17,6 +17,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    // "jsx": "react", // From w2w
+    // "baseUrl": "src",
+    // "noImplicitAny": false,
+    // "checkJs": false,
+    // "noFallthroughCasesInSwitch": true // from w2w ends
     "jsx": "preserve",
     "baseUrl": "src",
     "noImplicitAny": false,
@@ -24,6 +29,7 @@
   },
   "include": [
     "next-env.d.ts",
+    "src/config/custom.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "src/segments/ViewChannels.jsx",

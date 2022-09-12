@@ -50,3 +50,6 @@ export const toolingPostReq = async (path, obj) => {
     throw error.response.data;
   }
 };
+
+export * from './w2w'
+export * from './ipfs'

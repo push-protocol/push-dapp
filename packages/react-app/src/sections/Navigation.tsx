@@ -443,7 +443,7 @@ function Navigation() {
                       }}      
                       id={data.id}          
                     >
-                      <NavigationButton
+                      <NavButton
                         item={section}
                         data={data}
                         sectionID={sectionID}

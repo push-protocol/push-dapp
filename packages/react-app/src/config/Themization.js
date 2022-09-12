@@ -1,6 +1,24 @@
 // Define what props.theme will look like
 const themeLight = {
-  scheme: 'light',
+  scheme: "light",
+
+  // Default Theme
+  default: {
+    bg: '#FFF',
+    color: '#000',
+    hover: '#F3F3FF',
+  },
+
+  // Login Theme
+  login: {
+    bg: '#DBEBFF',
+    blur1: '#F6E4FF',
+    blur2: '#CECDFF'
+  },
+
+  // Default Background Theme
+  defaultBG: '#FFFFFF',
+
   // Section Theme
   sectionBorderBg: 'transparent',
 
@@ -96,24 +114,60 @@ const themeLight = {
 
   createColor: '#808080',
 
+  // Modals
+  modalContentBackground: "white",
+  modalBackdropBackground: `rgba(255,255,255,0.4)`,
+  modalBorderColor: "#E5E8F6",
+  modalMessageColor: "black",
+  modalIconColor: "#657795",
+  modalLoaderPrimary: "red",
+  modalLoaderSecondary: "white",
+  modalBackdropZIndex: 1000,
+
   // Toast Notifications
-  toastTextColor: '#000',
-  toastBorderColor: '#F4F3FF'
+  toastTextColor: "#000",
+  toastBorderColor: "#F4F3FF",
+  toastShadowColor: "#ccc",
+
+  // Profile
+  profileBG:"linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)",
+  profileText:"#fff",
+
+  //Snackbar
+  snackbarBorderColor:"#E5E8F7",
+  snackbarBorderText:"#000",
+  snackbarBorderIcon:"none",
 };
 
 const themeDark = {
-  scheme: 'dark',
+  scheme: "dark",
+  
+  // Default Theme
+  default: {
+    bg: '#43485B',
+    color: '#FFF',
+    hover: '#00000033',
+  },
+
+  // Login Theme
+  login: {
+    bg: '#000000',
+    blur1: '#E845A322',
+    blur2: '#E845A322'
+  },
+  
+
   // Section Theme
   sectionBorderBg: '#333',
 
   // Header Theme
-  headerBg: '#000',
-  headerTagBg: '#fff',
-  headerTagFg: '#000',
+  headerBg: "#2F3137",
+  headerTagBg: "#fff",
+  headerTagFg: "#fff",
 
   headerIconsBg: '#fff',
 
-  // Nav Menu
+  // Nav Menu 
   navMenuBg: '#00000066',
   navText: '#B6BCD6',
   activeNav: '#404650;',
@@ -135,13 +189,14 @@ const themeDark = {
   interfaceSkeleton: '#414141',
 
   // Main Theme
-  backgroundBG: '#222',
-  backgroundBGLucid: '#000000cc',
-  mainBg: '#000',
-  fontColor: '#fff',
-  fontColorSecondary: '#ffffff99',
-  scrollBg: '#333',
-  borderBg: '#333',
+  connectWalletBg: "#222",
+  backgroundBG: "#222",
+  backgroundBGLucid: "#000000cc",
+  mainBg: "#000",
+  fontColor: "#fff",
+  fontColorSecondary: "#ffffff99",
+  scrollBg: "#333",
+  borderBg: "#333",
 
   // View Channels Theme
   // -- View Channel Header Theme
@@ -201,12 +256,32 @@ const themeDark = {
 
   createColor: '#fff',
 
+  // Modals
+  modalContentBackground: "#282a2e",
+  modalBackdropBackground: `rgba(0,0,0,0.4)`,
+  modalBorderColor: "#4A4F67",
+  modalMessageColor: "#B6BCD6",
+  modalIconColor: "#787E99",
+  modalLoaderPrimary: "red",
+  modalLoaderSecondary: "white",
+  modalBackdropZIndex: 1000,
+
   // Toast Notifications
-  toastTextColor: '#B6BCD6',
-  toastBorderColor: '#4A4F67'
+  toastTextColor: "#B6BCD6",
+  toastBorderColor: "#4A4F67",
+  toastShadowColor: "#00000005",
+  
+  //Profile
+  profileBG:"#2F3137",
+  profileText:"#B6BCD6",
+
+  //Snackbar
+  snackbarBorderColor:"#4A4F67",
+  snackbarBorderText:"#B6BCD6",
+  snackbarBorderIcon:"brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)"
 };
 
 module.exports = {
-  themeLight: themeLight,
-  themeDark: themeDark
-};
+    themeLight: themeLight,
+    themeDark: themeDark
+}

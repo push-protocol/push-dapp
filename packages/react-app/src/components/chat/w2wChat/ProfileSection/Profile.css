@@ -1,0 +1,100 @@
+.profilePageContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(204, 226, 246);
+    height:'100%'
+
+}
+.profilePageDetails{
+    background-color: rgb(63, 63, 63);
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 20%;
+    border-top-right-radius: 20%;
+}
+.profilePageDetailsSection{
+    display: flex;
+    flex-direction: column;   
+}
+.profilePageHead1{
+    display: flex;
+    flex-direction: column;
+    
+    width: 100%;
+}
+.changeProfilePicture{
+   position: relative;
+   left: 7rem;
+   border-radius: 50%;
+   top: -2rem;
+}
+.changeProfilePicture input{
+    opacity: 0;
+    position: relative;
+    top: -2rem;
+    left: -4rem;
+    width: 4rem;
+    z-index: 1000;
+    cursor: pointer;
+}
+.changeProfilePicture imput:hover{
+    cursor: pointer;
+}
+.userDid,.userProfileWallets{
+    color:white;
+    font-size: 1rem;
+    font-weight: bold;
+    position: relative;
+    margin-left: 10px;
+    
+}
+.userDid p{
+    font-size: 0.8rem;
+    word-wrap: break-word;
+    font-weight: 300;
+    max-width: 90%;
+}
+.userProfileWallets span{
+    font-size: 0.8rem;
+    word-wrap: break-word;
+    font-weight: 300;
+    max-width: 85%;
+}
+.userProfileWallets i, .userDid i{
+    margin-left: 4px;
+    cursor: pointer;
+
+}
+.changeProfilePicture img{
+    width: 4.5rem;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 50%;
+    filter: brightness(.4);
+}
+
+.changeProfilePicture section{
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    color: #fff;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-family: 'Roboto',sans-serif;
+}
+
+.profilePageprofileImg{
+    background-color: rgb(204, 226, 246);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.profilePageprofileImg img{
+    object-fit: cover;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    height: 16rem;
+}
