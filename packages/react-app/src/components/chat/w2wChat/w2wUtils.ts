@@ -51,9 +51,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
 
 export const fetchInbox = async (did: DID): Promise<Feeds[]> => {
   let inbox: Feeds[] = await getInbox(did.id)
-  inbox = inbox.filter(
-    (inbx) => inbx.intent === 'Approved' || (inbx.intent === 'Pending' && inbx.intentSentBy === did.id)
-  )
+  inbox = inbox.filter((inbx) => inbx.intent.includes(did.id))
   inbox = await fetchMessagesFromIPFS(inbox)
   return inbox
 }
@@ -66,9 +64,9 @@ export const fetchIntent = async ({
   intentStatus?: string
 }): Promise<Feeds[]> => {
   let intents: Feeds[] = await getInbox(did)
-  intents = intents.filter((intent) => intent.intent === 'Pending' && intent.intentSentBy !== did)
-  if (intentStatus !== '') {
-    intents = intents.filter((intent) => intent.intent === intentStatus)
+  intents = intents.filter((intent) => !intent.intent.includes(did) && intent.intentSentBy !== did)
+  if (intentStatus === 'Pending') {
+    intents = intents.filter((intent) => !intent.intent.includes(did))
   }
   intents = await fetchMessagesFromIPFS(intents)
   return intents

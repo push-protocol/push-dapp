@@ -59,7 +59,6 @@ export const verifySignature = async ({
   const { verified, keyID } = verificationResult.signatures[0]
   try {
     await verified
-    console.log('========> The signature is valid! <========')
   } catch (e) {
     throw new Error('Signature could not be verified: ' + e)
   }

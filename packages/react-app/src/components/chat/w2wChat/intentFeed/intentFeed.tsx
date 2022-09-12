@@ -50,7 +50,7 @@ const IntentFeed = (): JSX.Element => {
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
   const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
   const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false)
-  const [toDID, settoDID] = useState<string>()
+  const [fromDID, setFromDID] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
 
   async function resolveThreadhash(): Promise<void> {
@@ -75,9 +75,9 @@ const IntentFeed = (): JSX.Element => {
     resolveThreadhash()
   }, [intents])
 
-  function showModal({ intentFrom, todid }: { intentFrom: string; todid: string }): void {
+  function showModal({ intentFrom, fromDID }: { intentFrom: string; fromDID: string }): void {
     setReceivedIntentFrom(intentFrom)
-    settoDID(todid)
+    setFromDID(fromDID)
     setOpen(true)
   }
 
@@ -112,7 +112,7 @@ const IntentFeed = (): JSX.Element => {
   async function ApproveIntent(status: string): Promise<void> {
     setIsLoading(true)
     const { didCreated } = await createUserIfNecessary()
-    await approveIntent(didCreated.id, toDID, status, '1', 'sigType')
+    await approveIntent(fromDID, didCreated.id, status, '1', 'sigType')
     setOpen(false)
     if (status === 'Approved') setOpenSuccessSnackBar(true)
     else setOpenReprovalSnackBar(true)
@@ -139,7 +139,7 @@ const IntentFeed = (): JSX.Element => {
                     setChat(intent)
                     showModal({
                       intentFrom: intent.wallets.split(',')[0],
-                      todid: intent.intentSentBy
+                      fromDID: intent.intentSentBy
                     })
                   }}
                 >
@@ -187,7 +187,7 @@ const IntentFeed = (): JSX.Element => {
             </Typography>
             <br />
             {isLoading ? (
-              <Loader type="oval" />
+              <Loader />
             ) : (
               <Button
                 onClick={(): void => {
