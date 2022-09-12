@@ -174,7 +174,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setSearch(parsedChannel);
     }, SEARCH_DELAY)
   }, [])
-
   return (
     <ThemeProvider theme={themes}>
       <Container>

@@ -1,12 +1,12 @@
-import React from "react";
-import styled, { css } from 'styled-components';
-import Blockies from "primaries/BlockiesIdenticon";
-import { Item, ItemH, ItemBreak, Image, Span, Anchor } from '../primaries/SharedStyling';
-import { toast } from 'react-toastify';
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import {toolingPostReq} from "../api/index"
+import Blockies from "primaries/BlockiesIdenticon";
+import React from "react";
+import { Oval as Loader } from 'react-loader-spinner';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import {Oval} from 'react-loader-spinner';
+import styled, { css } from 'styled-components';
+import { toolingPostReq } from "../api/index";
+import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
 
 import Skeleton from '@yisheng90/react-loading';
 import { FiTwitter } from 'react-icons/fi';
@@ -15,9 +15,9 @@ import { IoMdShareAlt } from 'react-icons/io';
 
 import { addresses } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
-import {createTransactionObject} from '../helpers/GaslessHelper';
-import {executeDelegateTx} from '../helpers/WithGasHelper';
 import Web3 from 'web3';
+import { createTransactionObject } from '../helpers/GaslessHelper';
+import { executeDelegateTx } from '../helpers/WithGasHelper';
 
 export const PUSH_BALANCE_TRESHOLD = 100; //minimum number of push
 export const GAS_LIMIT = 50; //dollars limit of gas;
@@ -138,7 +138,8 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval
+      <Loader
+        type="Oval"
         color={color}
         height={30}
         width={30}
@@ -160,10 +161,12 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
             {loading &&
               <Skeleton color="#eee" width="100%" height="100%" />
             }
+
             {!loading && delegateeObject.pic &&
+              
               <Image
-                src={`./delegatees/${delegateeObject.pic}.jpg`}
-                srcSet={`./delegatees/${delegateeObject.pic}@2x.jpg 2x, ./delegatees/${delegateeObject.pic}@3x.jpg 3x`}
+                src={require(`../assets/gov/delegatees/${delegateeObject.pic}.jpg`)}
+                srcSet={`${require(`../assets/gov/delegatees/${delegateeObject.pic}@2x.jpg`)} 2x, ${require(`../assets/gov/delegatees/${delegateeObject.pic}@3x.jpg`)} 3x`}
                 alt={delegateeObject.name}
               />
             }
@@ -230,7 +233,8 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
               
               txLoading ? (
                 <ActionTitle>
-                 <Oval
+                 <Loader
+                   type="Oval"
                    color="#35c5f3"
                    height={20}
                    width={20}
@@ -393,6 +397,5 @@ const Toaster = styled.div`
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `
-
 // Export Default
 export default ViewDelegateeItem;

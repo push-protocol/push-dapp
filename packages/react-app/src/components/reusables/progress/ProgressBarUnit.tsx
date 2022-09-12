@@ -1,6 +1,6 @@
 
-import { Image, Item, Section } from 'components/SharedStyling';
 import GLOBALS from "config/Globals";
+import { Image, Item, Section } from 'primaries/SharedStyling';
 import styled, { css, keyframes } from 'styled-components';
 
 interface ProgressBarPropsI {
