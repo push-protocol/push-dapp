@@ -186,14 +186,10 @@ const PreviewClose = styled(Anchor)`
 `
 
 const StyledToastContainer = styled(ToastContainer)`
-  &&&.Toastify__toast-container {
+  &&&.Toastify__toast-container--top-right {
     top: 7vh;
     right: 2vw;
   }
-  // .Toastify__toast {}
-  // .Toastify__toast-body {}
-  // .Toastify__progress-bar {}
-  // .Toastify__toast-container--top-right {}
 `;
 
 // Export Default

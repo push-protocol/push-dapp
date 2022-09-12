@@ -25,6 +25,7 @@
     "@epnsproject/frontend-sdk-staging": "^1.7.8",
     "@epnsproject/sdk-ledgerlive": "^0.1.2",
     "@epnsproject/sdk-restapi": "^0.1.13",
+    "@epnsproject/sdk-socket": "^0.1.0",
     "@epnsproject/sdk-uiweb": "^0.1.10",
     "@ethersproject/providers": "^5.0.0-beta.151",
     "@ethersproject/units": "^5.0.0-beta.132",
