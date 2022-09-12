@@ -1,27 +1,27 @@
+import { abis, addresses, envConfig } from '@project/contracts';
+import { useWeb3React } from '@web3-react/core';
+import { postReq } from 'api';
+import { ethers } from 'ethers';
 import React from 'react';
 import ReactGA from 'react-ga';
-import { ethers } from 'ethers';
-import styled, { useTheme, ThemeProvider } from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import { useWeb3React } from '@web3-react/core';
-import { Item, Button } from '../primaries/SharedStyling';
-import { addresses, abis, envConfig } from '@project/contracts';
-import { postReq } from 'api';
+import { useDispatch, useSelector } from 'react-redux';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+import { Button, Item } from '../primaries/SharedStyling';
 
 import { toast as toaster } from 'react-toastify';
 import NotificationToast from '../primaries/NotificationToast';
 
-import Loader from 'react-loader-spinner';
+import { Oval as Loader } from 'react-loader-spinner';
 
 import Feedbox from 'segments/Feedbox';
 
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
-import { setPushAdmin, setCoreReadProvider, setCommunicatorReadProvider } from 'redux/slices/contractSlice';
+import { setCommunicatorReadProvider, setCoreReadProvider, setPushAdmin } from 'redux/slices/contractSlice';
 
-import GLOBALS from 'config/Globals';
 import InboxComponent from 'components/InboxComponent';
+import GLOBALS from 'config/Globals';
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
 

@@ -443,7 +443,7 @@ function Navigation() {
                       }}      
                       id={data.id}          
                     >
-                      <NavButton
+                      <NavigationButton
                         item={section}
                         data={data}
                         sectionID={sectionID}
@@ -580,7 +580,7 @@ function Navigation() {
                     // mutateTransformedList(item)
                   }}
                 >
-                  <NavButton
+                  <NavigationButton
                     item={item}
                     data={data}
                     sectionID={sectionID}
