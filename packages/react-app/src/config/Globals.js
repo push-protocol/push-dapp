@@ -38,7 +38,8 @@ export default {
     NAVBAR_SECTIONS: {
       PRIMARY: 1,
       SECONDARY: 2,
-      MOBILE: 3
+      MOBILE: 3,
+      THIRD: 4
     },
 
     NAVBAR_IDENTIFIERS: {

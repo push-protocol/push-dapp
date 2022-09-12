@@ -1,9 +1,9 @@
-import { MessageIPFS } from '../../../helpers/w2w/ipfs'
-import { intitializeDb } from './w2wIndexeddb'
+import { Feeds, getFromIPFS, getInbox, User } from 'api'
 import { DID } from 'dids'
-import { Feeds, getInbox, getFromIPFS, User } from '../../../api'
-import { InboxChat } from './w2wIndex'
 import { decryptAndVerifySignature } from 'helpers/w2w'
+import { MessageIPFS } from 'helpers/w2w/ipfs'
+import { InboxChat } from './w2wIndex'
+import { intitializeDb } from './w2wIndexeddb'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {

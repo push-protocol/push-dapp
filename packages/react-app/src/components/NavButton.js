@@ -8,7 +8,7 @@ import GLOBALS from 'config/Globals';
 import { themeDark } from 'config/Themization';
 
 // Create Header
-function NavigationButton({ item, data, sectionID, active }) {
+function NavButton({ item, data, sectionID, active }) {
   const theme = useTheme();
 
   let SelectedIcon;
@@ -21,6 +21,10 @@ function NavigationButton({ item, data, sectionID, active }) {
       definedMargin = '5px';
       break;
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
       definedMargin = item.isSection ? '0px' : '5px';
       break;
@@ -37,7 +41,6 @@ function NavigationButton({ item, data, sectionID, active }) {
 
   return (
     <RouteLogic
-      style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
       flex="1"
       title={`${data.title}`}
       to={`${data.href ? data.href : '#'}`}
@@ -45,12 +48,12 @@ function NavigationButton({ item, data, sectionID, active }) {
       alt={`${data.alt}`}
       target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
       disabled={data.disabled}
-      hoverBG={theme.leftBarHoverColor}
+      //   hoverBG={theme.leftBarHoverColor}
       radius="16px"
       align="stretch"
       padding="12px"
       margin={definedMargin}
-      bg={!active ? 'transparent' : theme.activeNav}
+      //   bg={!active ? "transparent" : "#F9EBF3;"}
       active={active}
       className={data?.name?.toLowerCase()}
     >
@@ -80,28 +83,6 @@ function NavigationButton({ item, data, sectionID, active }) {
     </RouteLogic>
   );
 }
-
-// filter: ${(props) =>
-//   props.active
-//     ? "brightness(1)"
-//     : props.theme === themeDark
-//     ? "brightness(0) invert(1)"
-//     : "brightness(0)"};
-// opacity: ${(props) =>
-//   props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
-
-// transition: transform 0.1s ease-out;
-
-// filter: ${(props) =>
-//   props.active
-//     ? "brightness(1)"
-//     : props.theme === themeDark
-//     ? "brightness(0) invert(1)"
-//     : "brightness(0)"};
-// opacity: ${(props) =>
-//   props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
-
-// transition: transform 0.1s ease-out;
 
 // css styles
 const InheritedSectionGroupIcon = styled(Image)`
@@ -140,4 +121,4 @@ const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
 const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 
 // Export Default
-export default NavigationButton;
+export default NavButton;

@@ -5,10 +5,10 @@ import Sidebar from './sidebar/sidebar'
 import { Oval as Loader } from 'react-loader-spinner'
 
 // Helper
-import * as PushNodeClient from '../../../api'
-import * as w2wHelper from '../../../helpers/w2w'
-import { createCeramic } from '../../../helpers/w2w/ceramic'
-import * as DIDHelper from '../../../helpers/w2w/did'
+import * as PushNodeClient from 'api'
+import * as w2wHelper from 'helpers/w2w'
+import { createCeramic } from 'helpers/w2w/ceramic'
+import * as DIDHelper from 'helpers/w2w/did'
 
 // DID and ceramic
 import { ThreeIdConnect } from '@3id/connect'
@@ -22,8 +22,8 @@ import { useWeb3React } from '@web3-react/core'
 import { Web3Provider } from 'ethers/providers'
 import { QueryClient, QueryClientProvider } from 'react-query'
 // @ts-ignore
+import { Feeds, User } from 'api'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { Feeds, User } from '../../../api'
 
 import { ToastOptions } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
