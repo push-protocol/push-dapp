@@ -174,7 +174,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setSearch(parsedChannel);
     }, SEARCH_DELAY)
   }, [])
-
   return (
     <ThemeProvider theme={themes}>
       <Container>
@@ -206,9 +205,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 </Item>
               </SearchContainer>
 
-              {/* {!UtilityHelper.isMainnet(chainId) &&
-                <Faucets chainId={chainId} />
-              } */}
+              {!UtilityHelper.isMainnet(chainId) &&
+                <Faucets />
+              }
 
             </ItemH>
           )}
@@ -258,9 +257,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 // css styles
 const SearchBar = styled.input`
   width: 100%;
-  padding-right: 50px;
-  height: 60px;
-  padding-left: 40px;
+  padding: 13px 40px;
   border: none;
   background: ${props => props.theme.viewChannelSearchBg};
   color: ${props => props.theme.viewChannelSearchText};
@@ -274,7 +271,7 @@ const SearchBar = styled.input`
     display: none;
   }
   &::placeholder {
-    letter-spacing: 0.15em;
+    letter-spacing: -0.019em;
   }
   &:hover,
   &:active,

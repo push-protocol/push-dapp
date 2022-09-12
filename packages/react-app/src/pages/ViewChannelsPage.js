@@ -100,6 +100,8 @@ const Container = styled.div`
   display: flex;
   background: ${props => props.theme.mainBg};
   align-self: stretch;
+  margin:1rem 0 0 1rem;
+  border-radius:40px 0 0 0;
 `;
 
 const Interface = styled.div`

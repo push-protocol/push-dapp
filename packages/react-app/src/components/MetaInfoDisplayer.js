@@ -59,10 +59,10 @@ const MetaContent = styled(A)`
   max-width: fit-content;
   
   & > Span {
-    gap: 3px;
-    font-weight: 600;
+    gap: 5px;
+    font-weight: 500;
     display: flex;
-    font-size: 11px;
+    font-size: 14px;
     transition: 300ms;
   }
   & > Span:hover {

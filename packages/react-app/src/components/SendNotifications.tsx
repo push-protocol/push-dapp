@@ -1,37 +1,29 @@
-import React,{useEffect} from "react";
-import { toast } from "react-toastify";
-import Dropdown from "react-dropdown";
-import { FiLink } from "react-icons/fi";
-import {Oval} from "react-loader-spinner";
-import styled , {useTheme} from "styled-components";
-import { BsFillImageFill } from "react-icons/bs";
-import { useSelector } from "react-redux";
 import { postReq } from "api";
 import {
-Section,
-Content,
-Item,
-ItemH,
-H2,
-H3,
-Span,
-Button,
-FormSubmision,
-Input,
-TextField,
+  Button, Content, FormSubmision, H2,
+  H3, Input, Item,
+  ItemH, Section, Span, TextField
 } from "primaries/SharedStyling";
+import React, { useEffect } from "react";
+import Dropdown from "react-dropdown";
+import { BsFillImageFill } from "react-icons/bs";
+import { FiLink } from "react-icons/fi";
+import { Oval } from "react-loader-spinner";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import styled, { useTheme } from "styled-components";
 
-import "react-dropdown/style.css";
-import "react-toastify/dist/ReactToastify.min.css";
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import Switch from "@material-ui/core/Switch";
+import { envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 import { CloseIcon } from "assets/icons";
-import PreviewNotif from "./PreviewNotif";
-import CryptoHelper from "helpers/CryptoHelper";
-import { envConfig } from "@project/contracts";
-import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { IPFSupload } from "helpers/IpfsHelper";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import CryptoHelper from "helpers/CryptoHelper";
+import { IPFSupload } from "helpers/IpfsHelper";
+import "react-dropdown/style.css";
+import "react-toastify/dist/ReactToastify.min.css";
+import PreviewNotif from "./PreviewNotif";
 
 const ethers = require("ethers");
 

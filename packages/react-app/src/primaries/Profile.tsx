@@ -1,19 +1,54 @@
-import React from "react";
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core';
+import React,{useRef} from "react";
+import { Web3Provider } from 'ethers/providers'
+import styled,{useTheme} from 'styled-components';
+import Dropdown from '../components/Dropdown';
+import {Item} from "./SharedStyling.js";
+import { useClickAway } from 'hooks/useClickAway';
 
-import styled from 'styled-components';
-
-import { Oval } from 'react-loader-spinner'
-import Blockies from "primaries/BlockiesIdenticon";
+import { Oval } from 'react-loader-spinner';
 
 // Create Header
-const Profile = () => {
+const Profile = ({isDarkMode}) => {
+  const toggleArrowRef = useRef(null);
+  const dropdownRef = useRef(null);
   const { error, account, library } = useWeb3React();
-
+  // Get theme
+  const theme = useTheme();
   const [address, setAddress] = React.useState('');
   const [ens, setENS] = React.useState('');
   const [ensFetched, setENSFetched] = React.useState(false);
-
+  const [showDropdown, setShowDropdown] = React.useState(false);
+  // Get Web3 Context
+  const context = useWeb3React<Web3Provider>()
+  const { deactivate } = context
+  const dropdownValues = [
+    {
+      id: "walletAddress",
+      value: account,
+      title: account,
+      icon: "./copy.svg",
+    },
+    {
+      id: "prodDapp",
+      value: "",
+      link: "https://epns.io/",
+      title: "Production dapp",
+      icon: "./prod.svg",
+    },
+    {
+      id: "disconnect",
+      value: "",
+      function: ()=>deactivate(),
+      title: "Logout",
+      icon: "./logout.svg",
+    },
+  ];
+  
+  useClickAway(toggleArrowRef,dropdownRef, () => {
+    setShowDropdown(false);
+  });
+  
   React.useEffect(() => {
     if (account && account != '') {
       // Check if the address is the same
@@ -38,33 +73,52 @@ const Profile = () => {
   }, [account]);
 
   // to create blockies
-
   return (
     <>
-      {account && account !== '' && !error &&
+      {account && account !== "" && !error && (
         <Container>
-          <Blocky>
-            <BlockyInner>
-              <Blockies seed={account.toLowerCase()} opts={{ seed: account.toLowerCase(), size: 7, scale: 7 }} />
-            </BlockyInner>
-          </Blocky>
-          <Wallet>
-            {!ensFetched &&
+          <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
+            {!ensFetched && (
               <Oval
-                color="#FFF"
-                height={16}
-                width={16}
+              color="#FFF"
+              height={16}
+              width={16}
+            />
+            )}
+            {ensFetched && ens && <>{ens}</>}
+            {ensFetched && !ens && (
+              <>
+                {account.substring(0, 6)}.....
+                {account.substring(account.length - 6)}
+              </>
+            )}
+            <ToggleArrowImg ref={toggleArrowRef}
+              onClick={() => setShowDropdown(!showDropdown)} 
+              filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
+              <img
+                alt="arrow"
+                className={`${showDropdown ? "down" : "up"}`}
+                src="/svg/arrow.svg"
               />
-            }
-            {ensFetched && ens &&
-              <>{ens}</>
-            }
-            {ensFetched && !ens &&
-              <>{account.substring(0, 6)}.....{account.substring(account.length - 6)}</>
-            }
+            </ToggleArrowImg>
           </Wallet>
+          {showDropdown && (
+            <Item
+              ref={dropdownRef}
+              bg={theme.headerBg}
+              border={`1px solid ${theme.snackbarBorderColor}`}
+              radius="24px"
+              align="flex-start"
+              padding="1.3rem"
+              position="absolute"
+              top="4.1rem"
+              right="-0.5rem"
+            >
+              <Dropdown dropdownValues={dropdownValues} />
+            </Item>
+          )}
         </Container>
-      }
+      )}
     </>
   );
 }
@@ -82,34 +136,26 @@ const Container = styled.button`
   align-items: center;
   display: flex;
 `
-
-const Blocky = styled.div`
-  position: relative;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  overflow: hidden;
-  transform: scale(0.85);
-  outline-width: 2px;
-  outline-color: rgba(225,225,225,1);
-`
-
-const BlockyInner = styled.div`
-`
-
 const Wallet = styled.span`
   margin: 0px 10px;
-  padding: 8px 15px;
-  height: 16px;
+  padding: 4px 16px;
+  height: 34px;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  color: #fff;
-  border-radius: 15px;
-  background: rgb(226,8,128);
-  background: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
+  font-weight: 700;
+  font-size: 16px;
+  color: ${props => props.color};
+  border-radius:17px;
+  background: ${props => props.bg};
+  ${({ isDarkMode,bg }) => isDarkMode && `
+    border: solid 3px transparent;
+    background-image: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%), linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    box-shadow: 2px 1000px 1px ${bg} inset;
+  `}
+ 
   &:hover {
     opacity: 0.9;
     cursor: pointer;
@@ -121,6 +167,22 @@ const Wallet = styled.span`
     pointer: hand;
   }
 `
+const ToggleArrowImg = styled.div`
+  margin-left: 2rem;
+  filter:  ${props => props.filter};
+  &:hover {
+    cursor: pointer;
+  }
+  .down {
+    transform: rotate(-180deg);
+    transition: transform 0.25s;
+  }
+
+  .up {
+    transform: rotate(-360deg);
+    transition: transform 0.25s;
+  }
+`;
 
 // Export Default
 export default Profile;

@@ -11,7 +11,7 @@ import { GoVerified } from "react-icons/go";
 import { useWeb3React } from "@web3-react/core";
 import { useDispatch, useSelector } from "react-redux";
 
-import { ItemH, Span } from "../primaries/SharedStyling";
+import { ItemH, Span,Image } from "../primaries/SharedStyling";
 
 import { postReq } from "api";
 
@@ -36,6 +36,7 @@ import useToast from "hooks/useToast";
 import { MdCheckCircle, MdError } from "react-icons/md";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { isCommunityResourcable } from "@ethersproject/providers";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -593,6 +594,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     }
   };
 
+  const correctChannelTitleLink = () => {
+    const channelLink = CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url;
+    if(/(?:http|https):\/\//i.test(channelLink)) {
+      window.open(channelLink, '_blank', 'noopener,noreferrer');
+    }
+    else{
+      window.open(`https://${channelLink}`, '_blank', 'noopener,noreferrer');
+    }
+  }
   const CTA_OVERRIDE_CACHE = {
     "0xb1676B5Ab63F01F154bb9938F5e8999d9Da5444B": "https://boardroom.io/",
     "0x7DA9A33d15413F499299687cC9d81DE84684E28E":
@@ -627,9 +637,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             />
           ) : (
             <ChannelTitleLink
-              href={CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url}
-              target="_blank"
-              rel="nofollow"
+              onClick = {()=>correctChannelTitleLink()}
             >
               <Span>
                 {channelJson.name}
@@ -689,10 +697,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             <ItemH align="center" justify="flex-start" margin="0px -5px">
               <MetaInfoDisplayer
                 externalIcon={
-                  <IoMdPeople
-                    size={20}
-                    color={themes.viewChannelSecondaryIcon}
-                  />
+                  <Image src="./svg/users.svg" alt="users" width="14px"  height="14px"/>
                 }
                 internalIcon={null}
                 text={memberCount}
@@ -1113,14 +1118,14 @@ const SkeletonButton = styled.div`
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
   border-radius: 8px;
-  padding:9px 20px;
+  padding:9px 15px;
   min-width: 80px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: transparent;
   color:${(props) => props.theme.viewChannelPrimaryText};
-  border:1px solid #657795; 
+  border:1px solid #BAC4D6; 
   border-radius: 8px;
   padding:9px 15px;
   min-width: 80px;

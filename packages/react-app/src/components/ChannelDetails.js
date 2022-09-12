@@ -1,24 +1,24 @@
-import React from "react";
-import moment from "moment";
-import { ethers } from "ethers";
-import { envConfig } from "@project/contracts";
-import styled, { useTheme } from "styled-components";
-import { useSelector } from "react-redux";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import ShowDelegates from "./ShowDelegates";
-import { Item } from "../primaries/SharedStyling";
-import { getReq, postReq } from "api";
-import { useWeb3React } from "@web3-react/core";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { AiOutlineUser } from "react-icons/ai";
-import { useDeviceWidthCheck } from "hooks";
-import ChannelSettings from "./ChannelSettings";
+import { envConfig } from '@project/contracts';
+import { useWeb3React } from '@web3-react/core';
+import { getReq, postReq } from 'api';
+import { ethers } from 'ethers';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useDeviceWidthCheck } from 'hooks';
+import moment from 'moment';
+import React from 'react';
+import { AiOutlineUser } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import styled, { useTheme } from 'styled-components';
+import { Item } from '../primaries/SharedStyling';
+import ChannelSettings from './ChannelSettings';
+import ShowDelegates from './ShowDelegates';
 
-const DATE_FORMAT = "MMMM Do YYYY";
+const DATE_FORMAT = 'MMMM Do YYYY';
 
 const networkName = {
-  42: "Polygon Mumbai",
-  1: "Polygon Mainnet",
+  42: 'Polygon Mumbai',
+  1: 'Polygon Mainnet'
 };
 
 export default function ChannelDetails() {
@@ -26,15 +26,13 @@ export default function ChannelDetails() {
   const {
     channelDetails,
     canVerify,
-    aliasDetails: { isAliasVerified, aliasAddrFromContract },
+    aliasDetails: { isAliasVerified, aliasAddrFromContract }
   } = useSelector((state) => state.admin);
 
-  const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector(
-    (state) => state.channels
-  );
+  const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
-  const [creationDate, setCreationDate] = React.useState("");
+  const [creationDate, setCreationDate] = React.useState('');
   const { channelState } = channelDetails;
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
@@ -46,9 +44,7 @@ export default function ChannelDetails() {
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
     (async function() {
-      let channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-        channelDetails.verifiedBy
-      );
+      let channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(channelDetails.verifiedBy);
       setVerifyingChannel(channelJson);
     })();
   }, [channelDetails, canVerify]);
@@ -59,9 +55,7 @@ export default function ChannelDetails() {
       const bn = channelDetails.channelStartBlock.toString();
 
       // using ethers jsonRpcProvider instead of library bcz channels are created on only core chain, that's why block can be fetched from that only
-      const block = await new ethers.providers.JsonRpcProvider(
-        envConfig.coreRPC
-      ).getBlock(+bn);
+      const block = await new ethers.providers.JsonRpcProvider(envConfig.coreRPC).getBlock(+bn);
       const date = moment(block.timestamp * 1000); //convert from millisecs
       setCreationDate(date.format(DATE_FORMAT));
     })();
@@ -79,27 +73,16 @@ export default function ChannelDetails() {
           </ChannelName>
           <ChannelStatusContainer>
             {/* <div style={{ width: "8px" }} /> */}
-            {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) ||
-            (!onCoreNetwork && !isAliasVerified) ? (
+            {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified) ? (
               <AliasStateText>Alias Network Setup Pending</AliasStateText>
             ) : (
               <>
                 <Subscribers>
-                  <img
-                    style={{ width: "15px" }}
-                    src="/subcount.svg"
-                    alt="subscount"
-                  ></img>
-                  <SubscribersCount>
-                    {channelDetails.subscribers.length}
-                  </SubscribersCount>
+                  <img style={{ width: '15px' }} src="/subcount.svg" alt="subscount"></img>
+                  <SubscribersCount>{channelDetails.subscribers.length}</SubscribersCount>
                 </Subscribers>
                 <ChanneStateText active={channelIsActive}>
-                  {channelIsActive
-                    ? "Active"
-                    : channelIsDeactivated
-                    ? "Deactivated"
-                    : "Blocked"}
+                  {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
                 </ChanneStateText>
               </>
             )}
@@ -108,7 +91,7 @@ export default function ChannelDetails() {
         </Details>
       </SectionTop>
 
-      {!isMobile ? "" : <ChannelSettings />}
+      {!isMobile ? '' : <ChannelSettings />}
 
       <SectionDes>{channelDetails.info}</SectionDes>
 
@@ -208,11 +191,12 @@ const StateText = styled.div`
   border-radius: 25px;
   height: 26px;
   background-color: pink;
+  font-family: Strawford, Source Sans Pro;
 `;
 
 const ChanneStateText = styled(StateText)`
   color: #2dbd81;
-  color: ${(props) => (props.active ? "#2DBD81" : "red")};
+  color: ${(props) => (props.active ? '#2DBD81' : 'red')};
   background-color: #c6efd1;
   margin-left: 10px;
   ${(props) =>
@@ -239,7 +223,7 @@ const AliasStateText = styled(StateText)`
     height: 16px;
     background: #e3b61c;
     border-radius: 50%;
-    content: "";
+    content: '';
     display: inline-flex;
     align-items: center;
     margin-right: 6px;
@@ -288,6 +272,7 @@ const Verified = styled.div`
 
 const ChannelName = styled.div`
   display: flex;
+  font-family: Strawford, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
   font-weight: 500;
@@ -317,6 +302,7 @@ const SectionDate = styled.div`
 const SectionDes = styled.div`
   letter-spacing: 0.1em;
   text-transform: none;
+  font-family: Strawford, Source Sans Pro;
   color: #657795;
   margin-bottom: 40px;
   font-weight: 400;

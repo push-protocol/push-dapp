@@ -1,0 +1,52 @@
+.w2w_FilesUpload_Container{
+    width: 14rem;
+    height: 60px;
+    display: flex;
+    color: white;
+    background-color: #343536;
+    justify-content: space-around;
+    border-radius: 8px;
+    
+}
+.w2w_FilesUpload_details{
+    font-size: 1rem;
+    display: flex;
+    font-weight: 400;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 10rem;
+    flex-direction: column;
+}
+.w2w_FilesUpload_details span,p{
+    margin-left: 15px;
+}
+.w2w_FilesUpload_extention{
+    width: 2rem;
+    display: flex;
+    justify-content: center;
+    
+    object-fit: cover;
+}
+.w2w_FilesUpload_extention img{
+    width: 2rem;
+    position: relative;
+    top: 40%;
+    height: 1rem;
+}
+.w2w_FilesUpload_extention img:hover{
+    background-color: transparent;
+}
+.w2w_FilesUpload_extention i:hover{
+    background-color: #343536;
+}
+
+.w2w_FilesUpload_download{
+    display: flex;
+    padding: 10px;
+    font-size: 1.5rem;
+    justify-content: center;
+}
+.w2w_FilesUpload_Container i{
+    margin-top: 10px;
+    color: #575757;
+}
