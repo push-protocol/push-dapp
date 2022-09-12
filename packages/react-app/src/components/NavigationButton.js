@@ -24,6 +24,10 @@ function NavigationButton({ item, data, sectionID, active }) {
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
       definedMargin = item.isSection ? '0px' : '5px';
       break;
+    case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
+      SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
+      definedMargin = item.isSection ? '0px' : '5px';
+      break;
     default:
       SelectedIcon = item.isSection ? LeftBarPrimarySectionIcon : LeftBarPrimaryItemIcon;
       definedMargin = item.isSection ? '0px' : '5px';
@@ -45,12 +49,12 @@ function NavigationButton({ item, data, sectionID, active }) {
       alt={`${data.alt}`}
       target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
       disabled={data.disabled}
-      hoverBG={theme.leftBarHoverColor}
+      // hoverBG={theme.leftBarHoverColor}
       radius="16px"
       align="stretch"
       padding="12px"
       margin={definedMargin}
-      bg={!active ? 'transparent' : theme.activeNav}
+      // bg={!active ? 'transparent' : theme.activeNav}
       active={active}
       className={data?.name?.toLowerCase()}
     >

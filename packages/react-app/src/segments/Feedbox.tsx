@@ -10,13 +10,14 @@ import SearchFilter from "components/SearchFilter";
 import { ThemeProvider } from "styled-components";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { envConfig } from "@project/contracts";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
   updateTopNotifications,
 } from "redux/slices/notificationSlice";
-import { envConfig } from "@project/contracts";
+import { useClickAway } from "react-use";
 
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
@@ -27,8 +28,11 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-function Feedbox(props) {
+const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
+  const modalRef = React.useRef(null);
+  useClickAway(modalRef, () => showFilter && setShowFilter(false));
+
   const { account, library, chainId } = useWeb3React();
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
@@ -47,6 +51,7 @@ function Feedbox(props) {
   const [allNotf, setNotif] = React.useState([]);
   const [filteredNotifications, setFilteredNotifications] = React.useState([]);
   const [filter, setFilter] = React.useState(false);
+  const [allFilter, setAllFilter] = React.useState([]);
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -98,7 +103,8 @@ function Feedbox(props) {
         )
           filterNotif.push(notif);
       }
-      await setFilteredNotifications(filterNotif);
+      const newNotifs = filterNotif
+      setAllFilter(newNotifs)
     } catch (err) {
       console.log(err);
     } finally {
@@ -106,6 +112,12 @@ function Feedbox(props) {
       setBgUpdateLoading(false);
     }
   }
+
+  React.useEffect(() => {
+    // console.log(allFilter)
+    setFilteredNotifications(allFilter)
+  }, [allFilter])
+
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
     setLoading(true);
@@ -124,10 +136,9 @@ function Feedbox(props) {
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
-      console.log(results)
       const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (results.length === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -169,7 +180,7 @@ function Feedbox(props) {
           pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
-      if (results.length === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -312,19 +323,23 @@ function Feedbox(props) {
       }
     }
   };
-
   // Render
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <SearchFilter
+      <div ref={modalRef}>
+        <SearchFilter 
           notifications={allNotf}
           filterNotifications={filterNotifications}
           filter={filter}
           reset={reset}
           loadFilter={loadFilter}
-          showFilter={props.showFilter}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
         />
+        </div>
         <ScrollItem>
           {((!run && !notifications.length) ||
             (!run && filter && !filteredNotifications.length) ||
@@ -375,7 +390,7 @@ function Feedbox(props) {
                   );
                 })}
               {(filter
-                ? filteredNotifications.slice(0, limit)
+                ? filteredNotifications
                 : notifications
               ).map((oneNotification, index) => {
                 const {
@@ -443,8 +458,9 @@ const Container = styled.div`
   align-content: center;
   align-items: stretch;
   justify-content: center;
-  height: inherit;
-  // margin: 0px 10px;
+  height: 100%;
+  margin: 0px 10px;
+  overflow:scroll;
 `;
 
 const Notifs = styled.div`
