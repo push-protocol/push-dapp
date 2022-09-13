@@ -29,15 +29,23 @@ const AddSubgraphModalContent = ({onClose, onConfirm: addSubgraph, toastObject}:
 
 
         if (pollTime == '' || subgraphId == '') {
-            toastObject.showToast("");
-            toastObject.updateToast("Transaction Failed", "Fields are empty! Retry", "ERROR", (size) => <MdError size={size} color="red" />)
+            toastObject.showMessageToast({
+                toastTitle:"Transaction Failed", 
+                toastMessage: "Fields are empty! Retry", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            })
             setTimeout(() => {
                 setIsLoading(false)
             }, 500);
             return;
         } else if (parseInt(pollTime) < 60) {
-            toastObject.showToast("");
-            toastObject.updateToast("Transaction Failed", "Poll Time must be at least 60 sec", "ERROR", (size) => <MdError size={size} color="red" />)
+            toastObject.showMessageToast({
+                toastTitle:"Transaction Failed", 
+                toastMessage: "Poll Time must be at least 60 sec", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            })
             setTimeout(() => {
                 setIsLoading(false)
             }, 500);
@@ -48,16 +56,22 @@ const AddSubgraphModalContent = ({onClose, onConfirm: addSubgraph, toastObject}:
         addSubgraph(pollTime, subgraphId)
         .then(async (tx) => {
             console.log(tx);
-           
-  
-            toastObject.showToast("");
-            toastObject.updateToast("Subgraph Added", "Subgraph has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+            toastObject.showMessageToast({
+                toastTitle:"Subgraph Added", 
+                toastMessage: "Subgraph has been added successfully", 
+                toastType: "SUCCESS", 
+                getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+            })
             onClose();
           }).catch((err) => {
             console.log(err);
   
-            toastObject.showToast("");
-            toastObject.updateToast("Transaction Failed", "Adding a subgraph failed.", "ERROR", (size) => <MdError size={size} color="red" />)
+            toastObject.showMessageToast({
+                toastTitle:"Transaction Failed", 
+                toastMessage: "Adding a subgraph failed.", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            })
           }).finally(()=>{
             setIsLoading(false);
         });
