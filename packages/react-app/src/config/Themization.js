@@ -25,7 +25,7 @@ const themeLight = {
   // Header Theme
   headerBg: '#fff',
   headerTagBg: '#000',
-  headerTagFg: '#fff',
+  headerTagFg: '#000',
 
   headerIconsBg: '#000',
 
