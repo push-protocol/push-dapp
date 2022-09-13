@@ -40,8 +40,12 @@ export const EnvHelper = {
   isLocalHost: window.location.hostname === envUtil['localhost'],
   isProduction() {
     return (this.isProd || this.isStaging || this.isDev);
+  },
+  dappTitle() {
+    return (`EPNS ${this.isStaging? "Staging": this.isDev? "Dev":''} App`);
   }
 };
+
 
 export const networkName = {
   42: "Ethereum Kovan",
