@@ -44,7 +44,13 @@ function Dropdown(props) {
               spacing="1px"
               width="max-content"
             >
-              {dropdownValue?.title}
+              <DesktopAddress>
+                {dropdownValue?.title}
+              </DesktopAddress>
+              <MobileAddress>
+              {dropdownValue?.title.substring(0, 6)}.....
+                {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
+              </MobileAddress>
             </Span>
             <Image
               src={dropdownValue?.icon}
@@ -111,5 +117,25 @@ const DropdownItem = styled.div`
   display: flex;
   margin: 1rem;
 `;
+
+const SpanAddress= styled(Span)`
+  margin:11px 22px 11px 2px;
+  weight:400;
+  size:14px;
+  text-transform:uppercase;
+  color:#fff;
+  spacing:1px;
+  width:max-content;
+`
+const MobileAddress= styled(SpanAddress)`
+  @media (min-width: 993px) {
+    display: none;
+  }
+`
+const DesktopAddress = styled(SpanAddress)`
+  @media (max-width: 992px) {
+    display: none;
+  }
+`
 // Export Default
 export default Dropdown;

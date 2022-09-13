@@ -112,20 +112,13 @@ const Profile = ({isDarkMode}) => {
             </ToggleArrowImg>
           </Wallet>
           {showDropdown && (
-            <Item
+            <DropdownItem
               ref={dropdownRef}
               bg={theme.headerBg}
-              border={`1px solid ${theme.snackbarBorderColor}`}
-              radius="24px"
-              align="flex-start"
-              padding="1.3rem"
-              position="absolute"
-              top="3.6rem"
-              right="-0.5rem"
-              zIndex="10"
+              border={theme.snackbarBorderColor}
             >
               <Dropdown dropdownValues={dropdownValues} />
-            </Item>
+            </DropdownItem>
           )}
         </Container>
       )}
@@ -194,6 +187,22 @@ const ToggleArrowImg = styled.div`
     transition: transform 0.25s;
   }
 `;
+
+const DropdownItem= styled(Item)`
+  background: ${props => props.bg};
+  border:1px solid ${props => props.border};
+  border-radius:24px;
+  align-items:flex-start;
+  padding:1.3rem;
+  position:absolute;
+  top:3.6rem;
+  right:-0.5rem;
+  z-index:10;
+  @media (max-width: 992px) {
+    right: unset;
+    align-items:flex-start;
+  }
+`
 
 // Export Default
 export default Profile;
