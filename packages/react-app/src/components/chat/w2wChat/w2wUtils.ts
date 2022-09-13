@@ -1,9 +1,9 @@
-import { MessageIPFS } from '../../../helpers/w2w/ipfs'
-import { intitializeDb } from './w2wIndexeddb'
+import { Feeds, getFromIPFS, getInbox, User } from 'api'
 import { DID } from 'dids'
-import { Feeds, getInbox, getFromIPFS, User } from '../../../api'
-import { InboxChat } from './w2wIndex'
 import { decryptAndVerifySignature } from 'helpers/w2w'
+import { MessageIPFS } from 'helpers/w2w/ipfs'
+import { InboxChat } from './w2wIndex'
+import { intitializeDb } from './w2wIndexeddb'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {
@@ -51,9 +51,7 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
 
 export const fetchInbox = async (did: DID): Promise<Feeds[]> => {
   let inbox: Feeds[] = await getInbox(did.id)
-  inbox = inbox.filter(
-    (inbx) => inbx.intent === 'Approved' || (inbx.intent === 'Pending' && inbx.intentSentBy === did.id)
-  )
+  inbox = inbox.filter((inbx) => inbx.intent.includes(did.id))
   inbox = await fetchMessagesFromIPFS(inbox)
   return inbox
 }
@@ -66,9 +64,9 @@ export const fetchIntent = async ({
   intentStatus?: string
 }): Promise<Feeds[]> => {
   let intents: Feeds[] = await getInbox(did)
-  intents = intents.filter((intent) => intent.intent === 'Pending' && intent.intentSentBy !== did)
-  if (intentStatus !== '') {
-    intents = intents.filter((intent) => intent.intent === intentStatus)
+  intents = intents.filter((intent) => !intent.intent.includes(did) && intent.intentSentBy !== did)
+  if (intentStatus === 'Pending') {
+    intents = intents.filter((intent) => !intent.intent.includes(did))
   }
   intents = await fetchMessagesFromIPFS(intents)
   return intents

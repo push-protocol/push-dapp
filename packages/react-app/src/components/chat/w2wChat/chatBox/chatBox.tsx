@@ -6,9 +6,9 @@ import Chats from '../chats/chats'
 import { Context, ToastPosition } from '../w2wIndex'
 // @ts-ignore
 import { envConfig } from '@project/contracts'
+import * as PushNodeClient from 'api'
 import Picker from 'emoji-picker-react'
 import 'font-awesome/css/font-awesome.min.css'
-import * as PushNodeClient from '../../../../api'
 //import Dropdown from '../dropdown/dropdown'
 import { CID } from 'ipfs-http-client'
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w'
@@ -23,6 +23,7 @@ import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
 import { useWeb3React } from '@web3-react/core'
+import { Feeds, MessageIPFSWithCID, User } from 'api'
 import { Content } from 'components/SharedStyling'
 import { DID } from 'dids'
 import { Web3Provider } from 'ethers/providers'
@@ -34,7 +35,6 @@ import { useQuery } from 'react-query'
 import ScrollToBottom from 'react-scroll-to-bottom'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
-import { Feeds, MessageIPFSWithCID, User } from '../../../../api'
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
 import { FileMessageContent } from '../Files/Files'
 import GifPicker from '../Gifs/gifPicker'
@@ -305,7 +305,7 @@ const ChatBox = (): JSX.Element => {
     try {
       setMessageBeingSent(true)
       const { didCreated, createdUser } = await createUserIfNecessary()
-      if (currentChat.intent === null || currentChat.intent === '' || currentChat.intent === 'Pending') {
+      if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(didCreated.id)) {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
         if (!user) {
@@ -418,7 +418,7 @@ const ChatBox = (): JSX.Element => {
             type: file.type,
             size: file.size
           }
-          if (currentChat.intent === 'Pending') {
+          if (!currentChat.intent.includes(did.id)) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType })
           } else {
             sendMessage({
@@ -440,7 +440,7 @@ const ChatBox = (): JSX.Element => {
   }
 
   const sendGif = (url: string): void => {
-    if (currentChat.intent === 'Pending') {
+    if (!currentChat.intent.includes(did.id)) {
       sendIntent({ message: url, messageType: 'GIF' })
     } else {
       sendMessage({
@@ -512,7 +512,7 @@ const ChatBox = (): JSX.Element => {
             <ScrollToBottom>
               {Loading ? (
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                  <Loader type="Oval" color="#34C5F3" height={40} width={40} />
+                  <Loader color="#34C5F3" height={40} width={40} />
                 </div>
               ) : (
                 <>
@@ -548,14 +548,12 @@ const ChatBox = (): JSX.Element => {
           </MessageContainer>
 
           {messageBeingSent ? (
-            <Loader type="Oval" />
+            <Loader />
           ) : (
             <TypeBarContainer>
-              {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
-                <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
-                  <img src="/svg/chats/smiley.svg" height="24px" width="24px" alt="" />
-                </Icon>
-              ) : null}
+              <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
+                <img src="/svg/chats/smiley.svg" height="24px" width="24px" alt="" />
+              </Icon>
               {showEmojis && (
                 <Picker
                   onEmojiClick={addEmoji}
@@ -577,26 +575,23 @@ const ChatBox = (): JSX.Element => {
                 />
               }
               <>
-                {currentChat.intent === 'Pending' || currentChat.intent === 'Approved' ? (
-                  <>
-                    <label>
-                      <Icon onClick={() => setIsGifPickerOpened(true)}>
-                        <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
-                      </Icon>
-                      {isGifPickerOpened && <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} />}
-                    </label>
-                    <label>
-                      <Icon>
-                        <img src="/svg/chats/attachment.svg" height="24px" width="20px" alt="" />
-                      </Icon>
-                      <FileInput type="file" ref={fileInputRef} onChange={uploadFile} />
-                    </label>
-                  </>
-                ) : null}
-
+                <>
+                  <label>
+                    <Icon onClick={() => setIsGifPickerOpened(true)}>
+                      <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
+                    </Icon>
+                    {isGifPickerOpened && <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} />}
+                  </label>
+                  <label>
+                    <Icon>
+                      <img src="/svg/chats/attachment.svg" height="24px" width="20px" alt="" />
+                    </Icon>
+                    <FileInput type="file" ref={fileInputRef} onChange={uploadFile} />
+                  </label>
+                </>
                 {filesUploading ? (
                   <div className="imageloader">
-                    <Loader type="Oval" color="#3467eb" height={20} width={20} />
+                    <Loader color="#3467eb" height={20} width={20} />
                   </div>
                 ) : (
                   <Icon onClick={handleSubmit}>

@@ -1,32 +1,37 @@
-import React, { useState } from "react";
-import styled, { useTheme } from 'styled-components';
-import { Oval } from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useWeb3React } from "@web3-react/core";
-import { useSelector, useDispatch } from "react-redux";
-import { envConfig } from "@project/contracts";
-import SearchFilter from '../components/SearchFilter';
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import { getReq, postReq } from "api";
+import { device } from "config/Globals";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import CryptoHelper from "helpers/CryptoHelper";
+import { Item } from "primaries/SharedStyling";
+import React, { useState } from "react";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { toast as toaster } from "react-toastify";
+import { useClickAway } from "react-use";
+import { Waypoint } from "react-waypoint";
+import { cacheSubscribe } from "redux/slices/channelSlice";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/spamSlice";
-import { cacheSubscribe } from "redux/slices/channelSlice";
-import { getReq, postReq } from "api";
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from "../primaries/DisplayNotice";
-import { ThemeProvider } from "styled-components";
-import CryptoHelper from "helpers/CryptoHelper";
-import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { ScrollItem } from "./ViewChannels";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-function SpamBox(props) {
+const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
+  const modalRef = React.useRef(null);
+  useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, library } = useWeb3React();
   const { epnsCommReadProvider } = useSelector(
     (state: any) => state.contracts
@@ -34,6 +39,7 @@ function SpamBox(props) {
 
   const themes = useTheme();
   let user = convertAddressToAddrCaip(account,chainId)
+
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -51,6 +57,7 @@ function SpamBox(props) {
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [filteredNotifications, setFilteredNotifications] = React.useState([]);
   const [filter, setFilter] = React.useState(false);
+  const [allFilter, setAllFilter] = React.useState([]);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -113,11 +120,17 @@ function SpamBox(props) {
       )
         filterNotif.push(notif);
     }
-    setFilteredNotifications(filterNotif);
+    const newNotifs = filterNotif
+    setAllFilter(newNotifs)
     // }
     setLoading(false);
     setBgUpdateLoading(false);
   }
+
+  React.useEffect(() => {
+    console.log(filteredNotifications,allFilter)
+    setFilteredNotifications(allFilter)
+  }, [allFilter])
 
   const loadNotifications = async () => {
     if (loading || finishedFetching || run) return;
@@ -441,20 +454,27 @@ function SpamBox(props) {
   return (
     <ThemeProvider theme={themes}>
       <Container>
+      <div ref={modalRef}>
         <SearchFilter 
-          notifications={allNotif} 
-          filterNotifications={filterNotifications} 
-          filter={filter} reset={reset} 
-          loadFilter={loadFilter} 
-          showFilter={props.showFilter}
+          notifications={allNotif}
+          filterNotifications={filterNotifications}
+          filter={filter}
+          reset={reset}
+          loadFilter={loadFilter}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
         />
-        {bgUpdateLoading && (
-          <div style={{ marginTop: "10px" }}>
-            <Oval color="#35c5f3" height={40} width={40} />
-          </div>
-        )}
+        </div>
+      
         {notifications && (
           <Items id="scrollstyle-secondary">
+            {bgUpdateLoading && (
+                <Item padding="10px 20px">
+                   <Oval color="#35c5f3" height={40} width={40} />
+                </Item>
+              )}
             {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
               const {
                 cta,
@@ -473,7 +493,7 @@ function SpamBox(props) {
               // render the notification item
               // console.log(app , index);
               return (
-                <div key={index}>
+                <NotifsOuter key={index}>
                   {showWayPoint(index) && !loading && (
                     <Waypoint onEnter={handlePagination} />
                   )}
@@ -493,12 +513,12 @@ function SpamBox(props) {
                     chainName={blockchain}
                     url={url}
                   />
-                </div>
+                </NotifsOuter>
               );
             })}
           </Items>
         )}
-        {loading && !bgUpdateLoading && (
+         {loading && !bgUpdateLoading && (
           <Oval color="#35c5f3" height={40} width={40} />
         )}
         {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
@@ -535,36 +555,43 @@ const Items = styled.div`
 `;
 // css styles
 const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  font-weight: 200;
-  align-content: center;
-  align-items: center;
-  justify-content: center;
-  max-height: 100vh;
-  background: ${props => props.theme.mainBg};
-  // padding: 20px;
-  // font-size: 16px;
-  // display: flex;
-  // font-weight: 200;
-  // align-content: center;
-  // align-items: center;
-  // justify-content: center;
-  // width: 100%;
-  // min-height: 40vh;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    background: ${props => props.theme.mainBg};
+    font-weight: 200;
+    align-content: center;
+    align-items: stretch;
+    justify-content: center;
+    height: 100%;
+    // margin: 0px 10px;
+    overflow:scroll;
+`;
+
+const NotifsOuter = styled.div`
+  margin: 25px 0px;
 `;
 
 const Toaster = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0px 10px;
+  margin: 0 0 0 10px;
+  overflow:scroll;
+
+  @media ${device.laptop} {
+    
+  }
+
+  @media ${device.mobileM} {
+  
+  }
 `;
 
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `;
+
 
 // Export Default
 export default SpamBox;

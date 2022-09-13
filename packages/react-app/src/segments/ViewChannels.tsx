@@ -1,23 +1,23 @@
-import React from "react";
-import styled, { useTheme } from "styled-components";
-import { Oval } from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useDispatch, useSelector } from "react-redux";
-import { postReq } from "api";
-import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import { postReq } from "api";
+import React from "react";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { Waypoint } from "react-waypoint";
+import styled, { useTheme } from "styled-components";
 
-import { Item, ItemH } from "../primaries/SharedStyling";
 import { AiOutlineSearch } from "react-icons/ai";
+import { Item, ItemH } from "../primaries/SharedStyling";
 
 import UtilityHelper from 'helpers/UtilityHelper';
 
-import DisplayNotice from "../primaries/DisplayNotice";
-import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
+import ViewChannelItem from "components/ViewChannelItem";
+import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
+import DisplayNotice from "../primaries/DisplayNotice";
 
 import { ThemeProvider } from "styled-components";
 
@@ -293,7 +293,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  max-height: 92vh;
+  max-height: 100vh;
 `;
 
 const ContainerInfo = styled.div`

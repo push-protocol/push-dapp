@@ -192,25 +192,13 @@ export default AppLogin;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff
 const Container = styled(SectionV2)`
-  padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
+  padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
   }
 
   @media ${device.mobileM} {
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
   }
-`;
-
-const PushLogo = styled.div`
-  width: 200px;
-  padding-bottom: 20px;
-`;
-
-const ProviderImage = styled.img`
-  width: 73px;
-  height: 69px;
-  max-height: 69px;
-  padding-bottom: 18px;
 `;

@@ -1,34 +1,39 @@
-import React from "react";
-import styled, { useTheme } from "styled-components";
-import { Oval } from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useWeb3React } from "@web3-react/core";
-import { useSelector, useDispatch } from "react-redux";
-import { ScrollItem } from "./ViewChannels";
-import DisplayNotice from "../primaries/DisplayNotice";
-import SearchFilter from "components/SearchFilter";
-import { ThemeProvider } from "styled-components";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import SearchFilter from "components/SearchFilter";
+import React from "react";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { useClickAway } from "react-use";
+import { Waypoint } from "react-waypoint";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-  updateTopNotifications,
+  updateTopNotifications
 } from "redux/slices/notificationSlice";
-import { envConfig } from "@project/contracts";
+import styled, { ThemeProvider, useTheme } from "styled-components";
+import DisplayNotice from "../primaries/DisplayNotice";
+import { ScrollItem } from "./ViewChannels";
 
+import CryptoHelper from "helpers/CryptoHelper";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
-import CryptoHelper from "helpers/CryptoHelper";
 
-import { Item } from "../primaries/SharedStyling";
+import { device } from "config/Globals";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { Item } from "primaries/SharedStyling";
+
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
-function Feedbox(props) {
+const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
+  const modalRef = React.useRef(null);
+  useClickAway(modalRef, () => showFilter && setShowFilter(false));
+
   const { account, library, chainId } = useWeb3React();
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
@@ -47,6 +52,7 @@ function Feedbox(props) {
   const [allNotf, setNotif] = React.useState([]);
   const [filteredNotifications, setFilteredNotifications] = React.useState([]);
   const [filter, setFilter] = React.useState(false);
+  const [allFilter, setAllFilter] = React.useState([]);
   const [loadFilter, setLoadFilter] = React.useState(false);
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
@@ -98,7 +104,8 @@ function Feedbox(props) {
         )
           filterNotif.push(notif);
       }
-      await setFilteredNotifications(filterNotif);
+      const newNotifs = filterNotif
+      setAllFilter(newNotifs)
     } catch (err) {
       console.log(err);
     } finally {
@@ -106,6 +113,12 @@ function Feedbox(props) {
       setBgUpdateLoading(false);
     }
   }
+
+  React.useEffect(() => {
+    // console.log(allFilter)
+    setFilteredNotifications(allFilter)
+  }, [allFilter])
+
   const loadNotifications = async () => {
     if (loading || finishedFetching) return;
     setLoading(true);
@@ -124,10 +137,9 @@ function Feedbox(props) {
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
-      console.log(results)
       const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
-      if (results.length === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -169,7 +181,7 @@ function Feedbox(props) {
           pageSize: NOTIFICATIONS_PER_PAGE,
         })
       );
-      if (results.length === 0) {
+      if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
       }
     } catch (err) {
@@ -312,19 +324,23 @@ function Feedbox(props) {
       }
     }
   };
-
   // Render
   return (
     <ThemeProvider theme={themes}>
       <Container>
-        <SearchFilter
+      <div ref={modalRef}>
+        <SearchFilter 
           notifications={allNotf}
           filterNotifications={filterNotifications}
           filter={filter}
           reset={reset}
           loadFilter={loadFilter}
-          showFilter={props.showFilter}
+          showFilter={showFilter}
+          setShowFilter={setShowFilter}
+          search={search}
+          setSearch={setSearch}
         />
+        </div>
         <ScrollItem>
           {((!run && !notifications.length) ||
             (!run && filter && !filteredNotifications.length) ||
@@ -359,7 +375,7 @@ function Feedbox(props) {
 
                   // render the notification item
                   return (
-                    <div key={`${message}+${title}`}>
+                    <NotifsOuter key={`${message}+${title}`}>
                       <NotificationItem
                         notificationTitle={title}
                         notificationBody={message}
@@ -371,11 +387,11 @@ function Feedbox(props) {
                         chainName={blockchain}
                         url={url}
                       />
-                    </div>
+                    </NotifsOuter>
                   );
                 })}
               {(filter
-                ? filteredNotifications.slice(0, limit)
+                ? filteredNotifications
                 : notifications
               ).map((oneNotification, index) => {
                 const {
@@ -393,7 +409,7 @@ function Feedbox(props) {
                 if (run) return;
                 // render the notification item
                 return (
-                  <div key={index}>
+                  <NotifsOuter key={index}>
                     {showWayPoint(index) && (
                       <Waypoint onEnter={() => handlePagination()} />
                     )}
@@ -412,7 +428,7 @@ function Feedbox(props) {
                       theme={themes.scheme}
                       url={url}
                     />
-                  </div>
+                  </NotifsOuter>
                 );
               })}
 
@@ -443,8 +459,21 @@ const Container = styled.div`
   align-content: center;
   align-items: stretch;
   justify-content: center;
-  height: inherit;
-  // margin: 0px 10px;
+  height: 100%;
+  margin: 0 0 0 10px;
+  overflow:scroll;
+
+  @media ${device.laptop} {
+    
+  }
+
+  @media ${device.mobileM} {
+  
+  }
+`;
+
+const NotifsOuter = styled.div`
+  margin: 25px 0px;
 `;
 
 const Notifs = styled.div`

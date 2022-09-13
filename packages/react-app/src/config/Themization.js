@@ -23,14 +23,16 @@ const themeLight = {
   sectionBorderBg: 'transparent',
 
   // Header Theme
-  headerBg: "#fff",
-  headerTagBg: "#000",
-  headerTagFg: "#000",
+  headerBg: '#fff',
+  headerTagBg: '#000',
+  headerTagFg: '#fff',
 
   headerIconsBg: '#000',
 
-  // Nav Menu 
+  // Nav Menu
   navMenuBg: '#00000066',
+  navText: '#000',
+  activeNav: '#F9EBF3',
 
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',
@@ -97,21 +99,21 @@ const themeLight = {
   qnaBg: '#fff',
   qnaBgBorder: '#fafafa',
 
-  yieldBg: "#f3f3f3",
+  yieldBg: '#f3f3f3',
 
-  pushPriceBg: "#000",
+  pushPriceBg: '#000',
 
-  greyText: "#818589",
+  greyText: '#818589',
 
-  color: "#000",
+  color: '#000',
 
-  channelBg: "#fafafa",
+  channelBg: '#fafafa',
 
-  button: "#000",
-  
-  buttonColor: "#fff",
+  button: '#000',
 
-  createColor: "#808080",
+  buttonColor: '#fff',
+
+  createColor: '#808080',
 
   // Modals
   modalContentBackground: "white",
@@ -168,6 +170,8 @@ const themeDark = {
 
   // Nav Menu 
   navMenuBg: '#00000066',
+  navText: '#B6BCD6',
+  activeNav: '#404650;',
 
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',
@@ -236,25 +240,25 @@ const themeDark = {
   qnaBg: '#222',
   qnaBgBorder: '#666',
 
-  color: "#fff",
+  color: '#fff',
 
-  yieldBg: "#ddd",
+  yieldBg: '#ddd',
 
-  questionBg: "#000",
+  questionBg: '#000',
 
-  pushPriceBg: "teal",
+  pushPriceBg: 'teal',
 
-  greyText: "#818589",
+  greyText: '#818589',
 
-  channelBg: "#000",
+  channelBg: '#000',
 
-  button: "#fff",
-  
-  buttonColor: "#000",
+  button: '#fff',
 
-  buttonBd: "1px solid #fff",
+  buttonColor: '#000',
 
-  createColor: "#fff",
+  buttonBd: '1px solid #fff',
+
+  createColor: '#fff',
 
   // Modals
   modalContentBackground: "#282a2e",
