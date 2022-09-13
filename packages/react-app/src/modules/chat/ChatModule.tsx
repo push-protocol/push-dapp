@@ -36,13 +36,13 @@ const Container = styled(Section)`
 	justify-content: center;
 	position: relative;
 
-  margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
+  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
-    margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
   }
 
   @media ${device.mobileM} {
-    margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
   }
 `;
