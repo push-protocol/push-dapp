@@ -33,6 +33,7 @@ function Dropdown(props) {
             padding="2px 12px"
             wrap="nowrap"
             margin="0px 0 8px 0"
+            width="max-content"
           >
             <Span
               margin="11px 22px 11px 2px"
@@ -41,6 +42,7 @@ function Dropdown(props) {
               textTransform="uppercase"
               color="#fff"
               spacing="1px"
+              width="max-content"
             >
               {dropdownValue?.title}
             </Span>
@@ -60,7 +62,7 @@ function Dropdown(props) {
              {dropdownValue?.icon && <Image
               src={dropdownValue.icon}
               alt="icon"
-              width="auto"
+              width="max-content"
               spacing="1px"
               filter={theme.snackbarBorderIcon}
             />}
@@ -71,6 +73,7 @@ function Dropdown(props) {
                 weight="400"
                 size="16px"
                 cursor="pointer"
+                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}
@@ -84,6 +87,7 @@ function Dropdown(props) {
                 margin="10px 20px"
                 weight="400"
                 size="16px"
+                width="max-content"
                 color={theme.snackbarBorderText}
                 hoverBG="transparent"
               >

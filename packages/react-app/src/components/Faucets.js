@@ -59,7 +59,7 @@ const Faucets = () => {
           align="flex-start"
           padding="7px 83px 7px 14px"
           position="absolute"
-          top="1.2rem"
+          top="0rem"
           zIndex="10"
           right="-0.5rem"
         >
@@ -75,6 +75,7 @@ export default Faucets;
 
 // css styles
 const Container = styled.button`
+  position:relative;
   margin: 0;
   padding: 0;
   background: none;
