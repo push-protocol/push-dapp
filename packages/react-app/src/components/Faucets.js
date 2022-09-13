@@ -34,15 +34,12 @@ const Faucets = () => {
   // render
   return (
     <Container>
-      <Faucet color={theme.viewChannelSearchText}>
+      <Faucet color={theme.viewChannelSearchText} onClick={() => setShowDropdown(!showDropdown)} ref={toggleArrowRef}>
         <ItemH padding="0 8px 0 0">
           <Image src="./svg/gasPump.svg" alt="faucet" width="32px" height="32px" />
         </ItemH>
         Testnet Faucets
-        <ToggleArrowImg
-          ref={toggleArrowRef}
-          onClick={() => setShowDropdown(!showDropdown)}
-        >
+        <ToggleArrowImg>
           <img
             alt="arrow"
             className={`${showDropdown ? "down" : "up"}`}
