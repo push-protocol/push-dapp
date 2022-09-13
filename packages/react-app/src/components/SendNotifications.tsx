@@ -10,7 +10,7 @@ import { BsFillImageFill } from "react-icons/bs";
 import { FiLink } from "react-icons/fi";
 import { Oval } from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import useToast from "../hooks/useToast"
 import styled, { useTheme } from "styled-components";
 
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
@@ -24,6 +24,7 @@ import { IPFSupload } from "helpers/IpfsHelper";
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 import PreviewNotif from "./PreviewNotif";
+import { MdCheckCircle, MdError } from "react-icons/md";
 
 const ethers = require("ethers");
 
@@ -239,41 +240,35 @@ React.useEffect(() => {
   }
 }, [nfType]);
 
+// Notification Toast
+const notificationToast = useToast(5000);
+
 // validate the body being sent, return true if no errors
-const bodyValidated = (notificationToast) => {
-  let validated = true;
-  // if we are sending for a subset and there
-  if (nfType === "4" && multipleRecipients.length < 2) {
-      toast.update(notificationToast, {
-          render: "Please enter at least two recipients in order to use subset notifications type",
-          type: toast.TYPE.ERROR,
-          autoClose: 5000,
-      });
-      validated = false;
-  }
-  return validated;
+const bodyValidated = () => {
+    let validated = true;
+    // if we are sending for a subset and there
+    if (nfType === "4" && multipleRecipients.length < 2) {
+        notificationToast.showMessageToast({
+          toastTitle: "Error",
+          toastMessage:"Please enter at least two recipients in order to use subset notifications type",
+          toastType: "ERROR",
+          getToastIcon: (size) => <MdError size={size} color="red" />
+        })
+        validated = false;
+    }
+    return validated;
 };
 
 const handleSendMessage = async (e) => {
   // Check everything in order
   e.preventDefault();
 
-  // Toastify
-  let notificationToast = toast.dark(
-      <LoaderToast msg="Preparing Notification" color="#fff" />,
-      {
-          position: "bottom-right",
-          autoClose: false,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-      }
-  );
+  notificationToast.showLoaderToast({
+    loaderMessage: "Preparing Notification"
+  });
 
   // do some validation
-  if (!bodyValidated(notificationToast)) return;
+  if (!bodyValidated()) return;
 
   // Set to processing
   setNFProcessing(1);
@@ -430,11 +425,12 @@ const handleSendMessage = async (e) => {
           setNFInfo("Enter Subject or Disable it");
           setNFProcessing(2);
 
-          toast.update(notificationToast, {
-              render: "Incorrect Payload",
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
+          notificationToast.showMessageToast({
+            toastTitle: "Error",
+            toastMessage: "Incorrect Payload",
+            toastType: "ERROR",
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
 
           return;
       }
@@ -443,11 +439,12 @@ const handleSendMessage = async (e) => {
           setNFInfo("Enter Media URL or Disable it");
           setNFProcessing(2);
 
-          toast.update(notificationToast, {
-              render: "Incorrect Payload",
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
+          notificationToast.showMessageToast({
+            toastTitle: "Error",
+            toastMessage: "Incorrect Payload",
+            toastType: "ERROR",
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
           return;
       }
 
@@ -455,11 +452,12 @@ const handleSendMessage = async (e) => {
           setNFInfo("Enter Call to Action Link or Disable it");
           setNFProcessing(2);
 
-          toast.update(notificationToast, {
-              render: "Incorrect Payload",
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
+          notificationToast.showMessageToast({
+            toastTitle: "Error",
+            toastMessage: "Incorrect Payload",
+            toastType: "ERROR",
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
           return;
       }
 
@@ -467,11 +465,12 @@ const handleSendMessage = async (e) => {
           setNFInfo("Message cannot be empty");
           setNFProcessing(2);
 
-          toast.update(notificationToast, {
-              render: "Incorrect Payload",
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
+          notificationToast.showMessageToast({
+            toastTitle: "Error",
+            toastMessage: "Incorrect Payload",
+            toastType: "ERROR",
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
           return;
       }
 
@@ -621,31 +620,34 @@ const handleSendMessage = async (e) => {
         //       payload: payload,
         //       type: nfType,
         //   }).then(async (res) => {
-            toast.update(notificationToast, {
-                render: "Notification Sent",
-                type: toast.TYPE.INFO,
-                autoClose: 5000,
-            });
+            notificationToast.showMessageToast({
+                toastTitle:"Success", 
+                toastMessage: "Notification Sent", 
+                toastType: "SUCCESS", 
+                getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+            })
 
             setNFProcessing(2);
             setNFType("1");
             setNFInfo("Offchain Notification Sent");
 
-            toast.update(notificationToast, {
-                render: "Offchain Notification Sent",
-                type: toast.TYPE.SUCCESS,
-                autoClose: 5000,
-            });
+            notificationToast.showMessageToast({
+                toastTitle: "Success", 
+                toastMessage: "Offchain Notification Sent", 
+                toastType: "SUCCESS", 
+                getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+            })
         //       console.log(res);
         //   });
       } catch (err) {
           setNFInfo("Offchain Notification Failed, please try again");
 
-          toast.update(notificationToast, {
-              render: "Offchain Notification Failed: " + err,
-              type: toast.TYPE.ERROR,
-              autoClose: 5000,
-          });
+          notificationToast.showMessageToast({
+            toastTitle: "Error",
+            toastMessage: "Offchain Notification Failed: " + err,
+            toastType: "ERROR",
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
           setNFProcessing(0);
           console.log(err);
       }
