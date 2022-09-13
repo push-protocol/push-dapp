@@ -33,6 +33,7 @@ function Dropdown(props) {
             padding="2px 12px"
             wrap="nowrap"
             margin="0px 0 8px 0"
+            width="max-content"
           >
             <Span
               margin="11px 22px 11px 2px"
@@ -41,6 +42,7 @@ function Dropdown(props) {
               textTransform="uppercase"
               color="#fff"
               spacing="1px"
+              width="max-content"
             >
               {dropdownValue?.title}
             </Span>
@@ -66,6 +68,7 @@ function Dropdown(props) {
             />
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
+                width="max-content"
                 color={theme.snackbarBorderText}
                 margin="10px 20px"
                 weight="400"
@@ -78,6 +81,7 @@ function Dropdown(props) {
             )}
             {dropdownValue?.link && (
               <A
+                width="max-content"
                 href={dropdownValue?.link}
                 target="_blank"
                 rel="nofollow"

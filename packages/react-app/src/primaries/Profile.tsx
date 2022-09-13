@@ -120,8 +120,9 @@ const Profile = ({isDarkMode}) => {
               align="flex-start"
               padding="1.3rem"
               position="absolute"
-              top="4.1rem"
+              top="3.6rem"
               right="-0.5rem"
+              zIndex="10"
             >
               <Dropdown dropdownValues={dropdownValues} />
             </Item>
@@ -134,6 +135,7 @@ const Profile = ({isDarkMode}) => {
 
 // css styles
 const Container = styled.button`
+  position: relative;
   margin: 0;
   padding: 0;
   background: none;
