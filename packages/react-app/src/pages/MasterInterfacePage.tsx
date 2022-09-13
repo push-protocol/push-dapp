@@ -11,6 +11,7 @@ import { VscClose } from 'react-icons/vsc';
 
 import AirdropPage from "pages/AirdropPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
+import ChannelsPage from "pages/ChannelsPage";
 import ChatPage from 'pages/ChatPage';
 import NewChatPage from 'pages/ChatPageNew';
 import ComingSoonPage from "pages/ComingSoonPage";
@@ -23,7 +24,6 @@ import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
 import SendNotifs from "pages/SendNotifs";
 import SpamPage from "pages/SpamPage";
 import TutorialPage from "pages/TutorialPage";
-import ViewChannelsPage from "pages/ViewChannelsPage";
 import YieldFarmingPage from "pages/YieldFarmingPage";
 import NotAvailablePage from "./NotAvailablePage";
 
@@ -48,7 +48,7 @@ function MasterInterfacePage() {
           <Route path="chat-new" element={<NewChatPage />} />
 
           <Route path="channels" element={
-            <ViewChannelsPage
+            <ChannelsPage
               loadTeaser={setLoadTeaserVideo}
               playTeaser={setPlayTeaserVideo}
             />

@@ -24,7 +24,7 @@ import NotificationToast from "../primaries/NotificationToast";
 
 import { device } from "config/Globals";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { Item } from "../primaries/SharedStyling";
+import { Item } from "primaries/SharedStyling";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 
@@ -375,7 +375,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
 
                   // render the notification item
                   return (
-                    <div key={`${message}+${title}`}>
+                    <NotifsOuter key={`${message}+${title}`}>
                       <NotificationItem
                         notificationTitle={title}
                         notificationBody={message}
@@ -387,7 +387,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                         chainName={blockchain}
                         url={url}
                       />
-                    </div>
+                    </NotifsOuter>
                   );
                 })}
               {(filter
@@ -409,7 +409,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                 if (run) return;
                 // render the notification item
                 return (
-                  <div key={index}>
+                  <NotifsOuter key={index}>
                     {showWayPoint(index) && (
                       <Waypoint onEnter={() => handlePagination()} />
                     )}
@@ -428,7 +428,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                       theme={themes.scheme}
                       url={url}
                     />
-                  </div>
+                  </NotifsOuter>
                 );
               })}
 
@@ -470,6 +470,10 @@ const Container = styled.div`
   @media ${device.mobileM} {
   
   }
+`;
+
+const NotifsOuter = styled.div`
+  margin: 25px 0px;
 `;
 
 const Notifs = styled.div`

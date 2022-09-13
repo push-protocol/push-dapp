@@ -4,13 +4,14 @@ import { Web3Provider } from 'ethers/providers'
 import styled,{useTheme} from 'styled-components';
 import Dropdown from '../components/Dropdown';
 import {Item} from "./SharedStyling.js";
+import { useClickAway } from 'hooks/useClickAway';
 
 import { Oval } from 'react-loader-spinner';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
-  const toggleArrowRef = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLInputElement>(null);
+  const toggleArrowRef = useRef(null);
+  const dropdownRef = useRef(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
@@ -44,19 +45,9 @@ const Profile = ({isDarkMode}) => {
     },
   ];
   
-  React.useEffect(() => {
-    const closeDropdown = (e) => {
-      if(toggleArrowRef.current && !toggleArrowRef?.current.contains(e.target) && 
-         dropdownRef.current && !dropdownRef?.current.contains(e.target))
-      {
-        setShowDropdown(false);
-      }
-    }
-
-    document.addEventListener('click',closeDropdown);
-
-    return () => document.removeEventListener('click',closeDropdown);
-  })
+  useClickAway(toggleArrowRef,dropdownRef, () => {
+    setShowDropdown(false);
+  });
   
   React.useEffect(() => {
     if (account && account != '') {

@@ -52,35 +52,36 @@ const themeLight = {
   interfaceSkeleton: '#eee',
 
   // Main Theme
-  backgroundBG: '#fff',
-  backgroundBGLucid: '#00000099',
-  mainBg: '#fff',
-  fontColor: '#000',
-  fontColorSecondary: '#00000099',
-  scrollBg: '#eee',
-  borderBg: '#f1f1f1',
+  backgroundBG: "#F4F5FA",
+  backgroundBGLucid: "#00000099",
+  mainBg: "#fff",
+  fontColor: "#000",
+  fontColorSecondary: "#00000099",
+  scrollBg: "#eee",
+  borderBg: "#f1f1f1",
 
   // View Channels Theme
   // -- View Channel Header Theme
   // -- -- Search Bar
-  viewChannelSearchBg: '#fff',
-  viewChannelSearchBorder: '#f1f1f1',
-  viewChannelSearchText: '#000',
-  viewChannelSearchIcon: '#333',
+  viewChannelSearchBg: "#F4F5FA",
+  viewChannelSearchText: "#657795",
+  viewChannelSearchIcon: "#657795",
 
   // -- -- Faucet Theme
   faucetBg: '#fff',
-  faucetBorder: '#ededed',
-  faucetIcon: '#674c9f',
-  faucetHeader: '#e20880',
+  faucetBorder: '#BAC4D6',
+  faucetText: '#657795',
+  faucetFilter: "brightness(0) saturate(100%) invert(46%) sepia(24%) saturate(480%) hue-rotate(179deg) brightness(95%) contrast(89%)",
 
   // -- View Channel Main Theme
-  viewChannelOuterBorder: '#eee',
-  viewChannelLink: '#e20880',
-  viewChannelVerifiedBadge: '#ec008c',
-  viewChannelIconBorder: '#fafafa',
-  viewChannelSecondaryBG: '#35c5f3',
-  viewChannelSecondaryIcon: '#ccc',
+  viewChannelOuterBorder: "#eee",
+  viewChannelLink: "#e20880",
+  viewChannelVerifiedBadge: "#ec008c",
+  viewChannelIconBorder: "#E6E7EC",
+  viewChannelSecondaryBG: "#FFDBF0",
+  viewChannelSecondaryText: "#D53893",
+  viewChannelSecondaryIcon: "#D53893",
+  viewChannelPrimaryText: "#657795",
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: '#000',
@@ -211,16 +212,19 @@ const themeDark = {
   // -- -- Faucet Theme
   faucetBg: '#222',
   faucetBorder: '#333',
-  faucetIcon: '#414141',
-  faucetHeader: '#414141',
+  faucetText: '#657795',
+  faucetFilter: "brightness(0) saturate(100%) invert(46%) sepia(24%) saturate(480%) hue-rotate(179deg) brightness(95%) contrast(89%)",
 
   // -- View Channel Main Theme
-  viewChannelOuterBorder: '#222',
-  viewChannelLink: '#35c5f3',
-  viewChannelVerifiedBadge: '#ccc',
-  viewChannelIconBorder: '#222',
-  viewChannelSecondaryBG: '#222',
-  viewChannelSecondaryIcon: '#414141',
+  viewChannelOuterBorder: "#222",
+  viewChannelLink: "#35c5f3",
+  viewChannelVerifiedBadge: "#ccc",
+  viewChannelIconBorder: "#222",
+  viewChannelSecondaryBG: "#222",
+  viewChannelSecondaryText: "#D53893",
+  viewChannelSecondaryIcon: "#D53893",
+  viewChannelPrimaryText: "#fff",
+
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: '#000',

@@ -1,23 +1,23 @@
-import React from "react";
-import styled, { useTheme } from "styled-components";
-import { Oval } from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useDispatch, useSelector } from "react-redux";
-import { postReq } from "api";
-import { useWeb3React } from "@web3-react/core";
 import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import { postReq } from "api";
+import React from "react";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { Waypoint } from "react-waypoint";
+import styled, { useTheme } from "styled-components";
 
-import { Item, ItemH } from "../primaries/SharedStyling";
 import { AiOutlineSearch } from "react-icons/ai";
+import { Item, ItemH } from "../primaries/SharedStyling";
 
 import UtilityHelper from 'helpers/UtilityHelper';
 
-import DisplayNotice from "../primaries/DisplayNotice";
-import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
+import ViewChannelItem from "components/ViewChannelItem";
+import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
+import DisplayNotice from "../primaries/DisplayNotice";
 
 import { ThemeProvider } from "styled-components";
 
@@ -192,7 +192,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   value={search}
                   onChange={(e: any) => setSearch(e.target.value)}
                   className="input"
-                  placeholder="Search By Name/Address"
+                  placeholder={`Search by Name or ${account.slice(0,6)}`}
                 />
                 <Item
                   position="absolute"
@@ -206,7 +206,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               </SearchContainer>
 
               {!UtilityHelper.isMainnet(chainId) &&
-                <Faucets chainId={chainId} />
+                <Faucets />
               }
 
             </ItemH>
@@ -257,23 +257,21 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 // css styles
 const SearchBar = styled.input`
   width: 100%;
-  padding-right: 50px;
-  height: 60px;
-  padding-left: 40px;
-
+  padding: 13px 40px;
+  border: none;
   background: ${props => props.theme.viewChannelSearchBg};
-  border: 1px solid ${props => props.theme.viewChannelSearchBorder} !important;
   color: ${props => props.theme.viewChannelSearchText};
   box-sizing: border-box;
-  border-radius: 10px;
-  text-transform: capitalize;
+  border-radius: 99px;
+  text-transform: none;
   font-size: 16px;
+  font-weight: 400;
 
   input[type="reset"] {
     display: none;
   }
   &::placeholder {
-    letter-spacing: 0.15em;
+    letter-spacing: -0.019em;
   }
   &:hover,
   &:active,
@@ -295,7 +293,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
 
-  max-height: 92vh;
+  max-height: 100vh;
 `;
 
 const ContainerInfo = styled.div`
@@ -326,7 +324,7 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
   
   flex: 1;
-  padding: 10px 20px;
+  padding:  5px 20px 10px 20px;
   overflow-y: scroll;
 
   &::-webkit-scrollbar-track {

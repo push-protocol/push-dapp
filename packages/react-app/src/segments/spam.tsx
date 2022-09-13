@@ -493,7 +493,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
               // render the notification item
               // console.log(app , index);
               return (
-                <div key={index}>
+                <NotifsOuter key={index}>
                   {showWayPoint(index) && !loading && (
                     <Waypoint onEnter={handlePagination} />
                   )}
@@ -513,7 +513,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
                     chainName={blockchain}
                     url={url}
                   />
-                </div>
+                </NotifsOuter>
               );
             })}
           </Items>
@@ -566,6 +566,10 @@ const Container = styled.div`
     height: 100%;
     // margin: 0px 10px;
     overflow:scroll;
+`;
+
+const NotifsOuter = styled.div`
+  margin: 25px 0px;
 `;
 
 const Toaster = styled.div`
