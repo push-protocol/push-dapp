@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
 import {
   createSocketConnection,
   EVENTS
 } from '@epnsproject/sdk-socket';
-import { toast } from "react-toastify";
+import { showNotifcationToast } from 'components/reusables/toasts/toastController';
+import { useEffect, useState } from 'react';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 
 export type SDKSocketHookOptions = {
@@ -31,17 +31,9 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
        */
       try {
         const [feed] = feedList || [];
-        const { payload } = feed || {};
-        const { title, body } = payload?.notification || {};
-
-        const msgPayloadString = `${title} ${body}`;
-    
-        toast.dark(msgPayloadString, {
-          type: toast.TYPE.INFO,
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: 10000,
-          hideProgressBar: false,
-        });
+        const { payload } = feed || {};        
+        showNotifcationToast(payload);
+        
       } catch (e) {
         console.error('DAPP Error while diplaying received Notification: ', e);
       }     

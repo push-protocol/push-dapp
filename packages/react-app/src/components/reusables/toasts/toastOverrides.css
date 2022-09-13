@@ -1,0 +1,35 @@
+/* Notif Tost Override - z-index is 9999 for toastify so come over them */
+.NotifToastOverride {
+  background: transparent !important;
+  box-shadow: none !important;
+  z-index: 10004; 
+  position: relative;
+  min-width: 360px;
+}
+
+.NotifToastOverride:first-child {
+  z-index: 10003;
+  bottom: 0px;
+  right: 10px;
+  position: absolute;
+}
+
+.NotifToastOverride:nth-child(2) {
+  transform: scale(0.9);
+  bottom: 10px;
+  right: 10px;
+  position: absolute;
+  z-index: 10002;
+}
+
+.NotifToastOverride:nth-child(n+3):nth-last-child(n) {
+  transform: scale(0.8);
+  bottom: 15px;
+  right: 10px;
+  position: absolute;
+  z-index: 10001;
+}
+
+.NotifToastOverride > .Toastify__toast-body{
+  pointer-events: none;
+}

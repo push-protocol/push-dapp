@@ -21,6 +21,55 @@ export const device = {
   desktopL: `(max-width: ${size.desktop})`
 };
 
+// Define Padding
+export const globalsPadding = {
+
+}
+
+// Define Margin
+export const globalsMargin = {
+  MINI_MODULES: {
+    DESKTOP: {
+      TOP: '48px',
+      RIGHT: '30px', 
+      BOTTOM: '48px',
+      LEFT: '30px'
+    },
+    TABLET: {
+      TOP: '25px',
+      RIGHT: '25px', 
+      BOTTOM: '25px',
+      LEFT: '25px'
+    },
+    MOBILE: {
+      TOP: '20px',
+      RIGHT: '20px', 
+      BOTTOM: '20px',
+      LEFT: '20px'
+    },
+  },
+  BIG_MODULES: {
+    DESKTOP: {
+      TOP: '18px',
+      RIGHT: '0px', 
+      BOTTOM: '0px',
+      LEFT: '18px'
+    },
+    TABLET: {
+      TOP: '25px',
+      RIGHT: '25px', 
+      BOTTOM: '25px',
+      LEFT: '25px'
+    },
+    MOBILE: {
+      TOP: '20px',
+      RIGHT: '20px', 
+      BOTTOM: '20px',
+      LEFT: '20px'
+    },
+  }
+}
+
 // Define Globals
 export default {
   LINKS: {
@@ -53,26 +102,22 @@ export default {
     MODULE_BOX_SHADOW: 'rgb(0 0 0 / 10%) 0px 15px 20px -5px',
 
     PADDING: {
-      DEFAULT: '20px',
+      DEFAULT: '20px'
+    },
+    MARGIN: {
+      VERTICAL: '30px',
+      HORIZONTAL: '20px',
+
       MINI_MODULES: {
-        DESKTOP: '48px 30px 48px 30px',
-        TABLET: '25px',
-        MOBILE: '20px',
+        DESKTOP: `${globalsMargin.MINI_MODULES.DESKTOP.TOP} ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM} ${globalsMargin.MINI_MODULES.DESKTOP.LEFT}`,
+        TABLET: `${globalsMargin.MINI_MODULES.TABLET.TOP} ${globalsMargin.MINI_MODULES.TABLET.RIGHT} ${globalsMargin.MINI_MODULES.TABLET.BOTTOM} ${globalsMargin.MINI_MODULES.TABLET.LEFT}`,
+        MOBILE: `${globalsMargin.MINI_MODULES.MOBILE.TOP} ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM} ${globalsMargin.MINI_MODULES.MOBILE.LEFT}`,
+      },
+      BIG_MODULES: {
+        DESKTOP: `${globalsMargin.BIG_MODULES.DESKTOP.TOP} ${globalsMargin.BIG_MODULES.DESKTOP.RIGHT} ${globalsMargin.BIG_MODULES.DESKTOP.BOTTOM} ${globalsMargin.BIG_MODULES.DESKTOP.LEFT}`,
+        TABLET: `${globalsMargin.BIG_MODULES.TABLET.TOP} ${globalsMargin.BIG_MODULES.TABLET.RIGHT} ${globalsMargin.BIG_MODULES.TABLET.BOTTOM} ${globalsMargin.BIG_MODULES.TABLET.LEFT}`,
+        MOBILE: `${globalsMargin.BIG_MODULES.MOBILE.TOP} ${globalsMargin.BIG_MODULES.MOBILE.RIGHT} ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM} ${globalsMargin.BIG_MODULES.MOBILE.LEFT}`,
       }
-    },
-    MARGIN: {
-      VERTICAL: '30px',
-      HORIZONTAL: '20px'
-    },
-    RADIUS: {
-      LARGE: '32px',
-      MID: '24px',
-      SMALL: '16px',
-      MINI: '12px'
-    },
-    MARGIN: {
-      VERTICAL: '30px',
-      HORIZONTAL: '20px'
     },
     RADIUS: {
       LARGE: '32px',
@@ -84,6 +129,7 @@ export default {
 
   COLORS: {
     PRIMARY: 'rgba(27.0, 150.0, 227.0, 1.0)',
+    PRIMARY_PINK: '#CF1C84',
 
     LINKS: 'rgba(20.0, 126.0, 251.0, 1.0)',
 

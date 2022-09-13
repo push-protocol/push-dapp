@@ -1,30 +1,31 @@
-import React from "react";
-import styled, { useTheme } from "styled-components";
-import { Oval } from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useWeb3React } from "@web3-react/core";
-import { useSelector, useDispatch } from "react-redux";
-import { ScrollItem } from "./ViewChannels";
-import DisplayNotice from "../primaries/DisplayNotice";
-import SearchFilter from "components/SearchFilter";
-import { ThemeProvider } from "styled-components";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import SearchFilter from "components/SearchFilter";
+import React from "react";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { useClickAway } from "react-use";
+import { Waypoint } from "react-waypoint";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
-  updateTopNotifications,
+  updateTopNotifications
 } from "redux/slices/notificationSlice";
-import { useClickAway } from "react-use";
+import styled, { ThemeProvider, useTheme } from "styled-components";
+import DisplayNotice from "../primaries/DisplayNotice";
+import { ScrollItem } from "./ViewChannels";
 
+import CryptoHelper from "helpers/CryptoHelper";
 import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
-import CryptoHelper from "helpers/CryptoHelper";
 
-import { Item } from "../primaries/SharedStyling";
+import { device } from "config/Globals";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { Item } from "../primaries/SharedStyling";
+
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header
@@ -459,8 +460,16 @@ const Container = styled.div`
   align-items: stretch;
   justify-content: center;
   height: 100%;
-  margin: 0px 10px;
+  margin: 0 0 0 10px;
   overflow:scroll;
+
+  @media ${device.laptop} {
+    
+  }
+
+  @media ${device.mobileM} {
+  
+  }
 `;
 
 const Notifs = styled.div`

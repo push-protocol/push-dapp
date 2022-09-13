@@ -9,22 +9,21 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import { VscClose } from 'react-icons/vsc';
 
+import AirdropPage from "pages/AirdropPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
 import ChatPage from 'pages/ChatPage';
 import NewChatPage from 'pages/ChatPageNew';
+import ComingSoonPage from "pages/ComingSoonPage";
+import FAQPage from "pages/FAQPage";
+import GovPage from "pages/GovPage";
 import InboxPage from "pages/InboxPage";
+import InternalDevPage from "pages/InternalDevPage";
+import NFTPage from "pages/NFTPage";
 import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
 import SendNotifs from "pages/SendNotifs";
 import SpamPage from "pages/SpamPage";
-import ViewChannelsPage from "pages/ViewChannelsPage";
-
-import GovPage from "pages/GovPage";
-
-import AirdropPage from "pages/AirdropPage";
-import ComingSoonPage from "pages/ComingSoonPage";
-import FAQPage from "pages/FAQPage";
-import NFTPage from "pages/NFTPage";
 import TutorialPage from "pages/TutorialPage";
+import ViewChannelsPage from "pages/ViewChannelsPage";
 import YieldFarmingPage from "pages/YieldFarmingPage";
 import NotAvailablePage from "./NotAvailablePage";
 
@@ -69,6 +68,7 @@ function MasterInterfacePage() {
           <Route path="comingsoon" element={<ComingSoonPage />} />
           <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
+          <Route path="internal" element={<InternalDevPage />} />
           <Route
             path="/"
             element={<Navigate to="/channels" />}
