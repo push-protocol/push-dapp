@@ -10,8 +10,8 @@ import { BsFillImageFill } from "react-icons/bs";
 import { FiLink } from "react-icons/fi";
 import { Oval } from "react-loader-spinner";
 import { useSelector } from "react-redux";
-import useToast from "../hooks/useToast"
 import styled, { useTheme } from "styled-components";
+import useToast from "../hooks/useToast";
 
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import Switch from "@material-ui/core/Switch";
@@ -22,9 +22,9 @@ import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import CryptoHelper from "helpers/CryptoHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
 import "react-dropdown/style.css";
+import { MdCheckCircle, MdError } from "react-icons/md";
 import "react-toastify/dist/ReactToastify.min.css";
 import PreviewNotif from "./PreviewNotif";
-import { MdCheckCircle, MdError } from "react-icons/md";
 
 const ethers = require("ethers");
 
@@ -91,12 +91,10 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
-{ value: "1", label: "Broadcast (IPFS Payload)" },
-// { value: "2", label: "Old Secret (IPFS Payload)" },
-{ value: "3", label: "Targeted (IPFS Payload)" },
-{ value: "4", label: "Subset (IPFS Payload)" },
-//   { value: "5", label: "Secret (IPFS Payload)" },
-// { value: "6", label: "Offchain (Push)" },
+  { value: "1", label: "Broadcast (IPFS Payload)" },
+  // { value: "2", label: "Old Secret (IPFS Payload)" }, -- Deprecated
+  { value: "3", label: "Targeted (IPFS Payload)" },
+  { value: "4", label: "Subset (IPFS Payload)" },
 ];
 const LIMITER_KEYS = ["Enter", ","];
 
@@ -629,22 +627,22 @@ const handleSendMessage = async (e) => {
 
             setNFProcessing(2);
             setNFType("1");
-            setNFInfo("Offchain Notification Sent");
+            setNFInfo("Notification Sent");
 
             notificationToast.showMessageToast({
                 toastTitle: "Success", 
-                toastMessage: "Offchain Notification Sent", 
+                toastMessage: "Notification Sent", 
                 toastType: "SUCCESS", 
                 getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
             })
         //       console.log(res);
         //   });
       } catch (err) {
-          setNFInfo("Offchain Notification Failed, please try again");
+          setNFInfo("Send Notification Failed, please try again");
 
           notificationToast.showMessageToast({
             toastTitle: "Error",
-            toastMessage: "Offchain Notification Failed: " + err,
+            toastMessage: "Sending Notification Failed: " + err,
             toastType: "ERROR",
             getToastIcon: (size) => <MdError size={size} color="red" />
           })
@@ -776,10 +774,10 @@ const handleSendMessage = async (e) => {
 
 //               setNFProcessing(2);
 //               setNFType("");
-//               setNFInfo("Offchain Notification Sent");
+//               setNFInfo("Notification Sent");
 
 //               toast.update(notificationToast, {
-//                   render: "Offchain Notification Sent",
+//                   render: "Notification Sent",
 //                   type: toast.TYPE.SUCCESS,
 //                   autoClose: 5000,
 //               });
@@ -794,10 +792,10 @@ const handleSendMessage = async (e) => {
 //                 autoClose: 5000,
 //             });
 //           } else {
-//             setNFInfo("Offchain Notification Failed, please try again");
+//             setNFInfo("Sending Notification Failed, please try again");
 
 //             toast.update(notificationToast, {
-//                 render: "Offchain Notification Failed: " + err,
+//                 render: "Notification Failed: " + err,
 //                 type: toast.TYPE.ERROR,
 //                 autoClose: 5000,
 //             });  
