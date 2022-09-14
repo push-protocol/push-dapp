@@ -31,6 +31,7 @@ import UserJourneySteps from "segments/userJourneySteps";
 import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 
 import InitState from "components/InitState";
+import { EnvHelper } from "helpers/UtilityHelper";
 import * as dotenv from "dotenv";
 
 
@@ -52,6 +53,13 @@ export default function App() {
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
+  const [title, setTitle] = useState(EnvHelper.dappTitle());
+
+  React.useEffect(() => {
+    // This will run when the page first loads and whenever the title changes
+    document.title = title;
+  }, [title]);
+
 
   React.useEffect(() => {
     const now = Date.now() / 1000;

@@ -77,7 +77,12 @@ const Profile = ({isDarkMode}) => {
     <>
       {account && account !== "" && !error && (
         <Container>
-          <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
+          <Wallet 
+            bg={theme.profileBG} 
+            color={theme.profileText} 
+            isDarkMode={isDarkMode}
+            onClick={() => setShowDropdown(!showDropdown)} 
+            ref={toggleArrowRef}>
             {!ensFetched && (
               <Oval
               color="#FFF"
@@ -92,8 +97,7 @@ const Profile = ({isDarkMode}) => {
                 {account.substring(account.length - 6)}
               </>
             )}
-            <ToggleArrowImg ref={toggleArrowRef}
-              onClick={() => setShowDropdown(!showDropdown)} 
+            <ToggleArrowImg 
               filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
               <img
                 alt="arrow"
