@@ -59,7 +59,8 @@ const ChatBox = (): JSX.Element => {
     connectAndSetDID,
     setDID,
     setChat,
-    setInbox
+    setInbox,
+    setHasUserBeenSearched
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
@@ -379,6 +380,7 @@ const ChatBox = (): JSX.Element => {
         setOpenSuccessSnackBar(true)
         setSnackbarText('Cannot send message, Intent is not approved!')
       }
+      setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error)
     }
@@ -533,12 +535,12 @@ const ChatBox = (): JSX.Element => {
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
                         <Chats msg={msg} did={did} />
-                        {/* {messages.length === 1 ? (
+                        {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
                             conversation once the receipent accepts the intent
                           </FirstConversation>
-                        ) : null} */}
+                        ) : null}
                       </div>
                     )
                   })}
@@ -616,6 +618,7 @@ const FirstConversation = styled.div`
   font-weight: 500;
   color: #657795;
   margin: 59px 0px 0px 0px;
+  padding: 0px 50px;
 `
 
 const FileInput = styled.input`
