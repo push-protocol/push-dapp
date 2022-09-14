@@ -6,7 +6,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
 import { injected, ledger, portis, walletconnect } from "connectors";
 import { Web3Provider } from "ethers/providers";
-import { useSDKSocket, useEagerConnect, useInactiveListener } from "hooks";
+import { useEagerConnect, useInactiveListener, useSDKSocket } from "hooks";
 import Joyride, { CallBackProps } from "react-joyride";
 import { useLocation } from "react-router-dom";
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -31,8 +31,8 @@ import UserJourneySteps from "segments/userJourneySteps";
 import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
 
 import InitState from "components/InitState";
-import { EnvHelper } from "helpers/UtilityHelper";
 import * as dotenv from "dotenv";
+import { EnvHelper } from "helpers/UtilityHelper";
 
 
 dotenv.config();
@@ -275,10 +275,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   align-self: center;
-  width: 100%;
-
-
-
+  width: calc(100% - ${props => props.leftBarWidth}px);
   margin: 0px 0px 0px ${props => props.leftBarWidth}px;
 
   @media (max-width: 992px) {

@@ -1,60 +1,67 @@
 import { ReactComponent as CheckmarkSVG } from 'assets/reusables/loaders/checkmark.svg';
 
+import BlurBG from 'components/reusables/blurs/BlurBG';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
-import { Image, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
-import styled, { css, keyframes } from 'styled-components';
+
+import styled, { useTheme } from 'styled-components';
 
 import GLOBALS from "config/Globals";
 
-export const LOADERTYPE = {
+export const LOADER_TYPE = {
   STANDALONE: 1,
   SEAMLESS: 2
 }
 
+export const LOADER_OVERLAY = {
+  NORMAL: 1,
+  ONTOP: 2,
+}
+
 interface LoaderSpinnerI {
-  type: number;
+  type?: number;
+  overlay?: number;
+  blur?: number;
   title: string;
-  completed: boolean;
+  completed?: boolean;
 }
 
 // Create Progress Bar
-const LoaderSpinner = ({ type, title, completed }: LoaderSpinnerI) => {
+const LoaderSpinner = ({ type = LOADER_TYPE.STANDALONE, overlay = LOADER_OVERLAY.NORMAL, blur = 0, title, completed = false }: LoaderSpinnerI) => {
+  const theme = useTheme();
+
   return (
-    <ItemH>
-      {!completed && 
-        <Spinner />
+    <ItemVV2
+      position={overlay == LOADER_OVERLAY.ONTOP ? "absolute" : "relative"}
+      top="0" right="0" bottom="0" left="0"
+      zIndex="99"
+    >
+      {overlay === LOADER_OVERLAY.ONTOP && 
+        <BlurBG blur={blur} />
       }
-      {completed &&
-        <CheckmarkSVG />
-      }
-      <Span 
-        padding="10px"
-        weight="500"
-      >{title}</Span>
-    </ItemH>
+      
+      <ItemHV2 
+        flex="initial"
+        alignSelf={type == LOADER_TYPE.STANDALONE ? "center" : "auto"}
+        width={type == LOADER_TYPE.STANDALONE ? "50%" : "auto"}
+        padding={type == LOADER_TYPE.STANDALONE ? GLOBALS.ADJUSTMENTS.PADDING.DEFAULT : "0px"}
+        borderRadius={type == LOADER_TYPE.STANDALONE ? GLOBALS.ADJUSTMENTS.RADIUS.SMALL : "0px"}
+        border={type == LOADER_TYPE.STANDALONE ? `1px solid ${theme.modalBorderColor}` : "transparent"}
+        background={type == LOADER_TYPE.STANDALONE ? theme.default.bg : "initial"}
+      >
+        {!completed && 
+          <Spinner />
+        }
+        {completed &&
+          <CheckmarkSVG />
+        }
+        <SpanV2 
+          padding="10px"
+          fontWeight="500"
+          color={theme.default.color}
+        >{title}</SpanV2>
+      </ItemHV2>
+    </ItemVV2>
   );
 }
 export default LoaderSpinner;
-
-const Progress = styled.div`
-	background: ${GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
-	border-radius: 18px;
-	height: 8px;
-	overflow: hidden;
-	width: 100%;
-  position: relative;
-
-  &:after {
-    width: ${(props) => props.percent ? props.percent : 0}%;
-    background: ${(props) => props.color ? props.color : GLOBALS.COLORS.PRIMARY_PINK};
-    transition: width 0.25s;
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    content: '';
-    border-radius: 18px;
-  }
-`

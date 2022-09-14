@@ -1,11 +1,11 @@
 import { ReactComponent as SpinnerSVG } from 'assets/reusables/spinners/spinner.svg';
-import { Image, Item, Section } from 'primaries/SharedStyling';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import styled, { keyframes } from 'styled-components';
 
 // Create Spinner
 export default function Spinner() {
   return (
-    <SpinLoader>
+    <SpinLoader flex="initial">
       <SpinnerSVG />
     </SpinLoader>
   );
@@ -16,7 +16,7 @@ const spinAnimation = keyframes`
   to { transform:rotate(360deg); }
 `;
 
-const SpinLoader = styled(Item)`
+const SpinLoader = styled(ItemVV2)`
   animation-name: ${spinAnimation};
   animation-duration: 2500ms;
   animation-iteration-count: infinite;
