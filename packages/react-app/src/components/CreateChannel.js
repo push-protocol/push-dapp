@@ -63,7 +63,7 @@ function CreateChannel() {
   const [imageSrc, setImageSrc] = useState(undefined);
   const [croppedImage, setCroppedImage] = useState(undefined);
 
-  const [stepFlow, setStepFlow] = React.useState(1);
+  const [stepFlow, setStepFlow] = React.useState(0);
   const channelToast = useToast();
   const channelToastNotif = useToast();
 
@@ -106,7 +106,7 @@ function CreateChannel() {
   // }, []);
 
   const proceed = () => {
-    setStepFlow(3);
+    setStepFlow(2);
     setProcessing(0);
     setUploadDone(true);
   };
@@ -151,6 +151,17 @@ function CreateChannel() {
     // skip this for now
 
     e.preventDefault();
+
+    if(!channelInfoDone) {
+      channelToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `Channel Details are missing`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+      });
+
+      return false;
+    }
 
     if (!channelFile) {
       setLogoInfo("Please upload logo of the channel");
@@ -256,7 +267,7 @@ function CreateChannel() {
 
         setProcessing(3);
         setTxStatus(0);
-        setStepFlow(2);
+        setStepFlow(1);
         setChannelInfoDone(false);
         setUploadDone(false);
         setTimeout(() => {
@@ -290,7 +301,7 @@ function CreateChannel() {
             toastType:  "ERROR", 
             getToastIcon: (size) => <MdError size={size} color="red" />
           })
-          setStepFlow(3);
+          setStepFlow(2);
           setProcessing(0);
           setUploadDone(false);
         } else {
@@ -402,25 +413,25 @@ function CreateChannel() {
       ) : (
         <>
           <Section>
-            <ItemHere>
-              <Tab type={stepFlow >= 1 ? "active" : "inactive"}>
+          <ItemHere>
+              <Tab type={stepFlow >= 0 ? "active" : "inactive"} onClick={() => setStepFlow(0)}>
                 <div>Staking Info</div>
+                <Step type={stepFlow >= 0 ? "active" : "inactive"} />
+              </Tab>
+              <Tab type={stepFlow >= 1 ? "active" : "inactive"} onClick={() => setStepFlow(1)}>
+                <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? "active" : "inactive"} />
               </Tab>
-              <Tab type={stepFlow >= 2 ? "active" : "inactive"}>
-                <div>Channel Info</div>
-                <Step type={stepFlow >= 2 ? "active" : "inactive"} />
-              </Tab>
-              <Tab type={stepFlow >= 3 ? "active" : "inactive"}>
+              <Tab type={stepFlow >= 2 ? "active" : "inactive"} onClick={() => setStepFlow(2)}>
                 <div>Upload Logo</div>
-                <Step type={stepFlow >= 3 ? "active" : "inactive"} />
+                <Step type={stepFlow >= 2 ? "active" : "inactive"} />
               </Tab>
               <Line />
             </ItemHere>
           </Section>
 
           {/* Stake Fees Section */}
-          {!stakeFeesChoosen && (
+          {stepFlow === 0 && (
             <StakingInfo
               channelStakeFees={channelStakeFees}
               setStakeFeesChoosen={setStakeFeesChoosen}
@@ -430,7 +441,7 @@ function CreateChannel() {
           )}
 
           {/* Channel Entry */}
-          {stakeFeesChoosen && !channelInfoDone && (
+          {stepFlow === 1 && (
             <ChannelInfo
               setStepFlow={setStepFlow}
               channelName={channelName}
@@ -451,7 +462,7 @@ function CreateChannel() {
           )}
 
           {/* Image Upload Section */}
-          {!uploadDone && channelInfoDone && stakeFeesChoosen && (
+          {stepFlow === 2 && (
             <UploadLogo
               croppedImage={croppedImage}
               view={view}
@@ -571,6 +582,7 @@ const Tab = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
   margin: 0px 10px;
   color: #657795;
   div {
