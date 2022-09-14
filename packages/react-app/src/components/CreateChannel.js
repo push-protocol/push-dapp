@@ -23,6 +23,7 @@ import "./createChannel.css";
 import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
 import useToast from "hooks/useToast";
+import { isValidUrl } from "helpers/UtilityHelper";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -31,7 +32,7 @@ const networkName = {
   1: "Ethereum Mainnet",
 };
 
-const coreChain = "Ethereum Kovan";
+const coreChainId = envConfig.coreContractChain;
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
 // Create Header
@@ -57,6 +58,7 @@ function CreateChannel() {
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState("");
   const [logoInfo, setLogoInfo] = React.useState("");
+  const [errorInfo,setErrorInfo] = useState("");
 
   //image upload states
   const [view, setView] = useState(false);
@@ -65,7 +67,6 @@ function CreateChannel() {
 
   const [stepFlow, setStepFlow] = React.useState(0);
   const channelToast = useToast();
-  const channelToastNotif = useToast();
 
   //checking DAI for user
   React.useEffect(() => {
@@ -106,7 +107,7 @@ function CreateChannel() {
   // }, []);
 
   const proceed = () => {
-    setStepFlow(2);
+    setStepFlow(3);
     setProcessing(0);
     setUploadDone(true);
   };
@@ -146,16 +147,45 @@ function CreateChannel() {
     }
   };
 
+  const isEmpty = (field) => {
+    if (field.trim().length == 0) {
+      return true;
+    }
+
+    return false;
+  };
+  
+  const isAllFilledAndValid = () => {
+    setErrorInfo("")
+    if (
+      isEmpty(channelName) ||
+      isEmpty(channelInfo) ||
+      isEmpty(channelURL) ||
+      (isEmpty(channelAlias) && chainDetails !== coreChainId)
+    ) {
+      setErrorInfo("Channel Fields are Empty! Please retry!");
+      return false;
+    }
+
+    if(!isValidUrl(channelURL))
+    {
+      setErrorInfo("Channel Url is invalid! Please retry!");
+      return false;
+    }
+
+    return true;
+  }
+
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
 
     e.preventDefault();
 
-    if(!channelInfoDone) {
+    if(!isAllFilledAndValid()) {
       channelToast.showMessageToast({
         toastTitle:"Error", 
-        toastMessage: `Channel Details are missing`, 
+        toastMessage: `${errorInfo}`, 
         toastType:  "ERROR", 
         getToastIcon: (size) => <MdError size={size} color="red" />
       });
@@ -170,7 +200,7 @@ function CreateChannel() {
     }
 
     // Check complete, start logic
-    // setChannelInfoDone(true);
+    setChannelInfoDone(true);
     proceed();
     setProcessing(1);
 
@@ -292,7 +322,6 @@ function CreateChannel() {
         }, 2000);
       }
     } catch (err) {
-      console.log("hello", err);
         if (err.code === 4001) {
           // EIP-1193 userRejectedRequest error
           channelToast.showMessageToast({
@@ -454,10 +483,10 @@ function CreateChannel() {
               setChannelInfo={setChannelInfo}
               setChannelName={setChannelName}
               setChannelURL={setChannelURL}
-              setProcessing={setProcessing}
-              setProcessingInfo={setProcessingInfo}
               setChannelInfoDone={setChannelInfoDone}
               setTxStatus={setTxStatus}
+              errorInfo={errorInfo}
+              isAllFilledAndValid={isAllFilledAndValid}
             />
           )}
 

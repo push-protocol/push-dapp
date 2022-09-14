@@ -28,48 +28,12 @@ const ChannelInfo = ({
   setChannelName,
   setChannelURL,
   setStepFlow,
-  setProcessingInfo,
-  setProcessing,
   setChannelInfoDone,
-  setTxStatus
+  setTxStatus,
+  errorInfo,
+  isAllFilledAndValid
 }) => {
   const themes = useTheme();
-  const [info,setInfo] = useState("")
-
-  const isEmpty = (field) => {
-    if (field.trim().length == 0) {
-      return true;
-    }
-
-    return false;
-  };
-  
-  const isAllFilledAndValid = () => {
-    setInfo("")
-    if (
-      isEmpty(channelName) ||
-      isEmpty(channelInfo) ||
-      isEmpty(channelURL) ||
-      (isEmpty(channelAlias) && chainDetails !== coreChainId)
-    ) {
-      setInfo("Channel Fields are Empty! Please retry!");
-
-      // setTimeout(() => {
-      //   setProcessing(2);
-      //   setProcessingInfo("");
-      // }, 5000);
-
-      return false;
-    }
-
-    if(!isValidUrl(channelURL))
-    {
-      setInfo("Channel Url is invalid! Please retry!");
-      return false;
-    }
-
-    return true;
-  }
 
   return (
     <Section>
@@ -257,14 +221,19 @@ const ChannelInfo = ({
               />
           </Item>
 
-          {info?.length > 0 && (<Item 
-                margin="30px 0px 30px 0px"
-                flex="1"
-                padding="10px 5px"
-                radius="10px"
-                bg="#F5F5FA">
-                  <div style={{color:'#CF1C84'}}>{info}</div>
-                </Item>)}
+          {errorInfo?.length > 0 && (
+            <Item 
+              margin="30px 0px 30px 0px"
+              flex="1"
+              padding="10px 5px"
+              radius="10px"
+              bg="#F5F5FA"
+            >
+              <div style={{color:'#CF1C84'}}>
+                {errorInfo}
+              </div>
+            </Item>
+          )}
         
           <Item width="12.2em" self="stretch" align="stretch" margin="70px auto 50px auto">
             <Button
@@ -291,43 +260,6 @@ const ChannelInfo = ({
             </Span>
             </Button>
           </Item>
-
-        {/* <Item
-            margin="15px 0px 0px 0px"
-            flex="1"
-            self="stretch"
-            align="stretch"
-          >
-            <Button
-              bg="#e20880"
-              color="#fff"
-              flex="1"
-              radius="0px"
-              padding="20px 10px"
-              disabled={processing == 1 ? true : false}
-            >
-              {processing == 1 && (
-                <Oval
-                  color="#fff"
-                  height={24}
-                  width={24}
-                />
-              )}
-              {processing != 1 && (
-                <Input
-                  cursor="hand"
-                  textTransform="uppercase"
-                  color="#fff"
-                  weight="400"
-                  size="0.8em"
-                  spacing="0.2em"
-                  type="submit"
-                  value="Setup Channel"
-                />
-              )}
-            </Button>
-          </Item> */}
-        {/* </FormSubmision> */}
       </Body>
     </Section>
   );
