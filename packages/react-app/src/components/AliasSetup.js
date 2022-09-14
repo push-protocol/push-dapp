@@ -1,7 +1,7 @@
 import React from "react";
 import FadeLoader from "react-spinners/FadeLoader";
-import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
 import styled, { css, useTheme } from "styled-components";
+import { Button, H3, Item, Section, Span } from "../primaries/SharedStyling";
 
 const AliasSetup = () => {
   const themes = useTheme();

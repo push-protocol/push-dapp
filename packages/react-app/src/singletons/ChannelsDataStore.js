@@ -1,7 +1,7 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 
 import { envConfig } from "@project/contracts";
-import { postReq, getReq } from "api";
+import { getReq, postReq } from "api";
 
 // STATIC SINGLETON
 export const ChannelEvents = {

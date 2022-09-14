@@ -1,11 +1,18 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
 import React, { useRef, useState } from 'react';
+
+// External Packages
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-import { useWeb3React } from '@web3-react/core';
-import { addresses, abis } from "@project/contracts";
-import { Oval } from 'react-loader-spinner';
+
+// Internal Compoonents
 import { postReq } from "../api";
-import { Item, H2, H3, Span, Button, Input } from '../primaries/SharedStyling';
+import { Button, H2, H3, Input, Item, Span } from '../primaries/SharedStyling';
+
+// Internal Configs
+import { abis, addresses } from "@project/contracts";
 
 const ethers = require("ethers");
 
@@ -117,11 +124,7 @@ export default function AliasVerificationModal({
                                 </Item>
                                 {loading && (
                                     <Item margin="20px 0px 10px 0px">
-                                        <Oval
-                                            color="black"
-                                            height={16}
-                                            width={16}
-                                        />
+                                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
                                     </Item>
                                 )}
                                 <Item margin="15px 0px 0px 0px" flex="1" self="stretch" align="stretch">

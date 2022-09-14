@@ -1,9 +1,9 @@
+import LinearProgress from "@mui/material/LinearProgress";
+import { themeDark } from "config/Themization";
 import { H3, Item, Section } from "primaries/SharedStyling";
 import React from "react";
-import LinearProgress from "@mui/material/LinearProgress";
 import FadeLoader from "react-spinners/FadeLoader";
 import styled, { css, useTheme } from "styled-components";
-import { themeDark } from "config/Themization";
 
 const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
   const themes = useTheme();
@@ -11,7 +11,7 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
   return (
     <Section>
       <TabSpace>
-        <p>{progressInfo}</p>
+        {progressInfo}
       </TabSpace>
 
       <LinearProgress

@@ -1,11 +1,11 @@
 import React from "react";
 
+import { themeDark, themeLight } from "config/Themization";
+import { A, B, Button, H3, Item, ItemH, Span } from "primaries/SharedStyling";
 import styled from "styled-components";
-import { themeLight, themeDark } from "config/Themization";
-import { Item, ItemH, Span, H3, B, A, Button } from "primaries/SharedStyling";
 
-import {incrementStepIndex, setRun, setIndex, setWelcomeNotifsEmpty , setTutorialContinous} from "../redux/slices/userJourneySlice";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { incrementStepIndex, setIndex, setRun, setTutorialContinous, setWelcomeNotifsEmpty } from "../redux/slices/userJourneySlice";
 
 const UserJourneySteps = ({darkMode}) => {
   const dispatch = useDispatch();

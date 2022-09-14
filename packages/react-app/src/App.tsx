@@ -5,7 +5,7 @@ import { envConfig } from "@project/contracts";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
 import { injected, ledger, portis, walletconnect } from "connectors";
-import { Web3Provider } from "ethers/providers";
+import { ethers } from "ethers";
 import { useEagerConnect, useInactiveListener, useSDKSocket } from "hooks";
 import Joyride, { CallBackProps } from "react-joyride";
 import { useLocation } from "react-router-dom";
@@ -41,7 +41,7 @@ export default function App() {
 
   const dispatch = useDispatch();
 
-  const { connector, activate, active, error, account, chainId } = useWeb3React<Web3Provider>();
+  const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<
     AbstractConnector
   >();
@@ -109,23 +109,23 @@ export default function App() {
 
 
   React.useEffect(() => {
-    window?.Olvy?.init({
-      organisation: "epns",
-      target: "#olvy-target",
-      type: "sidebar",
-      view: {
-        showSearch: false,
-        compact: false,
-        showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
-        showUnreadIndicator: true,
-        unreadIndicatorColor: "#cc1919",
-        unreadIndicatorPosition: "top-right"
-      }
-    });
-    return function cleanup() {
-      window?.Olvy?.teardown();
-    };
-  });
+    // window?.Olvy?.init({
+    //   organisation: "epns",
+    //   target: "#olvy-target",
+    //   type: "sidebar",
+    //   view: {
+    //     showSearch: false,
+    //     compact: false,
+    //     showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
+    //     showUnreadIndicator: true,
+    //     unreadIndicatorColor: "#cc1919",
+    //     unreadIndicatorPosition: "top-right"
+    //   }
+    // });
+    // return function cleanup() {
+    //   window?.Olvy?.teardown();
+    // };
+  }, []);
 
   const steps = UserJourneySteps({ darkMode });
 

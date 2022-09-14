@@ -1,17 +1,16 @@
+import { useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
 import { Oval } from "react-loader-spinner";
-import { useWeb3React } from "@web3-react/core";
 
-import { envConfig } from "@project/contracts";
-import { addresses, abis } from "@project/contracts";
+import { abis, addresses, envConfig } from "@project/contracts";
 
 import GLOBALS, { device } from "config/Globals";
 
 import styled, { useTheme } from "styled-components";
-import { Section, Content, Item, ItemH, Span } from '../../primaries/SharedStyling';
+import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyling';
 
-import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
 import PoolCard from "components/PoolCard";
+import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
 
 
 

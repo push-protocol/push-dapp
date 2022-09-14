@@ -37,7 +37,7 @@ const ChannelInfo = ({
 
   return (
     <Section>
-      <Body>
+      <Item padding="40px 0 0 0" align="flex-start">
 
         {/* <FormSubmision
           flex="1"
@@ -223,8 +223,9 @@ const ChannelInfo = ({
 
           {errorInfo?.length > 0 && (
             <Item 
-              margin="30px 0px 30px 0px"
+              margin="30px 0px 0px 0px"
               flex="1"
+              self="center"
               padding="10px 5px"
               radius="10px"
               bg="#F5F5FA"
@@ -260,7 +261,7 @@ const ChannelInfo = ({
             </Span>
             </Button>
           </Item>
-      </Body>
+      </Item>
     </Section>
   );
 };
@@ -345,13 +346,6 @@ const DropdownStyled = styled(Dropdown)`
 
 const Body = styled.div`
   margin: 40px auto 0px auto;
-  width: 55%; 
-  @media (max-width: 600px) {
-    width: 100%%; 
-  }
-  @media (max-width: 1224px) {
-    width: 75%; 
-  }
 `;
 
 export default ChannelInfo;

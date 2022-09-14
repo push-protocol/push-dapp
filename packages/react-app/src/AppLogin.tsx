@@ -5,7 +5,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
 import { injected, ledger, portis, walletconnect } from 'connectors';
 import { Web3Provider } from 'ethers/providers';
-import { useBrowserNotification, useEagerConnect, useInactiveListener } from 'hooks';
+import { useEagerConnect, useInactiveListener } from 'hooks';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';

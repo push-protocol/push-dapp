@@ -1,15 +1,14 @@
 import React, { useState } from "react";
+import { Oval } from 'react-loader-spinner';
 import styled from 'styled-components';
-import { Oval } from 'react-loader-spinner'
 
-import { useWeb3React } from '@web3-react/core'
-import { addresses, abis } from "@project/contracts";
-import NFTHelper from 'helpers/NFTHelper';
+import { abis, addresses, envConfig } from "@project/contracts";
+import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import { envConfig } from "@project/contracts";
+import NFTHelper from 'helpers/NFTHelper';
 
-import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTV2Item from "components/ViewNFTsV2Item";
+import DisplayNotice from "../primaries/DisplayNotice";
 import { ItemH } from "../primaries/SharedStyling";
 
 // Create Header
