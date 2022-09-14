@@ -221,7 +221,8 @@ const Container = styled(Section)`
 	flex-direction: column;
 	flex: initial;
 	justify-content: center;
-  max-width: 1400px;
+  max-width: 1200px;
+  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT});
 	position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 

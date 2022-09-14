@@ -23,4 +23,5 @@ const Container = styled(SectionV2)`
   flex: 1;
   flex-direction: column;
   align-self: stretch;
+  justify-content: flex-start;
 `;
