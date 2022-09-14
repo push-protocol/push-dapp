@@ -41,11 +41,10 @@ const useStyles = makeStyles({
 })
 
 const Sidebar = () => {
-  const { connectedUser } = useContext(Context)
+  const { connectedUser, pendingRequests } = useContext(Context)
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture)
 
   const [value, setValue] = useState(0)
-  const [pendingRequests, setPendingRequests] = useState<number>(0)
   const classes = useStyles()
 
   const handleChange = (event, newValue) => {

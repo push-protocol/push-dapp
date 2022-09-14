@@ -136,7 +136,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   }
 
   return (
-    <SidebarWrapper className="messageFeed_body">
+    <SidebarWrapper>
       <DisplayText color="#6D6B7A" size="14px" weight="700" ml={2}>
         CHAT
       </DisplayText>
