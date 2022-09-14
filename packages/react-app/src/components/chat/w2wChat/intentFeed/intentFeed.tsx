@@ -124,11 +124,7 @@ const IntentFeed = (): JSX.Element => {
     return (
       <>
         {!receivedIntents?.length ? (
-          <p
-            style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}
-          >
-            No received intents !
-          </p>
+          <InfoMessage>No received intents</InfoMessage>
         ) : (
           <>
             <div>
@@ -217,6 +213,15 @@ const IntentFeed = (): JSX.Element => {
     </>
   )
 }
+
+const InfoMessage = styled.p`
+  position: relative;
+  text-align: center;
+  width: 80%;
+  background: #d2cfcf;
+  padding: 10px;
+  margin: 0;
+`
 
 const UserProfileContainer = styled.div`
   margin-top: 14px;

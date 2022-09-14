@@ -38,33 +38,6 @@ const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
       </UserData>
       <RequestTime>{date}</RequestTime>
     </ProfileCard>
-    // <div className="message_body">
-    //   <div className="message_content">
-    //     <img src={props.inbox.profilePicture} className="message_content_img"></img>
-
-    //     <div className="message_content_body">
-    //       <div className="message_name">{final}</div>
-
-    //       <div className="message_lastMsg">{props.inbox.msg.lastMessage}</div>
-    //     </div>
-
-    //     <div className="message_content_time">{date}</div>
-    //   </div>
-
-    //   {/* <div className='defaultMessage_1'>
-    //             <div className='defaultMessage_2'>
-    //                 <div className='defaultMessage_img'><img src={props.inbox.profilePicture}></img></div>
-
-    //                 <div className='defaultMessage_name'>{props.inbox.msg.name.split(':').at(-1).slice(0, 19) + '...'}</div>
-    //                 <div className='defaultMessage_time'>{date}</div>
-    //             </div>
-    //             <div className='defaultMessage_3'>
-    //                 <div className='defaultMessage_lastMsg'>
-    //                     {props.inbox.msg.lastMessage}
-    //                 </div>
-    //             </div>
-    //         </div> */}
-    // </div>
   )
 }
 

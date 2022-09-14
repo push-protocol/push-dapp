@@ -577,10 +577,12 @@ const ChatBox = (): JSX.Element => {
               <>
                 <>
                   <label>
-                    <Icon onClick={() => setIsGifPickerOpened(true)}>
+                    {isGifPickerOpened && (
+                      <GifPicker setIsOpened={setIsGifPickerOpened} isOpen={isGifPickerOpened} onSelect={sendGif} />
+                    )}
+                    <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
                       <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
                     </Icon>
-                    {isGifPickerOpened && <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} />}
                   </label>
                   <label>
                     <Icon>
@@ -711,6 +713,10 @@ const TextInput = styled.textarea`
   border: none;
   resize: none;
   background: transparent;
+  &&::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 `
 
 const TypeBarContainer = styled.div`
