@@ -32,10 +32,9 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
 }
 
 const SearchBar = () => {
-  const { setSearchedUser, searchedUser }: AppContext = useContext<AppContext>(Context)
+  const { setSearchedUser, searchedUser, hasUserBeenSearched, setHasUserBeenSearched }: AppContext = useContext<AppContext>(Context)
   const { chainId } = useWeb3React<Web3Provider>()
   const [filteredUserData, setFilteredUserData] = useState<User[]>([])
-  const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false)
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
@@ -124,46 +123,17 @@ const SearchBar = () => {
   }
 
   return (
-    // <>
-    //   <div className="search">
-    //     <form onSubmit={submitSearch}>
-    //       <div className="searchInputs">
-    //         <input
-    //           type="text"
-    //           placeholder="Search for addresses or ENS Domains"
-    //           value={searchedUser}
-    //           onChange={onChangeSearchBox}
-    //         />
-    //         <div className="searchIcon">
-    //           {searchedUser.length === 0 ? (
-    //             <SearchIcon />
-    //           ) : isLoadingSearch ? (
-    //             <div className="search-user-loader">
-    //               <Loader type="Oval" color="#000" height={25} width={25} />
-    //               <CloseIcon id="clearBtn" onClick={clearInput} />
-    //             </div>
-    //           ) : (
-    //             <CloseIcon id="clearBtn" onClick={clearInput} />
-    //           )}
-    //         </div>
-    //       </div>
-    //     </form>
-    //     <div className="sidebar_message">
-    //       {
-    //         <MessageFeed
-    //           hasUserBeenSearched={hasUserBeenSearched}
-    //           filteredUserData={filteredUserData}
-    //           isInvalidAddress={isInValidAddress}
-    //         />
-    //       }
-    //     </div>
-    //   </div>
-    // </>
     <TabPanel value={value} index={0}>
       <SearchBarContainer>
         <form onSubmit={submitSearch}>
-          <Input type="text" onChange={onChangeSearchBox} placeholder="Search name.eth or 0x123..." />
+          <Input
+            type="text"
+            value={searchedUser}
+            onChange={onChangeSearchBox}
+            placeholder="Search name.eth or 0x123..."
+          />
         </form>
+        {searchedUser.length > 0 && <Close onClick={clearInput} />}
         <Image src="/svg/chats/search.svg" />
       </SearchBarContainer>
       <MessageFeed
@@ -174,6 +144,13 @@ const SearchBar = () => {
     </TabPanel>
   )
 }
+
+const Close = styled(CloseIcon)`
+  position: absolute;
+  top: 50px;
+  right: 55px;
+  cursor: pointer;
+`
 
 const SearchBarContainer = styled.div`
   width: 100%;
@@ -197,7 +174,7 @@ const Input = styled.input`
   box-sizing: border-box;
   width: 294px;
   height: 48px;
-  padding: 13px 74px 13px 21px;
+  padding: 13px 60px 13px 21px;
   margin: 37px 0px 17px 0px;
   border-radius: 99px;
   border: 1px solid transparent !important;
