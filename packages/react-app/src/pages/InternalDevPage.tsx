@@ -18,7 +18,6 @@ export default InternalDevPage;
 const Container = styled(Section)`
     display: flex;
     flex-direction: column;
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
     align-items: stretch;
     align-self: stretch; 
 `;
