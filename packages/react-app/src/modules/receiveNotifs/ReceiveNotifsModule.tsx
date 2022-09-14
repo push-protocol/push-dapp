@@ -1,0 +1,67 @@
+import React from "react";
+import ReactGA from "react-ga";
+
+import styled, { useTheme } from "styled-components";
+import { Content, H2, H3, Item, Section, Span } from "../../primaries/SharedStyling";
+
+import Info from "segments/Info";
+
+import GLOBALS, { device } from "config/Globals";
+
+// Create Header
+function ReceiveNotifsModule() {
+  ReactGA.pageview("/receive");
+
+  // get themes
+  const themes = useTheme();
+
+  // Render
+  return (
+    <Container>
+      <Content className="contentBox" padding="20px 0px 0px 0px">
+        <Item align="stretch" justify="flex-start" margin="0px 20px">
+
+          <Item align="stretch" justify="flex-start" margin="0px 0px 0px 0px">
+            <H2 textTransform="uppercase" spacing="0.1em" margin="10px 0px 20px 0px">
+              <Span weight="200" color={themes.fontColor}>Receive </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">Notifications</Span>
+            </H2>
+            <H3 maxWidth="768px" color={themes.fontColorSecondary}>The following frontends enables receiving push alerts for your wallet. More coming soon!</H3>
+          </Item>
+
+          <Item align="stretch" justify="flex-start" margin="0px 0px 20px 0px">
+            <Info />
+          </Item>
+
+        </Item>
+      </Content>
+    </Container>
+  );
+}
+
+// css style
+const Container = styled(Section)`
+    align-items: stretch;
+    align-self: stretch;
+	background: ${(props) => props.theme.mainBg};
+	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.MID};
+	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
+	display: flex;
+	flex-direction: column;
+	flex: initial;
+	justify-content: center;
+  max-width: 1200px;
+	position: relative;
+  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+
+  @media ${device.laptop} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+  }
+
+  @media ${device.mobileM} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+  }
+`;
+
+
+// Export Default
+export default ReceiveNotifsModule;

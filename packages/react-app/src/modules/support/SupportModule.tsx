@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactGA from "react-ga";
 
 import {
@@ -13,13 +13,13 @@ import {
   FormSubmision,
   Input,
   TextField,
-} from "../primaries/SharedStyling";
+} from "../../primaries/SharedStyling";
 import Dropdown from "react-dropdown";
 import styled, { useTheme } from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
+import GLOBALS, { device } from "config/Globals";
 
-import { ThemeProvider } from "styled-components";
 
 // HELPER METHODS
 const validateEmail = (email) => {
@@ -35,7 +35,7 @@ const isEmpty = (field) => {
   return false;
 };
 
-const SupportPage = () => {
+const SupportModule = () => {
   // React GA Analytics
   ReactGA.pageview("/support");
 
@@ -106,9 +106,9 @@ const SupportPage = () => {
   };
 
   return (
-    <ThemeProvider theme={themes}>
-      <Section id="contact" theme={themes.mainBg}>
-        <Content className="contentBox" padding="10px 0">
+    <Container>
+      <Section id="contact" padding="0 20px">
+        <Content className="contentBox" padding="20px 0">
           <Item align="stretch" justify="flex-start" margin="0px 20px">
             <Item align="stretch" align="flex-end" tabletAlign="flex-start" margin="0px 16px 0px 0px" textAlign="right" tabletTextAlign="left">
               <H2 textTransform="uppercase" spacing="0.1em" bg="#fff">
@@ -361,11 +361,34 @@ const SupportPage = () => {
           </Item>
         </Content>
       </Section>
-    </ThemeProvider>
+    </Container>
   );
 };
 
 // CSS Styles
+const Container = styled(Section)`
+
+	align-items: center;
+	align-self: center;
+	background: ${(props) => props.theme.mainBg};
+	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.MID};
+	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
+	display: flex;
+	flex-direction: column;
+	flex: initial;
+	justify-content: center;
+  max-width: 1200px;
+	position: relative;
+  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+
+  @media ${device.laptop} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+  }
+
+  @media ${device.mobileM} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+  }
+`;
 const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
     background-color: #000;
@@ -429,4 +452,4 @@ const ContactTextArea = styled(TextField)`
 	border-radius: 4px;
 `
 
-export { SupportPage };
+export { SupportModule };
