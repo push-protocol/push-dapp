@@ -33,6 +33,7 @@ function Dropdown(props) {
             padding="2px 12px"
             wrap="nowrap"
             margin="0px 0 8px 0"
+            width="max-content"
           >
             <Span
               margin="11px 22px 11px 2px"
@@ -41,10 +42,17 @@ function Dropdown(props) {
               textTransform="uppercase"
               color="#fff"
               spacing="1px"
+              width="max-content"
             >
-              {dropdownValue?.title}
+              <DesktopAddress>
+                {dropdownValue?.title}
+              </DesktopAddress>
+              <MobileAddress>
+              {dropdownValue?.title.substring(0, 6)}.....
+                {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
+              </MobileAddress>
             </Span>
-            <Image
+           {dropdownValue?.icon && <Image
               src={dropdownValue?.icon}
               alt="icon"
               width="auto"
@@ -53,24 +61,26 @@ function Dropdown(props) {
               onClick={() => {
                 copyToClipboard(dropdownValue?.value);
               }}
-            />
+            />}
           </ItemH>
         ) : (
           <ItemH wrap="nowrap" margin="8px 0">
-            <Image
+             {dropdownValue?.icon && <Image
               src={dropdownValue.icon}
               alt="icon"
-              width="auto"
+              width="max-content"
               spacing="1px"
               filter={theme.snackbarBorderIcon}
-            />
+            />}
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
+                width="max-content"
                 color={theme.snackbarBorderText}
                 margin="10px 20px"
                 weight="400"
                 size="16px"
                 cursor="pointer"
+                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}
@@ -78,12 +88,14 @@ function Dropdown(props) {
             )}
             {dropdownValue?.link && (
               <A
+                width="max-content"
                 href={dropdownValue?.link}
                 target="_blank"
                 rel="nofollow"
                 margin="10px 20px"
                 weight="400"
                 size="16px"
+                width="max-content"
                 color={theme.snackbarBorderText}
                 hoverBG="transparent"
               >
@@ -107,5 +119,25 @@ const DropdownItem = styled.div`
   display: flex;
   margin: 1rem;
 `;
+
+const SpanAddress= styled(Span)`
+  margin:11px 22px 11px 2px;
+  weight:400;
+  size:14px;
+  text-transform:uppercase;
+  color:#fff;
+  spacing:1px;
+  width:max-content;
+`
+const MobileAddress= styled(SpanAddress)`
+  @media (min-width: 993px) {
+    display: none;
+  }
+`
+const DesktopAddress = styled(SpanAddress)`
+  @media (max-width: 992px) {
+    display: none;
+  }
+`
 // Export Default
 export default Dropdown;

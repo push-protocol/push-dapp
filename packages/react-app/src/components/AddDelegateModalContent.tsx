@@ -27,16 +27,24 @@ const AddDelegateModalContent = ({onConfirm : addDelegate, onClose, toastObject}
         addDelegate(delegateAddress)
         .then(async (tx) => {
             console.log(tx);
-        
-            toastObject.showToast("");
-            toastObject.updateToast("Delegate Added", "Delegate has been added successfully", "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+
+            toastObject.showMessageToast({
+                toastTitle:"Delegate Added", 
+                toastMessage: "Delegate has been added successfully", 
+                toastType: "SUCCESS", 
+                getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+            })
             onClose();
         })
         .catch((err) => {
             console.log({err})
             
-            toastObject.showToast("");
-            toastObject.updateToast("Transaction Failed", "Adding a delegate failed.", "ERROR", (size) => <MdError size={size} color="red" />)
+            toastObject.showMessageToast({
+                toastTitle:"Transaction Failed", 
+                toastMessage: "Adding a delegate failed.", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            })
         }).finally(()=>{
             setIsLoading(false);
         })

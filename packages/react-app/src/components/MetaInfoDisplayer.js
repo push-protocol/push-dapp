@@ -4,62 +4,69 @@ import styled from 'styled-components';
 import { Item, ItemH, Span, A} from '../primaries/SharedStyling';
 
 // Faucet URLs
-function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave }) {
+function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave, padding, color }) {
 
   // render
   return (
-    <MetaContainer>
-      {externalIcon &&
-        <Item
-          margin="0px 4px 0px 0px"
-        >
-          {externalIcon}
-        </Item>
-      }
+    <ItemH bg={bgColor} 
+     margin="0 8px"
+     radius="10px"
+     maxWidth="fit-content"
+     padding={padding}>
+     
       <MetaContent
         hoverBG="transparent"
         onClick={onClick}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
-        <Span
-          bg={bgColor}
-        >
-          {internalIcon && 
+        <Span color={color}>
+          {externalIcon &&
+            <ItemH
+            >
+              {externalIcon}
+            </ItemH>
+          }
+
+          {internalIcon &&
             <IconContainer>
               {internalIcon}
             </IconContainer>
           }
-          {text}
-        </Span>
+           <ItemH
+            >
+            {text}
+            </ItemH>
+          </Span>
       </MetaContent>
-    </MetaContainer>
+    </ItemH>
   );
 }
 
-const MetaContainer = styled(ItemH)`
-  flex-wrap: initial;
-  flex: initial;
-  padding: 5px;
-`
+// const MetaContainer = styled(ItemH)`
+//   flex-wrap: initial;
+//   flex: initial;
+//   & > ItemH {
+   
+//   }
+// `
 
 const MetaContent = styled(A)`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
+  max-width: fit-content;
   
   & > Span {
-    background: ${props => props.bgColor};
-    margin: 0px 5px;
-    color: #fff;
-    font-weight: 600;
-    padding: 5px 10px;
+    gap: 5px;
+    font-weight: 500;
     display: flex;
-    border-radius: 10px;
-    font-size: 11px;
-    gap: 3px;
+    font-size: 14px;
     transition: 300ms;
+  }
+  & > Span:hover {
+    white-space: pre;
   }
 `
 

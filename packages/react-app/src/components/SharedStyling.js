@@ -1,18 +1,18 @@
-import styled, { css } from 'styled-components'
 import { Link } from 'react-router-dom'
+import styled, { css } from 'styled-components'
 
 export const Section = styled.section`
-  display: flex;
-  align-self: stretch;
-  justify-content: center;
   align-items: ${props => props.align || 'initial'};
-  flex-direction: ${props => props.direction || 'column'};
-  background: ${props => props.theme || 'transparent'};
+  align-self: stretch;
   background: ${props => props.gradient || 'undefined'};
-  margin: ${props => props.margin || '0px'};
-  padding: ${props => props.padding || '0px'};
-  overflow: ${props => props.overflow || 'initial'};
+  background: ${props => props.theme || 'transparent'};
+  display: flex;
   flex: 1;
+  flex-direction: ${props => props.direction || 'column'};
+  justify-content: center;
+  margin: ${props => props.margin || '0px'};
+  overflow: ${props => props.overflow || 'initial'};
+  padding: ${props => props.padding || '0px'};
   position: relative;
 `
 
@@ -21,9 +21,9 @@ export const SectionFS = styled(Section)`
 `
 
 export const SectionFSHero = styled(Section)`
-  min-height: 100vh;
-  background: rgb(31,23,47);
   background: linear-gradient(283deg, rgba(31,23,47,1) 0%, rgba(62,9,40,1) 45%, rgba(17,58,72,1) 100%);
+  background: rgb(31,23,47);
+  min-height: 100vh;
 `
 
 export const SectionHero = styled(Section)`
@@ -32,11 +32,11 @@ export const SectionHero = styled(Section)`
 `
 
 export const Content = styled.div`
+  background: ${props => props.gradient || 'undefined'};
+  background: ${props => props.theme || 'transparent'};
   display: flex;
   flex-direction: column;
   padding: ${props => props.padding || '40px 0px'};
-  background: ${props => props.theme || 'transparent'};
-  background: ${props => props.gradient || 'undefined'};
   position: relative;
 `
 
@@ -45,38 +45,38 @@ export const ItemBreak = styled.div`
 `
 
 export const Item = styled.div`
+  align-items: ${props => props.align || 'center'};
+  align-self: ${props => props.self || 'auto'};
+  background: ${props => props.bg || 'transparent'};
+  border: ${props => props.border || 'none'};
+  border-radius: ${props => props.radius || '0px'};
+  bottom: ${props => props.bottom || 'auto'};
   display: flex;
+  filter: ${props => props.filter || 'none'};
+  flex: ${props => props.flex || '1'};
+  flex-basis: ${props => props.flexBasis || 'auto'};
+  flex-direction: ${props => props.direction || 'column'};
   flex-direction: column;
   flex-wrap: ${props => props.wrap || 'wrap'};
-  position: ${props => props.position || 'relative'};
-  justify-content: center;
-  background: ${props => props.bg || 'transparent'};
-  flex: ${props => props.flex || '1'};
-  flex-direction: ${props => props.direction || 'column'};
-  flex-basis: ${props => props.flexBasis || 'auto'};
-  align-self: ${props => props.self || 'auto'};
-  align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  padding: ${props => props.padding || '0px'};
-  margin: ${props => props.margin || '0px'};
-  min-width: ${props => props.minWidth || 'auto'};
-  max-width: ${props => props.maxWidth || 'initial'};
   font-size: ${props => props.size || 'inherit'};
-  text-align: ${props => props.textAlign || 'inherit'};
-  filter: ${props => props.filter || 'none'};
-
-  top: ${props => props.top || 'auto'};
-  bottom: ${props => props.bottom || 'auto'};
+  height: ${props => props.height || 'auto'};
+  justify-content: ${props => props.justify || 'center'};
+  justify-content: center;
   left: ${props => props.left || 'auto'};
+  margin: ${props => props.margin || '0px'};
+
+  max-width: ${props => props.maxWidth || 'initial'};
+  min-width: ${props => props.minWidth || 'auto'};
+  overflow: ${props => props.overflow || 'initial'};
+  padding: ${props => props.padding || '0px'};
+
+  position: ${props => props.position || 'relative'};
   right: ${props => props.right || 'auto'};
 
+  text-align: ${props => props.textAlign || 'inherit'};
+
+  top: ${props => props.top || 'auto'};
   width: ${props => props.width || 'auto'};
-  height: ${props => props.height || 'auto'};
-
-  border: ${props => props.border || 'none'};
-
-  border-radius: ${props => props.radius || '0px'};
-  overflow: ${props => props.overflow || 'initial'};
 
   z-index: ${props => props.zIndex || 'auto'};
 
@@ -95,48 +95,48 @@ export const Item = styled.div`
 `
 
 export const ItemH = styled(Item)`
-  flex-direction: row;
   flex: ${props => props.flex || '1'};
+  flex-direction: row;
 
   ${ItemBreak} {
-    width: auto;
     height: 0;
+    width: auto;
   }
 `
 
 export const WaveOuter = styled.div`
+  bottom: ${props => props.bottom || '-70px'};
+  left: 0;
   position: absolute;
   right: 0;
-  left: 0;
-  bottom: ${props => props.bottom || '-70px'};
   top: ${props => props.top || 'auto'};
   transform: ${props => props.transform || 'initial'};
 `
 
 export const WaveInner = styled.div`
+  bottom: 0;
+  left: 0;
   position: absolute;
   right: 0;
-  left: 0;
-  bottom: 0;
   transform: ${props => props.transform || 'initial'};
 `
 
 export const Arc = styled.div`
-  position: absolute;
-	overflow: hidden;
-	width: 100%;
-	height: 300px;
-
   bottom: ${props => props.bottom || 'auto'};
+	height: 300px;
+	overflow: hidden;
+	position: absolute;
+
   top: ${props => props.top || 'auto'};
+  width: 100%;
 
   &:after {
     content: '';
-    position: absolute;
-  	width: 300%;
-  	height: 300%;
-  	top: -25%;
+    height: 300%;
   	left: -100%;
+  	position: absolute;
+  	top: -25%;
+  	width: 300%;
 
 
     ${props => props.arcRGB && css`
@@ -153,75 +153,75 @@ export const H1 = styled.h1`
 
 export const H2 = styled.h2`
   color: ${props => props.color || '#000'};
-  font-weight: ${props => props.weight || 600};
+  font-family: ${props => props.family || "'Source Sans Pro', Helvetica, sans-serif"};
   font-size: ${props => props.size || '2rem'};
-  text-transform: ${props => props.textTransform || 'inherit'};
+  font-weight: ${props => props.weight || 600};
+  letter-spacing: ${props => props.spacing || 'inherit'};
   margin: ${props => props.margin || '20px 0px'};
   padding: ${props => props.padding || '0px'};
-  letter-spacing: ${props => props.spacing || 'inherit'};
-  font-family: ${props => props.family || "'Source Sans Pro', Helvetica, sans-serif"};
   text-align: ${props => props.textAlign || 'inherit'};
+  text-transform: ${props => props.textTransform || 'inherit'};
 `
 
 export const H3 = styled.h3`
   color: ${props => props.color || 'rgb(0 0 0 / 0.5)'};
-  font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || '1rem'};
-  text-transform: ${props => props.textTransform || 'uppercase'};
-  margin: ${props => props.margin || '-15px 0px 20px 0px'};
-  padding: ${props => props.padding || '0px'};
-  letter-spacing: ${props => props.spacing || '0.1em'};
   font-family: ${props => props.family || "'Source Sans Pro', Helvetica, sans-serif"};
-  text-align: ${props => props.textAlign || 'inherit'};
+  font-size: ${props => props.size || '1rem'};
+  font-weight: ${props => props.weight || 300};
+  letter-spacing: ${props => props.spacing || '0.1em'};
+  margin: ${props => props.margin || '-15px 0px 20px 0px'};
   max-width: ${props => props.maxWidth || 'initial'};
+  padding: ${props => props.padding || '0px'};
+  text-align: ${props => props.textAlign || 'inherit'};
+  text-transform: ${props => props.textTransform || 'uppercase'};
 `
 
 export const Image = styled.img`
-  width: 100%;
-  height: auto;
   display: flex;
+  height: auto;
+  width: 100%;
 `
 
 export const P = styled.p`
-  flex: ${props => props.flex || 'initial'};
   align-self: ${props => props.self || 'auto'};
+  background: ${props => props.bg || 'transparent'};
 
   color: ${props => props.color || '#000'};
-  background: ${props => props.bg || 'transparent'};
-  font-weight: ${props => props.weight || 300};
+  flex: ${props => props.flex || 'initial'};
   font-size: ${props => props.size || 'inherit'};
-  text-transform: ${props => props.textTransform || 'inherit'};
+  font-weight: ${props => props.weight || 300};
+  letter-spacing: ${props => props.spacing || 'inherit'};
   margin: ${props => props.margin || '20px 0px'};
   padding: ${props => props.padding || '0px'};
-  letter-spacing: ${props => props.spacing || 'inherit'};
   text-align: ${props => props.textAlign || 'initial'};
+  text-transform: ${props => props.textTransform || 'inherit'};
 `
 
 export const Para = styled(P)`
+  color: ${props => props.color || '#000000ee'};
+  font-size: ${props => props.size || '1.1em'};
   font-weight: ${props => props.weight || 300};
   letter-spacing: ${props => props.spacing || '0.02em'};
-  font-size: ${props => props.size || '1.1em'};
-  color: ${props => props.color || '#000000ee'};
 `
 
 export const Span = styled.span`
-  flex: ${props => props.flex || 'initial'};
   align-self: ${props => props.self || 'auto'};
-
-  color: ${props => props.color || '#000'};
   background: ${props => props.bg || 'transparent'};
-  font-weight: ${props => props.weight || 300};
+
+  bottom: ${props => props.bottom || 'auto'};
+  color: ${props => props.color || '#000'};
+  flex: ${props => props.flex || 'initial'};
   font-size: ${props => props.size || 'inherit'};
-  text-transform: ${props => props.textTransform || 'inherit'};
+  font-weight: ${props => props.weight || 300};
+  left: ${props => props.left || 'auto'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
   margin: ${props => props.margin || '0px'};
   padding: ${props => props.padding || '0px'};
-  letter-spacing: ${props => props.spacing || 'inherit'};
-  text-align: ${props => props.textAlign || 'initial'};
 
   position: ${props => props.pos || 'initial'};
   right: ${props => props.right || 'auto'};
-  left: ${props => props.left || 'auto'};
-  bottom: ${props => props.bottom || 'auto'};
+  text-align: ${props => props.textAlign || 'initial'};
+  text-transform: ${props => props.textTransform || 'inherit'};
   top: ${props => props.top || 'auto'};
 
   z-index: ${props => props.z || 'auto'};
@@ -241,58 +241,58 @@ export const LI = styled.li`
 `
 
 export const Anchor = styled.a`
-  display: flex;
-  flex-direction: ${props => props.direction || 'row'};
-  flex: ${props => props.flex || 'initial'};
-  align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || 'inherit'};
-  color: ${props => props.color || '#fff'};
+  align-self: ${props => props.self || 'auto'};
   background: ${props => props.bg || 'transparent'};
-  margin: ${props => props.margin || '0'};
-  padding: ${props => props.padding || '10px 15px'};
-  letter-spacing: ${props => props.spacing || '0.2em'};
   border: ${props => props.border || 'none'};
   border-radius: ${props => props.radius || '0px'};
-  width: ${props => props.width || 'initial'};
-
-  position: relative;
-  text-decoration: none;
-  overflow: ${props => props.overflow || 'hidden'};
-  z-index: 3;
-
-  filter: ${props => props.filter || 'none'};
-
+  color: ${props => props.color || '#fff'};
   cursor: pointer;
+  display: flex;
+  filter: ${props => props.filter || 'none'};
+  flex: ${props => props.flex || 'initial'};
+  flex-direction: ${props => props.direction || 'row'};
+  font-size: ${props => props.size || 'inherit'};
+  font-weight: ${props => props.weight || 400};
+  justify-content: ${props => props.justify || 'center'};
+  letter-spacing: ${props => props.spacing || '0.2em'};
+  margin: ${props => props.margin || '0'};
+
+  overflow: ${props => props.overflow || 'hidden'};
+  padding: ${props => props.padding || '10px 15px'};
   pointer: hand;
+  position: relative;
+
+  text-decoration: none;
+
+  width: ${props => props.width || 'initial'};
+  z-index: 3;
 
   &:hover & {
     filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : 'none')) || 'none'};
   }
 
   &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: ${props => props.hover || (props.bg ? props.bg : 'transparent')};
+    bottom: 0;
+    content: '';
     display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 
   &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: ${props => props.hoverBG || '#000'};
+    bottom: 0;
+    content: '';
+    left: 0;
     opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 
@@ -313,58 +313,58 @@ export const AnchorLink = styled(Anchor)`
 `
 
 export const RouterLink = styled(Link)`
-  display: flex;
-  flex-direction: ${props => props.direction || 'row'};
-  flex: ${props => props.flex || 'initial'};
-  align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || 'inherit'};
-  color: ${props => props.color || '#fff'};
+  align-self: ${props => props.self || 'auto'};
   background: ${props => props.bg || 'transparent'};
-  margin: ${props => props.margin || '0'};
-  padding: ${props => props.padding || '10px 15px'};
-  letter-spacing: ${props => props.spacing || '0.2em'};
   border: ${props => props.border || 'none'};
   border-radius: ${props => props.radius || '0px'};
-  width: ${props => props.width || 'initial'};
-
-  position: relative;
-  text-decoration: none;
-  overflow: ${props => props.overflow || 'hidden'};
-  z-index: 3;
-
-  filter: ${props => props.filter || 'none'};
-
+  color: ${props => props.color || '#fff'};
   cursor: pointer;
+  display: flex;
+  filter: ${props => props.filter || 'none'};
+  flex: ${props => props.flex || 'initial'};
+  flex-direction: ${props => props.direction || 'row'};
+  font-size: ${props => props.size || 'inherit'};
+  font-weight: ${props => props.weight || 400};
+  justify-content: ${props => props.justify || 'center'};
+  letter-spacing: ${props => props.spacing || '0.2em'};
+  margin: ${props => props.margin || '0'};
+
+  overflow: ${props => props.overflow || 'hidden'};
+  padding: ${props => props.padding || '10px 15px'};
   pointer: hand;
+  position: relative;
+
+  text-decoration: none;
+
+  width: ${props => props.width || 'initial'};
+  z-index: 3;
 
   &:hover & {
     filter: ${props => (props.filterHover ? props.filterHover : (props.hover ? props.hover : 'none')) || 'none'};
   }
 
   &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: ${props => props.hover || (props.bg ? props.bg : 'transparent')};
+    bottom: 0;
+    content: '';
     display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 
   &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: ${props => props.hoverBG || '#000'};
+    bottom: 0;
+    content: '';
+    left: 0;
     opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 
@@ -381,69 +381,69 @@ export const RouterLink = styled(Link)`
 `
 
 export const A = styled(Anchor)`
-  display: inline;
-  color: #e1087f;
   background: transparent;
-  padding: 0px;
+  color: #e1087f;
+  display: inline;
   letter-spacing: inherit;
+  padding: 0px;
   text-transform: initial;
 `
 
 export const C = styled(Anchor)`
-  display: inline;
-  color: #4292e4;
   background: transparent;
-  padding: 0px;
+  color: #4292e4;
+  display: inline;
   letter-spacing: inherit;
+  padding: 0px;
   text-transform: initial;
 `
 
 export const Button = styled.button`
-  display: flex;
-  flex: ${props => props.flex || 'initial'};
-  align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || 'inherit'};
-  color: ${props => props.color || '#fff'};
+  align-self: ${props => props.self || 'auto'};
   background: ${props => props.bg || 'tranparent'};
-  margin: ${props => props.margin || '0'};
-  padding: ${props => props.padding || '10px 15px'};
-  letter-spacing: ${props => props.spacing || 'initial'};
   border: ${props => props.border || 'none'};
   border-radius: ${props => props.radius || '0px'};
-  text-transform: ${props => props.textTransform || 'initial'};
+  color: ${props => props.color || '#fff'};
+  cursor: pointer;
+  display: flex;
+  flex: ${props => props.flex || 'initial'};
+  font-size: ${props => props.size || 'inherit'};
+  font-weight: ${props => props.weight || 400};
+  justify-content: ${props => props.justify || 'center'};
+  letter-spacing: ${props => props.spacing || 'initial'};
+  margin: ${props => props.margin || '0'};
+  overflow: ${props => props.overflow || 'hidden'};
 
+  padding: ${props => props.padding || '10px 15px'};
+  pointer: hand;
   position: relative;
   text-decoration: none;
-  overflow: ${props => props.overflow || 'hidden'};
+
+  text-transform: ${props => props.textTransform || 'initial'};
   z-index: 3;
 
-  cursor: pointer;
-  pointer: hand;
-
   &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: ${props => props.hover || (props.bg ? props.bg : 'transparent')};
+    bottom: 0;
+    content: '';
     display: none;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 
   &:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: ${props => props.hoverBG || '#000'};
+    bottom: 0;
+    content: '';
+    left: 0;
     opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
     z-index: -1;
   }
 
@@ -464,13 +464,13 @@ export const Button = styled.button`
 `
 
 export const Showoff = styled.div`
+  bottom: ${props => props.bottom || 'auto'};
+  left: ${props => props.left || 'auto'};
+  opacity: ${props => props.opacity || 'initial'};
   position: absolute;
   right: ${props => props.right || 'auto'};
-  left: ${props => props.left || 'auto'};
-  bottom: ${props => props.bottom || 'auto'};
   top: ${props => props.top || 'auto'};
   transform: ${props => props.transform || 'initial'};
-  opacity: ${props => props.opacity || 'initial'};
 
   @media (max-width: 768px) {
     align-items: ${props => (props.tabletAlign ? props.tabletAlign : (props.align ? props.align : 'center')) || 'center'};
@@ -487,86 +487,86 @@ export const Showoff = styled.div`
 `
 
 export const FormSubmision = styled.form`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-
-  flex: ${props => props.flex || 'initial'};
-  align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  font-weight: ${props => props.weight || 400};
-  font-size: ${props => props.size || 'inherit'};
-  text-transform: ${props => props.textTransform || 'inherit'};
-  color: ${props => props.color || '#fff'};
+  align-self: ${props => props.self || 'auto'};
   background: ${props => props.bg || 'transparent'};
-  margin: ${props => props.margin || '0px'};
-  padding: ${props => props.padding || '0px'};
+
   border: ${props => props.border || 'none'};
   border-radius: ${props => props.radius || '0px'};
+  color: ${props => props.color || '#fff'};
+  display: flex;
+  flex: ${props => props.flex || 'initial'};
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: ${props => props.size || 'inherit'};
+  font-weight: ${props => props.weight || 400};
+  justify-content: ${props => props.justify || 'center'};
+  margin: ${props => props.margin || '0px'};
+  padding: ${props => props.padding || '0px'};
   position: relative;
+  text-transform: ${props => props.textTransform || 'inherit'};
 `
 
 export const Input = styled.input`
-  display: ${props => props.display || 'flex'};
-  flex: ${props => props.flex || 'initial'};
-  align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || 'inherit'};
-  text-transform: ${props => props.textTransform || 'inherit'};
-  color: ${props => props.color || '#000'};
+  align-self: ${props => props.self || 'auto'};
   background: ${props => props.bg || 'transparent'};
-  margin: ${props => props.margin || '0px'};
-  padding: ${props => props.padding || '0px'};
-  letter-spacing: ${props => props.spacing || 'inherit'};
   border: ${props => props.border || 'none'};
   border-radius: ${props => props.radius || '0px'};
+  color: ${props => props.color || '#000'};
+  cursor: ${props => props.cursor || 'initial'};
+  display: ${props => props.display || 'flex'};
+  flex: ${props => props.flex || 'initial'};
+  font-size: ${props => props.size || 'inherit'};
+  font-weight: ${props => props.weight || 300};
+  justify-content: ${props => props.justify || 'center'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
+  margin: ${props => props.margin || '0px'};
   outline: ${props => props.outline || 'none'};
   overflow: ${props => props.overflow || 'hidden'};
-  position: relative;
-
-  cursor: ${props => props.cursor || 'initial'};
+  padding: ${props => props.padding || '0px'};
   pointer: ${props => props.hand || 'initial'};
 
-  &:focus + span {
-    opacity: 0;
+  position: relative;
+  text-transform: ${props => props.textTransform || 'inherit'};
 
-    -webkit-transition: all 0.2s ease-in-out;
+  &:focus + span {
     -moz-transition: all 0.2s ease-in-out;
+
     -o-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    opacity: 0;
     transition: all 0.2s ease-in-out;
   }
 `
 
 export const TextField = styled.textarea`
-  display: flex;
-  flex: ${props => props.flex || 'initial'};
-  align-self: ${props => props.self || 'auto'};
   align-items: ${props => props.align || 'center'};
-  justify-content: ${props => props.justify || 'center'};
-  font-weight: ${props => props.weight || 300};
-  font-size: ${props => props.size || 'inherit'};
-  text-transform: ${props => props.textTransform || 'inherit'};
-  color: ${props => props.color || '#000'};
+  align-self: ${props => props.self || 'auto'};
   background: ${props => props.bg || 'transparent'};
-  margin: ${props => props.margin || '0px'};
-  padding: ${props => props.padding || '0px'};
-  letter-spacing: ${props => props.spacing || 'inherit'};
   border: ${props => props.border || 'none'};
   border-radius: ${props => props.radius || '0px'};
+  color: ${props => props.color || '#000'};
+  display: flex;
+  flex: ${props => props.flex || 'initial'};
+  font-size: ${props => props.size || 'inherit'};
+  font-weight: ${props => props.weight || 300};
+  justify-content: ${props => props.justify || 'center'};
+  letter-spacing: ${props => props.spacing || 'inherit'};
+  margin: ${props => props.margin || '0px'};
   outline: ${props => props.outline || 'none'};
   overflow: ${props => props.overflow || 'hidden'};
+  padding: ${props => props.padding || '0px'};
   position: relative;
   resize: vertical;
+  text-transform: ${props => props.textTransform || 'inherit'};
 
   &:focus + span {
-    opacity: 0;
-
-    -webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
+
     -o-transition: all 0.2s ease-in-out;
+    -webkit-transition: all 0.2s ease-in-out;
+    opacity: 0;
     transition: all 0.2s ease-in-out;
   }
 `

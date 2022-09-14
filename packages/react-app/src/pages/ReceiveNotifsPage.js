@@ -1,8 +1,8 @@
 import React from "react";
 import ReactGA from "react-ga";
 
-import styled, {useTheme} from "styled-components";
-import { Section, Content, Item, Span, H2, H3 } from "../primaries/SharedStyling";
+import styled, { useTheme } from "styled-components";
+import { Content, H2, H3, Item, Section, Span } from "../primaries/SharedStyling";
 
 import Info from "segments/Info";
 
@@ -42,7 +42,6 @@ function ReceiveNotifsPage() {
 const Container = styled(Section)`
   flex: 1;
   flex-direction: column;
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
   background: ${props => props.theme.mainBg};
   align-self: stretch;
 `;

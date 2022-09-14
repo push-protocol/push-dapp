@@ -2070,6 +2070,14 @@
     tslib "^2.3.0"
     uuid "^8.3.2"
 
+"@epnsproject/sdk-socket@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@epnsproject/sdk-socket/-/sdk-socket-0.1.0.tgz#a901807f379535228d7ae9c687935d997e4a5074"
+  integrity sha512-RbKocFzIAIGHnu7k4UTHQoL9M2n0PdITmZ0FZiEDSbC+aSgDXQ1RMR6QPW2UYNxFBfVqdCKIlnTRw0AdZYwqgg==
+  dependencies:
+    socket.io-client "^4.5.2"
+    tslib "^2.3.0"
+
 "@epnsproject/sdk-uiweb@^0.1.10":
   version "0.1.10"
   resolved "https://registry.npmjs.org/@epnsproject/sdk-uiweb/-/sdk-uiweb-0.1.10.tgz"
@@ -21826,7 +21834,7 @@ snapdragon@^0.8.1:
     source-map-resolve "^0.5.0"
     use "^3.1.0"
 
-socket.io-client@^4.1.2:
+socket.io-client@^4.1.2, socket.io-client@^4.5.2:
   version "4.5.2"
   resolved "https://registry.npmjs.org/socket.io-client/-/socket.io-client-4.5.2.tgz"
   integrity sha512-naqYfFu7CLDiQ1B7AlLhRXKX3gdeaIMfgigwavDzgJoIUYulc1qHH5+2XflTsXTPY7BlPH5rppJyUjhjrKQKLg==
