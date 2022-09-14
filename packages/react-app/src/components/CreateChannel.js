@@ -224,18 +224,26 @@ function CreateChannel() {
     setProgress(0);
     console.log(`input is ${input}`);
     // const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
-    channelToast.showLoaderToast({ loaderMessage: "Waiting for Confirmation..."});
 
-    setProcessingInfo("Payload Uploaded");
+    setProcessingInfo("Loading...");
     setProgressInfo(
-      "Please complete the transaction in your wallet to continue."
+      "Please wait, payload is getting uploaded to IPFS."
     );
-    setProgress(10);
+    setProgress(5);
+
     // var storagePointer = (storagePointer = await ipfs.add(input));
     let storagePointer = await IPFSupload(input);
     console.log("IPFS storagePointer:", storagePointer);
     // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
+
+    channelToast.showLoaderToast({ loaderMessage: "Waiting for Confirmation..."});
+    setProcessingInfo("Payload Uploaded");
+    setProgressInfo(
+      "Please complete the transaction in your wallet to continue."
+    );
+
+    setProgress(10);
 
     // Send Transaction
     // First Approve DAI
