@@ -291,7 +291,7 @@ const PushLogo = styled.div`
 const ProviderButton = styled.button`
   flex: none;
   min-width: 179px;
-  background: ${props => props.theme.mainBg};
+  background: ${props => props.theme.default.bg};
   margin: 20px 15px;
   overflow: hidden;
   padding: 20px 5px;

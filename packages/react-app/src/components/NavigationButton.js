@@ -49,12 +49,11 @@ function NavigationButton({ item, data, sectionID, active }) {
       alt={`${data.alt}`}
       target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
       disabled={data.disabled}
-      // hoverBG={theme.leftBarHoverColor}
       radius="16px"
       align="stretch"
       padding="12px"
       margin={definedMargin}
-      // bg={!active ? 'transparent' : theme.activeNav}
+      // bg={!active ? 'transparent' : theme.nav.active}
       active={active}
       className={data?.name?.toLowerCase()}
     >
@@ -70,16 +69,15 @@ function NavigationButton({ item, data, sectionID, active }) {
           weight={!active ? '300' : '600'}
           spacing="0"
           margin="0 5px"
-          // color={theme.leftBarFontColor}
-          color={theme.navText}
+          color={theme.nav.color}
           size="14px"
         >
           {data.name}
         </Span>
 
-        {item.hasItems && !item.opened && <BiChevronDown color={theme.leftBarFontColor} />}
+        {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
 
-        {item.hasItems && item.opened && <BiChevronUp color={theme.leftBarFontColor} />}
+        {item.hasItems && item.opened && <BiChevronUp color={theme.nav.color} />}
       </ItemH>
     </RouteLogic>
   );

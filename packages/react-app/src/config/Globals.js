@@ -102,7 +102,8 @@ export default {
     MODULE_BOX_SHADOW: 'rgb(0 0 0 / 10%) 0px 15px 20px -5px',
 
     PADDING: {
-      DEFAULT: '20px'
+      DEFAULT: '20px',
+      BIG: '40px',
     },
     MARGIN: {
       VERTICAL: '30px',

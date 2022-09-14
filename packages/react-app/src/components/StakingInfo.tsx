@@ -1,10 +1,10 @@
-import React, { Fragment } from "react";
-import { Button,Item,Span } from "primaries/SharedStyling";
-import styled from "styled-components";
+import { abis, addresses } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
-import UtilityHelper from 'helpers/UtilityHelper';
 import { ethers } from "ethers";
-import { addresses, abis } from "@project/contracts";
+import UtilityHelper from 'helpers/UtilityHelper';
+import { Button, Item, Span } from "primaries/SharedStyling";
+import React, { Fragment } from "react";
+import styled from "styled-components";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { chainId, library, account } = useWeb3React();
@@ -50,7 +50,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
 
 
           <TextSpace>
-              <Span color="#657795" size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
+              <Span color={theme.default.secondaryColor} size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
 
               <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
 

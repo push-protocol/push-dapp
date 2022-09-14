@@ -22,12 +22,12 @@ interface LoaderSpinnerI {
   type?: number;
   overlay?: number;
   blur?: number;
-  title: string;
+  title?: string;
   completed?: boolean;
 }
 
 // Create Progress Bar
-const LoaderSpinner = ({ type = LOADER_TYPE.STANDALONE, overlay = LOADER_OVERLAY.NORMAL, blur = 0, title, completed = false }: LoaderSpinnerI) => {
+const LoaderSpinner = ({ type = LOADER_TYPE.STANDALONE, overlay = LOADER_OVERLAY.NORMAL, blur = 0, title = null, completed = false }: LoaderSpinnerI) => {
   const theme = useTheme();
 
   return (
@@ -46,7 +46,7 @@ const LoaderSpinner = ({ type = LOADER_TYPE.STANDALONE, overlay = LOADER_OVERLAY
         width={type == LOADER_TYPE.STANDALONE ? "50%" : "auto"}
         padding={type == LOADER_TYPE.STANDALONE ? GLOBALS.ADJUSTMENTS.PADDING.DEFAULT : "0px"}
         borderRadius={type == LOADER_TYPE.STANDALONE ? GLOBALS.ADJUSTMENTS.RADIUS.SMALL : "0px"}
-        border={type == LOADER_TYPE.STANDALONE ? `1px solid ${theme.modalBorderColor}` : "transparent"}
+        border={type == LOADER_TYPE.STANDALONE ? `1px solid ${theme.default.border}` : "transparent"}
         background={type == LOADER_TYPE.STANDALONE ? theme.default.bg : "initial"}
       >
         {!completed && 
@@ -55,11 +55,14 @@ const LoaderSpinner = ({ type = LOADER_TYPE.STANDALONE, overlay = LOADER_OVERLAY
         {completed &&
           <CheckmarkSVG />
         }
-        <SpanV2 
-          padding="10px"
-          fontWeight="500"
-          color={theme.default.color}
-        >{title}</SpanV2>
+
+        {title && 
+          <SpanV2 
+            padding="10px"
+            fontWeight="500"
+            color={theme.default.color}
+          >{title}</SpanV2>
+        }
       </ItemHV2>
     </ItemVV2>
   );

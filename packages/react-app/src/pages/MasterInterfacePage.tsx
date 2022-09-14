@@ -21,13 +21,13 @@ import InboxPage from "pages/InboxPage";
 import InternalDevPage from "pages/InternalDevPage";
 import NFTPage from "pages/NFTPage";
 import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
-import SendNotifs from "pages/SendNotifs";
+import SendNotifsPage from "pages/SendNotifsPage";
 import SpamPage from "pages/SpamPage";
+import SupportPage from "pages/SupportPage";
 import TutorialPage from "pages/TutorialPage";
 import YieldFarmingPage from "pages/YieldFarmingPage";
 import NotAvailablePage from "./NotAvailablePage";
 
-import { SupportPage } from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
 
@@ -55,7 +55,7 @@ function MasterInterfacePage() {
           }
           />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
-          <Route path="send" element={<SendNotifs />} />
+          <Route path="send" element={<SendNotifsPage />} />
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
 
