@@ -37,7 +37,7 @@ export const ItemHV2 = styled.div`
   filter: ${(props) => props.filter || 'initial'};
   flex: ${(props) => props.flex || '1'};
   flex-basis: ${(props) => props.flexBasis || 'auto'};
-  flex-direction: ${(props) => props.flexDirection || 'column'};
+  flex-direction: ${(props) => props.flexDirection || 'row'};
   flex-wrap: ${(props) => props.flexWrap || 'wrap'};
   font-size: ${(props) => props.fontSize || 'initial'};
   height: ${(props) => props.height || 'auto'};
@@ -47,6 +47,7 @@ export const ItemHV2 = styled.div`
   max-width: ${(props) => props.maxWidth || 'initial'};
   min-width: ${(props) => props.minWidth || 'auto'};
   overflow: ${(props) => props.overflow || 'initial'};
+  overflow-wrap: ${(props) => props.overflowWrap || 'anywhere'};
   padding: ${(props) => props.padding || '0px'};
   position: ${(props) => props.position || 'relative'};
   right: ${(props) => props.right || 'auto'};
@@ -66,7 +67,7 @@ export const ItemHV2 = styled.div`
 
 export const ItemVV2 = styled(ItemHV2)`
   flex: ${(props) => props.flex || "1"};
-  flex-direction: row;
+  flex-direction: ${(props) => props.flexDirection || 'column'};
 
   ${ItemBreakV2} {
     height: 0;
@@ -159,7 +160,7 @@ export const SpanV2 = styled.span`
   background: ${(props) => props.background || "transparent"};
   border-radius: ${(props) => props.borderRadius || "initial"};
   bottom: ${(props) => props.bottom || "auto"};
-  color: ${(props) => props.color || themeLight.default.color};
+  color: ${(props) => props.color || "inherit"};
   flex: ${(props) => props.flex || "initial"};
   font-size: ${(props) => props.fontSize || "inherit"};
   font-weight: ${(props) => props.fontWeight || "300"};

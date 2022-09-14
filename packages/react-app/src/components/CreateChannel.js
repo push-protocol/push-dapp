@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
-import styled, { css, useTheme } from "styled-components";
-import "react-dropdown/style.css";
-import {
-  Section,
-  Content,
-  Item,
-  H2,
-  Span,
-  H3,
-} from "../primaries/SharedStyling";
-import "react-dropzone-uploader/dist/styles.css";
-import { Oval } from "react-loader-spinner";
-import UploadLogo from "./UploadLogo";
-import StakingInfo from "./StakingInfo";
-import ChannelInfo from "./ChannelInfo";
-import ProcessingInfo from "./ProcessingInfo";
-import { MdCallMade, MdError } from "react-icons/md";
+import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
-import { ThemeProvider } from "styled-components";
-import { addresses, abis, envConfig } from "@project/contracts";
-import "./createChannel.css";
+import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
-import useToast from "hooks/useToast";
 import { isValidUrl } from "helpers/UtilityHelper";
+import useToast from "hooks/useToast";
+import {
+  Content, H2, H3, Item, Section, Span
+} from "primaries/SharedStyling";
+import React, { useEffect, useState } from "react";
+import "react-dropdown/style.css";
+import "react-dropzone-uploader/dist/styles.css";
+import { MdCallMade, MdError } from "react-icons/md";
+import { Oval } from "react-loader-spinner";
+import styled, { css, ThemeProvider, useTheme } from "styled-components";
+
+import {
+  ItemVV2
+} from "components/reusables/SharedStylingV2";
+
+import ChannelInfo from "./ChannelInfo";
+import "./createChannel.css";
+import ProcessingInfo from "./ProcessingInfo";
+import StakingInfo from "./StakingInfo";
+import UploadLogo from "./UploadLogo";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -298,7 +298,7 @@ function CreateChannel() {
       if (txCheck.status === 0) {
         channelToast.showMessageToast({
           toastTitle:"Error", 
-          toastMessage: `There was an error creating the channel`, 
+          toastMessage: `There was an error in creating the channel`, 
           toastType:  "ERROR", 
           getToastIcon: (size) => <MdError size={size} color="red" />
         })
@@ -344,7 +344,7 @@ function CreateChannel() {
         } else {
           channelToast.showMessageToast({
             toastTitle:"Error", 
-            toastMessage: `There was an error creating the channel`, 
+            toastMessage: `There was an error in creating the channel`, 
             toastType:  "ERROR", 
             getToastIcon: (size) => <MdError size={size} color="red" />
           })
@@ -353,7 +353,7 @@ function CreateChannel() {
           console.log({ err });
           setProcessing(3);
           setProgress(0);
-          setProgressInfo("There was an error creating the Channel");
+          setProgressInfo("There was an error in creating the Channel");
           setProcessingInfo(
             "Kindly Contact support@epns.io to resolve the issue."
           );
@@ -468,51 +468,63 @@ function CreateChannel() {
           </Section>
 
           {/* Stake Fees Section */}
-          {stepFlow === 0 && (
-            <StakingInfo
-              channelStakeFees={channelStakeFees}
-              setStakeFeesChoosen={setStakeFeesChoosen}
-              setStepFlow={setStepFlow}
-              setProcessingInfo={setProcessingInfo}
-            />
-          )}
+          {stepFlow === 0 && 
+            <ItemVV2>
+              <StakingInfo
+                channelStakeFees={channelStakeFees}
+                setStakeFeesChoosen={setStakeFeesChoosen}
+                setStepFlow={setStepFlow}
+                setProcessingInfo={setProcessingInfo}
+              />
+
+              {processing === 1 ? <LoaderSpinner type={LOADER_TYPE.STANDALONE} overlay={LOADER_OVERLAY.ONTOP} blur={5} title="Channel Creation in Progress" completed={false} /> : null}
+            </ItemVV2>
+          }
 
           {/* Channel Entry */}
-          {stepFlow === 1 && (
-            <ChannelInfo
-              setStepFlow={setStepFlow}
-              channelName={channelName}
-              channelAlias={channelAlias}
-              channelInfo={channelInfo}
-              channelURL={channelURL}
-              chainDetails={chainDetails}
-              setChannelAlias={setChannelAlias}
-              setChainDetails={setChainDetails}
-              setChannelInfo={setChannelInfo}
-              setChannelName={setChannelName}
-              setChannelURL={setChannelURL}
-              setChannelInfoDone={setChannelInfoDone}
-              setTxStatus={setTxStatus}
-              errorInfo={errorInfo}
-              isAllFilledAndValid={isAllFilledAndValid}
-            />
-          )}
+          {stepFlow === 1 && 
+            <ItemVV2>
+              <ChannelInfo
+                setStepFlow={setStepFlow}
+                channelName={channelName}
+                channelAlias={channelAlias}
+                channelInfo={channelInfo}
+                channelURL={channelURL}
+                chainDetails={chainDetails}
+                setChannelAlias={setChannelAlias}
+                setChainDetails={setChainDetails}
+                setChannelInfo={setChannelInfo}
+                setChannelName={setChannelName}
+                setChannelURL={setChannelURL}
+                setChannelInfoDone={setChannelInfoDone}
+                setTxStatus={setTxStatus}
+                errorInfo={errorInfo}
+                isAllFilledAndValid={isAllFilledAndValid}
+              />
+
+              {processing === 1 ? <LoaderSpinner type={LOADER_TYPE.STANDALONE} overlay={LOADER_OVERLAY.ONTOP} blur={5} title="Channel Creation in Progress" completed={false} /> : null}
+            </ItemVV2>
+          }
 
           {/* Image Upload Section */}
-          {stepFlow === 2 && (
-            <UploadLogo
-              croppedImage={croppedImage}
-              view={view}
-              imageSrc={imageSrc}
-              processing={processing}
-              setCroppedImage={setCroppedImage}
-              setView={setView}
-              setImageSrc={setImageSrc}
-              setProcessingInfo={setProcessingInfo}
-              handleCreateChannel={handleCreateChannel}
-              logoInfo={logoInfo}
-            />
-          )}
+          {stepFlow === 2 && 
+            <ItemVV2>
+              <UploadLogo
+                croppedImage={croppedImage}
+                view={view}
+                imageSrc={imageSrc}
+                processing={processing}
+                setCroppedImage={setCroppedImage}
+                setView={setView}
+                setImageSrc={setImageSrc}
+                setProcessingInfo={setProcessingInfo}
+                handleCreateChannel={handleCreateChannel}
+                logoInfo={logoInfo}
+              />
+
+              {processing === 1 ? <LoaderSpinner type={LOADER_TYPE.STANDALONE} overlay={LOADER_OVERLAY.ONTOP} blur={5} title="Channel Creation in Progress" completed={false} /> : null}
+            </ItemVV2>
+          }
 
           {/* Channel Setup Progress */}
           {(processing === 1 || processing === 3) && (

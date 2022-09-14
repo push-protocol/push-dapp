@@ -1,45 +1,45 @@
 import React, { useEffect, useState } from 'react';
 
-import GLOBALS, { device } from 'config/Globals';
-import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
-import { toast } from "react-toastify";
-import styled from 'styled-components';
+import { toast } from 'react-toastify';
+import styled, { useTheme } from 'styled-components';
 
-import LoaderSpinner, { LOADERTYPE } from 'components/reusables/loaders/LoaderSpinner';
+import BlurBG from 'components/reusables/blurs/BlurBG';
+import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ProgressBar from 'components/reusables/progress/ProgressBarUnit';
+import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
-
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
+import GLOBALS, { device } from 'config/Globals';
 
 // Helper Modules
 const randomTextWithLines = (maxChar, maxLines) => {
   var lines = '';
-  const numLines = Math.floor((Math.random() * maxLines) + 1);
+  const numLines = Math.floor(Math.random() * maxLines + 1);
   for (var i = 0; i < numLines; i++) {
     if (i > 0) lines += '<br/>';
     for (var x = 0; x < maxChar; x++) lines += randomText(maxChar);
   }
   return lines;
-}
+};
 
 const randomText = (length) => {
   var result = '';
-  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
+};
 
 const createRandomToast = () => {
   toast.dark(randomTextWithLines(20, 1), {
     type: toast.TYPE.INFO,
     position: toast.POSITION.BOTTOM_RIGHT,
     autoClose: 10000,
-    hideProgressBar: false,
+    hideProgressBar: false
   });
-}
+};
 
 const createNotificaionToast = () => {
   const payload = {
@@ -71,7 +71,10 @@ const createNotificaionToast = () => {
 
 // Create Module
 const InternalDevModule = () => {
+  const theme = useTheme();
+
   const [progress, setProgress] = useState(0);
+  const [randomText, setRandomText] = useState(null);
 
   useEffect(() => {
     // Do progress bar
@@ -83,6 +86,12 @@ const InternalDevModule = () => {
       }
     }, 100);
   }, [progress]);
+
+  useEffect(() => {
+    if (!randomText) {
+      setRandomText(randomTextWithLines(20, 5));
+    }
+  }, [randomText]);
 
   return (
     <Container>
@@ -97,56 +106,163 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="omponents/reusables/loaders/LoaderSpinner">
-        <LoaderSpinner type={LOADERTYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone">
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
+      </IndividualComps>
+
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone">
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Long Text, Very Long" completed={false} />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless overlay=normal blur=0">
+        <SpanV2 color={theme.default.color}>  
+          {randomText}
+        </SpanV2>
+        <LoaderSpinner 
+          type={LOADER_TYPE.SEAMLESS}
+          title={"Randomized With Long Text, Very Long"}
+          completed={false} 
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless overlay=ontop blur=0">
+        <SpanV2 color={theme.default.color}>  
+          {randomText}
+        </SpanV2>
+        <LoaderSpinner 
+          type={LOADER_TYPE.SEAMLESS}
+          overlay={LOADER_OVERLAY.ONTOP} 
+          title={"Randomized With Long Text, Very Long"}
+          completed={false} 
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless overlay=ontop blur=5">
+        <SpanV2 color={theme.default.color}>  
+          {randomText}
+        </SpanV2>
+        <LoaderSpinner 
+          type={LOADER_TYPE.SEAMLESS}
+          overlay={LOADER_OVERLAY.ONTOP} 
+          blur={5}
+          title={"Randomized With Long Text, Very Long"}
+          completed={false} 
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone overlay=ontop blur=5">
+        <SpanV2 color={theme.default.color}>  
+          {randomText}
+        </SpanV2>
+        <LoaderSpinner 
+          type={LOADER_TYPE.STANDALONE}
+          overlay={LOADER_OVERLAY.ONTOP} 
+          blur={5}
+          title={"Randomized With Long Text, Very Long"}
+          completed={false} 
+        />
       </IndividualComps>
 
       {/* Toast Controller */}
       <IndividualComps caption="omponents/reusables/toasts/ToastController">
-        <Button
-          bg="#e20880"
+        <ButtonV2
+          background="#e20880"
           color="#fff"
           flex="initial"
-          radius="15px"
+          borderRadius="15px"
           padding="20px 20px"
           onClick={() => {
             createNotificaionToast();
           }}
         >
-          <Span color="#fff" weight="600" textTransform="none" line="22px" size="16px">
+          <SpanV2>
             Trigger Random Notification
-          </Span>
-        </Button>
+          </SpanV2>
+        </ButtonV2>
       </IndividualComps>
 
       {/* Toast Controller */}
-      <IndividualComps caption="omponents/reusables/toasts/ToastController">
-        <Button
-          bg="#e20880"
+      <IndividualComps caption="components/reusables/toasts/ToastController">
+        <ButtonV2
+          background="#e20880"
           color="#fff"
           flex="initial"
-          radius="15px"
+          borderRadius="15px"
           padding="20px 20px"
           onClick={() => {
             createRandomToast();
           }}
         >
-          <Span color="#fff" weight="600" textTransform="none" line="22px" size="16px">
+          <SpanV2>
             Trigger Random Toast
-          </Span>
-        </Button>
-      </IndividualComps>
-      
-      {/* Loader with Spinner Component */}
-      <IndividualComps caption="omponents/reusables/loaders/LoaderSpinner">
-        <LoaderSpinner type={LOADERTYPE.STANDALONE} title="Randomized" completed={false} />
+          </SpanV2>
+        </ButtonV2>
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="omponents/reusables/loaders/LoaderSpinner">
-        <LoaderSpinner type={LOADERTYPE.SEAMLESS} title="This time it's done" completed={true} />
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized" completed={false} />
       </IndividualComps>
 
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="omponents/reusables/loaders/LoaderSpinner">
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
+      </IndividualComps>
+
+      {/* Defined Blur */}
+      <IndividualComps caption="omponents/reusables/blurs/BlurBG - Blur=10">
+        <ButtonV2
+          background="#e20880"
+          color="#fff"
+          flex="initial"
+          borderRadius="15px"
+          padding="20px 20px"
+          onClick={() => {
+            console.log('Nothing Should Be Clickable');
+          }}
+        >
+          <SpanV2>
+            Try to Trigger
+          </SpanV2>
+        </ButtonV2>
+        <BlurBG blur={10} />
+      </IndividualComps>
+
+      {/* Defined Blur Progress Bar */}
+      <IndividualComps caption="omponents/reusables/blurs/BlurBG  - Blur=5">
+        <ProgressBar percent={progress} color={GLOBALS.COLORS.PRIMARY_PINK} />
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
+        <BlurBG blur={5} />
+      </IndividualComps>
+
+      {/* Defined Blur Loader Done */}
+      <IndividualComps caption="omponents/reusables/blurs/BlurBG  - Blur=5">
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
+        <BlurBG blur={5} />
+      </IndividualComps>
+
+      {/* Defined Blur Loader Done */}
+      <IndividualComps caption="omponents/reusables/blurs/BlurBG  - Disabled">
+        <ButtonV2
+          background="#e20880"
+          color="#fff"
+          flex="initial"
+          borderRadius="15px"
+          padding="20px 20px"
+          onClick={() => {
+            console.log('This should be clickable');
+          }}
+        >
+          <SpanV2>
+            Try to Trigger
+          </SpanV2>
+        </ButtonV2>
+        <BlurBG blur={0} />
+      </IndividualComps>
     </Container>
   );
 };
@@ -154,7 +270,7 @@ export default InternalDevModule;
 
 // Define how the module is fitted, define it align-self to strect to fill entire bounds
 // Define height: inherit to cover entire height
-const Container = styled(Section)`
+const Container = styled(SectionV2)`
   align-items: center;
   align-self: stretch;
   background: ${(props) => props.theme.mainBg};
@@ -177,9 +293,9 @@ const Container = styled(Section)`
   }
 `;
 
-const IndividualComps = styled(Item)`
+const IndividualComps = styled(ItemVV2)`
 	border-radius: 32px;
-	border: 1px solid #ddd;
+	border: 1px solid ${(props) => props.theme.default.secondaryBg};
 	margin: 20px;
 	min-height: 100px;
 	min-width: 25%;
@@ -187,7 +303,7 @@ const IndividualComps = styled(Item)`
 	padding: 20px;
 	
 	&:after {
-		background: #ddd;
+		background: ${(props) => props.theme.default.secondaryBg};
 		bottom: 0;
 		content: '${(props) => props.caption}';
 		font-size: 10px;

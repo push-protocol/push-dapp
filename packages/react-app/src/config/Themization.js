@@ -5,6 +5,7 @@ const themeLight = {
   // Default Theme
   default: {
     bg: '#FFF',
+    secondaryBg: '#F4F5FA',
     color: '#000',
     hover: '#F3F3FF',
   },
@@ -148,6 +149,7 @@ const themeDark = {
   // Default Theme
   default: {
     bg: '#43485B',
+    secondaryBg: '#282A2E',
     color: '#FFF',
     hover: '#00000033',
   },
