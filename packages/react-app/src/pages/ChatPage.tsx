@@ -1,30 +1,26 @@
+import React from 'react';
 
-import React, { useEffect, useState } from 'react'
-import ReactGA from 'react-ga'
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
+import ChatModule from 'modules/chat/ChatModule';
+import styled, { useTheme } from 'styled-components';
 
-import { Section } from 'components/SharedStyling'
-import Chat from 'segments/Chat'
-import styled, { useTheme } from 'styled-components'
+import GLOBALS from 'config/Globals';
 
-import GLOBALS from 'config/Globals'
-//
-
-function ChatPage(props): JSX.Element {
-  // React GA Analytics
-  ReactGA.pageview('/chat')
-
-  const themes = useTheme()
-  return <Chat />
+// Chat page
+const ChatPage = () => {
+  // RENDER
+  return (
+    <Container>
+      <ChatModule />
+    </Container>
+  );
 }
+export default ChatPage;
 
-// const Container = styled(Section)`
-//   display: block;
-//   flex-direction: column;
-//   position: 'fixed';
-//   height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${(props) => props.theme.interfaceTopPadding});
-//   align-items: stretch;
-//   align-self: stretch;
-// `
-
-// Export Default
-export default ChatPage
+// This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center
+// justify content flex start to start from top, height is defined by module as well as amount of margin, padding
+const Container = styled(SectionV2)`
+  flex: 1;
+  flex-direction: column;
+  align-self: stretch;
+`;
