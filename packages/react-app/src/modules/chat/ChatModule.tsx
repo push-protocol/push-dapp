@@ -1,32 +1,40 @@
-import W2wIndex from 'components/chat/w2wIndex';
-import { Item, Section } from 'primaries/SharedStyling';
-import styled from 'styled-components';
+import React from 'react';
+import ReactGA from 'react-ga';
 
-import GLOBALS, { device } from 'config/Globals';
+import styled, { useTheme } from 'styled-components';
+
+import { ThemeProvider } from 'styled-components';
+
+import W2wIndex from 'components/chat/w2wChat/w2wIndex';
+import { Item, ItemH } from 'components/SharedStyling';
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Create Header
-const ChatModule = () => {
+function Chat() {
+  // React GA Analytics
+  ReactGA.pageview('/chat')
+  
   window.ethereum.on('accountsChanged', (account) => {
-    window.location.reload();
-  });
+    window.location.reload()
+  })
   window.ethereum.on('networksChanged', () => {
-    window.location.reload();
-  });
+    window.location.reload()
+  })
 
   return (
     <Container>
-      <W2wIndex />
+      <ItemH>
+        <W2wIndex />
+      </ItemH>
     </Container>
-  );
+  )
 }
-export default ChatModule;
 
-// Define how the module is fitted, define it align-self to strect to fill entire bounds
-// Define height: inherit to cover entire height
-const Container = styled(Section)`
-	align-items: center;
+// css styles
+const Container = styled.div`
+	align-items: stretch;
 	align-self: stretch;
-  height: inherit;
+  flex: 1;
 	background: ${(props) => props.theme.mainBg};
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
@@ -35,14 +43,22 @@ const Container = styled(Section)`
 	flex: initial;
 	justify-content: center;
 	position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 
-  margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
-
+  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM});
+  
   @media ${device.laptop} {
-    margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM});
   }
 
   @media ${device.mobileM} {
-    margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
-  }
-`;
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM});
+    border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+`
+
+// Export Default
+export default Chat

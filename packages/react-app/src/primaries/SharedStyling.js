@@ -188,7 +188,7 @@ export const H3 = styled.h3`
 export const Image = styled.img`
   width: ${(props) => props.width || "100%"};
   cursor: ${(props) => props.cursor || "default"};
-  height: auto;
+  height: ${(props) => props.height || "auto"};
   display: flex;
   filter: ${(props) => props.filter || "initial"};
 `;

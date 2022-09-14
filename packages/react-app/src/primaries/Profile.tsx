@@ -4,13 +4,14 @@ import { Web3Provider } from 'ethers/providers'
 import styled,{useTheme} from 'styled-components';
 import Dropdown from '../components/Dropdown';
 import {Item} from "./SharedStyling.js";
+import { useClickAway } from 'hooks/useClickAway';
 
 import { Oval } from 'react-loader-spinner';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
-  const toggleArrowRef = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLInputElement>(null);
+  const toggleArrowRef = useRef(null);
+  const dropdownRef = useRef(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
@@ -44,19 +45,9 @@ const Profile = ({isDarkMode}) => {
     },
   ];
   
-  React.useEffect(() => {
-    const closeDropdown = (e) => {
-      if(toggleArrowRef.current && !toggleArrowRef?.current.contains(e.target) && 
-         dropdownRef.current && !dropdownRef?.current.contains(e.target))
-      {
-        setShowDropdown(false);
-      }
-    }
-
-    document.addEventListener('click',closeDropdown);
-
-    return () => document.removeEventListener('click',closeDropdown);
-  })
+  useClickAway(toggleArrowRef,dropdownRef, () => {
+    setShowDropdown(false);
+  });
   
   React.useEffect(() => {
     if (account && account != '') {
@@ -86,7 +77,12 @@ const Profile = ({isDarkMode}) => {
     <>
       {account && account !== "" && !error && (
         <Container>
-          <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
+          <Wallet 
+            bg={theme.profileBG} 
+            color={theme.profileText} 
+            isDarkMode={isDarkMode}
+            onClick={() => setShowDropdown(!showDropdown)} 
+            ref={toggleArrowRef}>
             {!ensFetched && (
               <Oval
               color="#FFF"
@@ -101,8 +97,7 @@ const Profile = ({isDarkMode}) => {
                 {account.substring(account.length - 6)}
               </>
             )}
-            <ToggleArrowImg ref={toggleArrowRef}
-              onClick={() => setShowDropdown(!showDropdown)} 
+            <ToggleArrowImg 
               filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
               <img
                 alt="arrow"

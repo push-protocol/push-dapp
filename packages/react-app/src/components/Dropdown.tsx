@@ -52,7 +52,7 @@ function Dropdown(props) {
                 {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
               </MobileAddress>
             </Span>
-            <Image
+           {dropdownValue?.icon && <Image
               src={dropdownValue?.icon}
               alt="icon"
               width="auto"
@@ -61,17 +61,17 @@ function Dropdown(props) {
               onClick={() => {
                 copyToClipboard(dropdownValue?.value);
               }}
-            />
+            />}
           </ItemH>
         ) : (
           <ItemH wrap="nowrap" margin="8px 0">
-            <Image
+             {dropdownValue?.icon && <Image
               src={dropdownValue.icon}
               alt="icon"
-              width="auto"
+              width="max-content"
               spacing="1px"
               filter={theme.snackbarBorderIcon}
-            />
+            />}
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
                 width="max-content"
@@ -80,6 +80,7 @@ function Dropdown(props) {
                 weight="400"
                 size="16px"
                 cursor="pointer"
+                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}
@@ -94,6 +95,7 @@ function Dropdown(props) {
                 margin="10px 20px"
                 weight="400"
                 size="16px"
+                width="max-content"
                 color={theme.snackbarBorderText}
                 hoverBG="transparent"
               >

@@ -30,17 +30,27 @@ const CloseButton = ({ closeToast }) => (<Button onClick={closeToast}>
   <MdOutlineClose color="#657795" size="100%" />
 </Button>)
 
-const useToast = () => {
+export type ShowLoaderToastType = ({loaderMessage} : {loaderMessage: string}) => React.ReactText;
+
+export type ShowMessageToastType = ({toastTitle, toastMessage, toastType, getToastIcon}:{toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon?: (size: number) => JSX.Element}) => void
+
+const useToast = (
+    autoClose: number = 3000,
+    position: "top-left" | "top-right" | "bottom-left" | "bottom-right" = "top-right"
+  ) => {
   const toastId = React.useRef(null);
   const themes = useTheme();
 
-  const showToast = (loaderMessage: string) =>
-    toastId.current = toast(
+  let isLoaderToastShown = false;
+
+  const showLoaderToast : ShowLoaderToastType = ({loaderMessage}) => {
+    isLoaderToastShown = true;
+    return toastId.current = toast(
       <ThemeProvider theme={themes}>
         <LoaderToast msg={loaderMessage} loaderColor="#CF1C84" textColor={themes.toastTextColor} />
       </ThemeProvider>,
       {
-        position: "top-right",
+        position,
         autoClose: false,
         hideProgressBar: true,
         closeOnClick: true,
@@ -54,58 +64,69 @@ const useToast = () => {
           boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
           borderRadius: "20px",
         }
-      }
-    );
+      })
+    }
 
-  const updateToast = (toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon: (size: number) => JSX.Element = null) => {
-    const successBgGradient = themes.scheme==="dark"
-    ? "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #2F3137 42.81%)"
-    : "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)";
+  const showMessageToast : ShowMessageToastType = ({toastTitle, toastMessage, toastType, getToastIcon}) => {
+    const toastUI = 
+    <Toast>
+      <ToastIcon>
+        {getToastIcon ? getToastIcon(30) : ""}
+      </ToastIcon>
+      <ToastContent>
+        <ToastTitle style={{
+          color: themes.fontColor
+        }}>
+          {toastTitle}
+        </ToastTitle>
+        <ToastMessage style={{
+          color: themes.toastTextColor
+        }}>
+          {toastMessage}
+        </ToastMessage>
+      </ToastContent>
+    </Toast>;
 
-    const errorBgGradient = themes.scheme==="dark"
-    ? "linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)"
-    : "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)";
-
-
-    toast.update(toastId.current, {
-      render:
-        <Toast>
-          <ToastIcon>
-            {getToastIcon ? getToastIcon(30) : ""}
-          </ToastIcon>
-          <ToastContent>
-            <ToastTitle style={{
-              color: themes.fontColor
-            }}>
-              {toastTitle}
-            </ToastTitle>
-            <ToastMessage style={{
-              color: themes.toastTextColor
-            }}>
-              {toastMessage}
-            </ToastMessage>
-          </ToastContent>
-        </Toast>
-      ,
+    const toastRenderParams = {
+      position,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
       type: toast.TYPE.DEFAULT,
       closeButton: CloseButton,
-      autoClose: 3000,
+      autoClose: autoClose,
       style: {
-        background: toastType === "SUCCESS" ? successBgGradient : errorBgGradient,
+        background: toastType === "SUCCESS" ? themes.toastSuccessBackground : themes.toastErrorBackground,
         boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
         borderRadius: "20px",
       },
+    }
+
+    console.log("toastId", toastId.current);
+
+    if(!isLoaderToastShown){
+      // render a new toast
+      toastId.current = toast(
+        toastUI,
+        {
+          ...toastRenderParams
+        }
+      );
+    }
+
+    // update the old toast
+    toast.update(toastId.current, {
+      render: toastUI,
+      ...toastRenderParams 
     });
   }
 
   return {
-    showToast, updateToast
+    showLoaderToast, showMessageToast
   }
 }
-
-export type ShowToastType = (loaderMessage: string) => React.ReactText;
-
-export type UpdateToastType = (toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon?: (size: number) => JSX.Element) => void
 
 const LoaderNotification = styled.div`
   display: flex;

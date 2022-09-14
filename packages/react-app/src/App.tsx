@@ -6,7 +6,7 @@ import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
 import { injected, ledger, portis, walletconnect } from "connectors";
 import { Web3Provider } from "ethers/providers";
-import { useBrowserNotification, useEagerConnect, useInactiveListener } from "hooks";
+import { useEagerConnect, useInactiveListener, useSDKSocket } from "hooks";
 import Joyride, { CallBackProps } from "react-joyride";
 import { useLocation } from "react-router-dom";
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -32,6 +32,7 @@ import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJour
 
 import InitState from "components/InitState";
 import * as dotenv from "dotenv";
+import { EnvHelper } from "helpers/UtilityHelper";
 
 
 dotenv.config();
@@ -40,7 +41,7 @@ export default function App() {
 
   const dispatch = useDispatch();
 
-  const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
+  const { connector, activate, active, error, account, chainId } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<
     AbstractConnector
   >();
@@ -52,6 +53,13 @@ export default function App() {
     tutorialContinous,
   } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
+  const [title, setTitle] = useState(EnvHelper.dappTitle());
+
+  React.useEffect(() => {
+    // This will run when the page first loads and whenever the title changes
+    document.title = title;
+  }, [title]);
+
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
@@ -77,8 +85,8 @@ export default function App() {
   // Initialize Theme
   const [darkMode, setDarkMode] = useState(false);
 
-  // Enable browser notification
-  useBrowserNotification(account)
+  // enable socket notifications
+  useSDKSocket({ account, chainId, env: 'dev' });
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -267,10 +275,7 @@ const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   align-self: center;
-  width: 100%;
-
-
-
+  width: calc(100% - ${props => props.leftBarWidth}px);
   margin: 0px 0px 0px ${props => props.leftBarWidth}px;
 
   @media (max-width: 992px) {
