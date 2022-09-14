@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactGA from "react-ga";
 
-import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { A, Button, Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
 import { BsChevronExpand } from 'react-icons/bs';
@@ -24,8 +24,8 @@ function FaqModule() {
   // Render
   return (
     <Container>
-      <ItemHV2>
-        <ItemHV2 margin="0px 0px 0px 0px">
+      <ItemVV2 alignItems="stretch">
+        <ItemVV2 margin="0px 0px 0px 0px">
           <H2 textTransform="uppercase" spacing="0.1em" margin="10px 0px 20px 0px">
             <Span weight="200" color={theme.fontColor}>
               Frequently Asked{' '}
@@ -34,19 +34,19 @@ function FaqModule() {
               Questions
             </Span>
           </H2>
-        </ItemHV2>
+        </ItemVV2>
 
-        <ItemHV2 margin="0px 0px 0px 0px" alignItems="flex-start">
+        <ItemVV2 margin="0px 0px 0px 0px" alignItems="flex-start">
           <H2 textTransform="uppercase" spacing="0.1em" margin="20px 0px 20px 0px" size="1.6rem">
-            <SpanV2 weight="600" padding="8px" background={theme.default.secondaryBg} color="#fff" borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
+            <SpanV2 weight="600" padding="8px 20px" background={theme.default.secondaryBg} color={theme.default.color} borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
               For Users
             </SpanV2>
           </H2>
-        </ItemHV2>
+        </ItemVV2>
 
-        <ItemHV2>
+        <ItemVV2>
           {/* Question */}
-          <ItemHV2 margin="0px 0px 20px 0px">
+          <ItemVV2 margin="0px 0px 20px 0px">
             <QnAItem>
               <Question
                 onClick={() => {
@@ -200,20 +200,20 @@ function FaqModule() {
                 </Answer>
               )}
             </QnAItem>
-          </ItemHV2>
-        </ItemHV2>
+          </ItemVV2>
+        </ItemVV2>
 
-        <ItemHV2 margin="0px 0px 0px 0px" alignItems="flex-start">
+        <ItemVV2 margin="0px 0px 0px 0px" alignItems="flex-start">
           <H2 textTransform="uppercase" spacing="0.1em" margin="30px 0px 20px 0px" size="1.6rem">
-            <SpanV2 weight="600" padding="8px 20px" background={theme.default.secondaryBg} color="#fff" borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
+            <SpanV2 weight="600" padding="8px 20px" background={theme.default.secondaryBg} color={theme.default.color} borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
               For Developers
             </SpanV2>
           </H2>
-        </ItemHV2>
+        </ItemVV2>
 
-        <ItemHV2>
+        <ItemVV2>
           {/* Question */}
-          <ItemHV2 margin="0px 0px 20px 0px">
+          <ItemVV2 margin="0px 0px 20px 0px">
             <QnAItem>
               <Question
                 onClick={() => {
@@ -374,9 +374,9 @@ function FaqModule() {
                 </Answer>
               )}
             </QnAItem>
-          </ItemHV2>
-        </ItemHV2>
-      </ItemHV2>
+          </ItemVV2>
+        </ItemVV2>
+      </ItemVV2>
     </Container>
   );
 }
@@ -451,7 +451,7 @@ const QnAItem = styled(Item)`
   align-self: stretch;
   flex: auto;
   margin: 15px 0px;
-  border: 1px solid ${(props) => props.theme.qnaBgBorder};
+  border: 1px solid ${(props) => props.theme.modalBorderColor};
   border-radius: 10px;
   box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.2);
   overflow: hidden;
@@ -472,17 +472,19 @@ const QnAItem = styled(Item)`
     }
   }
   & ${Answer} {
-    border: 1px solid #e6e6e6;
-    border-top: 1px solid #e6e6e6;
+    border: 1px solid ${(props) => props.theme.modalBorderColor};
+    border-top: 1px solid ${(props) => props.theme.modalBorderColor};
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     padding: 10px 15px;
+    margin: -1px;
+    margin-top: 0px;
     align-items: flex-start;
-    background: #fff;
+    background: ${(props) => props.theme.qnaBg};
     & ${Span} {
       line-height: 1.5em;
       margin: 10px;
-      color: #000;
+      color: ${(props) => props.theme.default.color};
       font-size: 1.05em;
     }
   }
