@@ -67,11 +67,11 @@ const Container = styled.div`
   // display: flex;
   // flex-wrap: wrap;
 
-  background: ${props => props.theme.mainBg};
+  background: ${props => props.theme.default.secondaryBg};
 
   color:${props => props.theme.color};
   border-radius: 10px;
-  border: 1px solid rgb(237, 237, 237);
+  border: 1px solid ${props => props.theme.default.border};
 
   margin: 15px 0px;
   justify-content: center;

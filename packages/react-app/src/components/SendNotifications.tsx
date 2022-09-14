@@ -818,7 +818,7 @@ function SendNotifications() {
               </Span>
             </H2>
             <Span
-              color="#657795"
+              color={theme.default.secondaryColor}
               weight="400"
               size="15px"
               textTransform="none"
@@ -1085,7 +1085,7 @@ function SendNotifications() {
                           // }
                         }}
                       />
-                      <Span size="13px" margin="7px 0px 0px 0px" color="#657795">
+                      <Span size="13px" margin="7px 0px 0px 0px" color={theme.default.secondaryColor}>
                         Enter recipients wallet addresses separated by a comma or by pressing the enter key
                       </Span>
                     </Item>

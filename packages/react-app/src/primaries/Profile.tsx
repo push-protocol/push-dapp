@@ -1,10 +1,10 @@
 import { useWeb3React } from '@web3-react/core';
-import React,{useRef} from "react";
-import { Web3Provider } from 'ethers/providers'
-import styled,{useTheme} from 'styled-components';
-import Dropdown from '../components/Dropdown';
-import {Item} from "./SharedStyling.js";
+import { Web3Provider } from 'ethers/providers';
 import { useClickAway } from 'hooks/useClickAway';
+import React, { useRef } from "react";
+import styled, { useTheme } from 'styled-components';
+import Dropdown from '../components/Dropdown';
+import { Item } from "./SharedStyling.js";
 
 import { Oval } from 'react-loader-spinner';
 
@@ -109,7 +109,7 @@ const Profile = ({isDarkMode}) => {
           {showDropdown && (
             <Item
               ref={dropdownRef}
-              bg={theme.headerBg}
+              bg={theme.header.bg}
               border={`1px solid ${theme.snackbarBorderColor}`}
               radius="24px"
               align="flex-start"

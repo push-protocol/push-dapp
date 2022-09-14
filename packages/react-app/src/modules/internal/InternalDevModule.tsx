@@ -106,6 +106,11 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone title=null">
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone">
         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
       </IndividualComps>
@@ -273,7 +278,7 @@ export default InternalDevModule;
 const Container = styled(SectionV2)`
   align-items: center;
   align-self: stretch;
-  background: ${(props) => props.theme.mainBg};
+  background: ${(props) => props.theme.default.bg};
   border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   flex-direction: row;

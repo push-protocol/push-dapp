@@ -6,7 +6,9 @@ const themeLight = {
   default: {
     bg: '#FFF',
     secondaryBg: '#F4F5FA',
+    border: '#E5E8F6',
     color: '#000',
+    secondaryColor: '#657795',
     hover: '#F3F3FF',
   },
 
@@ -17,31 +19,30 @@ const themeLight = {
     blur2: '#CECDFF'
   },
 
+  // Header Theme
+  header: {
+    bg: '#F4F5FA', // alt color to try - #F4F5FA, #FFF
+  },
+
+  // Navigation Theme
+  nav: {
+    bg: '#F4F5FA', // alt color to try - #F4F5FA, #FFF
+    hamburgerBg: '#00000066',
+    color: '#000',
+    activeColor: '#F9EBF3',
+  },
+
   // Default Background Theme
   defaultBG: '#FFFFFF',
 
-  // Section Theme
-  sectionBorderBg: 'transparent',
-
   // Header Theme
-  headerBg: '#fff',
   headerTagBg: '#000',
   headerTagFg: '#000',
 
   headerIconsBg: '#000',
 
-  // Nav Menu
-  navMenuBg: '#00000066',
-  navText: '#000',
-  activeNav: '#F9EBF3',
-
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',
-
-  leftBarBg: '#fff',
-  leftBarButtonBg: '#fff',
-  leftBarHoverColor: '#5c5c5c',
-  leftBarFontColor: '#000',
 
   leftBarSocialBg: '#eee',
   leftBarSocialIconBg: '#ddd',
@@ -148,9 +149,11 @@ const themeDark = {
   
   // Default Theme
   default: {
-    bg: '#43485B',
+    bg: '#2F3137',
     secondaryBg: '#282A2E',
+    border: '#4A4F67',
     color: '#FFF',
+    secondaryColor: '#B6BCD6',
     hover: '#00000033',
   },
 
@@ -160,30 +163,28 @@ const themeDark = {
     blur1: '#E845A322',
     blur2: '#E845A322'
   },
-  
-
-  // Section Theme
-  sectionBorderBg: '#333',
 
   // Header Theme
-  headerBg: "#2F3137",
+  header: {
+    bg: '#212228', // alt color to try - #F4F5FA, #FFF
+  },
+
+  // Navigation Theme
+  nav: {
+    bg: '#212228', // alt color to try - #212228, #2F3137
+    hamburgerBg: '#00000066',
+    color: '#B6BCD6',
+    activeColor: '#404650'
+  },
+
+  // Header Theme
   headerTagBg: "#fff",
   headerTagFg: "#fff",
 
   headerIconsBg: '#fff',
 
-  // Nav Menu 
-  navMenuBg: '#00000066',
-  navText: '#B6BCD6',
-  activeNav: '#404650;',
-
   // Left Bar Theme
   leftBarLoaderBg: '#ddd',
-
-  leftBarBg: '#000',
-  leftBarButtonBg: '#000',
-  leftBarHoverColor: '#fff',
-  leftBarFontColor: '#fff',
 
   leftBarSocialBg: '#222',
   leftBarSocialIconBg: '#000',

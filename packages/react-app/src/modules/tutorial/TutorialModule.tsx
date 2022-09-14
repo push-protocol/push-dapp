@@ -1,17 +1,18 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import styled, { useTheme } from 'styled-components';
 
-import { Section, Content, Item, B, H2, H3, Span, Button} from '../../primaries/SharedStyling';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { setRun } from "redux/slices/userJourneySlice";
+import { B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
 
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 import { BsChevronExpand } from 'react-icons/bs';
-import GLOBALS, { device } from "config/Globals";
 
 function TutorialModule() {
   const dispatch = useDispatch();
-  const themes = useTheme();
+  const theme = useTheme();
 
   const { run } = useSelector((state: any) => state.userJourney);
 
@@ -25,57 +26,73 @@ function TutorialModule() {
   // Render
   return (
     <Container>
-      <Content className="contentBox" padding="20px 0px 0px 0px">
-        <Item align="stretch" justify="flex-start" margin="0px 30px">
+      <ItemVV2>
 
-          <Item align="stretch" justify="flex-start" margin="0px 0px 0px 0px">
-            <H2 textTransform="uppercase" spacing="0.1em" margin="10px 0px 20px 0px">
-              <Span weight="200" color={themes.fontColor}>Live </Span><Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">Walkthrough</Span>
-            </H2>
-            <H3 maxWidth="768px" color={themes.fontColorSecondary}>Let's walk you through the core functions of EPNS, the <B>native web3 communication protocol!</B></H3>
-          </Item>
+        <ItemVV2 align="stretch" justify="flex-start" margin="0px 0px 40px 0px">
+          <H2>
+            <Span weight="400" size="32px" color={theme.color}>
+              Live Walkthrough
+            </Span>
+          </H2>
+          <Span
+            color={theme.default.secondaryColor}
+            weight="400"
+            size="16px"
+            textTransform="none"
+            textAlign="center"
+            spacing="0.03em"
+            margin="0px 0px"
+          >
+            Let's walk you through the core functions of EPNS, the communication protocol of Web3!
+          </Span>
+        </ItemVV2>
 
-          <Item align="stretch" justify="flex-start" margin="0px 0px 20px 0px">
-            <QnAItem>
-              <Question
-                onClick={() => { onStart() }}
-                hover="#e20880"
-              >
-                <Span color={themes.color}>
-                  Show me everything!
-                </Span>
-                <BsChevronExpand size={20} color={"#ddd"} />
-              </Question>
-            </QnAItem>
-          </Item>
+        <ItemVV2 justify="flex-start">
+          <QnAItem>
+            <Question
+              onClick={() => { onStart() }}
+              hover="#e20880"
+            >
+              <Span color={theme.color}>
+              👉 Show me everything!
+              </Span>
+              <BsChevronExpand size={20} color={"#ddd"} />
+            </Question>
+          </QnAItem>
+        </ItemVV2>
 
-        </Item>
-      </Content>
+      </ItemVV2>
     </Container>
   );
 }
 
 // css style
 const Container = styled(Section)`
-    align-items: stretch;
-    align-self: stretch;
-	background: ${(props) => props.theme.mainBg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.MID};
+	align-items: center;
+	align-self: center;
+	background: ${(props) => props.theme.default.bg};
+	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
 	flex-direction: column;
 	flex: initial;
 	justify-content: center;
   max-width: 1200px;
+  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 	position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 `;
 

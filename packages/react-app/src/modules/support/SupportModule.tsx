@@ -1,24 +1,17 @@
 import React from "react";
 import ReactGA from "react-ga";
 
-import {
-  Section,
-  Content,
-  Item,
-  ItemH,
-  H2,
-  H3,
-  Span,
-  Button,
-  FormSubmision,
-  Input,
-  TextField,
-} from "../../primaries/SharedStyling";
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 import Dropdown from "react-dropdown";
-import styled, { useTheme } from "styled-components";
 import { FaCheckCircle } from "react-icons/fa";
 import { Oval } from "react-loader-spinner";
-import GLOBALS, { device } from "config/Globals";
+import styled, { useTheme } from "styled-components";
+import {
+  Button, Content, FormSubmision, H2,
+  H3, Input, Item,
+  ItemH, Section, Span, TextField
+} from "../../primaries/SharedStyling";
 
 
 // HELPER METHODS
@@ -51,7 +44,7 @@ const SupportModule = () => {
   const [contactFormMsg, setContactFormMsg] = React.useState("");
   const [contactFormError, setContactFormError] = React.useState("");
 
-  const themes = useTheme();
+  const theme = useTheme();
 
   const handleContactFormSubmit = (e) => {
     e.preventDefault();
@@ -107,288 +100,303 @@ const SupportModule = () => {
 
   return (
     <Container>
-      <Section id="contact" padding="0 20px">
-        <Content className="contentBox" padding="20px 0">
-          <Item align="stretch" justify="flex-start" margin="0px 20px">
-            <Item align="stretch" align="flex-end" tabletAlign="flex-start" margin="0px 16px 0px 0px" textAlign="right" tabletTextAlign="left">
-              <H2 textTransform="uppercase" spacing="0.1em" bg="#fff">
-                <Span color={themes.color} weight="600" padding="0px">Contact US!</Span>
-                {/* <Span weight="200" color="#000"> Us!</Span> */}
-              </H2>
-              <H3 bg="#fff" color={themes.color}>Get in Touch</H3>
-            </Item>
-            <Item self="stretch">
-              <FormSubmision
-                flex="1"
-                direction="row"
-                justify="stretch"
-                margin="10px"
-                size="1.1rem"
-                onSubmit={handleContactFormSubmit}
-              >
-                <Item align="stretch" justify="stretch" margin="10px -15px">
-                  {contactFormProcessing === 0 && (
-                    <>
-                      <ItemH align="stretch">
-                        <Item
-                          flex="1"
-                          margin="15px"
-                          justify="flex-start"
-                          align="stretch"
-                          minWidth="280px"
-                        >
-                          <ContactInput
-                            required
-                            radius="4px"
-                            padding="12px"
-                            bg="#fff"
-                            border="12px"
-                            placeholder="John Wick"
-                            value={contactFormName}
-                            onChange={(e) => {
-                              setContactFormName(e.target.value);
-                            }}
-                            autocomplete="name"
-                            style={{
-                            }}
-                          />
-                          {contactFormName.trim().length === 0 && (
-                            <Span
-                              padding="4px 10px"
-                              right="0px"
-                              top="0px"
-                              pos="absolute"
-                              color="#fff"
-                              bg="#000"
-                              size="0.7rem"
-                              z="1"
-                            >
-                              Name
-                            </Span>
-                          )}
-                        </Item>
+      <ItemVV2 alignSelf="stretch" justifyContent="flex-start">
+        <ItemVV2 alignSelf="stretch" justifyContent="flex-start">
+          <H2>
+            <Span weight="400" size="32px" color={theme.color}>
+              Support
+            </Span>
+          </H2>
+          <Span
+            color={theme.default.secondaryColor}
+            weight="400"
+            size="16px"
+            textTransform="none"
+            textAlign="center"
+            spacing="0.03em"
+            margin="0px 0px"
+          >
+            Let's get in touch!
+          </Span>
+        </ItemVV2>
 
-                        <Item
-                          flex="5"
-                          margin="15px"
-                          justify="flex-start"
-                          align="stretch"
-                          minWidth="280px"
-                        >
-                          <ContactInput
-                            required
-                            placeholder="john@wick.com"
-                            radius="4px"
-                            padding="12px"
-                            bg="#fff"
-                            value={contactFormEmail}
-                            onChange={(e) => {
-                              setContactFormEmail(e.target.value);
-                            }}
-                            autocomplete="email"
-                          />
-                          {contactFormEmail.trim().length === 0 && (
-                            <Span
-                              padding="4px 10px"
-                              right="0px"
-                              top="0px"
-                              pos="absolute"
-                              color="#fff"
-                              bg="#000"
-                              size="0.7rem"
-                              z="1"
-                            >
-                              E-mail
-                            </Span>
-                          )}
-                        </Item>
-                      </ItemH>
 
-                      <Item
-                        flex="5"
-                        justify="flex-start"
-                        align="stretch"
-                        minWidth="280px"
-                        margin="15px"
-                      >
-                        <DropdownStyled
-                          options={contactFormTopics}
-                          onChange={(option) => setContactFormTopic(option.value)}
-                          value={contactFormTopic}
-                          placeholder="Select an option"
-                        />
-                      </Item>
-
-                      <Item
-                        justify="center"
-                        align="stretch"
-                        minWidth="280px"
-                        margin="15px"
-                      >
-                        <ContactInput
-                          required
-                          placeholder="I want to tell you guys a secret!"
-                          radius="4px"
-                          padding="12px"
-                          bg="#fff"
-                          value={contactFormSub}
-                          onChange={(e) => {
-                            setContactFormSub(e.target.value);
-                          }}
-                          autocomplete="on"
-                        />
-                        {contactFormSub.trim().length === 0 && (
-                          <Span
-                            padding="4px 10px"
-                            right="0px"
-                            top="0px"
-                            pos="absolute"
-                            color="#fff"
-                            bg="#000"
-                            size="0.7rem"
-                            z="1"
-                          >
-                            Subject
-                          </Span>
-                        )}
-                      </Item>
-
-                      <Item
-                        justify="center"
-                        align="stretch"
-                        minWidth="280px"
-                        margin="15px"
-                      >
-                        <ContactTextArea
-                          required
-                          placeholder="This is where you will tell us that secret, or a bug or whatever is on your mind."
-                          rows="6"
-                          radius="4px"
-                          padding="12px"
-                          bg="#fff"
-                          value={contactFormMsg}
-                          onChange={(e) => {
-                            setContactFormMsg(e.target.value);
-                          }}
-                          autocomplete="off"
-                        />
-                      </Item>
-                    </>
-                  )}
-
-                  {contactFormProcessing === 2 && (
-                    <Item align="center" margin="0px 10px">
-                      <ItemH
-                        color="#e20880"
-                        bg="#000"
-                        padding="10px 15px"
-                        columnGap="0px"
-                        rowGap="0px"
-                      >
-                        <FaCheckCircle size={24} color="#fff" />
+        <ItemVV2 alignSelf="stretch">
+          <FormSubmision
+            flex="1"
+            direction="row"
+            self="stretch"
+            margin="0px"
+            size="1.1rem"
+            onSubmit={handleContactFormSubmit}
+          >
+            <Item self="stretch" align="stretch" justify="stretch" margin="10px -15px">
+              {contactFormProcessing === 0 && (
+                <>
+                  <ItemH align="stretch">
+                    <Item
+                      flex="1"
+                      margin="15px"
+                      justify="flex-start"
+                      align="stretch"
+                      minWidth="280px"
+                    >
+                      <ContactInput
+                        required
+                        radius="4px"
+                        padding="12px"
+                        bg="#fff"
+                        border="12px"
+                        placeholder="John Wick"
+                        value={contactFormName}
+                        onChange={(e) => {
+                          setContactFormName(e.target.value);
+                        }}
+                        autocomplete="name"
+                        style={{
+                        }}
+                      />
+                      {contactFormName.trim().length === 0 && (
                         <Span
-                          padding="0px 0px 0px 8px"
+                          padding="4px 10px"
+                          right="0px"
+                          top="0px"
+                          pos="absolute"
                           color="#fff"
-                          textTransform="uppercase"
-                          spacing="0.1em"
+                          bg="#000"
+                          size="0.7rem"
+                          z="1"
                         >
-                          Message Sent! We will be in Touch :)
+                          Name
                         </Span>
-                      </ItemH>
+                      )}
                     </Item>
-                  )}
 
-                  {contactFormError && contactFormProcessing === 0 && (
-                    <Item align="center" margin="0px 10px">
-                      <Item
-                        color="#e20880"
-                        bg="#000"
-                        padding="10px 15px"
-                        margin="15px"
-                      >
+                    <Item
+                      flex="5"
+                      margin="15px"
+                      justify="flex-start"
+                      align="stretch"
+                      minWidth="280px"
+                    >
+                      <ContactInput
+                        required
+                        placeholder="john@wick.com"
+                        radius="4px"
+                        padding="12px"
+                        bg="#fff"
+                        value={contactFormEmail}
+                        onChange={(e) => {
+                          setContactFormEmail(e.target.value);
+                        }}
+                        autocomplete="email"
+                      />
+                      {contactFormEmail.trim().length === 0 && (
                         <Span
+                          padding="4px 10px"
+                          right="0px"
+                          top="0px"
+                          pos="absolute"
                           color="#fff"
-                          textTransform="uppercase"
-                          spacing="0.1em"
+                          bg="#000"
+                          size="0.7rem"
+                          z="1"
                         >
-                          {contactFormError}
+                          E-mail
                         </Span>
-                      </Item>
+                      )}
                     </Item>
-                  )}
+                  </ItemH>
 
                   <Item
-                    justify="stretch"
-                    self="stretch"
+                    flex="5"
+                    justify="flex-start"
                     align="stretch"
                     minWidth="280px"
+                    margin="15px"
                   >
-                    {contactFormProcessing !== 2 && (
-                      <Button
-                        bg="#000"
+                    <DropdownStyled
+                      options={contactFormTopics}
+                      onChange={(option) => setContactFormTopic(option.value)}
+                      value={contactFormTopic}
+                      placeholder="Select an option"
+                    />
+                  </Item>
+
+                  <Item
+                    justify="center"
+                    align="stretch"
+                    minWidth="280px"
+                    margin="15px"
+                  >
+                    <ContactInput
+                      required
+                      placeholder="I want to tell you guys a secret!"
+                      radius="4px"
+                      padding="12px"
+                      bg="#fff"
+                      value={contactFormSub}
+                      onChange={(e) => {
+                        setContactFormSub(e.target.value);
+                      }}
+                      autocomplete="on"
+                    />
+                    {contactFormSub.trim().length === 0 && (
+                      <Span
+                        padding="4px 10px"
+                        right="0px"
+                        top="0px"
+                        pos="absolute"
                         color="#fff"
-                        border={themes.buttonBd}
-                        flex="1"
-                        radius="4px"
-                        disabled={contactFormProcessing}
-                        margin="15px"
-                        padding="12px 15px"
+                        bg="#000"
+                        size="0.7rem"
+                        z="1"
                       >
-                        {contactFormProcessing === 1 && (
-                          <Oval
-                            color="#fff"
-                            height={24}
-                            width={24}
-                          />
-                        )}
-                        {contactFormProcessing === 0 && (
-                          <Input
-                            cursor="hand"
-                            color="#fff"
-                            weight="400"
-                            size=".9em"
-                            spacing="0.2em"
-                            type="submit"
-                            value="Submit"
-                          />
-                        )}
-                      </Button>
+                        Subject
+                      </Span>
                     )}
                   </Item>
+
+                  <Item
+                    justify="center"
+                    align="stretch"
+                    minWidth="280px"
+                    margin="15px"
+                  >
+                    <ContactTextArea
+                      required
+                      placeholder="This is where you will tell us that secret, or a bug or whatever is on your mind."
+                      rows="6"
+                      radius="4px"
+                      padding="12px"
+                      bg="#fff"
+                      value={contactFormMsg}
+                      onChange={(e) => {
+                        setContactFormMsg(e.target.value);
+                      }}
+                      autocomplete="off"
+                    />
+                  </Item>
+                </>
+              )}
+
+              {contactFormProcessing === 2 && (
+                <Item align="center" margin="0px 10px">
+                  <ItemH
+                    color="#e20880"
+                    bg="#000"
+                    padding="10px 15px"
+                    columnGap="0px"
+                    rowGap="0px"
+                  >
+                    <FaCheckCircle size={24} color="#fff" />
+                    <Span
+                      padding="0px 0px 0px 8px"
+                      color="#fff"
+                      textTransform="uppercase"
+                      spacing="0.1em"
+                    >
+                      Message Sent! We will be in Touch :)
+                    </Span>
+                  </ItemH>
                 </Item>
-              </FormSubmision>
+              )}
+
+              {contactFormError && contactFormProcessing === 0 && (
+                <Item align="center" margin="0px 10px">
+                  <Item
+                    color="#e20880"
+                    bg="#000"
+                    padding="10px 15px"
+                    margin="15px"
+                  >
+                    <Span
+                      color="#fff"
+                      textTransform="uppercase"
+                      spacing="0.1em"
+                    >
+                      {contactFormError}
+                    </Span>
+                  </Item>
+                </Item>
+              )}
+
+              <Item
+                justify="stretch"
+                self="stretch"
+                align="stretch"
+                minWidth="280px"
+              >
+                {contactFormProcessing !== 2 && (
+                  <Button
+                    bg="#000"
+                    color="#fff"
+                    border={theme.buttonBd}
+                    flex="1"
+                    radius="4px"
+                    disabled={contactFormProcessing}
+                    margin="15px"
+                    padding="12px 15px"
+                  >
+                    {contactFormProcessing === 1 && (
+                      <Oval
+                        color="#fff"
+                        height={24}
+                        width={24}
+                      />
+                    )}
+                    {contactFormProcessing === 0 && (
+                      <Input
+                        cursor="hand"
+                        color="#fff"
+                        weight="400"
+                        size=".9em"
+                        spacing="0.2em"
+                        type="submit"
+                        value="Submit"
+                      />
+                    )}
+                  </Button>
+                )}
+              </Item>
             </Item>
-          </Item>
-        </Content>
-      </Section>
+          </FormSubmision>
+        </ItemVV2>
+      </ItemVV2>
     </Container>
   );
 };
 
 // CSS Styles
 const Container = styled(Section)`
-
 	align-items: center;
 	align-self: center;
-	background: ${(props) => props.theme.mainBg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.MID};
+	background: ${(props) => props.theme.default.bg};
+	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
 	flex-direction: column;
 	flex: initial;
 	justify-content: center;
   max-width: 1200px;
+  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 	position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 `;
+
 const DropdownStyled = styled(Dropdown)`
   .Dropdown-control {
     background-color: #000;

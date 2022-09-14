@@ -433,7 +433,6 @@ function Navigation() {
                     <SectionInnerGroupContainer
                       flex="1"
                       align="stretch"
-                      bg={theme.leftBarButtonBg}
                       zIndex={2}
                       refresh={refresh}
                       // margintop="15px"
@@ -465,7 +464,6 @@ function Navigation() {
                         <SectionInnerGroupContainer
                           flex="1"
                           align="stretch"
-                          bg={theme.leftBarButtonBg}
                           margintop="-10px"
                           zIndex={2}
                           refresh={refresh}
@@ -566,7 +564,6 @@ function Navigation() {
                 <SectionInnerItemContainer
                   flex="1"
                   align="stretch"
-                  // bg={theme.leftBarButtonBg}
                   zIndex={1}
                   refresh={refresh}
                   onClick={() => {
@@ -716,11 +713,10 @@ function Navigation() {
 
 // CSS Styles
 const Container = styled(Section)`
-  background: ${props => props.theme.leftBarBg};
+  background: ${props => props.theme.nav.bg};
   flex: 1;
   height: calc(100% - ${props => props.headerHeight}px);
   margin: ${props => props.headerHeight}px 0px 0px 0px;
-  border-right: 1px solid ${props => props.theme.sectionBorderBg};
 `
 
 const Primary = styled(Item)`
@@ -773,7 +769,6 @@ const SectionInnerGroupContainer = styled(Item)`
     top: ${props=>props.margintop};
     right: 0;
     left: 0;
-    background: ${props => props.theme.leftBarButtonBg};
     height: 10px;
   } 
 `

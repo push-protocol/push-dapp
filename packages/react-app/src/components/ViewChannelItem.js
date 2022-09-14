@@ -1,17 +1,17 @@
+import { Device } from "assets/Device";
 import React from "react";
 import styled, { css, useTheme } from "styled-components";
-import { Device } from "assets/Device";
 
+import { useWeb3React } from "@web3-react/core";
+import Skeleton from "@yisheng90/react-loading";
+import { GoVerified } from "react-icons/go";
+import { IoMdPeople } from "react-icons/io";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
 import { toast as toaster } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { Oval } from "react-loader-spinner";
-import Skeleton from "@yisheng90/react-loading";
-import { IoMdPeople } from "react-icons/io";
-import { GoVerified } from "react-icons/go";
-import { useWeb3React } from "@web3-react/core";
-import { useDispatch, useSelector } from "react-redux";
 
-import { ItemH, Span,Image } from "../primaries/SharedStyling";
+import { Image, ItemH, Span } from "../primaries/SharedStyling";
 
 import { postReq } from "api";
 
@@ -19,24 +19,23 @@ import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 import NotificationToast from "../primaries/NotificationToast";
 
 import ChannelTutorial, {
-  isChannelTutorialized,
+  isChannelTutorialized
 } from "segments/ChannelTutorial";
 
-import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { cacheChannelInfo } from "redux/slices/channelSlice";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
 
 import { envConfig } from "@project/contracts";
-import {
-  incrementStepIndex,
-  addNewWelcomeNotif,
-} from "redux/slices/userJourneySlice";
-import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 import useToast from "hooks/useToast";
+import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
+import {
+  addNewWelcomeNotif, incrementStepIndex
+} from "redux/slices/userJourneySlice";
 
-import { MdCheckCircle, MdError } from "react-icons/md";
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { isCommunityResourcable } from "@ethersproject/providers";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { MdCheckCircle, MdError } from "react-icons/md";
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -836,9 +835,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-
-  background: ${(props) => props.theme.mainBg};
-  border: 1px solid ${(props) => props.theme.viewChannelOuterBorder};
+  border: 1px solid ${(props) => props.theme.default.border};
   border-bottom:none;
   border-left:none;
   border-right:none;

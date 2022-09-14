@@ -1,19 +1,20 @@
 import React from "react";
 import ReactGA from "react-ga";
 
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import styled, { css, useTheme } from 'styled-components';
-import {Section, Content, Item, A, B, H2, H3, Span, Button} from '../../primaries/SharedStyling';
+import { A, B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
 
 import { BsChevronExpand } from 'react-icons/bs';
 
-import { useWeb3React } from '@web3-react/core'
-import MyNFTs from "components/MyNFTs";
-import MyNFTsV2 from "components/MyNFTsV2";
+import { useWeb3React } from '@web3-react/core';
 import AllNFTs from "components/AllNFTs";
 import AllNFTsV2 from "components/AllNFTsV2";
+import MyNFTs from "components/MyNFTs";
+import MyNFTsV2 from "components/MyNFTsV2";
 import TransferNFT from "components/TransferNFT";
 import TransferNFTv2 from "components/TransferNFTv2";
-import GLOBALS, { device } from "config/Globals";
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Create Header
 function NftModule() {
@@ -22,7 +23,7 @@ function NftModule() {
 
   const { account } = useWeb3React();
 
-  const themes = useTheme();
+  const theme = useTheme();
 
   const [tokenId, setTokenId] = React.useState(null);
   const [controlAt, setControlAt] = React.useState(1);
@@ -57,13 +58,25 @@ function NftModule() {
   return (
     <Container>
       <Section>
-          <Content padding="20px 20px 0px">
-          <Item align="flex-start" margin="0px 20px 0px 20px">
-            <H2 textTransform="uppercase" spacing="0.1em">
-              <Span bg="#674c9f" color="#fff" weight="600" padding="0px 8px">$ROCKSTAR</Span><Span weight="200" color={themes.color}> of </Span><Span bg="#e20880" color="#fff" weight="600" padding="0px 8px">EPNS</Span>
+        <Content padding="20px 0px">
+          <ItemVV2 alignSelf="stretch" justifyContent="flex-start" margin="0 0 40px 0">
+            <H2>
+              <Span weight="400" size="32px" color={theme.color}>
+                Rockstar of EPNS
+              </Span>
             </H2>
-            <H3 color={themes.greyText}>Thank you <B color={themes.color}>community</B> for all your support. Over the next year, we are excited to continue returning our gratitude!</H3>
-          </Item>
+            <Span
+              color={theme.default.secondaryColor}
+              weight="400"
+              size="16px"
+              textTransform="none"
+              textAlign="center"
+              spacing="0.03em"
+              margin="0px 0px"
+            >
+              Thank you community for all your support. Over the next year, we are excited to continue returning our gratitude!
+            </Span>
+          </ItemVV2>
 
           <Item align="stretch" justify="flex-start" margin="0px 20px 0px 20px">
 
@@ -74,7 +87,7 @@ function NftModule() {
                   onClick={() => {toggleShowAnswer(1)}}
                   hover="#e20880"
                 >
-                  <Span color={themes.color}>
+                  <Span color={theme.color}>
                     Does $ROCKSTAR of EPNS NFTs carry something along with NFTs?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -94,7 +107,7 @@ function NftModule() {
                   onClick={() => {toggleShowAnswer(2)}}
                   hover="#e20880"
                 >
-                  <Span color={themes.color}>
+                  <Span color={theme.color}>
                     How to get $ROCKSTAR of EPNS?
                   </Span>
                   <BsChevronExpand size={20} color={"#ddd"}/>
@@ -113,7 +126,7 @@ function NftModule() {
           </Item>
         </Content>
 
-        <Content padding="0px 20px 20px" bg="#eee">
+        <Content padding="20px 0px" bg="#eee">
           <Item align="flex-start" margin="0px 20px 0px 20px">
             
           <Controls>
@@ -149,7 +162,7 @@ function NftModule() {
                 Show mine
               </CheckSpace>
             </Controls>
-           
+            
 
             {controlAt === 0 && version === 1 && (
               <MyNFTs
@@ -177,7 +190,7 @@ function NftModule() {
             )}
 
             {/* NFTs version 2 */}
-             {controlAt === 1 && version === 2 && (
+              {controlAt === 1 && version === 2 && (
               <AllNFTsV2
                 controlAt={controlAt}
                 setControlAt={setControlAt}
@@ -187,33 +200,39 @@ function NftModule() {
             {controlAt === 2 && tokenId && <TransferNFT tokenId={tokenId} />}
             {controlAt === 3 && tokenId && <TransferNFTv2 tokenId={tokenId} />}
           </Item>
-          </Content>
+        </Content>
       </Section>
-   </Container>
+    </Container>
   );
 }
 
 // css styles
 const Container = styled(Section)`
-    align-items: stretch;
-    align-self: stretch;
-	background: ${(props) => props.theme.mainBg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.MID};
+	align-items: center;
+	align-self: center;
+	background: ${(props) => props.theme.default.bg};
+	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
 	flex-direction: column;
 	flex: initial;
 	justify-content: center;
   max-width: 1200px;
+  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
 	position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 `;
 
@@ -382,47 +401,44 @@ const QnAItem = styled(Item)`
   align-self: stretch;
   flex: auto;
   margin: 15px 0px;
-  border: 1px solid ${props => props.theme.qnaBgBorder};
+  border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 10px;
-  box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.20);
+  box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.2);
   overflow: hidden;
-
   & ${Question} {
-    background: ${props => props.theme.qnaBg};
+    background: ${(props) => props.theme.qnaBg};
     justify-content: flex-start;
     text-transform: uppercase;
-
     & ${Span} {
       font-weight: 400;
       letter-spacing: 0.2em;
       margin-left: 10px;
       flex: 1;
     }
-
     &:hover {
       & ${Span} {
         color: #fff;
       }
     }
   }
-
   & ${Answer} {
-    border: 1px solid #e6e6e6;
-    border-top: 1px solid #e6e6e6;
+    border: 1px solid ${(props) => props.theme.default.border};
+    border-top: 1px solid ${(props) => props.theme.default.border};
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     padding: 10px 15px;
+    margin: -1px;
+    margin-top: 0px;
     align-items: flex-start;
-    background: #fff;
-
+    background: ${(props) => props.theme.qnaBg};
     & ${Span} {
       line-height: 1.5em;
       margin: 10px;
-      color: #000 ;
+      color: ${(props) => props.theme.default.color};
       font-size: 1.05em;
     }
   }
-`
+`;
 
 const AMod = styled(A)`
   color: #e20880;

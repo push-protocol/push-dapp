@@ -216,7 +216,7 @@ function ChannelDashboardPage() {
 const Container = styled(Section)`
 	align-items: center;
 	align-self: center;
-	background: ${(props) => props.theme.mainBg};
+	background: ${(props) => props.theme.default.bg};
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;

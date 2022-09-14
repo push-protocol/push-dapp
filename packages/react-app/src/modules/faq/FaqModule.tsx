@@ -26,11 +26,11 @@ function FaqModule() {
     <Container>
       <ItemVV2 alignItems="stretch">
         <ItemVV2 margin="0px 0px 0px 0px">
-          <H2 textTransform="uppercase" spacing="0.1em" margin="10px 0px 20px 0px">
-            <Span weight="200" color={theme.fontColor}>
+          <H2>
+            <Span weight="400" size="32px" color={theme.color}>
               Frequently Asked{' '}
             </Span>
-            <Span bg={theme.fontColor} color={theme.mainBg} weight="600" padding="0px 8px">
+            <Span bg={theme.default.color} color={theme.default.bg} weight="600" padding="0px 8px">
               Questions
             </Span>
           </H2>
@@ -384,7 +384,7 @@ function FaqModule() {
 const Container = styled(Section)`
 	align-items: center;
 	align-self: center;
-	background: ${(props) => props.theme.mainBg};
+	background: ${(props) => props.theme.default.bg};
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
@@ -451,7 +451,7 @@ const QnAItem = styled(Item)`
   align-self: stretch;
   flex: auto;
   margin: 15px 0px;
-  border: 1px solid ${(props) => props.theme.modalBorderColor};
+  border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 10px;
   box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.2);
   overflow: hidden;
@@ -472,8 +472,8 @@ const QnAItem = styled(Item)`
     }
   }
   & ${Answer} {
-    border: 1px solid ${(props) => props.theme.modalBorderColor};
-    border-top: 1px solid ${(props) => props.theme.modalBorderColor};
+    border: 1px solid ${(props) => props.theme.default.border};
+    border-top: 1px solid ${(props) => props.theme.default.border};
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     padding: 10px 15px;
