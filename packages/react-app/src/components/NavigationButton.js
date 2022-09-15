@@ -49,7 +49,7 @@ function NavigationButton({ item, data, sectionID, active }) {
     <>
       {data.loading &&
         <ItemVV2 alignSelf="flex-start" padding="0px 15px">
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} spinnerColor={`${props => props.theme.default.secondaryColor}`} />
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} spinnerColor={props => props.theme.nav.color} />
         </ItemVV2>
       }
 
