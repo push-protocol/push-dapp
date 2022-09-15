@@ -6,13 +6,14 @@ import { User } from 'api'
 import { ethers } from 'ethers'
 import { Web3Provider } from 'ethers/providers'
 import * as w2wChatHelper from 'helpers/w2w'
+import FadeLoader from "react-spinners/FadeLoader";
 import React, { useContext, useState } from 'react'
 import MessageFeed from '../messageFeed/messageFeed'
 import { AppContext, Context } from '../w2wIndex'
 import './searchBar.css'
 // @ts-ignore
 import Box from '@mui/material/Box'
-import { Oval as Loader } from 'react-loader-spinner'
+import { ColorRing as Loader } from 'react-loader-spinner'
 import styled from 'styled-components'
 
 interface TabPanelProps {
@@ -70,6 +71,10 @@ const SearchBar = () => {
   }
 
   const submitSearch = async (event: React.FormEvent) => {
+    console.log("Searched happen")
+
+    //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
+
     event.preventDefault()
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true)
@@ -89,6 +94,7 @@ const SearchBar = () => {
         setFilteredUserData([displayUser])
       }
     } else {
+      setIsLoadingSearch(true)
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId })
       let filteredData: User
       setHasUserBeenSearched(true)
@@ -132,9 +138,21 @@ const SearchBar = () => {
             onChange={onChangeSearchBox}
             placeholder="Search name.eth or 0x123..."
           />
+          
         </form>
         {searchedUser.length > 0 && <Close onClick={clearInput} />}
-        <Image src="/svg/chats/search.svg" />
+        
+        {isLoadingSearch ? (
+          <SearchLoader><Loader
+            visible={true}
+            height="30"
+            width="30"
+            ariaLabel="blocks-loading"
+            colors={['#979292','#979292','#979292','#979292','#979292']}
+          /></SearchLoader>
+        ) : (
+          <Image src="/svg/chats/search.svg" />
+        )}
       </SearchBarContainer>
       <MessageFeed
         hasUserBeenSearched={hasUserBeenSearched}
@@ -157,6 +175,14 @@ const SearchBarContainer = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+`
+
+const SearchLoader = styled.div`
+position: absolute;
+  top: 46px;
+  right: 37px;
+  height: 25px;
+  width: 20px;
 `
 
 const Image = styled.img`
