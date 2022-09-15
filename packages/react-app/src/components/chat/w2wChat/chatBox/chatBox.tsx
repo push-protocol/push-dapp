@@ -85,81 +85,151 @@ const ChatBox = (): JSX.Element => {
   let time = ''
 
   const getMessagesFromCID = async (): Promise<void> => {
-    setLoading(true);
     if (currentChat) {
-      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
-      let messageCID = latestThreadhash;
+      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
+      let messageCID = latestThreadhash
+
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
-        while (messageCID) {
-          if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-            break;
+
+        // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
+        // We only enter on this if condition when we receive or send new messages
+        if (latestThreadhash !== currentChat?.threadhash) {
+          // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
+          const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+          let msgIPFS: MessageIPFSWithCID
+          if (messageFromIndexDB !== undefined) {
+            msgIPFS = messageFromIndexDB.body
           } else {
-            const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+            await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
+            msgIPFS = messageFromIPFS
+          }
 
-            let msgIPFS: MessageIPFSWithCID;
-            if (messageFromIndexDB !== undefined) {
-              msgIPFS = messageFromIndexDB.body;
+          // Decrypt message
+          if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
+            // To do signature verification it depends on who has sent the message
+            let signatureValidationPubliKey: string
+            if (msgIPFS.fromDID === connectedUser.did) {
+              signatureValidationPubliKey = connectedUser.publicKey
             } else {
-              const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-              await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-              msgIPFS = messageFromIPFS;
+              signatureValidationPubliKey = currentChat.publicKey
             }
+            msgIPFS.messageContent = await decryptAndVerifySignature({
+              cipherText: msgIPFS.messageContent,
+              encryptedSecretKey: msgIPFS.encryptedSecret,
+              did: did,
+              encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+              publicKeyArmored: signatureValidationPubliKey,
+              signatureArmored: msgIPFS.signature
+            })
+          }
 
-            // Decrypt message
-            if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
-              // To do signature verification it depends on who has sent the message
-              let signatureValidationPubliKey: string;
-              if (msgIPFS.fromDID === connectedUser.did) {
-                signatureValidationPubliKey = connectedUser.publicKey;
-              } else {
-                signatureValidationPubliKey = currentChat.publicKey;
-              }
-              msgIPFS.messageContent = await decryptAndVerifySignature({
-                cipherText: msgIPFS.messageContent,
-                encryptedSecretKey: msgIPFS.encryptedSecret,
-                did: did,
-                encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
-                publicKeyArmored: signatureValidationPubliKey,
-                signatureArmored: msgIPFS.signature
-              });
-            }
-
-            const messagesSentInChat: MessageIPFS = messages.find(
+          //checking if the message is encrypted or not
+          const messagesSentInChat: MessageIPFS = messages.find(
+            (msg) =>
+              msg.link === '' &&
+              msg.encType === '' &&
+              msg.cid === '' &&
+              msg.messageContent === msgIPFS.messageContent &&
+              msg.messageType === msgIPFS.messageType
+          )
+          // Replace message that was inserted when sending a message (same comment -abhishek)
+          if (messagesSentInChat) {
+            const newMessages = messages.map((x) => x)
+            const index = newMessages.findIndex(
               (msg) =>
                 msg.link === '' &&
                 msg.encType === '' &&
                 msg.cid === '' &&
                 msg.messageContent === msgIPFS.messageContent &&
                 msg.messageType === msgIPFS.messageType
-            );
-            // Replace message that was inserted when sending a message
-            if (messagesSentInChat) {
-              const newMessages = messages.map((x) => x);
-              const index = newMessages.findIndex(
+            )
+            newMessages[index] = msgIPFS
+            setMessages(newMessages)
+          } else {
+            //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
+            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link)
+            if (messageInChat === undefined) {
+              setMessages((m) => [...m, msgIPFS])
+            }
+          }
+        }
+        // This condition is triggered when the user loads the chat whenever the user is changed
+        else {
+          while (messageCID) {
+            setLoading(true)
+            if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
+              setLoading(false)
+              break
+            } else {
+              const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+              let msgIPFS: MessageIPFSWithCID
+              if (messageFromIndexDB !== undefined) {
+                msgIPFS = messageFromIndexDB.body
+              } else {
+                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid')
+                msgIPFS = messageFromIPFS
+              }
+
+              // Decrypt message
+              if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
+                // To do signature verification it depends on who has sent the message
+                let signatureValidationPubliKey: string
+                if (msgIPFS.fromDID === connectedUser.did) {
+                  signatureValidationPubliKey = connectedUser.publicKey
+                } else {
+                  signatureValidationPubliKey = currentChat.publicKey
+                }
+                msgIPFS.messageContent = await decryptAndVerifySignature({
+                  cipherText: msgIPFS.messageContent,
+                  encryptedSecretKey: msgIPFS.encryptedSecret,
+                  did: did,
+                  encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+                  publicKeyArmored: signatureValidationPubliKey,
+                  signatureArmored: msgIPFS.signature
+                })
+              }
+
+              // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
+              const messagesSentInChat: MessageIPFS = messages.find(
                 (msg) =>
                   msg.link === '' &&
                   msg.encType === '' &&
                   msg.cid === '' &&
                   msg.messageContent === msgIPFS.messageContent &&
                   msg.messageType === msgIPFS.messageType
-              );
-              newMessages[index] = msgIPFS;
-              setMessages(newMessages);
-            }
-            // Display messages for the first time
-            else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-              setMessages((m) => [msgIPFS, ...m]);
-            }
-            // Messages got from useQuery
-            else {
-              setMessages((m) => [...m, msgIPFS]);
-            }
-            const link = msgIPFS.link;
-            if (link) {
-              messageCID = link;
-            } else {
-              break;
+              )
+              // Replace message that was inserted when sending a message
+              if (messagesSentInChat) {
+                const newMessages = messages.map((x) => x)
+                const index = newMessages.findIndex(
+                  (msg) =>
+                    msg.link === '' &&
+                    msg.encType === '' &&
+                    msg.cid === '' &&
+                    msg.messageContent === msgIPFS.messageContent &&
+                    msg.messageType === msgIPFS.messageType
+                )
+                newMessages[index] = msgIPFS
+                setMessages(newMessages)
+              }
+              // Display messages for the first time
+              else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+                setMessages((m) => [msgIPFS, ...m])
+              }
+              // Messages got from useQuery
+              // else {
+              //TODO: Not needed as this is handled when the threadhashes are not same.
+              //   setMessages((m) => [...m, msgIPFS])
+              // }
+              const link = msgIPFS.link
+              if (link) {
+                messageCID = link
+              } else {
+                break
+              }
             }
           }
         }
@@ -186,8 +256,6 @@ const ChatBox = (): JSX.Element => {
           setImageSource(currentChat.profilePicture);
         }
       }
-      // Fetch new messages
-      getMessagesFromCID().catch((err) => console.error(err));
     }
   }, [currentChat]);
 
@@ -483,7 +551,7 @@ const ChatBox = (): JSX.Element => {
           <HelloBox>
             <Typography>Say Hello to Push Chat</Typography>
           </HelloBox>
-          <HelloText>You haven’t started a conversation yet.</HelloText>
+          <HelloText>You haven't started a conversation yet.</HelloText>
           <HelloText>Begin by searching name.eth or 0x123...</HelloText>
         </Box>
       ) : (
@@ -552,7 +620,7 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
-                        <Chats msg={msg} did={did} />
+                        <Chats msg={msg} did={did} messageBeingSent={messageBeingSent} />
                         {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
