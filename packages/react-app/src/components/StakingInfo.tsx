@@ -4,10 +4,12 @@ import { ethers } from "ethers";
 import UtilityHelper from 'helpers/UtilityHelper';
 import { Button, Item, Span } from "primaries/SharedStyling";
 import React, { Fragment } from "react";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { chainId, library, account } = useWeb3React();
+
+  const theme = useTheme();
   
   //mint Dai
   const mintDai = async () => {
@@ -37,7 +39,8 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
   return (
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}
-        <Body>
+        <Item padding="40px 0 0 0" align="flex-start">
+
           <TabSpace>
             <p>
               Amount for Staking
@@ -90,7 +93,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
             </Span>
           </Button>
         </Item>
-        </Body>
+      </Item>
       {/* </Content> */}
     </Fragment>
   );
@@ -173,13 +176,6 @@ const AnchorLink = styled.a`
 
 const Body = styled.div`
   margin: 0px auto;
-  width: 55%; 
-  @media (max-width: 600px) {
-    width: 95%; 
-  }
-  @media (max-width: 1224px) {
-    width: 75%; 
-  }
 `
 
 const Minter = styled.div`

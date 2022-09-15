@@ -1,21 +1,28 @@
-import React, {Fragment, useEffect, useState} from "react";
-import styled from "styled-components";
-import { Section, Content, Item } from "../primaries/SharedStyling";
-import ChannelSettings from "components/ChannelSettings";
-import ChannelDetails from "components/ChannelDetails";
-import CreateChannel from "components/CreateChannel";
-import { useDispatch, useSelector } from "react-redux";
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import { envConfig } from "@project/contracts";
-import { ThemeProvider, useTheme } from "styled-components";
-import { aliasChainIdsMapping, getAliasFromChannelDetails } from "helpers/UtilityHelper";
-import { convertChainIdToChainCaip, getCAIP } from "helpers/CaipHelper";
-import { setAliasAddress, setAliasEthAddress, setAliasVerified, setAliasAddressFromContract } from "redux/slices/adminSlice";
-import { setProcessingState } from "redux/slices/channelCreationSlice";
-import AliasProcessing from "components/AliasProcessing"
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { useDeviceWidthCheck } from "hooks";
+import React, { Fragment, useEffect, useState } from "react";
+
+// External Packages
+import { useDispatch, useSelector } from "react-redux";
+import styled, { useTheme } from "styled-components";
+
+// Internal Compoonents
+import AliasProcessing from "components/AliasProcessing";
+import ChannelDetails from "components/ChannelDetails";
 import ChannelLoading from "components/ChannelLoading";
+import ChannelSettings from "components/ChannelSettings";
+import CreateChannel from "components/CreateChannel";
+import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+import { convertChainIdToChainCaip, getCAIP } from "helpers/CaipHelper";
+import { aliasChainIdsMapping, getAliasFromChannelDetails } from "helpers/UtilityHelper";
+import { useDeviceWidthCheck } from "hooks";
+import { setAliasAddress, setAliasAddressFromContract, setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
+import { setProcessingState } from "redux/slices/channelCreationSlice";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
+import { Content, Item, Section } from "../primaries/SharedStyling";
+
+// Internal Configs
+import { envConfig } from "@project/contracts";
 
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL:number = 10;
@@ -90,19 +97,26 @@ const ChannelOwnerDashboard = () => {
   }
 
   return (
-    <Container>
-      <Interface>
-        {((channelDetails === 'unfetched') || processingState === null) &&
-          <ChannelLoading />
-        } 
-      </Interface>
-        <ModifiedContent>
+    <ItemHV2>
+      {((channelDetails === 'unfetched') || processingState === null) &&
+        <ChannelLoading />
+      }
+
+      {channelDetails !== 'unfetched' &&
+        <ItemVV2>
           {/* display the create channel page if there are no details */}
-          {(!channelDetails && processingState === 0) ? <CreateChannel /> : ""}
+          {!channelDetails && processingState === 0 && 
+            <CreateChannel />
+          }
+          
           {isChannelDetails && processingState !== null &&
             (
               <>
-                {channelDetails && !isMobile ? <ChannelSettings /> : ""}
+                {channelDetails && !isMobile && 
+                  <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
+                    <ChannelSettings />
+                  </ItemHV2>
+                }
                 {channelDetails ? <ChannelDetails /> : ""}
               </>
             )
@@ -110,77 +124,12 @@ const ChannelOwnerDashboard = () => {
           
           {/* processing box */}
           {processingState !== 0 && processingState !== null && isChannelDetails && (
-            <ThemeProvider theme={theme}>
-              <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
-            </ThemeProvider>
+            <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
           )}
-          </ModifiedContent>
-    </Container>
+        </ItemVV2>
+      }
+      
+    </ItemHV2>
   );
 }
-
-// css styles
-const ModifiedContent = styled(Content)`
-  flex: 1;
-  padding: 0px;
-  position: relative;
-    @media (min-width: 800px) and (max-width: 1600px) {
-      padding: 20px 30px;
-   }
-
-   @media (min-width: 1601px) and (max-width: 2200px) {
-    padding: 20px 50px;
- }
-  @media (min-width: 2201px) and (max-width: 2900px) {
-    padding: 30px 220px;
-  }
-  @media (min-width: 2901px) {
-    padding: 30px 550px;
-  }
-
-  @media (min-width: 3501px) {
-    padding: 30px 1000px;
-  }
-`;
-
-const Container = styled.div`
-  flex: 1;
-  display: block;
-  flex-direction: column;
-`;
-
-const Interface = styled.div`
-  flex: 1;
-  display: flex;
-
-  margin-bottom: 15px;
-  overflow: hidden;
-`;
-
-  //   @media screen and (max-width: 1200px) {
-  //   min-width: 700px;
-  //  }
-
-  //  @media screen and (max-width: 1600px) {
-  //   min-width: 900px;
-  // }
-
-  // @media screen and (max-width: 2000px) {
-  //   min-width: 1300px;
-  // }
-
-  // @media screen and (max-width: 2100px) {
-  //    min-width: 1200px;
-  // }
-
-const ChannelLoadingMessage = styled.div`
-  width: 100%;
-  padding: 40px;
-  font-size: 1.5em;
-  font-weight: 300;
-  text-align: center;
-  color: ${props => props.theme.color};
-`;
-
-// Export Default
 export default ChannelOwnerDashboard;

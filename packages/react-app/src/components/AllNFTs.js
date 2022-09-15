@@ -1,17 +1,20 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
 import React from "react";
 
+// External Packages
 import styled from 'styled-components';
-import { Section, ItemH } from 'primaries/SharedStyling';
 
-import { Oval } from 'react-loader-spinner'
-import { envConfig } from "@project/contracts";
-
-import { useWeb3React } from '@web3-react/core'
-import { addresses, abis } from "@project/contracts";
-import NFTHelper from 'helpers/NFTHelper';
-import { ethers } from "ethers";
-
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import ViewNFTItem from "components/ViewNFTItem";
+import NFTHelper from 'helpers/NFTHelper';
+import { ItemH, Section } from 'primaries/SharedStyling';
+
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
 
 // Create Header
 function AllNFTs({ controlAt, setControlAt, setTokenId }) {
@@ -62,24 +65,10 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
   return (
     <Section align="center">
       {loading &&
-        <ContainerInfo>
-          <Oval
-            color="#674c9f"
-            height={40}
-            width={40}
-          />
-        </ContainerInfo>
+        <ItemVV2 padding="50px 20px 20px 20px">
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+        </ItemVV2>
       }
-
-      {/* {!loading && NFTObjects.length == 0 &&
-        <ContainerInfo>
-          <Oval
-           color="#674c9f"
-           height={40}
-           width={40}
-          />
-        </ContainerInfo>
-      } */}
 
       {!loading && NFTObjects.length != 0 &&
         <ItemH id="scrollstyle-secondary">

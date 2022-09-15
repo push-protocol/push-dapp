@@ -1,77 +1,72 @@
+// React + Web3 Essentials
 import React from "react";
-import styled,{ ThemeProvider, useTheme } from "styled-components";
-import { Skeleton } from "@mui/material"
 
-import LoaderSpinner from "primaries/LoaderSpinner";
+// External Packages
+import { Skeleton } from "@mui/material";
+import styled, { useTheme } from "styled-components";
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
+import { ItemHV2 } from "components/reusables/SharedStylingV2";
 
 const ChannelLoading = () => {
-    const themes = useTheme();
+    const theme = useTheme();
     return (
-        <ThemeProvider theme={themes}>
-            <ChannelLoadingContainer>
-                <SkeletonContainerOuter>
-                    <SkeletonContainerUpperRow>
-                        <Skeleton
-                            variant="rectangular"
-                            sx={{ bgcolor: '#F4F5FA' }}
-                            style={{
-                                width: "8rem",
-                                height: "8rem",
-                                borderRadius: "32px",
-                                marginRight: "2%"
-                            }} />
+      <ItemHV2>
+        <SkeletonContainerOuter>
+          <SkeletonContainerUpperRow>
+            <Skeleton
+                variant="rectangular"
+                sx={{ bgcolor: '#F4F5FA' }}
+                style={{
+                    width: "8rem",
+                    height: "8rem",
+                    borderRadius: "32px",
+                    marginRight: "2%"
+                }} />
 
-                        <SkeletonContainerUpperCol>
-                            <Skeleton
-                                variant="rectangular"
-                                sx={{ bgcolor: '#F4F5FA' }}
-                                style={{
-                                    width: "40%",
-                                    height: "2.2rem",
-                                    borderRadius: "5px",
-                                    marginTop: "3%"
-                                }} />
-                            <Skeleton
-                                variant="rectangular"
-                                sx={{ bgcolor: '#F4F5FA' }}
-                                style={{
-                                    width: "20%",
-                                    height: "1.1rem",
-                                    borderRadius: "5px",
-                                    marginTop: "2%"
-                                }} />
-                        </SkeletonContainerUpperCol>
-                    </SkeletonContainerUpperRow>
-                    <Skeleton
-                        variant="rectangular"
-                        sx={{ bgcolor: '#F4F5FA' }}
-                        style={{
-                            width: "100%",
-                            height: "2.7rem",
-                            borderRadius: "9px",
-                            marginTop: "4%"
-                        }} />
-                </SkeletonContainerOuter>
+            <SkeletonContainerUpperCol>
+                <Skeleton
+                    variant="rectangular"
+                    sx={{ bgcolor: '#F4F5FA' }}
+                    style={{
+                        width: "40%",
+                        height: "2.2rem",
+                        borderRadius: "5px",
+                        marginTop: "3%"
+                    }} />
+                <Skeleton
+                    variant="rectangular"
+                    sx={{ bgcolor: '#F4F5FA' }}
+                    style={{
+                        width: "20%",
+                        height: "1.1rem",
+                        borderRadius: "5px",
+                        marginTop: "2%"
+                    }} />
+            </SkeletonContainerUpperCol>
+          </SkeletonContainerUpperRow>
+          <Skeleton
+            variant="rectangular"
+            sx={{ bgcolor: '#F4F5FA' }}
+            style={{
+                width: "100%",
+                height: "2.7rem",
+                borderRadius: "9px",
+                marginTop: "4%"
+            }} 
+          />
+        </SkeletonContainerOuter>
 
-                <LoaderContainer>
-                    <LoaderSpinner />
-                    <LoaderText style={{
-                        color: themes.fontColor
-                    }}>
-                        Loading Channel Details. Please wait...
-                    </LoaderText>
-                </LoaderContainer>
-            </ChannelLoadingContainer>
-        </ThemeProvider>
+        <ItemHV2 padding="40px 0 40px 0">
+          <LoaderSpinner 
+            type={LOADER_TYPE.SEAMLESS}
+            title="Loading Channel Details. Please wait..."
+          />
+        </ItemHV2>
+      </ItemHV2>
     )
 }
-
-const ChannelLoadingContainer = styled.div`
-    width:100%;
-    padding: 4.6rem;
-    height: 60vh;
-    border-radius: 20px;
-`
 
 const SkeletonContainerOuter = styled.div`
     width: 100%;
@@ -92,22 +87,5 @@ const SkeletonContainerUpperCol = styled.div`
     display: flex;
     flex-direction: column;
 `
-
-const LoaderContainer = styled.div`
-    height: 35vh;
-    display:flex;
-    align-items:center;
-    justify-content: center;
-`
-
-const LoaderText = styled.div`
-//   margin-left: 3%;
-font-family: Strawford, Source Sans Pro;
-  font-size: 1.25rem;
-  font-weight: 600;
-  line-height: 1.3rem;
-  letter-spacing: 0em;
-  text-align: left;
-`;
 
 export default ChannelLoading;

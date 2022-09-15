@@ -56,7 +56,7 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
         removeSocketEvents();
       }
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [epnsSDKSocket]);
 
 
@@ -78,7 +78,7 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
       });
       setEpnsSDKSocket(connectionObject);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [account, chainId, env]);
 
 

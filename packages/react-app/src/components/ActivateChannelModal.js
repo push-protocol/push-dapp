@@ -1,15 +1,15 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import Slider from "@material-ui/core/Slider";
-import styled from "styled-components";
-import { Oval } from "react-loader-spinner";
 import { useClickAway } from "react-use";
+import styled from "styled-components";
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import {
-  Section,
-  Content,
-  Item,
-  H3,
-  Span,
-  Button,
+  Button, Content, H3, Item, Section, Span
 } from "primaries/SharedStyling";
 
 const MIN_STAKE_FEES = 50;
@@ -69,7 +69,7 @@ export default function ActivateChannelModal({
                 onClick={activateChannel}
               >
                 {loading ? (
-                  <Oval color="#FFF" height={16} width={16} />
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
                 ) : (
                   <Span
                     color="#fff"

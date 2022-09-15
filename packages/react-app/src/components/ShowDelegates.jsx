@@ -1,4 +1,16 @@
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
+import React, { useEffect, useState } from "react";
+
+// External Packages
+import {
+  AiOutlineUserDelete
+} from 'react-icons/ai';
+import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
+import { useSelector } from "react-redux";
+import styled, { css, useTheme } from "styled-components";
+
+// Internal Compoonents
 import { getReq } from "api";
 import { ButtonV2 } from "components/reusables/SharedStylingV2";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
@@ -6,14 +18,6 @@ import { useDeviceWidthCheck } from "hooks";
 import useModal from "hooks/useModal";
 import useToast from "hooks/useToast";
 import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
-
-import React, { useEffect, useState } from "react";
-import {
-  AiOutlineUserDelete
-} from 'react-icons/ai';
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { useSelector } from "react-redux";
-import styled, { css, useTheme } from "styled-components";
 import DelegateInfo from "./DelegateInfo";
 import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
 
@@ -79,14 +83,16 @@ const ShowDelegates = () => {
       </Item>
       </Content>
     </Section>
-      <Item
-        flex="5"
-        minWidth="280px"
-        align="stretch"
-        margin="10px 0px 30px 0px"
-        radius={isMobile ? "10px" : "20px"}
-        border="1px solid #D4DCEA;"
-      >
+
+    <Item
+      flex="5"
+      minWidth="280px"
+      self="stretch"
+      align="stretch"
+      margin="10px 0px 30px 0px"
+      radius={isMobile ? "10px" : "20px"}
+      border="1px solid #D4DCEA;"
+    >
       {isActiveDelegateDropdown && delegatees && 
         <Item
           flex="5"
@@ -120,11 +126,11 @@ const ShowDelegates = () => {
           })}
         </Item>
         }
-           <RemoveDelegateModalComponent
+        <RemoveDelegateModalComponent
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
           toastObject={removeDelegateToast}
-           />
+        />
       </Item>
     </>
   )
@@ -170,7 +176,6 @@ const ChannelActionButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 8px 15px;
-  margin: 10px;
   color: #fff;
   border-radius: 5px;
   font-size: 14px;

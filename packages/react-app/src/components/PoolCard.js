@@ -1,11 +1,11 @@
-import React from "react";
 import { useWeb3React } from "@web3-react/core";
+import React from "react";
 
 import styled, { css } from "styled-components";
-import { Item, ItemH, B, H2, H3, Span, Button, Input } from '../primaries/SharedStyling';
 import InfoTooltip from "../primaries/InfoTooltip";
+import { B, Button, H2, H3, Input, Item, ItemH, Span } from '../primaries/SharedStyling';
 
-import { addresses, abis } from "@project/contracts";
+import { abis, addresses } from "@project/contracts";
 import { toast } from "react-toastify";
 
 import { Oval } from "react-loader-spinner";

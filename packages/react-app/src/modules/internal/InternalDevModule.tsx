@@ -111,6 +111,26 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner">
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless title=null spinnerSize=20">
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone spinnerSize=24">
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Long Text, Very Long" completed={false} spinnerSize={24} />
+      </IndividualComps>
+      
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone spinnerSize=24">
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="This time it's done" completed={true} spinnerSize={24} />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone">
         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
       </IndividualComps>
@@ -173,7 +193,7 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Toast Controller */}
-      <IndividualComps caption="omponents/reusables/toasts/ToastController">
+      <IndividualComps caption="components/reusables/toasts/ToastController">
         <ButtonV2
           background="#e20880"
           color="#fff"
@@ -209,17 +229,12 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="omponents/reusables/loaders/LoaderSpinner">
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner">
         <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized" completed={false} />
       </IndividualComps>
 
-      {/* Loader with Spinner Component */}
-      <IndividualComps caption="omponents/reusables/loaders/LoaderSpinner">
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
-      </IndividualComps>
-
       {/* Defined Blur */}
-      <IndividualComps caption="omponents/reusables/blurs/BlurBG - Blur=10">
+      <IndividualComps caption="components/reusables/blurs/BlurBG - Blur=10">
         <ButtonV2
           background="#e20880"
           color="#fff"
@@ -234,24 +249,24 @@ const InternalDevModule = () => {
             Try to Trigger
           </SpanV2>
         </ButtonV2>
-        <BlurBG blur={10} />
+        <BlurBG blur={10} zIndex={99} />
       </IndividualComps>
 
       {/* Defined Blur Progress Bar */}
-      <IndividualComps caption="omponents/reusables/blurs/BlurBG  - Blur=5">
+      <IndividualComps caption="components/reusables/blurs/BlurBG  - Blur=5">
         <ProgressBar percent={progress} color={GLOBALS.COLORS.PRIMARY_PINK} />
         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
         <BlurBG blur={5} />
       </IndividualComps>
 
       {/* Defined Blur Loader Done */}
-      <IndividualComps caption="omponents/reusables/blurs/BlurBG  - Blur=5">
+      <IndividualComps caption="components/reusables/blurs/BlurBG  - Blur=5">
         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
-        <BlurBG blur={5} />
+        <BlurBG blur={5} zIndex={99} />
       </IndividualComps>
 
       {/* Defined Blur Loader Done */}
-      <IndividualComps caption="omponents/reusables/blurs/BlurBG  - Disabled">
+      <IndividualComps caption="components/reusables/blurs/BlurBG  - Disabled">
         <ButtonV2
           background="#e20880"
           color="#fff"
@@ -317,5 +332,6 @@ const IndividualComps = styled(ItemVV2)`
 		position: absolute;
 		right: 0;
 		text-align: center;
+    z-index: 100;
 	}
 `;

@@ -104,6 +104,7 @@ export default {
     PADDING: {
       DEFAULT: '20px',
       BIG: '40px',
+      HUGE: '60px',
     },
     MARGIN: {
       VERTICAL: '30px',

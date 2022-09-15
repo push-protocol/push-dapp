@@ -1,4 +1,4 @@
-import { utils, BigNumber} from "ethers";
+import { BigNumber, utils } from "ethers";
 const claims = require("config/airdrop/claims.json")
 
 // Airdrop Helper Functions

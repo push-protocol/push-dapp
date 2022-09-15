@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 import { ShowLoaderToastType, ShowMessageToastType } from './useToast';
 
