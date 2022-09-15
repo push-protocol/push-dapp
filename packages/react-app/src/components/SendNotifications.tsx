@@ -134,6 +134,7 @@ function SendNotifications() {
   const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
   const [nfInfo, setNFInfo] = React.useState('');
   const [delegateeOptions, setDelegateeOptions] = React.useState([]);
+  const [errorMessage, setErrorMessage] = React.useState("");
 
   useEffect(() => {
     if (canSend !== 1) {
@@ -164,7 +165,9 @@ function SendNotifications() {
           label: (
             <CustomDropdownItem>
               <img src={oneDelegatee.icon} alt="" />
-              <div>{oneDelegatee.name}</div>
+              <div style={{
+                letterSpacing:"0",
+              }}>{oneDelegatee.name}</div>
             </CustomDropdownItem>
           )
         }))
@@ -409,7 +412,7 @@ function SendNotifications() {
     if (nfType === '1' || nfType === '2' || nfType === '3' || nfType === '4' || nfType === '5') {
       // Checks for optional fields
       if (nfSubEnabled && isEmpty(nfSub)) {
-        setNFInfo('Enter Subject or Disable it');
+        setNFInfo("Please enter a valid notification subject");
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
@@ -423,7 +426,7 @@ function SendNotifications() {
       }
 
       if (nfMediaEnabled && isEmpty(nfMedia)) {
-        setNFInfo('Enter Media URL or Disable it');
+        setNFInfo("Please enter a valid media URL");
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
@@ -436,7 +439,7 @@ function SendNotifications() {
       }
 
       if (nfCTAEnabled && isEmpty(nfCTA)) {
-        setNFInfo('Enter Call to Action Link or Disable it');
+        setNFInfo("Please enter a valid CTA link");
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
@@ -449,7 +452,7 @@ function SendNotifications() {
       }
 
       if (isEmpty(nfMsg)) {
-        setNFInfo('Message cannot be empty');
+        setNFInfo("Please enter a valid notification message");
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
@@ -1027,7 +1030,6 @@ function SendNotifications() {
                   <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
                     <Label style={{ color: theme.color }}>Recipient Wallet Address</Label>
                     <Input
-                      required
                       maxlength="40"
                       flex="1"
                       padding="12px"
@@ -1096,7 +1098,6 @@ function SendNotifications() {
                   <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
                     <Label style={{ color: theme.color }}>Subject</Label>
                     <Input
-                      required
                       maxlength="40"
                       flex="1"
                       padding="12px"
@@ -1120,7 +1121,6 @@ function SendNotifications() {
                   <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
                     <Label style={{ color: theme.color }}>Notification Message</Label>
                     <TextField
-                      required
                       // placeholder="Your Channel's Short Description (250 Characters)"
                       rows="4"
                       maxlength="250"
@@ -1145,7 +1145,6 @@ function SendNotifications() {
                   <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
                     <Label style={{ color: theme.color }}>Media URL</Label>
                     <Input
-                      required
                       maxlength="40"
                       flex="1"
                       padding="12px"
@@ -1170,7 +1169,6 @@ function SendNotifications() {
                     <Label style={{ color: theme.color }}>CTA Link</Label>
 
                     <Input
-                      required
                       maxlength="40"
                       flex="1"
                       padding="12px"
@@ -1190,11 +1188,20 @@ function SendNotifications() {
                   </Item>
                 )}
 
+                // to show the error message (if exists) upon clicking the send notification button
                 {nfInfo && nfProcessing != 1 && (
-                  <Item color="#fff" bg="#e1087f" padding="10px 15px" margin="15px 0px">
-                    <Span color="#fff" textTransform="uppercase" spacing="0.1em" weight="400" size="1em">
+                  <Item 
+                    margin="30px 0px 0px 0px"
+                    flex="1"
+                    self="center"
+                    width="100%"
+                    padding="1.5rem 0"
+                    radius="12px"
+                    bg="#F5F5FA"
+                  >
+                    <div style={{color:'#CF1C84'}}>
                       {nfInfo}
-                    </Span>
+                    </div>
                   </Item>
                 )}
 
@@ -1372,7 +1379,7 @@ const DropdownStyled = styled(Dropdown)`
     font-size: 16px;
     line-height: 150%;
     align-items: center;
-    padding: 10px;
+    padding: 0.75rem 1.18rem;
   }
   .Dropdown-arrow {
     top: 20px;
