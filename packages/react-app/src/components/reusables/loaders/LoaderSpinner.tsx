@@ -1,17 +1,21 @@
 // React + Web3 Essentials
 import React from "react";
 
+// External Packages
+import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
 import BlurBG from 'components/reusables/blurs/BlurBG';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 
-import styled, { useTheme } from 'styled-components';
-
+// Internal Configs
 import GLOBALS from 'config/Globals';
 
 export const LOADER_TYPE = {
   STANDALONE: 1,
-  SEAMLESS: 2
+  STANDALONE_MINIMAL: 2,
+  SEAMLESS: 3
 };
 
 export const LOADER_OVERLAY = {
@@ -25,6 +29,7 @@ interface LoaderSpinnerI {
   blur?: number;
   title?: string;
   spinnerSize?: number;
+  spinnerColor?: string;
   completed?: boolean;
 }
 
@@ -35,6 +40,7 @@ const LoaderSpinner = ({
   blur = 0,
   title = null,
   spinnerSize = 42,
+  spinnerColor = GLOBALS.COLORS.PRIMARY_PINK,
   completed = false
 }: LoaderSpinnerI) => {
   const theme = useTheme();
@@ -52,14 +58,14 @@ const LoaderSpinner = ({
 
       <ItemHV2
         flex="initial"
-        alignSelf={type == LOADER_TYPE.STANDALONE ? 'center' : 'auto'}
+        alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
         width={type == LOADER_TYPE.STANDALONE ? '50%' : 'auto'}
-        padding={type == LOADER_TYPE.STANDALONE ? GLOBALS.ADJUSTMENTS.PADDING.DEFAULT : '0px'}
-        borderRadius={type == LOADER_TYPE.STANDALONE ? GLOBALS.ADJUSTMENTS.RADIUS.SMALL : '0px'}
-        border={type == LOADER_TYPE.STANDALONE ? `1px solid ${theme.default.border}` : 'transparent'}
-        background={type == LOADER_TYPE.STANDALONE ? theme.default.bg : 'initial'}
+        padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+        borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+        border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
+        background={type == LOADER_TYPE.SEAMLESS ? 'initial' : theme.default.bg}
       >
-        <Spinner size={spinnerSize} completed={completed} />
+        <Spinner size={spinnerSize} color={spinnerColor} completed={completed} />
 
         {title && (
           <SpanV2 padding="10px" fontWeight="500" color={theme.default.color}>

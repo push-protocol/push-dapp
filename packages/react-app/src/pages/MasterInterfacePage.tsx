@@ -45,7 +45,7 @@ function MasterInterfacePage() {
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
           <Route path="chat" element={<ChatPage />} />
-          <Route path="chat-new" element={<NewChatPage />} />
+          {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
           <Route path="channels" element={
             <ChannelsPage

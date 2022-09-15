@@ -1,23 +1,22 @@
-import React from 'react';
-import styled from "styled-components";
-import Loader from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useDispatch, useSelector } from "react-redux";
-import { postReq } from "api";
 import { useWeb3React } from "@web3-react/core";
+import { postReq } from "api";
+import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { Waypoint } from "react-waypoint";
+import styled from "styled-components";
 // import { envConfig } from "@project/contracts";
 
 import { AiOutlineSearch } from "react-icons/ai";
 
 import DisplayNotice from "components/DisplayNotice";
-import ViewChannelItem from "components/ViewChannelItem";
 import Faucets from "components/Faucets";
+import ViewChannelItem from "components/ViewChannelItem";
+import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { setChannelMeta, incrementPage } from "redux/slices/channelSlice";
 
-import {ThemeProvider} from "styled-components";
-import { themeLight, themeDark } from "config/Themization";
+import { themeDark, themeLight } from "config/Themization";
 import queryString from 'query-string';
+import { ThemeProvider } from "styled-components";
 
 
 
@@ -156,7 +155,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
           <ContainerInfo>
             <DisplayNotice
               title="That's weird, No Channels in EPNS... world is ending... right?"
-              theme="primary"
             />
           </ContainerInfo>
         ) : (
@@ -205,7 +203,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               <CenteredContainerInfo>
                 <DisplayNotice
                   title="No channels match your query, please search for another name/address"
-                  theme="third"
                 />
               </CenteredContainerInfo>
             )}
@@ -214,7 +211,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               loading ||
               loadingChannel) && (
               <CenterContainer>
-                <Loader type="Oval" color="#35c5f3" height={40} width={40} />
+                {/* <Loader type="Oval" color="#35c5f3" height={40} width={40} /> */}
               </CenterContainer>
             )}
           </Items>

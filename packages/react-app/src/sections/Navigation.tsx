@@ -1,29 +1,28 @@
+// React + Web3 Essentials
+import { useWeb3React } from "@web3-react/core";
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
 
+// External Packages
 import { FaDiscord, FaGithub, FaMedium, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
-import { Oval } from 'react-loader-spinner';
-
-import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styled, { css, useTheme } from "styled-components";
 
+// Internal Compoonents
+import { postReq } from "api";
 import NavButton from 'components/NavButton';
 import NavigationButton from 'components/NavigationButton';
-import navigationList from "config/NavigationList";
-
-import { NavigationContext } from "contexts/NavigationContext";
-
-import GLOBALS from "config/Globals";
-
-import { useDispatch, useSelector } from "react-redux";
-import { incrementStepIndex, setCommunicateOpen, setDeveloperOpen, setTutorialContinous } from "../redux/slices/userJourneySlice";
-
-import { envConfig } from "@project/contracts";
-import { useWeb3React } from "@web3-react/core";
-
-import { postReq } from "api";
 import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import navigationList from "config/NavigationList";
+import { NavigationContext } from "contexts/NavigationContext";
+import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { SEND_NOTIFICATION_STATES, setCanSend } from "redux/slices/sendNotificationSlice";
+import { incrementStepIndex, setCommunicateOpen, setDeveloperOpen, setTutorialContinous } from "../redux/slices/userJourneySlice";
+ 
+// Internal Configs
+import { envConfig } from "@project/contracts";
+import GLOBALS from "config/Globals";
 
 
 // Create Header
@@ -427,12 +426,12 @@ function Navigation() {
                 (secondaryButton)?
                   (
                     <Item
-                    padding="5px 10px"
-                    flexBasis="100%"
-                    align="stretch"
-                    direction="row"
-                    overflow="hidden"
-                  >
+                      padding="5px 10px"
+                      flexBasis="100%"
+                      align="stretch"
+                      direction="row"
+                      overflow="hidden"
+                    >
 
                     { 
                     section.hasItems 
@@ -611,7 +610,7 @@ function Navigation() {
       <Container direction="column" headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
         {!navigationSetup &&
           <Item padding="20px" justify="flex-start">
-            <Oval color={theme.leftBarLoaderBg} height={20} width={20} />
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
           </Item>
         }
         {navigationSetup && Object.keys(navigationSetup).length > 0 &&

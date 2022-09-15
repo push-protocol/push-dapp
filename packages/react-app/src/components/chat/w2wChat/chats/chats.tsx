@@ -13,6 +13,7 @@ const infura_URL = envConfig.infuraApiUrl
 interface chatProps {
   msg: MessageIPFS
   did: DID
+  messageBeingSent: boolean
 }
 interface TextProps {
   content: string
@@ -38,7 +39,7 @@ const Text = ({ content }: TextProps) => {
     </p>
   )
 }
-export default function Chats({ msg, did }: chatProps) {
+export default function Chats({ msg, did,messageBeingSent }: chatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const time: Date = new Date(msg?.timestamp)
@@ -54,6 +55,11 @@ export default function Chats({ msg, did }: chatProps) {
               <SenderMessage>
                 <TextMessage>{msg.messageContent}</TextMessage>
                 <TimeStamp>{date}</TimeStamp>
+                {/* {messageBeingSent ? (
+                  <p>✔️</p>
+                ) : (
+                  <p>✔️ ✔️</p>
+                )} */}
               </SenderMessage>
             </MessageWrapper>
           ) : (

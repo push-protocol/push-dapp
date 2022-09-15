@@ -1,45 +1,49 @@
-import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
-import { envConfig } from "@project/contracts";
-import { useWeb3React } from "@web3-react/core";
-import { getReq, postReq } from "api";
-import { device } from "config/Globals";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import CryptoHelper from "helpers/CryptoHelper";
-import { Item } from "primaries/SharedStyling";
-import React, { useState } from "react";
-import { Oval } from "react-loader-spinner";
-import { useDispatch, useSelector } from "react-redux";
-import { toast as toaster } from "react-toastify";
-import { useClickAway } from "react-use";
-import { Waypoint } from "react-waypoint";
-import { cacheSubscribe } from "redux/slices/channelSlice";
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
+import React, { useState } from 'react';
+
+// External Packages
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast as toaster } from 'react-toastify';
+import { useClickAway } from 'react-use';
+import { Waypoint } from 'react-waypoint';
+import { cacheSubscribe } from 'redux/slices/channelSlice';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+
+// Internal Compoonents
+import * as EpnsAPI from '@epnsproject/sdk-restapi';
+import { NotificationItem } from '@epnsproject/sdk-uiweb';
+import { getReq, postReq } from 'api';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import CryptoHelper from 'helpers/CryptoHelper';
+import { Item } from 'primaries/SharedStyling';
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
   updateTopNotifications
-} from "redux/slices/spamSlice";
-import styled, { ThemeProvider, useTheme } from 'styled-components';
+} from 'redux/slices/spamSlice';
 import SearchFilter from '../components/SearchFilter';
-import DisplayNotice from "../primaries/DisplayNotice";
-import NotificationToast from "../primaries/NotificationToast";
-import { ScrollItem } from "./ViewChannels";
+import DisplayNotice from '../primaries/DisplayNotice';
+import NotificationToast from '../primaries/NotificationToast';
+import { ScrollItem } from './ViewChannels';
+
+// Internal Configs
+import { envConfig } from '@project/contracts';
+import { device } from 'config/Globals';
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
-const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
+const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, library } = useWeb3React();
-  const { epnsCommReadProvider } = useSelector(
-    (state: any) => state.contracts
-  );
+  const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
 
   const themes = useTheme();
-  let user = convertAddressToAddrCaip(account,chainId)
-
+  let user = convertAddressToAddrCaip(account, chainId);
 
   // toast related section
   const [toast, showToast] = React.useState(null);
@@ -49,9 +53,9 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
 
   const { notifications, page, finishedFetching } = useSelector((state: any) => state.spam);
   const EPNS_DOMAIN = {
-    name: "EPNS COMM V1",
+    name: 'EPNS COMM V1',
     chainId: chainId,
-    verifyingContract: epnsCommReadProvider?.address,
+    verifyingContract: epnsCommReadProvider?.address
   };
   const [allNotif, setNotif] = React.useState([]);
   const [loadFilter, setLoadFilter] = React.useState(false);
@@ -61,13 +65,13 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const onCoreNetwork = (chainId === envConfig.coreContractChain);
+  const onCoreNetwork = chainId === envConfig.coreContractChain;
 
   const NormalToast = ({ msg }) => (
     <Toaster>
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
-  )
+  );
 
   //clear toast variable after it is shown
   React.useEffect(() => {
@@ -77,14 +81,14 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   }, [toast]);
 
   const nameToIdDev = {
-    "POLYGON_TEST_MUMBAI": 80001,
-    "ETH_TEST_KOVAN": 42
-  }
+    POLYGON_TEST_MUMBAI: 80001,
+    ETH_TEST_KOVAN: 42
+  };
 
   const nameToIdProd = {
-    "POLYGON_MAINNET": 137,
-    "ETH_MAINNET": 1
-  }
+    POLYGON_MAINNET: 137,
+    ETH_MAINNET: 1
+  };
 
   const reset = () => setFilter(false);
   const filterNotifications = async (query, channels, startDate, endDate) => {
@@ -102,7 +106,6 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
     };
     if (channels.length == 0) delete Filter.channels;
 
-
     setFilteredNotifications([]);
 
     let filterNotif = [];
@@ -111,26 +114,26 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
       const matches = notif.message.match(/\[timestamp:(.*?)\]/);
       if (matches) {
         timestamp = matches[1];
-      }
-      else timestamp = notif.epoch;
+      } else timestamp = notif.epoch;
       if (
-        ((Filter.channels === undefined ? true : (Filter.channels.includes(notif.channel))) &&
-          timestamp >= startDate && timestamp <= endDate
-          && notif.message.toLowerCase().includes(query.toLowerCase()))
+        (Filter.channels === undefined ? true : Filter.channels.includes(notif.channel)) &&
+        timestamp >= startDate &&
+        timestamp <= endDate &&
+        notif.message.toLowerCase().includes(query.toLowerCase())
       )
         filterNotif.push(notif);
     }
-    const newNotifs = filterNotif
-    setAllFilter(newNotifs)
+    const newNotifs = filterNotif;
+    setAllFilter(newNotifs);
     // }
     setLoading(false);
     setBgUpdateLoading(false);
-  }
+  };
 
   React.useEffect(() => {
-    console.log(filteredNotifications,allFilter)
-    setFilteredNotifications(allFilter)
-  }, [allFilter])
+    console.log(filteredNotifications, allFilter);
+    setFilteredNotifications(allFilter);
+  }, [allFilter]);
 
   const loadNotifications = async () => {
     if (loading || finishedFetching || run) return;
@@ -142,27 +145,27 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
         page: page,
         env: envConfig['env'],
         spam: true,
-        raw:true
+        raw: true
       });
-        let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
-          parsedResponse.forEach( (each,i) => {
-              each['date'] = results[i].epoch;
-              each['epoch'] = (new Date(each['date']).getTime() / 1000);
-          })
-          const parsedResponsePromise = results.map(async (elem: any, i: any) => {
-            elem.channel = results[i].sender;
-            let address = results[i].sender;
-            
-            const {
-              data: { subscribers },
-            } = await postReq("/channels/_get_subscribers", {
-              channel: account,
-              blockchain: chainId,
-              op: "read",
-            });
-            elem.subscribers = subscribers;
-            return { ...elem };
+      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      parsedResponse.forEach((each, i) => {
+        each['date'] = results[i].epoch;
+        each['epoch'] = new Date(each['date']).getTime() / 1000;
+      });
+      const parsedResponsePromise = results.map(async (elem: any, i: any) => {
+        elem.channel = results[i].sender;
+        let address = results[i].sender;
+
+        const {
+          data: { subscribers }
+        } = await postReq('/channels/_get_subscribers', {
+          channel: account,
+          blockchain: chainId,
+          op: 'read'
         });
+        elem.subscribers = subscribers;
+        return { ...elem };
+      });
       parsedResponse = await Promise.all(parsedResponsePromise);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (parsedResponse.length === 0) {
@@ -187,29 +190,29 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
         page: 1,
         env: envConfig['env'],
         spam: true,
-        raw:true
+        raw: true
       });
       if (!notifications.length) {
         dispatch(incrementPage());
       }
       let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
-        parsedResponse.forEach( (each,i) => {
-            each['date'] = results[i].epoch;
-            each['epoch'] = (new Date(each['date']).getTime() / 1000);
-        })
-        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-          elem.channel = results[i].sender;
-          let address = results[i].sender;
+      parsedResponse.forEach((each, i) => {
+        each['date'] = results[i].epoch;
+        each['epoch'] = new Date(each['date']).getTime() / 1000;
+      });
+      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+        elem.channel = results[i].sender;
+        let address = results[i].sender;
 
-          const {
-            data: { subscribers },
-          } = await postReq("/channels/_get_subscribers", {
-            channel: account,
-            blockchain: chainId,
-            op: "read",
-          });
-          elem.subscribers = subscribers;
-          return { ...elem };
+        const {
+          data: { subscribers }
+        } = await postReq('/channels/_get_subscribers', {
+          channel: account,
+          blockchain: chainId,
+          op: 'read'
+        });
+        elem.subscribers = subscribers;
+        return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
       // dispatch(
@@ -238,41 +241,40 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
         page: 1,
         env: envConfig['env'],
         spam: true,
-        raw:true
+        raw: true
       });
 
       if (!notifications.length) {
         dispatch(incrementPage());
       }
       let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
-        parsedResponse.forEach( (each,i) => {
-            each['date'] = results[i].epoch;
-            each['epoch'] = (new Date(each['date']).getTime() / 1000);
-        })
-        const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
-          elem.channel = results[i].sender;
-          let address = results[i].sender;
-          
-          const {
-            data: { subscribers },
-          } = await postReq("/channels/_get_subscribers", {
-            channel: account,
-            blockchain: chainId,
-            op: "read",
-          });
-          elem.subscribers = subscribers;
-          return { ...elem };
+      parsedResponse.forEach((each, i) => {
+        each['date'] = results[i].epoch;
+        each['epoch'] = new Date(each['date']).getTime() / 1000;
+      });
+      const parsedResponsePromise = parsedResponse.map(async (elem: any, i: any) => {
+        elem.channel = results[i].sender;
+        let address = results[i].sender;
+
+        const {
+          data: { subscribers }
+        } = await postReq('/channels/_get_subscribers', {
+          channel: account,
+          blockchain: chainId,
+          op: 'read'
+        });
+        elem.subscribers = subscribers;
+        return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      let res = parsedResponse.filter(notif => !isSubscribedFn(notif['subscribers']));
+      let res = parsedResponse.filter((notif) => !isSubscribedFn(notif['subscribers']));
       dispatch(
         updateTopNotifications({
           notifs: res,
-          pageSize: NOTIFICATIONS_PER_PAGE,
+          pageSize: NOTIFICATIONS_PER_PAGE
         })
       );
       setNotif(res);
-
     } catch (err) {
       console.log(err);
     } finally {
@@ -305,7 +307,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
     });
 
     return ethAlias;
-  }
+  };
 
   const fetchEthAddress = async (channelAddress) => {
     if (channelAddress === null) return;
@@ -319,7 +321,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
     });
 
     return aliasEth;
-  }
+  };
 
   //function to query more notifications
   const handlePagination = async () => {
@@ -328,18 +330,14 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
   };
 
   const showWayPoint = (index: any) => {
-    return (
-      Number(index) === notifications.length - 1 &&
-      !finishedFetching &&
-      !bgUpdateLoading
-    );
+    return Number(index) === notifications.length - 1 && !finishedFetching && !bgUpdateLoading;
   };
 
   const onSubscribeToChannel = async (channelAddress, blockchain) => {
     if (!channelAddress) return;
     let address = channelAddress;
 
-    const nameToObj = (envConfig.coreContractChain === 1) ? nameToIdProd : nameToIdDev;
+    const nameToObj = envConfig.coreContractChain === 1 ? nameToIdProd : nameToIdDev;
     if (chainId !== nameToObj[blockchain]) {
       if (!onCoreNetwork) {
         address = await fetchAliasAddress(channelAddress);
@@ -351,35 +349,31 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
     if (!address) return;
     const type = {
       Subscribe: [
-        { name: "channel", type: "address" },
-        { name: "subscriber", type: "address" },
-        { name: "action", type: "string" },
-      ],
+        { name: 'channel', type: 'address' },
+        { name: 'subscriber', type: 'address' },
+        { name: 'action', type: 'string' }
+      ]
     };
     const message = {
       channel: address,
       subscriber: account,
-      action: "Subscribe",
+      action: 'Subscribe'
     };
 
-    const signature = await library
-      .getSigner(account)
-      ._signTypedData(EPNS_DOMAIN, type, message);
-    return postReq("/channels/subscribe", {
+    const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
+    return postReq('/channels/subscribe', {
       signature,
       message,
-      op: "write",
+      op: 'write',
       chainId,
-      contractAddress: epnsCommReadProvider.address,
+      contractAddress: epnsCommReadProvider.address
     }).then((res) => {
-        dispatch(cacheSubscribe({ channelAddress: channelAddress }));
-      });;
+      dispatch(cacheSubscribe({ channelAddress: channelAddress }));
+    });
   };
 
   const isSubscribedFn = (subscribers: any) => {
-    return subscribers
-      .map((a) => a.toLowerCase())
-      .includes(account.toLowerCase());
+    return subscribers.map((a) => a.toLowerCase()).includes(account.toLowerCase());
   };
 
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
@@ -403,78 +397,69 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
       if (error.code === 4001) {
         // EIP-1193 userRejectedRequest error
         console.error(error);
-        txToast = toaster.dark(
-          <NormalToast msg="User denied message decryption" />,
-          {
-            position: "bottom-right",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        txToast = toaster.dark(<NormalToast msg="User denied message decryption" />, {
+          position: 'bottom-right',
+          type: toaster.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
       } else if (error.code === -32601) {
         console.error(error);
-        txToast = toaster.dark(
-          <NormalToast msg="Your wallet doesn't support message decryption." />,
-          {
-            position: "bottom-right",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        txToast = toaster.dark(<NormalToast msg="Your wallet doesn't support message decryption." />, {
+          position: 'bottom-right',
+          type: toaster.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
       } else {
         console.error(error);
-        txToast = toaster.dark(
-          <NormalToast msg="There was an error in message decryption" />,
-          {
-            position: "bottom-right",
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          }
-        );
+        txToast = toaster.dark(<NormalToast msg="There was an error in message decryption" />, {
+          position: 'bottom-right',
+          type: toaster.TYPE.ERROR,
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        });
       }
     }
-  }
+  };
 
   // Render
   return (
     <ThemeProvider theme={themes}>
       <Container>
-      <div ref={modalRef}>
-        <SearchFilter 
-          notifications={allNotif}
-          filterNotifications={filterNotifications}
-          filter={filter}
-          reset={reset}
-          loadFilter={loadFilter}
-          showFilter={showFilter}
-          setShowFilter={setShowFilter}
-          search={search}
-          setSearch={setSearch}
-        />
+        <div ref={modalRef}>
+          <SearchFilter
+            notifications={allNotif}
+            filterNotifications={filterNotifications}
+            filter={filter}
+            reset={reset}
+            loadFilter={loadFilter}
+            showFilter={showFilter}
+            setShowFilter={setShowFilter}
+            search={search}
+            setSearch={setSearch}
+          />
         </div>
-      
+
         {notifications && (
           <Items id="scrollstyle-secondary">
             {bgUpdateLoading && (
-                <Item padding="10px 20px">
-                   <Oval color="#35c5f3" height={40} width={40} />
-                </Item>
-              )}
+              <Item padding="10px 20px">
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+              </Item>
+            )}
             {(filter && !run ? filteredNotifications : allNotif).map((oneNotification, index) => {
               const {
                 cta,
@@ -494,9 +479,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
               // console.log(app , index);
               return (
                 <NotifsOuter key={index}>
-                  {showWayPoint(index) && !loading && (
-                    <Waypoint onEnter={handlePagination} />
-                  )}
+                  {showWayPoint(index) && !loading && <Waypoint onEnter={handlePagination} />}
                   <NotificationItem
                     notificationTitle={notification.title}
                     notificationBody={notification.body}
@@ -518,27 +501,17 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
             })}
           </Items>
         )}
-         {loading && !bgUpdateLoading && (
-          <Oval color="#35c5f3" height={40} width={40} />
-        )}
+        {loading && !bgUpdateLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
         {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
           <CenteredContainerInfo>
-            <DisplayNotice
-              title="You currently have no spam notifications."
-              theme="third"
-            />
+            <DisplayNotice title="You currently have no spam notifications." />
           </CenteredContainerInfo>
         )}
-        {toast && (
-          <NotificationToast
-            notification={toast}
-            clearToast={clearToast}
-          />
-        )}
+        {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
       </Container>
     </ThemeProvider>
   );
-}
+};
 
 const CenteredContainerInfo = styled.div`
   padding: 20px;
@@ -555,16 +528,16 @@ const Items = styled.div`
 `;
 // css styles
 const Container = styled.div`
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    font-weight: 200;
-    align-content: center;
-    align-items: stretch;
-    justify-content: center;
-    height: 100%;
-    // margin: 0px 10px;
-    overflow:scroll;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  font-weight: 200;
+  align-content: center;
+  align-items: stretch;
+  justify-content: center;
+  height: 100%;
+  // margin: 0px 10px;
+  overflow: scroll;
 `;
 
 const NotifsOuter = styled.div`
@@ -576,21 +549,18 @@ const Toaster = styled.div`
   flex-direction: row;
   align-items: center;
   margin: 0 0 0 10px;
-  overflow:scroll;
+  overflow: scroll;
 
   @media ${device.laptop} {
-    
   }
 
   @media ${device.mobileM} {
-  
   }
 `;
 
 const ToasterMsg = styled.div`
   margin: 0px 10px;
 `;
-
 
 // Export Default
 export default SpamBox;
