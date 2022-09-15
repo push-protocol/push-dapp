@@ -597,7 +597,7 @@ const ChatBox = (): JSX.Element => {
           </ChatHeader>
 
           <MessageContainer>
-            <ScrollToBottom>
+            <ScrollToBottom className='chatBoxTop' initialScrollBehavior='smooth'>
               {Loading ? (
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                   <Loader color="#34C5F3" height={40} width={40} />
@@ -726,6 +726,7 @@ const MessageTime = styled.div`
 const MessageContainer = styled.div`
   position: absolute;
   top: 65px;
+  bottom:66px;
   left: 0;
   right: 0;
   margin: 0;
@@ -734,9 +735,15 @@ const MessageContainer = styled.div`
   overflow: auto;
   display: flex;
   flex-direction: column;
-  &&::-webkit-scrollbar {
+  /* &&::-webkit-scrollbar {
     width: 0;
     height: 0;
+  } */
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
   }
 `;
 
