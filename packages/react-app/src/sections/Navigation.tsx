@@ -49,27 +49,36 @@ function Navigation() {
     );
     
   useEffect(() => {
-    
-    if (!navigationSetup) return
+    if (!navigationSetup) return;
+
+    let newNavSetup = navigationSetup;
     if (processingState !== 0) {
-      navigationSetup.secondary[0].data.name = 'Hide';
-      navigationSetup.secondary[1].data.name = 'Hide';
+      newNavSetup.secondary[0].data.hidden = true;
+      newNavSetup.secondary[1].data.hidden = true;
     }
     else {
-      navigationSetup.secondary[0].data.name = 'Hide';
-      navigationSetup.secondary[1].data.name = 'Hide';
-      navigationSetup.secondary[2].data.name = 'Hide';
+      newNavSetup.secondary[0].data.hidden = true;
+      newNavSetup.secondary[1].data.hidden = true;
+
       if (channelDetails !== 'unfetched' && channelDetails != null) {
-        navigationSetup.secondary[0].data.name = channelDetails.name;
-        navigationSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
-        navigationSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
+        newNavSetup.secondary[0].data.name = channelDetails.name;
+        newNavSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
+        newNavSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
+        newNavSetup.secondary[0].data.hidden = false;
+        newNavSetup.secondary[0].data.loading = false;
       } else {
-        navigationSetup.secondary[0].data.name = 'Create Channel';
+        newNavSetup.secondary[0].data.name = 'Create Channel';
+        newNavSetup.secondary[0].data.hidden = false;
       }
+      
       if (canSend === SEND_NOTIFICATION_STATES.SEND) {
-        navigationSetup.secondary[1].data.name = 'Send Notifications'
+        newNavSetup.secondary[1].data.name = 'Send Notifications'
+        newNavSetup.secondary[1].data.hidden = false;
       }
     }
+
+    setNavigationSetup(newNavSetup);
+
   }, [canSend, channelDetails, navigationSetup, processingState,account]);
 
   useEffect(() => {
@@ -83,7 +92,7 @@ function Navigation() {
         dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
       }
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState,account])
+  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState, account])
 
     // useEffect(()=>{
     //   (async()=>{

@@ -1,4 +1,4 @@
-import LoaderSpinner,{LOADER_TYPE} from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 
@@ -15,6 +15,8 @@ const NavigationList = {
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
+      loading: false,
+      hidden: false,
       headerTag: {
         title: 'Inbox',
         light: {
@@ -39,6 +41,8 @@ const NavigationList = {
       isRoute: true,
       hasMenuLogic: true,
       opened: true,
+      loading: false,
+      hidden: false,
       headerTag: {
         title: 'View Channels',
         light: {
@@ -62,6 +66,7 @@ const NavigationList = {
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
+      hidden: false,
       headerTag: {
         title: 'Chat',
         light: {
@@ -88,6 +93,8 @@ const NavigationList = {
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
+      loading: true,
+      hidden: false,
       headerTag: {
         title: 'Channel Dashboard',
         light: {
@@ -112,28 +119,9 @@ const NavigationList = {
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
+      hidden: true,
       headerTag: {
         title: 'Send Notifications',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
-    },
-    loading: {
-      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.LOADING,
-      iconFactory: <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} />,
-      name: '',
-      title: 'Loading',
-      alt: 'Loading',
-      newTab: false,
-      hasMenuLogic: false,
-      headerTag: {
-        title: 'Channel Dashboard',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
           fg: themeLight.headerTagFg
@@ -157,6 +145,7 @@ const NavigationList = {
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
+      hidden: false,
       headerTag: {
         title: 'Receive Notifications',
         light: {
@@ -181,6 +170,7 @@ const NavigationList = {
       newTab: false,
       isRoute: true,
       hasMenuLogic: true,
+      hidden: false,
       headerTag: {
         title: 'Governance',
         light: {
@@ -217,6 +207,7 @@ const NavigationList = {
           newTab: false,
           isRoute: true,
           hasMenuLogic: true,
+          hidden: false,
           headerTag: {
             title: 'Yield Farming',
             light: {
@@ -240,6 +231,7 @@ const NavigationList = {
           newTab: false,
           isRoute: true,
           hasMenuLogic: true,
+          hidden: false,
           headerTag: {
             title: 'Rockstars NFTs',
             light: {
@@ -263,6 +255,7 @@ const NavigationList = {
           newTab: false,
           isRoute: true,
           hasMenuLogic: true,
+          hidden: false,
           headerTag: {
             title: 'Gratitude Drop',
             light: {
@@ -301,6 +294,7 @@ const NavigationList = {
           newTab: false,
           isRoute: true,
           hasMenuLogic: true,
+          hidden: false,
           headerTag: {
             title: 'FAQ',
             light: {
@@ -324,6 +318,7 @@ const NavigationList = {
           newTab: false,
           isRoute: true,
           hasMenuLogic: true,
+          hidden: false,
           headerTag: {
             title: 'Live Walkthrough',
             light: {
@@ -347,7 +342,8 @@ const NavigationList = {
           newTab: false,
           opened: false,
           isRoute: true,
-          isMenuLogic: false
+          isMenuLogic: false,
+          hidden: false,
         }
       }
     }
