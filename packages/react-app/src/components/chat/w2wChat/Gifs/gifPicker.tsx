@@ -1,19 +1,20 @@
-import React, { FC, useRef, useState } from 'react'
-import { Oval as Loader } from 'react-loader-spinner'
-import ClickAwayListener from '../clickAwayListener'
-import configs from '../configs'
-import { useFetch } from '../stickers/useFetchHook'
-import './gifPicker.css'
+import { FC, useRef, useState } from 'react';
+import configs from '../configs';
+import ClickAwayListener from '../clickAwayListener';
+import { Oval as Loader } from 'react-loader-spinner';
+import { useFetch } from '../stickers/useFetchHook';
+import React from 'react';
+import './gifPicker.css';
 
 interface GifPickerProps {
-  setIsOpened: (value: boolean) => void
-  onSelect: (gif: any) => void
+  setIsOpened: (value: boolean) => void;
+  onSelect: (gif: any) => void;
+  isOpen: boolean;
 }
 
-const GifPicker: FC<GifPickerProps> = ({ setIsOpened, onSelect }) => {
-  const [searchInputValue, setSearchInputValue] = useState('')
-  console.log('gif')
-  const timeOutRef = useRef<any>(null)
+const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
+  const [searchInputValue, setSearchInputValue] = useState('');
+  const timeOutRef = useRef<any>(null);
 
   const { data, loading, error } = useFetch(`giphy-${searchInputValue}`, () =>
     fetch(
@@ -22,22 +23,23 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, onSelect }) => {
             searchInputValue.trim()
           )}`
         : `https://api.giphy.com/v1/gifs/trending?api_key=${configs.giphyAPIKey}`
-    ).then(res => res.json())
-  )
+    ).then((res) => res.json())
+  );
 
   return (
-    <ClickAwayListener onClickAway={() => setIsOpened(false)}>
-      {ref => (
+    <ClickAwayListener onClickAway={() => setIsOpened(!isOpen)}>
+      {(ref) => (
         <div ref={ref} className="gifPciker_Body">
+          {/* <div className="gifPciker_Body"> */}
           <div className="gifPicker_search_body">
             <div className="gifPicker_search">
               <div className="gifPicker_search_input">
                 <input
-                  onChange={e => {
-                    if (timeOutRef.current) clearTimeout(timeOutRef.current)
+                  onChange={(e) => {
+                    if (timeOutRef.current) clearTimeout(timeOutRef.current);
                     timeOutRef.current = setTimeout(() => {
-                      setSearchInputValue(e.target.value)
-                    }, 500)
+                      setSearchInputValue(e.target.value);
+                    }, 500);
                   }}
                   type="text"
                   className="text"
@@ -64,8 +66,8 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, onSelect }) => {
                 <img
                   key={item.id}
                   onClick={() => {
-                    onSelect(item?.images?.original?.url)
-                    setIsOpened(false)
+                    onSelect(item?.images?.original?.url);
+                    setIsOpened(!isOpen);
                   }}
                   className="h-[100px] flex-1 cursor-pointer object-cover"
                   src={item?.images?.original?.url}
@@ -77,9 +79,7 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, onSelect }) => {
         </div>
       )}
     </ClickAwayListener>
-  )
-}
+  );
+};
 
-export default GifPicker
-/*
- */
+export default GifPicker;

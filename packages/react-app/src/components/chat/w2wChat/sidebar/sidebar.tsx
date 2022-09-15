@@ -84,7 +84,7 @@ const Sidebar = () => {
         </Box>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={2} mt={2}>
+        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
           REQUESTS
         </DisplayText>
         <IntentFeed />
