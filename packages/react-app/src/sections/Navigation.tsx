@@ -25,11 +25,12 @@ import { postReq } from "api";
 import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
 import { SEND_NOTIFICATION_STATES, setCanSend } from "redux/slices/sendNotificationSlice";
 
+
 // Create Header
 function Navigation() {
     const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified } } = useSelector((state: any) => state.admin);
     const [ refresh, setRefresh ] = useState(false);
-
+    const { processingState } = useSelector((state: any) => state.channelCreation);
     const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
 
@@ -48,48 +49,41 @@ function Navigation() {
     );
     
   useEffect(() => {
-    if (canSend === SEND_NOTIFICATION_STATES.LOADING) return
+    
     if (!navigationSetup) return
+    if (processingState !== 0) {
       navigationSetup.secondary[0].data.name = 'Hide';
       navigationSetup.secondary[1].data.name = 'Hide';
-      console.log(channelDetails)
-      console.log(canSend)
-      console.log(SEND_NOTIFICATION_STATES.HIDE)
-    if (canSend === SEND_NOTIFICATION_STATES.HIDE) {
-      // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-      navigationSetup.secondary[0].data.name = 'Create Channel';
+    }
+    else {
+      navigationSetup.secondary[0].data.name = 'Hide';
       navigationSetup.secondary[1].data.name = 'Hide';
       navigationSetup.secondary[2].data.name = 'Hide';
-      // navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-    } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
       if (channelDetails !== 'unfetched' && channelDetails != null) {
-        // navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails['name'];
         navigationSetup.secondary[0].data.name = channelDetails.name;
         navigationSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
         navigationSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
-        // console.log(navigationSetup);
       } else {
-        // navigationSetup.primary[1].data.drilldown[0].data.name = "Create Channel";
         navigationSetup.secondary[0].data.name = 'Create Channel';
       }
-      // navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-      navigationSetup.secondary[1].data.name = 'Send Notifications'
-      navigationSetup.secondary[2].data.name = 'Hide';
-
+      if (canSend === SEND_NOTIFICATION_STATES.SEND) {
+        navigationSetup.secondary[1].data.name = 'Send Notifications'
+      }
     }
-  }, [canSend, channelDetails, navigationSetup]);
+  }, [canSend, channelDetails, navigationSetup, processingState,account]);
 
   useEffect(() => {
-    console.log(aliasAddr)
-    console.log(aliasEthAddr);
-    console.log(isAliasVerified)
-    console.log(delegatees);
-    if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
-    } else {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+    if (processingState !== 0) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend])
+    else {
+      if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+      } else {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+      }
+    }
+  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState,account])
 
     // useEffect(()=>{
     //   (async()=>{

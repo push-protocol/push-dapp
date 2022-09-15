@@ -2,6 +2,7 @@ import React from 'react';
 import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
 import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
+import { ItemHV2 } from './reusables/SharedStylingV2';
 import styled, { css, useTheme } from 'styled-components';
 
 import GLOBALS from 'config/Globals';
@@ -57,6 +58,11 @@ function NavigationButton({ item, data, sectionID, active }) {
       active={active}
       className={data?.name?.toLowerCase()}
     >
+      {data.iconFactory?
+       <ItemHV2 justifyContent="flex-start" padding="0 2rem">
+       {data.iconFactory}
+       </ItemHV2>
+       :
       <ItemH align="center">
         {!active ? (
           <SelectedIcon src={require(`../assets/${data.src}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
@@ -79,6 +85,7 @@ function NavigationButton({ item, data, sectionID, active }) {
 
         {item.hasItems && item.opened && <BiChevronUp color={theme.nav.color} />}
       </ItemH>
+      }
     </RouteLogic>
   );
 }

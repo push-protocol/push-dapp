@@ -1,3 +1,4 @@
+import LoaderSpinner,{LOADER_TYPE} from 'components/reusables/loaders/LoaderSpinner';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 
@@ -125,14 +126,12 @@ const NavigationList = {
     },
     loading: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.LOADING,
-      src: 'navigation/createChannelIcon.svg',
-      activeSrc: 'navigation/createChannelIcon.svg',
-      iconFactory: null,
-      name: 'Loading',
+      iconFactory: <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} />,
+      name: '',
       title: 'Loading',
       alt: 'Loading',
       newTab: false,
-      hasMenuLogic: true,
+      hasMenuLogic: false,
       headerTag: {
         title: 'Channel Dashboard',
         light: {

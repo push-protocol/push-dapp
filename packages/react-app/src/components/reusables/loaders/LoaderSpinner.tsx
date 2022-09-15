@@ -42,6 +42,7 @@ const LoaderSpinner = ({
   return (
     <ItemVV2
       position={overlay == LOADER_OVERLAY.ONTOP ? 'absolute' : 'relative'}
+      maxWidth={type == LOADER_TYPE.SEAMLESS ? 'fit-content' : 'auto'}
       top="0"
       right="0"
       bottom="0"
