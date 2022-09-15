@@ -234,7 +234,7 @@ const InitState = () => {
       }
     }
     else{
-      dispatch(setProcessingState(1));
+      dispatch(setProcessingState(0));
     }
     return;
   }
