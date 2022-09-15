@@ -583,7 +583,7 @@ const ChatBox = (): JSX.Element => {
           </ChatHeader>
 
           <MessageContainer>
-            <ScrollToBottom>
+            <ScrollToBottom className="chatBoxTop" initialScrollBehavior='smooth'>
               {Loading ? (
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
                   <Loader color="#34C5F3" height={40} width={40} />
@@ -714,7 +714,7 @@ const MessageContainer = styled.div`
   right: 0;
   margin: 0;
   width: 100%;
-  max-height: calc(83.6vh - 130px);
+  max-height: calc(76.6vh - 130px);
   overflow: auto;
   display: flex;
   flex-direction: column;

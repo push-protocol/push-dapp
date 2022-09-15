@@ -68,7 +68,8 @@
   opacity: 0.8;
 }
 .chatBoxTop::-webkit-scrollbar {
-  width: 5px;
+  /* width: 5px; */
+  display: none;
 }
 
 .chatBoxTop::-webkit-scrollbar-track {
@@ -165,15 +166,16 @@
   cursor: pointer;
 }
 .chatBoxTop {
-  height: 65%;
+  /* height: 65%; */
   overflow-y: scroll;
-  padding-top: 9vh;
+  /* padding-top: 9vh; */
   padding-right: 0px;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
   margin: 0 2px;
 }
+
 
 .beforeMessageLoader {
   display: flex;
