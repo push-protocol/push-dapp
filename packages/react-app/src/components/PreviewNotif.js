@@ -1,9 +1,14 @@
-import React from "react";
-import styled, { ThemeProvider, useTheme } from "styled-components";
-import { Item, Span, H2 } from "../primaries/SharedStyling";
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import React from "react";
+
+// External Packages
 import { useSelector } from "react-redux";
+import styled, { ThemeProvider, useTheme } from "styled-components";
+
+// Internal Compoonents
+import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { H2, Item, Span } from "../primaries/SharedStyling";
 
 const blockchainName = {
   1: "ETH_MAINNET",
@@ -22,7 +27,7 @@ export default function PreviewNotif({ details }) {
   )[0];
   if (!channelDetail) channelDetail = channelDetails;
 
-  const themes = useTheme();
+  const theme = useTheme();
   const NotifItem = ({ test }) => {
     return (
       channelDetail && (
@@ -34,29 +39,27 @@ export default function PreviewNotif({ details }) {
           icon={channelDetail.icon}
           image={test?.aimg}
           chainName={blockchainName[chainId]}
-          theme={themes.scheme}
+          theme={theme.scheme}
         />
       )
     );
   };
 
   return (
-    <ThemeProvider theme={themes}>
-      <PreviewSpace>
-        <Item align="flex-start" margin="30px 0px 10px 0px">
-          <Span
-            weight="700"
-            size="12px"
-            spacing="0.2em"
-            color="#575D73"
-            // style={{ color: themes.color }}
-          >
-            PREVIEW NOTIFICATION
-          </Span>
-        </Item>
-        <NotifItem test={details} />
-      </PreviewSpace>
-    </ThemeProvider>
+    <PreviewSpace>
+      <Item align="flex-start" margin="30px 0px 10px 0px">
+        <Span
+          weight="700"
+          size="12px"
+          spacing="0.2em"
+          color="#575D73"
+          // style={{ color: theme.color }}
+        >
+          PREVIEW NOTIFICATION
+        </Span>
+      </Item>
+      <NotifItem test={details} />
+    </PreviewSpace>
   );
 }
 
@@ -78,5 +81,4 @@ const Overlay = styled.div`
 const PreviewSpace = styled.div`
   margin: 20px 20px;
   width: 100%;
-  background: ${(props) => props.theme.backgroundBG};
 `;

@@ -1,8 +1,8 @@
-import { Feeds } from 'api'
-import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import { Feeds } from 'api'
+import React from 'react'
+import styled, { useTheme } from 'styled-components'
 import './defaultIntent.css'
 
 interface DefaultIntentProps {
@@ -10,6 +10,8 @@ interface DefaultIntentProps {
 }
 
 const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
+  const theme = useTheme();
+
   let date = null
 
   if (props.inbox?.intentTimestamp !== null) {
@@ -34,7 +36,7 @@ const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
         <DisplayText color="#1E1E1E" weight="600" size="16px">
           {final}
         </DisplayText>
-        <DisplayText color="#657795">{props.inbox.msg.lastMessage}</DisplayText>
+        <DisplayText color={theme.default.secondaryColor}>{props.inbox.msg.lastMessage}</DisplayText>
       </UserData>
       <RequestTime>{date}</RequestTime>
     </ProfileCard>

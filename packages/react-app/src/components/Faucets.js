@@ -1,5 +1,5 @@
-import React,{useRef} from "react";
 import { useClickAway } from "hooks/useClickAway";
+import React, { useRef } from "react";
 import styled, { useTheme } from 'styled-components';
 import { Image, Item, ItemH } from '../primaries/SharedStyling';
 import Dropdown from "./Dropdown";
@@ -50,7 +50,7 @@ const Faucets = () => {
       {showDropdown && (
         <Item
           ref={dropdownRef}
-          bg={theme.headerBg}
+          bg={theme.default.secondaryBg}
           border={`1px solid ${theme.snackbarBorderColor}`}
           radius="24px"
           align="flex-start"

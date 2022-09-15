@@ -1,23 +1,16 @@
-import React, { useRef } from "react";
-import UtilityHelper from 'helpers/UtilityHelper';
-import {
-  Section,
-  Content,
-  Item,
-  H3,
-  Button,
-  Input,
-  FormSubmision,
-  Span
-} from "primaries/SharedStyling";
-import ImageClipper from "primaries/ImageClipper";
+import { abis, addresses } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
-import styled from "styled-components";
 import { ethers } from "ethers";
-import { addresses, abis } from "@project/contracts";
-import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+import UtilityHelper from 'helpers/UtilityHelper';
+import ImageClipper from "primaries/ImageClipper";
+import {
+  Button, Content, FormSubmision, H3, Input, Item, Section, Span
+} from "primaries/SharedStyling";
+import React, { useRef } from "react";
+import { BsCloudUpload } from 'react-icons/bs';
 import { Oval } from "react-loader-spinner";
-import {BsCloudUpload} from 'react-icons/bs'
+import styled from "styled-components";
+import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 
 const UploadLogo = ({
   croppedImage,

@@ -10,8 +10,8 @@ interface Props {
   payload: object
 }
 const NotifToastUI = ({ payload }) => {
-  // get themes
-  const themes = useTheme();
+  // get theme
+  const theme = useTheme();
 
   // get notification context and set it
   const { notificationReceived, setNotificationRecieved } = useContext(NotificationContext);
@@ -32,7 +32,7 @@ const NotifToastUI = ({ payload }) => {
       image={payload.data.aimg}
       url=''
       // url={`${window.location.hostname}:${window.location.port}/#/inbox`}
-      theme={themes.scheme ? themes.scheme : 'light'}
+      theme={theme.scheme ? theme.scheme : 'light'}
       chainName={payload.data.chainName ? payload.data.chainName : 'ETH_TEST_KOVAN'}
     />
   )

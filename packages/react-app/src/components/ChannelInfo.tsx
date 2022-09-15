@@ -1,12 +1,12 @@
-import React,{useState} from "react";
-import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Span, TextField } from "primaries/SharedStyling";
-import { FiLink } from "react-icons/fi";
-import styled, { useTheme } from "styled-components";
-import Dropdown from "react-dropdown";
-import { Oval } from "react-loader-spinner";
-import "./createChannel.css";
 import { envConfig } from "@project/contracts";
-import { aliasChainIdsMapping, networkName, isValidUrl } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping, isValidUrl, networkName } from "helpers/UtilityHelper";
+import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Span, TextField } from "primaries/SharedStyling";
+import React, { useState } from "react";
+import Dropdown from "react-dropdown";
+import { FiLink } from "react-icons/fi";
+import { Oval } from "react-loader-spinner";
+import styled, { useTheme } from "styled-components";
+import "./createChannel.css";
 
 const coreChainId = envConfig.coreContractChain;
 const aliasChainId = aliasChainIdsMapping[coreChainId];
@@ -33,11 +33,11 @@ const ChannelInfo = ({
   errorInfo,
   isAllFilledAndValid
 }) => {
-  const themes = useTheme();
+  const theme = useTheme();
 
   return (
     <Section>
-      <Body>
+      <Item padding="40px 0 0 0" align="flex-start">
 
         {/* <FormSubmision
           flex="1"
@@ -47,7 +47,7 @@ const ChannelInfo = ({
           size="1.1rem"
           onSubmit={handleCreateChannel}
         > */}
-          <Label style={{color:themes.color}}>Channel Name & Network</Label>
+          <Label style={{color:theme.color}}>Channel Name & Network</Label>
 
           <Item
             margin="7px 0px 0px 0px"
@@ -118,7 +118,7 @@ const ChannelInfo = ({
                 flex="1"
                 self="stretch"
                 align="stretch">
-              <Label style={{color:themes.color}}>Channel Alias address</Label>
+              <Label style={{color:theme.color}}>Channel Alias address</Label>
               <Input
                 required
                 // placeholder="Your Channel Address"
@@ -149,7 +149,7 @@ const ChannelInfo = ({
               <Span
                   size="13px"
                   margin="7px 0px 0px 0px"
-                  color="#657795"
+                  color={theme.default.secondaryColor}
                 >
                   Make sure you own this address as verification will take place.
                 </Span>
@@ -164,8 +164,8 @@ const ChannelInfo = ({
             style={{marginTop: `${chainDetails === coreChainId ? "55px" : "20px"}`, position: "relative"}}
           >
             <Item display='flex' direction="row" align="center" flex="1" self="stretch" justify="space-between">
-              <Label style={{color:themes.color}}>Channel Description</Label>
-              <Span color="#657795" size="13px" margin="0px 10px 0px 0px" weight='700'>{250 - channelInfo.length}</Span>
+              <Label style={{color:theme.color}}>Channel Description</Label>
+              <Span color={theme.default.secondaryColor} size="13px" margin="0px 10px 0px 0px" weight='700'>{250 - channelInfo.length}</Span>
             </Item>
             <TextField
               required
@@ -188,7 +188,7 @@ const ChannelInfo = ({
             <Span
                   size="13px"
                   margin="7px 0px 0px 0px"
-                  color="#657795"
+                  color={theme.default.secondaryColor}
                 >
                   Brief description of your channel.
                 </Span>
@@ -199,7 +199,7 @@ const ChannelInfo = ({
                 flex="1"
                 self="stretch"
                 align="stretch">
-              <Label style={{color:themes.color}}>Channel Website URL</Label>
+              <Label style={{color:theme.color}}>Channel Website URL</Label>
               <Input
                 required
                 // placeholder="Your Channel Address"
@@ -223,8 +223,9 @@ const ChannelInfo = ({
 
           {errorInfo?.length > 0 && (
             <Item 
-              margin="30px 0px 30px 0px"
+              margin="30px 0px 0px 0px"
               flex="1"
+              self="center"
               padding="10px 5px"
               radius="10px"
               bg="#F5F5FA"
@@ -260,7 +261,7 @@ const ChannelInfo = ({
             </Span>
             </Button>
           </Item>
-      </Body>
+      </Item>
     </Section>
   );
 };
@@ -345,13 +346,6 @@ const DropdownStyled = styled(Dropdown)`
 
 const Body = styled.div`
   margin: 40px auto 0px auto;
-  width: 55%; 
-  @media (max-width: 600px) {
-    width: 100%%; 
-  }
-  @media (max-width: 1224px) {
-    width: 75%; 
-  }
 `;
 
 export default ChannelInfo;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Oval } from 'react-loader-spinner';
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 type ModalConfirmButtonType = {
     text:string,

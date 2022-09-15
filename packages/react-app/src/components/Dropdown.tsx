@@ -1,11 +1,7 @@
 import React from "react";
-import styled,{useTheme} from "styled-components";
+import styled, { useTheme } from "styled-components";
 import {
-  ItemH,
-  Span,
-  Image,
-  A,
-  RouterLink,
+  A, Image, ItemH, RouterLink, Span
 } from "../primaries/SharedStyling.js";
 
 // Create Dropdown

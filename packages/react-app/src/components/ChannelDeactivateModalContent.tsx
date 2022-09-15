@@ -1,16 +1,16 @@
 import React from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 
 import { ModalInnerComponentType } from "hooks/useModal";
 import { useClickAway } from 'react-use';
 
-import { Oval } from "react-loader-spinner";
 import IconButton from '@mui/material/IconButton';
 import { MdError, MdHighlightOff } from "react-icons/md";
 import { RiNotificationOffLine } from "react-icons/ri";
+import { Oval } from "react-loader-spinner";
 
 const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : ModalInnerComponentType)=>{
     const themes = useTheme();

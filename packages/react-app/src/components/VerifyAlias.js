@@ -1,15 +1,15 @@
-import React, { useRef, useState } from "react";
-import styled, { css, useTheme } from "styled-components";
-import { H3, Section, Item, Span, Button } from "../primaries/SharedStyling";
+import { abis, addresses } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
-import { useDispatch } from "react-redux";
-import { addresses, abis } from "@project/contracts";
-import { useClickAway } from "react-use";
-import { getReq, postReq } from "../api";
-import FadeLoader from "react-spinners/FadeLoader";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { setProcessingState } from "redux/slices/channelCreationSlice";
+import React, { useRef, useState } from "react";
 import { BsFillCheckCircleFill } from "react-icons/bs";
+import { useDispatch } from "react-redux";
+import FadeLoader from "react-spinners/FadeLoader";
+import { useClickAway } from "react-use";
+import { setProcessingState } from "redux/slices/channelCreationSlice";
+import styled, { css, useTheme } from "styled-components";
+import { getReq, postReq } from "../api";
+import { Button, H3, Item, Section, Span } from "../primaries/SharedStyling";
 
 const ethers = require("ethers");
 

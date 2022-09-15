@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import styled, { useTheme } from 'styled-components';
+import GLOBALS from 'config/Globals';
 import { Content, Item, Section } from 'primaries/SharedStyling';
+import React, { useEffect, useState } from 'react';
 import { FiSearch, FiSliders } from 'react-icons/fi';
 import Feedbox from 'segments/Feedbox';
 import Spambox from 'segments/Spambox';
-import GLOBALS from 'config/Globals';
+import styled, { useTheme } from 'styled-components';
 
 const InboxComponent = () => {
   const [showInbox, setShowInbox] = useState(true);
@@ -91,7 +91,7 @@ const NavBoxHolder = styled.div`
     bottom: 0;
     width: 100%;
     content: '';
-    background-color: #e4e8ef;
+    background-color: ${props => props.theme.default.border};
   }
 `;
 
@@ -123,16 +123,16 @@ const NavTitleButton = styled.div`
   ${(props) =>
     props.isActive &&
     `&:after{
-            position: absolute;
-            height: 2px;
-            left: 0;
-            bottom: -15px;
-            width: 100%;
-            content: '';
-            background-color: #CF1C84;
-            z-index: 1;
-            
-        }`}
+        position: absolute;
+        height: 2px;
+        left: 0;
+        bottom: -15px;
+        width: 100%;
+        content: '';
+        background-color: #CF1C84;
+        z-index: 1;
+        
+    }`}
 `;
 
 // css styles
