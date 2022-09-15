@@ -1,8 +1,8 @@
 import { envConfig } from "@project/contracts";
 
-const apiVersion = envConfig.pushNodeApiVersion;
-const channelsRoute = `/v${apiVersion}/channels`;
-const usersRoute = `/v${apiVersion}/users`;
+const apiVersion: number = envConfig.pushNodeApiVersion;
+const channelsRoute: string = `/v${apiVersion}/channels`;
+const usersRoute: string = `/v${apiVersion}/users`;
 
 export const usersServiceEndpoints = {
     userSubscriptions: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/subscriptions`
