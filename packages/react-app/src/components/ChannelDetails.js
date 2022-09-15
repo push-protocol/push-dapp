@@ -310,7 +310,7 @@ const SectionDate = styled.div`
 `;
 
 const SectionDes = styled.div`
-  letter-spacing: 0.1em;
+  letter-spacing: 0.07em;
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
   color: #657795;

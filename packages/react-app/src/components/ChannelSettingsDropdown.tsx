@@ -23,12 +23,10 @@ import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 import ActivateChannelModal from "./ActivateChannelModal";
 
-
-import {
-  AiOutlineDropbox, AiOutlineUserAdd,
-  AiOutlineUserDelete,
-  AiTwotoneDelete
-} from 'react-icons/ai';
+import cubeIcon from "../assets/icons/cube.png";
+import userPlusIcon from "../assets/icons/userCirclePlus.png";
+import userMinusIcon from "../assets/icons/userCircleMinus.png";
+import redBellIcon from "../assets/icons/redBellSlash.png";
 
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -273,8 +271,8 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
               disabled={channelInactive}
               onClick={() => !channelInactive && showAddSubgraphModal()}
             >
-              <div style={{display:'flex',justifyContent:'start'}}>
-                <AiOutlineDropbox fontSize={20}/>
+              <div style={{display:'flex', justifyContent:'flex-start', alignItems:"center"}}>
+              <CustomIcon src={cubeIcon} alt="cube" />
                 <div style={{width:'10px'}}/>                  
                 Add SubGraph Details
               </div>
@@ -285,8 +283,8 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
             disabled={channelInactive}
             onClick={() => !channelInactive && showAddDelegateModal()}
           >
-            <div style={{display:'flex',justifyContent:'start'}}>
-              <AiOutlineUserAdd fontSize={20}/>
+            <div style={{display:'flex', justifyContent:'flex-start', alignItems:"center"}}>
+              <CustomIcon src={userPlusIcon} alt="user-plus" />
               <div style={{width:'10px'}}/>                  
               Add Delegate
             </div>
@@ -296,10 +294,9 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
             disabled={channelInactive}
             onClick={() => !channelInactive && showRemoveDelegateModal()}
           >
-            
-            <div style={{display:'flex',justifyContent:'start'}}>
-              <AiOutlineUserDelete fontSize={20}/>
-              <div style={{width:'10px'}}/>                  
+            <div style={{display:'flex', justifyContent:'flex-start', alignItems:"center"}}>
+              <CustomIcon src={userMinusIcon} alt="user-minus" />
+              <div style={{width:'10px'}} />             
               Remove Delegate
             </div>
           </ChannelActionButton>
@@ -309,8 +306,8 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
           onClick={toggleChannelActivationState}
         >
           <div style={{color:'red'}}>
-          <div style={{display:'flex',justifyContent:'start'}}>
-            <AiTwotoneDelete fontSize={20}/>
+          <div style={{display:'flex', justifyContent:'flex-start', alignItems:"center"}}>
+              <CustomIcon src={redBellIcon} alt="red-bell" />
             <div style={{width:'10px',color:'red'}}/>                  
             {!onCoreNetwork ? (
               ""
@@ -384,7 +381,7 @@ const DropdownWrapper = styled.div`
   align-items: center;
   width: 240px;
   height: 190px;
-  padding: 20px 4px;
+  padding: 24px 4px;
   background: ${props => props.background.backgroundBG};
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
@@ -449,6 +446,13 @@ const ChannelActionButton = styled.button`
   }
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
+
+const CustomIcon = styled.img`
+  width: 25px;
+  height: 25px;
+  padding: 0;
+  margin: 0;
+`
 
 // Export Default
 export default ChannelSettings;
