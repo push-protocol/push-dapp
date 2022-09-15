@@ -226,8 +226,9 @@ const ChannelInfo = ({
               margin="30px 0px 0px 0px"
               flex="1"
               self="center"
-              padding="10px 5px"
-              radius="10px"
+              width="100%"
+              padding="1.5rem 0"
+              radius="12px"
               bg="#F5F5FA"
             >
               <div style={{color:'#CF1C84'}}>
@@ -303,7 +304,7 @@ const Label = styled.div`
 const DropdownStyledParent = styled.div`
 flex:1;
 .is-open {
-    margin-bottom: 50px;
+    margin-bottom: 5rem;
 }
 `
 
@@ -328,19 +329,21 @@ const DropdownStyled = styled(Dropdown)`
   .Dropdown-menu {
     border-color: #BAC4D6;
     border-radius: 12px;
+    padding: 0.5rem 0;
       .is-selected {
-      background-color: #D00775;
-      color:#fff;
+      background-color:#fff;
+      color: #D00775;
     }
   }
  
   .Dropdown-option {
       background-color: #fff;
       color: #000;
+      padding: 0.8rem 2rem;
   }
   .Dropdown-option:hover {
-      background-color: #D00775;
-      color: #000;
+      background-color:#fff;
+      color: #D00775;
   }
 `
 

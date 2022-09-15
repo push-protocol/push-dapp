@@ -61,7 +61,7 @@ const useToast = (
         style: {
           background: themes.mainBg,
           border: `1px solid ${themes.toastBorderColor}`,
-          boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
+          boxShadow: `8px 8px 8px ${themes.toastShadowColor}`,
           borderRadius: "20px",
         }
       })
@@ -132,6 +132,7 @@ const LoaderNotification = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   margin: 1% 3%;
 `;
 const LoaderMessage = styled.div`

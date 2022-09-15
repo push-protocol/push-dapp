@@ -163,13 +163,13 @@ function CreateChannel() {
       isEmpty(channelURL) ||
       (isEmpty(channelAlias) && chainDetails !== coreChainId)
     ) {
-      setErrorInfo("Channel Fields are Empty! Please retry!");
+      setErrorInfo("Please enter the channel fields to continue.");
       return false;
     }
 
     if(!isValidUrl(channelURL))
     {
-      setErrorInfo("Channel Url is invalid! Please retry!");
+      setErrorInfo("Please enter your channel website URL to continue.");
       return false;
     }
 

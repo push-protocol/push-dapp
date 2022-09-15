@@ -278,7 +278,7 @@ const themeDark = {
   // Toast Notifications
   toastTextColor: "#B6BCD6",
   toastBorderColor: "#4A4F67",
-  toastShadowColor: "#00000005",
+  toastShadowColor: "#00000010",
   toastSuccessBackground: "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #2F3137 42.81%)",
   toastErrorBackground:  "linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)",
   
