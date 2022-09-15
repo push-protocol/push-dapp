@@ -1,18 +1,27 @@
-import { envConfig } from '@project/contracts';
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { getReq, postReq } from 'api';
 import { ethers } from 'ethers';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import { useDeviceWidthCheck } from 'hooks';
-import moment from 'moment';
 import React from 'react';
+
+// External Packages
+import moment from 'moment';
 import { AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
+import { getReq, postReq } from 'api';
+import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useDeviceWidthCheck } from 'hooks';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import { Item } from '../primaries/SharedStyling';
 import ChannelSettings from './ChannelSettings';
 import ShowDelegates from './ShowDelegates';
+
+// Internal Configs
+import { envConfig } from '@project/contracts';
+import GLOBALS, { device } from "config/Globals";
 
 const DATE_FORMAT = 'MMMM Do YYYY';
 
@@ -62,21 +71,22 @@ export default function ChannelDetails() {
   }, [channelDetails]);
 
   return (
-    <ChannelDetailsWrapper>
-      <SectionTop>
+    <ItemVV2>
+      <AdaptiveMobileItemHV2 justifyContent="flex-start" alignSelf="stretch" margin="10px 0px 0px 0px">
         <ImageSection src={channelDetails.icon}></ImageSection>
 
-        <Details>
+        <AdaptiveMobileItemVV2 alignItems="flex-start" padding="5px 0px">
           <ChannelName>
             {channelDetails.name}
             {canVerify && <VerifyImage src="/verify.png"></VerifyImage>}
           </ChannelName>
-          <ChannelStatusContainer>
+
+          <AdaptiveMobileItemVV2 alignItems="flex-start" flex="initial" padding="5px 0px">
             {/* <div style={{ width: "8px" }} /> */}
             {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified) ? (
               <AliasStateText>Alias Network Setup Pending</AliasStateText>
             ) : (
-              <>
+              <AdaptiveMobileItemHV2 justifyContent="flex-start">
                 <Subscribers>
                   <img style={{ width: '15px' }} src="/subcount.svg" alt="subscount"></img>
                   <SubscribersCount>{channelDetails.subscribers.length}</SubscribersCount>
@@ -84,69 +94,67 @@ export default function ChannelDetails() {
                 <ChanneStateText active={channelIsActive}>
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
                 </ChanneStateText>
-              </>
+              </AdaptiveMobileItemHV2>
             )}
-          </ChannelStatusContainer>
-          <Date>{creationDate && <>Created {creationDate}</>}</Date>
-        </Details>
-      </SectionTop>
 
-      {!isMobile ? '' : <ChannelSettings />}
+            <Date>{creationDate && <>Created {creationDate}</>}</Date>
+          </AdaptiveMobileItemVV2>
+        </AdaptiveMobileItemVV2>
+      </AdaptiveMobileItemHV2>
 
-      <SectionDes>{channelDetails.info}</SectionDes>
+      {isMobile && 
+        <ItemHV2 zIndex="1" padding="0 0 20px 0">
+          <ChannelSettings />
+        </ItemHV2>
+      }
 
-      <SectionDate>
-        {canVerify && (
-          <Verified>
-            <span>verified by:</span>
-            <VerifyingIcon src={verifyingChannel.icon}></VerifyingIcon>
-            <VerifyingName>{verifyingChannel.name}</VerifyingName>
-          </Verified>
-        )}
-      </SectionDate>
-      {processingState === 0 && <ShowDelegates />}
-    </ChannelDetailsWrapper>
+      <ItemVV2 alignItems="flex-start"><SectionDes>{channelDetails.info}</SectionDes></ItemVV2>
+      
+      {canVerify &&
+        <AdaptiveMobileItemVV2 alignItems="flex-start" padding="5px 0px">
+          <SectionDate>
+            <Verified>
+              <span>verified by:</span>
+              <VerifyingIcon src={verifyingChannel.icon}></VerifyingIcon>
+              <VerifyingName>{verifyingChannel.name}</VerifyingName>
+            </Verified>
+          </SectionDate>
+        </AdaptiveMobileItemVV2>
+      }
+      
+      {processingState === 0 && 
+        <ItemVV2>
+          <ShowDelegates />
+        </ItemVV2>
+      }
+    </ItemVV2>
   );
 }
 
-const ChannelDetailsWrapper = styled.div`
-  padding: 20px 30px;
-  padding-bottom: 0;
-  @media (max-width: 600px) {
-    padding: 20px 10px;
-  }
-`;
+const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 
-const SectionTop = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 30px;
-  @media (max-width: 600px) {
-    flex-direction: column;
+  @media ${device.mobileM} {
+    align-items: center;
   }
-`;
+`
+
+const AdaptiveMobileItemHV2 = styled(ItemHV2)`
+  @media ${device.mobileM} {
+    justify-content: center;
+  }
+`
 
 const ImageSection = styled.img`
   width: 128px;
   height: 128px;
   margin-right: 20px;
   border-radius: 32px;
-  @media (max-width: 600px) {
+  @media ${device.mobileM} {
     width: 70px;
     height: 70px;
     margin-right: 0px;
     border-radius: 20px;
   }
-`;
-
-const ChannelStatusContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  // justify-content: center;
-  margin: 10px 0px;
-  // height: 26px;
 `;
 
 const VerifyImage = styled.img`
@@ -238,7 +246,7 @@ const SubscribersCount = styled.span`
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  @media (max-width: 600px) {
+  @media ${device.mobileM} {
     flex-direction: column;
     align-items: center;
   }
@@ -247,13 +255,15 @@ const Details = styled.div`
 const Date = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   width: 340px;
   color: #657795;
+  margin: 10px 0;
   text-transform: none;
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
-  @media (max-width: 600px) {
+  @media ${device.mobileM} {
     flex-direction: column;
     align-items: center;
   }
@@ -279,7 +289,7 @@ const ChannelName = styled.div`
   font-size: 30px;
   line-height: 141%;
   color: ${(props) => props.theme.color};
-  @media (max-width: 600px) {
+  @media ${device.mobileM} {
     flex-direction: column;
     margin-top: 10px;
     font-size: 20px;
@@ -310,7 +320,7 @@ const SectionDes = styled.div`
   line-height: 140%;
   padding: 0px 20px;
   text-align: left;
-  @media (max-width: 600px) {
+  @media ${device.mobileM} {
     text-align: center;
     margin-top: 10px;
   }

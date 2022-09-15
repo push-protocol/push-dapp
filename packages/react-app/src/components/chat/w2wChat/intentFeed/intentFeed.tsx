@@ -41,7 +41,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 })
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<
+  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests }: AppContext = useContext<
     AppContext
   >(Context)
   const { chainId, account } = useWeb3React<Web3Provider>()
@@ -63,10 +63,12 @@ const IntentFeed = (): JSX.Element => {
     if (getIntent === undefined) {
       let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      setPendingRequests(intents?.length)
       setReceivedIntents(intents)
     } else {
       let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      setPendingRequests(intents?.length)
       setReceivedIntents(intents)
     }
   }

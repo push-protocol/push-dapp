@@ -58,6 +58,10 @@ export interface AppContext {
   setIntents: (intents: Feeds[]) => void
   inbox: Feeds[]
   setInbox: (inbox: Feeds[]) => void
+  pendingRequests: number
+  setPendingRequests: (pending: number) => void
+  hasUserBeenSearched: boolean
+  setHasUserBeenSearched: (searched: boolean) => void
 }
 
 export const ToastPosition: ToastOptions = {
@@ -82,6 +86,8 @@ function App() {
   const [connectedUser, setConnectedUser] = useState<User>()
   const [intents, setIntents] = useState<Feeds[]>([])
   const [inbox, setInbox] = useState<Feeds[]>([])
+  const [pendingRequests, setPendingRequests] = useState<number>(0)
+  const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
 
   const queryClient = new QueryClient({})
 
@@ -160,7 +166,11 @@ function App() {
                 intents,
                 setIntents,
                 inbox,
-                setInbox
+                setInbox,
+                pendingRequests,
+                setPendingRequests,
+                hasUserBeenSearched,
+                setHasUserBeenSearched
               }}
             >
               <Sidebar />

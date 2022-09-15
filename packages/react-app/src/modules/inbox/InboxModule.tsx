@@ -317,7 +317,7 @@ const Container = styled(Section)`
 	align-items: stretch;
 	align-self: stretch;
   flex: 1;
-	background: ${(props) => props.theme.mainBg};
+	background: ${(props) => props.theme.default.bg};
 	border-top-left-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
@@ -345,13 +345,6 @@ const Container = styled(Section)`
   }
 `;
 
-// const Container = styled.div`
-//   flex-direction: column;
-//   background: ${(props) => props.theme.mainBg};
-//   height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${(props) => props.theme.interfaceTopPadding});
-//   align-items: stretch;
-//   align-self: stretch;
-// `;
 
 const Toaster = styled.div`
   display: flex;

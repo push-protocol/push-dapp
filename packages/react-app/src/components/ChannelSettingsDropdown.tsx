@@ -1,10 +1,10 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import styled, { css , useTheme } from "styled-components";
+import { abis, addresses } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
-import { toast as toaster } from "react-toastify";
-import { addresses, abis } from "@project/contracts";
 import { postReq } from "api";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast as toaster } from "react-toastify";
+import styled, { css, useTheme } from "styled-components";
 
 import { envConfig } from "@project/contracts";
 
@@ -14,27 +14,26 @@ import useToast from "hooks/useToast";
 
 // modals
 import useModal from "hooks/useModal";
-import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
 import AddDelegateModalContent from "./AddDelegateModalContent";
-import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
 import AddSubgraphModalContent from "./AddSubgraphModalContent";
+import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
+import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
 
-import ActivateChannelModal from "./ActivateChannelModal";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
+import ActivateChannelModal from "./ActivateChannelModal";
 
 
 import {
-  AiOutlineUserAdd,
+  AiOutlineDropbox, AiOutlineUserAdd,
   AiOutlineUserDelete,
-  AiTwotoneDelete,
-  AiOutlineDropbox
+  AiTwotoneDelete
 } from 'react-icons/ai';
 
 import "react-dropdown/style.css";
 import "react-toastify/dist/ReactToastify.min.css";
 
-import {Oval} from "react-loader-spinner";
+import { Oval } from "react-loader-spinner";
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;

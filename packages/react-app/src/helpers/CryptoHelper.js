@@ -1,7 +1,7 @@
-import EthCrypto from 'eth-crypto';
-import {encrypt, decrypt} from 'eccrypto';
-import { publicKeyConvert } from 'secp256k1-v4';
 import * as metamaskSigUtil from "@metamask/eth-sig-util";
+import { decrypt, encrypt } from 'eccrypto';
+import EthCrypto from 'eth-crypto';
+import { publicKeyConvert } from 'secp256k1-v4';
 
 var CryptoJS = require("crypto-js");
 

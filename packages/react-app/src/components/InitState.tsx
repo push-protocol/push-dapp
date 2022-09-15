@@ -1,26 +1,25 @@
-import React, { useEffect } from "react";
-import { ethers } from "ethers";
-import { useDispatch, useSelector } from "react-redux";
-import { addresses, abis , envConfig } from "@project/contracts";
+import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 
 import {
-  setCoreReadProvider,
-  setCoreWriteProvider,
   setCommunicatorReadProvider,
-  setCommunicatorWriteProvider,
+  setCommunicatorWriteProvider, setCoreReadProvider,
+  setCoreWriteProvider
 } from "redux/slices/contractSlice";
 
-import {
-  setPushAdmin,
-} from "redux/slices/contractSlice";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import { getReq } from "api";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { setAliasAddress, setAliasEthAddress, setAliasVerified, setCanVerify, setCoreChannelAdmin, setDelegatees, setUserChannelDetails } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+import {
+  setPushAdmin
+} from "redux/slices/contractSlice";
 
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 

@@ -95,7 +95,7 @@ const Container = styled.div`
 	align-items: stretch;
 	align-self: stretch;
   flex: 1;
-	background: ${(props) => props.theme.mainBg};
+	background: ${(props) => props.theme.default.bg};
 	border-top-left-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;

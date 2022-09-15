@@ -1,22 +1,22 @@
 import React from 'react';
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 type ModalHeaderType = {
     heading:string, subHeading:string
 }
 
 const ModalHeader = ({heading, subHeading}:ModalHeaderType)=>{
-    const themes = useTheme();
+    const theme = useTheme();
     return(
-        <ThemeProvider theme={themes}>
+        <ThemeProvider theme={theme}>
             <ModalHeaderContainer>
                 <ModalHeading style={{
-                    color:themes.fontColor,
+                    color:theme.default.color,
                 }}>
                     {heading}
                 </ModalHeading>
                 <ModalSubHeading style={{
-                    color:themes.modalMessageColor,
+                    color:theme.modalMessageColor,
                 }}>
                     {subHeading}
                 </ModalSubHeading>
