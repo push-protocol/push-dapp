@@ -2,8 +2,10 @@ import { FC, useRef, useState } from 'react';
 import configs from '../configs';
 import ClickAwayListener from '../clickAwayListener';
 import { Oval as Loader } from 'react-loader-spinner';
+import Spinner from '../../../reusables/spinners/SpinnerUnit';
 import { useFetch } from '../stickers/useFetchHook';
 import React from 'react';
+import styled from 'styled-components';
 import './gifPicker.css';
 
 interface GifPickerProps {
@@ -53,9 +55,9 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
           </div>
 
           {loading ? (
-            <div className="flex flex-grow items-center justify-center">
-              <Loader />
-            </div>
+            <SpinnerWrapper>
+              <Spinner completed={false} />
+            </SpinnerWrapper>
           ) : error ? (
             <div className="flex flex-grow flex-col items-center justify-center">
               <p className="text-center">Sorry... Giphy has limited the request</p>
@@ -81,5 +83,13 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
     </ClickAwayListener>
   );
 };
+
+const SpinnerWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default GifPicker;
