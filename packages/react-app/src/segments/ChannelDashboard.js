@@ -1,16 +1,20 @@
+// React + Web3 Essentials
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import React from "react";
+
+// External Packages
 import styled, { css } from 'styled-components';
 
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import Switch from 'components/Switch';
-import { Oval as Loader } from 'react-loader-spinner';
-
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-
-import { abis, addresses } from "@project/contracts";
 import CryptoHelper from 'helpers/CryptoHelper';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-const ethers = require('ethers');
 
+// Internal Configs
+import { abis, addresses } from "@project/contracts";
+
+const ethers = require('ethers');
 const ipfs = require('ipfs-api')()
 
 // Create Header
@@ -147,12 +151,7 @@ function ChannelDashboard() {
         <Buttons>
           <Continue theme='#674c9f' disabled={processing} onClick={handleSendMessage}>
             {processing &&
-              <Loader
-               type="Oval"
-               color="#FFF"
-               height={16}
-               width={16}
-              />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
             }
             {!processing &&
               <Text>Group Message</Text>
@@ -160,12 +159,7 @@ function ChannelDashboard() {
           </Continue>
           <Continue theme='#e20880' disabled={processing} onClick={handleSendMessage}>
             {processing &&
-              <Loader
-               type="Oval"
-               color="#FFF"
-               height={16}
-               width={16}
-              />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
             }
             {!processing &&
               <Text>Secret Message</Text>

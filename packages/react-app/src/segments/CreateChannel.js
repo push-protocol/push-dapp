@@ -1,21 +1,19 @@
+// React + Web3 Essentials
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import React from "react";
-import styled, { css, useTheme } from "styled-components";
 
+// External Packages
 import Dropzone from 'react-dropzone-uploader';
 import 'react-dropzone-uploader/dist/styles.css';
+import styled from "styled-components";
 
-import { Oval as Loader } from 'react-loader-spinner';
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
-
+// Internal Configs
 import { abis, addresses } from "@project/contracts";
 
-import { ThemeProvider } from "styled-components";
-
-import { themeDark, themeLight } from "config/Themization";
-
 const ethers = require('ethers');
-
 const ipfs = require('ipfs-api')()
 
 // Create Header
@@ -164,12 +162,7 @@ function CreateChannel() {
         {uploadDone &&
           <Continue theme={processing ? '#674c9f' : '#e20880'} disabled={processing} onClick={handleCreateChannel}>
             {processing &&
-              <Loader
-               type="Oval"
-               color="#FFF"
-               height={16}
-               width={16}
-              />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
             }
             {!processing &&
               <Text>Beam me up!</Text>

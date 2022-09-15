@@ -1,41 +1,40 @@
-import { Device } from "assets/Device";
-import React from "react";
-import styled, { css, useTheme } from "styled-components";
-
+// React + Web3 Essentials
+import { isCommunityResourcable } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
+import React from "react";
+
+// External Packages
 import Skeleton from "@yisheng90/react-loading";
 import { GoVerified } from "react-icons/go";
 import { IoMdPeople } from "react-icons/io";
-import { Oval } from "react-loader-spinner";
+import { MdCheckCircle, MdError } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { toast as toaster } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import styled, { css, useTheme } from "styled-components";
 
-import { Image, ItemH, Span } from "../primaries/SharedStyling";
-
+// Internal Compoonents
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { postReq } from "api";
-
+import { Device } from "assets/Device";
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
-import NotificationToast from "../primaries/NotificationToast";
-
-import ChannelTutorial, {
-  isChannelTutorialized
-} from "segments/ChannelTutorial";
-
-import { cacheChannelInfo } from "redux/slices/channelSlice";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-
-import { envConfig } from "@project/contracts";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import useToast from "hooks/useToast";
-import { cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
+import { cacheChannelInfo, cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
 import {
   addNewWelcomeNotif, incrementStepIndex
 } from "redux/slices/userJourneySlice";
+import ChannelTutorial, {
+  isChannelTutorialized
+} from "segments/ChannelTutorial";
+import ChannelsDataStore from "singletons/ChannelsDataStore";
+import NotificationToast from "../primaries/NotificationToast";
+import { Image, ItemH, Span } from "../primaries/SharedStyling";
 
-import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { isCommunityResourcable } from "@ethersproject/providers";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { MdCheckCircle, MdError } from "react-icons/md";
+// Internal Configs
+import { envConfig } from "@project/contracts";
+
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -194,7 +193,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval color={color} height={30} width={30} />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -755,7 +754,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <SubscribeButton onClick={blockChannel} disabled={bLoading}>
                 {bLoading && (
                   <ActionLoader>
-                    <Oval color="#FFF" height={16} width={16} />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={bLoading}>Block channel</ActionTitle>
@@ -765,7 +764,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <SubscribeButton onClick={verifyChannel} disabled={vLoading}>
                 {vLoading && (
                   <ActionLoader>
-                    <Oval color="#FFF" height={16} width={16} />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Verify Channel</ActionTitle>
@@ -775,7 +774,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <UnsubscribeButton onClick={unverifyChannel} disabled={vLoading}>
                 {vLoading && (
                   <ActionLoader>
-                    <Oval color="#FFF" height={16} width={16} />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Unverify Channel</ActionTitle>
@@ -789,7 +788,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               >
                 {txInProgress && (
                   <ActionLoader>
-                    <Oval color="#FFF" height={16} width={16} />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
@@ -805,7 +804,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   >
                     {txInProgress && (
                       <ActionLoader>
-                        <Oval color="#FFF" height={16} width={16} />
+                        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                       </ActionLoader>
                     )}
                     <ActionTitle hideit={txInProgress}>Opt-out</ActionTitle>

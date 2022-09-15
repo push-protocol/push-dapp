@@ -1,11 +1,13 @@
+// React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import React from "react";
 
+// External Packages
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import styled, { css } from 'styled-components';
 
+// Internal Compoonents
 import Blockies from "components/BlockiesIdenticon";
-import { Oval as Loader } from 'react-loader-spinner';
-//   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
 
 // Create Header
 function Profile() {
@@ -51,12 +53,7 @@ function Profile() {
         </Blocky>
         <Wallet>
         {!ensFetched &&
-          <Loader
-      	     type="Oval"
-      	     color="#FFF"
-      	     height={16}
-      	     width={16}
-      	  />
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
         }
         {ensFetched && ens &&
           <>{ens}</>

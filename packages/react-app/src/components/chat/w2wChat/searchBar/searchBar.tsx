@@ -1,19 +1,24 @@
-import CloseIcon from '@material-ui/icons/Close'
-import SearchIcon from '@material-ui/icons/Search'
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core'
-import * as PushNodeClient from 'api'
-import { User } from 'api'
 import { ethers } from 'ethers'
 import { Web3Provider } from 'ethers/providers'
-import * as w2wChatHelper from 'helpers/w2w'
 import React, { useContext, useState } from 'react'
+
+// External Packages
+import CloseIcon from '@material-ui/icons/Close'
+import SearchIcon from '@material-ui/icons/Search'
+import Box from '@mui/material/Box'
+import styled from 'styled-components'
+
+// Internal Compoonents
+import * as PushNodeClient from 'api'
+import { User } from 'api'
+import * as w2wChatHelper from 'helpers/w2w'
 import MessageFeed from '../messageFeed/messageFeed'
 import { AppContext, Context } from '../w2wIndex'
 import './searchBar.css'
-// @ts-ignore
-import Box from '@mui/material/Box'
-import { Oval as Loader } from 'react-loader-spinner'
-import styled from 'styled-components'
+
+// Internal Configs
 
 interface TabPanelProps {
   children?: React.ReactNode

@@ -1,22 +1,24 @@
-import React from "react";
 
-import styled, { css } from "styled-components";
-import { Item, ItemH } from '../primaries/SharedStyling';
-
-import { Device } from 'assets/Device';
-
-import { Oval } from 'react-loader-spinner';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
-
-import Skeleton from '@yisheng90/react-loading';
-import { IoIosGift } from 'react-icons/io';
-
-import { abis, addresses, envConfig } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
+import React from "react";
 
+// External Packages
+import Skeleton from '@yisheng90/react-loading';
+import { IoIosGift } from 'react-icons/io';
 import ReactPlayer from 'react-player';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import styled, { css } from "styled-components";
+
+// Internal Compoonents
+import { Device } from 'assets/Device';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { Item, ItemH } from '../primaries/SharedStyling';
+
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
 
 // Create Header
 function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
@@ -90,11 +92,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval
-        color={color}
-        height={30}
-        width={30}
-      />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
@@ -164,11 +162,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
                 <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
-                      <Oval
-                        color="#FFF"
-                        height={16}
-                        width={16}
-                      />
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                     </ActionLoader>
                   }
                   {NFTObject.claimable &&

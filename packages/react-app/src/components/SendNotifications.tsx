@@ -1,7 +1,29 @@
+
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
+
+// External Packages
+import Switch from '@material-ui/core/Switch';
+import { CloseIcon } from 'assets/icons';
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
+import { BsFillImageFill } from 'react-icons/bs';
+import { FiLink } from 'react-icons/fi';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+import { useSelector } from 'react-redux';
+import 'react-toastify/dist/ReactToastify.min.css';
+import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
+import * as EpnsAPI from '@epnsproject/sdk-restapi';
 import { postReq } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import {
   SectionV2
 } from 'components/reusables/SharedStylingV2';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import CryptoHelper from 'helpers/CryptoHelper';
+import { IPFSupload } from 'helpers/IpfsHelper';
 import {
   Button,
   Content,
@@ -16,26 +38,11 @@ import {
   TextField
 } from 'primaries/SharedStyling';
 import React, { useEffect } from 'react';
-import Dropdown from 'react-dropdown';
-import { BsFillImageFill } from 'react-icons/bs';
-import { FiLink } from 'react-icons/fi';
-import { Oval } from 'react-loader-spinner';
-import { useSelector } from 'react-redux';
-import styled, { useTheme } from 'styled-components';
 import useToast from '../hooks/useToast';
-
-import * as EpnsAPI from '@epnsproject/sdk-restapi';
-import Switch from '@material-ui/core/Switch';
-import { envConfig } from '@project/contracts';
-import { useWeb3React } from '@web3-react/core';
-import { CloseIcon } from 'assets/icons';
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
-import CryptoHelper from 'helpers/CryptoHelper';
-import { IPFSupload } from 'helpers/IpfsHelper';
-import 'react-dropdown/style.css';
-import { MdCheckCircle, MdError } from 'react-icons/md';
-import 'react-toastify/dist/ReactToastify.min.css';
 import PreviewNotif from './PreviewNotif';
+
+// Internal Configs
+import { envConfig } from '@project/contracts';
 
 const ethers = require('ethers');
 
@@ -100,10 +107,10 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
-  { value: '1', label: 'Broadcast (IPFS Payload)' },
+  { value: '1', label: 'Broadcast (Direct Payload)' },
   // { value: "2", label: "Old Secret (IPFS Payload)" }, -- Deprecated
-  { value: '3', label: 'Targeted (IPFS Payload)' },
-  { value: '4', label: 'Subset (IPFS Payload)' }
+  { value: '3', label: 'Targeted (Direct Payload)' },
+  { value: '4', label: 'Subset (Direct Payload)' }
 ];
 const LIMITER_KEYS = ['Enter', ','];
 
@@ -800,7 +807,7 @@ function SendNotifications() {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval color={color} height={30} width={30} />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
@@ -1221,7 +1228,7 @@ function SendNotifications() {
                       padding="20px 10px"
                       disabled={nfProcessing == 1 ? true : false}
                     >
-                      {nfProcessing == 1 && <Oval color="#fff" height={24} width={24} />}
+                      {nfProcessing == 1 &&  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#FFF" />}
                       {nfProcessing != 1 && (
                         <Input
                           cursor="hand"
