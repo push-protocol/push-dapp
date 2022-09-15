@@ -50,11 +50,16 @@ function Navigation() {
   useEffect(() => {
     if (canSend === SEND_NOTIFICATION_STATES.LOADING) return
     if (!navigationSetup) return
-
+      navigationSetup.secondary[0].data.name = 'Hide';
+      navigationSetup.secondary[1].data.name = 'Hide';
+      console.log(channelDetails)
+      console.log(canSend)
+      console.log(SEND_NOTIFICATION_STATES.HIDE)
     if (canSend === SEND_NOTIFICATION_STATES.HIDE) {
       // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
       navigationSetup.secondary[0].data.name = 'Create Channel';
       navigationSetup.secondary[1].data.name = 'Hide';
+      navigationSetup.secondary[2].data.name = 'Hide';
       // navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
     } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
       if (channelDetails !== 'unfetched' && channelDetails != null) {
@@ -69,11 +74,16 @@ function Navigation() {
       }
       // navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
       navigationSetup.secondary[1].data.name = 'Send Notifications'
+      navigationSetup.secondary[2].data.name = 'Hide';
 
     }
   }, [canSend, channelDetails, navigationSetup]);
 
   useEffect(() => {
+    console.log(aliasAddr)
+    console.log(aliasEthAddr);
+    console.log(isAliasVerified)
+    console.log(delegatees);
     if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
       dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
     } else {
@@ -182,7 +192,8 @@ function Navigation() {
           transformedList[identifier].data.drilldown = drilldownModified;
         }
       });
-
+      if(identity === 2)
+      console.log(transformedList);
       return transformedList;
     }
 

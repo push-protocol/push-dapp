@@ -95,6 +95,7 @@ export default {
       CREATE_CHANNEL: 1,
       COMMUNICATE_TAB: 2,
       DEVELOPER_TAB: 3,
+      LOADING: 4,
     }
   },
   

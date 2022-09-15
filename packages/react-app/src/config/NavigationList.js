@@ -122,7 +122,29 @@ const NavigationList = {
           fg: themeDark.headerTagFg
         }
       }
-    }
+    },
+    loading: {
+      uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.LOADING,
+      src: 'navigation/createChannelIcon.svg',
+      activeSrc: 'navigation/createChannelIcon.svg',
+      iconFactory: null,
+      name: 'Loading',
+      title: 'Loading',
+      alt: 'Loading',
+      newTab: false,
+      hasMenuLogic: true,
+      headerTag: {
+        title: 'Channel Dashboard',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg
+        }
+      }
+    },
   },
   third: {
     receiveNotifs: {
