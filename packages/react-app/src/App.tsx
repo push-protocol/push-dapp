@@ -10,8 +10,8 @@ import { useEagerConnect, useInactiveListener, useSDKSocket } from "hooks";
 import Joyride, { CallBackProps } from "react-joyride";
 import { useLocation } from "react-router-dom";
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import Header from "sections/Header";
-import Navigation from "sections/Navigation";
+import Header from "structure/Header";
+import Navigation from "structure/Navigation";
 import styled from "styled-components";
 import AppLogin from './AppLogin';
 
@@ -21,7 +21,7 @@ import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyl
 import NavigationContextProvider from "contexts/NavigationContext";
 import MasterInterfacePage from "pages/MasterInterfacePage";
 
-import { ThemeProvider } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 
 import GLOBALS from "config/Globals";
 import { themeDark, themeLight } from "config/Themization";
@@ -36,6 +36,12 @@ import { EnvHelper } from "helpers/UtilityHelper";
 
 
 dotenv.config();
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background: ${props => (props.theme.header.bg)} !important;
+  }
+`
 
 export default function App() {
 
@@ -163,6 +169,7 @@ export default function App() {
 
       {active && !error && (
         <>
+          <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
             <Joyride
