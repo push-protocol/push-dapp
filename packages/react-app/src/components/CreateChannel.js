@@ -38,7 +38,7 @@ const CORE_CHAIN_ID = envConfig.coreContractChain;
 // Create Header
 function CreateChannel() {
   const { account, library, chainId } = useWeb3React();
-  const themes = useTheme();
+  const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
@@ -389,17 +389,17 @@ function CreateChannel() {
   }
 
   return (
-    <ThemeProvider theme={themes}>
+    <ThemeProvider theme={theme}>
       <Section margin="0px 0px 40px">
         <Content padding="10px 20px 10px">
           <Item align="center">
             <H2 textTransform="uppercase" spacing="0.075em">
-              <Span weight="400" size="32px" color={themes.color}>
+              <Span weight="400" size="32px" color={theme.color}>
                 Create Your Channel
               </Span>
             </H2>
             <Span
-              color="#657795"
+              color={theme.default.secondaryColor}
               weight="400"
               size="16px"
               textTransform="none"

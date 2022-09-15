@@ -1,8 +1,8 @@
 import React from "react";
-import { toast } from "react-toastify";
-import FadeLoader from "react-spinners/FadeLoader";
-import styled, { ThemeProvider,useTheme } from "styled-components";
 import { MdOutlineClose } from "react-icons/md";
+import FadeLoader from "react-spinners/FadeLoader";
+import { toast } from "react-toastify";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 type LoaderToastType = { msg: string, loaderColor: string, textColor:string }
 

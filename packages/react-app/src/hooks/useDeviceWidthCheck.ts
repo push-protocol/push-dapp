@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react';
 
 export function useDeviceWidthCheck(deviceWidth: number) {
     const [width, setWidth] = useState<number>(window.innerWidth);

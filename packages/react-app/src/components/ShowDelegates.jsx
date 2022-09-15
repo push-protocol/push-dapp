@@ -1,19 +1,25 @@
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import styled, { useTheme, css } from "styled-components";
-import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
-import { getReq } from "api";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { useDeviceWidthCheck } from "hooks";
-import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
 import React, { useEffect, useState } from "react";
+
+// External Packages
 import {
   AiOutlineUserDelete
 } from 'react-icons/ai';
 import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { useSelector } from "react-redux";
-import DelegateInfo from "./DelegateInfo";
+import styled, { css, useTheme } from "styled-components";
+
+// Internal Compoonents
+import { getReq } from "api";
+import { ButtonV2 } from "components/reusables/SharedStylingV2";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import { useDeviceWidthCheck } from "hooks";
 import useModal from "hooks/useModal";
 import useToast from "hooks/useToast";
+import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
+import DelegateInfo from "./DelegateInfo";
+import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
 
 const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
@@ -77,14 +83,16 @@ const ShowDelegates = () => {
       </Item>
       </Content>
     </Section>
-      <Item
-        flex="5"
-        minWidth="280px"
-        align="stretch"
-        margin="10px 0px 30px 0px"
-        radius={isMobile ? "10px" : "20px"}
-        border="1px solid #D4DCEA;"
-      >
+
+    <Item
+      flex="5"
+      minWidth="280px"
+      self="stretch"
+      align="stretch"
+      margin="10px 0px 30px 0px"
+      radius={isMobile ? "10px" : "20px"}
+      border="1px solid #D4DCEA;"
+    >
       {isActiveDelegateDropdown && delegatees && 
         <Item
           flex="5"
@@ -118,17 +126,18 @@ const ShowDelegates = () => {
           })}
         </Item>
         }
-           <RemoveDelegateModalComponent
+        <RemoveDelegateModalComponent
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
           toastObject={removeDelegateToast}
-           />
+        />
       </Item>
     </>
   )
 }
 
 const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDelegateModal }) => {
+  const theme = useTheme();
   const [isHovered,setIsHovered] = useState(false)
   
   const handleMouseOver = () => {
@@ -138,8 +147,9 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDeleg
   const handleMouseOut = () => {
     setIsHovered(false);
   };
+
   return (
-    
+
       <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => showRemoveDelegateModal()}>
         {
         isHovered ?
@@ -151,9 +161,9 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDeleg
           </div>
         </div>
           :
-            <div style={{color:"#657795",textAlign:'right',width:'100%'}}>
-              Delegate
-            </div>
+          <div style={{color:theme.secondaryColor,textAlign:'right',width:'100%'}}>
+            Delegate
+          </div>
         }
       </RemoveButtonUI>
   )
@@ -166,7 +176,6 @@ const ChannelActionButton = styled.button`
   align-items: center;
   justify-content: center;
   padding: 8px 15px;
-  margin: 10px;
   color: #fff;
   border-radius: 5px;
   font-size: 14px;
@@ -199,7 +208,7 @@ const ChannelActionButton = styled.button`
 `;
 
 const RemoveButtonUI = styled(ChannelActionButton)`
-  background: ${props => props.theme.backgroundBG};
+  background: transparent;
   color: ${props => props.theme.color};
   height: 36px;
   max-width: 164px;
@@ -218,10 +227,9 @@ const RemoveButtonUI = styled(ChannelActionButton)`
     opacity: 0.9;
     background: #E93636;
     border-radius: 8px;
-  };
     color: #fff;
-    cursor: pointer;
-  
+  };
+  cursor: pointer;
 `;
 
 const OwnerButton = styled(Button)`

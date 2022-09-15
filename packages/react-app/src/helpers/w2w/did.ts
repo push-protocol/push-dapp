@@ -1,8 +1,8 @@
-import { ThreeIdConnect, EthereumAuthProvider } from '@3id/connect'
-import { ResolverRegistry } from 'did-resolver'
-import { DID, DIDProvider } from 'dids'
+import { EthereumAuthProvider, ThreeIdConnect } from '@3id/connect'
 import { CeramicApi } from '@ceramicnetwork/common'
 import { JWE } from 'did-jwt'
+import { ResolverRegistry } from 'did-resolver'
+import { DID, DIDProvider } from 'dids'
 
 export async function Get3IDDIDProvider(
   threeIdConnect: ThreeIdConnect,

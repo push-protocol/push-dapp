@@ -1,8 +1,7 @@
 import React from "react";
 
-import styled, { useTheme } from 'styled-components';
-import { ThemeProvider } from "styled-components";
-import { Section, Content, Item } from '../primaries/SharedStyling';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+import { Content, Item, Section } from '../primaries/SharedStyling';
 
 function ComingSoonPage(props) {
   const themes = useTheme();

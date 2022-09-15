@@ -5,17 +5,16 @@ import { Item, ItemH } from '../primaries/SharedStyling';
 
 import { Device } from 'assets/Device';
 
+import { Oval } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { Oval } from 'react-loader-spinner';
 
 import Skeleton from '@yisheng90/react-loading';
 import { IoIosGift } from 'react-icons/io';
 
+import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
-import { addresses, abis } from "@project/contracts";
 import { ethers } from "ethers";
-import { envConfig } from "@project/contracts";
 
 import ReactPlayer from 'react-player';
 

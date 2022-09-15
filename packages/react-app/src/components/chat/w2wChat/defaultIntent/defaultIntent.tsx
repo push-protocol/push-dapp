@@ -1,8 +1,8 @@
-import { Feeds } from 'api'
-import React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import { Feeds } from 'api'
+import React from 'react'
+import styled, { useTheme } from 'styled-components'
 import './defaultIntent.css'
 
 interface DefaultIntentProps {
@@ -10,6 +10,8 @@ interface DefaultIntentProps {
 }
 
 const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
+  const theme = useTheme();
+
   let date = null
 
   if (props.inbox?.intentTimestamp !== null) {
@@ -34,37 +36,10 @@ const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
         <DisplayText color="#1E1E1E" weight="600" size="16px">
           {final}
         </DisplayText>
-        <DisplayText color="#657795">{props.inbox.msg.lastMessage}</DisplayText>
+        <DisplayText color={theme.default.secondaryColor}>{props.inbox.msg.lastMessage}</DisplayText>
       </UserData>
       <RequestTime>{date}</RequestTime>
     </ProfileCard>
-    // <div className="message_body">
-    //   <div className="message_content">
-    //     <img src={props.inbox.profilePicture} className="message_content_img"></img>
-
-    //     <div className="message_content_body">
-    //       <div className="message_name">{final}</div>
-
-    //       <div className="message_lastMsg">{props.inbox.msg.lastMessage}</div>
-    //     </div>
-
-    //     <div className="message_content_time">{date}</div>
-    //   </div>
-
-    //   {/* <div className='defaultMessage_1'>
-    //             <div className='defaultMessage_2'>
-    //                 <div className='defaultMessage_img'><img src={props.inbox.profilePicture}></img></div>
-
-    //                 <div className='defaultMessage_name'>{props.inbox.msg.name.split(':').at(-1).slice(0, 19) + '...'}</div>
-    //                 <div className='defaultMessage_time'>{date}</div>
-    //             </div>
-    //             <div className='defaultMessage_3'>
-    //                 <div className='defaultMessage_lastMsg'>
-    //                     {props.inbox.msg.lastMessage}
-    //                 </div>
-    //             </div>
-    //         </div> */}
-    // </div>
   )
 }
 

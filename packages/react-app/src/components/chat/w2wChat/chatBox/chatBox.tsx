@@ -15,33 +15,35 @@ import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import { intitializeDb } from '../w2wIndexeddb';
 // @ts-ignore
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Snackbar from '@mui/material/Snackbar';
-import Typography from '@mui/material/Typography';
-import { useWeb3React } from '@web3-react/core';
-import { Feeds, MessageIPFSWithCID, User } from 'api';
-import { Content } from 'components/SharedStyling';
-import { DID } from 'dids';
-import { Web3Provider } from 'ethers/providers';
-import * as w2wHelper from 'helpers/w2w/';
-import * as DIDHelper from 'helpers/w2w/did';
-import { generateKeyPair } from 'helpers/w2w/pgp';
-import { Oval as Loader } from 'react-loader-spinner';
-import { useQuery } from 'react-query';
-import ScrollToBottom from 'react-scroll-to-bottom';
-import { toast } from 'react-toastify';
-import styled from 'styled-components';
-import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex';
-import { FileMessageContent } from '../Files/Files';
-import GifPicker from '../Gifs/gifPicker';
-import IntentCondition from '../IntentCondition/IntentCondition';
-import { decryptFeeds, fetchInbox } from '../w2wUtils';
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Snackbar from '@mui/material/Snackbar'
+import Typography from '@mui/material/Typography'
+import { useWeb3React } from '@web3-react/core'
+import { Feeds, MessageIPFSWithCID, User } from 'api'
+import { Content } from 'components/SharedStyling'
+import { DID } from 'dids'
+import { Web3Provider } from 'ethers/providers'
+import * as w2wHelper from 'helpers/w2w/'
+import * as DIDHelper from 'helpers/w2w/did'
+import { generateKeyPair } from 'helpers/w2w/pgp'
+import { Oval as Loader } from 'react-loader-spinner'
+import { useQuery } from 'react-query'
+import ScrollToBottom from 'react-scroll-to-bottom'
+import { toast } from 'react-toastify'
+import styled from 'styled-components'
+import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
+import { FileMessageContent } from '../Files/Files'
+import GifPicker from '../Gifs/gifPicker'
+import IntentCondition from '../IntentCondition/IntentCondition'
+import { decryptFeeds, fetchInbox } from '../w2wUtils'
+import { ethers } from 'ethers'
 
-const INFURA_URL = envConfig.infuraApiUrl;
+
+const INFURA_URL = envConfig.infuraApiUrl
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -59,26 +61,28 @@ const ChatBox = (): JSX.Element => {
     connectAndSetDID,
     setDID,
     setChat,
-    setInbox
-  }: AppContext = useContext<AppContext>(Context);
-  const [newMessage, setNewMessage] = useState<string>('');
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
-  const [showEmojis, setShowEmojis] = useState<boolean>(false);
-  const { chainId, account } = useWeb3React<Web3Provider>();
-  const [Loading, setLoading] = useState<boolean>(true);
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
-  const [imageSource, setImageSource] = useState<string>('');
-  const [filesUploading, setFileUploading] = useState<boolean>(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
-  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
-  const [SnackbarText, setSnackbarText] = useState<string>('');
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [showOption, setShowOption] = useState<boolean>(false);
-  let showTime = false;
-  let time = '';
+    setInbox,
+    setHasUserBeenSearched
+  }: AppContext = useContext<AppContext>(Context)
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
+  const [showEmojis, setShowEmojis] = useState<boolean>(false)
+  const { chainId, account } = useWeb3React<Web3Provider>()
+  const [Loading, setLoading] = useState<boolean>(true)
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
+  const [imageSource, setImageSource] = useState<string>('')
+  const [filesUploading, setFileUploading] = useState<boolean>(false)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
+  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
+  const [SnackbarText, setSnackbarText] = useState<string>('')
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
+  const [showOption, setShowOption] = useState<boolean>(false)
+  const provider = ethers.getDefaultProvider()
+  let showTime = false
+  let time = ''
 
   const getMessagesFromCID = async (): Promise<void> => {
     setLoading(true);
@@ -306,10 +310,25 @@ const ChatBox = (): JSX.Element => {
       setMessageBeingSent(true);
       const { didCreated, createdUser } = await createUserIfNecessary();
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(didCreated.id)) {
-        const user: User = await PushNodeClient.getUser({ did: currentChat.did });
-        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
+        const user: User = await PushNodeClient.getUser({ did: currentChat.did })
+        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
+        let caip10: string
         if (!user) {
-          const caip10: string = walletToCAIP10({ account: searchedUser, chainId });
+          if (!ethers.utils.isAddress(searchedUser)) {
+            try {
+              const ens: string = await provider.resolveName(searchedUser)
+              if (ens) {
+                caip10 = walletToCAIP10({ account: ens, chainId })
+              }
+            }
+            catch (err) {
+              console.log(err)
+              return
+            }
+          }
+          else {
+            caip10 = walletToCAIP10({ account: searchedUser, chainId })
+          }
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -379,6 +398,7 @@ const ChatBox = (): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, Intent is not approved!');
       }
+      setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error);
     }
@@ -533,12 +553,12 @@ const ChatBox = (): JSX.Element => {
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
                         <Chats msg={msg} did={did} />
-                        {/* {messages.length === 1 ? (
+                        {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
                             conversation once the receipent accepts the intent
                           </FirstConversation>
-                        ) : null} */}
+                        ) : null}
                       </div>
                     );
                   })}
@@ -577,10 +597,12 @@ const ChatBox = (): JSX.Element => {
               <>
                 <>
                   <label>
-                    <Icon onClick={() => setIsGifPickerOpened(true)}>
+                    {isGifPickerOpened && (
+                      <GifPicker setIsOpened={setIsGifPickerOpened} isOpen={isGifPickerOpened} onSelect={sendGif} />
+                    )}
+                    <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
                       <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
                     </Icon>
-                    {isGifPickerOpened && <GifPicker setIsOpened={setIsGifPickerOpened} onSelect={sendGif} />}
                   </label>
                   <label>
                     <Icon>
@@ -616,7 +638,8 @@ const FirstConversation = styled.div`
   font-weight: 500;
   color: #657795;
   margin: 59px 0px 0px 0px;
-`;
+  padding: 0px 50px;
+`
 
 const FileInput = styled.input`
   display: none;
@@ -711,7 +734,11 @@ const TextInput = styled.textarea`
   border: none;
   resize: none;
   background: transparent;
-`;
+  &&::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+`
 
 const TypeBarContainer = styled.div`
   position: absolute;

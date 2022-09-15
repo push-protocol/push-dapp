@@ -1,7 +1,7 @@
 import React from 'react';
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
-import {Input} from "../SharedStyling"
+import { Input } from "../SharedStyling";
 
 type ModalInputType = {
     title:string

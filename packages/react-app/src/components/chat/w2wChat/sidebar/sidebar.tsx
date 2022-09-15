@@ -1,15 +1,15 @@
-import React, { useState, useContext } from 'react'
-import SearchBar from '../searchBar/searchBar'
+import React, { useContext, useState } from 'react'
 import IntentBar from '../intentBar/intentBar'
 import IntentFeed from '../intentFeed/intentFeed'
-import './sidebar.css'
+import SearchBar from '../searchBar/searchBar'
 import { Context } from '../w2wIndex'
+import './sidebar.css'
 
-import MuiTabs from '@mui/material/Tabs'
-import MuiTab from '@mui/material/Tab'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { makeStyles } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import MuiTab from '@mui/material/Tab'
+import MuiTabs from '@mui/material/Tabs'
+import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 
 import ProfileHeader from '../profile'
@@ -41,11 +41,10 @@ const useStyles = makeStyles({
 })
 
 const Sidebar = () => {
-  const { connectedUser } = useContext(Context)
+  const { connectedUser, pendingRequests } = useContext(Context)
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture)
 
   const [value, setValue] = useState(0)
-  const [pendingRequests, setPendingRequests] = useState<number>(0)
   const classes = useStyles()
 
   const handleChange = (event, newValue) => {
@@ -85,7 +84,7 @@ const Sidebar = () => {
         </Box>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={2} mt={2}>
+        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
           REQUESTS
         </DisplayText>
         <IntentFeed />

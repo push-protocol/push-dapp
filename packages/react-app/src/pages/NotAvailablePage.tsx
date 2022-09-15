@@ -1,10 +1,9 @@
 import React from "react";
 
-import styled, { useTheme } from 'styled-components';
-import { ThemeProvider } from "styled-components";
-import { Section, Content, Item } from '../primaries/SharedStyling';
 import { envConfig } from "@project/contracts";
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+import { Content, Item, Section } from '../primaries/SharedStyling';
 
 const networkName = {
   42: "Ethereum Kovan",

@@ -1,11 +1,11 @@
-import { networkName, CORE_CHAIN_ID, aliasChainIdsMapping, PolygonNetworks } from "helpers/UtilityHelper";
-import React from "react";
-import styled, { useTheme } from "styled-components";
-import { Item, Span, Button } from "../primaries/SharedStyling";
 import { useWeb3React } from '@web3-react/core';
-import useToast from "hooks/useToast";
 import { utils } from "ethers";
+import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, PolygonNetworks } from "helpers/UtilityHelper";
+import useToast from "hooks/useToast";
+import React from "react";
 import { MdCheckCircle, MdError } from "react-icons/md";
+import styled, { useTheme } from "styled-components";
+import { Button, Item, Span } from "../primaries/SharedStyling";
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();

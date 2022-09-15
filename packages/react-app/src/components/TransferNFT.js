@@ -1,14 +1,14 @@
 import React from "react";
 
 import styled, { css } from 'styled-components';
-import { Section, Content, Item, H2, Span, Button, FormSubmision, Input } from '../primaries/SharedStyling';
+import { Button, Content, FormSubmision, H2, Input, Item, Section, Span } from '../primaries/SharedStyling';
 
-import 'react-dropzone-uploader/dist/styles.css'
+import 'react-dropzone-uploader/dist/styles.css';
 import { Oval } from 'react-loader-spinner';
 
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core';
 
-import { addresses, abis } from "@project/contracts";
+import { abis, addresses } from "@project/contracts";
 const ethers = require('ethers');
 
 // Create Header

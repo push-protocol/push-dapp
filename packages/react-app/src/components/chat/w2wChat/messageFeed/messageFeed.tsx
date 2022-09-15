@@ -137,29 +137,23 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   return (
     <SidebarWrapper className="messageFeed_body">
-      <DisplayText color="#6D6B7A" size="14px" weight="700" ml={2}>
+      <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3}>
         CHAT
       </DisplayText>
-      {!feeds?.length && messagesLoading && (
-        <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
-          <Loader />
-        </div>
-      )}
-      {!feeds?.length && isSameUser ? (
-        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
-          You can&apos;t send intent to yourself
-        </p>
-      ) : !feeds?.length && isInValidAddress ? (
-        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
-          Invalid Address
-        </p>
-      ) : !feeds?.length && !messagesLoading ? (
-        <p style={{ position: 'relative', textAlign: 'center', width: '100%', background: '#d2cfcf', padding: '10px' }}>
-          No Address found.
-        </p>
-      ) : !messagesLoading ? (
-        <UserProfileContainer>
-          {feeds.map((feed: Feeds, i) => (
+      <UserProfileContainer>
+        {!feeds?.length && messagesLoading && (
+          <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
+            <Loader />
+          </div>
+        )}
+        {!feeds?.length && isSameUser ? (
+          <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
+        ) : !feeds?.length && isInValidAddress ? (
+          <InfoMessage>Invalid Address</InfoMessage>
+        ) : !feeds?.length && !messagesLoading ? (
+          <InfoMessage>No Address found.</InfoMessage>
+        ) : !messagesLoading ? (
+          feeds.map((feed: Feeds, i) => (
             <div
               key={feed.threadhash || i}
               onClick={(): void => {
@@ -168,16 +162,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             >
               <DefaultMessage inbox={feed} isSelected={isSelected} />
             </div>
-          ))}
-        </UserProfileContainer>
-      ) : null}
+          ))
+        ) : null}
 
-      <ReactSnackbar
-        text={errorMessage}
-        open={openReprovalSnackbar}
-        handleClose={handleCloseReprovalSnackbar}
-        severity={'error'}
-      />
+        <ReactSnackbar
+          text={errorMessage}
+          open={openReprovalSnackbar}
+          handleClose={handleCloseReprovalSnackbar}
+          severity={'error'}
+        />
+      </UserProfileContainer>
     </SidebarWrapper>
   );
 };
@@ -185,6 +179,15 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 const SidebarWrapper = styled.section`
   position: relative;
 `;
+
+const InfoMessage = styled.p`
+  position: relative;
+  text-align: center;
+  width: 80%;
+  background: #d2cfcf;
+  padding: 10px;
+  margin: 0;
+`
 
 const DisplayText = styled(Typography)`
   && {
