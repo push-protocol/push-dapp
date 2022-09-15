@@ -1,30 +1,35 @@
-import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
-import { envConfig } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import SearchFilter from "components/SearchFilter";
 import React from "react";
-import { Oval } from "react-loader-spinner";
+
+// External Packages
 import { useDispatch, useSelector } from "react-redux";
+import { toast as toaster } from "react-toastify";
 import { useClickAway } from "react-use";
 import { Waypoint } from "react-waypoint";
+import styled, { ThemeProvider, useTheme } from "styled-components";
+
+// Internal Compoonents
+import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import SearchFilter from "components/SearchFilter";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import CryptoHelper from "helpers/CryptoHelper";
+import { Item } from "primaries/SharedStyling";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/notificationSlice";
-import styled, { ThemeProvider, useTheme } from "styled-components";
 import DisplayNotice from "../primaries/DisplayNotice";
+import NotificationToast from "../primaries/NotificationToast";
 import { ScrollItem } from "./ViewChannels";
 
-import CryptoHelper from "helpers/CryptoHelper";
-import { toast as toaster } from "react-toastify";
-import NotificationToast from "../primaries/NotificationToast";
-
+// Internal Configs
+import { envConfig } from "@project/contracts";
 import { device } from "config/Globals";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { Item } from "primaries/SharedStyling";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 
@@ -349,15 +354,14 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
               <div style={{ textAlign: "center" }}>
                 <DisplayNotice
                   title="You currently have no notifications, try subscribing to some channels."
-                  theme="third"
-                ></DisplayNotice>
+                />
               </div>
             )}
           {notifications && (
             <Notifs id="scrollstyle-secondary">
               {bgUpdateLoading && (
                 <Item padding="10px 20px">
-                  <Oval color="#35c5f3" height={40} width={40} />
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
                 </Item>
               )}
               {run &&
@@ -434,7 +438,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
 
               {loading && !bgUpdateLoading && (
                 <Item padding="10px 20px">
-                  <Oval color="#35c5f3" height={40} width={40} />
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
                 </Item>
               )}
             </Notifs>

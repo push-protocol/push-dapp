@@ -1,32 +1,29 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core'
+import { Web3Provider } from 'ethers/providers'
 import React, { useEffect, useState } from 'react'
-import ChatBox from './chatBox/chatBox'
-import Sidebar from './sidebar/sidebar'
-// @ts-ignore
-import { Oval as Loader } from 'react-loader-spinner'
 
-// Helper
+
+// External Packages
+import { ThreeIdConnect } from '@3id/connect'
+import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver'
+import { CeramicClient } from '@ceramicnetwork/http-client'
+import { DID } from 'dids'
+import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { ToastOptions } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+// Internal Compoonents
 import * as PushNodeClient from 'api'
+import { Feeds, User } from 'api'
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
 import * as w2wHelper from 'helpers/w2w'
 import { createCeramic } from 'helpers/w2w/ceramic'
 import * as DIDHelper from 'helpers/w2w/did'
-
-// DID and ceramic
-import { ThreeIdConnect } from '@3id/connect'
-import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver'
-import { DID } from 'dids'
-import { getResolver as keyDIDGetResolver } from 'key-did-resolver'
-
-// Web3
-import { CeramicClient } from '@ceramicnetwork/http-client'
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from 'ethers/providers'
-import { QueryClient, QueryClientProvider } from 'react-query'
-// @ts-ignore
-import { Feeds, User } from 'api'
-import { ReactQueryDevtools } from 'react-query/devtools'
-
-import { ToastOptions } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import ChatBox from './chatBox/chatBox'
+import Sidebar from './sidebar/sidebar'
 import './w2wIndex.css'
 
 export interface InboxChat {
@@ -181,7 +178,7 @@ function App() {
           </QueryClientProvider>
         ) : (
           <div className="w2wIndexLoaderContainer">
-            <Loader className="w2wLoader" type="Oval" />
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
           </div>
         )}
       </div>

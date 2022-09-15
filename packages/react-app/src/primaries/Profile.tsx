@@ -1,12 +1,16 @@
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from 'ethers/providers';
-import { useClickAway } from 'hooks/useClickAway';
 import React, { useRef } from "react";
+
+// External Packages
+import { useClickAway } from 'hooks/useClickAway';
 import styled, { useTheme } from 'styled-components';
 import Dropdown from '../components/Dropdown';
-import { Item } from "./SharedStyling.js";
 
-import { Oval } from 'react-loader-spinner';
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { Item } from "./SharedStyling.js";
 
 // Create Header
 const Profile = ({isDarkMode}) => {
@@ -84,11 +88,7 @@ const Profile = ({isDarkMode}) => {
             onClick={() => setShowDropdown(!showDropdown)} 
             ref={toggleArrowRef}>
             {!ensFetched && (
-              <Oval
-              color="#FFF"
-              height={16}
-              width={16}
-            />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={20} spinnerColor="#FFF" />
             )}
             {ensFetched && ens && <>{ens}</>}
             {ensFetched && !ens && (

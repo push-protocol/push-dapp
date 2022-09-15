@@ -1,10 +1,17 @@
-import { FC, useRef, useState } from 'react';
-import configs from '../configs';
+// React + Web3 Essentials
+import React, { FC, useRef, useState } from 'react';
+
+// External Packages
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import ClickAwayListener from '../clickAwayListener';
-import { Oval as Loader } from 'react-loader-spinner';
 import { useFetch } from '../stickers/useFetchHook';
-import React from 'react';
 import './gifPicker.css';
+
+// Internal Configs
+import configs from '../configs';
 
 interface GifPickerProps {
   setIsOpened: (value: boolean) => void;
@@ -53,9 +60,9 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
           </div>
 
           {loading ? (
-            <div className="flex flex-grow items-center justify-center">
-              <Loader />
-            </div>
+            <ItemVV2>
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+            </ItemVV2>
           ) : error ? (
             <div className="flex flex-grow flex-col items-center justify-center">
               <p className="text-center">Sorry... Giphy has limited the request</p>
