@@ -102,6 +102,7 @@ const ChatBox = (): JSX.Element => {
               msgIPFS = messageFromIndexDB.body
             } else {
               const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+              console.log(messageFromIPFS)
               await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
               msgIPFS = messageFromIPFS
             }
