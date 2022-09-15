@@ -81,9 +81,6 @@ const ChatBox = (): JSX.Element => {
   let showTime = false
   let time = ''
 
-  //DAPP DEV
-
-
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
@@ -93,7 +90,8 @@ const ChatBox = (): JSX.Element => {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
-        if(latestThreadhash !== currentChat?.threadhash){
+        // We only enter on this if condition when we receive or send new messages
+        if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
           let msgIPFS: MessageIPFSWithCID
@@ -153,7 +151,9 @@ const ChatBox = (): JSX.Element => {
               setMessages((m) => [...m, msgIPFS])
             }
           }
-        }else{
+        }
+        // This condition is triggered when the user loads the chat whenever the user is changed
+        else {
           while (messageCID) {
             setLoading(true)
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -161,7 +161,7 @@ const ChatBox = (): JSX.Element => {
               break
             } else {
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 2, 'CID_store', messageCID, '', 'cid')
-  
+
               let msgIPFS: MessageIPFSWithCID
               if (messageFromIndexDB !== undefined) {
                 msgIPFS = messageFromIndexDB.body
@@ -170,7 +170,7 @@ const ChatBox = (): JSX.Element => {
                 await intitializeDb<MessageIPFS>('Insert', 2, 'CID_store', messageCID, messageFromIPFS, 'cid')
                 msgIPFS = messageFromIPFS
               }
-  
+
               // Decrypt message
               if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
                 // To do signature verification it depends on who has sent the message
@@ -189,7 +189,7 @@ const ChatBox = (): JSX.Element => {
                   signatureArmored: msgIPFS.signature
                 })
               }
-  
+
               // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
               const messagesSentInChat: MessageIPFS = messages.find(
                 (msg) =>
@@ -219,7 +219,7 @@ const ChatBox = (): JSX.Element => {
               }
               // Messages got from useQuery
               // else {
-                //TODO: Not needed as this is handled when the threadhashes are not same.
+              //TODO: Not needed as this is handled when the threadhashes are not same.
               //   setMessages((m) => [...m, msgIPFS])
               // }
               const link = msgIPFS.link
@@ -254,9 +254,6 @@ const ChatBox = (): JSX.Element => {
           setImageSource(currentChat.profilePicture)
         }
       }
-      // Fetch new messages
-      // !FIX-ME: This below function is commented, as It was calling this function twice as react query was also calling this function
-      // getMessagesFromCID().catch((err) => console.error(err))
     }
   }, [currentChat])
 
@@ -606,7 +603,7 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
-                        <Chats msg={msg} did={did} messageBeingSent={messageBeingSent}/>
+                        <Chats msg={msg} did={did} messageBeingSent={messageBeingSent} />
                         {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
