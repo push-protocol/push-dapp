@@ -1,30 +1,30 @@
-import React, { useState } from "react";
-import styled, { useTheme } from 'styled-components';
-import { Oval } from "react-loader-spinner";
-import { Waypoint } from "react-waypoint";
-import { useWeb3React } from "@web3-react/core";
-import { useSelector, useDispatch } from "react-redux";
-import { envConfig } from "@project/contracts";
-import SearchFilter from '../components/SearchFilter';
 import * as EpnsAPI from "@epnsproject/sdk-restapi";
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
-import { ScrollItem } from "./ViewChannels";
+import { envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import { getReq, postReq } from "api";
+import { device } from "config/Globals";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import CryptoHelper from "helpers/CryptoHelper";
+import { Item } from "primaries/SharedStyling";
+import React, { useState } from "react";
+import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { toast as toaster } from "react-toastify";
+import { useClickAway } from "react-use";
+import { Waypoint } from "react-waypoint";
+import { cacheSubscribe } from "redux/slices/channelSlice";
 import {
   addPaginatedNotifications,
   incrementPage,
   setFinishedFetching,
   updateTopNotifications
 } from "redux/slices/spamSlice";
-import { cacheSubscribe } from "redux/slices/channelSlice";
-import { getReq, postReq } from "api";
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from "../primaries/DisplayNotice";
-import { ThemeProvider } from "styled-components";
-import CryptoHelper from "helpers/CryptoHelper";
-import { toast as toaster } from "react-toastify";
 import NotificationToast from "../primaries/NotificationToast";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { useClickAway } from "react-use";
-import { Item } from "primaries/SharedStyling";
+import { ScrollItem } from "./ViewChannels";
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -493,7 +493,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
               // render the notification item
               // console.log(app , index);
               return (
-                <div key={index}>
+                <NotifsOuter key={index}>
                   {showWayPoint(index) && !loading && (
                     <Waypoint onEnter={handlePagination} />
                   )}
@@ -513,7 +513,7 @@ const SpamBox = ({showFilter,setShowFilter,search,setSearch}) => {
                     chainName={blockchain}
                     url={url}
                   />
-                </div>
+                </NotifsOuter>
               );
             })}
           </Items>
@@ -558,7 +558,6 @@ const Container = styled.div`
     display: flex;
     flex: 1;
     flex-direction: column;
-    background: ${props => props.theme.mainBg};
     font-weight: 200;
     align-content: center;
     align-items: stretch;
@@ -568,11 +567,24 @@ const Container = styled.div`
     overflow:scroll;
 `;
 
+const NotifsOuter = styled.div`
+  margin: 25px 0px;
+`;
+
 const Toaster = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 0px 10px;
+  margin: 0 0 0 10px;
+  overflow:scroll;
+
+  @media ${device.laptop} {
+    
+  }
+
+  @media ${device.mobileM} {
+  
+  }
 `;
 
 const ToasterMsg = styled.div`

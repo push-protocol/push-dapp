@@ -1,7 +1,7 @@
 import React from 'react';
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
-import { ShowToastType, UpdateToastType } from './useToast';
+import { ShowLoaderToastType, ShowMessageToastType } from './useToast';
 
 import Backdrop from '@mui/material/Backdrop';
 
@@ -9,8 +9,7 @@ export type ModalInnerComponentType = {
     onConfirm: (value?:any) => any, 
     onClose?: () => void,
     toastObject: {
-        showToast: ShowToastType,
-        updateToast: UpdateToastType
+        showLoaderToast: ShowLoaderToastType, showMessageToast: ShowMessageToastType
     } 
 };
 
@@ -18,8 +17,7 @@ export type ModalType = {
     InnerComponent:({ onConfirm, onClose } : ModalInnerComponentType ) => JSX.Element,
     onConfirm: (value?:any) => any,
     toastObject: {
-        showToast: ShowToastType,
-        updateToast: UpdateToastType
+        showLoaderToast: ShowLoaderToastType, showMessageToast: ShowMessageToastType
     }
 }
 

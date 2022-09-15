@@ -1,28 +1,29 @@
-import React, { useState, useEffect } from "react";
-import styled, { css, useTheme } from "styled-components";
-import "react-dropdown/style.css";
-import {
-  Section,
-  Content,
-  Item,
-  H2,
-  Span,
-  H3,
-} from "../primaries/SharedStyling";
-import "react-dropzone-uploader/dist/styles.css";
-import { Oval } from "react-loader-spinner";
-import UploadLogo from "./UploadLogo";
-import StakingInfo from "./StakingInfo";
-import ChannelInfo from "./ChannelInfo";
-import ProcessingInfo from "./ProcessingInfo";
-import { MdCallMade, MdError } from "react-icons/md";
+import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
-import { ThemeProvider } from "styled-components";
-import { addresses, abis, envConfig } from "@project/contracts";
-import "./createChannel.css";
+import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
+import { isValidUrl } from "helpers/UtilityHelper";
 import useToast from "hooks/useToast";
+import {
+  Content, H2, H3, Item, Section, Span
+} from "primaries/SharedStyling";
+import React, { useEffect, useState } from "react";
+import "react-dropdown/style.css";
+import "react-dropzone-uploader/dist/styles.css";
+import { MdCallMade, MdError } from "react-icons/md";
+import { Oval } from "react-loader-spinner";
+import styled, { css, ThemeProvider, useTheme } from "styled-components";
+
+import {
+  ItemVV2
+} from "components/reusables/SharedStylingV2";
+
+import ChannelInfo from "./ChannelInfo";
+import "./createChannel.css";
+import ProcessingInfo from "./ProcessingInfo";
+import StakingInfo from "./StakingInfo";
+import UploadLogo from "./UploadLogo";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -31,13 +32,13 @@ const networkName = {
   1: "Ethereum Mainnet",
 };
 
-const coreChain = "Ethereum Kovan";
+const coreChainId = envConfig.coreContractChain;
 const CORE_CHAIN_ID = envConfig.coreContractChain;
 
 // Create Header
 function CreateChannel() {
   const { account, library, chainId } = useWeb3React();
-  const themes = useTheme();
+  const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const [processing, setProcessing] = React.useState(0);
   const [processingInfo, setProcessingInfo] = React.useState("");
@@ -57,15 +58,15 @@ function CreateChannel() {
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState("");
   const [logoInfo, setLogoInfo] = React.useState("");
+  const [errorInfo,setErrorInfo] = useState("");
 
   //image upload states
   const [view, setView] = useState(false);
   const [imageSrc, setImageSrc] = useState(undefined);
   const [croppedImage, setCroppedImage] = useState(undefined);
 
-  const [stepFlow, setStepFlow] = React.useState(1);
+  const [stepFlow, setStepFlow] = React.useState(0);
   const channelToast = useToast();
-  const channelToastNotif = useToast();
 
   //checking DAI for user
   React.useEffect(() => {
@@ -146,11 +147,51 @@ function CreateChannel() {
     }
   };
 
+  const isEmpty = (field) => {
+    if (field.trim().length == 0) {
+      return true;
+    }
+
+    return false;
+  };
+  
+  const isAllFilledAndValid = () => {
+    setErrorInfo("")
+    if (
+      isEmpty(channelName) ||
+      isEmpty(channelInfo) ||
+      isEmpty(channelURL) ||
+      (isEmpty(channelAlias) && chainDetails !== coreChainId)
+    ) {
+      setErrorInfo("Channel Fields are Empty! Please retry!");
+      return false;
+    }
+
+    if(!isValidUrl(channelURL))
+    {
+      setErrorInfo("Channel Url is invalid! Please retry!");
+      return false;
+    }
+
+    return true;
+  }
+
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
 
     e.preventDefault();
+
+    if(!isAllFilledAndValid()) {
+      channelToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `${errorInfo}`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+      });
+
+      return false;
+    }
 
     if (!channelFile) {
       setLogoInfo("Please upload logo of the channel");
@@ -159,7 +200,7 @@ function CreateChannel() {
     }
 
     // Check complete, start logic
-    // setChannelInfoDone(true);
+    setChannelInfoDone(true);
     proceed();
     setProcessing(1);
 
@@ -183,18 +224,26 @@ function CreateChannel() {
     setProgress(0);
     console.log(`input is ${input}`);
     // const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
-    channelToast.showToast("Waiting for Confirmation...");
 
-    setProcessingInfo("Payload Uploaded");
+    setProcessingInfo("Loading...");
     setProgressInfo(
-      "Please complete the transaction in your wallet to continue."
+      "Please wait, payload is getting uploaded to IPFS."
     );
-    setProgress(10);
+    setProgress(5);
+
     // var storagePointer = (storagePointer = await ipfs.add(input));
     let storagePointer = await IPFSupload(input);
     console.log("IPFS storagePointer:", storagePointer);
     // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
+
+    channelToast.showLoaderToast({ loaderMessage: "Waiting for Confirmation..."});
+    setProcessingInfo("Payload Uploaded");
+    setProgressInfo(
+      "Please complete the transaction in your wallet to continue."
+    );
+
+    setProgress(10);
 
     // Send Transaction
     // First Approve DAI
@@ -247,16 +296,16 @@ function CreateChannel() {
       let txCheck = await library.waitForTransaction(tx.hash);
 
       if (txCheck.status === 0) {
-        channelToast.updateToast(
-          "Error",
-          `There was an error creating the channel`,
-          "ERROR",
-          (size) => <MdError size={size} color="red" />
-        );
+        channelToast.showMessageToast({
+          toastTitle:"Error", 
+          toastMessage: `There was an error in creating the channel`, 
+          toastType:  "ERROR", 
+          getToastIcon: (size) => <MdError size={size} color="red" />
+        })
 
         setProcessing(3);
         setTxStatus(0);
-        setStepFlow(2);
+        setStepFlow(1);
         setChannelInfoDone(false);
         setUploadDone(false);
         setTimeout(() => {
@@ -281,31 +330,30 @@ function CreateChannel() {
         }, 2000);
       }
     } catch (err) {
-      console.log("hello", err);
         if (err.code === 4001) {
           // EIP-1193 userRejectedRequest error
-          channelToast.updateToast(
-            "Error",
-            `User denied message signature.`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
-          setStepFlow(3);
+          channelToast.showMessageToast({
+            toastTitle:"Error", 
+            toastMessage: `User denied message signature.`, 
+            toastType:  "ERROR", 
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
+          setStepFlow(2);
           setProcessing(0);
           setUploadDone(false);
         } else {
-          channelToast.updateToast(
-            "Error",
-            `There was an error creating the channel`,
-            "ERROR",
-            (size) => <MdError size={size} color="red" />
-          );
+          channelToast.showMessageToast({
+            toastTitle:"Error", 
+            toastMessage: `There was an error in creating the channel`, 
+            toastType:  "ERROR", 
+            getToastIcon: (size) => <MdError size={size} color="red" />
+          })
 
           console.log("Error --> %o", err);
           console.log({ err });
           setProcessing(3);
           setProgress(0);
-          setProgressInfo("There was an error creating the Channel");
+          setProgressInfo("There was an error in creating the Channel");
           setProcessingInfo(
             "Kindly Contact support@epns.io to resolve the issue."
           );
@@ -341,17 +389,17 @@ function CreateChannel() {
   }
 
   return (
-    <ThemeProvider theme={themes}>
+    <ThemeProvider theme={theme}>
       <Section margin="0px 0px 40px">
         <Content padding="10px 20px 10px">
           <Item align="center">
             <H2 textTransform="uppercase" spacing="0.075em">
-              <Span weight="400" size="32px" color={themes.color}>
+              <Span weight="400" size="32px" color={theme.color}>
                 Create Your Channel
               </Span>
             </H2>
             <Span
-              color="#657795"
+              color={theme.default.secondaryColor}
               weight="400"
               size="16px"
               textTransform="none"
@@ -402,69 +450,81 @@ function CreateChannel() {
       ) : (
         <>
           <Section>
-            <ItemHere>
-              <Tab type={stepFlow >= 1 ? "active" : "inactive"}>
+          <ItemHere>
+              <Tab type={stepFlow >= 0 ? "active" : "inactive"} onClick={() => setStepFlow(0)}>
                 <div>Staking Info</div>
+                <Step type={stepFlow >= 0 ? "active" : "inactive"} />
+              </Tab>
+              <Tab type={stepFlow >= 1 ? "active" : "inactive"} onClick={() => setStepFlow(1)}>
+                <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? "active" : "inactive"} />
               </Tab>
-              <Tab type={stepFlow >= 2 ? "active" : "inactive"}>
-                <div>Channel Info</div>
-                <Step type={stepFlow >= 2 ? "active" : "inactive"} />
-              </Tab>
-              <Tab type={stepFlow >= 3 ? "active" : "inactive"}>
+              <Tab type={stepFlow >= 2 ? "active" : "inactive"} onClick={() => setStepFlow(2)}>
                 <div>Upload Logo</div>
-                <Step type={stepFlow >= 3 ? "active" : "inactive"} />
+                <Step type={stepFlow >= 2 ? "active" : "inactive"} />
               </Tab>
               <Line />
             </ItemHere>
           </Section>
 
           {/* Stake Fees Section */}
-          {!stakeFeesChoosen && (
-            <StakingInfo
-              channelStakeFees={channelStakeFees}
-              setStakeFeesChoosen={setStakeFeesChoosen}
-              setStepFlow={setStepFlow}
-              setProcessingInfo={setProcessingInfo}
-            />
-          )}
+          {stepFlow === 0 && 
+            <ItemVV2>
+              <StakingInfo
+                channelStakeFees={channelStakeFees}
+                setStakeFeesChoosen={setStakeFeesChoosen}
+                setStepFlow={setStepFlow}
+                setProcessingInfo={setProcessingInfo}
+              />
+
+              {processing === 1 ? <LoaderSpinner type={LOADER_TYPE.STANDALONE} overlay={LOADER_OVERLAY.ONTOP} blur={5} title="Channel Creation in Progress" completed={false} /> : null}
+            </ItemVV2>
+          }
 
           {/* Channel Entry */}
-          {stakeFeesChoosen && !channelInfoDone && (
-            <ChannelInfo
-              setStepFlow={setStepFlow}
-              channelName={channelName}
-              channelAlias={channelAlias}
-              channelInfo={channelInfo}
-              channelURL={channelURL}
-              chainDetails={chainDetails}
-              setChannelAlias={setChannelAlias}
-              setChainDetails={setChainDetails}
-              setChannelInfo={setChannelInfo}
-              setChannelName={setChannelName}
-              setChannelURL={setChannelURL}
-              setProcessing={setProcessing}
-              setProcessingInfo={setProcessingInfo}
-              setChannelInfoDone={setChannelInfoDone}
-              setTxStatus={setTxStatus}
-            />
-          )}
+          {stepFlow === 1 && 
+            <ItemVV2>
+              <ChannelInfo
+                setStepFlow={setStepFlow}
+                channelName={channelName}
+                channelAlias={channelAlias}
+                channelInfo={channelInfo}
+                channelURL={channelURL}
+                chainDetails={chainDetails}
+                setChannelAlias={setChannelAlias}
+                setChainDetails={setChainDetails}
+                setChannelInfo={setChannelInfo}
+                setChannelName={setChannelName}
+                setChannelURL={setChannelURL}
+                setChannelInfoDone={setChannelInfoDone}
+                setTxStatus={setTxStatus}
+                errorInfo={errorInfo}
+                isAllFilledAndValid={isAllFilledAndValid}
+              />
+
+              {processing === 1 ? <LoaderSpinner type={LOADER_TYPE.STANDALONE} overlay={LOADER_OVERLAY.ONTOP} blur={5} title="Channel Creation in Progress" completed={false} /> : null}
+            </ItemVV2>
+          }
 
           {/* Image Upload Section */}
-          {!uploadDone && channelInfoDone && stakeFeesChoosen && (
-            <UploadLogo
-              croppedImage={croppedImage}
-              view={view}
-              imageSrc={imageSrc}
-              processing={processing}
-              setCroppedImage={setCroppedImage}
-              setView={setView}
-              setImageSrc={setImageSrc}
-              setProcessingInfo={setProcessingInfo}
-              handleCreateChannel={handleCreateChannel}
-              logoInfo={logoInfo}
-            />
-          )}
+          {stepFlow === 2 && 
+            <ItemVV2>
+              <UploadLogo
+                croppedImage={croppedImage}
+                view={view}
+                imageSrc={imageSrc}
+                processing={processing}
+                setCroppedImage={setCroppedImage}
+                setView={setView}
+                setImageSrc={setImageSrc}
+                setProcessingInfo={setProcessingInfo}
+                handleCreateChannel={handleCreateChannel}
+                logoInfo={logoInfo}
+              />
+
+              {processing === 1 ? <LoaderSpinner type={LOADER_TYPE.STANDALONE} overlay={LOADER_OVERLAY.ONTOP} blur={5} title="Channel Creation in Progress" completed={false} /> : null}
+            </ItemVV2>
+          }
 
           {/* Channel Setup Progress */}
           {(processing === 1 || processing === 3) && (
@@ -571,6 +631,7 @@ const Tab = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
   margin: 0px 10px;
   color: #657795;
   div {

@@ -5,7 +5,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
 import { injected, ledger, portis, walletconnect } from 'connectors';
 import { Web3Provider } from 'ethers/providers';
-import { useBrowserNotification, useEagerConnect, useInactiveListener } from 'hooks';
+import { useEagerConnect, useInactiveListener } from 'hooks';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -24,7 +24,7 @@ import WCLogoLight from './assets/login/wcLight.svg';
 import { AInlineV2, ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import styled, { useTheme } from 'styled-components';
 
-import BlurBG from 'components/reusables/blurs/BlurBG';
+import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
 
 import GLOBALS, { device } from 'config/Globals';
 
@@ -70,9 +70,9 @@ const AppLogin = ({ toggleDarkMode }) => {
   // RENDER
   return (
     <Container alignItems="center">
-      <BlurBG />
+      <BlurBGClouds />
 
-      <ItemHV2
+      <ItemVV2
         padding="16px 0"
         position="absolute"
         top="30px"
@@ -89,12 +89,12 @@ const AppLogin = ({ toggleDarkMode }) => {
           size={24}
           sunColor="#fff"
         />
-      </ItemHV2>
+      </ItemVV2>
 
       {/* Login Module */}
-      <ItemHV2 alignSelf="center" justifyContent="flex-start" flex="auto">
+      <ItemVV2 alignSelf="center" justifyContent="flex-start" flex="auto">
         {/* Logo */}
-        <ItemHV2
+        <ItemVV2
           width="200px"
           margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} ${GLOBALS.ADJUSTMENTS.MARGIN.HORIZONTAL}`}
           alignSelf="center"
@@ -102,10 +102,10 @@ const AppLogin = ({ toggleDarkMode }) => {
         >
           {theme.scheme == 'light' && <EPNSLogoLight />}
           {theme.scheme == 'dark' && <EPNSLogoDark />}
-        </ItemHV2>
+        </ItemVV2>
         
         {/* Login Component */}
-        <ItemHV2
+        <ItemVV2
           background={theme.default.bg}
           maxWidth="480px"
           padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
@@ -123,7 +123,7 @@ const AppLogin = ({ toggleDarkMode }) => {
             Connect a Wallet
           </H2V2>
 
-          <ItemVV2 alignSelf="center" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
+          <ItemHV2 alignSelf="center" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             {Object.keys(web3Connectors).map((name) => {
               const currentConnector = web3Connectors[name].obj;
               const disabled = currentConnector === connector;
@@ -160,7 +160,7 @@ const AppLogin = ({ toggleDarkMode }) => {
                 </ButtonV2>
               );
             })}
-          </ItemVV2>
+          </ItemHV2>
 
           {/* TOS and PRIVACY */}
           <SpanV2
@@ -171,10 +171,10 @@ const AppLogin = ({ toggleDarkMode }) => {
           >
             By connecting your wallet, <b>You agree</b> to our <AInlineV2 href="https://epns.io/tos" target="_blank">Terms of Service</AInlineV2> and our <AInlineV2 href="https://epns.io/privacy" target="_blank">Privacy Policy</AInlineV2>.
           </SpanV2>
-        </ItemHV2>
+        </ItemVV2>
 
         {/* Chainsafe Audit and Discord */}
-        <ItemHV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
+        <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
           <SpanV2
             fontSize="14px"
             padding="25px 15px"
@@ -183,8 +183,8 @@ const AppLogin = ({ toggleDarkMode }) => {
           >
             Note: The EPNS protocol has been under development for 1+ year, and completed a <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank"> ChainSafe audit</AInlineV2> in October 2021. However, the mainnet is still a new product milestone. Always DYOR, and anticipate bugs and UI improvements. Learn how to report any bugs in our <AInlineV2 href="https://discord.com/invite/YVPB99F9W5" target="_blank">Discord</AInlineV2>.
           </SpanV2>
-        </ItemHV2>
-      </ItemHV2>
+        </ItemVV2>
+      </ItemVV2>
     </Container>
   );
 };
@@ -192,25 +192,13 @@ export default AppLogin;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff
 const Container = styled(SectionV2)`
-  padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
+  padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
   }
 
   @media ${device.mobileM} {
-    padding: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
   }
-`;
-
-const PushLogo = styled.div`
-  width: 200px;
-  padding-bottom: 20px;
-`;
-
-const ProviderImage = styled.img`
-  width: 73px;
-  height: 69px;
-  max-height: 69px;
-  padding-bottom: 18px;
 `;

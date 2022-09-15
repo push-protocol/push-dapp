@@ -1,11 +1,11 @@
-import { networkName, CORE_CHAIN_ID, aliasChainIdsMapping, PolygonNetworks } from "helpers/UtilityHelper";
-import React from "react";
-import styled, { useTheme } from "styled-components";
-import { Item, Span, Button } from "../primaries/SharedStyling";
 import { useWeb3React } from '@web3-react/core';
-import useToast from "hooks/useToast";
 import { utils } from "ethers";
+import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, PolygonNetworks } from "helpers/UtilityHelper";
+import useToast from "hooks/useToast";
+import React from "react";
 import { MdCheckCircle, MdError } from "react-icons/md";
+import styled, { useTheme } from "styled-components";
+import { Button, Item, Span } from "../primaries/SharedStyling";
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
@@ -16,16 +16,26 @@ const ChangeNetwork = () => {
     const polygonChainId = aliasChainIdsMapping[chainId];
 
     try {
-      changeNetworkToast.showToast("Waiting for Confirmation...");
+      changeNetworkToast.showLoaderToast({ loaderMessage: "Waiting for Confirmation..."});
 
       await provider.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: utils.hexValue(polygonChainId) }],
       });
 
-      changeNetworkToast.updateToast("Success", `Successfully switched to ${networkName[polygonChainId]} !`, "SUCCESS", (size) => <MdCheckCircle size={size} color="green" />)
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Success", 
+        toastMessage: `Successfully switched to ${networkName[polygonChainId]} !`, 
+        toastType: "SUCCESS", 
+        getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+    })
     } catch (switchError) {
-      changeNetworkToast.updateToast("Error", `There was an error switching Chain ( ${switchError.message} )`, "ERROR", (size) => <MdError size={size} color="red" />)
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `There was an error switching Chain ( ${switchError.message} )`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+    })
 
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
@@ -39,7 +49,12 @@ const ChangeNetwork = () => {
         }
       }
       // error toast - Your wallet doesn't support switch network. Kindly, switch the network to Polygon manually.
-      changeNetworkToast.updateToast("Error", `Your wallet doesn't support switching chains. Kindly, switch the network to ${networkName[polygonChainId]} manually.( ${switchError.message} )`, "ERROR", (size) => <MdError size={size} color="red" />)
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `Your wallet doesn't support switching chains. Kindly, switch the network to ${networkName[polygonChainId]} manually.( ${switchError.message} )`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+    })
       console.error("Unable to switch chains");
     }
   }

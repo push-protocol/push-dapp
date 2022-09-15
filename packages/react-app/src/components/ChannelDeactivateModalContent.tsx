@@ -1,16 +1,16 @@
 import React from 'react';
-import { useSelector, useDispatch } from "react-redux";
-import styled, {useTheme, ThemeProvider } from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import styled, { ThemeProvider, useTheme } from "styled-components";
 
 import { setUserChannelDetails } from "redux/slices/adminSlice";
 
 import { ModalInnerComponentType } from "hooks/useModal";
 import { useClickAway } from 'react-use';
 
-import { Oval } from "react-loader-spinner";
 import IconButton from '@mui/material/IconButton';
 import { MdError, MdHighlightOff } from "react-icons/md";
 import { RiNotificationOffLine } from "react-icons/ri";
+import { Oval } from "react-loader-spinner";
 
 const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : ModalInnerComponentType)=>{
     const themes = useTheme();
@@ -37,9 +37,13 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : Mod
             console.log(tx);
             console.log("Transaction Sent!");
             
-            toastObject.showToast("")
-            toastObject.updateToast("Channel Deactivated","Please Activate Channel to Send Notifications from it", "ERROR", (size) => <MdError size={size} color="red" />)
-            
+            toastObject.showMessageToast({
+                toastTitle:"Channel Deactivated", 
+                toastMessage:"Please Activate Channel to Send Notifications from it", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            });
+
             await tx.wait(1);
             console.log("Transaction Mined!");
             dispatch(
@@ -57,9 +61,13 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : Mod
             console.log({
               err,
             });
-            
-            toastObject.showToast("")
-            toastObject.updateToast("Transaction Failed", "Channel deactivation failed.", "ERROR", (size) => <MdError size={size} color="red" />)
+
+            toastObject.showMessageToast({
+                toastTitle:"Transaction Failed", 
+                toastMessage: "Channel deactivation failed.", 
+                toastType:  "ERROR", 
+                getToastIcon: (size) => <MdError size={size} color="red" />
+            })
 
             setIsLoading(false);
           })
@@ -91,12 +99,12 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : Mod
                             isLoading 
                             ?
                             <div style={{
-                                height:"32px", width:"32px", background: "red", borderRadius:"50%", padding:"3px"
+                                height:"34px", width:"34px", background: "red", borderRadius:"50%", padding:"3px"
                                 }}>
                                 <Oval color="white" secondaryColor='red' strokeWidth={2} height="100%" width="100%" />
                             </div> 
                             :
-                            <RiNotificationOffLine size="1.4rem" style={{
+                            <RiNotificationOffLine size="2.2rem" style={{
                                 color: "white", background: "red", borderRadius: "50%", padding: "8px"
                             }}
                             />

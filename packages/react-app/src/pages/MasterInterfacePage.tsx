@@ -9,26 +9,25 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 import { VscClose } from 'react-icons/vsc';
 
+import AirdropPage from "pages/AirdropPage";
 import ChannelDashboardPage from "pages/ChannelDashboardPage";
+import ChannelsPage from "pages/ChannelsPage";
 import ChatPage from 'pages/ChatPage';
 import NewChatPage from 'pages/ChatPageNew';
-import InboxPage from "pages/InboxPage";
-import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
-import SendNotifs from "pages/SendNotifs";
-import SpamPage from "pages/SpamPage";
-import ViewChannelsPage from "pages/ViewChannelsPage";
-
-import GovPage from "pages/GovPage";
-
-import AirdropPage from "pages/AirdropPage";
 import ComingSoonPage from "pages/ComingSoonPage";
 import FAQPage from "pages/FAQPage";
+import GovPage from "pages/GovPage";
+import InboxPage from "pages/InboxPage";
+import InternalDevPage from "pages/InternalDevPage";
 import NFTPage from "pages/NFTPage";
+import ReceiveNotifsPage from "pages/ReceiveNotifsPage";
+import SendNotifsPage from "pages/SendNotifsPage";
+import SpamPage from "pages/SpamPage";
+import SupportPage from "pages/SupportPage";
 import TutorialPage from "pages/TutorialPage";
 import YieldFarmingPage from "pages/YieldFarmingPage";
 import NotAvailablePage from "./NotAvailablePage";
 
-import { SupportPage } from "pages/SupportPage";
 
 import GLOBALS from "config/Globals";
 
@@ -49,14 +48,14 @@ function MasterInterfacePage() {
           <Route path="chat-new" element={<NewChatPage />} />
 
           <Route path="channels" element={
-            <ViewChannelsPage
+            <ChannelsPage
               loadTeaser={setLoadTeaserVideo}
               playTeaser={setPlayTeaserVideo}
             />
           }
           />
           <Route path="dashboard" element={<ChannelDashboardPage />} />
-          <Route path="send" element={<SendNotifs />} />
+          <Route path="send" element={<SendNotifsPage />} />
           <Route path="spam" element={<SpamPage />} />
           <Route path="receive" element={<ReceiveNotifsPage />} />
 
@@ -69,6 +68,7 @@ function MasterInterfacePage() {
           <Route path="comingsoon" element={<ComingSoonPage />} />
           <Route path="notavailable" element={<NotAvailablePage />} />
           <Route path="faq" element={<FAQPage />} />
+          <Route path="internal" element={<InternalDevPage />} />
           <Route
             path="/"
             element={<Navigate to="/channels" />}
@@ -186,14 +186,10 @@ const PreviewClose = styled(Anchor)`
 `
 
 const StyledToastContainer = styled(ToastContainer)`
-  &&&.Toastify__toast-container {
+  &&&.Toastify__toast-container--top-right {
     top: 7vh;
     right: 2vw;
   }
-  // .Toastify__toast {}
-  // .Toastify__toast-body {}
-  // .Toastify__progress-bar {}
-  // .Toastify__toast-container--top-right {}
 `;
 
 // Export Default

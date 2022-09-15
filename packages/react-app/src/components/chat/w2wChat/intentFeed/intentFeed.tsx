@@ -41,7 +41,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID }: AppContext = useContext<
+  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests }: AppContext = useContext<
     AppContext
   >(Context);
   const { chainId, account } = useWeb3React<Web3Provider>();
@@ -61,13 +61,15 @@ const IntentFeed = (): JSX.Element => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
-      setReceivedIntents(intents);
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      setPendingRequests(intents?.length)
+      setReceivedIntents(intents)
     } else {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
-      setReceivedIntents(intents);
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
+      setPendingRequests(intents?.length)
+      setReceivedIntents(intents)
     }
   }
 
@@ -124,11 +126,7 @@ const IntentFeed = (): JSX.Element => {
     return (
       <>
         {!receivedIntents?.length ? (
-          <p
-            style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}
-          >
-            No received intents !
-          </p>
+          <InfoMessage>No received intents</InfoMessage>
         ) : (
           <>
             <div>
@@ -217,6 +215,15 @@ const IntentFeed = (): JSX.Element => {
     </>
   );
 };
+
+const InfoMessage = styled.p`
+  position: relative;
+  text-align: center;
+  width: 80%;
+  background: #d2cfcf;
+  padding: 10px;
+  margin: 0;
+`
 
 const UserProfileContainer = styled.div`
   margin-top: 14px;

@@ -1,15 +1,15 @@
-import React from "react";
-import styled from 'styled-components';
-import { Oval } from 'react-loader-spinner'
 import { envConfig } from "@project/contracts";
+import React from "react";
+import { Oval } from 'react-loader-spinner';
+import styled from 'styled-components';
 
-import { useWeb3React } from '@web3-react/core'
-import { addresses, abis } from "@project/contracts";
-import NFTHelper from 'helpers/NFTHelper';
+import { abis, addresses } from "@project/contracts";
+import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
+import NFTHelper from 'helpers/NFTHelper';
 
-import DisplayNotice from "../primaries/DisplayNotice";
 import ViewNFTItem from "components/ViewNFTItem";
+import DisplayNotice from "../primaries/DisplayNotice";
 
 // Create Header
 function MyNFTs({ controlAt, setControlAt, setTokenId }) {

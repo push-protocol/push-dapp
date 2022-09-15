@@ -1,16 +1,17 @@
 import { useWeb3React } from '@web3-react/core';
-import React,{useRef} from "react";
-import { Web3Provider } from 'ethers/providers'
-import styled,{useTheme} from 'styled-components';
+import { Web3Provider } from 'ethers/providers';
+import { useClickAway } from 'hooks/useClickAway';
+import React, { useRef } from "react";
+import styled, { useTheme } from 'styled-components';
 import Dropdown from '../components/Dropdown';
-import {Item} from "./SharedStyling.js";
+import { Item } from "./SharedStyling.js";
 
 import { Oval } from 'react-loader-spinner';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
-  const toggleArrowRef = useRef<HTMLInputElement>(null);
-  const dropdownRef = useRef<HTMLInputElement>(null);
+  const toggleArrowRef = useRef(null);
+  const dropdownRef = useRef(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
@@ -44,19 +45,9 @@ const Profile = ({isDarkMode}) => {
     },
   ];
   
-  React.useEffect(() => {
-    const closeDropdown = (e) => {
-      if(toggleArrowRef.current && !toggleArrowRef?.current.contains(e.target) && 
-         dropdownRef.current && !dropdownRef?.current.contains(e.target))
-      {
-        setShowDropdown(false);
-      }
-    }
-
-    document.addEventListener('click',closeDropdown);
-
-    return () => document.removeEventListener('click',closeDropdown);
-  })
+  useClickAway(toggleArrowRef,dropdownRef, () => {
+    setShowDropdown(false);
+  });
   
   React.useEffect(() => {
     if (account && account != '') {
@@ -86,7 +77,12 @@ const Profile = ({isDarkMode}) => {
     <>
       {account && account !== "" && !error && (
         <Container>
-          <Wallet bg={theme.profileBG} color={theme.profileText} isDarkMode={isDarkMode}>
+          <Wallet 
+            bg={theme.profileBG} 
+            color={theme.profileText} 
+            isDarkMode={isDarkMode}
+            onClick={() => setShowDropdown(!showDropdown)} 
+            ref={toggleArrowRef}>
             {!ensFetched && (
               <Oval
               color="#FFF"
@@ -101,8 +97,7 @@ const Profile = ({isDarkMode}) => {
                 {account.substring(account.length - 6)}
               </>
             )}
-            <ToggleArrowImg ref={toggleArrowRef}
-              onClick={() => setShowDropdown(!showDropdown)} 
+            <ToggleArrowImg 
               filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
               <img
                 alt="arrow"
@@ -112,9 +107,9 @@ const Profile = ({isDarkMode}) => {
             </ToggleArrowImg>
           </Wallet>
           {showDropdown && (
-            <Item
+            <DropdownItem
               ref={dropdownRef}
-              bg={theme.headerBg}
+              bg={theme.header.bg}
               border={`1px solid ${theme.snackbarBorderColor}`}
               radius="24px"
               align="flex-start"
@@ -124,7 +119,7 @@ const Profile = ({isDarkMode}) => {
               right="-0.5rem"
             >
               <Dropdown dropdownValues={dropdownValues} />
-            </Item>
+            </DropdownItem>
           )}
         </Container>
       )}
@@ -134,6 +129,7 @@ const Profile = ({isDarkMode}) => {
 
 // css styles
 const Container = styled.button`
+  position: relative;
   margin: 0;
   padding: 0;
   background: none;
@@ -192,6 +188,22 @@ const ToggleArrowImg = styled.div`
     transition: transform 0.25s;
   }
 `;
+
+const DropdownItem= styled(Item)`
+  background: ${props => props.bg};
+  border:1px solid ${props => props.border};
+  border-radius:24px;
+  align-items:flex-start;
+  padding:1.3rem;
+  position:absolute;
+  top:3.6rem;
+  right:-0.5rem;
+  z-index:10;
+  @media (max-width: 992px) {
+    right: unset;
+    align-items:flex-start;
+  }
+`
 
 // Export Default
 export default Profile;

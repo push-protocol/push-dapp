@@ -4,6 +4,7 @@ import ReactGA from "react-ga";
 import { abis, addresses } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
 import { toolingPostReq } from "api/index";
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD } from "components/ViewDelegateeItem";
 import { ethers } from "ethers";
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
@@ -11,16 +12,17 @@ import Blockies from "primaries/BlockiesIdenticon";
 import InfoTooltip from "primaries/InfoTooltip";
 import { A, B, Button, Content, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
 import { BsChevronExpand } from 'react-icons/bs';
-import { Oval } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import styled, { css, useTheme } from 'styled-components';
+
+import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
 
 import { ThemeProvider } from "styled-components";
 
 import ViewDelegateeItem from "components/ViewDelegateeItem";
 
 import { envConfig } from "@project/contracts";
-import GLOBALS, { device } from "config/Globals";
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
 
@@ -32,8 +34,8 @@ const GovModule = () => {
   // React GA Analytics
   ReactGA.pageview("/governance");
 
-  // setup themes (styled components)
-  const themes = useTheme();
+  // setup theme (styled components)
+  const theme = useTheme();
 
   const { account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === envConfig.coreContractChain;
@@ -317,24 +319,28 @@ const GovModule = () => {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval
-        color={color}
-        height={30}
-        width={30}
-      />
+      <LoaderSpinner />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
 
   return (
     <Container>
-      <Content themes={themes.mainBg} padding="20px 20px 30px 20px">
+      <ItemVV2 alignItems="stretch">
         <Item align="stretch" justify="flex-start" margin="0px 15px 15px 15px">
           {(dashboardLoading || !prettyTokenBalance || !selfVotingPower) &&
             <Item padding="20px">
-              <Oval color="#e20880" height={40} width={40} />
+              <LoaderSpinner />
             </Item>
           }
+
+          <ItemVV2 margin="0px 0px 0px 0px">
+            <H2>
+              <Span weight="400" size="32px" color={theme.color}>
+                Governance Dashboard
+              </Span>
+            </H2>
+          </ItemVV2>
 
           {!dashboardLoading && prettyTokenBalance && selfVotingPower &&
             <Item margin="10px 0px 0px 0px" self="stretch" items="stretch">
@@ -342,7 +348,7 @@ const GovModule = () => {
                 align="stretch"
                 justify="flex-start"
                 self="stretch"
-                bg={themes.mainBg}
+                bg={theme.default.secondaryBg}
                 op="1"
               >
                 <StatsHeading bg="#e20880">Governance Dashboard</StatsHeading>
@@ -356,11 +362,7 @@ const GovModule = () => {
                       </Blocky>
                       <Wallet>
                         {!ensFetched &&
-                          <Oval
-                            color="#FFF"
-                            height={16}
-                            width={16}
-                          />
+                          <LoaderSpinner />
                         }
                         {ensFetched && ens &&
                           <>{ens}</>
@@ -373,12 +375,12 @@ const GovModule = () => {
 
                     <Item align="flex-start" self="stretch" padding="10px" size="16px">
                       <ItemH flex="initial" padding="5px">
-                        <Span weight="500" padding="0px 8px 0px 0px" color={themes.color}>$PUSH Balance: </Span>
+                        <Span weight="500" padding="0px 8px 0px 0px" color={theme.color}>$PUSH Balance: </Span>
                         <CurvedSpan bg="#e20880" color="#fff" weight="600" padding="4px 8px" textTransform="uppercase">{prettyTokenBalance}</CurvedSpan>
                       </ItemH>
 
                       <ItemH flex="initial" padding="5px">
-                        <Span weight="500" padding="0px 8px 0px 0px" color={themes.color}>Voting Power: </Span>
+                        <Span weight="500" padding="0px 8px 0px 0px" color={theme.color}>Voting Power: </Span>
                         <CurvedSpan bg="#35c5f3" color="#fff" weight="600" padding="4px 8px" textTransform="uppercase">{selfVotingPower}</CurvedSpan>
                       </ItemH>
                       {delegatee !== "0x0000000000000000000000000000000000000000" &&
@@ -444,7 +446,7 @@ const GovModule = () => {
                       <RadioGroup >
                         <div style={{ marginRight: "0px" }}>
                           <input type="radio" id="gasless" checked={transactionMode == "gasless"} name="gasless" value="gasless" onChange={e => setTransactionMode(e.target.value)} /> <br />
-                          <Label><div style={{ width: "2rem" }}>  Gasless  <InfoTooltip Infocolor={"gray"}
+                          <Label><div>  Gasless  <InfoTooltip Infocolor={"gray"}
                             title={"Delegate your PUSH votes without paying gas fee.   " + "Conditions: " + "Wallet address must hold at least 100 PUSH." + "Gasless delegation is enabled only when the gas fee is less than $50" + "Once delegated, the same wallet address could do gasless delegation again only after 7 days"} /> </div>
                           </Label><br />
                         </div>
@@ -500,11 +502,7 @@ const GovModule = () => {
                       >{
                           txInProgress ? (
                             <ActionTitle>
-                              <Oval
-                                color="#35c5f3"
-                                height={20}
-                                width={20}
-                              />
+                              <LoaderSpinner />
                             </ActionTitle>
                           ) :
 
@@ -536,17 +534,13 @@ const GovModule = () => {
             align="stretch"
             justify="flex-start"
             self="stretch"
-            bg={themes.mainBg}
+            bg={theme.default.secondaryBg}
           >
             <StatsHeading bg="#35c5f3">Meet the PUSH Nominees</StatsHeading>
             <NomineeContainer>
               {delegateesLoading ? (
                 <ContainerInfo>
-                  <Oval
-                    color="#35c5f3"
-                    height={40}
-                    width={40}
-                  />
+                  <LoaderSpinner />
                 </ContainerInfo>
               ) : (
                 <AbsoluteWrapper>
@@ -571,25 +565,21 @@ const GovModule = () => {
             </NomineeContainer>
           </StatsCard>
         </Item>
-      </Content>
+      </ItemVV2>
 
-      <Content padding="20px 20px 0px">
+      <ItemVV2 alignItems="stretch" padding="40px 0 20px 0">
         <Item align="flex-start" margin="0px 15px 0px 15px">
           <H2 textTransform="uppercase" spacing="0.1em">
-            <Span weight="200" color={themes.color}>PUSH </Span>
+            <Span weight="200" color={theme.color}>PUSH </Span>
             <Span bg="#35c5f3" color="#fff" weight="600" padding="0px 8px">DELEGATEES</Span>
           </H2>
-          <H3 color={themes.color}>Let's start <B>governing!!</B> </H3>
+          <H3 color={theme.color}>Let's start <B>governing!!</B> </H3>
         </Item>
 
         <Item>
           {dashboardLoading &&
             <ContainerInfo>
-              <Oval
-                color="#35c5f3"
-                height={40}
-                width={40}
-              />
+              <LoaderSpinner />
             </ContainerInfo>
           }
 
@@ -624,10 +614,10 @@ const GovModule = () => {
             </ItemH>
           }
         </Item>
-      </Content>
+      </ItemVV2>
 
       {/* FAQs */}
-      <Content padding="20px 20px 35px">
+      <ItemVV2 alignItems="stretch" padding="20px 0 35px 0">
         <Item align="stretch" justify="flex-start" margin="-10px 20px 0px 20px">
 
           {/* Question */}
@@ -637,7 +627,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(0) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   What are PUSH Delegatees?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -658,7 +648,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(1) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   What are PUSH Nominees
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -680,7 +670,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(2) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   How can I become a PUSH Nominee?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -714,7 +704,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(3) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   What if I don't wish to be a PUSH Nominee?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -734,7 +724,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(4) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   Where should I start?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -753,7 +743,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(5) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   What happens to the delegated voting power when I sell my PUSH tokens?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -773,7 +763,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(6) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   How can I cast my vote?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -791,7 +781,7 @@ const GovModule = () => {
                 onClick={() => { toggleShowAnswer(7) }}
                 hover="#e20880"
               >
-                <Span color={themes.color}>
+                <Span color={theme.color}>
                   How can I keep up with EPNS Governance?
                 </Span>
                 <BsChevronExpand size={20} color={"#ddd"} />
@@ -805,33 +795,38 @@ const GovModule = () => {
             </QnAItem>
           </Item>
         </Item>
-      </Content>
+      </ItemVV2>
     </Container>
   );
 }
 export default GovModule;
 
 const Container = styled(Section)`
-	align-items: stretch;
-	align-self: stretch;
-  flex: 1;
-	background: ${(props) => props.theme.mainBg};
+	align-items: center;
+	align-self: center;
+	background: ${(props) => props.theme.default.bg};
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
 	flex-direction: column;
-  max-width: 1600px;
 	flex: initial;
 	justify-content: center;
+  max-width: 1200px;
+  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 	position: relative;
-  margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.DESKTOP};
+  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
-    margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.TABLET};
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 
   @media ${device.mobileM} {
-    margin: ${GLOBALS.ADJUSTMENTS.PADDING.MINI_MODULES.MOBILE};
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 `;
 
@@ -869,47 +864,44 @@ const QnAItem = styled(Item)`
   align-self: stretch;
   flex: auto;
   margin: 15px 0px;
-  border: 1px solid ${props => props.theme.qnaBgBorder};
+  border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 10px;
-  box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.20);
+  box-shadow: 0px 5px 20px -10px rgb(0 0 0 / 0.2);
   overflow: hidden;
-
   & ${Question} {
-    background: ${props => props.theme.qnaBg};
+    background: ${(props) => props.theme.qnaBg};
     justify-content: flex-start;
     text-transform: uppercase;
-
     & ${Span} {
       font-weight: 400;
       letter-spacing: 0.2em;
       margin-left: 10px;
       flex: 1;
     }
-
     &:hover {
       & ${Span} {
         color: #fff;
       }
     }
   }
-
   & ${Answer} {
-    border: 1px solid #e6e6e6;
-    border-top: 1px solid #e6e6e6;
+    border: 1px solid ${(props) => props.theme.default.border};
+    border-top: 1px solid ${(props) => props.theme.default.border};
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
     padding: 10px 15px;
+    margin: -1px;
+    margin-top: 0px;
     align-items: flex-start;
-    background: #fff;
-
+    background: ${(props) => props.theme.qnaBg};
     & ${Span} {
       line-height: 1.5em;
       margin: 10px;
-      color: #000 ;
+      color: ${(props) => props.theme.default.color};
       font-size: 1.05em;
     }
   }
-`
+`;
 
 const AMod = styled(A)`
   color: #e20880;
@@ -939,7 +931,7 @@ const StatsCard = styled(Item)`
   min-width: 180px;
 
   border-radius: 12px;
-  border: 1px solid rgb(225, 225, 225);
+  border: 1px solid ${(props) => props.theme.default.border};
 
   &:hover {
     opacity: ${props => props.op ? "0.9" : props.op}

@@ -35,7 +35,6 @@ const Container = styled.div`
 const InfoBox = styled.div`
   display: block;
   align-self: stretch;
-  background: ${props => props.theme.mainBg};
 `
 
 // Export Default

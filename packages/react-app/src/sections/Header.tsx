@@ -5,8 +5,8 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
-} from '@web3-react/injected-connector'
-import { hexlify } from "ethers/utils";
+} from '@web3-react/injected-connector';
+import { ethers } from "ethers";
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
@@ -77,7 +77,7 @@ const chainIds = envConfig.allowedNetworks;
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: hexlify(envConfig.coreContractChain) }]
+            params: [{ chainId: ethers.utils.hexlify(envConfig.coreContractChain) }]
           });
         } catch (err) {
           console.error(err);
@@ -221,8 +221,7 @@ const chainIds = envConfig.allowedNetworks;
 
 // CSS Styles
 const Container = styled(Section)`
-  background: ${props => props.theme.headerBg};
-  border-bottom: 1px solid ${props => props.theme.sectionBorderBg};
+  background: ${props => props.theme.header.bg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
   padding: 0 1.5rem;
 `
@@ -261,7 +260,7 @@ const NavMenuContainer = styled(Item)`
   z-index: 1;
   align-items: flex-start;
 
-  background: ${props => props.theme.navMenuBg};
+  background: ${props => props.theme.nav.hamburgerBg};
   backdrop-filter: blur(30px);
   z-index: 11;
 `

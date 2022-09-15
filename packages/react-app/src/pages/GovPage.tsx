@@ -18,12 +18,10 @@ const GovPage = () => {
 }
 export default GovPage;
 
-// This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center, justify content flex start to start from top
+// This defines the page settings, toggle align-self to center if not covering entire stuff, align-items to place them at center
+// justify content flex start to start from top, height is defined by module as well as amount of margin, padding
 const Container = styled(SectionV2)`
-    display: flex;
+    flex: 1;
     flex-direction: column;
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - 52px - ${props => props.theme.interfaceTopPadding});
-    justify-content: flex-start;
-    align-self: center;
-    align-items: center;
+    align-self: stretch;
 `;
