@@ -40,32 +40,32 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4
-}
+};
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
-})
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const IntentFeed = (): JSX.Element => {
   const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests }: AppContext = useContext<
     AppContext
-  >(Context)
-  const { chainId, account } = useWeb3React<Web3Provider>()
-  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([])
-  const [open, setOpen] = useState(false)
-  const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>()
-  const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false)
-  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false)
-  const [fromDID, setFromDID] = useState<string>()
-  const [isLoading, setIsLoading] = useState<boolean>()
+  >(Context);
+  const { chainId, account } = useWeb3React<Web3Provider>();
+  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
+  const [open, setOpen] = useState(false);
+  const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>();
+  const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
+  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
+  const [fromDID, setFromDID] = useState<string>();
+  const [isLoading, setIsLoading] = useState<boolean>();
 
   async function resolveThreadhash(): Promise<void> {
-    let getIntent
+    let getIntent;
     if (did) {
-      getIntent = await intitializeDb<string>('Read', 2, 'Intent', did.id, '', 'did')
+      getIntent = await intitializeDb<string>('Read', 'Intent', did.id, '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0]
+    const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
       let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
       intents = await decryptFeeds({ feeds: intents, connectedUser, did })
@@ -80,23 +80,23 @@ const IntentFeed = (): JSX.Element => {
   }
 
   useEffect(() => {
-    resolveThreadhash()
-  }, [intents])
+    resolveThreadhash();
+  }, [intents]);
 
   function showModal({ intentFrom, fromDID }: { intentFrom: string; fromDID: string }): void {
-    setReceivedIntentFrom(intentFrom)
-    setFromDID(fromDID)
-    setOpen(true)
+    setReceivedIntentFrom(intentFrom);
+    setFromDID(fromDID);
+    setOpen(true);
   }
 
   const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
     try {
       if (!did) {
-        const createdDID: DID = await connectAndSetDID()
+        const createdDID: DID = await connectAndSetDID();
         // This is a new user
-        const keyPairs = await generateKeyPair()
-        const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID)
-        const caip10: string = w2wHelper.walletToCAIP10({ account, chainId })
+        const keyPairs = await generateKeyPair();
+        const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
+        const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -105,38 +105,34 @@ const IntentFeed = (): JSX.Element => {
           encryptionType: 'pgp',
           signature: 'xyz',
           sigType: 'a'
-        })
-        setConnectedUser(createdUser)
-        setDID(createdDID)
-        return { didCreated: createdDID, createdUser }
+        });
+        setConnectedUser(createdUser);
+        setDID(createdDID);
+        return { didCreated: createdDID, createdUser };
       } else {
-        return { didCreated: did, createdUser: connectedUser }
+        return { didCreated: did, createdUser: connectedUser };
       }
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
   async function ApproveIntent(status: string): Promise<void> {
-    setIsLoading(true)
-    const { didCreated } = await createUserIfNecessary()
-    await approveIntent(fromDID, didCreated.id, status, '1', 'sigType')
-    setOpen(false)
-    if (status === 'Approved') setOpenSuccessSnackBar(true)
-    else setOpenReprovalSnackBar(true)
-    await resolveThreadhash()
-    setIsLoading(false)
+    setIsLoading(true);
+    const { didCreated } = await createUserIfNecessary();
+    await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
+    setOpen(false);
+    if (status === 'Approved') setOpenSuccessSnackBar(true);
+    else setOpenReprovalSnackBar(true);
+    await resolveThreadhash();
+    setIsLoading(false);
   }
 
   function displayReceivedIntents(): JSX.Element {
     return (
       <>
         {!receivedIntents?.length ? (
-          <p
-            style={{ position: 'relative', textAlign: 'center', width: '80%', background: '#d2cfcf', padding: '10px' }}
-          >
-            No received intents !
-          </p>
+          <InfoMessage>No received intents</InfoMessage>
         ) : (
           <>
             <div>
@@ -144,11 +140,11 @@ const IntentFeed = (): JSX.Element => {
                 <div
                   key={intent.threadhash}
                   onClick={(): void => {
-                    setChat(intent)
+                    setChat(intent);
                     showModal({
                       intentFrom: intent.wallets.split(',')[0],
                       fromDID: intent.intentSentBy
-                    })
+                    });
                   }}
                 >
                   <DefaultIntent inbox={intent} />
@@ -158,24 +154,24 @@ const IntentFeed = (): JSX.Element => {
           </>
         )}
       </>
-    )
+    );
   }
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
-      return
+      return;
     }
 
-    setOpenSuccessSnackBar(false)
-  }
+    setOpenSuccessSnackBar(false);
+  };
 
   const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
-      return
+      return;
     }
 
-    setOpenReprovalSnackBar(false)
-  }
+    setOpenReprovalSnackBar(false);
+  };
 
   return (
     <>
@@ -199,7 +195,7 @@ const IntentFeed = (): JSX.Element => {
             ) : (
               <Button
                 onClick={(): void => {
-                  ApproveIntent('Approved')
+                  ApproveIntent('Approved');
                 }}
               >
                 Approve
@@ -223,8 +219,17 @@ const IntentFeed = (): JSX.Element => {
         <UserProfileContainer height={152}>{displayReceivedIntents()}</UserProfileContainer>
       </section>
     </>
-  )
-}
+  );
+};
+
+const InfoMessage = styled.p`
+  position: relative;
+  text-align: center;
+  width: 80%;
+  background: #d2cfcf;
+  padding: 10px;
+  margin: 0;
+`
 
 const UserProfileContainer = styled.div`
   margin-top: 14px;
@@ -242,6 +247,6 @@ const UserProfileContainer = styled.div`
   &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
   }
-`
+`;
 
-export default IntentFeed
+export default IntentFeed;
