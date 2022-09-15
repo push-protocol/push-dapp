@@ -313,27 +313,22 @@ const ChatBox = (): JSX.Element => {
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(didCreated.id)) {
         const user: User = await PushNodeClient.getUser({ did: currentChat.did })
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
-        console.log(searchedUser,account)
-        let caip10:string
+        let caip10: string
         if (!user) {
-          if(!ethers.utils.isAddress(searchedUser))
-          {
-            try{
+          if (!ethers.utils.isAddress(searchedUser)) {
+            try {
               const ens: string = await provider.resolveName(searchedUser)
-              console.log(ens)
-              if(ens)
-              {
+              if (ens) {
                 caip10 = walletToCAIP10({ account: ens, chainId })
               }
             }
-            catch(err)
-            {
+            catch (err) {
               console.log(err)
-              return 
+              return
             }
           }
-          else{
-             caip10 = walletToCAIP10({ account: searchedUser, chainId })
+          else {
+            caip10 = walletToCAIP10({ account: searchedUser, chainId })
           }
           await PushNodeClient.createUser({
             caip10,
