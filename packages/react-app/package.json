@@ -1,6 +1,6 @@
 {
   "name": "@project/react-app",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "homepage": "https://dev.epns.io",
   "browserslist": {
     "production": [
