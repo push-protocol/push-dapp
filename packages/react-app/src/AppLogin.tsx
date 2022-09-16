@@ -2,13 +2,19 @@ import React, { useContext, useState } from 'react';
 import ReactGA from 'react-ga';
 
 import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React } from '@web3-react/core';
+import {
+  NoEthereumProviderError,
+  UserRejectedRequestError as UserRejectedRequestErrorInjected
+} from '@web3-react/injected-connector';
+import { useWeb3React,UnsupportedChainIdError } from '@web3-react/core';
 import { injected, ledger, portis, walletconnect } from 'connectors';
-import { Web3Provider } from 'ethers/providers';
 import { useEagerConnect, useInactiveListener } from 'hooks';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
+
+import { Web3Provider } from '@ethersproject/providers';
+import { hexlify } from 'ethers/lib/utils';
 
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
@@ -27,6 +33,7 @@ import styled, { useTheme } from 'styled-components';
 import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
 
 import GLOBALS, { device } from 'config/Globals';
+import { envConfig } from "@project/contracts";
 
 // define the different type of connectors which we use
 const web3Connectors = {
@@ -46,6 +53,40 @@ const web3Connectors = {
   Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
   Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: 'Portis' }
 };
+
+async function handleChangeNetwork(){
+  const chainIds = envConfig.allowedNetworks;
+    if (!chainIds.includes(window.ethereum.networkVersion)) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: hexlify(envConfig.coreContractChain) }]
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        }
+  }
+  
+    // handle error functions
+    function getErrorMessage(error: Error) {
+      if (error instanceof NoEthereumProviderError) {
+        return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
+      } else if (error instanceof UnsupportedChainIdError) {
+        handleChangeNetwork();
+        if(envConfig.coreContractChain === 42)
+        return "Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network"
+        else 
+        return "Unsupported Network, please connect to the Ethereum Mainnet network"
+      } else if (
+        error instanceof UserRejectedRequestErrorInjected
+      ) {
+        return 'Please authorize this website to access the dApp'
+      } else {
+        console.error(error)
+        return 'An unknown error occurred. Check the console for more details'
+      }
+    }
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
@@ -91,6 +132,11 @@ const AppLogin = ({ toggleDarkMode }) => {
         />
       </ItemVV2>
 
+      <ItemVV2>
+          {!!error &&
+            <p>{getErrorMessage(error)}</p>
+          }
+        </ItemVV2>
       {/* Login Module */}
       <ItemVV2 alignSelf="center" justifyContent="flex-start" flex="auto">
         {/* Logo */}
