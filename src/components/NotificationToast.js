@@ -1,12 +1,11 @@
 import React from "react";
 import styled, { css } from 'styled-components';
 
-import { useWeb3React } from '@web3-react/core'
-import { addresses, abis } from "@project/contracts";
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import { toast } from 'react-toastify';
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 
 function NotificationToast({ notification, clearToast }) {
 
