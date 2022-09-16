@@ -159,25 +159,6 @@ function CreateChannel() {
     return false;
   };
   
-  const isAllValid = () => {
-    if(!isLengthValid(channelName,125))
-    {
-      setErrorInfo("Channel Name should not exceed 125 characters! Please retry!");
-      return false;
-    }
-    if(!isLengthValid(channelURL,125))
-    {
-      setErrorInfo("Channel Url should not exceed 125 characters! Please retry!");
-      return false;
-    }
-    if(!isValidUrl(channelURL))
-    {
-      setErrorInfo("Channel Url is invalid! Please retry!");
-      return false;
-    }
-    return true;
-  }
-  
   const isAllFilledAndValid = () => {
     setErrorInfo("")
     if (
