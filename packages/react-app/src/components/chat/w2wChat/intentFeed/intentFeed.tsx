@@ -1,32 +1,32 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core'
-import { Web3Provider } from 'ethers/providers'
-import React, { useContext, useEffect, useState } from 'react'
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from 'ethers/providers';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Modal from '@mui/material/Modal'
-import Snackbar from '@mui/material/Snackbar'
-import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
+import styled from 'styled-components';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api'
-import { approveIntent, Feeds, User } from 'api'
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
-import { DID } from 'dids'
-import { caip10ToWallet } from 'helpers/w2w'
-import * as w2wHelper from 'helpers/w2w/'
-import * as DIDHelper from 'helpers/w2w/did'
-import { generateKeyPair } from 'helpers/w2w/pgp'
-import DefaultIntent from '../defaultIntent/defaultIntent'
-import IntentCondition from '../IntentCondition/IntentCondition'
-import { AppContext, Context } from '../w2wIndex'
-import { intitializeDb } from '../w2wIndexeddb'
-import { decryptFeeds, fetchIntent } from '../w2wUtils'
-import './intentFeed.css'
+import * as PushNodeClient from 'api';
+import { approveIntent, Feeds, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { DID } from 'dids';
+import { caip10ToWallet } from 'helpers/w2w';
+import * as w2wHelper from 'helpers/w2w/';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
+import DefaultIntent from '../defaultIntent/defaultIntent';
+import IntentCondition from '../IntentCondition/IntentCondition';
+import { AppContext, Context } from '../w2wIndex';
+import { intitializeDb } from '../w2wIndexeddb';
+import { decryptFeeds, fetchIntent } from '../w2wUtils';
+import './intentFeed.css';
 
 // Internal Configs
 
@@ -47,9 +47,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests }: AppContext = useContext<
-    AppContext
-  >(Context);
+  const {
+    did,
+    setChat,
+    connectedUser,
+    intents,
+    setConnectedUser,
+    connectAndSetDID,
+    setDID,
+    setPendingRequests
+  }: AppContext = useContext<AppContext>(Context);
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
@@ -60,6 +67,7 @@ const IntentFeed = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>();
 
   async function resolveThreadhash(): Promise<void> {
+    setIsLoading(true);
     let getIntent;
     if (did) {
       getIntent = await intitializeDb<string>('Read', 'Intent', did.id, '', 'did');
@@ -67,16 +75,17 @@ const IntentFeed = (): JSX.Element => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
-      setPendingRequests(intents?.length)
-      setReceivedIntents(intents)
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
     } else {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
-      setPendingRequests(intents?.length)
-      setReceivedIntents(intents)
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -129,7 +138,9 @@ const IntentFeed = (): JSX.Element => {
   }
 
   function displayReceivedIntents(): JSX.Element {
-    return (
+    return isLoading ? (
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+    ) : (
       <>
         {!receivedIntents?.length ? (
           <InfoMessage>No received intents</InfoMessage>
@@ -229,7 +240,7 @@ const InfoMessage = styled.p`
   background: #d2cfcf;
   padding: 10px;
   margin: 0;
-`
+`;
 
 const UserProfileContainer = styled.div`
   margin-top: 14px;
