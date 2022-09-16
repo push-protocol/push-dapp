@@ -1,15 +1,35 @@
-import React, { useContext, useState } from 'react';
-import ReactGA from 'react-ga';
-
+// React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React } from '@web3-react/core';
-import { injected, ledger, portis, walletconnect } from 'connectors';
-import { Web3Provider } from 'ethers/providers';
-import { useEagerConnect, useInactiveListener } from 'hooks';
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import {
+  NoEthereumProviderError,
+  UserRejectedRequestError as UserRejectedRequestErrorInjected,
+} from '@web3-react/injected-connector';
+import { hexlify } from 'ethers/lib/utils';
+import React, { useContext, useState } from 'react';
+
+// External Packages
+import ReactGA from 'react-ga';
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
+// Internal Compoonents
+import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
+import {
+  AInlineV2,
+  ButtonV2,
+  H2V2,
+  ImageV2,
+  ItemHV2,
+  ItemVV2,
+  SectionV2,
+  SpanV2,
+} from 'components/reusables/SharedStylingV2';
+import { injected, ledger, portis, walletconnect } from 'connectors';
+import { useEagerConnect, useInactiveListener } from 'hooks';
+import styled, { useTheme } from 'styled-components';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
@@ -21,11 +41,8 @@ import PortisLogoLight from './assets/login/portisLight.svg';
 import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 
-import { AInlineV2, ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import styled, { useTheme } from 'styled-components';
-
-import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
-
+// Internal Configs
+import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 
 // define the different type of connectors which we use
@@ -34,18 +51,49 @@ const web3Connectors = {
     obj: injected,
     logolight: MMLogoLight,
     logodark: MMLogoDark,
-    title: 'Metamask'
+    title: 'Metamask',
   },
   WalletConnect: {
     obj: walletconnect,
     logolight: WCLogoLight,
     logodark: WCLogoDark,
-    title: 'Wallet Connect'
+    title: 'Wallet Connect',
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
   Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
-  Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: 'Portis' }
+  Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: 'Portis' },
 };
+
+async function handleChangeNetwork() {
+  const chainIds = appConfig.allowedNetworks;
+  if (!chainIds.includes(window.ethereum.networkVersion)) {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: hexlify(appConfig.coreContractChain) }],
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+}
+
+// handle error functions
+function getErrorMessage(error: Error) {
+  if (error instanceof NoEthereumProviderError) {
+    return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
+  } else if (error instanceof UnsupportedChainIdError) {
+    handleChangeNetwork();
+    if (appConfig.coreContractChain === 42)
+      return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
+    else return 'Unsupported Network, please connect to the Ethereum Mainnet network';
+  } else if (error instanceof UserRejectedRequestErrorInjected) {
+    return 'Please authorize this website to access the dApp';
+  } else {
+    console.error(error);
+    return 'An unknown error occurred. Check the console for more details';
+  }
+}
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
@@ -71,26 +119,29 @@ const AppLogin = ({ toggleDarkMode }) => {
   return (
     <Container alignItems="center">
       <BlurBGClouds />
-
-      <ItemVV2
-        padding="16px 0"
-        position="absolute"
-        top="30px"
-        right="30px"
-        width="fit-content"
-        borderRadius="100%"
-        background="rgba(179, 178, 236, 0.5)"
-        zIndex="99"
-      >
-        <DarkModeSwitch
-          style={{ margin: '0 1rem' }}
-          checked={theme.scheme == 'light' ? false : true}
-          onChange={toggleDarkMode}
-          size={24}
-          sunColor="#fff"
-        />
-      </ItemVV2>
-
+      <ItemHV2 flexWrap="nowrap" maxWidth="fit-content" alignSelf="flex-end" flex="initial">
+        {!!error && (
+          <SpanV2 padding="0.4rem 1rem" margin="0 1rem" borderRadius="20px" background="#CF1C84" color="#fff">
+            {getErrorMessage(error)}
+          </SpanV2>
+        )}
+        <ItemHV2
+          padding="16px 0"
+          width="fit-content"
+          height="fit-content"
+          borderRadius="100%"
+          alignSelf="center"
+          background="rgba(179, 178, 236, 0.5)"
+          zIndex="99">
+          <DarkModeSwitch
+            style={{ margin: '0 1rem' }}
+            checked={theme.scheme == 'light' ? false : true}
+            onChange={toggleDarkMode}
+            size={24}
+            sunColor="#fff"
+          />
+        </ItemHV2>
+      </ItemHV2>
       {/* Login Module */}
       <ItemVV2 alignSelf="center" justifyContent="flex-start" flex="auto">
         {/* Logo */}
@@ -98,12 +149,11 @@ const AppLogin = ({ toggleDarkMode }) => {
           width="200px"
           margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} ${GLOBALS.ADJUSTMENTS.MARGIN.HORIZONTAL}`}
           alignSelf="center"
-          flex="initial"
-        >
+          flex="initial">
           {theme.scheme == 'light' && <EPNSLogoLight />}
           {theme.scheme == 'dark' && <EPNSLogoDark />}
         </ItemVV2>
-        
+
         {/* Login Component */}
         <ItemVV2
           background={theme.default.bg}
@@ -112,14 +162,12 @@ const AppLogin = ({ toggleDarkMode }) => {
           borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
           alignSelf="center"
           flex="initial"
-          shadow="0px 0px 9px rgba(18, 8, 46, 0.04)"
-        >
+          shadow="0px 0px 9px rgba(18, 8, 46, 0.04)">
           <H2V2
             textTransform="none"
             color={theme.default.color}
             fontSize="32px"
-            margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0 0 0`}
-          >
+            margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0 0 0`}>
             Connect a Wallet
           </H2V2>
 
@@ -144,17 +192,15 @@ const AppLogin = ({ toggleDarkMode }) => {
                   onClick={() => {
                     setActivatingConnector(currentConnector);
                     activate(currentConnector);
-                  }}
-                >
-                  <ImageV2 src={image} height="68px" width="74px" padding="0px 0px 18px 0px"/>
+                  }}>
+                  <ImageV2 src={image} height="68px" width="74px" padding="0px 0px 18px 0px" />
 
                   <SpanV2
                     spacing="0.1em"
                     textTransform="Capitalize"
                     fontSize="18px"
                     fontWeight="500"
-                    color={theme.default.color}
-                  >
+                    color={theme.default.color}>
                     {title}
                   </SpanV2>
                 </ButtonV2>
@@ -163,25 +209,33 @@ const AppLogin = ({ toggleDarkMode }) => {
           </ItemHV2>
 
           {/* TOS and PRIVACY */}
-          <SpanV2
-            fontSize="14px"
-            padding="0px 20px 10px 20px"
-            color={theme.default.color}
-            lineHeight="140%"
-          >
-            By connecting your wallet, <b>You agree</b> to our <AInlineV2 href="https://epns.io/tos" target="_blank">Terms of Service</AInlineV2> and our <AInlineV2 href="https://epns.io/privacy" target="_blank">Privacy Policy</AInlineV2>.
+          <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" color={theme.default.color} lineHeight="140%">
+            By connecting your wallet, <b>You agree</b> to our{' '}
+            <AInlineV2 href="https://epns.io/tos" target="_blank">
+              Terms of Service
+            </AInlineV2>{' '}
+            and our{' '}
+            <AInlineV2 href="https://epns.io/privacy" target="_blank">
+              Privacy Policy
+            </AInlineV2>
+            .
           </SpanV2>
         </ItemVV2>
 
         {/* Chainsafe Audit and Discord */}
         <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
-          <SpanV2
-            fontSize="14px"
-            padding="25px 15px"
-            lineHeight="140%"
-            color={theme.default.color}
-          >
-            Note: The EPNS protocol has been under development for 1+ year, and completed a <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank"> ChainSafe audit</AInlineV2> in October 2021. However, the mainnet is still a new product milestone. Always DYOR, and anticipate bugs and UI improvements. Learn how to report any bugs in our <AInlineV2 href="https://discord.com/invite/YVPB99F9W5" target="_blank">Discord</AInlineV2>.
+          <SpanV2 fontSize="14px" padding="25px 15px" lineHeight="140%" color={theme.default.color}>
+            Note: The EPNS protocol has been under development for 1+ year, and completed a{' '}
+            <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank">
+              {' '}
+              ChainSafe audit
+            </AInlineV2>{' '}
+            in October 2021. However, the mainnet is still a new product milestone. Always DYOR, and anticipate bugs and
+            UI improvements. Learn how to report any bugs in our{' '}
+            <AInlineV2 href="https://discord.com/invite/YVPB99F9W5" target="_blank">
+              Discord
+            </AInlineV2>
+            .
           </SpanV2>
         </ItemVV2>
       </ItemVV2>
