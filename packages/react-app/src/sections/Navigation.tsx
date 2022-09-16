@@ -24,11 +24,12 @@ import { incrementStepIndex, setCommunicateOpen, setDeveloperOpen, setTutorialCo
 import { envConfig } from "@project/contracts";
 import GLOBALS from "config/Globals";
 
+
 // Create Header
 function Navigation() {
     const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified } } = useSelector((state: any) => state.admin);
     const [ refresh, setRefresh ] = useState(false);
-
+    const { processingState } = useSelector((state: any) => state.channelCreation);
     const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
 
@@ -47,38 +48,50 @@ function Navigation() {
     );
     
   useEffect(() => {
-    if (canSend === SEND_NOTIFICATION_STATES.LOADING) return
-    if (!navigationSetup) return
+    if (!navigationSetup) return;
 
-    if (canSend === SEND_NOTIFICATION_STATES.HIDE) {
-      // navigationSetup.primary[1].data.drilldown[0].data.name = 'Create Channel';
-      navigationSetup.secondary[0].data.name = 'Create Channel';
-      navigationSetup.secondary[1].data.name = 'Hide';
-      // navigationSetup.primary[1].data.drilldown[1].data.name = 'Hide';
-    } else if (canSend === SEND_NOTIFICATION_STATES.SEND) {
-      if (channelDetails !== 'unfetched' && channelDetails != null) {
-        // navigationSetup.primary[1].data.drilldown[0].data.name = channelDetails['name'];
-        navigationSetup.secondary[0].data.name = channelDetails.name;
-        navigationSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
-        navigationSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
-        // console.log(navigationSetup);
-      } else {
-        // navigationSetup.primary[1].data.drilldown[0].data.name = "Create Channel";
-        navigationSetup.secondary[0].data.name = 'Create Channel';
-      }
-      // navigationSetup.primary[1].data.drilldown[1].data.name = 'Send Notifications';
-      navigationSetup.secondary[1].data.name = 'Send Notifications'
-
+    let newNavSetup = navigationSetup;
+    if (processingState !== 0) {
+      newNavSetup.secondary[0].data.hidden = true;
+      newNavSetup.secondary[1].data.hidden = true;
     }
-  }, [canSend, channelDetails, navigationSetup]);
+    else {
+      newNavSetup.secondary[0].data.hidden = true;
+      newNavSetup.secondary[1].data.hidden = true;
+
+      if (channelDetails !== 'unfetched' && channelDetails != null) {
+        newNavSetup.secondary[0].data.name = channelDetails.name;
+        newNavSetup.secondary[0].data.src = 'navigation/homeOffIcon.svg';
+        newNavSetup.secondary[0].data.activeSrc = 'navigation/homeOnIcon.svg';
+        newNavSetup.secondary[0].data.hidden = false;
+        newNavSetup.secondary[0].data.loading = false;
+      } else {
+        newNavSetup.secondary[0].data.name = 'Create Channel';
+        newNavSetup.secondary[0].data.hidden = false;
+      }
+      
+      if (canSend === SEND_NOTIFICATION_STATES.SEND) {
+        newNavSetup.secondary[1].data.name = 'Send Notifications'
+        newNavSetup.secondary[1].data.hidden = false;
+      }
+    }
+
+    setNavigationSetup(newNavSetup);
+
+  }, [canSend, channelDetails, navigationSetup, processingState,account]);
 
   useEffect(() => {
-    if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
-    } else {
-      dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+    if (processingState !== 0) {
+      dispatch(setCanSend(SEND_NOTIFICATION_STATES.LOADING));
     }
-  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend])
+    else {
+      if (((aliasAddr || aliasEthAddr) && isAliasVerified) || (delegatees && delegatees.length > 0)) {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND));
+      } else {
+        dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE));
+      }
+    }
+  }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState, account])
 
     // useEffect(()=>{
     //   (async()=>{
@@ -181,7 +194,8 @@ function Navigation() {
           transformedList[identifier].data.drilldown = drilldownModified;
         }
       });
-
+      if(identity === 2)
+      console.log(transformedList);
       return transformedList;
     }
 
