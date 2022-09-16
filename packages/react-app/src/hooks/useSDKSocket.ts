@@ -25,13 +25,12 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
       setIsSDKSocketConnected(false);
     });
 
-    epnsSDKSocket?.on(EVENTS.USER_FEEDS, (feedList: any) => {
+    epnsSDKSocket?.on(EVENTS.USER_FEEDS, (feedItem: any) => {
       /**
-       * We receive a feed list which has 1 item.
+       * We receive a feedItem
        */
       try {
-        const [feed] = feedList || [];
-        const { payload } = feed || {};        
+        const { payload } = feedItem || {};        
         showNotifcationToast(payload);
         
       } catch (e) {
