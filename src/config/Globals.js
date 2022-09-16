@@ -7,8 +7,8 @@ const size = {
   tablet: '768px',
   laptop: '1024px',
   laptopL: '1440px',
-  desktop: '2560px'
-}
+  desktop: '2560px',
+};
 
 export const device = {
   mobileS: `(max-width: ${size.mobileS})`,
@@ -18,63 +18,61 @@ export const device = {
   laptop: `(max-width: ${size.laptop})`,
   laptopL: `(max-width: ${size.laptopL})`,
   desktop: `(max-width: ${size.desktop})`,
-  desktopL: `(max-width: ${size.desktop})`
+  desktopL: `(max-width: ${size.desktop})`,
 };
 
 // Define Padding
-export const globalsPadding = {
-
-}
+export const globalsPadding = {};
 
 // Define Margin
 export const globalsMargin = {
   MINI_MODULES: {
     DESKTOP: {
-      TOP: '48px',
-      RIGHT: '30px', 
-      BOTTOM: '48px',
-      LEFT: '30px'
+      TOP: '30px',
+      RIGHT: '30px',
+      BOTTOM: '30px',
+      LEFT: '30px',
     },
     TABLET: {
       TOP: '25px',
-      RIGHT: '25px', 
+      RIGHT: '25px',
       BOTTOM: '25px',
-      LEFT: '25px'
+      LEFT: '25px',
     },
     MOBILE: {
       TOP: '20px',
-      RIGHT: '20px', 
+      RIGHT: '20px',
       BOTTOM: '20px',
-      LEFT: '20px'
+      LEFT: '20px',
     },
   },
   BIG_MODULES: {
     DESKTOP: {
       TOP: '18px',
-      RIGHT: '0px', 
+      RIGHT: '0px',
       BOTTOM: '0px',
-      LEFT: '18px'
+      LEFT: '18px',
     },
     TABLET: {
       TOP: '25px',
-      RIGHT: '25px', 
+      RIGHT: '25px',
       BOTTOM: '25px',
-      LEFT: '25px'
+      LEFT: '25px',
     },
     MOBILE: {
       TOP: '20px',
-      RIGHT: '20px', 
+      RIGHT: '20px',
       BOTTOM: '20px',
-      LEFT: '20px'
+      LEFT: '20px',
     },
-  }
-}
+  },
+};
 
 // Define Globals
 export default {
   LINKS: {
     IOS_APP: 'https://apps.apple.com/app/ethereum-push-service-epns/id1528614910',
-    ANDROID_APP: 'https://play.google.com/store/apps/details?id=io.epns.epns&hl=mr&gl=US'
+    ANDROID_APP: 'https://play.google.com/store/apps/details?id=io.epns.epns&hl=mr&gl=US',
   },
 
   // For Async Storage --> Represents Key and some Constants
@@ -88,7 +86,7 @@ export default {
       PRIMARY: 1,
       SECONDARY: 2,
       MOBILE: 3,
-      THIRD: 4
+      THIRD: 4,
     },
 
     NAVBAR_IDENTIFIERS: {
@@ -96,9 +94,9 @@ export default {
       COMMUNICATE_TAB: 2,
       DEVELOPER_TAB: 3,
       LOADING: 4,
-    }
+    },
   },
-  
+
   ADJUSTMENTS: {
     MODULE_BOX_SHADOW: 'rgb(0 0 0 / 10%) 0px 15px 20px -5px',
 
@@ -120,14 +118,14 @@ export default {
         DESKTOP: `${globalsMargin.BIG_MODULES.DESKTOP.TOP} ${globalsMargin.BIG_MODULES.DESKTOP.RIGHT} ${globalsMargin.BIG_MODULES.DESKTOP.BOTTOM} ${globalsMargin.BIG_MODULES.DESKTOP.LEFT}`,
         TABLET: `${globalsMargin.BIG_MODULES.TABLET.TOP} ${globalsMargin.BIG_MODULES.TABLET.RIGHT} ${globalsMargin.BIG_MODULES.TABLET.BOTTOM} ${globalsMargin.BIG_MODULES.TABLET.LEFT}`,
         MOBILE: `${globalsMargin.BIG_MODULES.MOBILE.TOP} ${globalsMargin.BIG_MODULES.MOBILE.RIGHT} ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM} ${globalsMargin.BIG_MODULES.MOBILE.LEFT}`,
-      }
+      },
     },
     RADIUS: {
       LARGE: '32px',
       MID: '24px',
       SMALL: '16px',
-      MINI: '12px'
-    }
+      MINI: '12px',
+    },
   },
 
   COLORS: {
@@ -171,4 +169,3 @@ export default {
     LIGHTER_MAROON: 'rgba(129.0, 0.0, 0.0, 1.0)',
   },
 };
-
