@@ -1,19 +1,20 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
 import React from "react";
 
-import styled from 'styled-components';
-import { Section, Content, Item, Para, A, B, H2, H3, Span, Button } from 'primaries/SharedStyling';
-
+// External Packages
 import { BsChevronExpand } from 'react-icons/bs';
-import { Oval } from 'react-loader-spinner'
 import { toast } from 'react-toastify';
+import styled from 'styled-components';
 
-import { useWeb3React } from '@web3-react/core'
-import { addresses, abis } from "@project/contracts";
-import { ethers } from "ethers";
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import AirdropHelper from 'helpers/AirdropHelper';
+import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
 
-import * as dotenv from "dotenv";
-dotenv.config();
+// Internal Configs
+import { abis, addresses } from "@project/contracts";
 
 // Other Information section
 function Airdrop() {
@@ -103,11 +104,7 @@ function Airdrop() {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval
-        color={color}
-        height={30}
-        width={30}
-      />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
@@ -134,11 +131,7 @@ function Airdrop() {
 
           <Item padding="40px 0px 20px 0px">
             {loading &&
-              <Oval
-                color="#35c5f3"
-                height={40}
-                width={40}
-              />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
             }
 
             {!loading && controlAt == 0 &&

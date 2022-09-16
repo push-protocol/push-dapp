@@ -1,20 +1,9 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
-import './chatBox.css';
-// @ts-ignore
-//import epnsLogo from '../w2wAsset/epnsLogo.png'
-import Chats from '../chats/chats';
-import { Context, ToastPosition } from '../w2wIndex';
-// @ts-ignore
-import { envConfig } from '@project/contracts';
-import * as PushNodeClient from 'api';
-import Picker from 'emoji-picker-react';
-import 'font-awesome/css/font-awesome.min.css';
-//import Dropdown from '../dropdown/dropdown'
-import { CID } from 'ipfs-http-client';
-import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
-import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
-import { intitializeDb } from '../w2wIndexeddb';
-// @ts-ignore
+
+// External Packages
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
@@ -22,28 +11,40 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
-import { useWeb3React } from '@web3-react/core';
-import { Feeds, MessageIPFSWithCID, User } from 'api';
-import { Content } from 'components/SharedStyling';
-import { DID } from 'dids';
-import { Web3Provider } from 'ethers/providers';
-import * as w2wHelper from 'helpers/w2w/';
-import * as DIDHelper from 'helpers/w2w/did';
-import { generateKeyPair } from 'helpers/w2w/pgp';
-import { Oval as Loader } from 'react-loader-spinner';
+import Picker from 'emoji-picker-react';
+import 'font-awesome/css/font-awesome.min.css';
+import { CID } from 'ipfs-http-client';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+
+// Internal Compoonents
+import * as PushNodeClient from 'api';
+import { Feeds, MessageIPFSWithCID, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { Content } from 'components/SharedStyling';
+import { DID } from 'dids';
+import * as w2wHelper from 'helpers/w2w/';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
 import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex';
+import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
+import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
+import Chats from '../chats/chats';
 import { FileMessageContent } from '../Files/Files';
 import GifPicker from '../Gifs/gifPicker';
 import IntentCondition from '../IntentCondition/IntentCondition';
+import { Context, ToastPosition } from '../w2wIndex';
+import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
-import { ethers } from 'ethers';
-import Spinner from '../../../reusables/spinners/SpinnerUnit';
+import './chatBox.css';
 
-const INFURA_URL = envConfig.infuraApiUrl;
+// Internal Configs
+import { envConfig } from '@project/contracts';
+
+
+const INFURA_URL = envConfig.infuraApiUrl
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -63,26 +64,26 @@ const ChatBox = (): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched
-  }: AppContext = useContext<AppContext>(Context);
-  const [newMessage, setNewMessage] = useState<string>('');
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
-  const [showEmojis, setShowEmojis] = useState<boolean>(false);
-  const { chainId, account } = useWeb3React<Web3Provider>();
-  const [Loading, setLoading] = useState<boolean>(true);
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
-  const [imageSource, setImageSource] = useState<string>('');
-  const [filesUploading, setFileUploading] = useState<boolean>(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
-  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
-  const [SnackbarText, setSnackbarText] = useState<string>('');
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [showOption, setShowOption] = useState<boolean>(false);
-  const provider = ethers.getDefaultProvider();
-  let showTime = false;
-  let time = '';
+  }: AppContext = useContext<AppContext>(Context)
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
+  const [showEmojis, setShowEmojis] = useState<boolean>(false)
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
+  const [Loading, setLoading] = useState<boolean>(true)
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
+  const [imageSource, setImageSource] = useState<string>('')
+  const [filesUploading, setFileUploading] = useState<boolean>(false)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
+  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
+  const [SnackbarText, setSnackbarText] = useState<string>('')
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
+  const [showOption, setShowOption] = useState<boolean>(false)
+  const provider = ethers.getDefaultProvider()
+  let showTime = false
+  let time = ''
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -597,9 +598,9 @@ const ChatBox = (): JSX.Element => {
           <MessageContainer>
             <ScrollToBottom>
               {Loading ? (
-                <SpinnerWrapper>
-                  <Spinner completed={false} />
-                </SpinnerWrapper>
+                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+                </div>
               ) : (
                 <>
                   {messages?.map((msg, i) => {
@@ -634,9 +635,7 @@ const ChatBox = (): JSX.Element => {
           </MessageContainer>
 
           {messageBeingSent ? (
-            <SpinnerWrapper>
-              <Spinner completed={false} />
-            </SpinnerWrapper>
+            <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
           ) : (
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
@@ -681,7 +680,7 @@ const ChatBox = (): JSX.Element => {
                 </>
                 {filesUploading ? (
                   <div className="imageloader">
-                    <Spinner completed={false} />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={20} />
                   </div>
                 ) : (
                   <Icon onClick={handleSubmit}>

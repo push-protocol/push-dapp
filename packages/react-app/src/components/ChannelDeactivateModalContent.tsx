@@ -1,16 +1,18 @@
+// React + Web3 Essentials
 import React from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import styled, { ThemeProvider, useTheme } from "styled-components";
 
-import { setUserChannelDetails } from "redux/slices/adminSlice";
-
-import { ModalInnerComponentType } from "hooks/useModal";
-import { useClickAway } from 'react-use';
-
+// External Packages
 import IconButton from '@mui/material/IconButton';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { MdError, MdHighlightOff } from "react-icons/md";
 import { RiNotificationOffLine } from "react-icons/ri";
-import { Oval } from "react-loader-spinner";
+import { useDispatch, useSelector } from "react-redux";
+import { useClickAway } from 'react-use';
+import styled, { ThemeProvider, useTheme } from "styled-components";
+
+// Internal Compoonents
+import { ModalInnerComponentType } from "hooks/useModal";
+import { setUserChannelDetails } from "redux/slices/adminSlice";
 
 const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : ModalInnerComponentType)=>{
     const themes = useTheme();
@@ -101,7 +103,7 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : Mod
                             <div style={{
                                 height:"34px", width:"34px", background: "red", borderRadius:"50%", padding:"3px"
                                 }}>
-                                <Oval color="white" secondaryColor='red' strokeWidth={2} height="100%" width="100%" />
+                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={34} />
                             </div> 
                             :
                             <RiNotificationOffLine size="2.2rem" style={{

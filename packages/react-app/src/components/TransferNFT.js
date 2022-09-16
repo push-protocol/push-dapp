@@ -1,14 +1,18 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
 import React from "react";
 
+// External Packages
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import 'react-dropzone-uploader/dist/styles.css';
 import styled, { css } from 'styled-components';
+
+// Internal Compoonents
 import { Button, Content, FormSubmision, H2, Input, Item, Section, Span } from '../primaries/SharedStyling';
 
-import 'react-dropzone-uploader/dist/styles.css';
-import { Oval } from 'react-loader-spinner';
-
-import { useWeb3React } from '@web3-react/core';
-
+// Internal Configs
 import { abis, addresses } from "@project/contracts";
+
 const ethers = require('ethers');
 
 // Create Header
@@ -126,11 +130,7 @@ function TransferNFT({ tokenId }) {
                 disabled={processing == 1 ? true : false}
               >
                 {processing == 1 &&
-                  <Oval
-                    color="#fff"
-                    height={24}
-                    width={24}
-                  />
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#fff" />
                 }
                 {processing != 1 &&
                   <Input cursor="hand" textTransform="uppercase" color="#fff" weight="400" size="0.8em" spacing="0.2em" type="submit" value="Transfer" />

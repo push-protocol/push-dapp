@@ -1,12 +1,13 @@
+// React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import React from 'react';
 
+// External Packages
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import styled, { css } from 'styled-components';
 
-import Blockies from 'components/BlockiesIdenticon';
-import { Oval as Loader } from 'react-loader-spinner';
-import Spinner from '../../reusables/spinners/SpinnerUnit';
-//   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
+// Internal Compoonents
+import Blockies from "components/BlockiesIdenticon";
 
 // Create Header
 function Profile() {
@@ -43,24 +44,26 @@ function Profile() {
 
   return (
     <>
-      {account && account !== '' && !error && (
-        <Container>
-          <Blocky>
-            <BlockyInner>
-              <Blockies seed={account.toLowerCase()} opts={{ seed: account.toLowerCase(), size: 7, scale: 7 }} />
-            </BlockyInner>
-          </Blocky>
-          <Wallet>
-            {!ensFetched && <Spinner />}
-            {ensFetched && ens && <>{ens}</>}
-            {ensFetched && !ens && (
-              <>
-                {account.substring(0, 6)}.....{account.substring(account.length - 6)}
-              </>
-            )}
-          </Wallet>
-        </Container>
-      )}
+    {account && account !== '' && !error &&
+      <Container>
+        <Blocky>
+          <BlockyInner>
+             <Blockies seed={account.toLowerCase()} opts={{seed: account.toLowerCase(), size: 7, scale: 7}}/>
+          </BlockyInner>
+        </Blocky>
+        <Wallet>
+        {!ensFetched &&
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
+        }
+        {ensFetched && ens &&
+          <>{ens}</>
+        }
+        {ensFetched && !ens &&
+          <>{account.substring(0, 6)}.....{account.substring(account.length - 6)}</>
+        }
+        </Wallet>
+      </Container>
+    }
     </>
   );
 }

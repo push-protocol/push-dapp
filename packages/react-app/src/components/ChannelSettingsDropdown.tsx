@@ -1,39 +1,36 @@
-import { abis, addresses } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import { postReq } from "api";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toast as toaster } from "react-toastify";
-import styled, { css, useTheme } from "styled-components";
 
-import { envConfig } from "@project/contracts";
-
-import { useClickAway } from "react-use";
-
-import useToast from "hooks/useToast";
-
-// modals
-import useModal from "hooks/useModal";
-import AddDelegateModalContent from "./AddDelegateModalContent";
-import AddSubgraphModalContent from "./AddSubgraphModalContent";
-import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
-import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
-
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import { setUserChannelDetails } from "redux/slices/adminSlice";
-import ActivateChannelModal from "./ActivateChannelModal";
-
-
+// External Packages
+import "react-dropdown/style.css";
 import {
   AiOutlineDropbox, AiOutlineUserAdd,
   AiOutlineUserDelete,
   AiTwotoneDelete
 } from 'react-icons/ai';
-
-import "react-dropdown/style.css";
+import { useDispatch, useSelector } from "react-redux";
+import { toast as toaster } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
+import { useClickAway } from "react-use";
+import styled, { css, useTheme } from "styled-components";
 
-import { Oval } from "react-loader-spinner";
+// Internal Compoonents
+import { postReq } from "api";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+import useModal from "hooks/useModal";
+import useToast from "hooks/useToast";
+import { setUserChannelDetails } from "redux/slices/adminSlice";
+import ActivateChannelModal from "./ActivateChannelModal";
+import AddDelegateModalContent from "./AddDelegateModalContent";
+import AddSubgraphModalContent from "./AddSubgraphModalContent";
+import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
+import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
+
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
+
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
@@ -103,7 +100,7 @@ function ChannelSettings({DropdownRef, isDropdownOpen, closeDropdown} : ChannelS
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Oval color={color} height={30} width={30} />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
