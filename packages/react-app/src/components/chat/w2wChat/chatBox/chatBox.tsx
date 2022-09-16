@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
@@ -43,8 +43,7 @@ import './chatBox.css';
 // Internal Configs
 import { envConfig } from '@project/contracts';
 
-
-const INFURA_URL = envConfig.infuraApiUrl
+const INFURA_URL = envConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -64,26 +63,26 @@ const ChatBox = (): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched
-  }: AppContext = useContext<AppContext>(Context)
-  const [newMessage, setNewMessage] = useState<string>('')
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
-  const [showEmojis, setShowEmojis] = useState<boolean>(false)
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
-  const [Loading, setLoading] = useState<boolean>(true)
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
-  const [imageSource, setImageSource] = useState<string>('')
-  const [filesUploading, setFileUploading] = useState<boolean>(false)
-  const imageInputRef = useRef<HTMLInputElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
-  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
-  const [SnackbarText, setSnackbarText] = useState<string>('')
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
-  const [showOption, setShowOption] = useState<boolean>(false)
-  const provider = ethers.getDefaultProvider()
-  let showTime = false
-  let time = ''
+  }: AppContext = useContext<AppContext>(Context);
+  const [newMessage, setNewMessage] = useState<string>('');
+  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
+  const [showEmojis, setShowEmojis] = useState<boolean>(false);
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const [Loading, setLoading] = useState<boolean>(true);
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
+  const [imageSource, setImageSource] = useState<string>('');
+  const [filesUploading, setFileUploading] = useState<boolean>(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
+  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
+  const [SnackbarText, setSnackbarText] = useState<string>('');
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
+  const [showOption, setShowOption] = useState<boolean>(false);
+  const provider = ethers.getDefaultProvider();
+  let showTime = false;
+  let time = '';
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -598,9 +597,9 @@ const ChatBox = (): JSX.Element => {
           <MessageContainer>
             <ScrollToBottom>
               {Loading ? (
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                <SpinnerWrapper>
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-                </div>
+                </SpinnerWrapper>
               ) : (
                 <>
                   {messages?.map((msg, i) => {
@@ -698,7 +697,7 @@ const ChatBox = (): JSX.Element => {
 
 const SpinnerWrapper = styled.div`
   width: 100%;
-  min-height: calc(83.6vh - 130px);
+  height: calc(83.6vh - 130px);
   display: flex;
   justify-content: center;
   align-items: center;
