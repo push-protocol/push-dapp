@@ -823,10 +823,8 @@ function SendNotifications() {
       <Body>
         <Content padding="10px 20px 10px">
           <Item align="center">
-            <H2 textTransform="none">
-              <Span weight="400" size="32px" color={theme.color}>
-                Send Notification
-              </Span>
+            <H2 textTransform="none" weight="400" size="32px" color={theme.color} textAlign="center" style={{width:"100%"}}>
+              Send Notification
             </H2>
             <Span
               color={theme.default.secondaryColor}
@@ -876,12 +874,13 @@ function SendNotifications() {
               <FormSubmision
                 flex="1"
                 direction="column"
-                margin="0px"
                 justify="center"
+                margin="0px"
                 size="1.1rem"
+                width='100%'
                 onSubmit={handleSendMessage}
               >
-                <Item margin="0px 20px" flex="1" self="stretch" align="stretch">
+                <Item flex="1" self="stretch" align="stretch" width="100%">
                   {console.log(cannotDisplayDelegatees)}
                   {!cannotDisplayDelegatees && (
                     <Item flex="1" justify="flex-start" align="stretch">
@@ -958,18 +957,8 @@ function SendNotifications() {
                   />
 
                   {nfType && (
-                    <ItemH margin="40px 0px 15px 0px" flex="1" self="stretch" justify="space-between">
-                      <ItemH
-                        margin="15px 0px"
-                        width="10em"
-                        bg="#F4F5FA"
-                        flex="none"
-                        padding="15px"
-                        radius="20px"
-                        display="flex"
-                        direction="row"
-                        justify="space-between"
-                      >
+                    <ToggleOptionContainer>
+                      <ToggleOption>
                         <Span
                           weight="700"
                           textTransform="none"
@@ -981,19 +970,9 @@ function SendNotifications() {
                           Subject
                         </Span>
                         <IOSSwitch checked={nfSubEnabled} onChange={() => setNFSubEnabled(!nfSubEnabled)} />
-                      </ItemH>
+                      </ToggleOption>
 
-                      <ItemH
-                        margin="15px 0px"
-                        width="10em"
-                        bg="#F4F5FA"
-                        flex="none"
-                        padding="15px"
-                        radius="20px"
-                        display="flex"
-                        direction="row"
-                        justify="space-between"
-                      >
+                      <ToggleOption>
                         <Span
                           weight="700"
                           textTransform="none"
@@ -1005,19 +984,9 @@ function SendNotifications() {
                           Media
                         </Span>
                         <IOSSwitch checked={nfMediaEnabled} onChange={() => setNFMediaEnabled(!nfMediaEnabled)} />
-                      </ItemH>
+                      </ToggleOption>
 
-                      <ItemH
-                        margin="15px 0px"
-                        width="10em"
-                        bg="#F4F5FA"
-                        flex="none"
-                        padding="15px"
-                        radius="20px"
-                        display="flex"
-                        direction="row"
-                        justify="space-between"
-                      >
+                      <ToggleOption>
                         <Span
                           weight="700"
                           textTransform="none"
@@ -1029,13 +998,13 @@ function SendNotifications() {
                           CTA Link
                         </Span>
                         <IOSSwitch checked={nfCTAEnabled} onChange={() => setNFCTAEnabled(!nfCTAEnabled)} />
-                      </ItemH>
-                    </ItemH>
+                      </ToggleOption>
+                    </ToggleOptionContainer>
                   )}
                 </Item>
 
                 {(nfType === '2' || nfType === '3' || nfType === '5') && (
-                  <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+                  <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
                     <Label style={{ color: theme.color }}>Recipient Wallet Address</Label>
                     <Input
                       maxlength="40"
@@ -1069,7 +1038,7 @@ function SendNotifications() {
                         </span>
                       ))}
                     </MultiRecipientsContainer>
-                    <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+                    <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
                       <Label style={{ color: theme.color }}>Enter Recipients Wallet Addresses</Label>
                       <Input
                         required={multipleRecipients.length === 0}
@@ -1103,7 +1072,7 @@ function SendNotifications() {
                 )}
 
                 {nfType && nfSubEnabled && (
-                  <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+                  <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
                     <Label style={{ color: theme.color }}>Subject</Label>
                     <Input
                       maxlength="40"
@@ -1126,7 +1095,7 @@ function SendNotifications() {
                 )}
 
                 {nfType && (
-                  <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+                  <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
                     <Label style={{ color: theme.color }}>Notification Message</Label>
                     <TextField
                       // placeholder="Your Channel's Short Description (250 Characters)"
@@ -1150,7 +1119,7 @@ function SendNotifications() {
                 )}
 
                 {nfType && nfMediaEnabled && (
-                  <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+                  <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
                     <Label style={{ color: theme.color }}>Media URL</Label>
                     <Input
                       maxlength="40"
@@ -1173,7 +1142,7 @@ function SendNotifications() {
                 )}
 
                 {nfType && nfCTAEnabled && (
-                  <Item margin="15px 20px 15px 20px" flex="1" self="stretch" align="stretch">
+                  <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
                     <Label style={{ color: theme.color }}>CTA Link</Label>
 
                     <Input
@@ -1196,18 +1165,15 @@ function SendNotifications() {
                   </Item>
                 )}
 
-                // to show the error message (if exists) upon clicking the send notification button
                 {nfInfo && nfProcessing != 1 && (
                   <Item 
                     margin="30px 0px 0px 0px"
-                    flex="1"
-                    self="center"
                     width="100%"
                     padding="1.5rem 0"
                     radius="12px"
                     bg="#F5F5FA"
                   >
-                    <div style={{color:'#CF1C84'}}>
+                    <div style={{color:'#CF1C84', fontSize: "0.875rem", textAlign: "center"}}>
                       {nfInfo}
                     </div>
                   </Item>
@@ -1227,13 +1193,7 @@ function SendNotifications() {
                 )}
 
                 {nfType && (
-                  <Item width="15em" self="stretch" align="stretch" margin="70px auto 0px auto">
-                    <Button
-                      bg="#CF1C84"
-                      color="#fff"
-                      flex="1"
-                      radius="15px"
-                      padding="20px 10px"
+                    <SubmitButton
                       disabled={nfProcessing == 1 ? true : false}
                     >
                       {nfProcessing == 1 &&  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#FFF" />}
@@ -1248,8 +1208,7 @@ function SendNotifications() {
                           value="Send Notification"
                         />
                       )}
-                    </Button>
-                  </Item>
+                    </SubmitButton>
                 )}
               </FormSubmision>
             </Item>
@@ -1312,6 +1271,9 @@ const ModifiedContent = styled(Content)`
   font-weight: 400;
   width: 80%;
   margin: 0 auto;
+  @media (max-width: 600px) {
+    width: 90%;
+  }
 `;
 
 const DropdownHeader = styled.div`
@@ -1384,10 +1346,13 @@ const DropdownStyled = styled(Dropdown)`
     height: 50px;
     display: flex;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 150%;
     align-items: center;
     padding: 0.75rem 1.18rem;
+    @media (max-width: 380px) {
+      font-size: 0.875rem;
+    }
   }
   .Dropdown-arrow {
     top: 20px;
@@ -1467,13 +1432,54 @@ const CustomDropdownItem = styled.div`
 const Body = styled.div`
   margin: 40px auto 0px auto;
   width: 55%;
-  @media (max-width: 600px) {
-    width: 100%%;
-  }
   @media (max-width: 1224px) {
     width: 75%;
   }
+  @media (max-width: 600px) {
+    width: 100%;
+  }
 `;
+
+const ToggleOptionContainer = styled(ItemH)`
+  margin: 40px 0px 15px 0px;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: center;
+  }
+`
+
+const ToggleOption = styled(ItemH)`
+  box-sizing: border-box;
+  margin: 15px 0px;
+  width: 10em;
+  background: #F4F5FA;
+  flex: none;
+  padding: 15px;
+  border-radius: 20px;
+  display: flex;
+  direction: row;
+  justify-content: space-between;
+  @media (max-width: 640px) {
+    width: 100%;
+  }
+`
+
+const SubmitButton = styled(Button)`
+  width: 15rem;
+  margin: 70px auto 0px auto;
+  padding: 20px 10px;
+  border-radius: 15px;
+  background: #CF1C84;
+  color: #fff;
+  @media (max-width: 640px) {
+    width: 13rem;
+  }
+  @media (max-width: 380px) {
+    width: 9.5rem;
+  }
+`
 
 // Export Default
 export default SendNotifications;
