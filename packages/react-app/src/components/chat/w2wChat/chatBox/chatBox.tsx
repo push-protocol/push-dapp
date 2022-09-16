@@ -1,46 +1,47 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
-import './chatBox.css';
-// @ts-ignore
-//import epnsLogo from '../w2wAsset/epnsLogo.png'
-import Chats from '../chats/chats';
-import { Context, ToastPosition } from '../w2wIndex';
-// @ts-ignore
-import { envConfig } from '@project/contracts';
-import * as PushNodeClient from 'api';
+
+// External Packages
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
-//import Dropdown from '../dropdown/dropdown'
 import { CID } from 'ipfs-http-client';
+import { useQuery } from 'react-query';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import { toast } from 'react-toastify';
+import styled from 'styled-components';
+
+// Internal Compoonents
+import * as PushNodeClient from 'api';
+import { Feeds, MessageIPFSWithCID, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { Content } from 'components/SharedStyling';
+import { DID } from 'dids';
+import * as w2wHelper from 'helpers/w2w/';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
+import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
+import Chats from '../chats/chats';
+import { FileMessageContent } from '../Files/Files';
+import GifPicker from '../Gifs/gifPicker';
+import IntentCondition from '../IntentCondition/IntentCondition';
+import { Context, ToastPosition } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
-// @ts-ignore
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import Avatar from '@mui/material/Avatar'
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import Snackbar from '@mui/material/Snackbar'
-import Typography from '@mui/material/Typography'
-import { useWeb3React } from '@web3-react/core'
-import { Feeds, MessageIPFSWithCID, User } from 'api'
-import { Content } from 'components/SharedStyling'
-import { DID } from 'dids'
-import { Web3Provider } from 'ethers/providers'
-import * as w2wHelper from 'helpers/w2w/'
-import * as DIDHelper from 'helpers/w2w/did'
-import { generateKeyPair } from 'helpers/w2w/pgp'
-import { Oval as Loader } from 'react-loader-spinner'
-import { useQuery } from 'react-query'
-import ScrollToBottom from 'react-scroll-to-bottom'
-import { toast } from 'react-toastify'
-import styled from 'styled-components'
-import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex'
-import { FileMessageContent } from '../Files/Files'
-import GifPicker from '../Gifs/gifPicker'
-import IntentCondition from '../IntentCondition/IntentCondition'
-import { decryptFeeds, fetchInbox } from '../w2wUtils'
-import { ethers } from 'ethers'
+import { decryptFeeds, fetchInbox } from '../w2wUtils';
+import './chatBox.css';
+
+// Internal Configs
+import { envConfig } from '@project/contracts';
 
 
 const INFURA_URL = envConfig.infuraApiUrl
@@ -67,7 +68,7 @@ const ChatBox = (): JSX.Element => {
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
-  const { chainId, account } = useWeb3React<Web3Provider>()
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
   const [Loading, setLoading] = useState<boolean>(true)
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
   const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
@@ -85,81 +86,151 @@ const ChatBox = (): JSX.Element => {
   let time = ''
 
   const getMessagesFromCID = async (): Promise<void> => {
-    setLoading(true);
     if (currentChat) {
-      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
-      let messageCID = latestThreadhash;
+      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
+      let messageCID = latestThreadhash
+
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
-        while (messageCID) {
-          if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-            break;
+
+        // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
+        // We only enter on this if condition when we receive or send new messages
+        if (latestThreadhash !== currentChat?.threadhash) {
+          // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
+          const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+          let msgIPFS: MessageIPFSWithCID
+          if (messageFromIndexDB !== undefined) {
+            msgIPFS = messageFromIndexDB.body
           } else {
-            const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+            await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
+            msgIPFS = messageFromIPFS
+          }
 
-            let msgIPFS: MessageIPFSWithCID;
-            if (messageFromIndexDB !== undefined) {
-              msgIPFS = messageFromIndexDB.body;
+          // Decrypt message
+          if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
+            // To do signature verification it depends on who has sent the message
+            let signatureValidationPubliKey: string
+            if (msgIPFS.fromDID === connectedUser.did) {
+              signatureValidationPubliKey = connectedUser.publicKey
             } else {
-              const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-              await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-              msgIPFS = messageFromIPFS;
+              signatureValidationPubliKey = currentChat.publicKey
             }
+            msgIPFS.messageContent = await decryptAndVerifySignature({
+              cipherText: msgIPFS.messageContent,
+              encryptedSecretKey: msgIPFS.encryptedSecret,
+              did: did,
+              encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+              publicKeyArmored: signatureValidationPubliKey,
+              signatureArmored: msgIPFS.signature
+            })
+          }
 
-            // Decrypt message
-            if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
-              // To do signature verification it depends on who has sent the message
-              let signatureValidationPubliKey: string;
-              if (msgIPFS.fromDID === connectedUser.did) {
-                signatureValidationPubliKey = connectedUser.publicKey;
-              } else {
-                signatureValidationPubliKey = currentChat.publicKey;
-              }
-              msgIPFS.messageContent = await decryptAndVerifySignature({
-                cipherText: msgIPFS.messageContent,
-                encryptedSecretKey: msgIPFS.encryptedSecret,
-                did: did,
-                encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
-                publicKeyArmored: signatureValidationPubliKey,
-                signatureArmored: msgIPFS.signature
-              });
-            }
-
-            const messagesSentInChat: MessageIPFS = messages.find(
+          //checking if the message is encrypted or not
+          const messagesSentInChat: MessageIPFS = messages.find(
+            (msg) =>
+              msg.link === '' &&
+              msg.encType === '' &&
+              msg.cid === '' &&
+              msg.messageContent === msgIPFS.messageContent &&
+              msg.messageType === msgIPFS.messageType
+          )
+          // Replace message that was inserted when sending a message (same comment -abhishek)
+          if (messagesSentInChat) {
+            const newMessages = messages.map((x) => x)
+            const index = newMessages.findIndex(
               (msg) =>
                 msg.link === '' &&
                 msg.encType === '' &&
                 msg.cid === '' &&
                 msg.messageContent === msgIPFS.messageContent &&
                 msg.messageType === msgIPFS.messageType
-            );
-            // Replace message that was inserted when sending a message
-            if (messagesSentInChat) {
-              const newMessages = messages.map((x) => x);
-              const index = newMessages.findIndex(
+            )
+            newMessages[index] = msgIPFS
+            setMessages(newMessages)
+          } else {
+            //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
+            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link)
+            if (messageInChat === undefined) {
+              setMessages((m) => [...m, msgIPFS])
+            }
+          }
+        }
+        // This condition is triggered when the user loads the chat whenever the user is changed
+        else {
+          while (messageCID) {
+            setLoading(true)
+            if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
+              setLoading(false)
+              break
+            } else {
+              const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+              let msgIPFS: MessageIPFSWithCID
+              if (messageFromIndexDB !== undefined) {
+                msgIPFS = messageFromIndexDB.body
+              } else {
+                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid')
+                msgIPFS = messageFromIPFS
+              }
+
+              // Decrypt message
+              if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
+                // To do signature verification it depends on who has sent the message
+                let signatureValidationPubliKey: string
+                if (msgIPFS.fromDID === connectedUser.did) {
+                  signatureValidationPubliKey = connectedUser.publicKey
+                } else {
+                  signatureValidationPubliKey = currentChat.publicKey
+                }
+                msgIPFS.messageContent = await decryptAndVerifySignature({
+                  cipherText: msgIPFS.messageContent,
+                  encryptedSecretKey: msgIPFS.encryptedSecret,
+                  did: did,
+                  encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+                  publicKeyArmored: signatureValidationPubliKey,
+                  signatureArmored: msgIPFS.signature
+                })
+              }
+
+              // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
+              const messagesSentInChat: MessageIPFS = messages.find(
                 (msg) =>
                   msg.link === '' &&
                   msg.encType === '' &&
                   msg.cid === '' &&
                   msg.messageContent === msgIPFS.messageContent &&
                   msg.messageType === msgIPFS.messageType
-              );
-              newMessages[index] = msgIPFS;
-              setMessages(newMessages);
-            }
-            // Display messages for the first time
-            else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-              setMessages((m) => [msgIPFS, ...m]);
-            }
-            // Messages got from useQuery
-            else {
-              setMessages((m) => [...m, msgIPFS]);
-            }
-            const link = msgIPFS.link;
-            if (link) {
-              messageCID = link;
-            } else {
-              break;
+              )
+              // Replace message that was inserted when sending a message
+              if (messagesSentInChat) {
+                const newMessages = messages.map((x) => x)
+                const index = newMessages.findIndex(
+                  (msg) =>
+                    msg.link === '' &&
+                    msg.encType === '' &&
+                    msg.cid === '' &&
+                    msg.messageContent === msgIPFS.messageContent &&
+                    msg.messageType === msgIPFS.messageType
+                )
+                newMessages[index] = msgIPFS
+                setMessages(newMessages)
+              }
+              // Display messages for the first time
+              else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+                setMessages((m) => [msgIPFS, ...m])
+              }
+              // Messages got from useQuery
+              // else {
+              //TODO: Not needed as this is handled when the threadhashes are not same.
+              //   setMessages((m) => [...m, msgIPFS])
+              // }
+              const link = msgIPFS.link
+              if (link) {
+                messageCID = link
+              } else {
+                break
+              }
             }
           }
         }
@@ -186,8 +257,6 @@ const ChatBox = (): JSX.Element => {
           setImageSource(currentChat.profilePicture);
         }
       }
-      // Fetch new messages
-      getMessagesFromCID().catch((err) => console.error(err));
     }
   }, [currentChat]);
 
@@ -483,7 +552,7 @@ const ChatBox = (): JSX.Element => {
           <HelloBox>
             <Typography>Say Hello to Push Chat</Typography>
           </HelloBox>
-          <HelloText>You haven’t started a conversation yet.</HelloText>
+          <HelloText>You haven't started a conversation yet.</HelloText>
           <HelloText>Begin by searching name.eth or 0x123...</HelloText>
         </Box>
       ) : (
@@ -532,7 +601,7 @@ const ChatBox = (): JSX.Element => {
             <ScrollToBottom>
               {Loading ? (
                 <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
-                  <Loader color="#34C5F3" height={40} width={40} />
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
                 </div>
               ) : (
                 <>
@@ -552,7 +621,7 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
-                        <Chats msg={msg} did={did} />
+                        <Chats msg={msg} did={did} messageBeingSent={messageBeingSent} />
                         {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
@@ -568,7 +637,7 @@ const ChatBox = (): JSX.Element => {
           </MessageContainer>
 
           {messageBeingSent ? (
-            <Loader />
+            <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
           ) : (
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
@@ -613,7 +682,7 @@ const ChatBox = (): JSX.Element => {
                 </>
                 {filesUploading ? (
                   <div className="imageloader">
-                    <Loader color="#3467eb" height={20} width={20} />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={20} />
                   </div>
                 ) : (
                   <Icon onClick={handleSubmit}>

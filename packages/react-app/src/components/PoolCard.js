@@ -1,16 +1,19 @@
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
 import React from "react";
 
+// External Packages
 import styled, { css } from "styled-components";
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { toast } from "react-toastify";
 import InfoTooltip from "../primaries/InfoTooltip";
 import { B, Button, H2, H3, Input, Item, ItemH, Span } from '../primaries/SharedStyling';
 
+// Internal Configs
 import { abis, addresses } from "@project/contracts";
-import { toast } from "react-toastify";
 
-import { Oval } from "react-loader-spinner";
-
-//   <Blockies opts={{seed: "foo", color: "#dfe", bgcolor: "#a71", size: 15, scale: 3, spotcolor: "#000"}}/>
 const ethers = require("ethers");
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
@@ -522,25 +525,25 @@ export default function PoolCard({
         </Item>
 
         <Item padding="10px 20px 0px 20px" align="stretch" self="stretch">
-          <ItemH margin="0px">
-            <Item bg="#000" margin="5px 10px" radius="12px">
+          <ItemH margin="0px" align="stretch" self="stretch" flex="1">
+            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>User Deposit</PoolBoxTitle>
               <PoolBoxMsg>{formatTokens(userData.epochStakeNext)} {poolName == "Uniswap LP Pool (UNI-V2)" ? "UNI-V2" : "PUSH"}</PoolBoxMsg>
             </Item>
 
-            <Item bg="#000" margin="5px 10px" radius="12px">
+            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>Rewards Claimed <InfoTooltip title={"The total rewards you have already claimed from the pool. This includes all the rewards including the ones already harvested."} /></PoolBoxTitle>
               <PoolBoxMsg>{(userData.totalAccumulatedReward - userData.totalAvailableReward).toFixed(2)} PUSH</PoolBoxMsg>
             </Item>
           </ItemH>
 
-          <ItemH margin="0px">
-            <Item bg="#000" margin="5px 10px" radius="12px">
+          <ItemH margin="0px" align="stretch" self="stretch" flex="1">
+            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>Current Epoch Reward <InfoTooltip title={"This is only an estimation for the user's reward that they might get after the epoch. This might change depending upon deposits from other users."} /></PoolBoxTitle>
               <PoolBoxMsg>{userData.potentialUserReward} PUSH</PoolBoxMsg>
             </Item>
 
-            <Item bg="#000" margin="5px 10px" radius="12px">
+            <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>Available for Harvest <InfoTooltip title={"The rewards that are currently available for harvesting and can be immediately transferred to your address."} /></PoolBoxTitle>
               <PoolBoxMsg>{userData.totalAvailableReward} PUSH</PoolBoxMsg>
             </Item>
@@ -548,7 +551,7 @@ export default function PoolCard({
         </Item>
 
         {showDepositItem &&
-          <Item bg="#ddd" radius="12px" margin="20px 0px -10px 0px" padding="10px 20px" align="stretch" self="stretch">
+          <Item bg="#f1f1f1" radius="0px" margin="20px 0px -10px 0px" padding="10px 20px" align="stretch" self="stretch">
 
             {!showDepSlip &&
               <>
@@ -574,7 +577,7 @@ export default function PoolCard({
                   />
                 </Item>
 
-                <ItemH>
+                <ItemH padding="10px 0 0 0">
                   <ButtonAlt
                     bg={depositApproved ? "#999" : "#e20880"}
                     onClick={approveDeposit}
@@ -584,11 +587,7 @@ export default function PoolCard({
                       <Span color="#fff" weight="400">Approve</Span>
                     }
                     {txInProgressApprDep && !depositApproved &&
-                      <Oval
-                        color="#fff"
-                        height={12}
-                        width={12}
-                      />
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
                     }
                     {!txInProgress && depositApproved &&
                       <Span color="#fff" weight="600">Approved</Span>
@@ -603,11 +602,7 @@ export default function PoolCard({
                       <Span color="#fff" weight="400">Deposit</Span>
                     }
                     {txInProgressDep &&
-                      <Oval
-                        color="#fff"
-                        height={12}
-                        width={12}
-                      />
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
                     }
                   </ButtonAlt>
                 </ItemH>
@@ -643,11 +638,7 @@ export default function PoolCard({
                 <Span color="#fff" weight="400">Deposit</Span>
               }
               {txInProgressApprDep &&
-                <Oval
-                  color="#fff"
-                  height={12}
-                  width={12}
-                />
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
               }
             </ButtonAlt>
           }
@@ -660,11 +651,7 @@ export default function PoolCard({
               <Span color="#fff" weight="400">Withdraw</Span>
             }
             {txInProgressWithdraw &&
-              <Oval
-                color="#fff"
-                height={12}
-                width={12}
-              />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
             }
           </ButtonAlt>
 
@@ -676,11 +663,7 @@ export default function PoolCard({
               <Span color="#fff" weight="400">Harvest</Span>
             }
             {txInProgressMassHarvest &&
-              <Oval
-                color="#fff"
-                height={12}
-                width={12}
-              />
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
             }
           </ButtonAlt>
         </ItemH>
@@ -692,7 +675,7 @@ export default function PoolCard({
 // toast customize
 const LoaderToast = ({ msg, color }) => (
   <Toaster>
-    <Oval color={color} height={30} width={30} />
+    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
     <ToasterMsg>{msg}</ToasterMsg>
   </Toaster>
 );

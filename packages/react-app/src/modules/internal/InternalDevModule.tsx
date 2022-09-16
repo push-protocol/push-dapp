@@ -105,9 +105,18 @@ const InternalDevModule = () => {
         <Spinner />
       </IndividualComps>
 
+      {/* Spinner Component */}
+      <IndividualComps caption={`components/reusables/spinner/SpinnerUnit - color="#529015"`}>
+        <Spinner color='#529015' />
+      </IndividualComps>
+
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone title=null">
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} />
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE title=null">
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} completed={false} />
+      </IndividualComps>
+
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE_MINIMAL title=null">
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} completed={false} />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
@@ -121,21 +130,26 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone spinnerSize=24">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Long Text, Very Long" completed={false} spinnerSize={24} />
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerSize=24">
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Spinner Size" completed={false} spinnerSize={24} />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption={`components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerColor="#083c84"`}>
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Spinner Color" completed={false} spinnerColor="#083c84" />
       </IndividualComps>
       
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone spinnerSize=24">
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerSize=24">
         <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="This time it's done" completed={true} spinnerSize={24} />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone">
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE">
         <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
       </IndividualComps>
 
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone">
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE">
         <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Long Text, Very Long" completed={false} />
       </IndividualComps>
 
@@ -179,7 +193,7 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=standalone overlay=ontop blur=5">
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE overlay=ontop blur=5">
         <SpanV2 color={theme.default.color}>  
           {randomText}
         </SpanV2>

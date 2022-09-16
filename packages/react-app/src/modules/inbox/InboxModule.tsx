@@ -1,26 +1,27 @@
-import { abis, addresses, envConfig } from '@project/contracts';
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { postReq } from 'api';
 import { ethers } from 'ethers';
 import React from 'react';
 import ReactGA from 'react-ga';
+
+// External Packages
 import { useDispatch, useSelector } from 'react-redux';
+import { toast as toaster } from 'react-toastify';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
+// Internal Compoonents
+import { postReq } from 'api';
+import InboxComponent from 'components/InboxComponent';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import NotificationToast from 'primaries/NotificationToast';
 import { Section } from 'primaries/SharedStyling';
-import { toast as toaster } from 'react-toastify';
-
-import { Oval as Loader } from 'react-loader-spinner';
-
+import { setCommunicatorReadProvider, setCoreReadProvider, setPushAdmin } from 'redux/slices/contractSlice';
 import Feedbox from 'segments/Feedbox';
-
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
-import { setCommunicatorReadProvider, setCoreReadProvider, setPushAdmin } from 'redux/slices/contractSlice';
-
-import InboxComponent from 'components/InboxComponent';
+// Internal Configs
+import { abis, addresses, envConfig } from '@project/contracts';
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
@@ -86,7 +87,7 @@ const InboxModule = () => {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader type="Oval" color={color} height={30} width={30} />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
