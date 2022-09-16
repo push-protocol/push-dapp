@@ -11,7 +11,11 @@ const UtilityHelper = {
   },
 }
 
-export const isValidUrl = urlString=> {
+export const isLengthValid = (data:string,len:number):boolean => {
+  return data.length <=len;
+}
+
+export const isValidUrl = (urlString:string):boolean=> {
   var urlPattern = new RegExp('^((?:https|http):\\/\\/)'+ // validate protocol
   '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // validate domain name
   '((\\d{1,3}\\.){3}\\d{1,3}))'+ // validate OR ip (v4) address
