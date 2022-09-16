@@ -1,6 +1,6 @@
-import { envConfig } from "@project/contracts";
-import { convertChainIdToChainCaip } from "./CaipHelper";
+import { appConfig } from "config";
 import { utils } from "ethers";
+import { convertChainIdToChainCaip } from "./CaipHelper";
 
 // Utility Helper Functions
 const UtilityHelper = {
@@ -76,7 +76,7 @@ export const PolygonNetworks = {
   },
 }
 
-export const CORE_CHAIN_ID: number = envConfig.coreContractChain;
+export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
 
 export const getAliasFromChannelDetails = (channelDetails: Object | null | string): (string | null) => {
   if (!channelDetails || channelDetails === 'unfetched')

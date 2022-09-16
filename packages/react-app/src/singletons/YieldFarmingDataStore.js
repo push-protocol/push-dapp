@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 
-import { addresses, envConfig } from "@project/contracts";
+import { addresses, appConfig } from "config";
 
 const ONE_PUSH = ethers.BigNumber.from(1).mul(
   ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18))
@@ -297,7 +297,7 @@ export default class YieldFarmingDataStore {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
     let apr;
-    if(envConfig.coreContractChain === 42)
+    if(appConfig.coreContractChain === 42)
     apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
     else
     apr = annualRewards.mul(1000000).div(totalStaked);
@@ -317,7 +317,7 @@ export default class YieldFarmingDataStore {
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
 
     let apr;
-    if(envConfig.coreContractChain === 42)
+    if(appConfig.coreContractChain === 42)
     apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
     else
     apr = annualRewards.mul(1000000).div(totalStaked);

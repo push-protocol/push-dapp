@@ -1,3 +1,4 @@
+import { appConfig } from "config";
 import { create } from 'ipfs-http-client';
 import { EnvHelper } from "./UtilityHelper";
 
@@ -8,8 +9,8 @@ export const IPFSGateway = EnvHelper.isProduction() ? productionIpfsGateway : de
 
 export const IPFSupload = async (input: string) => {
   const bufferInput = Buffer.from(input);
-  const projectId = process.env.REACT_APP_IPFS_PROJECT_ID;
-  const projectSecret = process.env.REACT_APP_IPFS_PROJECT_SECRET;
+  const projectId = appConfig.ipfsInfuraAPIKey;
+  const projectSecret = appConfig.ipfsInfuraAPISecret;
   const auth = 'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
 
   const client = create({

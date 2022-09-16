@@ -1,7 +1,7 @@
-import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
 import { getReq } from "api";
 import AliasVerificationodal from "components/AliasVerificationModal";
+import { abis, addresses, appConfig } from "config";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 import { ethers } from "ethers";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
@@ -29,7 +29,7 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 import styled from "styled-components";
 
-export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
+export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
 
 // Create Channels Module

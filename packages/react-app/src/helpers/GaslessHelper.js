@@ -1,8 +1,8 @@
+import { toolingPostReq } from "api/index";
+import { appConfig } from "config";
 import { ethers } from "ethers";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 import { toast } from 'react-toastify';
-import {toolingPostReq} from "api/index"
-import { envConfig } from "@project/contracts";
 const GAS_LIMIT = 50;
 
 const ERROR_TOAST_DEFAULTS = {
@@ -35,7 +35,7 @@ export const createTransactionObject = async (newDelegatee,account,epnsToken,add
     console.log("🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ newDelegatee", newDelegatee)
       const contractName = await epnsToken.name()
       const nonce = await epnsToken.nonces(account)
-      const chainId = envConfig.coreContractChain
+      const chainId = appConfig.coreContractChain
       const contractAddress = addresses.epnsToken
       const now = new Date()
       const secondsSinceEpoch = Math.round(now.getTime() / 1000)

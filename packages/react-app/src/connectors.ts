@@ -1,12 +1,12 @@
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { envConfig } from "@project/contracts";
-import { PortisConnector } from '@web3-react/portis-connector'
+import { InjectedConnector } from '@web3-react/injected-connector';
+import { PortisConnector } from '@web3-react/portis-connector';
+import { appConfig } from "config";
 // import { NetworkConnector } from '@web3-react/network-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 // import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { LedgerConnector } from '@web3-react/ledger-connector'
-import { TrezorConnector } from '@web3-react/trezor-connector'
 import { LedgerHQFrameConnector } from "@epnsproject/sdk-ledgerlive";
+import { LedgerConnector } from '@web3-react/ledger-connector';
+import { TrezorConnector } from '@web3-react/trezor-connector';
 // import { FrameConnector } from '@web3-react/frame-connector'
 // import { AuthereumConnector } from '@web3-react/authereum-connector'
 // import { FortmaticConnector } from '@web3-react/fortmatic-connector'
@@ -14,13 +14,13 @@ import { LedgerHQFrameConnector } from "@epnsproject/sdk-ledgerlive";
 // import { TorusConnector } from '@web3-react/torus-connector'
 
 require('dotenv').config();
-const SUPPORTED_CHAIN_IDS = [...envConfig.allowedNetworks];
+const SUPPORTED_CHAIN_IDS = [...appConfig.allowedNetworks];
 const POLLING_INTERVAL = 12000;
-const CORE_CHAIN_ID = envConfig.coreContractChain;
-const CORE_RPC = envConfig.coreRPC;
+const CORE_CHAIN_ID = appConfig.coreContractChain;
+const CORE_RPC = appConfig.coreRPC;
 
 const RPC_URLS: { [chainId: number]: string } = {
-  [CORE_CHAIN_ID]: envConfig.coreRPC
+  [CORE_CHAIN_ID]: appConfig.coreRPC
 }
 
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS })

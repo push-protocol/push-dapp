@@ -21,7 +21,7 @@ import { SEND_NOTIFICATION_STATES, setCanSend } from "redux/slices/sendNotificat
 import { incrementStepIndex, setCommunicateOpen, setDeveloperOpen, setTutorialContinous } from "../redux/slices/userJourneySlice";
  
 // Internal Configs
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 import GLOBALS from "config/Globals";
 
 // Create Header
@@ -32,7 +32,7 @@ function Navigation() {
     const { run, stepIndex, isCommunicateOpen, isDeveloperOpen } = useSelector((state: any) => state.userJourney);
     const { navigationSetup, setNavigationSetup } = useContext(NavigationContext);
 
-    const CORE_CHAIN_ID = envConfig.coreContractChain;
+    const CORE_CHAIN_ID = appConfig.coreContractChain;
     const { account, chainId } = useWeb3React();
     const onCoreNetwork = CORE_CHAIN_ID === chainId;
 

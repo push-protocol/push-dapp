@@ -41,10 +41,11 @@ import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './chatBox.css';
 
 // Internal Configs
-import { envConfig } from '@project/contracts';
+import { appConfig } from "config";
+;
 
 
-const INFURA_URL = envConfig.infuraApiUrl
+const INFURA_URL = appConfig.infuraApiUrl
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;

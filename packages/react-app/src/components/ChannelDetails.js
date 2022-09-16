@@ -20,8 +20,9 @@ import ChannelSettings from './ChannelSettings';
 import ShowDelegates from './ShowDelegates';
 
 // Internal Configs
-import { envConfig } from '@project/contracts';
+import { appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
+;
 
 const DATE_FORMAT = 'MMMM Do YYYY';
 
@@ -46,7 +47,7 @@ export default function ChannelDetails() {
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
 
-  const CORE_CHAIN_ID = envConfig.coreContractChain;
+  const CORE_CHAIN_ID = appConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
@@ -64,7 +65,7 @@ export default function ChannelDetails() {
       const bn = channelDetails.channelStartBlock.toString();
 
       // using ethers jsonRpcProvider instead of library bcz channels are created on only core chain, that's why block can be fetched from that only
-      const block = await new ethers.providers.JsonRpcProvider(envConfig.coreRPC).getBlock(+bn);
+      const block = await new ethers.providers.JsonRpcProvider(appConfig.coreRPC).getBlock(+bn);
       const date = moment(block.timestamp * 1000); //convert from millisecs
       setCreationDate(date.format(DATE_FORMAT));
     })();

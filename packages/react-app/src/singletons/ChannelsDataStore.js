@@ -1,7 +1,7 @@
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
 
-import { envConfig } from "@project/contracts";
 import { getReq, postReq } from "api";
+import { appConfig } from "config";
 
 // STATIC SINGLETON
 export const ChannelEvents = {
@@ -41,7 +41,7 @@ export default class ChannelsDataStore {
 
     // set chainId
     this.state.chainId = chainId;
-    this.state.onCoreNetwork = chainId === envConfig.coreContractChain;
+    this.state.onCoreNetwork = chainId === appConfig.coreContractChain;
 
     // First attach listeners then overwrite the old one if any
     this.resetChannelsListeners();

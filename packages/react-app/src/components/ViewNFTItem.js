@@ -18,7 +18,7 @@ import Skeleton from '@yisheng90/react-loading';
 import { IoIosGift } from 'react-icons/io';
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
@@ -28,7 +28,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
   const [loading, setLoading] = React.useState(true);
   const [txInProgress, setTxInProgress] = React.useState(false);
 
-  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
+  const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
 
   React.useEffect(() => {

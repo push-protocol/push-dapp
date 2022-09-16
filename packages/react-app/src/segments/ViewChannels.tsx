@@ -21,7 +21,7 @@ import DisplayNotice from "../primaries/DisplayNotice";
 import { Item, ItemH } from "../primaries/SharedStyling";
 
 // Internal Configs
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
@@ -121,7 +121,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setLoadingChannel(true); //begin loading here
       setChannelToShow([]); //maybe remove later
       let payloadToSearchApiObj;
-      if (envConfig.coreContractChain === 42) {
+      if (appConfig.coreContractChain === 42) {
         payloadToSearchApiObj = {
           query: search,
           op: "read",

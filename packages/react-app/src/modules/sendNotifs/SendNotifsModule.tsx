@@ -1,10 +1,9 @@
 
+import { useWeb3React } from "@web3-react/core";
+import { abis, addresses, appConfig } from "config";
+import { ethers } from "ethers";
 import React from "react";
 import ReactGA from "react-ga";
-
-import { abis, addresses, envConfig } from "@project/contracts";
-import { useWeb3React } from "@web3-react/core";
-import { ethers } from "ethers";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -27,7 +26,7 @@ import {
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
 
-export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
+export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 const blockchainName = {
   1: "ETH_MAINNET",
@@ -49,7 +48,7 @@ function ChannelDashboardPage() {
   } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
 
-  const CORE_CHAIN_ID = envConfig.coreContractChain;
+  const CORE_CHAIN_ID = appConfig.coreContractChain;
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 

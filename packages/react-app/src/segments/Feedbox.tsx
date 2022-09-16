@@ -28,7 +28,7 @@ import NotificationToast from "../primaries/NotificationToast";
 import { ScrollItem } from "./ViewChannels";
 
 // Internal Configs
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 import { device } from "config/Globals";
 
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -138,7 +138,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
         raw: true,
-        env: envConfig['env'],
+        env: appConfig.pushNodesEnv,
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
@@ -160,7 +160,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     try {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
-        env: envConfig['env'],
+        env: appConfig.pushNodesEnv,
         raw: true,
         page: 1,
         limit: NOTIFICATIONS_PER_PAGE
@@ -202,7 +202,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     try {
       const results = await EpnsAPI.user.getFeeds({
         user: user, // user address in CAIP
-        env: envConfig['env'],
+        env: appConfig.pushNodesEnv,
         limit: 100000,
         page: page,
         raw:true

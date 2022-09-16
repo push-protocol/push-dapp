@@ -4,7 +4,7 @@ import React from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { Waypoint } from "react-waypoint";
 import styled from "styled-components";
-// import { envConfig } from "@project/contracts";
+// import { appConfig } from "config";
 
 import { AiOutlineSearch } from "react-icons/ai";
 

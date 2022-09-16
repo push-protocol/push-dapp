@@ -1,31 +1,29 @@
-import { abis, addresses } from "@project/contracts";
-import { useWeb3React } from "@web3-react/core";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import React, { useRef, useState } from "react";
-import { BsFillCheckCircleFill } from "react-icons/bs";
-import { useDispatch } from "react-redux";
-import FadeLoader from "react-spinners/FadeLoader";
-import { useClickAway } from "react-use";
-import { setProcessingState } from "redux/slices/channelCreationSlice";
-import styled, { css, useTheme } from "styled-components";
-import { getReq, postReq } from "../api";
-import { Button, H3, Item, Section, Span } from "../primaries/SharedStyling";
+import { useWeb3React } from '@web3-react/core';
+import { SpanV2 } from 'components/reusables/SharedStylingV2';
+import { abis, addresses, appConfig } from 'config';
+import GLOBALS from "config/Globals";
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import React, { useRef, useState } from 'react';
+import { BsFillCheckCircleFill } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { useClickAway } from 'react-use';
+import { setProcessingState } from 'redux/slices/channelCreationSlice';
+import styled, { css, useTheme } from 'styled-components';
+import { getReq, postReq } from '../api';
+import { A, Button, H3, Item, Section, Span } from '../primaries/SharedStyling';
 
-const ethers = require("ethers");
+const ethers = require('ethers');
 
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
-  const themes = useTheme();
+  const theme = useTheme();
   const { account, library, chainId } = useWeb3React();
   const signer = library.getSigner(account);
   const dispatch = useDispatch();
 
   // const modalRef = useRef(null);
-  const polygonCommsContract = new ethers.Contract(
-    addresses.epnsPolyComm,
-    abis.epnsComm,
-    signer
-  );
-  const [loading, setLoading] = useState("");
+  const polygonCommsContract = new ethers.Contract(addresses.epnsPolyComm, abis.epnsComm, signer);
+  const [loading, setLoading] = useState('');
   const [success, setSuccess] = useState(false);
   const mainAddress = aliasEthAccount;
 
@@ -40,12 +38,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
 
   const checkAliasVerification = async () => {
     const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    const { aliasVerified } = await getReq(
-      `/v1/alias/${userAddressInCaip}/channel`
-    ).then(({ data }) => {
+    const { aliasVerified } = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
       if (data) {
         dispatch(setAliasVerified(data.is_alias_verified));
-        return { aliasVerified: data["is_alias_verified"] };
+        return { aliasVerified: data['is_alias_verified'] };
       }
       return { aliasVerified: null };
     });
@@ -53,22 +49,20 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   };
 
   const submitAlias = () => {
-    setLoading("Processing");
-    const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(
-      mainAddress
-    );
+    setLoading('Processing');
+    const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(mainAddress);
     anotherSendTxPromise
       .then(async (tx) => {
         console.log(tx);
-        setLoading("Transaction Sent! It usually takes 5mins to verify.");
+        setLoading('Transaction Sent! It usually takes 5mins to verify.');
 
         await tx.wait(1);
         setTimeout(() => {
-          setLoading("Transaction Mined!");
+          setLoading('Transaction Mined!');
         }, 2000);
 
         setTimeout(() => {
-          setLoading("Loading...");
+          setLoading('Loading...');
         }, 2000);
 
         const intervalId = setInterval(async () => {
@@ -83,39 +77,33 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         }, 5000);
       })
       .catch(() => {
-        setLoading("There was an error");
+        setLoading('There was an error');
         setTimeout(() => {
-          setLoading("");
+          setLoading('');
         }, 2000);
       });
   };
 
   return (
-    <Item
-      margin="15px 20px 15px 20px"
-      flex="1"
-      display="flex"
-      direction="column"
-    >
-      <Span
+    <Item margin="15px 20px 15px 20px" flex="1" display="flex" direction="column">
+      <SpanV2
         textAlign="center"
         margin="60px 0px 0px 0px"
-        color={themes.color}
-        size="16px"
+        color={theme.color}
+        fontSize="16px"
         textTransform="none"
-        weight="500"
-        line="24px"
+        fontWeight="500"
+        lineHeight="24px"
+        maxWidth="400px"
       >
-        You’re almost there! Verify the Channel Alias to enable sending
-        <br></br>
-        Notifications from it.
-      </Span>
+        You’re almost there! Verify the Channel Alias to enable sending notifications from it.
+      </SpanV2>
 
-      {loading === "" && (
+      {loading === '' && (
         <Span
           textAlign="center"
           margin="60px 0px 0px 0px"
-          color={"#CF1C84"}
+          color={'#CF1C84'}
           size="16px"
           textTransform="none"
           weight="500"
@@ -125,49 +113,35 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         </Span>
       )}
 
+      {loading === '' && appConfig.appEnv !== 'prod' && (
+        <SpanV2
+          padding="10px"
+          margin="10px"
+          borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+          background={theme.default.secondaryBg}
+          color={theme.default.secondaryColor}
+        >
+          You will need{' '}
+          <A href="https://faucet.polygon.technology/" target="_blank">
+            testnet mumbai matic
+          </A>{' '}
+          to proceed.
+        </SpanV2>
+      )}
+
       {!success &&
         (loading ? (
-          <Item
-            display="flex"
-            direction="row"
-            align="center"
-            margin="60px 0px 0px 0px"
-          >
+          <Item display="flex" direction="row" align="center" margin="60px 0px 0px 0px">
             <FadeLoader color="#cf1c84" loading={true} height={13} width={4} />
 
-            <Span
-              color={themes.color}
-              weight="600"
-              textTransform="none"
-              line="22px"
-              size="16px"
-              margin="0px 10px"
-            >
+            <Span color={theme.color} weight="600" textTransform="none" line="22px" size="16px" margin="0px 10px">
               {loading}
             </Span>
           </Item>
         ) : (
-          <Item
-            width="15em"
-            self="stretch"
-            align="stretch"
-            margin="60px auto 0px auto"
-          >
-            <Button
-              bg="#e20880"
-              color="#fff"
-              flex="1"
-              radius="15px"
-              padding="20px 10px"
-              onClick={checkAlias}
-            >
-              <Span
-                color="#fff"
-                weight="600"
-                textTransform="none"
-                line="22px"
-                size="16px"
-              >
+          <Item width="15em" self="stretch" align="stretch" margin="60px auto 0px auto">
+            <Button bg="#e20880" color="#fff" flex="1" radius="15px" padding="20px 10px" onClick={checkAlias}>
+              <Span color="#fff" weight="600" textTransform="none" line="22px" size="16px">
                 Verify Alias Address
               </Span>
             </Button>
@@ -175,21 +149,9 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
         ))}
 
       {success && (
-        <Item
-          display="flex"
-          direction="row"
-          align="center"
-          margin="60px 0px 0px 0px"
-        >
+        <Item display="flex" direction="row" align="center" margin="60px 0px 0px 0px">
           <BsFillCheckCircleFill color="#30CC8B" size={30} />
-          <Span
-            color={themes.color}
-            weight="600"
-            textTransform="none"
-            line="22px"
-            size="16px"
-            margin="0px 10px"
-          >
+          <Span color={theme.color} weight="600" textTransform="none" line="22px" size="16px" margin="0px 10px">
             Verification Complete
           </Span>
         </Item>

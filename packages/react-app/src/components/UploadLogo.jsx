@@ -17,7 +17,7 @@ import { BsCloudUpload } from 'react-icons/bs';
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 
 const UploadLogo = ({

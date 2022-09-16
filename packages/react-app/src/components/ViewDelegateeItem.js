@@ -22,7 +22,7 @@ import { executeDelegateTx } from '../helpers/WithGasHelper';
 import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 export const PUSH_BALANCE_TRESHOLD = 100; //minimum number of push
 export const GAS_LIMIT = 50; //dollars limit of gas;

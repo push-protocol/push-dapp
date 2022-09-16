@@ -29,12 +29,12 @@ import ChannelDeactivateModalContent from "./ChannelDeactivateModalContent";
 import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses, appConfig } from "config";
 
 const ethers = require("ethers");
 
 const MIN_STAKE_FEES = 50;
-const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
+const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 type ChannelSettingsType = {
   DropdownRef:React.MutableRefObject<any>,

@@ -12,10 +12,10 @@ import { Section } from "primaries/SharedStyling";
 import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 
 // Internal Configs
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
-export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
+export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 
 // Create Header
 function ChannelDashboardModule() {

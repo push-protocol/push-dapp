@@ -1,5 +1,5 @@
-import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { abis, addresses, appConfig } from "config";
 import { ethers } from "ethers";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ import {
   setPushAdmin
 } from "redux/slices/contractSlice";
 
-const CORE_CHAIN_ID = envConfig.coreContractChain;
+const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 const InitState = () => {
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const InitState = () => {
       console.log(library);
       const coreProvider = onCoreNetwork
         ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
+        : new ethers.providers.JsonRpcProvider(appConfig.coreRPC)
       
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(
