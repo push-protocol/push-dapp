@@ -6,7 +6,7 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from '@web3-react/injected-connector';
-import { useWeb3React,UnsupportedChainIdError } from '@web3-react/core';
+import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
 import { injected, ledger, portis, walletconnect } from 'connectors';
 import { useEagerConnect, useInactiveListener } from 'hooks';
 import Joyride, { CallBackProps } from 'react-joyride';
@@ -33,7 +33,8 @@ import styled, { useTheme } from 'styled-components';
 import BlurBGClouds from 'components/reusables/blurs/BlurBGClouds';
 
 import GLOBALS, { device } from 'config/Globals';
-import { envConfig } from "@project/contracts";
+import { appConfig } from 'config';
+
 
 // define the different type of connectors which we use
 const web3Connectors = {
@@ -54,39 +55,39 @@ const web3Connectors = {
   Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: 'Portis' }
 };
 
-async function handleChangeNetwork(){
-  const chainIds = envConfig.allowedNetworks;
-    if (!chainIds.includes(window.ethereum.networkVersion)) {
-          try {
-            await window.ethereum.request({
-              method: 'wallet_switchEthereumChain',
-              params: [{ chainId: hexlify(envConfig.coreContractChain) }]
-            });
-          } catch (err) {
-            console.error(err);
-          }
-        }
-  }
-  
-    // handle error functions
-    function getErrorMessage(error: Error) {
-      if (error instanceof NoEthereumProviderError) {
-        return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
-      } else if (error instanceof UnsupportedChainIdError) {
-        handleChangeNetwork();
-        if(envConfig.coreContractChain === 42)
-        return "Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network"
-        else 
-        return "Unsupported Network, please connect to the Ethereum Mainnet network"
-      } else if (
-        error instanceof UserRejectedRequestErrorInjected
-      ) {
-        return 'Please authorize this website to access the dApp'
-      } else {
-        console.error(error)
-        return 'An unknown error occurred. Check the console for more details'
-      }
+async function handleChangeNetwork() {
+  const chainIds = appConfig.allowedNetworks;
+  if (!chainIds.includes(window.ethereum.networkVersion)) {
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: hexlify(appConfig.coreContractChain) }]
+      });
+    } catch (err) {
+      console.error(err);
     }
+  }
+}
+
+// handle error functions
+function getErrorMessage(error: Error) {
+  if (error instanceof NoEthereumProviderError) {
+    return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
+  } else if (error instanceof UnsupportedChainIdError) {
+    handleChangeNetwork();
+    if (appConfig.coreContractChain === 42)
+      return "Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network"
+    else
+      return "Unsupported Network, please connect to the Ethereum Mainnet network"
+  } else if (
+    error instanceof UserRejectedRequestErrorInjected
+  ) {
+    return 'Please authorize this website to access the dApp'
+  } else {
+    console.error(error)
+    return 'An unknown error occurred. Check the console for more details'
+  }
+}
 
 const AppLogin = ({ toggleDarkMode }) => {
   // React GA Analytics
@@ -112,31 +113,39 @@ const AppLogin = ({ toggleDarkMode }) => {
   return (
     <Container alignItems="center">
       <BlurBGClouds />
+      <ItemHV2
+        flexWrap="nowrap"
+        maxWidth="fit-content"
+        alignSelf="flex-end"
 
-      <ItemVV2
-        padding="16px 0"
-        position="absolute"
-        top="30px"
-        right="30px"
-        width="fit-content"
-        borderRadius="100%"
-        background="rgba(179, 178, 236, 0.5)"
-        zIndex="99"
       >
-        <DarkModeSwitch
-          style={{ margin: '0 1rem' }}
-          checked={theme.scheme == 'light' ? false : true}
-          onChange={toggleDarkMode}
-          size={24}
-          sunColor="#fff"
-        />
-      </ItemVV2>
+        {!!error &&
+          <SpanV2
+            padding="0.4rem 1rem"
+            margin="0 1rem"
+            borderRadius="20px"
+            background="#CF1C84"
+            color="#fff">{getErrorMessage(error)}</SpanV2>
+        }
+        <ItemHV2
+          padding="16px 0"
+          width="fit-content"
+          height="fit-content"
+          borderRadius="100%"
+          alignSelf="center"
+          background="rgba(179, 178, 236, 0.5)"
+          zIndex="99"
+        >
+          <DarkModeSwitch
+            style={{ margin: '0 1rem' }}
+            checked={theme.scheme == 'light' ? false : true}
+            onChange={toggleDarkMode}
+            size={24}
+            sunColor="#fff"
+          />
+        </ItemHV2>
 
-      <ItemVV2>
-          {!!error &&
-            <p>{getErrorMessage(error)}</p>
-          }
-        </ItemVV2>
+      </ItemHV2>
       {/* Login Module */}
       <ItemVV2 alignSelf="center" justifyContent="flex-start" flex="auto">
         {/* Logo */}
@@ -149,7 +158,7 @@ const AppLogin = ({ toggleDarkMode }) => {
           {theme.scheme == 'light' && <EPNSLogoLight />}
           {theme.scheme == 'dark' && <EPNSLogoDark />}
         </ItemVV2>
-        
+
         {/* Login Component */}
         <ItemVV2
           background={theme.default.bg}
@@ -192,7 +201,7 @@ const AppLogin = ({ toggleDarkMode }) => {
                     activate(currentConnector);
                   }}
                 >
-                  <ImageV2 src={image} height="68px" width="74px" padding="0px 0px 18px 0px"/>
+                  <ImageV2 src={image} height="68px" width="74px" padding="0px 0px 18px 0px" />
 
                   <SpanV2
                     spacing="0.1em"
