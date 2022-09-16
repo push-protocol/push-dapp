@@ -10,6 +10,7 @@ const initialState = {
   CHANNEL_BLACKLIST: [], //a list of channels
   page: 0,
   channels: [], // the channels meta-data
+  subscriptionStatus: {}, // a mapping of channel address to user's subscription status
   channelsCache: {}, // a mapping of channel address to channel details
 };
 
@@ -38,6 +39,13 @@ export const channelSlice = createSlice({
       const channelIndex = state.channels.findIndex((channelInfo) => channelInfo.addr === channelAddress);
       state.channels[channelIndex].memberCount--;
       state.channels[channelIndex].isSubscriber = false;
+    },
+    updateBulkSubscriptions: (state, action) => {
+      state.subscriptionStatus = action.payload;
+    },
+    updateSubscriptionStatus: (state, action) => {
+      const { channelAddress, status } = action.payload;
+      state.subscriptionStatus[channelAddress] = status;
     }
   },
 });
@@ -48,7 +56,9 @@ export const {
   incrementPage,
   cacheChannelInfo,
   cacheSubscribe,
-  cacheUnsubscribe
+  cacheUnsubscribe,
+  updateBulkSubscriptions,
+  updateSubscriptionStatus
 } = channelSlice.actions;
 
 export default channelSlice.reducer;

@@ -10,7 +10,7 @@ export const getUserSubscriptions = async ({ userCaipAddress }: Props) => {
 
     try {
         const response = await getReq(reqEndpoint);
-        return response;
+        return response?.data?.subscriptions;
     } catch (err) {
         throw new Error(err.message);
     }

@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import React from "react";
+import React, { useEffect } from "react";
 
 // External Packages
 import { useDispatch, useSelector } from "react-redux";
@@ -8,21 +8,24 @@ import { Waypoint } from "react-waypoint";
 import styled, { useTheme } from "styled-components";
 
 // Internal Compoonents
-import { postReq } from "api";
 import Faucets from "components/Faucets";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from "components/ViewChannelItem";
 import UtilityHelper from 'helpers/UtilityHelper';
 import { AiOutlineSearch } from "react-icons/ai";
-import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
+import { incrementPage, setChannelMeta, updateBulkSubscriptions } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { Item, ItemH } from "../primaries/SharedStyling";
+import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+
+// Api Services
+import { postReq } from "api";
+import { getChannels, getUserSubscriptions } from "services";
 
 // Internal Configs
 import { envConfig } from "@project/contracts";
-import { getChannels } from "services";
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
@@ -163,7 +166,16 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     };
   }, [search]);
 
-
+  useEffect(() => {
+    if(!account) return;
+    (async function() {
+      const userCaipAddress = convertAddressToAddrCaip(account, chainId);
+      const subscriptionsArr = await getUserSubscriptions({ userCaipAddress });
+      const subscriptionsMapping = {};
+      subscriptionsArr.map(({channel}) => subscriptionsMapping[channel] = true);
+      dispatch(updateBulkSubscriptions(subscriptionsMapping));
+    })()
+  }, [account]);
 
   React.useEffect(() => {
     const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42)

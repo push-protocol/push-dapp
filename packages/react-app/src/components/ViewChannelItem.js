@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { isCommunityResourcable } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import React from "react";
+import React, { useEffect } from "react";
 
 // External Packages
 import Skeleton from "@yisheng90/react-loading";
@@ -21,7 +21,7 @@ import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import useToast from "hooks/useToast";
-import { cacheChannelInfo, cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
+import { cacheChannelInfo, cacheSubscribe, cacheUnsubscribe, updateSubscriptionStatus } from "redux/slices/channelSlice";
 import {
   addNewWelcomeNotif, incrementStepIndex
 } from "redux/slices/userJourneySlice";
@@ -43,6 +43,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const themes = useTheme();
 
   const { run, stepIndex } = useSelector((state) => state.userJourney);
+  
 
   const {
     epnsReadProvider,
@@ -52,7 +53,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     ZERO_ADDRESS,
   } = useSelector((state) => state.contracts);
   const { canVerify } = useSelector((state) => state.admin);
-  const { channelsCache, CHANNEL_BLACKLIST } = useSelector(
+  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector(
     (state) => state.channels
   );
   const { account, library, chainId } = useWeb3React();
@@ -61,7 +62,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const [channelObject, setChannelObject] = React.useState({});
   const [channelJson, setChannelJson] = React.useState({});
-  const [subscribed, setSubscribed] = React.useState(true);
+  const [subscribed, setSubscribed] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [subscriberCount, setSubscriberCount] = React.useState(0);
   const [isPushAdmin, setIsPushAdmin] = React.useState(false);
@@ -94,6 +95,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [toast]);
   // ------ toast related section
 
+  useEffect(() => {
+    if (!channelObject.channel) return;
+    setSubscribed(subscriptionStatus[channelObject.channel]);
+  }, [channelObject]);
+
   React.useEffect(() => {
     if (!channelObject.channel) return;
     if (channelObject.verifiedBy) {
@@ -110,7 +116,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           channel: channelObject.channel,
           alias_address: channelObject.alias_address,
           subscriberCount: channelObject.subscriber_count,
-          isSubscriber: channelObject.isSubscriber,
         });
         fetchChannelJson();
       });
@@ -165,12 +170,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
       setIsPushAdmin(pushAdminAddress === account);
       setSubscriberCount(channelObject.subscriber_count);
-      setSubscribed(channelObject.isSubscriber);
       setChannelJson({
         ...channelJson,
         channel: channelObject.channel,
         subscriberCount: channelObject.subscriber_count,
-        isSubscriber: channelObject.isSubscriber,
       });
       setLoading(false);
     } catch (err) {
@@ -398,7 +401,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
         onSuccess: () => {
-          dispatch(cacheSubscribe({ channelAddress: channelObject.channel }));
+          // dispatch(cacheSubscribe({ channelAddress: channelObject.channel }));
+          dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: true }));
           setSubscribed(true);
           setSubscriberCount(subscriberCount + 1);
 
@@ -510,7 +514,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
         onSuccess: () => {
-          dispatch(cacheUnsubscribe({ channelAddress: channelObject.channel }));
+          // dispatch(cacheUnsubscribe({ channelAddress: channelObject.channel }));
+          dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: false }));
           setSubscribed(false);
           setSubscriberCount(subscriberCount - 1);
 
