@@ -570,7 +570,7 @@ const ChatBox = (): JSX.Element => {
                 {caip10ToWallet(currentChat.msg.name)}
               </Typography>
             </UserInfo>
-            <MoreOptions>
+            {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
                 <MoreVertIcon />
               </IconButton>
@@ -594,7 +594,7 @@ const ChatBox = (): JSX.Element => {
                   </Option>
                 </OptionContainer>
               )}
-            </MoreOptions>
+            </MoreOptions> */}
           </ChatHeader>
 
           <MessageContainer>
