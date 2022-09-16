@@ -71,7 +71,7 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
       }
 
       {!loading && NFTObjects.length != 0 &&
-        <ItemH id="scrollstyle-secondary">
+        <ItemH id="scrollstyle-secondary" margin="20px 0 0 0">
           {Object.keys(NFTObjects).map(index => {
             if (NFTObjects) {
               return (

@@ -1,6 +1,11 @@
+// React + Web3 Essentials
 import React from 'react';
-import { Oval } from 'react-loader-spinner';
+
+// External Packages
 import styled, { ThemeProvider, useTheme } from "styled-components";
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 type ModalConfirmButtonType = {
     text:string,
@@ -17,7 +22,7 @@ const ModalConfirmButton = ({text, onClick, isLoading}:ModalConfirmButtonType)=>
                     isLoading 
                     ? 
                     <LoaderContainer>
-                        <Oval color="#FFF" secondaryColor="#CF1C84" strokeWidth={2} height="2rem" width="2rem" /> 
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" />
                     </LoaderContainer>
                     :
                     <CustomButton onClick={onClick}>{text}</CustomButton>

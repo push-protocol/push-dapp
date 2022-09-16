@@ -1,28 +1,34 @@
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import Snackbar from '@mui/material/Snackbar';
-import Typography from '@mui/material/Typography';
-import { useWeb3React } from '@web3-react/core';
-import * as PushNodeClient from 'api';
-import { approveIntent, Feeds, User } from 'api';
-import { DID } from 'dids';
-import { Web3Provider } from 'ethers/providers';
-import { caip10ToWallet } from 'helpers/w2w';
-import * as w2wHelper from 'helpers/w2w/';
-import * as DIDHelper from 'helpers/w2w/did';
-import { generateKeyPair } from 'helpers/w2w/pgp';
-import React, { useContext, useEffect, useState } from 'react';
-import DefaultIntent from '../defaultIntent/defaultIntent';
-import { AppContext, Context } from '../w2wIndex';
-import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from '../w2wUtils';
-import './intentFeed.css';
-// @ts-ignore
-import { Oval as Loader } from 'react-loader-spinner';
-import styled from 'styled-components';
-import IntentCondition from '../IntentCondition/IntentCondition';
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core'
+import { Web3Provider } from 'ethers/providers'
+import React, { useContext, useEffect, useState } from 'react'
+
+// External Packages
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import Snackbar from '@mui/material/Snackbar'
+import Typography from '@mui/material/Typography'
+import styled from 'styled-components'
+
+// Internal Compoonents
+import * as PushNodeClient from 'api'
+import { approveIntent, Feeds, User } from 'api'
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
+import { DID } from 'dids'
+import { caip10ToWallet } from 'helpers/w2w'
+import * as w2wHelper from 'helpers/w2w/'
+import * as DIDHelper from 'helpers/w2w/did'
+import { generateKeyPair } from 'helpers/w2w/pgp'
+import DefaultIntent from '../defaultIntent/defaultIntent'
+import IntentCondition from '../IntentCondition/IntentCondition'
+import { AppContext, Context } from '../w2wIndex'
+import { intitializeDb } from '../w2wIndexeddb'
+import { decryptFeeds, fetchIntent } from '../w2wUtils'
+import './intentFeed.css'
+
+// Internal Configs
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -185,7 +191,7 @@ const IntentFeed = (): JSX.Element => {
             </Typography>
             <br />
             {isLoading ? (
-              <Loader />
+              <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
             ) : (
               <Button
                 onClick={(): void => {

@@ -1,24 +1,22 @@
-import React, { useState } from "react";
-import ReactGA from "react-ga";
-
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
-
-import styled, { useTheme } from 'styled-components';
-
-import { BsChevronExpand } from 'react-icons/bs';
-
-import { Oval as Loader } from 'react-loader-spinner';
-import { toast } from 'react-toastify';
-
-import { abis, addresses } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
+import React, { useState } from "react";
 
+// External Packages
+import ReactGA from "react-ga";
+import { BsChevronExpand } from 'react-icons/bs';
+import { toast } from 'react-toastify';
+import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import AirdropHelper from 'helpers/AirdropHelper';
+import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
 
-import { envConfig } from "@project/contracts";
-
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Other Information section
@@ -120,12 +118,7 @@ const AirdropModule = () => {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-        type="Oval"
-        color={color}
-        height={30}
-        width={30}
-      />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
@@ -163,12 +156,7 @@ const AirdropModule = () => {
 
       <Item padding="40px 0px 20px 0px">
         {loading &&
-          <Loader
-            type="Oval"
-            color="#35c5f3"
-            height={40}
-            width={40}
-          />
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
         }
 
         {!loading && controlAt == 0 &&
