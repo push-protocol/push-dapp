@@ -18,8 +18,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { Item, ItemH } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
-import { appConfig } from "config";
+import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
