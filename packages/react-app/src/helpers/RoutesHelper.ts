@@ -9,5 +9,6 @@ export const usersServiceEndpoints = {
 }
 
 export const channelsServiceEndpoints = {
-    channelsInfo: `${channelsRoute}/`
+    channelsInfo: (queryParams?: string) => `${channelsRoute}?${queryParams}`,
+    channelsSearch: (queryParams: string) => `${channelsRoute}/search?${queryParams}`
 }
