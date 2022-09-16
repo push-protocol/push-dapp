@@ -1,23 +1,28 @@
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import Blockies from "primaries/BlockiesIdenticon";
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
 import React from "react";
-import { Oval as Loader } from 'react-loader-spinner';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.min.css';
-import styled, { css } from 'styled-components';
-import { toolingPostReq } from "../api/index";
-import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
 
+// External Packages
 import Skeleton from '@yisheng90/react-loading';
 import { FiTwitter } from 'react-icons/fi';
 import { GoVerified } from 'react-icons/go';
 import { IoMdShareAlt } from 'react-icons/io';
-
-import { addresses } from "@project/contracts";
-import { useWeb3React } from '@web3-react/core';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import styled, { css } from 'styled-components';
 import Web3 from 'web3';
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+import Blockies from "primaries/BlockiesIdenticon";
+import { toolingPostReq } from "../api/index";
 import { createTransactionObject } from '../helpers/GaslessHelper';
 import { executeDelegateTx } from '../helpers/WithGasHelper';
+import { Anchor, Image, Item, ItemBreak, ItemH, Span } from '../primaries/SharedStyling';
+
+// Internal Configs
+import { addresses } from "@project/contracts";
 
 export const PUSH_BALANCE_TRESHOLD = 100; //minimum number of push
 export const GAS_LIMIT = 50; //dollars limit of gas;
@@ -138,12 +143,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <Loader
-        type="Oval"
-        color={color}
-        height={30}
-        width={30}
-      />
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   )
@@ -233,12 +233,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
               
               txLoading ? (
                 <ActionTitle>
-                 <Loader
-                   type="Oval"
-                   color="#35c5f3"
-                   height={20}
-                   width={20}
-                />
+                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={18} spinnerColor={'#fff'} />
                 </ActionTitle>
               ): (
                 <>

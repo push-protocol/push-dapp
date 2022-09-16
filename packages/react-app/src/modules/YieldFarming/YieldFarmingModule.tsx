@@ -1,18 +1,19 @@
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
 import React, { useState } from "react";
-import { Oval } from "react-loader-spinner";
 
-import { abis, addresses, envConfig } from "@project/contracts";
-
-import GLOBALS, { device } from "config/Globals";
-
+// External Packages
 import styled, { useTheme } from "styled-components";
+
+// Internal Compoonents
+import PoolCard from "components/PoolCard";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
 import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyling';
 
-import PoolCard from "components/PoolCard";
-import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
-
-
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 
 const ethers = require("ethers");
@@ -270,7 +271,7 @@ function YieldFarmingModule() {
 
             {!(lpPoolStats && userDataLP) && !(pushPoolStats && userDataPUSH)
               ? <Item padding="20px">
-                <Oval color="#35c5f3" height={40} width={40} />
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
               </Item>
               : <Content padding="25px 0px">
                 <ItemH margin="0px 10px 0px 10px" align="stretch">
@@ -308,7 +309,7 @@ function YieldFarmingModule() {
           </>
         ) : (
           <Item padding="20px">
-            <Oval color="#e20880" height={40} width={40} />
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
           </Item>
         )}
       </Section>
@@ -318,25 +319,31 @@ function YieldFarmingModule() {
 
 // css styles
 const Container = styled(Section)`
-    align-items: stretch;
-    align-self: stretch;
-	background: ${(props) => props.theme.mainBg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.MID};
+	align-items: center;
+	align-self: center;
+	background: ${(props) => props.theme.default.bg};
+	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
 	flex-direction: column;
 	flex: initial;
 	justify-content: center;
   max-width: 1200px;
+  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
+  padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 	position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
   }
 `;
 

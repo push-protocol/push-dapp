@@ -1,16 +1,24 @@
-import { abis, addresses } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
+import React, { useRef } from "react";
+
+// External Packages
+import styled from "styled-components";
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import UtilityHelper from 'helpers/UtilityHelper';
 import ImageClipper from "primaries/ImageClipper";
 import {
   Button, Content, FormSubmision, H3, Input, Item, Section, Span
 } from "primaries/SharedStyling";
-import React, { useRef } from "react";
 import { BsCloudUpload } from 'react-icons/bs';
-import { Oval } from "react-loader-spinner";
-import styled from "styled-components";
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
+
+// Internal Configs
+import { abis, addresses } from "@project/contracts";
+
 
 const UploadLogo = ({
   croppedImage,
@@ -221,11 +229,7 @@ const UploadLogo = ({
                   disabled={processing == 1 ? true : false}
                 >
                   {processing == 1 && (
-                    <Oval
-                      color="#fff"
-                      height={24}
-                      width={24}
-                    />
+                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#fff" />
                   )}
                   {processing != 1 && (
                     <Input

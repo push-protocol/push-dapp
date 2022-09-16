@@ -1,6 +1,18 @@
-import { abis, addresses, envConfig } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
+import React, { useEffect, useState } from "react";
+
+// External Packages
+import "react-dropdown/style.css";
+import "react-dropzone-uploader/dist/styles.css";
+import { MdCallMade, MdError } from "react-icons/md";
+import styled, { css, ThemeProvider, useTheme } from "styled-components";
+
+// Internal Compoonents
 import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import {
+  ItemVV2
+} from "components/reusables/SharedStylingV2";
 import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
 import { isValidUrl } from "helpers/UtilityHelper";
@@ -8,22 +20,14 @@ import useToast from "hooks/useToast";
 import {
   Content, H2, H3, Item, Section, Span
 } from "primaries/SharedStyling";
-import React, { useEffect, useState } from "react";
-import "react-dropdown/style.css";
-import "react-dropzone-uploader/dist/styles.css";
-import { MdCallMade, MdError } from "react-icons/md";
-import { Oval } from "react-loader-spinner";
-import styled, { css, ThemeProvider, useTheme } from "styled-components";
-
-import {
-  ItemVV2
-} from "components/reusables/SharedStylingV2";
-
 import ChannelInfo from "./ChannelInfo";
 import "./createChannel.css";
 import ProcessingInfo from "./ProcessingInfo";
 import StakingInfo from "./StakingInfo";
 import UploadLogo from "./UploadLogo";
+
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
 
 const ethers = require("ethers");
 const minStakeFees = 50;

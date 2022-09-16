@@ -1,44 +1,40 @@
+import { abis, addresses, envConfig } from "@project/contracts";
+import { useWeb3React } from "@web3-react/core";
+import { ethers } from "ethers";
+import hex2ascii from "hex2ascii";
 import React from "react";
 import ReactGA from "react-ga";
-import { ethers } from "ethers";
+import { useDispatch, useSelector } from "react-redux";
 import styled, { css } from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
-import Loader from "react-loader-spinner";
-import hex2ascii from "hex2ascii";
-import { addresses, abis, envConfig } from "@project/contracts";
-import { useWeb3React } from "@web3-react/core";
 
+import AliasVerificationodal from "components/AliasVerificationModal";
+import NotificationToast from "components/NotificationToast";
 import config from "config";
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-import NotificationToast from "components/NotificationToast";
-import AliasVerificationodal from "components/AliasVerificationModal";
 
 import Info from "segments/Info";
 import SpamBox from "segments/spam";
 
-import ViewChannels from "segments/ViewChannels";
 import Feedbox from "segments/Feedbox";
+import ViewChannels from "segments/ViewChannels";
 
-import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 import ChannelCreationDashboard from "segments/ChannelCreationDashboard";
+import ChannelOwnerDashboard from "segments/ChannelOwnerDashboard";
 
+import { postReq } from "api";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import UsersDataStore from "singletons/UsersDataStore";
-import { postReq } from "api";
 
 import {
-  setCoreReadProvider,
-  setCoreWriteProvider,
-  setCommunicatorReadProvider,
-  setCommunicatorWriteProvider,
-  setPushAdmin,
-} from "redux/slices/contractSlice";
-import {
-  setUserChannelDetails,
   setCanVerify,
-  setDelegatees,
+  setDelegatees, setUserChannelDetails
 } from "redux/slices/adminSlice";
-import { addNewNotification, toggleToggler, resetState } from "redux/slices/notificationSlice";
+import {
+  setCommunicatorReadProvider,
+  setCommunicatorWriteProvider, setCoreReadProvider,
+  setCoreWriteProvider, setPushAdmin
+} from "redux/slices/contractSlice";
+import { addNewNotification, resetState, toggleToggler } from "redux/slices/notificationSlice";
 
 export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 1; //Default to 1 which is the channel tab
@@ -335,7 +331,7 @@ function Home() {
           }}
         >
           {!adminStatusLoaded && (
-            <Loader type="Oval" color="#674c9f" height={32} width={32} />
+            // <Loader type="Oval" color="#674c9f" height={32} width={32} />
           )}
           {channelAdmin &&
             adminStatusLoaded &&

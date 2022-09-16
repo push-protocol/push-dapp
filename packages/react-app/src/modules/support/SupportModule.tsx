@@ -1,17 +1,23 @@
+// React + Web3 Essentials
 import React from "react";
-import ReactGA from "react-ga";
 
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import GLOBALS, { device, globalsMargin } from "config/Globals";
+// External Packages
 import Dropdown from "react-dropdown";
+import ReactGA from "react-ga";
 import { FaCheckCircle } from "react-icons/fa";
-import { Oval } from "react-loader-spinner";
 import styled, { useTheme } from "styled-components";
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import {
   Button, Content, FormSubmision, H2,
   H3, Input, Item,
   ItemH, Section, Span, TextField
 } from "../../primaries/SharedStyling";
+
+// Internal Configs
+import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 
 // HELPER METHODS
@@ -339,11 +345,7 @@ const SupportModule = () => {
                     padding="12px 15px"
                   >
                     {contactFormProcessing === 1 && (
-                      <Oval
-                        color="#fff"
-                        height={24}
-                        width={24}
-                      />
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerColor="#fff" spinnerSize={24} />
                     )}
                     {contactFormProcessing === 0 && (
                       <Input

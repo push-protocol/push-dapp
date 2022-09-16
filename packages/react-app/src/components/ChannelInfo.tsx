@@ -1,12 +1,17 @@
+// React + Web3 Essentials
 import { envConfig } from "@project/contracts";
-import { aliasChainIdsMapping, isValidUrl, networkName } from "helpers/UtilityHelper";
-import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Span, TextField } from "primaries/SharedStyling";
 import React, { useState } from "react";
+
+// External Packages
 import Dropdown from "react-dropdown";
 import { FiLink } from "react-icons/fi";
-import { Oval } from "react-loader-spinner";
 import styled, { useTheme } from "styled-components";
+
+// Internal Compoonents
+import { aliasChainIdsMapping, isValidUrl, networkName } from "helpers/UtilityHelper";
+import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Span, TextField } from "primaries/SharedStyling";
 import "./createChannel.css";
+
 
 const coreChainId = envConfig.coreContractChain;
 const aliasChainId = aliasChainIdsMapping[coreChainId];

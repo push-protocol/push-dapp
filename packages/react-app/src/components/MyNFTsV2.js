@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import { Oval } from 'react-loader-spinner';
-import styled from 'styled-components';
-
-import { abis, addresses, envConfig } from "@project/contracts";
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import NFTHelper from 'helpers/NFTHelper';
+import React, { useState } from "react";
 
+// External Packages
+import styled from 'styled-components';
+
+// Internal Compoonents
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import ViewNFTV2Item from "components/ViewNFTsV2Item";
+import NFTHelper from 'helpers/NFTHelper';
 import DisplayNotice from "../primaries/DisplayNotice";
 import { ItemH } from "../primaries/SharedStyling";
+
+// Internal Configs
+import { abis, addresses, envConfig } from "@project/contracts";
 
 // Create Header
 function MyNFTs({ controlAt, setControlAt, setTokenId }) {
@@ -81,14 +87,10 @@ function MyNFTs({ controlAt, setControlAt, setTokenId }) {
   }
 
   return (
-    <>
+    <ItemVV2 margin="32px 0 0 0">
       {loading &&
         <ContainerInfo>
-          <Oval
-            color="#35c5f3"
-            height={40}
-            width={40}
-          />
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
         </ContainerInfo>
       }
 
@@ -96,14 +98,13 @@ function MyNFTs({ controlAt, setControlAt, setTokenId }) {
         <ContainerInfo>
           <DisplayNotice
             title="No ROCKSTAR NFTs are available in your account"
-            theme="primary"
           />
         </ContainerInfo>
       }
 
 
       {!loading && NFTObjects.length != 0 &&
-        <ItemH id="scrollstyle-secondary">
+        <ItemH margin="20px 0 0 0">
 
           {Object.keys(NFTObjects).map(index => {
             if (NFTObjects) {
@@ -123,7 +124,7 @@ function MyNFTs({ controlAt, setControlAt, setTokenId }) {
           })}
         </ItemH>
       }
-    </>
+    </ItemVV2>
   );
 }
 
