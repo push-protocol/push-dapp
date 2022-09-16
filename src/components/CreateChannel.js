@@ -15,7 +15,7 @@ import {
 } from "components/reusables/SharedStylingV2";
 import { getCAIPObj } from "helpers/CaipHelper";
 import { IPFSupload } from "helpers/IpfsHelper";
-import { isValidUrl } from "helpers/UtilityHelper";
+import { isLengthValid,isValidUrl } from "helpers/UtilityHelper";
 import useToast from "hooks/useToast";
 import {
   Content, H2, H3, Item, Section, Span
@@ -170,7 +170,16 @@ function CreateChannel() {
       setErrorInfo("Channel Fields are Empty! Please retry!");
       return false;
     }
-
+    if(!isLengthValid(channelName,125))
+    {
+      setErrorInfo("Channel Name should not exceed 125 characters! Please retry!");
+      return false;
+    }
+    if(!isLengthValid(channelURL,125))
+    {
+      setErrorInfo("Channel Url should not exceed 125 characters! Please retry!");
+      return false;
+    }
     if(!isValidUrl(channelURL))
     {
       setErrorInfo("Channel Url is invalid! Please retry!");
