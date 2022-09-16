@@ -93,7 +93,7 @@ const UploadLogo = ({
     <Section>
       <Body>
         <Item align="center">
-          <H3 color=" #657795" margin="0px 0px" textTransform="none" weight="500" size="15px">
+          <H3 color=" #657795" margin="0px 0px" textTransform="none" weight="500" size="15px" spacing="0.05">
           Please upload a PNG, JPG. Crop the image to resize to 128px.  
           </H3>
         </Item>
@@ -332,13 +332,14 @@ const Space = styled.div`
         margin-right: auto;
         div {
           .croppedImage {
-            border-radius: 12px;
+            border-radius: 20px;
             @media (max-width: 768px) {
               margin-top: 1rem;
             }
           }
         }
         .cropper {
+          border-radius: 20px;
           width: 250px;
           height: 250px;
         }

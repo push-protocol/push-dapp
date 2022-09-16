@@ -134,13 +134,13 @@ export default function ChannelDetails() {
 
 const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     align-items: center;
   }
 `
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     justify-content: center;
   }
 `
@@ -264,7 +264,7 @@ const Date = styled.div`
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     flex-direction: column;
     align-items: center;
   }
@@ -290,7 +290,7 @@ const ChannelName = styled.div`
   font-size: 30px;
   line-height: 141%;
   color: ${(props) => props.theme.color};
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     flex-direction: column;
     margin-top: 10px;
     font-size: 20px;
@@ -311,7 +311,7 @@ const SectionDate = styled.div`
 `;
 
 const SectionDes = styled.div`
-  letter-spacing: 0.1em;
+  letter-spacing: 0.07em;
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
   color: #657795;
@@ -321,8 +321,10 @@ const SectionDes = styled.div`
   line-height: 140%;
   padding: 0px 20px;
   text-align: left;
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     text-align: center;
     margin-top: 10px;
+    width:100%;
+    padding: 0;
   }
 `;

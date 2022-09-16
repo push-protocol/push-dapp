@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDeviceWidthCheck } from "hooks";
-import { AiFillCopy, AiOutlineCopy } from "react-icons/ai";
+import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
 import { Item } from "primaries/SharedStyling";
 
 const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
@@ -73,9 +73,9 @@ const WalletInfoContent = ({
         }}
       >
         {isCopied ? (
-          <AiFillCopy size={18} color="white" style={{ paddingTop: 6 }} />
+          <RiFileCopyFill size={18} color="white" style={{ paddingTop: 6 }} />
         ) : (
-          <AiOutlineCopy size={18} color="white" style={{ paddingTop: 6 }} />
+          <RiFileCopyLine size={18} color="white" style={{ paddingTop: 6 }} />
         )}
       </ItemHere>
     </div>
