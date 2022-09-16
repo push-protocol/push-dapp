@@ -79,6 +79,6 @@ const Overlay = styled.div`
 `;
 
 const PreviewSpace = styled.div`
-  margin: 20px 20px;
+  margin: 0;
   width: 100%;
 `;
