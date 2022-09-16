@@ -22,6 +22,7 @@ import { Item, ItemH } from "../primaries/SharedStyling";
 
 // Internal Configs
 import { envConfig } from "@project/contracts";
+import { getChannels } from "services";
 
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
@@ -67,12 +68,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // to fetch initial channels and logged in user data
   const fetchInitialsChannelMeta = async () => {
     // fetch the meta of the first `CHANNELS_PER_PAGE` channels
-    const channelsMeta = await ChannelsDataStore.instance.getChannelFromApi(
-      channelsVisited,
-      CHANNELS_PER_PAGE,
-      account,
-      chainId
-    );
+    const channelsMeta = await getChannels({
+      page: Math.ceil(channelsVisited / CHANNELS_PER_PAGE) || 1,
+      limit: CHANNELS_PER_PAGE
+    });
     dispatch(incrementPage())
     if (!channels.length) {
       dispatch(setChannelMeta(channelsMeta));
@@ -93,12 +92,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // load more channels when we get to the bottom of the page
   const loadMoreChannelMeta = async (newPageNumber: any) => {
     const startingPoint = newPageNumber * CHANNELS_PER_PAGE;
-    const moreChannels = await ChannelsDataStore.instance.getChannelFromApi(
-      startingPoint,
-      CHANNELS_PER_PAGE,
-      account,
-      chainId
-    );
+    const moreChannels = await getChannels({
+      page: Math.ceil(startingPoint / CHANNELS_PER_PAGE) || 1,
+      limit: CHANNELS_PER_PAGE
+    });
     dispatch(setChannelMeta([...channels, ...moreChannels]));
     setMoreLoading(false);
   };
@@ -216,9 +213,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
         {(search ? channelToShow : channels).map(
           (channel: any, index: any) =>
             channel &&
-            channel.addr !== ZERO_ADDRESS && (
+            channel.channel !== ZERO_ADDRESS && (
               <>
-                <ViewChannelItems key={channel.addr} self="stretch">
+                <ViewChannelItems key={channel.channel} self="stretch">
                   <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
                 </ViewChannelItems>
 

@@ -63,7 +63,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [channelJson, setChannelJson] = React.useState({});
   const [subscribed, setSubscribed] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
-  const [memberCount, setMemberCount] = React.useState(0);
+  const [subscriberCount, setSubscriberCount] = React.useState(0);
   const [isPushAdmin, setIsPushAdmin] = React.useState(false);
   const [isVerified, setIsVerified] = React.useState(false);
   const [isBlocked, setIsBlocked] = React.useState(false);
@@ -75,7 +75,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [copyText, setCopyText] = React.useState(null);
 
   // ------ toast related section
-  const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
+  const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
 
@@ -83,7 +83,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   if (!onCoreNetwork) {
     isOwner = channelObject.alias_address === account;
   } else {
-    isOwner = channelObject.addr === account;
+    isOwner = channelObject.channel === account;
   }
 
   //clear toast variable after it is shown
@@ -95,7 +95,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   // ------ toast related section
 
   React.useEffect(() => {
-    if (!channelObject.addr) return;
+    if (!channelObject.channel) return;
     if (channelObject.verifiedBy) {
       // procced as usual
       fetchChannelJson().catch((err) => alert(err.message));
@@ -104,12 +104,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       );
     } else {
       // if this key (verifiedBy) is not present it means we are searching and should fetch the channel object from chain again
-      epnsReadProvider.channels(channelObject.addr).then((response) => {
+      epnsReadProvider.channels(channelObject.channel).then((response) => {
         setChannelObject({
           ...response,
-          addr: channelObject.addr,
+          channel: channelObject.channel,
           alias_address: channelObject.alias_address,
-          memberCount: channelObject.memberCount,
+          subscriberCount: channelObject.subscriber_count,
           isSubscriber: channelObject.isSubscriber,
         });
         fetchChannelJson();
@@ -143,33 +143,33 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const fetchChannelJson = async () => {
     try {
       let channelJson = {};
-      setCopyText(channelObject.addr);
-      if (channelsCache[channelObject.addr]) {
-        channelJson = channelsCache[channelObject.addr];
+      setCopyText(channelObject.channel);
+      if (channelsCache[channelObject.channel]) {
+        channelJson = channelsCache[channelObject.channel];
       } else {
         channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-          channelObject.addr
+          channelObject.channel
         );
         dispatch(
           cacheChannelInfo({
-            address: channelObject.addr,
+            address: channelObject.channel,
             meta: channelJson,
           })
         );
       }
-      let channelAddress = channelObject.addr;
+      let channelAddress = channelObject.channel;
       if (!onCoreNetwork) {
         channelAddress = channelObject.alias_address;
       }
       if (!channelAddress) return;
 
       setIsPushAdmin(pushAdminAddress === account);
-      setMemberCount(channelObject.memberCount);
+      setSubscriberCount(channelObject.subscriber_count);
       setSubscribed(channelObject.isSubscriber);
       setChannelJson({
         ...channelJson,
-        addr: channelObject.addr,
-        memberCount: channelObject.memberCount,
+        channel: channelObject.channel,
+        subscriberCount: channelObject.subscriber_count,
         isSubscriber: channelObject.isSubscriber,
       });
       setLoading(false);
@@ -184,7 +184,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       Boolean(
         (channelObject.verifiedBy &&
           channelObject.verifiedBy !== ZERO_ADDRESS) ||
-          channelObject.addr === pushAdminAddress
+          channelObject.channel === pushAdminAddress
       )
     );
     setCanUnverify(channelObject.verifiedBy == account);
@@ -225,7 +225,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     setvLoading(true);
     // post op
     epnsWriteProvider
-      .verifyChannel(channelObject.addr)
+      .verifyChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -256,7 +256,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const unverifyChannel = () => {
     setvLoading(true);
     epnsWriteProvider
-      .unverifyChannel(channelObject.addr)
+      .unverifyChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -284,7 +284,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const blockChannel = () => {
     setBLoading(true);
     epnsWriteProvider
-      .blockChannel(channelObject.addr)
+      .blockChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -326,7 +326,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ],
       // };
 
-      let channelAddress = channelObject.addr;
+      let channelAddress = channelObject.channel;
       // if (!onCoreNetwork) {
       //   channelAddress = channelObject.alias_address;
       // }
@@ -398,9 +398,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
         onSuccess: () => {
-          dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
+          dispatch(cacheSubscribe({ channelAddress: channelObject.channel }));
           setSubscribed(true);
-          setMemberCount(memberCount + 1);
+          setSubscriberCount(subscriberCount + 1);
 
           subscribeToast.showMessageToast({
             toastTitle:"Success", 
@@ -428,9 +428,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   chainId,
       //   contractAddress: epnsCommReadProvider.address,
       // }).then((res) => {
-      //   dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
+      //   dispatch(cacheSubscribe({ channelAddress: channelObject.channel }));
       //   setSubscribed(true);
-      //   setMemberCount(memberCount + 1);
+      //   setSubscriberCount(subscriberCount + 1);
 
       //   subscribeToast.updateToast(
       //     "Success",
@@ -488,7 +488,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ],
       // };
 
-      let channelAddress = channelObject.addr;
+      let channelAddress = channelObject.channel;
       // if (!onCoreNetwork) {
       //   channelAddress = channelObject.alias_address;
       // }
@@ -510,9 +510,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
         onSuccess: () => {
-          dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
+          dispatch(cacheUnsubscribe({ channelAddress: channelObject.channel }));
           setSubscribed(false);
-          setMemberCount(memberCount - 1);
+          setSubscriberCount(subscriberCount - 1);
 
           unsubscribeToast.showMessageToast({
             toastTitle:"Success", 
@@ -541,9 +541,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   contractAddress: epnsCommReadProvider.address,
       // })
       //   .then((res) => {
-      //     dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
+      //     dispatch(cacheUnsubscribe({ channelAddress: channelObject.channel }));
       //     setSubscribed(false);
-      //     setMemberCount(memberCount - 1);
+      //     setSubscriberCount(subscriberCount - 1);
 
       //     // toaster.update(txToast, {
       //     //   render: "Successfully opted out of channel !",
@@ -593,7 +593,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   };
 
   const correctChannelTitleLink = () => {
-    const channelLink = CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url;
+    const channelLink = CTA_OVERRIDE_CACHE[channelObject.channel] || channelJson.url;
     if(/(?:http|https):\/\//i.test(channelLink)) {
       window.open(channelLink, '_blank', 'noopener,noreferrer');
     }
@@ -612,7 +612,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   // render
   return (
-    <Container key={channelObject.addr}>
+    <Container key={channelObject.channel}>
       <ChannelLogo>
         <ChannelLogoOuter>
           <ChannelLogoInner>
@@ -698,7 +698,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   <Image src="./svg/users.svg" alt="users" width="14px"  height="14px"/>
                 }
                 internalIcon={null}
-                text={memberCount}
+                text={subscriberCount}
                 padding="1.5px 10px"
                 bgColor={themes.viewChannelSecondaryBG}
                 color={themes.viewChannelSecondaryText}
@@ -721,9 +721,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }}
               />
 
-              {isChannelTutorialized(channelObject.addr) && (
+              {isChannelTutorialized(channelObject.channel) && (
                 <ChannelTutorial
-                  addr={channelObject.addr}
+                  addr={channelObject.channel}
                   bgColor={themes.viewChannelSecondaryBG}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
