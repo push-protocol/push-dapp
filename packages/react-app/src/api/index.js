@@ -1,8 +1,8 @@
 import axios from "axios";
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 
-const BASE_URL = envConfig.apiUrl
-const TOOLING_BASE_URL = envConfig.toolingApiUrl
+const BASE_URL = appConfig.apiUrl
+const TOOLING_BASE_URL = appConfig.toolingApiUrl
 
 /**
  * A function used to make get requests throughout the entire application
@@ -51,5 +51,6 @@ export const toolingPostReq = async (path, obj) => {
   }
 };
 
-export * from './w2w'
-export * from './ipfs'
+export * from './ipfs';
+export * from './w2w';
+

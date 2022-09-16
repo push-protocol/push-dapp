@@ -1,5 +1,11 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import styled from 'styled-components';
+
+// Internal Configs
+import { appConfig } from "config";
 
 // Other Information URLs
 function ViewInfoItem() {
@@ -11,7 +17,7 @@ function ViewInfoItem() {
         <ChannelTitle>
           <>
           <AppLinkText>
-            <AppLink href={`${process.env.REACT_APP_BROWSER_EXTENSION_URL}`} target="_blank" rel="nofollow">
+            <AppLink href={`${appConfig.links.extension}`} target="_blank" rel="nofollow">
               Download EPNS Browser Extension
             </AppLink>
           </AppLinkText>
@@ -25,11 +31,11 @@ function ViewInfoItem() {
         <ChannelTitle>
           <>
           <AppLinkText>
-            <AppLink href={`${process.env.REACT_APP_IOS_STAGING_DAPP_URL}`} target="_blank" rel="nofollow">
-              Download EPNS App (iOS)
+            <AppLink href={`${appConfig.links.ios}`} target="_blank" rel="nofollow">
+              { appConfig.appEnv !== 'prod' ? 'Request EPNS Staging App (iOS)' : 'Download EPNS App (iOS)' }
             </AppLink>
           </AppLinkText>
-           For iOS Users
+           { appConfig.appEnv !== 'prod' ? 'For iOS Users -> Hit CM on Dscord' : 'For iOS Users' }
           </>
         </ChannelTitle>
       </ChannelInfo>
@@ -39,8 +45,8 @@ function ViewInfoItem() {
         <ChannelTitle>
           <>
           <AppLinkText>
-            <AppLink href={`${process.env.REACT_APP_ANDROID_STAGING_DAPP_URL}`} target="_blank" rel="nofollow">
-              Download EPNS App (Android)
+            <AppLink href={`${appConfig.links.android}`} target="_blank" rel="nofollow">
+              { appConfig.appEnv !== 'prod' ? 'Download Staging EPNS App (Android)' : 'Download EPNS App (Android)' }
             </AppLink>
           </AppLinkText>
            For Android Users
@@ -51,8 +57,8 @@ function ViewInfoItem() {
     <Container >
       <ChannelInfo>
         <ChannelTitle>
-          <ChannelTitleLink href={process.env.REACT_APP_HOW_TO_GUIDE} target="_blank" rel="nofollow">
-            Click here for our How to Guides
+          <ChannelTitleLink href={appConfig.links.howto} target="_blank" rel="nofollow">
+          👉 Visit our docs for how to guides, developer docs and more 👈
           </ChannelTitleLink>
         </ChannelTitle>
       </ChannelInfo>

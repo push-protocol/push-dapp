@@ -33,7 +33,7 @@ import NotificationToast from "../primaries/NotificationToast";
 import { Image, ItemH, Span } from "../primaries/SharedStyling";
 
 // Internal Configs
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 
 
 // Create Header
@@ -57,7 +57,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   );
   const { account, library, chainId } = useWeb3React();
 
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [channelObject, setChannelObject] = React.useState({});
   const [channelJson, setChannelJson] = React.useState({});
@@ -418,7 +418,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             getToastIcon: (size) => <MdError size={size} color="red" />
           })
         },
-        env: envConfig['env']
+        env: appConfig.pushNodesEnv
       })
 
       // postReq("/channels/subscribe", {
@@ -530,7 +530,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             getToastIcon: (size) => <MdError size={size} color="red" />
           })
         },
-        env: envConfig['env']
+        env: appConfig.pushNodesEnv
       })
 
       // postReq("/channels/unsubscribe", {

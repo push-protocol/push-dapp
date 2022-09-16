@@ -1,13 +1,13 @@
-import { MessageIPFS } from 'helpers/w2w/ipfs'
+import { MessageIPFS } from 'helpers/w2w/ipfs';
 // @ts-ignore
-import { envConfig } from '@project/contracts'
-import { MessageIPFSWithCID } from './w2w'
+import { appConfig } from "config";
+import { MessageIPFSWithCID } from './w2w';
 
-let BASE_URL = envConfig.apiUrl
+let BASE_URL = appConfig.apiUrl
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-  BASE_URL = envConfig.w2wApiUrl
+  BASE_URL = appConfig.w2wApiUrl
 } else {
-  BASE_URL = envConfig.apiUrl
+  BASE_URL = appConfig.apiUrl
 }
 
 export const getFromIPFS = async (cid: string): Promise<MessageIPFSWithCID> => {

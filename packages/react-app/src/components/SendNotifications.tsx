@@ -42,11 +42,12 @@ import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
 
 // Internal Configs
-import { envConfig } from '@project/contracts';
+import { appConfig } from "config";
+;
 
 const ethers = require('ethers');
 
-const CORE_CHAIN_ID = envConfig.coreContractChain;
+const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 export const IOSSwitch = styled(Switch).attrs(() => ({
   classes: {
@@ -595,7 +596,7 @@ function SendNotifications() {
           },
           recipients: notifRecipients, // recipient address
           channel: channelAddressInCaip, // your channel address
-          env: envConfig['env']
+          env: appConfig.pushNodesEnv
         });
         //   console.log(nfRecipient);
         //   postReq("/payloads/add_manual_payload", {

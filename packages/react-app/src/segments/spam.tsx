@@ -30,8 +30,9 @@ import NotificationToast from '../primaries/NotificationToast';
 import { ScrollItem } from './ViewChannels';
 
 // Internal Configs
-import { envConfig } from '@project/contracts';
+import { appConfig } from "config";
 import { device } from 'config/Globals';
+;
 
 const NOTIFICATIONS_PER_PAGE = 10;
 // Create Header
@@ -65,7 +66,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const NormalToast = ({ msg }) => (
     <Toaster>
@@ -143,7 +144,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         user: user,
         limit: NOTIFICATIONS_PER_PAGE,
         page: page,
-        env: envConfig['env'],
+        env: appConfig.pushNodesEnv,
         spam: true,
         raw: true
       });
@@ -188,7 +189,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         user: user,
         limit: NOTIFICATIONS_PER_PAGE,
         page: 1,
-        env: envConfig['env'],
+        env: appConfig.pushNodesEnv,
         spam: true,
         raw: true
       });
@@ -239,7 +240,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         user: user,
         limit: 100000,
         page: 1,
-        env: envConfig['env'],
+        env: appConfig.pushNodesEnv,
         spam: true,
         raw: true
       });
@@ -337,7 +338,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     if (!channelAddress) return;
     let address = channelAddress;
 
-    const nameToObj = envConfig.coreContractChain === 1 ? nameToIdProd : nameToIdDev;
+    const nameToObj = appConfig.coreContractChain === 1 ? nameToIdProd : nameToIdDev;
     if (chainId !== nameToObj[blockchain]) {
       if (!onCoreNetwork) {
         address = await fetchAliasAddress(channelAddress);

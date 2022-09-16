@@ -12,7 +12,7 @@ import InfoTooltip from "../primaries/InfoTooltip";
 import { B, Button, H2, H3, Input, Item, ItemH, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 const ethers = require("ethers");
 

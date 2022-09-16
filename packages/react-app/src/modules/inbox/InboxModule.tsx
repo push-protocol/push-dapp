@@ -21,10 +21,10 @@ import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internal Configs
-import { abis, addresses, envConfig } from '@project/contracts';
+import { abis, addresses, appConfig } from "config";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
-export const ALLOWED_CORE_NETWORK = envConfig.coreContractChain;
+export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 // Create Inbox Module
 const InboxModule = () => {
@@ -72,7 +72,7 @@ const InboxModule = () => {
 
   React.useEffect(() => {
     (async function init() {
-      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(envConfig.coreRPC);
+      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);

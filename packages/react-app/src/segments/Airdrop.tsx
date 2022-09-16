@@ -14,7 +14,7 @@ import AirdropHelper from 'helpers/AirdropHelper';
 import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 // Other Information section
 function Airdrop() {

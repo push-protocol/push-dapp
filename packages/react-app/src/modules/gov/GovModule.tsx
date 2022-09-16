@@ -21,7 +21,7 @@ import { ThemeProvider } from "styled-components";
 
 import ViewDelegateeItem from "components/ViewDelegateeItem";
 
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
@@ -38,7 +38,7 @@ const GovModule = () => {
   const theme = useTheme();
 
   const { account, library, chainId } = useWeb3React();
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [address, setAddress] = React.useState('');
   const [ens, setENS] = React.useState('');

@@ -1,4 +1,4 @@
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 
 export const Eip155EnabledIds: Array<Number> = [137, 80001];
 
@@ -9,7 +9,7 @@ type CAIPProps = {
 
 // return caip obj from chainId and address
 export const getCAIPObj = ({ chainId, address }: CAIPProps) => {
-  if (chainId === envConfig.coreContractChain) return {};
+  if (chainId === appConfig.coreContractChain) return {};
 
   if (Eip155EnabledIds.includes(chainId)) {
     const caip = 'eip155:' + chainId;

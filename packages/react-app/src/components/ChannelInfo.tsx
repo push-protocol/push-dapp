@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 import React, { useState } from "react";
 
 // External Packages
@@ -13,7 +13,7 @@ import { Button, Content, FormSubmision, H3, Input, Item, ItemH, P, Section, Spa
 import "./createChannel.css";
 
 
-const coreChainId = envConfig.coreContractChain;
+const coreChainId = appConfig.coreContractChain;
 const aliasChainId = aliasChainIdsMapping[coreChainId];
 
 const ALIAS_CHAINS = [
