@@ -16,7 +16,7 @@ import {
 } from "primaries/SharedStyling";
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
@@ -29,11 +29,11 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
 
   const [loading, setLoading] = React.useState(true);
 
-  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
+  const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
   const mainnetCoreProvider = onMainnetCore
     ? library
-    : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
+    : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC)
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {

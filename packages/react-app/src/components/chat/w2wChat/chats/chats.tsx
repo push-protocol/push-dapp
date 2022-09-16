@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import './w2wchats.css'
-import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import cn from 'classnames'
 import { DID } from 'dids'
-import Modal from '../Modal/Modal'
+import React, { useState } from 'react'
+import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Files, { FileMessageContent } from '../Files/Files'
+import Modal from '../Modal/Modal'
+import './w2wchats.css'
 // @ts-ignore
-import { envConfig } from '@project/contracts'
+import { appConfig } from "config"
 import styled from 'styled-components'
 
-const infura_URL = envConfig.infuraApiUrl
+const infura_URL = appConfig.infuraApiUrl
 interface chatProps {
   msg: MessageIPFS
   did: DID

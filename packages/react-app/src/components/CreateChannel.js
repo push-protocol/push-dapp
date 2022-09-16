@@ -27,7 +27,7 @@ import StakingInfo from "./StakingInfo";
 import UploadLogo from "./UploadLogo";
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses, appConfig } from "config";
 
 const ethers = require("ethers");
 const minStakeFees = 50;
@@ -36,8 +36,8 @@ const networkName = {
   1: "Ethereum Mainnet",
 };
 
-const coreChainId = envConfig.coreContractChain;
-const CORE_CHAIN_ID = envConfig.coreContractChain;
+const coreChainId = appConfig.coreContractChain;
+const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 // Create Header
 function CreateChannel() {
@@ -441,7 +441,7 @@ function CreateChannel() {
         <>
           <TabSpace>
             <p>
-              Please select {networkName[envConfig.coreContractChain]} Network
+              Please select {networkName[appConfig.coreContractChain]} Network
               in your Wallet to create a channel.
             </p>
           </TabSpace>

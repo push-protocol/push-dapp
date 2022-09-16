@@ -175,7 +175,8 @@ export const SpanV2 = styled.span`
   text-transform: ${(props) => props.textTransform || "inherit"};
   top: ${(props) => props.top || "auto"};
   z-index: ${(props) => props.zIndex || "auto"};
-`;
+  max-width: ${(props) => props.maxWidth || "initial"};
+`
 
 export const ImageV2 = styled.img`
   display: ${(props) => props.display || 'flex'};

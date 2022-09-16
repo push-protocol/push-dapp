@@ -16,7 +16,7 @@ import AirdropHelper from 'helpers/AirdropHelper';
 import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses, appConfig } from "config";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Other Information section
@@ -24,7 +24,7 @@ const AirdropModule = () => {
   const theme = useTheme();
 
   const { account, library, chainId } = useWeb3React();
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const [controlAt, setControlAt] = React.useState(0);
   const [loading, setLoading] = React.useState(true);

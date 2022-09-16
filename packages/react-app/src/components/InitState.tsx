@@ -1,5 +1,5 @@
-import { abis, addresses, envConfig } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { abis, addresses, appConfig } from "config";
 import { ethers } from "ethers";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,7 +21,7 @@ import {
   setPushAdmin
 } from "redux/slices/contractSlice";
 
-const CORE_CHAIN_ID = envConfig.coreContractChain;
+const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 const InitState = () => {
   const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const InitState = () => {
       console.log(library);
       const coreProvider = onCoreNetwork
         ? library
-        : new ethers.providers.JsonRpcProvider(envConfig.coreRPC)
+        : new ethers.providers.JsonRpcProvider(appConfig.coreRPC)
       
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(
@@ -115,11 +115,13 @@ const InitState = () => {
 
   // Check if a user is a channel or not
   const checkUserForChannelOwnership = async (channelAddress: string) => {
+ 
     if (!channelAddress) return;
     // Check if account is admin or not and handle accordingly
     const ownerAccount = channelAddress;
-    EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
+    return EPNSCoreHelper.getChannelJsonFromUserAddress(ownerAccount, epnsReadProvider)
       .then(async (response) => {
+        
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(
           ownerAccount
@@ -184,6 +186,7 @@ const InitState = () => {
           const channelInformation = await Promise.all(
             channelInformationPromise
           );
+          console.log(channelInformation);
           dispatch(setDelegatees(channelInformation));
         } else {
           dispatch(setDelegatees([]));
@@ -230,6 +233,9 @@ const InitState = () => {
         dispatch(setAliasVerified(false));
       }
     }
+    else{
+      dispatch(setProcessingState(0));
+    }
     return;
   }
 
@@ -239,8 +245,9 @@ const InitState = () => {
     
     (async function () {
       if (onCoreNetwork) {
-        await checkUserForChannelOwnership(account);
-        await checkUserForAlias();
+        checkUserForChannelOwnership(account).then(async()=>{
+          await checkUserForAlias();
+        });
       } else {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
         if (aliasEth) {

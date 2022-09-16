@@ -134,6 +134,7 @@
   },
   "devDependencies": {
     "@3id/connect": "0.4.1",
+    "@babel/eslint-parser": "7.19.1",
     "@ceramicnetwork/ceramic-core": "0.12.4",
     "@testing-library/dom": "^6.12.2",
     "@types/crypto-js": "^4.1.1",

@@ -1,10 +1,10 @@
 import { initializeApp } from "@firebase/app";
-import { envConfig } from "@project/contracts";
 import { getMessaging, getToken, onMessage } from "@firebase/messaging";
 import { postReq } from "api";
+import { appConfig } from "config";
 
 // Initialize the Firebase app in the service worker by passing the generated config
-var firebaseConfig = { ...envConfig.firebaseConfig };
+var firebaseConfig = { ...appConfig.firebaseConfig };
 const TOKEN_KEY = "EPNS_BASE_PUSH_TOKEN";
 const CACHEPREFIX = "PUSH_TOKEN_";
 
@@ -19,7 +19,7 @@ export const getPushToken = async () => {
     let token = getLocalToken(TOKEN_KEY);
     if(!token){
       token = await getToken(messaging, {
-        vapidKey: envConfig.vapidKey,
+        vapidKey: appConfig.vapidKey,
       });
       setLocalToken(token);
     }

@@ -4,12 +4,12 @@ import './defaultMessage.css'
 // @ts-ignore
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
-import { envConfig } from '@project/contracts'
 import { Feeds } from 'api'
+import { appConfig } from "config"
 import { caip10ToWallet } from 'helpers/w2w'
 import styled from 'styled-components'
 
-const INFURA_URL = envConfig.infuraApiUrl
+const INFURA_URL = appConfig.infuraApiUrl
 
 const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Element => {
   // printing default message props

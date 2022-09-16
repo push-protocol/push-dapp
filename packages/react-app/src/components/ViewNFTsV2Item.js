@@ -18,7 +18,8 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { Item, ItemH } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses } from "@project/contracts";
+import { appConfig } from "config";
 
 // Create Header
 function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
@@ -29,7 +30,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
   const [txInProgress, setTxInProgress] = React.useState(false);
 
 
-  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
+  const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
   React.useEffect(() => {
     if (!!(library && account)) {

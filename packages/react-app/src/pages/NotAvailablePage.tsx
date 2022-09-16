@@ -1,7 +1,7 @@
 import React from "react";
 
-import { envConfig } from "@project/contracts";
 import { useWeb3React } from '@web3-react/core';
+import { appConfig } from "config";
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { Content, Item, Section } from '../primaries/SharedStyling';
 
@@ -13,7 +13,7 @@ const networkName = {
 function NotAvailablePage(props) {
   const themes = useTheme();
   const { chainId } = useWeb3React();
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   React.useEffect(() => {
     if (onCoreNetwork) {
@@ -29,7 +29,7 @@ function NotAvailablePage(props) {
         <Content padding="0px 20px 0px">
           <Item align="center">
             <Heading color="#333" spacing="0.05em" size="2rem" weight={700}>
-              Kindly switch to {networkName[envConfig.coreContractChain]} Network to view this page.
+              Kindly switch to {networkName[appConfig.coreContractChain]} Network to view this page.
             </Heading>
           </Item>
         </Content>

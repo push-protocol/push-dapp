@@ -1,6 +1,6 @@
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 
-const apiVersion: number = envConfig.pushNodeApiVersion;
+const apiVersion: number = appConfig.pushNodeApiVersion;
 const channelsRoute: string = `/v${apiVersion}/channels`;
 const usersRoute: string = `/v${apiVersion}/users`;
 

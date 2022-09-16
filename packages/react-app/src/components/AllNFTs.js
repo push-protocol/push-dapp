@@ -14,7 +14,7 @@ import NFTHelper from 'helpers/NFTHelper';
 import { ItemH, Section } from 'primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses, appConfig } from "config";
 
 // Create Header
 function AllNFTs({ controlAt, setControlAt, setTokenId }) {
@@ -27,11 +27,11 @@ function AllNFTs({ controlAt, setControlAt, setTokenId }) {
 
   const [loading, setLoading] = React.useState(true);
 
-  const onMainnetCore = chainId === envConfig.mainnetCoreContractChain;
+  const onMainnetCore = chainId === appConfig.mainnetCoreContractChain;
 
   const mainnetCoreProvider = onMainnetCore
     ? library
-    : new ethers.providers.JsonRpcProvider(envConfig.mainnetCoreRPC)
+    : new ethers.providers.JsonRpcProvider(appConfig.mainnetCoreRPC)
 
   React.useEffect(() => {
     if (!!(mainnetCoreProvider && account)) {

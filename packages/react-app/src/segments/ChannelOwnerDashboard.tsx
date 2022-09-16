@@ -22,7 +22,7 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { Content, Item, Section } from "../primaries/SharedStyling";
 
 // Internal Configs
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL:number = 10;
@@ -43,7 +43,7 @@ const ChannelOwnerDashboard = () => {
 
   const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true); 
 
-  const CORE_CHAIN_ID: number = envConfig.coreContractChain;
+  const CORE_CHAIN_ID: number = appConfig.coreContractChain;
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 

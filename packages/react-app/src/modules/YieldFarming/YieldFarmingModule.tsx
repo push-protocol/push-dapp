@@ -12,7 +12,8 @@ import YieldFarmingDataStore from "singletons/YieldFarmingDataStore";
 import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses, envConfig } from "@project/contracts";
+import { abis, addresses } from "@project/contracts";
+import { appConfig } from "config";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 
@@ -21,7 +22,7 @@ const ethers = require("ethers");
 // Create Header
 function YieldFarmingModule() {
   const { account, library, chainId } = useWeb3React();
-  const onCoreNetwork = chainId === envConfig.coreContractChain;
+  const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();
 

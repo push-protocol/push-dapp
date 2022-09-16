@@ -21,7 +21,7 @@ import Profile from 'primaries/Profile';
 
 import { NavigationContext } from "contexts/NavigationContext";
 
-import { envConfig } from "@project/contracts";
+import { appConfig } from "config";
 import GLOBALS from "config/Globals";
 
 
@@ -72,12 +72,12 @@ function Header({ isDarkMode, darkModeToggle }) {
   }
 
 async function handleChangeNetwork(){
-const chainIds = envConfig.allowedNetworks;
+const chainIds = appConfig.allowedNetworks;
   if (!chainIds.includes(window.ethereum.networkVersion)) {
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: ethers.utils.hexlify(envConfig.coreContractChain) }]
+            params: [{ chainId: ethers.utils.hexlify(appConfig.coreContractChain) }]
           });
         } catch (err) {
           console.error(err);
@@ -91,7 +91,7 @@ const chainIds = envConfig.allowedNetworks;
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
     } else if (error instanceof UnsupportedChainIdError) {
       handleChangeNetwork();
-      if(envConfig.coreContractChain === 42)
+      if(appConfig.coreContractChain === 42)
       return "Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network"
       else 
       return "Unsupported Network, please connect to the Ethereum Mainnet network"

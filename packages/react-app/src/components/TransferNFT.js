@@ -11,7 +11,7 @@ import styled, { css } from 'styled-components';
 import { Button, Content, FormSubmision, H2, Input, Item, Section, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 const ethers = require('ethers');
 

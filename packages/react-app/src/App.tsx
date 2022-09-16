@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import ReactGA from "react-ga";
 
-import { envConfig } from "@project/contracts";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { useWeb3React } from "@web3-react/core";
+import { appConfig } from "config";
 import { injected, ledger, portis, walletconnect } from "connectors";
 import { ethers } from "ethers";
 import { useEagerConnect, useInactiveListener, useSDKSocket } from "hooks";
@@ -78,7 +78,7 @@ export default function App() {
   useInactiveListener(!triedEager || !!activatingConnector);
 
   // Initialize GA
-  ReactGA.initialize(envConfig.googleAnalyticsId);
+  ReactGA.initialize(appConfig.googleAnalyticsId);
   ReactGA.pageview("/login");
   // Initialize GA
 

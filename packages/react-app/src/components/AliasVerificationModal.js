@@ -12,7 +12,7 @@ import { postReq } from "../api";
 import { Button, H2, H3, Input, Item, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 const ethers = require("ethers");
 

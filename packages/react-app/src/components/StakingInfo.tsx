@@ -1,5 +1,5 @@
-import { abis, addresses } from "@project/contracts";
 import { useWeb3React } from "@web3-react/core";
+import { abis, addresses, appConfig } from "config";
 import { ethers } from "ethers";
 import UtilityHelper from 'helpers/UtilityHelper';
 import { Button, Item, Span } from "primaries/SharedStyling";
@@ -39,36 +39,37 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
   return (
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}
-        <Item padding="40px 0 0 0" align="flex-start">
+        <Item padding="40px 0 0 0" self="stretch" align="flex-start" justify="center">
+          <Item self="center" maxWidth="800px" width="100%">
+            <TabSpace>
+              <p>
+                Amount for Staking
+              </p>
 
-          <TabSpace>
-            <p>
-              Amount for Staking
-            </p>
-
-            <b>
-             {channelStakeFees} DAI
-            </b>
-          </TabSpace>
+              <b>
+              {channelStakeFees} DAI
+              </b>
+            </TabSpace>
 
 
-          <TextSpace>
-              <Span color={theme.default.secondaryColor} size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
+            <TextSpace>
+                <Span color={theme.default.secondaryColor} size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
 
-              <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
-
-              {!UtilityHelper.isMainnet(chainId) ? (
-              <Minter
-                onClick={() => {
-                  mintDai();
-                }}
-              >
-                  <PoolShare>Get Free DAI for Channel</PoolShare>
-              </Minter>
-          ) : (
-            <></>
-          )}
-          </TextSpace>
+                {appConfig.appEnv !== 'prod' && 
+                  <>
+                    <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
+                    
+                    <Minter
+                      onClick={() => {
+                        mintDai();
+                      }}
+                    >
+                        <PoolShare>Get Free DAI for Channel</PoolShare>
+                    </Minter>
+                  </>
+                }
+            </TextSpace>
+          </Item>
 
         <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto">
           <Button

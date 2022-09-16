@@ -12,7 +12,7 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 // Internal Configs
-import { abis, addresses } from "@project/contracts";
+import { abis, addresses } from "config";
 
 const ethers = require('ethers');
 const ipfs = require('ipfs-api')()
