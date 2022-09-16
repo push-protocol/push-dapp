@@ -1,19 +1,19 @@
-import React, { useContext, useState } from 'react'
-import IntentBar from '../intentBar/intentBar'
-import IntentFeed from '../intentFeed/intentFeed'
-import SearchBar from '../searchBar/searchBar'
-import { Context } from '../w2wIndex'
-import './sidebar.css'
+import React, { useContext, useState } from 'react';
+import IntentBar from '../intentBar/intentBar';
+import IntentFeed from '../intentFeed/intentFeed';
+import SearchBar from '../searchBar/searchBar';
+import { Context } from '../w2wIndex';
+import './sidebar.css';
 
-import { makeStyles } from '@material-ui/core'
-import Box from '@mui/material/Box'
-import MuiTab from '@mui/material/Tab'
-import MuiTabs from '@mui/material/Tabs'
-import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import { makeStyles } from '@material-ui/core';
+import Box from '@mui/material/Box';
+import MuiTab from '@mui/material/Tab';
+import MuiTabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
+import styled from 'styled-components';
 
-import ProfileHeader from '../profile'
-import Profile from '../ProfileSection/Profile'
+import ProfileHeader from '../profile';
+import Profile from '../ProfileSection/Profile';
 
 function TabPanel({ children, value, index, ...other }): JSX.Element {
   return (
@@ -26,7 +26,7 @@ function TabPanel({ children, value, index, ...other }): JSX.Element {
     >
       {value === index && children}
     </Box>
-  )
+  );
 }
 
 const useStyles = makeStyles({
@@ -38,22 +38,22 @@ const useStyles = makeStyles({
       color: '#CF1C84'
     }
   }
-})
+});
 
 const Sidebar = () => {
-  const { connectedUser, pendingRequests } = useContext(Context)
-  const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture)
+  const { connectedUser, pendingRequests } = useContext(Context);
+  const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
-  const [value, setValue] = useState(0)
-  const classes = useStyles()
+  const [value, setValue] = useState(0);
+  const classes = useStyles();
 
   const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   const updateProfile = (image: string) => {
-    setUserProfileImage(image)
-  }
+    setUserProfileImage(image);
+  };
 
   return (
     <Container>
@@ -75,6 +75,7 @@ const Sidebar = () => {
                 </span>
               }
             />
+            <Tab style={{ display: 'none' }} label="" />
           </Tabs>
         </Box>
       </TabContainer>
@@ -98,8 +99,8 @@ const Sidebar = () => {
         <ProfileHeader setValue={setValue} />
       </BottomBar>
     </Container>
-  )
-}
+  );
+};
 
 const Badge = styled.div`
   box-sizing: border-box;
@@ -112,7 +113,7 @@ const Badge = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 12px;
-`
+`;
 const BottomBar = styled(Box)`
   position: absolute;
   bottom: 0;
@@ -124,7 +125,7 @@ const BottomBar = styled(Box)`
   justify-content: space-between;
   align-items: center;
   displaytext-align: center;
-`
+`;
 
 const DisplayText = styled(Typography)`
   && {
@@ -132,7 +133,7 @@ const DisplayText = styled(Typography)`
     font-size: ${(props): string => props.size || '14px'};
     font-weight: ${(props): string => props.weight || '500'};
   }
-`
+`;
 const Container = styled(Box)`
   && {
     padding: 0px;
@@ -141,7 +142,7 @@ const Container = styled(Box)`
     height: inherit;
     position: relative;
   }
-`
+`;
 
 const TabContainer = styled(Box)`
   && {
@@ -151,11 +152,11 @@ const TabContainer = styled(Box)`
     display: flex;
     justify-content: center;
   }
-`
+`;
 
 const Tabs = styled(MuiTabs)`
   displaytext-transform: unset;
-`
+`;
 
 const Tab = styled(MuiTab)`
   && {
@@ -164,6 +165,6 @@ const Tab = styled(MuiTab)`
     font-size: 16px;
     color: #000000;
   }
-`
+`;
 
-export default Sidebar
+export default Sidebar;
