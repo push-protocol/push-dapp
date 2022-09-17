@@ -60,6 +60,7 @@ const IntentFeed = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>();
 
   async function resolveThreadhash(): Promise<void> {
+    setIsLoading(true);
     let getIntent;
     if (did) {
       getIntent = await intitializeDb<string>('Read', 'Intent', did.id, '', 'did');
@@ -77,6 +78,7 @@ const IntentFeed = (): JSX.Element => {
       setPendingRequests(intents?.length)
       setReceivedIntents(intents)
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -129,7 +131,9 @@ const IntentFeed = (): JSX.Element => {
   }
 
   function displayReceivedIntents(): JSX.Element {
-    return (
+    return isLoading ? (
+      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+    ) : (
       <>
         {!receivedIntents?.length ? (
           <InfoMessage>No received intents</InfoMessage>

@@ -10,6 +10,7 @@ import { AppContext, Context } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -68,6 +69,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       await getInbox();
       setIntents(await fetchIntent({ did: did.id }));
     }
+    setMessagesLoading(false);
   };
 
   useEffect(() => {
@@ -121,11 +123,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           }
           setFeeds([]);
         }
+        setMessagesLoading(false);
       };
       searchFn();
     }
 
-    setMessagesLoading(false);
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -141,36 +143,39 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         CHAT
       </DisplayText>
       <UserProfileContainer>
-        {!feeds?.length && messagesLoading && (
+        {messagesLoading ? (
           <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
-            <Loader />
+            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
           </div>
-        )}
-        {!feeds?.length && isSameUser ? (
-          <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
-        ) : !feeds?.length && isInValidAddress ? (
-          <InfoMessage>Invalid Address</InfoMessage>
-        ) : !feeds?.length && !messagesLoading ? (
-          <InfoMessage>No Address found.</InfoMessage>
-        ) : !messagesLoading ? (
-          feeds.map((feed: Feeds, i) => (
-            <div
-              key={feed.threadhash || i}
-              onClick={(): void => {
-                setChat(feed);
-              }}
-            >
-              <DefaultMessage inbox={feed} isSelected={isSelected} />
-            </div>
-          ))
-        ) : null}
+        ) : (
+          <>
+            {!feeds?.length && isSameUser ? (
+              <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
+            ) : !feeds?.length && isInValidAddress ? (
+              <InfoMessage>Invalid Address</InfoMessage>
+            ) : !feeds?.length && !messagesLoading ? (
+              <InfoMessage>No Address found.</InfoMessage>
+            ) : !messagesLoading ? (
+              feeds.map((feed: Feeds, i) => (
+                <div
+                  key={feed.threadhash || i}
+                  onClick={(): void => {
+                    setChat(feed);
+                  }}
+                >
+                  <DefaultMessage inbox={feed} isSelected={isSelected} />
+                </div>
+              ))
+            ) : null}
 
-        <ReactSnackbar
-          text={errorMessage}
-          open={openReprovalSnackbar}
-          handleClose={handleCloseReprovalSnackbar}
-          severity={'error'}
-        />
+            <ReactSnackbar
+              text={errorMessage}
+              open={openReprovalSnackbar}
+              handleClose={handleCloseReprovalSnackbar}
+              severity={'error'}
+            />
+          </>
+        )}
       </UserProfileContainer>
     </SidebarWrapper>
   );
