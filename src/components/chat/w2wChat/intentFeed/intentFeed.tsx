@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core'
+// @ts-ignore
 import { Web3Provider } from 'ethers/providers'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -47,7 +48,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests }: AppContext = useContext<
+  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests, setLoadingMessage }: AppContext = useContext<
     AppContext
   >(Context);
   const { chainId, account } = useWeb3React<Web3Provider>();
@@ -96,9 +97,12 @@ const IntentFeed = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
+        setLoadingMessage('Creating cryptography keys')
         const keyPairs = await generateKeyPair();
+        setLoadingMessage('Cryptography keys created')
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
+        setLoadingMessage('Creating user in the protocol')
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -110,6 +114,7 @@ const IntentFeed = (): JSX.Element => {
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
+        setLoadingMessage('User created')
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };
