@@ -19,7 +19,7 @@ interface MessageFeedProps {
 }
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
-  const { did, setChat, connectedUser, setIntents, setInbox }: AppContext = useContext<AppContext>(Context);
+  const { did, setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
@@ -87,33 +87,39 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
-            const inbox: Feeds = {
-              msg: {
-                name: user.wallets.split(',')[0].toString(),
+            let feed: Feeds
+            const desiredUser = inbox.filter(inb => inb.did === user.did)
+            if (desiredUser.length) {
+              feed = desiredUser[0]
+            } else {
+              feed = {
+                msg: {
+                  name: user.wallets.split(',')[0].toString(),
+                  profilePicture: user.profilePicture,
+                  lastMessage: null,
+                  timestamp: null,
+                  messageType: null,
+                  signature: null,
+                  signatureType: null,
+                  encType: null,
+                  encryptedSecret: null,
+                  fromDID: null,
+                  toDID: null
+                },
+                wallets: user.wallets,
+                did: user.did,
+                threadhash: null,
                 profilePicture: user.profilePicture,
-                lastMessage: null,
-                timestamp: null,
-                messageType: null,
-                signature: null,
-                signatureType: null,
-                encType: null,
-                encryptedSecret: null,
-                fromDID: null,
-                toDID: null
-              },
-              wallets: user.wallets,
-              did: user.did,
-              threadhash: null,
-              profilePicture: user.profilePicture,
-              about: user.about,
-              intent: null,
-              intentSentBy: null,
-              intentTimestamp: null,
-              publicKey: user.publicKey,
-              combinedDID: null,
-              cid: null
-            };
-            setFeeds([inbox]);
+                about: user.about,
+                intent: null,
+                intentSentBy: null,
+                intentTimestamp: null,
+                publicKey: user.publicKey,
+                combinedDID: null,
+                cid: null
+              };
+            }
+            setFeeds([feed]);
           }
         } else {
           if (props.isInvalidAddress) {
