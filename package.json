@@ -109,6 +109,7 @@
     "react-image-file-resizer": "^0.4.7",
     "react-images-upload": "^1.2.8",
     "react-joyride": "^2.4.0",
+    "react-loader-spinner": "^5.3.4",
     "react-multi-select-component": "^4.2.3",
     "react-player": "2.9.0",
     "react-query": "^3.39.1",
