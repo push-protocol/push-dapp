@@ -7,6 +7,8 @@ if (process.env.REACT_APP_DEPLOY_ENV == 'PROD') {
   appendName = 'staging';
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'DEV') {
   appendName = 'dev';
+} else if (process.env.REACT_APP_DEPLOY_ENV == 'LOCALHOST') {
+  appendName = 'localhost';
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'W2W') {
   appendName = 'staging';
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'ALPHA') {
