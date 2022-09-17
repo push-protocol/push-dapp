@@ -601,9 +601,9 @@ const ChatBox = (): JSX.Element => {
           <MessageContainer>
             <ScrollToBottom>
               {Loading ? (
-                <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                <SpinnerWrapper>
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-                </div>
+                </SpinnerWrapper>
               ) : (
                 <>
                   {messages?.map((msg, i) => {
@@ -699,6 +699,11 @@ const ChatBox = (): JSX.Element => {
   );
 };
 
+const SpinnerWrapper = styled.div`
+  width: 100%;
+  height: calc(83.6vh - 130px);
+`;
+
 const FirstConversation = styled.div`
   width: 100%;
   display: flex;
@@ -732,7 +737,7 @@ const MessageContainer = styled.div`
   right: 0;
   margin: 0;
   width: 100%;
-  max-height: calc(83.6vh - 130px);
+  height: calc(83.6vh - 130px);
   overflow: auto;
   display: flex;
   flex-direction: column;
