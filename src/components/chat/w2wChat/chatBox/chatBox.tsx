@@ -599,7 +599,7 @@ const ChatBox = (): JSX.Element => {
           </ChatHeader>
 
           <MessageContainer>
-            <ScrollToBottom>
+            <ScrollToBottom className='chatBoxTop' initialScrollBehavior='smooth'>
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
@@ -733,17 +733,24 @@ const MessageTime = styled.div`
 const MessageContainer = styled.div`
   position: absolute;
   top: 65px;
+  bottom:66px;
   left: 0;
   right: 0;
   margin: 0;
   width: 100%;
-  height: calc(83.6vh - 130px);
+  max-height: calc(83.6vh - 130px);
   overflow: auto;
   display: flex;
   flex-direction: column;
-  &&::-webkit-scrollbar {
+  /* &&::-webkit-scrollbar {
     width: 0;
     height: 0;
+  } */
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
   }
 `;
 
