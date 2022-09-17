@@ -738,7 +738,7 @@ const MessageContainer = styled.div`
   right: 0;
   margin: 0;
   width: 100%;
-  max-height: calc(83.6vh - 130px);
+  height: calc(83.6vh - 130px);
   overflow: auto;
   display: flex;
   flex-direction: column;
