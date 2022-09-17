@@ -16,10 +16,11 @@ import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { toast } from 'react-toastify';
+import { MdError, MdCheckCircle } from 'react-icons/md';
 import styled from 'styled-components';
 
 // Internal Compoonents
+import useToast from 'hooks/useToast';
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -34,8 +35,7 @@ import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import Chats from '../chats/chats';
 import { FileMessageContent } from '../Files/Files';
 import GifPicker from '../Gifs/gifPicker';
-import IntentCondition from '../IntentCondition/IntentCondition';
-import { Context, ToastPosition } from '../w2wIndex';
+import { Context } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './chatBox.css';
@@ -83,6 +83,7 @@ const ChatBox = (): JSX.Element => {
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
   const [showOption, setShowOption] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
+  const chatBoxToast = useToast();
   let showTime = false
   let time = ''
 
@@ -321,13 +322,23 @@ const ChatBox = (): JSX.Element => {
       });
 
       if (typeof savedMsg === 'string') {
-        toast.error(savedMsg, ToastPosition);
+        chatBoxToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `${savedMsg}`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
       }
     } catch (error) {
       console.log(error);
-      toast.error('Cannot send Message, Try again later', ToastPosition);
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot send Message, Try again later',
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
     }
     setMessageBeingSent(false);
   };
@@ -448,7 +459,12 @@ const ChatBox = (): JSX.Element => {
         });
         if (typeof msg === 'string') {
           // Display toaster
-          toast.error(msg, ToastPosition);
+          chatBoxToast.showMessageToast({
+            toastTitle: 'Error',
+            toastMessage: `${msg}`,
+            toastType: 'ERROR',
+            getToastIcon: (size) => <MdError size={size} color="red" />,
+          });
         } else {
           // We store the message in state decrypted so we display to the user the intent message
           msg.messageContent = message;
@@ -461,7 +477,12 @@ const ChatBox = (): JSX.Element => {
           setInbox(inboxes);
           const result = inboxes.find((x) => x.did === currentChat.did);
           setChat(result);
-          toast.success('Intent sent!', ToastPosition);
+          chatBoxToast.showMessageToast({
+            toastTitle: 'Success',
+            toastMessage: 'Intent Sent',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
+          });
         }
       } else {
         setNewMessage('');
