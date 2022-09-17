@@ -1,5 +1,5 @@
-import React from "react";
-import ReactGA from "react-ga";
+import React from 'react';
+import ReactGA from 'react-ga';
 
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import styled, { css, useTheme } from 'styled-components';
@@ -8,18 +8,18 @@ import { A, B, Button, Content, H2, H3, Item, Section, Span } from '../../primar
 import { BsChevronExpand } from 'react-icons/bs';
 
 import { useWeb3React } from '@web3-react/core';
-import AllNFTs from "components/AllNFTs";
-import AllNFTsV2 from "components/AllNFTsV2";
-import MyNFTs from "components/MyNFTs";
-import MyNFTsV2 from "components/MyNFTsV2";
-import TransferNFT from "components/TransferNFT";
-import TransferNFTv2 from "components/TransferNFTv2";
-import GLOBALS, { device, globalsMargin } from "config/Globals";
+import AllNFTs from 'components/AllNFTs';
+import AllNFTsV2 from 'components/AllNFTsV2';
+import MyNFTs from 'components/MyNFTs';
+import MyNFTsV2 from 'components/MyNFTsV2';
+import TransferNFT from 'components/TransferNFT';
+import TransferNFTv2 from 'components/TransferNFTv2';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Create Header
 function NftModule() {
   // React GA Analytics
-  ReactGA.pageview("/rockstars");
+  ReactGA.pageview('/rockstars');
 
   const { account } = useWeb3React();
 
@@ -36,7 +36,7 @@ function NftModule() {
     newShowAnswers[id] = !newShowAnswers[id];
 
     setShowAnswers(newShowAnswers);
-  }
+  };
 
   React.useEffect(() => {
     userClickedAt(2);
@@ -72,130 +72,115 @@ function NftModule() {
               textTransform="none"
               textAlign="center"
               spacing="0.03em"
-              margin="0px 0px"
-            >
-              Thank you community for all your support. Over the next year, we are excited to continue returning our gratitude!
+              margin="0px 0px">
+              Thank you community for all your support. Over the next year, we are excited to continue returning our
+              gratitude!
             </Span>
           </ItemVV2>
 
           <Item align="stretch" justify="flex-start" margin="0px 20px 0px 20px">
-
             {/* Question */}
             <Item align="stretch" margin="0px 0px 20px 0px">
               <QnAItem>
                 <Question
-                  onClick={() => {toggleShowAnswer(1)}}
-                  hover="#e20880"
-                >
-                  <Span color={theme.color}>
-                    Does $ROCKSTAR of EPNS NFTs carry something along with NFTs?
-                  </Span>
-                  <BsChevronExpand size={20} color={"#ddd"}/>
+                  onClick={() => {
+                    toggleShowAnswer(1);
+                  }}
+                  hover="#e20880">
+                  <Span color={theme.color}>Does $ROCKSTAR of Push (EPNS) NFTs carry something along with NFTs?</Span>
+                  <BsChevronExpand size={20} color={'#ddd'} />
                 </Question>
 
-                {showAnswers[1] &&
+                {showAnswers[1] && (
                   <Answer>
                     <Span>
-                      Yes, Each <B>$ROCKSTAR</B> contains <B>2400 $PUSH</B> tokens that can be claimed instantly!!! <AMod href="https://medium.com/ethereum-push-notification-service/push-token-economics-d7f566c29b1a" target="_blank" title="Read more about $PUSH tokeneconomics">Learn about $PUSH Token Economics.</AMod>
+                      Yes, Each <B>$ROCKSTAR</B> contains <B>2400 $PUSH</B> tokens that can be claimed instantly!!!{' '}
+                      <AMod
+                        href="https://medium.com/ethereum-push-notification-service/push-token-economics-d7f566c29b1a"
+                        target="_blank"
+                        title="Read more about $PUSH tokeneconomics">
+                        Learn about $PUSH Token Economics.
+                      </AMod>
                     </Span>
                   </Answer>
-                }
+                )}
               </QnAItem>
 
               <QnAItem>
                 <Question
-                  onClick={() => {toggleShowAnswer(2)}}
-                  hover="#e20880"
-                >
-                  <Span color={theme.color}>
-                    How to get $ROCKSTAR of EPNS?
-                  </Span>
-                  <BsChevronExpand size={20} color={"#ddd"}/>
+                  onClick={() => {
+                    toggleShowAnswer(2);
+                  }}
+                  hover="#e20880">
+                  <Span color={theme.color}>How to get $ROCKSTAR of EPNS?</Span>
+                  <BsChevronExpand size={20} color={'#ddd'} />
                 </Question>
 
-                {showAnswers[2] &&
+                {showAnswers[2] && (
                   <Answer>
                     <Span>
-                      We’ll be distributing one NFT a week (every Monday) to one community member who does something to help us push the envelope forward. <AMod href="https://medium.com/ethereum-push-notification-service/kicking-off-the-epns-nft-community-drops-6a5c49808cf" target="_blank" title="Read how to get $ROCKSTAR of EPNS">Here are some ways by which you can get one!</AMod>
+                      We’ll be distributing one NFT a week (every Monday) to one community member who does something to
+                      help us push the envelope forward.{' '}
+                      <AMod
+                        href="https://medium.com/ethereum-push-notification-service/kicking-off-the-epns-nft-community-drops-6a5c49808cf"
+                        target="_blank"
+                        title="Read how to get $ROCKSTAR of EPNS">
+                        Here are some ways by which you can get one!
+                      </AMod>
                     </Span>
                   </Answer>
-                }
+                )}
               </QnAItem>
-
             </Item>
           </Item>
         </Content>
 
         <Content padding="20px 0px" bg="#eee">
           <Item align="flex-start" margin="0px 20px 0px 20px">
-            
-          <Controls>
+            <Controls>
               <SubscribeButton
-                className={version === 2 ? "v2" : "v1"}
+                className={version === 2 ? 'v2' : 'v1'}
                 // index={2}
                 // active={version == 0 ? 1 : 0}
                 onClick={() => {
                   userClickedAt(2);
-                }}
-              >
+                }}>
                 <ActionTitle>ROCKSTAR V2</ActionTitle>
               </SubscribeButton>
 
               <SubscribeButton
-                className={version === 1 ? "v2" : "v1"}
+                className={version === 1 ? 'v2' : 'v1'}
                 // index={1}
                 // active={version == 1 ? 1 : 0}
                 onClick={() => {
                   userClickedAt(1);
-                }}
-              >
+                }}>
                 <ActionTitle>ROCKSTAR V1</ActionTitle>
-              </SubscribeButton> 
+              </SubscribeButton>
 
               <CheckSpace>
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  onChange={handleChange}
-                />
+                <input type="checkbox" className="checkbox" onChange={handleChange} />
                 {/* <span className=""></span> */}
                 Show mine
               </CheckSpace>
             </Controls>
-            
 
             {controlAt === 0 && version === 1 && (
-              <MyNFTs
-                controlAt={controlAt}
-                setControlAt={setControlAt}
-                setTokenId={setTokenId}
-              />
+              <MyNFTs controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
             )}
 
             {controlAt === 0 && version === 2 && (
-              <MyNFTsV2
-                controlAt={controlAt}
-                setControlAt={setControlAt}
-                setTokenId={setTokenId}
-              />
+              <MyNFTsV2 controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
             )}
-            
+
             {/* NFTs version 1 */}
             {controlAt === 1 && version === 1 && (
-              <AllNFTs
-                controlAt={controlAt}
-                setControlAt={setControlAt}
-                setTokenId={setTokenId}
-              />
+              <AllNFTs controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
             )}
 
             {/* NFTs version 2 */}
-              {controlAt === 1 && version === 2 && (
-              <AllNFTsV2
-                controlAt={controlAt}
-                setControlAt={setControlAt}
-                setTokenId={setTokenId}
-              />
+            {controlAt === 1 && version === 2 && (
+              <AllNFTsV2 controlAt={controlAt} setControlAt={setControlAt} setTokenId={setTokenId} />
             )}
             {controlAt === 2 && tokenId && <TransferNFT tokenId={tokenId} />}
             {controlAt === 3 && tokenId && <TransferNFTv2 tokenId={tokenId} />}
@@ -208,31 +193,40 @@ function NftModule() {
 
 // css styles
 const Container = styled(Section)`
-	align-items: center;
-	align-self: center;
-	background: ${(props) => props.theme.default.bg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
-	display: flex;
-	flex-direction: column;
-	flex: initial;
-	justify-content: center;
+  align-items: center;
+  align-self: center;
+  background: ${(props) => props.theme.default.bg};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
+  display: flex;
+  flex-direction: column;
+  flex: initial;
+  justify-content: center;
   max-width: 1200px;
-  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
-	position: relative;
+  width: calc(
+    100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
+      ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
+  );
+  position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
 `;
 
@@ -269,7 +263,7 @@ const CheckSpace = styled.div`
     appearance: none;
     background-color: white;
     &:checked {
-      background-color: #E10780;
+      background-color: #e10780;
       border: 1px solid transparent;
     }
   }
@@ -277,7 +271,7 @@ const CheckSpace = styled.div`
 
 const ContainerInfo = styled.div`
   padding: 20px;
-`
+`;
 
 const Items = styled.div`
   display: block;
@@ -285,7 +279,7 @@ const Items = styled.div`
   padding: 10px 20px;
   overflow-y: scroll;
   background: #fafafa;
-`
+`;
 
 const ChannelActionButton = styled.button`
   border: 0;
@@ -312,19 +306,21 @@ const ChannelActionButton = styled.button`
     cursor: pointer;
     pointer: hand;
   }
-  ${ props => props.disabled && css`
-    &:hover {
-      opacity: 1;
-      cursor: default;
-      pointer: default;
-    }
-    &:active {
-      opacity: 1;
-      cursor: default;
-      pointer: default;
-    }
-  `}
-`
+  ${(props) =>
+    props.disabled &&
+    css`
+      &:hover {
+        opacity: 1;
+        cursor: default;
+        pointer: default;
+      }
+      &:active {
+        opacity: 1;
+        cursor: default;
+        pointer: default;
+      }
+    `}
+`;
 
 const ChannelRockstarButton = styled.button`
   border: 0;
@@ -380,21 +376,22 @@ const SubscribeButton = styled(ChannelActionButton)`
 `;
 
 const ActionTitle = styled.span`
-  ${ props => props.hideit && css`
-    visibility: hidden;
-  `};
-`
+  ${(props) =>
+    props.hideit &&
+    css`
+      visibility: hidden;
+    `};
+`;
 
 const Question = styled(Button)`
   align-items: stretch;
   align-self: stretch;
-`
+`;
 
 const Answer = styled(Item)`
   align-items: stretch;
   align-self: stretch;
-
-`
+`;
 
 const QnAItem = styled(Item)`
   align-items: stretch;
@@ -443,7 +440,7 @@ const QnAItem = styled(Item)`
 const AMod = styled(A)`
   color: #e20880;
   font-weight: 500;
-`
+`;
 
 // Export Default
 export default NftModule;

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactGA from "react-ga";
+import ReactGA from 'react-ga';
 
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -8,7 +8,7 @@ import { BsChevronExpand } from 'react-icons/bs';
 import styled, { useTheme } from 'styled-components';
 
 function FaqModule() {
-  ReactGA.pageview("/faq");
+  ReactGA.pageview('/faq');
 
   const theme = useTheme();
 
@@ -38,7 +38,12 @@ function FaqModule() {
 
         <ItemVV2 margin="0px 0px 0px 0px" alignItems="flex-start">
           <H2 textTransform="uppercase" spacing="0.1em" margin="20px 0px 20px 0px" size="1.6rem">
-            <SpanV2 weight="600" padding="8px 20px" background={theme.default.secondaryBg} color={theme.default.color} borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
+            <SpanV2
+              weight="600"
+              padding="8px 20px"
+              background={theme.default.secondaryBg}
+              color={theme.default.color}
+              borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
               For Users
             </SpanV2>
           </H2>
@@ -52,8 +57,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(1);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>What are Channels?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -72,8 +76,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(2);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>Is Channel Creation a compulsory process?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -99,8 +102,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(3);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How do I opt into a Channel?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -120,8 +122,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(4);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>Does Opting-in to a Channel require gas fees?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -141,8 +142,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(5);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>Do I need ETHER to interact with the DAPP?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -164,8 +164,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(6);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How do I receive notifications?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -173,18 +172,17 @@ function FaqModule() {
               {showAnswers[6] && (
                 <Answer>
                   <Span>
-                    In order to receive notifications seamlessly, EPNS provides 3 different crypto front-ends
+                    In order to receive notifications seamlessly, Push (EPNS) provides 3 different crypto front-ends
                   </Span>
                   <Span2>
                     <AMod href="https://app.epns.io/" target="_blank">
-                      EPNS Dapp
+                      Push (EPNS) Dapp
                     </AMod>
                   </Span2>
                   <Span2 mtop="0.2rem">
                     <AMod
                       href="https://chrome.google.com/webstore/detail/epns-protocol-alpha/lbdcbpaldalgiieffakjhiccoeebchmg"
-                      target="_blank"
-                    >
+                      target="_blank">
                       Browser Extension
                     </AMod>
                   </Span2>
@@ -205,7 +203,12 @@ function FaqModule() {
 
         <ItemVV2 margin="0px 0px 0px 0px" alignItems="flex-start">
           <H2 textTransform="uppercase" spacing="0.1em" margin="30px 0px 20px 0px" size="1.6rem">
-            <SpanV2 weight="600" padding="8px 20px" background={theme.default.secondaryBg} color={theme.default.color} borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
+            <SpanV2
+              weight="600"
+              padding="8px 20px"
+              background={theme.default.secondaryBg}
+              color={theme.default.color}
+              borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}>
               For Developers
             </SpanV2>
           </H2>
@@ -219,8 +222,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(7);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How do I create a Channel?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -230,13 +232,12 @@ function FaqModule() {
                   <Span>
                     Easiest way to create a channel is from our{' '}
                     <AMod target="_blank" href="https://app.epns.io/#/dashboard">
-                      EPNS Dapp
+                      Push (EPNS) Dapp
                     </AMod>{' '}
                     itself. Find the entire channel creation process{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/create-your-first-channel"
-                    >
+                      href="https://docs.epns.io/developer-zone/developer-guides/create-your-first-channel">
                       here
                     </AMod>
                     .
@@ -250,8 +251,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(8);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>What are the different types of Notifications?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -277,8 +277,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(9);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How do I send notifications?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -295,8 +294,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(10);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How do I use Backend-Sdk and Showrunners?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -304,18 +302,16 @@ function FaqModule() {
               {showAnswers[10] && (
                 <Answer>
                   <Span>
-                    EPNS Documentation hub contains in-depth details on how to use our{' '}
+                    Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up"
-                    >
+                      href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up">
                       Backend SDKs
                     </AMod>{' '}
                     and{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/working-with-showrunners"
-                    >
+                      href="https://docs.epns.io/developer-zone/developer-guides/working-with-showrunners">
                       Showrunners
                     </AMod>
                     . Check them out.
@@ -329,8 +325,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(11);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>DHow do I use the Front-SDK?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -338,11 +333,10 @@ function FaqModule() {
               {showAnswers[11] && (
                 <Answer>
                   <Span>
-                    EPNS Documentation hub contains in-depth details on how to use our{' '}
+                    Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/integrating-with-front-end-sdk"
-                    >
+                      href="https://docs.epns.io/developer-zone/developer-guides/integrating-with-front-end-sdk">
                       Front-end SDK
                     </AMod>
                     .
@@ -356,8 +350,7 @@ function FaqModule() {
                 onClick={() => {
                   toggleShowAnswer(12);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>Where can I find Developer Documentations?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -367,7 +360,7 @@ function FaqModule() {
                   <Span>
                     All of our documentation can be found in our{' '}
                     <AMod target="_blank" href="https://docs.epns.io/">
-                      EPNS Documentation HUB
+                      Push (EPNS) Documentation HUB
                     </AMod>
                     .
                   </Span>
@@ -382,31 +375,40 @@ function FaqModule() {
 }
 
 const Container = styled(Section)`
-	align-items: center;
-	align-self: center;
-	background: ${(props) => props.theme.default.bg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
-	display: flex;
-	flex-direction: column;
-	flex: initial;
-	justify-content: center;
+  align-items: center;
+  align-self: center;
+  background: ${(props) => props.theme.default.bg};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
+  display: flex;
+  flex-direction: column;
+  flex: initial;
+  justify-content: center;
   max-width: 1200px;
-  width: calc(100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG});
+  width: calc(
+    100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
+      ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
+  );
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
-	position: relative;
+  position: relative;
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
 
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
-    width: calc(100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT});
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
 `;
 

@@ -1,4 +1,3 @@
-
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 
@@ -18,9 +17,7 @@ import styled, { useTheme } from 'styled-components';
 import * as EpnsAPI from '@epnsproject/sdk-restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import {
-  SectionV2
-} from 'components/reusables/SharedStylingV2';
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
@@ -35,16 +32,14 @@ import {
   ItemH,
   Section,
   Span,
-  TextField
+  TextField,
 } from 'primaries/SharedStyling';
 import React, { useEffect } from 'react';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
 
 // Internal Configs
-import { appConfig } from "config";
-;
-
+import { appConfig } from 'config';
 const ethers = require('ethers');
 
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -56,10 +51,10 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
     thumb: 'thumb',
     track: 'track',
     checked: 'checked',
-    focusVisible: 'focusVisible'
+    focusVisible: 'focusVisible',
   },
   disableRipple: true,
-  focusVisibleClassName: 'focusVisible'
+  focusVisibleClassName: 'focusVisible',
 }))`
   &.root {
     width: 42px;
@@ -111,7 +106,7 @@ const NFTypes = [
   { value: '1', label: 'Broadcast (Direct Payload)' },
   // { value: "2", label: "Old Secret (IPFS Payload)" }, -- Deprecated
   { value: '3', label: 'Targeted (Direct Payload)' },
-  { value: '4', label: 'Subset (Direct Payload)' }
+  { value: '4', label: 'Subset (Direct Payload)' },
 ];
 const LIMITER_KEYS = ['Enter', ','];
 
@@ -142,7 +137,7 @@ function SendNotifications() {
   const [nfMediaEnabled, setNFMediaEnabled] = React.useState(false);
   const [nfInfo, setNFInfo] = React.useState('');
   const [delegateeOptions, setDelegateeOptions] = React.useState([]);
-  const [errorMessage, setErrorMessage] = React.useState("");
+  const [errorMessage, setErrorMessage] = React.useState('');
 
   useEffect(() => {
     if (canSend !== 1) {
@@ -173,11 +168,14 @@ function SendNotifications() {
           label: (
             <CustomDropdownItem>
               <img src={oneDelegatee.icon} alt="" />
-              <div style={{
-                letterSpacing:"0",
-              }}>{oneDelegatee.name}</div>
+              <div
+                style={{
+                  letterSpacing: '0',
+                }}>
+                {oneDelegatee.name}
+              </div>
             </CustomDropdownItem>
-          )
+          ),
         }))
       );
       // default the channel address to the first one on the list which should be that of the user if they have a channel
@@ -256,7 +254,7 @@ function SendNotifications() {
         toastTitle: 'Error',
         toastMessage: 'Please enter at least two recipients in order to use subset notifications type',
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />
+        getToastIcon: (size) => <MdError size={size} color="red" />,
       });
       validated = false;
     }
@@ -268,7 +266,7 @@ function SendNotifications() {
     e.preventDefault();
 
     notificationToast.showLoaderToast({
-      loaderMessage: 'Preparing Notification'
+      loaderMessage: 'Preparing Notification',
     });
 
     // do some validation
@@ -279,7 +277,7 @@ function SendNotifications() {
 
     // Form signer and contract connection
     //   const communicatorContract = epnsCommWriteProvider;
-    // define the epns comms contracts
+    // define the Push (EPNS) comms contracts
 
     // For payload basic
     let nsub = nfSub;
@@ -420,54 +418,54 @@ function SendNotifications() {
     if (nfType === '1' || nfType === '2' || nfType === '3' || nfType === '4' || nfType === '5') {
       // Checks for optional fields
       if (nfSubEnabled && isEmpty(nfSub)) {
-        setNFInfo("Please enter a valid notification subject");
+        setNFInfo('Please enter a valid notification subject');
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />
+          getToastIcon: (size) => <MdError size={size} color="red" />,
         });
 
         return;
       }
 
       if (nfMediaEnabled && isEmpty(nfMedia)) {
-        setNFInfo("Please enter a valid media URL");
+        setNFInfo('Please enter a valid media URL');
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />
+          getToastIcon: (size) => <MdError size={size} color="red" />,
         });
         return;
       }
 
       if (nfCTAEnabled && isEmpty(nfCTA)) {
-        setNFInfo("Please enter a valid CTA link");
+        setNFInfo('Please enter a valid CTA link');
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />
+          getToastIcon: (size) => <MdError size={size} color="red" />,
         });
         return;
       }
 
       if (isEmpty(nfMsg)) {
-        setNFInfo("Please enter a valid notification message");
+        setNFInfo('Please enter a valid notification message');
         setNFProcessing(2);
 
         notificationToast.showMessageToast({
           toastTitle: 'Error',
           toastMessage: 'Incorrect Payload',
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />
+          getToastIcon: (size) => <MdError size={size} color="red" />,
         });
         return;
       }
@@ -522,7 +520,7 @@ function SendNotifications() {
       //       identityBytes,
       //   });
       //   const EPNS_DOMAIN = {
-      //       name: "EPNS COMM V1",
+      //       name: "Push (EPNS) COMM V1",
       //       chainId: chainId,
       //       verifyingContract: epnsCommReadProvider.address,
       //   };
@@ -589,17 +587,17 @@ function SendNotifications() {
           identityType: 2, // direct payload
           notification: {
             title: asub,
-            body: amsg
+            body: amsg,
           },
           payload: {
             title: asub,
             body: amsg,
             cta: acta,
-            img: aimg
+            img: aimg,
           },
           recipients: notifRecipients, // recipient address
           channel: channelAddressInCaip, // your channel address
-          env: appConfig.pushNodesEnv
+          env: appConfig.pushNodesEnv,
         });
         //   console.log(nfRecipient);
         //   postReq("/payloads/add_manual_payload", {
@@ -616,7 +614,7 @@ function SendNotifications() {
           toastTitle: 'Success',
           toastMessage: 'Notification Sent',
           toastType: 'SUCCESS',
-          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
         });
 
         setNFProcessing(2);
@@ -627,7 +625,7 @@ function SendNotifications() {
           toastTitle: 'Success',
           toastMessage: 'Notification Sent',
           toastType: 'SUCCESS',
-          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
         });
         //       console.log(res);
         //   });
@@ -638,7 +636,7 @@ function SendNotifications() {
           toastTitle: 'Error',
           toastMessage: 'Sending Notification Failed: ' + err,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />
+          getToastIcon: (size) => <MdError size={size} color="red" />,
         });
         setNFProcessing(0);
         console.log(err);
@@ -710,7 +708,7 @@ function SendNotifications() {
     //       // };
 
     //       const EPNS_DOMAIN = {
-    //           name: "EPNS COMM V1",
+    //           name: "Push (EPNS) COMM V1",
     //           chainId: chainId,
     //           verifyingContract: epnsCommReadProvider.address,
     //       };
@@ -823,7 +821,13 @@ function SendNotifications() {
       <Body>
         <Content padding="10px 20px 10px">
           <Item align="center">
-            <H2 textTransform="none" weight="400" size="32px" color={theme.color} textAlign="center" style={{width:"100%"}}>
+            <H2
+              textTransform="none"
+              weight="400"
+              size="32px"
+              color={theme.color}
+              textAlign="center"
+              style={{ width: '100%' }}>
               Send Notification
             </H2>
             <Span
@@ -833,9 +837,9 @@ function SendNotifications() {
               textTransform="none"
               spacing="0.03em"
               margin="0px 0px"
-              textAlign="center"
-            >
-              EPNS makes it extremely easy to open and maintain a genuine channel of communication with your users.
+              textAlign="center">
+              Push (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your
+              users.
             </Span>
           </Item>
         </Content>
@@ -854,7 +858,7 @@ function SendNotifications() {
                     </H2>
                     {!isChannelDeactivated ? (
                         <H3 style={{color : theme.color}}>
-                            EPNS supports three types of notifications (for
+                            Push (EPNS) supports three types of notifications (for
                             now!). <b>Groups</b>, <b>Subsets</b>, and{" "}<b>Targeted</b>
                         </H3>
                     ) : (
@@ -877,9 +881,8 @@ function SendNotifications() {
                 justify="center"
                 margin="0px"
                 size="1.1rem"
-                width='100%'
-                onSubmit={handleSendMessage}
-              >
+                width="100%"
+                onSubmit={handleSendMessage}>
                 <Item flex="1" self="stretch" align="stretch" width="100%">
                   {console.log(cannotDisplayDelegatees)}
                   {!cannotDisplayDelegatees && (
@@ -965,8 +968,7 @@ function SendNotifications() {
                           size="14px"
                           color="#1E1E1E"
                           padding="5px 15px"
-                          radius="30px"
-                        >
+                          radius="30px">
                           Subject
                         </Span>
                         <IOSSwitch checked={nfSubEnabled} onChange={() => setNFSubEnabled(!nfSubEnabled)} />
@@ -979,8 +981,7 @@ function SendNotifications() {
                           size="14px"
                           color="#1E1E1E"
                           padding="5px 15px"
-                          radius="30px"
-                        >
+                          radius="30px">
                           Media
                         </Span>
                         <IOSSwitch checked={nfMediaEnabled} onChange={() => setNFMediaEnabled(!nfMediaEnabled)} />
@@ -993,8 +994,7 @@ function SendNotifications() {
                           size="14px"
                           color="#1E1E1E"
                           padding="5px 15px"
-                          radius="30px"
-                        >
+                          radius="30px">
                           CTA Link
                         </Span>
                         <IOSSwitch checked={nfCTAEnabled} onChange={() => setNFCTAEnabled(!nfCTAEnabled)} />
@@ -1166,16 +1166,8 @@ function SendNotifications() {
                 )}
 
                 {nfInfo && nfProcessing != 1 && (
-                  <Item 
-                    margin="30px 0px 0px 0px"
-                    width="100%"
-                    padding="1.5rem 0"
-                    radius="12px"
-                    bg="#F5F5FA"
-                  >
-                    <div style={{color:'#CF1C84', fontSize: "0.875rem", textAlign: "center"}}>
-                      {nfInfo}
-                    </div>
+                  <Item margin="30px 0px 0px 0px" width="100%" padding="1.5rem 0" radius="12px" bg="#F5F5FA">
+                    <div style={{ color: '#CF1C84', fontSize: '0.875rem', textAlign: 'center' }}>{nfInfo}</div>
                   </Item>
                 )}
 
@@ -1187,28 +1179,28 @@ function SendNotifications() {
                       aimg: nfMedia,
                       amsg: nfMsg,
                       asub: nfSub,
-                      type: nfType
+                      type: nfType,
                     }}
                   />
                 )}
 
                 {nfType && (
-                    <SubmitButton
-                      disabled={nfProcessing == 1 ? true : false}
-                    >
-                      {nfProcessing == 1 &&  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#FFF" />}
-                      {nfProcessing != 1 && (
-                        <Input
-                          cursor="hand"
-                          textTransform="none"
-                          color="#fff"
-                          weight="600"
-                          size="16px"
-                          type="submit"
-                          value="Send Notification"
-                        />
-                      )}
-                    </SubmitButton>
+                  <SubmitButton disabled={nfProcessing == 1 ? true : false}>
+                    {nfProcessing == 1 && (
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} spinnerColor="#FFF" />
+                    )}
+                    {nfProcessing != 1 && (
+                      <Input
+                        cursor="hand"
+                        textTransform="none"
+                        color="#fff"
+                        weight="600"
+                        size="16px"
+                        type="submit"
+                        value="Send Notification"
+                      />
+                    )}
+                  </SubmitButton>
                 )}
               </FormSubmision>
             </Item>
@@ -1220,9 +1212,7 @@ function SendNotifications() {
 }
 
 // css styles
-const Container = styled(SectionV2)`
-  
-`
+const Container = styled(SectionV2)``;
 
 const Toaster = styled.div`
   display: flex;
@@ -1448,13 +1438,13 @@ const ToggleOptionContainer = styled(ItemH)`
     flex-direction: column;
     align-items: center;
   }
-`
+`;
 
 const ToggleOption = styled(ItemH)`
   box-sizing: border-box;
   margin: 15px 0px;
   width: 10em;
-  background: #F4F5FA;
+  background: #f4f5fa;
   flex: none;
   padding: 15px;
   border-radius: 20px;
@@ -1464,14 +1454,14 @@ const ToggleOption = styled(ItemH)`
   @media (max-width: 640px) {
     width: 100%;
   }
-`
+`;
 
 const SubmitButton = styled(Button)`
   width: 15rem;
   margin: 70px auto 0px auto;
   padding: 20px 10px;
   border-radius: 15px;
-  background: #CF1C84;
+  background: #cf1c84;
   color: #fff;
   @media (max-width: 640px) {
     width: 13rem;
@@ -1479,7 +1469,7 @@ const SubmitButton = styled(Button)`
   @media (max-width: 380px) {
     width: 9.5rem;
   }
-`
+`;
 
 // Export Default
 export default SendNotifications;

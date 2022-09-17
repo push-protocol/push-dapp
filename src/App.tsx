@@ -1,57 +1,49 @@
-import React, { useState } from "react";
-import ReactGA from "react-ga";
+import React, { useState } from 'react';
+import ReactGA from 'react-ga';
 
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { useWeb3React } from "@web3-react/core";
-import { appConfig } from "config";
-import { injected, ledger, portis, walletconnect } from "connectors";
-import { ethers } from "ethers";
-import { useEagerConnect, useInactiveListener, useSDKSocket } from "hooks";
-import Joyride, { CallBackProps } from "react-joyride";
-import { useLocation } from "react-router-dom";
+import { AbstractConnector } from '@web3-react/abstract-connector';
+import { useWeb3React } from '@web3-react/core';
+import { appConfig } from 'config';
+import { injected, ledger, walletconnect } from 'connectors';
+import { ethers } from 'ethers';
+import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
+import Joyride, { CallBackProps } from 'react-joyride';
+import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import Header from "sections/Header";
-import Navigation from "sections/Navigation";
-import styled from "styled-components";
+import Header from 'sections/Header';
+import Navigation from 'sections/Navigation';
+import styled from 'styled-components';
 import AppLogin from './AppLogin';
 
-import { SectionV2 } from "./components/reusables/SharedStylingV2";
-import { A, B, C, H2, Image, Item, ItemH, P, Span } from "./primaries/SharedStyling";
+import { SectionV2 } from './components/reusables/SharedStylingV2';
+import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
 
-import NavigationContextProvider from "contexts/NavigationContext";
-import MasterInterfacePage from "pages/MasterInterfacePage";
+import NavigationContextProvider from 'contexts/NavigationContext';
+import MasterInterfacePage from 'pages/MasterInterfacePage';
 
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider } from 'styled-components';
 
-import GLOBALS from "config/Globals";
-import { themeDark, themeLight } from "config/Themization";
+import GLOBALS from 'config/Globals';
+import { themeDark, themeLight } from 'config/Themization';
 
-import { useDispatch, useSelector } from "react-redux";
-import UserJourneySteps from "segments/userJourneySteps";
-import { setIndex, setRun, setWelcomeNotifsEmpty } from "./redux/slices/userJourneySlice";
+import { useDispatch, useSelector } from 'react-redux';
+import UserJourneySteps from 'segments/userJourneySteps';
+import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
-import InitState from "components/InitState";
-import * as dotenv from "dotenv";
-import { EnvHelper } from "helpers/UtilityHelper";
-
+import InitState from 'components/InitState';
+import * as dotenv from 'dotenv';
+import { EnvHelper } from 'helpers/UtilityHelper';
 
 dotenv.config();
 
 export default function App() {
-
   const dispatch = useDispatch();
 
   const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
-  const [activatingConnector, setActivatingConnector] = React.useState<
-    AbstractConnector
-  >();
+  const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
   const [currentTime, setcurrentTime] = React.useState(0);
 
-  const {
-    run,
-    stepIndex,
-    tutorialContinous,
-  } = useSelector((state: any) => state.userJourney);
+  const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
   const [title, setTitle] = useState(EnvHelper.dappTitle());
 
@@ -60,11 +52,10 @@ export default function App() {
     document.title = title;
   }, [title]);
 
-
   React.useEffect(() => {
     const now = Date.now() / 1000;
-    setcurrentTime(now)
-  }, [])
+    setcurrentTime(now);
+  }, []);
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -73,13 +64,13 @@ export default function App() {
 
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
-  
+
   // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
   useInactiveListener(!triedEager || !!activatingConnector);
 
   // Initialize GA
   ReactGA.initialize(appConfig.googleAnalyticsId);
-  ReactGA.pageview("/login");
+  ReactGA.pageview('/login');
   // Initialize GA
 
   // Initialize Theme
@@ -90,23 +81,22 @@ export default function App() {
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
-  }
+  };
 
   React.useEffect(() => {
-    const data = localStorage.getItem('theme')
+    const data = localStorage.getItem('theme');
     if (data) {
-      setDarkMode(JSON.parse(data))
+      setDarkMode(JSON.parse(data));
     }
-  }, [])
+  }, []);
 
   React.useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(darkMode))
-  })
+    localStorage.setItem('theme', JSON.stringify(darkMode));
+  });
 
   React.useEffect(() => {
-    document.body.style.backgroundColor = darkMode ? "#000" : "#fff";
-  }, [darkMode])
-
+    document.body.style.backgroundColor = darkMode ? '#000' : '#fff';
+  }, [darkMode]);
 
   React.useEffect(() => {
     // window?.Olvy?.init({
@@ -132,32 +122,29 @@ export default function App() {
   const handleJoyrideCallback = (data: CallBackProps) => {
     // console.log(data)
     // console.log(STATUS);
-    const { action, lifecycle, status, index } = data
-    if (lifecycle === "ready") {
+    const { action, lifecycle, status, index } = data;
+    if (lifecycle === 'ready') {
       setTimeout(() => {
-        document.querySelector("div > section > div").scrollTop = 0
-      }, 100)
+        document.querySelector('div > section > div').scrollTop = 0;
+      }, 100);
     }
 
-
-    if (action === "close" || index === 20) { //action === "close" ||
-      dispatch(setRun(false))
-      dispatch(setIndex(0))
+    if (action === 'close' || index === 20) {
+      //action === "close" ||
+      dispatch(setRun(false));
+      dispatch(setIndex(0));
       dispatch(setWelcomeNotifsEmpty());
     }
     // else if (action === 'next' && status === 'running') {
     //   dispatch(incrementStepIndex());
     // }
-  }
+  };
 
   return (
     <ThemeProvider theme={darkMode ? themeDark : themeLight}>
-
       {!active && (
         <SectionV2 minHeight="100vh">
-          <AppLogin 
-            toggleDarkMode={toggleDarkMode}
-          />
+          <AppLogin toggleDarkMode={toggleDarkMode} />
         </SectionV2>
       )}
 
@@ -183,21 +170,11 @@ export default function App() {
               callback={handleJoyrideCallback}
               styles={{
                 options: {
-                  arrowColor: darkMode
-                    ? themeDark.dynamicTutsBg
-                    : themeLight.dynamicTutsBg,
-                  backgroundColor: darkMode
-                    ? themeDark.dynamicTutsBg
-                    : themeLight.dynamicTutsBg,
-                  overlayColor: darkMode
-                    ? themeDark.dynamicTutsBgOverlay
-                    : themeLight.dynamicTutsBgOverlay,
-                  primaryColor: darkMode
-                    ? themeDark.dynamicTutsPrimaryColor
-                    : themeLight.dynamicTutsPrimaryColor,
-                  textColor: darkMode
-                    ? themeDark.dynamicTutsFontColor
-                    : themeLight.dynamicTutsFontColor,
+                  arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                  backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                  overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                  primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                  textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
                   zIndex: 1000,
                 },
               }}
@@ -208,15 +185,8 @@ export default function App() {
             </HeaderContainer>
 
             <ParentContainer
-              bg={
-                darkMode
-                  ? themeDark.backgroundBG
-                  : !active
-                  ? themeLight.connectWalletBg
-                  : themeLight.backgroundBG
-              }
-              headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}
-            >
+              bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
+              headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
               <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
                 <Navigation />
               </LeftBarContainer>
@@ -250,33 +220,33 @@ const ParentContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   flex: 1;
-  background: ${props => props.bg};
+  background: ${(props) => props.bg};
   background-position: center center;
-  background-size:cover;
-  background-repeat:no-repeat;
-  // background: ${props => props.bg};
-  margin: ${props => props.headerHeight}px 0px 0px 0px;
-  min-height: calc(100vh - ${props => props.headerHeight}px);
+  background-size: cover;
+  background-repeat: no-repeat;
+  // background: ${(props) => props.bg};
+  margin: ${(props) => props.headerHeight}px 0px 0px 0px;
+  min-height: calc(100vh - ${(props) => props.headerHeight}px);
 `;
 
 const LeftBarContainer = styled.div`
   left: 0;
   top: 0;
   bottom: 0;
-  width: ${props => props.leftBarWidth}px;
+  width: ${(props) => props.leftBarWidth}px;
   position: fixed;
 
   @media (max-width: 992px) {
     display: none;
   }
-`
+`;
 
 const ContentContainer = styled.div`
   display: flex;
   flex: 1;
   align-self: center;
-  width: calc(100% - ${props => props.leftBarWidth}px);
-  margin: 0px 0px 0px ${props => props.leftBarWidth}px;
+  width: calc(100% - ${(props) => props.leftBarWidth}px);
+  margin: 0px 0px 0px ${(props) => props.leftBarWidth}px;
 
   @media (max-width: 992px) {
     margin: 0px;
@@ -291,7 +261,7 @@ const PushLogo = styled.div`
 const ProviderButton = styled.button`
   flex: none;
   min-width: 179px;
-  background: ${props => props.theme.default.bg};
+  background: ${(props) => props.theme.default.bg};
   margin: 20px 15px;
   overflow: hidden;
   padding: 20px 5px;

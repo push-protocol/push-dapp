@@ -1,29 +1,30 @@
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected
+  UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from '@web3-react/injected-connector';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
 
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
-import styled, { css, useTheme } from "styled-components";
+import styled, { css, useTheme } from 'styled-components';
+import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
+import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 
 import NavigationButton from 'components/NavigationButton';
 import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
 
-import { NavigationContext } from "contexts/NavigationContext";
+import { NavigationContext } from 'contexts/NavigationContext';
 
-import { appConfig } from "config";
-import GLOBALS from "config/Globals";
-
+import { appConfig } from 'config';
+import GLOBALS from 'config/Globals';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -33,7 +34,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   // Get Web3 Context
   // const context = useWeb3React<Web3Provider>()
 
-  const { navigationSetup } = useContext(NavigationContext)
+  const { navigationSetup } = useContext(NavigationContext);
 
   const { active, error } = useWeb3React();
 
@@ -43,21 +44,21 @@ function Header({ isDarkMode, darkModeToggle }) {
   const [showNavBar, setShowNavBar] = React.useState(false);
 
   // Handle Header Tag
-  const [ headerTag, setHeaderTag ] = React.useState(null);
+  const [headerTag, setHeaderTag] = React.useState(null);
 
   // Get Location
   const location = useLocation();
 
   React.useEffect(() => {
     // runs when navigation setup is updated, will run on init
-    updateHeaderTag(location)
-  }, [navigationSetup])
+    updateHeaderTag(location);
+  }, [navigationSetup]);
 
   // Change text based on change of location
   React.useEffect(() => {
     // runs on location, i.e. route, change
-    updateHeaderTag(location)
-  }, [location])
+    updateHeaderTag(location);
+  }, [location]);
 
   // handle header tag update
   const updateHeaderTag = (location) => {
@@ -67,56 +68,53 @@ function Header({ isDarkMode, darkModeToggle }) {
         if (location.pathname === item.data.href) {
           setHeaderTag(item.data.headerTag);
         }
-      })
+      });
+    }
+  };
+
+  async function handleChangeNetwork() {
+    const chainIds = appConfig.allowedNetworks;
+    if (!chainIds.includes(window.ethereum.networkVersion)) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: ethers.utils.hexlify(appConfig.coreContractChain) }],
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
   }
-
-async function handleChangeNetwork(){
-const chainIds = appConfig.allowedNetworks;
-  if (!chainIds.includes(window.ethereum.networkVersion)) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: ethers.utils.hexlify(appConfig.coreContractChain) }]
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      }
-}
 
   // handle error functions
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
-      return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile'
+      return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
     } else if (error instanceof UnsupportedChainIdError) {
       handleChangeNetwork();
-      if(appConfig.coreContractChain === 42)
-      return "Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network"
-      else 
-      return "Unsupported Network, please connect to the Ethereum Mainnet network"
-    } else if (
-      error instanceof UserRejectedRequestErrorInjected
-    ) {
-      return 'Please authorize this website to access the dApp'
+      if (appConfig.coreContractChain === 42)
+        return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
+      else return 'Unsupported Network, please connect to the Ethereum Mainnet network';
+    } else if (error instanceof UserRejectedRequestErrorInjected) {
+      return 'Please authorize this website to access the dApp';
     } else {
-      console.error(error)
-      return 'An unknown error occurred. Check the console for more details'
+      console.error(error);
+      return 'An unknown error occurred. Check the console for more details';
     }
   }
 
   const bellPressed = () => {
     setShowLoginControls(!showLoginControls);
-  }
+  };
 
   return (
     <Container direction="row" padding="0px 15px">
       <ItemH justify="flex-start" flex="0">
         <RightBarContainer justify="flex-start" flex="0">
           <RightBarDesktop justify="flex-start" flex="0">
-              <Logo src={!isDarkMode ? "epns.svg" : "epnsDark.svg"} />
+            <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
           </RightBarDesktop>
-          
+
           {active && !error && (
             <RightBarMobile>
               <Button
@@ -125,27 +123,25 @@ const chainIds = appConfig.allowedNetworks;
                 radius="4px"
                 onClick={() => {
                   setShowNavBar(!showNavBar);
-                }}
-              >
+                }}>
                 <AiOutlineMenu size={30} color={theme.headerIconsBg} />
               </Button>
             </RightBarMobile>
           )}
         </RightBarContainer>
-        
+
         {navigationSetup && showNavBar && active && !error && (
           <NavMenuContainer tabletAlign="flex-start">
             <NavMenu>
-              <Profile isDarkMode={isDarkMode}/>
+              <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
-                {Object.keys(navigationSetup.navigation).map(function(key) {
+                {Object.keys(navigationSetup.navigation).map(function (key) {
                   return (
                     <Item
                       onClick={() => {
                         setShowNavBar(!showNavBar);
-                      }}
-                    >
+                      }}>
                       <NavigationButton
                         item={navigationSetup.navigation[key]}
                         data={navigationSetup.navigation[key].data}
@@ -165,8 +161,7 @@ const chainIds = appConfig.allowedNetworks;
                 radius="4px"
                 onClick={() => {
                   setShowNavBar(!showNavBar);
-                }}
-              >
+                }}>
                 <AiOutlineClose size={30} color={theme.headerIconsBg} />
               </Button>
             </Item>
@@ -183,36 +178,31 @@ const chainIds = appConfig.allowedNetworks;
               weight="normal"
               padding="8px 20px"
               size="24px"
-              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}
-            >
+              color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
             </Span>
           </HeaderTag>
         )}
-           
+
         {active && !showLoginControls && !error && (
-          
           <DarkModeSwitch
-            style={{ margin: "0 1rem" }}
-              checked={isDarkMode}
-              onChange={darkModeToggle}
+            style={{ margin: '0 1rem' }}
+            checked={isDarkMode}
+            onChange={darkModeToggle}
             size={28}
             sunColor="#494D5F"
             moonColor="#787E99"
           />
         )}
-       
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
-          {!active && !error && (
-            <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>
-          )}
+          {!active && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {active && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
-              <Profile isDarkMode={isDarkMode}/>
+              <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
-          )}{" "}
+          )}{' '}
         </ItemH>
       </ItemH>
     </Container>
@@ -221,32 +211,30 @@ const chainIds = appConfig.allowedNetworks;
 
 // CSS Styles
 const Container = styled(Section)`
-  background: ${props => props.theme.header.bg};
+  background: ${(props) => props.theme.header.bg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
   padding: 0 1.5rem;
-`
+`;
 
 const Logo = styled.img`
   height: 40px;
-`
+`;
 
-const RightBarContainer = styled(ItemH)`
-
-`
+const RightBarContainer = styled(ItemH)``;
 
 const RightBarDesktop = styled(ItemH)`
   @media (max-width: 992px) {
     display: none;
   }
-`
+`;
 
 const RightBarMobile = styled(ItemH)`
   margin: 5px 5px 5px -5px;
-  
+
   @media (min-width: 993px) {
     display: none;
   }
-`
+`;
 
 const NavMenuContainer = styled(Item)`
   position: fixed;
@@ -260,16 +248,16 @@ const NavMenuContainer = styled(Item)`
   z-index: 1;
   align-items: flex-start;
 
-  background: ${props => props.theme.nav.hamburgerBg};
+  background: ${(props) => props.theme.nav.hamburgerBg};
   backdrop-filter: blur(30px);
   z-index: 11;
-`
+`;
 
 const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
   padding: 10px 10px;
-`
+`;
 
 const NavMenuInner = styled(Item)`
   display: flex;
@@ -279,7 +267,7 @@ const NavMenuInner = styled(Item)`
   justify-content: flex-start;
   overflow-y: scroll;
   height: calc(100vh - 70px);
-`
+`;
 
 const Notice = styled.span`
   border: 0;
@@ -292,30 +280,28 @@ const Notice = styled.span`
   color: #fff;
   border-radius: 20px;
   font-size: 14px;
-`
+`;
 
 const PrimaryTheme = styled(Notice)`
   background: #e20880;
-`
+`;
 
 const ThirdTheme = styled(Notice)`
   background: #674c9f;
-`
+`;
 
 const HeaderTag = styled(Item)`
   flex: 1;
-  margin="5px 15px 5px 15px"
-
-  @media (min-width: 993px) {
-    margin: "5px 10px";
+  margin='5px 15px 5px 15px' @media (min-width: 993px) {
+    margin: '5px 10px';
   }
-`
+`;
 
 const DarkMode = styled(Item)`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 // Export Default
 export default Header;
