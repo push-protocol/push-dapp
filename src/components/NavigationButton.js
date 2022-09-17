@@ -14,7 +14,7 @@ import { ItemVV2 } from './reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
 
 // Create Header
-function NavigationButton({ item, data, sectionID, active }) {
+function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
 
   let SelectedIcon;
@@ -67,37 +67,37 @@ function NavigationButton({ item, data, sectionID, active }) {
           align="stretch"
           padding="12px"
           margin={definedMargin}
-          // bg={!active ? 'transparent' : theme.nav.active}
+          bg={bg}
           active={active}
           className={data?.name?.toLowerCase()}
         >
-          {data.iconFactory?
-          <ItemHV2 justifyContent="flex-start" padding="0 2rem">
-            {data.iconFactory}
-          </ItemHV2>
-          :
-          <ItemH align="center">
-            {!active ? (
-              <SelectedIcon src={require(`../assets/${data.src}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
-            ) : (
-              <SelectedIcon src={require(`../assets/${data.activeSrc}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
-            )}
+          {data.iconFactory ?
+            <ItemHV2 justifyContent="flex-start" padding="0 2rem">
+              {data.iconFactory}
+            </ItemHV2>
+            :
+            <ItemH align="center">
+              {!active ? (
+                <SelectedIcon src={require(`../assets/${data.src}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
+              ) : (
+                <SelectedIcon src={require(`../assets/${data.activeSrc}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
+              )}
 
-            <Span
-              flex="1"
-              weight={!active ? '300' : '600'}
-              spacing="0"
-              margin="0 5px"
-              color={theme.nav.color}
-              size="14px"
-            >
-              {data.name}
-            </Span>
+              <Span
+                flex="1"
+                weight={!active ? '300' : '600'}
+                spacing="0"
+                margin="0 5px"
+                color={theme.nav.color}
+                size="14px"
+              >
+                {data.name}
+              </Span>
 
-            {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
+              {item.hasItems && !item.opened && <BiChevronDown color={theme.nav.color} />}
 
-            {item.hasItems && item.opened && <BiChevronUp color={theme.nav.color} />}
-          </ItemH>
+              {item.hasItems && item.opened && <BiChevronUp color={theme.nav.color} />}
+            </ItemH>
           }
         </RouteLogic>
       }
