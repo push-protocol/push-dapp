@@ -21,8 +21,8 @@ import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internal Configs
-import { abis, addresses, appConfig } from "config";
-import GLOBALS, { device, globalsMargin } from "config/Globals";
+import { abis, addresses, appConfig } from 'config';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
@@ -58,7 +58,7 @@ const InboxModule = () => {
       // get public key from Backend API
       let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
         address: account,
-        op: 'read'
+        op: 'read',
       }).then((res) => {
         return res.data?.encryption_key;
       });
@@ -107,7 +107,7 @@ const InboxModule = () => {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined
+      progress: undefined,
     });
 
   /**
@@ -127,7 +127,7 @@ const InboxModule = () => {
         console.log({ err });
       });
 
-    // EPNS Read Provider Set
+    // Push (EPNS) Read Provider Set
     if (epnsReadProvider != null && epnsCommReadProvider != null) {
       // Instantiate Data Stores
       UsersDataStore.instance.init(account, epnsReadProvider, epnsCommReadProvider);
@@ -142,20 +142,20 @@ const InboxModule = () => {
         Register: [
           { name: 'user', type: 'address' },
           { name: 'encryptionKey', type: 'string' },
-          { name: 'action', type: 'string' }
-        ]
+          { name: 'action', type: 'string' },
+        ],
       };
 
       const message = {
         user: account,
         encryptionKey: encryptionPublicKey,
-        action: 'Register'
+        action: 'Register',
       };
 
       let EPNS_DOMAIN = {
         name: 'EPNS COMM V1',
         chainId: chainId,
-        verifyingContract: epnsCommReadProvider?.address
+        verifyingContract: epnsCommReadProvider?.address,
       };
 
       // loader toast
@@ -166,7 +166,7 @@ const InboxModule = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
 
       const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
@@ -178,7 +178,7 @@ const InboxModule = () => {
         message,
         op: 'write',
         chainId,
-        contractAddress: epnsCommReadProvider.address
+        contractAddress: epnsCommReadProvider.address,
       };
 
       const result = await postReq('/encryption_key/register', objPayload);
@@ -187,7 +187,7 @@ const InboxModule = () => {
       toaster.update(txToast, {
         render: 'Successfully enabled secret notifications !',
         type: toaster.TYPE.SUCCESS,
-        autoClose: 5000
+        autoClose: 5000,
       });
 
       setEnabledSecretNotif(true);
@@ -197,13 +197,13 @@ const InboxModule = () => {
         toaster.update(txToast, {
           render: 'User denied message signature.',
           type: toaster.TYPE.ERROR,
-          autoClose: 5000
+          autoClose: 5000,
         });
       } else {
         toaster.update(txToast, {
           render: 'There was an error registering the public key',
           type: toaster.TYPE.ERROR,
-          autoClose: 5000
+          autoClose: 5000,
         });
         console.log(err);
       }
@@ -221,7 +221,7 @@ const InboxModule = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
       return;
     }
@@ -230,7 +230,7 @@ const InboxModule = () => {
     await library.provider
       .request({
         method: 'eth_getEncryptionPublicKey',
-        params: [account] // you must have access to the specified account
+        params: [account], // you must have access to the specified account
       })
       .then((result) => {
         encryptionPublicKey = result;
@@ -249,7 +249,7 @@ const InboxModule = () => {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined
+            progress: undefined,
           });
         } else if (error.code === -32601) {
           console.error(error);
@@ -261,7 +261,7 @@ const InboxModule = () => {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined
+            progress: undefined,
           });
         } else {
           console.error(error);
@@ -273,7 +273,7 @@ const InboxModule = () => {
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined
+            progress: undefined,
           });
         }
       });
@@ -310,42 +310,50 @@ const InboxModule = () => {
       {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
     </Container>
   );
-}
+};
 export default InboxModule;
 
 // css style
 const Container = styled(Section)`
-	align-items: stretch;
-	align-self: stretch;
+  align-items: stretch;
+  align-self: stretch;
   flex: 1;
-	background: ${(props) => props.theme.default.bg};
-	border-top-left-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
-	display: flex;
-	flex-direction: column;
-	flex: initial;
-	justify-content: center;
-	position: relative;
+  background: ${(props) => props.theme.default.bg};
+  border-top-left-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
+  display: flex;
+  flex-direction: column;
+  flex: initial;
+  justify-content: center;
+  position: relative;
   overflow: hidden;
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.DESKTOP.TOP} - ${globalsMargin.BIG_MODULES.DESKTOP.BOTTOM});
-  
+  height: calc(
+    100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.DESKTOP.TOP} -
+      ${globalsMargin.BIG_MODULES.DESKTOP.BOTTOM}
+  );
+
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.TABLET.TOP} - ${globalsMargin.BIG_MODULES.TABLET.BOTTOM});
+    height: calc(
+      100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.TABLET.TOP} -
+        ${globalsMargin.BIG_MODULES.TABLET.BOTTOM}
+    );
     border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} - ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM});
+    height: calc(
+      100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} -
+        ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM}
+    );
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
     border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   }
 `;
-
 
 const Toaster = styled.div`
   display: flex;

@@ -96,7 +96,7 @@ const GovModule = () => {
         // get ens
         library
           .lookupAddress(account)
-          .then(function(name) {
+          .then(function (name) {
             setENS(name);
             setENSFetched(true);
             setAddress(account);
@@ -183,7 +183,7 @@ const GovModule = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
       return false;
     }
@@ -249,7 +249,7 @@ const GovModule = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
       setTxInProgress(false);
       return;
@@ -268,7 +268,7 @@ const GovModule = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined
+        progress: undefined,
       });
       setTxInProgress(false);
       return;
@@ -298,7 +298,7 @@ const GovModule = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined
+          progress: undefined,
         });
       });
   };
@@ -397,8 +397,7 @@ const GovModule = () => {
                               color="#fff"
                               weight="600"
                               padding="4px 8px"
-                              textTransform="uppercase"
-                            >
+                              textTransform="uppercase">
                               {new Date(gaslessInfo.timestamp).toLocaleDateString()}
                             </CurvedSpan>
                           </ItemH>
@@ -411,8 +410,7 @@ const GovModule = () => {
                               color="#fff"
                               weight="600"
                               padding="4px 8px"
-                              textTransform="uppercase"
-                            >
+                              textTransform="uppercase">
                               {gaslessInfo.delegatee}
                             </CurvedSpan>
                           </ItemH>
@@ -513,8 +511,7 @@ const GovModule = () => {
                             } else {
                               setShowDelegateePrompt(true);
                             }
-                          }}
-                        >
+                          }}>
                           <Span color="#fff" weight="400">
                             Delegate to Others
                           </Span>
@@ -526,8 +523,7 @@ const GovModule = () => {
                           disabled={txInProgress ? true : false}
                           onClick={() => {
                             delegateAction(account);
-                          }}
-                        >
+                          }}>
                           <Span color="#fff" weight="400">
                             Delegate to Myself
                           </Span>
@@ -542,8 +538,7 @@ const GovModule = () => {
                           } else {
                             setShowDelegateePrompt(true);
                           }
-                        }}
-                      >
+                        }}>
                         {txInProgress ? (
                           <ActionTitle>
                             <LoaderSpinner />
@@ -560,8 +555,7 @@ const GovModule = () => {
                           bg="#000"
                           onClick={() => {
                             setShowDelegateePrompt(false);
-                          }}
-                        >
+                          }}>
                           <Span color="#fff" weight="400">
                             Close
                           </Span>
@@ -671,8 +665,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(0);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>What are PUSH Delegatees?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -693,8 +686,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(1);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>What are PUSH Nominees</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -716,8 +708,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(2);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How can I become a PUSH Nominee?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -730,7 +721,7 @@ const GovModule = () => {
                       <Span>
                         Sign up on:-{' '}
                         <AMod href="https://gov.epns.io/" target="_blank" title="Join our EPNS's Telegram channel">
-                          EPNS Governance Portal
+                          Push (EPNS) Governance Portal
                         </AMod>
                       </Span>
                     </LI>
@@ -740,8 +731,7 @@ const GovModule = () => {
                         <AMod
                           href="https://gov.epns.io/t/epns-push-delegatee-nominations/21"
                           target="_blank"
-                          title="Join our EPNS's Telegram channel"
-                        >
+                          title="Join our EPNS's Telegram channel">
                           https://gov.epns.io/t/epns-push-delegatee-nominations/21
                         </AMod>
                       </Span>
@@ -763,8 +753,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(3);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>What if I don't wish to be a PUSH Nominee?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -784,8 +773,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(4);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>Where should I start?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -795,7 +783,7 @@ const GovModule = () => {
                   <Span>
                     Visit{' '}
                     <AMod href="https://gov.epns.io/" target="_blank" title="Join our EPNS's Telegram channel">
-                      EPNS Governance Portal
+                      Push (EPNS) Governance Portal
                     </AMod>{' '}
                     and introduce yoursef on the platform in the suggested format.
                   </Span>
@@ -808,8 +796,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(5);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>What happens to the delegated voting power when I sell my PUSH tokens?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -829,8 +816,7 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(6);
                 }}
-                hover="#e20880"
-              >
+                hover="#e20880">
                 <Span color={theme.color}>How can I cast my vote?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
@@ -842,9 +828,8 @@ const GovModule = () => {
                     <AMod
                       href="https://snapshot.org/#/epns.eth"
                       target="_blank"
-                      title="EPNS Governance - Snapshot Portal"
-                    >
-                      EPNS Governance - Snapshot Portal
+                      title="Push (EPNS) Governance - Snapshot Portal">
+                      Push (EPNS) Governance - Snapshot Portal
                     </AMod>{' '}
                     to view the ongoing on-chain proposals and cast your vote.
                   </Span>
@@ -857,9 +842,8 @@ const GovModule = () => {
                 onClick={() => {
                   toggleShowAnswer(7);
                 }}
-                hover="#e20880"
-              >
-                <Span color={theme.color}>How can I keep up with EPNS Governance?</Span>
+                hover="#e20880">
+                <Span color={theme.color}>How can I keep up with Push (EPNS) Governance?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
@@ -874,8 +858,7 @@ const GovModule = () => {
                     <AMod
                       href="https://twitter.com/epnsproject"
                       target="_blank"
-                      title="Join our EPNS's Twitter channel"
-                    >
+                      title="Join our EPNS's Twitter channel">
                       Twitter
                     </AMod>
                     , and sign up for our 5 minute{' '}

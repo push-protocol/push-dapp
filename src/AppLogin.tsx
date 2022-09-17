@@ -27,19 +27,17 @@ import {
   SectionV2,
   SpanV2,
 } from 'components/reusables/SharedStylingV2';
-import { injected, ledger, portis, walletconnect } from 'connectors';
+import { injected, ledger, walletconnect } from 'connectors';
 import { useEagerConnect, useInactiveListener } from 'hooks';
 import styled, { useTheme } from 'styled-components';
-import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
-import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
 import LedgerLogoLight from './assets/login/ledgerLight.svg';
 import MMLogoDark from './assets/login/metamaskDark.svg';
 import MMLogoLight from './assets/login/metamaskLight.svg';
-import PortisLogoDark from './assets/login/portisDark.svg';
-import PortisLogoLight from './assets/login/portisLight.svg';
 import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
+import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
+import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -61,7 +59,6 @@ const web3Connectors = {
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
   Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
-  Portis: { obj: portis, logolight: PortisLogoLight, logodark: PortisLogoDark, title: 'Portis' },
 };
 
 async function handleChangeNetwork() {
@@ -150,8 +147,8 @@ const AppLogin = ({ toggleDarkMode }) => {
           margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} ${GLOBALS.ADJUSTMENTS.MARGIN.HORIZONTAL}`}
           alignSelf="center"
           flex="initial">
-          {theme.scheme == 'light' && <EPNSLogoLight />}
-          {theme.scheme == 'dark' && <EPNSLogoDark />}
+          {theme.scheme == 'light' && <PushLogoLight />}
+          {theme.scheme == 'dark' && <PushLogoDark />}
         </ItemVV2>
 
         {/* Login Component */}
@@ -225,7 +222,7 @@ const AppLogin = ({ toggleDarkMode }) => {
         {/* Chainsafe Audit and Discord */}
         <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
           <SpanV2 fontSize="14px" padding="25px 15px" lineHeight="140%" color={theme.default.color}>
-            Note: The EPNS protocol has been under development for 1+ year, and completed a{' '}
+            Note: The Push (EPNS) protocol has been under development for 1+ year, and completed a{' '}
             <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank">
               {' '}
               ChainSafe audit
