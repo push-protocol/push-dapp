@@ -4,6 +4,10 @@ import fs from 'fs';
 import readline from 'readline';
 
 const envPresets = {
+  alpha: {
+    REACT_APP_DEPLOY_ENV: 'ALPHA',
+    REACT_APP_PUBLIC_URL: 'https://alpha.epns.io/',
+  },
   w2w: {
     REACT_APP_DEPLOY_ENV: 'W2W',
     REACT_APP_PUBLIC_URL: 'https://w2w.epns.io/',

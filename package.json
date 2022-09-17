@@ -157,6 +157,7 @@
     "extends": "react-app"
   },
   "scripts": {
+    "deploy:alpha": "node build.mjs alpha && npm run build && echo 'alpha.epns.io' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-alpha",
     "deploy:w2w": "node build.mjs w2w && npm run build && echo 'w2w.epns.io' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/epns-w2w-dapp-dev",
     "deploy:dev": "node build.mjs dev && npm run build && echo 'dev.epns.io' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/epns-dapp-dev",
     "deploy:staging": "node build.mjs staging && npm run build && echo 'staging.epns.io' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/epns-dapp-staging",
