@@ -364,7 +364,6 @@ const ChatBox = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
-        setLoadingMessage
         setLoadingMessage('Creating cryptography keys')
         const keyPairs = await generateKeyPair();
         setLoadingMessage('Cryptography keys created')
