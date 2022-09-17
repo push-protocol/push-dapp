@@ -16,7 +16,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { MdError, MdCheckCircle } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import styled from 'styled-components';
 
 // Internal Compoonents
@@ -64,7 +64,8 @@ const ChatBox = (): JSX.Element => {
     setDID,
     setChat,
     setInbox,
-    setHasUserBeenSearched
+    setHasUserBeenSearched,
+    setLoadingMessage
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
@@ -363,9 +364,12 @@ const ChatBox = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
+        setLoadingMessage('Creating cryptography keys')
         const keyPairs = await generateKeyPair();
+        setLoadingMessage('Cryptography keys created')
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
+        setLoadingMessage('Creating user in the protocol')
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -377,6 +381,7 @@ const ChatBox = (): JSX.Element => {
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
+        setLoadingMessage('User created')
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };

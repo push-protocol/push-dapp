@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core'
+// @ts-ignore
 import { Web3Provider } from 'ethers/providers'
 import React, { useEffect, useState } from 'react'
 
@@ -59,6 +60,8 @@ export interface AppContext {
   setPendingRequests: (pending: number) => void
   hasUserBeenSearched: boolean
   setHasUserBeenSearched: (searched: boolean) => void
+  loadingMessage: string
+  setLoadingMessage: (loadingMessage: string) => void
 }
 
 export const ToastPosition: ToastOptions = {
@@ -85,6 +88,7 @@ function App() {
   const [inbox, setInbox] = useState<Feeds[]>([])
   const [pendingRequests, setPendingRequests] = useState<number>(0)
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
+  const [loadingMessage, setLoadingMessage] = useState<string>('') // Used to display a message on the UI when user creating DID for the first time
 
   const queryClient = new QueryClient({})
 
@@ -99,8 +103,10 @@ function App() {
     const threeID: ThreeIdConnect = new ThreeIdConnect()
     const ceramic: CeramicClient = createCeramic()
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account)
+    setLoadingMessage('Connecting to DID. If it\'s your first time logging in you\'ll need to sign 2 transactions')
     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
     setDID(did)
+    setLoadingMessage('DID created')
     return did
   }
 
@@ -167,7 +173,9 @@ function App() {
                 pendingRequests,
                 setPendingRequests,
                 hasUserBeenSearched,
-                setHasUserBeenSearched
+                setHasUserBeenSearched,
+                loadingMessage,
+                setLoadingMessage
               }}
             >
               <Sidebar />
