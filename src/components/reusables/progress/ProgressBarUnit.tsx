@@ -1,5 +1,4 @@
-
-import GLOBALS from "config/Globals";
+import GLOBALS from 'config/Globals';
 import { Image, Item, Section } from 'primaries/SharedStyling';
 import styled, { css, keyframes } from 'styled-components';
 
@@ -11,25 +10,25 @@ interface ProgressBarPropsI {
 // Create Progress Bar
 const ProgressBar = ({ percent, color }: ProgressBarPropsI) => {
   return (
-    <Progress 
+    <Progress
       percent={percent}
       color={color}
     />
   );
-}
+};
 export default ProgressBar;
 
 const Progress = styled.div`
-	background: ${GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
-	border-radius: 18px;
-	height: 8px;
-	overflow: hidden;
-	width: 100%;
+  background: ${GLOBALS.COLORS.PLACEHOLDER_DARK_GRAY};
+  border-radius: 18px;
+  height: 8px;
+  overflow: hidden;
+  width: 100%;
   position: relative;
 
   &:after {
-    width: ${(props) => props.percent ? props.percent : 0}%;
-    background: ${(props) => props.color ? props.color : GLOBALS.COLORS.PRIMARY_PINK};
+    width: ${(props) => (props.percent ? props.percent : 0)}%;
+    background: ${(props) => (props.color ? props.color : GLOBALS.COLORS.PRIMARY_PINK)};
     transition: width 0.25s;
     overflow: hidden;
     position: absolute;
@@ -40,4 +39,4 @@ const Progress = styled.div`
     content: '';
     border-radius: 18px;
   }
-`
+`;
