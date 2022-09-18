@@ -1,0 +1,280 @@
+.chatBox_body {
+  width: 75%;
+  height: 100vh;
+  border-left: 0.5px solid rgb(225, 225, 225);
+}
+
+.chatBox_body img {
+  width: 100%;
+  height: 99.7%;
+}
+
+.showDateInChat {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  font-weight: 500;
+}
+
+.showDateInChat span {
+  border-radius: 20px;
+  border: 0.5px solid rgb(160, 160, 160);
+  padding: 7px;
+  cursor: pointer;
+}
+
+.stickerIcon_btn,
+.GifIcon_btn {
+  width: 1.5rem;
+  background-color: transparent;
+  color: #255b82;
+  cursor: pointer;
+}
+
+.defaultChatPage {
+  background-color: #f2f2f2;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  position: relative;
+  height: 100%;
+}
+
+.defaultChatPageText {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.defaultChatPage img {
+  width: 9rem;
+  height: 7rem;
+  border-radius: 20%;
+  position: relative;
+  top: -4rem;
+  left: 7rem;
+}
+
+.defaultChatPage p {
+  position: relative;
+  top: -4.5rem;
+  font-size: 2rem;
+  color: #255b82;
+  width: 100%;
+  font-weight: 400;
+  align-items: center;
+  left: 7rem;
+}
+
+.defaultChatPage span {
+  position: relative;
+  top: -5rem;
+  font-size: 1.2rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.chatBoxTop div::-webkit-scrollbar {
+  width: 5px;
+  /* display: none; */
+}
+
+
+.chatBoxTop div::-webkit-scrollbar-thumb {
+  background: #cf1c84;
+  border-radius: 10px;
+  background-image: transparent;
+}
+
+.chatBoxNavBar {
+  width: 75%;
+  height: 8vh;
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  z-index: 400;
+  display: flex;
+  background-color: rgb(255, 255, 255);
+  border-bottom: 1px rgb(80, 79, 79) solid;
+  border-radius: 3px;
+}
+
+.blockUserDropdown {
+  padding: 10px;
+  background-color: white;
+  border: 0.5px solid black;
+  z-index: 800;
+  position: relative;
+  border-radius: 5px;
+  left: -5.5rem;
+  font-weight: 450;
+  width: 75px;
+  cursor: pointer;
+}
+
+.blockUserDropdown:hover {
+  background-color: #e5e5ea;
+}
+
+.chatBoxUserName {
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+}
+
+.chatBoxUserName img {
+  width: 2.8rem;
+  height: 2.8rem;
+
+  border-radius: 20%;
+}
+
+.askForIntent {
+  display: flex;
+  font-size: 2rem;
+  position: relative;
+  justify-content: center;
+  text-align: end;
+
+  width: 100%;
+  height: 100%;
+}
+
+.askForIntent p {
+  text-align: end;
+  position: absolute;
+  border: 1px solid rgb(25, 66, 92);
+  padding: 10px;
+
+  border-radius: 8px;
+  color: white;
+  background-color: rgb(66, 133, 83);
+  top: 35%;
+}
+
+.chatBoxWallet {
+  font-weight: 510;
+  font-size: 1.1rem;
+  position: relative;
+  top: -1.5rem;
+  margin-left: 15px;
+}
+
+.chatBoxNavDetail {
+  position: relative;
+  top: 1rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.chatBoxNavDetail i {
+  position: relative;
+  top: -0.2rem;
+  margin-left: 5px;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+
+.chatBoxTop {
+  padding-right: 0px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  margin: 0 2px;
+}
+
+
+.beforeMessageLoader {
+  display: flex;
+  justify-content: center;
+}
+
+.chatBoxBottom {
+  height: 50px;
+  display: flex;
+  border-top: 1px solid black;
+  align-items: center;
+
+  padding: 6px;
+  justify-content: space-between;
+}
+
+.chatBoxBottomInput {
+  display: none;
+}
+
+.chatBoxBottom label {
+  cursor: pointer;
+}
+
+.chatBoxBottom i {
+  font-size: 1.5rem;
+  color: rgb(58, 103, 137);
+  margin-left: 5px;
+}
+
+.chatMessageInput {
+  width: 80%;
+  height: 39px;
+  padding: 10px;
+  border-radius: 10px;
+  outline: none;
+  border: 1px solid black;
+  border-style: none;
+  resize: none;
+  font-size: 1rem;
+  font-weight: 400;
+
+  resize: none;
+}
+
+.chatSubmitButton {
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
+}
+
+.imageloader {
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
+}
+
+.emojiButton {
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 5px;
+  position: relative;
+  left: 0.5rem;
+  background-color: transparent;
+  cursor: pointer;
+  font-weight: 100;
+}
+
+.emojiButton i {
+  font-size: 2rem;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.fa-smile::before {
+  content: '\f111';
+  color: #f1c40f;
+}
+
+.fa-smile::after {
+  left: 0;
+  position: absolute;
+  content: '\f118';
+}
