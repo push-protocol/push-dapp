@@ -26,7 +26,7 @@ export const globalsPadding = {};
 
 // Define Margin
 export const globalsMargin = {
-  MINI_MODULES: {
+  LOGIN_MODULES: {
     DESKTOP: {
       TOP: '30px',
       RIGHT: '30px',
@@ -46,9 +46,29 @@ export const globalsMargin = {
       LEFT: '20px',
     },
   },
+  MINI_MODULES: {
+    DESKTOP: {
+      TOP: '0px',
+      RIGHT: '30px',
+      BOTTOM: '48px',
+      LEFT: '30px',
+    },
+    TABLET: {
+      TOP: '25px',
+      RIGHT: '25px',
+      BOTTOM: '25px',
+      LEFT: '25px',
+    },
+    MOBILE: {
+      TOP: '20px',
+      RIGHT: '20px',
+      BOTTOM: '20px',
+      LEFT: '20px',
+    },
+  },
   BIG_MODULES: {
     DESKTOP: {
-      TOP: '18px',
+      TOP: '0px',
       RIGHT: '0px',
       BOTTOM: '0px',
       LEFT: '18px',
@@ -109,6 +129,11 @@ export default {
       VERTICAL: '30px',
       HORIZONTAL: '20px',
 
+      LOGIN_MODULES: {
+        DESKTOP: `${globalsMargin.LOGIN_MODULES.DESKTOP.TOP} ${globalsMargin.LOGIN_MODULES.DESKTOP.RIGHT} ${globalsMargin.LOGIN_MODULES.DESKTOP.BOTTOM} ${globalsMargin.LOGIN_MODULES.DESKTOP.LEFT}`,
+        TABLET: `${globalsMargin.LOGIN_MODULES.TABLET.TOP} ${globalsMargin.LOGIN_MODULES.TABLET.RIGHT} ${globalsMargin.LOGIN_MODULES.TABLET.BOTTOM} ${globalsMargin.LOGIN_MODULES.TABLET.LEFT}`,
+        MOBILE: `${globalsMargin.LOGIN_MODULES.MOBILE.TOP} ${globalsMargin.LOGIN_MODULES.MOBILE.RIGHT} ${globalsMargin.LOGIN_MODULES.MOBILE.BOTTOM} ${globalsMargin.LOGIN_MODULES.MOBILE.LEFT}`,
+      },
       MINI_MODULES: {
         DESKTOP: `${globalsMargin.MINI_MODULES.DESKTOP.TOP} ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM} ${globalsMargin.MINI_MODULES.DESKTOP.LEFT}`,
         TABLET: `${globalsMargin.MINI_MODULES.TABLET.TOP} ${globalsMargin.MINI_MODULES.TABLET.RIGHT} ${globalsMargin.MINI_MODULES.TABLET.BOTTOM} ${globalsMargin.MINI_MODULES.TABLET.LEFT}`,

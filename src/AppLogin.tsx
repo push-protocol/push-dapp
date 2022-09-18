@@ -243,13 +243,13 @@ export default AppLogin;
 
 // This defines the page settings, toggle align-self to center if not covering entire stuff
 const Container = styled(SectionV2)`
-  padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
+  padding: ${GLOBALS.ADJUSTMENTS.MARGIN.LOGIN_MODULES.DESKTOP};
 
   @media ${device.laptop} {
-    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
+    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.LOGIN_MODULES.TABLET};
   }
 
   @media ${device.mobileM} {
-    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.MARGIN.LOGIN_MODULES.MOBILE};
   }
 `;
