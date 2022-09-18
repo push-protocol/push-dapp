@@ -31,10 +31,11 @@ export async function CreateDID(
     resolver: resolverRegistry
   })
 
-  try{ 
-  await did.authenticate()
+  try{
+    await did.authenticate()
   } catch (e) {
     console.error(e)
+    throw e
   }
   return did
 }
