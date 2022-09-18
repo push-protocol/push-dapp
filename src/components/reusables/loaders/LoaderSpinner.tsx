@@ -6,13 +6,33 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import BlurBG from 'components/reusables/blurs/BlurBG';
-import ProgressBar from 'components/reusables/progress/ProgressBarUnit';
+import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/ProgressBarUnit';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
+// Interfaces
+interface LoaderSpinnerPropsI {
+  type?: number;
+  overlay?: number;
+  blur?: number;
+  title?: string;
+  width?: string;
+  spinnerEnabled?: boolean;
+  spinnerSize?: number;
+  spinnerColor?: string;
+  spinnerCompleted?: boolean;
+  progressEnabled?: boolean;
+  progressPositioning?: number;
+  progressColor?: string;
+  progressVerticalGap?: string;
+  progress?: number;
+  progressNotice?: string;
+}
+
+// Constants
 export const LOADER_TYPE = {
   STANDALONE: 1,
   STANDALONE_MINIMAL: 2,
@@ -28,23 +48,6 @@ export const PROGRESS_POSITIONING = {
   TOP: 1,
   BOTTOM: 2,
 };
-
-interface LoaderSpinnerI {
-  type?: number;
-  overlay?: number;
-  blur?: number;
-  title?: string;
-  width?: string;
-  spinnerEnabled?: boolean;
-  spinnerSize?: number;
-  spinnerColor?: string;
-  spinnerCompleted?: boolean;
-  progressEnabled?: boolean;
-  progressPositioning?: number;
-  progressColor?: string;
-  progressVerticalGap: string;
-  progress?: number;
-}
 
 // Create Progress Bar
 const LoaderSpinner = ({
@@ -62,7 +65,8 @@ const LoaderSpinner = ({
   progressColor = GLOBALS.COLORS.PRIMARY_PINK,
   progressVerticalGap = '40px',
   progress = 0,
-}: LoaderSpinnerI) => {
+  progressNotice = null
+}: LoaderSpinnerPropsI) => {
   const theme = useTheme();
 
   return (
@@ -78,6 +82,7 @@ const LoaderSpinner = ({
 
       <ItemVV2
         flex="initial"
+        flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? "column" : "column-reverse"}
         alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
         width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
         padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
@@ -85,14 +90,22 @@ const LoaderSpinner = ({
         border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
         background={type == LOADER_TYPE.SEAMLESS ? 'initial' : theme.default.bg}
       >
-        {progressEnabled && progressPositioning == PROGRESS_POSITIONING.TOP && (
-          <>
+        {progressEnabled && (
+          <ItemVV2
+            flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? "column" : "column-reverse"}
+          >
             <ProgressBar
               percent={progress}
               color={progressColor}
+              notice={progressNotice}
+              noticePositioning={progressPositioning == PROGRESS_POSITIONING.TOP ? NOTICE_POSITIONING.BOTTOM : NOTICE_POSITIONING.TOP}
             />
-            {(title || spinnerEnabled) && <ItemVV2 margin={`0 0 ${progressVerticalGap} 0`}></ItemVV2>}
-          </>
+            {(title || spinnerEnabled) && 
+              <ItemVV2 
+                margin={`0 0 ${progressVerticalGap} 0`}>  
+              </ItemVV2>
+            }
+          </ItemVV2>
         )}
 
         <ItemHV2>
@@ -114,16 +127,6 @@ const LoaderSpinner = ({
             </SpanV2>
           )}
         </ItemHV2>
-
-        {progressEnabled && progressPositioning == PROGRESS_POSITIONING.BOTTOM && (
-          <>
-            {(title || spinnerEnabled) && <ItemVV2 margin={`${progressVerticalGap} 0 0 0`}></ItemVV2>}
-            <ProgressBar
-              percent={progress}
-              color={progressColor}
-            />
-          </>
-        )}
       </ItemVV2>
     </ItemVV2>
   );

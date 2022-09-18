@@ -7,9 +7,9 @@ import BlurBG from 'components/reusables/blurs/BlurBG';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_TYPE,
-  PROGRESS_POSITIONING,
+  PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
-import ProgressBar from 'components/reusables/progress/ProgressBarUnit';
+import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/ProgressBarUnit';
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
@@ -103,6 +103,25 @@ const InternalDevModule = () => {
         <ProgressBar
           percent={progress}
           color={GLOBALS.COLORS.PRIMARY_PINK}
+        />
+      </IndividualComps>
+
+      {/* Progess Bar Component */}
+      <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+          notice="This is notice on bottom"
+        />
+      </IndividualComps>
+
+      {/* Progess Bar Component */}
+      <IndividualComps caption="components/reusables/progress/ProgressBarUnit noticePositioning=TOP">
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+          notice="This is notice on top"
+          noticePositioning={NOTICE_POSITIONING.TOP}
         />
       </IndividualComps>
 
@@ -304,6 +323,32 @@ const InternalDevModule = () => {
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=SEAMLESS progressEnabled=true progressPositioning=BOTTOM progressNotice=Some_Notice">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Step 1: Loading minimal no width"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+          progressNotice="This might take some time to load"
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=SEAMLESS progressEnabled=true progressPositioning=TOP progressNotice=Some_Notice">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Step 1: Loading minimal no width"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.TOP}
+          progress={progress}
+          progressNotice="This might take some time to load"
         />
       </IndividualComps>
 

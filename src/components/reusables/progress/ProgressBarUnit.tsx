@@ -1,19 +1,48 @@
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
-import { Image, Item, Section } from 'primaries/SharedStyling';
-import styled, { css, keyframes } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
+// Interfaces
 interface ProgressBarPropsI {
   percent: number;
-  color: string;
+  color?: string;
+  notice?: string;
+  noticePositioning?: number;
+}
+
+// Constants
+export const NOTICE_POSITIONING = {
+  TOP: 1,
+  BOTTOM: 2
 }
 
 // Create Progress Bar
-const ProgressBar = ({ percent, color }: ProgressBarPropsI) => {
+const ProgressBar = ({ percent, color = GLOBALS.COLORS.PRIMARY_PINK, notice = null, noticePositioning = NOTICE_POSITIONING.BOTTOM }: ProgressBarPropsI) => {
+  const theme = useTheme();
+
   return (
-    <Progress
-      percent={percent}
-      color={color}
-    />
+    <ItemVV2
+      flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? "column" : "column-reverse"}
+    >
+      <Progress
+        percent={percent}
+        color={color}
+      />
+
+      {notice &&
+        <SpanV2
+          color={theme.default.secondaryColor}
+          fontWeight="400"
+          fontSize="12px"
+          textTransform="none"
+          textAlign="center"
+          letterSpacing="0.03em"
+          margin={`${noticePositioning == NOTICE_POSITIONING.BOTTOM ? "5px" : 0} 0 ${noticePositioning == NOTICE_POSITIONING.TOP ? "5px" : 0} 0`}
+        >
+          {notice}
+        </SpanV2>
+      }
+    </ItemVV2>
   );
 };
 export default ProgressBar;

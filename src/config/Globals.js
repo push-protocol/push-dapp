@@ -151,6 +151,9 @@ export default {
       SMALL: '16px',
       MINI: '12px',
     },
+    BLUR: {
+      DEFAULT: 5,
+    }
   },
 
   COLORS: {

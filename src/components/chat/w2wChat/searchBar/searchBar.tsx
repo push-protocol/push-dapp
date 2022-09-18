@@ -16,8 +16,8 @@ import * as PushNodeClient from 'api';
 import { User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/messageFeed';
-import { AppContext, Context } from '../w2wIndex';
 import './searchBar.css';
 
 // Internal Configs

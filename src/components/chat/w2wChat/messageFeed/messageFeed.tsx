@@ -1,16 +1,16 @@
 import Typography from '@mui/material/Typography';
 import { Feeds, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import styled from 'styled-components';
 import DefaultMessage from '../defaultMessage/defaultMessage';
 import Loader from '../Loader/Loader';
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
-import { AppContext, Context } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 interface MessageFeedProps {
   filteredUserData: User[];

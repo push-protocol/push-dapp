@@ -1,19 +1,28 @@
+// React + Web3 Essentials
 import React, { useContext, useState } from 'react';
-import { Context } from 'sections/chat/ChatMainSection';
-import IntentBar from '../intentBar/intentBar';
-import IntentFeed from '../intentFeed/intentFeed';
-import SearchBar from '../searchBar/searchBar';
-import './sidebar.css';
 
+// External Packages
+import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
 import { makeStyles } from '@material-ui/core';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import styled from 'styled-components';
+import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
+import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
+import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
+import 'components/chat/w2wChat/sidebar/sidebar.css';
+import { Context } from 'sections/chat/ChatMainSection';
 
-import ProfileHeader from '../profile';
-import Profile from '../ProfileSection/Profile';
+import ProfileHeader from 'components/chat/w2wChat/profile';
+import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
+import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+
+// Internal Configs
+import GLOBALS from 'config/Globals';
 
 function TabPanel({ children, value, index, ...other }): JSX.Element {
   return (
@@ -40,7 +49,9 @@ const useStyles = makeStyles({
   }
 });
 
-const Sidebar = () => {
+// Chat Sections
+// Divided into two, left and right
+const ChatSidebarSection = () => {
   const { connectedUser, pendingRequests } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -55,52 +66,59 @@ const Sidebar = () => {
     setUserProfileImage(image);
   };
 
+  // RENDER
   return (
-    <Container>
-      <TabContainer>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} className={classes.tabs}>
-            <Tab label={<span style={{ textTransform: 'capitalize', fontSize: '17px' }}>chats</span>} />
-            <Tab
-              label={
-                <span
-                  style={{
-                    textTransform: 'capitalize',
-                    fontSize: '17px',
-                    display: 'flex',
-                    gap: '6px'
-                  }}
-                >
-                  Requests{pendingRequests > 0 ? <Badge>{pendingRequests}</Badge> : null}
-                </span>
-              }
-            />
-            <Tab style={{ display: 'none' }} label="" />
-          </Tabs>
-        </Box>
-      </TabContainer>
-      <TabPanel value={value} index={0}>
-        <Box>
-          <SearchBar />
-        </Box>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
-          REQUESTS
-        </DisplayText>
-        <IntentFeed />
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-        <Box>
-          <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setValue={setValue} />
-        </Box>
-      </TabPanel>
-      <BottomBar>
+    <ItemVV2>
+      <ItemVV2 flex="0">
+        <TabContainer>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs value={value} onChange={handleChange} className={classes.tabs}>
+              <Tab label={<span style={{ textTransform: 'capitalize', fontSize: '17px' }}>chats</span>} />
+              <Tab
+                label={
+                  <span
+                    style={{
+                      textTransform: 'capitalize',
+                      fontSize: '17px',
+                      display: 'flex',
+                      gap: '6px'
+                    }}
+                  >
+                    Requests{pendingRequests > 0 ? <Badge>{pendingRequests}</Badge> : null}
+                  </span>
+                }
+              />
+              <Tab style={{ display: 'none' }} label="" />
+            </Tabs>
+          </Box>
+        </TabContainer>
+      </ItemVV2>
+      <ItemVV2>
+        <TabPanel value={value} index={0}>
+          <Box>
+            <SearchBar />
+          </Box>
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
+            REQUESTS
+          </DisplayText>
+          <IntentFeed />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <Box>
+            <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setValue={setValue} />
+          </Box>
+        </TabPanel>
+      </ItemVV2>
+      <ItemVV2 flex="0">
         <ProfileHeader setValue={setValue} />
-      </BottomBar>
-    </Container>
+      </ItemVV2>
+    </ItemVV2>
   );
-};
+}
+export default ChatSidebarSection;
+
 
 const Badge = styled.div`
   box-sizing: border-box;
@@ -166,5 +184,3 @@ const Tab = styled(MuiTab)`
     color: #000000;
   }
 `;
-
-export default Sidebar;

@@ -1,15 +1,15 @@
 import React, { useContext } from 'react'
 
-import { Context } from '../w2wIndex'
-import styles from './styles'
-import Avatar from '@mui/material/Avatar'
-import Tooltip from '@mui/material/Tooltip'
-import styled from 'styled-components'
-import { caip10ToWallet } from 'helpers/w2w'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
+import Avatar from '@mui/material/Avatar'
 import IconButton from '@mui/material/IconButton'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { caip10ToWallet } from 'helpers/w2w'
+import { Context } from 'sections/chat/ChatMainSection'
+import styled from 'styled-components'
+import styles from './styles'
 
 const Profile = ({ setValue }: any): JSX.Element => {
   const { connectedUser } = useContext(Context)

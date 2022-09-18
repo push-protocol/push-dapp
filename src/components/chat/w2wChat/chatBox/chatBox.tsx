@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
@@ -14,13 +14,12 @@ import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { MdCheckCircle, MdError } from 'react-icons/md';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import useToast from 'hooks/useToast';
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -29,26 +28,30 @@ import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
 import { generateKeyPair } from 'helpers/w2w/pgp';
-import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex';
+import useToast from 'hooks/useToast';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import Chats from '../chats/chats';
 import { FileMessageContent } from '../Files/Files';
 import GifPicker from '../Gifs/gifPicker';
-import { Context } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './chatBox.css';
 
 // Internal Configs
-import { appConfig } from "config";
-;
-
-
-const INFURA_URL = appConfig.infuraApiUrl
+import { appConfig } from 'config';
+const INFURA_URL = appConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return (
+    <MuiAlert
+      elevation={6}
+      ref={ref}
+      variant="filled"
+      {...props}
+    />
+  );
 });
 
 const ChatBox = (): JSX.Element => {
@@ -65,33 +68,35 @@ const ChatBox = (): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched,
-    setLoadingMessage
-  }: AppContext = useContext<AppContext>(Context)
-  const [newMessage, setNewMessage] = useState<string>('')
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
-  const [showEmojis, setShowEmojis] = useState<boolean>(false)
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
-  const [Loading, setLoading] = useState<boolean>(true)
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
-  const [imageSource, setImageSource] = useState<string>('')
-  const [filesUploading, setFileUploading] = useState<boolean>(false)
-  const imageInputRef = useRef<HTMLInputElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
-  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
-  const [SnackbarText, setSnackbarText] = useState<string>('')
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
-  const [showOption, setShowOption] = useState<boolean>(false)
-  const provider = ethers.getDefaultProvider()
+    setLoadingMessage,
+    setBlockedLoading
+  }: AppContext = useContext<AppContext>(Context);
+
+  const [newMessage, setNewMessage] = useState<string>('');
+  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
+  const [showEmojis, setShowEmojis] = useState<boolean>(false);
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const [Loading, setLoading] = useState<boolean>(true);
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
+  const [imageSource, setImageSource] = useState<string>('');
+  const [filesUploading, setFileUploading] = useState<boolean>(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
+  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
+  const [SnackbarText, setSnackbarText] = useState<string>('');
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
+  const [showOption, setShowOption] = useState<boolean>(false);
+  const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
-  let showTime = false
-  let time = ''
+  let showTime = false;
+  let time = '';
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
-      let messageCID = latestThreadhash
+      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
+      let messageCID = latestThreadhash;
 
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -101,23 +106,23 @@ const ChatBox = (): JSX.Element => {
         if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-          let msgIPFS: MessageIPFSWithCID
+          let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
-            msgIPFS = messageFromIndexDB.body
+            msgIPFS = messageFromIndexDB.body;
           } else {
-            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
             await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-            msgIPFS = messageFromIPFS
+            msgIPFS = messageFromIPFS;
           }
 
           // Decrypt message
           if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
             // To do signature verification it depends on who has sent the message
-            let signatureValidationPubliKey: string
+            let signatureValidationPubliKey: string;
             if (msgIPFS.fromDID === connectedUser.did) {
-              signatureValidationPubliKey = connectedUser.publicKey
+              signatureValidationPubliKey = connectedUser.publicKey;
             } else {
-              signatureValidationPubliKey = currentChat.publicKey
+              signatureValidationPubliKey = currentChat.publicKey;
             }
             msgIPFS.messageContent = await decryptAndVerifySignature({
               cipherText: msgIPFS.messageContent,
@@ -125,8 +130,8 @@ const ChatBox = (): JSX.Element => {
               did: did,
               encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
               publicKeyArmored: signatureValidationPubliKey,
-              signatureArmored: msgIPFS.signature
-            })
+              signatureArmored: msgIPFS.signature,
+            });
           }
 
           //checking if the message is encrypted or not
@@ -137,10 +142,10 @@ const ChatBox = (): JSX.Element => {
               msg.cid === '' &&
               msg.messageContent === msgIPFS.messageContent &&
               msg.messageType === msgIPFS.messageType
-          )
+          );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
-            const newMessages = messages.map((x) => x)
+            const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
                 msg.link === '' &&
@@ -148,43 +153,43 @@ const ChatBox = (): JSX.Element => {
                 msg.cid === '' &&
                 msg.messageContent === msgIPFS.messageContent &&
                 msg.messageType === msgIPFS.messageType
-            )
-            newMessages[index] = msgIPFS
-            setMessages(newMessages)
+            );
+            newMessages[index] = msgIPFS;
+            setMessages(newMessages);
           } else {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
-            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link)
+            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
-              setMessages((m) => [...m, msgIPFS])
+              setMessages((m) => [...m, msgIPFS]);
             }
           }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else {
           while (messageCID) {
-            setLoading(true)
+            setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-              setLoading(false)
-              break
+              setLoading(false);
+              break;
             } else {
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-              let msgIPFS: MessageIPFSWithCID
+              let msgIPFS: MessageIPFSWithCID;
               if (messageFromIndexDB !== undefined) {
-                msgIPFS = messageFromIndexDB.body
+                msgIPFS = messageFromIndexDB.body;
               } else {
-                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
-                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid')
-                msgIPFS = messageFromIPFS
+                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
+                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
+                msgIPFS = messageFromIPFS;
               }
 
               // Decrypt message
               if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
                 // To do signature verification it depends on who has sent the message
-                let signatureValidationPubliKey: string
+                let signatureValidationPubliKey: string;
                 if (msgIPFS.fromDID === connectedUser.did) {
-                  signatureValidationPubliKey = connectedUser.publicKey
+                  signatureValidationPubliKey = connectedUser.publicKey;
                 } else {
-                  signatureValidationPubliKey = currentChat.publicKey
+                  signatureValidationPubliKey = currentChat.publicKey;
                 }
                 msgIPFS.messageContent = await decryptAndVerifySignature({
                   cipherText: msgIPFS.messageContent,
@@ -192,8 +197,8 @@ const ChatBox = (): JSX.Element => {
                   did: did,
                   encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
                   publicKeyArmored: signatureValidationPubliKey,
-                  signatureArmored: msgIPFS.signature
-                })
+                  signatureArmored: msgIPFS.signature,
+                });
               }
 
               // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
@@ -204,10 +209,10 @@ const ChatBox = (): JSX.Element => {
                   msg.cid === '' &&
                   msg.messageContent === msgIPFS.messageContent &&
                   msg.messageType === msgIPFS.messageType
-              )
+              );
               // Replace message that was inserted when sending a message
               if (messagesSentInChat) {
-                const newMessages = messages.map((x) => x)
+                const newMessages = messages.map((x) => x);
                 const index = newMessages.findIndex(
                   (msg) =>
                     msg.link === '' &&
@@ -215,24 +220,24 @@ const ChatBox = (): JSX.Element => {
                     msg.cid === '' &&
                     msg.messageContent === msgIPFS.messageContent &&
                     msg.messageType === msgIPFS.messageType
-                )
-                newMessages[index] = msgIPFS
-                setMessages(newMessages)
+                );
+                newMessages[index] = msgIPFS;
+                setMessages(newMessages);
               }
               // Display messages for the first time
               else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                setMessages((m) => [msgIPFS, ...m])
+                setMessages((m) => [msgIPFS, ...m]);
               }
               // Messages got from useQuery
               // else {
               //TODO: Not needed as this is handled when the threadhashes are not same.
               //   setMessages((m) => [...m, msgIPFS])
               // }
-              const link = msgIPFS.link
+              const link = msgIPFS.link;
               if (link) {
-                messageCID = link
+                messageCID = link;
               } else {
-                break
+                break;
               }
             }
           }
@@ -280,7 +285,7 @@ const ChatBox = (): JSX.Element => {
         timestamp: Date.now(),
         encryptedSecret: '',
         link: '',
-        cid: ''
+        cid: '',
       };
       setNewMessage('');
       setMessages([...messages, msg]);
@@ -296,13 +301,13 @@ const ChatBox = (): JSX.Element => {
           encryptedSecret,
           signature: pgpSignature,
           sigType: pgpSignatureType,
-          encType: pgpEncryptionType
+          encType: pgpEncryptionType,
         } = await encryptAndSign({
           plainText: message,
           fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           fromPublicKeyArmored: connectedUser.publicKey,
           toPublicKeyArmored: currentChat.publicKey,
-          did
+          did,
         });
         messageContent = cipherText;
         encryptionType = pgpEncryptionType;
@@ -319,7 +324,7 @@ const ChatBox = (): JSX.Element => {
         signature,
         encType: encryptionType,
         sigType,
-        encryptedSecret: aesEncryptedSecret
+        encryptedSecret: aesEncryptedSecret,
       });
 
       if (typeof savedMsg === 'string') {
@@ -327,7 +332,12 @@ const ChatBox = (): JSX.Element => {
           toastTitle: 'Error',
           toastMessage: `${savedMsg}`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
@@ -338,7 +348,12 @@ const ChatBox = (): JSX.Element => {
         toastTitle: 'Error',
         toastMessage: 'Cannot send Message, Try again later',
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
     }
     setMessageBeingSent(false);
@@ -351,7 +366,7 @@ const ChatBox = (): JSX.Element => {
       if (currentChat.threadhash) {
         sendMessage({
           message: newMessage,
-          messageType: 'Text'
+          messageType: 'Text',
         });
       } else {
         sendIntent({ message: newMessage, messageType: 'Text' });
@@ -364,12 +379,31 @@ const ChatBox = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
-        setLoadingMessage('Creating cryptography keys')
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 1/4: Creating cryptography keys",
+          progressEnabled: true,
+          progress: 25,
+        })
+
         const keyPairs = await generateKeyPair();
-        setLoadingMessage('Cryptography keys created')
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 2/4: Encrypting your info",
+          progressEnabled: true,
+          progress: 50
+        })
+
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        setLoadingMessage('Creating user in the protocol')
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 3/4: Syncing account info",
+          progressEnabled: true,
+          progress: 75,
+          progressNotice: "This might take a moment"
+        })
+
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -377,11 +411,20 @@ const ChatBox = (): JSX.Element => {
           encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
           encryptionType: 'pgp',
           signature: 'xyz',
-          sigType: 'a'
+          sigType: 'a',
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
-        setLoadingMessage('User created')
+
+        setBlockedLoading({
+          enabled: false,
+          title: "Step 4/4: Done, Welcome to Push Chat!",
+          spinnerCompleted: true,
+          progressEnabled: true,
+          progress: 100,
+          progressNotice: "This might take a moment"
+        })
+        
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };
@@ -396,24 +439,22 @@ const ChatBox = (): JSX.Element => {
       setMessageBeingSent(true);
       const { didCreated, createdUser } = await createUserIfNecessary();
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(didCreated.id)) {
-        const user: User = await PushNodeClient.getUser({ did: currentChat.did })
-        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
-        let caip10: string
+        const user: User = await PushNodeClient.getUser({ did: currentChat.did });
+        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
+        let caip10: string;
         if (!user) {
           if (!ethers.utils.isAddress(searchedUser)) {
             try {
-              const ens: string = await provider.resolveName(searchedUser)
+              const ens: string = await provider.resolveName(searchedUser);
               if (ens) {
-                caip10 = walletToCAIP10({ account: ens, chainId })
+                caip10 = walletToCAIP10({ account: ens, chainId });
               }
+            } catch (err) {
+              console.log(err);
+              return;
             }
-            catch (err) {
-              console.log(err)
-              return
-            }
-          }
-          else {
-            caip10 = walletToCAIP10({ account: searchedUser, chainId })
+          } else {
+            caip10 = walletToCAIP10({ account: searchedUser, chainId });
           }
           await PushNodeClient.createUser({
             caip10,
@@ -422,7 +463,7 @@ const ChatBox = (): JSX.Element => {
             encryptedPrivateKey: '',
             encryptionType: '',
             signature: 'pgp',
-            sigType: 'pgp'
+            sigType: 'pgp',
           });
           // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
           messageContent = message;
@@ -437,12 +478,16 @@ const ChatBox = (): JSX.Element => {
             aesEncryptedSecret = '';
             signature = '';
           } else {
-            const { cipherText, encryptedSecret, signature: pgpSignature } = await encryptAndSign({
+            const {
+              cipherText,
+              encryptedSecret,
+              signature: pgpSignature,
+            } = await encryptAndSign({
               plainText: message,
               fromEncryptedPrivateKeyArmored: createdUser.encryptedPrivateKey,
               toPublicKeyArmored: currentChat.publicKey,
               fromPublicKeyArmored: createdUser.publicKey,
-              did: didCreated
+              did: didCreated,
             });
             messageContent = cipherText;
             encryptionType = 'pgp';
@@ -460,7 +505,7 @@ const ChatBox = (): JSX.Element => {
           signature,
           encType: encryptionType,
           sigType: signature,
-          encryptedSecret: aesEncryptedSecret
+          encryptedSecret: aesEncryptedSecret,
         });
         if (typeof msg === 'string') {
           // Display toaster
@@ -468,7 +513,12 @@ const ChatBox = (): JSX.Element => {
             toastTitle: 'Error',
             toastMessage: `${msg}`,
             toastType: 'ERROR',
-            getToastIcon: (size) => <MdError size={size} color="red" />,
+            getToastIcon: (size) => (
+              <MdError
+                size={size}
+                color="red"
+              />
+            ),
           });
         } else {
           // We store the message in state decrypted so we display to the user the intent message
@@ -486,7 +536,12 @@ const ChatBox = (): JSX.Element => {
             toastTitle: 'Success',
             toastMessage: 'Intent Sent',
             toastType: 'SUCCESS',
-            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
           });
         }
       } else {
@@ -494,7 +549,7 @@ const ChatBox = (): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, Intent is not approved!');
       }
-      setHasUserBeenSearched(false)
+      setHasUserBeenSearched(false);
     } catch (error) {
       console.log(error);
     }
@@ -532,14 +587,14 @@ const ChatBox = (): JSX.Element => {
             content: e.target.result as string,
             name: file.name,
             type: file.type,
-            size: file.size
+            size: file.size,
           };
           if (!currentChat.intent.includes(did.id)) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
           } else {
             sendMessage({
               message: JSON.stringify(fileMessageContent),
-              messageType
+              messageType,
             });
           }
           setFileUploading(false);
@@ -561,7 +616,7 @@ const ChatBox = (): JSX.Element => {
     } else {
       sendMessage({
         message: url,
-        messageType: 'GIF'
+        messageType: 'GIF',
       });
     }
   };
@@ -584,16 +639,30 @@ const ChatBox = (): JSX.Element => {
         </Box>
       ) : (
         <>
-          <Snackbar open={openReprovalSnackbar} autoHideDuration={10000} onClose={handleCloseSuccessSnackbar}>
-            <Alert onClose={handleCloseSuccessSnackbar} severity="error" sx={{ width: '100%' }}>
+          <Snackbar
+            open={openReprovalSnackbar}
+            autoHideDuration={10000}
+            onClose={handleCloseSuccessSnackbar}
+          >
+            <Alert
+              onClose={handleCloseSuccessSnackbar}
+              severity="error"
+              sx={{ width: '100%' }}
+            >
               {SnackbarText}
             </Alert>
           </Snackbar>
 
           <ChatHeader>
             <UserInfo>
-              <Avatar alt="Profile Picture" src={imageSource} />
-              <Typography variant="body1" ml={1}>
+              <Avatar
+                alt="Profile Picture"
+                src={imageSource}
+              />
+              <Typography
+                variant="body1"
+                ml={1}
+              >
                 {caip10ToWallet(currentChat.msg.name)}
               </Typography>
             </UserInfo>
@@ -625,10 +694,16 @@ const ChatBox = (): JSX.Element => {
           </ChatHeader>
 
           <MessageContainer>
-            <ScrollToBottom className='chatBoxTop' initialScrollBehavior='smooth'>
+            <ScrollToBottom
+              className="chatBoxTop"
+              initialScrollBehavior="smooth"
+            >
               {Loading ? (
                 <SpinnerWrapper>
-                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={40}
+                  />
                 </SpinnerWrapper>
               ) : (
                 <>
@@ -648,7 +723,11 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
-                        <Chats msg={msg} did={did} messageBeingSent={messageBeingSent} />
+                        <Chats
+                          msg={msg}
+                          did={did}
+                          messageBeingSent={messageBeingSent}
+                        />
                         {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
@@ -664,11 +743,19 @@ const ChatBox = (): JSX.Element => {
           </MessageContainer>
 
           {messageBeingSent ? (
-            <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
+            <LoaderSpinner
+              type={LOADER_TYPE.STANDALONE_MINIMAL}
+              spinnerSize={40}
+            />
           ) : (
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
-                <img src="/svg/chats/smiley.svg" height="24px" width="24px" alt="" />
+                <img
+                  src="/svg/chats/smiley.svg"
+                  height="24px"
+                  width="24px"
+                  alt=""
+                />
               </Icon>
               {showEmojis && (
                 <Picker
@@ -678,7 +765,7 @@ const ChatBox = (): JSX.Element => {
                     position: 'absolute',
                     bottom: '2.5rem',
                     zindex: '700',
-                    left: '2.5rem'
+                    left: '2.5rem',
                   }}
                 />
               )}
@@ -694,26 +781,52 @@ const ChatBox = (): JSX.Element => {
                 <>
                   <label>
                     {isGifPickerOpened && (
-                      <GifPicker setIsOpened={setIsGifPickerOpened} isOpen={isGifPickerOpened} onSelect={sendGif} />
+                      <GifPicker
+                        setIsOpened={setIsGifPickerOpened}
+                        isOpen={isGifPickerOpened}
+                        onSelect={sendGif}
+                      />
                     )}
                     <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
-                      <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
+                      <img
+                        src="/svg/chats/gif.svg"
+                        height="18px"
+                        width="22px"
+                        alt=""
+                      />
                     </Icon>
                   </label>
                   <label>
                     <Icon>
-                      <img src="/svg/chats/attachment.svg" height="24px" width="20px" alt="" />
+                      <img
+                        src="/svg/chats/attachment.svg"
+                        height="24px"
+                        width="20px"
+                        alt=""
+                      />
                     </Icon>
-                    <FileInput type="file" ref={fileInputRef} onChange={uploadFile} />
+                    <FileInput
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={uploadFile}
+                    />
                   </label>
                 </>
                 {filesUploading ? (
                   <div className="imageloader">
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={20} />
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
+                    />
                   </div>
                 ) : (
                   <Icon onClick={handleSubmit}>
-                    <img src="/svg/chats/send.svg" height="27px" width="27px" alt="" />
+                    <img
+                      src="/svg/chats/send.svg"
+                      height="27px"
+                      width="27px"
+                      alt=""
+                    />
                   </Icon>
                 )}
               </>
@@ -740,7 +853,7 @@ const FirstConversation = styled.div`
   color: #657795;
   margin: 59px 0px 0px 0px;
   padding: 0px 50px;
-`
+`;
 
 const FileInput = styled.input`
   display: none;
@@ -759,7 +872,7 @@ const MessageTime = styled.div`
 const MessageContainer = styled.div`
   position: absolute;
   top: 65px;
-  bottom:66px;
+  bottom: 66px;
   left: 0;
   right: 0;
   margin: 0;
@@ -846,7 +959,7 @@ const TextInput = styled.textarea`
     width: 0;
     height: 0;
   }
-`
+`;
 
 const TypeBarContainer = styled.div`
   position: absolute;
@@ -865,14 +978,13 @@ const TypeBarContainer = styled.div`
 `;
 
 const Container = styled(Content)`
-  padding: 20px;
-  width: 100%;
   box-sizing: border-box;
   background: linear-gradient(179.97deg, #eef5ff 0.02%, rgba(236, 239, 255, 0) 123.25%);
   border-radius: 13px;
-  height: inherit;
+  height: 100%;
   display: flex;
   align-items: center;
+  align-self: stretch;
   text-align: center;
   font-weight: 400;
   justify-content: center;
