@@ -31,7 +31,7 @@ const prepForDeployment = async (appEnv) => {
   console.log(chalk.green('Starting Custom Deployment Prebuild...'));
 
   // Test if app dev is passed, else fail
-  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w') {
+  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w' && appEnv !== 'alpha') {
     console.log(
       chalk.red('App Environment not set correctly... can only be dev, staging, prod or w2w. Please check and retry')
     );
