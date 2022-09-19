@@ -1,12 +1,15 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import ReactGA from 'react-ga';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
 
-import styled, { useTheme } from 'styled-components';
-
-import { ThemeProvider } from 'styled-components';
-
-import W2wIndex from 'components/chat/w2wChat/w2wIndex';
+// Internal Compoonents
 import { Item, ItemH } from 'components/SharedStyling';
+import ChatMainSection from 'sections/chat/ChatMainSection';
+
+// Internal Configs
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Create Header
@@ -23,9 +26,7 @@ function Chat() {
 
   return (
     <Container>
-      <ItemH>
-        <W2wIndex />
-      </ItemH>
+      <ChatMainSection />
     </Container>
   )
 }

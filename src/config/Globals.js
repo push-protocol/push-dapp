@@ -151,11 +151,15 @@ export default {
       SMALL: '16px',
       MINI: '12px',
     },
+    BLUR: {
+      DEFAULT: 5,
+    }
   },
 
   COLORS: {
     PRIMARY: 'rgba(27.0, 150.0, 227.0, 1.0)',
     PRIMARY_PINK: '#CF1C84',
+    PLACEHOLDER_DARK_GRAY: '#D9D9D9',
 
     LINKS: 'rgba(20.0, 126.0, 251.0, 1.0)',
 

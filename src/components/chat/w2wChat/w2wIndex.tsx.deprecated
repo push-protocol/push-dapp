@@ -1,7 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core'
-// @ts-ignore
-import { Web3Provider } from 'ethers/providers'
+import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
 
@@ -80,7 +79,7 @@ function App() {
   const [viewChatBox, setViewChatBox] = useState<boolean>(false)
   const [currentChat, setCurrentChat] = useState<Feeds>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const { connector, account, chainId } = useWeb3React<Web3Provider>()
+  const { connector, account, chainId } = useWeb3React<ethers.providers.Web3Provider>()
   const [did, setDID] = useState<DID>()
   const [searchedUser, setSearchedUser] = useState<string>('')
   const [connectedUser, setConnectedUser] = useState<User>()

@@ -5,27 +5,29 @@ import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Modal from '@mui/material/Modal'
-import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import styled from 'styled-components';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api'
-import { approveIntent, Feeds, User } from 'api'
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
-import { DID } from 'dids'
-import { caip10ToWallet } from 'helpers/w2w'
-import * as w2wHelper from 'helpers/w2w/'
-import * as DIDHelper from 'helpers/w2w/did'
-import { generateKeyPair } from 'helpers/w2w/pgp'
-import DefaultIntent from '../defaultIntent/defaultIntent'
-import { AppContext, Context } from '../w2wIndex'
-import { intitializeDb } from '../w2wIndexeddb'
-import { decryptFeeds, fetchIntent } from '../w2wUtils'
-import './intentFeed.css'
+import * as PushNodeClient from 'api';
+import { approveIntent, Feeds, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { DID } from 'dids';
+import { caip10ToWallet } from 'helpers/w2w';
+import * as w2wHelper from 'helpers/w2w/';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import DefaultIntent from '../defaultIntent/defaultIntent';
+import IntentCondition from '../IntentCondition/IntentCondition';
+import { intitializeDb } from '../w2wIndexeddb';
+import { decryptFeeds, fetchIntent } from '../w2wUtils';
+import './intentFeed.css';
 
 // Internal Configs
 
@@ -49,17 +51,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const IntentFeed = (): JSX.Element => {
-  const {
-    did,
-    setChat,
-    connectedUser,
-    intents,
-    setConnectedUser,
-    connectAndSetDID,
-    setDID,
-    setPendingRequests,
-    setLoadingMessage,
-  }: AppContext = useContext<AppContext>(Context);
+  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests, setBlockedLoading }: AppContext = useContext<
+    AppContext
+  >(Context);
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
@@ -104,12 +98,32 @@ const IntentFeed = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
-        setLoadingMessage('Creating cryptography keys');
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 1/4: Creating cryptography keys",
+          progressEnabled: true,
+          progress: 25,
+        })
+
         const keyPairs = await generateKeyPair();
-        setLoadingMessage('Cryptography keys created');
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 2/4: Encrypting your info",
+          progressEnabled: true,
+          progress: 50
+        })
+
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        setLoadingMessage('Creating user in the protocol');
+        
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 3/4: Syncing account info",
+          progressEnabled: true,
+          progress: 75,
+          progressNotice: "This might take a moment"
+        })
+
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -121,7 +135,16 @@ const IntentFeed = (): JSX.Element => {
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
-        setLoadingMessage('User created');
+        
+        setBlockedLoading({
+          enabled: false,
+          title: "Step 4/4: Done, Welcome to Push Chat!",
+          spinnerCompleted: true,
+          progressEnabled: true,
+          progress: 100,
+          progressNotice: "This might take a moment"
+        })
+
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };
@@ -140,40 +163,25 @@ const IntentFeed = (): JSX.Element => {
     setIsLoading(false);
   }
 
-  function displayReceivedIntents(): JSX.Element {
-    return isLoading ? (
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-    ) : (
-      <>
-        {!receivedIntents?.length ? (
-          <InfoMessage>No received intents</InfoMessage>
-        ) : (
-          <>
-            <div>
-              {receivedIntents.map((intent: Feeds) => (
-                <div
-                  key={intent.threadhash}
-                  onClick={(): void => {
-                    setChat(intent);
-                    showModal({
-                      intentFrom: intent.wallets.split(',')[0],
-                      fromDID: intent.intentSentBy,
-                    });
-                  }}>
-                  <DefaultIntent inbox={intent} />
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </>
-    );
-  }
+  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
+    setOpenSuccessSnackBar(false);
+  };
+
+  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenReprovalSnackBar(false);
+  };
 
   return (
-    <>
-      <section className="messageFeed_body">
+    <ItemVV2 alignSelf="stretch" justifyContent="flex-start" alignItems="stretch">
+      {!isLoading && 
         <Modal
           open={open}
           onClose={() => setOpen(false)}
@@ -200,9 +208,40 @@ const IntentFeed = (): JSX.Element => {
             )}
           </Box>
         </Modal>
-        <UserProfileContainer height={152}>{displayReceivedIntents()}</UserProfileContainer>
-      </section>
-    </>
+      }
+      
+      {/* Load the Intents */}
+      <ItemVV2 justifyContent="flex-start">
+        {isLoading &&
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+        }
+
+        {!isLoading && receivedIntents?.length == 0 && 
+          <InfoMessage>No received intents</InfoMessage>
+        }
+
+        {!isLoading && receivedIntents?.length > 0 && 
+          <UserIntents>
+            {receivedIntents.map((intent: Feeds) => (
+              <ItemVV2
+                alignSelf="stretch"
+                flex="initial"
+                key={intent.threadhash}
+                onClick={(): void => {
+                  setChat(intent);
+                  showModal({
+                    intentFrom: intent.wallets.split(',')[0],
+                    fromDID: intent.intentSentBy
+                  });
+                }}
+              >
+                <DefaultIntent inbox={intent} />
+              </ItemVV2>
+            ))}
+          </UserIntents>
+        }
+      </ItemVV2>
+    </ItemVV2>
   );
 };
 
@@ -225,6 +264,25 @@ const UserProfileContainer = styled.div`
   justify-content: flex-start;
   overflow-y: auto;
   overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+  }
+`;
+
+const UserIntents = styled(ItemVV2)`
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 0px;
+  flex-flow: column;
+  
   &&::-webkit-scrollbar {
     width: 4px;
   }

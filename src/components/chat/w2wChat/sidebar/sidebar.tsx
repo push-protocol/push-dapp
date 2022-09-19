@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
+import { Context } from 'sections/chat/ChatMainSection';
 import IntentBar from '../intentBar/intentBar';
 import IntentFeed from '../intentFeed/intentFeed';
 import SearchBar from '../searchBar/searchBar';
-import { Context } from '../w2wIndex';
 import './sidebar.css';
 
 import { makeStyles } from '@material-ui/core';

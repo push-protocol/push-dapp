@@ -14,13 +14,12 @@ import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { MdCheckCircle, MdError } from 'react-icons/md';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import useToast from 'hooks/useToast';
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -29,13 +28,13 @@ import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
 import { generateKeyPair } from 'helpers/w2w/pgp';
-import { AppContext } from '../../../../components/chat/w2wChat/w2wIndex';
+import useToast from 'hooks/useToast';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import Chats from '../chats/chats';
 import { FileMessageContent } from '../Files/Files';
 import GifPicker from '../Gifs/gifPicker';
-import { Context } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './chatBox.css';
@@ -45,7 +44,14 @@ import { appConfig } from 'config';
 const INFURA_URL = appConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return (
+    <MuiAlert
+      elevation={6}
+      ref={ref}
+      variant="filled"
+      {...props}
+    />
+  );
 });
 
 const ChatBox = (): JSX.Element => {
@@ -63,7 +69,8 @@ const ChatBox = (): JSX.Element => {
     setInbox,
     setHasUserBeenSearched,
     setSearchedUser,
-    setLoadingMessage
+    setLoadingMessage,
+    setBlockedLoading
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
@@ -325,7 +332,12 @@ const ChatBox = (): JSX.Element => {
           toastTitle: 'Error',
           toastMessage: `${savedMsg}`,
           toastType: 'ERROR',
-          getToastIcon: (size) => <MdError size={size} color="red" />,
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
         });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
@@ -336,7 +348,12 @@ const ChatBox = (): JSX.Element => {
         toastTitle: 'Error',
         toastMessage: 'Cannot send Message, Try again later',
         toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
       });
     }
     setMessageBeingSent(false);
@@ -360,14 +377,42 @@ const ChatBox = (): JSX.Element => {
   const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
     try {
       if (!did) {
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 1/4: Preparing First Time Setup",
+          progressEnabled: true,
+          progress: 25,
+          progressNotice: "We use Ceramic to enable multichain and multiwallet experience. This step is is only done for first time users and might take a couple of minutes. Steady lads, chat is almost ready! You will need to sign two transactions when they appear."
+        })
+
         const createdDID: DID = await connectAndSetDID();
+
         // This is a new user
-        setLoadingMessage('Creating cryptography keys');
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 2/4: Generating crytographic keys",
+          progressEnabled: true,
+          progress: 40,
+        })
+
         const keyPairs = await generateKeyPair();
-        setLoadingMessage('Cryptography keys created');
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 3/4: Encrypting your info",
+          progressEnabled: true,
+          progress: 60
+        })
+
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        setLoadingMessage('Creating user in the protocol');
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 3/4: Syncing account info",
+          progressEnabled: true,
+          progress: 85,
+          progressNotice: "This might take a couple of seconds as push nodes sync your info for first time!"
+        })
+
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -379,7 +424,15 @@ const ChatBox = (): JSX.Element => {
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
-        setLoadingMessage('User created');
+
+        setBlockedLoading({
+          enabled: false,
+          title: "Step 4/4: Done, Welcome to Push Chat!",
+          spinnerCompleted: true,
+          progressEnabled: true,
+          progress: 100,
+        })
+        
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };
@@ -468,7 +521,12 @@ const ChatBox = (): JSX.Element => {
             toastTitle: 'Error',
             toastMessage: `${msg}`,
             toastType: 'ERROR',
-            getToastIcon: (size) => <MdError size={size} color="red" />,
+            getToastIcon: (size) => (
+              <MdError
+                size={size}
+                color="red"
+              />
+            ),
           });
         } else {
           // We store the message in state decrypted so we display to the user the intent message
@@ -486,7 +544,12 @@ const ChatBox = (): JSX.Element => {
             toastTitle: 'Success',
             toastMessage: 'Intent Sent',
             toastType: 'SUCCESS',
-            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />,
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
           });
         }
       } else {
@@ -585,16 +648,30 @@ const ChatBox = (): JSX.Element => {
         </Box>
       ) : (
         <>
-          <Snackbar open={openReprovalSnackbar} autoHideDuration={10000} onClose={handleCloseSuccessSnackbar}>
-            <Alert onClose={handleCloseSuccessSnackbar} severity="error" sx={{ width: '100%' }}>
+          <Snackbar
+            open={openReprovalSnackbar}
+            autoHideDuration={10000}
+            onClose={handleCloseSuccessSnackbar}
+          >
+            <Alert
+              onClose={handleCloseSuccessSnackbar}
+              severity="error"
+              sx={{ width: '100%' }}
+            >
               {SnackbarText}
             </Alert>
           </Snackbar>
 
           <ChatHeader>
             <UserInfo>
-              <Avatar alt="Profile Picture" src={imageSource} />
-              <Typography variant="body1" ml={1}>
+              <Avatar
+                alt="Profile Picture"
+                src={imageSource}
+              />
+              <Typography
+                variant="body1"
+                ml={1}
+              >
                 {caip10ToWallet(currentChat.msg.name)}
               </Typography>
             </UserInfo>
@@ -629,7 +706,10 @@ const ChatBox = (): JSX.Element => {
             <ScrollToBottom className="chatBoxTop" initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
-                  <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={40}
+                  />
                 </SpinnerWrapper>
               ) : (
                 <>
@@ -649,7 +729,11 @@ const ChatBox = (): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
-                        <Chats msg={msg} did={did} messageBeingSent={messageBeingSent} />
+                        <Chats
+                          msg={msg}
+                          did={did}
+                          messageBeingSent={messageBeingSent}
+                        />
                         {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
@@ -665,11 +749,19 @@ const ChatBox = (): JSX.Element => {
           </MessageContainer>
 
           {messageBeingSent ? (
-            <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
+            <LoaderSpinner
+              type={LOADER_TYPE.STANDALONE_MINIMAL}
+              spinnerSize={40}
+            />
           ) : (
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
-                <img src="/svg/chats/smiley.svg" height="24px" width="24px" alt="" />
+                <img
+                  src="/svg/chats/smiley.svg"
+                  height="24px"
+                  width="24px"
+                  alt=""
+                />
               </Icon>
               {showEmojis && (
                 <Picker
@@ -695,26 +787,52 @@ const ChatBox = (): JSX.Element => {
                 <>
                   <label>
                     {isGifPickerOpened && (
-                      <GifPicker setIsOpened={setIsGifPickerOpened} isOpen={isGifPickerOpened} onSelect={sendGif} />
+                      <GifPicker
+                        setIsOpened={setIsGifPickerOpened}
+                        isOpen={isGifPickerOpened}
+                        onSelect={sendGif}
+                      />
                     )}
                     <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
-                      <img src="/svg/chats/gif.svg" height="18px" width="22px" alt="" />
+                      <img
+                        src="/svg/chats/gif.svg"
+                        height="18px"
+                        width="22px"
+                        alt=""
+                      />
                     </Icon>
                   </label>
                   <label>
                     <Icon>
-                      <img src="/svg/chats/attachment.svg" height="24px" width="20px" alt="" />
+                      <img
+                        src="/svg/chats/attachment.svg"
+                        height="24px"
+                        width="20px"
+                        alt=""
+                      />
                     </Icon>
-                    <FileInput type="file" ref={fileInputRef} onChange={uploadFile} />
+                    <FileInput
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={uploadFile}
+                    />
                   </label>
                 </>
                 {filesUploading ? (
                   <div className="imageloader">
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={20} />
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
+                    />
                   </div>
                 ) : (
                   <Icon onClick={handleSubmit}>
-                    <img src="/svg/chats/send.svg" height="27px" width="27px" alt="" />
+                    <img
+                      src="/svg/chats/send.svg"
+                      height="27px"
+                      width="27px"
+                      alt=""
+                    />
                   </Icon>
                 )}
               </>
@@ -866,14 +984,13 @@ const TypeBarContainer = styled.div`
 `;
 
 const Container = styled(Content)`
-  padding: 20px;
-  width: 100%;
   box-sizing: border-box;
   background: linear-gradient(179.97deg, #eef5ff 0.02%, rgba(236, 239, 255, 0) 123.25%);
-  border-radius: 13px;
-  height: inherit;
+  border-radius: 24px;
+  height: 100%;
   display: flex;
   align-items: center;
+  align-self: stretch;
   text-align: center;
   font-weight: 400;
   justify-content: center;

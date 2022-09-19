@@ -1,32 +1,32 @@
-import CheckIcon from '@mui/icons-material/Check';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { CardActionArea } from '@mui/material';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
-import Snackbar from '@mui/material/Snackbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import { postIPFS } from 'api';
-import { updateUser } from 'api/w2w';
-import { CID } from 'ipfs-http-client';
-import React, { useContext, useEffect, useState } from 'react';
-import { AppContext, Context } from '../w2wIndex';
-import { showCharacters } from './helpers';
-import './Profile.css';
+import CheckIcon from '@mui/icons-material/Check'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import { CardActionArea } from '@mui/material'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import IconButton from '@mui/material/IconButton'
+import Snackbar from '@mui/material/Snackbar'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { postIPFS } from 'api'
+import { updateUser } from 'api/w2w'
+import { CID } from 'ipfs-http-client'
+import React, { useContext, useEffect, useState } from 'react'
+import { AppContext, Context } from 'sections/chat/ChatMainSection'
+import { showCharacters } from './helpers'
+import './Profile.css'
 
-import { ChangeEvent } from 'react';
-import { FileMessageContent } from '../Files/Files';
-import styles from './styles';
+import { ChangeEvent } from 'react'
+import { FileMessageContent } from '../Files/Files'
+import styles from './styles'
 
 interface ProfilePropsType {
-  profilePicture: string;
-  updateProfile: (image: string) => void;
-  setValue: (number: number) => void;
+  profilePicture: string
+  updateProfile: (image: string) => void
+  setActiveTab: (number: number) => void
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -102,7 +102,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
     <>
       <Card sx={styles.container} elevation={0}>
         <Box sx={styles.header}>
-          <IconButton aria-label="back" onClick={() => props.setValue(0)} sx={styles.backButtonHolder}>
+          <IconButton aria-label="back" onClick={() => props.setActiveTab(0)} sx={styles.backButtonHolder}>
             <KeyboardBackspaceIcon sx={styles.backButton} />
           </IconButton>
         </Box>
