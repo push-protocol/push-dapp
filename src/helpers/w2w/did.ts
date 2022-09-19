@@ -20,11 +20,9 @@ export async function CreateDID(
   didProvider: DIDProvider
 ): Promise<DID> {
   const threeIDResolver: ResolverRegistry = threeIDGetResolver(ceramic)
-  const keyDIDResolver: ResolverRegistry = keyDIDGetResolver()
 
   const resolverRegistry = {
     ...threeIDResolver,
-    ...keyDIDResolver
   }
   const did = new DID({
     provider: didProvider,
