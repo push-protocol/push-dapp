@@ -17,13 +17,15 @@ import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import styled from 'styled-components';
+import styled,{useTheme} from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Content } from 'components/SharedStyling';
+import { Content, Item } from 'components/SharedStyling';
+import { ItemVV2,SpanV2,ImageV2 } from 'components/reusables/SharedStylingV2';
+import HandwaveIcon from "../../../../assets/chat/handwave.svg"
 import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
@@ -90,6 +92,7 @@ const ChatBox = (): JSX.Element => {
   const [showOption, setShowOption] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
   const chatBoxToast = useToast();
+  const theme = useTheme();
   let showTime = false;
   let time = '';
 
@@ -639,13 +642,47 @@ const ChatBox = (): JSX.Element => {
   return (
     <Container>
       {!viewChatBox ? (
-        <Box>
-          <HelloBox>
-            <Typography>Say Hello to Push Chat</Typography>
-          </HelloBox>
-          <HelloText>You haven't started a conversation yet.</HelloText>
-          <HelloText>Begin by searching name.eth or 0x123...</HelloText>
-        </Box>
+        <ItemVV2 gap="25px">
+          {/* <ItemVV2 background={theme.default.bg} 
+          padding="24px 70px 27px 70px"
+          bodrderRadius="2px 28px 28px 28px"
+          maxWidth="fit-content"
+          maxHeight="fit-content"> */}
+         <SpanV2 
+         background={theme.default.bg}  
+         padding="20px 55px 20px 55px"
+         borderRadius="2px 28px 28px 28px"
+         fontSize="28px"
+         fontWeight="500"
+         textAlign="center"
+         color={theme.default.color}
+         letterSpacing="-0.03em">
+           Say
+           <ImageV2 src={HandwaveIcon} 
+           alt="wave"
+           display="inline" 
+           width="auto"
+           verticalAlign="middle"
+           margin="0 13px"/>
+            to Push Chat!
+         </SpanV2>
+         {/* </ItemVV2> */}
+         <SpanV2 
+         fontSize="15px"
+         fontWeight="400"
+         lineHeight="19px"
+         maxWidth="17rem"
+         color={theme.default.secondaryColor}>
+           You haven’t started a conversation yet. Start a new chat by using the + button
+         </SpanV2>
+        </ItemVV2>
+        // <Box>
+        //   <HelloBox>
+        //     <HelloMainText>Say to Push Chat!</HelloMainText>
+        //   </HelloBox>
+        //   <HelloText>You haven’t started a conversation yet.</HelloText>
+        //   <HelloText>Start a new chat by using the + button</HelloText>
+        // </Box>
       ) : (
         <>
           <Snackbar
@@ -998,13 +1035,9 @@ const Container = styled(Content)`
 `;
 
 const HelloBox = styled(Box)`
-  width: 333px;
-  height: 75px;
   background: #ffffff;
-  border-radius: 2px 16px 16px 16px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 400;
+  border-radius: 2px 28px 28px 28px;
+  padding:24px 70px 27px 70px;
   display: flex;
   align-items: center;
   text-align: center;
@@ -1012,10 +1045,19 @@ const HelloBox = styled(Box)`
   margin-bottom: 10px;
 `;
 
+const HelloMainText = styled(Typography)`
+color: #000000;
+font-weight: 500;
+font-size: 28px;
+line-height: 39px;
+letter-spacing: -0.03em;
+`;
+
 const HelloText = styled(Typography)`
   color: #657795;
-  font-size: 14px;
-  margin-bottom: 5px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 130%;
 `;
 
 export default ChatBox;

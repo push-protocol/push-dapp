@@ -56,6 +56,7 @@ export const ItemHV2 = styled.div`
   top: ${(props) => props.top || 'auto'};
   width: ${(props) => props.width || 'auto'};
   z-index: ${(props) => props.zIndex || 'auto'};
+  gap: ${(props) =>props.gap || '0px'};
 
   &:hover & {
     filter: ${(props) => (props.filterHover ? props.filterHover : props.hover ? props.hover : 'none') || 'none'};
@@ -185,6 +186,8 @@ export const ImageV2 = styled.img`
   max-height: ${(props) => props.maxHeight || "initial"};
   padding: ${(props) => props.padding || "0px"};
   width: ${(props) => props.width || "100%"};
+  margin: ${(props) => props.margin || "0px"};
+  vertical-align: ${(props) => props.verticalAlign || "auto"};
 `;
 
 export const AInlineV2 = styled.a`
