@@ -184,7 +184,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           </HeaderTag>
         )}
 
-        {active && !showLoginControls && !error && (
+        {active && !showLoginControls && !error && location.pathname !== '/chat' && (
           <DarkModeSwitch
             style={{ margin: '0 1rem' }}
             checked={isDarkMode}

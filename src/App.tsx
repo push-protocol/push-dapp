@@ -91,9 +91,9 @@ export default function App() {
   React.useEffect(() => {
     const data = localStorage.getItem('theme');
     if (data) {
-      setDarkMode(JSON.parse(data));
+      setDarkMode(location.pathname === '/chat' ? false : JSON.parse(data));
     }
-  }, []);
+  }, [location]);
 
   React.useEffect(() => {
     localStorage.setItem('theme', JSON.stringify(darkMode));
