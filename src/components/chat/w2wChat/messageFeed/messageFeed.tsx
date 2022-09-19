@@ -19,7 +19,7 @@ interface MessageFeedProps {
 }
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
-  const { did, setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
+  const { did, setChat, connectedUser, setIntents, setInbox, inbox,setDecryptingMessage,decryptingMessage }: AppContext = useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
@@ -28,6 +28,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [isSelected, setIsSelected] = useState<boolean>(false);
+
+  const [clicked,setClicked] = useState<boolean>(false)
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (did) {
@@ -143,6 +145,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setOpenReprovalSnackBar(false);
   };
 
+
+  const handleUserClick = (feed)=>{
+    console.log("Decrypting Message",decryptingMessage)
+    if(decryptingMessage === false){
+      setChat(feed);
+    }else{
+      //! here we can do whatever we want until the messages are being decrypted!!
+      console.log("Cant perform onclick")
+    }
+  }
+
   return (
     <SidebarWrapper className="messageFeed_body">
       <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3}>
@@ -166,7 +179,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 <div
                   key={feed.threadhash || i}
                   onClick={(): void => {
-                    setChat(feed);
+                    handleUserClick(feed)
+                    setClicked(true)
                   }}
                 >
                   <DefaultMessage inbox={feed} isSelected={isSelected} />

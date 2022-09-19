@@ -65,7 +65,9 @@ const ChatBox = (): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched,
-    setLoadingMessage
+    setLoadingMessage,
+    setDecryptingMessage,
+    decryptingMessage
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
@@ -151,6 +153,10 @@ const ChatBox = (): JSX.Element => {
             )
             newMessages[index] = msgIPFS
             setMessages(newMessages)
+            //this setState is here because when the user sends a message so it needs to be encrypted and it gets encrypted here instead of there
+            //this will prevent spamming of the messages 
+            //!Just have a look at this -----FABIO!!
+            setMessageBeingSent(false);
           } else {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link)
@@ -167,6 +173,7 @@ const ChatBox = (): JSX.Element => {
               setLoading(false)
               break
             } else {
+              setDecryptingMessage(true)
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
               let msgIPFS: MessageIPFSWithCID
               if (messageFromIndexDB !== undefined) {
@@ -232,6 +239,7 @@ const ChatBox = (): JSX.Element => {
               if (link) {
                 messageCID = link
               } else {
+                setDecryptingMessage(false)
                 break
               }
             }
@@ -341,7 +349,7 @@ const ChatBox = (): JSX.Element => {
         getToastIcon: (size) => <MdError size={size} color="red" />,
       });
     }
-    setMessageBeingSent(false);
+    // setMessageBeingSent(false);
   };
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
@@ -629,6 +637,7 @@ const ChatBox = (): JSX.Element => {
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+                  {decryptingMessage && (<>Decrypting Messages. Please wait</>)}
                 </SpinnerWrapper>
               ) : (
                 <>

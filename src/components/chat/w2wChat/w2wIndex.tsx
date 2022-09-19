@@ -62,6 +62,8 @@ export interface AppContext {
   setHasUserBeenSearched: (searched: boolean) => void
   loadingMessage: string
   setLoadingMessage: (loadingMessage: string) => void
+  decryptingMessage:boolean
+  setDecryptingMessage : (decryptingMessage: boolean) => void
 }
 
 export const ToastPosition: ToastOptions = {
@@ -90,6 +92,7 @@ function App() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const [loadingMessage, setLoadingMessage] = useState<string>('') // Used to display a message on the UI when user creating DID for the first time
 
+  const [decryptingMessage,setDecryptingMessage] = useState<boolean>(false);
   const queryClient = new QueryClient({})
 
   useEffect(() => {
@@ -175,7 +178,9 @@ function App() {
                 hasUserBeenSearched,
                 setHasUserBeenSearched,
                 loadingMessage,
-                setLoadingMessage
+                setLoadingMessage,
+                setDecryptingMessage,
+                decryptingMessage
               }}
             >
               <Sidebar />
