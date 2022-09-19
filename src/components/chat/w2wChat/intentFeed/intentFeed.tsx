@@ -9,7 +9,6 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Modal from '@mui/material/Modal'
-import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
 import styled from 'styled-components'
 
@@ -54,7 +53,6 @@ const IntentFeed = (): JSX.Element => {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>();
-  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
   const [fromDID, setFromDID] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>();
 
@@ -127,8 +125,6 @@ const IntentFeed = (): JSX.Element => {
     const { didCreated } = await createUserIfNecessary();
     await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
     setOpen(false);
-    // if (status === 'Approved') setOpenSuccessSnackBar(true);
-    // else setOpenReprovalSnackBar(true);
     await resolveThreadhash();
     setIsLoading(false);
   }
@@ -165,14 +161,6 @@ const IntentFeed = (): JSX.Element => {
   }
 
 
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenReprovalSnackBar(false);
-  };
-
   return (
     <>
       <section className="messageFeed_body">
@@ -203,14 +191,6 @@ const IntentFeed = (): JSX.Element => {
             )}
           </Box>
         </Modal>
-
-
-        {/* Snackbar for rejected intent */}
-        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-            Intent was Reproved !
-          </Alert>
-        </Snackbar>
         <UserProfileContainer height={152}>{displayReceivedIntents()}</UserProfileContainer>
       </section>
     </>
