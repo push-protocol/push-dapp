@@ -65,6 +65,7 @@ const ChatBox = (): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched,
+    setSearchedUser,
     setLoadingMessage
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
@@ -494,6 +495,7 @@ const ChatBox = (): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, Intent is not approved!');
       }
+      setSearchedUser('')
       setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error);
