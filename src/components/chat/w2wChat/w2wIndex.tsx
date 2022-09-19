@@ -26,6 +26,8 @@ import * as DIDHelper from 'helpers/w2w/did'
 import ChatBox from './chatBox/chatBox'
 import Sidebar from './sidebar/sidebar'
 import './w2wIndex.css'
+import useToast from 'hooks/useToast';
+import { MdCheckCircle, MdError } from 'react-icons/md'
 
 export interface InboxChat {
   name: string
@@ -90,6 +92,7 @@ function App() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false)
   const [loadingMessage, setLoadingMessage] = useState<string>('') // Used to display a message on the UI when user creating DID for the first time
 
+  const chatBoxToast = useToast();
   const queryClient = new QueryClient({})
 
   useEffect(() => {
@@ -104,10 +107,22 @@ function App() {
     const ceramic: CeramicClient = createCeramic()
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account)
     setLoadingMessage('Connecting to DID. If it\'s your first time logging in you\'ll need to sign 2 transactions')
-    const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
-    setDID(did)
-    setLoadingMessage('DID created')
-    return did
+    try{
+      const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
+      if(did.id){
+        setDID(did)
+        setLoadingMessage('DID created')
+        return did
+      }
+    }catch(error){
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `${error}! Please Reload the page`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
+    }
+   
   }
 
   const connectToCeramic = async (): Promise<void> => {
