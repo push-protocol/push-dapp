@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { ethers } from "ethers";
+import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
@@ -41,11 +41,8 @@ import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './chatBox.css';
 
 // Internal Configs
-import { appConfig } from "config";
-;
-
-
-const INFURA_URL = appConfig.infuraApiUrl
+import { appConfig } from 'config';
+const INFURA_URL = appConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -86,13 +83,13 @@ const ChatBox = (): JSX.Element => {
   const [showOption, setShowOption] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
   const chatBoxToast = useToast();
-  let showTime = false
-  let time = ''
+  let showTime = false;
+  let time = '';
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
-      let messageCID = latestThreadhash
+      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
+      let messageCID = latestThreadhash;
 
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -102,23 +99,23 @@ const ChatBox = (): JSX.Element => {
         if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-          let msgIPFS: MessageIPFSWithCID
+          let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
-            msgIPFS = messageFromIndexDB.body
+            msgIPFS = messageFromIndexDB.body;
           } else {
-            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
+            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
             await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-            msgIPFS = messageFromIPFS
+            msgIPFS = messageFromIPFS;
           }
 
           // Decrypt message
           if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
             // To do signature verification it depends on who has sent the message
-            let signatureValidationPubliKey: string
+            let signatureValidationPubliKey: string;
             if (msgIPFS.fromDID === connectedUser.did) {
-              signatureValidationPubliKey = connectedUser.publicKey
+              signatureValidationPubliKey = connectedUser.publicKey;
             } else {
-              signatureValidationPubliKey = currentChat.publicKey
+              signatureValidationPubliKey = currentChat.publicKey;
             }
             msgIPFS.messageContent = await decryptAndVerifySignature({
               cipherText: msgIPFS.messageContent,
@@ -126,8 +123,8 @@ const ChatBox = (): JSX.Element => {
               did: did,
               encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
               publicKeyArmored: signatureValidationPubliKey,
-              signatureArmored: msgIPFS.signature
-            })
+              signatureArmored: msgIPFS.signature,
+            });
           }
 
           //checking if the message is encrypted or not
@@ -138,10 +135,10 @@ const ChatBox = (): JSX.Element => {
               msg.cid === '' &&
               msg.messageContent === msgIPFS.messageContent &&
               msg.messageType === msgIPFS.messageType
-          )
+          );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
-            const newMessages = messages.map((x) => x)
+            const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
                 msg.link === '' &&
@@ -149,43 +146,43 @@ const ChatBox = (): JSX.Element => {
                 msg.cid === '' &&
                 msg.messageContent === msgIPFS.messageContent &&
                 msg.messageType === msgIPFS.messageType
-            )
-            newMessages[index] = msgIPFS
-            setMessages(newMessages)
+            );
+            newMessages[index] = msgIPFS;
+            setMessages(newMessages);
           } else {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
-            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link)
+            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
-              setMessages((m) => [...m, msgIPFS])
+              setMessages((m) => [...m, msgIPFS]);
             }
           }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else {
           while (messageCID) {
-            setLoading(true)
+            setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-              setLoading(false)
-              break
+              setLoading(false);
+              break;
             } else {
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-              let msgIPFS: MessageIPFSWithCID
+              let msgIPFS: MessageIPFSWithCID;
               if (messageFromIndexDB !== undefined) {
-                msgIPFS = messageFromIndexDB.body
+                msgIPFS = messageFromIndexDB.body;
               } else {
-                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID)
-                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid')
-                msgIPFS = messageFromIPFS
+                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
+                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
+                msgIPFS = messageFromIPFS;
               }
 
               // Decrypt message
               if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
                 // To do signature verification it depends on who has sent the message
-                let signatureValidationPubliKey: string
+                let signatureValidationPubliKey: string;
                 if (msgIPFS.fromDID === connectedUser.did) {
-                  signatureValidationPubliKey = connectedUser.publicKey
+                  signatureValidationPubliKey = connectedUser.publicKey;
                 } else {
-                  signatureValidationPubliKey = currentChat.publicKey
+                  signatureValidationPubliKey = currentChat.publicKey;
                 }
                 msgIPFS.messageContent = await decryptAndVerifySignature({
                   cipherText: msgIPFS.messageContent,
@@ -193,8 +190,8 @@ const ChatBox = (): JSX.Element => {
                   did: did,
                   encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
                   publicKeyArmored: signatureValidationPubliKey,
-                  signatureArmored: msgIPFS.signature
-                })
+                  signatureArmored: msgIPFS.signature,
+                });
               }
 
               // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
@@ -205,10 +202,10 @@ const ChatBox = (): JSX.Element => {
                   msg.cid === '' &&
                   msg.messageContent === msgIPFS.messageContent &&
                   msg.messageType === msgIPFS.messageType
-              )
+              );
               // Replace message that was inserted when sending a message
               if (messagesSentInChat) {
-                const newMessages = messages.map((x) => x)
+                const newMessages = messages.map((x) => x);
                 const index = newMessages.findIndex(
                   (msg) =>
                     msg.link === '' &&
@@ -216,24 +213,24 @@ const ChatBox = (): JSX.Element => {
                     msg.cid === '' &&
                     msg.messageContent === msgIPFS.messageContent &&
                     msg.messageType === msgIPFS.messageType
-                )
-                newMessages[index] = msgIPFS
-                setMessages(newMessages)
+                );
+                newMessages[index] = msgIPFS;
+                setMessages(newMessages);
               }
               // Display messages for the first time
               else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                setMessages((m) => [msgIPFS, ...m])
+                setMessages((m) => [msgIPFS, ...m]);
               }
               // Messages got from useQuery
               // else {
               //TODO: Not needed as this is handled when the threadhashes are not same.
               //   setMessages((m) => [...m, msgIPFS])
               // }
-              const link = msgIPFS.link
+              const link = msgIPFS.link;
               if (link) {
-                messageCID = link
+                messageCID = link;
               } else {
-                break
+                break;
               }
             }
           }
@@ -281,7 +278,7 @@ const ChatBox = (): JSX.Element => {
         timestamp: Date.now(),
         encryptedSecret: '',
         link: '',
-        cid: ''
+        cid: '',
       };
       setNewMessage('');
       setMessages([...messages, msg]);
@@ -297,13 +294,13 @@ const ChatBox = (): JSX.Element => {
           encryptedSecret,
           signature: pgpSignature,
           sigType: pgpSignatureType,
-          encType: pgpEncryptionType
+          encType: pgpEncryptionType,
         } = await encryptAndSign({
           plainText: message,
           fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           fromPublicKeyArmored: connectedUser.publicKey,
           toPublicKeyArmored: currentChat.publicKey,
-          did
+          did,
         });
         messageContent = cipherText;
         encryptionType = pgpEncryptionType;
@@ -320,7 +317,7 @@ const ChatBox = (): JSX.Element => {
         signature,
         encType: encryptionType,
         sigType,
-        encryptedSecret: aesEncryptedSecret
+        encryptedSecret: aesEncryptedSecret,
       });
 
       if (typeof savedMsg === 'string') {
@@ -352,7 +349,7 @@ const ChatBox = (): JSX.Element => {
       if (currentChat.threadhash) {
         sendMessage({
           message: newMessage,
-          messageType: 'Text'
+          messageType: 'Text',
         });
       } else {
         sendIntent({ message: newMessage, messageType: 'Text' });
@@ -365,12 +362,12 @@ const ChatBox = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
-        setLoadingMessage('Creating cryptography keys')
+        setLoadingMessage('Creating cryptography keys');
         const keyPairs = await generateKeyPair();
-        setLoadingMessage('Cryptography keys created')
+        setLoadingMessage('Cryptography keys created');
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        setLoadingMessage('Creating user in the protocol')
+        setLoadingMessage('Creating user in the protocol');
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -378,11 +375,11 @@ const ChatBox = (): JSX.Element => {
           encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
           encryptionType: 'pgp',
           signature: 'xyz',
-          sigType: 'a'
+          sigType: 'a',
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
-        setLoadingMessage('User created')
+        setLoadingMessage('User created');
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };
@@ -397,24 +394,22 @@ const ChatBox = (): JSX.Element => {
       setMessageBeingSent(true);
       const { didCreated, createdUser } = await createUserIfNecessary();
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(didCreated.id)) {
-        const user: User = await PushNodeClient.getUser({ did: currentChat.did })
-        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string
-        let caip10: string
+        const user: User = await PushNodeClient.getUser({ did: currentChat.did });
+        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
+        let caip10: string;
         if (!user) {
           if (!ethers.utils.isAddress(searchedUser)) {
             try {
-              const ens: string = await provider.resolveName(searchedUser)
+              const ens: string = await provider.resolveName(searchedUser);
               if (ens) {
-                caip10 = walletToCAIP10({ account: ens, chainId })
+                caip10 = walletToCAIP10({ account: ens, chainId });
               }
+            } catch (err) {
+              console.log(err);
+              return;
             }
-            catch (err) {
-              console.log(err)
-              return
-            }
-          }
-          else {
-            caip10 = walletToCAIP10({ account: searchedUser, chainId })
+          } else {
+            caip10 = walletToCAIP10({ account: searchedUser, chainId });
           }
           await PushNodeClient.createUser({
             caip10,
@@ -423,7 +418,7 @@ const ChatBox = (): JSX.Element => {
             encryptedPrivateKey: '',
             encryptionType: '',
             signature: 'pgp',
-            sigType: 'pgp'
+            sigType: 'pgp',
           });
           // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
           messageContent = message;
@@ -438,12 +433,16 @@ const ChatBox = (): JSX.Element => {
             aesEncryptedSecret = '';
             signature = '';
           } else {
-            const { cipherText, encryptedSecret, signature: pgpSignature } = await encryptAndSign({
+            const {
+              cipherText,
+              encryptedSecret,
+              signature: pgpSignature,
+            } = await encryptAndSign({
               plainText: message,
               fromEncryptedPrivateKeyArmored: createdUser.encryptedPrivateKey,
               toPublicKeyArmored: currentChat.publicKey,
               fromPublicKeyArmored: createdUser.publicKey,
-              did: didCreated
+              did: didCreated,
             });
             messageContent = cipherText;
             encryptionType = 'pgp';
@@ -461,7 +460,7 @@ const ChatBox = (): JSX.Element => {
           signature,
           encType: encryptionType,
           sigType: signature,
-          encryptedSecret: aesEncryptedSecret
+          encryptedSecret: aesEncryptedSecret,
         });
         if (typeof msg === 'string') {
           // Display toaster
@@ -534,14 +533,14 @@ const ChatBox = (): JSX.Element => {
             content: e.target.result as string,
             name: file.name,
             type: file.type,
-            size: file.size
+            size: file.size,
           };
           if (!currentChat.intent.includes(did.id)) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
           } else {
             sendMessage({
               message: JSON.stringify(fileMessageContent),
-              messageType
+              messageType,
             });
           }
           setFileUploading(false);
@@ -563,7 +562,7 @@ const ChatBox = (): JSX.Element => {
     } else {
       sendMessage({
         message: url,
-        messageType: 'GIF'
+        messageType: 'GIF',
       });
     }
   };
@@ -627,7 +626,7 @@ const ChatBox = (): JSX.Element => {
           </ChatHeader>
 
           <MessageContainer>
-            <ScrollToBottom className='chatBoxTop' initialScrollBehavior='smooth'>
+            <ScrollToBottom className="chatBoxTop" initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
@@ -680,7 +679,7 @@ const ChatBox = (): JSX.Element => {
                     position: 'absolute',
                     bottom: '2.5rem',
                     zindex: '700',
-                    left: '2.5rem'
+                    left: '2.5rem',
                   }}
                 />
               )}
@@ -742,7 +741,7 @@ const FirstConversation = styled.div`
   color: #657795;
   margin: 59px 0px 0px 0px;
   padding: 0px 50px;
-`
+`;
 
 const FileInput = styled.input`
   display: none;
@@ -761,7 +760,7 @@ const MessageTime = styled.div`
 const MessageContainer = styled.div`
   position: absolute;
   top: 65px;
-  bottom:66px;
+  bottom: 66px;
   left: 0;
   right: 0;
   margin: 0;
@@ -848,7 +847,7 @@ const TextInput = styled.textarea`
     width: 0;
     height: 0;
   }
-`
+`;
 
 const TypeBarContainer = styled.div`
   position: absolute;

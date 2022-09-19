@@ -1,33 +1,33 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core';
 // @ts-ignore
-import { Web3Provider } from 'ethers/providers'
-import React, { useContext, useEffect, useState } from 'react'
+import { Web3Provider } from 'ethers/providers';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Modal from '@mui/material/Modal'
-import Snackbar from '@mui/material/Snackbar'
-import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
+import styled from 'styled-components';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api'
-import { approveIntent, Feeds, User } from 'api'
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
-import { DID } from 'dids'
-import { caip10ToWallet } from 'helpers/w2w'
-import * as w2wHelper from 'helpers/w2w/'
-import * as DIDHelper from 'helpers/w2w/did'
-import { generateKeyPair } from 'helpers/w2w/pgp'
-import DefaultIntent from '../defaultIntent/defaultIntent'
-import IntentCondition from '../IntentCondition/IntentCondition'
-import { AppContext, Context } from '../w2wIndex'
-import { intitializeDb } from '../w2wIndexeddb'
-import { decryptFeeds, fetchIntent } from '../w2wUtils'
-import './intentFeed.css'
+import * as PushNodeClient from 'api';
+import { approveIntent, Feeds, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { DID } from 'dids';
+import { caip10ToWallet } from 'helpers/w2w';
+import * as w2wHelper from 'helpers/w2w/';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
+import DefaultIntent from '../defaultIntent/defaultIntent';
+import IntentCondition from '../IntentCondition/IntentCondition';
+import { AppContext, Context } from '../w2wIndex';
+import { intitializeDb } from '../w2wIndexeddb';
+import { decryptFeeds, fetchIntent } from '../w2wUtils';
+import './intentFeed.css';
 
 // Internal Configs
 
@@ -36,11 +36,14 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  borderRadius: '20px',
   boxShadow: 24,
-  p: 4
+  p: 4,
 };
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -48,9 +51,17 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests, setLoadingMessage }: AppContext = useContext<
-    AppContext
-  >(Context);
+  const {
+    did,
+    setChat,
+    connectedUser,
+    intents,
+    setConnectedUser,
+    connectAndSetDID,
+    setDID,
+    setPendingRequests,
+    setLoadingMessage,
+  }: AppContext = useContext<AppContext>(Context);
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
@@ -69,15 +80,15 @@ const IntentFeed = (): JSX.Element => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
-      setPendingRequests(intents?.length)
-      setReceivedIntents(intents)
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
     } else {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
-      setPendingRequests(intents?.length)
-      setReceivedIntents(intents)
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
     }
     setIsLoading(false);
   }
@@ -97,12 +108,12 @@ const IntentFeed = (): JSX.Element => {
       if (!did) {
         const createdDID: DID = await connectAndSetDID();
         // This is a new user
-        setLoadingMessage('Creating cryptography keys')
+        setLoadingMessage('Creating cryptography keys');
         const keyPairs = await generateKeyPair();
-        setLoadingMessage('Cryptography keys created')
+        setLoadingMessage('Cryptography keys created');
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        setLoadingMessage('Creating user in the protocol')
+        setLoadingMessage('Creating user in the protocol');
         const createdUser = await PushNodeClient.createUser({
           caip10,
           did: createdDID.id,
@@ -110,11 +121,11 @@ const IntentFeed = (): JSX.Element => {
           encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
           encryptionType: 'pgp',
           signature: 'xyz',
-          sigType: 'a'
+          sigType: 'a',
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
-        setLoadingMessage('User created')
+        setLoadingMessage('User created');
         return { didCreated: createdDID, createdUser };
       } else {
         return { didCreated: did, createdUser: connectedUser };
@@ -152,10 +163,9 @@ const IntentFeed = (): JSX.Element => {
                     setChat(intent);
                     showModal({
                       intentFrom: intent.wallets.split(',')[0],
-                      fromDID: intent.intentSentBy
+                      fromDID: intent.intentSentBy,
                     });
-                  }}
-                >
+                  }}>
                   <DefaultIntent inbox={intent} />
                 </div>
               ))}
@@ -189,13 +199,12 @@ const IntentFeed = (): JSX.Element => {
           open={open}
           onClose={() => setOpen(false)}
           aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+          aria-describedby="modal-modal-description">
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Approve Intent
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ textAlign: 'center' }}>
               You have received an intent from {receivedIntentFrom ? caip10ToWallet(receivedIntentFrom) : ''}.
             </Typography>
             <br />
@@ -203,10 +212,10 @@ const IntentFeed = (): JSX.Element => {
               <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
             ) : (
               <Button
+                style={{ background: '#cf1c84', width: '100%', color: 'white' }}
                 onClick={(): void => {
                   ApproveIntent('Approved');
-                }}
-              >
+                }}>
                 Approve
               </Button>
             )}
@@ -238,7 +247,7 @@ const InfoMessage = styled.p`
   background: #d2cfcf;
   padding: 10px;
   margin: 0;
-`
+`;
 
 const UserProfileContainer = styled.div`
   margin-top: 14px;
