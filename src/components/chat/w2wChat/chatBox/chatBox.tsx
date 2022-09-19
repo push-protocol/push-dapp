@@ -146,9 +146,11 @@ const ChatBox = (): JSX.Element => {
                 msg.cid === '' &&
                 msg.messageContent === msgIPFS.messageContent &&
                 msg.messageType === msgIPFS.messageType
-            );
+            )
             newMessages[index] = msgIPFS;
             setMessages(newMessages);
+            //This is written here because the messages are needed to be encrypted before sending it to the other user. Till then user has to wait and this will prevent the user from spamming.
+            setMessageBeingSent(false);
           } else {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
@@ -339,7 +341,7 @@ const ChatBox = (): JSX.Element => {
         getToastIcon: (size) => <MdError size={size} color="red" />,
       });
     }
-    setMessageBeingSent(false);
+    // setMessageBeingSent(false);
   };
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
