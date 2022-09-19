@@ -4,8 +4,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import DefaultMessage from '../defaultMessage/defaultMessage';
-import Loader from '../Loader/Loader';
-import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
+import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 import { AppContext, Context } from '../w2wIndex';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
@@ -24,10 +24,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
-  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (did) {
@@ -57,7 +56,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     suspense: false,
     onError: () => {
       setStopApi(false);
-      setErrorMessage("You can't send intent to yourself");
     },
     retry: 3,
     refetchInterval: 1000 * 5,
@@ -80,8 +78,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).did === did?.id) {
             setIsSameUser(true);
-            setOpenReprovalSnackBar(true);
-            setErrorMessage("You can't send intent to yourself");
             setFeeds([]);
           } else {
             // When searching as of now the search will always result in only one user being displayed.
@@ -123,9 +119,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           }
         } else {
           if (props.isInvalidAddress) {
+            messageFeedToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: 'Invalid Address',
+              toastType: 'ERROR',
+              getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
             setIsInvalidAddress(true);
-            setOpenReprovalSnackBar(true);
-            setErrorMessage('Invalid Address');
           }
           setFeeds([]);
         }
@@ -135,13 +135,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
 
   }, [props.hasUserBeenSearched, props.filteredUserData]);
-
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenReprovalSnackBar(false);
-  };
 
   return (
     <SidebarWrapper className="messageFeed_body">
@@ -173,13 +166,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 </div>
               ))
             ) : null}
-
-            <ReactSnackbar
-              text={errorMessage}
-              open={openReprovalSnackbar}
-              handleClose={handleCloseReprovalSnackbar}
-              severity={'error'}
-            />
           </>
         )}
       </UserProfileContainer>
