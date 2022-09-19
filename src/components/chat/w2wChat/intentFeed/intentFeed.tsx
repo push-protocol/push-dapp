@@ -5,29 +5,27 @@ import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import Snackbar from '@mui/material/Snackbar';
-import Typography from '@mui/material/Typography';
-import styled from 'styled-components';
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Modal from '@mui/material/Modal'
+import Typography from '@mui/material/Typography'
+import styled from 'styled-components'
 
 // Internal Compoonents
-import * as PushNodeClient from 'api';
-import { approveIntent, Feeds, User } from 'api';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { DID } from 'dids';
-import { caip10ToWallet } from 'helpers/w2w';
-import * as w2wHelper from 'helpers/w2w/';
-import * as DIDHelper from 'helpers/w2w/did';
-import { generateKeyPair } from 'helpers/w2w/pgp';
-import DefaultIntent from '../defaultIntent/defaultIntent';
-import IntentCondition from '../IntentCondition/IntentCondition';
-import { AppContext, Context } from '../w2wIndex';
-import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from '../w2wUtils';
-import './intentFeed.css';
+import * as PushNodeClient from 'api'
+import { approveIntent, Feeds, User } from 'api'
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
+import { DID } from 'dids'
+import { caip10ToWallet } from 'helpers/w2w'
+import * as w2wHelper from 'helpers/w2w/'
+import * as DIDHelper from 'helpers/w2w/did'
+import { generateKeyPair } from 'helpers/w2w/pgp'
+import DefaultIntent from '../defaultIntent/defaultIntent'
+import { AppContext, Context } from '../w2wIndex'
+import { intitializeDb } from '../w2wIndexeddb'
+import { decryptFeeds, fetchIntent } from '../w2wUtils'
+import './intentFeed.css'
 
 // Internal Configs
 
@@ -66,8 +64,6 @@ const IntentFeed = (): JSX.Element => {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>();
-  const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
-  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
   const [fromDID, setFromDID] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>();
 
@@ -140,8 +136,6 @@ const IntentFeed = (): JSX.Element => {
     const { didCreated } = await createUserIfNecessary();
     await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
     setOpen(false);
-    if (status === 'Approved') setOpenSuccessSnackBar(true);
-    else setOpenReprovalSnackBar(true);
     await resolveThreadhash();
     setIsLoading(false);
   }
@@ -176,21 +170,6 @@ const IntentFeed = (): JSX.Element => {
     );
   }
 
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenSuccessSnackBar(false);
-  };
-
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenReprovalSnackBar(false);
-  };
 
   return (
     <>
@@ -221,19 +200,6 @@ const IntentFeed = (): JSX.Element => {
             )}
           </Box>
         </Modal>
-
-        {/* Snackbar for successful approval */}
-        <Snackbar open={openSuccessSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
-          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%' }}>
-            Intent succesfully Approved !
-          </Alert>
-        </Snackbar>
-        {/* Snackbar for rejected intent */}
-        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-            Intent was Reproved !
-          </Alert>
-        </Snackbar>
         <UserProfileContainer height={152}>{displayReceivedIntents()}</UserProfileContainer>
       </section>
     </>
