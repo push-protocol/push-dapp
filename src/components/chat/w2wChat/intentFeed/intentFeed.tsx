@@ -1,34 +1,33 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core';
 // @ts-ignore
-import { Web3Provider } from 'ethers/providers'
-import React, { useContext, useEffect, useState } from 'react'
+import { Web3Provider } from 'ethers/providers';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Modal from '@mui/material/Modal'
-import Snackbar from '@mui/material/Snackbar'
-import Typography from '@mui/material/Typography'
-import styled from 'styled-components'
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Typography from '@mui/material/Typography';
+import styled from 'styled-components';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api'
-import { approveIntent, Feeds, User } from 'api'
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner'
-import { ItemVV2 } from 'components/reusables/SharedStylingV2'
-import { DID } from 'dids'
-import { caip10ToWallet } from 'helpers/w2w'
-import * as w2wHelper from 'helpers/w2w/'
-import * as DIDHelper from 'helpers/w2w/did'
-import { generateKeyPair } from 'helpers/w2w/pgp'
-import { AppContext, Context } from 'sections/chat/ChatMainSection'
-import DefaultIntent from '../defaultIntent/defaultIntent'
-import IntentCondition from '../IntentCondition/IntentCondition'
-import { intitializeDb } from '../w2wIndexeddb'
-import { decryptFeeds, fetchIntent } from '../w2wUtils'
-import './intentFeed.css'
+import * as PushNodeClient from 'api';
+import { approveIntent, Feeds, User } from 'api';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { DID } from 'dids';
+import { caip10ToWallet } from 'helpers/w2w';
+import * as w2wHelper from 'helpers/w2w/';
+import * as DIDHelper from 'helpers/w2w/did';
+import { generateKeyPair } from 'helpers/w2w/pgp';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import DefaultIntent from '../defaultIntent/defaultIntent';
+import IntentCondition from '../IntentCondition/IntentCondition';
+import { intitializeDb } from '../w2wIndexeddb';
+import { decryptFeeds, fetchIntent } from '../w2wUtils';
+import './intentFeed.css';
 
 // Internal Configs
 
@@ -37,11 +36,14 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  borderRadius: '20px',
   boxShadow: 24,
-  p: 4
+  p: 4,
 };
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -56,8 +58,6 @@ const IntentFeed = (): JSX.Element => {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>();
-  const [openSuccessSnackbar, setOpenSuccessSnackBar] = useState(false);
-  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState(false);
   const [fromDID, setFromDID] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>();
 
@@ -70,15 +70,15 @@ const IntentFeed = (): JSX.Element => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
-      setPendingRequests(intents?.length)
-      setReceivedIntents(intents)
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
     } else {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' })
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did })
-      setPendingRequests(intents?.length)
-      setReceivedIntents(intents)
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
     }
     setIsLoading(false);
   }
@@ -131,7 +131,7 @@ const IntentFeed = (): JSX.Element => {
           encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
           encryptionType: 'pgp',
           signature: 'xyz',
-          sigType: 'a'
+          sigType: 'a',
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
@@ -159,8 +159,6 @@ const IntentFeed = (): JSX.Element => {
     const { didCreated } = await createUserIfNecessary();
     await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
     setOpen(false);
-    if (status === 'Approved') setOpenSuccessSnackBar(true);
-    else setOpenReprovalSnackBar(true);
     await resolveThreadhash();
     setIsLoading(false);
   }
@@ -188,13 +186,12 @@ const IntentFeed = (): JSX.Element => {
           open={open}
           onClose={() => setOpen(false)}
           aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
+          aria-describedby="modal-modal-description">
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Approve Intent
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ textAlign: 'center' }}>
               You have received an intent from {receivedIntentFrom ? caip10ToWallet(receivedIntentFrom) : ''}.
             </Typography>
             <br />
@@ -202,30 +199,17 @@ const IntentFeed = (): JSX.Element => {
               <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
             ) : (
               <Button
+                style={{ background: '#cf1c84', width: '100%', color: 'white' }}
                 onClick={(): void => {
                   ApproveIntent('Approved');
-                }}
-              >
+                }}>
                 Approve
               </Button>
             )}
           </Box>
         </Modal>
       }
-
-      {/* Snackbar for successful approval */}
-      <Snackbar open={openSuccessSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
-        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%' }}>
-          Intent succesfully Approved !
-        </Alert>
-      </Snackbar>
-      {/* Snackbar for rejected intent */}
-      <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-        <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-          Intent was Reproved !
-        </Alert>
-      </Snackbar>
-
+      
       {/* Load the Intents */}
       <ItemVV2 justifyContent="flex-start">
         {isLoading &&
@@ -268,7 +252,7 @@ const InfoMessage = styled.p`
   background: #d2cfcf;
   padding: 10px;
   margin: 0;
-`
+`;
 
 const UserProfileContainer = styled.div`
   margin-top: 14px;

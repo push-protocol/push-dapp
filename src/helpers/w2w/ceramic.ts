@@ -3,7 +3,7 @@ import { Caip10Link } from '@ceramicnetwork/stream-caip10-link'
 import { CeramicApi } from '@ceramicnetwork/common'
 
 export function createCeramic(): CeramicClient {
-  const ceramic = new CeramicClient('https://ceramic-clay.3boxlabs.com')
+  const ceramic = new CeramicClient('https://chat.epns.io')
   return ceramic
 }
 

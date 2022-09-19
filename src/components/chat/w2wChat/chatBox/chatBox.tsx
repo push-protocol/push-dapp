@@ -68,27 +68,27 @@ const ChatBox = (): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched,
+    setSearchedUser,
     setLoadingMessage,
     setBlockedLoading
-  }: AppContext = useContext<AppContext>(Context);
-
-  const [newMessage, setNewMessage] = useState<string>('');
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
-  const [showEmojis, setShowEmojis] = useState<boolean>(false);
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [Loading, setLoading] = useState<boolean>(true);
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
-  const [imageSource, setImageSource] = useState<string>('');
-  const [filesUploading, setFileUploading] = useState<boolean>(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
-  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
-  const [SnackbarText, setSnackbarText] = useState<string>('');
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [showOption, setShowOption] = useState<boolean>(false);
-  const provider = ethers.getDefaultProvider();
+  }: AppContext = useContext<AppContext>(Context)
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
+  const [showEmojis, setShowEmojis] = useState<boolean>(false)
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
+  const [Loading, setLoading] = useState<boolean>(true)
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
+  const [imageSource, setImageSource] = useState<string>('')
+  const [filesUploading, setFileUploading] = useState<boolean>(false)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
+  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
+  const [SnackbarText, setSnackbarText] = useState<string>('')
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
+  const [showOption, setShowOption] = useState<boolean>(false)
+  const provider = ethers.getDefaultProvider()
   const chatBoxToast = useToast();
   let showTime = false;
   let time = '';
@@ -557,7 +557,8 @@ const ChatBox = (): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, Intent is not approved!');
       }
-      setHasUserBeenSearched(false);
+      setSearchedUser('')
+      setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error);
     }
@@ -702,10 +703,7 @@ const ChatBox = (): JSX.Element => {
           </ChatHeader>
 
           <MessageContainer>
-            <ScrollToBottom
-              className="chatBoxTop"
-              initialScrollBehavior="smooth"
-            >
+            <ScrollToBottom className="chatBoxTop" initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner

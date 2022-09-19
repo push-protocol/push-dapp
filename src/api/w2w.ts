@@ -1,4 +1,4 @@
-import { InboxChat, ToastPosition } from 'components/chat/w2wChat/w2wIndex';
+import { InboxChat, ToastPosition } from 'sections/chat/ChatMainSection';
 // @ts-ignore
 import { appConfig } from "config";
 import { MessageIPFS } from 'helpers/w2w/ipfs';

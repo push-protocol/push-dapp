@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from "components/reusables/SharedStylingV2";
+import useToast from 'hooks/useToast';
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
@@ -25,10 +26,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
-  const [openReprovalSnackbar, setOpenReprovalSnackBar] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [isSelected, setIsSelected] = useState<boolean>(false);
+  const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (did) {
@@ -58,7 +58,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     suspense: false,
     onError: () => {
       setStopApi(false);
-      setErrorMessage("You can't send intent to yourself");
     },
     retry: 3,
     refetchInterval: 1000 * 5,
@@ -81,8 +80,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).did === did?.id) {
             setIsSameUser(true);
-            setOpenReprovalSnackBar(true);
-            setErrorMessage("You can't send intent to yourself");
             setFeeds([]);
           } else {
             // When searching as of now the search will always result in only one user being displayed.
@@ -124,9 +121,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           }
         } else {
           if (props.isInvalidAddress) {
+            messageFeedToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: 'Invalid Address',
+              toastType: 'ERROR',
+              getToastIcon: (size) => <MdError size={size} color="red" />,
+            });
             setIsInvalidAddress(true);
-            setOpenReprovalSnackBar(true);
-            setErrorMessage('Invalid Address');
           }
           setFeeds([]);
         }
@@ -136,13 +137,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
 
   }, [props.hasUserBeenSearched, props.filteredUserData]);
-
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setOpenReprovalSnackBar(false);
-  };
 
   return (
     <ItemVV2 alignItems="flex-start" justifyContent="flex-start">
@@ -186,13 +180,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 </ItemVV2>
               ))
             ) : null}
-
-            <ReactSnackbar
-              text={errorMessage}
-              open={openReprovalSnackbar}
-              handleClose={handleCloseReprovalSnackbar}
-              severity={'error'}
-            />
           </>
         )}
       </UserChats>

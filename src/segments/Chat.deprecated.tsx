@@ -3,7 +3,7 @@ import styled, { useTheme } from 'styled-components'
 
 import { ThemeProvider } from 'styled-components'
 
-import W2wIndex from 'components/chat/w2wChat/w2wIndex'
+import W2wIndex from 'components/chat/w2wChat/w2wIndex.deprecated'
 import { Item, ItemH } from 'components/SharedStyling'
 import GLOBALS from 'config/Globals'
 

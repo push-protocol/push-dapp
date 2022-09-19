@@ -6,7 +6,6 @@ import ReactGA from 'react-ga';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import W2wIndex from 'components/chat/w2wChat/w2wIndex';
 import { Item, ItemH } from 'components/SharedStyling';
 import ChatMainSection from 'sections/chat/ChatMainSection';
 
