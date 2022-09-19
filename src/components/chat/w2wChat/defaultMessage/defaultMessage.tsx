@@ -8,6 +8,7 @@ import { Feeds } from 'api'
 import { appConfig } from "config"
 import { caip10ToWallet } from 'helpers/w2w'
 import styled from 'styled-components'
+import { ethers } from 'ethers'
 
 const INFURA_URL = appConfig.infuraApiUrl
 
@@ -16,6 +17,19 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
   let date = null
   const [imageSource, setImageSource] = useState<string>('')
   const [unread, setUnread] = useState<boolean>(false)
+
+  const provider = ethers.getDefaultProvider()
+  const [ensName,setENSName] = useState<String>('')
+
+  const getENSName = async(walletAddress)=>{
+    const ens: string = await provider.lookupAddress(walletAddress)
+    if(ens){
+      setENSName(ens)
+    }else{
+      setENSName('')
+    }
+  }
+
   if (props.inbox?.msg.timestamp !== null) {
     const time = new Date(props.inbox?.msg?.timestamp)
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2)
@@ -29,6 +43,10 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
     }
   }, [])
 
+  useEffect(()=>{
+    getENSName(caip10ToWallet(props.inbox.msg.name))
+  },[])
+
   return (
     <ProfileCard>
       <AvatarContainer>
@@ -36,7 +54,13 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
       </AvatarContainer>
       <UserData>
         <DisplayText color="#1E1E1E" weight="600" size="16px">
+
+          {ensName ? ensName : (
+            <>
           {caip10ToWallet(props.inbox.msg.name).slice(0, 8) + '...' + caip10ToWallet(props.inbox.msg.name).slice(-7)}
+            </>
+          )}
+
         </DisplayText>
         <DisplayText color={unread ? '#D53A94' : '#657795'}>
           {props.inbox.msg.messageType === 'Text' ? (

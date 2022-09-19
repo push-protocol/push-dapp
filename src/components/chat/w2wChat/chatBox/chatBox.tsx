@@ -88,6 +88,27 @@ const ChatBox = (): JSX.Element => {
   let showTime = false
   let time = ''
 
+  const [ensName,setENSName] = useState<String>('')
+  const [loadingName,setLoadingName] = useState<Boolean>(false)
+
+  const getENSName = async(walletAddress)=>{
+    setLoadingName(true)
+    const ens: string = await provider.lookupAddress(walletAddress)
+    if(ens){
+      setENSName(ens)
+    }else{
+      setENSName('')
+    }
+    setLoadingName(false)
+  }
+
+  useEffect(()=>{
+    if(currentChat){
+      getENSName(caip10ToWallet(currentChat.msg.name))
+    }
+  },[currentChat])
+
+
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash
@@ -594,7 +615,20 @@ const ChatBox = (): JSX.Element => {
             <UserInfo>
               <Avatar alt="Profile Picture" src={imageSource} />
               <Typography variant="body1" ml={1}>
-                {caip10ToWallet(currentChat.msg.name)}
+                {loadingName ? (
+                  <p>
+                  Resolving Name..
+                  </p>
+                ) : (
+                  <>
+                  {ensName ? ensName : (
+                    <>
+                  {caip10ToWallet(currentChat.msg.name)}
+                    </>
+                  )}
+                  </>
+                )} 
+                
               </Typography>
             </UserInfo>
             {/* <MoreOptions>
