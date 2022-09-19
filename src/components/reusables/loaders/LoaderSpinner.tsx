@@ -55,7 +55,7 @@ const LoaderSpinner = ({
   overlay = LOADER_OVERLAY.NORMAL,
   blur = 0,
   title = null,
-  width = '50%',
+  width = 'auto',
   spinnerEnabled = true,
   spinnerSize = 42,
   spinnerColor = GLOBALS.COLORS.PRIMARY_PINK,
@@ -72,6 +72,8 @@ const LoaderSpinner = ({
   return (
     <ItemVV2
       position={overlay == LOADER_OVERLAY.ONTOP ? 'absolute' : 'relative'}
+      alignSelf={overlay == LOADER_OVERLAY.ONTOP ? 'stretch' : 'center'}
+      flex="initial"
       top="0"
       right="0"
       bottom="0"

@@ -249,9 +249,10 @@ const InternalDevModule = () => {
       </IndividualComps>
 
       {/* Loader with Spinner and Progress Component */}
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE title=null spinnerEnabled=false progressEnabled=true progressPositioning=BOTTOM">
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE title=null width=50% spinnerEnabled=false progressEnabled=true progressPositioning=BOTTOM">
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
+          width="50%"
           title={null}
           spinnerEnabled={false}
           progressEnabled={true}

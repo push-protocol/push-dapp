@@ -377,21 +377,30 @@ const ChatBox = (): JSX.Element => {
   const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
     try {
       if (!did) {
+        setBlockedLoading({
+          enabled: true,
+          title: "Step 1/4: Preparing First Time Setup",
+          progressEnabled: true,
+          progress: 25,
+          progressNotice: "We use Ceramic to enable multichain and multiwallet experience. This step is is only done for first time users and might take a couple of minutes. Steady lads, chat is almost ready! You will need to sign two transactions when they appear."
+        })
+
         const createdDID: DID = await connectAndSetDID();
+
         // This is a new user
         setBlockedLoading({
           enabled: true,
-          title: "Step 1/4: Creating cryptography keys",
+          title: "Step 2/4: Generating crytographic keys",
           progressEnabled: true,
-          progress: 25,
+          progress: 40,
         })
 
         const keyPairs = await generateKeyPair();
         setBlockedLoading({
           enabled: true,
-          title: "Step 2/4: Encrypting your info",
+          title: "Step 3/4: Encrypting your info",
           progressEnabled: true,
-          progress: 50
+          progress: 60
         })
 
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
@@ -400,8 +409,8 @@ const ChatBox = (): JSX.Element => {
           enabled: true,
           title: "Step 3/4: Syncing account info",
           progressEnabled: true,
-          progress: 75,
-          progressNotice: "This might take a moment"
+          progress: 85,
+          progressNotice: "This might take a couple of seconds as push nodes sync your info for first time!"
         })
 
         const createdUser = await PushNodeClient.createUser({
@@ -422,7 +431,6 @@ const ChatBox = (): JSX.Element => {
           spinnerCompleted: true,
           progressEnabled: true,
           progress: 100,
-          progressNotice: "This might take a moment"
         })
         
         return { didCreated: createdDID, createdUser };
@@ -980,7 +988,7 @@ const TypeBarContainer = styled.div`
 const Container = styled(Content)`
   box-sizing: border-box;
   background: linear-gradient(179.97deg, #eef5ff 0.02%, rgba(236, 239, 255, 0) 123.25%);
-  border-radius: 13px;
+  border-radius: 24px;
   height: 100%;
   display: flex;
   align-items: center;

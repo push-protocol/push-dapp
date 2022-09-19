@@ -165,37 +165,6 @@ const IntentFeed = (): JSX.Element => {
     setIsLoading(false);
   }
 
-  function displayReceivedIntents(): JSX.Element {
-    return isLoading ? (
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-    ) : (
-      <>
-        {!receivedIntents?.length ? (
-          <InfoMessage>No received intents</InfoMessage>
-        ) : (
-          <>
-            <ItemVV2>
-              {receivedIntents.map((intent: Feeds) => (
-                <div
-                  key={intent.threadhash}
-                  onClick={(): void => {
-                    setChat(intent);
-                    showModal({
-                      intentFrom: intent.wallets.split(',')[0],
-                      fromDID: intent.intentSentBy
-                    });
-                  }}
-                >
-                  <DefaultIntent inbox={intent} />
-                </div>
-              ))}
-            </ItemVV2>
-          </>
-        )}
-      </>
-    );
-  }
-
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -244,19 +213,50 @@ const IntentFeed = (): JSX.Element => {
         </Modal>
       }
 
-        {/* Snackbar for successful approval */}
-        <Snackbar open={openSuccessSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
-          <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%' }}>
-            Intent succesfully Approved !
-          </Alert>
-        </Snackbar>
-        {/* Snackbar for rejected intent */}
-        <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
-          <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
-            Intent was Reproved !
-          </Alert>
-        </Snackbar>
-        <UserProfileContainer height={152}>{displayReceivedIntents()}</UserProfileContainer>
+      {/* Snackbar for successful approval */}
+      <Snackbar open={openSuccessSnackbar} autoHideDuration={6000} onClose={handleCloseSuccessSnackbar}>
+        <Alert onClose={handleCloseSuccessSnackbar} severity="success" sx={{ width: '100%' }}>
+          Intent succesfully Approved !
+        </Alert>
+      </Snackbar>
+      {/* Snackbar for rejected intent */}
+      <Snackbar open={openReprovalSnackbar} autoHideDuration={6000} onClose={handleCloseReprovalSnackbar}>
+        <Alert onClose={handleCloseReprovalSnackbar} severity="error" sx={{ width: '100%' }}>
+          Intent was Reproved !
+        </Alert>
+      </Snackbar>
+
+      {/* Load the Intents */}
+      <ItemVV2 justifyContent="flex-start">
+        {isLoading &&
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+        }
+
+        {!isLoading && receivedIntents?.length == 0 && 
+          <InfoMessage>No received intents</InfoMessage>
+        }
+
+        {!isLoading && receivedIntents?.length > 0 && 
+          <UserIntents>
+            {receivedIntents.map((intent: Feeds) => (
+              <ItemVV2
+                alignSelf="stretch"
+                flex="initial"
+                key={intent.threadhash}
+                onClick={(): void => {
+                  setChat(intent);
+                  showModal({
+                    intentFrom: intent.wallets.split(',')[0],
+                    fromDID: intent.intentSentBy
+                  });
+                }}
+              >
+                <DefaultIntent inbox={intent} />
+              </ItemVV2>
+            ))}
+          </UserIntents>
+        }
+      </ItemVV2>
     </ItemVV2>
   );
 };
@@ -280,6 +280,25 @@ const UserProfileContainer = styled.div`
   justify-content: flex-start;
   overflow-y: auto;
   overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+  }
+`;
+
+const UserIntents = styled(ItemVV2)`
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 0px;
+  flex-flow: column;
+  
   &&::-webkit-scrollbar {
     width: 4px;
   }

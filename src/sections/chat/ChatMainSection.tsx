@@ -128,7 +128,7 @@ const ChatMainSection = () => {
       title: "Step 3/4: Creating DID",
       progressEnabled: true,
       progress: 75,
-      progressNotice: "Required only for first time and might take few seconds. You will shortly get a request to sign two transactions to continue."
+      progressNotice: "We use Ceramic to enable multichain and multiwallet experience. You will need to sign two transactions when they appear."
     })
 
     const provider: Promise<any> = await connector.getProvider();
@@ -175,7 +175,7 @@ const ChatMainSection = () => {
           title: "Step 3/4: Syncing your Info",
           progressEnabled: true,
           progress: 90,
-          progressNotice: "Required only for first time and might take few seconds. You will shortly get a request to sign two transactions to continue."
+          progressNotice: "Almost done! Please wait while we sync up your info"
         })
     
         user = await PushNodeClient.updateUser({ did: did.id, caip10 });
@@ -251,10 +251,14 @@ const ChatMainSection = () => {
             <ItemVV2
               flex="initial"
               width="340px"
+              padding="10px 20px"
+              boxSizing="content-box"
             >
               <ChatSidebarSection />
             </ItemVV2>
-            <ItemVV2>
+            <ItemVV2
+              padding="10px 10px 10px 10px"
+            >
               <ChatBoxSection />
             </ItemVV2>
           </Context.Provider>

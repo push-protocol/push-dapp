@@ -1,6 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
@@ -144,15 +145,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
 
   return (
-    <SidebarWrapper className="messageFeed_body">
+    <ItemVV2 alignItems="flex-start" justifyContent="flex-start">
       <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3}>
         CHAT
       </DisplayText>
-      <UserProfileContainer>
+      <UserChats flexFlow="column">
         {messagesLoading ? (
-          <div style={{ position: 'relative', textAlign: 'center', width: '100%', height: '100%' }}>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-          </div>
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
         ) : (
           <>
             {!feeds?.length && isSameUser ? (
@@ -163,14 +162,28 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               <InfoMessage>No Address found.</InfoMessage>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-                <div
+                // To Test
+                // <ItemVV2
+                //   key={feed.threadhash || i}
+                //   onClick={(): void => {
+                //     setChat(feed);
+                //   }}
+                //   background="red"
+                //   margin="10px"
+                //   height="80px"
+                //   flex="initial"
+                // >
+                // </ItemVV2>
+                <ItemVV2
+                  alignSelf="stretch"
+                  flex="initial"
                   key={feed.threadhash || i}
                   onClick={(): void => {
                     setChat(feed);
                   }}
                 >
                   <DefaultMessage inbox={feed} isSelected={isSelected} />
-                </div>
+                </ItemVV2>
               ))
             ) : null}
 
@@ -182,8 +195,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             />
           </>
         )}
-      </UserProfileContainer>
-    </SidebarWrapper>
+      </UserChats>
+    </ItemVV2>
   );
 };
 
@@ -207,16 +220,18 @@ const DisplayText = styled(Typography)`
     font-weight: ${(props): string => props.weight || '500'};
   }
 `;
-const UserProfileContainer = styled.div`
+
+const UserChats = styled(ItemVV2)`
   margin-top: 14px;
-  width: 100%;
-  height: calc(83.6vh - ${(props) => props.height || 238}px);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  overflow-y: auto;
+  flex: 1 1 auto;
   overflow-x: hidden;
+  overflow-y: auto;
+  height: 0px;
+  flex-flow: column;
+  
   &&::-webkit-scrollbar {
     width: 4px;
   }

@@ -5,8 +5,10 @@ import './defaultMessage.css'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import { Feeds } from 'api'
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2'
 import { appConfig } from "config"
 import { caip10ToWallet } from 'helpers/w2w'
+
 import styled from 'styled-components'
 
 const INFURA_URL = appConfig.infuraApiUrl
@@ -30,7 +32,9 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
   }, [])
 
   return (
-    <ProfileCard>
+    <ProfileCard
+      padding="10px"
+    >
       <AvatarContainer>
         <Avatar alt="Remy Sharp" src={imageSource} />
       </AvatarContainer>
@@ -101,17 +105,14 @@ const MessageData = styled.div`
   gap: 5px;
 `
 
-const ProfileCard = styled.div`
-  width: 336px;
+const ProfileCard = styled(ItemHV2)`
   min-height: 73px;
+  flex: initial;
+  justify-content: flex-start;
   background:${(props): string => (props.selected ? '#f4f5fa' : 'transparent')};
   position: relative;
   left:0;
   right:0;
-  display:flex;
-  align-items-center;
-  padding:0;
-  margin:0;
   &:hover{
     background-color:#f4f5fa;
     cursor:pointer;
@@ -123,7 +124,6 @@ const AvatarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 18px;
 `
 const UserData = styled.div`
   height: 100%;

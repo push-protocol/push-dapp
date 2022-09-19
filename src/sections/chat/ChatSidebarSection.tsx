@@ -19,7 +19,7 @@ import { Context } from 'sections/chat/ChatMainSection';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -52,10 +52,14 @@ const useStyles = makeStyles({
 // Chat Sections
 // Divided into two, left and right
 const ChatSidebarSection = () => {
+  // theme context
+  const theme = useTheme();
+
   const { connectedUser, pendingRequests } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const [value, setValue] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
   const classes = useStyles();
 
   const handleChange = (event, newValue) => {
@@ -69,56 +73,91 @@ const ChatSidebarSection = () => {
   // RENDER
   return (
     <ItemVV2>
-      <ItemVV2 flex="0">
-        <TabContainer>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs value={value} onChange={handleChange} className={classes.tabs}>
-              <Tab label={<span style={{ textTransform: 'capitalize', fontSize: '17px' }}>chats</span>} />
-              <Tab
-                label={
-                  <span
-                    style={{
-                      textTransform: 'capitalize',
-                      fontSize: '17px',
-                      display: 'flex',
-                      gap: '6px'
-                    }}
-                  >
-                    Requests{pendingRequests > 0 ? <Badge>{pendingRequests}</Badge> : null}
-                  </span>
-                }
-              />
-              <Tab style={{ display: 'none' }} label="" />
-            </Tabs>
-          </Box>
-        </TabContainer>
+
+      {/* Header */}
+      <ItemVV2 flex="initial">
+        <ItemHV2>
+          {/* Set active and onCLick to customize tab */}
+          <TabButton
+            active={activeTab == 0 ? true : false}
+            background="transparent"
+            hoverBackground="transparent"
+            color={theme.default.color}
+            flex="1"
+            padding="10px 10px 20px 10px"
+            onClick={() => {
+              setActiveTab(0);
+            }}
+          >
+            <SpanV2 fontSize="16px" color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"}>Chats</SpanV2>
+          </TabButton>
+
+          <TabButton
+            active={activeTab == 1 ? true : false}
+            background="transparent"
+            hoverBackground="transparent"
+            color={theme.default.color}
+            flex="1"
+            padding="10px 10px 20px 10px"
+            onClick={() => {
+              setActiveTab(1);
+            }}
+          >
+            <ItemHV2 alignItems="center">
+              <SpanV2 flex="initial" fontSize="16px" color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"} margin="0px 4px">
+                Requests
+              </SpanV2>
+
+              {pendingRequests > 0 && 
+                <SpanV2
+                  background={GLOBALS.COLORS.PRIMARY_PINK}
+                  color={GLOBALS.COLORS.WHITE}
+                  padding="2px 8px"
+                  margin="0px 4px"
+                  fontSize="12px"
+                  borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                >
+                  {pendingRequests}
+                </SpanV2>
+              } 
+            </ItemHV2>
+          </TabButton>
+        </ItemHV2>
       </ItemVV2>
-      <ItemVV2>
-        <TabPanel value={value} index={0}>
-          <Box>
-            <SearchBar />
-          </Box>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
-            REQUESTS
-          </DisplayText>
-          <IntentFeed />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          <Box>
-            <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setValue={setValue} />
-          </Box>
-        </TabPanel>
+
+      {/* Main Content */}
+      <ItemVV2 justifyContent="flex-start" alignItems="stretch">
+        {activeTab == 0 &&
+          <SearchBar />
+        }
+        {activeTab == 1 &&
+          <>
+            <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
+              REQUESTS
+            </DisplayText>
+            <IntentFeed />
+          </>
+        }
+        {activeTab == 2 &&
+          <>
+            <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setActiveTab={setActiveTab} />
+          </>
+        }
       </ItemVV2>
-      <ItemVV2 flex="0">
-        <ProfileHeader setValue={setValue} />
+
+      {/* Footer */}
+      <ItemVV2 flex="initial">
+        <ProfileHeader setActiveTab={setActiveTab} />
       </ItemVV2>
     </ItemVV2>
   );
 }
 export default ChatSidebarSection;
 
+const TabButton = styled(ButtonV2)`
+  border-bottom: 2px solid ${(props) => props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg};
+  pointer: hand;
+`
 
 const Badge = styled.div`
   box-sizing: border-box;
@@ -132,33 +171,12 @@ const Badge = styled.div`
   align-items: center;
   font-size: 12px;
 `;
-const BottomBar = styled(Box)`
-  position: absolute;
-  bottom: 0;
-  left: 26px;
-  right: 22px;
-  border-top: 2px solid #f4f5fa;
-  display: flex;
-  padding-top: 10px;
-  justify-content: space-between;
-  align-items: center;
-  displaytext-align: center;
-`;
 
 const DisplayText = styled(Typography)`
   && {
     color: ${(props): string => props.color || '#000000'};
     font-size: ${(props): string => props.size || '14px'};
     font-weight: ${(props): string => props.weight || '500'};
-  }
-`;
-const Container = styled(Box)`
-  && {
-    padding: 0px;
-    min-width: 336px;
-    max-width: 336px;
-    height: inherit;
-    position: relative;
   }
 `;
 
@@ -173,12 +191,12 @@ const TabContainer = styled(Box)`
 `;
 
 const Tabs = styled(MuiTabs)`
-  displaytext-transform: unset;
+  text-transform: unset;
 `;
 
 const Tab = styled(MuiTab)`
   && {
-    displaytext-transform: unset;
+    text-transform: unset;
     width: 150px;
     font-size: 16px;
     color: #000000;

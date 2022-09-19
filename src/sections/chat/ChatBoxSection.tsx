@@ -16,7 +16,7 @@ import GLOBALS from 'config/Globals';
 const ChatBoxSection = () => {
   // RENDER
   return (
-    <ItemVV2 justifyContent="stretch" padding="20px">
+    <ItemVV2 justifyContent="stretch">
       <ChatBox />
     </ItemVV2>
   );

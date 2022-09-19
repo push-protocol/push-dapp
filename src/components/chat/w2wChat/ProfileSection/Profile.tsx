@@ -26,7 +26,7 @@ import styles from './styles'
 interface ProfilePropsType {
   profilePicture: string
   updateProfile: (image: string) => void
-  setValue: (number: number) => void
+  setActiveTab: (number: number) => void
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -102,7 +102,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
     <>
       <Card sx={styles.container} elevation={0}>
         <Box sx={styles.header}>
-          <IconButton aria-label="back" onClick={() => props.setValue(0)} sx={styles.backButtonHolder}>
+          <IconButton aria-label="back" onClick={() => props.setActiveTab(0)} sx={styles.backButtonHolder}>
             <KeyboardBackspaceIcon sx={styles.backButton} />
           </IconButton>
         </Box>

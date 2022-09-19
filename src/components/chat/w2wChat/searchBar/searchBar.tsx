@@ -6,7 +6,6 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
-import SearchIcon from '@material-ui/icons/Search';
 import Box from '@mui/material/Box';
 import FadeLoader from 'react-spinners/FadeLoader';
 import styled, { useTheme } from 'styled-components';
@@ -14,7 +13,9 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { User } from 'api';
+import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/messageFeed';
@@ -49,7 +50,6 @@ const SearchBar = () => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
-  const [value, setValue] = React.useState(0);
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let searchAddress = event.target.value;
@@ -136,66 +136,61 @@ const SearchBar = () => {
   };
 
   return (
-    <TabPanel value={value} index={0}>
-      <SearchBarContainer>
-        <form onSubmit={submitSearch}>
+    <ItemVV2 alignItems="stretch" justifyContent="flex-start">
+      <ItemVV2 justifyContent="flex-start" flex="initial">
+        <SearchBarContent onSubmit={submitSearch}>
           <Input
             type="text"
             value={searchedUser}
             onChange={onChangeSearchBox}
             placeholder="Search name.eth or 0x123..."
           />
-        </form>
-        {searchedUser.length > 0 && <Close onClick={clearInput} />}
 
-        {isLoadingSearch ? (
-          <SearchLoader>
-            <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={theme.default.secondaryColor} />
-          </SearchLoader>
-        ) : (
-          <Image src="/svg/chats/search.svg" />
-        )}
-      </SearchBarContainer>
-      <MessageFeed
-        hasUserBeenSearched={hasUserBeenSearched}
-        filteredUserData={filteredUserData}
-        isInvalidAddress={isInValidAddress}
-      />
-    </TabPanel>
+          {searchedUser.length > 0 && 
+            <ItemVV2 position="absolute" alignItems="flex-end" width="24px" height="24px" top="22px" right="42px">
+              <CloseIcon onClick={clearInput} />
+            </ItemVV2>
+          }
+            
+
+          <ItemVV2 position="absolute" alignItems="flex-end" width="24px" height="24px" top="22px" right="16px">
+            {isLoadingSearch &&
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} width="auto" spinnerSize={24} spinnerColor={theme.default.secondaryColor} />
+            } 
+            {!isLoadingSearch &&
+              <SearchIcon />
+            }
+          </ItemVV2>
+        </SearchBarContent>
+      </ItemVV2>
+      <ItemVV2 justifyContent="flex-start">
+        <MessageFeed
+          hasUserBeenSearched={hasUserBeenSearched}
+          filteredUserData={filteredUserData}
+          isInvalidAddress={isInValidAddress}
+        />
+      </ItemVV2>
+    </ItemVV2>
   );
 };
 
+const SearchBarContent = styled.form`
+  position: relative;
+`
+
 const Close = styled(CloseIcon)`
   position: absolute;
-  top: 50px;
+  top: 23px;
   right: 55px;
   cursor: pointer;
 `;
 
-const SearchBarContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  position: relative;
-`;
-
 const SearchLoader = styled.div`
   position: absolute;
-  top: 46px;
-  right: 37px;
+  top: 20px;
+  right: 15px;
   height: 25px;
   width: 20px;
-`;
-
-const Image = styled.img`
-  position: absolute;
-  top: 48px;
-  right: 35px;
-  height: 25px;
-  width: 20px;
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const Input = styled.input`
@@ -203,7 +198,7 @@ const Input = styled.input`
   width: 294px;
   height: 48px;
   padding: 13px 60px 13px 21px;
-  margin: 37px 0px 17px 0px;
+  margin: 10px 0px 17px 0px;
   border-radius: 99px;
   border: 1px solid transparent !important;
   background-color: #f4f5fa;
