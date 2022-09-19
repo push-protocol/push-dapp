@@ -61,7 +61,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     },
     retry: 3,
     refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5
+    retryDelay: 1000 * 5,
   });
 
   const updateInboxAndIntents = async (): Promise<void> => {
@@ -87,10 +87,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
-            let feed: Feeds
-            const desiredUser = inbox.filter(inb => inb.did === user.did)
+            let feed: Feeds;
+            const desiredUser = inbox.filter((inb) => inb.did === user.did);
             if (desiredUser.length) {
-              feed = desiredUser[0]
+              feed = desiredUser[0];
             } else {
               feed = {
                 msg: {
@@ -104,7 +104,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   encType: null,
                   encryptedSecret: null,
                   fromDID: null,
-                  toDID: null
+                  toDID: null,
                 },
                 wallets: user.wallets,
                 did: user.did,
@@ -116,7 +116,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 intentTimestamp: null,
                 publicKey: user.publicKey,
                 combinedDID: null,
-                cid: null
+                cid: null,
               };
             }
             setFeeds([feed]);
@@ -133,7 +133,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       };
       searchFn();
     }
-
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -158,17 +157,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             {!feeds?.length && isSameUser ? (
               <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
             ) : !feeds?.length && isInValidAddress ? (
-              <InfoMessage>Invalid Address</InfoMessage>
+              <InfoMessage>Invalid address</InfoMessage>
             ) : !feeds?.length && !messagesLoading ? (
-              <InfoMessage>No Address found.</InfoMessage>
+              <InfoMessage>No address found.</InfoMessage>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
                 <div
                   key={feed.threadhash || i}
                   onClick={(): void => {
                     setChat(feed);
-                  }}
-                >
+                  }}>
                   <DefaultMessage inbox={feed} isSelected={isSelected} />
                 </div>
               ))
@@ -195,10 +193,11 @@ const InfoMessage = styled.p`
   position: relative;
   text-align: center;
   width: 80%;
-  background: #d2cfcf;
+  background: #f4f5fa;
+  border-radius: 10px;
   padding: 10px;
   margin: 0;
-`
+`;
 
 const DisplayText = styled(Typography)`
   && {
