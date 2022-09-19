@@ -107,22 +107,21 @@ function App() {
     const ceramic: CeramicClient = createCeramic()
     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account)
     setLoadingMessage('Connecting to DID. If it\'s your first time logging in you\'ll need to sign 2 transactions')
-    try{
+    try {
       const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider)
-      if(did.id){
+      if (did.id) {
         setDID(did)
         setLoadingMessage('DID created')
         return did
       }
-    }catch(error){
+    } catch (error) {
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `${error}! Please Reload the page`,
+        toastMessage: `Error in DID Provider, please reload the page`,
         toastType: 'ERROR',
         getToastIcon: (size) => <MdError size={size} color="red" />,
       });
     }
-   
   }
 
   const connectToCeramic = async (): Promise<void> => {
