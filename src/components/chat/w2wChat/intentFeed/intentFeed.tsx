@@ -27,7 +27,9 @@ import DefaultIntent from '../defaultIntent/defaultIntent';
 import IntentCondition from '../IntentCondition/IntentCondition';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from '../w2wUtils';
+import useToast from 'hooks/useToast';
 import './intentFeed.css';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 // Internal Configs
 
@@ -54,6 +56,7 @@ const IntentFeed = (): JSX.Element => {
   const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests, setBlockedLoading }: AppContext = useContext<
     AppContext
   >(Context);
+  const intentToast = useToast();
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
@@ -159,6 +162,35 @@ const IntentFeed = (): JSX.Element => {
     const { didCreated } = await createUserIfNecessary();
     await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
     setOpen(false);
+
+    // displaying toast according to status
+    if(status==="Approved"){
+      intentToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: 'Intent approved',
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => (
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />
+        ),
+      });
+    }
+    else{
+      intentToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `There was a problem in approving the intent, please try again.`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+
     await resolveThreadhash();
     setIsLoading(false);
   }
