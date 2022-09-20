@@ -219,7 +219,7 @@ const IntentFeed = (): JSX.Element => {
         }
 
         {!isLoading && receivedIntents?.length == 0 && 
-          <InfoMessage>No received intents</InfoMessage>
+          <InfoMessage>No chat requests</InfoMessage>
         }
 
         {!isLoading && receivedIntents?.length > 0 && 
