@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import useToast from 'hooks/useToast';
 import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
@@ -61,7 +61,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     },
     retry: 3,
     refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5
+    retryDelay: 1000 * 5,
   });
 
   const updateInboxAndIntents = async (): Promise<void> => {
@@ -85,10 +85,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
-            let feed: Feeds
-            const desiredUser = inbox.filter(inb => inb.did === user.did)
+            let feed: Feeds;
+            const desiredUser = inbox.filter((inb) => inb.did === user.did);
             if (desiredUser.length) {
-              feed = desiredUser[0]
+              feed = desiredUser[0];
             } else {
               feed = {
                 msg: {
@@ -102,7 +102,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   encType: null,
                   encryptedSecret: null,
                   fromDID: null,
-                  toDID: null
+                  toDID: null,
                 },
                 wallets: user.wallets,
                 did: user.did,
@@ -114,7 +114,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 intentTimestamp: null,
                 publicKey: user.publicKey,
                 combinedDID: null,
-                cid: null
+                cid: null,
               };
             }
             setFeeds([feed]);
@@ -125,7 +125,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               toastTitle: 'Error',
               toastMessage: 'Invalid Address',
               toastType: 'ERROR',
-              getToastIcon: (size) => <MdError size={size} color="red" />,
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
             });
             setIsInvalidAddress(true);
           }
@@ -135,17 +140,29 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       };
       searchFn();
     }
-
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   return (
-    <ItemVV2 alignItems="flex-start" justifyContent="flex-start">
-      <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3}>
-        CHAT
-      </DisplayText>
+    <ItemVV2
+      alignItems="flex-start"
+      justifyContent="flex-start"
+    >
+      {feeds?.length > 0 ? (
+        <DisplayText
+          color="#6D6B7A"
+          size="14px"
+          weight="700"
+          ml={3}
+        >
+          CHAT
+        </DisplayText>
+      ) : null}
       <UserChats flexFlow="column">
         {messagesLoading ? (
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
         ) : (
           <>
             {!feeds?.length && isSameUser ? (
@@ -153,7 +170,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             ) : !feeds?.length && isInValidAddress ? (
               <InfoMessage>Invalid Address</InfoMessage>
             ) : !feeds?.length && !messagesLoading ? (
-              <InfoMessage>No Address found.</InfoMessage>
+              <EmptyConnection>
+                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+              </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
                 // To Test
@@ -176,7 +195,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     setChat(feed);
                   }}
                 >
-                  <DefaultMessage inbox={feed} isSelected={isSelected} />
+                  <DefaultMessage
+                    inbox={feed}
+                    isSelected={isSelected}
+                  />
                 </ItemVV2>
               ))
             ) : null}
@@ -191,6 +213,21 @@ const SidebarWrapper = styled.section`
   position: relative;
 `;
 
+const ArrowBend = styled.img`
+  position: absolute;
+  right: -23px;
+  top: -30px;
+`;
+
+const EmptyConnection = styled.div`
+  position: relative;
+  width: 80%;
+  text-align: center;
+  color: #657795;
+  font-size: 15px;
+  margin-top:25px;
+`;
+
 const InfoMessage = styled.p`
   position: relative;
   text-align: center;
@@ -198,7 +235,7 @@ const InfoMessage = styled.p`
   background: #d2cfcf;
   padding: 10px;
   margin: 0;
-`
+`;
 
 const DisplayText = styled(Typography)`
   && {
@@ -218,7 +255,7 @@ const UserChats = styled(ItemVV2)`
   overflow-y: auto;
   height: 0px;
   flex-flow: column;
-  
+
   &&::-webkit-scrollbar {
     width: 4px;
   }
