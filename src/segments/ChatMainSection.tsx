@@ -1,6 +1,8 @@
 import React from 'react'
 import styled, { ThemeProvider, useTheme } from 'styled-components'
 import { Content } from 'components/SharedStyling'
+import { ItemVV2,ImageV2,SpanV2 } from 'components/reusables/SharedStylingV2'
+import HandwaveIcon from "../assets/chat/handwave.svg"
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -137,13 +139,23 @@ const ChatMainSection = (): JSX.Element => {
             <TypeBar />
           </Box>
         ) : (
-          <Box>
-            <HelloBox>
-              <Typography>Say Hello to Push Chat</Typography>
-            </HelloBox>
-            <HelloText>You haven’t started a conversation yet.</HelloText>
-            <HelloText>Begin by searching name.eth or 0x123...</HelloText>
-          </Box>
+          <ItemVV2 gap="25px">
+          <WelcomeMainText 
+          theme={themes}>
+            Say
+            <ImageV2 src={HandwaveIcon} 
+            alt="wave"
+            display="inline" 
+            width="auto"
+            verticalAlign="middle"
+            margin="0 13px"/>
+             to Push Chat!
+          </WelcomeMainText>
+          <WelcomeSubText 
+           theme={themes}>
+            You haven’t started a conversation yet. Start a new chat by using the + button
+          </WelcomeSubText>
+         </ItemVV2>
         )}
       </Container>
     </ThemeProvider>
@@ -346,25 +358,46 @@ const Container = styled(Content)`
   position: relative;
 `
 
-const HelloBox = styled(Box)`
-  width: 333px;
-  height: 75px;
-  background: #ffffff;
-  border-radius: 2px 16px 16px 16px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin-bottom: 10px;
-`
+const WelcomeMainText = styled(SpanV2)`
+  background:${props => props.theme.default.bg};
+  padding:20px 55px;
+  border-radius:2px 28px 28px 28px;
+  font-size:28px;
+  font-weight:500;
+  text-align:center;
+  color:${props => props.theme.default.color};
+  letter-spacing:-0.03em;
+  margin:0 4rem;
+  @media only screen and (max-width: 1115px) and (min-width: 991px) {
+    font-size:26px;
+    padding: 16px 33px;
+    & img {
+      width:2rem;
+    }
+  }
+  @media only screen and (max-width: 771px) and (min-width: 711px) {
+    font-size:23px;
+    padding: 16px 30px;
+    & img {
+      width:1.8rem;
+    }
+  }
+`;
 
-const HelloText = styled(Typography)`
-  color: #657795;
-  font-size: 14px;
-  margin-bottom: 5px;
-`
+const WelcomeSubText = styled(SpanV2)`
+font-size:15px;
+font-weight:400;
+line-height:19px;
+max-width:17rem;
+color:${props => props.theme.default.seconddaryColor};
+@media only screen and (max-width: 1115px) and (min-width: 991px) {
+  font-size:13px;
+  max-width:15rem;
+}
+@media only screen and (max-width: 780px) and (min-width: 711px) {
+  font-size:13px;
+  max-width:14rem;
+}
+`;
 
 export default ChatMainSection

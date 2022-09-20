@@ -4,11 +4,9 @@ import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
@@ -23,8 +21,8 @@ import styled,{useTheme} from 'styled-components';
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Content, Item } from 'components/SharedStyling';
-import { ItemVV2,SpanV2,ImageV2 } from 'components/reusables/SharedStylingV2';
+import { Content } from 'components/SharedStyling';
+import { ImageV2,ItemVV2,SpanV2 } from 'components/reusables/SharedStylingV2';
 import HandwaveIcon from "../../../../assets/chat/handwave.svg"
 import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
@@ -643,20 +641,8 @@ const ChatBox = (): JSX.Element => {
     <Container>
       {!viewChatBox ? (
         <ItemVV2 gap="25px">
-          {/* <ItemVV2 background={theme.default.bg} 
-          padding="24px 70px 27px 70px"
-          bodrderRadius="2px 28px 28px 28px"
-          maxWidth="fit-content"
-          maxHeight="fit-content"> */}
-         <SpanV2 
-         background={theme.default.bg}  
-         padding="20px 55px 20px 55px"
-         borderRadius="2px 28px 28px 28px"
-         fontSize="28px"
-         fontWeight="500"
-         textAlign="center"
-         color={theme.default.color}
-         letterSpacing="-0.03em">
+         <WelcomeMainText 
+         theme={theme}>
            Say
            <ImageV2 src={HandwaveIcon} 
            alt="wave"
@@ -665,24 +651,12 @@ const ChatBox = (): JSX.Element => {
            verticalAlign="middle"
            margin="0 13px"/>
             to Push Chat!
-         </SpanV2>
-         {/* </ItemVV2> */}
-         <SpanV2 
-         fontSize="15px"
-         fontWeight="400"
-         lineHeight="19px"
-         maxWidth="17rem"
-         color={theme.default.secondaryColor}>
+         </WelcomeMainText>
+         <WelcomeSubText 
+          theme={theme}>
            You haven’t started a conversation yet. Start a new chat by using the + button
-         </SpanV2>
+         </WelcomeSubText>
         </ItemVV2>
-        // <Box>
-        //   <HelloBox>
-        //     <HelloMainText>Say to Push Chat!</HelloMainText>
-        //   </HelloBox>
-        //   <HelloText>You haven’t started a conversation yet.</HelloText>
-        //   <HelloText>Start a new chat by using the + button</HelloText>
-        // </Box>
       ) : (
         <>
           <Snackbar
@@ -1045,19 +1019,46 @@ const HelloBox = styled(Box)`
   margin-bottom: 10px;
 `;
 
-const HelloMainText = styled(Typography)`
-color: #000000;
-font-weight: 500;
-font-size: 28px;
-line-height: 39px;
-letter-spacing: -0.03em;
+const WelcomeMainText = styled(SpanV2)`
+  background:${props => props.theme.default.bg};
+  padding:20px 55px;
+  border-radius:2px 28px 28px 28px;
+  font-size:28px;
+  font-weight:500;
+  text-align:center;
+  color:${props => props.theme.default.color};
+  letter-spacing:-0.03em;
+  margin:0 4rem;
+  @media only screen and (max-width: 1115px) and (min-width: 991px) {
+    font-size:26px;
+    padding: 16px 33px;
+    & img {
+      width:2rem;
+    }
+  }
+  @media only screen and (max-width: 771px) and (min-width: 711px) {
+    font-size:23px;
+    padding: 16px 30px;
+    & img {
+      width:1.8rem;
+    }
+  }
 `;
 
-const HelloText = styled(Typography)`
-  color: #657795;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 130%;
+const WelcomeSubText = styled(SpanV2)`
+font-size:15px;
+font-weight:400;
+line-height:19px;
+max-width:17rem;
+color:${props => props.theme.default.seconddaryColor};
+@media only screen and (max-width: 1115px) and (min-width: 991px) {
+  font-size:13px;
+  max-width:15rem;
+}
+@media only screen and (max-width: 780px) and (min-width: 711px) {
+  font-size:13px;
+  max-width:14rem;
+}
 `;
 
 export default ChatBox;
