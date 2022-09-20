@@ -6,5 +6,6 @@
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "eslint.enable": false,
-  "editor.formatOnSave": false
+  "editor.formatOnSave": false,
+  "prettier.semi": false
 }
