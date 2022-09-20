@@ -20,6 +20,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/messageFeed';
 import './searchBar.css';
+import { MdError } from 'react-icons/md';
 
 // Internal Configs
 
@@ -85,21 +86,25 @@ const SearchBar = () => {
     event.preventDefault();
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
-      const ens: string = await provider.resolveName(searchedUser);
-      let resolvedENS: string;
-      try {
-        resolvedENS = await provider.resolveName(ens);
-      } catch (error) {
+      let ens:string
+      try{
+        ens = await provider.resolveName(searchedUser);
+      if (ens) {
+        const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
+        const displayUser = displayDefaultUser({ caip10 });
+        setHasUserBeenSearched(true);
+        setFilteredUserData([displayUser]);
+      }else{
         setIsInvalidAddress(true);
         setFilteredUserData([]);
         setHasUserBeenSearched(true);
       }
-      if (resolvedENS) {
-        const caip10 = w2wChatHelper.walletToCAIP10({ account: resolvedENS, chainId });
-        const displayUser = displayDefaultUser({ caip10 });
+      }catch(err){
+        setIsInvalidAddress(true);
+        setFilteredUserData([]);
         setHasUserBeenSearched(true);
-        setFilteredUserData([displayUser]);
       }
+      
     } else {
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
