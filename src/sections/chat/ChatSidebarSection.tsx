@@ -89,7 +89,7 @@ const ChatSidebarSection = () => {
               setActiveTab(0);
             }}
           >
-            <SpanV2 fontSize="16px" color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"}>Chats</SpanV2>
+            <SpanV2 fontSize="16px" fontWeight="400" color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"}>Chats</SpanV2>
           </TabButton>
 
           <TabButton
@@ -104,7 +104,7 @@ const ChatSidebarSection = () => {
             }}
           >
             <ItemHV2 alignItems="center">
-              <SpanV2 flex="initial" fontSize="16px" color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"} margin="0px 4px">
+              <SpanV2 flex="initial" fontSize="16px" fontWeight="400" color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"} margin="0px 4px">
                 Requests
               </SpanV2>
 
@@ -132,9 +132,15 @@ const ChatSidebarSection = () => {
         }
         {activeTab == 1 &&
           <>
-            <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
+            <SpanV2
+              fontWeight="700"
+              fontSize="12px"
+              textAlign="start"
+              margin="10px 0 0 0"
+              color={theme.default.secondaryColor}
+            >
               REQUESTS
-            </DisplayText>
+            </SpanV2>
             <IntentFeed />
           </>
         }
@@ -147,6 +153,15 @@ const ChatSidebarSection = () => {
 
       {/* Footer */}
       <ItemVV2 flex="initial">
+        <ItemVV2 
+          position="absolute"
+          top="0"
+          left="0"
+          right="0"
+          height='1px'
+          background={theme.default.secondaryBg}
+        >
+        </ItemVV2>
         <ProfileHeader setActiveTab={setActiveTab} />
       </ItemVV2>
     </ItemVV2>

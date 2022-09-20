@@ -1,18 +1,27 @@
-import Typography from '@mui/material/Typography';
-import { Feeds, User } from 'api';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import useToast from 'hooks/useToast';
+
+// React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
+
+// External Packages
+import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
+import styled, { useTheme } from 'styled-components';
+
+// Internal Components
+import { Feeds, User } from 'api';
+import ChatSnap from "components/chat/chatsnap/ChatSnap";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import styled from 'styled-components';
-import DefaultMessage from '../defaultMessage/defaultMessage';
+import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
 import Loader from '../Loader/Loader';
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
+
+// Internal Configs
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -21,13 +30,15 @@ interface MessageFeedProps {
 }
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
+  const theme = useTheme();
+
   const { did, setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
@@ -140,9 +151,15 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   return (
     <ItemVV2 alignItems="flex-start" justifyContent="flex-start">
-      <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3}>
-        CHAT
-      </DisplayText>
+      <SpanV2
+        fontWeight="700"
+        fontSize="12px"
+        textAlign="start"
+        margin="10px 0 0 0"
+        color={theme.default.secondaryColor}
+      >
+        CHATS
+      </SpanV2>
       <UserChats flexFlow="column">
         {messagesLoading ? (
           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
@@ -172,11 +189,23 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   alignSelf="stretch"
                   flex="initial"
                   key={feed.threadhash || i}
-                  onClick={(): void => {
-                    setChat(feed);
-                  }}
                 >
-                  <DefaultMessage inbox={feed} isSelected={isSelected} />
+                  <ChatSnap
+                    pfp={feed.profilePicture}
+                    username={feed.msg.name}
+                    chatSnapMsg={
+                      {
+                        type: feed.msg.messageType,
+                        message: feed.msg.lastMessage,
+                      }
+                    }
+                    timestamp={feed.msg.timestamp}
+                    selected={feed.threadhash == selectedChatSnap ? true : false}
+                    onClick={(): void => {
+                      setChat(feed);
+                      setSelectedChatSnap(feed.threadhash)
+                    }}
+                  />
                 </ItemVV2>
               ))
             ) : null}
@@ -223,7 +252,7 @@ const UserChats = styled(ItemVV2)`
     width: 4px;
   }
   &&::-webkit-scrollbar-thumb {
-    background: #cf1c84;
+    background: ${(props) => props.theme.default.secondaryBg || '#000000'};
   }
 `;
 

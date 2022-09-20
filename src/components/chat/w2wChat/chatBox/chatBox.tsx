@@ -985,7 +985,7 @@ const TypeBarContainer = styled.div`
 
 const Container = styled(Content)`
   box-sizing: border-box;
-  background: linear-gradient(179.97deg, #eef5ff 0.02%, rgba(236, 239, 255, 0) 123.25%);
+  background: ${(props) => props.theme.chat.chatboxBg || 'transparent'};
   border-radius: 24px;
   height: 100%;
   display: flex;

@@ -15,6 +15,7 @@ import styled from 'styled-components';
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { approveIntent, Feeds, User } from 'api';
+import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
@@ -23,7 +24,7 @@ import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import DefaultIntent from '../defaultIntent/defaultIntent';
+import DefaultIntent from '../defaultIntentDeprecated/defaultIntent.deprecated';
 import IntentCondition from '../IntentCondition/IntentCondition';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from '../w2wUtils';
@@ -60,7 +61,8 @@ const IntentFeed = (): JSX.Element => {
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>();
   const [fromDID, setFromDID] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>();
-
+  const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
+  
   async function resolveThreadhash(): Promise<void> {
     setIsLoading(true);
     let getIntent;
@@ -222,20 +224,36 @@ const IntentFeed = (): JSX.Element => {
 
         {!isLoading && receivedIntents?.length > 0 && 
           <UserIntents>
-            {receivedIntents.map((intent: Feeds) => (
+            {receivedIntents.map((intent: Feeds, i) => (
               <ItemVV2
                 alignSelf="stretch"
                 flex="initial"
-                key={intent.threadhash}
+                key={intent.threadhash || i}
                 onClick={(): void => {
                   setChat(intent);
-                  showModal({
-                    intentFrom: intent.wallets.split(',')[0],
-                    fromDID: intent.intentSentBy
-                  });
+
                 }}
               >
-                <DefaultIntent inbox={intent} />
+                <ChatSnap
+                    pfp={intent.profilePicture}
+                    username={intent.msg.name}
+                    chatSnapMsg={
+                      {
+                        type: intent.msg.messageType,
+                        message: intent.msg.lastMessage,
+                      }
+                    }
+                    timestamp={intent.msg.timestamp}
+                    selected={intent.threadhash == selectedIntentSnap ? true : false}
+                    onClick={(): void => {
+                      setChat(intent);
+                      setSelectedIntentSnap(intent.threadhash);
+                      showModal({
+                        intentFrom: intent.wallets.split(',')[0],
+                        fromDID: intent.intentSentBy
+                      });
+                    }}
+                  />
               </ItemVV2>
             ))}
           </UserIntents>
