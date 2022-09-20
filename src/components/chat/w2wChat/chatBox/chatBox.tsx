@@ -734,12 +734,12 @@ const ChatBox = (): JSX.Element => {
                           did={did}
                           messageBeingSent={messageBeingSent}
                         />
-                        {messages.length === 1 && msg.fromDID === did.id ? (
+                        {/* {messages.length === 1 && msg.fromDID === did.id ? (
                           <FirstConversation>
                             This is your first conversation with the receipent, you will be able to continue the
                             conversation once the receipent accepts the intent
                           </FirstConversation>
-                        ) : null}
+                        ) : null} */}
                       </div>
                     );
                   })}
