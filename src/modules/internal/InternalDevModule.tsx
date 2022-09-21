@@ -4,8 +4,12 @@ import { toast } from 'react-toastify';
 import styled, { useTheme } from 'styled-components';
 
 import BlurBG from 'components/reusables/blurs/BlurBG';
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import ProgressBar from 'components/reusables/progress/ProgressBarUnit';
+import LoaderSpinner, {
+  LOADER_OVERLAY,
+  LOADER_TYPE,
+  PROGRESS_POSITIONING
+} from 'components/reusables/loaders/LoaderSpinner';
+import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/ProgressBarUnit';
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
@@ -37,7 +41,7 @@ const createRandomToast = () => {
     type: toast.TYPE.INFO,
     position: toast.POSITION.BOTTOM_RIGHT,
     autoClose: 10000,
-    hideProgressBar: false
+    hideProgressBar: false,
   });
 };
 
@@ -51,19 +55,18 @@ const createNotificaionToast = () => {
       aimg: '',
       amsg: 'Testing 3..2..1',
       asub: '',
-      icon:
-        'https://gateway.ipfs.io/ipfs/bafybeifvqzq7pgr547ridaxceikskfvuxxrfz2m5vlpk7uljikwd3ybesa/QmdKPEWYv1xR6A6pEPPUwfaWSTztjeMWLVaaMjjEMo8foU',
+      icon: 'https://gateway.ipfs.io/ipfs/bafybeifvqzq7pgr547ridaxceikskfvuxxrfz2m5vlpk7uljikwd3ybesa/QmdKPEWYv1xR6A6pEPPUwfaWSTztjeMWLVaaMjjEMo8foU',
       type: 1,
       epoch: '1663058708',
       etime: null,
       hidden: '0',
-      sectype: null
+      sectype: null,
     },
     recipients: '0xb59cdc85cacd15097ece4c77ed9d225014b4d56d',
     notification: {
       body: randomTextWithLines(5, 3),
-      title: 'Testing Channel - '
-    }
+      title: 'Testing Channel - ',
+    },
   };
 
   showNotifcationToast(payload, true);
@@ -97,7 +100,29 @@ const InternalDevModule = () => {
     <Container>
       {/* Progess Bar Component */}
       <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
-        <ProgressBar percent={progress} color={GLOBALS.COLORS.PRIMARY_PINK} />
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+        />
+      </IndividualComps>
+
+      {/* Progess Bar Component */}
+      <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+          notice="This is notice on bottom"
+        />
+      </IndividualComps>
+
+      {/* Progess Bar Component */}
+      <IndividualComps caption="components/reusables/progress/ProgressBarUnit noticePositioning=TOP">
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+          notice="This is notice on top"
+          noticePositioning={NOTICE_POSITIONING.TOP}
+        />
       </IndividualComps>
 
       {/* Spinner Component */}
@@ -107,102 +132,269 @@ const InternalDevModule = () => {
 
       {/* Spinner Component */}
       <IndividualComps caption={`components/reusables/spinner/SpinnerUnit - color="#529015"`}>
-        <Spinner color='#529015' />
+        <Spinner color="#529015" />
+      </IndividualComps>
+
+      {/* Spinner Component */}
+      <IndividualComps caption={`components/reusables/spinner/SpinnerUnit - completed=true"`}>
+        <Spinner completed={true} />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE title=null">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} completed={false} />
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          spinnerCompleted={false}
+        />
       </IndividualComps>
 
+      {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE_MINIMAL title=null">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} completed={false} />
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE_MINIMAL}
+          spinnerCompleted={false}
+        />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner">
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="This time it's done"
+          spinnerCompleted={true}
+        />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless title=null spinnerSize=20">
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} />
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          spinnerCompleted={false}
+          spinnerSize={20}
+        />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerSize=24">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Spinner Size" completed={false} spinnerSize={24} />
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Randomized With Spinner Size"
+          spinnerCompleted={false}
+          spinnerSize={24}
+        />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption={`components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerColor="#083c84"`}>
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Spinner Color" completed={false} spinnerColor="#083c84" />
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Randomized With Spinner Color"
+          spinnerCompleted={false}
+          spinnerColor="#083c84"
+        />
       </IndividualComps>
-      
+
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerSize=24">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="This time it's done" completed={true} spinnerSize={24} />
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="This time it's done"
+          spinnerCompleted={true}
+          spinnerSize={24}
+        />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE">
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Randomized With Long Text, Very Long"
+          spinnerCompleted={false}
+        />
       </IndividualComps>
 
-      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized With Long Text, Very Long" completed={false} />
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE progressEnabled=true">
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Loading Something Cool"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Step 1: Loading coolness"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE spinnerEnabled=false progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Step 2: No Spinner, Just Progress"
+          spinnerEnabled={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE title=null width=50% spinnerEnabled=false progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          width="50%"
+          title={null}
+          spinnerEnabled={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps
+        caption={`components/reusables/loaders/LoaderSpinner - type=STANDALONE progressEnabled=true progressPositioning=BOTTOM progressColor="#EREDDD"`}
+      >
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Step 1: Loading color coolness"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progressColor="#AA33EE"
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE width=80% progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          width="80%"
+          title="Step 1: Loading coolness with minimal"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE_MINIMAL width=80% progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE_MINIMAL}
+          width="80%"
+          title="Step 1: Loading coolness with minimal"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=SEAMLESS width=80% progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          width="80%"
+          title="Step 1: Loading coolness with minimal"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=SEAMLESS progressEnabled=true progressPositioning=BOTTOM">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Step 1: Loading minimal no width"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=SEAMLESS progressEnabled=true progressPositioning=BOTTOM progressNotice=Some_Notice">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Step 1: Loading minimal no width"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={progress}
+          progressNotice="This might take some time to load"
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner and Progress Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=SEAMLESS progressEnabled=true progressPositioning=TOP progressNotice=Some_Notice">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Step 1: Loading minimal no width"
+          spinnerCompleted={false}
+          progressEnabled={true}
+          progressPositioning={PROGRESS_POSITIONING.TOP}
+          progress={progress}
+          progressNotice="This might take some time to load"
+        />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless overlay=normal blur=0">
-        <SpanV2 color={theme.default.color}>  
-          {randomText}
-        </SpanV2>
-        <LoaderSpinner 
+        <SpanV2 color={theme.default.color}>{randomText}</SpanV2>
+        <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
-          title={"Randomized With Long Text, Very Long"}
-          completed={false} 
+          title={'Randomized With Long Text, Very Long'}
+          spinnerCompleted={false}
         />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless overlay=ontop blur=0">
-        <SpanV2 color={theme.default.color}>  
-          {randomText}
-        </SpanV2>
-        <LoaderSpinner 
+        <SpanV2 color={theme.default.color}>{randomText}</SpanV2>
+        <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
-          overlay={LOADER_OVERLAY.ONTOP} 
-          title={"Randomized With Long Text, Very Long"}
-          completed={false} 
+          overlay={LOADER_OVERLAY.ONTOP}
+          title={'Another Very Randomized Long Text'}
+          spinnerCompleted={false}
         />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless overlay=ontop blur=5">
-        <SpanV2 color={theme.default.color}>  
-          {randomText}
-        </SpanV2>
-        <LoaderSpinner 
+        <SpanV2 color={theme.default.color}>{randomText}</SpanV2>
+        <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
-          overlay={LOADER_OVERLAY.ONTOP} 
+          overlay={LOADER_OVERLAY.ONTOP}
           blur={5}
-          title={"Randomized With Long Text, Very Long"}
-          completed={false} 
+          title={'And Yet Another Randomined Loooong Text'}
+          spinnerCompleted={false}
         />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE overlay=ontop blur=5">
-        <SpanV2 color={theme.default.color}>  
-          {randomText}
-        </SpanV2>
-        <LoaderSpinner 
+        <SpanV2 color={theme.default.color}>{randomText}</SpanV2>
+        <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
-          overlay={LOADER_OVERLAY.ONTOP} 
+          overlay={LOADER_OVERLAY.ONTOP}
           blur={5}
-          title={"Randomized With Long Text, Very Long"}
-          completed={false} 
+          title={'Randomized With Long Text, Very Long'}
+          spinnerCompleted={false}
         />
       </IndividualComps>
 
@@ -218,9 +410,7 @@ const InternalDevModule = () => {
             createNotificaionToast();
           }}
         >
-          <SpanV2>
-            Trigger Random Notification
-          </SpanV2>
+          <SpanV2>Trigger Random Notification</SpanV2>
         </ButtonV2>
       </IndividualComps>
 
@@ -236,15 +426,17 @@ const InternalDevModule = () => {
             createRandomToast();
           }}
         >
-          <SpanV2>
-            Trigger Random Toast
-          </SpanV2>
+          <SpanV2>Trigger Random Toast</SpanV2>
         </ButtonV2>
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner">
-        <LoaderSpinner type={LOADER_TYPE.STANDALONE} title="Randomized" completed={false} />
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          title="Randomized"
+          spinnerCompleted={false}
+        />
       </IndividualComps>
 
       {/* Defined Blur */}
@@ -259,24 +451,39 @@ const InternalDevModule = () => {
             console.log('Nothing Should Be Clickable');
           }}
         >
-          <SpanV2>
-            Try to Trigger
-          </SpanV2>
+          <SpanV2>Try to Trigger</SpanV2>
         </ButtonV2>
-        <BlurBG blur={10} zIndex={99} />
+        <BlurBG
+          blur={10}
+          zIndex={99}
+        />
       </IndividualComps>
 
       {/* Defined Blur Progress Bar */}
       <IndividualComps caption="components/reusables/blurs/BlurBG  - Blur=5">
-        <ProgressBar percent={progress} color={GLOBALS.COLORS.PRIMARY_PINK} />
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="Randomized With Long Text, Very Long" completed={false} />
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+        />
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="Randomized With Long Text, Very Long"
+          spinnerCompleted={false}
+        />
         <BlurBG blur={5} />
       </IndividualComps>
 
       {/* Defined Blur Loader Done */}
       <IndividualComps caption="components/reusables/blurs/BlurBG  - Blur=5">
-        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} title="This time it's done" completed={true} />
-        <BlurBG blur={5} zIndex={99} />
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="This time it's done"
+          spinnerCompleted={true}
+        />
+        <BlurBG
+          blur={5}
+          zIndex={99}
+        />
       </IndividualComps>
 
       {/* Defined Blur Loader Done */}
@@ -291,9 +498,7 @@ const InternalDevModule = () => {
             console.log('This should be clickable');
           }}
         >
-          <SpanV2>
-            Try to Trigger
-          </SpanV2>
+          <SpanV2>Try to Trigger</SpanV2>
         </ButtonV2>
         <BlurBG blur={0} />
       </IndividualComps>
@@ -328,24 +533,25 @@ const Container = styled(SectionV2)`
 `;
 
 const IndividualComps = styled(ItemVV2)`
-	border-radius: 32px;
-	border: 1px solid ${(props) => props.theme.default.secondaryBg};
-	margin: 20px;
-	min-height: 100px;
-	min-width: 25%;
-	overflow: hidden;
-	padding: 20px;
-	
-	&:after {
-		background: ${(props) => props.theme.default.secondaryBg};
-		bottom: 0;
-		content: '${(props) => props.caption}';
-		font-size: 10px;
-		left: 0;
-		padding: 2px;
-		position: absolute;
-		right: 0;
-		text-align: center;
+  border-radius: 32px;
+  border: 1px solid ${(props) => props.theme.default.secondaryBg};
+  background: ${(props) => props.theme.default.secondaryBg};
+  margin: 20px;
+  min-height: 100px;
+  min-width: 25%;
+  overflow: hidden;
+  padding: 20px;
+
+  &:after {
+    background: ${(props) => props.theme.nav.bg};
+    bottom: 0;
+    content: '${(props) => props.caption}';
+    font-size: 10px;
+    left: 0;
+    padding: 2px;
+    position: absolute;
+    right: 0;
+    text-align: center;
     z-index: 100;
-	}
+  }
 `;

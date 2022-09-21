@@ -1,40 +1,45 @@
+// React + Web3 Essentials
+import { AbstractConnector } from '@web3-react/abstract-connector';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
 import ReactGA from 'react-ga';
 
-import { AbstractConnector } from '@web3-react/abstract-connector';
-import { useWeb3React } from '@web3-react/core';
-import { appConfig } from 'config';
-import { injected, ledger, walletconnect } from 'connectors';
-import { ethers } from 'ethers';
-import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
+// External Packages
 import Joyride, { CallBackProps } from 'react-joyride';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-import Header from 'sections/Header';
-import Navigation from 'sections/Navigation';
-import styled from 'styled-components';
-import AppLogin from './AppLogin';
+import Navigation from 'structure/Navigation';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
-import { SectionV2 } from './components/reusables/SharedStylingV2';
-import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
-
-import NavigationContextProvider from 'contexts/NavigationContext';
-import MasterInterfacePage from 'pages/MasterInterfacePage';
-
-import { ThemeProvider } from 'styled-components';
-
+// Internal Compoonents
+import InitState from 'components/InitState';
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
-
-import { useDispatch, useSelector } from 'react-redux';
+import { injected, ledger, walletconnect } from 'connectors';
+import NavigationContextProvider from 'contexts/NavigationContext';
+import { EnvHelper } from 'helpers/UtilityHelper';
+import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
 import UserJourneySteps from 'segments/userJourneySteps';
+import Header from 'structure/Header';
+import MasterInterfacePage from 'structure/MasterInterfacePage';
+import AppLogin from './AppLogin';
+import { SectionV2 } from './components/reusables/SharedStylingV2';
+import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 
-import InitState from 'components/InitState';
+// Internal Configs
+import { appConfig } from 'config';
 import * as dotenv from 'dotenv';
-import { EnvHelper } from 'helpers/UtilityHelper';
 
 dotenv.config();
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background: ${(props) => props.theme.header.bg} !important;
+  }
+`;
 
 export default function App() {
   const dispatch = useDispatch();
@@ -150,6 +155,7 @@ export default function App() {
 
       {active && !error && (
         <>
+          <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
             <Joyride

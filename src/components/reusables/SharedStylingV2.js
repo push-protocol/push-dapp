@@ -37,6 +37,7 @@ export const ItemHV2 = styled.div`
   filter: ${(props) => props.filter || 'initial'};
   flex: ${(props) => props.flex || '1'};
   flex-basis: ${(props) => props.flexBasis || 'auto'};
+  flex-flow: ${(props) => props.flexFlow || 'initial'};
   flex-direction: ${(props) => props.flexDirection || 'row'};
   flex-wrap: ${(props) => props.flexWrap || 'wrap'};
   font-size: ${(props) => props.fontSize || 'initial'};
@@ -55,6 +56,7 @@ export const ItemHV2 = styled.div`
   top: ${(props) => props.top || 'auto'};
   width: ${(props) => props.width || 'auto'};
   z-index: ${(props) => props.zIndex || 'auto'};
+  gap: ${(props) =>props.gap || '0px'};
 
   &:hover & {
     filter: ${(props) => (props.filterHover ? props.filterHover : props.hover ? props.hover : 'none') || 'none'};
@@ -95,7 +97,7 @@ export const ButtonV2 = styled.button`
   border: ${(props) => props.border || "initial"};
   border-radius: ${(props) => props.borderRadius || "0px"};
   color: ${(props) => props.color || themeLight.default.color};
-  cursor: ${(props) => props.color || "pointer"};
+  cursor: ${(props) => props.cursor || "pointer"};
   display: ${(props) => props.display || 'flex'};
   flex: ${(props) => props.flex || "1"};
   flex-direction: ${(props) => props.flexDirection || 'column'};
@@ -116,7 +118,7 @@ export const ButtonV2 = styled.button`
 
   &:before {
     background: ${(props) =>
-      props.hover || (props.bg ? props.bg : "transparent")};
+      props.hover || (props.background ? props.background : "transparent")};
     bottom: 0;
     content: "";
     display: none;
@@ -128,7 +130,7 @@ export const ButtonV2 = styled.button`
   }
 
   &:after {
-    background: ${(props) => props.hoverBG || "#000"};
+    background: ${(props) => props.hoverBackground || "#000"};
     bottom: 0;
     content: "";
     left: 0;
@@ -184,6 +186,8 @@ export const ImageV2 = styled.img`
   max-height: ${(props) => props.maxHeight || "initial"};
   padding: ${(props) => props.padding || "0px"};
   width: ${(props) => props.width || "100%"};
+  margin: ${(props) => props.margin || "0px"};
+  vertical-align: ${(props) => props.verticalAlign || "auto"};
 `;
 
 export const AInlineV2 = styled.a`

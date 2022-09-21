@@ -47,13 +47,18 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 
   return (
     <>
-      {data.loading &&
+      {data.loading && (
         <ItemVV2 alignSelf="flex-start" padding="0px 15px">
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} completed={false} spinnerSize={20} spinnerColor={props => props.theme.nav.color} />
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            completed={false}
+            spinnerSize={20}
+            spinnerColor={(props) => props.theme.nav.color}
+          />
         </ItemVV2>
-      }
+      )}
 
-      {!data.loading && !data.hidden &&
+      {!data.loading && !data.hidden && (
         <RouteLogic
           style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
           flex="1"
@@ -69,18 +74,27 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           margin={definedMargin}
           bg={bg}
           active={active}
-          className={data?.name?.toLowerCase()}
-        >
-          {data.iconFactory ?
+          className={data?.name?.toLowerCase()}>
+          {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 2rem">
               {data.iconFactory}
             </ItemHV2>
-            :
+          ) : (
             <ItemH align="center">
               {!active ? (
-                <SelectedIcon src={require(`../assets/${data.src}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
+                <SelectedIcon
+                  src={require(`../assets/${data.src}`)}
+                  margin="0 5px"
+                  alt={`${data.alt}`}
+                  active={active}
+                />
               ) : (
-                <SelectedIcon src={require(`../assets/${data.activeSrc}`)} margin="0 5px" alt={`${data.alt}`} active={active} />
+                <SelectedIcon
+                  src={require(`../assets/${data.activeSrc}`)}
+                  margin="0 5px"
+                  alt={`${data.alt}`}
+                  active={active}
+                />
               )}
 
               <Span
@@ -89,8 +103,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 spacing="0"
                 margin="0 5px"
                 color={theme.nav.color}
-                size="14px"
-              >
+                size="14px">
                 {data.name}
               </Span>
 
@@ -98,9 +111,9 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
 
               {item.hasItems && item.opened && <BiChevronUp color={theme.nav.color} />}
             </ItemH>
-          }
+          )}
         </RouteLogic>
-      }
+      )}
     </>
   );
 }

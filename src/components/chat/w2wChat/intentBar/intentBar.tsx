@@ -1,8 +1,8 @@
-import { Feeds, getIntents } from 'api'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import IntentFeed from '../intentFeed/intentFeed'
-import { AppContext, Context } from '../w2wIndex'
-import './intentBar.css'
+import { Feeds, getIntents } from 'api';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import IntentFeed from '../intentFeed/intentFeed';
+import './intentBar.css';
 
 const IntentBar = (): JSX.Element => {
   return (
