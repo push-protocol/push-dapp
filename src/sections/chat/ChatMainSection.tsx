@@ -15,6 +15,8 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled, { useTheme } from 'styled-components';
+import useToast from 'hooks/useToast';
+import { MdCheckCircle, MdError } from 'react-icons/md'
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
@@ -121,6 +123,7 @@ const ChatMainSection = () => {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<number>(0);
 
+  const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
 
   useEffect(() => {
@@ -139,14 +142,23 @@ const ChatMainSection = () => {
         'We use Ceramic to enable multichain and multiwallet experience. You will need to sign two transactions when they appear.',
     });
 
-    const provider: Promise<any> = await connector.getProvider();
-    const threeID: ThreeIdConnect = new ThreeIdConnect();
-    const ceramic: CeramicClient = createCeramic();
-    const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);
-
-    const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
-    setDID(did);
-    return did;
+    try {
+      const provider: Promise<any> = await connector.getProvider();
+      const threeID: ThreeIdConnect = new ThreeIdConnect();
+      const ceramic: CeramicClient = createCeramic();
+      const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);
+  
+      const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
+      setDID(did);
+      return did;
+    } catch (error) {
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error fetching your DID',
+        toastMessage: `Please reload the page`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
+    }
   };
 
   const connectToCeramic = async (): Promise<void> => {
