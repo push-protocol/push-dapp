@@ -1,15 +1,23 @@
-import { CID } from 'ipfs-http-client'
+// React + Web3 Essentials
 import React, { useEffect, useState } from 'react'
-import './defaultMessage.css'
-// @ts-ignore
+
+// External Packages
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
+import { CID } from 'ipfs-http-client'
+import styled from 'styled-components'
+
+// Internal Packages
 import { Feeds } from 'api'
+import ChatSnap, { ChatSnapMsgI } from 'components/chat/chatsnap/ChatSnap'
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2'
 import { appConfig } from "config"
 import { caip10ToWallet } from 'helpers/w2w'
+import './defaultMessage.css'
 
-import styled from 'styled-components'
+
+// Internal Configs
+
 
 const INFURA_URL = appConfig.infuraApiUrl
 
@@ -22,6 +30,7 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
     const time = new Date(props.inbox?.msg?.timestamp)
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2)
   }
+
   useEffect(() => {
     try {
       CID.parse(props.inbox.profilePicture)
@@ -30,6 +39,37 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
       setImageSource(props.inbox.profilePicture)
     }
   }, [])
+
+  console.log(props.inbox.msg);
+  
+  const username = caip10ToWallet(props.inbox.msg.name).slice(0, 8) + '...' + caip10ToWallet(props.inbox.msg.name).slice(-7);
+  const chatSnapMsg: ChatSnapMsgI = {
+    type: props.inbox.msg.messageType,
+    message: props.inbox.msg.lastMessage,
+  }
+  
+  const message = props.inbox.msg.messageType === 'Text' ? (
+      props.inbox.msg.lastMessage.length > 25 ? (
+        props.inbox.msg.lastMessage.slice(0, 25) + '...'
+      ) : (
+        props.inbox.msg.lastMessage
+      )
+    ) : props.inbox.msg.messageType === 'Image' ? (
+      <div>
+        <i className="fa fa-picture-o" aria-hidden="true"></i>
+        Image
+      </div>
+    ) : props.inbox.msg.messageType === 'File' ? (
+      <div>
+        <i className="fa fa-file" aria-hidden="true"></i>
+        File
+      </div>
+    ) : props.inbox.msg.messageType === 'GIF' ? (
+      <div>
+        <i className="fa fa-picture-o" aria-hidden="true"></i>
+        GIF
+      </div>
+    ) : null;
 
   return (
     <ProfileCard

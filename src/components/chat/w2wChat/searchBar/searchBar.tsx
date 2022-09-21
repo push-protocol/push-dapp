@@ -247,10 +247,11 @@ const Input = styled.input`
   margin: 10px 0px 17px 0px;
   border-radius: 99px;
   border: 1px solid transparent !important;
-  background-color: #f4f5fa;
+  background-color: ${(props) => props.theme.chat.snapFocusBg};
+  color: ${(props) => props.theme.default.color || '#000'};
   &:focus {
     outline: none;
-    background-image: linear-gradient(#f4f5fa, #f4f5fa), linear-gradient(to right, #cf1c84, #8ed6ff);
+    background-image: linear-gradient(${(props) => props.theme.chat.snapFocusBg}, ${(props) => props.theme.chat.snapFocusBg}), linear-gradient(to right, #cf1c84, #8ed6ff);
     background-origin: border;
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;

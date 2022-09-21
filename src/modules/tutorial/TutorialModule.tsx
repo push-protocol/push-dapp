@@ -43,7 +43,7 @@ function TutorialModule() {
             spacing="0.03em"
             margin="0px 0px"
           >
-            Let's walk you through the core functions of EPNS, the communication protocol of Web3!
+            Let's walk you through the core functions of Push (EPNS), the communication protocol of Web3!
           </Span>
         </ItemVV2>
 

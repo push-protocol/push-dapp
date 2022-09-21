@@ -216,7 +216,7 @@ const AirdropModule = () => {
                 toggleShowAnswer(2);
               }}
               hover="#e20880">
-              <Span color={theme.color}>What is EPNS?</Span>
+              <Span color={theme.color}>What is Push (EPNS)?</Span>
               <BsChevronExpand size={20} color={'#ddd'} />
             </Question>
 
@@ -285,7 +285,7 @@ const AirdropModule = () => {
                 toggleShowAnswer(4);
               }}
               hover="#e20880">
-              <Span color={theme.color}>How can I keep up with EPNS?</Span>
+              <Span color={theme.color}>How can I keep up with Push (EPNS)?</Span>
               <BsChevronExpand size={20} color={'#ddd'} />
             </Question>
 
@@ -296,15 +296,15 @@ const AirdropModule = () => {
                   <AMod
                     href="https://discord.com/invite/YVPB99F9W5"
                     target="_blank"
-                    title="Join our EPNS's Telegram channel">
+                    title="Join our Push (EPNS)'s Telegram channel">
                     Discord
                   </AMod>
                   , follow us on{' '}
-                  <AMod href="https://twitter.com/epnsproject" target="_blank" title="Join our EPNS's Twitter channel">
+                  <AMod href="https://twitter.com/epnsproject" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
                     Twitter
                   </AMod>
                   , and sign up for our 5 minute{' '}
-                  <AMod href="https://epns.substack.com/" target="_blank" title="Join our EPNS's Twitter channel">
+                  <AMod href="https://epns.substack.com/" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
                     weekly product updates
                   </AMod>
                   .

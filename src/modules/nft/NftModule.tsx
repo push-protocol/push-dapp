@@ -62,7 +62,7 @@ function NftModule() {
           <ItemVV2 alignSelf="stretch" justifyContent="flex-start" margin="0 0 40px 0">
             <H2>
               <Span weight="400" size="32px" color={theme.color}>
-                Rockstar of EPNS
+                Rockstar of Push (EPNS)
               </Span>
             </H2>
             <Span
@@ -112,7 +112,7 @@ function NftModule() {
                     toggleShowAnswer(2);
                   }}
                   hover="#e20880">
-                  <Span color={theme.color}>How to get $ROCKSTAR of EPNS?</Span>
+                  <Span color={theme.color}>How to get $ROCKSTAR of Push (EPNS)?</Span>
                   <BsChevronExpand size={20} color={'#ddd'} />
                 </Question>
 
@@ -124,7 +124,7 @@ function NftModule() {
                       <AMod
                         href="https://medium.com/ethereum-push-notification-service/kicking-off-the-epns-nft-community-drops-6a5c49808cf"
                         target="_blank"
-                        title="Read how to get $ROCKSTAR of EPNS">
+                        title="Read how to get $ROCKSTAR of Push (EPNS)">
                         Here are some ways by which you can get one!
                       </AMod>
                     </Span>

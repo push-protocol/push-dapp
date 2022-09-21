@@ -35,7 +35,7 @@ const UserJourneySteps = ({ darkMode }) => {
             size="normal"
             align="stretch">
             <Span color="inherit">
-              <B>EPNS</B>, the native web3 communication layer enables open communication tied to wallet address from
+              <B>Push (EPNS)</B>, the native web3 communication layer enables open communication tied to wallet address from
               any supported dApps, protocol or web3 projects.
             </Span>
 
@@ -182,7 +182,7 @@ const UserJourneySteps = ({ darkMode }) => {
             size="normal"
             align="stretch">
             <Span color="inherit">
-              <B>EPNS</B> is a user centric protocol which means that you need to gaslessly (for free) opt-in to a
+              <B>Push (EPNS)</B> is a user centric protocol which means that you need to gaslessly (for free) opt-in to a
               channel to enable them to send notifs to your wallet!
             </Span>
 
