@@ -97,13 +97,15 @@ const ChatBox = (): JSX.Element => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
-
+      console.log("Threadhash",latestThreadhash)
       if (latestThreadhash) {
+        
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
         if (latestThreadhash !== currentChat?.threadhash) {
+          console.log("Threadhashes are not changed")
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
@@ -160,6 +162,7 @@ const ChatBox = (): JSX.Element => {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
+              
               setMessages((m) => [...m, msgIPFS]);
             }
           }
@@ -172,11 +175,14 @@ const ChatBox = (): JSX.Element => {
               setLoading(false);
               break;
             } else {
+              console.log("Threadhashes are changed")
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
               let msgIPFS: MessageIPFSWithCID;
               if (messageFromIndexDB !== undefined) {
+                console.log("Fetched from Index DB")
                 msgIPFS = messageFromIndexDB.body;
               } else {
+              console.log("Fetched from IPFS")
                 const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
                 await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
                 msgIPFS = messageFromIPFS;
@@ -226,7 +232,9 @@ const ChatBox = (): JSX.Element => {
               }
               // Display messages for the first time
               else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+                console.log("Here the message is added")
                 setMessages((m) => [msgIPFS, ...m]);
+                setMessageBeingSent(false)
               }
               // Messages got from useQuery
               // else {
@@ -243,6 +251,7 @@ const ChatBox = (): JSX.Element => {
           }
         }
       } else {
+        console.log("This ran because of no threadhash")
         setMessages([]);
       }
       setLoading(false);
@@ -252,6 +261,7 @@ const ChatBox = (): JSX.Element => {
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
+    console.log("Current Chat changes",currentChat)
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -288,7 +298,7 @@ const ChatBox = (): JSX.Element => {
         cid: '',
       };
       setNewMessage('');
-      setMessages([...messages, msg]);
+      // setMessages([...messages, msg]);
       if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
         messageContent = message;
         encryptionType = 'PlainText';
@@ -341,6 +351,27 @@ const ChatBox = (): JSX.Element => {
         });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
+
+         // Decrypt message
+         if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+          // To do signature verification it depends on who has sent the message
+          let signatureValidationPubliKey: string;
+          if (savedMsg.fromDID === connectedUser.did) {
+            signatureValidationPubliKey = connectedUser.publicKey;
+          } else {
+            signatureValidationPubliKey = currentChat.publicKey;
+          }
+          savedMsg.messageContent = await decryptAndVerifySignature({
+            cipherText: savedMsg.messageContent,
+            encryptedSecretKey: savedMsg.encryptedSecret,
+            did: did,
+            encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+            publicKeyArmored: signatureValidationPubliKey,
+            signatureArmored: savedMsg.signature,
+          });
+        }
+
+        setMessages([...messages, savedMsg]);
       }
     } catch (error) {
       console.log(error);
@@ -451,19 +482,7 @@ const ChatBox = (): JSX.Element => {
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
         let caip10: string;
         if (!user) {
-          if (!ethers.utils.isAddress(searchedUser)) {
-            try {
-              const ens: string = await provider.resolveName(searchedUser);
-              if (ens) {
-                caip10 = walletToCAIP10({ account: ens, chainId });
-              }
-            } catch (err) {
-              console.log(err);
-              return;
-            }
-          } else {
             caip10 = walletToCAIP10({ account: searchedUser, chainId });
-          }
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -515,6 +534,8 @@ const ChatBox = (): JSX.Element => {
           sigType: signature,
           encryptedSecret: aesEncryptedSecret,
         });
+
+        console.log("Message",msg)
         if (typeof msg === 'string') {
           // Display toaster
           chatBoxToast.showMessageToast({
@@ -531,7 +552,7 @@ const ChatBox = (): JSX.Element => {
         } else {
           // We store the message in state decrypted so we display to the user the intent message
           msg.messageContent = message;
-          setMessages([...messages, msg]);
+          // setMessages([...messages, msg]);
           setNewMessage('');
           // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
           // will be undefined since it was not updated right after the intent was sent
@@ -561,8 +582,9 @@ const ChatBox = (): JSX.Element => {
       setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error);
+      setMessageBeingSent(false);
     }
-    setMessageBeingSent(false);
+    // setMessageBeingSent(false);
   };
 
   const handleKeyPress = (e: any): void => {
