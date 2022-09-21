@@ -99,6 +99,7 @@ const ChatBox = (): JSX.Element => {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
+        
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
@@ -161,6 +162,7 @@ const ChatBox = (): JSX.Element => {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
+              
               setMessages((m) => [...m, msgIPFS]);
             }
           }
@@ -228,6 +230,9 @@ const ChatBox = (): JSX.Element => {
               // Display messages for the first time
               else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
+
+                //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
+                setMessageBeingSent(false)
               }
               // Messages got from useQuery
               // else {
@@ -478,19 +483,7 @@ const ChatBox = (): JSX.Element => {
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
         let caip10: string;
         if (!user) {
-          if (!ethers.utils.isAddress(searchedUser)) {
-            try {
-              const ens: string = await provider.resolveName(searchedUser);
-              if (ens) {
-                caip10 = walletToCAIP10({ account: ens, chainId });
-              }
-            } catch (err) {
-              console.log(err);
-              return;
-            }
-          } else {
             caip10 = walletToCAIP10({ account: searchedUser, chainId });
-          }
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -542,6 +535,7 @@ const ChatBox = (): JSX.Element => {
           sigType: signature,
           encryptedSecret: aesEncryptedSecret,
         });
+
         if (typeof msg === 'string') {
           // Display toaster
           chatBoxToast.showMessageToast({
@@ -558,7 +552,7 @@ const ChatBox = (): JSX.Element => {
         } else {
           // We store the message in state decrypted so we display to the user the intent message
           msg.messageContent = message;
-          setMessages([...messages, msg]);
+          // setMessages([...messages, msg]);
           setNewMessage('');
           // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
           // will be undefined since it was not updated right after the intent was sent
@@ -588,8 +582,9 @@ const ChatBox = (): JSX.Element => {
       setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error);
+      setMessageBeingSent(false);
     }
-    setMessageBeingSent(false);
+    // setMessageBeingSent(false);
   };
 
   const handleKeyPress = (e: any): void => {
