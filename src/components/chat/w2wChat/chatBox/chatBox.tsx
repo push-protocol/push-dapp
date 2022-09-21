@@ -104,15 +104,20 @@ const ChatBox = (): JSX.Element => {
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
         if (latestThreadhash !== currentChat?.threadhash) {
+          console.log("Threadhash are not same")
+        console.time()
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
+            console.log("Fetched from Indexed DB")
             msgIPFS = messageFromIndexDB.body;
           } else {
+            console.log("Fetched from IPFS")
             const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
             await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
             msgIPFS = messageFromIPFS;
+            
           }
 
           // Decrypt message
@@ -134,6 +139,7 @@ const ChatBox = (): JSX.Element => {
             });
           }
 
+          
           //checking if the message is encrypted or not
           const messagesSentInChat: MessageIPFS = messages.find(
             (msg) =>
@@ -145,6 +151,7 @@ const ChatBox = (): JSX.Element => {
           );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
+            console.log("Message sent in chat",messagesSentInChat)
             const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
@@ -157,15 +164,17 @@ const ChatBox = (): JSX.Element => {
             newMessages[index] = msgIPFS;
             setMessages(newMessages);
           } else {
+            console.log("Else part ran")
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
               setMessages((m) => [...m, msgIPFS]);
             }
           }
+          console.timeEnd()
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
-        else {
+        else{
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -250,8 +259,10 @@ const ChatBox = (): JSX.Element => {
   };
 
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
+  console.log("Messages",messages)
 
   useEffect(() => {
+    console.log("Current Chat changed")
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -288,7 +299,7 @@ const ChatBox = (): JSX.Element => {
         cid: '',
       };
       setNewMessage('');
-      setMessages([...messages, msg]);
+      // setMessages([...messages, msg]);
       if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
         messageContent = message;
         encryptionType = 'PlainText';
@@ -326,6 +337,27 @@ const ChatBox = (): JSX.Element => {
         sigType,
         encryptedSecret: aesEncryptedSecret,
       });
+
+      // Decrypt message
+      if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+        // To do signature verification it depends on who has sent the message
+        let signatureValidationPubliKey: string;
+        if (savedMsg.fromDID === connectedUser.did) {
+          signatureValidationPubliKey = connectedUser.publicKey;
+        } else {
+          signatureValidationPubliKey = currentChat.publicKey;
+        }
+        savedMsg.messageContent = await decryptAndVerifySignature({
+          cipherText: savedMsg.messageContent,
+          encryptedSecretKey: savedMsg.encryptedSecret,
+          did: did,
+          encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+          publicKeyArmored: signatureValidationPubliKey,
+          signatureArmored: savedMsg.signature,
+        });
+      }
+      console.log("Saved Msg",savedMsg)
+      setMessages([...messages, savedMsg]);
 
       if (typeof savedMsg === 'string') {
         chatBoxToast.showMessageToast({
