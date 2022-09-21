@@ -72,31 +72,46 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
     ) : null;
 
   return (
-    <ChatSnap
-      pfp={imageSource}
-      username={username}
-      chatSnapMsg={chatSnapMsg}
-      date={props.inbox?.msg?.timestamp}
-    />
-    // <ProfileCard
-    //   padding="10px"
-    // >
-    //   <AvatarContainer>
-    //     <Avatar alt="Remy Sharp" src={imageSource} />
-    //   </AvatarContainer>
-    //   <UserData>
-    //     <DisplayText color="#1E1E1E" weight="600" size="16px">
-    //       {caip10ToWallet(props.inbox.msg.name).slice(0, 8) + '...' + caip10ToWallet(props.inbox.msg.name).slice(-7)}
-    //     </DisplayText>
-    //     <DisplayText color={unread ? '#D53A94' : '#657795'}>
-    //       {message}
-    //     </DisplayText>
-    //   </UserData>
-    //   <MessageData>
-    //     <ReceivedTime color={unread ? '#D53A94' : '#657795'}>{date}</ReceivedTime>
-    //     {unread ? <Badge>3</Badge> : null}
-    //   </MessageData>
-    // </ProfileCard>
+    <ProfileCard
+      padding="10px"
+    >
+      <AvatarContainer>
+        <Avatar alt="Remy Sharp" src={imageSource} />
+      </AvatarContainer>
+      <UserData>
+        <DisplayText color="#1E1E1E" weight="600" size="16px">
+          {caip10ToWallet(props.inbox.msg.name).slice(0, 8) + '...' + caip10ToWallet(props.inbox.msg.name).slice(-7)}
+        </DisplayText>
+        <DisplayText color={unread ? '#D53A94' : '#657795'}>
+          {props.inbox.msg.messageType === 'Text' ? (
+            props.inbox.msg.lastMessage.length > 25 ? (
+              props.inbox.msg.lastMessage.slice(0, 25) + '...'
+            ) : (
+              props.inbox.msg.lastMessage
+            )
+          ) : props.inbox.msg.messageType === 'Image' ? (
+            <div>
+              <i className="fa fa-picture-o" aria-hidden="true"></i>
+              Image
+            </div>
+          ) : props.inbox.msg.messageType === 'File' ? (
+            <div>
+              <i className="fa fa-file" aria-hidden="true"></i>
+              File
+            </div>
+          ) : props.inbox.msg.messageType === 'GIF' ? (
+            <div>
+              <i className="fa fa-picture-o" aria-hidden="true"></i>
+              GIF
+            </div>
+          ) : null}
+        </DisplayText>
+      </UserData>
+      <MessageData >
+        {unread ? <Badge>3</Badge> : null}
+        <ReceivedTime color={unread ? '#D53A94' : '#657795'}>{date}</ReceivedTime>
+      </MessageData>
+    </ProfileCard>
   )
 }
 
@@ -116,6 +131,9 @@ const Badge = styled.div`
 const ReceivedTime = styled.div`
   font-size: 14px;
   color: ${(props): string => props.color || '#657795'};
+  display: flex;
+  align-items: end;
+  margin-top: 10px;
 `
 
 const MessageData = styled.div`
@@ -126,7 +144,7 @@ const MessageData = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: end;
   gap: 5px;
 `
 
