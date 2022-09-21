@@ -1,10 +1,11 @@
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
-import { Feeds } from 'api'
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2'
-import React from 'react'
-import styled, { useTheme } from 'styled-components'
-import './defaultIntent.css'
+import Avatar from '@mui/material/Avatar';
+import Typography from '@mui/material/Typography';
+import { Feeds } from 'api';
+import ChatSnap from 'components/chat/chatsnap/ChatSnap';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import React from 'react';
+import styled, { useTheme } from 'styled-components';
+import './defaultIntent.css';
 
 interface DefaultIntentProps {
   inbox: Feeds
@@ -27,7 +28,7 @@ const DefaultIntent = (props: DefaultIntentProps): JSX.Element => {
   const fh = walletAddress.slice(0, 6)
   const sh = walletAddress.slice(-6)
   const final = fh + '....' + sh
-
+  
   return (
     <ProfileCard>
       <AvatarContainer>
