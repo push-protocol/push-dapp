@@ -98,7 +98,6 @@ const ChatBox = (): JSX.Element => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
-
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
@@ -146,6 +145,7 @@ const ChatBox = (): JSX.Element => {
           );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
+            console.log("Message sent in chat",messagesSentInChat)
             const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
@@ -166,7 +166,7 @@ const ChatBox = (): JSX.Element => {
           }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
-        else {
+        else{
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -254,6 +254,7 @@ const ChatBox = (): JSX.Element => {
 
   useEffect(() => {
     setLoading(true)
+    console.log("Current Chat changed")
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -290,7 +291,7 @@ const ChatBox = (): JSX.Element => {
         cid: '',
       };
       setNewMessage('');
-      setMessages([...messages, msg]);
+      // setMessages([...messages, msg]);
       if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
         messageContent = message;
         encryptionType = 'PlainText';
@@ -343,6 +344,27 @@ const ChatBox = (): JSX.Element => {
         });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
+        //Decrypting Message here because we want it to add in the setMessages Array as encrypted Message and also we are displaying the messages so encryption is done above and decryption is done to add it in the setMessages
+        // Decrypt message
+        if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+          // To do signature verification it depends on who has sent the message
+          let signatureValidationPubliKey: string;
+          if (savedMsg.fromDID === connectedUser.did) {
+            signatureValidationPubliKey = connectedUser.publicKey;
+          } else {
+            signatureValidationPubliKey = currentChat.publicKey;
+          }
+          savedMsg.messageContent = await decryptAndVerifySignature({
+            cipherText: savedMsg.messageContent,
+            encryptedSecretKey: savedMsg.encryptedSecret,
+            did: did,
+            encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+            publicKeyArmored: signatureValidationPubliKey,
+            signatureArmored: savedMsg.signature,
+          });
+        }
+        console.log("Saved Msg",savedMsg)
+        setMessages([...messages, savedMsg]);
       }
     } catch (error) {
       console.log(error);
@@ -358,7 +380,10 @@ const ChatBox = (): JSX.Element => {
         ),
       });
     }
-    setMessageBeingSent(false);
+    setTimeout(() => {
+      console.log("Timeout of 2 sec")
+      setMessageBeingSent(false);
+    }, 2000);
   };
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
@@ -575,7 +600,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const textOnChange = (e: any): void => {
-    setNewMessage(e.target.value);
+    if(!messageBeingSent){
+      setNewMessage(e.target.value);
+    }
   };
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -760,12 +787,12 @@ const ChatBox = (): JSX.Element => {
             </ScrollToBottom>
           </MessageContainer>
 
-          {messageBeingSent ? (
+          {/* {messageBeingSent ? (
             <LoaderSpinner
               type={LOADER_TYPE.STANDALONE_MINIMAL}
               spinnerSize={40}
             />
-          ) : (
+          ) : ( */}
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
                 <img
@@ -793,6 +820,7 @@ const ChatBox = (): JSX.Element => {
                   onKeyDown={handleKeyPress}
                   onChange={textOnChange}
                   value={newMessage}
+                  autoFocus="autoFocus"
                 />
               }
               <>
@@ -838,6 +866,13 @@ const ChatBox = (): JSX.Element => {
                     />
                   </div>
                 ) : (
+                  <>
+                  {messageBeingSent ? (
+                    <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={40}
+                  />
+                  ) : (
                   <Icon onClick={handleSubmit}>
                     <img
                       src="/svg/chats/send.svg"
@@ -845,11 +880,13 @@ const ChatBox = (): JSX.Element => {
                       width="27px"
                       alt=""
                     />
-                  </Icon>
+                  </Icon>)}
+                  
+                  </>
                 )}
               </>
             </TypeBarContainer>
-          )}
+          {/* )} */}
         </>
       )}
     </Container>
