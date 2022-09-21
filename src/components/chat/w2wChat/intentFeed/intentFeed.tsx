@@ -253,7 +253,9 @@ const IntentFeed = (): JSX.Element => {
           />
         )}
 
-        {!isLoading && receivedIntents?.length == 0 && <InfoMessage>No received intents</InfoMessage>}
+        {!isLoading && receivedIntents?.length == 0 && (
+          <NoIntentMessage>You don't have any request yet Start a conversation by using the + button</NoIntentMessage>
+        )}
 
         {!isLoading && receivedIntents?.length > 0 && (
           <UserIntents>
@@ -280,13 +282,14 @@ const IntentFeed = (): JSX.Element => {
   );
 };
 
-const InfoMessage = styled.p`
+const NoIntentMessage = styled.div`
   position: relative;
-  text-align: center;
   width: 80%;
-  background: #d2cfcf;
-  padding: 10px;
-  margin: 0;
+  text-align: justify;
+  text-align-last: center;
+  color: #657795;
+  font-size: 15px;
+  margin-top:25px;
 `;
 
 const UserProfileContainer = styled.div`
