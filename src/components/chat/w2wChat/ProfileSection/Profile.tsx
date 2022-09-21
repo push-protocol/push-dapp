@@ -139,7 +139,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
               DID:
             </Typography>
 
-            <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', }}>
               <Typography component="legend" sx={styles.value}>
                 {showCharacters(did?.id)}
               </Typography>
@@ -162,7 +162,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
             </Typography>
 
             {wallets.map((wallet) => (
-              <Box sx={{ display: 'flex', marginBottom: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
                 <Typography component="legend" sx={styles.value}>
                   {showCharacters(wallet)}
                 </Typography>
