@@ -4,11 +4,9 @@ import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
@@ -17,13 +15,15 @@ import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import styled from 'styled-components';
+import styled,{useTheme} from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Content } from 'components/SharedStyling';
+import { ImageV2,ItemVV2,SpanV2 } from 'components/reusables/SharedStylingV2';
+import HandwaveIcon from "../../../../assets/chat/handwave.svg"
 import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
@@ -90,6 +90,7 @@ const ChatBox = (): JSX.Element => {
   const [showOption, setShowOption] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
   const chatBoxToast = useToast();
+  const theme = useTheme();
   let showTime = false;
   let time = '';
 
@@ -97,8 +98,8 @@ const ChatBox = (): JSX.Element => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
-
       if (latestThreadhash) {
+        
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
@@ -145,6 +146,7 @@ const ChatBox = (): JSX.Element => {
           );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
+            console.log("Message sent in chat",messagesSentInChat)
             const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
@@ -160,12 +162,13 @@ const ChatBox = (): JSX.Element => {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
+              
               setMessages((m) => [...m, msgIPFS]);
             }
           }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
-        else {
+        else{
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -227,6 +230,9 @@ const ChatBox = (): JSX.Element => {
               // Display messages for the first time
               else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
+
+                //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
+                setMessageBeingSent(false)
               }
               // Messages got from useQuery
               // else {
@@ -245,13 +251,15 @@ const ChatBox = (): JSX.Element => {
       } else {
         setMessages([]);
       }
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
+    setLoading(true)
+    console.log("Current Chat changed")
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -288,7 +296,7 @@ const ChatBox = (): JSX.Element => {
         cid: '',
       };
       setNewMessage('');
-      setMessages([...messages, msg]);
+      // setMessages([...messages, msg]);
       if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
         messageContent = message;
         encryptionType = 'PlainText';
@@ -341,6 +349,27 @@ const ChatBox = (): JSX.Element => {
         });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
+        //Decrypting Message here because we want it to add in the setMessages Array as encrypted Message and also we are displaying the messages so encryption is done above and decryption is done to add it in the setMessages
+        // Decrypt message
+        if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+          // To do signature verification it depends on who has sent the message
+          let signatureValidationPubliKey: string;
+          if (savedMsg.fromDID === connectedUser.did) {
+            signatureValidationPubliKey = connectedUser.publicKey;
+          } else {
+            signatureValidationPubliKey = currentChat.publicKey;
+          }
+          savedMsg.messageContent = await decryptAndVerifySignature({
+            cipherText: savedMsg.messageContent,
+            encryptedSecretKey: savedMsg.encryptedSecret,
+            did: did,
+            encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+            publicKeyArmored: signatureValidationPubliKey,
+            signatureArmored: savedMsg.signature,
+          });
+        }
+        console.log("Saved Msg",savedMsg)
+        setMessages([...messages, savedMsg]);
       }
     } catch (error) {
       console.log(error);
@@ -356,7 +385,10 @@ const ChatBox = (): JSX.Element => {
         ),
       });
     }
-    setMessageBeingSent(false);
+    setTimeout(() => {
+      console.log("Timeout of 2 sec")
+      setMessageBeingSent(false);
+    }, 2000);
   };
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
@@ -451,19 +483,7 @@ const ChatBox = (): JSX.Element => {
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
         let caip10: string;
         if (!user) {
-          if (!ethers.utils.isAddress(searchedUser)) {
-            try {
-              const ens: string = await provider.resolveName(searchedUser);
-              if (ens) {
-                caip10 = walletToCAIP10({ account: ens, chainId });
-              }
-            } catch (err) {
-              console.log(err);
-              return;
-            }
-          } else {
-            caip10 = walletToCAIP10({ account: searchedUser, chainId });
-          }
+          caip10 = walletToCAIP10({ account: searchedUser, chainId });
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -515,6 +535,7 @@ const ChatBox = (): JSX.Element => {
           sigType: signature,
           encryptedSecret: aesEncryptedSecret,
         });
+
         if (typeof msg === 'string') {
           // Display toaster
           chatBoxToast.showMessageToast({
@@ -531,7 +552,7 @@ const ChatBox = (): JSX.Element => {
         } else {
           // We store the message in state decrypted so we display to the user the intent message
           msg.messageContent = message;
-          setMessages([...messages, msg]);
+          // setMessages([...messages, msg]);
           setNewMessage('');
           // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
           // will be undefined since it was not updated right after the intent was sent
@@ -561,8 +582,9 @@ const ChatBox = (): JSX.Element => {
       setHasUserBeenSearched(false)
     } catch (error) {
       console.log(error);
+      setMessageBeingSent(false);
     }
-    setMessageBeingSent(false);
+    // setMessageBeingSent(false);
   };
 
   const handleKeyPress = (e: any): void => {
@@ -573,7 +595,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const textOnChange = (e: any): void => {
-    setNewMessage(e.target.value);
+    if(!messageBeingSent){
+      setNewMessage(e.target.value);
+    }
   };
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -639,13 +663,23 @@ const ChatBox = (): JSX.Element => {
   return (
     <Container>
       {!viewChatBox ? (
-        <Box>
-          <HelloBox>
-            <Typography>Say Hello to Push Chat</Typography>
-          </HelloBox>
-          <HelloText>You haven't started a conversation yet.</HelloText>
-          <HelloText>Begin by searching name.eth or 0x123...</HelloText>
-        </Box>
+        <ItemVV2 gap="25px">
+         <WelcomeMainText 
+         theme={theme}>
+           Say
+           <ImageV2 src={HandwaveIcon} 
+           alt="wave"
+           display="inline" 
+           width="auto"
+           verticalAlign="middle"
+           margin="0 13px"/>
+            to Push Chat!
+         </WelcomeMainText>
+         <WelcomeSubText 
+          theme={theme}>
+           You haven’t started a conversation yet. Start a new chat by using the + button
+         </WelcomeSubText>
+        </ItemVV2>
       ) : (
         <>
           <Snackbar
@@ -748,12 +782,12 @@ const ChatBox = (): JSX.Element => {
             </ScrollToBottom>
           </MessageContainer>
 
-          {messageBeingSent ? (
+          {/* {messageBeingSent ? (
             <LoaderSpinner
               type={LOADER_TYPE.STANDALONE_MINIMAL}
               spinnerSize={40}
             />
-          ) : (
+          ) : ( */}
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
                 <img
@@ -781,6 +815,7 @@ const ChatBox = (): JSX.Element => {
                   onKeyDown={handleKeyPress}
                   onChange={textOnChange}
                   value={newMessage}
+                  autoFocus="autoFocus"
                 />
               }
               <>
@@ -826,6 +861,13 @@ const ChatBox = (): JSX.Element => {
                     />
                   </div>
                 ) : (
+                  <>
+                  {messageBeingSent ? (
+                    <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={40}
+                  />
+                  ) : (
                   <Icon onClick={handleSubmit}>
                     <img
                       src="/svg/chats/send.svg"
@@ -833,11 +875,13 @@ const ChatBox = (): JSX.Element => {
                       width="27px"
                       alt=""
                     />
-                  </Icon>
+                  </Icon>)}
+                  
+                  </>
                 )}
               </>
             </TypeBarContainer>
-          )}
+          {/* )} */}
         </>
       )}
     </Container>
@@ -998,13 +1042,9 @@ const Container = styled(Content)`
 `;
 
 const HelloBox = styled(Box)`
-  width: 333px;
-  height: 75px;
   background: #ffffff;
-  border-radius: 2px 16px 16px 16px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 400;
+  border-radius: 2px 28px 28px 28px;
+  padding:24px 70px 27px 70px;
   display: flex;
   align-items: center;
   text-align: center;
@@ -1012,10 +1052,46 @@ const HelloBox = styled(Box)`
   margin-bottom: 10px;
 `;
 
-const HelloText = styled(Typography)`
-  color: #657795;
-  font-size: 14px;
-  margin-bottom: 5px;
+const WelcomeMainText = styled(SpanV2)`
+  background:${props => props.theme.default.bg};
+  padding:20px 55px;
+  border-radius:2px 28px 28px 28px;
+  font-size:28px;
+  font-weight:500;
+  text-align:center;
+  color:${props => props.theme.default.color};
+  letter-spacing:-0.03em;
+  margin:0 4rem;
+  @media only screen and (max-width: 1115px) and (min-width: 991px) {
+    font-size:26px;
+    padding: 16px 33px;
+    & img {
+      width:2rem;
+    }
+  }
+  @media only screen and (max-width: 771px) and (min-width: 711px) {
+    font-size:23px;
+    padding: 16px 30px;
+    & img {
+      width:1.8rem;
+    }
+  }
+`;
+
+const WelcomeSubText = styled(SpanV2)`
+font-size:15px;
+font-weight:400;
+line-height:19px;
+max-width:17rem;
+color:${props => props.theme.default.seconddaryColor};
+@media only screen and (max-width: 1115px) and (min-width: 991px) {
+  font-size:13px;
+  max-width:15rem;
+}
+@media only screen and (max-width: 780px) and (min-width: 711px) {
+  font-size:13px;
+  max-width:14rem;
+}
 `;
 
 export default ChatBox;

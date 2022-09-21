@@ -107,7 +107,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
           </IconButton>
         </Box>
 
-        <CardActionArea sx={{ position: 'relative', background: 'lightgrey' }}>
+        <CardActionArea sx={{ position: 'relative', background: 'lightgrey', pointerEvents: 'none' }}>
           <CardMedia component="img" height="140" image={profile} alt="profile" />
         </CardActionArea>
 
