@@ -74,65 +74,67 @@ const ChatSidebarSection = () => {
   return (
     <ItemVV2>
       {/* Header */}
-      <ItemVV2 flex="initial">
-        <ItemHV2>
-          {/* Set active and onCLick to customize tab */}
-          <TabButton
-            active={activeTab == 0 ? true : false}
-            background="transparent"
-            hoverBackground="transparent"
-            color={theme.default.color}
-            flex="1"
-            padding="10px 10px 20px 10px"
-            onClick={() => {
-              setActiveTab(0);
-            }}
-          >
-            <SpanV2
-              fontSize="16px"
-              color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+      {activeTab !== 2 ? (
+        <ItemVV2 flex="initial">
+          <ItemHV2>
+            {/* Set active and onCLick to customize tab */}
+            <TabButton
+              active={activeTab == 0 ? true : false}
+              background="transparent"
+              hoverBackground="transparent"
+              color={theme.default.color}
+              flex="1"
+              padding="10px 10px 20px 10px"
+              onClick={() => {
+                setActiveTab(0);
+              }}
             >
-              Chats
-            </SpanV2>
-          </TabButton>
-
-          <TabButton
-            active={activeTab == 1 ? true : false}
-            background="transparent"
-            hoverBackground="transparent"
-            color={theme.default.color}
-            flex="1"
-            padding="10px 10px 20px 10px"
-            onClick={() => {
-              setActiveTab(1);
-            }}
-          >
-            <ItemHV2 alignItems="center">
               <SpanV2
-                flex="initial"
                 fontSize="16px"
-                color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
-                margin="0px 4px"
+                color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
               >
-                Requests
+                Chats
               </SpanV2>
+            </TabButton>
 
-              {pendingRequests > 0 && (
+            <TabButton
+              active={activeTab == 1 ? true : false}
+              background="transparent"
+              hoverBackground="transparent"
+              color={theme.default.color}
+              flex="1"
+              padding="10px 10px 20px 10px"
+              onClick={() => {
+                setActiveTab(1);
+              }}
+            >
+              <ItemHV2 alignItems="center">
                 <SpanV2
-                  background={GLOBALS.COLORS.PRIMARY_PINK}
-                  color={GLOBALS.COLORS.WHITE}
-                  padding="2px 8px"
+                  flex="initial"
+                  fontSize="16px"
+                  color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
                   margin="0px 4px"
-                  fontSize="12px"
-                  borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                 >
-                  {pendingRequests}
+                  Requests
                 </SpanV2>
-              )}
-            </ItemHV2>
-          </TabButton>
-        </ItemHV2>
-      </ItemVV2>
+
+                {pendingRequests > 0 && (
+                  <SpanV2
+                    background={GLOBALS.COLORS.PRIMARY_PINK}
+                    color={GLOBALS.COLORS.WHITE}
+                    padding="2px 8px"
+                    margin="0px 4px"
+                    fontSize="12px"
+                    borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                  >
+                    {pendingRequests}
+                  </SpanV2>
+                )}
+              </ItemHV2>
+            </TabButton>
+          </ItemHV2>
+        </ItemVV2>
+      ) : null}
 
       {/* Main Content */}
       <ItemVV2
