@@ -47,13 +47,29 @@ const style = {
 };
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  return (
+    <MuiAlert
+      elevation={6}
+      ref={ref}
+      variant="filled"
+      {...props}
+    />
+  );
 });
 
 const IntentFeed = (): JSX.Element => {
-  const { did, setChat, connectedUser, intents, setConnectedUser, connectAndSetDID, setDID, setPendingRequests, setBlockedLoading }: AppContext = useContext<
-    AppContext
-  >(Context);
+  const {
+    did,
+    setChat,
+    connectedUser,
+    intents,
+    setConnectedUser,
+    connectAndSetDID,
+    setDID,
+    setPendingRequests,
+    setBlockedLoading,
+    setActiveTab,
+  }: AppContext = useContext<AppContext>(Context);
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
@@ -100,29 +116,29 @@ const IntentFeed = (): JSX.Element => {
         // This is a new user
         setBlockedLoading({
           enabled: true,
-          title: "Step 1/4: Creating cryptography keys",
+          title: 'Step 1/4: Creating cryptography keys',
           progressEnabled: true,
           progress: 25,
-        })
+        });
 
         const keyPairs = await generateKeyPair();
         setBlockedLoading({
           enabled: true,
-          title: "Step 2/4: Encrypting your info",
+          title: 'Step 2/4: Encrypting your info',
           progressEnabled: true,
-          progress: 50
-        })
+          progress: 50,
+        });
 
         const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        
+
         setBlockedLoading({
           enabled: true,
-          title: "Step 3/4: Syncing account info",
+          title: 'Step 3/4: Syncing account info',
           progressEnabled: true,
           progress: 75,
-          progressNotice: "This might take a moment"
-        })
+          progressNotice: 'This might take a moment',
+        });
 
         const createdUser = await PushNodeClient.createUser({
           caip10,
@@ -135,15 +151,15 @@ const IntentFeed = (): JSX.Element => {
         });
         setConnectedUser(createdUser);
         setDID(createdDID);
-        
+
         setBlockedLoading({
           enabled: false,
-          title: "Step 4/4: Done, Welcome to Push Chat!",
+          title: 'Step 4/4: Done, Welcome to Push Chat!',
           spinnerCompleted: true,
           progressEnabled: true,
           progress: 100,
-          progressNotice: "This might take a moment"
-        })
+          progressNotice: 'This might take a moment',
+        });
 
         return { didCreated: createdDID, createdUser };
       } else {
@@ -160,6 +176,7 @@ const IntentFeed = (): JSX.Element => {
     await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
     setOpen(false);
     await resolveThreadhash();
+    setActiveTab(0);
     setIsLoading(false);
   }
 
@@ -180,47 +197,65 @@ const IntentFeed = (): JSX.Element => {
   };
 
   return (
-    <ItemVV2 alignSelf="stretch" justifyContent="flex-start" alignItems="stretch">
-      {!isLoading && 
+    <ItemVV2
+      alignSelf="stretch"
+      justifyContent="flex-start"
+      alignItems="stretch"
+    >
+      {!isLoading && (
         <Modal
           open={open}
           onClose={() => setOpen(false)}
           aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description">
+          aria-describedby="modal-modal-description"
+        >
           <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+            >
               Approve Intent
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }} style={{ textAlign: 'center' }}>
+            <Typography
+              id="modal-modal-description"
+              sx={{ mt: 2 }}
+              style={{ textAlign: 'center' }}
+            >
               You have received an intent from {receivedIntentFrom ? caip10ToWallet(receivedIntentFrom) : ''}.
             </Typography>
             <br />
             {isLoading ? (
-              <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} spinnerSize={40} />
+              <LoaderSpinner
+                type={LOADER_TYPE.STANDALONE_MINIMAL}
+                spinnerSize={40}
+              />
             ) : (
               <Button
                 style={{ background: '#cf1c84', width: '100%', color: 'white' }}
                 onClick={(): void => {
                   ApproveIntent('Approved');
-                }}>
+                }}
+              >
                 Approve
               </Button>
             )}
           </Box>
         </Modal>
-      }
-      
+      )}
+
       {/* Load the Intents */}
       <ItemVV2 justifyContent="flex-start">
-        {isLoading &&
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={40} />
-        }
+        {isLoading && (
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
+        )}
 
-        {!isLoading && receivedIntents?.length == 0 && 
-          <InfoMessage>No received intents</InfoMessage>
-        }
+        {!isLoading && receivedIntents?.length == 0 && <InfoMessage>No received intents</InfoMessage>}
 
-        {!isLoading && receivedIntents?.length > 0 && 
+        {!isLoading && receivedIntents?.length > 0 && (
           <UserIntents>
             {receivedIntents.map((intent: Feeds) => (
               <ItemVV2
@@ -231,7 +266,7 @@ const IntentFeed = (): JSX.Element => {
                   setChat(intent);
                   showModal({
                     intentFrom: intent.wallets.split(',')[0],
-                    fromDID: intent.intentSentBy
+                    fromDID: intent.intentSentBy,
                   });
                 }}
               >
@@ -239,7 +274,7 @@ const IntentFeed = (): JSX.Element => {
               </ItemVV2>
             ))}
           </UserIntents>
-        }
+        )}
       </ItemVV2>
     </ItemVV2>
   );
@@ -282,7 +317,7 @@ const UserIntents = styled(ItemVV2)`
   overflow-y: auto;
   height: 0px;
   flex-flow: column;
-  
+
   &&::-webkit-scrollbar {
     width: 4px;
   }

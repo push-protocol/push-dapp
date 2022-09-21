@@ -21,7 +21,11 @@ import * as PushNodeClient from 'api';
 import { Feeds, User } from 'api';
 import ChatBox from 'components/chat/w2wChat/chatBox/chatBox';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE, PROGRESS_POSITIONING } from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, {
+  LOADER_OVERLAY,
+  LOADER_TYPE,
+  PROGRESS_POSITIONING,
+} from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wHelper from 'helpers/w2w';
 import { createCeramic } from 'helpers/w2w/ceramic';
 import * as DIDHelper from 'helpers/w2w/did';
@@ -78,6 +82,8 @@ export interface AppContext {
   loadingMessage: string;
   setLoadingMessage: (loadingMessage: string) => void;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
+  activeTab: number;
+  setActiveTab: (active: number) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -103,9 +109,9 @@ const ChatMainSection = () => {
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
-    title: null
+    title: null,
   });
-  const [user, setUser] = useState()
+  const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
   const [searchedUser, setSearchedUser] = useState<string>('');
   const [connectedUser, setConnectedUser] = useState<User>();
@@ -113,6 +119,7 @@ const ChatMainSection = () => {
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<number>(0);
 
   const queryClient = new QueryClient({});
 
@@ -125,11 +132,12 @@ const ChatMainSection = () => {
   const connectAndSetDID = async (): Promise<DID> => {
     setBlockedLoading({
       enabled: true,
-      title: "Step 3/4: Creating DID",
+      title: 'Step 3/4: Creating DID',
       progressEnabled: true,
       progress: 75,
-      progressNotice: "We use Ceramic to enable multichain and multiwallet experience. You will need to sign two transactions when they appear."
-    })
+      progressNotice:
+        'We use Ceramic to enable multichain and multiwallet experience. You will need to sign two transactions when they appear.',
+    });
 
     const provider: Promise<any> = await connector.getProvider();
     const threeID: ThreeIdConnect = new ThreeIdConnect();
@@ -145,10 +153,10 @@ const ChatMainSection = () => {
     // Getting User Info
     setBlockedLoading({
       enabled: true,
-      title: "Step 1/4: Getting Account Info",
+      title: 'Step 1/4: Getting Account Info',
       progressEnabled: true,
       progress: 25,
-      progressNotice: "Push Chat is in alpha and might be slow sometimes"
+      progressNotice: 'Push Chat is in alpha and might be slow sometimes',
     });
 
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
@@ -159,10 +167,10 @@ const ChatMainSection = () => {
       // Getting User Info
       setBlockedLoading({
         enabled: true,
-        title: "Step 2/4: Checking for DID",
+        title: 'Step 2/4: Checking for DID',
         progressEnabled: true,
         progress: 50,
-        progressNotice: "DID enables you to chat multichain with anyone"
+        progressNotice: 'DID enables you to chat multichain with anyone',
       });
 
       await connectAndSetDID();
@@ -172,12 +180,12 @@ const ChatMainSection = () => {
       if (!user.wallets.includes(caip10)) {
         setBlockedLoading({
           enabled: true,
-          title: "Step 3/4: Syncing your Info",
+          title: 'Step 3/4: Syncing your Info',
           progressEnabled: true,
           progress: 90,
-          progressNotice: "Almost done! Please wait while we sync up your info"
-        })
-    
+          progressNotice: 'Almost done! Please wait while we sync up your info',
+        });
+
         user = await PushNodeClient.updateUser({ did: did.id, caip10 });
       }
     } else {
@@ -207,7 +215,7 @@ const ChatMainSection = () => {
       spinnerCompleted: true,
       progressEnabled: true,
       progress: 100,
-    })
+    });
 
     setConnectedUser(user);
     setIsLoading(false);
@@ -245,7 +253,9 @@ const ChatMainSection = () => {
               setHasUserBeenSearched,
               loadingMessage,
               setLoadingMessage,
-              setBlockedLoading
+              setBlockedLoading,
+              activeTab,
+              setActiveTab
             }}
           >
             <ItemVV2
@@ -256,19 +266,19 @@ const ChatMainSection = () => {
             >
               <ChatSidebarSection />
             </ItemVV2>
-            <ItemVV2
-              padding="10px 10px 10px 10px"
-            >
+            <ItemVV2 padding="10px 10px 10px 10px">
               <ChatBoxSection />
             </ItemVV2>
           </Context.Provider>
           {/* The rest of your application */}
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
-      ) : <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
+      ) : (
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+      )}
 
       {/* This always needs to be last */}
-      {blockedLoading.enabled && 
+      {blockedLoading.enabled && (
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           overlay={LOADER_OVERLAY.ONTOP}
@@ -282,8 +292,8 @@ const ChatMainSection = () => {
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={blockedLoading.progress}
           progressNotice={blockedLoading.progressNotice}
-        />  
-      }
+        />
+      )}
     </ItemHV2>
   );
 };
