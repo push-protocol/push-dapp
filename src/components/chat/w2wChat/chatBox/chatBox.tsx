@@ -483,7 +483,7 @@ const ChatBox = (): JSX.Element => {
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
         let caip10: string;
         if (!user) {
-            caip10 = walletToCAIP10({ account: searchedUser, chainId });
+          caip10 = walletToCAIP10({ account: searchedUser, chainId });
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
