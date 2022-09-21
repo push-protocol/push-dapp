@@ -4,6 +4,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import useToast from 'hooks/useToast';
 import React, { useContext, useEffect, useState } from 'react';
+import { MdError } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import styled from 'styled-components';
@@ -121,7 +122,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           }
         } else {
           if (props.isInvalidAddress) {
-            messageFeedToast.showMessageToast({
+              messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: 'Invalid Address',
               toastType: 'ERROR',
