@@ -720,7 +720,7 @@ const GovModule = () => {
                     <LI>
                       <Span>
                         Sign up on:-{' '}
-                        <AMod href="https://gov.epns.io/" target="_blank" title="Join our EPNS's Telegram channel">
+                        <AMod href="https://gov.epns.io/" target="_blank" title="Join our Push (EPNS)'s Telegram channel">
                           Push (EPNS) Governance Portal
                         </AMod>
                       </Span>
@@ -731,7 +731,7 @@ const GovModule = () => {
                         <AMod
                           href="https://gov.epns.io/t/epns-push-delegatee-nominations/21"
                           target="_blank"
-                          title="Join our EPNS's Telegram channel">
+                          title="Join our Push (EPNS)'s Telegram channel">
                           https://gov.epns.io/t/epns-push-delegatee-nominations/21
                         </AMod>
                       </Span>
@@ -782,7 +782,7 @@ const GovModule = () => {
                 <Answer>
                   <Span>
                     Visit{' '}
-                    <AMod href="https://gov.epns.io/" target="_blank" title="Join our EPNS's Telegram channel">
+                    <AMod href="https://gov.epns.io/" target="_blank" title="Join our Push (EPNS)'s Telegram channel">
                       Push (EPNS) Governance Portal
                     </AMod>{' '}
                     and introduce yoursef on the platform in the suggested format.
@@ -858,11 +858,11 @@ const GovModule = () => {
                     <AMod
                       href="https://twitter.com/epnsproject"
                       target="_blank"
-                      title="Join our EPNS's Twitter channel">
+                      title="Join our Push (EPNS)'s Twitter channel">
                       Twitter
                     </AMod>
                     , and sign up for our 5 minute{' '}
-                    <AMod href="https://epns.substack.com/" target="_blank" title="Join our EPNS's Twitter channel">
+                    <AMod href="https://epns.substack.com/" target="_blank" title="Join our Push (EPNS)'s Twitter channel">
                       weekly product updates
                     </AMod>
                     .
