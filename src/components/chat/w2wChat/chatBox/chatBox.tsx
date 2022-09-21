@@ -338,27 +338,6 @@ const ChatBox = (): JSX.Element => {
         encryptedSecret: aesEncryptedSecret,
       });
 
-      // Decrypt message
-      if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
-        // To do signature verification it depends on who has sent the message
-        let signatureValidationPubliKey: string;
-        if (savedMsg.fromDID === connectedUser.did) {
-          signatureValidationPubliKey = connectedUser.publicKey;
-        } else {
-          signatureValidationPubliKey = currentChat.publicKey;
-        }
-        savedMsg.messageContent = await decryptAndVerifySignature({
-          cipherText: savedMsg.messageContent,
-          encryptedSecretKey: savedMsg.encryptedSecret,
-          did: did,
-          encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
-          publicKeyArmored: signatureValidationPubliKey,
-          signatureArmored: savedMsg.signature,
-        });
-      }
-      console.log("Saved Msg",savedMsg)
-      setMessages([...messages, savedMsg]);
-
       if (typeof savedMsg === 'string') {
         chatBoxToast.showMessageToast({
           toastTitle: 'Error',
@@ -373,6 +352,27 @@ const ChatBox = (): JSX.Element => {
         });
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
+        //Decrypting Message here because we want it to add in the setMessages Array as encrypted Message and also we are displaying the messages so encryption is done above and decryption is done to add it in the setMessages
+        // Decrypt message
+        if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+          // To do signature verification it depends on who has sent the message
+          let signatureValidationPubliKey: string;
+          if (savedMsg.fromDID === connectedUser.did) {
+            signatureValidationPubliKey = connectedUser.publicKey;
+          } else {
+            signatureValidationPubliKey = currentChat.publicKey;
+          }
+          savedMsg.messageContent = await decryptAndVerifySignature({
+            cipherText: savedMsg.messageContent,
+            encryptedSecretKey: savedMsg.encryptedSecret,
+            did: did,
+            encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+            publicKeyArmored: signatureValidationPubliKey,
+            signatureArmored: savedMsg.signature,
+          });
+        }
+          console.log("Saved Msg",savedMsg)
+          setMessages([...messages, savedMsg]);
       }
     } catch (error) {
       console.log(error);
