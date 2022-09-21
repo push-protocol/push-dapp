@@ -67,9 +67,9 @@ const DefaultMessage = (props: { inbox: Feeds, isSelected: boolean }): JSX.Eleme
           ) : null}
         </DisplayText>
       </UserData>
-      <MessageData>
-        <ReceivedTime color={unread ? '#D53A94' : '#657795'}>{date}</ReceivedTime>
+      <MessageData >
         {unread ? <Badge>3</Badge> : null}
+        <ReceivedTime color={unread ? '#D53A94' : '#657795'}>{date}</ReceivedTime>
       </MessageData>
     </ProfileCard>
   )
@@ -91,6 +91,9 @@ const Badge = styled.div`
 const ReceivedTime = styled.div`
   font-size: 14px;
   color: ${(props): string => props.color || '#657795'};
+  display: flex;
+  align-items: end;
+  margin-top: 10px;
 `
 
 const MessageData = styled.div`
@@ -101,7 +104,7 @@ const MessageData = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: end;
   gap: 5px;
 `
 
