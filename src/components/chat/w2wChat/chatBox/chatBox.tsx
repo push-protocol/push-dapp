@@ -97,7 +97,6 @@ const ChatBox = (): JSX.Element => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
-      console.log("Threadhash",latestThreadhash)
       if (latestThreadhash) {
         
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -105,7 +104,6 @@ const ChatBox = (): JSX.Element => {
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
         if (latestThreadhash !== currentChat?.threadhash) {
-          console.log("Threadhashes are not changed")
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
@@ -175,14 +173,11 @@ const ChatBox = (): JSX.Element => {
               setLoading(false);
               break;
             } else {
-              console.log("Threadhashes are changed")
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
               let msgIPFS: MessageIPFSWithCID;
               if (messageFromIndexDB !== undefined) {
-                console.log("Fetched from Index DB")
                 msgIPFS = messageFromIndexDB.body;
               } else {
-              console.log("Fetched from IPFS")
                 const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
                 await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
                 msgIPFS = messageFromIPFS;
@@ -232,8 +227,9 @@ const ChatBox = (): JSX.Element => {
               }
               // Display messages for the first time
               else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                console.log("Here the message is added")
                 setMessages((m) => [msgIPFS, ...m]);
+
+                //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
                 setMessageBeingSent(false)
               }
               // Messages got from useQuery
@@ -251,7 +247,6 @@ const ChatBox = (): JSX.Element => {
           }
         }
       } else {
-        console.log("This ran because of no threadhash")
         setMessages([]);
       }
       setLoading(false);
@@ -261,7 +256,6 @@ const ChatBox = (): JSX.Element => {
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
-    console.log("Current Chat changes",currentChat)
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -535,7 +529,6 @@ const ChatBox = (): JSX.Element => {
           encryptedSecret: aesEncryptedSecret,
         });
 
-        console.log("Message",msg)
         if (typeof msg === 'string') {
           // Display toaster
           chatBoxToast.showMessageToast({
