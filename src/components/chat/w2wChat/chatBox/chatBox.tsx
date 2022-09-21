@@ -97,27 +97,21 @@ const ChatBox = (): JSX.Element => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
-
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
         if (latestThreadhash !== currentChat?.threadhash) {
-          console.log("Threadhash are not same")
-        console.time()
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
-            console.log("Fetched from Indexed DB")
             msgIPFS = messageFromIndexDB.body;
           } else {
-            console.log("Fetched from IPFS")
             const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
             await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
             msgIPFS = messageFromIPFS;
-            
           }
 
           // Decrypt message
@@ -139,7 +133,6 @@ const ChatBox = (): JSX.Element => {
             });
           }
 
-          
           //checking if the message is encrypted or not
           const messagesSentInChat: MessageIPFS = messages.find(
             (msg) =>
@@ -164,14 +157,12 @@ const ChatBox = (): JSX.Element => {
             newMessages[index] = msgIPFS;
             setMessages(newMessages);
           } else {
-            console.log("Else part ran")
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
               setMessages((m) => [...m, msgIPFS]);
             }
           }
-          console.timeEnd()
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else{
@@ -259,7 +250,6 @@ const ChatBox = (): JSX.Element => {
   };
 
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
-  console.log("Messages",messages)
 
   useEffect(() => {
     console.log("Current Chat changed")
@@ -371,8 +361,8 @@ const ChatBox = (): JSX.Element => {
             signatureArmored: savedMsg.signature,
           });
         }
-          console.log("Saved Msg",savedMsg)
-          setMessages([...messages, savedMsg]);
+        console.log("Saved Msg",savedMsg)
+        setMessages([...messages, savedMsg]);
       }
     } catch (error) {
       console.log(error);
@@ -388,7 +378,10 @@ const ChatBox = (): JSX.Element => {
         ),
       });
     }
-    setMessageBeingSent(false);
+    setTimeout(() => {
+      console.log("Timeout of 2 sec")
+      setMessageBeingSent(false);
+    }, 2000);
   };
 
   const handleSubmit = (e: { preventDefault: () => void }): void => {
@@ -605,7 +598,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const textOnChange = (e: any): void => {
-    setNewMessage(e.target.value);
+    if(!messageBeingSent){
+      setNewMessage(e.target.value);
+    }
   };
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -780,12 +775,12 @@ const ChatBox = (): JSX.Element => {
             </ScrollToBottom>
           </MessageContainer>
 
-          {messageBeingSent ? (
+          {/* {messageBeingSent ? (
             <LoaderSpinner
               type={LOADER_TYPE.STANDALONE_MINIMAL}
               spinnerSize={40}
             />
-          ) : (
+          ) : ( */}
             <TypeBarContainer>
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
                 <img
@@ -813,6 +808,7 @@ const ChatBox = (): JSX.Element => {
                   onKeyDown={handleKeyPress}
                   onChange={textOnChange}
                   value={newMessage}
+                  autoFocus="autoFocus"
                 />
               }
               <>
@@ -858,6 +854,13 @@ const ChatBox = (): JSX.Element => {
                     />
                   </div>
                 ) : (
+                  <>
+                  {messageBeingSent ? (
+                    <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={40}
+                  />
+                  ) : (
                   <Icon onClick={handleSubmit}>
                     <img
                       src="/svg/chats/send.svg"
@@ -865,11 +868,13 @@ const ChatBox = (): JSX.Element => {
                       width="27px"
                       alt=""
                     />
-                  </Icon>
+                  </Icon>)}
+                  
+                  </>
                 )}
               </>
             </TypeBarContainer>
-          )}
+          {/* )} */}
         </>
       )}
     </Container>
