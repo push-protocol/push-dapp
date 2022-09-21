@@ -246,13 +246,14 @@ const ChatBox = (): JSX.Element => {
       } else {
         setMessages([]);
       }
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
+    setLoading(true)
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
