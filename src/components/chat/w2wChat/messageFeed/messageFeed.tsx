@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { MessageIPFS } from 'helpers/w2w/ipfs';
 import useToast from 'hooks/useToast';
 import React, { useContext, useEffect, useState } from 'react';
 import { MdError } from 'react-icons/md';
@@ -34,8 +35,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const getInbox = async (): Promise<Feeds[]> => {
     if (did) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', did.id, '', 'did');
+      console.log(getInbox)
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = await fetchInbox(did);
+        console.log(inboxes)
+        let inboxes2: Feeds[] = getInbox.body;
+        console.log(inboxes2)
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did });
         setFeeds(inboxes);
         setInbox(inboxes);
@@ -43,6 +48,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       } else {
         let inboxes: Feeds[] = await fetchInbox(did);
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did });
+        console.log(inboxes)
+        await intitializeDb<Feeds[]>('Insert', 'Inbox', did.id, inboxes, 'did');
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
