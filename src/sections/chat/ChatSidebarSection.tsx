@@ -41,12 +41,12 @@ function TabPanel({ children, value, index, ...other }): JSX.Element {
 const useStyles = makeStyles({
   tabs: {
     '& .MuiTabs-indicator': {
-      backgroundColor: '#CF1C84'
+      backgroundColor: '#CF1C84',
     },
     '& .MuiTab-root.Mui-selected': {
-      color: '#CF1C84'
-    }
-  }
+      color: '#CF1C84',
+    },
+  },
 });
 
 // Chat Sections
@@ -55,11 +55,11 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests } = useContext(Context);
+  const { connectedUser, pendingRequests, activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const [value, setValue] = useState(0);
-  const [activeTab, setActiveTab] = useState(0);
+  // const [activeTab, setActiveTab] = useState(0);
   const classes = useStyles();
 
   const handleChange = (event, newValue) => {
@@ -73,7 +73,6 @@ const ChatSidebarSection = () => {
   // RENDER
   return (
     <ItemVV2>
-
       {/* Header */}
       <ItemVV2 flex="initial">
         <ItemHV2>
@@ -89,7 +88,12 @@ const ChatSidebarSection = () => {
               setActiveTab(0);
             }}
           >
-            <SpanV2 fontSize="16px" color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"}>Chats</SpanV2>
+            <SpanV2
+              fontSize="16px"
+              color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+            >
+              Chats
+            </SpanV2>
           </TabButton>
 
           <TabButton
@@ -104,11 +108,16 @@ const ChatSidebarSection = () => {
             }}
           >
             <ItemHV2 alignItems="center">
-              <SpanV2 flex="initial" fontSize="16px" color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"} margin="0px 4px">
+              <SpanV2
+                flex="initial"
+                fontSize="16px"
+                color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+                margin="0px 4px"
+              >
                 Requests
               </SpanV2>
 
-              {pendingRequests > 0 && 
+              {pendingRequests > 0 && (
                 <SpanV2
                   background={GLOBALS.COLORS.PRIMARY_PINK}
                   color={GLOBALS.COLORS.WHITE}
@@ -119,30 +128,41 @@ const ChatSidebarSection = () => {
                 >
                   {pendingRequests}
                 </SpanV2>
-              } 
+              )}
             </ItemHV2>
           </TabButton>
         </ItemHV2>
       </ItemVV2>
 
       {/* Main Content */}
-      <ItemVV2 justifyContent="flex-start" alignItems="stretch">
-        {activeTab == 0 &&
-          <SearchBar />
-        }
-        {activeTab == 1 &&
+      <ItemVV2
+        justifyContent="flex-start"
+        alignItems="stretch"
+      >
+        {activeTab == 0 && <SearchBar />}
+        {activeTab == 1 && (
           <>
-            <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
+            <DisplayText
+              color="#6D6B7A"
+              size="14px"
+              weight="700"
+              ml={3}
+              mt={2}
+            >
               REQUESTS
             </DisplayText>
             <IntentFeed />
           </>
-        }
-        {activeTab == 2 &&
+        )}
+        {activeTab == 2 && (
           <>
-            <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setActiveTab={setActiveTab} />
+            <Profile
+              profilePicture={updateProfileImage}
+              updateProfile={updateProfile}
+              setActiveTab={setActiveTab}
+            />
           </>
-        }
+        )}
       </ItemVV2>
 
       {/* Footer */}
@@ -151,13 +171,13 @@ const ChatSidebarSection = () => {
       </ItemVV2>
     </ItemVV2>
   );
-}
+};
 export default ChatSidebarSection;
 
 const TabButton = styled(ButtonV2)`
-  border-bottom: 2px solid ${(props) => props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg};
+  border-bottom: 2px solid ${(props) => (props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg)};
   pointer: hand;
-`
+`;
 
 const Badge = styled.div`
   box-sizing: border-box;
