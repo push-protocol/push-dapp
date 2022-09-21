@@ -32,12 +32,12 @@ function TabPanel({ children, value, index, ...other }): JSX.Element {
 const useStyles = makeStyles({
   tabs: {
     '& .MuiTabs-indicator': {
-      backgroundColor: '#CF1C84'
+      backgroundColor: '#CF1C84',
     },
     '& .MuiTab-root.Mui-selected': {
-      color: '#CF1C84'
-    }
-  }
+      color: '#CF1C84',
+    },
+  },
 });
 
 const Sidebar = () => {
@@ -54,12 +54,17 @@ const Sidebar = () => {
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
   };
+  console.log('pending',pendingRequests)
 
   return (
     <Container>
       <TabContainer>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} className={classes.tabs}>
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            className={classes.tabs}
+          >
             <Tab label={<span style={{ textTransform: 'capitalize', fontSize: '17px' }}>chats</span>} />
             <Tab
               label={
@@ -68,31 +73,55 @@ const Sidebar = () => {
                     textTransform: 'capitalize',
                     fontSize: '17px',
                     display: 'flex',
-                    gap: '6px'
+                    gap: '6px',
                   }}
                 >
                   Requests{pendingRequests > 0 ? <Badge>{pendingRequests}</Badge> : null}
                 </span>
               }
             />
-            <Tab style={{ display: 'none' }} label="" />
+            <Tab
+              style={{ display: 'none' }}
+              label=""
+            />
           </Tabs>
         </Box>
       </TabContainer>
-      <TabPanel value={value} index={0}>
+      <TabPanel
+        value={value}
+        index={0}
+      >
         <Box>
           <SearchBar />
         </Box>
       </TabPanel>
-      <TabPanel value={value} index={1}>
-        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={3} mt={2}>
-          REQUESTS
-        </DisplayText>
+      <TabPanel
+        value={value}
+        index={1}
+      >
+        {pendingRequests > 0 ? (
+          <DisplayText
+            color="#6D6B7A"
+            size="14px"
+            weight="700"
+            ml={3}
+            mt={2}
+          >
+            REQUESTS
+          </DisplayText>
+        ) : null}
         <IntentFeed />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel
+        value={value}
+        index={2}
+      >
         <Box>
-          <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setValue={setValue} />
+          <Profile
+            profilePicture={updateProfileImage}
+            updateProfile={updateProfile}
+            setValue={setValue}
+          />
         </Box>
       </TabPanel>
       <BottomBar>

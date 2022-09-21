@@ -6,6 +6,7 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import FadeLoader from 'react-spinners/FadeLoader';
 import styled, { useTheme } from 'styled-components';
@@ -15,7 +16,7 @@ import * as PushNodeClient from 'api';
 import { User } from 'api';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/messageFeed';
@@ -34,7 +35,12 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
   const { children, value, index, ...other } = props;
 
   return (
-    <div role="tabpanel" hidden={value !== index} id={`${index}`} {...other}>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`${index}`}
+      {...other}
+    >
       {value === index && <Box sx={{ p: 3, padding: '0px' }}>{children}</Box>}
     </div>
   );
@@ -141,8 +147,15 @@ const SearchBar = () => {
   };
 
   return (
-    <ItemVV2 alignItems="stretch" justifyContent="flex-start">
-      <ItemVV2 justifyContent="flex-start" flex="initial">
+    <ItemVV2
+      alignItems="stretch"
+      justifyContent="flex-start"
+    >
+      <ItemHV2
+        justifyContent="space-between"
+        width="100%"
+        flex="initial"
+      >
         <SearchBarContent onSubmit={submitSearch}>
           <Input
             type="text"
@@ -151,23 +164,51 @@ const SearchBar = () => {
             placeholder="Search name.eth or 0x123..."
           />
 
-          {searchedUser.length > 0 && 
-            <ItemVV2 position="absolute" alignItems="flex-end" width="24px" height="24px" top="22px" right="42px">
+          {searchedUser.length > 0 && (
+            <ItemVV2
+              position="absolute"
+              alignItems="flex-end"
+              width="24px"
+              height="24px"
+              top="22px"
+              right="34px"
+            >
               <CloseIcon onClick={clearInput} />
             </ItemVV2>
-          }
-            
+          )}
 
-          <ItemVV2 position="absolute" alignItems="flex-end" width="24px" height="24px" top="22px" right="16px">
-            {isLoadingSearch &&
-              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} width="auto" spinnerSize={24} spinnerColor={theme.default.secondaryColor} />
-            } 
-            {!isLoadingSearch &&
-              <SearchIcon />
-            }
+          <ItemVV2
+            position="absolute"
+            alignItems="flex-end"
+            width="24px"
+            height="24px"
+            top="22px"
+            right="16px"
+          >
+            {isLoadingSearch && (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                width="auto"
+                spinnerSize={24}
+                spinnerColor={theme.default.secondaryColor}
+              />
+            )}
+            {!isLoadingSearch && <SearchIcon style={{ cursor: 'pointer' }} />}
           </ItemVV2>
         </SearchBarContent>
-      </ItemVV2>
+        <ItemVV2
+          position="absolute"
+          alignItems="center"
+          width="48px"
+          height="48px"
+          top="10px"
+          right="0px"
+          background="#D53893"
+          borderRadius="50%"
+        >
+          <AddIcon style={{ color: '#FFFFFF', fontSize: '24px' }} />
+        </ItemVV2>
+      </ItemHV2>
       <ItemVV2 justifyContent="flex-start">
         <MessageFeed
           hasUserBeenSearched={hasUserBeenSearched}
@@ -181,7 +222,7 @@ const SearchBar = () => {
 
 const SearchBarContent = styled.form`
   position: relative;
-`
+`;
 
 const Close = styled(CloseIcon)`
   position: absolute;
@@ -200,7 +241,7 @@ const SearchLoader = styled.div`
 
 const Input = styled.input`
   box-sizing: border-box;
-  width: 294px;
+  width: 245px;
   height: 48px;
   padding: 13px 60px 13px 21px;
   margin: 10px 0px 17px 0px;
