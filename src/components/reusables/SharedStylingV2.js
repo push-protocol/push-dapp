@@ -181,6 +181,7 @@ export const SpanV2 = styled.span`
 `
 
 export const ImageV2 = styled.img`
+  background: ${(props) => props.background || "transparent"};
   display: ${(props) => props.display || 'flex'};
   height: ${(props) => props.height || "auto"};
   max-height: ${(props) => props.maxHeight || "initial"};

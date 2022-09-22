@@ -22,7 +22,7 @@ import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { Content } from 'components/SharedStyling';
+import { Content, TextField } from 'components/SharedStyling';
 import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
@@ -828,14 +828,7 @@ const ChatBox = (): JSX.Element => {
             />
           ) : ( */}
             <TypeBarContainer>
-              <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
-                <img
-                  src="/svg/chats/smiley.svg"
-                  height="100%"
-                  width="100%"
-                  alt=""
-                />
-              </Icon>
+              <Icon src="/svg/chats/smiley.svg" onClick={(): void => setShowEmojis(!showEmojis)} />
               {showEmojis && (
                 <Picker
                   onEmojiClick={addEmoji}
@@ -868,31 +861,24 @@ const ChatBox = (): JSX.Element => {
                       />
                     )}
                     <Icon 
+                      src="/svg/chats/gif.svg"
+                      onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
                       style={{
-                        // height: "18px",
-                        width: "20px",
+                        width: "38px",
                         padding: "5.5px 9px",
                         background: "#F6F8FF",
                         borderRadius: "10px",
                       }} 
-                      onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
-                    >
-                      <img
-                        src="/svg/chats/gif.svg"
-                        width= "22px"
-                        alt=""
-                      />
-                    </Icon>
+                    />
                   </label>
                   <label>
-                    <Icon>
-                      <img
-                        src="/svg/chats/attachment.svg"
-                        height="24px"
-                        width="20px"
-                        alt=""
-                      />
-                    </Icon>
+                    <Icon 
+                      style={{
+                        height:"24px",
+                        width:"20px"
+                      }} 
+                      src="/svg/chats/attachment.svg"
+                    />
                     <FileInput
                       type="file"
                       ref={fileInputRef}
@@ -915,15 +901,11 @@ const ChatBox = (): JSX.Element => {
                     spinnerSize={40}
                   />
                   ) : (
-                  <Icon onClick={handleSubmit}>
-                    <img
-                      src="/svg/chats/send.svg"
-                      height="27px"
-                      width="27px"
-                      alt=""
-                    />
-                  </Icon>)}
-                  
+                  <Icon 
+                    src="/svg/chats/send.svg"
+                    onClick={handleSubmit}
+                  />
+                  )}
                   </>
                 )}
               </>
@@ -1037,9 +1019,9 @@ const MoreOptions = styled.div`
   position: relative;
 `;
 
-const Icon = styled.i`
-  height: 26px;
-  width: 26px;
+const Icon = styled(ImageV2)`
+  height: 27px;
+  width: 27px;
   margin: 0px;
   padding: 0px;
   &:hover {
@@ -1047,18 +1029,18 @@ const Icon = styled.i`
   }
 `;
 
-const TextInput = styled.textarea`
+const TextInput = styled(TextField)`
   height: 26px;
   width: 77%;
   font-size: 16px;
-  outline: none;
-  border: none;
   resize: none;
   padding: 4px 0;
-  background: transparent;
   &&::-webkit-scrollbar {
     width: 0;
     height: 0;
+  }
+  &&::placeholder {
+    color: #494D5F;
   }
 `;
 
@@ -1073,7 +1055,7 @@ const TypeBarContainer = styled.div`
   right: 9px;
   height: 55px;
   padding: 16px;
-  border-radius: 13px;
+  border-radius: 16px;
   color: black;
   background: #ffffff;
 `;
