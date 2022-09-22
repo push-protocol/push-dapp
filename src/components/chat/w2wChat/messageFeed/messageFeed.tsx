@@ -17,6 +17,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
 import Loader from '../Loader/Loader';
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
+import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
@@ -90,7 +91,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).did === did?.id) {
-            setIsSameUser(true);
+            messageFeedToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: "You can't send intent to yourself",
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
             setFeeds([]);
           } else {
             // When searching as of now the search will always result in only one user being displayed.
@@ -143,7 +154,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 />
               ),
             });
-            setIsInvalidAddress(true);
           }
           setFeeds([]);
         }
@@ -172,11 +182,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && isSameUser ? (
-              <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
-            ) : !feeds?.length && isInValidAddress ? (
-              <InfoMessage>Invalid Address</InfoMessage>
-            ) : !feeds?.length && !messagesLoading ? (
+            {!feeds?.length && !messagesLoading ? (
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
