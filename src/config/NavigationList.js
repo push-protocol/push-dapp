@@ -342,7 +342,7 @@ const NavigationList = {
           newTab: false,
           opened: false,
           isRoute: true,
-          isMenuLogic: false,
+          hasMenuLogic: true,
           hidden: false,
         },
       },
