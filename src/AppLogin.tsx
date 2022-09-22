@@ -4,7 +4,7 @@ import { AbstractConnector } from '@web3-react/abstract-connector';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
-  UserRejectedRequestError as UserRejectedRequestErrorInjected,
+  UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from '@web3-react/injected-connector';
 import { hexlify } from 'ethers/lib/utils';
 import React, { useContext, useState } from 'react';
@@ -25,7 +25,7 @@ import {
   ItemHV2,
   ItemVV2,
   SectionV2,
-  SpanV2,
+  SpanV2
 } from 'components/reusables/SharedStylingV2';
 import { injected, ledger, walletconnect } from 'connectors';
 import { useEagerConnect, useInactiveListener } from 'hooks';
@@ -154,7 +154,7 @@ const AppLogin = ({ toggleDarkMode }) => {
         {/* Login Component */}
         <ItemVV2
           background={theme.default.bg}
-          maxWidth="480px"
+          maxWidth="440px"
           padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
           borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
           alignSelf="center"
@@ -164,11 +164,12 @@ const AppLogin = ({ toggleDarkMode }) => {
             textTransform="none"
             color={theme.default.color}
             fontSize="32px"
-            margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0 0 0`}>
+            fontWeight="500"
+            margin={`${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             Connect a Wallet
           </H2V2>
 
-          <ItemHV2 alignSelf="center" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
+          <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
             {Object.keys(web3Connectors).map((name) => {
               const currentConnector = web3Connectors[name].obj;
               const disabled = currentConnector === connector;
@@ -176,10 +177,10 @@ const AppLogin = ({ toggleDarkMode }) => {
               const title = web3Connectors[name].title;
 
               return (
-                <ButtonV2
+                <LoginButton
                   disabled={disabled}
-                  margin="20px"
-                  padding="30px"
+                  margin="10px"
+                  padding="10px"
                   hover={theme.default.hover}
                   background={theme.default.bg}
                   borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
@@ -190,20 +191,20 @@ const AppLogin = ({ toggleDarkMode }) => {
                     setActivatingConnector(currentConnector);
                     activate(currentConnector);
                   }}>
-                  <ImageV2 src={image} height="68px" width="74px" padding="0px 0px 18px 0px" />
+                  <ImageV2 src={image} height="40px" width="50px" padding="5px" />
 
                   <SpanV2
-                    spacing="0.1em"
+                    padding="5px"
                     textTransform="Capitalize"
                     fontSize="18px"
                     fontWeight="500"
                     color={theme.default.color}>
                     {title}
                   </SpanV2>
-                </ButtonV2>
+                </LoginButton>
               );
             })}
-          </ItemHV2>
+          </ItemVV2>
 
           {/* TOS and PRIVACY */}
           <SpanV2 fontSize="14px" padding="0px 20px 10px 20px" color={theme.default.color} lineHeight="140%">
@@ -253,3 +254,8 @@ const Container = styled(SectionV2)`
     padding: ${GLOBALS.ADJUSTMENTS.MARGIN.LOGIN_MODULES.MOBILE};
   }
 `;
+
+const LoginButton = styled(ButtonV2)`
+  flex-direction: row;
+  justify-content: flex-start;
+`
