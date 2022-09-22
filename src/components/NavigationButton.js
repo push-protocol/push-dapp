@@ -103,7 +103,7 @@ function NavigationButton({ item, data, sectionID, active }) {
                 spacing="0"
                 margin="0 5px"
                 color={theme.nav.color}
-                size="14px">
+                size="16px">
                 {data.name}
               </Span>
 

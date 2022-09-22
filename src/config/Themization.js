@@ -32,6 +32,12 @@ const themeLight = {
     activeColor: '#F9EBF3',
   },
 
+  // Chat Theme
+  chat: {
+    snapFocusBg: '#F4F5FA',
+    chatboxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
+  },
+
   // Default Background Theme
   defaultBG: '#FFFFFF',
 
@@ -175,6 +181,12 @@ const themeDark = {
     hamburgerBg: '#00000066',
     color: '#B6BCD6',
     activeColor: '#404650'
+  },
+
+  // Chat Theme
+  chat: {
+    snapFocusBg: '#404650',
+    chatboxBg: '#282A2E',
   },
 
   // Header Theme

@@ -12,24 +12,24 @@ import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
-import { MdCheckCircle, MdError } from 'react-icons/md';
+import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import styled,{useTheme} from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
-import { ImageV2,ItemVV2,SpanV2 } from 'components/reusables/SharedStylingV2';
-import HandwaveIcon from "../../../../assets/chat/handwave.svg"
 import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import HandwaveIcon from "../../../../assets/chat/handwave.svg";
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import Chats from '../chats/chats';
@@ -41,6 +41,8 @@ import './chatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
+import GLOBALS, { device } from 'config/Globals';
+
 const INFURA_URL = appConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -666,14 +668,12 @@ const ChatBox = (): JSX.Element => {
         <ItemVV2 gap="25px">
          <WelcomeMainText 
          theme={theme}>
-           Say
            <ImageV2 src={HandwaveIcon} 
            alt="wave"
            display="inline" 
            width="auto"
            verticalAlign="middle"
            margin="0 13px"/>
-            to Push Chat!
          </WelcomeMainText>
          <WelcomeSubText 
           theme={theme}>
@@ -696,19 +696,58 @@ const ChatBox = (): JSX.Element => {
             </Alert>
           </Snackbar>
 
-          <ChatHeader>
-            <UserInfo>
-              <Avatar
+          <ItemHV2
+            position="absolute"
+            alignItems="center"
+            justifyContent="flex-start"
+            top="10px"
+            left="10px"
+            right="10px"
+            minHeight="55px"
+            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
+            color={theme.default.color}
+            background={theme.default.bg}
+            padding="6px"
+            fontWeight="500"
+            zIndex="999"
+          >
+          {/* setChat */}
+          
+            <ItemHV2
+              height="48px"
+              flex="initial"
+            > 
+              <TabletBackButton
+                margin="0px 5px 0px 0px"
+                color={theme.default.secondaryColor}
+                background="transparent"
+                hover="transparent"
+                hoverBackground="transparent"
+                onClick={() => {
+                  setChat(null);
+                }}
+              >
+                <MdOutlineArrowBackIos size={24} />
+              </TabletBackButton>
+
+              <ImageV2
+                height="48px"
+                width="48px"
                 alt="Profile Picture"
                 src={imageSource}
+                borderRadius="100%"
+                overflow="hidden"
               />
-              <Typography
-                variant="body1"
-                ml={1}
-              >
-                {caip10ToWallet(currentChat.msg.name)}
-              </Typography>
-            </UserInfo>
+            </ItemHV2>
+            
+            <SpanV2
+              flex="1"
+              margin="5px 10px"
+              fontWeight="400"
+              textAlign="start"
+            >
+              {caip10ToWallet(currentChat.msg.name)}
+            </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
                 <MoreVertIcon />
@@ -734,7 +773,7 @@ const ChatBox = (): JSX.Element => {
                 </OptionContainer>
               )}
             </MoreOptions> */}
-          </ChatHeader>
+          </ItemHV2>
 
           <MessageContainer>
             <ScrollToBottom className="chatBoxTop" initialScrollBehavior="smooth">
@@ -959,8 +998,8 @@ const ChatHeader = styled.div`
   right: 9px;
   height: 55px;
   border-radius: 29px;
-  color: black;
-  background: #ffffff;
+  color: ${(props) => props.theme.default.color};
+  background: ${(props) => props.theme.default.bg};
   padding: 6px;
   font-weight: 500;
 `;
@@ -1029,7 +1068,7 @@ const TypeBarContainer = styled.div`
 
 const Container = styled(Content)`
   box-sizing: border-box;
-  background: linear-gradient(179.97deg, #eef5ff 0.02%, rgba(236, 239, 255, 0) 123.25%);
+  background: ${(props) => props.theme.chat.chatboxBg || 'transparent'};
   border-radius: 24px;
   height: 100%;
   display: flex;
@@ -1093,5 +1132,13 @@ color:${props => props.theme.default.seconddaryColor};
   max-width:14rem;
 }
 `;
+
+const TabletBackButton = styled(ButtonV2)`
+  display: none;
+  
+  @media ${device.tablet} {
+    display: initial;
+  }
+`
 
 export default ChatBox;

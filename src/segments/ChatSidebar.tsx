@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 import MuiTab from '@mui/material/Tab'
 import MuiTabs from '@mui/material/Tabs'
 import Typography from '@mui/material/Typography'
-import { ItemVV2 } from 'components/reusables/SharedStylingV2'
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -213,9 +213,14 @@ const ChatSidebar = (): JSX.Element => {
         <UserProfiles />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <DisplayText color="#6D6B7A" size="14px" weight="700" ml={2} mt={2}>
+        <SpanV2
+          fontWeight="700"
+          fontSize="14px"
+          margin="10px 0 0 0"
+          color={theme.default.secondaryColor}
+        >
           REQUESTS
-        </DisplayText>
+        </SpanV2>
         <Requests />
       </TabPanel>
       <BottomBar>

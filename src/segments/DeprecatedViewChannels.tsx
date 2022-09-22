@@ -154,7 +154,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
         {!loading && channels.length == 0 ? (
           <ContainerInfo>
             <DisplayNotice
-              title="That's weird, No Channels in EPNS... world is ending... right?"
+              title="That's weird, No Channels in Push (EPNS)... world is ending... right?"
             />
           </ContainerInfo>
         ) : (

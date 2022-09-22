@@ -7,5 +7,4 @@
   },
   "eslint.enable": false,
   "editor.formatOnSave": false,
-  "prettier.semi": true
 }

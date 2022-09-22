@@ -21,13 +21,13 @@ const NavigationList = {
         title: 'Inbox',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-          fg: themeLight.headerTagFg
+          fg: themeLight.headerTagFg,
         },
         dark: {
           bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
+          fg: themeDark.headerTagFg,
+        },
+      },
     },
     channels: {
       src: 'navigation/channelsOffIcon.svg',
@@ -47,13 +47,13 @@ const NavigationList = {
         title: 'View Channels',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg
+          fg: themeLight.headerTagFg,
         },
         dark: {
           bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
+          fg: themeDark.headerTagFg,
+        },
+      },
     },
     chat: {
       src: 'navigation/chatOffIcon.svg',
@@ -99,13 +99,13 @@ const NavigationList = {
         title: 'Channel Dashboard',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg
+          fg: themeLight.headerTagFg,
         },
         dark: {
           bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
+          fg: themeDark.headerTagFg,
+        },
+      },
     },
     sendNotifs: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.SEND_NOTIFS,
@@ -124,13 +124,13 @@ const NavigationList = {
         title: 'Send Notifications',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg
+          fg: themeLight.headerTagFg,
         },
         dark: {
           bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
+          fg: themeDark.headerTagFg,
+        },
+      },
     },
   },
   third: {
@@ -150,13 +150,13 @@ const NavigationList = {
         title: 'Receive Notifications',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_THIRD,
-          fg: themeLight.headerTagFg
+          fg: themeLight.headerTagFg,
         },
         dark: {
           bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
+          fg: themeDark.headerTagFg,
+        },
+      },
     },
     governance: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
@@ -175,13 +175,13 @@ const NavigationList = {
         title: 'Governance',
         light: {
           bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-          fg: themeLight.headerTagFg
+          fg: themeLight.headerTagFg,
         },
         dark: {
           bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
+          fg: themeDark.headerTagFg,
+        },
+      },
     },
     incentives: {
       src: 'navigation/incentivesOffIcon.svg',
@@ -212,20 +212,20 @@ const NavigationList = {
             title: 'Yield Farming',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         rockstars: {
           src: 'navigation/rockstarsIcon.svg',
           activeSrc: 'navigation/rockstarsIcon.svg',
           iconFactory: null,
-          name: 'Rockstars of EPNS',
-          title: 'Check Rockstars of EPNS',
+          name: 'Rockstars of Push (EPNS)',
+          title: 'Check Rockstars of Push (EPNS)',
           alt: 'Open Inbox',
           href: '/rockstar',
           newTab: false,
@@ -236,13 +236,13 @@ const NavigationList = {
             title: 'Rockstars NFTs',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         airdrop: {
           src: 'navigation/airdropIcon.svg',
@@ -260,15 +260,15 @@ const NavigationList = {
             title: 'Gratitude Drop',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_THIRD,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
-        }
-      }
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
+      },
     },
     more: {
       src: 'navigation/moreOffIcon.svg',
@@ -299,13 +299,13 @@ const NavigationList = {
             title: 'FAQ',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         livewalkthrough: {
           src: 'navigation/walkthroughIcon.svg',
@@ -323,13 +323,13 @@ const NavigationList = {
             title: 'Live Walkthrough',
             light: {
               bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
-              fg: themeLight.headerTagFg
+              fg: themeLight.headerTagFg,
             },
             dark: {
               bg: themeDark.headerTagBg,
-              fg: themeDark.headerTagFg
-            }
-          }
+              fg: themeDark.headerTagFg,
+            },
+          },
         },
         support: {
           src: 'navigation/supportIcon.svg',
@@ -344,10 +344,20 @@ const NavigationList = {
           isRoute: true,
           isMenuLogic: false,
           hidden: false,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
+
+// remove secret feature
+if (
+  window.location.hostname == 'app.epns.io' ||
+  window.location.hostname == 'staging.epns.io' ||
+  window.location.hostname == 'app.push.org' ||
+  window.location.hostname == 'staging.push.org'
+) {
+  delete NavigationList.primary.chat;
+}
 
 export default NavigationList;
