@@ -19,7 +19,7 @@ import styled,{useTheme} from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { Feeds, MessageIPFSWithCID, User } from 'api';
+import { ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Content } from 'components/SharedStyling';
 import { ImageV2,ItemVV2,SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -41,6 +41,7 @@ import './chatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
+import CryptoHelper from 'helpers/CryptoHelper';
 const INFURA_URL = appConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
@@ -58,13 +59,10 @@ const ChatBox = (): JSX.Element => {
   const {
     currentChat,
     viewChatBox,
-    did,
     searchedUser,
     connectedUser,
     inbox,
     setConnectedUser,
-    connectAndSetDID,
-    setDID,
     setChat,
     setInbox,
     setHasUserBeenSearched,
@@ -120,16 +118,24 @@ const ChatBox = (): JSX.Element => {
           if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
             // To do signature verification it depends on who has sent the message
             let signatureValidationPubliKey: string;
-            if (msgIPFS.fromDID === connectedUser.did) {
+            if (msgIPFS.fromCAIP10 === walletToCAIP10({ account, chainId })) {
               signatureValidationPubliKey = connectedUser.publicKey;
             } else {
-              signatureValidationPubliKey = currentChat.publicKey;
+              // If the other peer is registered in the protocol while this browser is open, we will not get the user publicKeys. In this case, to get the new publicKey, we fetch
+              // from the inbox since the inbox contains the latest state of users
+              if (!currentChat.publicKey) {
+                const latestUserInfo = inbox.find(x => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
+                if (latestUserInfo) {
+                  signatureValidationPubliKey = latestUserInfo.publicKey;
+                }
+              } else {
+                signatureValidationPubliKey = currentChat.publicKey;
+              }
             }
             msgIPFS.messageContent = await decryptAndVerifySignature({
               cipherText: msgIPFS.messageContent,
               encryptedSecretKey: msgIPFS.encryptedSecret,
-              did: did,
-              encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+              privateKeyArmored: connectedUser.privateKey,
               publicKeyArmored: signatureValidationPubliKey,
               signatureArmored: msgIPFS.signature,
             });
@@ -189,16 +195,24 @@ const ChatBox = (): JSX.Element => {
               if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
                 // To do signature verification it depends on who has sent the message
                 let signatureValidationPubliKey: string;
-                if (msgIPFS.fromDID === connectedUser.did) {
+                if (msgIPFS.fromCAIP10 === walletToCAIP10({ account, chainId })) {
                   signatureValidationPubliKey = connectedUser.publicKey;
                 } else {
-                  signatureValidationPubliKey = currentChat.publicKey;
+                  // If the other peer approves the intent while we have the browser open, the peer publicKey will still be empty
+                  // For this, we check on the inbox to see if the user has registred into the protocol by looking at the publicKey on the inbox.
+                  if (!currentChat.publicKey) {
+                    const latestUserInfo = inbox.find(x => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0])
+                    if (latestUserInfo) {
+                      signatureValidationPubliKey = latestUserInfo.publicKey;
+                    }
+                  } else {
+                    signatureValidationPubliKey = currentChat.publicKey;
+                  }
                 }
                 msgIPFS.messageContent = await decryptAndVerifySignature({
                   cipherText: msgIPFS.messageContent,
                   encryptedSecretKey: msgIPFS.encryptedSecret,
-                  did: did,
-                  encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+                  privateKeyArmored: connectedUser.privateKey,
                   publicKeyArmored: signatureValidationPubliKey,
                   signatureArmored: msgIPFS.signature,
                 });
@@ -282,9 +296,10 @@ const ChatBox = (): JSX.Element => {
     let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string, sigType: string;
     try {
       msg = {
+        fromDID: walletToCAIP10({ account, chainId }),
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        fromDID: did.id,
-        toDID: currentChat.did,
+        toDID: walletToCAIP10({account: currentChat.wallets.split(',')[0], chainId}),
+        toCAIP10: walletToCAIP10({account: currentChat.wallets.split(',')[0], chainId}),
         messageContent: message,
         messageType,
         signature: '',
@@ -312,10 +327,9 @@ const ChatBox = (): JSX.Element => {
           encType: pgpEncryptionType,
         } = await encryptAndSign({
           plainText: message,
-          fromEncryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
           fromPublicKeyArmored: connectedUser.publicKey,
           toPublicKeyArmored: currentChat.publicKey,
-          did,
+          privateKeyArmored: connectedUser.privateKey
         });
         messageContent = cipherText;
         encryptionType = pgpEncryptionType;
@@ -325,8 +339,9 @@ const ChatBox = (): JSX.Element => {
       }
       const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        fromDID: did.id,
-        toDID: currentChat.did,
+        fromDID: walletToCAIP10({ account, chainId }),
+        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
         messageContent,
         messageType,
         signature,
@@ -354,7 +369,7 @@ const ChatBox = (): JSX.Element => {
         if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
           // To do signature verification it depends on who has sent the message
           let signatureValidationPubliKey: string;
-          if (savedMsg.fromDID === connectedUser.did) {
+          if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
             signatureValidationPubliKey = connectedUser.publicKey;
           } else {
             signatureValidationPubliKey = currentChat.publicKey;
@@ -362,8 +377,7 @@ const ChatBox = (): JSX.Element => {
           savedMsg.messageContent = await decryptAndVerifySignature({
             cipherText: savedMsg.messageContent,
             encryptedSecretKey: savedMsg.encryptedSecret,
-            did: did,
-            encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
+            privateKeyArmored: connectedUser.privateKey,
             publicKeyArmored: signatureValidationPubliKey,
             signatureArmored: savedMsg.signature,
           });
@@ -406,9 +420,9 @@ const ChatBox = (): JSX.Element => {
     }
   };
 
-  const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
+  const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
     try {
-      if (!did) {
+      if (connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '') {
         setBlockedLoading({
           enabled: true,
           title: "Step 1/4: Preparing First Time Setup",
@@ -416,8 +430,6 @@ const ChatBox = (): JSX.Element => {
           progress: 25,
           progressNotice: "We use Ceramic to enable multichain and multiwallet experience. This step is is only done for first time users and might take a couple of minutes. Steady lads, chat is almost ready! You will need to sign two transactions when they appear."
         })
-
-        const createdDID: DID = await connectAndSetDID();
 
         // This is a new user
         setBlockedLoading({
@@ -435,7 +447,8 @@ const ChatBox = (): JSX.Element => {
           progress: 60
         })
 
-        const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
+        const walletPublicKey = await CryptoHelper.getPublicKey(account);
+        const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(keyPairs.privateKeyArmored, walletPublicKey);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
         setBlockedLoading({
           enabled: true,
@@ -445,17 +458,17 @@ const ChatBox = (): JSX.Element => {
           progressNotice: "This might take a couple of seconds as push nodes sync your info for first time!"
         })
 
-        const createdUser = await PushNodeClient.createUser({
+        const createdUser: User = await PushNodeClient.createUser({
           caip10,
-          did: createdDID.id,
+          did: caip10,
           publicKey: keyPairs.publicKeyArmored,
           encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
-          encryptionType: 'pgp',
+          encryptionType: 'x25519-xsalsa20-poly1305',
           signature: 'xyz',
           sigType: 'a',
         });
-        setConnectedUser(createdUser);
-        setDID(createdDID);
+        const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored }
+        setConnectedUser(createdConnectedUser);
 
         setBlockedLoading({
           enabled: false,
@@ -464,10 +477,10 @@ const ChatBox = (): JSX.Element => {
           progressEnabled: true,
           progress: 100,
         })
-        
-        return { didCreated: createdDID, createdUser };
+
+        return { createdUser: createdConnectedUser };
       } else {
-        return { didCreated: did, createdUser: connectedUser };
+        return { createdUser: connectedUser };
       }
     } catch (e) {
       console.log(e);
@@ -477,9 +490,9 @@ const ChatBox = (): JSX.Element => {
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       setMessageBeingSent(true);
-      const { didCreated, createdUser } = await createUserIfNecessary();
-      if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(didCreated.id)) {
-        const user: User = await PushNodeClient.getUser({ did: currentChat.did });
+      const { createdUser } = await createUserIfNecessary();
+      if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(currentChat.wallets.split(',')[0])) {
+        const user: User = await PushNodeClient.getUser({ caip10: currentChat.wallets.split(',')[0] });
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
         let caip10: string;
         if (!user) {
@@ -512,10 +525,9 @@ const ChatBox = (): JSX.Element => {
               signature: pgpSignature,
             } = await encryptAndSign({
               plainText: message,
-              fromEncryptedPrivateKeyArmored: createdUser.encryptedPrivateKey,
               toPublicKeyArmored: currentChat.publicKey,
               fromPublicKeyArmored: createdUser.publicKey,
-              did: didCreated,
+              privateKeyArmored: createdUser.privateKey
             });
             messageContent = cipherText;
             encryptionType = 'pgp';
@@ -525,8 +537,9 @@ const ChatBox = (): JSX.Element => {
         }
 
         const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
-          toDID: currentChat.did,
-          fromDID: didCreated.id,
+          toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+          toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+          fromDID: walletToCAIP10({ account: account, chainId }),
           fromCAIP10: walletToCAIP10({ account, chainId }),
           messageContent,
           messageType,
@@ -556,10 +569,10 @@ const ChatBox = (): JSX.Element => {
           setNewMessage('');
           // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
           // will be undefined since it was not updated right after the intent was sent
-          let inboxes: Feeds[] = await fetchInbox(didCreated);
-          inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser, did: didCreated });
+          let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+          inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
           setInbox(inboxes);
-          const result = inboxes.find((x) => x.did === currentChat.did);
+          const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
@@ -622,7 +635,7 @@ const ChatBox = (): JSX.Element => {
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.intent.includes(did.id)) {
+          if (!currentChat.intent.includes(account)) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
           } else {
             sendMessage({
@@ -644,7 +657,7 @@ const ChatBox = (): JSX.Element => {
   };
 
   const sendGif = (url: string): void => {
-    if (!currentChat.intent.includes(did.id)) {
+    if (!currentChat.intent.includes(account)) {
       sendIntent({ message: url, messageType: 'GIF' });
     } else {
       sendMessage({
@@ -765,7 +778,7 @@ const ChatBox = (): JSX.Element => {
                         {!showTime ? null : <MessageTime>{time}</MessageTime>}
                         <Chats
                           msg={msg}
-                          did={did}
+                          caip10={walletToCAIP10({ account, chainId })}
                           messageBeingSent={messageBeingSent}
                         />
                         {/* {messages.length === 1 && msg.fromDID === did.id ? (

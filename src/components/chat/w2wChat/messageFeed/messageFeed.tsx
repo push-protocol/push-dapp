@@ -20,6 +20,9 @@ import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import { walletToCAIP10 } from 'helpers/w2w';
 
 // Internal Configs
 
@@ -32,27 +35,28 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { did, setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
+  const { setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
+  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>()
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (did) {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', did.id, '', 'did');
+    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
-        let inboxes: Feeds[] = await fetchInbox(did);
-        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did });
+        let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
       } else {
-        let inboxes: Feeds[] = await fetchInbox(did);
-        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser, did });
+        let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
@@ -76,9 +80,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInboxAndIntents = async (): Promise<void> => {
-    if (did) {
+    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       await getInbox();
-      setIntents(await fetchIntent({ did: did.id }));
+      setIntents(await fetchIntent({ did: walletToCAIP10({ account, chainId }) }));
     }
     setMessagesLoading(false);
   };
@@ -89,7 +93,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).did === did?.id) {
+          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
             setIsSameUser(true);
             setFeeds([]);
           } else {
@@ -113,7 +117,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   encType: null,
                   encryptedSecret: null,
                   fromDID: null,
+                  fromCAIP10: null,
                   toDID: null,
+                  toCAIP10: null
                 },
                 wallets: user.wallets,
                 did: user.did,

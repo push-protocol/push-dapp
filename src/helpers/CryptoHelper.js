@@ -6,13 +6,22 @@ import { publicKeyConvert } from 'secp256k1-v4';
 var CryptoJS = require("crypto-js");
 
 const CryptoHelper = {
+  getPublicKey: async function (account) {
+    console.log('Fetching Public Key');
+    const keyB64 = await window.ethereum.request({
+      method: 'eth_getEncryptionPublicKey',
+      params: [account], // you must have access to the specified account
+    });
+    console.log(`Public Key: ${keyB64}`);
+    return keyB64;
+  },
   // To Encrypt with AES
-  encryptWithAES: function(message, key) {
+  encryptWithAES: function (message, key) {
     return CryptoJS.AES.encrypt(message, key).toString();
   },
   // To Decrypt with AES
-  decryptWithAES: function(message, key) {
-    let bytes  = CryptoJS.AES.decrypt(message, key);
+  decryptWithAES: function (message, key) {
+    let bytes = CryptoJS.AES.decrypt(message, key);
     return bytes.toString(CryptoJS.enc.Utf8);
   },
   // To Encrypt Secret with Public key
@@ -27,6 +36,15 @@ const CryptoHelper = {
     const result = bufferRes.toString('hex');
 
     return result;
+  },
+  encryptWithRPCEncryptionPublicKeyReturnRawData: function (text, encryptionPublicKey) {
+    const encryptedSecret = metamaskSigUtil.encrypt({
+      publicKey: encryptionPublicKey,
+      data: text,
+      version: 'x25519-xsalsa20-poly1305'
+    });
+
+    return encryptedSecret;
   },
   decryptWithWalletRPCMethod: async function (provider, encryptedMessage, account) {
     const result = await provider.request({
@@ -48,14 +66,14 @@ const CryptoHelper = {
     return encryptedSecret;
   },
   // To Form Decrypted Secret, no more than 15 characters supported
-  decryptWithECIES: async function(message, privateKey) {
+  decryptWithECIES: async function (message, privateKey) {
     // Message is always compressed, not using because sqlite2 has some error with this
     //const uncompressedMessage = EthCrypto.hex.decompress(message).substr(2); // to remove 0x
 
     return await this.decryptWithPrivateKey(message, privateKey);
   },
   // Encryption with public key
-  encryptWithPublicKey: async function(message, publicKey) {
+  encryptWithPublicKey: async function (message, publicKey) {
     // Convert compressed public key, starts with 03 or 04
     const pubKeyUint8Array = Uint8Array.from(
       new Buffer(publicKey, 'hex')
@@ -72,14 +90,14 @@ const CryptoHelper = {
     //console.log("[ENCRYPTION] pubkey getting sentout for encrypt: " + pubKey);
 
     return encrypt(
-        pubKey,
-        Buffer(message)
+      pubKey,
+      Buffer(message)
     ).then(encryptedBuffers => {
       const cipher = {
-          iv: encryptedBuffers.iv.toString('hex'),
-          ephemPublicKey: encryptedBuffers.ephemPublicKey.toString('hex'),
-          ciphertext: encryptedBuffers.ciphertext.toString('hex'),
-          mac: encryptedBuffers.mac.toString('hex')
+        iv: encryptedBuffers.iv.toString('hex'),
+        ephemPublicKey: encryptedBuffers.ephemPublicKey.toString('hex'),
+        ciphertext: encryptedBuffers.ciphertext.toString('hex'),
+        mac: encryptedBuffers.mac.toString('hex')
       };
       // use compressed key because it's smaller
       // const compressedKey = new Buffer.from(publicKeyConvert(Web3Helper.getUint8ArrayFromHexStr(cipher.ephemPublicKey), true)).toString('hex')
@@ -109,7 +127,7 @@ const CryptoHelper = {
     });
   },
   // Decryption with public key
-  decryptWithPrivateKey: async function(message, privateKey) {
+  decryptWithPrivateKey: async function (message, privateKey) {
     let encrypted = message;
     const buf = new Buffer(encrypted, 'hex');
     // console.log("[DECRYPTION] Buffer Passed: " + buf);
@@ -151,7 +169,7 @@ const CryptoHelper = {
     ).then(decryptedBuffer => decryptedBuffer.toString());
   },
   // Testing of Encryption and Decryption from Public to Private key
-  encryptionDecryptionPublicToPrivateTest: async function(privateKey) {
+  encryptionDecryptionPublicToPrivateTest: async function (privateKey) {
     const startTime = new Date();
     console.log("[ENCRYPTION / DECRYPTION TEST STARTED] - " + startTime);
 
@@ -177,7 +195,7 @@ const CryptoHelper = {
     console.log("[ENCRYPTION / DECRYPTION DECRYPTION DONE] - " + decryptionTime / 1000 + " secs");
   },
   // To output messge payload if required
-  outputMsgPayload: async function(secret, subject, message, calltoaction, imageurl, pkey) {
+  outputMsgPayload: async function (secret, subject, message, calltoaction, imageurl, pkey) {
     // Output AES
     console.log("[AES ENCRYTED FORMAT (" + new Date() + ")");
     console.log("---------------------");
@@ -209,13 +227,13 @@ const CryptoHelper = {
     console.log(this.decryptWithAES(aimgE, secret));
   },
   makeid: function (length) {
-     var result           = '[' + new Date().toISOString() + '] ';
-     var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-     var charactersLength = characters.length;
-     for ( var i = 0; i < length; i++ ) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
-     }
-     return result;
+    var result = '[' + new Date().toISOString() + '] ';
+    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 };
 
