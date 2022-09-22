@@ -50,7 +50,7 @@ const SearchBar = () => {
   // get theme
   const theme = useTheme();
 
-  const { setSearchedUser, searchedUser, hasUserBeenSearched, setHasUserBeenSearched }: AppContext =
+  const { setSearchedUser, searchedUser, hasUserBeenSearched, setHasUserBeenSearched, setActiveTab }: AppContext =
     useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -92,25 +92,24 @@ const SearchBar = () => {
     event.preventDefault();
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
-      let ens:string
-      try{
+      let ens: string;
+      try {
         ens = await provider.resolveName(searchedUser);
-      if (ens) {
-        const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
-        const displayUser = displayDefaultUser({ caip10 });
-        setHasUserBeenSearched(true);
-        setFilteredUserData([displayUser]);
-      }else{
+        if (ens) {
+          const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
+          const displayUser = displayDefaultUser({ caip10 });
+          setHasUserBeenSearched(true);
+          setFilteredUserData([displayUser]);
+        } else {
+          setIsInvalidAddress(true);
+          setFilteredUserData([]);
+          setHasUserBeenSearched(true);
+        }
+      } catch (err) {
         setIsInvalidAddress(true);
         setFilteredUserData([]);
         setHasUserBeenSearched(true);
       }
-      }catch(err){
-        setIsInvalidAddress(true);
-        setFilteredUserData([]);
-        setHasUserBeenSearched(true);
-      }
-      
     } else {
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
@@ -206,7 +205,10 @@ const SearchBar = () => {
           background="#D53893"
           borderRadius="50%"
         >
-          <AddIcon style={{ color: '#FFFFFF', fontSize: '24px' }} />
+          <AddIcon
+            onClick={() => setActiveTab(3)}
+            style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }}
+          />
         </ItemVV2>
       </ItemHV2>
       <ItemVV2 justifyContent="flex-start">

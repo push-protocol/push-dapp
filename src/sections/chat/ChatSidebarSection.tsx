@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
 import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
+import NewUser from 'components/chat/w2wChat/NewUser/NewUser';
+
 import 'components/chat/w2wChat/sidebar/sidebar.css';
 import { Context } from 'sections/chat/ChatMainSection';
 
@@ -74,7 +76,7 @@ const ChatSidebarSection = () => {
   return (
     <ItemVV2>
       {/* Header */}
-      {activeTab !== 2 ? (
+      {activeTab == 3 || activeTab == 2 ? null : (
         <ItemVV2 flex="initial">
           <ItemHV2>
             {/* Set active and onCLick to customize tab */}
@@ -134,7 +136,7 @@ const ChatSidebarSection = () => {
             </TabButton>
           </ItemHV2>
         </ItemVV2>
-      ) : null}
+      )}
 
       {/* Main Content */}
       <ItemVV2
@@ -165,6 +167,7 @@ const ChatSidebarSection = () => {
             />
           </>
         )}
+        {activeTab == 3 && <NewUser />}
       </ItemVV2>
 
       {/* Footer */}
