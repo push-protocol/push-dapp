@@ -261,7 +261,6 @@ const ChatBox = (): JSX.Element => {
 
   useEffect(() => {
     setLoading(true)
-    console.log("Current Chat changed")
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -370,7 +369,6 @@ const ChatBox = (): JSX.Element => {
             signatureArmored: savedMsg.signature,
           });
         }
-        console.log("Saved Msg",savedMsg)
         setMessages([...messages, savedMsg]);
       }
     } catch (error) {
@@ -388,7 +386,6 @@ const ChatBox = (): JSX.Element => {
       });
     }
     setTimeout(() => {
-      console.log("Timeout of 2 sec")
       setMessageBeingSent(false);
     }, 2000);
   };
@@ -646,9 +643,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const sendGif = (url: string): void => {
-    if (!currentChat.intent.includes(did.id)) {
+    if(currentChat?.intent === null){
       sendIntent({ message: url, messageType: 'GIF' });
-    } else {
+    }else{
       sendMessage({
         message: url,
         messageType: 'GIF',
