@@ -14,7 +14,7 @@ import { ItemVV2 } from './reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
 
 // Create Header
-function NavigationButton({ item, data, sectionID, active }) {
+function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
 
   let SelectedIcon;
@@ -72,7 +72,7 @@ function NavigationButton({ item, data, sectionID, active }) {
           align="stretch"
           padding="12px"
           margin={definedMargin}
-          // bg={!active ? 'transparent' : theme.nav.active}
+          bg={bg}
           active={active}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (

@@ -104,22 +104,22 @@ export default function App() {
   }, [darkMode]);
 
   React.useEffect(() => {
-    // window?.Olvy?.init({
-    //   organisation: "epns",
-    //   target: "#olvy-target",
-    //   type: "sidebar",
-    //   view: {
-    //     showSearch: false,
-    //     compact: false,
-    //     showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
-    //     showUnreadIndicator: true,
-    //     unreadIndicatorColor: "#cc1919",
-    //     unreadIndicatorPosition: "top-right"
-    //   }
-    // });
-    // return function cleanup() {
-    //   window?.Olvy?.teardown();
-    // };
+    window?.Olvy?.init({
+      organisation: "epns",
+      target: "#olvy-target",
+      type: "sidebar",
+      view: {
+        showSearch: false,
+        compact: false,
+        showHeader: true, // only applies when widget type is embed. you cannot hide header for modal and sidebar widgets
+        showUnreadIndicator: true,
+        unreadIndicatorColor: "#cc1919",
+        unreadIndicatorPosition: "top-right"
+      }
+    });
+    return function cleanup() {
+      window?.Olvy?.teardown();
+    };
   }, []);
 
   const steps = UserJourneySteps({ darkMode });
