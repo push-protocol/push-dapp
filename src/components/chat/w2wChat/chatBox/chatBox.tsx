@@ -831,8 +831,8 @@ const ChatBox = (): JSX.Element => {
               <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
                 <img
                   src="/svg/chats/smiley.svg"
-                  height="24px"
-                  width="24px"
+                  height="100%"
+                  width="100%"
                   alt=""
                 />
               </Icon>
@@ -850,12 +850,12 @@ const ChatBox = (): JSX.Element => {
               )}
               {
                 <TextInput
-                  placeholder="Type your message"
+                  placeholder="Type your message..."
                   onKeyDown={handleKeyPress}
                   onChange={textOnChange}
                   value={newMessage}
                   autoFocus="autoFocus"
-                />
+                  />
               }
               <>
                 <>
@@ -867,11 +867,19 @@ const ChatBox = (): JSX.Element => {
                         onSelect={sendGif}
                       />
                     )}
-                    <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
+                    <Icon 
+                      style={{
+                        // height: "18px",
+                        width: "20px",
+                        padding: "5.5px 9px",
+                        background: "#F6F8FF",
+                        borderRadius: "10px",
+                      }} 
+                      onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+                    >
                       <img
                         src="/svg/chats/gif.svg"
-                        height="18px"
-                        width="22px"
+                        width= "22px"
                         alt=""
                       />
                     </Icon>
@@ -1030,6 +1038,9 @@ const MoreOptions = styled.div`
 `;
 
 const Icon = styled.i`
+  height: 26px;
+  width: 26px;
+  margin: 0px;
   padding: 0px;
   &:hover {
     cursor: pointer;
@@ -1037,12 +1048,13 @@ const Icon = styled.i`
 `;
 
 const TextInput = styled.textarea`
+  height: 26px;
+  width: 77%;
   font-size: 16px;
-  width: 75%;
-  height: 25px;
   outline: none;
   border: none;
   resize: none;
+  padding: 4px 0;
   background: transparent;
   &&::-webkit-scrollbar {
     width: 0;
