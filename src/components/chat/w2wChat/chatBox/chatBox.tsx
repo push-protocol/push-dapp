@@ -838,9 +838,12 @@ const ChatBox = (): JSX.Element => {
                 padding="0 1rem"
                 borderRadius="16px"
                 color="black"
-                background="#ffffff"
+                background={theme.chat.sendMessageBoxBg}
             >
-              <Icon src="/svg/chats/smiley.svg" onClick={(): void => setShowEmojis(!showEmojis)} />
+              <Icon 
+                src={`/svg/chats/smiley${theme.scheme==="dark"?"_dark":""}.svg`} 
+                onClick={(): void => setShowEmojis(!showEmojis)} 
+              />
               {showEmojis && (
                 <Picker
                   onEmojiClick={addEmoji}
@@ -873,23 +876,23 @@ const ChatBox = (): JSX.Element => {
                       />
                     )}
                     <Icon 
-                      src="/svg/chats/gif.svg"
+                      src={`/svg/chats/gif${theme.scheme==="dark"?"_dark":""}.svg`} 
                       onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
                       style={{
                         width: "38px",
                         padding: "5.5px 9px",
-                        background: "#F6F8FF",
+                        background: theme.chat.gifBtnBg,
                         borderRadius: "10px",
                       }} 
                     />
                   </label>
                   <label>
-                    <Icon 
+                    <Icon
+                      src={`/svg/chats/attachment${theme.scheme==="dark"?"_dark":""}.svg`} 
                       style={{
                         height:"24px",
                         width:"20px"
                       }} 
-                      src="/svg/chats/attachment.svg"
                     />
                     <FileInput
                       type="file"
@@ -905,11 +908,11 @@ const ChatBox = (): JSX.Element => {
                     />
                   ) : (
                   <Icon
+                    src={`/svg/chats/send${theme.scheme==="dark"?"_dark":""}.svg`} 
+                    onClick={handleSubmit}
                     style={{
                       width: "26px"
                     }}
-                    src="/svg/chats/send.svg"
-                    onClick={handleSubmit}
                   />
                 )}
               </>
@@ -1039,12 +1042,13 @@ const TextInput = styled(TextField)`
   font-size: 16px;
   resize: none;
   padding: 4px 0;
+  color: ${(props) => props.theme.chat.sendMessageBoxFontClr || '#494D5F'};
   &&::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
   &&::placeholder {
-    color: #494D5F;
+    color: ${(props) => props.theme.chat.sendMessageBoxFontClr || '#494D5F'};
   }
 `;
 
