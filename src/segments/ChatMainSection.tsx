@@ -1,13 +1,13 @@
-import React from 'react'
-import styled, { ThemeProvider, useTheme } from 'styled-components'
-import { Content } from 'components/SharedStyling'
-import { ItemVV2,ImageV2,SpanV2 } from 'components/reusables/SharedStylingV2'
-import HandwaveIcon from "../assets/chat/handwave.svg"
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import Avatar from '@mui/material/Avatar'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2'
+import { Content } from 'components/SharedStyling'
+import React from 'react'
+import styled, { ThemeProvider, useTheme } from 'styled-components'
+import HandwaveIcon from "../assets/chat/handwave.svg"
 
 const ChatMainSection = (): JSX.Element => {
   const [showOption, setShowOption] = React.useState(false)
@@ -142,14 +142,12 @@ const ChatMainSection = (): JSX.Element => {
           <ItemVV2 gap="25px">
           <WelcomeMainText 
           theme={themes}>
-            Say
             <ImageV2 src={HandwaveIcon} 
             alt="wave"
             display="inline" 
             width="auto"
             verticalAlign="middle"
             margin="0 13px"/>
-             to Push Chat!
           </WelcomeMainText>
           <WelcomeSubText 
            theme={themes}>
