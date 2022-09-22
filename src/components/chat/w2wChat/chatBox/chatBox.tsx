@@ -827,7 +827,19 @@ const ChatBox = (): JSX.Element => {
               spinnerSize={40}
             />
           ) : ( */}
-            <TypeBarContainer>
+            <ItemHV2 
+                position="absolute"
+                justifyContent="space-between"
+                gap="10px"
+                bottom="9px"
+                left="9px"
+                right="9px"
+                height="55px"
+                padding="0 1rem"
+                borderRadius="16px"
+                color="black"
+                background="#ffffff"
+            >
               <Icon src="/svg/chats/smiley.svg" onClick={(): void => setShowEmojis(!showEmojis)} />
               {showEmojis && (
                 <Picker
@@ -848,7 +860,7 @@ const ChatBox = (): JSX.Element => {
                   onChange={textOnChange}
                   value={newMessage}
                   autoFocus="autoFocus"
-                  />
+                />
               }
               <>
                 <>
@@ -886,30 +898,22 @@ const ChatBox = (): JSX.Element => {
                     />
                   </label>
                 </>
-                {filesUploading ? (
-                  <div className="imageloader">
+                {(filesUploading || messageBeingSent) ? (
                     <LoaderSpinner
                       type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={20}
+                      spinnerSize={32}
                     />
-                  </div>
-                ) : (
-                  <>
-                  {messageBeingSent ? (
-                    <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    spinnerSize={40}
-                  />
                   ) : (
-                  <Icon 
+                  <Icon
+                    style={{
+                      width: "26px"
+                    }}
                     src="/svg/chats/send.svg"
                     onClick={handleSubmit}
                   />
-                  )}
-                  </>
                 )}
               </>
-            </TypeBarContainer>
+            </ItemHV2>
           {/* )} */}
         </>
       )}
@@ -1020,8 +1024,8 @@ const MoreOptions = styled.div`
 `;
 
 const Icon = styled(ImageV2)`
-  height: 27px;
-  width: 27px;
+  height: 32px;
+  width: 32px;
   margin: 0px;
   padding: 0px;
   &:hover {
@@ -1042,22 +1046,6 @@ const TextInput = styled(TextField)`
   &&::placeholder {
     color: #494D5F;
   }
-`;
-
-const TypeBarContainer = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  bottom: 9px;
-  left: 9px;
-  right: 9px;
-  height: 55px;
-  padding: 16px;
-  border-radius: 16px;
-  color: black;
-  background: #ffffff;
 `;
 
 const Container = styled(Content)`

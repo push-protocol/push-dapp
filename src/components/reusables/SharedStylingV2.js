@@ -26,6 +26,7 @@ export const ItemBreakV2 = styled.div`
 // ItemH is horizontal
 // ItemV is vertical
 export const ItemHV2 = styled.div`
+  position: ${(props) => props.position || 'static'};
   align-items: ${(props) => props.alignItems || 'center'};
   align-self: ${(props) => props.alignSelf || 'stretch'};
   background: ${(props) => props.gradient ? props.gradient : props.background ? props.background : 'transparent' || 'transparent'};
