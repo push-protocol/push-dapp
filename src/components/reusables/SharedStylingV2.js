@@ -188,6 +188,8 @@ export const ImageV2 = styled.img`
   width: ${(props) => props.width || "100%"};
   margin: ${(props) => props.margin || "0px"};
   vertical-align: ${(props) => props.verticalAlign || "auto"};
+  border-radius: ${(props) => props.borderRadius || "initial"};
+  overflow: ${(props) => props.overflow || 'initial'};
 `;
 
 export const AInlineV2 = styled.a`

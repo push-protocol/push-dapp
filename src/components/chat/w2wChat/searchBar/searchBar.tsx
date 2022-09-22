@@ -18,10 +18,10 @@ import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
+import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/messageFeed';
 import './searchBar.css';
-import { MdError } from 'react-icons/md';
 
 // Internal Configs
 
@@ -92,25 +92,27 @@ const SearchBar = () => {
     event.preventDefault();
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
-      let ens:string
-      try{
-        ens = await provider.resolveName(searchedUser);
-      if (ens) {
-        const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
-        const displayUser = displayDefaultUser({ caip10 });
-        setHasUserBeenSearched(true);
-        setFilteredUserData([displayUser]);
-      }else{
+      let ens: string;
+      try {
+        const address = await provider.resolveName(searchedUser);
+        // this ensures address are checksummed
+        ens = ethers.utils.getAddress(address.toLowerCase());
+
+        if (ens) {
+          const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
+          const displayUser = displayDefaultUser({ caip10 });
+          setHasUserBeenSearched(true);
+          setFilteredUserData([displayUser]);
+        } else {
+          setIsInvalidAddress(true);
+          setFilteredUserData([]);
+          setHasUserBeenSearched(true);
+        }
+      } catch (err) {
         setIsInvalidAddress(true);
         setFilteredUserData([]);
         setHasUserBeenSearched(true);
       }
-      }catch(err){
-        setIsInvalidAddress(true);
-        setFilteredUserData([]);
-        setHasUserBeenSearched(true);
-      }
-      
     } else {
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
@@ -196,8 +198,10 @@ const SearchBar = () => {
             {!isLoadingSearch && <SearchIcon style={{ cursor: 'pointer' }} />}
           </ItemVV2>
         </SearchBarContent>
+
         <ItemVV2
-          position="absolute"
+          flex="initial"
+          margin="0px 0px 0px 10px"
           alignItems="center"
           width="48px"
           height="48px"
@@ -222,6 +226,8 @@ const SearchBar = () => {
 
 const SearchBarContent = styled.form`
   position: relative;
+  display: flex;
+  flex: 1;
 `;
 
 const Close = styled(CloseIcon)`
@@ -241,7 +247,9 @@ const SearchLoader = styled.div`
 
 const Input = styled.input`
   box-sizing: border-box;
-  width: 245px;
+  display: flex;
+  flex: 1;
+  width: 0;
   height: 48px;
   padding: 13px 60px 13px 21px;
   margin: 10px 0px 17px 0px;
@@ -251,7 +259,11 @@ const Input = styled.input`
   color: ${(props) => props.theme.default.color || '#000'};
   &:focus {
     outline: none;
-    background-image: linear-gradient(${(props) => props.theme.chat.snapFocusBg}, ${(props) => props.theme.chat.snapFocusBg}), linear-gradient(to right, #cf1c84, #8ed6ff);
+    background-image: linear-gradient(
+        ${(props) => props.theme.chat.snapFocusBg},
+        ${(props) => props.theme.chat.snapFocusBg}
+      ),
+      linear-gradient(to right, #cf1c84, #8ed6ff);
     background-origin: border;
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;

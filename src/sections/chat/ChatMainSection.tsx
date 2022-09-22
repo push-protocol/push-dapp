@@ -9,14 +9,14 @@ import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-re
 import { CeramicClient } from '@ceramicnetwork/http-client';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
+import useToast from 'hooks/useToast';
 import { getResolver as keyDIDGetResolver } from 'key-did-resolver';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import styled, { useTheme } from 'styled-components';
-import useToast from 'hooks/useToast';
-import { MdCheckCircle, MdError } from 'react-icons/md'
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
@@ -26,7 +26,7 @@ import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_TYPE,
-  PROGRESS_POSITIONING,
+  PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wHelper from 'helpers/w2w';
 import { createCeramic } from 'helpers/w2w/ceramic';
@@ -35,7 +35,7 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
+import GLOBALS, { device } from 'config/Globals';
 
 export interface InboxChat {
   name: string;
@@ -105,6 +105,8 @@ export const Context = React.createContext<AppContext | null>(null);
 const ChatMainSection = () => {
   const { connector, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
 
+  const theme = useTheme();
+
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -139,7 +141,7 @@ const ChatMainSection = () => {
       progressEnabled: true,
       progress: 75,
       progressNotice:
-        'We use Ceramic to enable multichain and multiwallet experience. You will need to sign two transactions when they appear.',
+        'We use Ceramic to enable multichain and multiwallet experience. This step is is only done for first time users and might take a couple of minutes. Steady lads, chat is almost ready! You will need to sign two transactions when they appear.',
     });
 
     try {
@@ -234,8 +236,13 @@ const ChatMainSection = () => {
   };
 
   const setChat = (feed: Feeds): void => {
-    setViewChatBox(true);
-    setCurrentChat(feed);
+    if (feed) {
+      setViewChatBox(true);
+      setCurrentChat(feed);
+    } else {
+      setViewChatBox(false);
+      setCurrentChat(null);
+    }
   };
 
   // RENDER
@@ -270,17 +277,23 @@ const ChatMainSection = () => {
               setActiveTab
             }}
           >
-            <ItemVV2
-              flex="initial"
-              width="340px"
-              padding="10px 20px"
+            <ChatSidebarContainer
+              flex="1"
+              maxWidth="340px"
+              minWidth="280px"
+              padding="10px 10px 10px 20px"
               boxSizing="content-box"
+              background={theme.default.bg}
+              chatActive={viewChatBox}
             >
               <ChatSidebarSection />
-            </ItemVV2>
-            <ItemVV2 padding="10px 10px 10px 10px">
+            </ChatSidebarContainer>
+            <ChatContainer 
+              padding="10px 10px 10px 10px"
+              chatActive={viewChatBox}
+            >
               <ChatBoxSection />
-            </ItemVV2>
+            </ChatContainer>
           </Context.Provider>
           {/* The rest of your application */}
           <ReactQueryDevtools initialIsOpen={false} />
@@ -310,3 +323,34 @@ const ChatMainSection = () => {
   );
 };
 export default ChatMainSection;
+
+const ChatSidebarContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    margin-right: ${(props) => props.chatActive ? '20%' : '0%'};
+    opacity: ${(props) => props.chatActive ? '0' : '1'};
+    transition: margin-right 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 1;
+  }
+`
+
+const ChatContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin-left: ${(props) => props.chatActive ? '0%' : '100%'};
+    transition: margin-left 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 2;
+  }
+`
