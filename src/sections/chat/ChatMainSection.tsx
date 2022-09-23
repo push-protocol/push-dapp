@@ -35,8 +35,8 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 
 // Internal Configs
-import CryptoHelper from 'helpers/CryptoHelper';
 import GLOBALS, { device } from 'config/Globals';
+import CryptoHelper from 'helpers/CryptoHelper';
 
 export interface InboxChat {
   name: string;
@@ -257,7 +257,8 @@ const ChatMainSection = () => {
       throw Error('Invalid DID')
     }
 
-    if (user) {
+    // new user might not have a private key
+    if (user && user.encryptedPrivateKey) {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
         throw Error('Invalid user')
       }
