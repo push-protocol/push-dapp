@@ -71,6 +71,7 @@ const ChatBox = (): JSX.Element => {
     setSearchedUser,
     setLoadingMessage,
     setBlockedLoading,
+    setActiveTab
   }: AppContext = useContext<AppContext>(Context);
   const [newMessage, setNewMessage] = useState<string>('');
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
@@ -489,7 +490,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
+    
     try {
+      console.log('try')
       setMessageBeingSent(true);
       const { createdUser } = await createUserIfNecessary();
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(currentChat.wallets.split(',')[0])) {
@@ -510,6 +513,7 @@ const ChatBox = (): JSX.Element => {
           } else {
             caip10 = walletToCAIP10({ account: searchedUser, chainId });
           }
+          console.log("creating")
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -606,6 +610,7 @@ const ChatBox = (): JSX.Element => {
       }
       setSearchedUser('');
       setHasUserBeenSearched(false);
+      setActiveTab(0)
     } catch (error) {
       console.log(error);
       setMessageBeingSent(false);

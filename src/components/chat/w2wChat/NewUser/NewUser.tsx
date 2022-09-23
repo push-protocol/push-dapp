@@ -220,35 +220,35 @@ function NewUser() {
           const displayUser = displayDefaultUser({ caip10 });
           //console.log("searched",displayUser)
           setHasUserBeenSearched(true);
-          setSearchedUserData([displayUser]);
-          // let feed: Feeds;
-          // feed = {
-          //   msg: {
-          //     name: displayUser.wallets.split(',')[0].toString(),
-          //     profilePicture: displayUser.profilePicture,
-          //     lastMessage: null,
-          //     timestamp: null,
-          //     messageType: null,
-          //     signature: null,
-          //     signatureType: null,
-          //     encType: null,
-          //     encryptedSecret: null,
-          //     fromDID: null,
-          //     toDID: null,
-          //   },
-          //   wallets: displayUser.wallets,
-          //   did: displayUser.did,
-          //   threadhash: null,
-          //   profilePicture: displayUser.profilePicture,
-          //   about: displayUser.about,
-          //   intent: null,
-          //   intentSentBy: null,
-          //   intentTimestamp: null,
-          //   publicKey: displayUser.publicKey,
-          //   combinedDID: null,
-          //   cid: null,
-          // };
-          // setFeeds([feed]);
+          // setSearchedUserData([displayUser]);
+          let feed: Feeds;
+          feed = {
+            msg: {
+              name: displayUser.wallets.split(',')[0].toString(),
+              profilePicture: displayUser.profilePicture,
+              lastMessage: null,
+              timestamp: null,
+              messageType: null,
+              signature: null,
+              signatureType: null,
+              encType: null,
+              encryptedSecret: null,
+              fromDID: null,
+              toDID: null,
+            },
+            wallets: displayUser.wallets,
+            did: displayUser.did,
+            threadhash: null,
+            profilePicture: displayUser.profilePicture,
+            about: displayUser.about,
+            intent: null,
+            intentSentBy: null,
+            intentTimestamp: null,
+            publicKey: displayUser.publicKey,
+            combinedDID: null,
+            cid: null,
+          };
+          setFeeds([feed]);
           setMessagesLoading(false);
         } else {
           setIsInvalidAddress(true);
@@ -353,42 +353,40 @@ function NewUser() {
             spinnerSize={40}
           />
         ) : (
-          // ) : (
-          //   <>
-          //     {feeds?.map((feed: Feeds, i) => {
-          //       return (
-          //         <ProfileCard
-          //           padding="10px"
-          //           onClick={() => setChat(feed)}
-          //           key={feed.threadhash || i}
-          //         >
-          //           <ImageV2
-          //             src={feed.profilePicture}
-          //             alt="UserProfile"
-          //             height="48px"
-          //             width="48px"
-          //             borderRadius="50%"
-          //             margin="0px 13px 0px 0px"
-          //           />
-          //           <SpanV2
-          //             fontSize="17px"
-          //             fontWeight="500"
-          //           >
-          //             {caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(0, 8) +
-          //               '...' +
-          //               caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(-7)}
-          //           </SpanV2>
-          //         </ProfileCard>
-          //       );
-          //     })}
-          //   </>
-          // )}
-          <MessageFeed
-            hasUserBeenSearched={hasUserBeenSearched}
-            filteredUserData={searchedUserData}
-            isInvalidAddress={isInvalidAddress}
-          />
+          <>
+            {feeds?.map((feed: Feeds, i) => {
+              return (
+                <ProfileCard
+                  padding="10px"
+                  onClick={() => setChat(feed)}
+                  key={feed.threadhash || i}
+                >
+                  <ImageV2
+                    src={feed.profilePicture}
+                    alt="UserProfile"
+                    height="48px"
+                    width="48px"
+                    borderRadius="50%"
+                    margin="0px 13px 0px 0px"
+                  />
+                  <SpanV2
+                    fontSize="17px"
+                    fontWeight="500"
+                  >
+                    {caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(0, 8) +
+                      '...' +
+                      caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(-7)}
+                  </SpanV2>
+                </ProfileCard>
+              );
+            })}
+          </>
         )}
+        {/* <MessageFeed
+             hasUserBeenSearched={hasUserBeenSearched}
+           filteredUserData={searchedUserData}
+             isInvalidAddress={isInvalidAddress}
+          /> */}
       </ItemVV2>
     </ItemVV2>
   );
