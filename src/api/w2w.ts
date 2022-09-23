@@ -44,6 +44,10 @@ export interface User {
   linkedListHash?: string | null
 }
 
+export interface ConnectedUser extends User {
+  privateKey: string | null
+}
+
 export interface MessageIPFSWithCID extends MessageIPFS {
   cid: string
 }
@@ -138,6 +142,7 @@ export const postMessage = async ({
   fromCAIP10,
   fromDID,
   toDID,
+  toCAIP10,
   messageContent,
   messageType,
   signature,
@@ -147,6 +152,7 @@ export const postMessage = async ({
 }: {
   fromCAIP10: string
   fromDID: string
+  toCAIP10,
   toDID: string
   messageContent: string
   messageType: string
@@ -162,6 +168,7 @@ export const postMessage = async ({
     },
     body: JSON.stringify({
       fromCAIP10,
+      toCAIP10,
       fromDID,
       toDID,
       messageContent,
@@ -221,7 +228,7 @@ export const approveIntent = async (
   status: string,
   signature: string,
   sigType: string
-): Promise<void> => {
+): Promise<string> => {
   const response = await fetch(BASE_URL + '/v1/w2w/intents', {
     method: 'PUT',
     headers: {
@@ -238,12 +245,14 @@ export const approveIntent = async (
   if (response.status < 200 || response.status > 299) {
     throw new Error('Error changing intent status')
   }
+  return await response.json();
 }
 
 export const createIntent = async ({
   toDID,
   fromDID,
   fromCAIP10,
+  toCAIP10,
   messageContent,
   messageType,
   signature,
@@ -254,6 +263,7 @@ export const createIntent = async ({
   toDID: string
   fromDID: string
   fromCAIP10: string
+  toCAIP10: string,
   messageContent: string
   messageType: string
   signature: string
@@ -272,6 +282,7 @@ export const createIntent = async ({
         toDID,
         fromDID,
         fromCAIP10,
+        toCAIP10,
         messageContent,
         messageType,
         signature,
