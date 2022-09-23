@@ -128,7 +128,7 @@ function CreateChannel() {
           }
           {!uploadDone &&
             <>
-            <Info><b>Ethereum Push Notification Service</b> (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your users.</Info>
+            <Info><b>Push</b> (previously EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your users.</Info>
             <Info>The only step for <b>You</b> or your <b>dApp</b> or even your <b>Smart Contract</b> is opening up the channel.</Info>
             <Info>Rest of the heavy lifting of securely connecting users, wallets, device tokens, listening to and ensuring sent events, forming and delivering payload to each mobile or destop devices and informing them and you about it is done automagically by EPNS.</Info>
             </>

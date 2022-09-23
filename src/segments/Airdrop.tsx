@@ -209,12 +209,12 @@ function Airdrop() {
                 {showAnswers[2] && (
                   <Answer>
                     <Span>
-                      Ethereum Push Notification Service (EPNS) is a decentralized protocol allowing Ethereum users to
+                      Push (previously EPNS) is a decentralized protocol allowing Ethereum users to
                       receive notifications for on-chain or off-chain activity.
                     </Span>
 
                     <Span>
-                      Push (EPNS) allows Web3 actors (users, dapps, service providers) to create notifications that are
+                      Push (previously EPNS) allows Web3 actors (users, dapps, service providers) to create notifications that are
                       triggered if and when a smart contract reaches certain conditions. Other Web3 participants can
                       search, browse, and subscribe to specific notifications and more confidently interact with dapps.
                     </Span>

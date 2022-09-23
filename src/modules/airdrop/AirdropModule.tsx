@@ -223,7 +223,7 @@ const AirdropModule = () => {
             {showAnswers[2] && (
               <Answer>
                 <Span>
-                  Ethereum Push Notification Service (EPNS) is a decentralized protocol allowing Ethereum users to
+                  Push (previously EPNS) is a decentralized protocol allowing Ethereum users to
                   receive notifications for on-chain or off-chain activity.
                 </Span>
 
