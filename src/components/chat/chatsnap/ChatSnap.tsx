@@ -38,7 +38,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
   const message = chatSnapMsg.type === 'Text' ? (
     <SpanV2 color={theme.default.secondaryColor}>
       {chatSnapMsg.message.length > 25 ? (
-        chatSnapMsg.message.length(0, 25) + '...'
+        chatSnapMsg.message.slice(0, 25) + '...'
       ) : (
         chatSnapMsg.message
       )}

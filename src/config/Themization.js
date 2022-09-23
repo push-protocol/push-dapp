@@ -138,21 +138,21 @@ const themeLight = {
   toastBorderColor: "#F4F3FF",
   toastShadowColor: "#ccc",
   toastSuccessBackground: "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #F3FFF9 42.81%)",
-  toastErrorBackground:  "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)",
+  toastErrorBackground: "linear-gradient(90.15deg, #FF2070 -125.65%, #FF2D79 -125.63%, #FFF9FB 42.81%)",
 
   // Profile
-  profileBG:"linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)",
-  profileText:"#fff",
+  profileBG: "linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%)",
+  profileText: "#fff",
 
   //Snackbar
-  snackbarBorderColor:"#E5E8F7",
-  snackbarBorderText:"#000",
-  snackbarBorderIcon:"none",
+  snackbarBorderColor: "#E5E8F7",
+  snackbarBorderText: "#000",
+  snackbarBorderIcon: "none",
 };
 
 const themeDark = {
   scheme: "dark",
-  
+
   // Default Theme
   default: {
     bg: '#2F3137',
@@ -292,19 +292,19 @@ const themeDark = {
   toastBorderColor: "#4A4F67",
   toastShadowColor: "#00000010",
   toastSuccessBackground: "linear-gradient(90.15deg, #30CC8B -125.65%, #30CC8B -125.63%, #2F3137 42.81%)",
-  toastErrorBackground:  "linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)",
-  
+  toastErrorBackground: "linear-gradient(89.96deg, #FF2070 -101.85%, #2F3137 51.33%)",
+
   //Profile
-  profileBG:"#2F3137",
-  profileText:"#B6BCD6",
+  profileBG: "#2F3137",
+  profileText: "#B6BCD6",
 
   //Snackbar
-  snackbarBorderColor:"#4A4F67",
-  snackbarBorderText:"#B6BCD6",
-  snackbarBorderIcon:"brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)"
+  snackbarBorderColor: "#4A4F67",
+  snackbarBorderText: "#B6BCD6",
+  snackbarBorderIcon: "brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)"
 };
 
 module.exports = {
-    themeLight: themeLight,
-    themeDark: themeDark
+  themeLight: themeLight,
+  themeDark: themeDark
 }

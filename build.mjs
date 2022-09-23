@@ -4,6 +4,26 @@ import fs from 'fs';
 import readline from 'readline';
 
 const envPresets = {
+  alpha_push: {
+    REACT_APP_DEPLOY_ENV: 'ALPHA',
+    REACT_APP_PUBLIC_URL: 'https://alpha.push.org/',
+  },
+  w2w_push: {
+    REACT_APP_DEPLOY_ENV: 'W2W',
+    REACT_APP_PUBLIC_URL: 'https://w2w.push.org/',
+  },
+  dev_push: {
+    REACT_APP_DEPLOY_ENV: 'DEV',
+    REACT_APP_PUBLIC_URL: 'https://dev.push.org/',
+  },
+  staging_push: {
+    REACT_APP_DEPLOY_ENV: 'STAGING',
+    REACT_APP_PUBLIC_URL: 'https://staging.push.org/',
+  },
+  prod_push: {
+    REACT_APP_DEPLOY_ENV: 'PROD',
+    REACT_APP_PUBLIC_URL: 'https://app.push.org/',
+  },
   alpha: {
     REACT_APP_DEPLOY_ENV: 'ALPHA',
     REACT_APP_PUBLIC_URL: 'https://alpha.epns.io/',

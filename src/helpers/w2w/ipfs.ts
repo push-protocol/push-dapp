@@ -1,5 +1,6 @@
 export interface MessageIPFS {
   fromCAIP10: string
+  toCAIP10: string
   fromDID: string
   toDID: string
   messageType: string
