@@ -14,7 +14,6 @@ import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
-import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -801,7 +800,6 @@ const ChatBox = (): JSX.Element => {
           </ItemHV2>
 
           <MessageContainer>
-            <ScrollToBottom className="chatBoxTop" initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -843,7 +841,6 @@ const ChatBox = (): JSX.Element => {
                   })}
                 </>
               )}
-            </ScrollToBottom>
           </MessageContainer>
 
           {/* {messageBeingSent ? (
