@@ -31,6 +31,7 @@ import IntentCondition from '../IntentCondition/IntentCondition';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from '../w2wUtils';
 import './intentFeed.css';
+import CryptoHelper from 'helpers/CryptoHelper';
 
 // Internal Configs
 
@@ -62,42 +63,40 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const IntentFeed = (): JSX.Element => {
   const {
-    did,
     setChat,
     connectedUser,
     intents,
     setConnectedUser,
-    connectAndSetDID,
-    setDID,
     setPendingRequests,
     setBlockedLoading,
     setActiveTab,
+    currentChat
   }: AppContext = useContext<AppContext>(Context);
   const intentToast = useToast();
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [open, setOpen] = useState(false);
   const [receivedIntentFrom, setReceivedIntentFrom] = useState<string>();
-  const [fromDID, setFromDID] = useState<string>();
+  const [fromCAIP10, setFromCAIP10] = useState<string>();
   const [isLoading, setIsLoading] = useState<boolean>();
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
   
   async function resolveThreadhash(): Promise<void> {
     setIsLoading(true);
     let getIntent;
-    if (did) {
-      getIntent = await intitializeDb<string>('Read', 'Intent', did.id, '', 'did');
+    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = did ? did.id : connectedUser.wallets.split(',')[0];
+    const didOrWallet: string = connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
       let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      intents = await decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     } else {
       let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser, did });
+      intents = await decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     }
@@ -108,67 +107,65 @@ const IntentFeed = (): JSX.Element => {
     resolveThreadhash();
   }, [intents]);
 
-  function showModal({ intentFrom, fromDID }: { intentFrom: string; fromDID: string }): void {
+  function showModal({ intentFrom, fromCAIP10 }: { intentFrom: string; fromCAIP10: string }): void {
     setReceivedIntentFrom(intentFrom);
-    setFromDID(fromDID);
+    setFromCAIP10(fromCAIP10);
     setOpen(true);
   }
 
-  const createUserIfNecessary = async (): Promise<{ didCreated: DID; createdUser: User }> => {
+  const createUserIfNecessary = async (): Promise<{ createdUser: User }> => {
     try {
-      if (!did) {
-        const createdDID: DID = await connectAndSetDID();
-        // This is a new user
+      if (connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '') {
         setBlockedLoading({
           enabled: true,
-          title: 'Step 1/4: Creating cryptography keys',
+          title: "Step 1/4: Creating cryptography keys",
           progressEnabled: true,
           progress: 25,
-        });
+        })
 
         const keyPairs = await generateKeyPair();
         setBlockedLoading({
           enabled: true,
-          title: 'Step 2/4: Encrypting your info',
+          title: "Step 2/4: Encrypting your info",
           progressEnabled: true,
-          progress: 50,
-        });
+          progress: 50
+        })
 
-        const encryptedPrivateKey = await DIDHelper.encrypt(keyPairs.privateKeyArmored, createdDID);
+        const walletPublicKey = await CryptoHelper.getPublicKey(account);
+        const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(keyPairs.privateKeyArmored, walletPublicKey);
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
 
         setBlockedLoading({
           enabled: true,
-          title: 'Step 3/4: Syncing account info',
+          title: "Step 3/4: Syncing account info",
           progressEnabled: true,
           progress: 75,
-          progressNotice: 'This might take a moment',
-        });
+          progressNotice: "This might take a moment"
+        })
 
         const createdUser = await PushNodeClient.createUser({
           caip10,
-          did: createdDID.id,
+          did: caip10,
           publicKey: keyPairs.publicKeyArmored,
           encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
           encryptionType: 'pgp',
           signature: 'xyz',
           sigType: 'a',
         });
-        setConnectedUser(createdUser);
-        setDID(createdDID);
+        setConnectedUser({ ...createdUser, privateKey: keyPairs.privateKeyArmored });
 
         setBlockedLoading({
           enabled: false,
-          title: 'Step 4/4: Done, Welcome to Push Chat!',
+          title: "Step 4/4: Done, Welcome to Push Chat!",
           spinnerCompleted: true,
           progressEnabled: true,
           progress: 100,
-          progressNotice: 'This might take a moment',
-        });
+          progressNotice: "This might take a moment"
+        })
 
-        return { didCreated: createdDID, createdUser };
+        return { createdUser };
       } else {
-        return { didCreated: did, createdUser: connectedUser };
+        return { createdUser: connectedUser };
       }
     } catch (e) {
       console.log(e);
@@ -177,8 +174,12 @@ const IntentFeed = (): JSX.Element => {
 
   async function ApproveIntent(status: string): Promise<void> {
     setIsLoading(true);
-    const { didCreated } = await createUserIfNecessary();
-    await approveIntent(fromDID, didCreated.id, status, '1', 'sigType');
+    const { createdUser } = await createUserIfNecessary();
+    // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
+    const updatedIntent: string = await approveIntent(fromCAIP10, createdUser.wallets.split(',')[0], status, '1', 'sigType');
+    let activeChat = currentChat;
+    activeChat.intent = updatedIntent
+    setChat(activeChat)
     setOpen(false);
 
     // displaying toast according to status
@@ -315,7 +316,7 @@ const IntentFeed = (): JSX.Element => {
                       setSelectedIntentSnap(intent.threadhash);
                       showModal({
                         intentFrom: intent.wallets.split(',')[0],
-                        fromDID: intent.intentSentBy,
+                        fromCAIP10: intent.intentSentBy,
                       });
                     }}
                   />

@@ -10,9 +10,9 @@ import { appConfig } from "config"
 import styled from 'styled-components'
 
 const infura_URL = appConfig.infuraApiUrl
-interface chatProps {
+interface ChatProps {
   msg: MessageIPFS
-  did: DID
+  caip10: string
   messageBeingSent: boolean
 }
 interface TextProps {
@@ -39,7 +39,7 @@ const Text = ({ content }: TextProps) => {
     </p>
   )
 }
-export default function Chats({ msg, did,messageBeingSent }: chatProps) {
+export default function Chats({ msg, caip10 }: ChatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const time: Date = new Date(msg?.timestamp)
@@ -50,7 +50,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
     <>
       {msg.messageType === 'Text' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage>
                 <TextMessage>{msg.messageContent}</TextMessage>
@@ -73,7 +73,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
         </>
       ) : msg.messageType === 'Image' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper height="138px" align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
@@ -110,7 +110,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
         </>
       ) : msg.messageType === 'GIF' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper height="170px" align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
@@ -146,7 +146,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
         </>
       ) : msg.messageType === 'File' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <FileMessage>

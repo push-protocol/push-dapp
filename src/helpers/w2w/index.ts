@@ -23,18 +23,15 @@ export const caip10ToWallet = (wallet: string): string => {
 
 export const encryptAndSign = async ({
   plainText,
-  fromEncryptedPrivateKeyArmored,
   fromPublicKeyArmored,
   toPublicKeyArmored,
-  did
+  privateKeyArmored
 }: {
   plainText: string
-  fromEncryptedPrivateKeyArmored: string
   fromPublicKeyArmored: string
-  toPublicKeyArmored: string
-  did: DID
+  toPublicKeyArmored: string,
+  privateKeyArmored: string
 }): Promise<{ cipherText: string; encryptedSecret: string; signature: string; sigType: string; encType: string }> => {
-  const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(fromEncryptedPrivateKeyArmored), did)
   const secretKey: string = AES.generateRandomSecret(15)
   const cipherText: string = AES.encrypt({ plainText, secretKey })
   const encryptedSecret = await PGP.encrypt({
@@ -55,19 +52,17 @@ export const encryptAndSign = async ({
 export const decryptAndVerifySignature = async ({
   cipherText,
   encryptedSecretKey,
-  encryptedPrivateKeyArmored,
   publicKeyArmored,
-  did,
-  signatureArmored
+  signatureArmored,
+  privateKeyArmored
 }: {
   cipherText: string
   encryptedSecretKey: string
-  encryptedPrivateKeyArmored: string
   publicKeyArmored: string
-  did: DID
-  signatureArmored: string
+  signatureArmored: string,
+  privateKeyArmored: string
 }): Promise<string> => {
-  const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(encryptedPrivateKeyArmored), did)
+  // const privateKeyArmored: string = await DIDHelper.decrypt(JSON.parse(encryptedPrivateKeyArmored), did)
   const secretKey: string = await PGP.decrypt({
     cipherText: encryptedSecretKey,
     toPrivateKeyArmored: privateKeyArmored

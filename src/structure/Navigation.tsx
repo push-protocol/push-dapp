@@ -429,7 +429,7 @@ function Navigation() {
                   mutateTransformedList(section, true);
                 }}
                 id={data.id}>
-                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} />
+                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} bg={!section.active ? 'transparent' : theme.nav.activeColor} />
               </SectionInnerGroupContainer>
             </Item>
           ) : (
@@ -465,7 +465,8 @@ function Navigation() {
                     }, 500);
                   }
                 }}>
-                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active} />
+                <NavigationButton item={section} data={data} sectionID={sectionID} active={section.active}
+                  bg={!section.active ? 'transparent' : theme.nav.activeColor} />
               </SectionInnerGroupContainer>
 
               {/* { 
@@ -532,7 +533,8 @@ function Navigation() {
                   // console.log(`Clicked  button`);
                   // mutateTransformedList(item)
                 }}>
-                <NavigationButton item={item} data={data} sectionID={sectionID} active={item.active} />
+                <NavigationButton item={item} data={data} sectionID={sectionID} active={item.active}
+                  bg={!item.active ? 'transparent' : theme.nav.activeColor} />
               </SectionInnerItemContainer>
             </SectionItem>
           );
