@@ -209,7 +209,7 @@ function Airdrop() {
                 {showAnswers[2] && (
                   <Answer>
                     <Span>
-                      Push (previously EPNS) is a decentralized protocol allowing Ethereum users to
+                      Push (previously EPNS) is a decentralized protocol allowing web3 users to
                       receive notifications for on-chain or off-chain activity.
                     </Span>
 
