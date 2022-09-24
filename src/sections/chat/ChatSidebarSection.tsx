@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -34,13 +35,13 @@ import GLOBALS from 'config/Globals';
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
-  
-  const { connectedUser, pendingRequests, setPendingRequests } = useContext(Context);
-  const { chainId, account } = useWeb3React<Web3Provider>();
+
+  const { connectedUser, pendingRequests ,setPendingRequests} = useContext(Context);
+  const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
+  const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
-  const {activeTab, setActiveTab} = useContext(Context);
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
