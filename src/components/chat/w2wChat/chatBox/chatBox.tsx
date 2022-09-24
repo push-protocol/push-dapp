@@ -63,6 +63,7 @@ const ChatBox = (): JSX.Element => {
     viewChatBox,
     searchedUser,
     connectedUser,
+    receivedIntents,
     inbox,
     intents,
     setConnectedUser,
@@ -100,7 +101,7 @@ const ChatBox = (): JSX.Element => {
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ||
-      intents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ;
+      receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ;
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         
@@ -902,7 +903,7 @@ const ChatBox = (): JSX.Element => {
                       </div>
                     );
                   })}
-                  {(intents.find((x) => (x.combinedDID === currentChat.combinedDID) && (x.msg.toDID === connectedUser.did))?.threadhash)
+                  {(receivedIntents.find((x) => (x.combinedDID === currentChat.combinedDID) && (x.msg.toDID === connectedUser.did))?.threadhash)
                    && <Chats
                     msg={{...messages[0],messageContent:'Please accept to continue or reject to decline.',messageType:'Intent' }}
                     caip10={walletToCAIP10({ account, chainId })}
@@ -921,7 +922,7 @@ const ChatBox = (): JSX.Element => {
               spinnerSize={40}
             />
           ) : ( */}
-            {(intents.find((x) => x.msg.toDID === connectedUser.did)?.threadhash) ?
+            {(receivedIntents.find((x) => x.msg.toDID === connectedUser.did)?.threadhash) ?
               null
               :
               (<TypeBarContainer>
