@@ -68,6 +68,8 @@ interface BlockedLoadingI {
 export interface AppContext {
   currentChat: Feeds;
   viewChatBox: boolean;
+  receivedIntents: Feeds[];
+  setReceivedIntents: (rIntent: Feeds[]) => void;
   // did: DID;
   // setDID: (did: DID) => void;
   setSearchedUser: (searched: string) => void;
@@ -111,6 +113,7 @@ const ChatMainSection = () => {
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
@@ -299,13 +302,13 @@ const ChatMainSection = () => {
   }
 
 
+
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
       setCurrentChat(feed);
     } else {
       setViewChatBox(false);
-      setCurrentChat(null);
     }
   };
 
@@ -317,6 +320,8 @@ const ChatMainSection = () => {
           <Context.Provider
             value={{
               currentChat,
+              receivedIntents,
+              setReceivedIntents,
               viewChatBox,
               setChat,
               setSearchedUser,

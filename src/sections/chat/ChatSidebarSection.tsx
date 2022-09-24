@@ -56,12 +56,11 @@ const ChatSidebarSection = () => {
   const theme = useTheme();
 
   const { connectedUser, pendingRequests } = useContext(Context);
+  const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const [value, setValue] = useState(0);
-  const [activeTab, setActiveTab] = useState(0);
   const classes = useStyles();
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
