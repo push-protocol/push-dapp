@@ -82,7 +82,7 @@ const ChatMainSection = (): JSX.Element => {
               {msgcount !== 2 ? (
                 <FirstConversation>
                   This is your first conversation with the receipent, you will be able to continue the conversation once
-                  the receipent accepts the intent
+                  the receipent accepts the chat request
                 </FirstConversation>
               ) : (
                 <>
@@ -121,7 +121,7 @@ const ChatMainSection = (): JSX.Element => {
                   <MessageWrapper>
                     <ReceivedMessage>
                       <Message>
-                        This is your first conversation with the sender, please accept to continue or reject to decline
+                        This is your first conversation with the sender, please accept to continue the chat
                       </Message>
                       <DecisionContainer>
                         <Icon>

@@ -15,7 +15,6 @@ import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
@@ -31,6 +30,7 @@ import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJour
 
 // Internal Configs
 import { appConfig } from 'config';
+import GLOBALS from 'config/Globals';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
