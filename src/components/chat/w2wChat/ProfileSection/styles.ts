@@ -36,6 +36,7 @@ const styles = {
     fontSize: 16,
     marginBottom: 1,
     color: '#E20880',
+    fontFamily: 'Strawford','Manrope':'sans-serif',
   },
   detailsCard: {
     marginBottom: 2,
@@ -52,12 +53,14 @@ const styles = {
   label: {
     color: 'rgba(53.0,197.0,243.0,1.0)',
     fontSize: 13,
+    fontFamily: 'Strawford','Manrope':'sans-serif',
   },
   value: {
     color: 'black',
     fontSize: 14,
     marginRight: 2,
     minWidth: 200,
+    fontFamily: 'Strawford','Manrope':'sans-serif',
   },
   copyIcon: {
     color: 'rgb(226,8,128)',
