@@ -128,7 +128,7 @@ const ChatMainSection = () => {
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTab, setCurrentTab] = useState<number>(0);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -303,6 +303,17 @@ const ChatMainSection = () => {
   }
 
 
+  const setActiveTab = (tab: number): void => {
+    if (tab === 1) {
+      if(intents.length)
+        setChat(intents[0]);
+      else
+        setChat(null);
+        setCurrentTab(tab);
+    } else {
+        setCurrentTab(tab);
+    } 
+  };
 
   const setChat = (feed: Feeds): void => {
     if (feed) {

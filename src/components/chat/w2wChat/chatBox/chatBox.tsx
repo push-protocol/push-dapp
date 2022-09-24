@@ -424,8 +424,6 @@ const ChatBox = (): JSX.Element => {
       }
     }
   };
-  console.log(intents)
-  console.log(connectedUser)
   async function resolveThreadhash(): Promise<void> {
     // setIsLoading(true);
     let getIntent;
@@ -922,7 +920,7 @@ const ChatBox = (): JSX.Element => {
               spinnerSize={40}
             />
           ) : ( */}
-            {(receivedIntents.find((x) => x.msg.toDID === connectedUser.did)?.threadhash) ?
+            {(receivedIntents.find((x) => (x.combinedDID === currentChat.combinedDID) && (x.msg.toDID === connectedUser.did))?.threadhash) ?
               null
               :
               (<TypeBarContainer>
