@@ -4,21 +4,23 @@ import React, { useState } from 'react'
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Files, { FileMessageContent } from '../Files/Files'
 import Modal from '../Modal/Modal'
+import tickIcon from "../../../../assets/chat/tick.svg";
 import './w2wchats.css'
 // @ts-ignore
 import { appConfig } from "config"
 import styled from 'styled-components'
+import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2'
 
 const infura_URL = appConfig.infuraApiUrl
-interface chatProps {
+interface ChatProps {
   msg: MessageIPFS
-  did: DID
-  messageBeingSent: boolean
+  caip10: string
+  messageBeingSent: boolean,
+  ApproveIntent?: Function
 }
 interface TextProps {
   content: string
 }
-
 const URL_REGEX = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm
 
 const Text = ({ content }: TextProps) => {
@@ -39,7 +41,7 @@ const Text = ({ content }: TextProps) => {
     </p>
   )
 }
-export default function Chats({ msg, did,messageBeingSent }: chatProps) {
+export default function Chats({ msg, caip10,ApproveIntent }: ChatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const time: Date = new Date(msg?.timestamp)
@@ -50,7 +52,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
     <>
       {msg.messageType === 'Text' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage>
                 <TextMessage>{msg.messageContent}</TextMessage>
@@ -71,9 +73,25 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
             </MessageWrapper>
           )}
         </>
-      ) : msg.messageType === 'Image' ? (
+      )
+      :msg.messageType === 'Intent' ? (
         <>
-          {msg.fromDID === did.id ? (
+            <MessageWrapper align="row">
+              <ReceivedMessage>
+                <SpanV2 fontSize="14px" 
+                maxWidth="13rem"
+                fontWeight="400"
+                padding="0px 44px 10px 0px" 
+                textAlign="left"
+                color="#000">{msg.messageContent}</SpanV2>
+                <ImageV2 src={tickIcon} alt='tick' width="39px" height="39px" cursor="pointer" onClick={()=>ApproveIntent()} margin="-5px 0 0 0" />
+              </ReceivedMessage>
+            </MessageWrapper>
+        </>
+      )
+       : msg.messageType === 'Image' ? (
+        <>
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper height="138px" align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
@@ -110,7 +128,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
         </>
       ) : msg.messageType === 'GIF' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper height="170px" align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
@@ -146,7 +164,7 @@ export default function Chats({ msg, did,messageBeingSent }: chatProps) {
         </>
       ) : msg.messageType === 'File' ? (
         <>
-          {msg.fromDID === did.id ? (
+          {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <FileMessage>
@@ -179,6 +197,7 @@ const ImageMessage = styled.img`
   max-height: 170px;
   max-width: 300px;
   object-fit: contain;
+  z-index:1000;
   &:hover {
     cursor: pointer;
   }
@@ -190,6 +209,7 @@ const TextMessage = styled.p`
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
+  font-weigth:400;
   margin: 0px;
 `
 

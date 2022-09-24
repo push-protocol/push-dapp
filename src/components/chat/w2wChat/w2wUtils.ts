@@ -1,4 +1,4 @@
-import { Feeds, getFromIPFS, getInbox, User } from 'api'
+import { ConnectedUser, Feeds, getFromIPFS, getInbox, User } from 'api'
 import { DID } from 'dids'
 import { decryptAndVerifySignature } from 'helpers/w2w'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
@@ -22,7 +22,9 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
         encType: msgIPFS.encType,
         fromDID: msgIPFS.fromDID,
         toDID: msgIPFS.toDID,
-        encryptedSecret: msgIPFS.encryptedSecret
+        encryptedSecret: msgIPFS.encryptedSecret,
+        fromCAIP10: msgIPFS.fromCAIP10,
+        toCAIP10: msgIPFS.toCAIP10
       }
       // if (msg.lastMessage.length > 25) {
       //   msg.lastMessage = msg.lastMessage.slice(0, 25) + '...'
@@ -40,7 +42,9 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
         signatureType: null,
         fromDID: null,
         toDID: null,
-        encryptedSecret: null
+        encryptedSecret: null,
+        fromCAIP10: null,
+        toCAIP10: null
       }
       inbox[i] = { ...inbox[i], msg }
     }
@@ -49,9 +53,9 @@ export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> =>
   return inbox
 }
 
-export const fetchInbox = async (did: DID): Promise<Feeds[]> => {
-  let inbox: Feeds[] = await getInbox(did.id)
-  inbox = inbox.filter((inbx) => inbx.intent.includes(did.id))
+export const fetchInbox = async (userId: string): Promise<Feeds[]> => {
+  let inbox: Feeds[] = await getInbox(userId)
+  inbox = inbox.filter((inbx) => inbx.intent.includes(userId))
   inbox = await fetchMessagesFromIPFS(inbox)
   return inbox
 }
@@ -80,17 +84,15 @@ export const formatFileSize = (size: number): string => {
 export const decryptFeeds = async ({
   feeds,
   connectedUser,
-  did
 }: {
   feeds: Feeds[]
-  connectedUser: User
-  did: DID
+  connectedUser: ConnectedUser
 }): Promise<Feeds[]> => {
   for (let feed of feeds) {
     if (feed.msg.encType !== 'PlainText' && feed.msg.encType !== null) {
       // To do signature verification it depends on who has sent the message
       let signatureValidationPubliKey: string
-      if (feed.msg.fromDID === connectedUser.did) {
+      if (feed.msg.fromCAIP10 === connectedUser.wallets.split(',')[0]) {
         signatureValidationPubliKey = connectedUser.publicKey
       } else {
         signatureValidationPubliKey = feed.publicKey
@@ -99,10 +101,9 @@ export const decryptFeeds = async ({
       feed.msg.lastMessage = await decryptAndVerifySignature({
         cipherText: feed.msg.lastMessage,
         encryptedSecretKey: feed.msg.encryptedSecret,
-        did: did,
-        encryptedPrivateKeyArmored: connectedUser.encryptedPrivateKey,
         publicKeyArmored: signatureValidationPubliKey,
-        signatureArmored: feed.msg.signature
+        signatureArmored: feed.msg.signature,
+        privateKeyArmored: connectedUser.privateKey
       })
     }
   }

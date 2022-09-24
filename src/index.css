@@ -446,7 +446,7 @@ template {
         url('./assets/fonts/Strawford-Black.woff') format('woff'),
         url('./assets/fonts/Strawford-Black.eot'),
         url('./assets/fonts/Strawford-Black.ttf') format('truetype');
-  font-weight: 700 800 900;
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
