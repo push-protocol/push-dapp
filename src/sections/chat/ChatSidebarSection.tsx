@@ -40,7 +40,7 @@ const ChatSidebarSection = () => {
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const [loadingRequests, setLoadingRequests] = useState(true);
-  const [activeTab, setActiveTab] = useState(0);
+  const {activeTab, setActiveTab} = useContext(Context);
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
