@@ -19,7 +19,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { approveIntent,ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
+import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
@@ -387,7 +387,6 @@ const ChatBox = (): JSX.Element => {
             signatureArmored: savedMsg.signature,
           });
         }
-        console.log("Saved Msg",savedMsg)
         setMessages([...messages, savedMsg]);
       }
     } catch (error) {
@@ -405,7 +404,6 @@ const ChatBox = (): JSX.Element => {
       });
     }
     setTimeout(() => {
-      console.log("Timeout of 2 sec")
       setMessageBeingSent(false);
     }, 2000);
   };
@@ -656,7 +654,7 @@ const ChatBox = (): JSX.Element => {
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
-            toastMessage: 'Intent Sent',
+            toastMessage: 'Chat Request Sent',
             toastType: 'SUCCESS',
             getToastIcon: (size) => (
               <MdCheckCircle
@@ -737,9 +735,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const sendGif = (url: string): void => {
-    if (!currentChat.intent.includes(account)) {
+    if(currentChat?.intent === null){
       sendIntent({ message: url, messageType: 'GIF' });
-    } else {
+    }else{
       sendMessage({
         message: url,
         messageType: 'GIF',
