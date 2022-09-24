@@ -1,5 +1,6 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import { useWeb3React } from '@web3-react/core';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -12,63 +13,80 @@ import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
-import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
-import 'components/chat/w2wChat/sidebar/sidebar.css';
-import { Context } from 'sections/chat/ChatMainSection';
-
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
+import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
+import 'components/chat/w2wChat/sidebar/sidebar.css';
+import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
+import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import * as w2wHelper from 'helpers/w2w/';
+import { Context } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-function TabPanel({ children, value, index, ...other }): JSX.Element {
-  return (
-    <Box
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && children}
-    </Box>
-  );
-}
-
-const useStyles = makeStyles({
-  tabs: {
-    '& .MuiTabs-indicator': {
-      backgroundColor: '#CF1C84'
-    },
-    '& .MuiTab-root.Mui-selected': {
-      color: '#CF1C84'
-    }
-  }
-});
 
 // Chat Sections
 // Divided into two, left and right
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
-
-  const { connectedUser, pendingRequests } = useContext(Context);
+  
+  const { connectedUser, pendingRequests, setPendingRequests } = useContext(Context);
+  const { chainId, account } = useWeb3React<Web3Provider>();
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
-  const [value, setValue] = useState(0);
+  const [loadingRequests, setLoadingRequests] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
-  const classes = useStyles();
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
   };
+
+  // See if there are pending requests and update requests tab
+  useEffect(() => {
+    // This will run when the page first loads and whenever the title changes
+    getPendingRequests(true);
+  }, []);
+
+  // Keep on updating after every few seconds
+  useEffect(() => {
+    if (!loadingRequests) {
+      //setup timer
+      const delay = 5;
+      let timer = setInterval(() => getPendingRequests(false), delay * 1000);
+
+      // this will clear Timeout
+      // when component unmount like in willComponentUnmount
+      // and show will not change to true
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+    
+  }, [loadingRequests]);
+    
+  // Get pending requests
+  const getPendingRequests = async (firstLoad) => {
+    let getIntent;
+    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+      getIntent = await intitializeDb<string>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+    }
+
+    // If the user is not registered in the protocol yet, his did will be his wallet address
+    const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+    intents = await decryptFeeds({ feeds: intents, connectedUser });
+
+    setPendingRequests(intents?.length);
+
+    if (firstLoad) {
+      setLoadingRequests(false);
+    }
+  } 
 
   // RENDER
   return (
@@ -108,7 +126,11 @@ const ChatSidebarSection = () => {
                 Requests
               </SpanV2>
 
-              {pendingRequests > 0 && 
+              {loadingRequests && 
+                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={12} spinnerColor={theme.default.secondaryColor} />
+              }
+
+              {!loadingRequests && pendingRequests > 0 && 
                 <SpanV2
                   background={GLOBALS.COLORS.PRIMARY_PINK}
                   color={GLOBALS.COLORS.WHITE}

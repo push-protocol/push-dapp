@@ -19,6 +19,7 @@ import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
+import CryptoHelper from 'helpers/CryptoHelper';
 import { caip10ToWallet } from 'helpers/w2w';
 import * as w2wHelper from 'helpers/w2w/';
 import * as DIDHelper from 'helpers/w2w/did';
@@ -31,7 +32,6 @@ import IntentCondition from '../IntentCondition/IntentCondition';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from '../w2wUtils';
 import './intentFeed.css';
-import CryptoHelper from 'helpers/CryptoHelper';
 
 // Internal Configs
 
@@ -87,19 +87,13 @@ const IntentFeed = (): JSX.Element => {
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
+
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    if (getIntent === undefined) {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
-    } else {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
-    }
+    let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    setPendingRequests(intents?.length);
+    setReceivedIntents(intents);
     setIsLoading(false);
   }
 

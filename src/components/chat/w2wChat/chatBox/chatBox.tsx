@@ -41,8 +41,8 @@ import './chatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
-import CryptoHelper from 'helpers/CryptoHelper';
 import GLOBALS, { device } from 'config/Globals';
+import CryptoHelper from 'helpers/CryptoHelper';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -734,7 +734,7 @@ const ChatBox = (): JSX.Element => {
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="999"
+            zIndex="998"
           >
           {/* setChat */}
           

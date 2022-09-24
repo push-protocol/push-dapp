@@ -245,7 +245,7 @@ const ChatMainSection = () => {
       title: "Step 1/4: Getting Account Info",
       progressEnabled: true,
       progress: 25,
-      progressNotice: "Push Chat is in alpha and might be slow sometimes"
+      progressNotice: "Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue"
     });
 
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
