@@ -57,6 +57,7 @@ const styles = {
     color: 'black',
     fontSize: 14,
     marginRight: 2,
+    minWidth: 200,
   },
   copyIcon: {
     color: 'rgb(226,8,128)',
