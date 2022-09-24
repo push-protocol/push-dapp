@@ -533,7 +533,7 @@ const ChatBox = (): JSX.Element => {
               signature: pgpSignature,
             } = await encryptAndSign({
               plainText: message,
-              toPublicKeyArmored: currentChat.publicKey,
+              toPublicKeyArmored: user.publicKey,
               fromPublicKeyArmored: createdUser.publicKey,
               privateKeyArmored: createdUser.privateKey
             });
