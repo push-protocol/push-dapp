@@ -425,28 +425,23 @@ const ChatBox = (): JSX.Element => {
   const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
     try {
       if (connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '') {
-        setBlockedLoading({
-          enabled: true,
-          title: "Step 1/4: Preparing First Time Setup",
-          progressEnabled: true,
-          progress: 25,
-          progressNotice: "We use Ceramic to enable multichain and multiwallet experience. This step is is only done for first time users and might take a couple of minutes. Steady lads, chat is almost ready! You will need to sign two transactions when they appear."
-        })
-
         // This is a new user
         setBlockedLoading({
           enabled: true,
-          title: "Step 2/4: Generating crytographic keys",
+          title: "Step 1/4: Generating secure keys for your account",
           progressEnabled: true,
-          progress: 40,
+          progress: 30,  
+          progressNotice: "This step is is only done for first time users and might take a few seconds. PGP keys are getting generated to provide you with secure yet seamless chat"
         })
+        await new Promise(r => setTimeout(r, 200));
 
         const keyPairs = await generateKeyPair();
         setBlockedLoading({
           enabled: true,
-          title: "Step 3/4: Encrypting your info",
+          title: "Step 2/4: Encrypting your keys",
           progressEnabled: true,
-          progress: 60
+          progress: 60,
+          progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!'
         })
 
         const walletPublicKey = await CryptoHelper.getPublicKey(account);
@@ -479,7 +474,6 @@ const ChatBox = (): JSX.Element => {
           progressEnabled: true,
           progress: 100,
         })
-
         return { createdUser: createdConnectedUser };
       } else {
         return { createdUser: connectedUser };
