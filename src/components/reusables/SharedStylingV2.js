@@ -190,6 +190,7 @@ export const ImageV2 = styled.img`
   vertical-align: ${(props) => props.verticalAlign || "auto"};
   border-radius: ${(props) => props.borderRadius || "initial"};
   overflow: ${(props) => props.overflow || 'initial'};
+  cursor: ${(props) => props.cursor || 'default'};
 `;
 
 export const AInlineV2 = styled.a`
