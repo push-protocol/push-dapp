@@ -148,7 +148,7 @@ const Wallet = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
   color: ${props => props.color};
   border-radius:17px;
