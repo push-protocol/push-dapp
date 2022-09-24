@@ -667,7 +667,7 @@ const ChatBox = (): JSX.Element => {
       } else {
         setNewMessage('');
         setOpenSuccessSnackBar(true);
-        setSnackbarText('Cannot send message, Chat request is not approved!');
+        setSnackbarText('Cannot send message, chat request is not approved!');
       }
       setSearchedUser('')
       setHasUserBeenSearched(false)
