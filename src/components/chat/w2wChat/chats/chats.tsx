@@ -1,15 +1,22 @@
-import cn from 'classnames'
-import { DID } from 'dids'
+// React + Web3 Essentials
 import React, { useState } from 'react'
+
+// External Packages
+import cn from 'classnames'
+import styled from 'styled-components'
+
+// Internal Compoonents
+import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2'
+import { DID } from 'dids'
+import tickIcon from "../../../../assets/chat/tick.svg"
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Files, { FileMessageContent } from '../Files/Files'
 import Modal from '../Modal/Modal'
-import tickIcon from "../../../../assets/chat/tick.svg";
 import './w2wchats.css'
-// @ts-ignore
+
+// Internal Configs
 import { appConfig } from "config"
-import styled from 'styled-components'
-import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2'
+import GLOBALS from 'config/Globals'
 
 const infura_URL = appConfig.infuraApiUrl
 interface ChatProps {
@@ -95,6 +102,7 @@ export default function Chats({ msg, caip10,ApproveIntent }: ChatProps) {
             <MessageWrapper height="138px" align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
+
                   src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
                   onClick={() => {
                     setShowImageModal(true)
@@ -133,6 +141,7 @@ export default function Chats({ msg, caip10,ApproveIntent }: ChatProps) {
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
                   src={msg.messageContent}
+                  borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} 0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
                   onClick={() => {
                     setShowImageModal(true)
                     setImageUrl(msg.messageContent)
@@ -145,6 +154,7 @@ export default function Chats({ msg, caip10,ApproveIntent }: ChatProps) {
               <ReceivedMessage color="transparent" padding="0px">
                 <ImageMessage
                   src={msg.messageContent}
+                  borderRadius={`0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
                   onClick={() => {
                     setShowImageModal(true)
                     setImageUrl(msg.messageContent)
@@ -197,7 +207,7 @@ const ImageMessage = styled.img`
   max-height: 170px;
   max-width: 300px;
   object-fit: contain;
-  z-index:1000;
+  border-radius: ${(props) => props.borderRadius || "0px"};
   &:hover {
     cursor: pointer;
   }
@@ -215,7 +225,7 @@ const TextMessage = styled.p`
 
 const TimeStamp = styled.span`
   min-width: 44px;
-  font-size: 13px;
+  font-size: 11px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;

@@ -463,7 +463,7 @@ const ChatBox = (): JSX.Element => {
     if(status==="Approved"){
       chatBoxToast.showMessageToast({
         toastTitle: 'Success',
-        toastMessage: 'Intent approved',
+        toastMessage: 'Request approved',
         toastType: 'SUCCESS',
         getToastIcon: (size) => (
           <MdCheckCircle
@@ -476,7 +476,7 @@ const ChatBox = (): JSX.Element => {
     else{
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: `There was a problem in approving the intent, please try again.`,
+        toastMessage: `There was a problem in approving the chat request, please try again.`,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -667,7 +667,7 @@ const ChatBox = (): JSX.Element => {
       } else {
         setNewMessage('');
         setOpenSuccessSnackBar(true);
-        setSnackbarText('Cannot send message, Intent is not approved!');
+        setSnackbarText('Cannot send message, Chat request is not approved!');
       }
       setSearchedUser('')
       setHasUserBeenSearched(false)
@@ -756,7 +756,8 @@ const ChatBox = (): JSX.Element => {
       {!viewChatBox ? (
         <ItemVV2 gap="25px">
          <WelcomeMainText 
-         theme={theme}>
+          theme={theme}
+        >
            <ImageV2 src={HandwaveIcon} 
            alt="wave"
            display="inline" 
@@ -901,7 +902,7 @@ const ChatBox = (): JSX.Element => {
                   })}
                   {(receivedIntents.find((x) => (x.combinedDID === currentChat.combinedDID) && (x.msg.toDID === connectedUser.did))?.threadhash)
                    && <Chats
-                    msg={{...messages[0],messageContent:'Please accept to continue or reject to decline.',messageType:'Intent' }}
+                    msg={{...messages[0],messageContent:'Please accept to enable push chat from this wallet',messageType:'Intent' }}
                     caip10={walletToCAIP10({ account, chainId })}
                     messageBeingSent={messageBeingSent}
                     ApproveIntent = {()=>ApproveIntent('Approved')}
@@ -1022,7 +1023,8 @@ const ChatBox = (): JSX.Element => {
 
 const SpinnerWrapper = styled.div`
   width: 100%;
-  height: calc(83.6vh - 130px);
+  margin-top: 20px;
+  height: 90px;
 `;
 
 const FirstConversation = styled.div`
@@ -1046,8 +1048,8 @@ const MessageTime = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
-  color: #000000;
+  font-size: 11px;
+  color: ${(props) => props.theme.default.secondaryColor};
   margin: 15px 0px;
 `;
 
@@ -1059,7 +1061,7 @@ const MessageContainer = styled.div`
   right: 0;
   margin: 0;
   width: 100%;
-  height: calc(83.6vh - 130px);
+  height: calc(100% - 140px);
   overflow: auto;
   display: flex;
   flex-direction: column;

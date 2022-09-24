@@ -96,7 +96,7 @@ export const getIntents = async (did: string): Promise<Feeds[]> => {
     } catch (err) {
       console.log('Retry', retry)
       if (retry > 1) {
-        toast.error('Intent cannot be loaded! Please try again later', ToastPosition)
+        toast.error("Chat request can't be loaded! Please try again later", ToastPosition)
       }
       console.log('Error in the API call', err)
       retry++
