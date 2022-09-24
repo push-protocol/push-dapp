@@ -352,7 +352,11 @@ template {
  * react-toastify
  */
 /** Classes for the displayed toast **/
+.Toastify {
+  z-index: 999999;
+}
 .Toastify__toast {
+  
 }
 .Toastify__toast--rtl {
 }
@@ -553,4 +557,3 @@ button, a, a:before, a:after {
   height: 100% !important;
   border-radius: 0 !important;
 }
-

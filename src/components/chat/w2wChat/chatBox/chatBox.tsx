@@ -654,7 +654,7 @@ const ChatBox = (): JSX.Element => {
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
-            toastMessage: 'Intent Sent',
+            toastMessage: 'Chat Request Sent',
             toastType: 'SUCCESS',
             getToastIcon: (size) => (
               <MdCheckCircle
