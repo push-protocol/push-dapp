@@ -1,0 +1,40 @@
+.w2wIndex {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+}
+
+.w2wIndexLoaderContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.w2wLoader {
+
+    display: flex;
+    justify-content: center;
+    font-size: 3rem;
+    position: relative;
+    color: rgb(74, 140, 155);
+    top: 40%;
+}
+
+.w2wIndexLoaderContainer p {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+
+    color: white;
+    width: 35%;
+    background-color: rgb(84, 84, 193);
+    position: relative;
+    text-align: center;
+    left: 25rem;
+    font-weight: 400;
+    border-radius: 8px;
+    top: 45%;
+}
