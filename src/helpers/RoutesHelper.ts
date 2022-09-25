@@ -11,5 +11,6 @@ export const usersServiceEndpoints = {
 
 export const channelsServiceEndpoints = {
     channelsInfo: (queryParams?: string) => `${channelsRoute}?${queryParams}`,
-    channelsSearch: (queryParams: string) => `${channelsRoute}/search?${queryParams}`
+    channelsSearch: (queryParams: string) => `${channelsRoute}/search?${queryParams}`,
+    channelDelegates: (channelAddressInCAIP: string) => `${channelsRoute}/${channelAddressInCAIP}/delegates`
 }
