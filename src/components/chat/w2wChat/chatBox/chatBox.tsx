@@ -945,7 +945,7 @@ const ChatBox = (): JSX.Element => {
                 )}
                 {
                   <TextInput
-                    placeholder="Type your message"
+                    placeholder="Type your message..."
                     onKeyDown={handleKeyPress}
                     onChange={textOnChange}
                     value={newMessage}
@@ -954,23 +954,25 @@ const ChatBox = (): JSX.Element => {
                 }
                 <>
                   <>
-                    <label>
-                      {isGifPickerOpened && (
-                        <GifPicker
-                          setIsOpened={setIsGifPickerOpened}
-                          isOpen={isGifPickerOpened}
-                          onSelect={sendGif}
-                        />
-                      )}
-                      <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
-                        <img
-                          src="/svg/chats/gif.svg"
-                          height="18px"
-                          width="22px"
-                          alt=""
-                        />
-                      </Icon>
-                    </label>
+                    <GifDiv>
+                      <label>
+                        {isGifPickerOpened && (
+                            <GifPicker
+                              setIsOpened={setIsGifPickerOpened}
+                              isOpen={isGifPickerOpened}
+                              onSelect={sendGif}
+                            />
+                        )}
+                        <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
+                          <img
+                            src="/svg/chats/gif.svg"
+                            height="18px"
+                            width="22px"
+                            alt=""
+                          />
+                        </Icon>
+                      </label>
+                    </GifDiv>
                     <label>
                       <Icon>
                         <img
@@ -1126,16 +1128,25 @@ const MoreOptions = styled.div`
 
 const Icon = styled.i`
   padding: 0px;
+  display: flex;
+  margin-left: 5px;
   &:hover {
     cursor: pointer;
   }
 `;
 
+const GifDiv = styled.div`
+  background: linear-gradient(179.97deg,#EEF5FF 0.02%,#ECE9FA 123.25%);
+    padding: 5px 8px;
+    border-radius: 7px;
+`;
+
 const TextInput = styled.textarea`
   font-size: 16px;
-  width: 75%;
+  width: 100%;
   height: 25px;
   outline: none;
+  padding-top: 4px;
   border: none;
   resize: none;
   background: transparent;
