@@ -19,6 +19,7 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { Item, ItemH } from "../primaries/SharedStyling";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+import ChainsSelect from "components/ChainsSelect";
 
 // Api Services
 import { getChannels, getChannelsSearch, getUserSubscriptions } from "services";
@@ -51,6 +52,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   const [channelToShow, setChannelToShow] = useState([]);
   const [loadingChannel, setLoadingChannel] = useState(false);
   const [trialCount, setTrialCount] = useState(0);
+  const [channelsNetworkId, setChannelsNetworkId] = useState(chainId);
 
   const channelsVisited = page * CHANNELS_PER_PAGE;
 
@@ -240,6 +242,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             {!UtilityHelper.isMainnet(chainId) &&
               <Faucets />
             }
+
+            <ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} />
 
           </ItemH>
         )}

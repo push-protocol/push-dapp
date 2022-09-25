@@ -643,16 +643,26 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             <ChannelTitleLink
               onClick = {()=>correctChannelTitleLink()}
             >
-              <Span>
+              <Span style={{display: "flex", alignItems: "center"}}>
                 {channelJson.name}
                 {isVerified && (
-                  <Span margin="0px 5px">
+                  <Span margin="0px 5px" style={{display: "flex"}}>
                     <GoVerified
                       size={18}
                       color={themes.viewChannelVerifiedBadge}
                     />
                   </Span>
                 )}
+                {channelObject.channel && 
+                  <Span padding="0 0 0 5px">
+                    <Image src={`./svg/Ethereum.svg`} alt="Ethereum" width="20px" height="20px" />
+                  </Span>
+                }
+                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && 
+                  <Span padding="0 0 0 5px">
+                    <Image src={`./svg/Polygon.svg`} alt="Ethereum" width="20px" height="20px" />
+                  </Span>
+                }
               </Span>
             </ChannelTitleLink>
           )}
