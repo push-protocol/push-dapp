@@ -90,7 +90,7 @@ export default function ChannelDetails() {
               <AdaptiveMobileItemHV2 justifyContent="flex-start">
                 <Subscribers>
                   <img style={{ width: '15px' }} src="/subcount.svg" alt="subscount"></img>
-                  <SubscribersCount>{channelDetails.subscribers.length}</SubscribersCount>
+                  <SubscribersCount>{channelDetails.subscriberCount}</SubscribersCount>
                 </Subscribers>
                 <ChanneStateText active={channelIsActive}>
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}

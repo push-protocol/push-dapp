@@ -27,6 +27,7 @@ import {
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
+import { getChannelsSearch } from 'services';
 
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
@@ -47,7 +48,6 @@ const InitState = () => {
     if (!library) return;
 
     (async function init() {
-      console.log(library);
       const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
@@ -102,12 +102,17 @@ const InitState = () => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
-        const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(account);
+        const channelDetail = await getChannelsSearch({
+          page: 1,
+          limit: 1,
+          query: account
+        });
+        const subsCount = channelDetail[0].subscriber_count;
         dispatch(
           setUserChannelDetails({
             ...response,
             ...channelJson,
-            subscribers: channelSubscribers,
+            subscriberCount: subsCount,
           })
         );
         dispatch(setCoreChannelAdmin(ownerAccount));
@@ -143,11 +148,8 @@ const InitState = () => {
           }
         }
         if (delegators && delegators.channelOwners) {
-          console.log(delegators.channelOwners, delegators);
           delegateeList.push(...delegators.channelOwners);
-          console.log(delegateeList);
         }
-        console.log(delegateeList);
         if (delegateeList.length > 0) {
           const channelInformationPromise = [...delegateeList].map((channelAddress) => {
             return ChannelsDataStore.instance
@@ -156,7 +158,6 @@ const InitState = () => {
               .catch(() => false);
           });
           const channelInformation = await Promise.all(channelInformationPromise);
-          console.log(channelInformation);
           dispatch(setDelegatees(channelInformation));
         } else {
           dispatch(setDelegatees([]));
