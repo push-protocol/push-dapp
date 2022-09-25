@@ -5,7 +5,8 @@ const channelsRoute: string = `/v${apiVersion}/channels`;
 const usersRoute: string = `/v${apiVersion}/users`;
 
 export const usersServiceEndpoints = {
-    userSubscriptions: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/subscriptions`
+    userSubscriptions: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/subscriptions`,
+    userDelegations: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/delegations`
 }
 
 export const channelsServiceEndpoints = {
