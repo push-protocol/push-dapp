@@ -27,7 +27,7 @@ import {
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
-import { getChannelsSearch } from 'services';
+import { getChannelsSearch, getUserDelegations } from 'services';
 
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
@@ -126,35 +126,35 @@ const InitState = () => {
   };
 
   // fetch all the channels who have delegated to this account
-  const fetchDelegators = (aliasAddress: string, aliasEthAddress: string, aliasVerified: string) => {
+  const fetchDelegators = async (aliasAddress: string, aliasEthAddress: string, aliasVerified: string) => {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
 
-    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
-      .then(async ({ data: delegators }) => {
-        // if there are actual delegators
-        // fetch basic information abouot the channels and store it to state
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    try {
+      const delegations = await getUserDelegations({userCaipAddress: userAddressInCaip});
         const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
-        let delegateeList: Array<string> = [];
+        let delegateeList: Array<{channel: string}> = [];
+        console.log(delegations);
         if (
           ((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) ||
           (processingState === 0 && isChannelDetails)
         ) {
-          if (onCoreNetwork) delegateeList.push(account);
+          if (onCoreNetwork) delegateeList.push({channel: account});
           else {
             if (aliasEthAddr) {
-              delegateeList.push(aliasEthAddr);
+              delegateeList.push({channel: aliasEthAddr});
             }
           }
         }
-        if (delegators && delegators.channelOwners) {
-          delegateeList.push(...delegators.channelOwners);
+        if (delegations) {
+          delegateeList.push(...delegations);
         }
+        console.log(delegateeList);
         if (delegateeList.length > 0) {
-          const channelInformationPromise = [...delegateeList].map((channelAddress) => {
+          const channelInformationPromise = [...delegateeList].map(({channel}) => {
             return ChannelsDataStore.instance
-              .getChannelJsonAsync(channelAddress)
-              .then((res) => ({ ...res, address: channelAddress }))
+              .getChannelJsonAsync(channel)
+              .then((res) => ({ ...res, address: channel }))
               .catch(() => false);
           });
           const channelInformation = await Promise.all(channelInformationPromise);
@@ -162,10 +162,9 @@ const InitState = () => {
         } else {
           dispatch(setDelegatees([]));
         }
-      })
-      .catch(async (err) => {
-        console.log({ err });
-      });
+      } catch(err) {
+        console.log(err);
+      };
   };
 
   useEffect(() => {
