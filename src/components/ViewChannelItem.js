@@ -206,6 +206,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     console.log("click executed");
     subscribeAction(false);
   };
+
   const formatAddress = (addressText) => {
     return addressText.length > 40
       ? `${addressText.slice(0, 4)}....${addressText.slice(36)}`
@@ -715,14 +716,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 padding="6px 16px"
                 color={themes.viewChannelPrimaryText}
                 onClick={() => {
-                  copyToClipboard(channelJson.addr);
+                  copyToClipboard(channelJson.channel);
                   setCopyText("copied");
                 }}
                 onMouseEnter={() => {
                   setCopyText("click to copy");
                 }}
                 onMouseLeave={() => {
-                  setCopyText(channelJson.addr);
+                  setCopyText(channelJson.channel);
                 }}
               />
 

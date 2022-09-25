@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 // External Packages
 import { useDispatch, useSelector } from "react-redux";
@@ -21,8 +21,7 @@ import { Item, ItemH } from "../primaries/SharedStyling";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 
 // Api Services
-import { postReq } from "api";
-import { getChannels, getUserSubscriptions } from "services";
+import { getChannels, getChannelsSearch, getUserSubscriptions } from "services";
 
 // Internal Configs
 import { appConfig } from "config";
@@ -32,6 +31,7 @@ const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const SEARCH_DELAY = 1500;
+const SEARCH_LIMIT = 5;
 
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser }) {
@@ -44,17 +44,18 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     stepIndex
   } = useSelector((state: any) => state.userJourney);
 
-  const [loading, setLoading] = React.useState(false);
-  const [moreLoading, setMoreLoading] = React.useState(false);
-  const [search, setSearch] = React.useState("");
-  const [channelToShow, setChannelToShow] = React.useState([]);
-  const [loadingChannel, setLoadingChannel] = React.useState(false);
-  const [trialCount, setTrialCount] = React.useState(0);
+  const [loading, setLoading] = useState(false);
+  const [moreLoading, setMoreLoading] = useState(false);
+  const [search, setSearch] = useState("");
+  const [searchPage, setSearchPage] = useState(1);
+  const [channelToShow, setChannelToShow] = useState([]);
+  const [loadingChannel, setLoadingChannel] = useState(false);
+  const [trialCount, setTrialCount] = useState(0);
 
   const channelsVisited = page * CHANNELS_PER_PAGE;
 
   // fetch channel data if we are just getting to this pae
-  React.useEffect(() => {
+  useEffect(() => {
     setLoading(!channels.length); //if there are no channels initially then, set the loader
     fetchInitialsChannelMeta();
   }, [account, chainId]);
@@ -62,8 +63,13 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   // to update a page
   const updateCurrentPage = () => {
     if (loading || moreLoading) return;
+
     // fetch more channel information
     setMoreLoading(true);
+    if(search) {
+      loadMoreSearchChannels();
+      return;
+    }
     dispatch(incrementPage());
     loadMoreChannelMeta(page + 1); //load the meta for the next page
   };
@@ -103,62 +109,76 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     setMoreLoading(false);
   };
 
+  const loadMoreSearchChannels = async () => {
+    try {
+      const searchChannels = await getChannelsSearch({
+        page: searchPage,
+        limit: SEARCH_LIMIT,
+        query: search
+      });
+
+      if(searchChannels && searchChannels.length > 0) {
+        setChannelToShow([...channelToShow, ...searchChannels] || []);
+        setSearchPage((page) => page+1);
+      }
+      setMoreLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   // conditionally display the waymore bar which loads more information
   // load more channels when we are at the bottom of the page
   const showWayPoint = (index: any) => {
+    if(search) 
+      return Number(index) === channelToShow.length - 1;
     return Number(index) === channels.length - 1;
   };
 
   // Search Channels Feature
-  React.useEffect(() => {
+  useEffect(() => {
     if (!channels.length) return;
     setChannelToShow(channels);
   }, [channels]);
 
-  function searchForChannel() {
+  async function searchForChannel() {
     if (loadingChannel) return; //if we are already loading, do nothing
     if (search) {
       setLoadingChannel(true); //begin loading here
       setChannelToShow([]); //maybe remove later
-      let payloadToSearchApiObj;
-      if (appConfig.coreContractChain === 42) {
-        payloadToSearchApiObj = {
-          query: search,
-          op: "read",
-          page: 1,
-          address: account,
-          pageSize: 1000,
-          chainId: chainId,
-        };
-      } else {
-        payloadToSearchApiObj = {
-          query: search,
-          op: "read",
-        };
-      }
-      postReq("/channels/_search", payloadToSearchApiObj)
-        .then((data) => {
-          setChannelToShow(data.data.channels || []);
-          setLoadingChannel(false);
-        })
-        .catch(() => {
-          // if there's an error search for three times before giving up and displaying the normal channels
-          if (trialCount < SEARCH_TRIAL_LIMIT) {
-            setTrialCount((t) => t + 1);
-            searchForChannel(); //if theres an error, recursively search
-          } else {
-            setChannelToShow(channels);
-            setLoadingChannel(false);
-          }
+      try {
+        const searchChannels = await getChannelsSearch({
+          page: searchPage,
+          limit: SEARCH_LIMIT,
+          query: search
         });
+
+        setChannelToShow(searchChannels || []);
+        if(searchChannels && searchChannels.length > 0) {
+          setSearchPage((page) => page+1);
+        }
+        setLoadingChannel(false);
+      } catch (err) {
+        console.log(err);
+        // if there's an error search for three times before giving up and displaying the normal channels
+        if (trialCount < SEARCH_TRIAL_LIMIT) {
+          setTrialCount((t) => t + 1);
+          searchForChannel(); //if theres an error, recursively search
+        } else {
+          setChannelToShow(channels);
+          setSearch("");
+          setLoadingChannel(false);
+        }
+      }
     } else {
       // if no search item, then set it back to the channels
       setLoadingChannel(false);
+      setSearch("");
       setChannelToShow(channels);
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
     return () => {
@@ -177,7 +197,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     })()
   }, [account]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const parsedChannel = window.location.href.toString().slice(window.location.href.toString().length - 42)
     if (!ADDRESS_REGEX.test(parsedChannel)) return;
     setTimeout(() => {
@@ -199,7 +219,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               <SearchBar
                 type="text"
                 value={search}
-                onChange={(e: any) => setSearch(e.target.value)}
+                onChange={(e: any) => {
+                  setSearchPage(1);
+                  setSearch(e.target.value);
+                }}
                 className="input"
                 placeholder={`Search by Name or ${account.slice(0,6)}`}
               />
@@ -230,7 +253,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 <ViewChannelItems key={channel.channel} self="stretch">
                   <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
                 </ViewChannelItems>
-
+                
                 {showWayPoint(index) && (
                   <Waypoint onEnter={updateCurrentPage} />
                 )}

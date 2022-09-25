@@ -14,7 +14,7 @@ export const getChannelsSearch = async ({ page=1, limit=10, order="desc", query 
 
     try {
         const response = await getReq(reqEndpoint);
-        return response;
+        return response?.data?.channels;
     } catch (err) {
         throw new Error(err.message);
     }
