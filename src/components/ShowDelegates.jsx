@@ -20,6 +20,7 @@ import useToast from "hooks/useToast";
 import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
 import DelegateInfo from "./DelegateInfo";
 import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
+import { getChannelDelegates } from "services";
 
 const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
@@ -54,9 +55,9 @@ const ShowDelegates = () => {
   const fetchDelegatees = async () => {
     try {
       const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
-      const { data } = await getReq(`/v1/channels/${channelAddressinCAIP}/delegates`);
-      if (data?.delegates) {
-        const delegateeList = data.delegates.map((delegate) => delegate);
+      const channelDelegates = await getChannelDelegates({channelCaipAddress: channelAddressinCAIP});
+      if (channelDelegates) {
+        const delegateeList = channelDelegates.map((delegate) => delegate);
         delegateeList.unshift(account);
         setDelegatees(delegateeList);
       }
