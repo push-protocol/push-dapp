@@ -255,7 +255,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             channel.channel !== ZERO_ADDRESS && (
               <>
                 <ViewChannelItems key={channel.channel} self="stretch">
-                  <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
+                  {((channelsNetworkId == appConfig.coreContractChain) || (channelsNetworkId == channel.alias_blockchain_id)) &&
+                    <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
+                  }
                 </ViewChannelItems>
                 
                 {showWayPoint(index) && (
