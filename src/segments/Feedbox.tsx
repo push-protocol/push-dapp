@@ -418,8 +418,8 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                       <Waypoint onEnter={() => handlePagination()} />
                     )}
                     <NotificationItem
-                      notificationTitle={notification.title}
-                      notificationBody={notification.body}
+                      notificationTitle={title}
+                      notificationBody={message}
                       cta={cta}
                       app={app}
                       icon={icon}

@@ -57,7 +57,7 @@ function Navigation() {
     if (!navigationSetup) return;
 
     let newNavSetup = navigationSetup;
-    if (processingState !== 0 && processingState !== 3) {
+    if (processingState === null) {
       newNavSetup.secondary[0].data.hidden = true;
       newNavSetup.secondary[1].data.hidden = true;
     } else {
