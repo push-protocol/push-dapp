@@ -1,5 +1,5 @@
 import { getReq } from "api";
-import { channelsServiceEndpoints } from "helpers/RoutesHelper"
+import { channelsServiceEndpoints } from "helpers/RoutesHelper";
 
 type Props = {
     page?: number,
