@@ -31,7 +31,7 @@ const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const SEARCH_DELAY = 1500;
-const SEARCH_LIMIT = 5;
+const SEARCH_LIMIT = 10;
 
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser }) {
