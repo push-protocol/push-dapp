@@ -76,7 +76,7 @@ const IntentFeed = (): JSX.Element => {
 
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
     setReceivedIntents(intents);
@@ -86,22 +86,6 @@ const IntentFeed = (): JSX.Element => {
   useEffect(() => {
     resolveThreadhash();
   }, [intents]);
-
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenSuccessSnackBar(false);
-  };
-
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenReprovalSnackBar(false);
-  };
 
   return (
     <ItemVV2
