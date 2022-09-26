@@ -50,12 +50,13 @@ export default function App() {
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
-  const [title, setTitle] = useState(EnvHelper.dappTitle());
+  // Build takes care of this now
+  // const [title, setTitle] = useState(EnvHelper.dappTitle());
 
-  React.useEffect(() => {
-    // This will run when the page first loads and whenever the title changes
-    document.title = title;
-  }, [title]);
+  // React.useEffect(() => {
+  //   // This will run when the page first loads and whenever the title changes
+  //   document.title = title;
+  // }, [title]);
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
