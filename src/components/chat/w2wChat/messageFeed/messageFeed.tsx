@@ -67,7 +67,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         setInbox(inboxes);
         return inboxes;
       } else {
-        console.log();
         let inboxes: Feeds[] = await fetchInboxApi();
         return inboxes;
       }
