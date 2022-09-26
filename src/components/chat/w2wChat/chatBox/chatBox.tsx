@@ -43,6 +43,7 @@ import './chatBox.css';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import ImageClipper from 'primaries/ImageClipper';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -925,7 +926,7 @@ const ChatBox = (): JSX.Element => {
               (<TypeBarContainer>
                 <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
                   <img
-                    src="/svg/chats/smiley.svg"
+                    src={`/svg/chats/smiley${theme.scheme==="dark"?"_dark":""}.svg`}
                     height="24px"
                     width="24px"
                     alt=""
@@ -965,7 +966,7 @@ const ChatBox = (): JSX.Element => {
                         )}
                         <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
                           <img
-                            src="/svg/chats/gif.svg"
+                            src={`/svg/chats/gif${theme.scheme==="dark"?"_dark":""}.svg`}
                             height="18px"
                             width="22px"
                             alt=""
@@ -976,7 +977,7 @@ const ChatBox = (): JSX.Element => {
                     <label>
                       <Icon>
                         <img
-                          src="/svg/chats/attachment.svg"
+                          src={`/svg/chats/attachment${theme.scheme==="dark"?"_dark":""}.svg`}
                           height="24px"
                           width="20px"
                           alt=""
@@ -1006,7 +1007,7 @@ const ChatBox = (): JSX.Element => {
                       ) : (
                         <Icon onClick={handleSubmit}>
                           <img
-                            src="/svg/chats/send.svg"
+                            src={`/svg/chats/send${theme.scheme==="dark"?"_dark":""}.svg`}
                             height="27px"
                             width="27px"
                             alt=""
@@ -1136,9 +1137,9 @@ const Icon = styled.i`
 `;
 
 const GifDiv = styled.div`
-  background: linear-gradient(179.97deg,#EEF5FF 0.02%,#ECE9FA 123.25%);
-    padding: 5px 8px;
-    border-radius: 7px;
+  background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
+  padding: 5px 8px 5px 6px;
+  border-radius: 7px;
 `;
 
 const TextInput = styled.textarea`
@@ -1150,9 +1151,13 @@ const TextInput = styled.textarea`
   border: none;
   resize: none;
   background: transparent;
+  color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   &&::-webkit-scrollbar {
     width: 0;
     height: 0;
+  }
+  ::placeholder {
+    color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   }
 `;
 
@@ -1168,8 +1173,7 @@ const TypeBarContainer = styled.div`
   height: 55px;
   padding: 16px;
   border-radius: 13px;
-  color: black;
-  background: #ffffff;
+  background: ${(props) => props.theme.chat.sendMesageBg || '#fff'};
 `;
 
 const Container = styled(Content)`

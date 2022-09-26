@@ -36,6 +36,9 @@ const themeLight = {
   chat: {
     snapFocusBg: '#F4F5FA',
     chatboxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
+    sendMesageBg: "white",
+    sendMessageFontColor: "black",
+    gifContainerBg: "#F7F8FF"
   },
 
   // Default Background Theme
@@ -187,6 +190,9 @@ const themeDark = {
   chat: {
     snapFocusBg: '#404650',
     chatboxBg: '#282A2E',
+    sendMesageBg: "#404650",
+    sendMessageFontColor: "#B6BCD6",
+    gifContainerBg:  "#282A2E"
   },
 
   // Header Theme
