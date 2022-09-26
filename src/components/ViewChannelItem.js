@@ -115,7 +115,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           ...response,
           channel: channelObject.channel,
           alias_address: channelObject.alias_address,
-          subscriberCount: channelObject.subscriber_count,
+          subscriber_count: channelObject.subscriber_count,
         });
         fetchChannelJson();
       });
@@ -173,7 +173,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       setChannelJson({
         ...channelJson,
         channel: channelObject.channel,
-        subscriberCount: channelObject.subscriber_count,
+        subscriber_count: channelObject.subscriber_count,
       });
       setLoading(false);
     } catch (err) {
