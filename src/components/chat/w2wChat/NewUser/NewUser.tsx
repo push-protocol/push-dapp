@@ -15,6 +15,7 @@ import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import * as PushNodeClient from 'api';
 import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import MessageFeed from '../messageFeed/messageFeed';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
@@ -23,7 +24,7 @@ import { Context } from 'sections/chat/ChatMainSection';
 function NewUser() {
   const theme = useTheme();
 
-  const { setChat, setSearchedUser, searchedUser, setHasUserBeenSearched, setActiveTab } = useContext(Context);
+  const { setChat, setSearchedUser, searchedUser, hasUserBeenSearched,setHasUserBeenSearched, setActiveTab } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
   const [searchedUserData, setSearchedUserData] = useState<User[]>([]);
@@ -65,19 +66,23 @@ function NewUser() {
   const submitSearch = async (event: React.FormEvent) => {
     //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
     event.preventDefault();
-    setMessagesLoading(true);
+   
+    console.log("in search")
+    console.log(!ethers.utils.isAddress(searchedUser))
     if (!ethers.utils.isAddress(searchedUser)) {
+      setMessagesLoading(true);
       setIsLoadingSearch(true);
       let ens: string;
       try {
         const address = await provider.resolveName(searchedUser);
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
-
+        
         if (ens) {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
           const displayUser = displayDefaultUser({ caip10 });
           setHasUserBeenSearched(true);
+          console.log(displayUser);
           setSearchedUserData([displayUser]);
         } else {
           setIsInvalidAddress(true);
@@ -90,50 +95,56 @@ function NewUser() {
         setHasUserBeenSearched(true);
       }
     } else {
+      
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
       let filteredData: User;
       setHasUserBeenSearched(true);
+      
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          setHasUserBeenSearched(false);
-          setActiveTab(0);
+          console.log(filteredData)
+          setHasUserBeenSearched(true);
+          setSearchedUserData([filteredData]);
+          // setActiveTab(0);
         }
         // User is not in the protocol. Create new user
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             const displayUser = displayDefaultUser({ caip10 });
-            setHasUserBeenSearched(true);
+  
+            setSearchedUserData([displayUser]);
             // making data compatible with Feeds type
-            let feed: Feeds;
-            feed = {
-              msg: {
-                name: displayUser.wallets.split(',')[0].toString(),
-                profilePicture: displayUser.profilePicture,
-                lastMessage: null,
-                timestamp: null,
-                messageType: null,
-                signature: null,
-                signatureType: null,
-                encType: null,
-                encryptedSecret: null,
-                fromDID: null,
-                toDID: null,
-              },
-              wallets: displayUser.wallets,
-              did: displayUser.did,
-              threadhash: null,
-              profilePicture: displayUser.profilePicture,
-              about: displayUser.about,
-              intent: null,
-              intentSentBy: null,
-              intentTimestamp: null,
-              publicKey: displayUser.publicKey,
-              combinedDID: null,
-              cid: null,
-            };
-            setFeeds([feed]);
+            // let feed: Feeds;
+            // feed = {
+            //   msg: {
+            //     name: displayUser.wallets.split(',')[0].toString(),
+            //     profilePicture: displayUser.profilePicture,
+            //     lastMessage: null,
+            //     timestamp: null,
+            //     messageType: null,
+            //     signature: null,
+            //     signatureType: null,
+            //     encType: null,
+            //     encryptedSecret: null,
+            //     fromDID: null,
+            //     toDID: null,
+            //   },
+            //   wallets: displayUser.wallets,
+            //   did: displayUser.did,
+            //   threadhash: null,
+            //   profilePicture: displayUser.profilePicture,
+            //   about: displayUser.about,
+            //   intent: null,
+            //   intentSentBy: null,
+            //   intentTimestamp: null,
+            //   publicKey: displayUser.publicKey,
+            //   combinedDID: null,
+            //   cid: null,
+            // };
+            // setFeeds([feed]);
+            setHasUserBeenSearched(true);
             setMessagesLoading(false);
           } else {
             setIsInvalidAddress(true);
@@ -245,7 +256,14 @@ function NewUser() {
           />
         ) : (
           <>
-            {feeds?.map((feed: Feeds, i) => {
+           <ItemVV2 justifyContent="flex-start">
+        <MessageFeed
+          hasUserBeenSearched={hasUserBeenSearched}
+          filteredUserData={searchedUserData}
+          isInvalidAddress={isInvalidAddress}
+        />
+      </ItemVV2>
+            {/* {feeds?.map((feed: Feeds, i) => {
               return (
                 <ProfileCard
                   padding="10px"
@@ -272,9 +290,10 @@ function NewUser() {
                   </SpanV2>
                 </ProfileCard>
               );
-            })}
+            })} */}
           </>
         )}
+        
       </ItemVV2>
     </ItemVV2>
   );

@@ -37,7 +37,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
-
+  const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
@@ -208,15 +208,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       alignItems="flex-start"
       justifyContent="flex-start"
     >
-      <SpanV2
-        fontWeight="700"
-        fontSize="12px"
-        textAlign="start"
-        margin="10px 0 0 0"
-        color={theme.default.secondaryColor}
-      >
-        CHATS
-      </SpanV2>
+      {activeTab !==3 && (
+        <SpanV2
+          fontWeight="700"
+          fontSize="12px"
+          textAlign="start"
+          margin="10px 0 0 0"
+          color={theme.default.secondaryColor}
+        >
+          CHATS
+        </SpanV2>
+      )}
       <UserChats flexFlow="column">
         {messagesLoading ? (
           <LoaderSpinner
@@ -234,42 +236,46 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
             ) : !messagesLoading ? (
-              feeds.map((feed: Feeds, i) => (
-                // To Test
-                // <ItemVV2
-                //   key={feed.threadhash || i}
-                //   onClick={(): void => {
-                //     setChat(feed);
-                //   }}
-                //   background="red"
-                //   margin="10px"
-                //   height="80px"
-                //   flex="initial"
-                // >
-                // </ItemVV2>
-                <ItemVV2
-                  alignSelf="stretch"
-                  flex="initial"
-                  key={feed.threadhash || i}
-                >
-                  <ChatSnap
-                    pfp={feed.profilePicture}
-                    username={feed.msg.name}
-                    chatSnapMsg={{
-                      type: feed.msg.messageType,
-                      message: feed.msg.lastMessage,
-                    }}
-                    timestamp={feed.msg.timestamp}
-                    selected={feed.threadhash == selectedChatSnap ? true : false}
-                    onClick={(): void => {
-                      setChat(feed);
-                      setSelectedChatSnap(feed.threadhash);
-                      setSearchedUser('');
-                      setHasUserBeenSearched(false);
-                    }}
-                  />
-                </ItemVV2>
-              ))
+              feeds.map(
+                (feed: Feeds, i) =>
+                  // To Test
+                  // <ItemVV2
+                  //   key={feed.threadhash || i}
+                  //   onClick={(): void => {
+                  //     setChat(feed);
+                  //   }}
+                  //   background="red"
+                  //   margin="10px"
+                  //   height="80px"
+                  //   flex="initial"
+                  // >
+                  // </ItemVV2>
+
+                  ((activeTab == 3 && props.hasUserBeenSearched) || activeTab != 3) && (
+                    <ItemVV2
+                      alignSelf="stretch"
+                      flex="initial"
+                      key={feed.threadhash || i}
+                    >
+                      <ChatSnap
+                        pfp={feed.profilePicture}
+                        username={feed.msg.name}
+                        chatSnapMsg={{
+                          type: feed.msg.messageType,
+                          message: feed.msg.lastMessage,
+                        }}
+                        timestamp={feed.msg.timestamp}
+                        selected={feed.threadhash == selectedChatSnap ? true : false}
+                        onClick={(): void => {
+                          setChat(feed);
+                          setSelectedChatSnap(feed.threadhash);
+                          setSearchedUser('');
+                          setHasUserBeenSearched(false);
+                        }}
+                      />
+                    </ItemVV2>
+                  )
+              )
             ) : null}
           </>
         )}
