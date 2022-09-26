@@ -7,7 +7,6 @@ import { Web3Provider } from 'ethers/providers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
-import { useQuery } from 'react-query';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -18,28 +17,13 @@ import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
-import MessageFeed from '../messageFeed/messageFeed';
-import useToast from 'hooks/useToast';
-import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 
 import { Context } from 'sections/chat/ChatMainSection';
 
 function NewUser() {
   const theme = useTheme();
 
-  const {
-    did,
-    setChat,
-    setSearchedUser,
-    searchedUser,
-    hasUserBeenSearched,
-    setHasUserBeenSearched,
-    setInbox,
-    inbox,
-    connectedUser,
-    setIntents,
-    setActiveTab,
-  } = useContext(Context);
+  const { setChat, setSearchedUser, searchedUser, setHasUserBeenSearched, setActiveTab } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
   const [searchedUserData, setSearchedUserData] = useState<User[]>([]);
@@ -113,7 +97,7 @@ function NewUser() {
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          // setFilteredUserData([filteredData]);
+          setHasUserBeenSearched(false);
           setActiveTab(0);
         }
         // User is not in the protocol. Create new user
@@ -121,6 +105,7 @@ function NewUser() {
           if (ethers.utils.isAddress(searchedUser)) {
             const displayUser = displayDefaultUser({ caip10 });
             setHasUserBeenSearched(true);
+            // making data compatible with Feeds type
             let feed: Feeds;
             feed = {
               msg: {
@@ -240,7 +225,12 @@ function NewUser() {
                 spinnerColor={theme.default.secondaryColor}
               />
             )}
-            {!isLoadingSearch && <SearchIcon style={{ cursor: 'pointer' }} />}
+            {!isLoadingSearch && (
+              <SearchIcon
+                style={{ cursor: 'pointer' }}
+                onClick={submitSearch}
+              />
+            )}
           </ItemVV2>
         </SearchBarContent>
       </ItemHV2>
@@ -290,15 +280,6 @@ function NewUser() {
   );
 }
 
-const InfoMessage = styled.p`
-  position: relative;
-  text-align: center;
-  width: 80%;
-  background: transparent;
-  padding: 10px;
-  margin: 0;
-`;
-
 const ProfileCard = styled(ItemHV2)`
   min-height: 73px;
   flex: initial;
@@ -316,21 +297,6 @@ const ProfileCard = styled(ItemHV2)`
 
 const SearchBarContent = styled.form`
   position: relative;
-`;
-
-// const Close = styled(CloseIcon)`
-//   position: absolute;
-//   top: 23px;
-//   right: 55px;
-//   cursor: pointer;
-// `;
-
-const SearchLoader = styled.div`
-  position: absolute;
-  top: 20px;
-  right: 15px;
-  height: 25px;
-  width: 20px;
 `;
 
 const Input = styled.input`

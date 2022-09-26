@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import { Feeds, User } from 'api';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
@@ -35,7 +35,9 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
+  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+    useContext<AppContext>(Context);
+
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
@@ -63,26 +65,24 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
-      } 
-      else {
-        console.log()
+      } else {
+        console.log();
         let inboxes: Feeds[] = await fetchInboxApi();
         return inboxes;
       }
     }
   };
 
-  const fetchInboxApi = async(): Promise<Feeds[]> => {
+  const fetchInboxApi = async (): Promise<Feeds[]> => {
     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }),inboxes, 'did');
+    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
     inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    if(feeds.length !== inboxes.length)
-    {
-    setFeeds(inboxes);
-    setInbox(inboxes);
+    if (feeds.length !== inboxes.length) {
+      setFeeds(inboxes);
+      setInbox(inboxes);
     }
     return inboxes;
-  }
+  };
 
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
@@ -264,6 +264,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     onClick={(): void => {
                       setChat(feed);
                       setSelectedChatSnap(feed.threadhash);
+                      setSearchedUser('');
+                      setHasUserBeenSearched(false);
                     }}
                   />
                 </ItemVV2>

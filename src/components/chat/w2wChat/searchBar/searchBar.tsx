@@ -196,7 +196,12 @@ const SearchBar = () => {
                 spinnerColor={theme.default.secondaryColor}
               />
             )}
-            {!isLoadingSearch && <SearchIcon style={{ cursor: 'pointer' }} />}
+            {!isLoadingSearch && (
+              <SearchIcon
+                style={{ cursor: 'pointer' }}
+                onClick={submitSearch}
+              />
+            )}
           </ItemVV2>
         </SearchBarContent>
 
