@@ -18,6 +18,7 @@ import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
+import NewUser from 'components/chat/w2wChat/NewUser/NewUser';
 import 'components/chat/w2wChat/sidebar/sidebar.css';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
@@ -29,14 +30,13 @@ import { Context } from 'sections/chat/ChatMainSection';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-
 // Chat Sections
 // Divided into two, left and right
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests ,setPendingRequests} = useContext(Context);
+  const { connectedUser, pendingRequests, setPendingRequests } = useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -67,14 +67,28 @@ const ChatSidebarSection = () => {
         clearTimeout(timer);
       };
     }
-    
   }, [loadingRequests]);
-    
+
   // Get pending requests
   const getPendingRequests = async (firstLoad) => {
     let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-      getIntent = await intitializeDb<string>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
+      getIntent = await intitializeDb<string>(
+        'Insert',
+        'Intent',
+        w2wHelper.walletToCAIP10({ account, chainId }),
+        '',
+        'did'
+      );
     }
 
     // If the user is not registered in the protocol yet, his did will be his wallet address
@@ -87,14 +101,14 @@ const ChatSidebarSection = () => {
     if (firstLoad) {
       setLoadingRequests(false);
     }
-  } 
+  };
 
   // RENDER
   return (
     <ItemVV2>
       {/* Header */}
-      <ItemVV2 flex="initial">
-        {activeTab == 0 || activeTab == 1 ? (
+      {activeTab == 0 || activeTab == 1 ? (
+        <ItemVV2 flex="initial">
           <ItemHV2>
             {/* Set active and onCLick to customize tab */}
             <TabButton
@@ -115,12 +129,20 @@ const ChatSidebarSection = () => {
               >
                 Chats
               </SpanV2>
+            </TabButton>
 
-              {loadingRequests && 
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={12} spinnerColor={theme.default.secondaryColor} />
-              }
-
-              {!loadingRequests && pendingRequests > 0 && 
+            <TabButton
+              active={activeTab == 1 ? true : false}
+              background="transparent"
+              hoverBackground="transparent"
+              color={theme.default.color}
+              flex="1"
+              padding="10px 10px 20px 10px"
+              onClick={() => {
+                setActiveTab(1);
+              }}
+            >
+              <ItemHV2 alignItems="center">
                 <SpanV2
                   flex="initial"
                   fontSize="16px"
@@ -131,7 +153,15 @@ const ChatSidebarSection = () => {
                   Requests
                 </SpanV2>
 
-                {pendingRequests > 0 && (
+                {loadingRequests && (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={12}
+                    spinnerColor={theme.default.secondaryColor}
+                  />
+                )}
+
+                {!loadingRequests && pendingRequests > 0 && (
                   <SpanV2
                     background={GLOBALS.COLORS.PRIMARY_PINK}
                     color={GLOBALS.COLORS.WHITE}
@@ -146,8 +176,8 @@ const ChatSidebarSection = () => {
               </ItemHV2>
             </TabButton>
           </ItemHV2>
-        ) : null}
-      </ItemVV2>
+        </ItemVV2>
+      ) : null}
 
       {/* Main Content */}
       <ItemVV2
