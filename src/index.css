@@ -405,8 +405,6 @@ template {
 /**
  * Custom CSS
  */
- @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap');
-
  @font-face {
   font-family: 'Strawford';
   src: url('./assets/fonts/Strawford-ExtraLight.woff2') format('woff2'),
@@ -461,11 +459,11 @@ template {
 } */
 
  span, p, label, div {
-  font-family: "Strawford", 'Manrope', sans-serif;
+  font-family: "Strawford", Helvetica, sans-serif;
 }
 
 button, a, a:before, a:after {
-  font-family: "Strawford", 'Manrope', sans-serif;
+  font-family: "Strawford", Helvetica, sans-serif;
   border: 0;
   outline: 0;
 
@@ -477,7 +475,7 @@ button, a, a:before, a:after {
 
 
  h1 {
-  font-family: "Strawford", 'Manrope', sans-serif;
+  font-family: "Strawford", Helvetica, sans-serif;
    font-weight: 700;
    line-height: 1.25em;
    color: #fff;
@@ -488,7 +486,7 @@ button, a, a:before, a:after {
  }
 
  h2, h3, h4, h5, h6 {
-   font-family: 'Strawford', 'Manrope', sans-serif;
+   font-family: 'Strawford', Helvetica, sans-serif;
    font-weight: 500;
    font-size: 32px;
    line-height: 1.25em;
