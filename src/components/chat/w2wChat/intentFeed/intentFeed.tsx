@@ -87,22 +87,6 @@ const IntentFeed = (): JSX.Element => {
     resolveThreadhash();
   }, [intents]);
 
-  const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenSuccessSnackBar(false);
-  };
-
-  const handleCloseReprovalSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpenReprovalSnackBar(false);
-  };
-
   return (
     <ItemVV2
       alignSelf="stretch"
