@@ -31,21 +31,21 @@ const Profile = ({isDarkMode}) => {
       id: "walletAddress",
       value: account,
       title: account,
-      icon: "./copy.svg",
+      invertedIcon: "./copy.svg",
     },
     {
       id: "prodDapp",
       value: "",
       link: "https://epns.io/",
       title: "Production dapp",
-      icon: "./prod.svg",
+      invertedIcon: "./prod.svg",
     },
     {
       id: "disconnect",
       value: "",
       function: ()=>deactivate(),
       title: "Logout",
-      icon: "./logout.svg",
+      invertedIcon: "./logout.svg",
     },
   ];
   
@@ -148,7 +148,7 @@ const Wallet = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 16px;
   color: ${props => props.color};
   border-radius:17px;

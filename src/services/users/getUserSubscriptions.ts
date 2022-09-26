@@ -1,12 +1,16 @@
 import { getReq } from "api";
 import { usersServiceEndpoints } from "helpers/RoutesHelper"
 
-export const getUserSubscriptions = async (userCaipAddress: string) => {
+type Props = {
+    userCaipAddress: string;
+}
+
+export const getUserSubscriptions = async ({ userCaipAddress }: Props) => {
     const reqEndpoint = usersServiceEndpoints.userSubscriptions(userCaipAddress);
 
     try {
         const response = await getReq(reqEndpoint);
-        return response;
+        return response?.data?.subscriptions;
     } catch (err) {
         throw new Error(err.message);
     }

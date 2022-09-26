@@ -19,7 +19,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
+import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
@@ -36,13 +36,13 @@ import Chats from '../chats/chats';
 import { FileMessageContent } from '../Files/Files';
 import GifPicker from '../Gifs/gifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox } from '../w2wUtils';
+import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './chatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
-import CryptoHelper from 'helpers/CryptoHelper';
 import GLOBALS, { device } from 'config/Globals';
+import CryptoHelper from 'helpers/CryptoHelper';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -63,33 +63,36 @@ const ChatBox = (): JSX.Element => {
     viewChatBox,
     searchedUser,
     connectedUser,
+    receivedIntents,
     inbox,
+    intents,
     setConnectedUser,
+    setActiveTab,
     setChat,
     setInbox,
     setHasUserBeenSearched,
+    setPendingRequests,
     setSearchedUser,
-    setLoadingMessage,
-    setBlockedLoading,
-    setActiveTab
-  }: AppContext = useContext<AppContext>(Context);
-  const [newMessage, setNewMessage] = useState<string>('');
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false);
-  const [showEmojis, setShowEmojis] = useState<boolean>(false);
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [Loading, setLoading] = useState<boolean>(true);
-  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
-  const [imageSource, setImageSource] = useState<string>('');
-  const [filesUploading, setFileUploading] = useState<boolean>(false);
-  const imageInputRef = useRef<HTMLInputElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
-  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
-  const [SnackbarText, setSnackbarText] = useState<string>('');
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [showOption, setShowOption] = useState<boolean>(false);
-  const provider = ethers.getDefaultProvider();
+    setReceivedIntents,
+    setBlockedLoading
+  }: AppContext = useContext<AppContext>(Context)
+  const [newMessage, setNewMessage] = useState<string>('')
+  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
+  const [showEmojis, setShowEmojis] = useState<boolean>(false)
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
+  const [Loading, setLoading] = useState<boolean>(true)
+  const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false)
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
+  const [imageSource, setImageSource] = useState<string>('')
+  const [filesUploading, setFileUploading] = useState<boolean>(false)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
+  const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
+  const [SnackbarText, setSnackbarText] = useState<string>('')
+  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
+  const [showOption, setShowOption] = useState<boolean>(false)
+  const provider = ethers.getDefaultProvider()
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
@@ -97,7 +100,8 @@ const ChatBox = (): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
+      const latestThreadhash: string = inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ||
+      receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ;
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -154,7 +158,6 @@ const ChatBox = (): JSX.Element => {
           );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
-            console.log('Message sent in chat', messagesSentInChat);
             const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
@@ -273,8 +276,7 @@ const ChatBox = (): JSX.Element => {
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
-    setLoading(true);
-    console.log('Current Chat changed');
+    setLoading(true)
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -383,7 +385,6 @@ const ChatBox = (): JSX.Element => {
             signatureArmored: savedMsg.signature,
           });
         }
-        console.log('Saved Msg', savedMsg);
         setMessages([...messages, savedMsg]);
       }
     } catch (error) {
@@ -401,7 +402,6 @@ const ChatBox = (): JSX.Element => {
       });
     }
     setTimeout(() => {
-      console.log('Timeout of 2 sec');
       setMessageBeingSent(false);
     }, 2000);
   };
@@ -420,34 +420,97 @@ const ChatBox = (): JSX.Element => {
       }
     }
   };
+  async function resolveThreadhash(): Promise<void> {
+    // setIsLoading(true);
+    let getIntent;
+    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+    }
+    // If the user is not registered in the protocol yet, his did will be his wallet address
+    const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    if (getIntent === undefined) {
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser });
+      console.log(intents)
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
+    } else {
+      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      intents = await decryptFeeds({ feeds: intents, connectedUser });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
+    }
+    // setIsLoading(false);
+  }
 
+  useEffect(() => {
+    resolveThreadhash();
+  }, [intents]);
+  async function ApproveIntent(status: string): Promise<void> {
+    // setIsLoading(true);
+    const { createdUser } = await createUserIfNecessary();
+    // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
+    const updatedIntent: string = await approveIntent(currentChat.intentSentBy, createdUser.wallets.split(',')[0], status, '1', 'sigType');
+    console.log(currentChat)
+    let activeChat = currentChat;
+    activeChat.intent = updatedIntent
+    setChat(activeChat)
+    // setOpen(false);
+
+    // displaying toast according to status
+    if(status==="Approved"){
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: 'Request approved',
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => (
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />
+        ),
+      });
+    }
+    else{
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `There was a problem in approving the chat request, please try again.`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+    setActiveTab(0);
+    await resolveThreadhash();
+   
+
+    // setIsLoading(false);
+  }
   const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
     try {
       if (connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '') {
-        setBlockedLoading({
-          enabled: true,
-          title: 'Step 1/4: Preparing First Time Setup',
-          progressEnabled: true,
-          progress: 25,
-          progressNotice:
-            'We use Ceramic to enable multichain and multiwallet experience. This step is is only done for first time users and might take a couple of minutes. Steady lads, chat is almost ready! You will need to sign two transactions when they appear.',
-        });
-
         // This is a new user
         setBlockedLoading({
           enabled: true,
-          title: 'Step 2/4: Generating crytographic keys',
+          title: "Step 1/4: Generating secure keys for your account",
           progressEnabled: true,
-          progress: 40,
-        });
+          progress: 30,  
+          progressNotice: "This step is is only done for first time users and might take a few seconds. PGP keys are getting generated to provide you with secure yet seamless chat"
+        })
+        await new Promise(r => setTimeout(r, 200));
 
         const keyPairs = await generateKeyPair();
         setBlockedLoading({
           enabled: true,
-          title: 'Step 3/4: Encrypting your info',
+          title: "Step 2/4: Encrypting your keys",
           progressEnabled: true,
           progress: 60,
-        });
+          progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!'
+        })
 
         const walletPublicKey = await CryptoHelper.getPublicKey(account);
         const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(keyPairs.privateKeyArmored, walletPublicKey);
@@ -479,7 +542,6 @@ const ChatBox = (): JSX.Element => {
           progressEnabled: true,
           progress: 100,
         })
-
         return { createdUser: createdConnectedUser };
       } else {
         return { createdUser: connectedUser };
@@ -542,7 +604,7 @@ const ChatBox = (): JSX.Element => {
               signature: pgpSignature,
             } = await encryptAndSign({
               plainText: message,
-              toPublicKeyArmored: currentChat.publicKey,
+              toPublicKeyArmored: user.publicKey,
               fromPublicKeyArmored: createdUser.publicKey,
               privateKeyArmored: createdUser.privateKey
             });
@@ -593,7 +655,7 @@ const ChatBox = (): JSX.Element => {
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
-            toastMessage: 'Intent Sent',
+            toastMessage: 'Chat Request Sent',
             toastType: 'SUCCESS',
             getToastIcon: (size) => (
               <MdCheckCircle
@@ -606,7 +668,7 @@ const ChatBox = (): JSX.Element => {
       } else {
         setNewMessage('');
         setOpenSuccessSnackBar(true);
-        setSnackbarText('Cannot send message, Intent is not approved!');
+        setSnackbarText('Cannot send message, chat request is not approved!');
       }
       setSearchedUser('');
       setHasUserBeenSearched(false);
@@ -675,9 +737,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const sendGif = (url: string): void => {
-    if (!currentChat.intent.includes(account)) {
+    if(currentChat?.intent === null){
       sendIntent({ message: url, messageType: 'GIF' });
-    } else {
+    }else{
       sendMessage({
         message: url,
         messageType: 'GIF',
@@ -695,19 +757,20 @@ const ChatBox = (): JSX.Element => {
     <Container>
       {!viewChatBox ? (
         <ItemVV2 gap="25px">
-          <WelcomeMainText theme={theme}>
-            <ImageV2
-              src={HandwaveIcon}
-              alt="wave"
-              display="inline"
-              width="auto"
-              verticalAlign="middle"
-              margin="0 13px"
-            />
-          </WelcomeMainText>
-          <WelcomeSubText theme={theme}>
-            You haven’t started a conversation yet. Start a new chat by using the + button
-          </WelcomeSubText>
+         <WelcomeMainText 
+          theme={theme}
+        >
+           <ImageV2 src={HandwaveIcon} 
+           alt="wave"
+           display="inline" 
+           width="auto"
+           verticalAlign="middle"
+           margin="0 13px"/>
+         </WelcomeMainText>
+         <WelcomeSubText 
+          theme={theme}>
+           You haven’t started a conversation yet. Start a new chat by using the + button
+         </WelcomeSubText>
         </ItemVV2>
       ) : (
         <>
@@ -738,7 +801,7 @@ const ChatBox = (): JSX.Element => {
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="999"
+            zIndex="998"
           >
             {/* setChat */}
 
@@ -839,15 +902,17 @@ const ChatBox = (): JSX.Element => {
                           caip10={walletToCAIP10({ account, chainId })}
                           messageBeingSent={messageBeingSent}
                         />
-                        {/* {messages.length === 1 && msg.fromDID === did.id ? (
-                          <FirstConversation>
-                            This is your first conversation with the receipent, you will be able to continue the
-                            conversation once the receipent accepts the intent
-                          </FirstConversation>
-                        ) : null} */}
                       </div>
                     );
                   })}
+                  {(receivedIntents.find((x) => (x.combinedDID === currentChat.combinedDID) && (x.msg.toDID === connectedUser.did))?.threadhash)
+                   && <Chats
+                    msg={{...messages[0],messageContent:'Please accept to enable push chat from this wallet',messageType:'Intent' }}
+                    caip10={walletToCAIP10({ account, chainId })}
+                    messageBeingSent={messageBeingSent}
+                    ApproveIntent = {()=>ApproveIntent('Approved')}
+                  />}
+
                 </>
               )}
             </ScrollToBottom>
@@ -859,100 +924,104 @@ const ChatBox = (): JSX.Element => {
               spinnerSize={40}
             />
           ) : ( */}
-          <TypeBarContainer>
-            <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
-              <img
-                src="/svg/chats/smiley.svg"
-                height="24px"
-                width="24px"
-                alt=""
-              />
-            </Icon>
-            {showEmojis && (
-              <Picker
-                onEmojiClick={addEmoji}
-                pickerStyle={{
-                  width: '300px',
-                  position: 'absolute',
-                  bottom: '2.5rem',
-                  zindex: '700',
-                  left: '2.5rem',
-                }}
-              />
-            )}
-            {
-              <TextInput
-                placeholder="Type your message"
-                onKeyDown={handleKeyPress}
-                onChange={textOnChange}
-                value={newMessage}
-                autoFocus="autoFocus"
-              />
-            }
-            <>
-              <>
-                <label>
-                  {isGifPickerOpened && (
-                    <GifPicker
-                      setIsOpened={setIsGifPickerOpened}
-                      isOpen={isGifPickerOpened}
-                      onSelect={sendGif}
-                    />
-                  )}
-                  <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
-                    <img
-                      src="/svg/chats/gif.svg"
-                      height="18px"
-                      width="22px"
-                      alt=""
-                    />
-                  </Icon>
-                </label>
-                <label>
-                  <Icon>
-                    <img
-                      src="/svg/chats/attachment.svg"
-                      height="24px"
-                      width="20px"
-                      alt=""
-                    />
-                  </Icon>
-                  <FileInput
-                    type="file"
-                    ref={fileInputRef}
-                    onChange={uploadFile}
+            {(receivedIntents.find((x) => (x.combinedDID === currentChat.combinedDID) && (x.msg.toDID === connectedUser.did))?.threadhash) ?
+              null
+              :
+              (<TypeBarContainer>
+                <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
+                  <img
+                    src="/svg/chats/smiley.svg"
+                    height="24px"
+                    width="24px"
+                    alt=""
                   />
-                </label>
-              </>
-              {filesUploading ? (
-                <div className="imageloader">
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    spinnerSize={20}
+                </Icon>
+                {showEmojis && (
+                  <Picker
+                    onEmojiClick={addEmoji}
+                    pickerStyle={{
+                      width: '300px',
+                      position: 'absolute',
+                      bottom: '2.5rem',
+                      zindex: '700',
+                      left: '2.5rem',
+                    }}
                   />
-                </div>
-              ) : (
+                )}
+                {
+                  <TextInput
+                    placeholder="Type your message..."
+                    onKeyDown={handleKeyPress}
+                    onChange={textOnChange}
+                    value={newMessage}
+                    autoFocus="autoFocus"
+                  />
+                }
                 <>
-                  {messageBeingSent ? (
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={40}
-                    />
-                  ) : (
-                    <Icon onClick={handleSubmit}>
-                      <img
-                        src="/svg/chats/send.svg"
-                        height="27px"
-                        width="27px"
-                        alt=""
+                  <>
+                    <GifDiv>
+                      <label>
+                        {isGifPickerOpened && (
+                            <GifPicker
+                              setIsOpened={setIsGifPickerOpened}
+                              isOpen={isGifPickerOpened}
+                              onSelect={sendGif}
+                            />
+                        )}
+                        <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
+                          <img
+                            src="/svg/chats/gif.svg"
+                            height="18px"
+                            width="22px"
+                            alt=""
+                          />
+                        </Icon>
+                      </label>
+                    </GifDiv>
+                    <label>
+                      <Icon>
+                        <img
+                          src="/svg/chats/attachment.svg"
+                          height="24px"
+                          width="20px"
+                          alt=""
+                        />
+                      </Icon>
+                      <FileInput
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={uploadFile}
                       />
-                    </Icon>
+                    </label>
+                  </>
+                  {filesUploading ? (
+                    <div className="imageloader">
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={20}
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      {messageBeingSent ? (
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={40}
+                        />
+                      ) : (
+                        <Icon onClick={handleSubmit}>
+                          <img
+                            src="/svg/chats/send.svg"
+                            height="27px"
+                            width="27px"
+                            alt=""
+                          />
+                        </Icon>)}
+
+                    </>
                   )}
                 </>
-              )}
-            </>
-          </TypeBarContainer>
-          {/* )} */}
+              </TypeBarContainer>)}
         </>
       )}
     </Container>
@@ -961,7 +1030,8 @@ const ChatBox = (): JSX.Element => {
 
 const SpinnerWrapper = styled.div`
   width: 100%;
-  height: calc(83.6vh - 130px);
+  margin-top: 20px;
+  height: 90px;
 `;
 
 const FirstConversation = styled.div`
@@ -985,8 +1055,8 @@ const MessageTime = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
-  color: #000000;
+  font-size: 11px;
+  color: ${(props) => props.theme.default.secondaryColor};
   margin: 15px 0px;
 `;
 
@@ -998,7 +1068,7 @@ const MessageContainer = styled.div`
   right: 0;
   margin: 0;
   width: 100%;
-  height: calc(83.6vh - 130px);
+  height: calc(100% - 140px);
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -1063,16 +1133,25 @@ const MoreOptions = styled.div`
 
 const Icon = styled.i`
   padding: 0px;
+  display: flex;
+  margin-left: 5px;
   &:hover {
     cursor: pointer;
   }
 `;
 
+const GifDiv = styled.div`
+  background: linear-gradient(179.97deg,#EEF5FF 0.02%,#ECE9FA 123.25%);
+    padding: 5px 8px;
+    border-radius: 7px;
+`;
+
 const TextInput = styled.textarea`
   font-size: 16px;
-  width: 75%;
+  width: 100%;
   height: 25px;
   outline: none;
+  padding-top: 4px;
   border: none;
   resize: none;
   background: transparent;

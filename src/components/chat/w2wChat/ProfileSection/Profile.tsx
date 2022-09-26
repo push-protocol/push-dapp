@@ -136,33 +136,11 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
 
           <Box sx={styles.detailsCard}>
             <Typography component="legend" sx={styles.label}>
-              DID:
-            </Typography>
-
-            <Box sx={{ display: 'flex' }}>
-              <Typography component="legend" sx={styles.value}>
-                {showCharacters(did?.id)}
-              </Typography>
-
-              {!copiedDid ? (
-                <IconButton aria-label="back" onClick={() => handleClickDid(did.id)}>
-                  <ContentCopyIcon sx={styles.copyIcon} />
-                </IconButton>
-              ) : (
-                <IconButton aria-label="back">
-                  <CheckIcon sx={styles.copyIcon} />
-                </IconButton>
-              )}
-            </Box>
-          </Box>
-
-          <Box sx={styles.detailsCard}>
-            <Typography component="legend" sx={styles.label}>
               Wallets:
             </Typography>
 
             {wallets.map((wallet) => (
-              <Box sx={{ display: 'flex', marginBottom: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
                 <Typography component="legend" sx={styles.value}>
                   {showCharacters(wallet)}
                 </Typography>

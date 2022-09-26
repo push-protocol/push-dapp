@@ -15,7 +15,6 @@ import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
@@ -31,6 +30,7 @@ import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJour
 
 // Internal Configs
 import { appConfig } from 'config';
+import GLOBALS from 'config/Globals';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
@@ -50,12 +50,13 @@ export default function App() {
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
   const location = useLocation();
-  const [title, setTitle] = useState(EnvHelper.dappTitle());
+  // Build takes care of this now
+  // const [title, setTitle] = useState(EnvHelper.dappTitle());
 
-  React.useEffect(() => {
-    // This will run when the page first loads and whenever the title changes
-    document.title = title;
-  }, [title]);
+  // React.useEffect(() => {
+  //   // This will run when the page first loads and whenever the title changes
+  //   document.title = title;
+  // }, [title]);
 
   React.useEffect(() => {
     const now = Date.now() / 1000;
@@ -217,7 +218,7 @@ const HeaderContainer = styled.header`
   width: 100%;
   position: fixed;
   top: 0;
-  z-index: 999;
+  z-index: 99999;
 `;
 
 const ParentContainer = styled.div`

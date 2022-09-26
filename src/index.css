@@ -352,7 +352,11 @@ template {
  * react-toastify
  */
 /** Classes for the displayed toast **/
+.Toastify {
+  z-index: 999999;
+}
 .Toastify__toast {
+  
 }
 .Toastify__toast--rtl {
 }
@@ -446,7 +450,7 @@ template {
         url('./assets/fonts/Strawford-Black.woff') format('woff'),
         url('./assets/fonts/Strawford-Black.eot'),
         url('./assets/fonts/Strawford-Black.ttf') format('truetype');
-  font-weight: 700 800 900;
+  font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
@@ -553,4 +557,3 @@ button, a, a:before, a:after {
   height: 100% !important;
   border-radius: 0 !important;
 }
-

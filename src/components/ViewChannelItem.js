@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { isCommunityResourcable } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
-import React from "react";
+import React, { useEffect } from "react";
 
 // External Packages
 import Skeleton from "@yisheng90/react-loading";
@@ -21,7 +21,7 @@ import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import useToast from "hooks/useToast";
-import { cacheChannelInfo, cacheSubscribe, cacheUnsubscribe } from "redux/slices/channelSlice";
+import { cacheChannelInfo, cacheSubscribe, cacheUnsubscribe, updateSubscriptionStatus } from "redux/slices/channelSlice";
 import {
   addNewWelcomeNotif, incrementStepIndex
 } from "redux/slices/userJourneySlice";
@@ -43,6 +43,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const themes = useTheme();
 
   const { run, stepIndex } = useSelector((state) => state.userJourney);
+  
 
   const {
     epnsReadProvider,
@@ -52,7 +53,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     ZERO_ADDRESS,
   } = useSelector((state) => state.contracts);
   const { canVerify } = useSelector((state) => state.admin);
-  const { channelsCache, CHANNEL_BLACKLIST } = useSelector(
+  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector(
     (state) => state.channels
   );
   const { account, library, chainId } = useWeb3React();
@@ -61,9 +62,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const [channelObject, setChannelObject] = React.useState({});
   const [channelJson, setChannelJson] = React.useState({});
-  const [subscribed, setSubscribed] = React.useState(true);
+  const [subscribed, setSubscribed] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [memberCount, setMemberCount] = React.useState(0);
+  const [subscriberCount, setSubscriberCount] = React.useState(0);
   const [isPushAdmin, setIsPushAdmin] = React.useState(false);
   const [isVerified, setIsVerified] = React.useState(false);
   const [isBlocked, setIsBlocked] = React.useState(false);
@@ -75,7 +76,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [copyText, setCopyText] = React.useState(null);
 
   // ------ toast related section
-  const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.addr);
+  const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
   const clearToast = () => showToast(null);
 
@@ -83,7 +84,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   if (!onCoreNetwork) {
     isOwner = channelObject.alias_address === account;
   } else {
-    isOwner = channelObject.addr === account;
+    isOwner = channelObject.channel === account;
   }
 
   //clear toast variable after it is shown
@@ -94,8 +95,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [toast]);
   // ------ toast related section
 
+  useEffect(() => {
+    if (!channelObject.channel) return;
+    setSubscribed(subscriptionStatus[channelObject.channel]);
+  }, [channelObject]);
+
   React.useEffect(() => {
-    if (!channelObject.addr) return;
+    if (!channelObject.channel) return;
     if (channelObject.verifiedBy) {
       // procced as usual
       fetchChannelJson().catch((err) => alert(err.message));
@@ -104,13 +110,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       );
     } else {
       // if this key (verifiedBy) is not present it means we are searching and should fetch the channel object from chain again
-      epnsReadProvider.channels(channelObject.addr).then((response) => {
+      epnsReadProvider.channels(channelObject.channel).then((response) => {
         setChannelObject({
           ...response,
-          addr: channelObject.addr,
+          channel: channelObject.channel,
           alias_address: channelObject.alias_address,
-          memberCount: channelObject.memberCount,
-          isSubscriber: channelObject.isSubscriber,
+          subscriber_count: channelObject.subscriber_count,
         });
         fetchChannelJson();
       });
@@ -143,34 +148,32 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const fetchChannelJson = async () => {
     try {
       let channelJson = {};
-      setCopyText(channelObject.addr);
-      if (channelsCache[channelObject.addr]) {
-        channelJson = channelsCache[channelObject.addr];
+      setCopyText(channelObject.channel);
+      if (channelsCache[channelObject.channel]) {
+        channelJson = channelsCache[channelObject.channel];
       } else {
         channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-          channelObject.addr
+          channelObject.channel
         );
         dispatch(
           cacheChannelInfo({
-            address: channelObject.addr,
+            address: channelObject.channel,
             meta: channelJson,
           })
         );
       }
-      let channelAddress = channelObject.addr;
+      let channelAddress = channelObject.channel;
       if (!onCoreNetwork) {
         channelAddress = channelObject.alias_address;
       }
       if (!channelAddress) return;
 
       setIsPushAdmin(pushAdminAddress === account);
-      setMemberCount(channelObject.memberCount);
-      setSubscribed(channelObject.isSubscriber);
+      setSubscriberCount(channelObject.subscriber_count);
       setChannelJson({
         ...channelJson,
-        addr: channelObject.addr,
-        memberCount: channelObject.memberCount,
-        isSubscriber: channelObject.isSubscriber,
+        channel: channelObject.channel,
+        subscriber_count: channelObject.subscriber_count,
       });
       setLoading(false);
     } catch (err) {
@@ -184,7 +187,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       Boolean(
         (channelObject.verifiedBy &&
           channelObject.verifiedBy !== ZERO_ADDRESS) ||
-          channelObject.addr === pushAdminAddress
+          channelObject.channel === pushAdminAddress
       )
     );
     setCanUnverify(channelObject.verifiedBy == account);
@@ -203,6 +206,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     console.log("click executed");
     subscribeAction(false);
   };
+
   const formatAddress = (addressText) => {
     return addressText.length > 40
       ? `${addressText.slice(0, 4)}....${addressText.slice(36)}`
@@ -225,7 +229,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     setvLoading(true);
     // post op
     epnsWriteProvider
-      .verifyChannel(channelObject.addr)
+      .verifyChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -256,7 +260,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const unverifyChannel = () => {
     setvLoading(true);
     epnsWriteProvider
-      .unverifyChannel(channelObject.addr)
+      .unverifyChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -284,7 +288,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const blockChannel = () => {
     setBLoading(true);
     epnsWriteProvider
-      .blockChannel(channelObject.addr)
+      .blockChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
         console.log("Transaction Sent!");
@@ -326,7 +330,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ],
       // };
 
-      let channelAddress = channelObject.addr;
+      let channelAddress = channelObject.channel;
       // if (!onCoreNetwork) {
       //   channelAddress = channelObject.alias_address;
       // }
@@ -398,9 +402,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
         onSuccess: () => {
-          dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
+          // dispatch(cacheSubscribe({ channelAddress: channelObject.channel }));
+          dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: true }));
           setSubscribed(true);
-          setMemberCount(memberCount + 1);
+          setSubscriberCount(subscriberCount + 1);
 
           subscribeToast.showMessageToast({
             toastTitle:"Success", 
@@ -428,9 +433,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   chainId,
       //   contractAddress: epnsCommReadProvider.address,
       // }).then((res) => {
-      //   dispatch(cacheSubscribe({ channelAddress: channelObject.addr }));
+      //   dispatch(cacheSubscribe({ channelAddress: channelObject.channel }));
       //   setSubscribed(true);
-      //   setMemberCount(memberCount + 1);
+      //   setSubscriberCount(subscriberCount + 1);
 
       //   subscribeToast.updateToast(
       //     "Success",
@@ -488,7 +493,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ],
       // };
 
-      let channelAddress = channelObject.addr;
+      let channelAddress = channelObject.channel;
       // if (!onCoreNetwork) {
       //   channelAddress = channelObject.alias_address;
       // }
@@ -510,9 +515,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
         onSuccess: () => {
-          dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
+          // dispatch(cacheUnsubscribe({ channelAddress: channelObject.channel }));
+          dispatch(updateSubscriptionStatus({ channelAddress: channelObject.channel, status: false }));
           setSubscribed(false);
-          setMemberCount(memberCount - 1);
+          setSubscriberCount(subscriberCount - 1);
 
           unsubscribeToast.showMessageToast({
             toastTitle:"Success", 
@@ -541,9 +547,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   contractAddress: epnsCommReadProvider.address,
       // })
       //   .then((res) => {
-      //     dispatch(cacheUnsubscribe({ channelAddress: channelObject.addr }));
+      //     dispatch(cacheUnsubscribe({ channelAddress: channelObject.channel }));
       //     setSubscribed(false);
-      //     setMemberCount(memberCount - 1);
+      //     setSubscriberCount(subscriberCount - 1);
 
       //     // toaster.update(txToast, {
       //     //   render: "Successfully opted out of channel !",
@@ -593,7 +599,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   };
 
   const correctChannelTitleLink = () => {
-    const channelLink = CTA_OVERRIDE_CACHE[channelObject.addr] || channelJson.url;
+    const channelLink = CTA_OVERRIDE_CACHE[channelObject.channel] || channelJson.url;
     if(/(?:http|https):\/\//i.test(channelLink)) {
       window.open(channelLink, '_blank', 'noopener,noreferrer');
     }
@@ -612,7 +618,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   // render
   return (
-    <Container key={channelObject.addr}>
+    <Container key={channelObject.channel}>
       <ChannelLogo>
         <ChannelLogoOuter>
           <ChannelLogoInner>
@@ -637,16 +643,26 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             <ChannelTitleLink
               onClick = {()=>correctChannelTitleLink()}
             >
-              <Span>
+              <Span style={{display: "flex", alignItems: "center"}}>
                 {channelJson.name}
                 {isVerified && (
-                  <Span margin="0px 5px">
+                  <Span margin="0px 5px" style={{display: "flex"}}>
                     <GoVerified
                       size={18}
                       color={themes.viewChannelVerifiedBadge}
                     />
                   </Span>
                 )}
+                {channelObject.channel && 
+                  <Span padding="0 0 0 5px">
+                    <Image src={`./svg/Ethereum.svg`} alt="Ethereum" width="20px" height="20px" />
+                  </Span>
+                }
+                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && 
+                  <Span padding="0 0 0 5px">
+                    <Image src={`./svg/Polygon.svg`} alt="Ethereum" width="20px" height="20px" />
+                  </Span>
+                }
               </Span>
             </ChannelTitleLink>
           )}
@@ -698,7 +714,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   <Image src="./svg/users.svg" alt="users" width="14px"  height="14px"/>
                 }
                 internalIcon={null}
-                text={memberCount}
+                text={subscriberCount}
                 padding="1.5px 10px"
                 bgColor={themes.viewChannelSecondaryBG}
                 color={themes.viewChannelSecondaryText}
@@ -710,20 +726,20 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 padding="6px 16px"
                 color={themes.viewChannelPrimaryText}
                 onClick={() => {
-                  copyToClipboard(channelJson.addr);
+                  copyToClipboard(channelJson.channel);
                   setCopyText("copied");
                 }}
                 onMouseEnter={() => {
                   setCopyText("click to copy");
                 }}
                 onMouseLeave={() => {
-                  setCopyText(channelJson.addr);
+                  setCopyText(channelJson.channel);
                 }}
               />
 
-              {isChannelTutorialized(channelObject.addr) && (
+              {isChannelTutorialized(channelObject.channel) && (
                 <ChannelTutorial
-                  addr={channelObject.addr}
+                  addr={channelObject.channel}
                   bgColor={themes.viewChannelSecondaryBG}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
