@@ -431,13 +431,13 @@ const ChatBox = (): JSX.Element => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     if (getIntent === undefined) {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
       intents = await decryptFeeds({ feeds: intents, connectedUser });
       console.log(intents)
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     } else {
-      let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+      let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
       intents = await decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
