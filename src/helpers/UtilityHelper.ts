@@ -28,6 +28,10 @@ export const isValidUrl = (urlString: string): boolean => {
   return !!urlPattern.test(urlString);
 };
 
+export const isValidAddress = (address: string): boolean => {
+  return utils.isAddress(address);
+}
+
 // Disable the browser notification on Metamask iphone mobile
 export const isUserAgentIphone = (userAgent) => {
   return userAgent.indexOf('iPhone') !== -1;
