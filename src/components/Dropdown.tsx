@@ -48,8 +48,8 @@ function Dropdown(props) {
                 {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
               </MobileAddress>
             </Span>
-           {dropdownValue?.icon && <Image
-              src={dropdownValue?.icon}
+           {dropdownValue?.invertedIcon && <Image
+              src={dropdownValue?.invertedIcon}
               alt="icon"
               width="auto"
               cursor="pointer"
@@ -58,15 +58,30 @@ function Dropdown(props) {
                 copyToClipboard(dropdownValue?.value);
               }}
             />}
+            {dropdownValue?.icon && <Image
+              src={dropdownValue?.icon}
+              alt="icon"
+              width="auto"
+              cursor="pointer"
+              onClick={() => {
+                copyToClipboard(dropdownValue?.value);
+              }}
+            />}
           </ItemH>
         ) : (
           <ItemH wrap="nowrap" margin="8px 0">
-             {dropdownValue?.icon && <Image
-              src={dropdownValue.icon}
+             {dropdownValue?.invertedIcon && <Image
+              src={dropdownValue.invertedIcon}
               alt="icon"
               width="max-content"
               spacing="1px"
               filter={theme.snackbarBorderIcon}
+            />}
+            {dropdownValue?.icon && <Image
+              src={dropdownValue.icon}
+              alt="icon"
+              width="max-content"
+              spacing="1px"
             />}
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span

@@ -22,8 +22,8 @@ export const config = {
    * Allowed Networks
    */
   allowedNetworks: [
-    1, //for ropsten
-    137, //for mumbai polygon
+    1, //for ethereum mainnet
+    // 137, //for polygon mainnet
   ],
 
   /**

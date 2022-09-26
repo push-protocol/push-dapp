@@ -53,22 +53,22 @@ const InboxModule = () => {
   }, [toast]);
   // toast related section
 
-  React.useEffect(() => {
-    const fetchEncryptionKey = async () => {
-      // get public key from Backend API
-      let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
-        address: account,
-        op: 'read',
-      }).then((res) => {
-        return res.data?.encryption_key;
-      });
+  // React.useEffect(() => {
+  //   const fetchEncryptionKey = async () => {
+  //     // get public key from Backend API
+  //     let encryptionKey = await postReq('/encryption_key/get_encryption_key', {
+  //       address: account,
+  //       op: 'read',
+  //     }).then((res) => {
+  //       return res.data?.encryption_key;
+  //     });
 
-      if (encryptionKey != null) {
-        setEnabledSecretNotif(true);
-      }
-    };
-    fetchEncryptionKey();
-  }, [enabledSecretNotif]);
+  //     if (encryptionKey != null) {
+  //       setEnabledSecretNotif(true);
+  //     }
+  //   };
+  //   fetchEncryptionKey();
+  // }, [enabledSecretNotif]);
 
   React.useEffect(() => {
     (async function init() {
@@ -135,149 +135,149 @@ const InboxModule = () => {
     }
   }, [epnsReadProvider, epnsCommReadProvider]);
 
-  const registerPubKey = async (encryptionPublicKey) => {
-    let txToast;
-    try {
-      const type = {
-        Register: [
-          { name: 'user', type: 'address' },
-          { name: 'encryptionKey', type: 'string' },
-          { name: 'action', type: 'string' },
-        ],
-      };
+  // const registerPubKey = async (encryptionPublicKey) => {
+  //   let txToast;
+  //   try {
+  //     const type = {
+  //       Register: [
+  //         { name: 'user', type: 'address' },
+  //         { name: 'encryptionKey', type: 'string' },
+  //         { name: 'action', type: 'string' },
+  //       ],
+  //     };
 
-      const message = {
-        user: account,
-        encryptionKey: encryptionPublicKey,
-        action: 'Register',
-      };
+  //     const message = {
+  //       user: account,
+  //       encryptionKey: encryptionPublicKey,
+  //       action: 'Register',
+  //     };
 
-      let EPNS_DOMAIN = {
-        name: 'EPNS COMM V1',
-        chainId: chainId,
-        verifyingContract: epnsCommReadProvider?.address,
-      };
+  //     let EPNS_DOMAIN = {
+  //       name: 'EPNS COMM V1',
+  //       chainId: chainId,
+  //       verifyingContract: epnsCommReadProvider?.address,
+  //     };
 
-      // loader toast
-      txToast = toaster.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
-        position: 'bottom-right',
-        autoClose: false,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+  //     // loader toast
+  //     txToast = toaster.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
+  //       position: 'bottom-right',
+  //       autoClose: false,
+  //       hideProgressBar: true,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     });
 
-      const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
+  //     const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
 
-      const objPayload = {
-        address: account,
-        encryptionKey: encryptionPublicKey,
-        signature,
-        message,
-        op: 'write',
-        chainId,
-        contractAddress: epnsCommReadProvider.address,
-      };
+  //     const objPayload = {
+  //       address: account,
+  //       encryptionKey: encryptionPublicKey,
+  //       signature,
+  //       message,
+  //       op: 'write',
+  //       chainId,
+  //       contractAddress: epnsCommReadProvider.address,
+  //     };
 
-      const result = await postReq('/encryption_key/register', objPayload);
-      console.log(result);
+  //     const result = await postReq('/encryption_key/register', objPayload);
+  //     console.log(result);
 
-      toaster.update(txToast, {
-        render: 'Successfully enabled secret notifications !',
-        type: toaster.TYPE.SUCCESS,
-        autoClose: 5000,
-      });
+  //     toaster.update(txToast, {
+  //       render: 'Successfully enabled secret notifications !',
+  //       type: toaster.TYPE.SUCCESS,
+  //       autoClose: 5000,
+  //     });
 
-      setEnabledSecretNotif(true);
-    } catch (err) {
-      if (err.code === 4001) {
-        // EIP-1193 userRejectedRequest error
-        toaster.update(txToast, {
-          render: 'User denied message signature.',
-          type: toaster.TYPE.ERROR,
-          autoClose: 5000,
-        });
-      } else {
-        toaster.update(txToast, {
-          render: 'There was an error registering the public key',
-          type: toaster.TYPE.ERROR,
-          autoClose: 5000,
-        });
-        console.log(err);
-      }
-    }
-  };
+  //     setEnabledSecretNotif(true);
+  //   } catch (err) {
+  //     if (err.code === 4001) {
+  //       // EIP-1193 userRejectedRequest error
+  //       toaster.update(txToast, {
+  //         render: 'User denied message signature.',
+  //         type: toaster.TYPE.ERROR,
+  //         autoClose: 5000,
+  //       });
+  //     } else {
+  //       toaster.update(txToast, {
+  //         render: 'There was an error registering the public key',
+  //         type: toaster.TYPE.ERROR,
+  //         autoClose: 5000,
+  //       });
+  //       console.log(err);
+  //     }
+  //   }
+  // };
 
-  const enableSecretNotif = async () => {
-    let txToast;
-    if (enabledSecretNotif) {
-      txToast = toaster.dark(<NormalToast msg="Secret Notifications are already enabled." />, {
-        position: 'bottom-right',
-        type: toaster.TYPE.SUCCESS,
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-      return;
-    }
-    if (!epnsCommReadProvider?.address) return;
-    let encryptionPublicKey;
-    await library.provider
-      .request({
-        method: 'eth_getEncryptionPublicKey',
-        params: [account], // you must have access to the specified account
-      })
-      .then((result) => {
-        encryptionPublicKey = result;
-        registerPubKey(encryptionPublicKey);
-        console.log(result);
-      })
-      .catch((error) => {
-        if (error.code === 4001) {
-          // EIP-1193 userRejectedRequest error
-          console.log('User Rejected the Request to the Key');
-          txToast = toaster.dark(<NormalToast msg="User denied message EncryptionPublicKey" />, {
-            position: 'bottom-right',
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        } else if (error.code === -32601) {
-          console.error(error);
-          txToast = toaster.dark(<NormalToast msg="Your wallet doesn't support providing public encryption key." />, {
-            position: 'bottom-right',
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        } else {
-          console.error(error);
-          txToast = toaster.dark(<NormalToast msg="There was an error getting public encryption key." />, {
-            position: 'bottom-right',
-            type: toaster.TYPE.ERROR,
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-        }
-      });
-  };
+  // const enableSecretNotif = async () => {
+  //   let txToast;
+  //   if (enabledSecretNotif) {
+  //     txToast = toaster.dark(<NormalToast msg="Secret Notifications are already enabled." />, {
+  //       position: 'bottom-right',
+  //       type: toaster.TYPE.SUCCESS,
+  //       autoClose: 3000,
+  //       hideProgressBar: true,
+  //       closeOnClick: true,
+  //       pauseOnHover: true,
+  //       draggable: true,
+  //       progress: undefined,
+  //     });
+  //     return;
+  //   }
+  //   if (!epnsCommReadProvider?.address) return;
+  //   let encryptionPublicKey;
+  //   await library.provider
+  //     .request({
+  //       method: 'eth_getEncryptionPublicKey',
+  //       params: [account], // you must have access to the specified account
+  //     })
+  //     .then((result) => {
+  //       encryptionPublicKey = result;
+  //       registerPubKey(encryptionPublicKey);
+  //       console.log(result);
+  //     })
+  //     .catch((error) => {
+  //       if (error.code === 4001) {
+  //         // EIP-1193 userRejectedRequest error
+  //         console.log('User Rejected the Request to the Key');
+  //         txToast = toaster.dark(<NormalToast msg="User denied message EncryptionPublicKey" />, {
+  //           position: 'bottom-right',
+  //           type: toaster.TYPE.ERROR,
+  //           autoClose: 5000,
+  //           hideProgressBar: true,
+  //           closeOnClick: true,
+  //           pauseOnHover: true,
+  //           draggable: true,
+  //           progress: undefined,
+  //         });
+  //       } else if (error.code === -32601) {
+  //         console.error(error);
+  //         txToast = toaster.dark(<NormalToast msg="Your wallet doesn't support providing public encryption key." />, {
+  //           position: 'bottom-right',
+  //           type: toaster.TYPE.ERROR,
+  //           autoClose: 5000,
+  //           hideProgressBar: true,
+  //           closeOnClick: true,
+  //           pauseOnHover: true,
+  //           draggable: true,
+  //           progress: undefined,
+  //         });
+  //       } else {
+  //         console.error(error);
+  //         txToast = toaster.dark(<NormalToast msg="There was an error getting public encryption key." />, {
+  //           position: 'bottom-right',
+  //           type: toaster.TYPE.ERROR,
+  //           autoClose: 5000,
+  //           hideProgressBar: true,
+  //           closeOnClick: true,
+  //           pauseOnHover: true,
+  //           draggable: true,
+  //           progress: undefined,
+  //         });
+  //       }
+  //     });
+  // };
 
   // Render
   return (

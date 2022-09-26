@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 
-import YieldFarmingModule from 'modules/yieldfarming/YieldFarmingModule';
+import YieldFarmingModule from "modules/yieldFarming/YieldFarmingModule";
 
 // Other Information section
 const YieldFarmingPage = () => {

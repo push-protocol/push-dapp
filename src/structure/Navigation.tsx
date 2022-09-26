@@ -57,7 +57,7 @@ function Navigation() {
     if (!navigationSetup) return;
 
     let newNavSetup = navigationSetup;
-    if (processingState !== 0 && processingState !== 3) {
+    if (processingState === null) {
       newNavSetup.secondary[0].data.hidden = true;
       newNavSetup.secondary[1].data.hidden = true;
     } else {
@@ -96,26 +96,6 @@ function Navigation() {
       }
     }
   }, [channelDetails, aliasAddr, isAliasVerified, delegatees, canSend, processingState, account]);
-
-  // useEffect(()=>{
-  //   (async()=>{
-  //     const channelAddress = await postReq("/channels/_search", {
-  //       "page": 1,
-  //       "pageSize": 1,
-  //       "address":account,
-  //       "chainId": chainId,
-  //       "query":account,
-  //       "op": "read"
-  //     }).then(({ data }) => data.channels);
-
-  //     if(channelAddress.length === 0){
-  //       setLoading(false)
-  //       dispatch(setCanSend(SEND_NOTIFICATION_STATES.HIDE))
-  //     }else{
-  //       dispatch(setCanSend(SEND_NOTIFICATION_STATES.SEND))
-  //     }
-  //   })()
-  // },[channelDetails])
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {

@@ -27,6 +27,7 @@ import {
 } from 'redux/slices/adminSlice';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
+import { getChannelsSearch, getUserDelegations } from 'services';
 
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
@@ -47,7 +48,6 @@ const InitState = () => {
     if (!library) return;
 
     (async function init() {
-      console.log(library);
       const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
@@ -102,12 +102,17 @@ const InitState = () => {
         // if channel admin, then get if the channel is verified or not, then also fetch more details about the channel
         const verificationStatus = await epnsWriteProvider.getChannelVerfication(ownerAccount);
         const channelJson = await epnsWriteProvider.channels(ownerAccount);
-        const channelSubscribers = await ChannelsDataStore.instance.getChannelSubscribers(account);
+        const channelDetail = await getChannelsSearch({
+          page: 1,
+          limit: 1,
+          query: account
+        });
+        const subsCount = channelDetail[0].subscriber_count;
         dispatch(
           setUserChannelDetails({
             ...response,
             ...channelJson,
-            subscribers: channelSubscribers,
+            subscriberCount: subsCount,
           })
         );
         dispatch(setCoreChannelAdmin(ownerAccount));
@@ -121,50 +126,45 @@ const InitState = () => {
   };
 
   // fetch all the channels who have delegated to this account
-  const fetchDelegators = (aliasAddress: string, aliasEthAddress: string, aliasVerified: string) => {
+  const fetchDelegators = async (aliasAddress: string, aliasEthAddress: string, aliasVerified: string) => {
     if (!epnsReadProvider || !epnsCommReadProvider || !epnsWriteProvider) return;
 
-    const channelAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    getReq(`/channels/_getUserDelegations/${channelAddressInCaip}`)
-      .then(async ({ data: delegators }) => {
-        // if there are actual delegators
-        // fetch basic information abouot the channels and store it to state
+    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+    try {
+      const delegations = await getUserDelegations({userCaipAddress: userAddressInCaip});
         const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
-        let delegateeList: Array<string> = [];
+        let delegateeList: Array<{channel: string}> = [];
+        console.log(delegations);
         if (
           ((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) ||
           (processingState === 0 && isChannelDetails)
         ) {
-          if (onCoreNetwork) delegateeList.push(account);
+          if (onCoreNetwork) delegateeList.push({channel: account});
           else {
             if (aliasEthAddr) {
-              delegateeList.push(aliasEthAddr);
+              delegateeList.push({channel: aliasEthAddr});
             }
           }
         }
-        if (delegators && delegators.channelOwners) {
-          console.log(delegators.channelOwners, delegators);
-          delegateeList.push(...delegators.channelOwners);
-          console.log(delegateeList);
+        if (delegations) {
+          delegateeList.push(...delegations);
         }
         console.log(delegateeList);
         if (delegateeList.length > 0) {
-          const channelInformationPromise = [...delegateeList].map((channelAddress) => {
+          const channelInformationPromise = [...delegateeList].map(({channel}) => {
             return ChannelsDataStore.instance
-              .getChannelJsonAsync(channelAddress)
-              .then((res) => ({ ...res, address: channelAddress }))
+              .getChannelJsonAsync(channel)
+              .then((res) => ({ ...res, address: channel }))
               .catch(() => false);
           });
           const channelInformation = await Promise.all(channelInformationPromise);
-          console.log(channelInformation);
           dispatch(setDelegatees(channelInformation));
         } else {
           dispatch(setDelegatees([]));
         }
-      })
-      .catch(async (err) => {
-        console.log({ err });
-      });
+      } catch(err) {
+        console.log(err);
+      };
   };
 
   useEffect(() => {
