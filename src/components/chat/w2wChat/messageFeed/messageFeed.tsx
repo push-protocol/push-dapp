@@ -1,4 +1,3 @@
-
 // React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -9,9 +8,9 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { Feeds, User } from 'api';
-import ChatSnap from "components/chat/chatsnap/ChatSnap";
+import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
@@ -42,11 +41,20 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
-  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>()
+  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
@@ -80,7 +88,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInboxAndIntents = async (): Promise<void> => {
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
       await getInbox();
       setIntents(await fetchIntent({ did: walletToCAIP10({ account, chainId }) }));
     }
@@ -119,7 +136,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   fromDID: null,
                   fromCAIP10: null,
                   toDID: null,
-                  toCAIP10: null
+                  toCAIP10: null,
                 },
                 wallets: user.wallets,
                 did: user.did,
@@ -138,7 +155,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           }
         } else {
           if (props.isInvalidAddress) {
-              messageFeedToast.showMessageToast({
+            messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: 'Invalid Address',
               toastType: 'ERROR',
@@ -160,7 +177,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   return (
-    <ItemVV2 alignItems="flex-start" justifyContent="flex-start">
+    <ItemVV2
+      alignItems="flex-start"
+      justifyContent="flex-start"
+    >
       <SpanV2
         fontWeight="700"
         fontSize="12px"
@@ -208,17 +228,15 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   <ChatSnap
                     pfp={feed.profilePicture}
                     username={feed.msg.name}
-                    chatSnapMsg={
-                      {
-                        type: feed.msg.messageType,
-                        message: feed.msg.lastMessage,
-                      }
-                    }
+                    chatSnapMsg={{
+                      type: feed.msg.messageType,
+                      message: feed.msg.lastMessage,
+                    }}
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
                     onClick={(): void => {
                       setChat(feed);
-                      setSelectedChatSnap(feed.threadhash)
+                      setSelectedChatSnap(feed.threadhash);
                     }}
                   />
                 </ItemVV2>
@@ -247,7 +265,7 @@ const EmptyConnection = styled.div`
   text-align: center;
   color: #657795;
   font-size: 15px;
-  margin-top:25px;
+  margin-top: 25px;
 `;
 
 const InfoMessage = styled.p`

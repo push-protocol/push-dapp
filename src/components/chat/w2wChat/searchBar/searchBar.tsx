@@ -126,9 +126,10 @@ const SearchBar = () => {
         // User is not in the protocol. Create new user
         else {
           if (ethers.utils.isAddress(searchedUser)) {
-            const displayUser = displayDefaultUser({ caip10 });
-            setHasUserBeenSearched(true);
-            setFilteredUserData([displayUser]);
+            // const displayUser = displayDefaultUser({ caip10 });
+            // setHasUserBeenSearched(true);
+            // setFilteredUserData([displayUser]);
+            setActiveTab(3);
           } else {
             setIsInvalidAddress(true);
             setFilteredUserData([]);
