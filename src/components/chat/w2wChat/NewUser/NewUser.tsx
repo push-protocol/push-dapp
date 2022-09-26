@@ -67,8 +67,6 @@ function NewUser() {
     //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
     event.preventDefault();
    
-    console.log("in search")
-    console.log(!ethers.utils.isAddress(searchedUser))
     if (!ethers.utils.isAddress(searchedUser)) {
       setMessagesLoading(true);
       setIsLoadingSearch(true);
@@ -82,7 +80,6 @@ function NewUser() {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
           const displayUser = displayDefaultUser({ caip10 });
           setHasUserBeenSearched(true);
-          console.log(displayUser);
           setSearchedUserData([displayUser]);
         } else {
           setIsInvalidAddress(true);
@@ -104,7 +101,6 @@ function NewUser() {
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          console.log(filteredData)
           setHasUserBeenSearched(true);
           setSearchedUserData([filteredData]);
           // setActiveTab(0);

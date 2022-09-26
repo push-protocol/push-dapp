@@ -126,7 +126,6 @@ const ModalContainer = styled.div`
 
 const ModalMessage = styled.div`
     width: 70%;
-    font-family: Manrope;
     font-size: 0.95rem;
     font-weight: 500;
     line-height: 20px;

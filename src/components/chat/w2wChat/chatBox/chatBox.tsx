@@ -43,6 +43,7 @@ import './chatBox.css';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import ImageClipper from 'primaries/ImageClipper';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -753,6 +754,8 @@ const ChatBox = (): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
+  const isDarkMode = theme.scheme==="dark";
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -928,7 +931,10 @@ const ChatBox = (): JSX.Element => {
               null
               :
               (<TypeBarContainer>
-                <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
+                <Icon
+                  onClick={(): void => setShowEmojis(!showEmojis)}
+                  filter={theme.snackbarBorderIcon}
+                >
                   <img
                     src="/svg/chats/smiley.svg"
                     height="24px"
@@ -968,7 +974,10 @@ const ChatBox = (): JSX.Element => {
                               onSelect={sendGif}
                             />
                         )}
-                        <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
+                        <Icon
+                          onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+                          filter={theme.snackbarBorderIcon}
+                        >
                           <img
                             src="/svg/chats/gif.svg"
                             height="18px"
@@ -979,7 +988,9 @@ const ChatBox = (): JSX.Element => {
                       </label>
                     </GifDiv>
                     <label>
-                      <Icon>
+                      <Icon
+                        filter={theme.snackbarBorderIcon}
+                      >
                         <img
                           src="/svg/chats/attachment.svg"
                           height="24px"
@@ -1009,9 +1020,11 @@ const ChatBox = (): JSX.Element => {
                           spinnerSize={40}
                         />
                       ) : (
-                        <Icon onClick={handleSubmit}>
+                        <Icon 
+                          onClick={handleSubmit}
+                        >
                           <img
-                            src="/svg/chats/send.svg"
+                            src={`/svg/chats/send${isDarkMode?"_dark":""}.svg`}
                             height="27px"
                             width="27px"
                             alt=""
@@ -1132,6 +1145,7 @@ const MoreOptions = styled.div`
 `;
 
 const Icon = styled.i`
+  filter:  ${props => props.filter};
   padding: 0px;
   display: flex;
   margin-left: 5px;
@@ -1141,9 +1155,9 @@ const Icon = styled.i`
 `;
 
 const GifDiv = styled.div`
-  background: linear-gradient(179.97deg,#EEF5FF 0.02%,#ECE9FA 123.25%);
-    padding: 5px 8px;
-    border-radius: 7px;
+  background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
+  padding: 5px 8px 5px 6px;
+  border-radius: 7px;
 `;
 
 const TextInput = styled.textarea`
@@ -1155,9 +1169,13 @@ const TextInput = styled.textarea`
   border: none;
   resize: none;
   background: transparent;
+  color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   &&::-webkit-scrollbar {
     width: 0;
     height: 0;
+  }
+  ::placeholder {
+    color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   }
 `;
 
@@ -1173,8 +1191,7 @@ const TypeBarContainer = styled.div`
   height: 55px;
   padding: 16px;
   border-radius: 13px;
-  color: black;
-  background: #ffffff;
+  background: ${(props) => props.theme.chat.sendMesageBg || '#fff'};
 `;
 
 const Container = styled(Content)`

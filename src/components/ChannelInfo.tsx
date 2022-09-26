@@ -297,9 +297,8 @@ const SpanR = styled.div`
 `;
 
 const Label = styled.div`
-  font-family: 'Manrope';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   line-height: 21px;
   letter-spacing: -0.011em;

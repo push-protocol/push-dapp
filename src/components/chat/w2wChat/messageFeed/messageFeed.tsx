@@ -12,6 +12,7 @@ import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
+import { MdError } from 'react-icons/md';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
@@ -232,7 +233,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             ) : !feeds?.length && isInValidAddress ? (
               <InfoMessage>Invalid Address</InfoMessage>
             ) : !feeds?.length && !messagesLoading ? (
-              <EmptyConnection>
+              activeTab !==3 && <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
             ) : !messagesLoading ? (
