@@ -61,16 +61,16 @@ export const fetchInbox = async (userId: string): Promise<Feeds[]> => {
 }
 
 export const fetchIntent = async ({
-  did,
+  userId,
   intentStatus = ''
 }: {
-  did: string
+  userId: string
   intentStatus?: string
 }): Promise<Feeds[]> => {
-  let intents: Feeds[] = await getInbox(did)
-  intents = intents.filter((intent) => !intent.intent.includes(did) && intent.intentSentBy !== did)
+  let intents: Feeds[] = await getInbox(userId)
+  intents = intents.filter((intent) => !intent.intent.includes(userId) && intent.intentSentBy !== userId)
   if (intentStatus === 'Pending') {
-    intents = intents.filter((intent) => !intent.intent.includes(did))
+    intents = intents.filter((intent) => !intent.intent.includes(userId))
   }
   intents = await fetchMessagesFromIPFS(intents)
   return intents

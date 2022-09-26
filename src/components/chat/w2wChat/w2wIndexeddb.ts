@@ -1,3 +1,4 @@
+import { Feeds } from 'api';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
 
 let db: IDBDatabase;
@@ -12,7 +13,7 @@ let db: IDBDatabase;
  * @returns
  */
 
-export const intitializeDb = async <T extends string | MessageIPFS>(
+export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
   state: 'Read' | 'Insert',
   dbName: 'Inbox' | 'Intent' | 'CID_store',
   key: string,
@@ -45,7 +46,7 @@ export const intitializeDb = async <T extends string | MessageIPFS>(
     };
   });
 };
-export const addData = async <T extends string | MessageIPFS>(
+export const addData = async <T extends string | MessageIPFS | Feeds[]>(
   db: IDBDatabase,
   key: string,
   dbName: string,
@@ -55,6 +56,8 @@ export const addData = async <T extends string | MessageIPFS>(
     const newItem = {
       body: chatMesage
     };
+    console.log("in add data")
+    console.log(newItem)
     if (dbName === 'Inbox' || dbName === 'Intent') {
       newItem['did'] = key;
     }
@@ -63,10 +66,11 @@ export const addData = async <T extends string | MessageIPFS>(
     }
     const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
     const objectStore: IDBObjectStore = tx.objectStore(dbName);
+    console.log(objectStore)
     const query = objectStore.put(newItem);
-
+    
     query.onsuccess = (e: any) => {
-      // console.log("success");
+      console.log(query);
       return resolve(query.result);
     };
     query.onerror = (e: any) => {
@@ -86,6 +90,7 @@ export const viewData = async (db: IDBDatabase, key: string, dbName: string, ind
     const idx: IDBIndex = objStore.index(index);
     const query: IDBRequest<any> = idx.get(key);
     query.onsuccess = (e: any) => {
+      // console.log((query))
       return resolve(query.result);
     };
     query.onerror = (e: any) => {

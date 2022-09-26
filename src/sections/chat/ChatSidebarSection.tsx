@@ -93,7 +93,7 @@ const ChatSidebarSection = () => {
 
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ did: didOrWallet, intentStatus: 'Pending' });
+    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     intents = await decryptFeeds({ feeds: intents, connectedUser });
 
     setPendingRequests(intents?.length);
