@@ -1,6 +1,6 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -14,11 +14,11 @@ import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
+import NewUser from 'components/chat/w2wChat/newuser/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
-import NewUser from 'components/chat/w2wChat/newUser/newUser';
 import 'components/chat/w2wChat/sidebar/sidebar.css';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
