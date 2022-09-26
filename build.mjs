@@ -57,8 +57,18 @@ const prepForDeployment = async (appEnv) => {
     );
   }
 
+  await changeIndexHTML(appEnv);
   await changeENV(appEnv);
 };
+
+const changeIndexHTML = async (appEnv) => {
+  // Load index.html files
+  const indexpath = `./public/index.html`;
+  const indexreplacepath = `./public/index-${appEnv}.html`;
+
+  const indexhtmlcontent = fs.readFileSync(indexreplacepath, 'utf8');
+  fs.writeFileSync(indexpath, indexhtmlcontent, { flag: 'w' });
+}
 
 const changeENV = async (appEnv) => {
   console.log(chalk.green.dim('  -- Generating custom .env file...'));
