@@ -109,7 +109,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const updateInboxAndIntents = async (): Promise<void> => {
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       await getInbox();
-      setIntents(await fetchIntent({ did: walletToCAIP10({ account, chainId }) }));
+      setIntents(await fetchIntent({ userId: walletToCAIP10({ account, chainId }) }));
     }
     setMessagesLoading(false);
   };

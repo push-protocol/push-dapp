@@ -1,6 +1,4 @@
-import { Feeds, getIntents } from 'api';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import React from 'react';
 import IntentFeed from '../intentFeed/intentFeed';
 import './intentBar.css';
 
