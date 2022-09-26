@@ -12,6 +12,7 @@ import { Feeds, User } from 'api';
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { MessageIPFS } from 'helpers/w2w/ipfs';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
@@ -49,22 +50,48 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
-        let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+        let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
-      } else {
-        let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-        inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        setFeeds(inboxes);
-        setInbox(inboxes);
+      } 
+      else {
+        console.log()
+        let inboxes: Feeds[] = await fetchInboxApi();
         return inboxes;
       }
     }
   };
 
+  const fetchInboxApi = async(): Promise<Feeds[]> => {
+    let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }),inboxes, 'did');
+    inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+    if(feeds.length !== inboxes.length)
+    {
+    setFeeds(inboxes);
+    setInbox(inboxes);
+    }
+    return inboxes;
+  }
+
   useQuery('inbox', getInbox, {
+    enabled: !props.hasUserBeenSearched && stopApi,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+    suspense: false,
+    onError: () => {
+      setStopApi(false);
+    },
+    retry: 3,
+    refetchInterval: 1000 * 5,
+    retryDelay: 1000 * 5,
+  });
+
+  useQuery('fetchInboxApi', fetchInboxApi, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
