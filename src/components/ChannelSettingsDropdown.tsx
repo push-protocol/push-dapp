@@ -257,7 +257,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
       <div>
         <DropdownWrapper background={theme}>
           <ActiveChannelWrapper>
-            {onCoreNetwork && (
+            {onCoreNetwork && appConfig.appEnv !== 'prod' && (
               <ChannelActionButton
                 disabled={channelInactive}
                 onClick={() => !channelInactive && showAddSubgraphModal()}>

@@ -1,24 +1,33 @@
-import cn from 'classnames'
-import { DID } from 'dids'
+// React + Web3 Essentials
 import React, { useState } from 'react'
+
+// External Packages
+import cn from 'classnames'
+import styled from 'styled-components'
+
+// Internal Compoonents
+import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2'
+import { DID } from 'dids'
+import tickIcon from "../../../../assets/chat/tick.svg"
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs'
 import Files, { FileMessageContent } from '../Files/Files'
 import Modal from '../Modal/Modal'
 import './w2wchats.css'
-// @ts-ignore
+
+// Internal Configs
 import { appConfig } from "config"
-import styled from 'styled-components'
+import GLOBALS from 'config/Globals'
 
 const infura_URL = appConfig.infuraApiUrl
 interface ChatProps {
   msg: MessageIPFS
   caip10: string
-  messageBeingSent: boolean
+  messageBeingSent: boolean,
+  ApproveIntent?: Function
 }
 interface TextProps {
   content: string
 }
-
 const URL_REGEX = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm
 
 const Text = ({ content }: TextProps) => {
@@ -39,7 +48,7 @@ const Text = ({ content }: TextProps) => {
     </p>
   )
 }
-export default function Chats({ msg, caip10 }: ChatProps) {
+export default function Chats({ msg, caip10,ApproveIntent }: ChatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false)
   const [imageUrl, setImageUrl] = useState<string>('')
   const time: Date = new Date(msg?.timestamp)
@@ -71,12 +80,29 @@ export default function Chats({ msg, caip10 }: ChatProps) {
             </MessageWrapper>
           )}
         </>
-      ) : msg.messageType === 'Image' ? (
+      )
+      :msg.messageType === 'Intent' ? (
+        <>
+            <MessageWrapper align="row">
+              <ReceivedMessage>
+                <SpanV2 fontSize="14px" 
+                maxWidth="13rem"
+                fontWeight="400"
+                padding="0px 44px 10px 0px" 
+                textAlign="left"
+                color="#000">{msg.messageContent}</SpanV2>
+                <ImageV2 src={tickIcon} alt='tick' width="39px" height="39px" cursor="pointer" onClick={()=>ApproveIntent()} margin="-5px 0 0 0" />
+              </ReceivedMessage>
+            </MessageWrapper>
+        </>
+      )
+       : msg.messageType === 'Image' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper height="138px" align="row-reverse">
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
+
                   src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
                   onClick={() => {
                     setShowImageModal(true)
@@ -115,6 +141,7 @@ export default function Chats({ msg, caip10 }: ChatProps) {
               <SenderMessage color="transparent" padding="0px">
                 <ImageMessage
                   src={msg.messageContent}
+                  borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} 0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
                   onClick={() => {
                     setShowImageModal(true)
                     setImageUrl(msg.messageContent)
@@ -127,6 +154,7 @@ export default function Chats({ msg, caip10 }: ChatProps) {
               <ReceivedMessage color="transparent" padding="0px">
                 <ImageMessage
                   src={msg.messageContent}
+                  borderRadius={`0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
                   onClick={() => {
                     setShowImageModal(true)
                     setImageUrl(msg.messageContent)
@@ -179,6 +207,7 @@ const ImageMessage = styled.img`
   max-height: 170px;
   max-width: 300px;
   object-fit: contain;
+  border-radius: ${(props) => props.borderRadius || "0px"};
   &:hover {
     cursor: pointer;
   }
@@ -190,12 +219,13 @@ const TextMessage = styled.p`
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
+  font-weigth:400;
   margin: 0px;
 `
 
 const TimeStamp = styled.span`
   min-width: 44px;
-  font-size: 13px;
+  font-size: 11px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;

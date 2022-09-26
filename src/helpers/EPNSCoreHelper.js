@@ -181,24 +181,24 @@ const EPNSCoreHelper = {
   },
 
   // Helper to get Channel Alias from Channel's address
-  getAliasAddressFromChannelAddress: async (channel, chainId) => {
-    if (channel === null) return;
-    const enableLogs = 0;
+  // getAliasAddressFromChannelAddress: async (channel, chainId) => {
+  //   if (channel === null) return;
+  //   const enableLogs = 0;
 
-    return new Promise((resolve, reject) => {
-      // To get channel info from a channel address
-      const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId);
-      getReq(`/v1/alias/${channelAddressInCaip}/channel`)
-        .then((response) => {
-          if (enableLogs) console.log('getAliasAddressFromChannelAddress() --> %o', response);
-          resolve(response?.data?.aliasAddress);
-        })
-        .catch((err) => {
-          console.log('!!!Error, getAliasAddressFromChannelAddress() --> %o', err);
-          reject(err);
-        });
-    });
-  },
+  //   return new Promise((resolve, reject) => {
+  //     // To get channel info from a channel address
+  //     const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId);
+  //     getReq(`/v1/alias/${channelAddressInCaip}/channel`)
+  //       .then((response) => {
+  //         if (enableLogs) console.log('getAliasAddressFromChannelAddress() --> %o', response);
+  //         resolve(response?.data?.aliasAddress);
+  //       })
+  //       .catch((err) => {
+  //         console.log('!!!Error, getAliasAddressFromChannelAddress() --> %o', err);
+  //         reject(err);
+  //       });
+  //   });
+  // },
   // Helper to get Channel from Channel's address
   getChannelJsonFromChannelAddress: async (channel, contract) => {
     if (channel === null) return;

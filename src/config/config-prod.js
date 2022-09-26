@@ -22,15 +22,15 @@ export const config = {
    * Allowed Networks
    */
   allowedNetworks: [
-    1, //for ropsten
-    137, //for mumbai polygon
+    1, //for ethereum mainnet
+    // 137, //for polygon mainnet
   ],
 
   /**
    * Core Network Related Data
    */
   coreContractChain: 1, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://kovan.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',

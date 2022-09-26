@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React, { useState } from 'react';
+import React from 'react';
 
 // External Packages
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -8,12 +8,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import { useClickAway } from 'react-use';
 import { Waypoint } from 'react-waypoint';
-import { cacheSubscribe } from 'redux/slices/channelSlice';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-
-// Internal Compoonents
 import * as EpnsAPI from '@epnsproject/sdk-restapi';
 import { NotificationItem } from '@epnsproject/sdk-uiweb';
+
+// Internal Components
 import { getReq, postReq } from 'api';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
@@ -27,7 +26,9 @@ import {
 import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from '../primaries/DisplayNotice';
 import NotificationToast from '../primaries/NotificationToast';
-import { ScrollItem } from './ViewChannels';
+import useToast from 'hooks/useToast';
+import { MdCheckCircle, MdError } from "react-icons/md";
+import { updateSubscriptionStatus } from 'redux/slices/channelSlice';
 
 // Internal Configs
 import { appConfig } from "config";
@@ -42,6 +43,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
   const { account, chainId, library } = useWeb3React();
   const { epnsCommReadProvider } = useSelector((state: any) => state.contracts);
+  const { subscriptionStatus } = useSelector((state: any) => state.channels);
 
   const themes = useTheme();
   let user = convertAddressToAddrCaip(account, chainId);
@@ -81,12 +83,9 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   }, [toast]);
 
-  const nameToIdDev = {
+  const nameToId = {
     POLYGON_TEST_MUMBAI: 80001,
-    ETH_TEST_KOVAN: 42
-  };
-
-  const nameToIdProd = {
+    ETH_TEST_KOVAN: 42,
     POLYGON_MAINNET: 137,
     ETH_MAINNET: 1
   };
@@ -157,14 +156,14 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         elem.channel = results[i].sender;
         let address = results[i].sender;
 
-        const {
-          data: { subscribers }
-        } = await postReq('/channels/_get_subscribers', {
-          channel: account,
-          blockchain: chainId,
-          op: 'read'
-        });
-        elem.subscribers = subscribers;
+        // const {
+        //   data: { subscribers }
+        // } = await postReq('/channels/_get_subscribers', {
+        //   channel: account,
+        //   blockchain: chainId,
+        //   op: 'read'
+        // });
+        // elem.subscribers = subscribers;
         return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
@@ -205,14 +204,14 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         elem.channel = results[i].sender;
         let address = results[i].sender;
 
-        const {
-          data: { subscribers }
-        } = await postReq('/channels/_get_subscribers', {
-          channel: account,
-          blockchain: chainId,
-          op: 'read'
-        });
-        elem.subscribers = subscribers;
+        // const {
+        //   data: { subscribers }
+        // } = await postReq('/channels/_get_subscribers', {
+        //   channel: account,
+        //   blockchain: chainId,
+        //   op: 'read'
+        // });
+        // elem.subscribers = subscribers;
         return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
@@ -257,18 +256,19 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         elem.channel = results[i].sender;
         let address = results[i].sender;
 
-        const {
-          data: { subscribers }
-        } = await postReq('/channels/_get_subscribers', {
-          channel: account,
-          blockchain: chainId,
-          op: 'read'
-        });
-        elem.subscribers = subscribers;
+        // const {
+        //   data: { subscribers }
+        // } = await postReq('/channels/_get_subscribers', {
+        //   channel: account,
+        //   blockchain: chainId,
+        //   op: 'read'
+        // });
+        // elem.subscribers = subscribers;
         return { ...elem };
       });
       parsedResponse = await Promise.all(parsedResponsePromise);
-      let res = parsedResponse.filter((notif) => !isSubscribedFn(notif['subscribers']));
+      console.log(parsedResponse);
+      let res = parsedResponse.filter((notif) => !isSubscribedFn(notif['channel']));
       dispatch(
         updateTopNotifications({
           notifs: res,
@@ -296,33 +296,33 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     }
   }, [epnsCommReadProvider, account]);
 
-  const fetchAliasAddress = async (channelAddress) => {
-    if (channelAddress === null) return;
-    const userAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
-    const ethAlias = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-      let aliasAccount;
-      if (data) {
-        aliasAccount = data.alias_address;
-      }
-      return aliasAccount;
-    });
+  // const fetchAliasAddress = async (channelAddress) => {
+  //   if (channelAddress === null) return;
+  //   const userAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
+  //   const ethAlias = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+  //     let aliasAccount;
+  //     if (data) {
+  //       aliasAccount = data.alias_address;
+  //     }
+  //     return aliasAccount;
+  //   });
 
-    return ethAlias;
-  };
+  //   return ethAlias;
+  // };
 
-  const fetchEthAddress = async (channelAddress) => {
-    if (channelAddress === null) return;
-    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    const aliasEth = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
-      let ethAccount;
-      if (data) {
-        ethAccount = data.channel;
-      }
-      return ethAccount;
-    });
+  // const fetchEthAddress = async (channelAddress) => {
+  //   if (channelAddress === null) return;
+  //   const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
+  //   const aliasEth = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+  //     let ethAccount;
+  //     if (data) {
+  //       ethAccount = data.channel;
+  //     }
+  //     return ethAccount;
+  //   });
 
-    return aliasEth;
-  };
+  //   return aliasEth;
+  // };
 
   //function to query more notifications
   const handlePagination = async () => {
@@ -334,47 +334,59 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     return Number(index) === notifications.length - 1 && !finishedFetching && !bgUpdateLoading;
   };
 
+  const subscribeToast = useToast();
   const onSubscribeToChannel = async (channelAddress, blockchain) => {
     if (!channelAddress) return;
     let address = channelAddress;
 
-    const nameToObj = appConfig.coreContractChain === 1 ? nameToIdProd : nameToIdDev;
-    if (chainId !== nameToObj[blockchain]) {
-      if (!onCoreNetwork) {
-        address = await fetchAliasAddress(channelAddress);
-      } else {
-        address = await fetchEthAddress(channelAddress);
-      }
-    }
+    // const nameToObj = nameToId;
+    // if (chainId !== nameToObj[blockchain]) {
+    //   if (!onCoreNetwork) {
+    //     address = await fetchAliasAddress(channelAddress);
+    //   } else {
+    //     address = await fetchEthAddress(channelAddress);
+    //   }
+    // }
 
     if (!address) return;
-    const type = {
-      Subscribe: [
-        { name: 'channel', type: 'address' },
-        { name: 'subscriber', type: 'address' },
-        { name: 'action', type: 'string' }
-      ]
-    };
-    const message = {
-      channel: address,
-      subscriber: account,
-      action: 'Subscribe'
-    };
-
-    const signature = await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
-    return postReq('/channels/subscribe', {
-      signature,
-      message,
-      op: 'write',
-      chainId,
-      contractAddress: epnsCommReadProvider.address
-    }).then((res) => {
-      dispatch(cacheSubscribe({ channelAddress: channelAddress }));
-    });
+    console.log(address);
+    subscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
+    console.log(library, account);
+    const _signer = await library.getSigner(account);
+    console.log(_signer);
+    console.log({
+      signer: _signer,
+      channelAddress: convertAddressToAddrCaip(channelAddress, nameToId[blockchain]), // channel address in CAIP
+      userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
+    })
+    await EpnsAPI.channels.subscribe({
+      signer: _signer,
+      channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
+      userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
+      onSuccess: () => {
+        subscribeToast.showMessageToast({
+          toastTitle:"Success", 
+          toastMessage: "Successfully opted into channel !", 
+          toastType: "SUCCESS", 
+          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+        })
+        dispatch(updateSubscriptionStatus({ channelAddress: channelAddress, status: true }));
+      },
+      onError: (err) => {
+        console.error(err);
+        subscribeToast.showMessageToast({
+          toastTitle:"Error", 
+          toastMessage: `There was an error opting into channel`, 
+          toastType:  "ERROR", 
+          getToastIcon: (size) => <MdError size={size} color="red" />
+        })
+      },
+      env: appConfig.pushNodesEnv
+    })
   };
 
-  const isSubscribedFn = (subscribers: any) => {
-    return subscribers.map((a) => a.toLowerCase()).includes(account.toLowerCase());
+  const isSubscribedFn = (channel: string) => {
+    return subscriptionStatus[channel];
   };
 
   const onDecrypt = async ({ secret, title, message, image, cta }) => {
@@ -472,7 +484,6 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
                 secret,
                 notification,
                 channel,
-                subscribers,
                 blockchain,
                 url
               } = oneNotification;
@@ -482,8 +493,8 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
                 <NotifsOuter key={index}>
                   {showWayPoint(index) && !loading && <Waypoint onEnter={handlePagination} />}
                   <NotificationItem
-                    notificationTitle={notification.title}
-                    notificationBody={notification.body}
+                    notificationTitle={title}
+                    notificationBody={message}
                     cta={cta}
                     app={app}
                     icon={icon}
@@ -491,7 +502,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
                     theme={themes.scheme}
                     subscribeFn={() => onSubscribeToChannel(channel, blockchain)}
                     isSpam
-                    isSubscribedFn={async () => isSubscribedFn(subscribers)}
+                    isSubscribedFn={async () => isSubscribedFn(channel)}
                     isSecret={secret != ''}
                     decryptFn={() => onDecrypt({ secret, title, message, image, cta })}
                     chainName={blockchain}

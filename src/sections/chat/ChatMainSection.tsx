@@ -35,8 +35,8 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 
 // Internal Configs
-import CryptoHelper from 'helpers/CryptoHelper';
 import GLOBALS, { device } from 'config/Globals';
+import CryptoHelper from 'helpers/CryptoHelper';
 
 export interface InboxChat {
   name: string;
@@ -68,6 +68,8 @@ interface BlockedLoadingI {
 export interface AppContext {
   currentChat: Feeds;
   viewChatBox: boolean;
+  receivedIntents: Feeds[];
+  setReceivedIntents: (rIntent: Feeds[]) => void;
   // did: DID;
   // setDID: (did: DID) => void;
   setSearchedUser: (searched: string) => void;
@@ -111,6 +113,7 @@ const ChatMainSection = () => {
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
@@ -125,7 +128,7 @@ const ChatMainSection = () => {
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTab, setCurrentTab] = useState<number>(0);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -245,7 +248,7 @@ const ChatMainSection = () => {
       title: "Step 1/4: Getting Account Info",
       progressEnabled: true,
       progress: 25,
-      progressNotice: "Push Chat is in alpha and might be slow sometimes"
+      progressNotice: "Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue"
     });
 
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
@@ -257,7 +260,8 @@ const ChatMainSection = () => {
       throw Error('Invalid DID')
     }
 
-    if (user) {
+    // new user might not have a private key
+    if (user && user.encryptedPrivateKey) {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
         throw Error('Invalid user')
       }
@@ -299,13 +303,24 @@ const ChatMainSection = () => {
   }
 
 
+  const setActiveTab = (tab: number): void => {
+    if (tab === 1) {
+      if(intents.length)
+        setChat(intents[0]);
+      else
+        setChat(null);
+        setCurrentTab(tab);
+    } else {
+        setCurrentTab(tab);
+    } 
+  };
+
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
       setCurrentChat(feed);
     } else {
       setViewChatBox(false);
-      setCurrentChat(null);
     }
   };
 
@@ -317,6 +332,8 @@ const ChatMainSection = () => {
           <Context.Provider
             value={{
               currentChat,
+              receivedIntents,
+              setReceivedIntents,
               viewChatBox,
               setChat,
               setSearchedUser,

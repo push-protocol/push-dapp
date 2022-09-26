@@ -1,9 +1,10 @@
-import * as openpgp from 'openpgp'
+import * as openpgp from 'openpgp';
+import { generateKey } from 'openpgp/lightweight';
 
 export const generateKeyPair = async (): Promise<{ privateKeyArmored: string; publicKeyArmored: string }> => {
-  const keys = await openpgp.generateKey({
+  const keys = await generateKey({
     type: 'rsa',
-    rsaBits: 4096,
+    rsaBits: 2048,
     userIDs: [{ name: '', email: '' }]
   })
   return {

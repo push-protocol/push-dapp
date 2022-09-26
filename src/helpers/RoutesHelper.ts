@@ -5,9 +5,12 @@ const channelsRoute: string = `/v${apiVersion}/channels`;
 const usersRoute: string = `/v${apiVersion}/users`;
 
 export const usersServiceEndpoints = {
-    userSubscriptions: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/subscriptions`
+    userSubscriptions: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/subscriptions`,
+    userDelegations: (userAddressInCAIP: string) => `${usersRoute}/${userAddressInCAIP}/delegations`
 }
 
 export const channelsServiceEndpoints = {
-    channelsInfo: `${channelsRoute}/`
+    channelsInfo: (queryParams?: string) => `${channelsRoute}?${queryParams}`,
+    channelsSearch: (queryParams: string) => `${channelsRoute}/search?${queryParams}`,
+    channelDelegates: (channelAddressInCAIP: string) => `${channelsRoute}/${channelAddressInCAIP}/delegates`
 }

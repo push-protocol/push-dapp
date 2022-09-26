@@ -78,7 +78,7 @@ const LoaderSpinner = ({
       right="0"
       bottom="0"
       left="0"
-      zIndex="99"
+      zIndex="1000"
     >
       {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
 

@@ -49,26 +49,15 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const getInbox = async (): Promise<Feeds[]> => {
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
-      console.log(getInbox)
       if (getInbox !== undefined) {
-        console.log("in cache data")
-        // let inboxes2: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
         let inboxes: Feeds[] = getInbox.body;
-        // if(inboxes2.length !== inboxes.length)
-        // {
-        //   inboxes=inboxes2;
-        // }
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
       } 
       else {
-        // let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-        // await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }),inboxes, 'did');
-        // inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        // setFeeds(inboxes);
-        // setInbox(inboxes);
+        console.log()
         let inboxes: Feeds[] = await fetchInboxApi();
         return inboxes;
       }
@@ -76,15 +65,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
 
   const fetchInboxApi = async(): Promise<Feeds[]> => {
-    console.log("in fetch data")
     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
     await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }),inboxes, 'did');
     inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    console.log(inboxes)
-    console.log(feeds)
     if(feeds.length !== inboxes.length)
     {
-      console.log("in if fetch")
     setFeeds(inboxes);
     setInbox(inboxes);
     }
@@ -106,20 +91,20 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     retryDelay: 1000 * 5,
   });
 
-  // useQuery('fetchInboxApi', fetchInboxApi, {
-  //   enabled: !props.hasUserBeenSearched && stopApi,
-  //   refetchOnMount: false,
-  //   refetchOnWindowFocus: false,
-  //   refetchOnReconnect: false,
-  //   refetchIntervalInBackground: false,
-  //   suspense: false,
-  //   onError: () => {
-  //     setStopApi(false);
-  //   },
-  //   retry: 3,
-  //   refetchInterval: 1000 * 5,
-  //   retryDelay: 1000 * 5,
-  // });
+  useQuery('fetchInboxApi', fetchInboxApi, {
+    enabled: !props.hasUserBeenSearched && stopApi,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+    suspense: false,
+    onError: () => {
+      setStopApi(false);
+    },
+    retry: 3,
+    refetchInterval: 1000 * 5,
+    retryDelay: 1000 * 5,
+  });
 
   const updateInboxAndIntents = async (): Promise<void> => {
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {

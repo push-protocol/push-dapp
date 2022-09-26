@@ -54,13 +54,13 @@ export const globalsMargin = {
       LEFT: '30px',
     },
     TABLET: {
-      TOP: '25px',
+      TOP: '0px',
       RIGHT: '25px',
       BOTTOM: '25px',
       LEFT: '25px',
     },
     MOBILE: {
-      TOP: '20px',
+      TOP: '0px',
       RIGHT: '20px',
       BOTTOM: '20px',
       LEFT: '20px',
@@ -74,13 +74,13 @@ export const globalsMargin = {
       LEFT: '18px',
     },
     TABLET: {
-      TOP: '25px',
+      TOP: '0px',
       RIGHT: '25px',
       BOTTOM: '25px',
       LEFT: '25px',
     },
     MOBILE: {
-      TOP: '20px',
+      TOP: '0px',
       RIGHT: '20px',
       BOTTOM: '20px',
       LEFT: '20px',
