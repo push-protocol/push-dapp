@@ -32,7 +32,7 @@ import {
   ItemH,
   Section,
   Span,
-  TextField,
+  TextField
 } from 'primaries/SharedStyling';
 import React, { useEffect } from 'react';
 import useToast from '../hooks/useToast';
@@ -963,7 +963,7 @@ function SendNotifications() {
                     <ToggleOptionContainer>
                       <ToggleOption>
                         <Span
-                          weight="700"
+                          weight="600"
                           textTransform="none"
                           size="14px"
                           color="#1E1E1E"
@@ -976,7 +976,7 @@ function SendNotifications() {
 
                       <ToggleOption>
                         <Span
-                          weight="700"
+                          weight="600"
                           textTransform="none"
                           size="14px"
                           color="#1E1E1E"
@@ -989,7 +989,7 @@ function SendNotifications() {
 
                       <ToggleOption>
                         <Span
-                          weight="700"
+                          weight="600"
                           textTransform="none"
                           size="14px"
                           color="#1E1E1E"
@@ -1274,9 +1274,8 @@ const DropdownHeader = styled.div`
 `;
 
 const Label = styled.div`
-  font-family: 'Manrope';
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   line-height: 21px;
   letter-spacing: -0.011em;
@@ -1335,7 +1334,7 @@ const DropdownStyled = styled(Dropdown)`
     outline: none;
     height: 50px;
     display: flex;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 1rem;
     line-height: 150%;
     align-items: center;
