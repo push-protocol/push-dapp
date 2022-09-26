@@ -752,6 +752,8 @@ const ChatBox = (): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
+  const isDarkMode = theme.scheme==="dark";
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -924,9 +926,12 @@ const ChatBox = (): JSX.Element => {
               null
               :
               (<TypeBarContainer>
-                <Icon onClick={(): void => setShowEmojis(!showEmojis)}>
+                <Icon
+                  onClick={(): void => setShowEmojis(!showEmojis)}
+                  filter={theme.snackbarBorderIcon}
+                >
                   <img
-                    src={`/svg/chats/smiley${theme.scheme==="dark"?"_dark":""}.svg`}
+                    src="/svg/chats/smiley.svg"
                     height="24px"
                     width="24px"
                     alt=""
@@ -964,9 +969,12 @@ const ChatBox = (): JSX.Element => {
                               onSelect={sendGif}
                             />
                         )}
-                        <Icon onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}>
+                        <Icon
+                          onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+                          filter={theme.snackbarBorderIcon}
+                        >
                           <img
-                            src={`/svg/chats/gif${theme.scheme==="dark"?"_dark":""}.svg`}
+                            src="/svg/chats/gif.svg"
                             height="18px"
                             width="22px"
                             alt=""
@@ -975,9 +983,11 @@ const ChatBox = (): JSX.Element => {
                       </label>
                     </GifDiv>
                     <label>
-                      <Icon>
+                      <Icon
+                        filter={theme.snackbarBorderIcon}
+                      >
                         <img
-                          src={`/svg/chats/attachment${theme.scheme==="dark"?"_dark":""}.svg`}
+                          src="/svg/chats/attachment.svg"
                           height="24px"
                           width="20px"
                           alt=""
@@ -1005,9 +1015,11 @@ const ChatBox = (): JSX.Element => {
                           spinnerSize={40}
                         />
                       ) : (
-                        <Icon onClick={handleSubmit}>
+                        <Icon 
+                          onClick={handleSubmit}
+                        >
                           <img
-                            src={`/svg/chats/send${theme.scheme==="dark"?"_dark":""}.svg`}
+                            src={`/svg/chats/send${isDarkMode?"_dark":""}.svg`}
                             height="27px"
                             width="27px"
                             alt=""
@@ -1128,6 +1140,7 @@ const MoreOptions = styled.div`
 `;
 
 const Icon = styled.i`
+  filter:  ${props => props.filter};
   padding: 0px;
   display: flex;
   margin-left: 5px;
