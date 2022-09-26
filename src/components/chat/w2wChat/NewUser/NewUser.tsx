@@ -358,6 +358,7 @@ function NewUser() {
               return (
                 <ProfileCard
                   padding="10px"
+                  background={theme.chat.snapFocusBg}
                   onClick={() => setChat(feed)}
                   key={feed.threadhash || i}
                 >
@@ -402,7 +403,7 @@ const ProfileCard = styled(ItemHV2)`
   left: 0;
   right: 0;
   &:hover {
-    background-color: #f4f5fa;
+    background-color: ${(props) => props.background || 'transparent'};
     cursor: pointer;
   }
 `;
