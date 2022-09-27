@@ -2,6 +2,7 @@
 import { useWeb3React } from '@web3-react/core';
 // @ts-ignore
 import { Web3Provider } from 'ethers/providers';
+import { useQuery } from 'react-query';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -78,6 +79,7 @@ const IntentFeed = (): JSX.Element => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+    console.log(intents)
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
@@ -88,6 +90,21 @@ const IntentFeed = (): JSX.Element => {
   useEffect(() => {
     resolveThreadhash();
   }, [intents]);
+
+  useQuery('intent', getInbox, {
+    enabled: !props.hasUserBeenSearched && stopApi,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchIntervalInBackground: false,
+    suspense: false,
+    onError: () => {
+      setStopApi(false);
+    },
+    retry: 3,
+    refetchInterval: 1000 * 5,
+    retryDelay: 1000 * 5,
+  });
 
   return (
     <ItemVV2
