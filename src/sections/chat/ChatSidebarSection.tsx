@@ -14,7 +14,7 @@ import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
-import NewUser from 'components/chat/w2wChat/newUser/NewUser';
+import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';

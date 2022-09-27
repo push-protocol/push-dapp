@@ -7,13 +7,16 @@ import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
+import { useWeb3React } from '@web3-react/core';
 import { Feeds, User } from 'api';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ethers } from 'ethers';
+import { walletToCAIP10 } from 'helpers/w2w';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
-import { MdError } from 'react-icons/md';
 import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
 import Loader from '../Loader/Loader';
@@ -21,11 +24,9 @@ import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
-import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
-import { walletToCAIP10 } from 'helpers/w2w';
 
 // Internal Configs
+import GLOBALS from 'config/Globals';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -228,7 +229,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         ) : (
           <>
             {!feeds?.length && isSameUser ? (
-              <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
+              <InfoMessage>You can&apos;t send chat request to yourself</InfoMessage>
             ) : !feeds?.length && isInValidAddress ? (
               <InfoMessage>Invalid Address</InfoMessage>
             ) : !feeds?.length && !messagesLoading ? (
@@ -303,11 +304,14 @@ const EmptyConnection = styled.div`
   margin-top: 25px;
 `;
 
-const InfoMessage = styled.p`
+const InfoMessage = styled(ItemVV2)`
+  justify-content: flex-start;
   position: relative;
   text-align: center;
-  width: 80%;
-  background: #d2cfcf;
+  flex: initial;
+  color: ${(props) => props.theme.default.secondaryColor};
+  background: ${(props) => props.theme.default.secondaryBg};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL};
   padding: 10px;
   margin: 0;
 `;
