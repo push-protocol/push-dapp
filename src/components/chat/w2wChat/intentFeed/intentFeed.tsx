@@ -64,6 +64,7 @@ const IntentFeed = (): JSX.Element => {
     currentChat
   }: AppContext = useContext<AppContext>(Context);
   const intentToast = useToast();
+  const [stopApi, setStopApi] = useState<boolean>(true);
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [isLoading, setIsLoading] = useState<boolean>();
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
@@ -78,21 +79,38 @@ const IntentFeed = (): JSX.Element => {
     console.log(getIntent);
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    if (getIntent !== undefined) {
+      let intents: Feeds[] = getIntent.body;
+      intents = await decryptFeeds({ feeds: intents, connectedUser });
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
+      setIsLoading(false);
+    } 
+    else {
+      await fetchIntentApi();
+    }
+  }
+
+  const fetchIntentApi = async(): Promise<Feeds[]> => {
+    const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     console.log(intents)
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
-    setPendingRequests(intents?.length);
-    setReceivedIntents(intents);
-    setIsLoading(false);
+    if(intents !== receivedIntents) {
+      setPendingRequests(intents?.length);
+      setReceivedIntents(intents);
+    }
+    // setIsLoading(false);
+    return intents;
   }
-
+ 
   useEffect(() => {
     resolveThreadhash();
   }, [intents]);
 
-  useQuery('intent', getInbox, {
-    enabled: !props.hasUserBeenSearched && stopApi,
+  useQuery('intent', fetchIntentApi, {
+    enabled: stopApi,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
