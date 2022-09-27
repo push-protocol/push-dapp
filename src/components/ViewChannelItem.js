@@ -740,7 +740,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               {isChannelTutorialized(channelObject.channel) && (
                 <ChannelTutorial
                   addr={channelObject.channel}
-                  bgColor={themes.viewChannelSecondaryBG}
+                  bgColor={themes.viewChannelSearchBg}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
                 />
@@ -1017,6 +1017,9 @@ const Subscribers = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
+  @media ${Device.laptopL} {
+    padding-top: 1rem;
+  }
 `;
 
 const SubscribersCount = styled(ChannelMetaBox)`

@@ -225,7 +225,7 @@ const themeDark = {
   // View Channels Theme
   // -- View Channel Header Theme
   // -- -- Search Bar
-  viewChannelSearchBg: '#222',
+  viewChannelSearchBg: '#282A2E',
   viewChannelSearchBorder: '#333',
   viewChannelSearchText: '#fff',
   viewChannelSearchIcon: '#414141',
