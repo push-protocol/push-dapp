@@ -16,7 +16,7 @@ import * as PushNodeClient from 'api';
 import { User } from 'api';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
@@ -213,13 +213,19 @@ const SearchBar = () => {
           height="48px"
           top="10px"
           right="0px"
-          background="#D53893"
-          borderRadius="50%"
         >
-          <AddIcon
+          <ButtonV2
+            alignSelf="stretch"
+            background="#D53893"
+            hoverBackground="transparent"
+            borderRadius="50%"
             onClick={() => setActiveTab(3)}
-            style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }}
-          />
+          >
+            <AddIcon
+              style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }}
+            />
+          </ButtonV2>
+          
         </ItemVV2>
       </ItemHV2>
       <ItemVV2 justifyContent="flex-start">
