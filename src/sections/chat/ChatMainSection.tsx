@@ -310,9 +310,14 @@ const ChatMainSection = () => {
       else
         setChat(null);
         setCurrentTab(tab);
-    } else {
+    } else if(tab === 0){
         setCurrentTab(tab);
     } 
+    else if(tab === 3)
+    {
+      setChat(null);
+      setCurrentTab(tab);
+    }
   };
 
   const setChat = (feed: Feeds): void => {
