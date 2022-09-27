@@ -1017,6 +1017,9 @@ const Subscribers = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
+  @media ${Device.laptopL} {
+    padding-top: 1rem;
+  }
 `;
 
 const SubscribersCount = styled(ChannelMetaBox)`
