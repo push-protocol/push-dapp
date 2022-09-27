@@ -79,16 +79,16 @@ const IntentFeed = (): JSX.Element => {
     console.log(getIntent);
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    if (getIntent !== undefined) {
-      let intents: Feeds[] = getIntent.body;
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
+    // if (getIntent !== undefined) {
+      // let intents: Feeds[] = getIntent.body;
+      // intents = await decryptFeeds({ feeds: intents, connectedUser });
+      // setPendingRequests(intents?.length);
+      // setReceivedIntents(intents);
       setIsLoading(false);
-    } 
-    else {
+    // } 
+    // else {
       await fetchIntentApi();
-    }
+    // }
   }
 
   const fetchIntentApi = async(): Promise<Feeds[]> => {
@@ -101,7 +101,7 @@ const IntentFeed = (): JSX.Element => {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     }
-    // setIsLoading(false);
+    setIsLoading(false);
     return intents;
   }
  
@@ -109,7 +109,21 @@ const IntentFeed = (): JSX.Element => {
     resolveThreadhash();
   }, [intents]);
 
-  useQuery('intent', fetchIntentApi, {
+  // useQuery('intent', fetchIntentApi, {
+  //   enabled: stopApi,
+  //   refetchOnMount: false,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnReconnect: false,
+  //   refetchIntervalInBackground: false,
+  //   suspense: false,
+  //   onError: () => {
+  //     setStopApi(false);
+  //   },
+  //   retry: 3,
+  //   refetchInterval: 1000 * 5,
+  //   retryDelay: 1000 * 5,
+  // });
+  useQuery('resolveIntents', resolveThreadhash, {
     enabled: stopApi,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -123,7 +137,6 @@ const IntentFeed = (): JSX.Element => {
     refetchInterval: 1000 * 5,
     retryDelay: 1000 * 5,
   });
-
   return (
     <ItemVV2
       alignSelf="stretch"

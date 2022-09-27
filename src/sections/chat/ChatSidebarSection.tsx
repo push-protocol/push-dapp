@@ -74,7 +74,7 @@ const ChatSidebarSection = () => {
   const getPendingRequests = async (firstLoad) => {
     let getIntent;
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-      getIntent = await intitializeDb<string>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+      // getIntent = await intitializeDb<string>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
 
     // If the user is not registered in the protocol yet, his did will be his wallet address
