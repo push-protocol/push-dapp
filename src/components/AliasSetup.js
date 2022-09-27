@@ -36,7 +36,6 @@ const AliasSetup = () => {
         <FadeLoader color="#cf1c84" loading={true} height={13} width={4} />
         <H3
           margin="auto 15px"
-          family="Manrope"
           textTransform="none"
           color={themes.color}
           size="16px"

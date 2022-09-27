@@ -13,7 +13,7 @@ import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { isLengthValid, isValidUrl } from 'helpers/UtilityHelper';
+import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
 import { Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
@@ -170,8 +170,12 @@ function CreateChannel() {
       setErrorInfo('Channel Url should not exceed 125 characters! Please retry!');
       return false;
     }
+    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
+      setErrorInfo('Channel Alias address is invalid! Please enter a valid address!');
+      return false;
+    }
     if (!isValidUrl(channelURL)) {
-      setErrorInfo('Please enter your channel website URL to continue.');
+      setErrorInfo('Channel URL is invalid! Please enter a valid url!');
       return false;
     }
 
@@ -629,7 +633,6 @@ const Tab = styled.div`
   color: #657795;
   div {
     margin: 5px 0px;
-    font-family: 'Strawford', 'Manrope';
     font-style: normal;
     font-weight: 600;
     font-size: 16px;

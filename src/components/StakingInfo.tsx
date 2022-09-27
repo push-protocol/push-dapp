@@ -122,7 +122,7 @@ const TabSpace = styled.div`
   }
   b {
     font-style: normal;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 26px;
     line-height: 150%;
     text-align: right;
