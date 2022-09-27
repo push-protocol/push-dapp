@@ -31,10 +31,10 @@ import ChannelTutorial, {
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import NotificationToast from "../primaries/NotificationToast";
 import { Image, ItemH, Span } from "../primaries/SharedStyling";
+import { aliasChainIdsMapping } from "helpers/UtilityHelper";
 
 // Internal Configs
 import { appConfig } from "config";
-
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -658,7 +658,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     <Image src={`./svg/Ethereum.svg`} alt="Ethereum" width="20px" height="20px" />
                   </Span>
                 }
-                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && 
+                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) &&
                   <Span padding="0 0 0 5px">
                     <Image src={`./svg/Polygon.svg`} alt="Ethereum" width="20px" height="20px" />
                   </Span>
