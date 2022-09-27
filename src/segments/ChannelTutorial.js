@@ -142,9 +142,16 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
       }
 
       <MetaInfoDisplayer
-        internalIcon={<ImageV2 width="fit-content" src="/svg/view-tutorial-icon.svg"/>}
+        internalIcon={
+          <ImageV2 
+            filter={themes.snackbarBorderIcon} 
+            width="fit-content" src="/svg/view-tutorial-icon.svg"
+          />
+        }
         text="Tutorial"
         bgColor={bgColor}
+        color={themes.viewChannelPrimaryText}
+        padding="6px 16px"
       />
     </Item>
   );
