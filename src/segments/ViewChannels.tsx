@@ -242,8 +242,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             {!UtilityHelper.isMainnet(chainId) &&
               <Faucets />
             }
-
-            <ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} />
+            {appConfig.allowedNetworks.length > 1 && 
+              <ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} />
+            }
 
           </ItemH>
         )}
