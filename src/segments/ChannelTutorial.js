@@ -3,11 +3,12 @@ import React from "react";
 import { Button, Image, Item, ItemH, Span } from 'primaries/SharedStyling';
 import styled, { useTheme } from 'styled-components';
 
-import { FaPlay, FaShareSquare, FaYoutube } from 'react-icons/fa';
+import { FaShareSquare, FaYoutube } from 'react-icons/fa';
 
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
 
 import channelTuts from "config/channelTuts";
+import { ImageV2 } from "components/reusables/SharedStylingV2";
 
 // Check channel has tutorial
 export const isChannelTutorialized = (addr) => {
@@ -141,8 +142,8 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
       }
 
       <MetaInfoDisplayer
-        internalIcon={<FaPlay />}
-        text="Short Tutorial"
+        internalIcon={<ImageV2 width="fit-content" src="/svg/view-tutorial-icon.svg"/>}
+        text="Tutorial"
         bgColor={bgColor}
       />
     </Item>

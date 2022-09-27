@@ -740,7 +740,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               {isChannelTutorialized(channelObject.channel) && (
                 <ChannelTutorial
                   addr={channelObject.channel}
-                  bgColor={themes.viewChannelSecondaryBG}
+                  bgColor={themes.viewChannelSearchBg}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
                 />
