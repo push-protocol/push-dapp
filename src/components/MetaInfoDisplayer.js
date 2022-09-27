@@ -8,17 +8,18 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
 
   // render
   return (
-    <ItemH bg={bgColor} 
+    <MetaContentConatiner bg={bgColor} 
      margin="0 8px"
-     radius="10px"
+     radius="25px"
      maxWidth="fit-content"
+     onMouseEnter={onMouseEnter}
+     onMouseLeave={onMouseLeave}
      padding={padding}>
      
       <MetaContent
         hoverBG="transparent"
         onClick={onClick}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
+       
       >
         <Span color={color}>
           {externalIcon &&
@@ -39,7 +40,7 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
             </ItemH>
           </Span>
       </MetaContent>
-    </ItemH>
+    </MetaContentConatiner>
   );
 }
 
@@ -51,22 +52,29 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
 //   }
 // `
 
+const MetaContentConatiner = styled(ItemH)`
+  white-space: pre;
+`;
+
 const MetaContent = styled(A)`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   max-width: fit-content;
-  
+
   & > Span {
     gap: 5px;
     font-weight: 500;
     display: flex;
     font-size: 14px;
     transition: 300ms;
+
   }
   & > Span:hover {
     white-space: pre;
+    cursor:${props => props.onClick? "pointer":"default"};
+
   }
 `
 
