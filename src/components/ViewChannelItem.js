@@ -715,7 +715,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }
                 internalIcon={null}
                 text={subscriberCount}
-                padding="1.5px 10px"
+                padding="5.3px 10px"
                 bgColor={themes.viewChannelSecondaryBG}
                 color={themes.viewChannelSecondaryText}
               />
@@ -946,6 +946,7 @@ const ChannelTitleLink = styled.a`
     font-weight: 500;
     color: ${(props) => props.theme.viewChannelLink};
     font-size: 18px;
+    cursor:pointer;
   }
 
   & > span > span {
