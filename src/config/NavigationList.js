@@ -158,29 +158,29 @@ const NavigationList = {
         },
       },
     },
-    latestOlvy: {
-      src: 'navigation/olvyIcon.svg',
-      activeSrc: 'navigation/olvyIcon.svg',
-      iconFactory: null,
-      name: 'Latest',
-      title: 'Latest',
-      alt: 'Latest',
-      id:"olvy-target",
-      newTab: false,
-      isRoute: true,
-      hasMenuLogic: true,
-      headerTag: {
-        title: 'Latest',
-        light: {
-          bg: GLOBALS.COLORS.GRADIENT_THIRD,
-          fg: themeLight.headerTagFg
-        },
-        dark: {
-          bg: themeDark.headerTagBg,
-          fg: themeDark.headerTagFg
-        }
-      }
-    },
+    // latestOlvy: {
+    //   src: 'navigation/olvyIcon.svg',
+    //   activeSrc: 'navigation/olvyIcon.svg',
+    //   iconFactory: null,
+    //   name: 'Latest',
+    //   title: 'Latest',
+    //   alt: 'Latest',
+    //   id:"olvy-target",
+    //   newTab: false,
+    //   isRoute: true,
+    //   hasMenuLogic: true,
+    //   headerTag: {
+    //     title: 'Latest',
+    //     light: {
+    //       bg: GLOBALS.COLORS.GRADIENT_THIRD,
+    //       fg: themeLight.headerTagFg
+    //     },
+    //     dark: {
+    //       bg: themeDark.headerTagBg,
+    //       fg: themeDark.headerTagFg
+    //     }
+    //   }
+    // },
     governance: {
       uid: GLOBALS.CONSTANTS.NAVBAR_IDENTIFIERS.GOVERNANCE,
       src: 'navigation/govOffIcon.svg',

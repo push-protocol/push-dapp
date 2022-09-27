@@ -633,7 +633,6 @@ const Tab = styled.div`
   color: #657795;
   div {
     margin: 5px 0px;
-    font-family: 'Strawford', 'Manrope';
     font-style: normal;
     font-weight: 600;
     font-size: 16px;

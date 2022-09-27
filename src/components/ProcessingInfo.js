@@ -34,7 +34,6 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
         <FadeLoader color="#cf1c84" loading={true} height={13} width={2.5} />
         <H3
           margin="auto 15px"
-          family="Manrope"
           textTransform="none"
           color={themes.color}
           size="16px"

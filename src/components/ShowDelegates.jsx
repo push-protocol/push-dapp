@@ -18,9 +18,9 @@ import { useDeviceWidthCheck } from "hooks";
 import useModal from "hooks/useModal";
 import useToast from "hooks/useToast";
 import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
+import { getChannelDelegates } from "services";
 import DelegateInfo from "./DelegateInfo";
 import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
-import { getChannelDelegates } from "services";
 
 const isOwner=(account,delegate)=>{
   return account.toLowerCase() !== delegate.toLowerCase() 
@@ -215,7 +215,7 @@ const RemoveButtonUI = styled(ChannelActionButton)`
   max-width: 164px;
   flex:1; 
   font-style: normal;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 14px;
   line-height: 141%;
   display: flex;

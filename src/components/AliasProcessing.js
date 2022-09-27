@@ -1,10 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
 import { Section } from "../primaries/SharedStyling";
 import AliasSetup from "./AliasSetup";
 import ChangeNetwork from "./ChangeNetwork";
 import VerifyAlias from "./VerifyAlias";
-import { useSelector } from "react-redux";
 
 const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
   const { processingState } = useSelector((state) => state.channelCreation);
@@ -87,7 +87,6 @@ const Tab = styled.div`
   color: #657795;
   div {
     margin: 5px 0px;
-    font-family: "Manrope";
     font-style: normal;
     font-weight: 600;
     font-size: 16px;

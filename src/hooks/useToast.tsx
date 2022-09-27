@@ -137,9 +137,8 @@ const LoaderNotification = styled.div`
 `;
 const LoaderMessage = styled.div`
   margin-left: 3%;
-  font-family: Manrope;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.3rem;
   letter-spacing: 0em;
   text-align: left;
@@ -161,16 +160,14 @@ const ToastContent = styled.div`
   align-items: flex-start;
 `;
 const ToastTitle = styled.div`
-  font-family: Manrope;
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.4rem;
   letter-spacing: 0em;
   text-align: left;
   margin-bottom: 1%;
 `;
 const ToastMessage = styled.div`
-  font-family: Manrope;
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.3rem;
