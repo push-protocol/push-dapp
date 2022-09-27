@@ -3,6 +3,8 @@ import React from "react";
 import styled from 'styled-components';
 import { A, Item, ItemH, Span } from '../primaries/SharedStyling';
 
+import { Device } from "assets/Device";
+
 // Faucet URLs
 function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, onMouseEnter, onMouseLeave, padding, color }) {
 
@@ -54,6 +56,7 @@ function MetaInfoDisplay({ externalIcon, internalIcon, text, bgColor, onClick, o
 
 const MetaContentConatiner = styled(ItemH)`
   white-space: pre;
+  margin: 0.3rem 0.4rem;
 `;
 
 const MetaContent = styled(A)`
