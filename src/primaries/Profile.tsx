@@ -36,7 +36,7 @@ const Profile = ({isDarkMode}) => {
     {
       id: "prodDapp",
       value: "",
-      link: "https://epns.io/",
+      link: "https://app.push.org",
       title: "Production dapp",
       invertedIcon: "./prod.svg",
     },
