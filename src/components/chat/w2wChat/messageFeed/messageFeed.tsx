@@ -37,8 +37,15 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
-    useContext<AppContext>(Context);
+  const {
+    setChat,
+    connectedUser,
+    setIntents,
+    setInbox,
+    inbox,
+    setHasUserBeenSearched,
+    setSearchedUser,
+  }: AppContext = useContext<AppContext>(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);

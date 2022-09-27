@@ -23,8 +23,16 @@ import { Context } from 'sections/chat/ChatMainSection';
 function NewUser() {
   const theme = useTheme();
 
-  const { setChat, setSearchedUser, searchedUser, hasUserBeenSearched, setHasUserBeenSearched, setActiveTab } =
-    useContext(Context);
+  const {
+    setChat,
+    setSearchedUser,
+    searchedUser,
+    hasUserBeenSearched,
+    setHasUserBeenSearched,
+    setActiveTab,
+    searchUser,
+    setSearchUser,
+  } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
   const [searchedUserData, setSearchedUserData] = useState<User[]>([]);
@@ -33,6 +41,13 @@ function NewUser() {
   const [messagesLoading, setMessagesLoading] = useState<boolean>(false);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const provider = ethers.getDefaultProvider();
+
+  useEffect(() => {
+    if (searchedUser !== '' && searchUser) {
+      handleSearch();
+      setSearchUser(false);
+    }
+  }, []);
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let searchAddress = event.target.value;
@@ -63,10 +78,13 @@ function NewUser() {
     return userCreated;
   };
 
-  const submitSearch = async (event: React.FormEvent) => {
+  const submitSearch = (event: React.FormEvent) => {
     //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
     event.preventDefault();
+    handleSearch();
+  };
 
+  const handleSearch = async () => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setMessagesLoading(true);
       setIsLoadingSearch(true);
@@ -81,7 +99,8 @@ function NewUser() {
           let filteredData: User;
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
-            setHasUserBeenSearched(false);
+            setHasUserBeenSearched(true);
+            setSearchUser(true)
             setActiveTab(0);
           } else {
             const displayUser = displayDefaultUser({ caip10 });
@@ -107,8 +126,8 @@ function NewUser() {
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          setHasUserBeenSearched(false);
-          // setSearchedUserData([filteredData]);
+          setHasUserBeenSearched(true);
+          setSearchUser(true)
           setActiveTab(0);
         }
         // User is not in the protocol. Create new user

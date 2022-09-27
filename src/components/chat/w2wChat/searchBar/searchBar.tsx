@@ -2,7 +2,7 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
@@ -50,13 +50,27 @@ const SearchBar = () => {
   // get theme
   const theme = useTheme();
 
-  const { setSearchedUser, searchedUser, hasUserBeenSearched, setHasUserBeenSearched, setActiveTab }: AppContext =
-    useContext<AppContext>(Context);
+  const {
+    setSearchedUser,
+    searchedUser,
+    hasUserBeenSearched,
+    setHasUserBeenSearched,
+    setActiveTab,
+    searchUser,
+    setSearchUser,
+  }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
+
+  useEffect(() => {
+    if (searchedUser !== '' && searchUser) {
+      handleSearch();
+      setSearchUser(false);
+    }
+  }, []);
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let searchAddress = event.target.value;
@@ -87,9 +101,13 @@ const SearchBar = () => {
     return userCreated;
   };
 
-  const submitSearch = async (event: React.FormEvent) => {
+  const submitSearch = (event: React.FormEvent) => {
     //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
     event.preventDefault();
+    handleSearch();
+  };
+
+  const handleSearch = async () => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
       let ens: string;
@@ -105,7 +123,8 @@ const SearchBar = () => {
             setHasUserBeenSearched(true);
             setFilteredUserData([filteredData]);
           } else {
-            setHasUserBeenSearched(false);
+            setHasUserBeenSearched(true);
+            setSearchUser(true);
             setActiveTab(3);
           }
         } else {
@@ -131,7 +150,8 @@ const SearchBar = () => {
         // User is not in the protocol. Create new user
         else {
           if (ethers.utils.isAddress(searchedUser)) {
-            setHasUserBeenSearched(false);
+            setHasUserBeenSearched(true);
+            setSearchUser(true);
             setActiveTab(3);
           } else {
             setIsInvalidAddress(true);

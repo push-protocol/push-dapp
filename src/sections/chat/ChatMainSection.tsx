@@ -26,7 +26,7 @@ import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_TYPE,
-  PROGRESS_POSITIONING
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wHelper from 'helpers/w2w';
 import { createCeramic } from 'helpers/w2w/ceramic';
@@ -44,8 +44,8 @@ export interface InboxChat {
   timestamp: number;
   fromDID: string;
   toDID: string;
-  fromCAIP10: string,
-  toCAIP10: string,
+  fromCAIP10: string;
+  toCAIP10: string;
   lastMessage: string;
   messageType: string;
   encType: string;
@@ -90,6 +90,8 @@ export interface AppContext {
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
+  searchUser: boolean;
+  setSearchUser: (value: boolean) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -129,6 +131,7 @@ const ChatMainSection = () => {
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
+  const [searchUser, setSearchUser] = useState<boolean>(false);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -154,7 +157,7 @@ const ChatMainSection = () => {
   //     const threeID: ThreeIdConnect = new ThreeIdConnect();
   //     const ceramic: CeramicClient = createCeramic();
   //     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);
-  
+
   //     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
   //     setDID(did);
   //     return did;
@@ -240,15 +243,14 @@ const ChatMainSection = () => {
   //   setIsLoading(false);
   // };
 
-
   const connectUser = async (): Promise<void> => {
     // Getting User Info
     setBlockedLoading({
       enabled: true,
-      title: "Step 1/4: Getting Account Info",
+      title: 'Step 1/4: Getting Account Info',
       progressEnabled: true,
       progress: 25,
-      progressNotice: "Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue"
+      progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
@@ -257,17 +259,21 @@ const ChatMainSection = () => {
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
     if (user?.did.includes('did:3:')) {
-      throw Error('Invalid DID')
+      throw Error('Invalid DID');
     }
 
     // new user might not have a private key
     if (user && user.encryptedPrivateKey) {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
-        throw Error('Invalid user')
+        throw Error('Invalid user');
       }
 
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, user.encryptedPrivateKey, account);
-      connectedUser = { ...user, privateKey: privateKeyArmored }
+      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
+        library.provider,
+        user.encryptedPrivateKey,
+        account
+      );
+      connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
       connectedUser = {
         // We only need to provide this information when it's a new user
@@ -286,7 +292,7 @@ const ChatMainSection = () => {
         sigType: '',
         signature: '',
         linkedListHash: '',
-        privateKey: ''
+        privateKey: '',
       };
     }
 
@@ -296,25 +302,20 @@ const ChatMainSection = () => {
       spinnerCompleted: true,
       progressEnabled: true,
       progress: 100,
-    })
+    });
 
     setConnectedUser(connectedUser);
     setIsLoading(false);
-  }
-
+  };
 
   const setActiveTab = (tab: number): void => {
     if (tab === 1) {
-      if(intents.length)
-        setChat(intents[0]);
-      else
-        setChat(null);
-        setCurrentTab(tab);
-    } else if(tab === 0){
-        setCurrentTab(tab);
-    } 
-    else if(tab === 3)
-    {
+      if (intents.length) setChat(intents[0]);
+      else setChat(null);
+      setCurrentTab(tab);
+    } else if (tab === 0) {
+      setCurrentTab(tab);
+    } else if (tab === 3) {
       setChat(null);
       setCurrentTab(tab);
     }
@@ -357,7 +358,9 @@ const ChatMainSection = () => {
               setLoadingMessage,
               setBlockedLoading,
               activeTab,
-              setActiveTab
+              setActiveTab,
+              searchUser,
+              setSearchUser,
             }}
           >
             <ChatSidebarContainer
@@ -371,7 +374,7 @@ const ChatMainSection = () => {
             >
               <ChatSidebarSection />
             </ChatSidebarContainer>
-            <ChatContainer 
+            <ChatContainer
               padding="10px 10px 10px 10px"
               chatActive={viewChatBox}
             >
@@ -414,14 +417,14 @@ const ChatSidebarContainer = styled(ItemVV2)`
     bottom: 0;
     right: 0;
     width: 100%;
-    margin-right: ${(props) => props.chatActive ? '20%' : '0%'};
-    opacity: ${(props) => props.chatActive ? '0' : '1'};
+    margin-right: ${(props) => (props.chatActive ? '20%' : '0%')};
+    opacity: ${(props) => (props.chatActive ? '0' : '1')};
     transition: margin-right 0.25s;
     max-width: initial;
     min-width: auto;
     z-index: 1;
   }
-`
+`;
 
 const ChatContainer = styled(ItemVV2)`
   @media ${device.tablet} {
@@ -430,10 +433,10 @@ const ChatContainer = styled(ItemVV2)`
     bottom: 0;
     left: 0;
     width: 100%;
-    margin-left: ${(props) => props.chatActive ? '0%' : '100%'};
+    margin-left: ${(props) => (props.chatActive ? '0%' : '100%')};
     transition: margin-left 0.25s;
     max-width: initial;
     min-width: auto;
     z-index: 2;
   }
-`
+`;
