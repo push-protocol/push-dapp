@@ -715,7 +715,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }
                 internalIcon={null}
                 text={subscriberCount}
-                padding="1.5px 10px"
+                padding="5.3px 10px"
                 bgColor={themes.viewChannelSecondaryBG}
                 color={themes.viewChannelSecondaryText}
               />
@@ -740,7 +740,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               {isChannelTutorialized(channelObject.channel) && (
                 <ChannelTutorial
                   addr={channelObject.channel}
-                  bgColor={themes.viewChannelSecondaryBG}
+                  bgColor={themes.viewChannelSearchBg}
                   loadTeaser={loadTeaser}
                   playTeaser={playTeaser}
                 />
@@ -946,6 +946,7 @@ const ChannelTitleLink = styled.a`
     font-weight: 500;
     color: ${(props) => props.theme.viewChannelLink};
     font-size: 18px;
+    cursor:pointer;
   }
 
   & > span > span {
@@ -1016,6 +1017,9 @@ const Subscribers = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
+  @media ${Device.laptopL} {
+    padding-top: 1rem;
+  }
 `;
 
 const SubscribersCount = styled(ChannelMetaBox)`

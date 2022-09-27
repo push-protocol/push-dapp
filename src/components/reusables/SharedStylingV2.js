@@ -191,6 +191,7 @@ export const ImageV2 = styled.img`
   border-radius: ${(props) => props.borderRadius || "initial"};
   overflow: ${(props) => props.overflow || 'initial'};
   cursor: ${(props) => props.cursor || 'default'};
+  filter: ${(props) => props.filter || 'none'};
 `;
 
 export const AInlineV2 = styled.a`
