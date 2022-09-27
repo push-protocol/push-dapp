@@ -209,7 +209,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       alignItems="flex-start"
       justifyContent="flex-start"
     >
-      {activeTab !==3 && (
+      {activeTab !== 3 && (
         <SpanV2
           fontWeight="700"
           fontSize="12px"
@@ -233,50 +233,49 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             ) : !feeds?.length && isInValidAddress ? (
               <InfoMessage>Invalid Address</InfoMessage>
             ) : !feeds?.length && !messagesLoading ? (
-              activeTab !==3 && <EmptyConnection>
-                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
-              </EmptyConnection>
-            ) : !messagesLoading ? (
-              feeds.map(
-                (feed: Feeds, i) =>
-                  // To Test
-                  // <ItemVV2
-                  //   key={feed.threadhash || i}
-                  //   onClick={(): void => {
-                  //     setChat(feed);
-                  //   }}
-                  //   background="red"
-                  //   margin="10px"
-                  //   height="80px"
-                  //   flex="initial"
-                  // >
-                  // </ItemVV2>
-
-                  ((activeTab == 3 && props.hasUserBeenSearched) || activeTab != 3) && (
-                    <ItemVV2
-                      alignSelf="stretch"
-                      flex="initial"
-                      key={feed.threadhash || i}
-                    >
-                      <ChatSnap
-                        pfp={feed.profilePicture}
-                        username={feed.msg.name}
-                        chatSnapMsg={{
-                          type: feed.msg.messageType,
-                          message: feed.msg.lastMessage,
-                        }}
-                        timestamp={feed.msg.timestamp}
-                        selected={feed.threadhash == selectedChatSnap ? true : false}
-                        onClick={(): void => {
-                          setChat(feed);
-                          setSelectedChatSnap(feed.threadhash);
-                          setSearchedUser('');
-                          setHasUserBeenSearched(false);
-                        }}
-                      />
-                    </ItemVV2>
-                  )
+              activeTab !== 3 && (
+                <EmptyConnection>
+                  Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+                </EmptyConnection>
               )
+            ) : !messagesLoading ? (
+              feeds.map((feed: Feeds, i) => (
+                // To Test
+                // <ItemVV2
+                //   key={feed.threadhash || i}
+                //   onClick={(): void => {
+                //     setChat(feed);
+                //   }}
+                //   background="red"
+                //   margin="10px"
+                //   height="80px"
+                //   flex="initial"
+                // >
+                // </ItemVV2>
+
+                <ItemVV2
+                  alignSelf="stretch"
+                  flex="initial"
+                  key={feed.threadhash || i}
+                >
+                  <ChatSnap
+                    pfp={feed.profilePicture}
+                    username={feed.msg.name}
+                    chatSnapMsg={{
+                      type: feed.msg.messageType,
+                      message: feed.msg.lastMessage,
+                    }}
+                    timestamp={feed.msg.timestamp}
+                    selected={feed.threadhash == selectedChatSnap ? true : false}
+                    onClick={(): void => {
+                      setChat(feed);
+                      setSelectedChatSnap(feed.threadhash);
+                      setSearchedUser('');
+                      setHasUserBeenSearched(false);
+                    }}
+                  />
+                </ItemVV2>
+              ))
             ) : null}
           </>
         )}

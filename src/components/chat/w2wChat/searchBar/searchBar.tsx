@@ -97,12 +97,17 @@ const SearchBar = () => {
         const address = await provider.resolveName(searchedUser);
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
-
+        let filteredData: User;
         if (ens) {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
-          const displayUser = displayDefaultUser({ caip10 });
-          setHasUserBeenSearched(true);
-          setFilteredUserData([displayUser]);
+          filteredData = await PushNodeClient.getUser({ caip10 });
+          if (filteredData !== null) {
+            setHasUserBeenSearched(true);
+            setFilteredUserData([filteredData]);
+          } else {
+            setHasUserBeenSearched(false);
+            setActiveTab(3);
+          }
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -126,9 +131,7 @@ const SearchBar = () => {
         // User is not in the protocol. Create new user
         else {
           if (ethers.utils.isAddress(searchedUser)) {
-            // const displayUser = displayDefaultUser({ caip10 });
-            // setHasUserBeenSearched(true);
-            // setFilteredUserData([displayUser]);
+            setHasUserBeenSearched(false);
             setActiveTab(3);
           } else {
             setIsInvalidAddress(true);
@@ -221,11 +224,8 @@ const SearchBar = () => {
             borderRadius="50%"
             onClick={() => setActiveTab(3)}
           >
-            <AddIcon
-              style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }}
-            />
+            <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
           </ButtonV2>
-          
         </ItemVV2>
       </ItemHV2>
       <ItemVV2 justifyContent="flex-start">
