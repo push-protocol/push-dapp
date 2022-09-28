@@ -4,60 +4,81 @@ import fs from 'fs';
 import readline from 'readline';
 
 const envPresets = {
-  alpha_push: {
+  alpha: {
     REACT_APP_DEPLOY_ENV: 'ALPHA',
     REACT_APP_PUBLIC_URL: 'https://alpha.push.org/',
   },
-  w2w_push: {
+  w2w: {
     REACT_APP_DEPLOY_ENV: 'W2W',
     REACT_APP_PUBLIC_URL: 'https://w2w.push.org/',
   },
-  dev_push: {
+  dev: {
     REACT_APP_DEPLOY_ENV: 'DEV',
     REACT_APP_PUBLIC_URL: 'https://dev.push.org/',
   },
-  staging_push: {
+  staging: {
     REACT_APP_DEPLOY_ENV: 'STAGING',
     REACT_APP_PUBLIC_URL: 'https://staging.push.org/',
   },
-  prod_push: {
+  prod: {
     REACT_APP_DEPLOY_ENV: 'PROD',
     REACT_APP_PUBLIC_URL: 'https://app.push.org/',
   },
-  alpha: {
-    REACT_APP_DEPLOY_ENV: 'ALPHA',
-    REACT_APP_PUBLIC_URL: 'https://alpha.epns.io/',
-  },
-  w2w: {
-    REACT_APP_DEPLOY_ENV: 'W2W',
-    REACT_APP_PUBLIC_URL: 'https://w2w.epns.io/',
-  },
-  dev: {
-    REACT_APP_DEPLOY_ENV: 'DEV',
-    REACT_APP_PUBLIC_URL: 'https://dev.epns.io/',
-  },
-  staging: {
-    REACT_APP_DEPLOY_ENV: 'STAGING',
-    REACT_APP_PUBLIC_URL: 'https://staging.epns.io/',
-  },
-  prod: {
-    REACT_APP_DEPLOY_ENV: 'PROD',
-    REACT_APP_PUBLIC_URL: 'https://app.epns.io/',
-  },
+  // alpha: {
+  //   REACT_APP_DEPLOY_ENV: 'ALPHA',
+  //   REACT_APP_PUBLIC_URL: 'https://alpha.epns.io/',
+  // },
+  // w2w: {
+  //   REACT_APP_DEPLOY_ENV: 'W2W',
+  //   REACT_APP_PUBLIC_URL: 'https://w2w.epns.io/',
+  // },
+  // dev: {
+  //   REACT_APP_DEPLOY_ENV: 'DEV',
+  //   REACT_APP_PUBLIC_URL: 'https://dev.epns.io/',
+  // },
+  // staging: {
+  //   REACT_APP_DEPLOY_ENV: 'STAGING',
+  //   REACT_APP_PUBLIC_URL: 'https://staging.epns.io/',
+  // },
+  // prod: {
+  //   REACT_APP_DEPLOY_ENV: 'PROD',
+  //   REACT_APP_PUBLIC_URL: 'https://app.epns.io/',
+  // },
 };
 
 // Prep for deployment starts everything
 const prepForDeployment = async (appEnv) => {
-  console.log(chalk.green('Starting Custom Deployment Prebuild...'));
+  console.log(chalk.green('Starting Custom Deployment Prebuild...' ));
 
   // Test if app dev is passed, else fail
-  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w') {
+  let indexAppEnv = appEnv;
+  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w' && appEnv !== 'alpha' || appEnv !== 'dev_push' && appEnv !== 'staging_push' && appEnv !== 'prod_push' && appEnv !== 'w2w_push' && appEnv !== 'alpha_push') {
     console.log(
-      chalk.red('App Environment not set correctly... can only be dev, staging, prod or w2w. Please check and retry')
+      chalk.red('App Environment not set correctly... can only be dev, staging, prod, alpha or w2w. Please check and retry'), 
     );
   }
 
-  await changeIndexHTML(appEnv);
+  if (appEnv === 'w2w_push') {
+    indexAppEnv = 'w2w';
+  }
+
+  if (appEnv === 'alpha_push') {
+    indexAppEnv = 'alpha';
+  }
+
+  if (appEnv === 'dev_push') {
+    indexAppEnv = 'dev';
+  }
+
+  if (appEnv === 'staging_push') {
+    indexAppEnv = 'staging';
+  }
+
+  if (appEnv === 'prod_push') {
+    indexAppEnv = 'prod';
+  }
+
+  await changeIndexHTML(indexAppEnv);
   await changeENV(appEnv);
 };
 
