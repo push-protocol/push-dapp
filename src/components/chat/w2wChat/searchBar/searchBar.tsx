@@ -56,8 +56,8 @@ const SearchBar = () => {
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
-    searchUser,
-    setSearchUser,
+    userShouldBeSearched,
+    setUserShouldBeSearched,
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -66,9 +66,9 @@ const SearchBar = () => {
   const provider = ethers.getDefaultProvider();
 
   useEffect(() => {
-    if (searchedUser !== '' && searchUser) {
+    if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setSearchUser(false);
+      setUserShouldBeSearched(false);
     }
   }, []);
 
@@ -124,7 +124,7 @@ const SearchBar = () => {
             setFilteredUserData([filteredData]);
           } else {
             setHasUserBeenSearched(true);
-            setSearchUser(true);
+            setUserShouldBeSearched(true);
             setActiveTab(3);
           }
         } else {
@@ -151,7 +151,7 @@ const SearchBar = () => {
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             setHasUserBeenSearched(true);
-            setSearchUser(true);
+            setUserShouldBeSearched(true);
             setActiveTab(3);
           } else {
             setIsInvalidAddress(true);

@@ -90,8 +90,8 @@ export interface AppContext {
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
-  searchUser: boolean;
-  setSearchUser: (value: boolean) => void;
+  userShouldBeSearched: boolean;
+  setUserShouldBeSearched: (value: boolean) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -131,7 +131,7 @@ const ChatMainSection = () => {
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
-  const [searchUser, setSearchUser] = useState<boolean>(false);
+  const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -359,8 +359,8 @@ const ChatMainSection = () => {
               setBlockedLoading,
               activeTab,
               setActiveTab,
-              searchUser,
-              setSearchUser,
+              userShouldBeSearched,
+              setUserShouldBeSearched,
             }}
           >
             <ChatSidebarContainer

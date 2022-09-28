@@ -30,8 +30,8 @@ function NewUser() {
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
-    searchUser,
-    setSearchUser,
+    userShouldBeSearched,
+    setUserShouldBeSearched,
   } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
@@ -43,9 +43,9 @@ function NewUser() {
   const provider = ethers.getDefaultProvider();
 
   useEffect(() => {
-    if (searchedUser !== '' && searchUser) {
+    if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setSearchUser(false);
+      setUserShouldBeSearched(false);
     }
   }, []);
 
@@ -100,7 +100,7 @@ function NewUser() {
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
             setHasUserBeenSearched(true);
-            setSearchUser(true)
+            setUserShouldBeSearched(true);
             setActiveTab(0);
           } else {
             const displayUser = displayDefaultUser({ caip10 });
@@ -127,7 +127,7 @@ function NewUser() {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
           setHasUserBeenSearched(true);
-          setSearchUser(true)
+          setUserShouldBeSearched(true);
           setActiveTab(0);
         }
         // User is not in the protocol. Create new user
@@ -330,13 +330,15 @@ const ProfileCard = styled(ItemHV2)`
 
 const SearchBarContent = styled.form`
   position: relative;
+  display: flex;
+  flex: 1;
 `;
 
 const Input = styled.input`
   box-sizing: border-box;
   display: flex;
   flex: 1;
-  width: 297px;
+  width: 0;
   height: 48px;
   padding: 13px 60px 13px 21px;
   margin: 20px 0px 17px 0px;
