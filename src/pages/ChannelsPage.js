@@ -7,11 +7,11 @@ import GLOBALS from "config/Globals";
 import ChannelsModule from "modules/channels/ChannelsModule";
 
 // Other Information section
-const ChannelsPage = () => {
+const ChannelsPage = ({ loadTeaser, playTeaser }) => {
   // RENDER
   return (
     <Container>
-      <ChannelsModule />
+      <ChannelsModule loadTeaser={loadTeaser} playTeaser={playTeaser} />
     </Container>
   );
 }
