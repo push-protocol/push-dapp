@@ -29,7 +29,7 @@ import * as DIDHelper from 'helpers/w2w/did';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import HandwaveIcon from "../../../../assets/chat/handwave.svg";
+import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import Chats from '../chats/chats';
@@ -105,7 +105,6 @@ const ChatBox = (): JSX.Element => {
       receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ;
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
-        
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
@@ -175,13 +174,12 @@ const ChatBox = (): JSX.Element => {
             //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
             const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
             if (messageInChat === undefined) {
-              
               setMessages((m) => [...m, msgIPFS]);
             }
           }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
-        else{
+        else {
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -253,7 +251,7 @@ const ChatBox = (): JSX.Element => {
                 setMessages((m) => [msgIPFS, ...m]);
 
                 //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
-                setMessageBeingSent(false)
+                setMessageBeingSent(false);
               }
               // Messages got from useQuery
               // else {
@@ -520,11 +518,11 @@ const ChatBox = (): JSX.Element => {
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
         setBlockedLoading({
           enabled: true,
-          title: "Step 3/4: Syncing account info",
+          title: 'Step 3/4: Syncing account info',
           progressEnabled: true,
           progress: 85,
-          progressNotice: "This might take a couple of seconds as push nodes sync your info for first time!"
-        })
+          progressNotice: 'This might take a couple of seconds as push nodes sync your info for first time!',
+        });
 
         const createdUser: User = await PushNodeClient.createUser({
           caip10,
@@ -540,7 +538,7 @@ const ChatBox = (): JSX.Element => {
 
         setBlockedLoading({
           enabled: false,
-          title: "Step 4/4: Done, Welcome to Push Chat!",
+          title: 'Step 4/4: Done, Welcome to Push Chat!',
           spinnerCompleted: true,
           progressEnabled: true,
           progress: 100,
@@ -555,7 +553,9 @@ const ChatBox = (): JSX.Element => {
   };
 
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
+    
     try {
+      console.log('try')
       setMessageBeingSent(true);
       const { createdUser } = await createUserIfNecessary();
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(currentChat.wallets.split(',')[0])) {
@@ -576,6 +576,7 @@ const ChatBox = (): JSX.Element => {
           } else {
             caip10 = walletToCAIP10({ account: searchedUser, chainId });
           }
+          console.log("creating")
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -670,8 +671,9 @@ const ChatBox = (): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, chat request is not approved!');
       }
-      setSearchedUser('')
-      setHasUserBeenSearched(false)
+      setSearchedUser('');
+      setHasUserBeenSearched(false);
+      setActiveTab(0)
     } catch (error) {
       console.log(error);
       setMessageBeingSent(false);
@@ -687,7 +689,7 @@ const ChatBox = (): JSX.Element => {
   };
 
   const textOnChange = (e: any): void => {
-    if(!messageBeingSent){
+    if (!messageBeingSent) {
       setNewMessage(e.target.value);
     }
   };
@@ -804,12 +806,12 @@ const ChatBox = (): JSX.Element => {
             fontWeight="500"
             zIndex="998"
           >
-          {/* setChat */}
-          
+            {/* setChat */}
+
             <ItemHV2
               height="48px"
               flex="initial"
-            > 
+            >
               <TabletBackButton
                 margin="0px 5px 0px 0px"
                 color={theme.default.secondaryColor}
@@ -832,7 +834,7 @@ const ChatBox = (): JSX.Element => {
                 overflow="hidden"
               />
             </ItemHV2>
-            
+
             <SpanV2
               flex="1"
               margin="5px 10px"
@@ -869,7 +871,10 @@ const ChatBox = (): JSX.Element => {
           </ItemHV2>
 
           <MessageContainer>
-            <ScrollToBottom className="chatBoxTop" initialScrollBehavior="smooth">
+            <ScrollToBottom
+              className="chatBoxTop"
+              initialScrollBehavior="smooth"
+            >
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -1206,7 +1211,7 @@ const Container = styled(Content)`
 const HelloBox = styled(Box)`
   background: #ffffff;
   border-radius: 2px 28px 28px 28px;
-  padding:24px 70px 27px 70px;
+  padding: 24px 70px 27px 70px;
   display: flex;
   align-items: center;
   text-align: center;
@@ -1215,53 +1220,53 @@ const HelloBox = styled(Box)`
 `;
 
 const WelcomeMainText = styled(SpanV2)`
-  background:${props => props.theme.default.bg};
-  padding:20px 55px;
-  border-radius:2px 28px 28px 28px;
-  font-size:28px;
-  font-weight:500;
-  text-align:center;
-  color:${props => props.theme.default.color};
-  letter-spacing:-0.03em;
-  margin:0 4rem;
+  background: ${(props) => props.theme.default.bg};
+  padding: 20px 55px;
+  border-radius: 2px 28px 28px 28px;
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+  color: ${(props) => props.theme.default.color};
+  letter-spacing: -0.03em;
+  margin: 0 4rem;
   @media only screen and (max-width: 1115px) and (min-width: 991px) {
-    font-size:26px;
+    font-size: 26px;
     padding: 16px 33px;
     & img {
-      width:2rem;
+      width: 2rem;
     }
   }
   @media only screen and (max-width: 771px) and (min-width: 711px) {
-    font-size:23px;
+    font-size: 23px;
     padding: 16px 30px;
     & img {
-      width:1.8rem;
+      width: 1.8rem;
     }
   }
 `;
 
 const WelcomeSubText = styled(SpanV2)`
-font-size:15px;
-font-weight:400;
-line-height:19px;
-max-width:17rem;
-color:${props => props.theme.default.seconddaryColor};
-@media only screen and (max-width: 1115px) and (min-width: 991px) {
-  font-size:13px;
-  max-width:15rem;
-}
-@media only screen and (max-width: 780px) and (min-width: 711px) {
-  font-size:13px;
-  max-width:14rem;
-}
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  max-width: 17rem;
+  color: ${(props) => props.theme.default.seconddaryColor};
+  @media only screen and (max-width: 1115px) and (min-width: 991px) {
+    font-size: 13px;
+    max-width: 15rem;
+  }
+  @media only screen and (max-width: 780px) and (min-width: 711px) {
+    font-size: 13px;
+    max-width: 14rem;
+  }
 `;
 
 const TabletBackButton = styled(ButtonV2)`
   display: none;
-  
+
   @media ${device.tablet} {
     display: initial;
   }
-`
+`;
 
 export default ChatBox;

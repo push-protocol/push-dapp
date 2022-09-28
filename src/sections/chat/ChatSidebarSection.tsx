@@ -1,6 +1,6 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -14,6 +14,7 @@ import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
+import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
@@ -29,14 +30,13 @@ import { Context } from 'sections/chat/ChatMainSection';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-
 // Chat Sections
 // Divided into two, left and right
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests ,setPendingRequests} = useContext(Context);
+  const { connectedUser, pendingRequests, setPendingRequests } = useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -67,14 +67,28 @@ const ChatSidebarSection = () => {
         clearTimeout(timer);
       };
     }
-    
   }, [loadingRequests]);
-    
+
   // Get pending requests
   const getPendingRequests = async (firstLoad) => {
     let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-      getIntent = await intitializeDb<string>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
+      getIntent = await intitializeDb<string>(
+        'Insert',
+        'Intent',
+        w2wHelper.walletToCAIP10({ account, chainId }),
+        '',
+        'did'
+      );
     }
 
     // If the user is not registered in the protocol yet, his did will be his wallet address
@@ -87,73 +101,91 @@ const ChatSidebarSection = () => {
     if (firstLoad) {
       setLoadingRequests(false);
     }
-  } 
+  };
 
   // RENDER
   return (
     <ItemVV2>
-
       {/* Header */}
-      <ItemVV2 flex="initial">
-        <ItemHV2>
-          {/* Set active and onCLick to customize tab */}
-          <TabButton
-            active={activeTab == 0 ? true : false}
-            background="transparent"
-            hoverBackground="transparent"
-            color={theme.default.color}
-            flex="1"
-            padding="10px 10px 20px 10px"
-            onClick={() => {
-              setActiveTab(0);
-            }}
-          >
-            <SpanV2 fontSize="16px" fontWeight="400" color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"}>Chats</SpanV2>
-          </TabButton>
-
-          <TabButton
-            active={activeTab == 1 ? true : false}
-            background="transparent"
-            hoverBackground="transparent"
-            color={theme.default.color}
-            flex="1"
-            padding="10px 10px 20px 10px"
-            onClick={() => {
-              setActiveTab(1);
-            }}
-          >
-            <ItemHV2 alignItems="center">
-              <SpanV2 flex="initial" fontSize="16px" fontWeight="400" color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : "inherit"} margin="0px 4px">
-                Requests
+      {activeTab == 0 || activeTab == 1 ? (
+        <ItemVV2 flex="initial">
+          <ItemHV2>
+            {/* Set active and onCLick to customize tab */}
+            <TabButton
+              active={activeTab == 0 ? true : false}
+              background="transparent"
+              hoverBackground="transparent"
+              color={theme.default.color}
+              flex="1"
+              padding="10px 10px 20px 10px"
+              onClick={() => {
+                setActiveTab(0);
+              }}
+            >
+              <SpanV2
+                fontSize="16px"
+                fontWeight="400"
+                color={activeTab === 0 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
+              >
+                Chats
               </SpanV2>
+            </TabButton>
 
-              {loadingRequests && 
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={12} spinnerColor={theme.default.secondaryColor} />
-              }
-
-              {!loadingRequests && pendingRequests > 0 && 
+            <TabButton
+              active={activeTab == 1 ? true : false}
+              background="transparent"
+              hoverBackground="transparent"
+              color={theme.default.color}
+              flex="1"
+              padding="10px 10px 20px 10px"
+              onClick={() => {
+                setActiveTab(1);
+              }}
+            >
+              <ItemHV2 alignItems="center">
                 <SpanV2
-                  background={GLOBALS.COLORS.PRIMARY_PINK}
-                  color={GLOBALS.COLORS.WHITE}
-                  padding="2px 8px"
+                  flex="initial"
+                  fontSize="16px"
+                  fontWeight="400"
+                  color={activeTab === 1 ? GLOBALS.COLORS.PRIMARY_PINK : 'inherit'}
                   margin="0px 4px"
-                  fontSize="12px"
-                  borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                 >
-                  {pendingRequests}
+                  Requests
                 </SpanV2>
-              } 
-            </ItemHV2>
-          </TabButton>
-        </ItemHV2>
-      </ItemVV2>
+
+                {loadingRequests && (
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={12}
+                    spinnerColor={theme.default.secondaryColor}
+                  />
+                )}
+
+                {!loadingRequests && pendingRequests > 0 && (
+                  <SpanV2
+                    background={GLOBALS.COLORS.PRIMARY_PINK}
+                    color={GLOBALS.COLORS.WHITE}
+                    padding="2px 8px"
+                    margin="0px 4px"
+                    fontSize="12px"
+                    borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                  >
+                    {pendingRequests}
+                  </SpanV2>
+                )}
+              </ItemHV2>
+            </TabButton>
+          </ItemHV2>
+        </ItemVV2>
+      ) : null}
 
       {/* Main Content */}
-      <ItemVV2 justifyContent="flex-start" alignItems="stretch">
-        {activeTab == 0 &&
-          <SearchBar />
-        }
-        {activeTab == 1 &&
+      <ItemVV2
+        justifyContent="flex-start"
+        alignItems="stretch"
+      >
+        {activeTab == 0 && <SearchBar />}
+        {activeTab == 1 && (
           <>
             <SpanV2
               fontWeight="700"
@@ -166,36 +198,40 @@ const ChatSidebarSection = () => {
             </SpanV2>
             <IntentFeed />
           </>
-        }
-        {activeTab == 2 &&
+        )}
+        {activeTab == 2 && (
           <>
-            <Profile profilePicture={updateProfileImage} updateProfile={updateProfile} setActiveTab={setActiveTab} />
+            <Profile
+              profilePicture={updateProfileImage}
+              updateProfile={updateProfile}
+              setActiveTab={setActiveTab}
+            />
           </>
-        }
+        )}
+        {activeTab == 3 && <NewUser />}
       </ItemVV2>
 
       {/* Footer */}
       <ItemVV2 flex="initial">
-        <ItemVV2 
+        <ItemVV2
           position="absolute"
           top="0"
           left="0"
           right="0"
-          height='1px'
+          height="1px"
           background={theme.default.secondaryBg}
-        >
-        </ItemVV2>
+        ></ItemVV2>
         <ProfileHeader setActiveTab={setActiveTab} />
       </ItemVV2>
     </ItemVV2>
   );
-}
+};
 export default ChatSidebarSection;
 
 const TabButton = styled(ButtonV2)`
-  border-bottom: 2px solid ${(props) => props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg};
+  border-bottom: 2px solid ${(props) => (props.active ? GLOBALS.COLORS.PRIMARY_PINK : props.theme.default.secondaryBg)};
   pointer: hand;
-`
+`;
 
 const Badge = styled.div`
   box-sizing: border-box;

@@ -1,56 +1,30 @@
 // React + Web3 Essentials
+import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
-import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import CloseIcon from '@material-ui/icons/Close';
-import AddIcon from '@mui/icons-material/Add';
-import Box from '@mui/material/Box';
-import FadeLoader from 'react-spinners/FadeLoader';
 import styled, { useTheme } from 'styled-components';
+import CloseIcon from '@material-ui/icons/Close';
 
-// Internal Compoonents
-import * as PushNodeClient from 'api';
-import { User } from 'api';
+// Internal Components
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
+import * as PushNodeClient from 'api';
+import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
-import { MdError } from 'react-icons/md';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import MessageFeed from '../messageFeed/messageFeed';
-import './searchBar.css';
+import { caip10ToWallet } from 'helpers/w2w';
 
-// Internal Configs
+import { Context } from 'sections/chat/ChatMainSection';
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-const TabPanel = (props: TabPanelProps): JSX.Element => {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3, padding: '0px' }}>{children}</Box>}
-    </div>
-  );
-};
-
-const SearchBar = () => {
-  // get theme
+function NewUser() {
   const theme = useTheme();
 
   const {
+    setChat,
     setSearchedUser,
     searchedUser,
     hasUserBeenSearched,
@@ -58,11 +32,14 @@ const SearchBar = () => {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-  }: AppContext = useContext<AppContext>(Context);
+  } = useContext(Context);
+
   const { chainId } = useWeb3React<Web3Provider>();
-  const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
-  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
+  const [searchedUserData, setSearchedUserData] = useState<User[]>([]);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
+  const [isInvalidAddress, setIsInvalidAddress] = useState<boolean>(false);
+  const [messagesLoading, setMessagesLoading] = useState<boolean>(false);
+  const [feeds, setFeeds] = useState<Feeds[]>([]);
   const provider = ethers.getDefaultProvider();
 
   useEffect(() => {
@@ -109,32 +86,35 @@ const SearchBar = () => {
 
   const handleSearch = async () => {
     if (!ethers.utils.isAddress(searchedUser)) {
+      setMessagesLoading(true);
       setIsLoadingSearch(true);
       let ens: string;
       try {
         const address = await provider.resolveName(searchedUser);
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
-        let filteredData: User;
+
         if (ens) {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
+          let filteredData: User;
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
             setHasUserBeenSearched(true);
-            setFilteredUserData([filteredData]);
-          } else {
-            setHasUserBeenSearched(true);
             setUserShouldBeSearched(true);
-            setActiveTab(3);
+            setActiveTab(0);
+          } else {
+            const displayUser = displayDefaultUser({ caip10 });
+            setFeed(displayUser);
+            setHasUserBeenSearched(true);
           }
         } else {
           setIsInvalidAddress(true);
-          setFilteredUserData([]);
+          setSearchedUserData([]);
           setHasUserBeenSearched(true);
         }
       } catch (err) {
         setIsInvalidAddress(true);
-        setFilteredUserData([]);
+        setSearchedUserData([]);
         setHasUserBeenSearched(true);
       }
     } else {
@@ -142,31 +122,68 @@ const SearchBar = () => {
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
       let filteredData: User;
       setHasUserBeenSearched(true);
+
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          setFilteredUserData([filteredData]);
+          setHasUserBeenSearched(true);
+          setUserShouldBeSearched(true);
+          setActiveTab(0);
         }
         // User is not in the protocol. Create new user
         else {
           if (ethers.utils.isAddress(searchedUser)) {
+            const displayUser = displayDefaultUser({ caip10 });
+            setFeed(displayUser);
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
-            setActiveTab(3);
+            setMessagesLoading(false);
           } else {
             setIsInvalidAddress(true);
-            setFilteredUserData([]);
+            setSearchedUserData([]);
           }
         }
       } else {
-        setFilteredUserData([]);
+        setSearchedUserData([]);
       }
     }
     setIsLoadingSearch(false);
+    setMessagesLoading(false);
   };
 
+  function setFeed(displayUser: User) {
+    let feed: Feeds;
+    feed = {
+      msg: {
+        name: displayUser.wallets.split(',')[0].toString(),
+        profilePicture: displayUser.profilePicture,
+        lastMessage: null,
+        timestamp: null,
+        messageType: null,
+        signature: null,
+        signatureType: null,
+        encType: null,
+        encryptedSecret: null,
+        fromDID: null,
+        toDID: null,
+      },
+      wallets: displayUser.wallets,
+      did: displayUser.did,
+      threadhash: null,
+      profilePicture: displayUser.profilePicture,
+      about: displayUser.about,
+      intent: null,
+      intentSentBy: null,
+      intentTimestamp: null,
+      publicKey: displayUser.publicKey,
+      combinedDID: null,
+      cid: null,
+    };
+    setFeeds([feed]);
+  }
+
   const clearInput = () => {
-    setFilteredUserData([]);
+    setSearchedUserData([]);
+    setFeeds([]);
     setSearchedUser('');
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
@@ -178,7 +195,29 @@ const SearchBar = () => {
       justifyContent="flex-start"
     >
       <ItemHV2
-        justifyContent="space-between"
+        justifyContent="flex-start"
+        width="100%"
+        flex="initial"
+        margin="20px 0px 0px 0px"
+        padding="0px 0px 14px 0px"
+        style={{ borderBottom: '2px solid #D53893' }}
+      >
+        <ImageV2
+          src={ArrowLeft}
+          height="18px"
+          width="22px"
+          style={{ cursor: 'pointer' }}
+          onClick={() => setActiveTab(0)}
+        />
+        <SpanV2
+          color="#D53893"
+          margin="0px 0px 0px 7px"
+        >
+          New Chat
+        </SpanV2>
+      </ItemHV2>
+      <ItemHV2
+        justifyContent="center"
         width="100%"
         flex="initial"
       >
@@ -196,7 +235,7 @@ const SearchBar = () => {
               alignItems="flex-end"
               width="24px"
               height="24px"
-              top="22px"
+              top="32px"
               right="34px"
             >
               <CloseIcon onClick={clearInput} />
@@ -208,7 +247,7 @@ const SearchBar = () => {
             alignItems="flex-end"
             width="24px"
             height="24px"
-            top="22px"
+            top="32px"
             right="16px"
           >
             {isLoadingSearch && (
@@ -227,57 +266,72 @@ const SearchBar = () => {
             )}
           </ItemVV2>
         </SearchBarContent>
-
-        <ItemVV2
-          flex="initial"
-          margin="0px 0px 0px 10px"
-          alignItems="center"
-          width="48px"
-          height="48px"
-          top="10px"
-          right="0px"
-        >
-          <ButtonV2
-            alignSelf="stretch"
-            background="#D53893"
-            hoverBackground="transparent"
-            borderRadius="50%"
-            onClick={() => setActiveTab(3)}
-          >
-            <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
-          </ButtonV2>
-        </ItemVV2>
       </ItemHV2>
-      <ItemVV2 justifyContent="flex-start">
-        <MessageFeed
-          hasUserBeenSearched={hasUserBeenSearched}
-          filteredUserData={filteredUserData}
-          isInvalidAddress={isInValidAddress}
-        />
+      <ItemVV2
+        alignItems="stretch"
+        justifyContent="flex-start"
+      >
+        {messagesLoading ? (
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
+        ) : (
+          <>
+            {feeds?.map((feed: Feeds, i) => {
+              return (
+                <ProfileCard
+                  padding="10px"
+                  background={theme.chat.snapFocusBg}
+                  onClick={() => setChat(feed)}
+                  key={feed.threadhash || i}
+                >
+                  <ImageV2
+                    src={feed.profilePicture}
+                    alt="UserProfile"
+                    height="48px"
+                    width="48px"
+                    borderRadius="50%"
+                    margin="0px 13px 0px 0px"
+                  />
+                  <SpanV2
+                    fontSize="17px"
+                    fontWeight="500"
+                    color={theme.default.color}
+                  >
+                    {caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(0, 8) +
+                      '...' +
+                      caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(-7)}
+                  </SpanV2>
+                </ProfileCard>
+              );
+            })}
+          </>
+        )}
       </ItemVV2>
     </ItemVV2>
   );
-};
+}
+
+const ProfileCard = styled(ItemHV2)`
+  min-height: 73px;
+  flex: initial;
+  justify-content: flex-start;
+  position: relative;
+  border-radius: 16px;
+  margin-bottom: 10px;
+  left: 0;
+  right: 0;
+  &:hover {
+    background-color: ${(props) => props.background || 'transparent'};
+    cursor: pointer;
+  }
+`;
 
 const SearchBarContent = styled.form`
   position: relative;
   display: flex;
   flex: 1;
-`;
-
-const Close = styled(CloseIcon)`
-  position: absolute;
-  top: 23px;
-  right: 55px;
-  cursor: pointer;
-`;
-
-const SearchLoader = styled.div`
-  position: absolute;
-  top: 20px;
-  right: 15px;
-  height: 25px;
-  width: 20px;
 `;
 
 const Input = styled.input`
@@ -287,7 +341,7 @@ const Input = styled.input`
   width: 0;
   height: 48px;
   padding: 13px 60px 13px 21px;
-  margin: 10px 0px 17px 0px;
+  margin: 20px 0px 17px 0px;
   border-radius: 99px;
   border: 1px solid transparent !important;
   background-color: ${(props) => props.theme.chat.snapFocusBg};
@@ -305,4 +359,4 @@ const Input = styled.input`
   }
 `;
 
-export default SearchBar;
+export default NewUser;
