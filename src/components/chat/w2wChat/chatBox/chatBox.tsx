@@ -424,26 +424,27 @@ const ChatBox = (): JSX.Element => {
     }
   };
   async function resolveThreadhash(): Promise<void> {
-    // setIsLoading(true);
+    setLoading(true);
     let getIntent;
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    if (getIntent === undefined) {
+    // if (getIntent === undefined) {
+    //   let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+    //   intents = await decryptFeeds({ feeds: intents, connectedUser });
+    //   console.log(intents)
+    //   setPendingRequests(intents?.length);
+    //   setReceivedIntents(intents);
+    // } else {
       let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+      await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
       intents = await decryptFeeds({ feeds: intents, connectedUser });
-      console.log(intents)
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
-    } else {
-      let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
-    }
-    // setIsLoading(false);
+    // }
+    setLoading(false);
   }
 
   useEffect(() => {
