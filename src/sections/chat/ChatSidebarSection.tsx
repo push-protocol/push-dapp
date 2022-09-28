@@ -18,6 +18,7 @@ import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
+import { Feeds } from 'api';
 import 'components/chat/w2wChat/sidebar/sidebar.css';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
@@ -36,7 +37,7 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests ,setPendingRequests} = useContext(Context);
+  const { connectedUser, pendingRequests ,setPendingRequests,receivedIntents,setReceivedIntents} = useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -47,45 +48,26 @@ const ChatSidebarSection = () => {
     setUserProfileImage(image);
   };
 
-  // See if there are pending requests and update requests tab
+  // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
-    // This will run when the page first loads and whenever the title changes
-    getPendingRequests(true);
+    // This will run when the page first loads 
+    resolveThreadhash();
   }, []);
 
-  // Keep on updating after every few seconds
-  useEffect(() => {
-    if (!loadingRequests) {
-      //setup timer
-      const delay = 5;
-      let timer = setInterval(() => getPendingRequests(false), delay * 1000);
-
-      // this will clear Timeout
-      // when component unmount like in willComponentUnmount
-      // and show will not change to true
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-    
-  }, [loadingRequests]);
 
   async function resolveThreadhash(): Promise<void> {
-    setIsLoading(true);
     let getIntent;
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       console.log("in here")
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     console.log(getIntent);
-    // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(',')[0];
     if (getIntent!== undefined) {
       let intents: Feeds[] = getIntent.body;
       intents = await decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
-      setIsLoading(false);
+      setLoadingRequests(false);
     } 
     else {
       await fetchIntentApi();
@@ -93,6 +75,7 @@ const ChatSidebarSection = () => {
   }
 
   const fetchIntentApi = async(): Promise<Feeds[]> => {
+    // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     console.log(intents)
@@ -105,28 +88,27 @@ const ChatSidebarSection = () => {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     }
-    setIsLoading(false);
+    setLoadingRequests(false);
     return intents;
   }
     
-  // Get pending requests
-  const getPendingRequests = async (firstLoad) => {
-    let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-      // getIntent = await intitializeDb<string>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+  // Keep on updating after every few seconds
+  useEffect(() => {
+    if (!loadingRequests) {
+      //setup timer
+      const delay = 5;
+      let timer = setInterval(() => fetchIntentApi(), delay * 1000);
+
+      // this will clear Timeout
+      // when component unmount like in willComponentUnmount
+      // and show will not change to true
+      return () => {
+        clearTimeout(timer);
+      };
     }
+    
+  }, [loadingRequests]);
 
-    // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-    intents = await decryptFeeds({ feeds: intents, connectedUser });
-
-    setPendingRequests(intents?.length);
-
-    if (firstLoad) {
-      setLoadingRequests(false);
-    }
-  } 
 
   // RENDER
   return (
@@ -203,7 +185,7 @@ const ChatSidebarSection = () => {
             >
               REQUESTS
             </SpanV2>
-            <IntentFeed />
+            <IntentFeed isLoading={loadingRequests}/>
           </>
         }
         {activeTab == 2 &&

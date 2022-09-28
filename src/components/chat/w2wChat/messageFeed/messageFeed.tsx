@@ -64,17 +64,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
   };
 
-  const fetchInboxApi = async(): Promise<Feeds[]> => {
+  const fetchInboxApi = async (): Promise<Feeds[]> => {
     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }),inboxes, 'did');
+    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
     inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    if(feeds !== inboxes)
-    {
-    setFeeds(inboxes);
-    setInbox(inboxes);
+    if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+      setFeeds(inboxes);
+      setInbox(inboxes);
     }
     return inboxes;
-  }
+  };
 
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,

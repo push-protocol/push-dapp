@@ -1,31 +1,19 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 // @ts-ignore
-import { Web3Provider } from 'ethers/providers';
-import { useQuery } from 'react-query';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api';
 import { Feeds } from 'api';
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { DID } from 'dids';
-import CryptoHelper from 'helpers/CryptoHelper';
-import { caip10ToWallet } from 'helpers/w2w';
-import * as w2wHelper from 'helpers/w2w/';
-import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from '../w2wUtils';
 import './intentFeed.css';
 
-// Internal Configs
+
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -42,91 +30,14 @@ const style = {
   p: 4,
 };
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return (
-    <MuiAlert
-      elevation={6}
-      ref={ref}
-      variant="filled"
-      {...props}
-    />
-  );
-});
-
-const IntentFeed = (): JSX.Element => {
+const IntentFeed = ({isLoading}): JSX.Element => {
   const {
     setChat,
-    connectedUser,
-    intents,
     receivedIntents,
-    setReceivedIntents,
-    setPendingRequests,
-    currentChat
   }: AppContext = useContext<AppContext>(Context);
-  const intentToast = useToast();
-  const [stopApi, setStopApi] = useState<boolean>(true);
-  const { chainId, account } = useWeb3React<Web3Provider>();
-  const [isLoading, setIsLoading] = useState<boolean>();
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
   
-  // async function resolveThreadhash(): Promise<void> {
-  //   setIsLoading(true);
-  //   let getIntent;
-  //   if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-  //     console.log("in here")
-  //     getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
-  //   }
-  //   console.log(getIntent);
-  //   // If the user is not registered in the protocol yet, his did will be his wallet address
-  //   const didOrWallet: string = connectedUser.wallets.split(',')[0];
-  //   if (getIntent!== undefined) {
-  //     let intents: Feeds[] = getIntent.body;
-  //     intents = await decryptFeeds({ feeds: intents, connectedUser });
-  //     setPendingRequests(intents?.length);
-  //     setReceivedIntents(intents);
-  //     setIsLoading(false);
-  //   } 
-  //   else {
-  //     await fetchIntentApi();
-  //   }
-  // }
 
-  // const fetchIntentApi = async(): Promise<Feeds[]> => {
-  //   const didOrWallet: string = connectedUser.wallets.split(',')[0];
-  //   let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-  //   console.log(intents)
-  //   await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
-  //   intents = await decryptFeeds({ feeds: intents, connectedUser });
-  //   if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-  //     console.log("in fetch intent api")
-  //     console.log(receivedIntents)
-  //     console.log(intents);
-  //     setPendingRequests(intents?.length);
-  //     setReceivedIntents(intents);
-  //   }
-  //   setIsLoading(false);
-  //   return intents;
-  // }
- 
-  // useEffect(() => {
-  //   resolveThreadhash();
-  // }, [intents]);
-
-  useQuery('intent', fetchIntentApi, {
-    enabled: stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
-  
   return (
     <ItemVV2
       alignSelf="stretch"
