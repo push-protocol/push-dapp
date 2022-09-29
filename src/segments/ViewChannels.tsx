@@ -256,7 +256,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             channel.channel !== ZERO_ADDRESS && (
               <>
                 <ViewChannelItems key={channel.channel} self="stretch">
-                  {((channelsNetworkId == appConfig.coreContractChain) || (channelsNetworkId == channel.alias_blockchain_id)) &&
+                  {((channelsNetworkId == appConfig.coreContractChain) || (channelsNetworkId == channel.alias_blockchain_id || channel.alias_blockchain_id == "80001")) &&
                     <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
                   }
                 </ViewChannelItems>
@@ -362,7 +362,7 @@ const ScrollItem = styled(Item)`
   
   flex: 1;
   padding:  5px 20px 10px 20px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &::-webkit-scrollbar-track {
     background-color: ${props => props.theme.scrollBg};

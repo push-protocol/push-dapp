@@ -660,7 +660,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 }
                 {channelObject.alias_address != null && channelObject.alias_address != "NULL" && appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) &&
                   <Span padding="0 0 0 5px">
-                    <Image src={`./svg/Polygon.svg`} alt="Ethereum" width="20px" height="20px" />
+                    <Image src={`./svg/Polygon.svg`} alt="Polygon" width="20px" height="20px" />
                   </Span>
                 }
               </Span>

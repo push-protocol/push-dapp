@@ -5,10 +5,8 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'rea
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
-import Typography from '@mui/material/Typography';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
@@ -23,9 +21,7 @@ import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'a
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
-import { DID } from 'dids';
 import * as w2wHelper from 'helpers/w2w/';
-import * as DIDHelper from 'helpers/w2w/did';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
@@ -43,7 +39,6 @@ import './chatBox.css';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
-import ImageClipper from 'primaries/ImageClipper';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -78,7 +73,6 @@ const ChatBox = (): JSX.Element => {
     setBlockedLoading
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
-  const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
   const [showEmojis, setShowEmojis] = useState<boolean>(false)
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>()
   const [Loading, setLoading] = useState<boolean>(true)
@@ -86,13 +80,11 @@ const ChatBox = (): JSX.Element => {
   const [messages, setMessages] = useState<MessageIPFSWithCID[]>([])
   const [imageSource, setImageSource] = useState<string>('')
   const [filesUploading, setFileUploading] = useState<boolean>(false)
-  const imageInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false)
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false)
   const [SnackbarText, setSnackbarText] = useState<string>('')
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('')
-  const [showOption, setShowOption] = useState<boolean>(false)
   const provider = ethers.getDefaultProvider()
   const chatBoxToast = useToast();
   const theme = useTheme();
@@ -422,33 +414,23 @@ const ChatBox = (): JSX.Element => {
     }
   };
   async function resolveThreadhash(): Promise<void> {
-    // setIsLoading(true);
+    setLoading(true);
     let getIntent;
     if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    if (getIntent === undefined) {
-      let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
-      console.log(intents)
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
-    } else {
-      let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
-    }
-    // setIsLoading(false);
+    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
+    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    setPendingRequests(intents?.length);
+    setReceivedIntents(intents);
+    setLoading(false);
   }
 
-  useEffect(() => {
-    resolveThreadhash();
-  }, [intents]);
+
   async function ApproveIntent(status: string): Promise<void> {
-    // setIsLoading(true);
     const { createdUser } = await createUserIfNecessary();
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
     const updatedIntent: string = await approveIntent(currentChat.intentSentBy, createdUser.wallets.split(',')[0], status, '1', 'sigType');
@@ -487,9 +469,7 @@ const ChatBox = (): JSX.Element => {
     }
     setActiveTab(0);
     await resolveThreadhash();
-   
 
-    // setIsLoading(false);
   }
   const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
     try {
