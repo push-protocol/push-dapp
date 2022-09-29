@@ -1,4 +1,3 @@
-
 // React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
 
@@ -8,12 +7,16 @@ import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
+import { useWeb3React } from '@web3-react/core';
 import { Feeds, User } from 'api';
-import ChatSnap from "components/chat/chatsnap/ChatSnap";
+import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ethers } from 'ethers';
+import { walletToCAIP10 } from 'helpers/w2w';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
 import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
 import Loader from '../Loader/Loader';
@@ -21,11 +24,9 @@ import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
-import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
-import { walletToCAIP10 } from 'helpers/w2w';
 
 // Internal Configs
+import GLOBALS from 'config/Globals';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -36,18 +37,36 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox }: AppContext = useContext<AppContext>(Context);
+  const {
+    setChat,
+    connectedUser,
+    setIntents,
+    setInbox,
+    inbox,
+    setHasUserBeenSearched,
+    setSearchedUser,
+  }: AppContext = useContext<AppContext>(Context);
+  const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [isSameUser, setIsSameUser] = useState<boolean>(false);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
-  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>()
+  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
@@ -55,26 +74,23 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         setFeeds(inboxes);
         setInbox(inboxes);
         return inboxes;
-      } 
-      else {
-        console.log()
+      } else {
         let inboxes: Feeds[] = await fetchInboxApi();
         return inboxes;
       }
     }
   };
 
-  const fetchInboxApi = async(): Promise<Feeds[]> => {
+  const fetchInboxApi = async (): Promise<Feeds[]> => {
     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }),inboxes, 'did');
+    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
     inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    if(feeds.length !== inboxes.length)
-    {
-    setFeeds(inboxes);
-    setInbox(inboxes);
+    if (feeds.length !== inboxes.length) {
+      setFeeds(inboxes);
+      setInbox(inboxes);
     }
     return inboxes;
-  }
+  };
 
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
@@ -107,7 +123,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInboxAndIntents = async (): Promise<void> => {
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
       await getInbox();
       setIntents(await fetchIntent({ userId: walletToCAIP10({ account, chainId }) }));
     }
@@ -146,7 +171,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   fromDID: null,
                   fromCAIP10: null,
                   toDID: null,
-                  toCAIP10: null
+                  toCAIP10: null,
                 },
                 wallets: user.wallets,
                 did: user.did,
@@ -165,7 +190,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           }
         } else {
           if (props.isInvalidAddress) {
-              messageFeedToast.showMessageToast({
+            messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: 'Invalid Address',
               toastType: 'ERROR',
@@ -187,16 +212,21 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   return (
-    <ItemVV2 alignItems="flex-start" justifyContent="flex-start">
-      <SpanV2
-        fontWeight="700"
-        fontSize="12px"
-        textAlign="start"
-        margin="10px 0 0 0"
-        color={theme.default.secondaryColor}
-      >
-        CHATS
-      </SpanV2>
+    <ItemVV2
+      alignItems="flex-start"
+      justifyContent="flex-start"
+    >
+      {activeTab !== 3 && (
+        <SpanV2
+          fontWeight="700"
+          fontSize="12px"
+          textAlign="start"
+          margin="10px 0 0 0"
+          color={theme.default.secondaryColor}
+        >
+          CHATS
+        </SpanV2>
+      )}
       <UserChats flexFlow="column">
         {messagesLoading ? (
           <LoaderSpinner
@@ -206,13 +236,15 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         ) : (
           <>
             {!feeds?.length && isSameUser ? (
-              <InfoMessage>You can&apos;t send intent to yourself</InfoMessage>
+              <InfoMessage>You can&apos;t send chat request to yourself</InfoMessage>
             ) : !feeds?.length && isInValidAddress ? (
               <InfoMessage>Invalid Address</InfoMessage>
             ) : !feeds?.length && !messagesLoading ? (
-              <EmptyConnection>
-                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
-              </EmptyConnection>
+              activeTab !== 3 && (
+                <EmptyConnection>
+                  Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+                </EmptyConnection>
+              )
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
                 // To Test
@@ -227,6 +259,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 //   flex="initial"
                 // >
                 // </ItemVV2>
+
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"
@@ -235,17 +268,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   <ChatSnap
                     pfp={feed.profilePicture}
                     username={feed.msg.name}
-                    chatSnapMsg={
-                      {
-                        type: feed.msg.messageType,
-                        message: feed.msg.lastMessage,
-                      }
-                    }
+                    chatSnapMsg={{
+                      type: feed.msg.messageType,
+                      message: feed.msg.lastMessage,
+                    }}
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
                     onClick={(): void => {
                       setChat(feed);
-                      setSelectedChatSnap(feed.threadhash)
+                      setSelectedChatSnap(feed.threadhash);
+                      setSearchedUser('');
+                      setHasUserBeenSearched(false);
                     }}
                   />
                 </ItemVV2>
@@ -274,14 +307,17 @@ const EmptyConnection = styled.div`
   text-align: center;
   color: #657795;
   font-size: 15px;
-  margin-top:25px;
+  margin-top: 25px;
 `;
 
-const InfoMessage = styled.p`
+const InfoMessage = styled(ItemVV2)`
+  justify-content: flex-start;
   position: relative;
   text-align: center;
-  width: 80%;
-  background: #d2cfcf;
+  flex: initial;
+  color: ${(props) => props.theme.default.secondaryColor};
+  background: ${(props) => props.theme.default.secondaryBg};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL};
   padding: 10px;
   margin: 0;
 `;
