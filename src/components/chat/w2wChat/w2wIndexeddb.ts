@@ -56,8 +56,6 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
     const newItem = {
       body: chatMesage
     };
-    console.log("in add data")
-    console.log(newItem)
     if (dbName === 'Inbox' || dbName === 'Intent') {
       newItem['did'] = key;
     }
@@ -66,15 +64,12 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
     }
     const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
     const objectStore: IDBObjectStore = tx.objectStore(dbName);
-    console.log(objectStore)
     const query = objectStore.put(newItem);
     
     query.onsuccess = (e: any) => {
-      console.log(query);
       return resolve(query.result);
     };
     query.onerror = (e: any) => {
-      console.log(e.target.error, dbName);
       return reject(e.target.error);
     };
     tx.oncomplete = () => {

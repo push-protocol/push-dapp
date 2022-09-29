@@ -154,37 +154,52 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
             const desiredUser = inbox.filter((inb) => inb.did === user.did);
+
+
+            //the following code checks that User already present in the Intent or not
+            const didOrWallet: string = connectedUser.wallets.split(',')[0];
+            let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+            intents = await decryptFeeds({ feeds: intents, connectedUser });
+            console.log("Intent",intents)
+            const IntentUser = intents.filter((userExist) => userExist.did === user.did);
+
             if (desiredUser.length) {
               feed = desiredUser[0];
             } else {
-              feed = {
-                msg: {
-                  name: user.wallets.split(',')[0].toString(),
+              if(IntentUser.length){
+                feed = IntentUser[0];
+              }else{
+                feed = {
+                  msg: {
+                    name: user.wallets.split(',')[0].toString(),
+                    profilePicture: user.profilePicture,
+                    lastMessage: null,
+                    timestamp: null,
+                    messageType: null,
+                    signature: null,
+                    signatureType: null,
+                    encType: null,
+                    encryptedSecret: null,
+                    fromDID: null,
+                    fromCAIP10: null,
+                    toDID: null,
+                    toCAIP10: null,
+                  },
+                  wallets: user.wallets,
+                  did: user.did,
+                  threadhash: null,
                   profilePicture: user.profilePicture,
-                  lastMessage: null,
-                  timestamp: null,
-                  messageType: null,
-                  signature: null,
-                  signatureType: null,
-                  encType: null,
-                  encryptedSecret: null,
-                  fromDID: null,
-                  fromCAIP10: null,
-                  toDID: null,
-                  toCAIP10: null,
-                },
-                wallets: user.wallets,
-                did: user.did,
-                threadhash: null,
-                profilePicture: user.profilePicture,
-                about: user.about,
-                intent: null,
-                intentSentBy: null,
-                intentTimestamp: null,
-                publicKey: user.publicKey,
-                combinedDID: null,
-                cid: null,
-              };
+                  about: user.about,
+                  intent: null,
+                  intentSentBy: null,
+                  intentTimestamp: null,
+                  publicKey: user.publicKey,
+                  combinedDID: null,
+                  cid: null,
+                };
+              }
+
+              
             }
             setFeeds([feed]);
           }
