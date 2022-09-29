@@ -104,8 +104,6 @@ const useToast = (
       },
     }
 
-    console.log("toastId", toastId.current);
-
     if(!isLoaderToastShown){
       // render a new toast
       toastId.current = toast(
