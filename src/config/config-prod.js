@@ -23,7 +23,7 @@ export const config = {
    */
   allowedNetworks: [
     1, //for ethereum mainnet
-    // 137, //for polygon mainnet
+    137, //for polygon mainnet
   ],
 
   /**

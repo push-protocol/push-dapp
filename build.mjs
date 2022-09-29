@@ -52,10 +52,11 @@ const prepForDeployment = async (appEnv) => {
 
   // Test if app dev is passed, else fail
   let indexAppEnv = appEnv;
-  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w' && appEnv !== 'alpha' || appEnv !== 'dev_push' && appEnv !== 'staging_push' && appEnv !== 'prod_push' && appEnv !== 'w2w_push' && appEnv !== 'alpha_push') {
+  if (appEnv !== 'dev' && appEnv !== 'staging' && appEnv !== 'prod' && appEnv !== 'w2w' && appEnv !== 'alpha') {
     console.log(
       chalk.red('App Environment not set correctly... can only be dev, staging, prod, alpha or w2w. Please check and retry'), 
     );
+    process.exit(1);
   }
 
   if (appEnv === 'w2w_push') {
