@@ -296,6 +296,25 @@ const ChatBox = (): JSX.Element => {
     }
   }, [currentChat]);
 
+  const fetchInboxApi = async (): Promise<Feeds[]> => {
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
+      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+        setInbox(inboxes);
+      return inboxes;
+    }
+  };
+
   const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true);
     let msg: MessageIPFSWithCID;
@@ -388,6 +407,7 @@ const ChatBox = (): JSX.Element => {
             signatureArmored: savedMsg.signature,
           });
         }
+        await fetchInboxApi();
         setMessages([...messages, savedMsg]);
       }
     } catch (error) {
