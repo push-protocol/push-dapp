@@ -16,8 +16,8 @@ import { ethers } from 'ethers';
 import { walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import { intitializeDb } from '../w2wIndexeddb';
 import { MdError } from 'react-icons/md';
+import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './messageFeed.css';
 
@@ -142,6 +142,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
             setIsSameUser(true);
+            messageFeedToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: "You can't send intent to yourself",
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
             setFeeds([]);
           } else {
             // When searching as of now the search will always result in only one user being displayed.
@@ -196,7 +207,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 />
               ),
             });
-            setIsInvalidAddress(true);
           }
           setFeeds([]);
         }
@@ -230,16 +240,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && isSameUser ? (
-              <InfoMessage>You can&apos;t send chat request to yourself</InfoMessage>
-            ) : !feeds?.length && isInValidAddress ? (
-              <InfoMessage>Invalid Address</InfoMessage>
-            ) : !feeds?.length && !messagesLoading ? (
-              activeTab !== 3 && (
-                <EmptyConnection>
-                  Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
-                </EmptyConnection>
-              )
+            {!feeds?.length && !messagesLoading ? (
+              <EmptyConnection>
+                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+              </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
                 // To Test
