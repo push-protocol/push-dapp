@@ -824,7 +824,7 @@ const UserJourneySteps = ({ darkMode }) => {
               bg={darkMode ? themeDark.dynamicTutsButtonBg : themeLight.dynamicTutsButtonBg}
               color={darkMode ? themeDark.dynamicTutsButtonColor : themeLight.dynamicTutsButtonColor}
               onClick={() => {
-                window.open('https://docs.epns.io/', '_blank');
+                window.open('https://docs.push.org', '_blank');
                 // dispatch(incrementStepIndex());
                 dispatch(setRun(false));
                 dispatch(setIndex(0));

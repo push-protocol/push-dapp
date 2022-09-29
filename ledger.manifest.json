@@ -2,7 +2,7 @@
     "id": "EPNS",
     "name": "EPNS",
     "url": "https://platform.apps.ledger.com/app/dapp-browser?dappName=EPNS&nanoApp=EPNS&url=https%3A%2F%2Fapp.epns.io%2F%3Fembed%3Dtrue",
-    "homepageUrl": "https://epns.io/",
+    "homepageUrl": "https://push.org/",
     "icon": "https://backend-dev.epns.io/assets/epnslogo.png",
     "platform": "all",
     "apiVersion": "0.0.1",

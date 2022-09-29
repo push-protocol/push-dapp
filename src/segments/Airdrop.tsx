@@ -136,7 +136,7 @@ function Airdrop() {
             </Para>
             <Para margin="10px 0px 0px 20px">
               - Used our dApp on or before <B>20th March, 2021</B>:{' '}
-              <AMod href="https://app.epns.io" target="_blank" title="Visit our dApp">
+              <AMod href="https://app.push.org" target="_blank" title="Visit our dApp">
                 Push (EPNS) dApp
               </AMod>
             </Para>
