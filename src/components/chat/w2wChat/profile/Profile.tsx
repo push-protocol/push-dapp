@@ -20,7 +20,7 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
 
   return (
     <>
-      <Tooltip title="Profile" placement="top-start">
+      {/* <Tooltip title="Profile" placement="top-start"> */}
         <WalletDetailsContainer direction="row" spacing={2} onClick={(): void => setActiveTab(2)}>
           <Avatar alt="Profile Image" src={connectedUser.profilePicture} />
           <SpanV2 color={theme.default.secondaryColor} size="16px" weight="400">
@@ -29,10 +29,10 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
               caip10ToWallet(connectedUser.wallets).slice(-7)}
           </SpanV2>
         </WalletDetailsContainer>
-      </Tooltip>
-      <IconButton aria-label="more">
+      {/* </Tooltip> */}
+      {/* <IconButton aria-label="more">
         <MoreVertIcon />
-      </IconButton>
+      </IconButton> */}
     </>
   )
 }
@@ -42,9 +42,6 @@ const WalletDetailsContainer = styled(Stack)`
   align-items: center;
   displaytext-align: center;
   height: 100%;
-  &:hover {
-    cursor: pointer;
-  }
 `
 const DisplayText = styled(Typography)`
   && {

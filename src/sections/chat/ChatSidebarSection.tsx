@@ -37,7 +37,8 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } = useContext(Context);
+  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
+    useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -50,48 +51,61 @@ const ChatSidebarSection = () => {
 
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
-    // This will run when the page first loads 
+    // This will run when the page first loads
     resolveThreadhash();
   }, []);
 
-
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-      console.log("in here")
-      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+    if (
+      !(
+        connectedUser.allowedNumMsg === 0 &&
+        connectedUser.numMsg === 0 &&
+        connectedUser.about === '' &&
+        connectedUser.signature === '' &&
+        connectedUser.encryptedPrivateKey === '' &&
+        connectedUser.publicKey === ''
+      )
+    ) {
+      console.log('in here');
+      getIntent = await intitializeDb<string>(
+        'Read',
+        'Intent',
+        w2wHelper.walletToCAIP10({ account, chainId }),
+        '',
+        'did'
+      );
     }
     console.log(getIntent);
-    if (getIntent!== undefined) {
+    if (getIntent !== undefined) {
       let intents: Feeds[] = getIntent.body;
       intents = await decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
       setLoadingRequests(false);
-    } 
-    else {
+    } else {
       await fetchIntentApi();
     }
   }
 
-  const fetchIntentApi = async(): Promise<Feeds[]> => {
+  const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-    console.log(intents)
-    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
+    console.log(intents);
+    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
-    if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-      console.log("in fetch intent api")
-      console.log(receivedIntents)
+    if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+      console.log('in fetch intent api');
+      console.log(receivedIntents);
       console.log(intents);
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     }
     setLoadingRequests(false);
     return intents;
-  }
-    
+  };
+
   // Keep on updating after every few seconds
   useEffect(() => {
     if (!loadingRequests) {
@@ -201,7 +215,7 @@ const ChatSidebarSection = () => {
             >
               REQUESTS
             </SpanV2>
-            <IntentFeed isLoading={loadingRequests}/>
+            <IntentFeed isLoading={loadingRequests} />
           </>
         )}
         {activeTab == 2 && (
@@ -226,7 +240,13 @@ const ChatSidebarSection = () => {
           height="1px"
           background={theme.default.secondaryBg}
         ></ItemVV2>
-        <ProfileHeader setActiveTab={setActiveTab} />
+        <ItemHV2
+          justifyContent="flext-start"
+          margin="15px 0px 5px 0px"
+          padding="0px 10px"
+        >
+          <ProfileHeader setActiveTab={setActiveTab} />
+        </ItemHV2>
       </ItemVV2>
     </ItemVV2>
   );
