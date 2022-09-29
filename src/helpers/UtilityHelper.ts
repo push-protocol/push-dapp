@@ -11,6 +11,16 @@ const UtilityHelper = {
   },
 };
 
+export const MaskedPolygonChannels = {
+  '0x2dbf5aFead4759E6151590E4a8F6cD596B7044F8': 1,
+  '0xe5b06bfd663C94005B8b159Cd320Fd7976549f9b': 1,
+  '0x46b676303ebC5699BF47e416677A57A89c70a015': 1,
+  '0x68e9DaC7f8fa2e5F6C823Df82c91AC0F132Ec7E4': 1,
+  '0x57f61667Ec26A23C47c77ab1B39c983BE3Bb7855': 1,
+  '0xC2f41b3a1FF28Fd2A6EeE76EE12e51482fcFd11F': 1,
+  '0x9bE426C8A28ee7Ca935b5C27a4bc2395640c9378': 1
+ }
+
 export const isLengthValid = (data: string, len: number): boolean => {
   return data.length <= len;
 };
