@@ -1,30 +1,19 @@
 // React + Web3 Essentials
-import { useWeb3React } from '@web3-react/core';
 // @ts-ignore
-import { Web3Provider } from 'ethers/providers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import styled from 'styled-components';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api';
 import { Feeds } from 'api';
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { DID } from 'dids';
-import CryptoHelper from 'helpers/CryptoHelper';
-import { caip10ToWallet } from 'helpers/w2w';
-import * as w2wHelper from 'helpers/w2w/';
-import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from '../w2wUtils';
 import './intentFeed.css';
 
-// Internal Configs
+
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,51 +30,13 @@ const style = {
   p: 4,
 };
 
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
-  return (
-    <MuiAlert
-      elevation={6}
-      ref={ref}
-      variant="filled"
-      {...props}
-    />
-  );
-});
-
-const IntentFeed = (): JSX.Element => {
+const IntentFeed = ({isLoading}): JSX.Element => {
   const {
     setChat,
-    connectedUser,
-    intents,
     receivedIntents,
-    setReceivedIntents,
-    setPendingRequests,
-    currentChat
   }: AppContext = useContext<AppContext>(Context);
-  const intentToast = useToast();
-  const { chainId, account } = useWeb3React<Web3Provider>();
-  const [isLoading, setIsLoading] = useState<boolean>();
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
   
-  async function resolveThreadhash(): Promise<void> {
-    setIsLoading(true);
-    let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
-      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
-    }
-
-    // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-    intents = await decryptFeeds({ feeds: intents, connectedUser });
-    setPendingRequests(intents?.length);
-    setReceivedIntents(intents);
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    resolveThreadhash();
-  }, [intents]);
 
   return (
     <ItemVV2
