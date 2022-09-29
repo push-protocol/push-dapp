@@ -452,7 +452,6 @@ const ChatBox = (): JSX.Element => {
     if (getIntent === undefined) {
       let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
       intents = await decryptFeeds({ feeds: intents, connectedUser });
-      console.log(intents)
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     } else {
@@ -472,7 +471,6 @@ const ChatBox = (): JSX.Element => {
     const { createdUser } = await createUserIfNecessary();
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
     const updatedIntent: string = await approveIntent(currentChat.intentSentBy, createdUser.wallets.split(',')[0], status, '1', 'sigType');
-    console.log(currentChat)
     let activeChat = currentChat;
     activeChat.intent = updatedIntent
     setChat(activeChat)

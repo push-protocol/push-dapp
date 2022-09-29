@@ -134,14 +134,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       )
     ) {
       await getInbox();
-      // setIntents(await fetchIntent({ userId: walletToCAIP10({ account, chainId }) }));
+      setIntents(await fetchIntent({ userId: walletToCAIP10({ account, chainId }) }));
     }
     setMessagesLoading(false);
   };
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      console.log("in here update inbox")
       updateInboxAndIntents();
     } else {
       const searchFn = async (): Promise<void> => {
