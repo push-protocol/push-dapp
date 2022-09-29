@@ -122,7 +122,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     retryDelay: 1000 * 5,
   });
 
-  const updateInboxAndIntents = async (): Promise<void> => {
+  const updateInbox = async (): Promise<void> => {
     if (
       !(
         connectedUser.allowedNumMsg === 0 &&
@@ -134,14 +134,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       )
     ) {
       await getInbox();
-      setIntents(await fetchIntent({ userId: walletToCAIP10({ account, chainId }) }));
     }
     setMessagesLoading(false);
   };
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      updateInboxAndIntents();
+      updateInbox();
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
