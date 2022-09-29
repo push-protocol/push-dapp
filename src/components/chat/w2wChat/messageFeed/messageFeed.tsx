@@ -22,6 +22,7 @@ import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecate
 import Loader from '../Loader/Loader';
 import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
 import { intitializeDb } from '../w2wIndexeddb';
+import { MdError } from 'react-icons/md';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './messageFeed.css';
 
