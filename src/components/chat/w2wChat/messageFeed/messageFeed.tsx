@@ -14,16 +14,11 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
 import { walletToCAIP10 } from 'helpers/w2w';
-import { MessageIPFS } from 'helpers/w2w/ipfs';
 import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
-import Loader from '../Loader/Loader';
-import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { MdError } from 'react-icons/md';
-import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './messageFeed.css';
 
 // Internal Configs
