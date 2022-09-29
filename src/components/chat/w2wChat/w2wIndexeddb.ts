@@ -70,7 +70,7 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
     const query = objectStore.put(newItem);
     
     query.onsuccess = (e: any) => {
-      console.log(query);
+      console.log(query.result);
       return resolve(query.result);
     };
     query.onerror = (e: any) => {

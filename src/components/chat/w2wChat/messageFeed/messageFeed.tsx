@@ -85,7 +85,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
     await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
     inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    if (feeds.length !== inboxes.length) {
+    if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
       setFeeds(inboxes);
       setInbox(inboxes);
     }
