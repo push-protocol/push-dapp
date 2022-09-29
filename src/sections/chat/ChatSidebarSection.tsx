@@ -36,7 +36,7 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests, setPendingRequests } = useContext(Context);
+  const { connectedUser, pendingRequests, setPendingRequests,setReceivedIntents } = useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -97,7 +97,7 @@ const ChatSidebarSection = () => {
     intents = await decryptFeeds({ feeds: intents, connectedUser });
 
     setPendingRequests(intents?.length);
-
+    setReceivedIntents(intents);
     if (firstLoad) {
       setLoadingRequests(false);
     }

@@ -45,6 +45,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     inbox,
     setHasUserBeenSearched,
     setSearchedUser,
+    receivedIntents
+    
   }: AppContext = useContext<AppContext>(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
@@ -154,21 +156,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
             const desiredUser = inbox.filter((inb) => inb.did === user.did);
-
-
-            //the following code checks that User already present in the Intent or not
-            const didOrWallet: string = connectedUser.wallets.split(',')[0];
-            let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-            intents = await decryptFeeds({ feeds: intents, connectedUser });
-            console.log("Intent",intents)
-            const IntentUser = intents.filter((userExist) => userExist.did === user.did);
+            const IntentUser = receivedIntents.filter((userExist) => userExist.did === user.did);
 
             if (desiredUser.length) {
               feed = desiredUser[0];
-            } else {
-              if(IntentUser.length){
-                feed = IntentUser[0];
-              }else{
+            } else if(IntentUser.length){
+              feed = IntentUser[0];
+            }else {
                 feed = {
                   msg: {
                     name: user.wallets.split(',')[0].toString(),
@@ -198,9 +192,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   cid: null,
                 };
               }
-
-              
-            }
             setFeeds([feed]);
           }
         } else {
