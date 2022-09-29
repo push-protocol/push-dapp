@@ -37,7 +37,8 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } = useContext(Context);
+  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
+    useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -50,10 +51,9 @@ const ChatSidebarSection = () => {
 
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
-    // This will run when the page first loads 
+    // This will run when the page first loads
     resolveThreadhash();
   }, []);
-
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
@@ -66,13 +66,12 @@ const ChatSidebarSection = () => {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
       setLoadingRequests(false);
-    } 
-    else {
+    } else {
       await fetchIntentApi();
     }
   }
 
-  const fetchIntentApi = async(): Promise<Feeds[]> => {
+  const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
@@ -84,8 +83,8 @@ const ChatSidebarSection = () => {
     }
     setLoadingRequests(false);
     return intents;
-  }
-    
+  };
+
   // Keep on updating after every few seconds
   useEffect(() => {
     if (!loadingRequests) {
@@ -195,7 +194,7 @@ const ChatSidebarSection = () => {
             >
               REQUESTS
             </SpanV2>
-            <IntentFeed isLoading={loadingRequests}/>
+            <IntentFeed isLoading={loadingRequests} />
           </>
         )}
         {activeTab == 2 && (
@@ -220,7 +219,13 @@ const ChatSidebarSection = () => {
           height="1px"
           background={theme.default.secondaryBg}
         ></ItemVV2>
-        <ProfileHeader setActiveTab={setActiveTab} />
+        <ItemHV2
+          justifyContent="flext-start"
+          margin="15px 0px 5px 0px"
+          padding="0px 10px"
+        >
+          <ProfileHeader setActiveTab={setActiveTab} />
+        </ItemHV2>
       </ItemVV2>
     </ItemVV2>
   );
