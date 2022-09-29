@@ -521,7 +521,7 @@ const ChatBox = (): JSX.Element => {
           title: 'Step 3/4: Syncing account info',
           progressEnabled: true,
           progress: 85,
-          progressNotice: 'This might take a couple of seconds as push nodes sync your info for first time!',
+          progressNotice: 'This might take a couple of seconds as push nodes sync your info for the first time!',
         });
 
         const createdUser: User = await PushNodeClient.createUser({
