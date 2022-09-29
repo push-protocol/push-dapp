@@ -322,6 +322,7 @@ const ChatMainSection = () => {
   };
 
   const setChat = (feed: Feeds): void => {
+    console.log("Feed",feed)
     if (feed) {
       setViewChatBox(true);
       setCurrentChat(feed);

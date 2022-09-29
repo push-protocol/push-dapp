@@ -75,7 +75,8 @@ const ChatBox = (): JSX.Element => {
     setPendingRequests,
     setSearchedUser,
     setReceivedIntents,
-    setBlockedLoading
+    setBlockedLoading,
+    
   }: AppContext = useContext<AppContext>(Context)
   const [newMessage, setNewMessage] = useState<string>('')
   const [textAreaDisabled, setTextAreaDisabled] = useState<boolean>(false)
@@ -432,7 +433,6 @@ const ChatBox = (): JSX.Element => {
     if (getIntent === undefined) {
       let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
       intents = await decryptFeeds({ feeds: intents, connectedUser });
-      console.log(intents)
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     } else {
@@ -452,7 +452,6 @@ const ChatBox = (): JSX.Element => {
     const { createdUser } = await createUserIfNecessary();
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
     const updatedIntent: string = await approveIntent(currentChat.intentSentBy, createdUser.wallets.split(',')[0], status, '1', 'sigType');
-    console.log(currentChat)
     let activeChat = currentChat;
     activeChat.intent = updatedIntent
     setChat(activeChat)
@@ -552,10 +551,21 @@ const ChatBox = (): JSX.Element => {
     }
   };
 
+  const IntentAlreadyExist = async()=>{
+    const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    const sameIntent = intents.find((x) => x.did === currentChat.did);
+    if(sameIntent){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
-    
+    const IntentExist = await IntentAlreadyExist();
     try {
-      console.log('try')
       setMessageBeingSent(true);
       const { createdUser } = await createUserIfNecessary();
       if (currentChat.intent === null || currentChat.intent === '' || !currentChat.intent.includes(currentChat.wallets.split(',')[0])) {
@@ -576,7 +586,7 @@ const ChatBox = (): JSX.Element => {
           } else {
             caip10 = walletToCAIP10({ account: searchedUser, chainId });
           }
-          console.log("creating")
+          // console.log("creating")
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
@@ -616,24 +626,61 @@ const ChatBox = (): JSX.Element => {
           }
         }
 
-        const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
-          toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-          toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-          fromDID: walletToCAIP10({ account: account, chainId }),
-          fromCAIP10: walletToCAIP10({ account, chainId }),
-          messageContent,
-          messageType,
-          signature,
-          encType: encryptionType,
-          sigType: signature,
-          encryptedSecret: aesEncryptedSecret,
-        });
-
-        if (typeof msg === 'string') {
-          // Display toaster
+       if(!IntentExist){
+          const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
+            toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+            toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+            fromDID: walletToCAIP10({ account: account, chainId }),
+            fromCAIP10: walletToCAIP10({ account, chainId }),
+            messageContent,
+            messageType,
+            signature,
+            encType: encryptionType,
+            sigType: signature,
+            encryptedSecret: aesEncryptedSecret,
+          });
+          if (typeof msg === 'string') {
+            // Display toaster
+            chatBoxToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: `${msg}`,
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
+          } else {
+            // We store the message in state decrypted so we display to the user the intent message
+            msg.messageContent = message;
+            // setMessages([...messages, msg]);
+            setNewMessage('');
+            // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
+            // will be undefined since it was not updated right after the intent was sent
+            let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+            inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
+            setInbox(inboxes);
+            const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
+            setChat(result);
+            chatBoxToast.showMessageToast({
+              toastTitle: 'Success',
+              toastMessage: 'Chat Request Sent',
+              toastType: 'SUCCESS',
+              getToastIcon: (size) => (
+                <MdCheckCircle
+                  size={size}
+                  color="green"
+                />
+              ),
+            });
+          }
+        }else{
+          setMessageBeingSent(false);
           chatBoxToast.showMessageToast({
             toastTitle: 'Error',
-            toastMessage: `${msg}`,
+            toastMessage: `Intent Already Exist! Approve the Intent`,
             toastType: 'ERROR',
             getToastIcon: (size) => (
               <MdError
@@ -642,30 +689,8 @@ const ChatBox = (): JSX.Element => {
               />
             ),
           });
-        } else {
-          // We store the message in state decrypted so we display to the user the intent message
-          msg.messageContent = message;
-          // setMessages([...messages, msg]);
-          setNewMessage('');
-          // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
-          // will be undefined since it was not updated right after the intent was sent
-          let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-          inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
-          setInbox(inboxes);
-          const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
-          setChat(result);
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Chat Request Sent',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
         }
+        
       } else {
         setNewMessage('');
         setOpenSuccessSnackBar(true);
@@ -755,6 +780,7 @@ const ChatBox = (): JSX.Element => {
   };
 
   const isDarkMode = theme.scheme==="dark";
+
 
   return (
     <Container>

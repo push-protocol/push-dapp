@@ -55,6 +55,7 @@ export default function Chats({ msg, caip10,ApproveIntent }: ChatProps) {
   const time1 = time.toLocaleTimeString('en-US')
   const date = time1.slice(0, -6) + time1.slice(-2)
 
+
   return (
     <>
       {msg.messageType === 'Text' ? (
