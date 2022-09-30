@@ -43,6 +43,7 @@
     width: 100%;
     z-index: 3000;
     height: 80%;
+    object-fit: contain;
 }
 .modal_close{
     display: flex;

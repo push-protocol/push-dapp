@@ -750,7 +750,7 @@ const ChatBox = (): JSX.Element => {
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.intent.includes(account)) {
+          if (!currentChat.threadhash) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
           } else {
             sendMessage({
