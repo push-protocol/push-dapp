@@ -151,13 +151,13 @@ const ChatSidebarSection = () => {
                   Requests
                 </SpanV2>
 
-                {loadingRequests && (
+                {/* {loadingRequests && (
                   <LoaderSpinner
                     type={LOADER_TYPE.SEAMLESS}
                     spinnerSize={12}
                     spinnerColor={theme.default.secondaryColor}
                   />
-                )}
+                )} */}
 
                 {!loadingRequests && pendingRequests > 0 && (
                   <SpanV2
