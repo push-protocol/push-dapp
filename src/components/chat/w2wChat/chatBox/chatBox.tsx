@@ -586,7 +586,6 @@ const ChatBox = (): JSX.Element => {
 
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
-      console.log('try');
       setMessageBeingSent(true);
       const { createdUser } = await createUserIfNecessary();
       if (
@@ -611,7 +610,6 @@ const ChatBox = (): JSX.Element => {
           } else {
             caip10 = walletToCAIP10({ account: searchedUser, chainId });
           }
-          console.log('creating');
           await PushNodeClient.createUser({
             caip10,
             did: caip10,
