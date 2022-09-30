@@ -30,6 +30,7 @@ const blockchainName = {
   1: 'ETH_MAINNET',
   137: 'POLYGON_MAINNET',
   42: 'ETH_TEST_KOVAN',
+  5: "ETH_TEST_GOERLI",
   80001: 'POLYGON_TEST_MUMBAI',
 };
 

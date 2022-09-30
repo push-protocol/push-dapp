@@ -26,11 +26,6 @@ import GLOBALS, { device } from "config/Globals";
 
 const DATE_FORMAT = 'MMMM Do YYYY';
 
-const networkName = {
-  42: 'Polygon Mumbai',
-  1: 'Polygon Mainnet'
-};
-
 export default function ChannelDetails() {
   const { chainId } = useWeb3React();
   const {

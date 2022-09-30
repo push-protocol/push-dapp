@@ -4,11 +4,7 @@ import { useWeb3React } from '@web3-react/core';
 import { appConfig } from "config";
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { Content, Item, Section } from '../primaries/SharedStyling';
-
-const networkName = {
-  42: "Ethereum Kovan",
-  1: "Ethereum Mainnet"
-}
+import { networkName } from "helpers/UtilityHelper";
 
 function NotAvailablePage(props) {
   const themes = useTheme();

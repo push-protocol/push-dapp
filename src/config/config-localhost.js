@@ -23,14 +23,15 @@ export const config = {
    */
   allowedNetworks: [
     42, //for ropsten
+    5,
     80001, //for mumbai polygon
   ],
 
   /**
    * Core Network Related Data
    */
-  coreContractChain: 42, //the chain id of the network which the core contract relies on
-  coreRPC: 'https://kovan.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
+  coreContractChain: 5, //the chain id of the network which the core contract relies on
+  coreRPC: 'https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreRPC: 'https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a',
   mainnetCoreContractChain: 1,
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',

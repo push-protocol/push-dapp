@@ -297,7 +297,7 @@ export default class YieldFarmingDataStore {
     // get annual rewards
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
     let apr;
-    if(appConfig.coreContractChain === 42)
+    if(appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
     apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
     else
     apr = annualRewards.mul(1000000).div(totalStaked);
@@ -317,7 +317,7 @@ export default class YieldFarmingDataStore {
     const annualRewards = this.calcAnnualEpochReward(genesisEpochAmount, epochId, deprecationPerEpoch)
 
     let apr;
-    if(appConfig.coreContractChain === 42)
+    if(appConfig.coreContractChain === 42 || appConfig.coreContractChain === 5)
     apr = annualRewards.mul(1000000).div(Math.max(totalStaked, 1));
     else
     apr = annualRewards.mul(1000000).div(totalStaked);
