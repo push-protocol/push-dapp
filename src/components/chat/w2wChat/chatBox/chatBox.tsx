@@ -403,7 +403,6 @@ const ChatBox = (): JSX.Element => {
         setMessages([...messages, savedMsg]);
       }
     } catch (error) {
-      console.log(error);
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot send Message, Try again later',
