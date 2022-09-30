@@ -61,7 +61,7 @@
     align-items: flex-start;
 }
 
-.gifPciker_Body::-webkit-scrollbar {
+/* .gifPciker_Body::-webkit-scrollbar {
     width: 5px;
 }
 
@@ -74,7 +74,7 @@
 .gifPciker_Body::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-image: transparent;
-}
+} */
 
 .gifPicker_gifs {
     display: flex;
@@ -82,8 +82,24 @@
     margin-top: 10px;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-evenly;
     gap: 2;
     flex-grow: initial;
+}
+
+.gifPicker_gifs::-webkit-scrollbar {
+    width: 7px;
+}
+
+.gifPicker_gifs::-webkit-scrollbar-track {
+    background: rgb(55, 55, 56);
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+.gifPicker_gifs::-webkit-scrollbar-thumb {
+    background: #ca599b;
+    border-radius: 10px;
 }
 
 .gifPicker_gifs img {
