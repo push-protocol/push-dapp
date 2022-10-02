@@ -91,6 +91,34 @@ const ChatBox = (): JSX.Element => {
   let showTime = false;
   let time = '';
 
+  // get ens name
+  const [ensName, setENSName] = useState(null);
+
+  // get reverse name
+  React.useEffect(() => {
+    const walletLowercase = caip10ToWallet(currentChat.msg.name).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+
+    let provider = ethers.getDefaultProvider('mainnet');
+    if (
+      window.location.hostname == 'app.push.org' ||
+      window.location.hostname == 'staging.push.org' ||
+      window.location.hostname == 'dev.push.org' ||
+      window.location.hostname == 'alpha.push.org' ||
+      window.location.hostname == 'w2w.push.org'
+    ) {
+      provider = new ethers.providers.InfuraProvider('mainnet', appConfig.ipfsInfuraAPIKey);
+    }
+    
+    provider.lookupAddress(checksumWallet).then((ens) => {
+      if (ens) {
+        // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
+        // setENSName(`${ens} (${shorterUsername})`);
+        setENSName(ens);
+      }
+    })
+  }, []);
+
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string =
@@ -839,7 +867,6 @@ const ChatBox = (): JSX.Element => {
             fontWeight="500"
             zIndex="998"
           >
-            {/* setChat */}
 
             <ItemHV2
               height="48px"
@@ -874,7 +901,13 @@ const ChatBox = (): JSX.Element => {
               fontWeight="400"
               textAlign="start"
             >
-              {caip10ToWallet(currentChat.msg.name)}
+              {ensName && 
+                `${ensName} (${caip10ToWallet(currentChat.msg.name)})`
+              }
+              
+              {!ensName && 
+                caip10ToWallet(currentChat.msg.name)
+              }
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
