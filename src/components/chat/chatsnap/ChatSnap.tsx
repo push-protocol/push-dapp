@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { ethers } from 'ethers';
 import React, { useState } from "react";
 
 // External Packages
@@ -9,6 +10,7 @@ import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusable
 import { caip10ToWallet } from 'helpers/w2w';
 
 // Internal Configs
+import { appConfig } from 'config';
 import GLOBALS from "config/Globals";
 
 // Interfaces
@@ -30,6 +32,34 @@ interface ChatSnapPropsI {
 const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
   // get theme
   const theme = useTheme();
+
+  // get ens name
+  const [ensName, setENSName] = useState(null);
+
+  // get reverse name
+  React.useEffect(() => {
+    const walletLowercase = caip10ToWallet(username).toLowerCase();
+    const checksumWallet = ethers.utils.getAddress(walletLowercase);
+
+    let provider = ethers.getDefaultProvider('mainnet');
+    if (
+      window.location.hostname == 'app.push.org' ||
+      window.location.hostname == 'staging.push.org' ||
+      window.location.hostname == 'dev.push.org' ||
+      window.location.hostname == 'alpha.push.org' ||
+      window.location.hostname == 'w2w.push.org'
+    ) {
+      provider = new ethers.providers.InfuraProvider('mainnet', appConfig.ipfsInfuraAPIKey);
+    }
+    
+    provider.lookupAddress(checksumWallet).then((ens) => {
+      if (ens) {
+        // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
+        // setENSName(`${ens} (${shorterUsername})`);
+        setENSName(ens);
+      }
+    })
+  }, []);
 
   // get short username
   const shortUsername = caip10ToWallet(username).slice(0, 8) + '...' + caip10ToWallet(username).slice(-7);
@@ -86,13 +116,18 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
         
         <ItemHV2 alignItems="flex-start" margin="2px 0 2px 0">
           <SpanV2 
-            color={theme.default.color}
-            fontWeight="500"
+            color={ensName ? '#d53793' : theme.default.color}
+            fontWeight={ensName ? "600" : "500"}
             textAlign="start"
             flex="1"
             fontSize="14px"
           >
-            {shortUsername}
+            {ensName && 
+              ensName
+            }
+            {!ensName && 
+              shortUsername
+            }
           </SpanV2>
           {date && 
             <SpanV2 
@@ -110,6 +145,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
             color={theme.default.secondaryColor}
             flex="1"
             textAlign="start"
+            fontWeight="400"
           >
             {message}
           </SpanV2>
