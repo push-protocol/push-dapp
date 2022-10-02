@@ -721,6 +721,15 @@ const ChatBox = (): JSX.Element => {
 
   const handleKeyPress = (e: any): void => {
     const x = e.keyCode;
+
+    // TODO: multiline
+    // if (e.key === "Enter" && e.shiftKey) {
+    //   console.log("pressed shift+enter");
+    //   const newMsg = `${e.target.value}`;
+    //   setNewMessage(newMsg);
+    //   return;
+    // }
+
     if (x === 13) {
       handleSubmit(e);
     }
@@ -973,15 +982,24 @@ const ChatBox = (): JSX.Element => {
             <> */}
               {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
                 ?.threadhash ? null : (
-                <TypeBarContainer>
+                <TypeBarContainer
+                  background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}
+                >
                   {messageBeingSent ? (
-                    <MessageLoader>
+                    <ItemHV2
+                      position="absolute"
+                      top="0"
+                      right="10px"
+                      bottom="0"
+                      justifyContent="flex-end"
+                      background="transparent"
+                    >
                       <LoaderSpinner
                         type={LOADER_TYPE.SEAMLESS}
                         spinnerSize={40}
                         width='100%'
                       />
-                    </MessageLoader>
+                    </ItemHV2>
                     
                       ) : (
                           <>
@@ -1238,7 +1256,7 @@ const TypeBarContainer = styled.div`
   height: 55px;
   padding: 16px;
   border-radius: 13px;
-  background: ${(props) => props.theme.chat.sendMesageBg || '#fff'};
+  background: ${(props) => props.background ? props.background : props.theme.chat.sendMesageBg};
 `;
 
 const Container = styled(Content)`
