@@ -49,7 +49,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
       window.location.hostname == 'alpha.push.org' ||
       window.location.hostname == 'w2w.push.org'
     ) {
-      provider = new ethers.providers.InfuraProvider('mainnet', appConfig.ipfsInfuraAPIKey);
+      provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
     }
     
     provider.lookupAddress(checksumWallet).then((ens) => {
@@ -116,7 +116,8 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
         
         <ItemHV2 alignItems="flex-start" margin="2px 0 2px 0">
           <SpanV2 
-            color={ensName ? '#d53793' : theme.default.color}
+            // color={ensName ? '#d53793' : theme.default.color}
+            color={theme.default.color}
             fontWeight={ensName ? "600" : "500"}
             textAlign="start"
             flex="1"
