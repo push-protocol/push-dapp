@@ -342,6 +342,7 @@ const ChatBox = (): JSX.Element => {
 
   const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true);
+    // setLoading(true);
     let msg: MessageIPFSWithCID;
     let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string, sigType: string;
     try {
@@ -450,6 +451,7 @@ const ChatBox = (): JSX.Element => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
+      // setLoading(true);
     }, 2000);
   };
 
@@ -749,6 +751,15 @@ const ChatBox = (): JSX.Element => {
 
   const handleKeyPress = (e: any): void => {
     const x = e.keyCode;
+
+    // TODO: multiline
+    // if (e.key === "Enter" && e.shiftKey) {
+    //   console.log("pressed shift+enter");
+    //   const newMsg = `${e.target.value}`;
+    //   setNewMessage(newMsg);
+    //   return;
+    // }
+
     if (x === 13) {
       handleSubmit(e);
     }
@@ -1002,111 +1013,128 @@ const ChatBox = (): JSX.Element => {
               type={LOADER_TYPE.STANDALONE_MINIMAL}
               spinnerSize={40}
             />
-          ) : ( */}
-          {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
-            ?.threadhash ? null : (
-            <TypeBarContainer>
-              <Icon
-                onClick={(): void => setShowEmojis(!showEmojis)}
-                filter={theme.snackbarBorderIcon}
-              >
-                <img
-                  src="/svg/chats/smiley.svg"
-                  height="24px"
-                  width="24px"
-                  alt=""
-                />
-              </Icon>
-              {showEmojis && (
-                <Picker
-                  onEmojiClick={addEmoji}
-                  pickerStyle={{
-                    width: '300px',
-                    position: 'absolute',
-                    bottom: '2.5rem',
-                    zindex: '700',
-                    left: '2.5rem',
-                  }}
-                />
-              )}
-              {
-                <TextInput
-                  placeholder="Type your message..."
-                  onKeyDown={handleKeyPress}
-                  onChange={textOnChange}
-                  value={newMessage}
-                  autoFocus="autoFocus"
-                />
-              }
-              <>
-                <>
-                  <GifDiv>
-                    <label>
-                      {isGifPickerOpened && (
-                        <GifPicker
-                          setIsOpened={setIsGifPickerOpened}
-                          isOpen={isGifPickerOpened}
-                          onSelect={sendGif}
-                        />
-                      )}
-                      <Icon
-                        onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
-                        filter={theme.snackbarBorderIcon}
-                      >
-                        <img
-                          src="/svg/chats/gif.svg"
-                          height="18px"
-                          width="22px"
-                          alt=""
-                        />
-                      </Icon>
-                    </label>
-                  </GifDiv>
-                  <label>
-                    <Icon filter={theme.snackbarBorderIcon}>
-                      <img
-                        src="/svg/chats/attachment.svg"
-                        height="24px"
-                        width="20px"
-                        alt=""
-                      />
-                    </Icon>
-                    <FileInput
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={uploadFile}
-                    />
-                  </label>
-                </>
-                {filesUploading ? (
-                  <div className="imageloader">
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={20}
-                    />
-                  </div>
-                ) : (
-                  <>
-                    {messageBeingSent ? (
+          ) : (
+            <> */}
+              {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
+                ?.threadhash ? null : (
+                <TypeBarContainer
+                  background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}
+                >
+                  {messageBeingSent ? (
+                    <ItemHV2
+                      position="absolute"
+                      top="0"
+                      right="10px"
+                      bottom="0"
+                      justifyContent="flex-end"
+                      background="transparent"
+                    >
                       <LoaderSpinner
                         type={LOADER_TYPE.SEAMLESS}
                         spinnerSize={40}
+                        width='100%'
                       />
-                    ) : (
-                      <Icon onClick={handleSubmit}>
-                        <img
-                          src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
-                          height="27px"
-                          width="27px"
-                          alt=""
-                        />
-                      </Icon>
-                    )}
-                  </>
-                )}
-              </>
-            </TypeBarContainer>
-          )}
+                    </ItemHV2>
+                    
+                      ) : (
+                          <>
+                            <Icon
+                              onClick={(): void => setShowEmojis(!showEmojis)}
+                              filter={theme.snackbarBorderIcon}>
+                              <img
+                                src="/svg/chats/smiley.svg"
+                                height="24px"
+                                width="24px"
+                                alt=""
+                              />
+                            </Icon>
+                            {showEmojis && (
+                              <Picker
+                                onEmojiClick={addEmoji}
+                                pickerStyle={{
+                                  width: '300px',
+                                  position: 'absolute',
+                                  bottom: '2.5rem',
+                                  zindex: '700',
+                                  left: '2.5rem',
+                                }}
+                              />
+                            )}
+                            {
+                              <TextInput
+                                placeholder="Type your message..."
+                                onKeyDown={handleKeyPress}
+                                onChange={textOnChange}
+                                value={newMessage}
+                                autoFocus="autoFocus"
+                              />
+                            }
+
+                            <>
+                              <GifDiv>
+                                <label>
+                                  {isGifPickerOpened && (
+                                    <GifPicker
+                                      setIsOpened={setIsGifPickerOpened}
+                                      isOpen={isGifPickerOpened}
+                                      onSelect={sendGif}
+                                    />
+                                  )}
+                                  <Icon
+                                    onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
+                                    filter={theme.snackbarBorderIcon}
+                                  >
+                                    <img
+                                      src="/svg/chats/gif.svg"
+                                      height="18px"
+                                      width="22px"
+                                      alt=""
+                                    />
+                                  </Icon>
+                                </label>
+                              </GifDiv>
+                              <label>
+                                <Icon filter={theme.snackbarBorderIcon}>
+                                  <img
+                                    src="/svg/chats/attachment.svg"
+                                    height="24px"
+                                    width="20px"
+                                    alt=""
+                                  />
+                                </Icon>
+                                <FileInput
+                                  type="file"
+                                  ref={fileInputRef}
+                                  onChange={uploadFile}
+                                />
+                              </label>
+                          
+                              {filesUploading ? (
+                                <div className="imageloader">
+                                  <LoaderSpinner
+                                    type={LOADER_TYPE.SEAMLESS}
+                                    spinnerSize={20}
+                                  />
+                                </div>
+                                ) : (
+                                  <>
+                                    <Icon onClick={handleSubmit}>
+                                      <img
+                                        src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
+                                        height="27px"
+                                        width="27px"
+                                        alt=""
+                                      />
+                                    </Icon>
+                                  </>
+                              )}
+                            </>
+                          </>
+                      )}
+                </TypeBarContainer>
+              )}
+          {/* </>
+          )} */}
         </>
       )}
     </Container>
@@ -1263,7 +1291,7 @@ const TypeBarContainer = styled.div`
   height: 55px;
   padding: 16px;
   border-radius: 13px;
-  background: ${(props) => props.theme.chat.sendMesageBg || '#fff'};
+  background: ${(props) => props.background ? props.background : props.theme.chat.sendMesageBg};
 `;
 
 const Container = styled(Content)`
@@ -1339,6 +1367,12 @@ const TabletBackButton = styled(ButtonV2)`
   @media ${device.tablet} {
     display: initial;
   }
+`;
+
+const MessageLoader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: end;
 `;
 
 export default ChatBox;
