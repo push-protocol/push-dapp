@@ -21,10 +21,13 @@ export const MaskedPolygonChannels = {
   '0x9bE426C8A28ee7Ca935b5C27a4bc2395640c9378': 0,
   '0x994909594Ef6c80cE8d9C85Ad30AeC696E10f73E': 1,
   '0xdc0964aaacE97CF4E7476B4EEbC924730E524ade': 1,
-  // '0x19A6C52bd08898F8Ee5c6ba3FB67AFd184be8034': 1, // Polygon Bridge
-  // '0x64A971F0D01b3555Ac60B9Bd151d5B7A75cf12Fd': 1, // MahaDAO
-  // '0xe8381F84a32A4C2B08c328BfF68c0E889a34F255': 1, // Good Ghosting
-  // '0x2f5ccA6f594118ef54f4157927A323BaA982Fd78': 1 // mean finance
+  '0x19A6C52bd08898F8Ee5c6ba3FB67AFd184be8034': 1, // Polygon Bridge
+  '0x64A971F0D01b3555Ac60B9Bd151d5B7A75cf12Fd': 1, // MahaDAO
+  '0xe8381F84a32A4C2B08c328BfF68c0E889a34F255': 1, // Good Ghosting
+  '0x2f5ccA6f594118ef54f4157927A323BaA982Fd78': 1, // mean finance
+  '0x77f319B1d9c43a8B729399f81515166632100744': 1, // ethsign
+  '0xef6426D522CfE5B7Ae5dB05623aB0Ef78023dBe0': 1, // lens
+  '0x27F68B2C092DB48928D70EA781F7dE8B844ad07B': 1, // polychain
  }
 
 export const isLengthValid = (data: string, len: number): boolean => {
