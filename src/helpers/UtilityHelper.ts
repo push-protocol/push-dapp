@@ -78,6 +78,7 @@ export const EnvHelper = {
 
 export const networkName = {
   42: 'Ethereum Kovan',
+  5: "Ethereum Goerli",
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
@@ -86,6 +87,7 @@ export const networkName = {
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,
+  5: 80001
 };
 
 export const PolygonNetworks = {

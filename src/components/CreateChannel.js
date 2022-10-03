@@ -13,7 +13,7 @@ import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/UtilityHelper';
+import { isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
 import { Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
@@ -27,10 +27,6 @@ import { abis, addresses, appConfig } from 'config';
 
 const ethers = require('ethers');
 const minStakeFees = 50;
-const networkName = {
-  42: 'Ethereum Kovan',
-  1: 'Ethereum Mainnet',
-};
 
 const coreChainId = appConfig.coreContractChain;
 const CORE_CHAIN_ID = appConfig.coreContractChain;

@@ -9,13 +9,7 @@ import styled, { ThemeProvider, useTheme } from "styled-components";
 // Internal Compoonents
 import { NotificationItem } from "@epnsproject/sdk-uiweb";
 import { H2, Item, Span } from "../primaries/SharedStyling";
-
-const blockchainName = {
-  1: "ETH_MAINNET",
-  137: "POLYGON_MAINNET",
-  42: "ETH_TEST_KOVAN",
-  80001: "POLYGON_TEST_MUMBAI",
-};
+import { networkName } from "helpers/UtilityHelper";
 
 export default function PreviewNotif({ details }) {
   const { delegatees, channelDetails } = useSelector((state) => state.admin);
@@ -38,7 +32,7 @@ export default function PreviewNotif({ details }) {
           app={channelDetail.name}
           icon={channelDetail.icon}
           image={test?.aimg}
-          chainName={blockchainName[chainId]}
+          chainName={networkName[chainId]}
           theme={theme.scheme}
         />
       )
