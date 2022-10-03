@@ -5,6 +5,7 @@ import { MessageIPFS } from 'helpers/w2w/ipfs';
 import { toast } from 'react-toastify';
 
 let BASE_URL = appConfig.apiUrl;
+let errorFlag = false;
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   BASE_URL = appConfig.w2wApiUrl;
 } else {
@@ -63,12 +64,14 @@ export const getInbox = async (did: string): Promise<Feeds[]> => {
       });
       if (response.status >= 500) continue;
       const data: Feeds[] = await response.json();
+      errorFlag = false;
       return data;
     } catch (err) {
-      if (retry === 2) {
+      if (retry > 1 && !errorFlag) {
         toast.error('An Error Occurred! Please Reload the Page', ToastPosition);
+        errorFlag = true;
       }
-      console.log('Error in the API call', err);
+      // console.log('Error in the API call', err);
       retry++;
       continue;
     }
