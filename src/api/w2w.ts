@@ -128,9 +128,9 @@ export const getUser = async ({ did = '', caip10 = '' }: { did?: string; caip10?
       const data: User = await response.json();
       return data;
     } catch (err) {
-      if (retry > 1) {
-        toast.error('An Error Occurred! Please Reload the Page', ToastPosition);
-      }
+      // if (retry > 1) {
+      //   toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
+      // }
       console.log('Error in the API call', err);
       retry++;
       continue;
