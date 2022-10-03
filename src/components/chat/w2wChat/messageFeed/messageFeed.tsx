@@ -33,15 +33,8 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const {
-    setChat,
-    connectedUser,
-    setIntents,
-    setInbox,
-    inbox,
-    setHasUserBeenSearched,
-    setSearchedUser,
-  }: AppContext = useContext<AppContext>(Context);
+  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+    useContext<AppContext>(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -50,6 +43,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
   const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
@@ -78,14 +72,32 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds[]> => {
-    let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-    inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
-      setFeeds(inboxes);
-      setInbox(inboxes);
+    try {
+      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+      if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+        setFeeds(inboxes);
+        setInbox(inboxes);
+      }
+      setShowError(false);
+      return inboxes;
+    } catch (e) {
+      if (!showError) {
+        messageFeedToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: 'An Error Occurred!...Please Reload the Page',
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+      }
+      setShowError(true);
     }
-    return inboxes;
   };
 
   useQuery('inbox', getInbox, {
