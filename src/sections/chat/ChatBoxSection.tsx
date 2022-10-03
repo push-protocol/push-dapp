@@ -13,11 +13,13 @@ import GLOBALS from 'config/Globals';
 
 // Chat Sections
 // Divided into two, left and right
-const ChatBoxSection = () => {
+const ChatBoxSection = ({ setVideoCallInfo }) => {
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch">
-      <ChatBox />
+      <ChatBox 
+        setVideoCallInfo={setVideoCallInfo}
+      />
     </ItemVV2>
   );
 }

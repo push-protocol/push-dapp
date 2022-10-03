@@ -2,16 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
 
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { Web3ReactProvider } from "@web3-react/core";
+import { VideoCallContextProvider } from 'contexts/VideoCallContext';
 import { ethers } from "ethers";
 import { Provider } from "react-redux";
-import { Web3ReactProvider } from "@web3-react/core";
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
-import * as serviceWorker from "./serviceWorker";
 import * as dotenv from "dotenv";
 import App from "./App";
-import store from "./redux/store";
 import "./index.css";
+import store from "./redux/store";
+import * as serviceWorker from "./serviceWorker";
 
 // enable environmental variables across the entire application
 dotenv.config();
@@ -41,7 +42,9 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <App />
+          <VideoCallContextProvider>
+            <App />
+          </VideoCallContextProvider>
         </Web3ReactProvider>
       </ApolloProvider>
     </Provider>

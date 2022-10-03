@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/ProgressBarUnit';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import Spinner from 'components/reusables/spinners/SpinnerUnit';
+import Spinner, { SPINNER_TYPE } from 'components/reusables/spinners/SpinnerUnit';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -23,7 +23,7 @@ interface LoaderSpinnerPropsI {
   spinnerEnabled?: boolean;
   spinnerSize?: number;
   spinnerColor?: string;
-  spinnerCompleted?: boolean;
+  spinnerType?: number;
   progressEnabled?: boolean;
   progressPositioning?: number;
   progressColor?: string;
@@ -49,6 +49,8 @@ export const PROGRESS_POSITIONING = {
   BOTTOM: 2,
 };
 
+export const LOADER_SPINNER_TYPE = SPINNER_TYPE;
+
 // Create Progress Bar
 const LoaderSpinner = ({
   type = LOADER_TYPE.STANDALONE,
@@ -59,7 +61,7 @@ const LoaderSpinner = ({
   spinnerEnabled = true,
   spinnerSize = 42,
   spinnerColor = GLOBALS.COLORS.PRIMARY_PINK,
-  spinnerCompleted = false,
+  spinnerType = LOADER_SPINNER_TYPE.PROCESSING,
   progressEnabled = false,
   progressPositioning = PROGRESS_POSITIONING.TOP,
   progressColor = GLOBALS.COLORS.PRIMARY_PINK,
@@ -115,7 +117,7 @@ const LoaderSpinner = ({
             <Spinner
               size={spinnerSize}
               color={spinnerColor}
-              completed={spinnerCompleted}
+              type={spinnerType}
             />
           )}
 

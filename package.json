@@ -128,6 +128,8 @@
     "react-wavify": "^1.5.4",
     "react-waypoint": "^9.0.3",
     "secp256k1-v4": "https://github.com/HarshRajat/secp256k1-node",
+    "simple-peer": "9.11.1",
+    "socket.io-client": "4.5.2",
     "stream-browserify": "3.0.0",
     "styled-components": "5.1.0",
     "timeago.js": "^4.0.2",

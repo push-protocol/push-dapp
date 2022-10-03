@@ -18,7 +18,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
@@ -53,7 +53,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = (): JSX.Element => {
+const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const {
     currentChat,
     viewChatBox,
@@ -605,7 +605,7 @@ const ChatBox = (): JSX.Element => {
         setBlockedLoading({
           enabled: false,
           title: 'Step 4/4: Done, Welcome to Push Chat!',
-          spinnerCompleted: true,
+          spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
           progressEnabled: true,
           progress: 100,
         });
@@ -759,6 +759,19 @@ const ChatBox = (): JSX.Element => {
     //   setNewMessage(newMsg);
     //   return;
     // }
+
+    // Send video request only when two users are chatting
+    if (e.target.value === '/video' && currentChat.threadhash) {
+      setVideoCallInfo({
+        address: caip10ToWallet(currentChat.msg.name),
+        fromPublicKeyArmored: connectedUser.publicKey,
+        toPublicKeyArmored: currentChat.publicKey,
+        privateKeyArmored: connectedUser.privateKey,
+        establishConnection: true
+      })
+      setNewMessage('');
+      return;
+    }
 
     if (x === 13) {
       handleSubmit(e);
