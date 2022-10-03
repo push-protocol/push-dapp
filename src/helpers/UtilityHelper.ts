@@ -26,7 +26,6 @@ export const MaskedPolygonChannels = {
   '0xe8381F84a32A4C2B08c328BfF68c0E889a34F255': 1, // Good Ghosting
   '0x2f5ccA6f594118ef54f4157927A323BaA982Fd78': 1, // mean finance
   '0x77f319B1d9c43a8B729399f81515166632100744': 1, // ethsign
-  '0xef6426D522CfE5B7Ae5dB05623aB0Ef78023dBe0': 1, // lens
   '0x27F68B2C092DB48928D70EA781F7dE8B844ad07B': 1, // polychain
  }
 
