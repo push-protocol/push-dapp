@@ -1,6 +1,10 @@
 // environmental configurations for the dapp for different environments
 export const config = {
-  
+  /** 
+   * API Calls Related
+   */
+  infuraAPIKey: 'e214e9781e104829bc93941508a45b58'
+
 }
 
 import daiAbi from "./abis/dai";
