@@ -25,7 +25,10 @@ const VideoCallContextProvider = ({ children }) => {
       setStream(stream);
       myVideo.current.srcObject = stream;
 
-      socket.on('me', (id) => setMe(id));
+      socket.on('me', (id) => {
+        console.log(id)
+        setMe(id)
+      });
 
       socket.on('callUser', ({ from, name: callerName, signal }) => {
         setCall({ isReceivingCall: true, from, name: callerName, signal });
