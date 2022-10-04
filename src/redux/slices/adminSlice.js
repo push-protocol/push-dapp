@@ -22,6 +22,7 @@ export const contractSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
+    resetAdminSlice: () => initialState,
     setUserChannelDetails: (state, action) => {
       state.channelDetails = action.payload;
     },
@@ -50,6 +51,7 @@ export const contractSlice = createSlice({
 });
 
 export const {
+  resetAdminSlice,
   setUserChannelDetails,
   setCoreChannelAdmin,
   setAliasVerified,
