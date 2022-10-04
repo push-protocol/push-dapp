@@ -78,7 +78,7 @@ function Header({ isDarkMode, darkModeToggle }) {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: ethers.utils.hexlify(appConfig.coreContractChain) }],
+          params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
         });
       } catch (err) {
         console.error(err);
