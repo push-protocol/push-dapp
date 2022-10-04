@@ -29,6 +29,16 @@ export const MaskedPolygonChannels = {
   '0x27F68B2C092DB48928D70EA781F7dE8B844ad07B': 0, // polychain
  }
 
+export const MaskedChannels = {
+  '0xDa63D70332139E6A8eCA7513f4b6E2E0Dc93b693': 1, 
+  '0xAd95A5fE898679B927C266eB2eDfAbC7fe268C27': 1,
+  '0x7101829b8C82184D59D1dAE4361DB057F85656a1': 1,
+  '0xf192080bdFbF1ED6f2c6a38Cd273a8ff59018176': 1, 
+  '0xEC864BE26084ba3bbF3cAAcF8F6961A9263319C4': 1, 
+  '0x7183a02EBb534a7B183741Bab09F4ec932DCe27B': 1, 
+  '0xcf3224c64FF2d5b18b5e4460b1103FF9037eFAC2': 1
+}
+
 export const isLengthValid = (data: string, len: number): boolean => {
   return data.length <= len;
 };
