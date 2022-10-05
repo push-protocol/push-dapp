@@ -464,7 +464,7 @@ const Container = styled.div`
   justify-content: center;
   height: 100%;
   margin: 0 0 0 10px;
-  overflow:scroll;
+  /* overflow: scroll; */
 
   @media ${device.laptop} {
     
