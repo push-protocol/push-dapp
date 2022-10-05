@@ -226,7 +226,7 @@ function NewUser() {
             type="text"
             value={searchedUser}
             onChange={onChangeSearchBox}
-            placeholder="Search name.eth or 0x123..."
+            placeholder="Search a name.eth or 0x123..."
           />
 
           {searchedUser.length > 0 && (

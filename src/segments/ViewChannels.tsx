@@ -235,7 +235,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 left="12px"
 
               >
-                <AiOutlineSearch size={20} style={{ color: themes.viewChannelSearchIcon }} />
+                <AiOutlineSearch size={20} style={{ color: '#657795' }} />
               </Item>
             </SearchContainer>
 
@@ -309,6 +309,7 @@ const SearchBar = styled.input`
   }
   &::placeholder {
     letter-spacing: -0.019em;
+    color: #657795;
   }
   &:hover,
   &:active,
