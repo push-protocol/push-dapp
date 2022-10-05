@@ -1188,8 +1188,8 @@ const MessageContainer = styled.div`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
-  overflow-y: auto;
-  overflow-x: hidden;
+  // overflow-y: auto;
+  // overflow-x: hidden;
   display: flex;
   flex-direction: column;
   // &&::-webkit-scrollbar {
