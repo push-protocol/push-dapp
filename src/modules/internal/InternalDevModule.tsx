@@ -6,6 +6,7 @@ import styled, { useTheme } from 'styled-components';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 import LoaderSpinner, {
   LOADER_OVERLAY,
+  LOADER_SPINNER_TYPE,
   LOADER_TYPE,
   PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
@@ -142,18 +143,12 @@ const InternalDevModule = () => {
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE title=null">
-        <LoaderSpinner
-          type={LOADER_TYPE.STANDALONE}
-          spinnerCompleted={false}
-        />
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE} />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=STANDALONE_MINIMAL title=null">
-        <LoaderSpinner
-          type={LOADER_TYPE.STANDALONE_MINIMAL}
-          spinnerCompleted={false}
-        />
+        <LoaderSpinner type={LOADER_TYPE.STANDALONE_MINIMAL} />
       </IndividualComps>
 
       {/* Loader with Spinner Component */}
@@ -161,7 +156,25 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="This time it's done"
-          spinnerCompleted={true}
+          spinnerType={LOADER_SPINNER_TYPE.COMPLETED}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="This time it's a warning"
+          spinnerType={LOADER_SPINNER_TYPE.WARNING}
+        />
+      </IndividualComps>
+
+      {/* Loader with Spinner Component */}
+      <IndividualComps caption="components/reusables/loaders/LoaderSpinner">
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          title="This time it's an error"
+          spinnerType={LOADER_SPINNER_TYPE.ERROR}
         />
       </IndividualComps>
 
@@ -169,7 +182,7 @@ const InternalDevModule = () => {
       <IndividualComps caption="components/reusables/loaders/LoaderSpinner - type=seamless title=null spinnerSize=20">
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           spinnerSize={20}
         />
       </IndividualComps>
@@ -179,7 +192,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="Randomized With Spinner Size"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           spinnerSize={24}
         />
       </IndividualComps>
@@ -189,7 +202,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="Randomized With Spinner Color"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           spinnerColor="#083c84"
         />
       </IndividualComps>
@@ -199,7 +212,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="This time it's done"
-          spinnerCompleted={true}
+          spinnerType={LOADER_SPINNER_TYPE.COMPLETED}
           spinnerSize={24}
         />
       </IndividualComps>
@@ -209,7 +222,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="Randomized With Long Text, Very Long"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.COMPLETED}
         />
       </IndividualComps>
 
@@ -218,7 +231,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="Loading Something Cool"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progress={progress}
         />
@@ -229,7 +242,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="Step 1: Loading coolness"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
@@ -268,7 +281,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="Step 1: Loading color coolness"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progressColor="#AA33EE"
@@ -282,7 +295,7 @@ const InternalDevModule = () => {
           type={LOADER_TYPE.STANDALONE}
           width="80%"
           title="Step 1: Loading coolness with minimal"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
@@ -295,7 +308,7 @@ const InternalDevModule = () => {
           type={LOADER_TYPE.STANDALONE_MINIMAL}
           width="80%"
           title="Step 1: Loading coolness with minimal"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
@@ -308,7 +321,7 @@ const InternalDevModule = () => {
           type={LOADER_TYPE.SEAMLESS}
           width="80%"
           title="Step 1: Loading coolness with minimal"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
@@ -320,7 +333,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="Step 1: Loading minimal no width"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
@@ -332,7 +345,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="Step 1: Loading minimal no width"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={progress}
@@ -345,7 +358,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="Step 1: Loading minimal no width"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
           progressEnabled={true}
           progressPositioning={PROGRESS_POSITIONING.TOP}
           progress={progress}
@@ -359,7 +372,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title={'Randomized With Long Text, Very Long'}
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
         />
       </IndividualComps>
 
@@ -370,7 +383,7 @@ const InternalDevModule = () => {
           type={LOADER_TYPE.SEAMLESS}
           overlay={LOADER_OVERLAY.ONTOP}
           title={'Another Very Randomized Long Text'}
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
         />
       </IndividualComps>
 
@@ -382,7 +395,7 @@ const InternalDevModule = () => {
           overlay={LOADER_OVERLAY.ONTOP}
           blur={5}
           title={'And Yet Another Randomined Loooong Text'}
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
         />
       </IndividualComps>
 
@@ -394,7 +407,7 @@ const InternalDevModule = () => {
           overlay={LOADER_OVERLAY.ONTOP}
           blur={5}
           title={'Randomized With Long Text, Very Long'}
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
         />
       </IndividualComps>
 
@@ -435,7 +448,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.STANDALONE}
           title="Randomized"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
         />
       </IndividualComps>
 
@@ -468,7 +481,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="Randomized With Long Text, Very Long"
-          spinnerCompleted={false}
+          spinnerType={LOADER_SPINNER_TYPE.PROCESSING}
         />
         <BlurBG blur={5} />
       </IndividualComps>
@@ -478,7 +491,7 @@ const InternalDevModule = () => {
         <LoaderSpinner
           type={LOADER_TYPE.SEAMLESS}
           title="This time it's done"
-          spinnerCompleted={true}
+          spinnerType={LOADER_SPINNER_TYPE.COMPLETED}
         />
         <BlurBG
           blur={5}

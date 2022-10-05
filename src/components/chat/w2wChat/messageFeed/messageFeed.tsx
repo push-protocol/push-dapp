@@ -14,15 +14,11 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
 import { walletToCAIP10 } from 'helpers/w2w';
-import { MessageIPFS } from 'helpers/w2w/ipfs';
 import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import DefaultMessage from '../defaultMessageDeprecated/defaultMessage.deprecated';
-import Loader from '../Loader/Loader';
-import ReactSnackbar from '../ReactSnackbar/ReactSnackbar';
+import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { decryptFeeds, fetchInbox } from '../w2wUtils';
 import './messageFeed.css';
 
 // Internal Configs
@@ -37,15 +33,8 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const {
-    setChat,
-    connectedUser,
-    setIntents,
-    setInbox,
-    inbox,
-    setHasUserBeenSearched,
-    setSearchedUser,
-  }: AppContext = useContext<AppContext>(Context);
+  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+    useContext<AppContext>(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -54,6 +43,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
   const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
@@ -82,14 +72,32 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds[]> => {
-    let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-    await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-    inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-    if (feeds.length !== inboxes.length) {
-      setFeeds(inboxes);
-      setInbox(inboxes);
+    try {
+      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+      if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+        setFeeds(inboxes);
+        setInbox(inboxes);
+      }
+      setShowError(false);
+      return inboxes;
+    } catch (e) {
+      if (!showError) {
+        messageFeedToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: 'An Error Occurred!...Please Reload the Page',
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+      }
+      setShowError(true);
     }
-    return inboxes;
   };
 
   useQuery('inbox', getInbox, {
@@ -122,7 +130,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     retryDelay: 1000 * 5,
   });
 
-  const updateInboxAndIntents = async (): Promise<void> => {
+  const updateInbox = async (): Promise<void> => {
     if (
       !(
         connectedUser.allowedNumMsg === 0 &&
@@ -134,19 +142,29 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       )
     ) {
       await getInbox();
-      setIntents(await fetchIntent({ userId: walletToCAIP10({ account, chainId }) }));
     }
     setMessagesLoading(false);
   };
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      updateInboxAndIntents();
+      updateInbox();
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
             setIsSameUser(true);
+            messageFeedToast.showMessageToast({
+              toastTitle: 'Error',
+              toastMessage: "You can't send intent to yourself",
+              toastType: 'ERROR',
+              getToastIcon: (size) => (
+                <MdError
+                  size={size}
+                  color="red"
+                />
+              ),
+            });
             setFeeds([]);
           } else {
             // When searching as of now the search will always result in only one user being displayed.
@@ -216,7 +234,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 />
               ),
             });
-            setIsInvalidAddress(true);
           }
           setFeeds([]);
         }
@@ -250,16 +267,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && isSameUser ? (
-              <InfoMessage>You can&apos;t send chat request to yourself</InfoMessage>
-            ) : !feeds?.length && isInValidAddress ? (
-              <InfoMessage>Invalid Address</InfoMessage>
-            ) : !feeds?.length && !messagesLoading ? (
-              activeTab !== 3 && (
-                <EmptyConnection>
-                  Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
-                </EmptyConnection>
-              )
+            {!feeds?.length && !messagesLoading ? (
+              <EmptyConnection>
+                Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
+              </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
                 // To Test

@@ -6,7 +6,7 @@ import {
   NoEthereumProviderError,
   UserRejectedRequestError as UserRejectedRequestErrorInjected
 } from '@web3-react/injected-connector';
-import { hexlify } from 'ethers/lib/utils';
+import { ethers } from "ethers";
 import React, { useContext, useState } from 'react';
 
 // External Packages
@@ -67,7 +67,7 @@ async function handleChangeNetwork() {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: hexlify(appConfig.coreContractChain) }],
+        params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
       });
     } catch (err) {
       console.error(err);
@@ -83,7 +83,9 @@ function getErrorMessage(error: Error) {
     handleChangeNetwork();
     if (appConfig.coreContractChain === 42)
       return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
-    else return 'Unsupported Network, please connect to the Ethereum Mainnet network';
+    else if (appConfig.coreContractChain === 5)
+      return 'Unsupported Network, please connect to the Ethereum Goerli network or Polygon Mumbai network';
+    else return 'Unsupported Network, please connect to the Ethereum Mainnet network or Polygon Mainnet network';
   } else if (error instanceof UserRejectedRequestErrorInjected) {
     return 'Please authorize this website to access the dApp';
   } else {

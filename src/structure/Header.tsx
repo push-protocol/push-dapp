@@ -78,7 +78,7 @@ function Header({ isDarkMode, darkModeToggle }) {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: ethers.utils.hexlify(appConfig.coreContractChain) }],
+          params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
         });
       } catch (err) {
         console.error(err);
@@ -94,7 +94,9 @@ function Header({ isDarkMode, darkModeToggle }) {
       handleChangeNetwork();
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
-      else return 'Unsupported Network, please connect to the Ethereum Mainnet network';
+      else if (appConfig.coreContractChain === 5)
+        return 'Unsupported Network, please connect to the Ethereum Goerli network or Polygon Mumbai network';
+      else return 'Unsupported Network, please connect to the Ethereum Mainnet network or Polygon Mainnet network';
     } else if (error instanceof UserRejectedRequestErrorInjected) {
       return 'Please authorize this website to access the dApp';
     } else {

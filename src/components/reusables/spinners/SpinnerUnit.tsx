@@ -6,26 +6,42 @@ import styled, { css, keyframes } from 'styled-components';
 
 // Internal Compoonents
 import { ReactComponent as CheckmarkSVG } from 'assets/reusables/spinners/checkmark.svg';
+import { ReactComponent as ErrorSVG } from 'assets/reusables/spinners/error.svg';
 import { ReactComponent as SpinnerSVG } from 'assets/reusables/spinners/spinner.svg';
+import { ReactComponent as WarningSVG } from 'assets/reusables/spinners/warning.svg';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
+// Interfaces
 interface SpinnerPropsI {
   size?: number;
-  color?: color;
-  completed: boolean;
+  color?: string;
+  type: number;
+}
+
+export const SPINNER_TYPE = {
+  PROCESSING: 1,
+  WARNING: 2,
+  ERROR: 3,
+  COMPLETED: 4,
 }
 
 // Create Spinner
-export default function Spinner({ size = 42, color =  GLOBALS.COLORS.PRIMARY_PINK, completed = false }: SpinnerPropsI) {
+export default function Spinner({ size = 42, color =  GLOBALS.COLORS.PRIMARY_PINK, type = SPINNER_TYPE.PROCESSING }: SpinnerPropsI) {
   return (
-    <SpinLoader flex="initial" alignSelf="center" color={color} width={`${size}px`} completed={completed}>
-      {!completed && 
+    <SpinLoader flex="initial" alignSelf="center" color={color} width={`${size}px`} completed={type == SPINNER_TYPE.PROCESSING ? false : true}>
+      {type == SPINNER_TYPE.PROCESSING && 
         <SpinnerSVG />
       }
-      {completed && 
+      {type == SPINNER_TYPE.ERROR && 
+        <ErrorSVG />
+      }
+      {type == SPINNER_TYPE.WARNING && 
+        <WarningSVG />
+      }
+      {type == SPINNER_TYPE.COMPLETED && 
         <CheckmarkSVG />
       }
     </SpinLoader>

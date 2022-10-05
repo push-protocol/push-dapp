@@ -1,30 +1,37 @@
+// React + Web3 Essentials
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import React from "react";
+
+// External Packages
 import styled, { css, useTheme } from 'styled-components';
-import { Section } from 'components/SharedStyling';
 
-import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core'
+// Internal Compoonents
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
-// Create Header
-function Templater() {
+// Internal Configs
+
+// Interface
+
+// Constants
+
+// Create Module
+const module = () => {
   const [openFlag, setOpenFlag] = React.useState(false);
 
   React.useEffect(() => {
 
   });
 
-  // to create blockies
-
+  // RENDER
   return (
     <Container>
       What's my purpose!
     </Container>
   );
 }
+export default module;
 
 // css styles
-const Container = styled.div`
+const Container = styled(ItemVV2)`
 
 `
-
-// Export Default
-export default Templater;

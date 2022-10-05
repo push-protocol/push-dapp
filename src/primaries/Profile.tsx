@@ -11,6 +11,7 @@ import Dropdown from '../components/Dropdown';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Item } from "./SharedStyling.js";
+import { envUtil } from 'helpers/UtilityHelper';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
@@ -36,7 +37,7 @@ const Profile = ({isDarkMode}) => {
     {
       id: "prodDapp",
       value: "",
-      link: "https://app.push.org",
+      link: `https://${envUtil.prod}`,
       title: "Production dapp",
       invertedIcon: "./prod.svg",
     },

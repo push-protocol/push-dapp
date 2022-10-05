@@ -31,7 +31,7 @@ import ChannelTutorial, {
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import NotificationToast from "../primaries/NotificationToast";
 import { Image, ItemH, Span } from "../primaries/SharedStyling";
-import { aliasChainIdsMapping } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping, MaskedPolygonChannels } from "helpers/UtilityHelper";
 
 // Internal Configs
 import { appConfig } from "config";
@@ -658,9 +658,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     <Image src={`./svg/Ethereum.svg`} alt="Ethereum" width="20px" height="20px" />
                   </Span>
                 }
-                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) &&
+                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) && !MaskedPolygonChannels[channelObject.channel] &&
                   <Span padding="0 0 0 5px">
-                    <Image src={`./svg/Polygon.svg`} alt="Ethereum" width="20px" height="20px" />
+                    <Image src={`./svg/Polygon.svg`} alt="Polygon" width="20px" height="20px" />
                   </Span>
                 }
               </Span>

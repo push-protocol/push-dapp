@@ -24,15 +24,15 @@ import { ConnectedUser, Feeds, User } from 'api';
 import ChatBox from 'components/chat/w2wChat/chatBox/chatBox';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import LoaderSpinner, {
-  LOADER_OVERLAY,
-  LOADER_TYPE,
-  PROGRESS_POSITIONING,
+  LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
+  PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wHelper from 'helpers/w2w';
 import { createCeramic } from 'helpers/w2w/ceramic';
 import * as DIDHelper from 'helpers/w2w/did';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
+import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
@@ -54,12 +54,12 @@ export interface InboxChat {
   encryptedSecret: string;
 }
 
-interface BlockedLoadingI {
+export interface BlockedLoadingI {
   enabled: boolean;
   title: string;
   spinnerEnabled?: boolean;
   spinnerSize?: number;
-  spinnerCompleted?: boolean;
+  spinnerType?: number;
   progressEnabled?: boolean;
   progress?: number;
   progressNotice?: string;
@@ -136,112 +136,27 @@ const ChatMainSection = () => {
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
 
+  // For video calling
+  const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
+    address: null,
+    fromPublicKeyArmored: null,
+    toPublicKeyArmored: null,
+    privateKeyArmored: null,
+    establishConnection: false
+  });
+
+  useEffect(() => {
+    if (videoCallInfo) {
+      console.log(videoCallInfo);
+    }
+  }, [videoCallInfo]);
+
+  // Rest of the loading logic
   useEffect(() => {
     if (isLoading) {
       connectUser();
     }
   }, []);
-
-  // const connectAndSetDID = async (): Promise<DID> => {
-  //   setBlockedLoading({
-  //     enabled: true,
-  //     title: 'Step 3/4: Creating DID',
-  //     progressEnabled: true,
-  //     progress: 75,
-  //     progressNotice:
-  //       'We use Ceramic to enable multichain and multiwallet experience. You will need to sign two transactions when they appear.',
-  //   });
-
-  //   try {
-  //     const provider: Promise<any> = await connector.getProvider();
-  //     const threeID: ThreeIdConnect = new ThreeIdConnect();
-  //     const ceramic: CeramicClient = createCeramic();
-  //     const didProvider = await DIDHelper.Get3IDDIDProvider(threeID, provider, account);
-
-  //     const did: DID = await DIDHelper.CreateDID(keyDIDGetResolver, threeIDDIDGetResolver, ceramic, didProvider);
-  //     setDID(did);
-  //     return did;
-  //   } catch (error) {
-  //     chatBoxToast.showMessageToast({
-  //       toastTitle: 'Error fetching your DID',
-  //       toastMessage: `Please reload the page`,
-  //       toastType: 'ERROR',
-  //       getToastIcon: (size) => <MdError size={size} color="red" />,
-  //     });
-  //   }
-  // };
-
-  // const connectToCeramic = async (): Promise<void> => {
-  //   // Getting User Info
-  //   setBlockedLoading({
-  //     enabled: true,
-  //     title: 'Step 1/4: Getting Account Info',
-  //     progressEnabled: true,
-  //     progress: 25,
-  //     progressNotice: 'Push Chat is in alpha and might be slow sometimes',
-  //   });
-
-  //   const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-  //   let user: User = await PushNodeClient.getUser({ caip10 });
-
-  //   // TODO: Change this to do verification on ceramic to validate if did is valid
-  //   if (user?.did.includes('did:3:')) {
-  //     // Getting User Info
-  //     setBlockedLoading({
-  //       enabled: true,
-  //       title: 'Step 2/4: Checking for DID',
-  //       progressEnabled: true,
-  //       progress: 50,
-  //       progressNotice: 'DID enables you to chat multichain with anyone',
-  //     });
-
-  //     await connectAndSetDID();
-  //   }
-
-  //   if (user) {
-  //     if (!user.wallets.includes(caip10)) {
-  //       setBlockedLoading({
-  //         enabled: true,
-  //         title: 'Step 3/4: Syncing your Info',
-  //         progressEnabled: true,
-  //         progress: 90,
-  //         progressNotice: 'Almost done! Please wait while we sync up your info',
-  //       });
-
-  //       user = await PushNodeClient.updateUser({ did: did.id, caip10 });
-  //     }
-  //   } else {
-  //     user = {
-  //       // We only need to provide this information when it's a new user
-  //       name: 'john-snow',
-  //       profilePicture:
-  //         'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
-  //       wallets: caip10,
-  //       ///
-  //       about: '',
-  //       allowedNumMsg: 0,
-  //       did: '',
-  //       encryptedPrivateKey: '',
-  //       encryptionType: '',
-  //       numMsg: 0,
-  //       publicKey: '',
-  //       sigType: '',
-  //       signature: '',
-  //       linkedListHash: '',
-  //     };
-  //   }
-
-  //   setBlockedLoading({
-  //     enabled: false,
-  //     title: "Step 4/4: Let's Chat ;)",
-  //     spinnerCompleted: true,
-  //     progressEnabled: true,
-  //     progress: 100,
-  //   });
-
-  //   setConnectedUser(user);
-  //   setIsLoading(false);
-  // };
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -299,7 +214,7 @@ const ChatMainSection = () => {
     setBlockedLoading({
       enabled: false,
       title: "Step 4/4: Let's Chat ;)",
-      spinnerCompleted: true,
+      spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
       progressEnabled: true,
       progress: 100,
     });
@@ -378,7 +293,7 @@ const ChatMainSection = () => {
               padding="10px 10px 10px 10px"
               chatActive={viewChatBox}
             >
-              <ChatBoxSection />
+              <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
             </ChatContainer>
           </Context.Provider>
           {/* The rest of your application */}
@@ -398,11 +313,27 @@ const ChatMainSection = () => {
           width="50%"
           spinnerEnabled={blockedLoading.spinnerEnabled}
           spinnerSize={blockedLoading.spinnerSize}
-          spinnerCompleted={blockedLoading.spinnerCompleted}
+          spinnerType={blockedLoading.spinnerType}
           progressEnabled={blockedLoading.progressEnabled}
           progressPositioning={PROGRESS_POSITIONING.BOTTOM}
           progress={blockedLoading.progress}
           progressNotice={blockedLoading.progressNotice}
+        />
+      )}
+
+      {/* But video chat trumps this now!!! */}
+      {videoCallInfo.establishConnection && (
+        <VideoCallSection
+          videoCallInfo={videoCallInfo}
+          endVideoCallHook={() => {
+            setVideoCallInfo({
+              address: null,
+              fromPublicKeyArmored: null,
+              toPublicKeyArmored: null,
+              privateKeyArmored: null,
+              establishConnection: false
+            });
+          }}
         />
       )}
     </ItemHV2>

@@ -26,12 +26,6 @@ import UsersDataStore from 'singletons/UsersDataStore';
 
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
-const blockchainName = {
-  1: 'ETH_MAINNET',
-  137: 'POLYGON_MAINNET',
-  42: 'ETH_TEST_KOVAN',
-  80001: 'POLYGON_TEST_MUMBAI',
-};
 
 // Create Header
 function ChannelDashboardPage() {

@@ -11,7 +11,7 @@ import styled, { useTheme } from "styled-components";
 import Faucets from "components/Faucets";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from "components/ViewChannelItem";
-import UtilityHelper from 'helpers/UtilityHelper';
+import UtilityHelper, { MaskedChannels, MaskedPolygonChannels } from 'helpers/UtilityHelper';
 import { AiOutlineSearch } from "react-icons/ai";
 import { incrementPage, setChannelMeta, updateBulkSubscriptions } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
@@ -256,7 +256,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             channel.channel !== ZERO_ADDRESS && (
               <>
                 <ViewChannelItems key={channel.channel} self="stretch">
-                  {((channelsNetworkId == appConfig.coreContractChain) || (channelsNetworkId == channel.alias_blockchain_id)) &&
+                  {(!MaskedChannels[channel.channel]) && ((channelsNetworkId == appConfig.coreContractChain) || ((channelsNetworkId == channel.alias_blockchain_id || channel.alias_blockchain_id == "80001") && !MaskedPolygonChannels[channel.channel])) &&
                     <ViewChannelItem channelObjectProp={channel} loadTeaser={loadTeaser} playTeaser={playTeaser} />
                   }
                 </ViewChannelItems>
@@ -362,7 +362,7 @@ const ScrollItem = styled(Item)`
   
   flex: 1;
   padding:  5px 20px 10px 20px;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &::-webkit-scrollbar-track {
     background-color: ${props => props.theme.scrollBg};

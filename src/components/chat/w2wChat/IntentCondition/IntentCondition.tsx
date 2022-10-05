@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { caip10ToWallet } from 'helpers/w2w'
 
 function IntentCondition(props): JSX.Element {
-  console.log('condition called')
   return (
     <MessageWrapper>
       <ReceivedMessage>

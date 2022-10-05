@@ -47,7 +47,7 @@ export const trezor = new TrezorConnector({
   url: CORE_RPC,
   pollingInterval: POLLING_INTERVAL,
   manifestEmail: 'support@epns.io',
-  manifestAppUrl: 'https://staging-app.epns.io',
+  manifestAppUrl: 'https://staging.push.org',
 });
 
 //
