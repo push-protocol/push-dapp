@@ -77,8 +77,9 @@
 }
 
 .chatBoxTop div::-webkit-scrollbar {
-  width: 5px;
-  /* display: none; */
+  /* width: 4px; */
+  width: 0;
+  height: 0;
 }
 
 
