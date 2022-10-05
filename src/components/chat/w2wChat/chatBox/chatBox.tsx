@@ -1188,21 +1188,8 @@ const MessageContainer = styled.div`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
-  // overflow-y: auto;
-  // overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  // &&::-webkit-scrollbar {
-  //   width: 0;
-  //   height: 0;
-  // }
-  // &&::-webkit-scrollbar {
-  //   width: 4px;
-  // }
-  // &&::-webkit-scrollbar-thumb {
-  //   background: #cf1c84;
-  //   border-radius: 10px;
-  // }
 `;
 
 const UserInfo = styled.div`
