@@ -66,9 +66,9 @@ export const isUserAgentIphone = (userAgent) => {
 };
 
 export const envUtil = {
-  prod: 'app.epns.io',
-  staging: 'staging.epns.io',
-  dev: 'dev.epns.io',
+  prod: 'app.push.org',
+  staging: 'staging.push.org',
+  dev: 'dev.push.org',
   localhost: 'localhost',
 };
 
