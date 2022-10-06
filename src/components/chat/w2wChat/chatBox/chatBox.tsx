@@ -767,8 +767,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         fromPublicKeyArmored: connectedUser.publicKey,
         toPublicKeyArmored: currentChat.publicKey,
         privateKeyArmored: connectedUser.privateKey,
-        establishConnection: true
-      })
+        establishConnection: true,
+      });
       setNewMessage('');
       return;
     }
@@ -1188,19 +1188,8 @@ const MessageContainer = styled.div`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
-  overflow: auto;
   display: flex;
   flex-direction: column;
-  /* &&::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  } */
-  &&::-webkit-scrollbar {
-    width: 4px;
-  }
-  &&::-webkit-scrollbar-thumb {
-    background: #cf1c84;
-  }
 `;
 
 const UserInfo = styled.div`
