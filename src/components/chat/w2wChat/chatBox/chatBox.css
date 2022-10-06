@@ -184,10 +184,9 @@
   margin: 0 2px;
 }
 
-.react-scroll-to-bottom--css-sndnf-1n7m0yu{
+.chatBoxTop > * {
   overflow-x: hidden;
 }
-
 
 .beforeMessageLoader {
   display: flex;
