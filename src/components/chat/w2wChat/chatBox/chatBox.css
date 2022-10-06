@@ -77,8 +77,7 @@
 }
 
 .chatBoxTop div::-webkit-scrollbar {
-  width: 5px;
-  /* display: none; */
+  width: 4px;
 }
 
 
@@ -185,6 +184,9 @@
   margin: 0 2px;
 }
 
+.chatBoxTop > * {
+  overflow-x: hidden;
+}
 
 .beforeMessageLoader {
   display: flex;

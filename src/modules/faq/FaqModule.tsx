@@ -175,7 +175,7 @@ function FaqModule() {
                     In order to receive notifications seamlessly, Push (EPNS) provides 3 different crypto front-ends
                   </Span>
                   <Span2>
-                    <AMod href="https://app.epns.io/" target="_blank">
+                    <AMod href="https://app.push.org/" target="_blank">
                       Push (EPNS) Dapp
                     </AMod>
                   </Span2>
@@ -231,7 +231,7 @@ function FaqModule() {
                 <Answer>
                   <Span>
                     Easiest way to create a channel is from our{' '}
-                    <AMod target="_blank" href="https://app.epns.io/#/dashboard">
+                    <AMod target="_blank" href="https://app.push.org/#/dashboard">
                       Push (EPNS) Dapp
                     </AMod>{' '}
                     itself. Find the entire channel creation process{' '}
@@ -359,7 +359,7 @@ function FaqModule() {
                 <Answer>
                   <Span>
                     All of our documentation can be found in our{' '}
-                    <AMod target="_blank" href="https://docs.epns.io/">
+                    <AMod target="_blank" href="https://docs.push.org/">
                       Push (EPNS) Documentation HUB
                     </AMod>
                     .
