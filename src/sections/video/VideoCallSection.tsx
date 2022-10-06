@@ -40,11 +40,13 @@ const videoCallSection = ({ videoCallInfo, endVideoCallHook }: VideoCallSectionP
     title: null,
   });
 
+  // get account
+  const { account } = useWeb3React();
+
   // get stream
-  const { initializeStream, me } = useContext(VideoCallContext);
+  const { initializeStream, callUser } = useContext(VideoCallContext);
   
   React.useEffect(() => {
-    
     const setupStream = async () => {
       setBlockedLoading({
         enabled: true,
@@ -53,7 +55,10 @@ const videoCallSection = ({ videoCallInfo, endVideoCallHook }: VideoCallSectionP
       });
       await new Promise(r => setTimeout(r, 200));
       try {
-        await initializeStream();
+        await initializeStream(account);
+
+        // send notification with id 
+        callUser(account, videoCallInfo.address);
 
         setBlockedLoading({
           enabled: false,
