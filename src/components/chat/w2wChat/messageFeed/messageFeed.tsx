@@ -187,10 +187,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
             if (desiredUser.length) {
               feed = desiredUser[0];
-            } else {
-              if(IntentUser.length){
-                feed = IntentUser[0];
-              }else{
+            } else if(IntentUser.length){
+              feed = IntentUser[0];
+            }else {
                 feed = {
                   msg: {
                     name: user.wallets.split(',')[0].toString(),
@@ -220,9 +219,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   cid: null,
                 };
               }
-
-              
-            }
             setFeeds([feed]);
           }
         } else {
