@@ -24,8 +24,10 @@ import { ConnectedUser, Feeds, User } from 'api';
 import ChatBox from 'components/chat/w2wChat/chatBox/chatBox';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import LoaderSpinner, {
-  LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
-  PROGRESS_POSITIONING
+  LOADER_OVERLAY,
+  LOADER_SPINNER_TYPE,
+  LOADER_TYPE,
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wHelper from 'helpers/w2w';
 import { createCeramic } from 'helpers/w2w/ceramic';
@@ -92,6 +94,8 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
+  selectedENSName: string;
+  setSelectedENSName: (ens: string) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -132,6 +136,7 @@ const ChatMainSection = () => {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  const [selectedENSName, setSelectedENSName] = useState<string>(null);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -142,7 +147,7 @@ const ChatMainSection = () => {
     fromPublicKeyArmored: null,
     toPublicKeyArmored: null,
     privateKeyArmored: null,
-    establishConnection: false
+    establishConnection: false,
   });
 
   useEffect(() => {
@@ -276,6 +281,8 @@ const ChatMainSection = () => {
               setActiveTab,
               userShouldBeSearched,
               setUserShouldBeSearched,
+              selectedENSName,
+              setSelectedENSName,
             }}
           >
             <ChatSidebarContainer
@@ -331,7 +338,7 @@ const ChatMainSection = () => {
               fromPublicKeyArmored: null,
               toPublicKeyArmored: null,
               privateKeyArmored: null,
-              establishConnection: false
+              establishConnection: false,
             });
           }}
         />

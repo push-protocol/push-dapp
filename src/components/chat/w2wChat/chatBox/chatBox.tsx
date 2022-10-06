@@ -71,6 +71,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
+    selectedENSName,
   }: AppContext = useContext<AppContext>(Context);
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
@@ -93,7 +94,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
-
+  console.log("resolved in snap",selectedENSName)
   // get reverse name
   React.useEffect(() => {
     if (currentChat && currentChat.msg && currentChat.msg.name) {
@@ -119,9 +120,12 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         } else {
           setENSName(null);
         }
+        console.log("resolved in Box",ens, currentChat.msg.name)
       });
     }
   }, [currentChat]);
+
+  console.log("reolved in box outside",ensName)
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -928,9 +932,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               fontWeight="400"
               textAlign="start"
             >
-              {ensName && `${ensName} (${caip10ToWallet(currentChat.msg.name)})`}
+              {selectedENSName && `${selectedENSName} (${caip10ToWallet(currentChat.msg.name)})`}
 
-              {!ensName && caip10ToWallet(currentChat.msg.name)}
+              {!selectedENSName && ensName && `${ensName} (${caip10ToWallet(currentChat.msg.name)})`}
+
+              {!selectedENSName && !ensName && caip10ToWallet(currentChat.msg.name)}
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
