@@ -33,18 +33,27 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox, inbox,receivedIntents, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-  const [isSameUser, setIsSameUser] = useState<boolean>(false);
-  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
-  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
+
+  const onFeedClick = (feed:Feeds):void => {
+    if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
+    {
+      setActiveTab(1);
+    }
+    setChat(feed);
+    setSelectedChatSnap(feed.threadhash);
+    setSearchedUser('');
+    setHasUserBeenSearched(false);
+  }
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (
@@ -153,7 +162,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
-            setIsSameUser(true);
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -175,11 +183,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
 
             //the following code checks that User already present in the Intent or not
-            const didOrWallet: string = connectedUser.wallets.split(',')[0];
-            let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-            intents = await decryptFeeds({ feeds: intents, connectedUser });
-            console.log("Intent",intents)
-            const IntentUser = intents.filter((userExist) => userExist.did === user.did);
+            const IntentUser = receivedIntents.filter((userExist) => userExist.did === user.did);
 
             if (desiredUser.length) {
               feed = desiredUser[0];
@@ -300,12 +304,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     }}
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
-                    onClick={(): void => {
-                      setChat(feed);
-                      setSelectedChatSnap(feed.threadhash);
-                      setSearchedUser('');
-                      setHasUserBeenSearched(false);
-                    }}
+                    onClick={(): void => onFeedClick(feed)}
                   />
                 </ItemVV2>
               ))
