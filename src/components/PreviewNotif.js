@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import styled, { ThemeProvider, useTheme } from "styled-components";
 
 // Internal Compoonents
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { NotificationItem } from "@pushprotocol/uiweb";
 import { H2, Item, Span } from "../primaries/SharedStyling";
 import { networkName } from "helpers/UtilityHelper";
 

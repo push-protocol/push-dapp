@@ -11,7 +11,7 @@ import styled, { ThemeProvider, useTheme } from "styled-components";
 
 // Internal Compoonents
 import * as PushAPI from "@pushprotocol/restapi";
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import { NotificationItem } from "@pushprotocol/uiweb";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import SearchFilter from "components/SearchFilter";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";

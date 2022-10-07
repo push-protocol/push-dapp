@@ -10,7 +10,7 @@ import { useClickAway } from 'react-use';
 import { Waypoint } from 'react-waypoint';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
-import { NotificationItem } from '@epnsproject/sdk-uiweb';
+import { NotificationItem } from '@pushprotocol/uiweb';
 
 // Internal Components
 import { getReq, postReq } from 'api';
