@@ -9,7 +9,7 @@ import { toast as toaster } from 'react-toastify';
 import { useClickAway } from 'react-use';
 import { Waypoint } from 'react-waypoint';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-import * as EpnsAPI from '@epnsproject/sdk-restapi';
+import * as PushAPI from '@pushprotocol/restapi';
 import { NotificationItem } from '@epnsproject/sdk-uiweb';
 
 // Internal Components
@@ -140,7 +140,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     if (loading || finishedFetching || run) return;
     setLoading(true);
     try {
-      const results = await EpnsAPI.user.getFeeds({
+      const results = await PushAPI.user.getFeeds({
         user: user,
         limit: NOTIFICATIONS_PER_PAGE,
         page: page,
@@ -148,7 +148,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
         spam: true,
         raw: true
       });
-      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      let parsedResponse = PushAPI.utils.parseApiResponse(results);
       parsedResponse.forEach((each, i) => {
         each['date'] = results[i].epoch;
         each['epoch'] = new Date(each['date']).getTime() / 1000;
@@ -185,7 +185,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     setLoading(true);
 
     try {
-      const results = await EpnsAPI.user.getFeeds({
+      const results = await PushAPI.user.getFeeds({
         user: user,
         limit: NOTIFICATIONS_PER_PAGE,
         page: 1,
@@ -196,7 +196,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      let parsedResponse = PushAPI.utils.parseApiResponse(results);
       parsedResponse.forEach((each, i) => {
         each['date'] = results[i].epoch;
         each['epoch'] = new Date(each['date']).getTime() / 1000;
@@ -236,7 +236,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const results = await EpnsAPI.user.getFeeds({
+      const results = await PushAPI.user.getFeeds({
         user: user,
         limit: 100000,
         page: 1,
@@ -248,7 +248,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      let parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      let parsedResponse = PushAPI.utils.parseApiResponse(results);
       parsedResponse.forEach((each, i) => {
         each['date'] = results[i].epoch;
         each['epoch'] = new Date(each['date']).getTime() / 1000;
@@ -360,7 +360,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
       channelAddress: convertAddressToAddrCaip(channelAddress, nameToId[blockchain]), // channel address in CAIP
       userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
     })
-    await EpnsAPI.channels.subscribe({
+    await PushAPI.channels.subscribe({
       signer: _signer,
       channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
       userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP

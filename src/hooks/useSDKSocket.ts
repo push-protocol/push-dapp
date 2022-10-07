@@ -1,7 +1,7 @@
 import {
   createSocketConnection,
   EVENTS
-} from '@epnsproject/sdk-socket';
+} from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { useEffect, useState } from 'react';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';

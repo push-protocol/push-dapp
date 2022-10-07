@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.min.css";
 import styled, { css, useTheme } from "styled-components";
 
 // Internal Compoonents
-import * as EpnsAPI from "@epnsproject/sdk-restapi";
+import * as PushAPI from "@pushprotocol/restapi";
 import { postReq } from "api";
 import { Device } from "assets/Device";
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
@@ -397,7 +397,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       }
 
       const _signer = await library.getSigner(account);
-      await EpnsAPI.channels.subscribe({
+      await PushAPI.channels.subscribe({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
@@ -510,7 +510,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       unsubscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
 
       const _signer = await library.getSigner(account);
-      await EpnsAPI.channels.unsubscribe({
+      await PushAPI.channels.unsubscribe({
         signer: _signer,
         channelAddress: convertAddressToAddrCaip(channelAddress, chainId), // channel address in CAIP
         userAddress: convertAddressToAddrCaip(account, chainId), // user address in CAIP
