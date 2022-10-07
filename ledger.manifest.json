@@ -3,7 +3,7 @@
     "name": "PUSH",
     "url": "https://platform.apps.ledger.com/app/dapp-browser?dappName=PUSH&nanoApp=PUSH&url=https%3A%2F%2Fapp.push.org%2F%3Fembed%3Dtrue",
     "homepageUrl": "https://push.org/",
-    "icon": "https://backend-dev.epns.io/assets/epnslogo.png",
+    "icon": "https://backend-dev.epns.io/assets/pushlogo.png",
     "platform": "all",
     "apiVersion": "0.0.1",
     "manifestVersion": "1",
