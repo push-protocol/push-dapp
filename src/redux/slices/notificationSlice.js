@@ -14,13 +14,9 @@ export const contractSlice = createSlice({
     name: "notifications",
     initialState,
     reducers: {
+        resetNotificationsSlice: () => initialState,
         toggleToggler: (state) => {
             state.toggler = !state.toggler;
-        },
-        resetState: (state) => {
-            state.page = initialState.page;
-            state.notifications = initialState.notifications;
-            state.finishedFetching = initialState.finishedFetching;
         },
         addPaginatedNotifications: (state, action) => {
             state.notifications = [ ...state.notifications, ...action.payload ];
@@ -44,6 +40,7 @@ export const contractSlice = createSlice({
 });
 
 export const {
+    resetNotificationsSlice,
     toggleToggler,
     addPaginatedNotifications,
     incrementPage,

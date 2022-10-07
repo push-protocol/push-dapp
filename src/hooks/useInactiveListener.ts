@@ -3,11 +3,11 @@ import { useWeb3React } from '@web3-react/core'
 import { injected } from 'connectors'
 
 export function useInactiveListener(suppress: boolean = false) {
-    const { active, error, activate } = useWeb3React()
+    const { active, error, activate, connector } = useWeb3React()
   
     useEffect((): any => {
-      const { ethereum } = window as any
-      if (ethereum && ethereum.on && !active && !error && !suppress) {
+      const providerConnector = connector;
+      if (providerConnector && providerConnector.on && !active && !error && !suppress) {
         const handleConnect = () => {
           console.log("Handling 'connect' event")
           activate(injected)
@@ -27,17 +27,17 @@ export function useInactiveListener(suppress: boolean = false) {
           activate(injected)
         }
   
-        ethereum.on('connect', handleConnect)
-        ethereum.on('chainChanged', handleChainChanged)
-        ethereum.on('accountsChanged', handleAccountsChanged)
-        ethereum.on('networkChanged', handleNetworkChanged)
+        providerConnector.on('connect', handleConnect)
+        providerConnector.on('chainChanged', handleChainChanged)
+        providerConnector.on('accountsChanged', handleAccountsChanged)
+        providerConnector.on('networkChanged', handleNetworkChanged)
   
         return () => {
-          if (ethereum.removeListener) {
-            ethereum.removeListener('connect', handleConnect)
-            ethereum.removeListener('chainChanged', handleChainChanged)
-            ethereum.removeListener('accountsChanged', handleAccountsChanged)
-            ethereum.removeListener('networkChanged', handleNetworkChanged)
+          if (providerConnector.removeListener) {
+            providerConnector.removeListener('connect', handleConnect)
+            providerConnector.removeListener('chainChanged', handleChainChanged)
+            providerConnector.removeListener('accountsChanged', handleAccountsChanged)
+            providerConnector.removeListener('networkChanged', handleNetworkChanged)
           }
         }
       }
