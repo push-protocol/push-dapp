@@ -767,7 +767,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         fromPublicKeyArmored: connectedUser.publicKey,
         toPublicKeyArmored: currentChat.publicKey,
         privateKeyArmored: connectedUser.privateKey,
-        establishConnection: true,
+        establishConnection: 1,
       });
       setNewMessage('');
       return;
