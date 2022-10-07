@@ -94,7 +94,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
-  console.log("resolved in snap",selectedENSName)
   // get reverse name
   React.useEffect(() => {
     if (currentChat && currentChat.msg && currentChat.msg.name) {
@@ -111,7 +110,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       ) {
         provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
       }
-
       provider.lookupAddress(checksumWallet).then((ens) => {
         if (ens) {
           // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
@@ -120,12 +118,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         } else {
           setENSName(null);
         }
-        console.log("resolved in Box",ens, currentChat.msg.name)
       });
     }
   }, [currentChat]);
 
-  console.log("reolved in box outside",ensName)
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {

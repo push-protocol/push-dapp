@@ -40,8 +40,10 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
   const [ensName, setENSName] = useState(null);
 
   React.useEffect(() => {
-    selected ? setSelectedENSName(ensName) : setSelectedENSName(null);
-  }, [selected]);
+    selected ? ensName?setSelectedENSName(ensName) : setSelectedENSName(null):null;
+  }, [ensName]);
+
+
 
   // get reverse name
   React.useEffect(() => {
@@ -65,8 +67,11 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
         // setENSName(`${ens} (${shorterUsername})`);
         setENSName(ens);
       }
+      else {
+        setENSName(null);
+      }
     });
-  }, []);
+  }, [selected]);
 
   // get short username
   const shortUsername = caip10ToWallet(username).slice(0, 8) + '...' + caip10ToWallet(username).slice(-7);
