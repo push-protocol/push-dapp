@@ -64,11 +64,11 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
   db: IDBDatabase,
   key: string,
   dbName: string,
-  chatMesage: T
+  chatMesage: T | string
 ): Promise<IDBValidKey> => {
   return await new Promise((resolve, reject) => {
     const newItem = {
-      body: chatMesage
+      body: chatMesage,
     };
     if (dbName === 'Inbox' || dbName === 'Intent') {
       newItem['did'] = key;
@@ -76,10 +76,13 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
     if (dbName === 'CID_store') {
       newItem['cid'] = key;
     }
+    if (dbName === 'Wallets') {
+      newItem['ens'] = key;
+    }
     const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
     const objectStore: IDBObjectStore = tx.objectStore(dbName);
     const query = objectStore.put(newItem);
-    
+
     query.onsuccess = (e: any) => {
       return resolve(query.result);
     };

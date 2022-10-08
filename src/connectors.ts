@@ -19,9 +19,11 @@ const POLLING_INTERVAL = 12000;
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 const CORE_RPC = appConfig.coreRPC;
 
-const RPC_URLS: { [chainId: number]: string } = {
+let RPC_URLS: { [chainId: number]: string } = {
   [CORE_CHAIN_ID]: appConfig.coreRPC,
 };
+
+RPC_URLS = Object.assign(RPC_URLS, appConfig.aliasRPC);
 
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
 
