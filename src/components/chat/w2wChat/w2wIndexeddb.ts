@@ -13,24 +13,38 @@ let db: IDBDatabase;
  * @returns
  */
 
-export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
+ export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
   state: 'Read' | 'Insert',
-  dbName: 'Inbox' | 'Intent' | 'CID_store',
+  dbName: 'Inbox' | 'Intent' | 'CID_store' | 'Wallets',
   key: string,
-  message: T,
-  index: 'did' | 'cid'
+  message: T | string,
+  index: 'did' | 'cid' | 'ens'
 ): Promise<IDBValidKey> => {
   return await new Promise((resolve, reject) => {
-    const openRequest = window.indexedDB.open('w2w_idxDb', 2);
+    const openRequest = window.indexedDB.open('w2w_idxDb', 3);
+    let cIDStore,cIDStore1,cIDStore2,cIDStore3;
     openRequest.onupgradeneeded = (e: any) => {
       db = e.target.result;
-      const cIDStore = db.createObjectStore('Inbox', { keyPath: 'did' });
-      cIDStore.createIndex('did', 'did', { unique: true });
-      const cIDStore1 = db.createObjectStore('CID_store', { keyPath: 'cid' });
-      cIDStore1.createIndex('cid', 'cid', { unique: true });
-      const cIDStore2 = db.createObjectStore('Intent', { keyPath: 'did' });
-      cIDStore2.createIndex('did', 'did', { unique: true });
+      if (!db.objectStoreNames.contains('Inbox')) {
+       cIDStore = db.createObjectStore('Inbox', { keyPath: 'did' });
+       cIDStore.createIndex('did', 'did', { unique: true });
+      }
+      if (!db.objectStoreNames.contains('CID_store')) {
+       cIDStore1 = db.createObjectStore('CID_store', { keyPath: 'cid' });
+       cIDStore1.createIndex('cid', 'cid', { unique: true });
+      }
+      if (!db.objectStoreNames.contains('Intent')) {
+       cIDStore2 = db.createObjectStore('Intent', { keyPath: 'did' });
+       cIDStore2.createIndex('did', 'did', { unique: true });
+      }
+      if (!db.objectStoreNames.contains('Wallets')) {
+       cIDStore3 = db.createObjectStore('Wallets', { keyPath: 'ens' });
+       cIDStore3.createIndex('ens', 'ens', { unique: true });
+      }
+      
+      console.log("created",cIDStore3)
     };
+    
     openRequest.onsuccess = (e: any) => {
       db = e.target.result;
 
