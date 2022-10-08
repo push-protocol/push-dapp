@@ -9,6 +9,8 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { intitializeDb } from '../w2wChat/w2wIndexeddb';
+import { MessageIPFS } from '../../../helpers/w2w/ipfs';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -40,10 +42,8 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
   const [ensName, setENSName] = useState(null);
 
   React.useEffect(() => {
-    selected ? ensName?setSelectedENSName(ensName) : setSelectedENSName(null):null;
-  }, [ensName]);
-
-
+    selected ? setSelectedENSName(ensName) : setSelectedENSName(null);
+  }, [selected]);
 
   // get reverse name
   React.useEffect(() => {
@@ -61,17 +61,17 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
       provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
     }
 
-    provider.lookupAddress(checksumWallet).then((ens) => {
+    provider.lookupAddress(checksumWallet).then(async (ens) => {
       if (ens) {
         // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
         // setENSName(`${ens} (${shorterUsername})`);
         setENSName(ens);
-      }
-      else {
+        await intitializeDb<MessageIPFS>('Insert', 'Wallets', username, ens, 'ens');
+      } else {
         setENSName(null);
       }
     });
-  }, [selected]);
+  }, []);
 
   // get short username
   const shortUsername = caip10ToWallet(username).slice(0, 8) + '...' + caip10ToWallet(username).slice(-7);

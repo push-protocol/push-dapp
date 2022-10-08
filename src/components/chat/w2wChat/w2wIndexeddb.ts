@@ -15,10 +15,10 @@ let db: IDBDatabase;
 
 export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
   state: 'Read' | 'Insert',
-  dbName: 'Inbox' | 'Intent' | 'CID_store',
+  dbName: 'Inbox' | 'Intent' | 'CID_store' | 'Wallets',
   key: string,
-  message: T,
-  index: 'did' | 'cid'
+  message: T | string,
+  index: 'did' | 'cid' | 'ens'
 ): Promise<IDBValidKey> => {
   return await new Promise((resolve, reject) => {
     const openRequest = window.indexedDB.open('w2w_idxDb', 2);
@@ -30,7 +30,11 @@ export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
       cIDStore1.createIndex('cid', 'cid', { unique: true });
       const cIDStore2 = db.createObjectStore('Intent', { keyPath: 'did' });
       cIDStore2.createIndex('did', 'did', { unique: true });
+      const cIDStore3 = db.createObjectStore('Wallets', { keyPath: 'ens' });
+      cIDStore3.createIndex('ens', 'ens', { unique: true });
+      console.log("created",cIDStore3)
     };
+    
     openRequest.onsuccess = (e: any) => {
       db = e.target.result;
 
@@ -50,11 +54,11 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
   db: IDBDatabase,
   key: string,
   dbName: string,
-  chatMesage: T
+  chatMesage: T | string
 ): Promise<IDBValidKey> => {
   return await new Promise((resolve, reject) => {
     const newItem = {
-      body: chatMesage
+      body: chatMesage,
     };
     if (dbName === 'Inbox' || dbName === 'Intent') {
       newItem['did'] = key;
@@ -62,10 +66,13 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
     if (dbName === 'CID_store') {
       newItem['cid'] = key;
     }
+    if (dbName === 'Wallets') {
+      newItem['wallet'] = key;
+    }
     const tx: IDBTransaction = db.transaction(dbName, 'readwrite');
     const objectStore: IDBObjectStore = tx.objectStore(dbName);
     const query = objectStore.put(newItem);
-    
+
     query.onsuccess = (e: any) => {
       return resolve(query.result);
     };
