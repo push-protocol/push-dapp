@@ -94,8 +94,6 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
-  selectedENSName: string;
-  setSelectedENSName: (ens: string) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -136,9 +134,6 @@ const ChatMainSection = () => {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
-  const [selectedENSName, setSelectedENSName] = useState<string>(null);
-
-  const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
 
   // For video calling
@@ -281,8 +276,6 @@ const ChatMainSection = () => {
               setActiveTab,
               userShouldBeSearched,
               setUserShouldBeSearched,
-              selectedENSName,
-              setSelectedENSName,
             }}
           >
             <ChatSidebarContainer

@@ -36,14 +36,9 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
   // get theme
   const theme = useTheme();
 
-  const { setSelectedENSName }: AppContext = useContext<AppContext>(Context);
-
   // get ens name
   const [ensName, setENSName] = useState(null);
 
-  React.useEffect(() => {
-    selected ? setSelectedENSName(ensName) : setSelectedENSName(null);
-  }, [selected]);
 
   // get reverse name
   React.useEffect(() => {
@@ -63,11 +58,11 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
 
     provider.lookupAddress(checksumWallet).then(async (ens) => {
       if (ens) {
-        // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
-        // setENSName(`${ens} (${shorterUsername})`);
+        await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, ens, 'ens');
         setENSName(ens);
-        await intitializeDb<MessageIPFS>('Insert', 'Wallets', username, ens, 'ens');
       } else {
+        
+        await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, null, 'ens');
         setENSName(null);
       }
     });

@@ -94,37 +94,49 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
+
+  const getEnsFromIndexDb = async(checksumWallet:string):Promise<any> => {
+    const ensFromIndexDB: any = await intitializeDb<string>('Read', 'Wallets', checksumWallet, '', 'ens');
+    return ensFromIndexDB;
+  }
   // get reverse name
   React.useEffect(() => {
-    // if (currentChat && currentChat.msg && currentChat.msg.name) {
-    //   const walletLowercase = caip10ToWallet(currentChat.msg.name).toLowerCase();
-    //   const checksumWallet = ethers.utils.getAddress(walletLowercase);
+    if (currentChat && currentChat.msg && currentChat.msg.name) {
+      const walletLowercase = caip10ToWallet(currentChat.msg.name).toLowerCase();
+      const checksumWallet = ethers.utils.getAddress(walletLowercase);
 
-    //   let provider = ethers.getDefaultProvider('mainnet');
-    //   if (
-    //     window.location.hostname == 'app.push.org' ||
-    //     window.location.hostname == 'staging.push.org' ||
-    //     window.location.hostname == 'dev.push.org' ||
-    //     window.location.hostname == 'alpha.push.org' ||
-    //     window.location.hostname == 'w2w.push.org'
-    //   ) {
-    //     provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
-    //   }
-    //   provider.lookupAddress(checksumWallet).then((ens) => {
-    //     if (ens) {
-    //       // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
-    //       // setENSName(`${ens} (${shorterUsername})`);
-    //       setENSName(ens);
-    //     } else {
-    //       setENSName(null);
-    //     }
-    //   });
-    // }
-    // async function resolving() {
-    //   const messageFromIndexDB: any = await intitializeDb<string>('Read', 'Wallets', currentChat?.msg?.name, '', 'ens');
-    //   console.log("index data",messageFromIndexDB)
-    // }
-    // resolving();
+      let provider = ethers.getDefaultProvider('mainnet');
+      if (
+        window.location.hostname == 'app.push.org' ||
+        window.location.hostname == 'staging.push.org' ||
+        window.location.hostname == 'dev.push.org' ||
+        window.location.hostname == 'alpha.push.org' ||
+        window.location.hostname == 'w2w.push.org'
+      ) {
+        provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
+      }
+      getEnsFromIndexDb(checksumWallet).then((ensFromIndexDb)=>{
+        if(ensFromIndexDb)
+        {
+          setENSName(ensFromIndexDb.body);
+        }
+        else{
+          provider.lookupAddress(checksumWallet).then(async(ens) => {
+            if (ens) {
+              await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, ens, 'ens');
+              setENSName(ens);
+            } else {
+              
+              await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, null, 'ens');
+              setENSName(null);
+            }
+          });
+        }
+       
+      });
+    
+    }
+   
   }, [currentChat]);
 
   const getMessagesFromCID = async (): Promise<void> => {
@@ -932,11 +944,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               fontWeight="400"
               textAlign="start"
             >
-              {selectedENSName && `${selectedENSName} (${caip10ToWallet(currentChat.msg.name)})`}
+              {ensName && `${ensName} (${caip10ToWallet(currentChat.msg.name)})`}
 
-              {!selectedENSName && ensName && `${ensName} (${caip10ToWallet(currentChat.msg.name)})`}
-
-              {!selectedENSName && !ensName && caip10ToWallet(currentChat.msg.name)}
+              {!ensName && caip10ToWallet(currentChat.msg.name)}
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
