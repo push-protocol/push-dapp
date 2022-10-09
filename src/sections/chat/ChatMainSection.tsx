@@ -359,11 +359,7 @@ const ChatMainSection = () => {
               fromPublicKeyArmored: null,
               toPublicKeyArmored: null,
               privateKeyArmored: null,
-<<<<<<< HEAD
-              establishConnection: false,
-=======
               establishConnection: 0
->>>>>>> 8ccb1d34b9e4df8b88ceab159bd38bf3f6cf6f03
             });
           }}
         />
