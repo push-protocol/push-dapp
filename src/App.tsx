@@ -97,7 +97,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   // enable socket notifications
-  useSDKSocket({ account, chainId, env: 'dev' });
+  useSDKSocket({ account, chainId, env: appConfig.appEnv });
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
