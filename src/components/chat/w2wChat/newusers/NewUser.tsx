@@ -10,6 +10,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import * as PushNodeClient from 'api';
@@ -40,6 +41,7 @@ function NewUser() {
   const [isInvalidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(false);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
+  const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
   const provider = ethers.getDefaultProvider();
 
   useEffect(() => {
@@ -280,30 +282,22 @@ function NewUser() {
           <>
             {feeds?.map((feed: Feeds, i) => {
               return (
-                <ProfileCard
-                  padding="10px"
-                  background={theme.chat.snapFocusBg}
-                  onClick={() => setChat(feed)}
+                <ItemVV2
+                  alignSelf="stretch"
+                  flex="initial"
                   key={feed.threadhash || i}
                 >
-                  <ImageV2
-                    src={feed.profilePicture}
-                    alt="UserProfile"
-                    height="48px"
-                    width="48px"
-                    borderRadius="50%"
-                    margin="0px 13px 0px 0px"
+                  <ChatSnap
+                    pfp={feed.profilePicture}
+                    username={feed.msg.name}
+                    selected={feed.threadhash == selectedChatSnap ? true : false}
+                    onClick={(): void => {
+                      setChat(feed);
+                      setSelectedChatSnap(feed.threadhash);
+                    }}
+                    isNewUser={true}
                   />
-                  <SpanV2
-                    fontSize="17px"
-                    fontWeight="500"
-                    color={theme.default.color}
-                  >
-                    {caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(0, 8) +
-                      '...' +
-                      caip10ToWallet(feed.wallets.split(',')[0].toString()).slice(-7)}
-                  </SpanV2>
-                </ProfileCard>
+                </ItemVV2>
               );
             })}
           </>
