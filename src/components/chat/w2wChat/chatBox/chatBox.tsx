@@ -696,6 +696,17 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         });
 
         if (typeof msg === 'string') {
+          if (msg.toLowerCase() === 'your wallet is not whitelisted') {
+            // Getting User Info
+            setBlockedLoading({
+              enabled: true,
+              title: 'Wallet is not whitelisted',
+              spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
+              progressEnabled: true,
+              progress: 0,
+              progressNotice: 'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
+            });
+          }
           // Display toaster
           chatBoxToast.showMessageToast({
             toastTitle: 'Error',
