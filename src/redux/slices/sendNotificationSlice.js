@@ -15,6 +15,7 @@ export const contractSlice = createSlice({
     name: "canSend",
     initialState,
     reducers: {
+        resetCanSendSlice: () => initialState,
         setCanSend: (state, action) => {
             state.canSend = action.payload;
         }
@@ -22,6 +23,7 @@ export const contractSlice = createSlice({
 });
 
 export const {
+    resetCanSendSlice,
     setCanSend,
 } = contractSlice.actions;
 

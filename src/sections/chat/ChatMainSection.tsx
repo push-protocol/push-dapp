@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { ThreeIdConnect } from '@3id/connect';
@@ -27,6 +27,7 @@ import LoaderSpinner, {
   LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
   PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 import * as w2wHelper from 'helpers/w2w';
 import { createCeramic } from 'helpers/w2w/ceramic';
 import * as DIDHelper from 'helpers/w2w/did';
@@ -142,7 +143,7 @@ const ChatMainSection = () => {
     fromPublicKeyArmored: null,
     toPublicKeyArmored: null,
     privateKeyArmored: null,
-    establishConnection: false
+    establishConnection: 0,
   });
 
   useEffect(() => {
@@ -150,6 +151,32 @@ const ChatMainSection = () => {
       console.log(videoCallInfo);
     }
   }, [videoCallInfo]);
+
+  const { call, callAccepted } = useContext(VideoCallContext);
+  useEffect(() => {
+    if (Object.keys(call).length > 0) {
+      setVideoCallInfo({
+        address: call.from,
+        fromPublicKeyArmored: connectedUser.publicKey,
+        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+        privateKeyArmored: connectedUser.privateKey,
+        establishConnection: 2,
+      })
+    }
+  }, [call]);
+
+  useEffect(() => {
+    if (callAccepted && videoCallInfo.establishConnection == 2) {
+      setVideoCallInfo({
+        address: call.from,
+        fromPublicKeyArmored: connectedUser.publicKey,
+        toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
+        privateKeyArmored: connectedUser.privateKey,
+        establishConnection: 3,
+      })
+    }
+  }, [callAccepted]);
+  
 
   // Rest of the loading logic
   useEffect(() => {
@@ -322,16 +349,17 @@ const ChatMainSection = () => {
       )}
 
       {/* But video chat trumps this now!!! */}
-      {videoCallInfo.establishConnection && (
+      {videoCallInfo.establishConnection > 0 && (
         <VideoCallSection
           videoCallInfo={videoCallInfo}
+          setVideoCallInfo={setVideoCallInfo}
           endVideoCallHook={() => {
             setVideoCallInfo({
               address: null,
               fromPublicKeyArmored: null,
               toPublicKeyArmored: null,
               privateKeyArmored: null,
-              establishConnection: false
+              establishConnection: 0
             });
           }}
         />

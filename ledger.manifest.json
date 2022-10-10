@@ -1,9 +1,9 @@
 {
-    "id": "EPNS",
-    "name": "EPNS",
-    "url": "https://platform.apps.ledger.com/app/dapp-browser?dappName=EPNS&nanoApp=EPNS&url=https%3A%2F%2Fapp.epns.io%2F%3Fembed%3Dtrue",
+    "id": "PUSH",
+    "name": "PUSH",
+    "url": "https://platform.apps.ledger.com/app/dapp-browser?dappName=PUSH&nanoApp=PUSH&url=https%3A%2F%2Fapp.push.org%2F%3Fembed%3Dtrue",
     "homepageUrl": "https://push.org/",
-    "icon": "https://backend-dev.epns.io/assets/epnslogo.png",
+    "icon": "https://backend-dev.epns.io/assets/pushlogo.png",
     "platform": "all",
     "apiVersion": "0.0.1",
     "manifestVersion": "1",
@@ -19,10 +19,10 @@
     ],
     "content": {
       "shortDescription": {
-        "en": "Protocol for blockchain based notifications that are chain agnostic, platform independent and incentivized!"
+        "en": "The Communication Protocol of Web3"
       },
       "description": {
-        "en": "Protocol for blockchain based notifications that are chain agnostic, platform independent and incentivized!"
+        "en": "Push Protocol is a web3 communication network, enabling cross-chain notifications and messaging for dapps, wallets, and services."
       }
     },
     "permissions": [],
