@@ -3,7 +3,8 @@ import {
   EVENTS
 } from '@epnsproject/sdk-socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
-import { useEffect, useState } from 'react';
+import { VideoCallContext } from 'contexts/VideoCallContext';
+import { useContext, useEffect, useState } from 'react';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 
 export type SDKSocketHookOptions = {
@@ -15,6 +16,7 @@ export type SDKSocketHookOptions = {
 export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
+  const { incomingCall, acceptCall } = useContext(VideoCallContext);
 
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
@@ -30,7 +32,21 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
        * We receive a feedItem
        */
       try {
-        const { payload } = feedItem || {};        
+        const { payload } = feedItem || {};    
+
+        // if video meta, skip notification
+        if (payload.hasOwnProperty("data") && payload["data"].hasOwnProperty("videoMeta")) {
+          const videoMeta = JSON.parse(payload["data"]["videoMeta"]);
+          
+          if (videoMeta.status == 1) {
+            // incoming call
+            incomingCall(videoMeta);
+          } else if (videoMeta.status == 2) {
+            // call answered
+            acceptCall(videoMeta);
+          }
+        }
+
         showNotifcationToast(payload);
         
       } catch (e) {
