@@ -15,6 +15,7 @@ import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
 import { walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
+import { checkConnectedUser } from 'helpers/w2w/user';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
@@ -47,16 +48,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
@@ -131,16 +123,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInbox = async (): Promise<void> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       await getInbox();
     }
     setMessagesLoading(false);
