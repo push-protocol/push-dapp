@@ -17,6 +17,8 @@ import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
+import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 
 import { Context } from 'sections/chat/ChatMainSection';
 
@@ -42,6 +44,7 @@ function NewUser() {
   const [messagesLoading, setMessagesLoading] = useState<boolean>(false);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const provider = ethers.getDefaultProvider();
+  const searchFeedToast = useToast();
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
@@ -49,6 +52,22 @@ function NewUser() {
       setUserShouldBeSearched(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (isInvalidAddress) {
+      searchFeedToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Invalid Address',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+  }, [isInvalidAddress]);
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
     let searchAddress = event.target.value;
