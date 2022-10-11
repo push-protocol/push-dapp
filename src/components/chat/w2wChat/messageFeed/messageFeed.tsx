@@ -34,13 +34,10 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
-  const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-  const [isSameUser, setIsSameUser] = useState<boolean>(false);
-  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
   const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
@@ -136,7 +133,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
-            setIsSameUser(true);
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
