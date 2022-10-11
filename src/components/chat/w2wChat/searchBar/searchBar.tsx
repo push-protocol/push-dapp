@@ -58,6 +58,7 @@ const SearchBar = () => {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
+    inbox,
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -99,7 +100,9 @@ const SearchBar = () => {
         if (ens) {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
           filteredData = await PushNodeClient.getUser({ caip10 });
-          if (filteredData !== null) {
+          let isUserConnected = checkUser(filteredData);
+
+          if (filteredData !== null && isUserConnected) {
             setHasUserBeenSearched(true);
             setFilteredUserData([filteredData]);
           } else {
@@ -124,7 +127,9 @@ const SearchBar = () => {
       setHasUserBeenSearched(true);
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
-        if (filteredData !== null) {
+        let isUserConnected = checkUser(filteredData);
+
+        if (filteredData !== null && isUserConnected) {
           setFilteredUserData([filteredData]);
         }
         // User is not in the protocol. Create new user
@@ -151,6 +156,16 @@ const SearchBar = () => {
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };
+
+  function checkUser(userData: User): boolean {
+    let isPresent = false;
+    inbox.map((item) => {
+      if (item?.did == userData?.did) {
+        isPresent = true;
+      }
+    });
+    return isPresent;
+  }
 
   return (
     <ItemVV2

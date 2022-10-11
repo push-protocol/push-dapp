@@ -32,6 +32,7 @@ function NewUser() {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
+    inbox,
   } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
@@ -98,7 +99,9 @@ function NewUser() {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
           let filteredData: User;
           filteredData = await PushNodeClient.getUser({ caip10 });
-          if (filteredData !== null) {
+          let isUserConnected = checkUser(filteredData);
+
+          if (filteredData !== null && isUserConnected) {
             setHasUserBeenSearched(true);
             setUserShouldBeSearched(true);
             setActiveTab(0);
@@ -125,7 +128,9 @@ function NewUser() {
 
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
-        if (filteredData !== null) {
+        let isUserConnected = checkUser(filteredData);
+
+        if (filteredData !== null && isUserConnected) {
           setHasUserBeenSearched(true);
           setUserShouldBeSearched(true);
           setActiveTab(0);
@@ -149,6 +154,16 @@ function NewUser() {
     setIsLoadingSearch(false);
     setMessagesLoading(false);
   };
+
+  function checkUser(userData: User): boolean {
+    let isPresent = false;
+    inbox.map((item) => {
+      if (item?.did == userData?.did) {
+        isPresent = true;
+      }
+    });
+    return isPresent;
+  }
 
   function setFeed(displayUser: User) {
     let feed: Feeds;
