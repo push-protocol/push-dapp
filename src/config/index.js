@@ -12,7 +12,7 @@ if (process.env.REACT_APP_DEPLOY_ENV == 'PROD') {
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'W2W') {
   appendName = 'staging';
 } else if (process.env.REACT_APP_DEPLOY_ENV == 'ALPHA') {
-  appendName = 'prod';
+  appendName = 'staging';
 } else {
   throw new Error('⚠️  Provide proper REACT_APP_DEPLOY_ENV in .env ⚠️');
 }

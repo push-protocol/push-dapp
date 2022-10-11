@@ -373,11 +373,11 @@ const NavigationList = {
   },
 };
 
-// remove secret feature
+// // remove secret feature
 if (
-  window.location.hostname == 'app.epns.io' ||
+  // window.location.hostname == 'app.epns.io' ||
   window.location.hostname == 'staging.epns.io' ||
-  window.location.hostname == 'app.push.org' ||
+  // window.location.hostname == 'app.push.org' ||
   window.location.hostname == 'staging.push.org'
 ) {
   delete NavigationList.primary.chat;

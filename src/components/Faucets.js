@@ -18,10 +18,10 @@ const Faucets = () => {
 
   const dropdownValues = [
     {
-      id: "42",
-      value: "Kovan",
-      title: "Kovan Faucet",
-      link: "https://gitter.im/kovan-testnet/faucet",
+      id: "5",
+      value: "Goerli",
+      title: "Goerli Faucet",
+      link: "https://goerlifaucet.com/",
     },
     {
       id: "80001",
