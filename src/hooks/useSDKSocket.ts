@@ -1,7 +1,7 @@
 import {
   createSocketConnection,
   EVENTS
-} from '@epnsproject/sdk-socket';
+} from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { useContext, useEffect, useState } from 'react';
