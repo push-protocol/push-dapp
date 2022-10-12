@@ -32,7 +32,7 @@ const Search = (): JSX.Element => {
   const handleSearch = (event: React.SyntheticEvent): void => {
     console.log(event.target)
   }
-  return <Input type="text" onChange={(e): void => handleSearch(e)} placeholder="Search b name.eth or 0x123..." />
+  return <Input type="text" onChange={(e): void => handleSearch(e)} placeholder="Search name.eth or 0x123..." />
 }
 
 const Requests = (): JSX.Element => {

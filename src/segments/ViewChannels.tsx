@@ -36,7 +36,7 @@ const SEARCH_LIMIT = 10;
 
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser }) {
-  const themes = useTheme();
+  const theme = useTheme();
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
@@ -295,7 +295,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 const SearchBar = styled.input`
   width: 100%;
   padding: 13px 40px;
-  border: none;
+  /* border: none; */
+  border: 1px solid;
+  border-color: ${props => props.theme.viewChannelSearchBg};
   background: ${props => props.theme.viewChannelSearchBg};
   color: ${props => props.theme.viewChannelSearchText};
   box-sizing: border-box;
