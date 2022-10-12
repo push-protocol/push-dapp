@@ -2,7 +2,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactGA from 'react-ga';
 
 // External Packages
@@ -27,6 +27,11 @@ import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
 import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
+import { resetSpamSlice } from 'redux/slices/spamSlice';
+import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
+import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
+import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
+import { resetAdminSlice } from 'redux/slices/adminSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -68,6 +73,15 @@ export default function App() {
     }
   }, [activatingConnector, connector]);
 
+  useEffect(() => {
+    if(!account) return;
+    dispatch(resetSpamSlice());
+    dispatch(resetNotificationsSlice());
+    dispatch(resetCanSendSlice());
+    dispatch(resetChannelCreationSlice());
+    dispatch(resetAdminSlice());
+  }, [account]);
+
   // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
   const triedEager = useEagerConnect();
 
@@ -83,7 +97,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   // enable socket notifications
-  useSDKSocket({ account, chainId, env: 'dev' });
+  useSDKSocket({ account, chainId, env: appConfig.appEnv });
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);

@@ -9,6 +9,7 @@ import { ReactComponent as CheckmarkSVG } from 'assets/reusables/spinners/checkm
 import { ReactComponent as ErrorSVG } from 'assets/reusables/spinners/error.svg';
 import { ReactComponent as SpinnerSVG } from 'assets/reusables/spinners/spinner.svg';
 import { ReactComponent as WarningSVG } from 'assets/reusables/spinners/warning.svg';
+import { ReactComponent as WhitelistSVG } from 'assets/reusables/spinners/whitelist.svg';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
@@ -26,6 +27,7 @@ export const SPINNER_TYPE = {
   WARNING: 2,
   ERROR: 3,
   COMPLETED: 4,
+  WHITELIST: 5,
 }
 
 // Create Spinner
@@ -43,6 +45,9 @@ export default function Spinner({ size = 42, color =  GLOBALS.COLORS.PRIMARY_PIN
       }
       {type == SPINNER_TYPE.COMPLETED && 
         <CheckmarkSVG />
+      }
+      {type == SPINNER_TYPE.WHITELIST && 
+        <WhitelistSVG />
       }
     </SpinLoader>
   );

@@ -4,7 +4,7 @@ import { appConfig } from 'config';
 // import { NetworkConnector } from '@web3-react/network-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 // import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { LedgerHQFrameConnector } from '@epnsproject/sdk-ledgerlive';
+import { LedgerHQFrameConnector } from '@pushprotocol/ledgerlive';
 import { LedgerConnector } from '@web3-react/ledger-connector';
 import { TrezorConnector } from '@web3-react/trezor-connector';
 // import { FrameConnector } from '@web3-react/frame-connector'
@@ -19,9 +19,11 @@ const POLLING_INTERVAL = 12000;
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 const CORE_RPC = appConfig.coreRPC;
 
-const RPC_URLS: { [chainId: number]: string } = {
+let RPC_URLS: { [chainId: number]: string } = {
   [CORE_CHAIN_ID]: appConfig.coreRPC,
 };
+
+RPC_URLS = Object.assign(RPC_URLS, appConfig.aliasRPC);
 
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
 

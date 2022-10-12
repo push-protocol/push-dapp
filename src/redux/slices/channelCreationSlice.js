@@ -21,6 +21,7 @@ export const channelCreationSlice = createSlice({
   name: "channelCreation",
   initialState,
   reducers: {
+    resetChannelCreationSlice: () => initialState,
     setProcessingState: (state, action) => {
       state.processingState = action.payload;
     },
@@ -28,6 +29,6 @@ export const channelCreationSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setProcessingState } = channelCreationSlice.actions;
+export const { resetChannelCreationSlice, setProcessingState } = channelCreationSlice.actions;
 
 export default channelCreationSlice.reducer;

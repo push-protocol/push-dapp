@@ -1,4 +1,4 @@
-import { isLedgerDappBrowserProvider } from '@epnsproject/sdk-ledgerlive';
+import { isLedgerDappBrowserProvider } from '@pushprotocol/ledgerlive';
 import { useWeb3React } from '@web3-react/core';
 import { injected, ledgerLiveConnector } from 'connectors';
 import { useEffect, useState } from 'react';
