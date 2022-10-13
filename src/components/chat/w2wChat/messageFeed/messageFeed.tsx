@@ -15,6 +15,7 @@ import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
 import { walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
+import { checkConnectedUser } from 'helpers/w2w/user';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
@@ -33,13 +34,10 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
-  const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-  const [isSameUser, setIsSameUser] = useState<boolean>(false);
-  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
   const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
@@ -47,16 +45,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const messageFeedToast = useToast();
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
@@ -131,16 +120,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInbox = async (): Promise<void> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       await getInbox();
     }
     setMessagesLoading(false);
@@ -153,7 +133,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
-            setIsSameUser(true);
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",

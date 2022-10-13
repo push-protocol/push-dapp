@@ -19,6 +19,7 @@ import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
+import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'api';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
@@ -56,7 +57,7 @@ const ChatSidebarSection = () => {
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     if (getIntent!== undefined) {
