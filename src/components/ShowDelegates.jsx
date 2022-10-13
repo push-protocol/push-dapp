@@ -95,25 +95,40 @@ const ShowDelegates = () => {
         toastType:  "ERROR", 
         getToastIcon: (size) => <MdError size={size} color="red" />
     })
-  
+
+    if (switchError.code === 4001) {
+      // This error code indicates that user denied the wallet switch chain request.
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `${switchError.message}`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+      })
+    } else if(switchError.code === 4902) {
       // This error code indicates that the chain has not been added to MetaMask.
-      if (switchError.code === 4902) {
-        try {
-          await library.provider.request({
-            method: 'wallet_addEthereumChain',
-            params: [Networks[chainIdToNetwork[switchChainId]]],
-          });
-        } catch (addError) {
-          console.error(`Unable to add ${networkName[switchChainId]} Network in wallet`);
-        }
+      try {
+        await library.provider.request({
+          method: 'wallet_addEthereumChain',
+          params: [Networks[chainIdToNetwork[switchChainId]]],
+        });
+      } catch (addError) {
+        console.error(`Unable to add ${networkName[switchChainId]} Network in wallet`);
+        changeNetworkToast.showMessageToast({
+          toastTitle:"Error", 
+          toastMessage: `Unable to add ${networkName[switchChainId]} Network in wallet. Kindly add it manually and try switching again`, 
+          toastType:  "ERROR", 
+          getToastIcon: (size) => <MdError size={size} color="red" />
+        })
       }
+    } else {
       // error toast - Your wallet doesn't support switch network. Kindly, switch the network to Polygon manually.
       changeNetworkToast.showMessageToast({
         toastTitle:"Error", 
         toastMessage: `Your wallet doesn't support switching chains. Kindly, switch the network to ${networkName[switchChainId]} manually.( ${switchError.message} )`, 
         toastType:  "ERROR", 
         getToastIcon: (size) => <MdError size={size} color="red" />
-    })
+      })
+    }
       console.error("Unable to switch chains");
     }
   }
@@ -172,7 +187,7 @@ const ShowDelegates = () => {
                   :
                     <InfoButton
                         clickHandler={chainId === parseInt(delegate.chainId) ? showRemoveDelegateModal : switchNetwork}
-                        hoverText="Remove Delegate"
+                        hoverText={chainId === parseInt(delegate.chainId) ? "Remove Delegate" : "Switch Network"}
                     />
                 }
               </Item>
