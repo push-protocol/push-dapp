@@ -20,7 +20,6 @@ import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import { Feeds } from 'api';
-import 'components/chat/w2wChat/sidebar/sidebar.css';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
