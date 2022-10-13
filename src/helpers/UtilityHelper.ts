@@ -9,6 +9,16 @@ const UtilityHelper = {
       return true;
     }
   },
+  isPolygon: (chainId: number) => {
+    if (chainId === 137 || chainId === 80001) {
+      return true;
+    }
+  },
+  isEthereum: (chainId: number) => {
+    if (chainId === 1 || chainId === 5) {
+      return true;
+    }
+  },
 };
 
 export const MaskedPolygonChannels = {
@@ -99,7 +109,14 @@ export const aliasChainIdsMapping = {
   5: 80001
 };
 
-export const PolygonNetworks = {
+export const chainIdToNetwork = {
+  1: 'ETHEREUM_MAINNET',
+  137: 'POLYGON_MAINNET',
+  5: 'GOERLI_TESTNET',
+  80001: 'MUMBAI_TESTNET'
+}
+
+export const Networks = {
   MUMBAI_TESTNET: {
     chainId: utils.hexValue(80001),
     chainName: 'Polygon Mumbai Testnet',
@@ -113,6 +130,20 @@ export const PolygonNetworks = {
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://polygon-rpc.com'],
     blockExplorerUrls: ['https://www.polygonscan.com/'],
+  },
+  GOERLI_TESTNET: {
+    chainId: utils.hexValue(5),
+    chainName: 'Ethereum Goerli Testnet',
+    nativeCurrency: { name: 'goerliETH', symbol: 'goerliETH', decimals: 18 },
+    rpcUrls: ['https://goerli.infura.io/v3/'],
+    blockExplorerUrls: ['https://goerli.etherscan.io'],
+  },
+  ETHEREUM_MAINNET: {
+    chainId: utils.hexValue(1),
+    chainName: 'Ethereum Mainnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: ['https://mainnet.infura.io/v3/'],
+    blockExplorerUrls: ['https://etherscan.io'],
   },
 };
 
