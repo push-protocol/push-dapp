@@ -20,7 +20,7 @@ import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2
 import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import MessageFeed from '../messageFeed/messageFeed';
+import MessageFeed from '../messageFeed/MessageFeed';
 import './searchBar.css';
 
 // Internal Configs
