@@ -1,19 +1,18 @@
 // React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState } from "react";
+import { utils } from "ethers";
 
 // External Packages
 import {
   AiOutlineUserDelete
 } from 'react-icons/ai';
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
 import { useSelector } from "react-redux";
 import styled, { css, useTheme } from "styled-components";
+import { MdCheckCircle, MdError } from "react-icons/md";
 
-// Internal Compoonents
-import { getReq } from "api";
-import { ButtonV2 } from "components/reusables/SharedStylingV2";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
+// Internal Components
+import { convertAddressToAddrCaip, getCaipToObj } from "helpers/CaipHelper";
 import { useDeviceWidthCheck } from "hooks";
 import useModal from "hooks/useModal";
 import useToast from "hooks/useToast";
@@ -21,22 +20,23 @@ import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedSt
 import { getChannelDelegates } from "services";
 import DelegateInfo from "./DelegateInfo";
 import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
+import { appConfig } from "config";
+import { aliasChainIdsMapping, chainIdToNetwork, networkName, Networks } from "helpers/UtilityHelper";
 
 const isOwner=(account,delegate)=>{
-  return account.toLowerCase() !== delegate.toLowerCase() 
+  return account.toLowerCase() === delegate.toLowerCase() 
 }
 
 const ShowDelegates = () => {
-  const { account, chainId } = useWeb3React();
-  const [delegatees, setDelegatees] = React.useState([account]);
+  const { account, chainId, library } = useWeb3React();
+  const [delegatees, setDelegatees] = React.useState([]);
   const theme = useTheme();
   const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(true);
-  const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
-  const [delegateToBeRemoved, setDelegateToBeRemoved] = React.useState('');
   const { epnsCommWriteProvider } = useSelector(
     (state) => state.contracts
   );
   const isMobile = useDeviceWidthCheck(700);
+  const changeNetworkToast = useToast();
 
   const {
     isModalOpen: isRemoveDelegateModalOpen, 
@@ -57,8 +57,11 @@ const ShowDelegates = () => {
       const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
       const channelDelegates = await getChannelDelegates({channelCaipAddress: channelAddressinCAIP});
       if (channelDelegates) {
-        const delegateeList = channelDelegates.map((delegate) => delegate);
-        delegateeList.unshift(account);
+        const delegateeList = channelDelegates.map((delegate) => {
+          const obj = getCaipToObj(delegate);
+          return obj;
+        });
+        delegateeList.unshift(getCaipToObj(channelAddressinCAIP));
         setDelegatees(delegateeList);
       }
     } catch (err) {
@@ -66,9 +69,53 @@ const ShowDelegates = () => {
     }
   }
 
-  const removeDelegateModalOpen = (delegateAddress) => {
-    setDelegateToBeRemoved(delegateAddress);
-    setRemoveModalOpen(true);
+  const switchNetwork = async () => {
+    const switchChainId = (chainId === appConfig.coreContractChain) ? aliasChainIdsMapping[chainId] : appConfig.coreContractChain;
+  
+    try {
+      changeNetworkToast.showLoaderToast({ loaderMessage: "Waiting for Confirmation..."});
+
+      console.log(switchChainId);
+  
+      await library.provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: utils.hexValue(switchChainId) }],
+      });
+  
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Success", 
+        toastMessage: `Successfully switched to ${networkName[switchChainId]} !`, 
+        toastType: "SUCCESS", 
+        getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
+    })
+    } catch (switchError) {
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `There was an error switching Chain ( ${switchError.message} )`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+    })
+  
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          await library.provider.request({
+            method: 'wallet_addEthereumChain',
+            params: [Networks[chainIdToNetwork[switchChainId]]],
+          });
+        } catch (addError) {
+          console.error(`Unable to add ${networkName[switchChainId]} Network in wallet`);
+        }
+      }
+      // error toast - Your wallet doesn't support switch network. Kindly, switch the network to Polygon manually.
+      changeNetworkToast.showMessageToast({
+        toastTitle:"Error", 
+        toastMessage: `Your wallet doesn't support switching chains. Kindly, switch the network to ${networkName[switchChainId]} manually.( ${switchError.message} )`, 
+        toastType:  "ERROR", 
+        getToastIcon: (size) => <MdError size={size} color="red" />
+    })
+      console.error("Unable to switch chains");
+    }
   }
   
   return (
@@ -106,21 +153,27 @@ const ShowDelegates = () => {
                 padding={!isMobile ? "25px":"12px"}
                 direction="row"
                 justify="space-between"
-                key={delegate}
+                key={delegate.addr}
                 style={{
                   borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
                 }}
               >
-                <DelegateInfo delegateAddress={delegate} isDelegate={isOwner(account,delegate)} maxWidth={'200px'}/>
-                {isOwner(account,delegate) ?
-                  <RemoveButton
-                    delegateAddress={delegate}
-                    removeDelegateModalOpen={removeDelegateModalOpen}
-                    showRemoveDelegateModal={showRemoveDelegateModal}
-                  /> : 
-                  <OwnerButton disabled={true}>
-                    Channel Creator
-                  </OwnerButton>
+                <DelegateInfo 
+                  delegateAddress={delegate.addr} 
+                  delegateChainId={delegate.chainId}
+                  isDelegate={!isOwner(account,delegate.addr)} 
+                  maxWidth={'200px'}
+                />
+                {isOwner(account,delegate.addr) 
+                  ?
+                    <OwnerButton disabled={true}>
+                      Channel Creator
+                    </OwnerButton>
+                  :
+                    <InfoButton
+                        clickHandler={chainId === parseInt(delegate.chainId) ? showRemoveDelegateModal : switchNetwork}
+                        hoverText="Remove Delegate"
+                    />
                 }
               </Item>
             )
@@ -137,7 +190,7 @@ const ShowDelegates = () => {
   )
 }
 
-const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDelegateModal }) => {
+const InfoButton = ({ clickHandler, hoverText }) => {
   const theme = useTheme();
   const [isHovered,setIsHovered] = useState(false)
   
@@ -150,15 +203,14 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDeleg
   };
 
   return (
-
-      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => showRemoveDelegateModal()}>
+      <CustomButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => clickHandler()}>
         {
         isHovered ?
         <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
           <AiOutlineUserDelete fontSize={15}/>
           <div style={{padding:'3px'}}/>
           <div>
-            Remove Delegate 
+            {hoverText} 
           </div>
         </div>
           :
@@ -166,7 +218,7 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDeleg
             Delegate
           </div>
         }
-      </RemoveButtonUI>
+      </CustomButtonUI>
   )
 }
 
@@ -208,7 +260,7 @@ const ChannelActionButton = styled.button`
     `}
 `;
 
-const RemoveButtonUI = styled(ChannelActionButton)`
+const CustomButtonUI = styled(ChannelActionButton)`
   background: transparent;
   color: ${props => props.theme.color};
   height: 36px;
