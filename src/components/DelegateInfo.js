@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useDeviceWidthCheck } from "hooks";
 import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
-import { Item } from "primaries/SharedStyling";
+import { Image, Item, Span } from "primaries/SharedStyling";
+import UtilityHelper from "helpers/UtilityHelper";
 
-const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
+const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth, delegateChainId }) => {
   const [addressText, setAddressText] = useState(delegateAddress);
   const [isCopied, setIsCopied] = useState(false);
   const isMobile = useDeviceWidthCheck(1200);
@@ -30,7 +31,7 @@ const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
           minWidth={!isMobile ? "350px" : "120px"}
         >
           <WalletInfoContent
-            {...{ addressText, isCopied, setIsCopied, delegateAddress }}
+            {...{ addressText, isCopied, setIsCopied, delegateAddress, delegateChainId }}
           />
         </Wallet>
       ) : (
@@ -39,7 +40,7 @@ const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
           minWidth={!isMobile ? "350px" : "120px"}
         >
           <WalletInfoContent
-            {...{ addressText, isCopied, setIsCopied, delegateAddress }}
+            {...{ addressText, isCopied, setIsCopied, delegateAddress, delegateChainId }}
           />
         </HoverWallet>
       )}
@@ -52,6 +53,7 @@ const WalletInfoContent = ({
   isCopied,
   setIsCopied,
   delegateAddress,
+  delegateChainId
 }) => {
   const isMobile = useDeviceWidthCheck(1000);
 
@@ -61,12 +63,21 @@ const WalletInfoContent = ({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
         width: "100%",
       }}
     >
+      <Span padding="0 5px 0 0">
+        <Image 
+          src={UtilityHelper.isPolygon(parseInt(delegateChainId)) ? `./svg/Polygon.svg` : './svg/Ethereum.svg'} 
+          alt="Delegatee Network Id" 
+          width="25px" 
+          height="25px" 
+        />
+      </Span>
       <div style={{ paddingTop: 3 }}>{addressText}</div>
       <ItemHere
-        isMobile={isMobile ? "10px" : "50px"}
+        marginLeft={isMobile ? "10px" : "50px"}
         onClick={() => {
           navigator.clipboard.writeText(delegateAddress);
           setIsCopied(true);
@@ -84,7 +95,7 @@ const WalletInfoContent = ({
 
 const ItemHere = styled.div`
   cursor: pointer;
-  margin-left: ${(props) => props.isMobile || ""};
+  margin-left: ${(props) => props.marginLeft || ""};
 `;
 
 const WalletAddressDisplay = styled.span`
