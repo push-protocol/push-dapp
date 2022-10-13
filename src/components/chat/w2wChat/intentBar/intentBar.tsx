@@ -1,5 +1,5 @@
 import React from 'react';
-import IntentFeed from '../intentFeed/intentFeed';
+import IntentFeed from '../intentFeed/IntentFeed';
 import './intentBar.css';
 
 const IntentBar = (): JSX.Element => {

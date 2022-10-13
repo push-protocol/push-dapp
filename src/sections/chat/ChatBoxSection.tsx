@@ -2,7 +2,7 @@
 import React from 'react';
 
 // External Packages
-import ChatBox from 'components/chat/w2wChat/chatBox/chatBox';
+import ChatBox from 'components/chat/w2wChat/chatBox/ChatBox';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import styled, { useTheme } from 'styled-components';
 
