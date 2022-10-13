@@ -1,6 +1,6 @@
 import { appConfig } from "config";
 
-export const Eip155EnabledIds: Array<Number> = [137, 80001];
+export const Eip155EnabledIds: Array<Number> = [137, 80001, 5, 1];
 
 type CAIPProps = {
   chainId: number;
@@ -28,6 +28,21 @@ export const getCAIP = (chainId: number) => {
   } else {
     return null;
   }
+}
+
+export const getCaipToObj = (caip: string) => {
+  const objArr = caip.split(':');
+  if(objArr.length !== 3) {
+    throw new Error('Invalid CAIP Format');
+  }
+
+  const caipObj = {
+    namespace: objArr[0],
+    chainId: objArr[1],
+    addr: objArr[2]
+  };
+
+  return caipObj;
 }
 
 export const convertAddressToAddrCaip = (userAddress: string, chainId: number) => {
