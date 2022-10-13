@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core';
 import { utils } from "ethers";
-import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, PolygonNetworks } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, Networks } from "helpers/UtilityHelper";
 import useToast from "hooks/useToast";
 import React from "react";
 import { MdCheckCircle, MdError } from "react-icons/md";
@@ -42,7 +42,7 @@ const ChangeNetwork = () => {
         try {
           await provider.request({
             method: 'wallet_addEthereumChain',
-            params: [polygonChainId === 80001 ? PolygonNetworks.MUMBAI_TESTNET : PolygonNetworks.POLYGON_MAINNET],
+            params: [polygonChainId === 80001 ? Networks.MUMBAI_TESTNET : Networks.POLYGON_MAINNET],
           });
         } catch (addError) {
           console.error(`Unable to add ${networkName[polygonChainId]} Network in wallet`);
