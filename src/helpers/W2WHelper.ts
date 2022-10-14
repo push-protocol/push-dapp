@@ -3,7 +3,7 @@ import { DID } from 'dids'
 import { decryptAndVerifySignature } from 'helpers/w2w'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
 import { InboxChat } from 'sections/chat/ChatMainSection'
-import { intitializeDb } from './w2wIndexeddb'
+import { intitializeDb } from '../components/chat/w2wChat/w2wIndexeddb'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {

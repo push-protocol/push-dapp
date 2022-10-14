@@ -32,7 +32,7 @@ import Chats from '../chats/Chats';
 import { FileMessageContent } from '../Files/Files';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { decryptFeeds, fetchInbox, fetchIntent  } from 'helpers/W2WHelper';
 import './chatBox.css';
 
 // Internal Configs
@@ -40,6 +40,7 @@ import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
+
 
 const INFURA_URL = appConfig.infuraApiUrl;
 

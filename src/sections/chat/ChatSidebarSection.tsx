@@ -20,7 +20,7 @@ import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'api';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
+import { decryptFeeds, fetchIntent } from 'helpers/W2WHelper';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
