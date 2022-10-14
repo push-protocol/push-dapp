@@ -28,9 +28,9 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
-import Chats from '../chats/chats';
+import Chats from '../chats/Chats';
 import { FileMessageContent } from '../Files/Files';
-import GifPicker from '../Gifs/gifPicker';
+import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './chatBox.css';
@@ -39,6 +39,7 @@ import './chatBox.css';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { checkConnectedUser } from 'helpers/w2w/user';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -322,16 +323,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   }, [currentChat]);
 
   const fetchInboxApi = async (): Promise<Feeds[]> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
@@ -471,16 +463,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
     let getIntent;
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>(
         'Read',
         'Intent',
@@ -547,14 +530,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   }
   const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
     try {
-      if (
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      ) {
+      if (!checkConnectedUser(connectedUser)) {
         // This is a new user
         setBlockedLoading({
           enabled: true,

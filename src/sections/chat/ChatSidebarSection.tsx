@@ -12,15 +12,13 @@ import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
-import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
+import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
-import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
-import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
+import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
+import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'api';
-import 'components/chat/w2wChat/sidebar/sidebar.css';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -57,7 +55,7 @@ const ChatSidebarSection = () => {
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     if (getIntent!== undefined) {

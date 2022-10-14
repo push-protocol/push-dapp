@@ -21,7 +21,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { ConnectedUser, Feeds, User } from 'api';
-import ChatBox from 'components/chat/w2wChat/chatBox/chatBox';
+import ChatBox from 'components/chat/w2wChat/chatBox/ChatBox';
 import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import LoaderSpinner, {
   LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
