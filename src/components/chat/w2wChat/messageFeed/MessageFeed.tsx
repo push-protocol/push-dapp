@@ -20,7 +20,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds,fetchInbox } from 'helpers/W2WHelper';
-import './messageFeed.css';
+import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';

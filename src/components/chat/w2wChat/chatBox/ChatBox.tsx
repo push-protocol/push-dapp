@@ -33,7 +33,7 @@ import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent  } from 'helpers/W2WHelper';
-import './chatBox.css';
+import './ChatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
