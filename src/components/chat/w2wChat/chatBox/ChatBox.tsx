@@ -28,12 +28,12 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
-import Chats from '../chats/Chats';
 import { FileMessageContent } from '../Files/Files';
+import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
-import './chatBox.css';
+import './ChatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
