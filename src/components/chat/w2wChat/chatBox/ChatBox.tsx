@@ -27,12 +27,12 @@ import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
-import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
+import { fetchInbox,fetchIntent,MessageIPFS } from 'helpers/w2w/ipfs';
 import { FileMessageContent } from '../Files/Files';
 import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+// import {   fetchIntent  } from 'helpers/W2WHelper';
 import './ChatBox.css';
 
 // Internal Configs
@@ -40,6 +40,8 @@ import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
+
+
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -326,7 +328,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     if (checkConnectedUser(connectedUser)) {
       let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser });
       setInbox(inboxes);
       return inboxes;
     }
@@ -476,7 +478,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
-    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
     setReceivedIntents(intents);
     setLoading(false);
@@ -704,7 +706,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
           // will be undefined since it was not updated right after the intent was sent
           let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-          inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
+          inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
           setInbox(inboxes);
           const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
           await fetchInboxApi();
