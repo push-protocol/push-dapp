@@ -306,15 +306,16 @@ const SectionDate = styled.div`
 `;
 
 const SectionDes = styled.div`
-  letter-spacing: 0.07em;
+  /* letter-spacing: 0.07em; */
+  letter-spacing: 0.025em;
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
   color: #657795;
-  margin-bottom: 40px;
+  margin: 25px 0px 40px 0px;
   font-weight: 400;
   font-size: 15px;
   line-height: 140%;
-  padding: 0px 20px;
+  padding: 0px 20px 0px 10px;
   text-align: left;
   @media ${device.mobileL} {
     text-align: center;
