@@ -21,7 +21,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
-import './searchBar.css';
+import './SearchBar.css';
 
 // Internal Configs
 
