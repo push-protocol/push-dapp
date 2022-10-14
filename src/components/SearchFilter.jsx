@@ -8,15 +8,15 @@ import DateTimePicker from "react-datetime-picker";
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 
 const SearchFilter = ({
-         notifications,
-          filterNotifications,
-          filter,
-          reset,
-          loadFilter,
-          showFilter,
-          setShowFilter,
-          search,
-          setSearch
+     notifications,
+      filterNotifications,
+      filter,
+      reset,
+      loadFilter,
+      showFilter,
+      setShowFilter,
+      search,
+      setSearch
 }) =>{
   // const [search, setSearch] = useState("");
   const [startDate, setStartDate] = useState();
@@ -245,6 +245,8 @@ const SMultiSelect = styled(MultiSelect)`
         border: 0px solid white !important;
         margin: 0px !important;
         padding: 0px !important;
+        /* background: #F4F5FA; */
+        background: ${props => props.theme.backgroundBG};
     }
 
     .dropdown-heading {
@@ -304,6 +306,8 @@ const SelectChannel = styled.div`
     font-family: Strawford, Source Sans Pro;
     font-style: normal;
     font-weight: 400;
+    /* background: #F4F5FA; */
+    background: ${props => props.theme.backgroundBG};
     font-size: 15px;
 `;
 
