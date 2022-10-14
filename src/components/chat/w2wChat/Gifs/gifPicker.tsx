@@ -6,8 +6,8 @@ import React, { FC, useRef, useState } from 'react';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import ClickAwayListener from '../clickAwayListener';
 import { useFetch } from '../stickers/useFetchHook';
+import { useClickAway } from 'hooks/useClickAway';
 import './gifPicker.css';
 
 // Internal Configs
@@ -23,6 +23,10 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
   const [searchInputValue, setSearchInputValue] = useState('');
   const timeOutRef = useRef<any>(null);
 
+  useClickAway(timeOutRef,null,() => {
+    setIsOpened(!isOpen);
+  });
+
   const { data, loading, error } = useFetch(`giphy-${searchInputValue}`, () =>
     fetch(
       searchInputValue.trim()
@@ -34,10 +38,7 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
   );
 
   return (
-    <ClickAwayListener onClickAway={() => setIsOpened(!isOpen)}>
-      {(ref) => (
-        <div ref={ref} className="gifPciker_Body">
-          {/* <div className="gifPciker_Body"> */}
+        <div ref={timeOutRef} className="gifPciker_Body">
           <div className="gifPicker_search_body">
             <div className="gifPicker_search">
               <div className="gifPicker_search_input">
@@ -84,8 +85,6 @@ const GifPicker: FC<GifPickerProps> = ({ setIsOpened, isOpen, onSelect }) => {
             </div>
           )}
         </div>
-      )}
-    </ClickAwayListener>
   );
 };
 
