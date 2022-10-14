@@ -32,7 +32,7 @@ import { FileMessageContent } from '../Files/Files';
 import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { decryptFeeds, decryptMessages, fetchInbox, fetchIntent } from '../w2wUtils';
 import './ChatBox.css';
 
 // Internal Configs
@@ -136,45 +136,31 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
         if (latestThreadhash !== currentChat?.threadhash) {
+          // console.log("Getting from here initially")
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
             msgIPFS = messageFromIndexDB.body;
+            // console.log("Noper from here",msgIPFS)
           } else {
+            // console.log("Getting from here")
             const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
             await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
             msgIPFS = messageFromIPFS;
           }
 
           // Decrypt message
-          if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
-            // To do signature verification it depends on who has sent the message
-            let signatureValidationPubliKey: string;
-            if (msgIPFS.fromCAIP10 === walletToCAIP10({ account, chainId })) {
-              signatureValidationPubliKey = connectedUser.publicKey;
-            } else {
-              // If the other peer is registered in the protocol while this browser is open, we will not get the user publicKeys. In this case, to get the new publicKey, we fetch
-              // from the inbox since the inbox contains the latest state of users
-              if (!currentChat.publicKey) {
-                const latestUserInfo = inbox.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
-                if (latestUserInfo) {
-                  signatureValidationPubliKey = latestUserInfo.publicKey;
-                }
-              } else {
-                signatureValidationPubliKey = currentChat.publicKey;
-              }
-            }
-            msgIPFS.messageContent = await decryptAndVerifySignature({
-              cipherText: msgIPFS.messageContent,
-              encryptedSecretKey: msgIPFS.encryptedSecret,
-              privateKeyArmored: connectedUser.privateKey,
-              publicKeyArmored: signatureValidationPubliKey,
-              signatureArmored: msgIPFS.signature,
-            });
-          }
+          msgIPFS = await decryptMessages({
+            savedMsg: msgIPFS, 
+            connectedUser,
+            account,
+            chainId,
+            currentChat,
+            inbox
+          });
 
-          //checking if the message is encrypted or not
+          //!checking if the message is encrypted or not (not needed much)
           const messagesSentInChat: MessageIPFS = messages.find(
             (msg) =>
               msg.link === '' &&
@@ -185,6 +171,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           );
           // Replace message that was inserted when sending a message (same comment -abhishek)
           if (messagesSentInChat) {
+            console.log("Message is not encrypted",messagesSentInChat);
             const newMessages = messages.map((x) => x);
             const index = newMessages.findIndex(
               (msg) =>
@@ -223,69 +210,21 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               }
 
               // Decrypt message
-              if (msgIPFS.encType !== 'PlainText' && msgIPFS.encType !== null) {
-                // To do signature verification it depends on who has sent the message
-                let signatureValidationPubliKey: string;
-                if (msgIPFS.fromCAIP10 === walletToCAIP10({ account, chainId })) {
-                  signatureValidationPubliKey = connectedUser.publicKey;
-                } else {
-                  // If the other peer approves the intent while we have the browser open, the peer publicKey will still be empty
-                  // For this, we check on the inbox to see if the user has registred into the protocol by looking at the publicKey on the inbox.
-                  if (!currentChat.publicKey) {
-                    const latestUserInfo = inbox.find(
-                      (x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]
-                    );
-                    if (latestUserInfo) {
-                      signatureValidationPubliKey = latestUserInfo.publicKey;
-                    }
-                  } else {
-                    signatureValidationPubliKey = currentChat.publicKey;
-                  }
-                }
-                msgIPFS.messageContent = await decryptAndVerifySignature({
-                  cipherText: msgIPFS.messageContent,
-                  encryptedSecretKey: msgIPFS.encryptedSecret,
-                  privateKeyArmored: connectedUser.privateKey,
-                  publicKeyArmored: signatureValidationPubliKey,
-                  signatureArmored: msgIPFS.signature,
-                });
-              }
+              msgIPFS = await decryptMessages({
+                savedMsg: msgIPFS,
+                connectedUser,
+                account,
+                chainId,
+                currentChat,
+                inbox
+              });
 
-              // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
-              const messagesSentInChat: MessageIPFS = messages.find(
-                (msg) =>
-                  msg.link === '' &&
-                  msg.encType === '' &&
-                  msg.cid === '' &&
-                  msg.messageContent === msgIPFS.messageContent &&
-                  msg.messageType === msgIPFS.messageType
-              );
-              // Replace message that was inserted when sending a message
-              if (messagesSentInChat) {
-                const newMessages = messages.map((x) => x);
-                const index = newMessages.findIndex(
-                  (msg) =>
-                    msg.link === '' &&
-                    msg.encType === '' &&
-                    msg.cid === '' &&
-                    msg.messageContent === msgIPFS.messageContent &&
-                    msg.messageType === msgIPFS.messageType
-                );
-                newMessages[index] = msgIPFS;
-                setMessages(newMessages);
-              }
-              // Display messages for the first time
-              else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+              if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
-
                 //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
                 setMessageBeingSent(false);
               }
-              // Messages got from useQuery
-              // else {
-              //TODO: Not needed as this is handled when the threadhashes are not same.
-              //   setMessages((m) => [...m, msgIPFS])
-              // }
+
               const link = msgIPFS.link;
               if (link) {
                 messageCID = link;
@@ -335,26 +274,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true);
     // setLoading(true);
-    let msg: MessageIPFSWithCID;
     let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string, sigType: string;
     try {
-      msg = {
-        fromDID: walletToCAIP10({ account, chainId }),
-        fromCAIP10: walletToCAIP10({ account, chainId }),
-        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-        messageContent: message,
-        messageType,
-        signature: '',
-        encType: '',
-        sigType: '',
-        timestamp: Date.now(),
-        encryptedSecret: '',
-        link: '',
-        cid: '',
-      };
-      setNewMessage('');
-      // setMessages([...messages, msg]);
+      //Encryption of the Messages
       if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
         messageContent = message;
         encryptionType = 'PlainText';
@@ -380,7 +302,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         signature = pgpSignature;
         sigType = pgpSignatureType;
       }
-      const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
+
+      let savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
         fromDID: walletToCAIP10({ account, chainId }),
         toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
@@ -409,25 +332,19 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
         //Decrypting Message here because we want it to add in the setMessages Array as encrypted Message and also we are displaying the messages so encryption is done above and decryption is done to add it in the setMessages
         // Decrypt message
-        if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
-          // To do signature verification it depends on who has sent the message
-          let signatureValidationPubliKey: string;
-          if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
-            signatureValidationPubliKey = connectedUser.publicKey;
-          } else {
-            signatureValidationPubliKey = currentChat.publicKey;
-          }
-          savedMsg.messageContent = await decryptAndVerifySignature({
-            cipherText: savedMsg.messageContent,
-            encryptedSecretKey: savedMsg.encryptedSecret,
-            privateKeyArmored: connectedUser.privateKey,
-            publicKeyArmored: signatureValidationPubliKey,
-            signatureArmored: savedMsg.signature,
-          });
-        }
+        savedMsg = await decryptMessages({
+          savedMsg: savedMsg,
+          connectedUser,
+          account,
+          chainId,
+          currentChat,
+          inbox:[]
+        });
+        setNewMessage('');
         setMessages([...messages, savedMsg]);
       }
     } catch (error) {
+      console.log("Error",error)
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot send Message, Try again later',

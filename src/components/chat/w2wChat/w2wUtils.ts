@@ -1,9 +1,14 @@
-import { ConnectedUser, Feeds, getFromIPFS, getInbox, User } from 'api'
+// import { useWeb3React } from '@web3-react/core'
+import { ConnectedUser, Feeds, getFromIPFS, getInbox, MessageIPFSWithCID, User } from 'api'
 import { DID } from 'dids'
-import { decryptAndVerifySignature } from 'helpers/w2w'
+// import { ethers } from 'ethers'
+import { decryptAndVerifySignature, walletToCAIP10 } from 'helpers/w2w'
 import { MessageIPFS } from 'helpers/w2w/ipfs'
 import { InboxChat } from 'sections/chat/ChatMainSection'
 import { intitializeDb } from './w2wIndexeddb'
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {
@@ -108,4 +113,50 @@ export const decryptFeeds = async ({
     }
   }
   return feeds
+}
+
+export const decryptMessages = async ({
+  savedMsg,
+  connectedUser,
+  account,
+  chainId,
+  currentChat,
+  inbox
+}: {
+  savedMsg: MessageIPFSWithCID 
+  connectedUser: ConnectedUser
+  account:string
+  chainId:number
+  currentChat:Feeds
+  inbox:Feeds[]
+}): Promise<MessageIPFSWithCID> => {
+  if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+    // To do signature verification it depends on who has sent the message
+    let signatureValidationPubliKey: string;
+    if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
+      signatureValidationPubliKey = connectedUser.publicKey;
+    } else {
+      // signatureValidationPubliKey = currentChat.publicKey;
+      if (!currentChat.publicKey) {
+        const latestUserInfo = inbox.find(
+          (x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]
+        );
+        if (latestUserInfo) {
+          signatureValidationPubliKey = latestUserInfo.publicKey;
+        }
+      } else {
+        signatureValidationPubliKey = currentChat.publicKey;
+      }
+    }
+    savedMsg.messageContent = await decryptAndVerifySignature({
+      cipherText: savedMsg.messageContent,
+      encryptedSecretKey: savedMsg.encryptedSecret,
+      privateKeyArmored: connectedUser.privateKey,
+      publicKeyArmored: signatureValidationPubliKey,
+      signatureArmored: savedMsg.signature,
+    });
+
+  }
+
+  return savedMsg;
 }
