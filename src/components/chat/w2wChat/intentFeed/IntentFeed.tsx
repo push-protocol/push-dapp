@@ -4,6 +4,7 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { Feeds } from 'api';
@@ -12,6 +13,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import './IntentFeed.css';
+import { setChat } from 'redux/slices/chatSlice';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -30,9 +32,11 @@ const style = {
 
 const IntentFeed = ({isLoading}): JSX.Element => {
   const {
-    setChat,
+    // setChat,
     receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
+  const dispatch = useDispatch();
+
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
   
 
@@ -75,7 +79,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                     timestamp={intent.msg.timestamp}
                     selected={intent.threadhash == selectedIntentSnap ? true : false}
                     onClick={(): void => {
-                      setChat(intent);
+                      dispatch(setChat(intent));
                       setSelectedIntentSnap(intent.threadhash);
                     }}
                   />
