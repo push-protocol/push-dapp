@@ -124,16 +124,14 @@ const SearchFilter = ({
               </RangeSection>
             </SectionSearch>
           </SearchOptions>
-        <ButtonBar>
-            <Buttons>
-                <ResetButton onClick={resetIt}>
-                    Reset
-                </ResetButton>
-                <ButtonFeed bgColor="#e20880" onClick={applySearch}>
-                    Search
-                </ButtonFeed>
-            </Buttons>
-        </ButtonBar>
+          <ButtonContainer>
+            <ResetButton onClick={resetIt}>
+                Reset
+            </ResetButton>
+            <ButtonFeed bgColor="#e20880" onClick={applySearch}>
+                Search
+            </ButtonFeed>
+          </ButtonContainer>
       </Container>
     </ThemeProvider>
   );
@@ -176,7 +174,7 @@ const SDateTimePicker = styled(DateTimePicker)`
     .react-datetime-picker__button{
         @media(max-width:850px)
             {
-                margin: 0px !important;
+                margin: 4px !important;
                 padding: 0px !important;
             }
     }
@@ -362,40 +360,23 @@ const Container = styled.div`
     z-index: 2;
     top: 43px;
     padding: 0;
-    
-    @media(max-width: 400px){
+    @media(max-width: 600px){
         margin-left: 0.5rem;
         margin-right: 0.5rem;
+        padding: 0.5rem;
     }
 `;
 
-const ButtonBar = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: end;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    margin-bottom: 19px;
-    font-family: Strawford, Source Sans Pro;
-`;
-
-const Buttons = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-margin-right: 2rem;
-margin-top: 0.3rem;
-margin-bottom: 0.5rem;
-@media (max-width: 600px)
-{
-    margin-right: 1.5rem;
-    margin-left: 2rem;
-    width: 4rem;
-    flex-direction: column;
-    
-}
-font-family: Strawford, Source Sans Pro;
-
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin: 0.3rem 2rem 1.6rem 0;
+  font-family: Strawford, Source Sans Pro;
+  @media (max-width: 600px){
+    justify-content: space-evenly ;
+    margin-right: 0;
+  }
 `;
 
 const ButtonFeed = styled.button`
@@ -454,6 +435,10 @@ const SectionSearch = styled.div`
         margin-right:  ${(props) => (props.mright ? props.mright : "")};
         margin-left:  ${(props) => (props.mleft ? props.mleft : "")};
         margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
+    }
+    @media(max-width:600px)
+    {
+        margin-top: 1.5rem;
     }
 `;
 
