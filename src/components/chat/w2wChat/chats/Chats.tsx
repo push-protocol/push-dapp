@@ -13,7 +13,7 @@ import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import Files, { FileMessageContent } from '../Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import './w2wchats.css';
+import './W2wchats.css';
 
 // Internal Configs
 import { appConfig } from 'config';

@@ -11,9 +11,7 @@ import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import './intentFeed.css';
-
-
+import './IntentFeed.css';
 
 const style = {
   position: 'absolute' as 'absolute',

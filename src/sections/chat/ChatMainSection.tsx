@@ -21,16 +21,12 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 import { ConnectedUser, Feeds, User } from 'api';
-import ChatBox from 'components/chat/w2wChat/chatBox/ChatBox';
-import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
 import LoaderSpinner, {
   LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
   PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import * as w2wHelper from 'helpers/w2w';
-import { createCeramic } from 'helpers/w2w/ceramic';
-import * as DIDHelper from 'helpers/w2w/did';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
