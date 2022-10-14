@@ -8,7 +8,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import { useFetch } from '../stickers/useFetchHook';
 import { useClickAway } from 'hooks/useClickAway';
-import './gifPicker.css';
+import './GifPicker.css';
 
 // Internal Configs
 import configs from '../configs';
