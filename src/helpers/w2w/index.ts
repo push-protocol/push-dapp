@@ -2,7 +2,7 @@ import * as PGP from './pgp'
 import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'
 import * as AES from './aes'
-import { ConnectedUser, Feeds } from 'api'
+import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
 export const walletToCAIP10 = ({ account, chainId }: { account: string; chainId: number }): string => {
   if (account.includes('eip155:')) {
@@ -93,6 +93,56 @@ export const decryptFeeds = async ({
     }
   }
   return feeds
+}
+
+export interface DecryptMessage {
+  savedMsg: MessageIPFSWithCID
+  connectedUser: ConnectedUser
+  account:string
+  chainId:number
+  currentChat:Feeds
+  inbox:Feeds[]
+}
+
+export const decryptMessages = async ({
+  savedMsg,
+  connectedUser,
+  account,
+  chainId,
+  currentChat,
+  inbox
+}:
+  DecryptMessage
+): Promise<MessageIPFSWithCID> => {
+  if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
+    // To do signature verification it depends on who has sent the message
+    let signatureValidationPubliKey: string;
+    if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
+      signatureValidationPubliKey = connectedUser.publicKey;
+    } else {
+      // signatureValidationPubliKey = currentChat.publicKey;
+      if (!currentChat.publicKey) {
+        const latestUserInfo = inbox.find(
+          (x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]
+        );
+        if (latestUserInfo) {
+          signatureValidationPubliKey = latestUserInfo.publicKey;
+        }
+      } else {
+        signatureValidationPubliKey = currentChat.publicKey;
+      }
+    }
+    savedMsg.messageContent = await decryptAndVerifySignature({
+      cipherText: savedMsg.messageContent,
+      encryptedSecretKey: savedMsg.encryptedSecret,
+      privateKeyArmored: connectedUser.privateKey,
+      publicKeyArmored: signatureValidationPubliKey,
+      signatureArmored: savedMsg.signature,
+    });
+
+  }
+
+  return savedMsg;
 }
 
 export const formatFileSize = (size: number): string => {
