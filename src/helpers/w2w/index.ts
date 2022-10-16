@@ -95,7 +95,7 @@ export const decryptFeeds = async ({
   return feeds
 }
 
-export interface DecryptMessage {
+export interface IDecryptMessage {
   savedMsg: MessageIPFSWithCID
   connectedUser: ConnectedUser
   account:string
@@ -112,7 +112,7 @@ export const decryptMessages = async ({
   currentChat,
   inbox
 }:
-  DecryptMessage
+  IDecryptMessage
 ): Promise<MessageIPFSWithCID> => {
   if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
     // To do signature verification it depends on who has sent the message
