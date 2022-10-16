@@ -120,7 +120,6 @@ export const decryptMessages = async ({
     if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
       signatureValidationPubliKey = connectedUser.publicKey;
     } else {
-      // signatureValidationPubliKey = currentChat.publicKey;
       if (!currentChat.publicKey) {
         const latestUserInfo = inbox.find(
           (x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]
