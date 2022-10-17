@@ -13,6 +13,7 @@ import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { useDispatch ,useSelector} from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -33,6 +34,7 @@ import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { setReceivedIntents } from 'redux/slices/chatSlice';
 import './ChatBox.css';
 
 // Internal Configs
@@ -60,7 +62,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     viewChatBox,
     searchedUser,
     connectedUser,
-    receivedIntents,
     inbox,
     intents,
     setConnectedUser,
@@ -70,9 +71,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setHasUserBeenSearched,
     setPendingRequests,
     setSearchedUser,
-    setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
+  const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -94,6 +95,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
+
+
+  // redux variables
+  const { receivedIntents } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -478,7 +483,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
-    setReceivedIntents(intents);
+    dispatch(setReceivedIntents(intents));
     setLoading(false);
   }
 

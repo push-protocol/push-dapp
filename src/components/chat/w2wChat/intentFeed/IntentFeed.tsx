@@ -4,6 +4,7 @@ import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { Feeds } from 'api';
@@ -31,9 +32,12 @@ const style = {
 const IntentFeed = ({isLoading}): JSX.Element => {
   const {
     setChat,
-    receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
+
+
+  // redux variables
+  const { receivedIntents } = useSelector((state:any) => state.chat);
   
 
   return (
