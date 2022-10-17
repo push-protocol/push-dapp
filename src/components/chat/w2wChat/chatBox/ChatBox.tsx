@@ -13,6 +13,7 @@ import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import { useDispatch } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -32,6 +33,7 @@ import { FileMessageContent } from '../Files/Files';
 import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
+import { setPendingRequests } from 'redux/slices/chatSlice';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './ChatBox.css';
 
@@ -68,7 +70,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched,
-    setPendingRequests,
     setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
@@ -89,6 +90,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
+  const dispatch = useDispatch();
   let showTime = false;
   let time = '';
 
@@ -477,7 +479,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
-    setPendingRequests(intents?.length);
+    dispatch(setPendingRequests(intents?.length));
     setReceivedIntents(intents);
     setLoading(false);
   }
