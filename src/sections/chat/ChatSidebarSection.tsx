@@ -20,7 +20,7 @@ import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'api';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
+import { fetchIntent } from 'helpers/w2w/ipfs';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
@@ -28,6 +28,7 @@ import { Context } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+
 
 // Chat Sections
 // Divided into two, left and right
@@ -60,7 +61,7 @@ const ChatSidebarSection = () => {
     }
     if (getIntent!== undefined) {
       let intents: Feeds[] = getIntent.body;
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
+      intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
       setLoadingRequests(false);
@@ -74,7 +75,7 @@ const ChatSidebarSection = () => {
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
-    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
