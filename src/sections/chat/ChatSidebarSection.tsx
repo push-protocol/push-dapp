@@ -45,7 +45,7 @@ const ChatSidebarSection = () => {
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
   // redux variables
-  const { receivedIntents } = useSelector((state:any) => state.receivedIntents);
+  const { receivedIntents } = useSelector((state:any) => state.chat);
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
   };
