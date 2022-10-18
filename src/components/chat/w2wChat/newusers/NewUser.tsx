@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -19,12 +20,13 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
 import { Context } from 'sections/chat/ChatMainSection';
+import { setChat } from 'redux/slices/chatSlice';
 
 function NewUser() {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const {
-    setChat,
     setSearchedUser,
     searchedUser,
     hasUserBeenSearched,
@@ -283,7 +285,7 @@ function NewUser() {
                 <ProfileCard
                   padding="10px"
                   background={theme.chat.snapFocusBg}
-                  onClick={() => setChat(feed)}
+                  onClick={() => dispatch(setChat(feed))}
                   key={feed.threadhash || i}
                 >
                   <ImageV2

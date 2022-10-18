@@ -51,7 +51,13 @@ export const chatSlice = createSlice({
          state.inbox = action.payload;
       },
       setChat: (state, action: PayloadAction<Feeds>) => {
-         state.currentChat = action.payload;
+         const feed = action.payload;
+         if (feed) {
+            state.viewChatBox = true;
+            state.currentChat = feed;
+          } else {
+            state.viewChatBox = false;
+          }
       },
       setReceivedIntents: (state, action: PayloadAction<Feeds[]>) => {
          state.receivedIntents = action.payload;
