@@ -51,7 +51,13 @@ export const chatSlice = createSlice({
          state.inbox = action.payload;
       },
       setChat: (state, action: PayloadAction<Feeds>) => {
-         state.currentChat = action.payload;
+         const feed = action.payload;
+         if (feed) {
+            state.viewChatBox = true;
+            state.currentChat = feed;
+          } else {
+            state.viewChatBox = false;
+          }
       },
       setReceivedIntents: (state, action: PayloadAction<Feeds[]>) => {
          state.receivedIntents = action.payload;
@@ -79,17 +85,19 @@ export const chatSlice = createSlice({
       },
       setActiveTab: (state, action: PayloadAction<number>) => {
          if (action.payload === 1) {
-           if (state.receivedIntents.length)  state.currentChat = state.receivedIntents[0];
+           if (state.receivedIntents.length) {
+            state.currentChat = state.receivedIntents[0];
+            state.viewChatBox = true;
+           } 
            else {
             state.currentChat = null;
+            state.viewChatBox = false;
            }
-           state.activeTab = action.payload;
-         } else if (action.payload === 0) {
-           state.activeTab = action.payload;
          } else if (action.payload === 3) {
             state.currentChat = null;
-           state.activeTab = action.payload;
+            state.viewChatBox = false;
          }
+         state.activeTab = action.payload;
       },
       setUserShouldBeSearched: (state, action: PayloadAction<boolean>) => {
          state.userShouldBeSearched = action.payload;

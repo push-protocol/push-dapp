@@ -4,10 +4,10 @@ import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
-import { useDispatch, useSelector } from 'react-redux';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
@@ -36,6 +36,7 @@ import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './ChatBox.css';
+import { setChat } from 'redux/slices/chatSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -58,15 +59,12 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const {
-    currentChat,
-    viewChatBox,
     searchedUser,
     connectedUser,
     receivedIntents,
     inbox,
     intents,
     setConnectedUser,
-    setChat,
     setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
@@ -96,6 +94,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
+
+  // redux variables
+  const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -129,8 +130,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string =
-        inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ||
-        receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
+        inbox.find((x) => x.combinedDID === currentChat?.combinedDID)?.threadhash ||
+        receivedIntents.find((x) => x.combinedDID === currentChat?.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -158,13 +159,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             } else {
               // If the other peer is registered in the protocol while this browser is open, we will not get the user publicKeys. In this case, to get the new publicKey, we fetch
               // from the inbox since the inbox contains the latest state of users
-              if (!currentChat.publicKey) {
-                const latestUserInfo = inbox.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
+              if (!currentChat?.publicKey) {
+                const latestUserInfo = inbox.find((x) => x.wallets.split(',')[0] === currentChat?.wallets.split(',')[0]);
                 if (latestUserInfo) {
                   signatureValidationPubliKey = latestUserInfo.publicKey;
                 }
               } else {
-                signatureValidationPubliKey = currentChat.publicKey;
+                signatureValidationPubliKey = currentChat?.publicKey;
               }
             }
             msgIPFS.messageContent = await decryptAndVerifySignature({
@@ -233,15 +234,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 } else {
                   // If the other peer approves the intent while we have the browser open, the peer publicKey will still be empty
                   // For this, we check on the inbox to see if the user has registred into the protocol by looking at the publicKey on the inbox.
-                  if (!currentChat.publicKey) {
+                  if (!currentChat?.publicKey) {
                     const latestUserInfo = inbox.find(
-                      (x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]
+                      (x) => x.wallets.split(',')[0] === currentChat?.wallets.split(',')[0]
                     );
                     if (latestUserInfo) {
                       signatureValidationPubliKey = latestUserInfo.publicKey;
                     }
                   } else {
-                    signatureValidationPubliKey = currentChat.publicKey;
+                    signatureValidationPubliKey = currentChat?.publicKey;
                   }
                 }
                 msgIPFS.messageContent = await decryptAndVerifySignature({
@@ -309,16 +310,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   useEffect(() => {
     setLoading(true);
     if (currentChat) {
-      if (currentChat.combinedDID !== chatCurrentCombinedDID) {
-        setChatCurrentCombinedDID(currentChat.combinedDID);
+      if (currentChat?.combinedDID !== chatCurrentCombinedDID) {
+        setChatCurrentCombinedDID(currentChat?.combinedDID);
         // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
         // even though the user was still on the same chat.
         setMessages([]);
         try {
-          CID.parse(currentChat.profilePicture); // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${currentChat.profilePicture}`);
+          CID.parse(currentChat?.profilePicture); // Will throw exception if invalid CID
+          setImageSource(INFURA_URL + `${currentChat?.profilePicture}`);
         } catch (err) {
-          setImageSource(currentChat.profilePicture);
+          setImageSource(currentChat?.profilePicture);
         }
       }
     }
@@ -343,8 +344,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       msg = {
         fromDID: walletToCAIP10({ account, chainId }),
         fromCAIP10: walletToCAIP10({ account, chainId }),
-        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+        toDID: walletToCAIP10({ account: currentChat?.wallets.split(',')[0], chainId }),
+        toCAIP10: walletToCAIP10({ account: currentChat?.wallets.split(',')[0], chainId }),
         messageContent: message,
         messageType,
         signature: '',
@@ -357,7 +358,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       };
       setNewMessage('');
       // setMessages([...messages, msg]);
-      if (!currentChat.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+      if (!currentChat?.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
         messageContent = message;
         encryptionType = 'PlainText';
         aesEncryptedSecret = '';
@@ -372,9 +373,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           encType: pgpEncryptionType,
         } = await encryptAndSign({
           plainText: message,
-          fromPublicKeyArmored: connectedUser.publicKey,
-          toPublicKeyArmored: currentChat.publicKey,
-          privateKeyArmored: connectedUser.privateKey,
+          fromPublicKeyArmored: connectedUser?.publicKey,
+          toPublicKeyArmored: currentChat?.publicKey,
+          privateKeyArmored: connectedUser?.privateKey,
         });
         messageContent = cipherText;
         encryptionType = pgpEncryptionType;
@@ -385,8 +386,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       const savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
         fromCAIP10: walletToCAIP10({ account, chainId }),
         fromDID: walletToCAIP10({ account, chainId }),
-        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+        toDID: walletToCAIP10({ account: currentChat?.wallets.split(',')[0], chainId }),
+        toCAIP10: walletToCAIP10({ account: currentChat?.wallets.split(',')[0], chainId }),
         messageContent,
         messageType,
         signature,
@@ -417,7 +418,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
             signatureValidationPubliKey = connectedUser.publicKey;
           } else {
-            signatureValidationPubliKey = currentChat.publicKey;
+            signatureValidationPubliKey = currentChat?.publicKey;
           }
           savedMsg.messageContent = await decryptAndVerifySignature({
             cipherText: savedMsg.messageContent,
@@ -452,7 +453,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     e.preventDefault();
 
     if (newMessage.trim() !== '') {
-      if (currentChat.threadhash) {
+      if (currentChat?.threadhash) {
         sendMessage({
           message: newMessage,
           messageType: 'Text',
@@ -489,15 +490,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     const { createdUser } = await createUserIfNecessary();
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
     const updatedIntent: string = await approveIntent(
-      currentChat.intentSentBy,
-      createdUser.wallets.split(',')[0],
+      currentChat?.intentSentBy,
+      createdUser?.wallets.split(',')[0],
       status,
       '1',
       'sigType'
     );
-    let activeChat = currentChat;
+    let activeChat = Object.assign({}, currentChat);
     activeChat.intent = updatedIntent;
-    setChat(activeChat);
+    dispatch(setChat(activeChat));
     // setOpen(false);
 
     // displaying toast according to status
@@ -600,11 +601,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       setMessageBeingSent(true);
       const { createdUser } = await createUserIfNecessary();
       if (
-        currentChat.intent === null ||
-        currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(',')[0])
+        currentChat?.intent === null ||
+        currentChat?.intent === '' ||
+        !currentChat?.intent.includes(currentChat?.wallets.split(',')[0])
       ) {
-        const user: User = await PushNodeClient.getUser({ caip10: currentChat.wallets.split(',')[0] });
+        const user: User = await PushNodeClient.getUser({ caip10: currentChat?.wallets.split(',')[0] });
         let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
         let caip10: string;
         if (!user) {
@@ -661,8 +662,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         }
 
         const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
-          toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-          toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
+          toDID: walletToCAIP10({ account: currentChat?.wallets.split(',')[0], chainId }),
+          toCAIP10: walletToCAIP10({ account: currentChat?.wallets.split(',')[0], chainId }),
           fromDID: walletToCAIP10({ account: account, chainId }),
           fromCAIP10: walletToCAIP10({ account, chainId }),
           messageContent,
@@ -703,14 +704,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           msg.messageContent = message;
           // setMessages([...messages, msg]);
           setNewMessage('');
-          // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
+          // Update inbox. We do this because otherwise the currentChat?.threadhash after sending the first intent
           // will be undefined since it was not updated right after the intent was sent
           let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
           inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
           setInbox(inboxes);
-          const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
+          const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat?.wallets.split(',')[0]);
           await fetchInboxApi();
-          setChat(result);
+          dispatch(setChat(result));
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
             toastMessage: 'Chat Request Sent',
@@ -750,11 +751,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     // }
 
     // Send video request only when two users are chatting
-    if (e.target.value === '/video' && currentChat.threadhash) {
+    if (e.target.value === '/video' && currentChat?.threadhash) {
       setVideoCallInfo({
-        address: caip10ToWallet(currentChat.msg.name),
+        address: caip10ToWallet(currentChat?.msg.name),
         fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat.publicKey,
+        toPublicKeyArmored: currentChat?.publicKey,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 1,
       });
@@ -795,7 +796,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.threadhash) {
+          if (!currentChat?.threadhash) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
           } else {
             sendMessage({
@@ -895,7 +896,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 hover="transparent"
                 hoverBackground="transparent"
                 onClick={() => {
-                  setChat(null);
+                  dispatch(setChat(null));
                 }}
               >
                 <MdOutlineArrowBackIos size={24} />
@@ -917,9 +918,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               fontWeight="400"
               textAlign="start"
             >
-              {ensName && `${ensName} (${caip10ToWallet(currentChat.msg.name)})`}
+              {ensName && `${ensName} (${caip10ToWallet(currentChat?.msg?.name)})`}
 
-              {!ensName && caip10ToWallet(currentChat.msg.name)}
+              {!ensName && caip10ToWallet(currentChat?.msg?.name)}
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
@@ -987,7 +988,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     );
                   })}
                   {receivedIntents.find(
-                    (x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did
+                    (x) => x.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
                   )?.threadhash && (
                     <Chats
                       msg={{
@@ -1012,7 +1013,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             />
           ) : (
             <> */}
-          {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
+          {receivedIntents.find((x) => x.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did)
             ?.threadhash ? null : (
             <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
               {messageBeingSent ? (
