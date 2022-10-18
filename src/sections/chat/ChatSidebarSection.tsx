@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { makeStyles } from '@material-ui/core';
@@ -34,8 +35,10 @@ import GLOBALS from 'config/Globals';
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
-
-  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
+  
+  const { pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
     useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);

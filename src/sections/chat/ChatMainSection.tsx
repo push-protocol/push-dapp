@@ -32,7 +32,8 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import {
-  setChat
+  setChat,
+  setConnectedUser,
 } from 'redux/slices/chatSlice';
 
 // Internal Configs
@@ -76,8 +77,8 @@ export interface AppContext {
   setSearchedUser: (searched: string) => void;
   searchedUser: string;
   // setChat: (feed: Feeds) => void;
-  connectedUser: ConnectedUser;
-  setConnectedUser: (user: ConnectedUser) => void;
+  // connectedUser: ConnectedUser;
+  // setConnectedUser: (user: ConnectedUser) => void;
   intents: Feeds[];
   setIntents: (intents: Feeds[]) => void;
   inbox: Feeds[];
@@ -115,6 +116,9 @@ const ChatMainSection = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
+  
   // const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   // const [currentChat, setCurrentChat] = useState<Feeds>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
@@ -127,7 +131,7 @@ const ChatMainSection = () => {
   const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
   const [searchedUser, setSearchedUser] = useState<string>('');
-  const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
+  // const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
@@ -250,7 +254,7 @@ const ChatMainSection = () => {
       progress: 100,
     });
 
-    setConnectedUser(connectedUser);
+    dispatch(setConnectedUser(connectedUser));
     setIsLoading(false);
   };
 
@@ -281,8 +285,8 @@ const ChatMainSection = () => {
               // setChat,
               setSearchedUser,
               searchedUser,
-              connectedUser,
-              setConnectedUser,
+              // connectedUser,
+              // setConnectedUser,
               intents,
               setIntents,
               inbox,

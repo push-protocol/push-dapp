@@ -38,7 +38,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const {
-    connectedUser, 
     setInbox, 
     activeTab,
     inbox, 
@@ -53,6 +52,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
+
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
