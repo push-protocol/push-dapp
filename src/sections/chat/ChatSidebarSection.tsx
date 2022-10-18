@@ -205,7 +205,7 @@ const ChatSidebarSection = () => {
             />
           </>
         )}
-        {activeTab == 3 && <NewUser />}
+        {activeTab == 3 && <SearchBar/>}
       </ItemVV2>
 
       {/* Footer */}
