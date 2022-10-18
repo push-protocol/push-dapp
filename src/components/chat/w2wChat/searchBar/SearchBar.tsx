@@ -8,6 +8,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
+import { useDispatch } from 'react-redux';
 import FadeLoader from 'react-spinners/FadeLoader';
 import styled, { useTheme } from 'styled-components';
 
@@ -21,6 +22,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
+import { setActiveTab } from 'redux/slices/chatSlice';
 import './SearchBar.css';
 
 // Internal Configs
@@ -49,13 +51,12 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
 const SearchBar = () => {
   // get theme
   const theme = useTheme();
-
+  const dispatch = useDispatch();
   const {
     setSearchedUser,
     searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
-    setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
   }: AppContext = useContext<AppContext>(Context);
@@ -105,7 +106,7 @@ const SearchBar = () => {
           } else {
             setHasUserBeenSearched(true);
             setUserShouldBeSearched(true);
-            setActiveTab(3);
+            dispatch(setActiveTab(3));
           }
         } else {
           setIsInvalidAddress(true);
@@ -132,7 +133,7 @@ const SearchBar = () => {
           if (ethers.utils.isAddress(searchedUser)) {
             setHasUserBeenSearched(true);
             setUserShouldBeSearched(true);
-            setActiveTab(3);
+            dispatch(setActiveTab(3));
           } else {
             setIsInvalidAddress(true);
             setFilteredUserData([]);
@@ -222,7 +223,7 @@ const SearchBar = () => {
             background="#D53893"
             hoverBackground="transparent"
             borderRadius="50%"
-            onClick={() => setActiveTab(3)}
+            onClick={() => dispatch(setActiveTab(3))}
           >
             <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
           </ButtonV2>

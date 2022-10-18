@@ -7,6 +7,7 @@ import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'rea
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
+import { useDispatch, useSelector } from 'react-redux';
 import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
@@ -17,6 +18,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
+import { setActiveTab } from 'redux/slices/chatSlice';
 import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -64,7 +66,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     inbox,
     intents,
     setConnectedUser,
-    setActiveTab,
     setChat,
     setInbox,
     setHasUserBeenSearched,
@@ -89,6 +90,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
+  const dispatch = useDispatch();
   let showTime = false;
   let time = '';
 
@@ -524,7 +526,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         ),
       });
     }
-    setActiveTab(0);
+    dispatch(setActiveTab(0));
     await resolveThreadhash();
     setMessageBeingSent(false);
   }
@@ -728,7 +730,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       }
       setSearchedUser('');
       setHasUserBeenSearched(false);
-      setActiveTab(0);
+      dispatch(setActiveTab(0));
     } catch (error) {
       console.log(error);
       setMessageBeingSent(false);

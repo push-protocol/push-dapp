@@ -4,6 +4,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
@@ -34,7 +35,7 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -43,6 +44,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
+
+  // redux variables
+  const { activeTab } = useSelector((state:any) => state.activeTab);
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {

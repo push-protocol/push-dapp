@@ -5,6 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useDispatch } from 'react-redux';
 
 // Internal Compoonents
 import { makeStyles } from '@material-ui/core';
@@ -18,6 +19,7 @@ import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
+import { setActiveTab } from 'redux/slices/chatSlice';
 import { Feeds } from 'api';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
@@ -34,10 +36,10 @@ import GLOBALS from 'config/Globals';
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
-
+  const dispatch = useDispatch();
   const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
     useContext(Context);
-  const { activeTab, setActiveTab } = useContext(Context);
+  const { activeTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
@@ -115,7 +117,7 @@ const ChatSidebarSection = () => {
               flex="1"
               padding="10px 10px 20px 10px"
               onClick={() => {
-                setActiveTab(0);
+                dispatch(setActiveTab(0));
               }}
             >
               <SpanV2
@@ -135,7 +137,7 @@ const ChatSidebarSection = () => {
               flex="1"
               padding="10px 10px 20px 10px"
               onClick={() => {
-                setActiveTab(1);
+                dispatch(setActiveTab(1));
               }}
             >
               <ItemHV2 alignItems="center">
