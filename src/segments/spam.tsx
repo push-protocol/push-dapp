@@ -33,6 +33,7 @@ import { updateSubscriptionStatus } from 'redux/slices/channelSlice';
 // Internal Configs
 import { appConfig } from "config";
 import { device } from 'config/Globals';
+import { ScrollItem } from './ViewChannels';
 ;
 
 const NOTIFICATIONS_PER_PAGE = 10;
@@ -466,7 +467,7 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
             setSearch={setSearch}
           />
         </div>
-
+        <ScrollItem>
         {notifications && (
           <Items id="scrollstyle-secondary">
             {bgUpdateLoading && (
@@ -512,15 +513,16 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
                 </NotifsOuter>
               );
             })}
+            {loading && !bgUpdateLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
           </Items>
         )}
-        {loading && !bgUpdateLoading && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />}
         {(!notifications.length || (filter && !filteredNotifications.length)) && !loading && (
           <CenteredContainerInfo>
             <DisplayNotice title="You currently have no spam notifications." />
           </CenteredContainerInfo>
         )}
         {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
+        </ScrollItem>
       </Container>
     </ThemeProvider>
   );
@@ -534,10 +536,8 @@ const CenteredContainerInfo = styled.div`
 `;
 
 const Items = styled.div`
-  display: block;
   align-self: stretch;
-  padding: 10px 20px;
-  overflow-y: scroll;
+  flex: 1;
 `;
 // css styles
 const Container = styled.div`
@@ -547,10 +547,12 @@ const Container = styled.div`
   font-weight: 200;
   align-content: center;
   align-items: stretch;
+  height: 80%;
   justify-content: center;
-  height: 100%;
-  // margin: 0px 10px;
-  overflow: scroll;
+  margin: 0 0 0 10px;
+  @media ${device.tablet} {
+    height: 60%;
+  }
 `;
 
 const NotifsOuter = styled.div`
@@ -562,13 +564,6 @@ const Toaster = styled.div`
   flex-direction: row;
   align-items: center;
   margin: 0 0 0 10px;
-  overflow: scroll;
-
-  @media ${device.laptop} {
-  }
-
-  @media ${device.mobileM} {
-  }
 `;
 
 const ToasterMsg = styled.div`
