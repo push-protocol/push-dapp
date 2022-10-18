@@ -79,8 +79,10 @@ export const chatSlice = createSlice({
       },
       setActiveTab: (state, action: PayloadAction<number>) => {
          if (action.payload === 1) {
-           if (state.receivedIntents.length) setChat(state.receivedIntents[0]);
-           else state.currentChat = null;
+           if (state.receivedIntents.length)  state.currentChat = state.receivedIntents[0];
+           else {
+            state.currentChat = null;
+           }
            state.activeTab = action.payload;
          } else if (action.payload === 0) {
            state.activeTab = action.payload;
