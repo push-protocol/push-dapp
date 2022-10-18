@@ -33,15 +33,12 @@ import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 // import {   fetchIntent  } from 'helpers/W2WHelper';
-import './ChatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
-
-
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -889,10 +886,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           </ItemHV2>
 
           <MessageContainer>
-            <ScrollToBottom
-              className="chatBoxTop"
-              initialScrollBehavior="smooth"
-            >
+            <CustomScrollContent initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -942,7 +936,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                   )}
                 </>
               )}
-            </ScrollToBottom>
+            </CustomScrollContent>
           </MessageContainer>
 
           {/* {messageBeingSent ? (
@@ -976,11 +970,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     onClick={(): void => setShowEmojis(!showEmojis)}
                     filter={theme.snackbarBorderIcon}
                   >
-                    <img
+                    <ImageV2 
                       src="/svg/chats/smiley.svg"
                       height="24px"
                       width="24px"
-                      alt=""
                     />
                   </Icon>
                   {showEmojis && (
@@ -1019,22 +1012,20 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                           onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
                           filter={theme.snackbarBorderIcon}
                         >
-                          <img
+                          <ImageV2 
                             src="/svg/chats/gif.svg"
                             height="18px"
                             width="22px"
-                            alt=""
                           />
                         </Icon>
                       </label>
                     </GifDiv>
                     <label>
                       <Icon filter={theme.snackbarBorderIcon}>
-                        <img
+                        <ImageV2 
                           src="/svg/chats/attachment.svg"
                           height="24px"
                           width="20px"
-                          alt=""
                         />
                       </Icon>
                       <FileInput
@@ -1045,7 +1036,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     </label>
 
                     {filesUploading ? (
-                      <div className="imageloader">
+                      <div 
+                        style={{
+                          border: "none",
+                          fontSize: "1.8rem",
+                          borderRadius: "5px",
+                          backgroundColor: "transparent",
+                          marginRight: "2rem",
+                          color: "rgb(58, 103, 137)",
+                        }}
+                      >
                         <LoaderSpinner
                           type={LOADER_TYPE.SEAMLESS}
                           spinnerSize={20}
@@ -1054,11 +1054,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     ) : (
                       <>
                         <Icon onClick={handleSubmit}>
-                          <img
+                          <ImageV2 
                             src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
                             height="27px"
                             width="27px"
-                            alt=""
                           />
                         </Icon>
                       </>
@@ -1298,5 +1297,23 @@ const MessageLoader = styled.div`
   display: flex;
   justify-content: end;
 `;
+
+const CustomScrollContent = styled(ScrollToBottom)`
+  padding-right: 0px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  margin: 0 2px;
+  & > * {
+    overflow-x: hidden;
+  }
+  & > div::-webkit-scrollbar {
+    width: 4px;
+  }
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+  }
+`
 
 export default ChatBox;
