@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
@@ -22,6 +23,7 @@ import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
+import { setUserShouldBeSearched } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -50,14 +52,16 @@ const SearchBar = () => {
   // get theme
   const theme = useTheme();
 
+  const dispatch = useDispatch();
+
   const {
     setSearchedUser,
     searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
-    userShouldBeSearched,
-    setUserShouldBeSearched,
+    // userShouldBeSearched,
+    // setUserShouldBeSearched,
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -65,10 +69,12 @@ const SearchBar = () => {
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
 
+  const { userShouldBeSearched } = useSelector((state: any) => state.chat);
+
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setUserShouldBeSearched(false);
+      dispatch(setUserShouldBeSearched(false));
     }
   }, []);
 
@@ -104,7 +110,7 @@ const SearchBar = () => {
             setFilteredUserData([filteredData]);
           } else {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             setActiveTab(3);
           }
         } else {
@@ -131,7 +137,7 @@ const SearchBar = () => {
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             setActiveTab(3);
           } else {
             setIsInvalidAddress(true);
