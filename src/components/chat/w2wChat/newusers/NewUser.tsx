@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -19,14 +20,19 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
 import { Context } from 'sections/chat/ChatMainSection';
+import { setSearchedUser } from 'redux/slices/chatSlice';
 
 function NewUser() {
   const theme = useTheme();
+  const dispatch = useDispatch();
+
+  // redux variables
+  const { searchedUser } = useSelector((state: any) => state.chat);
 
   const {
     setChat,
-    setSearchedUser,
-    searchedUser,
+    // setSearchedUser,
+    // searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
@@ -54,7 +60,7 @@ function NewUser() {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -184,7 +190,7 @@ function NewUser() {
   const clearInput = () => {
     setSearchedUserData([]);
     setFeeds([]);
-    setSearchedUser('');
+    dispatch(setSearchedUser(''));
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };

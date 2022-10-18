@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 // External Packages
 import Typography from '@mui/material/Typography';
@@ -24,6 +25,7 @@ import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { setSearchedUser } from 'redux/slices/chatSlice';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -33,8 +35,9 @@ interface MessageFeedProps {
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
-  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched }: AppContext =
     useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -267,7 +270,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     onClick={(): void => {
                       setChat(feed);
                       setSelectedChatSnap(feed.threadhash);
-                      setSearchedUser('');
+                      dispatch(setSearchedUser(''));
                       setHasUserBeenSearched(false);
                     }}
                   />

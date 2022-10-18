@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
@@ -22,6 +23,7 @@ import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
+import { setSearchedUser } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -50,9 +52,14 @@ const SearchBar = () => {
   // get theme
   const theme = useTheme();
 
+  const dispatch = useDispatch();
+
+  // redux variables
+  const { searchedUser } = useSelector((state: any) => state.chat);
+
   const {
-    setSearchedUser,
-    searchedUser,
+    // setSearchedUser,
+    // searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
@@ -77,7 +84,7 @@ const SearchBar = () => {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -147,7 +154,7 @@ const SearchBar = () => {
 
   const clearInput = () => {
     setFilteredUserData([]);
-    setSearchedUser('');
+    dispatch(setSearchedUser(''));
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };

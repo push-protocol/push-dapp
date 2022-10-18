@@ -69,8 +69,8 @@ export interface AppContext {
   setReceivedIntents: (rIntent: Feeds[]) => void;
   // did: DID;
   // setDID: (did: DID) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
+  // setSearchedUser: (searched: string) => void;
+  // searchedUser: string;
   setChat: (feed: Feeds) => void;
   connectedUser: ConnectedUser;
   setConnectedUser: (user: ConnectedUser) => void;
@@ -121,7 +121,7 @@ const ChatMainSection = () => {
   });
   const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
-  const [searchedUser, setSearchedUser] = useState<string>('');
+  // const [searchedUser, setSearchedUser] = useState<string>('');
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
@@ -280,8 +280,8 @@ const ChatMainSection = () => {
               setReceivedIntents,
               viewChatBox,
               setChat,
-              setSearchedUser,
-              searchedUser,
+              // setSearchedUser,
+              // searchedUser,
               connectedUser,
               setConnectedUser,
               intents,

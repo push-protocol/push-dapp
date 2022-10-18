@@ -2,6 +2,7 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -40,6 +41,7 @@ import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
+import { setSearchedUser } from 'redux/slices/chatSlice';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -55,10 +57,12 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
+  const dispatch = useDispatch();
+
   const {
     currentChat,
     viewChatBox,
-    searchedUser,
+    // searchedUser,
     connectedUser,
     receivedIntents,
     inbox,
@@ -69,7 +73,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
-    setSearchedUser,
+    // setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
@@ -94,6 +98,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
+
+  // redux variables
+  const { searchedUser } = useSelector((state: any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -726,7 +733,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, chat request is not approved!');
       }
-      setSearchedUser('');
+      dispatch(setSearchedUser(''));
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
