@@ -49,7 +49,7 @@ const ChatSidebarSection = () => {
     setUserProfileImage(image);
   };
  // redux variables
-  const { pendingRequests } = useSelector((state:any) => state.chat);
+  const { pendingRequests } = useSelector((state:any) => state.pendingRequests);
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
     // This will run when the page first loads
