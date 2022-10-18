@@ -1097,17 +1097,16 @@ const FileInput = styled.input`
   display: none;
 `;
 
-const MessageTime = styled.div`
+const MessageTime = styled(ItemHV2)`
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 11px;
   color: ${(props) => props.theme.default.secondaryColor};
   margin: 15px 0px;
 `;
 
-const MessageContainer = styled.div`
+const MessageContainer = styled(ItemVV2)`
+  align-items: unset;
+  justify-content: flex-start;
   position: absolute;
   top: 65px;
   bottom: 66px;
@@ -1116,8 +1115,6 @@ const MessageContainer = styled.div`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
-  display: flex;
-  flex-direction: column;
 `;
 
 const UserInfo = styled.div`
