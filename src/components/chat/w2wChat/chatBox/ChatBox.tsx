@@ -500,7 +500,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       '1',
       'sigType'
     );
-    let activeChat = currentChat;
+    let activeChat = Object.assign({}, currentChat);
     activeChat.intent = updatedIntent;
     dispatch(setChat(activeChat));
     // setOpen(false);
