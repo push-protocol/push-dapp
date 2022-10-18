@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
@@ -20,6 +21,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
+import { setChat } from 'redux/slices/chatSlice';
 import './MessageFeed.css';
 
 // Internal Configs
@@ -33,8 +35,16 @@ interface MessageFeedProps {
 
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
-  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const {
+    connectedUser, 
+    setInbox, 
+    activeTab,
+    inbox, 
+    setHasUserBeenSearched, 
+    setSearchedUser 
+  }: AppContext =
     useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -265,7 +275,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
                     onClick={(): void => {
-                      setChat(feed);
+                      dispatch(setChat(feed));
                       setSelectedChatSnap(feed.threadhash);
                       setSearchedUser('');
                       setHasUserBeenSearched(false);

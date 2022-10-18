@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
@@ -34,6 +35,7 @@ import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './ChatBox.css';
+import { setChat } from 'redux/slices/chatSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -55,9 +57,9 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
+  const dispatch = useDispatch();
+
   const {
-    currentChat,
-    viewChatBox,
     searchedUser,
     connectedUser,
     receivedIntents,
@@ -65,7 +67,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     intents,
     setConnectedUser,
     setActiveTab,
-    setChat,
     setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
@@ -94,6 +95,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
+
+  // redux variables
+  const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -493,9 +497,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       '1',
       'sigType'
     );
-    let activeChat = currentChat;
+    let activeChat = Object.assign({}, currentChat);
     activeChat.intent = updatedIntent;
-    setChat(activeChat);
+    dispatch(setChat(activeChat));
     // setOpen(false);
 
     // displaying toast according to status
@@ -708,7 +712,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           setInbox(inboxes);
           const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
           await fetchInboxApi();
-          setChat(result);
+          dispatch(setChat(result));
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
             toastMessage: 'Chat Request Sent',
@@ -893,7 +897,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 hover="transparent"
                 hoverBackground="transparent"
                 onClick={() => {
-                  setChat(null);
+                  dispatch(setChat(null));
                 }}
               >
                 <MdOutlineArrowBackIos size={24} />
