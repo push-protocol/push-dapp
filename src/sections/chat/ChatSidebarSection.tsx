@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { makeStyles } from '@material-ui/core';
@@ -39,11 +39,13 @@ const ChatSidebarSection = () => {
   const dispatch = useDispatch();
   const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
     useContext(Context);
-  const { activeTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
+
+   // redux variables
+  const { activeTab } = useSelector((state:any) => state.chat);
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);

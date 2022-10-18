@@ -46,7 +46,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const messageFeedToast = useToast();
 
   // redux variables
-  const { activeTab } = useSelector((state:any) => state.activeTab);
+  const { activeTab } = useSelector((state:any) => state.chat);
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
