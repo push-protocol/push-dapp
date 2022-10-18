@@ -39,7 +39,10 @@ const initialState: SliceState = {
     loadingMessage: '',
     activeTab: 0,
     userShouldBeSearched: false,
-    blockedLoading: null
+    blockedLoading: {
+      enabled: false,
+      title: null,
+    }
 }
  
 export const chatSlice = createSlice({
