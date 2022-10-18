@@ -1036,21 +1036,12 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     </label>
 
                     {filesUploading ? (
-                      <div 
-                        style={{
-                          border: "none",
-                          fontSize: "1.8rem",
-                          borderRadius: "5px",
-                          backgroundColor: "transparent",
-                          marginRight: "2rem",
-                          color: "rgb(58, 103, 137)",
-                        }}
-                      >
+                      <FileUploadLoaderContainer>
                         <LoaderSpinner
                           type={LOADER_TYPE.SEAMLESS}
                           spinnerSize={20}
                         />
-                      </div>
+                      </FileUploadLoaderContainer>
                     ) : (
                       <>
                         <Icon onClick={handleSubmit}>
@@ -1311,6 +1302,15 @@ const CustomScrollContent = styled(ScrollToBottom)`
     background: #cf1c84;
     border-radius: 10px;
   }
+`
+
+const FileUploadLoaderContainer = styled.div`
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
 `
 
 export default ChatBox;
