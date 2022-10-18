@@ -933,9 +933,6 @@ const FirstConversation = styled.div`
   padding: 0px 50px;
 `;
 
-const FileInput = styled.input`
-  display: none;
-`;
 
 const MessageTime = styled.div`
   width: 100%;
@@ -1017,45 +1014,7 @@ const Icon = styled.i`
   }
 `;
 
-const GifDiv = styled.div`
-  background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
-  padding: 5px 8px 5px 6px;
-  border-radius: 7px;
-`;
 
-const TextInput = styled.textarea`
-  font-size: 16px;
-  width: 100%;
-  height: 25px;
-  outline: none;
-  padding-top: 4px;
-  border: none;
-  resize: none;
-  background: transparent;
-  color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
-  &&::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-  ::placeholder {
-    color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
-  }
-`;
-
-const TypeBarContainer = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  bottom: 9px;
-  left: 9px;
-  right: 9px;
-  height: 55px;
-  padding: 16px;
-  border-radius: 13px;
-  background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
-`;
 
 const Container = styled(Content)`
   box-sizing: border-box;
