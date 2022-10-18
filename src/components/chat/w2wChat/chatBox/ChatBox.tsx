@@ -98,7 +98,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
 
   // redux variables
-  const { receivedIntents } = useSelector((state:any) => state.chat);
+  const { receivedIntents } = useSelector((state:any) => state.receivedIntents);
 
   // get reverse name
   React.useEffect(() => {

@@ -37,7 +37,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
 
 
   // redux variables
-  const { receivedIntents } = useSelector((state:any) => state.chat);
+  const { receivedIntents } = useSelector((state:any) => state.receivedIntents);
   
 
   return (
