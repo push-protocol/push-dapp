@@ -60,8 +60,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const dispatch = useDispatch();
 
   const {
-    // currentChat,
-    // viewChatBox,
     searchedUser,
     connectedUser,
     receivedIntents,
@@ -69,7 +67,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     intents,
     setConnectedUser,
     setActiveTab,
-    // setChat,
     setInbox,
     setHasUserBeenSearched,
     setPendingRequests,

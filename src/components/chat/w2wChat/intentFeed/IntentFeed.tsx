@@ -32,7 +32,6 @@ const style = {
 
 const IntentFeed = ({isLoading}): JSX.Element => {
   const {
-    // setChat,
     receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
   const dispatch = useDispatch();

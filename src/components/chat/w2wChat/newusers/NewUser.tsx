@@ -27,7 +27,6 @@ function NewUser() {
   const dispatch = useDispatch();
 
   const {
-    // setChat,
     setSearchedUser,
     searchedUser,
     hasUserBeenSearched,
