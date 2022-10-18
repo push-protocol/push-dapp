@@ -25,6 +25,7 @@ import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
+import { setInbox } from 'redux/slices/chatSlice';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
@@ -63,11 +64,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     searchedUser,
     connectedUser,
     receivedIntents,
-    inbox,
     intents,
     setConnectedUser,
     setActiveTab,
-    setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
     setSearchedUser,
@@ -97,7 +96,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [ensName, setENSName] = useState(null);
 
   // redux variables
-  const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
+  const { currentChat, viewChatBox, inbox } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -331,7 +330,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-      setInbox(inboxes);
+      dispatch(setInbox(inboxes));
       return inboxes;
     }
   };
@@ -709,7 +708,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           // will be undefined since it was not updated right after the intent was sent
           let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
           inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
-          setInbox(inboxes);
+          dispatch(setInbox(inboxes));
           const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
           await fetchInboxApi();
           dispatch(setChat(result));
