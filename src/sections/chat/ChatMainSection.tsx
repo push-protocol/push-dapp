@@ -82,8 +82,8 @@ export interface AppContext {
   setPendingRequests: (pending: number) => void;
   hasUserBeenSearched: boolean;
   setHasUserBeenSearched: (searched: boolean) => void;
-  loadingMessage: string;
-  setLoadingMessage: (loadingMessage: string) => void;
+  // loadingMessage: string;
+  // setLoadingMessage: (loadingMessage: string) => void;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
@@ -114,7 +114,7 @@ const ChatMainSection = () => {
   const [currentChat, setCurrentChat] = useState<Feeds>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [loadingMessage, setLoadingMessage] = useState<string>('');
+  // const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
     title: null,
@@ -292,8 +292,8 @@ const ChatMainSection = () => {
               setPendingRequests,
               hasUserBeenSearched,
               setHasUserBeenSearched,
-              loadingMessage,
-              setLoadingMessage,
+              // loadingMessage,
+              // setLoadingMessage,
               setBlockedLoading,
               activeTab,
               setActiveTab,
