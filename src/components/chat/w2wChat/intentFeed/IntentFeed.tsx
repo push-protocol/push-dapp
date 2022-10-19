@@ -31,12 +31,13 @@ const style = {
 };
 
 const IntentFeed = ({isLoading}): JSX.Element => {
-  const {
-    receivedIntents,
-  }: AppContext = useContext<AppContext>(Context);
   const dispatch = useDispatch();
 
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
+
+
+  // redux variables
+  const { receivedIntents } = useSelector((state:any) => state.chat);
   
 
   return (

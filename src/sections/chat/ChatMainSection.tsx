@@ -33,7 +33,8 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import {
-  setChat
+  setChat,
+  setConnectedUser,
 } from 'redux/slices/chatSlice';
 
 // Internal Configs
@@ -77,9 +78,9 @@ export interface AppContext {
   // setDID: (did: DID) => void;
   setSearchedUser: (searched: string) => void;
   searchedUser: string;
-  setChat: (feed: Feeds) => void;
-  connectedUser: ConnectedUser;
-  setConnectedUser: (user: ConnectedUser) => void;
+  // setChat: (feed: Feeds) => void;
+  // connectedUser: ConnectedUser;
+  // setConnectedUser: (user: ConnectedUser) => void;
   intents: Feeds[];
   setIntents: (intents: Feeds[]) => void;
   inbox: Feeds[];
@@ -88,9 +89,9 @@ export interface AppContext {
   setPendingRequests: (pending: number) => void;
   hasUserBeenSearched: boolean;
   setHasUserBeenSearched: (searched: boolean) => void;
-  loadingMessage: string;
-  setLoadingMessage: (loadingMessage: string) => void;
-  // setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
+  // loadingMessage: string;
+  // setLoadingMessage: (loadingMessage: string) => void;
+  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
   // userShouldBeSearched: boolean;
@@ -117,11 +118,14 @@ const ChatMainSection = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
+  
   // const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   // const [currentChat, setCurrentChat] = useState<Feeds>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [loadingMessage, setLoadingMessage] = useState<string>('');
+  // const [loadingMessage, setLoadingMessage] = useState<string>('');
   // const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
   //   enabled: false,
   //   title: null,
@@ -129,7 +133,7 @@ const ChatMainSection = () => {
   const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
   // const [searchedUser, setSearchedUser] = useState<string>('');
-  const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
+  // const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
@@ -254,7 +258,7 @@ const ChatMainSection = () => {
       progress: 100,
     }));
 
-    setConnectedUser(connectedUser);
+    dispatch(setConnectedUser(connectedUser));
     setIsLoading(false);
   };
 
@@ -285,8 +289,8 @@ const ChatMainSection = () => {
               // setChat,
               // setSearchedUser,
               // searchedUser,
-              connectedUser,
-              setConnectedUser,
+              // connectedUser,
+              // setConnectedUser,
               intents,
               setIntents,
               inbox,
@@ -295,8 +299,8 @@ const ChatMainSection = () => {
               setPendingRequests,
               hasUserBeenSearched,
               setHasUserBeenSearched,
-              loadingMessage,
-              setLoadingMessage,
+              // loadingMessage,
+              // setLoadingMessage,
               // setBlockedLoading,
               activeTab,
               setActiveTab,
