@@ -43,7 +43,6 @@ const SearchBar = () => {
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
-  const [messagesLoading, setMessagesLoading] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
   const searchFeedToast = useToast();
 
@@ -52,6 +51,7 @@ const SearchBar = () => {
       handleSearch();
       setUserShouldBeSearched(false);
     }
+    return () => setUserShouldBeSearched(false);
   }, []);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const SearchBar = () => {
     return userCreated;
   };
 
-  const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeSearchBox = (event: React.ChangeEvent<HTMLInputElement>) => {
     let searchAddress = event.target.value;
     if (searchAddress === '') {
       clearInput();
@@ -204,7 +204,10 @@ const SearchBar = () => {
             height="18px"
             width="22px"
             style={{ cursor: 'pointer' }}
-            onClick={() => setActiveTab(0)}
+            onClick={() => {
+              setActiveTab(0);
+              clearInput();
+            }}
           />
           <SpanV2
             color="#D53893"
