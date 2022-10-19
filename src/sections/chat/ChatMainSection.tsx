@@ -132,7 +132,7 @@ const ChatMainSection = () => {
   // });
   const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
-  const [searchedUser, setSearchedUser] = useState<string>('');
+  // const [searchedUser, setSearchedUser] = useState<string>('');
   // const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   // const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
@@ -287,8 +287,8 @@ const ChatMainSection = () => {
               setReceivedIntents,
               // viewChatBox,
               // setChat,
-              setSearchedUser,
-              searchedUser,
+              // setSearchedUser,
+              // searchedUser,
               // connectedUser,
               // setConnectedUser,
               // intents,

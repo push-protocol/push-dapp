@@ -20,15 +20,12 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
 import { Context } from 'sections/chat/ChatMainSection';
-import { setChat, setUserShouldBeSearched } from 'redux/slices/chatSlice';
+import { setChat, setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
 function NewUser() {
   const theme = useTheme();
   const dispatch = useDispatch();
-
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
@@ -43,7 +40,7 @@ function NewUser() {
   const provider = ethers.getDefaultProvider();
 
   // redux variables
-  const { userShouldBeSearched } = useSelector((state: any) => state.chat);
+  const { userShouldBeSearched, searchedUser } = useSelector((state: any) => state.chat);
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
@@ -57,7 +54,7 @@ function NewUser() {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -187,7 +184,7 @@ function NewUser() {
   const clearInput = () => {
     setSearchedUserData([]);
     setFeeds([]);
-    setSearchedUser('');
+    dispatch(setSearchedUser(''));
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };

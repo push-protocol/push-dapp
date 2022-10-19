@@ -23,7 +23,7 @@ import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
-import { setUserShouldBeSearched } from 'redux/slices/chatSlice';
+import { setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -55,8 +55,6 @@ const SearchBar = () => {
   const dispatch = useDispatch();
 
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab
@@ -66,8 +64,9 @@ const SearchBar = () => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
-
-  const { userShouldBeSearched } = useSelector((state: any) => state.chat);
+  
+  // redux variables
+  const { userShouldBeSearched, searchedUser } = useSelector((state: any) => state.chat);
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
@@ -81,7 +80,7 @@ const SearchBar = () => {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -151,7 +150,7 @@ const SearchBar = () => {
 
   const clearInput = () => {
     setFilteredUserData([]);
-    setSearchedUser('');
+    dispatch(setSearchedUser(''));
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };

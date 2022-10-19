@@ -27,6 +27,7 @@ import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { setSearchedUser } from 'redux/slices/chatSlice';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -41,7 +42,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const {
     activeTab,
     setHasUserBeenSearched, 
-    setSearchedUser 
   }: AppContext =
     useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
@@ -278,7 +278,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     onClick={(): void => {
                       dispatch(setChat(feed));
                       setSelectedChatSnap(feed.threadhash);
-                      setSearchedUser('');
+                      dispatch(setSearchedUser(''));
                       setHasUserBeenSearched(false);
                     }}
                   />
