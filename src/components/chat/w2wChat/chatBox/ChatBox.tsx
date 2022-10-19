@@ -36,7 +36,7 @@ import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
 import './ChatBox.css';
-import { setChat } from 'redux/slices/chatSlice';
+import { setChat ,setConnectedUser} from 'redux/slices/chatSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -63,11 +63,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const {
     searchedUser,
-    connectedUser,
     receivedIntents,
     inbox,
     intents,
-    setConnectedUser,
     setActiveTab,
     setInbox,
     setHasUserBeenSearched,
@@ -100,7 +98,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [ensName, setENSName] = useState(null);
 
   // redux variables
-  const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
+  const { currentChat, viewChatBox, connectedUser } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -582,7 +580,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           sigType: 'a',
         });
         const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
-        setConnectedUser(createdConnectedUser);
+        dispatch(setConnectedUser(createdConnectedUser));
 
         dispatch(setBlockedLoading({
           enabled: false,
