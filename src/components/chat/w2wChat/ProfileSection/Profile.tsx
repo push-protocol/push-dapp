@@ -1,3 +1,4 @@
+// External Packages
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
@@ -11,6 +12,9 @@ import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import { useSelector } from 'react-redux'
+
+// Internal Packages
 import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
 import { CID } from 'ipfs-http-client'
@@ -34,8 +38,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const Profile = (props: ProfilePropsType): JSX.Element => {
-  const { did, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { did }: AppContext = useContext<AppContext>(Context);
 
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
   const wallets = connectedUser.wallets.split(',');
   const [copiedDid, setCopiedDid] = useState<boolean>(false);
   const [copiedWallet, setCopiedWallet] = useState<boolean>(false);

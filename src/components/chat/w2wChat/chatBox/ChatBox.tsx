@@ -2,8 +2,10 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
@@ -24,6 +26,7 @@ import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
+import { setInbox } from 'redux/slices/chatSlice';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
@@ -33,13 +36,16 @@ import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { setReceivedIntents } from 'redux/slices/chatSlice';
 import './ChatBox.css';
+import { setChat ,setConnectedUser} from 'redux/slices/chatSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
+import { setBlockedLoading } from 'redux/slices/chatSlice';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -55,24 +61,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
+
   const {
-    currentChat,
-    viewChatBox,
     searchedUser,
-    connectedUser,
-    receivedIntents,
-    inbox,
     intents,
-    setConnectedUser,
     setActiveTab,
-    setChat,
-    setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
     setSearchedUser,
-    setReceivedIntents,
-    setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
+  const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -92,8 +90,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let showTime = false;
   let time = '';
 
+  const dispatch = useDispatch();
+
   // get ens name
   const [ensName, setENSName] = useState(null);
+
+
+  // redux variables
+  const { currentChat, viewChatBox, connectedUser, inbox, receivedIntents } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -327,7 +331,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-      setInbox(inboxes);
+      dispatch(setInbox(inboxes));
       return inboxes;
     }
   };
@@ -478,7 +482,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
-    setReceivedIntents(intents);
+    dispatch(setReceivedIntents(intents));
     setLoading(false);
   }
 
@@ -493,9 +497,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       '1',
       'sigType'
     );
-    let activeChat = currentChat;
+    let activeChat = Object.assign({}, currentChat);
     activeChat.intent = updatedIntent;
-    setChat(activeChat);
+    dispatch(setChat(activeChat));
     // setOpen(false);
 
     // displaying toast according to status
@@ -532,24 +536,24 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     try {
       if (!checkConnectedUser(connectedUser)) {
         // This is a new user
-        setBlockedLoading({
+        dispatch(setBlockedLoading({
           enabled: true,
           title: 'Step 1/4: Generating secure keys for your account',
           progressEnabled: true,
           progress: 30,
           progressNotice:
             'This step is is only done for first time users and might take a few seconds. PGP keys are getting generated to provide you with secure yet seamless chat',
-        });
+        }));
         await new Promise((r) => setTimeout(r, 200));
 
         const keyPairs = await generateKeyPair();
-        setBlockedLoading({
+        dispatch(setBlockedLoading({
           enabled: true,
           title: 'Step 2/4: Encrypting your keys',
           progressEnabled: true,
           progress: 60,
           progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!',
-        });
+        }));
 
         const walletPublicKey = await CryptoHelper.getPublicKey(account);
         const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
@@ -557,13 +561,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           walletPublicKey
         );
         const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-        setBlockedLoading({
+        dispatch(setBlockedLoading({
           enabled: true,
           title: 'Step 3/4: Syncing account info',
           progressEnabled: true,
           progress: 85,
           progressNotice: 'This might take a couple of seconds as push nodes sync your info for the first time!',
-        });
+        }));
 
         const createdUser: User = await PushNodeClient.createUser({
           caip10,
@@ -575,15 +579,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           sigType: 'a',
         });
         const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
-        setConnectedUser(createdConnectedUser);
+        dispatch(setConnectedUser(createdConnectedUser));
 
-        setBlockedLoading({
+        dispatch(setBlockedLoading({
           enabled: false,
           title: 'Step 4/4: Done, Welcome to Push Chat!',
           spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
           progressEnabled: true,
           progress: 100,
-        });
+        }));
         return { createdUser: createdConnectedUser };
       } else {
         return { createdUser: connectedUser };
@@ -674,14 +678,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         if (typeof msg === 'string') {
           if (msg.toLowerCase() === 'your wallet is not whitelisted') {
             // Getting User Info
-            setBlockedLoading({
+            dispatch(setBlockedLoading({
               enabled: true,
               title: 'Wallet is not whitelisted',
               spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
               progressEnabled: true,
               progress: 0,
               progressNotice: 'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
-            });
+            }));
           }
           // Display toaster
           chatBoxToast.showMessageToast({
@@ -705,10 +709,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           // will be undefined since it was not updated right after the intent was sent
           let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
           inboxes = await decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
-          setInbox(inboxes);
+          dispatch(setInbox(inboxes));
           const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
           await fetchInboxApi();
-          setChat(result);
+          dispatch(setChat(result));
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
             toastMessage: 'Chat Request Sent',
@@ -893,7 +897,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 hover="transparent"
                 hoverBackground="transparent"
                 onClick={() => {
-                  setChat(null);
+                  dispatch(setChat(null));
                 }}
               >
                 <MdOutlineArrowBackIos size={24} />
