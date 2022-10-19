@@ -64,7 +64,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const {
-    intents,
     setActiveTab,
     setHasUserBeenSearched,
   }: AppContext = useContext<AppContext>(Context);
