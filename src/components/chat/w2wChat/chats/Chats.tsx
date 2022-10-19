@@ -10,7 +10,7 @@ import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
 import tickIcon from '../../../../assets/chat/tick.svg';
 import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
-import Files, { FileMessageContent } from '../Files/Files';
+import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import './W2wchats.css';
