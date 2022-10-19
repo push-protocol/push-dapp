@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
 import { Feeds, User } from 'api';
+import { setInbox } from 'redux/slices/chatSlice';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -38,10 +39,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const {
-    connectedUser, 
-    setInbox, 
     activeTab,
-    inbox, 
     setHasUserBeenSearched, 
     setSearchedUser 
   }: AppContext =
@@ -54,6 +52,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
+  // redux variables
+  const { connectedUser, inbox } = useSelector((state:any) => state.chat);
+
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
@@ -61,7 +62,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
-        setInbox(inboxes);
+        dispatch(setInbox(inboxes));
         return inboxes;
       } else {
         let inboxes: Feeds[] = await fetchInboxApi();
@@ -77,7 +78,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
-        setInbox(inboxes);
+        dispatch(setInbox(inboxes));
       }
       setShowError(false);
       return inboxes;

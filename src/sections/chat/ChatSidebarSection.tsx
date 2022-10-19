@@ -36,8 +36,12 @@ import GLOBALS from 'config/Globals';
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
+  
   const dispatch = useDispatch();
-  const { connectedUser, pendingRequests, setPendingRequests } =
+  
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
+  const { pendingRequests, setPendingRequests } =
     useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
