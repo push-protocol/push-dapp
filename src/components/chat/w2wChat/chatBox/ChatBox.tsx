@@ -36,6 +36,7 @@ import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { setReceivedIntents } from 'redux/slices/chatSlice';
 import './ChatBox.css';
 import { setChat ,setConnectedUser} from 'redux/slices/chatSlice';
 
@@ -60,18 +61,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
-  const dispatch = useDispatch();
 
   const {
     searchedUser,
-    receivedIntents,
     intents,
     setActiveTab,
     setHasUserBeenSearched,
     setPendingRequests,
     setSearchedUser,
-    setReceivedIntents,
   }: AppContext = useContext<AppContext>(Context);
+  const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -96,8 +95,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   // get ens name
   const [ensName, setENSName] = useState(null);
 
+
   // redux variables
-  const { currentChat, viewChatBox, connectedUser, inbox } = useSelector((state:any) => state.chat);
+  const { currentChat, viewChatBox, connectedUser, inbox, receivedIntents } = useSelector((state:any) => state.chat);
 
   // get reverse name
   React.useEffect(() => {
@@ -482,7 +482,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
-    setReceivedIntents(intents);
+    dispatch(setReceivedIntents(intents));
     setLoading(false);
   }
 
