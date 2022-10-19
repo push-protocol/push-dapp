@@ -66,7 +66,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const {
     searchedUser,
-    intents,
     setActiveTab,
     setHasUserBeenSearched,
     setSearchedUser,

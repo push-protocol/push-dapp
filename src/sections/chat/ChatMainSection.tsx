@@ -81,8 +81,8 @@ export interface AppContext {
   // setChat: (feed: Feeds) => void;
   // connectedUser: ConnectedUser;
   // setConnectedUser: (user: ConnectedUser) => void;
-  intents: Feeds[];
-  setIntents: (intents: Feeds[]) => void;
+  // intents: Feeds[];
+  // setIntents: (intents: Feeds[]) => void;
   inbox: Feeds[];
   setInbox: (inbox: Feeds[]) => void;
   pendingRequests: number;
@@ -134,7 +134,7 @@ const ChatMainSection = () => {
   const [did, setDID] = useState<DID>();
   const [searchedUser, setSearchedUser] = useState<string>('');
   // const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
-  const [intents, setIntents] = useState<Feeds[]>([]);
+  // const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
@@ -264,7 +264,7 @@ const ChatMainSection = () => {
 
   const setActiveTab = (tab: number): void => {
     if (tab === 1) {
-      if (intents.length) dispatch(setChat(intents[0]));
+      if (receivedIntents.length) dispatch(setChat(receivedIntents[0]));
       else dispatch(setChat(null));
       setCurrentTab(tab);
     } else if (tab === 0) {
@@ -291,8 +291,8 @@ const ChatMainSection = () => {
               searchedUser,
               // connectedUser,
               // setConnectedUser,
-              intents,
-              setIntents,
+              // intents,
+              // setIntents,
               inbox,
               setInbox,
               pendingRequests,
