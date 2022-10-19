@@ -2,6 +2,7 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,6 +39,7 @@ import {
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { setBlockedLoading } from 'redux/slices/chatSlice';
 
 export interface InboxChat {
   name: string;
@@ -88,7 +90,7 @@ export interface AppContext {
   setHasUserBeenSearched: (searched: boolean) => void;
   loadingMessage: string;
   setLoadingMessage: (loadingMessage: string) => void;
-  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
+  // setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
   // userShouldBeSearched: boolean;
@@ -120,10 +122,10 @@ const ChatMainSection = () => {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
-    enabled: false,
-    title: null,
-  });
+  // const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
+  //   enabled: false,
+  //   title: null,
+  // });
   const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
   const [searchedUser, setSearchedUser] = useState<string>('');
@@ -137,6 +139,8 @@ const ChatMainSection = () => {
 
   // redux variables
   const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
+
+  const { blockedLoading } = useSelector((state:any) => state.chat);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -191,13 +195,13 @@ const ChatMainSection = () => {
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
-    setBlockedLoading({
+    dispatch(setBlockedLoading({
       enabled: true,
       title: 'Step 1/4: Getting Account Info',
       progressEnabled: true,
       progress: 25,
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
-    });
+    }));
 
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
     const user: User = await PushNodeClient.getUser({ caip10 });
@@ -242,13 +246,13 @@ const ChatMainSection = () => {
       };
     }
 
-    setBlockedLoading({
+    dispatch(setBlockedLoading({
       enabled: false,
       title: "Step 4/4: Let's Chat ;)",
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
       progressEnabled: true,
       progress: 100,
-    });
+    }));
 
     setConnectedUser(connectedUser);
     setIsLoading(false);
@@ -293,7 +297,7 @@ const ChatMainSection = () => {
               setHasUserBeenSearched,
               loadingMessage,
               setLoadingMessage,
-              setBlockedLoading,
+              // setBlockedLoading,
               activeTab,
               setActiveTab,
               // userShouldBeSearched,
