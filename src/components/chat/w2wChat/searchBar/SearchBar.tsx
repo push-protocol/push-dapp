@@ -55,8 +55,6 @@ const SearchBar = () => {
   const dispatch = useDispatch();
 
   const {
-    // setSearchedUser,
-    // searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab
