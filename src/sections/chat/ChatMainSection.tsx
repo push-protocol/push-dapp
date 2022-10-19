@@ -2,8 +2,10 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import { ThreeIdConnect } from '@3id/connect';
 import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
 import { CeramicClient } from '@ceramicnetwork/http-client';
@@ -30,10 +32,14 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import {
+  setChat
+} from 'redux/slices/chatSlice';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { setBlockedLoading } from 'redux/slices/chatSlice';
 
 export interface InboxChat {
   name: string;
@@ -63,14 +69,14 @@ export interface BlockedLoadingI {
 }
 
 export interface AppContext {
-  currentChat: Feeds;
-  viewChatBox: boolean;
+  // currentChat: Feeds;
+  // viewChatBox: boolean;
   receivedIntents: Feeds[];
   setReceivedIntents: (rIntent: Feeds[]) => void;
   // did: DID;
   // setDID: (did: DID) => void;
-  // setSearchedUser: (searched: string) => void;
-  // searchedUser: string;
+  setSearchedUser: (searched: string) => void;
+  searchedUser: string;
   setChat: (feed: Feeds) => void;
   connectedUser: ConnectedUser;
   setConnectedUser: (user: ConnectedUser) => void;
@@ -84,11 +90,11 @@ export interface AppContext {
   setHasUserBeenSearched: (searched: boolean) => void;
   loadingMessage: string;
   setLoadingMessage: (loadingMessage: string) => void;
-  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
+  // setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
-  userShouldBeSearched: boolean;
-  setUserShouldBeSearched: (value: boolean) => void;
+  // userShouldBeSearched: boolean;
+  // setUserShouldBeSearched: (value: boolean) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -109,16 +115,17 @@ const ChatMainSection = () => {
   const { connector, account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
+  const dispatch = useDispatch();
 
-  const [viewChatBox, setViewChatBox] = useState<boolean>(false);
-  const [currentChat, setCurrentChat] = useState<Feeds>();
+  // const [viewChatBox, setViewChatBox] = useState<boolean>(false);
+  // const [currentChat, setCurrentChat] = useState<Feeds>();
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
-    enabled: false,
-    title: null,
-  });
+  // const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
+  //   enabled: false,
+  //   title: null,
+  // });
   const [user, setUser] = useState();
   const [did, setDID] = useState<DID>();
   // const [searchedUser, setSearchedUser] = useState<string>('');
@@ -128,7 +135,12 @@ const ChatMainSection = () => {
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
-  const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  // const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+
+  // redux variables
+  const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
+
+  const { blockedLoading } = useSelector((state:any) => state.chat);
 
   const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
@@ -183,13 +195,13 @@ const ChatMainSection = () => {
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
-    setBlockedLoading({
+    dispatch(setBlockedLoading({
       enabled: true,
       title: 'Step 1/4: Getting Account Info',
       progressEnabled: true,
       progress: 25,
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
-    });
+    }));
 
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
     const user: User = await PushNodeClient.getUser({ caip10 });
@@ -234,13 +246,13 @@ const ChatMainSection = () => {
       };
     }
 
-    setBlockedLoading({
+    dispatch(setBlockedLoading({
       enabled: false,
       title: "Step 4/4: Let's Chat ;)",
       spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
       progressEnabled: true,
       progress: 100,
-    });
+    }));
 
     setConnectedUser(connectedUser);
     setIsLoading(false);
@@ -248,23 +260,14 @@ const ChatMainSection = () => {
 
   const setActiveTab = (tab: number): void => {
     if (tab === 1) {
-      if (intents.length) setChat(intents[0]);
-      else setChat(null);
+      if (intents.length) dispatch(setChat(intents[0]));
+      else dispatch(setChat(null));
       setCurrentTab(tab);
     } else if (tab === 0) {
       setCurrentTab(tab);
     } else if (tab === 3) {
-      setChat(null);
+      dispatch(setChat(null));
       setCurrentTab(tab);
-    }
-  };
-
-  const setChat = (feed: Feeds): void => {
-    if (feed) {
-      setViewChatBox(true);
-      setCurrentChat(feed);
-    } else {
-      setViewChatBox(false);
     }
   };
 
@@ -275,11 +278,11 @@ const ChatMainSection = () => {
         <QueryClientProvider client={queryClient}>
           <Context.Provider
             value={{
-              currentChat,
+              // currentChat,
               receivedIntents,
               setReceivedIntents,
-              viewChatBox,
-              setChat,
+              // viewChatBox,
+              // setChat,
               // setSearchedUser,
               // searchedUser,
               connectedUser,
@@ -294,11 +297,11 @@ const ChatMainSection = () => {
               setHasUserBeenSearched,
               loadingMessage,
               setLoadingMessage,
-              setBlockedLoading,
+              // setBlockedLoading,
               activeTab,
               setActiveTab,
-              userShouldBeSearched,
-              setUserShouldBeSearched,
+              // userShouldBeSearched,
+              // setUserShouldBeSearched,
             }}
           >
             <ChatSidebarContainer

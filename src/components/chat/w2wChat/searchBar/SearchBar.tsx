@@ -23,7 +23,7 @@ import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
-import { setSearchedUser } from 'redux/slices/chatSlice';
+import { setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -54,28 +54,26 @@ const SearchBar = () => {
 
   const dispatch = useDispatch();
 
-  // redux variables
-  const { searchedUser } = useSelector((state: any) => state.chat);
-
   const {
     // setSearchedUser,
     // searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
-    setActiveTab,
-    userShouldBeSearched,
-    setUserShouldBeSearched,
+    setActiveTab
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
+  
+  // redux variables
+  const { userShouldBeSearched, searchedUser } = useSelector((state: any) => state.chat);
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setUserShouldBeSearched(false);
+      dispatch(setUserShouldBeSearched(false));
     }
   }, []);
 
@@ -111,7 +109,7 @@ const SearchBar = () => {
             setFilteredUserData([filteredData]);
           } else {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             setActiveTab(3);
           }
         } else {
@@ -138,7 +136,7 @@ const SearchBar = () => {
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             setActiveTab(3);
           } else {
             setIsInvalidAddress(true);

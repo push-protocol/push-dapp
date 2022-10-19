@@ -1,8 +1,8 @@
 // React + Web3 Essentials
 import React, { useContext, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
@@ -21,6 +21,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
+import { setChat } from 'redux/slices/chatSlice';
 import './MessageFeed.css';
 
 // Internal Configs
@@ -268,7 +269,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
                     onClick={(): void => {
-                      setChat(feed);
+                      dispatch(setChat(feed));
                       setSelectedChatSnap(feed.threadhash);
                       dispatch(setSearchedUser(''));
                       setHasUserBeenSearched(false);
