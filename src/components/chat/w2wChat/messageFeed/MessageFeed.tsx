@@ -21,7 +21,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
-import { setHasUserBeenSearched, setChat } from 'redux/slices/chatSlice';
+import { setChat, setHasUserBeenSearched } from 'redux/slices/chatSlice';
 import './MessageFeed.css';
 
 // Internal Configs

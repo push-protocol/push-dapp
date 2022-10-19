@@ -8,7 +8,6 @@ import { Web3Provider } from 'ethers/providers';
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
-import { useDispatch } from 'react-redux';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';

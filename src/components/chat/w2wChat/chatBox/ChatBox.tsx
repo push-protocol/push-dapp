@@ -74,8 +74,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
-  
-  const dispatch = useDispatch();
 
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
