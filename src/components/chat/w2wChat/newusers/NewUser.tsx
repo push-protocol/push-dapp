@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 
 // External Packages
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -13,6 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
+import { setActiveTab } from 'redux/slices/chatSlice';
 import * as PushNodeClient from 'api';
 import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -24,11 +25,9 @@ import { setChat, setUserShouldBeSearched, setSearchedUser } from 'redux/slices/
 
 function NewUser() {
   const theme = useTheme();
-  const dispatch = useDispatch();
   const {
     hasUserBeenSearched,
     setHasUserBeenSearched,
-    setActiveTab,
   } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
@@ -37,6 +36,7 @@ function NewUser() {
   const [isInvalidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(false);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
+  const dispatch = useDispatch();
   const provider = ethers.getDefaultProvider();
 
   // redux variables
@@ -101,7 +101,7 @@ function NewUser() {
           if (filteredData !== null) {
             setHasUserBeenSearched(true);
             dispatch(setUserShouldBeSearched(true));
-            setActiveTab(0);
+            dispatch(setActiveTab(0));
           } else {
             const displayUser = displayDefaultUser({ caip10 });
             setFeed(displayUser);
@@ -128,7 +128,7 @@ function NewUser() {
         if (filteredData !== null) {
           setHasUserBeenSearched(true);
           dispatch(setUserShouldBeSearched(true));
-          setActiveTab(0);
+          dispatch(setActiveTab(0));
         }
         // User is not in the protocol. Create new user
         else {
@@ -207,7 +207,7 @@ function NewUser() {
           height="18px"
           width="22px"
           style={{ cursor: 'pointer' }}
-          onClick={() => setActiveTab(0)}
+          onClick={() => dispatch(setActiveTab(0))}
         />
         <SpanV2
           color="#D53893"

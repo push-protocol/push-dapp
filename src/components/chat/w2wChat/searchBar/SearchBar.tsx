@@ -22,6 +22,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
+import { setActiveTab } from 'redux/slices/chatSlice';
 import './SearchBar.css';
 import { setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
@@ -51,13 +52,10 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
 const SearchBar = () => {
   // get theme
   const theme = useTheme();
-
   const dispatch = useDispatch();
-
   const {
     hasUserBeenSearched,
-    setHasUserBeenSearched,
-    setActiveTab
+    setHasUserBeenSearched
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -108,7 +106,7 @@ const SearchBar = () => {
           } else {
             setHasUserBeenSearched(true);
             dispatch(setUserShouldBeSearched(true));
-            setActiveTab(3);
+            dispatch(setActiveTab(3));
           }
         } else {
           setIsInvalidAddress(true);
@@ -135,7 +133,7 @@ const SearchBar = () => {
           if (ethers.utils.isAddress(searchedUser)) {
             setHasUserBeenSearched(true);
             dispatch(setUserShouldBeSearched(true));
-            setActiveTab(3);
+            dispatch(setActiveTab(3));
           } else {
             setIsInvalidAddress(true);
             setFilteredUserData([]);
@@ -225,7 +223,7 @@ const SearchBar = () => {
             background="#D53893"
             hoverBackground="transparent"
             borderRadius="50%"
-            onClick={() => setActiveTab(3)}
+            onClick={() => dispatch(setActiveTab(3))}
           >
             <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
           </ButtonV2>

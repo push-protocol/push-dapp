@@ -1,21 +1,19 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import React from 'react';
 
 // External Packages
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import styled, { useTheme } from 'styled-components';
 
-// Internal Packages
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
-
+import styled, { useTheme } from 'styled-components';
 
 const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
-
+  const dispatch = useDispatch();
   // redux variables
   const { connectedUser } = useSelector((state:any) => state.chat);
 
@@ -25,7 +23,7 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
       <WalletDetailsContainer
         direction="row"
         spacing={2}
-        onClick={(): void => setActiveTab(2)}
+        onClick={(): void => dispatch(setActiveTab(2))}
       >
         <ItemVV2
           width="48px"

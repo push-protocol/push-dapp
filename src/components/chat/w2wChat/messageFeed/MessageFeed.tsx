@@ -40,7 +40,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const {
-    activeTab,
     setHasUserBeenSearched, 
   }: AppContext =
     useContext<AppContext>(Context);
@@ -53,7 +52,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const messageFeedToast = useToast();
 
   // redux variables
-  const { connectedUser, inbox } = useSelector((state:any) => state.chat);
+  const { connectedUser, inbox, activeTab } = useSelector((state:any) => state.chat);
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {

@@ -87,6 +87,19 @@ export const chatSlice = createSlice({
          state.blockedLoading = action.payload;
       },
       setActiveTab: (state, action: PayloadAction<number>) => {
+         if (action.payload === 1) {
+           if (state.receivedIntents.length) {
+            state.currentChat = state.receivedIntents[0];
+            state.viewChatBox = true;
+           } 
+           else {
+            state.currentChat = null;
+            state.viewChatBox = false;
+           }
+         } else if (action.payload === 3) {
+            state.currentChat = null;
+            state.viewChatBox = false;
+         }
          state.activeTab = action.payload;
       },
       setUserShouldBeSearched: (state, action: PayloadAction<boolean>) => {
