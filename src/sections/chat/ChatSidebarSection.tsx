@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { useDispatch , useSelector} from 'react-redux';
 import styled, { useTheme } from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { makeStyles } from '@material-ui/core';
@@ -13,6 +14,7 @@ import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+import { setReceivedIntents } from 'redux/slices/chatSlice';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -36,20 +38,19 @@ import GLOBALS from 'config/Globals';
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
+  
   const dispatch = useDispatch();
-  const { connectedUser, receivedIntents, setReceivedIntents } =
-    useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
-
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
   };
+    
  // redux variables
-  const { pendingRequests } = useSelector((state:any) => state.chat);
+  const { pendingRequests, connectedUser, receivedIntents } = useSelector((state:any) => state.chat);
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
     // This will run when the page first loads
@@ -65,7 +66,7 @@ const ChatSidebarSection = () => {
       let intents: Feeds[] = getIntent.body;
       intents = await decryptFeeds({ feeds: intents, connectedUser });
       dispatch(setPendingRequests(intents?.length));
-      setReceivedIntents(intents);
+      dispatch(setReceivedIntents(intents));
       setLoadingRequests(false);
     } else {
       await fetchIntentApi();
@@ -80,7 +81,7 @@ const ChatSidebarSection = () => {
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       dispatch(setPendingRequests(intents?.length));
-      setReceivedIntents(intents);
+      dispatch(setReceivedIntents(intents));
     }
     setLoadingRequests(false);
     return intents;
