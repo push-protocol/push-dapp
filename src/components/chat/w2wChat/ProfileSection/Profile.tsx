@@ -1,7 +1,10 @@
+import { ChangeEvent } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import PhotoCamera from '@mui/icons-material/PhotoCamera'
+import { useDispatch } from 'react-redux'
 import { CardActionArea } from '@mui/material'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Box from '@mui/material/Box'
@@ -9,17 +12,15 @@ import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+
 import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
 import { CID } from 'ipfs-http-client'
-import React, { useContext, useEffect, useState } from 'react'
 import { AppContext, Context } from 'sections/chat/ChatMainSection'
 import { showCharacters } from './helpers'
 import './Profile.css'
 
-import { ChangeEvent } from 'react'
 import { FileMessageContent } from '../Files/Files'
 import styles from './styles'
 
@@ -41,7 +42,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
   const [copiedWallet, setCopiedWallet] = useState<boolean>(false);
   const [profile, setProfile] = useState('');
   const [message, setMessage] = useState('');
-
+  const dispatch = useDispatch();
   useEffect(() => {
     try {
       CID.parse(props.profilePicture);
@@ -102,7 +103,7 @@ const Profile = (props: ProfilePropsType): JSX.Element => {
     <>
       <Card sx={styles.container} elevation={0}>
         <Box sx={styles.header}>
-          <IconButton aria-label="back" onClick={() => props.setActiveTab(0)} sx={styles.backButtonHolder}>
+          <IconButton aria-label="back" onClick={() => dispatch(props.setActiveTab(0))} sx={styles.backButtonHolder}>
             <KeyboardBackspaceIcon sx={styles.backButton} />
           </IconButton>
         </Box>
