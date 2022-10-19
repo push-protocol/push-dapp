@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
-import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
