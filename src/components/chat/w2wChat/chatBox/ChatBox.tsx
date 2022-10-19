@@ -26,7 +26,7 @@ import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
-import { fetchInbox,fetchIntent,MessageIPFS } from 'helpers/w2w/ipfs';
+import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import './ChatBox.css';
@@ -142,15 +142,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
           // Decrypt message
           msgIPFS = await w2wHelper.decryptMessages({
-            savedMsg: msgIPFS, 
+            savedMsg: msgIPFS,
             connectedUser,
             account,
             chainId,
             currentChat,
-            inbox
+            inbox,
           });
 
-          //checking if the message is encrypted or not 
+          //checking if the message is encrypted or not
           //!This below checking is not needed according to me as the message sent are always encrypted.
           // const messagesSentInChat: MessageIPFS = messages.find(
           //   (msg) =>
@@ -175,12 +175,12 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           //   setMessages(newMessages);
           // } else {
 
-            //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
-            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
-            if (messageInChat === undefined) {
-              setMessages((m) => [...m, msgIPFS]);
-            }
-            
+          //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
+          const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
+          if (messageInChat === undefined) {
+            setMessages((m) => [...m, msgIPFS]);
+          }
+
           // }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
@@ -208,7 +208,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 account,
                 chainId,
                 currentChat,
-                inbox
+                inbox,
               });
 
               // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
@@ -235,14 +235,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               //   setMessages(newMessages);
               // }
               // Display messages for the first time
-              // else 
+              // else
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
 
                 //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
                 setMessageBeingSent(false);
               }
-             
+
               const link = msgIPFS.link;
               if (link) {
                 messageCID = link;
@@ -279,15 +279,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
-  const fetchInboxApi = async (): Promise<Feeds[]> => {
-    if (checkConnectedUser(connectedUser)) {
-      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser });
-      setInbox(inboxes);
-      return inboxes;
-    }
-  };
+  // const fetchInboxApi = async (): Promise<Feeds[]> => {
+  //   if (checkConnectedUser(connectedUser)) {
+  //     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+  //     await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+  //     inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser });
+  //     setInbox(inboxes);
+  //     return inboxes;
+  //   }
+  // };
 
   const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true);
@@ -355,7 +355,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           account,
           chainId,
           currentChat,
-          inbox:[]
+          inbox: [],
         });
         setNewMessage('');
         setMessages([...messages, savedMsg]);
@@ -512,6 +512,77 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   };
 
+  const encryptingMessages = async ({
+    user,
+    createdUser,
+    message,
+  }: {
+    user: User;
+    createdUser: ConnectedUser;
+    message: string;
+  }) => {
+    let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
+    let caip10: string;
+    if (!user) {
+      if (!ethers.utils.isAddress(searchedUser)) {
+        try {
+          const ens: string = await provider.resolveName(searchedUser);
+          if (ens) {
+            caip10 = walletToCAIP10({ account: ens, chainId });
+          }
+        } catch (err) {
+          console.log(err);
+          return;
+        }
+      } else {
+        caip10 = walletToCAIP10({ account: searchedUser, chainId });
+      }
+      await PushNodeClient.createUser({
+        caip10,
+        did: caip10,
+        publicKey: '',
+        encryptedPrivateKey: '',
+        encryptionType: '',
+        signature: 'pgp',
+        sigType: 'pgp',
+      });
+      // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
+      messageContent = message;
+      encryptionType = 'PlainText';
+      aesEncryptedSecret = '';
+      signature = '';
+    } else {
+      // It's possible for a user to be created but the PGP keys still not created
+      if (!user.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+        messageContent = message;
+        encryptionType = 'PlainText';
+        aesEncryptedSecret = '';
+        signature = '';
+      } else {
+        const {
+          cipherText,
+          encryptedSecret,
+          signature: pgpSignature,
+        } = await encryptAndSign({
+          plainText: message,
+          toPublicKeyArmored: user.publicKey,
+          fromPublicKeyArmored: createdUser.publicKey,
+          privateKeyArmored: createdUser.privateKey,
+        });
+        messageContent = cipherText;
+        encryptionType = 'pgp';
+        aesEncryptedSecret = encryptedSecret;
+        signature = pgpSignature;
+      }
+    }
+    return {
+      messageContent,
+      encryptionType,
+      aesEncryptedSecret,
+      signature,
+    };
+  };
+
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       setMessageBeingSent(true);
@@ -522,60 +593,64 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
         const user: User = await PushNodeClient.getUser({ caip10: currentChat.wallets.split(',')[0] });
-        let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string;
-        let caip10: string;
-        if (!user) {
-          if (!ethers.utils.isAddress(searchedUser)) {
-            try {
-              const ens: string = await provider.resolveName(searchedUser);
-              if (ens) {
-                caip10 = walletToCAIP10({ account: ens, chainId });
-              }
-            } catch (err) {
-              console.log(err);
-              return;
-            }
-          } else {
-            caip10 = walletToCAIP10({ account: searchedUser, chainId });
-          }
-          await PushNodeClient.createUser({
-            caip10,
-            did: caip10,
-            publicKey: '',
-            encryptedPrivateKey: '',
-            encryptionType: '',
-            signature: 'pgp',
-            sigType: 'pgp',
-          });
-          // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
-          messageContent = message;
-          encryptionType = 'PlainText';
-          aesEncryptedSecret = '';
-          signature = '';
-        } else {
-          // It's possible for a user to be created but the PGP keys still not created
-          if (!user.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
-            messageContent = message;
-            encryptionType = 'PlainText';
-            aesEncryptedSecret = '';
-            signature = '';
-          } else {
-            const {
-              cipherText,
-              encryptedSecret,
-              signature: pgpSignature,
-            } = await encryptAndSign({
-              plainText: message,
-              toPublicKeyArmored: user.publicKey,
-              fromPublicKeyArmored: createdUser.publicKey,
-              privateKeyArmored: createdUser.privateKey,
-            });
-            messageContent = cipherText;
-            encryptionType = 'pgp';
-            aesEncryptedSecret = encryptedSecret;
-            signature = pgpSignature;
-          }
-        }
+        const { messageContent, encryptionType, aesEncryptedSecret, signature } = await encryptingMessages({
+          user,
+          createdUser,
+          message,
+        });
+
+        // if (!user) {
+        //   if (!ethers.utils.isAddress(searchedUser)) {
+        //     try {
+        //       const ens: string = await provider.resolveName(searchedUser);
+        //       if (ens) {
+        //         caip10 = walletToCAIP10({ account: ens, chainId });
+        //       }
+        //     } catch (err) {
+        //       console.log(err);
+        //       return;
+        //     }
+        //   } else {
+        //     caip10 = walletToCAIP10({ account: searchedUser, chainId });
+        //   }
+        //   await PushNodeClient.createUser({
+        //     caip10,
+        //     did: caip10,
+        //     publicKey: '',
+        //     encryptedPrivateKey: '',
+        //     encryptionType: '',
+        //     signature: 'pgp',
+        //     sigType: 'pgp',
+        //   });
+        //   // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
+        //   messageContent = message;
+        //   encryptionType = 'PlainText';
+        //   aesEncryptedSecret = '';
+        //   signature = '';
+        // } else {
+        //   // It's possible for a user to be created but the PGP keys still not created
+        //   if (!user.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
+        //     messageContent = message;
+        //     encryptionType = 'PlainText';
+        //     aesEncryptedSecret = '';
+        //     signature = '';
+        //   } else {
+        //     const {
+        //       cipherText,
+        //       encryptedSecret,
+        //       signature: pgpSignature,
+        //     } = await encryptAndSign({
+        //       plainText: message,
+        //       toPublicKeyArmored: user.publicKey,
+        //       fromPublicKeyArmored: createdUser.publicKey,
+        //       privateKeyArmored: createdUser.privateKey,
+        //     });
+        //     messageContent = cipherText;
+        //     encryptionType = 'pgp';
+        //     aesEncryptedSecret = encryptedSecret;
+        //     signature = pgpSignature;
+        //   }
+        // }
 
         const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
           toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
@@ -599,7 +674,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
               progressEnabled: true,
               progress: 0,
-              progressNotice: 'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
+              progressNotice:
+                'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
             });
           }
           // Display toaster
@@ -624,9 +700,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           // will be undefined since it was not updated right after the intent was sent
           let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
           inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
+          await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
           setInbox(inboxes);
           const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
-          await fetchInboxApi();
+          // await fetchInboxApi();
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
@@ -661,7 +738,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
     setOpenSuccessSnackBar(false);
   };
-
 
   return (
     <Container>
@@ -839,7 +915,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               <Typebar
                 messageBeingSent={messageBeingSent}
                 setNewMessage={setNewMessage}
-                newMessage={newMessage} 
+                newMessage={newMessage}
                 setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
                 sendIntent={sendIntent}
@@ -847,8 +923,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 setSnackbarText={setSnackbarText}
               />
             </>
-          )
-          }
+          )}
         </>
       )}
     </Container>
@@ -872,7 +947,6 @@ const FirstConversation = styled.div`
   margin: 59px 0px 0px 0px;
   padding: 0px 50px;
 `;
-
 
 const MessageTime = styled.div`
   width: 100%;
@@ -953,8 +1027,6 @@ const Icon = styled.i`
     cursor: pointer;
   }
 `;
-
-
 
 const Container = styled(Content)`
   box-sizing: border-box;
