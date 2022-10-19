@@ -7,6 +7,7 @@ import { Web3Provider } from 'ethers/providers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
+import { useDispatch } from 'react-redux';
 
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -17,18 +18,18 @@ import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
+import { setHasUserBeenSearched } from 'redux/slices/chatSlice';
 
 import { Context } from 'sections/chat/ChatMainSection';
 
 function NewUser() {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   const {
     setChat,
     setSearchedUser,
     searchedUser,
-    hasUserBeenSearched,
-    setHasUserBeenSearched,
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
@@ -99,34 +100,34 @@ function NewUser() {
           let filteredData: User;
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             setUserShouldBeSearched(true);
             setActiveTab(0);
           } else {
             const displayUser = displayDefaultUser({ caip10 });
             setFeed(displayUser);
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
           }
         } else {
           setIsInvalidAddress(true);
           setSearchedUserData([]);
-          setHasUserBeenSearched(true);
+          dispatch(setHasUserBeenSearched(true));
         }
       } catch (err) {
         setIsInvalidAddress(true);
         setSearchedUserData([]);
-        setHasUserBeenSearched(true);
+        dispatch(setHasUserBeenSearched(true));
       }
     } else {
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
       let filteredData: User;
-      setHasUserBeenSearched(true);
+      dispatch(setHasUserBeenSearched(true));
 
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          setHasUserBeenSearched(true);
+          dispatch(setHasUserBeenSearched(true));
           setUserShouldBeSearched(true);
           setActiveTab(0);
         }
@@ -135,7 +136,7 @@ function NewUser() {
           if (ethers.utils.isAddress(searchedUser)) {
             const displayUser = displayDefaultUser({ caip10 });
             setFeed(displayUser);
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             setMessagesLoading(false);
           } else {
             setIsInvalidAddress(true);
@@ -185,7 +186,7 @@ function NewUser() {
     setSearchedUserData([]);
     setFeeds([]);
     setSearchedUser('');
-    setHasUserBeenSearched(false);
+    dispatch(setHasUserBeenSearched(false));
     setIsLoadingSearch(false);
   };
 

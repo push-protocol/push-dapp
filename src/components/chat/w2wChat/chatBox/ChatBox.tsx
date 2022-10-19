@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
+import { useDispatch } from 'react-redux';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
@@ -33,6 +34,7 @@ import Chats from '../chats/Chats';
 import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
+import { setHasUserBeenSearched } from 'redux/slices/chatSlice';
 import './ChatBox.css';
 
 // Internal Configs
@@ -67,12 +69,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setActiveTab,
     setChat,
     setInbox,
-    setHasUserBeenSearched,
     setPendingRequests,
     setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
+  
+  const dispatch = useDispatch();
+
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -94,6 +98,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // get ens name
   const [ensName, setENSName] = useState(null);
+
 
   // get reverse name
   React.useEffect(() => {
@@ -727,7 +732,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         setSnackbarText('Cannot send message, chat request is not approved!');
       }
       setSearchedUser('');
-      setHasUserBeenSearched(false);
+      dispatch(setHasUserBeenSearched(false));
       setActiveTab(0);
     } catch (error) {
       console.log(error);
