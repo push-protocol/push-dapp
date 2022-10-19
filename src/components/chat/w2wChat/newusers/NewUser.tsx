@@ -20,7 +20,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
 import { Context } from 'sections/chat/ChatMainSection';
-import { setChat } from 'redux/slices/chatSlice';
+import { setChat, setUserShouldBeSearched } from 'redux/slices/chatSlice';
 
 function NewUser() {
   const theme = useTheme();
@@ -32,8 +32,6 @@ function NewUser() {
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
-    userShouldBeSearched,
-    setUserShouldBeSearched,
   } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
@@ -44,10 +42,13 @@ function NewUser() {
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const provider = ethers.getDefaultProvider();
 
+  // redux variables
+  const { userShouldBeSearched } = useSelector((state: any) => state.chat);
+
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setUserShouldBeSearched(false);
+      dispatch(setUserShouldBeSearched(false));
     }
   }, []);
 
@@ -102,7 +103,7 @@ function NewUser() {
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             setActiveTab(0);
           } else {
             const displayUser = displayDefaultUser({ caip10 });
@@ -129,7 +130,7 @@ function NewUser() {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
           setHasUserBeenSearched(true);
-          setUserShouldBeSearched(true);
+          dispatch(setUserShouldBeSearched(true));
           setActiveTab(0);
         }
         // User is not in the protocol. Create new user

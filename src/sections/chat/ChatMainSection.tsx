@@ -91,8 +91,8 @@ export interface AppContext {
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
   setActiveTab: (active: number) => void;
-  userShouldBeSearched: boolean;
-  setUserShouldBeSearched: (value: boolean) => void;
+  // userShouldBeSearched: boolean;
+  // setUserShouldBeSearched: (value: boolean) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -133,7 +133,7 @@ const ChatMainSection = () => {
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
-  const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  // const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
 
   // redux variables
   const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
@@ -296,8 +296,8 @@ const ChatMainSection = () => {
               setBlockedLoading,
               activeTab,
               setActiveTab,
-              userShouldBeSearched,
-              setUserShouldBeSearched,
+              // userShouldBeSearched,
+              // setUserShouldBeSearched,
             }}
           >
             <ChatSidebarContainer
