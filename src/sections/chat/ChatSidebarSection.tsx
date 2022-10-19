@@ -39,6 +39,10 @@ const ChatSidebarSection = () => {
   const theme = useTheme();
   
   const dispatch = useDispatch();
+
+  // redux variables
+  const { pendingRequests, connectedUser, receivedIntents } = useSelector((state:any) => state.chat);
+  
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
@@ -48,8 +52,6 @@ const ChatSidebarSection = () => {
     setUserProfileImage(image);
   };
     
- // redux variables
-  const { pendingRequests, connectedUser, receivedIntents } = useSelector((state:any) => state.chat);
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
     // This will run when the page first loads
