@@ -39,6 +39,7 @@ const ChatSidebarSection = () => {
   const { pendingRequests, connectedUser, receivedIntents,activeTab } = useSelector((state:any) => state.chat);
   
   const dispatch = useDispatch();
+
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
@@ -50,7 +51,6 @@ const ChatSidebarSection = () => {
     setUserProfileImage(image);
   };
     
-
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
     // This will run when the page first loads

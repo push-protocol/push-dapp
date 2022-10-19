@@ -66,6 +66,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const {
     setHasUserBeenSearched,
   }: AppContext = useContext<AppContext>(Context);
+
+  const dispatch = useDispatch();
+  
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -81,11 +84,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
+
   const theme = useTheme();
   let showTime = false;
   let time = '';
 
-  const dispatch = useDispatch();
 
   // get ens name
   const [ensName, setENSName] = useState(null);
