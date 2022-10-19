@@ -14,7 +14,6 @@ import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { useDispatch } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -67,7 +66,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setActiveTab,
     setHasUserBeenSearched,
   }: AppContext = useContext<AppContext>(Context);
+
   const dispatch = useDispatch();
+  
   const [newMessage, setNewMessage] = useState<string>('');
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -83,12 +84,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
+
   const theme = useTheme();
-  const dispatch = useDispatch();
   let showTime = false;
   let time = '';
 
-  const dispatch = useDispatch();
 
   // get ens name
   const [ensName, setENSName] = useState(null);

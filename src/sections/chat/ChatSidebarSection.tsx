@@ -6,7 +6,6 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { useDispatch , useSelector} from 'react-redux';
 import styled, { useTheme } from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { makeStyles } from '@material-ui/core';
