@@ -2,7 +2,6 @@ import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/
 import adminReducer from './slices/adminSlice';
 import channelCreationReducer from './slices/channelCreationSlice';
 import channelReducer from './slices/channelSlice';
-import chatReducer from './slices/chatSlice';
 import contractReducer from './slices/contractSlice';
 import notificationReducer from './slices/notificationSlice';
 import canSendNotification from "./slices/sendNotificationSlice";

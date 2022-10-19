@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
+import { useDispatch, useSelector } from 'react-redux';
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
@@ -24,7 +25,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import { setActiveTab } from 'redux/slices/chatSlice';
 import './SearchBar.css';
-import { setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
+import { setHasUserBeenSearched, setSearchedUser, setUserShouldBeSearched } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -52,15 +53,16 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
 const SearchBar = () => {
   // get theme
   const theme = useTheme();
+  
   const dispatch = useDispatch();
-  const {
-    hasUserBeenSearched,
-    setHasUserBeenSearched
-  }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
+
+  // redux variables
+  const { hasUserBeenSearched } = useSelector((state:any) => state.chat);
+
   const provider = ethers.getDefaultProvider();
   
   // redux variables
@@ -101,28 +103,28 @@ const SearchBar = () => {
           const caip10 = w2wChatHelper.walletToCAIP10({ account: ens, chainId });
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             setFilteredUserData([filteredData]);
           } else {
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             dispatch(setUserShouldBeSearched(true));
             dispatch(setActiveTab(3));
           }
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
-          setHasUserBeenSearched(true);
+          dispatch(setHasUserBeenSearched(true));
         }
       } catch (err) {
         setIsInvalidAddress(true);
         setFilteredUserData([]);
-        setHasUserBeenSearched(true);
+        dispatch(setHasUserBeenSearched(true));
       }
     } else {
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
       let filteredData: User;
-      setHasUserBeenSearched(true);
+      dispatch(setHasUserBeenSearched(true));
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
@@ -131,7 +133,7 @@ const SearchBar = () => {
         // User is not in the protocol. Create new user
         else {
           if (ethers.utils.isAddress(searchedUser)) {
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             dispatch(setUserShouldBeSearched(true));
             dispatch(setActiveTab(3));
           } else {
@@ -148,8 +150,8 @@ const SearchBar = () => {
 
   const clearInput = () => {
     setFilteredUserData([]);
+    dispatch(setHasUserBeenSearched(false));
     dispatch(setSearchedUser(''));
-    setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };
 

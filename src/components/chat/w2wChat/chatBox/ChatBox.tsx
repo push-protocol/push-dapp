@@ -37,9 +37,8 @@ import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
 import { setPendingRequests } from 'redux/slices/chatSlice';
 import { decryptFeeds, fetchInbox, fetchIntent } from '../w2wUtils';
-import { setReceivedIntents } from 'redux/slices/chatSlice';
 import './ChatBox.css';
-import { setChat ,setConnectedUser} from 'redux/slices/chatSlice';
+import { setChat, setConnectedUser, setHasUserBeenSearched, setReceivedIntents } from 'redux/slices/chatSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -62,11 +61,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
-
-  const {
-    setHasUserBeenSearched,
-  }: AppContext = useContext<AppContext>(Context);
-
   const dispatch = useDispatch();
   
   const [newMessage, setNewMessage] = useState<string>('');
@@ -728,8 +722,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         setOpenSuccessSnackBar(true);
         setSnackbarText('Cannot send message, chat request is not approved!');
       }
+      dispatch(setHasUserBeenSearched(false));
       dispatch(setSearchedUser(''));
-      setHasUserBeenSearched(false);
       dispatch(setActiveTab(0));
     } catch (error) {
       console.log(error);

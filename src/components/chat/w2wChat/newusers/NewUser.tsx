@@ -19,16 +19,13 @@ import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
+import { setHasUserBeenSearched } from 'redux/slices/chatSlice';
 
 import { Context } from 'sections/chat/ChatMainSection';
 import { setChat, setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
 function NewUser() {
   const theme = useTheme();
-  const {
-    hasUserBeenSearched,
-    setHasUserBeenSearched,
-  } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
   const [searchedUserData, setSearchedUserData] = useState<User[]>([]);
@@ -99,34 +96,34 @@ function NewUser() {
           let filteredData: User;
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             dispatch(setUserShouldBeSearched(true));
             dispatch(setActiveTab(0));
           } else {
             const displayUser = displayDefaultUser({ caip10 });
             setFeed(displayUser);
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
           }
         } else {
           setIsInvalidAddress(true);
           setSearchedUserData([]);
-          setHasUserBeenSearched(true);
+          dispatch(setHasUserBeenSearched(true));
         }
       } catch (err) {
         setIsInvalidAddress(true);
         setSearchedUserData([]);
-        setHasUserBeenSearched(true);
+        dispatch(setHasUserBeenSearched(true));
       }
     } else {
       setIsLoadingSearch(true);
       const caip10 = w2wChatHelper.walletToCAIP10({ account: searchedUser, chainId });
       let filteredData: User;
-      setHasUserBeenSearched(true);
+      dispatch(setHasUserBeenSearched(true));
 
       if (searchedUser.length) {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
-          setHasUserBeenSearched(true);
+          dispatch(setHasUserBeenSearched(true));
           dispatch(setUserShouldBeSearched(true));
           dispatch(setActiveTab(0));
         }
@@ -135,7 +132,7 @@ function NewUser() {
           if (ethers.utils.isAddress(searchedUser)) {
             const displayUser = displayDefaultUser({ caip10 });
             setFeed(displayUser);
-            setHasUserBeenSearched(true);
+            dispatch(setHasUserBeenSearched(true));
             setMessagesLoading(false);
           } else {
             setIsInvalidAddress(true);
@@ -184,8 +181,8 @@ function NewUser() {
   const clearInput = () => {
     setSearchedUserData([]);
     setFeeds([]);
+    dispatch(setHasUserBeenSearched(false));
     dispatch(setSearchedUser(''));
-    setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };
 

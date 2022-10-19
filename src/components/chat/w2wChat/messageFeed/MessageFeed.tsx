@@ -22,7 +22,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { decryptFeeds, fetchInbox } from '../w2wUtils';
-import { setChat } from 'redux/slices/chatSlice';
+import { setChat, setHasUserBeenSearched } from 'redux/slices/chatSlice';
 import './MessageFeed.css';
 
 // Internal Configs
@@ -39,10 +39,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const {
-    setHasUserBeenSearched, 
-  }: AppContext =
-    useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);
@@ -277,8 +273,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     onClick={(): void => {
                       dispatch(setChat(feed));
                       setSelectedChatSnap(feed.threadhash);
+                      dispatch(setHasUserBeenSearched(false));
                       dispatch(setSearchedUser(''));
-                      setHasUserBeenSearched(false);
                     }}
                   />
                 </ItemVV2>
