@@ -3,12 +3,12 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
-import { useDispatch } from 'react-redux';
 import FadeLoader from 'react-spinners/FadeLoader';
 import styled, { useTheme } from 'styled-components';
 
@@ -24,6 +24,7 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import { setActiveTab } from 'redux/slices/chatSlice';
 import './SearchBar.css';
+import { setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -53,23 +54,22 @@ const SearchBar = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
-    setHasUserBeenSearched,
-    userShouldBeSearched,
-    setUserShouldBeSearched,
+    setHasUserBeenSearched
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = ethers.getDefaultProvider();
+  
+  // redux variables
+  const { userShouldBeSearched, searchedUser } = useSelector((state: any) => state.chat);
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setUserShouldBeSearched(false);
+      dispatch(setUserShouldBeSearched(false));
     }
   }, []);
 
@@ -78,7 +78,7 @@ const SearchBar = () => {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -105,7 +105,7 @@ const SearchBar = () => {
             setFilteredUserData([filteredData]);
           } else {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             dispatch(setActiveTab(3));
           }
         } else {
@@ -132,7 +132,7 @@ const SearchBar = () => {
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             dispatch(setActiveTab(3));
           } else {
             setIsInvalidAddress(true);
@@ -148,7 +148,7 @@ const SearchBar = () => {
 
   const clearInput = () => {
     setFilteredUserData([]);
-    setSearchedUser('');
+    dispatch(setSearchedUser(''));
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };

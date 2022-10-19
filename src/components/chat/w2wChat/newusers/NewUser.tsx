@@ -5,7 +5,7 @@ import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 
 // External Packages
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -21,18 +21,13 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
 import { Context } from 'sections/chat/ChatMainSection';
-import { setChat } from 'redux/slices/chatSlice';
+import { setChat, setUserShouldBeSearched, setSearchedUser } from 'redux/slices/chatSlice';
 
 function NewUser() {
   const theme = useTheme();
-
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
-    userShouldBeSearched,
-    setUserShouldBeSearched,
   } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();
@@ -44,10 +39,13 @@ function NewUser() {
   const dispatch = useDispatch();
   const provider = ethers.getDefaultProvider();
 
+  // redux variables
+  const { userShouldBeSearched, searchedUser } = useSelector((state: any) => state.chat);
+
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setUserShouldBeSearched(false);
+      dispatch(setUserShouldBeSearched(false));
     }
   }, []);
 
@@ -56,7 +54,7 @@ function NewUser() {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -102,7 +100,7 @@ function NewUser() {
           filteredData = await PushNodeClient.getUser({ caip10 });
           if (filteredData !== null) {
             setHasUserBeenSearched(true);
-            setUserShouldBeSearched(true);
+            dispatch(setUserShouldBeSearched(true));
             dispatch(setActiveTab(0));
           } else {
             const displayUser = displayDefaultUser({ caip10 });
@@ -129,7 +127,7 @@ function NewUser() {
         filteredData = await PushNodeClient.getUser({ caip10 });
         if (filteredData !== null) {
           setHasUserBeenSearched(true);
-          setUserShouldBeSearched(true);
+          dispatch(setUserShouldBeSearched(true));
           dispatch(setActiveTab(0));
         }
         // User is not in the protocol. Create new user
@@ -186,7 +184,7 @@ function NewUser() {
   const clearInput = () => {
     setSearchedUserData([]);
     setFeeds([]);
-    setSearchedUser('');
+    dispatch(setSearchedUser(''));
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
   };

@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
-import { useDispatch } from 'react-redux'
+import { useDispatch,useSelector } from 'react-redux'
 import { CardActionArea } from '@mui/material'
 import MuiAlert, { AlertProps } from '@mui/material/Alert'
 import Box from '@mui/material/Box'
@@ -13,7 +13,6 @@ import CardMedia from '@mui/material/CardMedia'
 import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
-
 import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
 import { CID } from 'ipfs-http-client'
@@ -35,8 +34,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const Profile = (props: ProfilePropsType): JSX.Element => {
-  const { did, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { did }: AppContext = useContext<AppContext>(Context);
 
+  // redux variables
+  const { connectedUser } = useSelector((state:any) => state.chat);
   const wallets = connectedUser.wallets.split(',');
   const [copiedDid, setCopiedDid] = useState<boolean>(false);
   const [copiedWallet, setCopiedWallet] = useState<boolean>(false);

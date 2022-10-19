@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
 import { Feeds, User } from 'api';
+import { setInbox } from 'redux/slices/chatSlice';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -26,6 +27,7 @@ import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { setSearchedUser } from 'redux/slices/chatSlice';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -38,11 +40,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const {
-    connectedUser, 
-    setInbox, 
-    inbox, 
     setHasUserBeenSearched, 
-    setSearchedUser 
   }: AppContext =
     useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
@@ -54,7 +52,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const messageFeedToast = useToast();
 
   // redux variables
-  const { activeTab } = useSelector((state:any) => state.chat);
+  const { connectedUser, inbox, activeTab } = useSelector((state:any) => state.chat);
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
@@ -63,7 +61,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
-        setInbox(inboxes);
+        dispatch(setInbox(inboxes));
         return inboxes;
       } else {
         let inboxes: Feeds[] = await fetchInboxApi();
@@ -79,7 +77,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
-        setInbox(inboxes);
+        dispatch(setInbox(inboxes));
       }
       setShowError(false);
       return inboxes;
@@ -279,7 +277,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     onClick={(): void => {
                       dispatch(setChat(feed));
                       setSelectedChatSnap(feed.threadhash);
-                      setSearchedUser('');
+                      dispatch(setSearchedUser(''));
                       setHasUserBeenSearched(false);
                     }}
                   />
