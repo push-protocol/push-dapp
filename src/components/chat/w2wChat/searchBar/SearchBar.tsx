@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,8 +23,9 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
+import { setActiveTab } from 'redux/slices/chatSlice';
 import './SearchBar.css';
-import { setHasUserBeenSearched } from 'redux/slices/chatSlice';
+import { setHasUserBeenSearched, setSearchedUser, setUserShouldBeSearched } from 'redux/slices/chatSlice';
 
 // Internal Configs
 
@@ -51,16 +53,8 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
 const SearchBar = () => {
   // get theme
   const theme = useTheme();
-
+  
   const dispatch = useDispatch();
-
-  const {
-    setSearchedUser,
-    searchedUser,
-    setActiveTab,
-    userShouldBeSearched,
-    setUserShouldBeSearched,
-  }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
@@ -70,11 +64,14 @@ const SearchBar = () => {
   const { hasUserBeenSearched } = useSelector((state:any) => state.chat);
 
   const provider = ethers.getDefaultProvider();
+  
+  // redux variables
+  const { userShouldBeSearched, searchedUser } = useSelector((state: any) => state.chat);
 
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
-      setUserShouldBeSearched(false);
+      dispatch(setUserShouldBeSearched(false));
     }
   }, []);
 
@@ -83,7 +80,7 @@ const SearchBar = () => {
     if (searchAddress === '') {
       clearInput();
     } else {
-      setSearchedUser(searchAddress);
+      dispatch(setSearchedUser(searchAddress));
     }
   };
 
@@ -110,8 +107,8 @@ const SearchBar = () => {
             setFilteredUserData([filteredData]);
           } else {
             dispatch(setHasUserBeenSearched(true));
-            setUserShouldBeSearched(true);
-            setActiveTab(3);
+            dispatch(setUserShouldBeSearched(true));
+            dispatch(setActiveTab(3));
           }
         } else {
           setIsInvalidAddress(true);
@@ -137,8 +134,8 @@ const SearchBar = () => {
         else {
           if (ethers.utils.isAddress(searchedUser)) {
             dispatch(setHasUserBeenSearched(true));
-            setUserShouldBeSearched(true);
-            setActiveTab(3);
+            dispatch(setUserShouldBeSearched(true));
+            dispatch(setActiveTab(3));
           } else {
             setIsInvalidAddress(true);
             setFilteredUserData([]);
@@ -153,8 +150,8 @@ const SearchBar = () => {
 
   const clearInput = () => {
     setFilteredUserData([]);
-    setSearchedUser('');
     dispatch(setHasUserBeenSearched(false));
+    dispatch(setSearchedUser(''));
     setIsLoadingSearch(false);
   };
 
@@ -228,7 +225,7 @@ const SearchBar = () => {
             background="#D53893"
             hoverBackground="transparent"
             borderRadius="50%"
-            onClick={() => setActiveTab(3)}
+            onClick={() => dispatch(setActiveTab(3))}
           >
             <AddIcon style={{ color: '#FFFFFF', fontSize: '24px', cursor: 'pointer' }} />
           </ButtonV2>
