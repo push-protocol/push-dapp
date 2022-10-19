@@ -4,7 +4,9 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { useDispatch , useSelector} from 'react-redux';
 import styled, { useTheme } from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Internal Compoonents
 import { makeStyles } from '@material-ui/core';
@@ -12,11 +14,13 @@ import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+import { setReceivedIntents } from 'redux/slices/chatSlice';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
+import { setPendingRequests } from 'redux/slices/chatSlice';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'api';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
@@ -34,19 +38,19 @@ import GLOBALS from 'config/Globals';
 const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
-
-  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
-    useContext(Context);
+  
+  const dispatch = useDispatch();
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
-
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
   };
-
+    
+ // redux variables
+  const { pendingRequests, connectedUser, receivedIntents } = useSelector((state:any) => state.chat);
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
     // This will run when the page first loads
@@ -61,8 +65,8 @@ const ChatSidebarSection = () => {
     if (getIntent!== undefined) {
       let intents: Feeds[] = getIntent.body;
       intents = await decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
+      dispatch(setPendingRequests(intents?.length));
+      dispatch(setReceivedIntents(intents));
       setLoadingRequests(false);
     } else {
       await fetchIntentApi();
@@ -76,8 +80,8 @@ const ChatSidebarSection = () => {
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
     intents = await decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
+      dispatch(setPendingRequests(intents?.length));
+      dispatch(setReceivedIntents(intents));
     }
     setLoadingRequests(false);
     return intents;

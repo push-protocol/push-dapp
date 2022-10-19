@@ -2,9 +2,10 @@ import React, { useState } from "react";
 
 import styled from 'styled-components';
 
-import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS from "config/Globals";
 import InboxModule from "modules/inbox/InboxModule";
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
+
+
 
 // Other Information section
 const InboxPage = () => {
