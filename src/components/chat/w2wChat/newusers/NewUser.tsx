@@ -32,8 +32,6 @@ function NewUser() {
     hasUserBeenSearched,
     setHasUserBeenSearched,
     setActiveTab,
-    // userShouldBeSearched,
-    // setUserShouldBeSearched,
   } = useContext(Context);
 
   const { chainId } = useWeb3React<Web3Provider>();

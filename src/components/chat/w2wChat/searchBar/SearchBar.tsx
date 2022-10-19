@@ -59,9 +59,7 @@ const SearchBar = () => {
     searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
-    setActiveTab,
-    // userShouldBeSearched,
-    // setUserShouldBeSearched,
+    setActiveTab
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
