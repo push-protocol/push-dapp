@@ -26,7 +26,7 @@ import useToast from 'hooks/useToast';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
-import { fetchInbox,fetchIntent,MessageIPFS } from 'helpers/w2w/ipfs';
+import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 
@@ -116,6 +116,32 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
+  const checkingDuplicateMessage = async (msgIPFS: MessageIPFSWithCID) : Promise<MessageIPFSWithCID[]> => {
+    // checking if the message is encrypted or not
+    const messagesSentInChat: MessageIPFS = messages.find(
+      (msg) =>
+        msg.link === '' &&
+        msg.encType === '' &&
+        msg.cid === '' &&
+        msg.messageContent === msgIPFS.messageContent &&
+        msg.messageType === msgIPFS.messageType
+    );
+    // Replace message that was inserted when sending a message (same comment -abhishek)
+    if (messagesSentInChat) {
+      const newMessages = messages.map((x) => x);
+      const index = newMessages.findIndex(
+        (msg) =>
+          msg.link === '' &&
+          msg.encType === '' &&
+          msg.cid === '' &&
+          msg.messageContent === msgIPFS.messageContent &&
+          msg.messageType === msgIPFS.messageType
+      );
+      newMessages[index] = msgIPFS;
+      return newMessages;
+    }
+  };
+
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string =
@@ -128,7 +154,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
         if (latestThreadhash !== currentChat?.threadhash) {
-          // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
@@ -141,16 +166,17 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
           // Decrypt message
           msgIPFS = await w2wHelper.decryptMessages({
-            savedMsg: msgIPFS, 
+            savedMsg: msgIPFS,
             connectedUser,
             account,
             chainId,
             currentChat,
-            inbox
+            inbox,
           });
 
-          //checking if the message is encrypted or not 
-          //!This below checking is not needed according to me as the message sent are always encrypted.
+          // checkingDuplicateMessage(msgIPFS);
+
+          //checking if the message is encrypted or not
           // const messagesSentInChat: MessageIPFS = messages.find(
           //   (msg) =>
           //     msg.link === '' &&
@@ -174,12 +200,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           //   setMessages(newMessages);
           // } else {
 
-            //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
-            const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
-            if (messageInChat === undefined) {
-              setMessages((m) => [...m, msgIPFS]);
-            }
-            
+          //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
+          const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
+          if (messageInChat === undefined) {
+            setMessages((m) => [...m, msgIPFS]);
+          }else{
+            const newMessages = await checkingDuplicateMessage(msgIPFS);
+            setMessages(newMessages);
+          }
           // }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
@@ -207,7 +235,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 account,
                 chainId,
                 currentChat,
-                inbox
+                inbox,
               });
 
               // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
@@ -234,14 +262,17 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               //   setMessages(newMessages);
               // }
               // Display messages for the first time
-              // else 
+              // else
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
 
                 //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
                 setMessageBeingSent(false);
+              }else{
+                const newMessages = await checkingDuplicateMessage(msgIPFS);
+                setMessages(newMessages);
               }
-             
+
               const link = msgIPFS.link;
               if (link) {
                 messageCID = link;
@@ -354,7 +385,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           account,
           chainId,
           currentChat,
-          inbox:[]
+          inbox: [],
         });
         setNewMessage('');
         setMessages([...messages, savedMsg]);
@@ -598,7 +629,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
               progressEnabled: true,
               progress: 0,
-              progressNotice: 'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
+              progressNotice:
+                'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
             });
           }
           // Display toaster
@@ -660,7 +692,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
     setOpenSuccessSnackBar(false);
   };
-
 
   return (
     <Container>
@@ -835,7 +866,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               <Typebar
                 messageBeingSent={messageBeingSent}
                 setNewMessage={setNewMessage}
-                newMessage={newMessage} 
+                newMessage={newMessage}
                 setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
                 sendIntent={sendIntent}
@@ -843,8 +874,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 setSnackbarText={setSnackbarText}
               />
             </>
-          )
-          }
+          )}
         </>
       )}
     </Container>
@@ -868,7 +898,6 @@ const FirstConversation = styled.div`
   margin: 59px 0px 0px 0px;
   padding: 0px 50px;
 `;
-
 
 const MessageTime = styled(ItemHV2)`
   width: 100%;
@@ -946,8 +975,6 @@ const Icon = styled.i`
     cursor: pointer;
   }
 `;
-
-
 
 const Container = styled(Content)`
   box-sizing: border-box;
@@ -1046,7 +1073,7 @@ const CustomScrollContent = styled(ScrollToBottom)`
     background: #cf1c84;
     border-radius: 10px;
   }
-`
+`;
 
 const FileUploadLoaderContainer = styled.div`
   border: none;
@@ -1055,6 +1082,6 @@ const FileUploadLoaderContainer = styled.div`
   background-color: transparent;
   margin-right: 2rem;
   color: rgb(58, 103, 137);
-`
+`;
 
 export default ChatBox;
