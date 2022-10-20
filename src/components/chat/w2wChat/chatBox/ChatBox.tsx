@@ -29,7 +29,6 @@ import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP
 import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
-import './ChatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -853,10 +852,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           </ItemHV2>
 
           <MessageContainer>
-            <ScrollToBottom
-              className="chatBoxTop"
-              initialScrollBehavior="smooth"
-            >
+            <CustomScrollContent initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -906,7 +902,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                   )}
                 </>
               )}
-            </ScrollToBottom>
+            </CustomScrollContent>
           </MessageContainer>
 
           {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
@@ -948,17 +944,17 @@ const FirstConversation = styled.div`
   padding: 0px 50px;
 `;
 
-const MessageTime = styled.div`
+
+const MessageTime = styled(ItemHV2)`
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 11px;
   color: ${(props) => props.theme.default.secondaryColor};
   margin: 15px 0px;
 `;
 
-const MessageContainer = styled.div`
+const MessageContainer = styled(ItemVV2)`
+  align-items: unset;
+  justify-content: flex-start;
   position: absolute;
   top: 65px;
   bottom: 66px;
@@ -967,8 +963,6 @@ const MessageContainer = styled.div`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
-  display: flex;
-  flex-direction: column;
 `;
 
 const UserInfo = styled.div`
@@ -1108,5 +1102,32 @@ const MessageLoader = styled.div`
   display: flex;
   justify-content: end;
 `;
+
+const CustomScrollContent = styled(ScrollToBottom)`
+  padding-right: 0px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  margin: 0 2px;
+  & > * {
+    overflow-x: hidden;
+  }
+  & > div::-webkit-scrollbar {
+    width: 4px;
+  }
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+  }
+`
+
+const FileUploadLoaderContainer = styled.div`
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
+`
 
 export default ChatBox;
