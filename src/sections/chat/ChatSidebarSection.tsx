@@ -16,19 +16,20 @@ import { setReceivedIntents } from 'redux/slices/chatSlice';
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
-import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
+// import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { setPendingRequests } from 'redux/slices/chatSlice';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { setActiveTab } from 'redux/slices/chatSlice';
 import { Feeds } from 'api';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
+import { fetchIntent } from 'helpers/w2w/ipfs';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+
 
 // Chat Sections
 // Divided into two, left and right
@@ -47,9 +48,9 @@ const ChatSidebarSection = () => {
 
    
 
-  const updateProfile = (image: string) => {
-    setUserProfileImage(image);
-  };
+  // const updateProfile = (image: string) => {
+  //   setUserProfileImage(image);
+  // };
     
   // See if there are pending requests and update requests tab and intent feed box
   useEffect(() => {
@@ -64,7 +65,7 @@ const ChatSidebarSection = () => {
     }
     if (getIntent!== undefined) {
       let intents: Feeds[] = getIntent.body;
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
+      intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       dispatch(setPendingRequests(intents?.length));
       dispatch(setReceivedIntents(intents));
       setLoadingRequests(false);
@@ -78,7 +79,7 @@ const ChatSidebarSection = () => {
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
-    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       dispatch(setPendingRequests(intents?.length));
       dispatch(setReceivedIntents(intents));

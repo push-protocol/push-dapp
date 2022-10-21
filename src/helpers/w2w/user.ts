@@ -1,6 +1,6 @@
 import { ConnectedUser } from "api";
 
-export function checkConnectedUser(connectedUser): boolean {
+export function checkConnectedUser(connectedUser:ConnectedUser): boolean {
   if (
     !(
       connectedUser.allowedNumMsg === 0 &&

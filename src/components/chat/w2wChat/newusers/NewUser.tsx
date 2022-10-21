@@ -20,8 +20,6 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 import { setHasUserBeenSearched } from 'redux/slices/chatSlice';
-
-import { Context } from 'sections/chat/ChatMainSection';
 import { setChat, setSearchedUser, setUserShouldBeSearched } from 'redux/slices/chatSlice';
 
 function NewUser() {

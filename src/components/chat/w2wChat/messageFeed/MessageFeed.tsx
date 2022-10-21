@@ -15,19 +15,19 @@ import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
-import { walletToCAIP10 } from 'helpers/w2w';
+import {  decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { checkConnectedUser } from 'helpers/w2w/user';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox } from '../w2wUtils';
+import { fetchInbox } from 'helpers/w2w/ipfs';
 import { setChat, setHasUserBeenSearched } from 'redux/slices/chatSlice';
 import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { setSearchedUser } from 'redux/slices/chatSlice';
+
 
 interface MessageFeedProps {
   filteredUserData: User[];

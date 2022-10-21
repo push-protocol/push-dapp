@@ -6,8 +6,6 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { DID } from 'dids';
-import useToast from 'hooks/useToast';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
@@ -27,7 +25,6 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import {
-  setChat,
   setConnectedUser,
 } from 'redux/slices/chatSlice';
 
