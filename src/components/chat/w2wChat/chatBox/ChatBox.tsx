@@ -278,15 +278,17 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
-  // const fetchInboxApi = async (): Promise<Feeds[]> => {
-  //   if (checkConnectedUser(connectedUser)) {
-  //     let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-  //     await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-  //     inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser });
-  //     setInbox(inboxes);
-  //     return inboxes;
-  //   }
-  // };
+  const fetchInboxApi = async (createdUser:ConnectedUser): Promise<Feeds> => {
+    if (checkConnectedUser(connectedUser)) {
+      // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
+      // will be undefined since it was not updated right after the intent was sent
+      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
+      setInbox(inboxes);
+      return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
+    }
+  };
 
   const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true);
@@ -598,59 +600,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           message,
         });
 
-        // if (!user) {
-        //   if (!ethers.utils.isAddress(searchedUser)) {
-        //     try {
-        //       const ens: string = await provider.resolveName(searchedUser);
-        //       if (ens) {
-        //         caip10 = walletToCAIP10({ account: ens, chainId });
-        //       }
-        //     } catch (err) {
-        //       console.log(err);
-        //       return;
-        //     }
-        //   } else {
-        //     caip10 = walletToCAIP10({ account: searchedUser, chainId });
-        //   }
-        //   await PushNodeClient.createUser({
-        //     caip10,
-        //     did: caip10,
-        //     publicKey: '',
-        //     encryptedPrivateKey: '',
-        //     encryptionType: '',
-        //     signature: 'pgp',
-        //     sigType: 'pgp',
-        //   });
-        //   // If the user is being created here, that means that user don't have a PGP keys. So this intent will be in plaintext
-        //   messageContent = message;
-        //   encryptionType = 'PlainText';
-        //   aesEncryptedSecret = '';
-        //   signature = '';
-        // } else {
-        //   // It's possible for a user to be created but the PGP keys still not created
-        //   if (!user.publicKey.includes('-----BEGIN PGP PUBLIC KEY BLOCK-----')) {
-        //     messageContent = message;
-        //     encryptionType = 'PlainText';
-        //     aesEncryptedSecret = '';
-        //     signature = '';
-        //   } else {
-        //     const {
-        //       cipherText,
-        //       encryptedSecret,
-        //       signature: pgpSignature,
-        //     } = await encryptAndSign({
-        //       plainText: message,
-        //       toPublicKeyArmored: user.publicKey,
-        //       fromPublicKeyArmored: createdUser.publicKey,
-        //       privateKeyArmored: createdUser.privateKey,
-        //     });
-        //     messageContent = cipherText;
-        //     encryptionType = 'pgp';
-        //     aesEncryptedSecret = encryptedSecret;
-        //     signature = pgpSignature;
-        //   }
-        // }
-
         const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
           toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
           toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
@@ -693,16 +642,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         } else {
           // We store the message in state decrypted so we display to the user the intent message
           msg.messageContent = message;
-          // setMessages([...messages, msg]);
           setNewMessage('');
-          // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
-          // will be undefined since it was not updated right after the intent was sent
-          let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-          inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
-          await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-          setInbox(inboxes);
-          const result = inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
-          // await fetchInboxApi();
+          const result = await fetchInboxApi(createdUser);
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
