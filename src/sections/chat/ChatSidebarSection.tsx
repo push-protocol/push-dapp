@@ -199,7 +199,7 @@ const ChatSidebarSection = () => {
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 2 && (
+        {/* {activeTab == 2 && (
           <>
             <Profile
               profilePicture={updateProfileImage}
@@ -207,7 +207,7 @@ const ChatSidebarSection = () => {
               setActiveTab={setActiveTab}
             />
           </>
-        )}
+        )} */}
         {activeTab == 3 && <NewUser />}
       </ItemVV2>
 

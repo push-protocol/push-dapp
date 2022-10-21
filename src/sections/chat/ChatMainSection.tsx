@@ -5,14 +5,9 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
-import { ThreeIdConnect } from '@3id/connect';
-import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
-import { CeramicClient } from '@ceramicnetwork/http-client';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
 import useToast from 'hooks/useToast';
-import { getResolver as keyDIDGetResolver } from 'key-did-resolver';
-import { MdCheckCircle, MdError } from 'react-icons/md';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
@@ -68,34 +63,6 @@ export interface BlockedLoadingI {
   progressNotice?: string;
 }
 
-export interface AppContext {
-  // currentChat: Feeds;
-  // viewChatBox: boolean;
-  receivedIntents: Feeds[];
-  setReceivedIntents: (rIntent: Feeds[]) => void;
-  // did: DID;
-  // setDID: (did: DID) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
-  // setChat: (feed: Feeds) => void;
-  // connectedUser: ConnectedUser;
-  // setConnectedUser: (user: ConnectedUser) => void;
-  // intents: Feeds[];
-  // setIntents: (intents: Feeds[]) => void;
-  inbox: Feeds[];
-  setInbox: (inbox: Feeds[]) => void;
-  pendingRequests: number;
-  setPendingRequests: (pending: number) => void;
-  hasUserBeenSearched: boolean;
-  setHasUserBeenSearched: (searched: boolean) => void;
-  // loadingMessage: string;
-  // setLoadingMessage: (loadingMessage: string) => void;
-  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
-  activeTab: number;
-  setActiveTab: (active: number) => void;
-  // userShouldBeSearched: boolean;
-  // setUserShouldBeSearched: (value: boolean) => void;
-}
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -107,7 +74,6 @@ export const ToastPosition: ToastOptions = {
   progress: 0,
 };
 
-export const Context = React.createContext<AppContext | null>(null);
 
 // Chat Sections
 // Divided into two, left and right
@@ -116,36 +82,11 @@ const ChatMainSection = () => {
 
   const theme = useTheme();
   const dispatch = useDispatch();
-
-  // redux variables
-  const { connectedUser } = useSelector((state:any) => state.chat);
-  
-  // const [viewChatBox, setViewChatBox] = useState<boolean>(false);
-  // const [currentChat, setCurrentChat] = useState<Feeds>();
-  const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [loadingMessage, setLoadingMessage] = useState<string>('');
-  // const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
-  //   enabled: false,
-  //   title: null,
-  // });
-  const [user, setUser] = useState();
-  const [did, setDID] = useState<DID>();
-  // const [searchedUser, setSearchedUser] = useState<string>('');
-  // const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
-  // const [intents, setIntents] = useState<Feeds[]>([]);
-  const [inbox, setInbox] = useState<Feeds[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<number>(0);
-  const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
-  const [activeTab, setCurrentTab] = useState<number>(0);
-  // const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
 
   // redux variables
-  const { currentChat, viewChatBox } = useSelector((state:any) => state.chat);
+  const { currentChat, viewChatBox, connectedUser, blockedLoading } = useSelector((state:any) => state.chat);
 
-  const { blockedLoading } = useSelector((state:any) => state.chat);
-
-  const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
 
   // For video calling
@@ -261,52 +202,12 @@ const ChatMainSection = () => {
     setIsLoading(false);
   };
 
-  const setActiveTab = (tab: number): void => {
-    if (tab === 1) {
-      if (receivedIntents.length) dispatch(setChat(receivedIntents[0]));
-      else dispatch(setChat(null));
-      setCurrentTab(tab);
-    } else if (tab === 0) {
-      setCurrentTab(tab);
-    } else if (tab === 3) {
-      dispatch(setChat(null));
-      setCurrentTab(tab);
-    }
-  };
 
   // RENDER
   return (
     <ItemHV2>
       {!isLoading ? (
         <QueryClientProvider client={queryClient}>
-          <Context.Provider
-            value={{
-              // currentChat,
-              receivedIntents,
-              setReceivedIntents,
-              // viewChatBox,
-              // setChat,
-              // setSearchedUser,
-              // searchedUser,
-              // connectedUser,
-              // setConnectedUser,
-              // intents,
-              // setIntents,
-              inbox,
-              setInbox,
-              pendingRequests,
-              setPendingRequests,
-              hasUserBeenSearched,
-              setHasUserBeenSearched,
-              // loadingMessage,
-              // setLoadingMessage,
-              // setBlockedLoading,
-              activeTab,
-              setActiveTab,
-              // userShouldBeSearched,
-              // setUserShouldBeSearched,
-            }}
-          >
             <ChatSidebarContainer
               flex="1"
               maxWidth="340px"
@@ -324,7 +225,6 @@ const ChatMainSection = () => {
             >
               <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
             </ChatContainer>
-          </Context.Provider>
           {/* The rest of your application */}
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>

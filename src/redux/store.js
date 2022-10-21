@@ -1,6 +1,7 @@
 import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import adminReducer from './slices/adminSlice';
 import channelCreationReducer from './slices/channelCreationSlice';
+import chatReducer from "./slices/chatSlice";
 import channelReducer from './slices/channelSlice';
 import contractReducer from './slices/contractSlice';
 import notificationReducer from './slices/notificationSlice';
