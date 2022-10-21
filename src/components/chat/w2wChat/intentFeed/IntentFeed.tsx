@@ -11,22 +11,6 @@ import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import './IntentFeed.css';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: 400,
-  bgcolor: 'background.paper',
-  borderRadius: '20px',
-  boxShadow: 24,
-  p: 4,
-};
 
 const IntentFeed = ({isLoading}): JSX.Element => {
   const {
@@ -34,7 +18,6 @@ const IntentFeed = ({isLoading}): JSX.Element => {
     receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
-  
 
   return (
     <ItemVV2
@@ -98,28 +81,26 @@ const NoIntentMessage = styled.div`
   margin-top:25px;
 `;
 
-const UserProfileContainer = styled.div`
-  margin-top: 14px;
-  width: 100%;
-  max-height: calc(83.6vh - ${(props) => props.height || 238}px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  overflow-y: auto;
-  overflow-x: hidden;
-  &&::-webkit-scrollbar {
-    width: 4px;
-  }
-  &&::-webkit-scrollbar-thumb {
-    background: #cf1c84;
-  }
-`;
+// const UserProfileContainer = styled.div`
+//   margin-top: 14px;
+//   width: 100%;
+//   max-height: calc(83.6vh - ${(props) => props.height || 238}px);
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: flex-start;
+//   overflow-y: auto;
+//   overflow-x: hidden;
+//   &&::-webkit-scrollbar {
+//     width: 4px;
+//   }
+//   &&::-webkit-scrollbar-thumb {
+//     background: #cf1c84;
+//   }
+// `;
 
 const UserIntents = styled(ItemVV2)`
   margin-top: 14px;
-  display: flex;
-  align-items: center;
   justify-content: flex-start;
   flex: 1 1 auto;
   overflow-x: hidden;
