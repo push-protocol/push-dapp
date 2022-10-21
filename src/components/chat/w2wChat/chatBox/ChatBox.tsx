@@ -1,13 +1,12 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
-import Picker from 'emoji-picker-react';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
@@ -29,20 +28,15 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { fetchInbox,fetchIntent,MessageIPFS } from 'helpers/w2w/ipfs';
-import { FileMessageContent } from '../Files/Files';
 import Chats from '../chats/Chats';
-import GifPicker from '../Gifs/GifPicker';
 import { intitializeDb } from '../w2wIndexeddb';
-// import {   fetchIntent  } from 'helpers/W2WHelper';
-import './ChatBox.css';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
-
-
+import Typebar from '../TypeBar/Typebar';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -77,15 +71,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
   const [newMessage, setNewMessage] = useState<string>('');
-  const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
   const [imageSource, setImageSource] = useState<string>('');
-  const [filesUploading, setFileUploading] = useState<boolean>(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
@@ -360,20 +350,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }, 2000);
   };
 
-  const handleSubmit = (e: { preventDefault: () => void }): void => {
-    e.preventDefault();
-
-    if (newMessage.trim() !== '') {
-      if (currentChat.threadhash) {
-        sendMessage({
-          message: newMessage,
-          messageType: 'Text',
-        });
-      } else {
-        sendIntent({ message: newMessage, messageType: 'Text' });
-      }
-    }
-  };
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
     let getIntent;
@@ -650,94 +626,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     // setMessageBeingSent(false);
   };
 
-  const handleKeyPress = (e: any): void => {
-    const x = e.keyCode;
-
-    // TODO: multiline
-    // if (e.key === "Enter" && e.shiftKey) {
-    //   console.log("pressed shift+enter");
-    //   const newMsg = `${e.target.value}`;
-    //   setNewMessage(newMsg);
-    //   return;
-    // }
-
-    // Send video request only when two users are chatting
-    if (e.target.value === '/video' && currentChat.threadhash) {
-      setVideoCallInfo({
-        address: caip10ToWallet(currentChat.msg.name),
-        fromPublicKeyArmored: connectedUser.publicKey,
-        toPublicKeyArmored: currentChat.publicKey,
-        privateKeyArmored: connectedUser.privateKey,
-        establishConnection: 1,
-      });
-      setNewMessage('');
-      return;
-    }
-
-    if (x === 13) {
-      handleSubmit(e);
-    }
-  };
-
-  const textOnChange = (e: any): void => {
-    if (!messageBeingSent) {
-      setNewMessage(e.target.value);
-    }
-  };
-
-  const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
-    const file: File = e.target.files?.[0];
-    if (file) {
-      try {
-        const TWO_MB = 1024 * 1024 * 2;
-        if (file.size > TWO_MB) {
-          setOpenSuccessSnackBar(true);
-          setSnackbarText('Files larger than 2mb is now allowed');
-          return;
-        }
-        setFileUploading(true);
-        const messageType = file.type.startsWith('image') ? 'Image' : 'File';
-        const reader = new FileReader();
-        let fileMessageContent: FileMessageContent;
-        reader.readAsDataURL(file);
-        reader.onloadend = async (e): Promise<void> => {
-          fileMessageContent = {
-            content: e.target.result as string,
-            name: file.name,
-            type: file.type,
-            size: file.size,
-          };
-          if (!currentChat.threadhash) {
-            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
-          } else {
-            sendMessage({
-              message: JSON.stringify(fileMessageContent),
-              messageType,
-            });
-          }
-          setFileUploading(false);
-        };
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
-
-  const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
-    setNewMessage(newMessage + emojiObject.emoji);
-    setShowEmojis(false);
-  };
-
-  const sendGif = (url: string): void => {
-    if (currentChat?.intent === null) {
-      sendIntent({ message: url, messageType: 'GIF' });
-    } else {
-      sendMessage({
-        message: url,
-        messageType: 'GIF',
-      });
-    }
-  };
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -745,7 +633,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const isDarkMode = theme.scheme === 'dark';
 
   return (
     <Container>
@@ -861,10 +748,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           </ItemHV2>
 
           <MessageContainer>
-            <ScrollToBottom
-              className="chatBoxTop"
-              initialScrollBehavior="smooth"
-            >
+            <CustomScrollContent initialScrollBehavior="smooth">
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -914,134 +798,25 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                   )}
                 </>
               )}
-            </ScrollToBottom>
+            </CustomScrollContent>
           </MessageContainer>
 
-          {/* {messageBeingSent ? (
-            <LoaderSpinner
-              type={LOADER_TYPE.STANDALONE_MINIMAL}
-              spinnerSize={40}
-            />
-          ) : (
-            <> */}
           {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
             ?.threadhash ? null : (
-            <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
-              {messageBeingSent ? (
-                <ItemHV2
-                  position="absolute"
-                  top="0"
-                  right="10px"
-                  bottom="0"
-                  justifyContent="flex-end"
-                  background="transparent"
-                >
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    spinnerSize={40}
-                    width="100%"
-                  />
-                </ItemHV2>
-              ) : (
-                <>
-                  <Icon
-                    onClick={(): void => setShowEmojis(!showEmojis)}
-                    filter={theme.snackbarBorderIcon}
-                  >
-                    <img
-                      src="/svg/chats/smiley.svg"
-                      height="24px"
-                      width="24px"
-                      alt=""
-                    />
-                  </Icon>
-                  {showEmojis && (
-                    <Picker
-                      onEmojiClick={addEmoji}
-                      pickerStyle={{
-                        width: '300px',
-                        position: 'absolute',
-                        bottom: '2.5rem',
-                        zindex: '700',
-                        left: '2.5rem',
-                      }}
-                    />
-                  )}
-                  {
-                    <TextInput
-                      placeholder="Type your message..."
-                      onKeyDown={handleKeyPress}
-                      onChange={textOnChange}
-                      value={newMessage}
-                      autoFocus="autoFocus"
-                    />
-                  }
-
-                  <>
-                    <GifDiv>
-                      <label>
-                        {isGifPickerOpened && (
-                          <GifPicker
-                            setIsOpened={setIsGifPickerOpened}
-                            isOpen={isGifPickerOpened}
-                            onSelect={sendGif}
-                          />
-                        )}
-                        <Icon
-                          onClick={() => setIsGifPickerOpened(!isGifPickerOpened)}
-                          filter={theme.snackbarBorderIcon}
-                        >
-                          <img
-                            src="/svg/chats/gif.svg"
-                            height="18px"
-                            width="22px"
-                            alt=""
-                          />
-                        </Icon>
-                      </label>
-                    </GifDiv>
-                    <label>
-                      <Icon filter={theme.snackbarBorderIcon}>
-                        <img
-                          src="/svg/chats/attachment.svg"
-                          height="24px"
-                          width="20px"
-                          alt=""
-                        />
-                      </Icon>
-                      <FileInput
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={uploadFile}
-                      />
-                    </label>
-
-                    {filesUploading ? (
-                      <div className="imageloader">
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={20}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <Icon onClick={handleSubmit}>
-                          <img
-                            src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
-                            height="27px"
-                            width="27px"
-                            alt=""
-                          />
-                        </Icon>
-                      </>
-                    )}
-                  </>
-                </>
-              )}
-            </TypeBarContainer>
-          )}
-          {/* </>
-          )} */}
+            <>
+              <Typebar
+                messageBeingSent={messageBeingSent}
+                setNewMessage={setNewMessage}
+                newMessage={newMessage} 
+                setVideoCallInfo={setVideoCallInfo}
+                sendMessage={sendMessage}
+                sendIntent={sendIntent}
+                setOpenSuccessSnackBar={setOpenSuccessSnackBar}
+                setSnackbarText={setSnackbarText}
+              />
+            </>
+          )
+          }
         </>
       )}
     </Container>
@@ -1066,21 +841,17 @@ const FirstConversation = styled.div`
   padding: 0px 50px;
 `;
 
-const FileInput = styled.input`
-  display: none;
-`;
 
-const MessageTime = styled.div`
+const MessageTime = styled(ItemHV2)`
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-size: 11px;
   color: ${(props) => props.theme.default.secondaryColor};
   margin: 15px 0px;
 `;
 
-const MessageContainer = styled.div`
+const MessageContainer = styled(ItemVV2)`
+  align-items: unset;
+  justify-content: flex-start;
   position: absolute;
   top: 65px;
   bottom: 66px;
@@ -1089,8 +860,6 @@ const MessageContainer = styled.div`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
-  display: flex;
-  flex-direction: column;
 `;
 
 const UserInfo = styled.div`
@@ -1150,45 +919,7 @@ const Icon = styled.i`
   }
 `;
 
-const GifDiv = styled.div`
-  background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
-  padding: 5px 8px 5px 6px;
-  border-radius: 7px;
-`;
 
-const TextInput = styled.textarea`
-  font-size: 16px;
-  width: 100%;
-  height: 25px;
-  outline: none;
-  padding-top: 4px;
-  border: none;
-  resize: none;
-  background: transparent;
-  color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
-  &&::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-  }
-  ::placeholder {
-    color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
-  }
-`;
-
-const TypeBarContainer = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  bottom: 9px;
-  left: 9px;
-  right: 9px;
-  height: 55px;
-  padding: 16px;
-  border-radius: 13px;
-  background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
-`;
 
 const Container = styled(Content)`
   box-sizing: border-box;
@@ -1270,5 +1001,32 @@ const MessageLoader = styled.div`
   display: flex;
   justify-content: end;
 `;
+
+const CustomScrollContent = styled(ScrollToBottom)`
+  padding-right: 0px;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  margin: 0 2px;
+  & > * {
+    overflow-x: hidden;
+  }
+  & > div::-webkit-scrollbar {
+    width: 4px;
+  }
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+  }
+`
+
+const FileUploadLoaderContainer = styled.div`
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
+`
 
 export default ChatBox;

@@ -20,7 +20,7 @@ import { showCharacters } from './helpers'
 import './Profile.css'
 
 import { ChangeEvent } from 'react'
-import { FileMessageContent } from '../Files/Files'
+import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
 
 interface ProfilePropsType {
