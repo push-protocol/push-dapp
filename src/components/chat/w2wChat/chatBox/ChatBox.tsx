@@ -23,6 +23,7 @@ import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
+import { useResolveEns } from 'hooks/useResolveEns';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
@@ -85,36 +86,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let time = '';
 
   // get ens name
-  const [ensName, setENSName] = useState(null);
-
-  // get reverse name
-  React.useEffect(() => {
-    if (currentChat && currentChat.msg && currentChat.msg.name) {
-      const walletLowercase = caip10ToWallet(currentChat.msg.name).toLowerCase();
-      const checksumWallet = ethers.utils.getAddress(walletLowercase);
-
-      let provider = ethers.getDefaultProvider('mainnet');
-      if (
-        window.location.hostname == 'app.push.org' ||
-        window.location.hostname == 'staging.push.org' ||
-        window.location.hostname == 'dev.push.org' ||
-        window.location.hostname == 'alpha.push.org' ||
-        window.location.hostname == 'w2w.push.org'
-      ) {
-        provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
-      }
-
-      provider.lookupAddress(checksumWallet).then((ens) => {
-        if (ens) {
-          // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
-          // setENSName(`${ens} (${shorterUsername})`);
-          setENSName(ens);
-        } else {
-          setENSName(null);
-        }
-      });
-    }
-  }, [currentChat]);
+  const ensName = useResolveEns(currentChat?.msg?.name);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
