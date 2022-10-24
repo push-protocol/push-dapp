@@ -36,7 +36,7 @@ export function useResolveEns(username: string): string {
       getEnsFromIndexDb(checksumWallet).then((ensFromIndexDb)=>{
         if(ensFromIndexDb)
         {
-          setEnsName(ensFromIndexDb.body);
+          setEnsName(ensFromIndexDb?.body);
         }
         else{
           provider.lookupAddress(checksumWallet).then(async(ens) => {
