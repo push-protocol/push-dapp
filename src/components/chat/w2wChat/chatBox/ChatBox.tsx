@@ -116,9 +116,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
-  const checkingDuplicateMessage = async (msgIPFS: MessageIPFSWithCID) : Promise<MessageIPFSWithCID[]> => {
-    // checking if the message is encrypted or not
-    const messagesSentInChat: MessageIPFS = messages.find(
+  const getMessageIndex = ({newMessages,msgIPFS} : {newMessages:MessageIPFSWithCID[], msgIPFS:MessageIPFSWithCID}): Number=>{
+    const index = newMessages.findIndex(
       (msg) =>
         msg.link === '' &&
         msg.encType === '' &&
@@ -126,21 +125,21 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         msg.messageContent === msgIPFS.messageContent &&
         msg.messageType === msgIPFS.messageType
     );
-    // Replace message that was inserted when sending a message (same comment -abhishek)
-    if (messagesSentInChat) {
-      const newMessages = messages.map((x) => x);
-      const index = newMessages.findIndex(
-        (msg) =>
-          msg.link === '' &&
-          msg.encType === '' &&
-          msg.cid === '' &&
-          msg.messageContent === msgIPFS.messageContent &&
-          msg.messageType === msgIPFS.messageType
-      );
-      newMessages[index] = msgIPFS;
-      return newMessages;
-    }
-  };
+    console.log("Index",index)
+    return index
+  }
+
+  const getDuplicateMessage = ({messages,msgIPFS} : {messages:MessageIPFSWithCID[], msgIPFS:MessageIPFSWithCID}) : MessageIPFS=>{
+   const message = messages.find(
+      (msg) =>
+        msg.link === '' &&
+        msg.encType === '' &&
+        msg.cid === '' &&
+        msg.messageContent === msgIPFS.messageContent &&
+        msg.messageType === msgIPFS.messageType
+    );
+    return message
+  }
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -176,7 +175,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
           // checkingDuplicateMessage(msgIPFS);
 
-          //checking if the message is encrypted or not
+          // checking if the message is encrypted or not
+          
           // const messagesSentInChat: MessageIPFS = messages.find(
           //   (msg) =>
           //     msg.link === '' &&
@@ -185,30 +185,21 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           //     msg.messageContent === msgIPFS.messageContent &&
           //     msg.messageType === msgIPFS.messageType
           // );
-          // // Replace message that was inserted when sending a message (same comment -abhishek)
-          // if (messagesSentInChat) {
-          //   const newMessages = messages.map((x) => x);
-          //   const index = newMessages.findIndex(
-          //     (msg) =>
-          //       msg.link === '' &&
-          //       msg.encType === '' &&
-          //       msg.cid === '' &&
-          //       msg.messageContent === msgIPFS.messageContent &&
-          //       msg.messageType === msgIPFS.messageType
-          //   );
-          //   newMessages[index] = msgIPFS;
-          //   setMessages(newMessages);
-          // } else {
+          const messagesSentInChat: MessageIPFS = getDuplicateMessage({messages,msgIPFS})
+          // Replace message that was inserted when sending a message (same comment -abhishek)
+          if (messagesSentInChat) {
+            const newMessages = messages.map((x) => x);
+            const index = getMessageIndex({newMessages,msgIPFS})
+            newMessages[index] = msgIPFS;
+            setMessages(newMessages);
+          } else {
 
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
           if (messageInChat === undefined) {
             setMessages((m) => [...m, msgIPFS]);
-          }else{
-            const newMessages = await checkingDuplicateMessage(msgIPFS);
-            setMessages(newMessages);
           }
-          // }
+          }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else {
@@ -247,31 +238,22 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               //     msg.messageContent === msgIPFS.messageContent &&
               //     msg.messageType === msgIPFS.messageType
               // );
-              // // Replace message that was inserted when sending a message
-              // if (messagesSentInChat) {
-              //   const newMessages = messages.map((x) => x);
-              //   const index = newMessages.findIndex(
-              //     (msg) =>
-              //       msg.link === '' &&
-              //       msg.encType === '' &&
-              //       msg.cid === '' &&
-              //       msg.messageContent === msgIPFS.messageContent &&
-              //       msg.messageType === msgIPFS.messageType
-              //   );
-              //   newMessages[index] = msgIPFS;
-              //   setMessages(newMessages);
-              // }
-              // Display messages for the first time
-              // else
-              if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+              const messagesSentInChat: MessageIPFS = getDuplicateMessage({messages,msgIPFS})
+              // Replace message that was inserted when sending a message
+              if (messagesSentInChat) {
+                const newMessages = messages.map((x) => x);
+                const index = getMessageIndex({newMessages,msgIPFS})
+                newMessages[index] = msgIPFS;
+                setMessages(newMessages);
+              }else if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
-
                 //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
                 setMessageBeingSent(false);
-              }else{
-                const newMessages = await checkingDuplicateMessage(msgIPFS);
-                setMessages(newMessages);
               }
+              // else{
+              //   const newMessages = await checkingDuplicateMessage(msgIPFS);
+              //   setMessages(newMessages);
+              // }
 
               const link = msgIPFS.link;
               if (link) {
@@ -355,7 +337,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         fromDID: walletToCAIP10({ account, chainId }),
         toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
         toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
-        messageContent,
+        messageContent: messageContent,
         messageType,
         signature,
         encType: encryptionType,
