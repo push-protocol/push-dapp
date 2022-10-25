@@ -716,11 +716,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             ),
           });
         }
-      } else {
-        setNewMessage('');
-        setOpenSuccessSnackBar(true);
-        setSnackbarText('Cannot send message, chat request is not approved!');
-      }
+      } 
+      
       setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
