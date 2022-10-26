@@ -182,7 +182,7 @@ const ChatSidebarSection = () => {
         alignItems="stretch"
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 1 && (
+        {activeTab == 2 && (
           <>
             <SpanV2
               fontWeight="700"
@@ -196,7 +196,7 @@ const ChatSidebarSection = () => {
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 2 && (
+        {activeTab == 1 && (
           <>
             <Profile
               profilePicture={updateProfileImage}
