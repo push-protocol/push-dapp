@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom'
 
 import styled from 'styled-components';
 
+import { ImageV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+
 const Modal = props => {
   if (!props.showImageModal) {
     return null
@@ -32,26 +34,21 @@ const Modal = props => {
   )
 }
 
-const ModalContainer = styled.div`
+const ModalContainer = styled(ItemVV2)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  display: flex;
   background-color: rgba(37, 37, 37, 0.5);
-  align-items: center;
   /* z-index of header is 99999 */
   z-index: 100000;
-  justify-content: center;
-  flex-direction: column;
 `
 
-const ModalContent = styled.div`
+const ModalContent = styled(ItemHV2)`
+  align-items: flex-start;
   width:100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
 `
 
 const ModalClose = styled.div`
@@ -84,7 +81,7 @@ const ModalImageContainer = styled.div`
   align-items: center;
 `
 
-const ModalImage = styled.img`
+const ModalImage = styled(ImageV2)`
   width: 100%;
   z-index: 3000;
   height: 80%;
