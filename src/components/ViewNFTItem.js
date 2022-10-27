@@ -162,12 +162,12 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                       <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
                     </ActionLoader>
                   }
-                  {NFTObject.claimable &&
+                  {/* {NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} onClick={() => { handleClaim(NFTObject.id) }}>Claim $PUSH</ActionTitle>
-                  }
-                  {!NFTObject.claimable &&
+                  } */}
+                  {/* {!NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} >Rewards Claimed</ActionTitle>
-                  }
+                  } */}
                 </UnsubscribeButton>
               }
             </ChannelActions>
