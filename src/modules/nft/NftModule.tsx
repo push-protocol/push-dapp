@@ -87,14 +87,14 @@ function NftModule() {
                     toggleShowAnswer(1);
                   }}
                   hover="#e20880">
-                  <Span color={theme.color}>Does $ROCKSTAR of Push (EPNS) NFTs carry something along with NFTs?</Span>
+                  <Span color={theme.color}>Does $ROCKSTAR of Push (EPNS) Vol 2 NFTs carry something along with NFTs?</Span>
                   <BsChevronExpand size={20} color={'#ddd'} />
                 </Question>
 
                 {showAnswers[1] && (
                   <Answer>
                     <Span>
-                      Yes, Each <B>$ROCKSTAR</B> contains <B>2400 $PUSH</B> tokens that can be claimed instantly!!!{' '}
+                      Yes, Each <B>$ROCKSTAR_V2</B> contains <B>900 $PUSH</B> tokens that can be claimed instantly!!!{' '}
                       <AMod
                         href="https://medium.com/ethereum-push-notification-service/push-token-economics-d7f566c29b1a"
                         target="_blank"
