@@ -24,7 +24,7 @@ import { fetchIntent } from 'helpers/w2w/ipfs';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
-import { Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -205,7 +205,7 @@ const ChatSidebarSection = () => {
             />
           </>
         )}
-        {activeTab == 3 && <SearchBar/>}
+        {activeTab == 3 && <NewUser />}
       </ItemVV2>
 
       {/* Footer */}

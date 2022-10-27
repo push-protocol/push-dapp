@@ -13,10 +13,10 @@ import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
-import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
+import {  decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { checkConnectedUser } from 'helpers/w2w/user';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { AppContext, Context } from 'modules/chat/ChatModule';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { fetchInbox } from 'helpers/w2w/ipfs';
@@ -24,6 +24,7 @@ import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -34,7 +35,7 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setInbox, activeTab, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -231,7 +232,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && !messagesLoading && activeTab !== 3 ? (
+            {!feeds?.length && !messagesLoading ? (
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
