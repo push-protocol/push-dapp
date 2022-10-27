@@ -192,6 +192,7 @@ export const ImageV2 = styled.img`
   overflow: ${(props) => props.overflow || 'initial'};
   cursor: ${(props) => props.cursor || 'default'};
   filter: ${(props) => props.filter || 'none'};
+  alt: ${(props) => props.alt || 'Image'};
 `;
 
 export const AInlineV2 = styled.a`
