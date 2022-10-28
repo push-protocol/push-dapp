@@ -95,6 +95,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
+        
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
@@ -151,77 +152,77 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           if (messageInChat === undefined) {
             setMessages((m) => [...m, msgIPFS]);
           }
-
           // }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
-        else {
-          while (messageCID) {
-            setLoading(true);
-            if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-              setLoading(false);
-              break;
-            } else {
-              const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-              let msgIPFS: MessageIPFSWithCID;
-              if (messageFromIndexDB !== undefined) {
-                msgIPFS = messageFromIndexDB.body;
-              } else {
-                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-                msgIPFS = messageFromIPFS;
-              }
-
-              //Decrypting Messages
-              msgIPFS = await w2wHelper.decryptMessages({
-                savedMsg: msgIPFS,
-                connectedUser,
-                account,
-                chainId,
-                currentChat,
-                inbox,
-              });
-
-              // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
-              // const messagesSentInChat: MessageIPFS = messages.find(
-              //   (msg) =>
-              //     msg.link === '' &&
-              //     msg.encType === '' &&
-              //     msg.cid === '' &&
-              //     msg.messageContent === msgIPFS.messageContent &&
-              //     msg.messageType === msgIPFS.messageType
-              // );
-              // // Replace message that was inserted when sending a message
-              // if (messagesSentInChat) {
-              //   const newMessages = messages.map((x) => x);
-              //   const index = newMessages.findIndex(
-              //     (msg) =>
-              //       msg.link === '' &&
-              //       msg.encType === '' &&
-              //       msg.cid === '' &&
-              //       msg.messageContent === msgIPFS.messageContent &&
-              //       msg.messageType === msgIPFS.messageType
-              //   );
-              //   newMessages[index] = msgIPFS;
-              //   setMessages(newMessages);
-              // }
-              // Display messages for the first time
-              // else
-              if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                setMessages((m) => [msgIPFS, ...m]);
-
-                //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
-                setMessageBeingSent(false);
-              }
-
-              const link = msgIPFS.link;
-              if (link) {
-                messageCID = link;
-              } else {
+        else if(messages.length ==0 ) {
+            while (messageCID) {
+              setLoading(true);
+              if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
+                setLoading(false);
                 break;
+              } else {
+                const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+                let msgIPFS: MessageIPFSWithCID;
+                if (messageFromIndexDB !== undefined) {
+                  msgIPFS = messageFromIndexDB.body;
+                } else {
+                  const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
+                  await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
+                  msgIPFS = messageFromIPFS;
+                }
+  
+                //Decrypting Messages
+                msgIPFS = await w2wHelper.decryptMessages({
+                  savedMsg: msgIPFS,
+                  connectedUser,
+                  account,
+                  chainId,
+                  currentChat,
+                  inbox,
+                });
+  
+                // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
+                // const messagesSentInChat: MessageIPFS = messages.find(
+                //   (msg) =>
+                //     msg.link === '' &&
+                //     msg.encType === '' &&
+                //     msg.cid === '' &&
+                //     msg.messageContent === msgIPFS.messageContent &&
+                //     msg.messageType === msgIPFS.messageType
+                // );
+                // // Replace message that was inserted when sending a message
+                // if (messagesSentInChat) {
+                //   const newMessages = messages.map((x) => x);
+                //   const index = newMessages.findIndex(
+                //     (msg) =>
+                //       msg.link === '' &&
+                //       msg.encType === '' &&
+                //       msg.cid === '' &&
+                //       msg.messageContent === msgIPFS.messageContent &&
+                //       msg.messageType === msgIPFS.messageType
+                //   );
+                //   newMessages[index] = msgIPFS;
+                //   setMessages(newMessages);
+                // }
+                // Display messages for the first time
+                // else
+                if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+                  setMessages((m) => [msgIPFS, ...m]);
+  
+                  //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
+                  setMessageBeingSent(false);
+                }
+  
+                const link = msgIPFS.link;
+                if (link) {
+                  messageCID = link;
+                } else {
+                  break;
+                }
               }
             }
-          }
+          // }
         }
       } else {
         setMessages([]);
