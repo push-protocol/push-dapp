@@ -1,32 +1,33 @@
-import React, { useState } from 'react';
-import ReactGA from 'react-ga';
-
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import React, { useState } from 'react';
+
+// External Packages
+import ReactGA from 'react-ga';
+import { BsChevronExpand } from 'react-icons/bs';
+import { toast } from 'react-toastify';
+import styled, { css, ThemeProvider , useTheme } from 'styled-components';
+
+// Internal Components
 import { toolingPostReq } from 'api/index';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { GAS_LIMIT, PUSH_BALANCE_TRESHOLD } from 'components/ViewDelegateeItem';
-import { abis, addresses } from 'config';
-import { ethers } from 'ethers';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import Blockies from 'primaries/BlockiesIdenticon';
 import InfoTooltip from 'primaries/InfoTooltip';
 import { A, B, Button, Content, H2, H3, Input, Item, ItemH, LI, Section, Span, UL } from 'primaries/SharedStyling';
-import { BsChevronExpand } from 'react-icons/bs';
-import { toast } from 'react-toastify';
-import styled, { css, useTheme } from 'styled-components';
-
 import LoaderSpinner from 'components/reusables/loaders/LoaderSpinner';
-
-import { ThemeProvider } from 'styled-components';
-
 import ViewDelegateeItem from 'components/ViewDelegateeItem';
-
-import { appConfig } from 'config';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { createTransactionObject } from 'helpers/GaslessHelper';
 import { executeDelegateTx } from 'helpers/WithGasHelper';
 
+// Internal Configs
+import { abis, addresses,appConfig } from 'config';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 const delegateesJSON = require('config/delegatees.json');
+
+// Constants
 const VOTING_TRESHOLD = 75000; //the treshold for delegates
 
 // Create Governance Module

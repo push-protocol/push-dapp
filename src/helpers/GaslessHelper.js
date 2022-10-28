@@ -1,8 +1,17 @@
-import { toolingPostReq } from "api/index";
-import { appConfig } from "config";
+// React + Web3 Essentials
 import { ethers } from "ethers";
-import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+
+// External Packages
 import { toast } from 'react-toastify';
+
+// Internal Components
+import { toolingPostReq } from "api/index";
+import EPNSCoreHelper from "helpers/EPNSCoreHelper";
+
+// Internal Configs
+import { appConfig } from "config";
+
+// Constants
 const GAS_LIMIT = 50;
 
 const ERROR_TOAST_DEFAULTS = {

@@ -1,8 +1,8 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { Web3Provider } from 'ethers/providers';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -17,7 +17,6 @@ import { Feeds, User } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
-
 import { Context } from 'sections/chat/ChatMainSection';
 
 function NewUser() {

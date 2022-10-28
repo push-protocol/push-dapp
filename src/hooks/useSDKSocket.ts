@@ -1,16 +1,16 @@
-import {
-  createSocketConnection,
-  EVENTS
-} from '@pushprotocol/socket';
+// React + Web3 Essentials
+import { useContext, useEffect, useState } from 'react';
+
+// Internal Components
+import { createSocketConnection, EVENTS } from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { useContext, useEffect, useState } from 'react';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 
 export type SDKSocketHookOptions = {
-  account?: string | null,
-  env?: string,
-  chainId?: number,
+  account?: string | null;
+  env?: string;
+  chainId?: number;
 };
 
 export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) => {
@@ -32,12 +32,12 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
        * We receive a feedItem
        */
       try {
-        const { payload } = feedItem || {};    
+        const { payload } = feedItem || {};
 
         // if video meta, skip notification
-        if (payload.hasOwnProperty("data") && payload["data"].hasOwnProperty("videoMeta")) {
-          const videoMeta = JSON.parse(payload["data"]["videoMeta"]);
-          
+        if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('videoMeta')) {
+          const videoMeta = JSON.parse(payload['data']['videoMeta']);
+
           if (videoMeta.status == 1) {
             // incoming call
             incomingCall(videoMeta);
@@ -48,10 +48,9 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
         }
 
         showNotifcationToast(payload);
-        
       } catch (e) {
         console.error('DAPP Error while diplaying received Notification: ', e);
-      }     
+      }
     });
   };
 
@@ -65,19 +64,17 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
     if (epnsSDKSocket) {
       addSocketEvents();
     }
-  
+
     return () => {
       if (epnsSDKSocket) {
         removeSocketEvents();
       }
-    }
-
+    };
   }, [epnsSDKSocket]);
-
 
   /**
    * Whenever the requisite params to create a connection object change
-   *  - disconnect the old connection 
+   *  - disconnect the old connection
    *  - create a new connection object
    */
   useEffect(() => {
@@ -85,7 +82,7 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
       if (epnsSDKSocket) {
         epnsSDKSocket?.disconnect();
       }
-      
+
       // this is auto-connect on instantiation
       const connectionObject = createSocketConnection({
         user: convertAddressToAddrCaip(account, chainId),
@@ -93,12 +90,10 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
       });
       setEpnsSDKSocket(connectionObject);
     }
-
   }, [account, chainId, env]);
-
 
   return {
     epnsSDKSocket,
     isSDKSocketConnected,
-  }
+  };
 };

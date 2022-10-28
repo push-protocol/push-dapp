@@ -1,10 +1,13 @@
-import React from "react";
-import { useState } from "react";
+// React + Web3 Essentials
+import React, { useState } from "react";
+
+// External Packages
 import { MultiSelect } from "react-multi-select-component";
 import styled, { useTheme } from "styled-components";
 import { ThemeProvider } from "styled-components";
 import DateTimePicker from "react-datetime-picker";
 
+// Constants
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 
 const SearchFilter = ({

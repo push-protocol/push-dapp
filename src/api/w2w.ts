@@ -1,10 +1,16 @@
+// Internal components
 import { InboxChat, ToastPosition } from 'sections/chat/ChatMainSection';
-// @ts-ignore
-import { appConfig } from 'config';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
+
+// External Components
 import { toast } from 'react-toastify';
 
+// Internal configs
+import { appConfig } from 'config';
+
+// Constants
 let BASE_URL = appConfig.apiUrl;
+
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   BASE_URL = appConfig.w2wApiUrl;
 } else {

@@ -1,3 +1,4 @@
+// Internal Components
 import { Feeds } from 'api';
 import { MessageIPFS } from 'helpers/w2w/ipfs';
 

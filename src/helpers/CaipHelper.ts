@@ -1,3 +1,4 @@
+// Internal Configs
 import { appConfig } from "config";
 
 export const Eip155EnabledIds: Array<Number> = [137, 80001];

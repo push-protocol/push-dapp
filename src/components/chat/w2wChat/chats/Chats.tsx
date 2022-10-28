@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import cn from 'classnames';
 import styled from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
 import tickIcon from '../../../../assets/chat/tick.svg';
@@ -19,7 +19,7 @@ import './W2wchats.css';
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 
-const infura_URL = appConfig.infuraApiUrl;
+// Interfaces
 interface ChatProps {
   msg: MessageIPFS;
   caip10: string;
@@ -29,6 +29,9 @@ interface ChatProps {
 interface TextProps {
   content: string;
 }
+
+// Constants
+const infura_URL = appConfig.infuraApiUrl;
 const URL_REGEX =
   /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
 

@@ -1,18 +1,20 @@
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { abis, addresses, appConfig } from 'config';
 import { ethers } from 'ethers';
 import React from 'react';
+
+// External Packages
 import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { Navigate } from 'react-router-dom';
 
+// Internal Components
 import { getReq, postReq } from 'api';
 import SendNotifications from 'components/SendNotifications';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
-import { Navigate } from 'react-router-dom';
 import { setCanVerify, setDelegatees, setUserChannelDetails } from 'redux/slices/adminSlice';
 import {
   setCommunicatorReadProvider,
@@ -24,6 +26,11 @@ import {
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
+// Internal Configs
+import { abis, addresses, appConfig } from 'config';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
+
+// Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
 

@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
 // External Packages
@@ -25,9 +26,8 @@ import UploadLogo from './UploadLogo';
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 
-const ethers = require('ethers');
+// Constants
 const minStakeFees = 50;
-
 const coreChainId = appConfig.coreContractChain;
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 

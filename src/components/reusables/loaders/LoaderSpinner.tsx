@@ -4,7 +4,7 @@ import React from 'react';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import BlurBG from 'components/reusables/blurs/BlurBG';
 import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/ProgressBarUnit';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';

@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
 // External Packages
@@ -14,8 +15,6 @@ import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyli
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-
-const ethers = require('ethers');
 
 // Create Header
 function YieldFarmingModule() {

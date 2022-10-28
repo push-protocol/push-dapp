@@ -1,5 +1,7 @@
+// Internal Configs
 import { appConfig } from "config";
 
+// Constants
 const apiVersion: number = appConfig.pushNodeApiVersion;
 const channelsRoute: string = `/v${apiVersion}/channels`;
 const usersRoute: string = `/v${apiVersion}/users`;

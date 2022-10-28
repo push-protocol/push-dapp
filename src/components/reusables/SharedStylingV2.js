@@ -1,6 +1,9 @@
-import { themeLight } from 'config/Themization';
+// External Packages
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
+
+// Internal Configs
+import { themeLight } from 'config/Themization';
 
 // Section covers the entire width and height
 export const SectionV2 = styled.section`

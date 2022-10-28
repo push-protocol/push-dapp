@@ -1,4 +1,7 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import { MdOutlineClose } from "react-icons/md";
 import FadeLoader from "react-spinners/FadeLoader";
 import { toast } from "react-toastify";

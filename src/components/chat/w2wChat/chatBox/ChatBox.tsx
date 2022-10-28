@@ -14,7 +14,7 @@ import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import * as PushNodeClient from 'api';
 import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -30,14 +30,15 @@ import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP
 import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
-
-// Internal Configs
-import { appConfig } from 'config';
-import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 
+// Internal Configs
+import { appConfig } from 'config';
+import GLOBALS, { device } from 'config/Globals';
+
+// Constants
 const INFURA_URL = appConfig.infuraApiUrl;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {

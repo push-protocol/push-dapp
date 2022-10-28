@@ -1,19 +1,23 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
 import React from 'react';
+
+// External Packages
 import ReactGA from 'react-ga';
-
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import styled, { css, useTheme } from 'styled-components';
-import { A, B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
-
 import { BsChevronExpand } from 'react-icons/bs';
 
-import { useWeb3React } from '@web3-react/core';
+// Internal Components
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { A, B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
 import AllNFTs from 'components/AllNFTs';
 import AllNFTsV2 from 'components/AllNFTsV2';
 import MyNFTs from 'components/MyNFTs';
 import MyNFTsV2 from 'components/MyNFTsV2';
 import TransferNFT from 'components/TransferNFT';
 import TransferNFTv2 from 'components/TransferNFTv2';
+
+// Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Create Header

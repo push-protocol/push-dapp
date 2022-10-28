@@ -3,7 +3,6 @@ import React from 'react';
 
 // External Packages
 import IconButton from '@mui/material/IconButton';
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { MdError, MdHighlightOff } from "react-icons/md";
 import { RiNotificationOffLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +12,7 @@ import styled, { ThemeProvider, useTheme } from "styled-components";
 // Internal Compoonents
 import { ModalInnerComponentType } from "hooks/useModal";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : ModalInnerComponentType)=>{
     const themes = useTheme();

@@ -1,3 +1,4 @@
+// Internal Components
 import { Feeds, getFromIPFS, getInbox } from "api"
 import { InboxChat } from "sections/chat/ChatMainSection"
 

@@ -2,9 +2,9 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
-import ReactGA from 'react-ga';
 
 // External Packages
+import ReactGA from 'react-ga';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import styled, { ThemeProvider, useTheme } from 'styled-components';

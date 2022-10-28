@@ -1,3 +1,4 @@
+// Internal Components
 import * as PGP from './pgp'
 import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'

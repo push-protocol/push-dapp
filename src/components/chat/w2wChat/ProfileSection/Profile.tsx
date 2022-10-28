@@ -1,3 +1,7 @@
+// React + Web3 Essentials
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
+
+// External Packages
 import CheckIcon from '@mui/icons-material/Check'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
@@ -11,18 +15,18 @@ import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import { CID } from 'ipfs-http-client'
+
+//Internal Components
 import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
-import { CID } from 'ipfs-http-client'
-import React, { useContext, useEffect, useState } from 'react'
 import { AppContext, Context } from 'sections/chat/ChatMainSection'
 import { showCharacters } from './helpers'
 import './Profile.css'
-
-import { ChangeEvent } from 'react'
 import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
 
+// Interfaces
 interface ProfilePropsType {
   profilePicture: string
   updateProfile: (image: string) => void

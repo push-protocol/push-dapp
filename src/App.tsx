@@ -15,7 +15,6 @@ import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import { themeDark, themeLight } from 'config/Themization';
 import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
@@ -35,6 +34,7 @@ import { resetAdminSlice } from 'redux/slices/adminSlice';
 
 // Internal Configs
 import { appConfig } from 'config';
+import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
 import * as dotenv from 'dotenv';
 

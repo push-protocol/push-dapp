@@ -1,6 +1,11 @@
-import { appConfig } from 'config';
+// React + Web3 Essentials
 import { utils } from 'ethers';
+
+// Internal Components
 import { convertChainIdToChainCaip } from './CaipHelper';
+
+// Internal Configs
+import { appConfig } from 'config';
 
 // Utility Helper Functions
 const UtilityHelper = {

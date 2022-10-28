@@ -1,3 +1,4 @@
+// Internal Components
 import { ConnectedUser } from "api";
 
 export function checkConnectedUser(connectedUser:ConnectedUser): boolean {

@@ -1,21 +1,17 @@
-// const { ethers, utils } = require("ethers")
+// React + Web3 Essentials
 import {ethers,utils } from 'ethers';
-// const { getMessage, TypedData } = require('eip-712')
-// const {
 
-//   encrypt,
-//   recoverPersonalSignature,
-//   recoverTypedSignatureLegacy,
-//   recoverTypedSignature,
-//   recoverTypedSignature_v4
-// } = require('eth-sig-util');
-import {  encrypt,    recoverPersonalSignature,    recoverTypedSignatureLegacy,recoverTypedSignature,recoverTypedSignature_v4} from 'eth-sig-util';
+// External Packages
+// const { getMessage, TypedData } = require('eip-712')
+import {  encrypt, recoverPersonalSignature, recoverTypedSignatureLegacy, recoverTypedSignature, recoverTypedSignature_v4} from 'eth-sig-util';
+
+// Constants
 const privateKey = "PRIVATE_KEY"
 var url = 'https://mainnet.infura.io/v3/9b2dd511261345bfb6073ae6b10f5a7d';
-var provider = new ethers.providers.JsonRpcProvider(url);
 const wallet = new ethers.Wallet(privateKey)
+var provider = new ethers.providers.JsonRpcProvider(url);
 
-// // // //for creating signature
+//for creating signature
 const typedData = {
   types: {
     EIP712Domain:

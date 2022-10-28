@@ -1,4 +1,7 @@
+// React + Web3 Essentials
 import { BigNumber, utils } from "ethers";
+
+// Internal Configs
 const claims = require("config/airdrop/claims.json")
 
 // Airdrop Helper Functions

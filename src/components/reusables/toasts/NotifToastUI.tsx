@@ -1,14 +1,19 @@
+// React + Web3 Essentials
 import React, { useContext } from "react";
 
+// External Packages
 import { chainNameType, NotificationItem } from "@pushprotocol/uiweb";
 import styled, { useTheme } from "styled-components";
-
-import { NotificationContext } from "contexts/NotificationContext";
 import { ToastContainer } from 'react-toastify';
 
+// Internal Components
+import { NotificationContext } from "contexts/NotificationContext";
+
+// Interfaces
 interface Props {
   payload: object
 }
+
 const NotifToastUI = ({ payload }) => {
   // get theme
   const theme = useTheme();
