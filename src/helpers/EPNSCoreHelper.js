@@ -10,7 +10,6 @@ import { getReq } from 'api';
 import { convertAddressToAddrCaip } from './CaipHelper';
 import { IPFSGateway } from './IpfsHelper';
 
-
 // Constants
 const COINDESK_CHANNEL_ADDR = '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF';
 const COINDESK_HASH = '1+bafkreif643vf3cteadznccivnsk5uj26e3ls7onbshnldb3aej3omrxsau';

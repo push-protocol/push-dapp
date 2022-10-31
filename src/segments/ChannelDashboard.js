@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React from 'react';
 
 // External Packages
@@ -14,7 +15,6 @@ import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 // Internal Configs
 import { abis, addresses } from 'config';
 
-const ethers = require('ethers');
 const ipfs = require('ipfs-api')();
 
 // Create Header
@@ -189,12 +189,30 @@ function ChannelDashboard() {
         </FormSubmision>
 
         <Buttons>
-          <Continue theme="#674c9f" disabled={processing} onClick={handleSendMessage}>
-            {processing && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />}
+          <Continue
+            theme="#674c9f"
+            disabled={processing}
+            onClick={handleSendMessage}
+          >
+            {processing && (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={24}
+              />
+            )}
             {!processing && <Text>Group Message</Text>}
           </Continue>
-          <Continue theme="#e20880" disabled={processing} onClick={handleSendMessage}>
-            {processing && <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />}
+          <Continue
+            theme="#e20880"
+            disabled={processing}
+            onClick={handleSendMessage}
+          >
+            {processing && (
+              <LoaderSpinner
+                type={LOADER_TYPE.SEAMLESS}
+                spinnerSize={24}
+              />
+            )}
             {!processing && <Text>Secret Message</Text>}
           </Continue>
         </Buttons>

@@ -24,6 +24,7 @@ import UsersDataStore from 'singletons/UsersDataStore';
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
+// Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain;
 
 // Create Inbox Module

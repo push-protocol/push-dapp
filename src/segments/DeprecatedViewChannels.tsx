@@ -1,32 +1,31 @@
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import { postReq } from "api";
 import React from 'react';
+
+// External Packages
+import styled,{ ThemeProvider } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { Waypoint } from "react-waypoint";
-import styled from "styled-components";
-// import { appConfig } from "config";
-
 import { AiOutlineSearch } from "react-icons/ai";
+import queryString from 'query-string';
 
+// Internal Components
 import DisplayNotice from "components/DisplayNotice";
 import Faucets from "components/Faucets";
 import ViewChannelItem from "components/ViewChannelItem";
 import { incrementPage, setChannelMeta } from "redux/slices/channelSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
+import { postReq } from "api";
 
+// Internal Configs
 import { themeDark, themeLight } from "config/Themization";
-import queryString from 'query-string';
-import { ThemeProvider } from "styled-components";
 
-
-
+// Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
 const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/;
 const SEARCH_DELAY = 1500;
-
-
 
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser }) {

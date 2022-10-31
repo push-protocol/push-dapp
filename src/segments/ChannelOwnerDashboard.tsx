@@ -24,6 +24,7 @@ import { Content, Item, Section } from "../primaries/SharedStyling";
 // Internal Configs
 import { appConfig } from "config";
 
+// Constants
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL:number = 10;
 

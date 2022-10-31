@@ -4,6 +4,7 @@ import React, { useContext, useState } from "react";
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { MdCall, MdCallEnd } from 'react-icons/md';
 
 // Internal Compoonents
 import LoaderSpinner, {
@@ -13,13 +14,12 @@ import LoaderSpinner, {
 import { ButtonV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { MdCall, MdCallEnd } from 'react-icons/md';
 import { BlockedLoadingI } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 
-// Interface
+// Interfaces
 export interface VideoCallInfoI {
   address: string;
   fromPublicKeyArmored: string;

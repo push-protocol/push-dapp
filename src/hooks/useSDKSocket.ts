@@ -7,6 +7,7 @@ import { showNotifcationToast } from 'components/reusables/toasts/toastControlle
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 
+// Types
 export type SDKSocketHookOptions = {
   account?: string | null;
   env?: string;

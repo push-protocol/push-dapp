@@ -1,6 +1,8 @@
 /**
  * This file helps us maintain the channel creation state
  */
+
+// External Packages
 import { createSlice } from "@reduxjs/toolkit";
 
 /*

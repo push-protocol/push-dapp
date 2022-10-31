@@ -1,12 +1,17 @@
+// React + Web3 Essentials
+import React from 'react'
+
+// External Packages
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
+import styled, { ThemeProvider, useTheme } from 'styled-components'
+
+// Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2'
 import { Content } from 'components/SharedStyling'
-import React from 'react'
-import styled, { ThemeProvider, useTheme } from 'styled-components'
 import HandwaveIcon from "../assets/chat/handwave.svg"
 
 const ChatMainSection = (): JSX.Element => {

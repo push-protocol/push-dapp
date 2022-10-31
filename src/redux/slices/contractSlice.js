@@ -3,6 +3,8 @@
  * This is used to prevent duplication of logic and instantiating contracts multiple times
  * This is also used to prevent passing props everywhere and making the code ugly
  */
+
+// External Packages
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

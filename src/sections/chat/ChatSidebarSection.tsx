@@ -5,13 +5,13 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-
-// Internal Compoonents
 import { makeStyles } from '@material-ui/core';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+
+// Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -28,7 +28,6 @@ import { Context } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-
 
 // Chat Sections
 // Divided into two, left and right
