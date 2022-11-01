@@ -155,7 +155,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                   >Transfer</ActionTitle>
                 </UnsubscribeButton>
               }
-              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {/* {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
@@ -164,12 +164,12 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                   }
                   {NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} onClick={() => { handleClaim(NFTObject.id) }}>Claim $PUSH</ActionTitle>
-                  }
+                  } 
                   {!NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} >Rewards Claimed</ActionTitle>
                   }
                 </UnsubscribeButton>
-              }
+              } */}
             </ChannelActions>
           </ItemH>
         }
