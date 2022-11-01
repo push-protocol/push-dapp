@@ -250,7 +250,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
-  const fetchInboxApi = async (createdUser:ConnectedUser): Promise<Feeds> => {
+  const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
@@ -629,8 +629,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             ),
           });
         }
-      } 
-      
+      }
+
       setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
@@ -647,6 +647,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
     setOpenSuccessSnackBar(false);
   };
+
+  const checkIfIntentExist = (receivedIntents:PushNodeClient.Feeds[])=>{
+    console.log("receivedIntents",receivedIntents)
+    const intentReceived = receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
+    ?.threadhash
+    console.log("Intent received",intentReceived)
+
+    return intentReceived
+  }
 
   return (
     <Container>
@@ -796,9 +805,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                       </div>
                     );
                   })}
-                  {receivedIntents.find(
-                    (x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did
-                  )?.threadhash && (
+                  {checkIfIntentExist(receivedIntents) && (
                     <Chats
                       msg={{
                         ...messages[0],
@@ -815,8 +822,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             </CustomScrollContent>
           </MessageContainer>
 
-          {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
-            ?.threadhash ? null : (
+          {checkIfIntentExist(receivedIntents) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -853,7 +859,6 @@ const FirstConversation = styled.div`
   margin: 59px 0px 0px 0px;
   padding: 0px 50px;
 `;
-
 
 const MessageTime = styled(ItemHV2)`
   width: 100%;
@@ -1029,7 +1034,7 @@ const CustomScrollContent = styled(ScrollToBottom)`
     background: #cf1c84;
     border-radius: 10px;
   }
-`
+`;
 
 const FileUploadLoaderContainer = styled.div`
   border: none;
@@ -1038,6 +1043,6 @@ const FileUploadLoaderContainer = styled.div`
   background-color: transparent;
   margin-right: 2rem;
   color: rgb(58, 103, 137);
-`
+`;
 
 export default ChatBox;

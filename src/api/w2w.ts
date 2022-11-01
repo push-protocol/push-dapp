@@ -20,7 +20,7 @@ export interface Feeds {
   profilePicture: string | null;
   publicKey: string | null;
   about: string | null;
-  threadhash: string | null;
+  intentHelperthreadhash: string | null;
   intent: string | null;
   intentSentBy: string | null;
   intentTimestamp: Date;
