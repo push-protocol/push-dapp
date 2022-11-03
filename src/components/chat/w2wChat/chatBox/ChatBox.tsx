@@ -30,6 +30,7 @@ import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP
 import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
+import Lock from '../../../../assets/Lock.png'
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -37,6 +38,7 @@ import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
+import { Item } from 'primaries/SharedStyling';
 
 const INFURA_URL = appConfig.infuraApiUrl;
 
@@ -787,7 +789,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     }
                     return (
                       <div key={i}>
-                        {!showTime ? null : <MessageTime>{time}</MessageTime>}
+                        {!showTime ? null : <Item>
+                          <MessageTime>{time}</ MessageTime>
+
+                          {i === 0 && (<ItemText>
+                            <Image src={Lock} />
+                            Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://push.org'> Click to learn more.</ItemLink></ItemText>)}
+                        </Item>}
+                        
                         <Chats
                           msg={msg}
                           caip10={walletToCAIP10({ account, chainId })}
@@ -853,6 +862,38 @@ const FirstConversation = styled.div`
   margin: 59px 0px 0px 0px;
   padding: 0px 50px;
 `;
+
+const ItemLink = styled.a`
+  color: ${(props) => props.theme.default.secondaryColor};
+  text-decoration: none;
+  cursor: pointer;
+`;
+
+const ItemText = styled.div`
+  color: ${(props) => props.theme.default.secondaryColor};
+  width: 556px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 130%;
+  background-color: ${(props) => props.theme.default.bg};
+  padding: 10px;
+  border-radius: 14px;
+  text-align:center;
+  margin-bottom: 10px;
+
+  @media (max-width: 1250px) {
+    width: 70%;
+  }
+
+  @media (max-width: 771px) {
+    width: 80%;
+  }
+`;
+
+const Image = styled.img`
+  width: 10px;
+  margin-right: 5px;
+`
 
 
 const MessageTime = styled(ItemHV2)`
