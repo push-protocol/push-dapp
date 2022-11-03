@@ -22,8 +22,10 @@ import styled, { useTheme } from 'styled-components';
 import * as PushNodeClient from 'api';
 import { ConnectedUser, Feeds, User } from 'api';
 import LoaderSpinner, {
-  LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
-  PROGRESS_POSITIONING
+  LOADER_OVERLAY,
+  LOADER_SPINNER_TYPE,
+  LOADER_TYPE,
+  PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import * as w2wHelper from 'helpers/w2w';
@@ -157,7 +159,7 @@ const ChatMainSection = () => {
         toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 2,
-      })
+      });
     }
   }, [call]);
 
@@ -169,10 +171,9 @@ const ChatMainSection = () => {
         toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 3,
-      })
+      });
     }
   }, [callAccepted]);
-  
 
   // Rest of the loading logic
   useEffect(() => {
@@ -200,6 +201,8 @@ const ChatMainSection = () => {
       throw Error('Invalid DID');
     }
 
+    const avatar = await library.getAvatar(account);
+
     // new user might not have a private key
     if (user && user.encryptedPrivateKey) {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
@@ -211,12 +214,14 @@ const ChatMainSection = () => {
         user.encryptedPrivateKey,
         account
       );
+
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
       connectedUser = {
         // We only need to provide this information when it's a new user
         name: 'john-snow',
         profilePicture:
+          avatar ??
           'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
         wallets: caip10,
         ///
@@ -355,7 +360,7 @@ const ChatMainSection = () => {
               fromPublicKeyArmored: null,
               toPublicKeyArmored: null,
               privateKeyArmored: null,
-              establishConnection: 0
+              establishConnection: 0,
             });
           }}
         />
