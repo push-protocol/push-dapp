@@ -8,8 +8,9 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 // Internal Configs
 import { appConfig } from 'config';
 
-export function useResolveEns(username: string): string {
+export function useResolveEns(username: string) {
   const [ensName, setEnsName] = useState(null);
+  const [ensAvatar, setEnsAvatar] = useState(null);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   useEffect(() => {
@@ -36,8 +37,16 @@ export function useResolveEns(username: string): string {
           setEnsName(null);
         }
       });
+      
+      provider.getAvatar(checksumWallet).then((avatar) => {
+        if (avatar) {
+          setEnsAvatar(avatar);
+        } else {
+          setEnsAvatar(null);
+        }
+      })
     }
   }, [currentChat]);
 
-  return ensName;
+  return { ensName, ensAvatar };
 }
