@@ -1017,7 +1017,7 @@ const TextInfo = styled.div`
   font-weight: 400;
   font-size: 15px;
   line-height: 130%;
-  color: #657795;
+  color: ${(props) => props.theme.default.secondaryColor};
   width: 274px;
 `
 
