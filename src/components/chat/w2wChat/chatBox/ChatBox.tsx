@@ -682,7 +682,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           <WelcomeInfo>
             <SpanV2 fontWeight='500' fontSize='15px' lineHeight='130%'>Push Chat is in alpha and things might break.</SpanV2>
 
-            <Atag href={'https://push.org'}>We would love to hear your feedback</Atag>
+            <Atag href={'https://discord.gg/pushprotocol'} target='_blank'>We would love to hear your feedback</Atag>
             
             {InfoMessages.map((item) => 
               <WelcomeContent key={item.id}>
