@@ -650,7 +650,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   };
 
   const InfoMessages = [
-    {id: 1, content: 'You can send upto 10 chat requests in alpha'},
+    {id: 1, content: 'You can send up to 10 chat requests in alpha'},
   {id: 2, content: 'You can send a chat request to anyone including non-whitelisted users'},
   {id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.'},
   {id: 4, content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted'},
@@ -663,7 +663,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       {!viewChatBox ? (
         <WelcomeItem gap="25px">
           <WelcomeMainText theme={theme}>
+            <WelcomeText>
             Say
+            </WelcomeText>
             <ImageV2
               src={HandwaveIcon}
               alt="wave"
@@ -672,15 +674,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               verticalAlign="middle"
               margin="0 13px"
             /> 
+            <WelcomeText>
             to Push Chat
+            </WelcomeText>
           </WelcomeMainText>
           
           <WelcomeInfo>
-
             <SpanV2 fontWeight='500' fontSize='15px' lineHeight='130%'>Push Chat is in alpha and things might break.</SpanV2>
 
             <Atag href={'https://push.org'}>We would love to hear your feedback</Atag>
-
             
             {InfoMessages.map((item) => 
               <WelcomeContent key={item.id}>
@@ -688,8 +690,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               <TextInfo>{item.content}</TextInfo>
             </WelcomeContent>
             )}
-
-
 
           </WelcomeInfo>
           {/* <WelcomeSubText theme={theme}>
@@ -992,6 +992,10 @@ const WelcomeItem = styled(ItemVV2)`
   display:flex;
   justify-content :center;
   margin: auto auto;
+  @media (max-width: 1200px) {
+    width: auto;
+  }
+  
 `
 
 const WelcomeContent = styled.div`
@@ -1027,7 +1031,6 @@ const WelcomeMainText = styled(SpanV2)`
   width: 100%;
   color: ${(props) => props.theme.default.color};
   letter-spacing: -0.03em;
-  // margin: 0 4rem;
   @media only screen and (max-width: 1115px) and (min-width: 991px) {
     font-size: 26px;
     padding: 16px 33px;
@@ -1044,6 +1047,18 @@ const WelcomeMainText = styled(SpanV2)`
   }
 `;
 
+const WelcomeText = styled(SpanV2)`
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+  color: ${(props) => props.theme.default.color};
+  letter-spacing: -0.03em;
+  @media (max-width: 1200px) {
+    display: none;
+  }
+`;
+
 const WelcomeInfo = styled.div`
   background: ${(props) => props.theme.default.bg};
   display:flex;
@@ -1051,6 +1066,9 @@ const WelcomeInfo = styled.div`
   width: 100%;
   padding: 30px 20px;
   border-radius: 28px;
+  @media (max-width: 1200px) {
+    display: none;
+  }
 `
 
 const Atag = styled.a`
