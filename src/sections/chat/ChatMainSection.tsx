@@ -4,14 +4,9 @@ import { ethers } from 'ethers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { ThreeIdConnect } from '@3id/connect';
-import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
-import { CeramicClient } from '@ceramicnetwork/http-client';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
 import useToast from 'hooks/useToast';
-import { getResolver as keyDIDGetResolver } from 'key-did-resolver';
-import { MdCheckCircle, MdError } from 'react-icons/md';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
@@ -202,6 +197,7 @@ const ChatMainSection = () => {
 
     // new user might not have a private key
     if (user && user.encryptedPrivateKey) {
+
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
         throw Error('Invalid user');
       }
@@ -211,11 +207,12 @@ const ChatMainSection = () => {
         user.encryptedPrivateKey,
         account
       );
+
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
       connectedUser = {
         // We only need to provide this information when it's a new user
-        name: 'john-snow',
+        name: '',
         profilePicture:
           'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
         wallets: caip10,
@@ -232,8 +229,19 @@ const ChatMainSection = () => {
         linkedListHash: '',
         privateKey: '',
       };
+
     }
 
+    /* Fetch user Avatar from ENS resolver */
+    
+    const ens = await library.lookupAddress(account);
+    if(ens) {
+    const resolver = await library.getResolver(ens);
+    if(resolver) {
+    const avatar = await resolver.getAvatar();
+    if(avatar.url) {
+      connectedUser = {...connectedUser, profilePicture: avatar.url, name: ens};
+    }}}
     setBlockedLoading({
       enabled: false,
       title: "Step 4/4: Let's Chat ;)",
