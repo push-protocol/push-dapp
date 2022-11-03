@@ -31,6 +31,7 @@ import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png'
+import LockSlash from '../../../../assets/LockSlash.png'
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -650,6 +651,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
+  // console.log(messages)
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -787,15 +790,23 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                         time = dateString;
                       }
                     }
+                    let intents = currentChat?.intent?.split('+')
                     return (
                       <div key={i}>
                         {!showTime ? null : <Item>
                           <MessageTime>{time}</ MessageTime>
 
-                          {i === 0 && (<ItemText>
+                          {i === 0 && intents?.length === 2 &&(<ItemText>
                             <Image src={Lock} />
                             Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://push.org'> Click to learn more.</ItemLink></ItemText>)}
+
+                            {i === 0 && intents?.length === 1 &&(<ItemTextSlash>
+                            <Image src={LockSlash} />
+                            Messages are not encrypted till the user accepts the chat request.
+                            </ItemTextSlash>)}
                         </Item>}
+
+                        
                         
                         <Chats
                           msg={msg}
@@ -805,6 +816,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                       </div>
                     );
                   })}
+                  {messages && messages?.length === 0 && (
+                          <Item margin="30px 0px">
+                            <ItemTextSlash>
+                            <Image src={LockSlash} />
+                            Messages are not encrypted till the user accepts the chat request.
+                            </ItemTextSlash>
+                            
+                            <FirstTime>This is your first conversation with recipient.<br></br> Start the conversation by sending a message.</FirstTime>
+                            </Item>
+                        )}
                   {receivedIntents.find(
                     (x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did
                   )?.threadhash && (
@@ -890,6 +911,26 @@ const ItemText = styled.div`
   }
 `;
 
+const ItemTextSlash = styled.div`
+  color: ${(props) => props.theme.default.secondaryColor};
+  width: auto;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 130%;
+  background-color: ${(props) => props.theme.default.bg};
+  padding: 10px;
+  border-radius: 14px;
+  text-align:center;
+  margin-bottom: 10px;
+
+  @media (max-width: 1250px) {
+    width: 70%;
+  }
+
+  @media (max-width: 771px) {
+    width: 80%;
+  }
+`;
 const Image = styled.img`
   width: 10px;
   margin-right: 5px;
@@ -899,6 +940,13 @@ const Image = styled.img`
 const MessageTime = styled(ItemHV2)`
   width: 100%;
   font-size: 11px;
+  color: ${(props) => props.theme.default.secondaryColor};
+  margin: 15px 0px;
+`;
+
+const FirstTime = styled(ItemHV2)`
+  width: 100%;
+  font-size: 13px;
   color: ${(props) => props.theme.default.secondaryColor};
   margin: 15px 0px;
 `;
