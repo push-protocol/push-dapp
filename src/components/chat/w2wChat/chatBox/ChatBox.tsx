@@ -13,6 +13,7 @@ import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
+import {BsDashLg} from 'react-icons/bs'
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
@@ -651,13 +652,24 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  // console.log(messages)
+
+  const InfoMessages = [
+    {id: 1, content: 'You can send up to 10 chat requests in alpha'},
+  {id: 2, content: 'You can send a chat request to anyone including non-whitelisted users'},
+  {id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.'},
+  {id: 4, content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted'},
+  {id: 5, content: 'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.'},
+  {id: 6, content: 'Access to more chat requests and messages will be added in the near future'},
+  ]
 
   return (
     <Container>
       {!viewChatBox ? (
-        <ItemVV2 gap="25px">
+        <WelcomeItem gap="25px">
           <WelcomeMainText theme={theme}>
+            <WelcomeText>
+            Say
+            </WelcomeText>
             <ImageV2
               src={HandwaveIcon}
               alt="wave"
@@ -665,12 +677,29 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               width="auto"
               verticalAlign="middle"
               margin="0 13px"
-            />
+            /> 
+            <WelcomeText>
+            to Push Chat
+            </WelcomeText>
           </WelcomeMainText>
-          <WelcomeSubText theme={theme}>
+          
+          <WelcomeInfo>
+            <SpanV2 fontWeight='500' fontSize='15px' lineHeight='130%'>Push Chat is in alpha and things might break.</SpanV2>
+
+            <Atag href={'https://discord.gg/pushprotocol'} target='_blank'>We would love to hear your feedback</Atag>
+            
+            {InfoMessages.map((item) => 
+              <WelcomeContent key={item.id}>
+              <BsDashLg  className='icon'/>
+              <TextInfo>{item.content}</TextInfo>
+            </WelcomeContent>
+            )}
+
+          </WelcomeInfo>
+          {/* <WelcomeSubText theme={theme}>
             You haven’t started a conversation yet. Start a new chat by using the + button
-          </WelcomeSubText>
-        </ItemVV2>
+          </WelcomeSubText> */}
+        </WelcomeItem>
       ) : (
         <>
           <Snackbar
@@ -1046,6 +1075,40 @@ const HelloBox = styled(Box)`
   margin-bottom: 10px;
 `;
 
+const WelcomeItem = styled(ItemVV2)`
+  width: 369px;
+  display:flex;
+  justify-content :center;
+  margin: auto auto;
+  @media (max-width: 1200px) {
+    width: auto;
+  }
+  
+`
+
+const WelcomeContent = styled.div`
+  width: 304px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px auto;
+  .icon {
+    transform: rotate(-60deg);
+    color: #D53893;
+    min-width: 17px;
+  }
+`
+
+const TextInfo = styled.div`
+  align-items:center;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 130%;
+  color: ${(props) => props.theme.default.secondaryColor};
+  width: 274px;
+`
+
 const WelcomeMainText = styled(SpanV2)`
   background: ${(props) => props.theme.default.bg};
   padding: 20px 55px;
@@ -1053,9 +1116,9 @@ const WelcomeMainText = styled(SpanV2)`
   font-size: 28px;
   font-weight: 500;
   text-align: center;
+  width: 100%;
   color: ${(props) => props.theme.default.color};
   letter-spacing: -0.03em;
-  margin: 0 4rem;
   @media only screen and (max-width: 1115px) and (min-width: 991px) {
     font-size: 26px;
     padding: 16px 33px;
@@ -1071,6 +1134,40 @@ const WelcomeMainText = styled(SpanV2)`
     }
   }
 `;
+
+const WelcomeText = styled(SpanV2)`
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+  width: 100%;
+  color: ${(props) => props.theme.default.color};
+  letter-spacing: -0.03em;
+  @media (max-width: 1200px) {
+    display: none;
+  }
+`;
+
+const WelcomeInfo = styled.div`
+  background: ${(props) => props.theme.default.bg};
+  display:flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 30px 20px;
+  border-radius: 28px;
+  @media (max-width: 1200px) {
+    display: none;
+  }
+`
+
+const Atag = styled.a`
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 130%;
+    text-align: center;
+    color: #D53893;
+    cursor: pointer;
+    margin-bottom: 20px;
+`
 
 const WelcomeSubText = styled(SpanV2)`
   font-size: 15px;
