@@ -963,6 +963,8 @@ const ItemTextSlash = styled.div`
 const Image = styled.img`
   width: 10px;
   margin-right: 5px;
+  position: relative;
+  bottom: -2px;
 `
 
 
