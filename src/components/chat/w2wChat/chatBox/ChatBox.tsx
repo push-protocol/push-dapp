@@ -688,12 +688,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
             <Atag href={'https://discord.gg/pushprotocol'} target='_blank'>We would love to hear your feedback</Atag>
             
+            <ItemBody>
             {InfoMessages.map((item) => 
               <WelcomeContent key={item.id}>
               <BsDashLg  className='icon'/>
               <TextInfo>{item.content}</TextInfo>
             </WelcomeContent>
             )}
+            </ItemBody>
+
+
 
           </WelcomeInfo>
           {/* <WelcomeSubText theme={theme}>
@@ -963,6 +967,8 @@ const ItemTextSlash = styled.div`
 const Image = styled.img`
   width: 10px;
   margin-right: 5px;
+  position: relative;
+  bottom: -2px;
 `
 
 
@@ -1080,8 +1086,12 @@ const WelcomeItem = styled(ItemVV2)`
   display:flex;
   justify-content :center;
   margin: auto auto;
-  @media (max-width: 1200px) {
+  @media (max-width: 768px) {
     width: auto;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1060px){
+    width: 95%;
   }
   
 `
@@ -1097,6 +1107,19 @@ const WelcomeContent = styled.div`
     transform: rotate(-60deg);
     color: #D53893;
     min-width: 17px;
+  }
+  
+`
+
+const ItemBody = styled.div`
+  @media (min-width: 768px) and (max-height: 800px) {
+    overflow-y: scroll;
+    height: 300px;
+  }
+
+  @media (min-width: 768px) and (max-height: 650px) {
+    overflow-y: scroll;
+    height: 150px;
   }
 `
 
@@ -1142,7 +1165,7 @@ const WelcomeText = styled(SpanV2)`
   width: 100%;
   color: ${(props) => props.theme.default.color};
   letter-spacing: -0.03em;
-  @media (max-width: 1200px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;
@@ -1154,7 +1177,7 @@ const WelcomeInfo = styled.div`
   width: 100%;
   padding: 30px 20px;
   border-radius: 28px;
-  @media (max-width: 1200px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `
