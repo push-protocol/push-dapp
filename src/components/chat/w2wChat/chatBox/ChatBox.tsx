@@ -798,7 +798,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
                           {i === 0 && intents?.length === 2 &&(<ItemText>
                             <Image src={Lock} />
-                            Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://push.org'> Click to learn more.</ItemLink></ItemText>)}
+                            Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://push.org' target={'_blank'}> Click to learn more.</ItemLink></ItemText>)}
 
                             {i === 0 && intents?.length === 1 &&(<ItemTextSlash>
                             <Image src={LockSlash} />
