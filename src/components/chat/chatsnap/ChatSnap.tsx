@@ -20,7 +20,7 @@ export interface ChatSnapMsgI {
 }
 
 interface ChatSnapPropsI {
-  pfp: string,
+  ensAvatar ?? pfp: string,
   username: string,
   chatSnapMsg: ChatSnapMsgI,
   timestamp: number,
@@ -29,12 +29,12 @@ interface ChatSnapPropsI {
 }
 
 // Other Information section
-const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
+const ChatSnap = ({ ensAvatar ?? pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
   // get theme
   const theme = useTheme();
 
   // get ens name
-  const ensName = useResolveEns(username);
+  const {ensName, ensAvatar } = useResolveEns(username);
   // get reverse name
  
 
@@ -86,7 +86,8 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
       hoverBackground={selected ? theme.chat.snapFocusBg : 'transparent'}
     >
       <ItemVV2 width="48px" maxWidth="48px" borderRadius="100%" overflow="hidden" margin="0 5px 0 0">
-        <ImageV2 alt={`Profile pic of ${username}`} src={pfp} />
+        {/* Check if ensAvatar is available, if use use it, else use the default pfp */}
+        <ImageV2 alt={`Profile pic of ${username}`} src={ensAvatar ?? pfp} />
       </ItemVV2>
 
       <ItemVV2 margin="0 0 0 5px">

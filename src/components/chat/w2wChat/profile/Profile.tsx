@@ -10,12 +10,16 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'sections/chat/ChatMainSection';
 import styled, { useTheme } from 'styled-components';
 import styles from './styles';
+//bring in useResolveEns hook
+import { useResolveEns } from 'hooks/useResolveEns';
 
 const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
   const { connectedUser } = useContext(Context);
+  //destructuring the useResolveEns hook to get ensName and ensAvatar
+  const { ensName, ensAvatar } = useResolveEns(connectedUser.wallets);
 
   return (
     <>
@@ -34,7 +38,8 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
         >
           <ImageV2
             alt="Profile"
-            src={connectedUser.profilePicture}
+            //if ensAvatar is not null, use ensAvatar, else use the default avatar
+            src={ensAvatar ?? connectedUser.profilePicture}
           />
         </ItemVV2>
         <SpanV2
@@ -42,7 +47,8 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
+          {/* if ensName is not null, use ensName, else use the sliced address */}
+          {ensName ?? caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}

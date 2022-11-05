@@ -8,8 +8,18 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 // Internal Configs
 import { appConfig } from 'config';
 
-export function useResolveEns(username: string): string {
+//new Return type
+interface ensNameAndAvatar {
+  ensName: string;
+  ensAvatar: string | null;
+}
+
+export function useResolveEns(username: string): ensNameAndAvatar {
   const [ensName, setEnsName] = useState(null);
+  /**
+   * Create new state to store ensAvatar
+   */
+   const [ensAvatar, setEnsAvatar] = useState(null);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   useEffect(() => {
@@ -36,8 +46,21 @@ export function useResolveEns(username: string): string {
           setEnsName(null);
         }
       });
+      /**
+       * Use current provider to check if there is an ensAvatar linked to the address,
+       * if yes, set ensAvatar state to the ensAvatar linked to the checksum address
+       * else, set state to null
+       */
+       provider.getAvatar(checksumWallet).then((avatar) => {
+        if (avatar) {
+          setEnsAvatar(avatar);
+        } else {
+          setEnsAvatar(null);
+        }
+      })
     }
   }, [currentChat]);
 
-  return ensName;
+  //return ensName and ensAvatar instead of just ensName
+  return {ensName, ensAvatar};
 }

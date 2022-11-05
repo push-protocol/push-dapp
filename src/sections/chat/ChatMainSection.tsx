@@ -212,6 +212,7 @@ const ChatMainSection = () => {
         account
       );
       connectedUser = { ...user, privateKey: privateKeyArmored };
+        
     } else {
       connectedUser = {
         // We only need to provide this information when it's a new user
