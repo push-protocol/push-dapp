@@ -89,8 +89,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let showTime = false;
   let time = '';
 
-  // get ens name
-  const ensName = useResolveEns(currentChat?.msg?.name);
+  // get ens name and avatar
+  const { ensName, ensAvatar } = useResolveEns(currentChat?.msg?.name);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -756,7 +756,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 height="48px"
                 width="48px"
                 alt="Profile Picture"
-                src={imageSource}
+                src={ensAvatar || imageSource}
                 borderRadius="100%"
                 overflow="hidden"
               />

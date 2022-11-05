@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'sections/chat/ChatMainSection';
+import { useResolveEns } from 'hooks/useResolveEns';
 import styled, { useTheme } from 'styled-components';
 import styles from './styles';
 
@@ -16,6 +17,8 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
   const theme = useTheme();
 
   const { connectedUser } = useContext(Context);
+  // get ens name and avatar
+  const { ensName, ensAvatar } = useResolveEns(connectedUser.wallets);
 
   return (
     <>
@@ -34,7 +37,7 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
         >
           <ImageV2
             alt="Profile"
-            src={connectedUser.profilePicture}
+            src={ensAvatar || connectedUser.profilePicture}
           />
         </ItemVV2>
         <SpanV2
@@ -42,7 +45,7 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
+          {ensName || caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
