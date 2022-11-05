@@ -20,7 +20,7 @@ export interface ChatSnapMsgI {
 }
 
 interface ChatSnapPropsI {
-  ensAvatar ?? pfp: string,
+  pfp: string,
   username: string,
   chatSnapMsg: ChatSnapMsgI,
   timestamp: number,
@@ -29,7 +29,7 @@ interface ChatSnapPropsI {
 }
 
 // Other Information section
-const ChatSnap = ({ ensAvatar ?? pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
+const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
   // get theme
   const theme = useTheme();
 
