@@ -13,7 +13,7 @@ import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
-import {BsDashLg} from 'react-icons/bs'
+import { BsDashLg } from 'react-icons/bs';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
@@ -31,8 +31,8 @@ import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP
 import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
-import Lock from '../../../../assets/Lock.png'
-import LockSlash from '../../../../assets/LockSlash.png'
+import Lock from '../../../../assets/Lock.png';
+import LockSlash from '../../../../assets/LockSlash.png';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -89,8 +89,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let showTime = false;
   let time = '';
 
-  // get ens name and ensAvatar
-  const { ensName, ensAvatar } = useResolveEns(currentChat?.msg?.name);
+  // get ens name and avatar
+  const [ensName, ensAvatar] = useResolveEns(currentChat?.msg?.name);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -254,7 +254,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
-  const fetchInboxApi = async (createdUser:ConnectedUser): Promise<Feeds> => {
+  const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
@@ -633,8 +633,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             ),
           });
         }
-      } 
-      
+      }
+
       setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
@@ -652,24 +652,28 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-
   const InfoMessages = [
-    {id: 1, content: 'You can send up to 10 chat requests in alpha'},
-  {id: 2, content: 'You can send a chat request to anyone including non-whitelisted users'},
-  {id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.'},
-  {id: 4, content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted'},
-  {id: 5, content: 'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.'},
-  {id: 6, content: 'Access to more chat requests and messages will be added in the near future'},
-  ]
+    { id: 1, content: 'You can send up to 10 chat requests in alpha' },
+    { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
+    { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
+    {
+      id: 4,
+      content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
+    },
+    {
+      id: 5,
+      content:
+        'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.',
+    },
+    { id: 6, content: 'Access to more chat requests and messages will be added in the near future' },
+  ];
 
   return (
     <Container>
       {!viewChatBox ? (
         <WelcomeItem gap="25px">
           <WelcomeMainText theme={theme}>
-            <WelcomeText>
-            Say
-            </WelcomeText>
+            <WelcomeText>Say</WelcomeText>
             <ImageV2
               src={HandwaveIcon}
               alt="wave"
@@ -677,28 +681,34 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               width="auto"
               verticalAlign="middle"
               margin="0 13px"
-            /> 
-            <WelcomeText>
-            to Push Chat
-            </WelcomeText>
+            />
+            <WelcomeText>to Push Chat</WelcomeText>
           </WelcomeMainText>
-          
+
           <WelcomeInfo>
-            <SpanV2 fontWeight='500' fontSize='15px' lineHeight='130%'>Push Chat is in alpha and things might break.</SpanV2>
+            <SpanV2
+              fontWeight="500"
+              fontSize="15px"
+              lineHeight="130%"
+            >
+              Push Chat is in alpha and things might break.
+            </SpanV2>
 
-            <Atag href={'https://discord.gg/pushprotocol'} target='_blank'>We would love to hear your feedback</Atag>
-            
+            <Atag
+              href={'https://discord.gg/pushprotocol'}
+              target="_blank"
+            >
+              We would love to hear your feedback
+            </Atag>
+
             <ItemBody>
-            {InfoMessages.map((item) => 
-              <WelcomeContent key={item.id}>
-              <BsDashLg  className='icon'/>
-              <TextInfo>{item.content}</TextInfo>
-            </WelcomeContent>
-            )}
+              {InfoMessages.map((item) => (
+                <WelcomeContent key={item.id}>
+                  <BsDashLg className="icon" />
+                  <TextInfo>{item.content}</TextInfo>
+                </WelcomeContent>
+              ))}
             </ItemBody>
-
-
-
           </WelcomeInfo>
           {/* <WelcomeSubText theme={theme}>
             You haven’t started a conversation yet. Start a new chat by using the + button
@@ -756,7 +766,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 height="48px"
                 width="48px"
                 alt="Profile Picture"
-                // if ensAvatar is not null, use it, else use the default aimage
                 src={ensAvatar ?? imageSource}
                 borderRadius="100%"
                 overflow="hidden"
@@ -824,24 +833,36 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                         time = dateString;
                       }
                     }
-                    let intents = currentChat?.intent?.split('+')
+                    let intents = currentChat?.intent?.split('+');
                     return (
                       <div key={i}>
-                        {!showTime ? null : <Item>
-                          <MessageTime>{time}</ MessageTime>
+                        {!showTime ? null : (
+                          <Item>
+                            <MessageTime>{time}</MessageTime>
 
-                          {i === 0 && intents?.length === 2 &&(<ItemText>
-                            <Image src={Lock} />
-                            Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://docs.push.org/developers/concepts/push-chat-for-web3#encryption' target={'_blank'}> Click to learn more.</ItemLink></ItemText>)}
+                            {i === 0 && intents?.length === 2 && (
+                              <ItemText>
+                                <Image src={Lock} />
+                                Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
+                                <ItemLink
+                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                                  target={'_blank'}
+                                >
+                                  {' '}
+                                  Click to learn more.
+                                </ItemLink>
+                              </ItemText>
+                            )}
 
-                            {i === 0 && intents?.length === 1 &&(<ItemTextSlash>
-                            <Image src={LockSlash} />
-                            Messages are not encrypted till the user accepts the chat request.
-                            </ItemTextSlash>)}
-                        </Item>}
+                            {i === 0 && intents?.length === 1 && (
+                              <ItemTextSlash>
+                                <Image src={LockSlash} />
+                                Messages are not encrypted till the user accepts the chat request.
+                              </ItemTextSlash>
+                            )}
+                          </Item>
+                        )}
 
-                        
-                        
                         <Chats
                           msg={msg}
                           caip10={walletToCAIP10({ account, chainId })}
@@ -851,15 +872,18 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     );
                   })}
                   {messages && messages?.length === 0 && (
-                          <Item margin="30px 0px">
-                            <ItemTextSlash>
-                            <Image src={LockSlash} />
-                            Messages are not encrypted till the user accepts the chat request.
-                            </ItemTextSlash>
-                            
-                            <FirstTime>This is your first conversation with recipient.<br></br> Start the conversation by sending a message.</FirstTime>
-                            </Item>
-                        )}
+                    <Item margin="30px 0px">
+                      <ItemTextSlash>
+                        <Image src={LockSlash} />
+                        Messages are not encrypted till the user accepts the chat request.
+                      </ItemTextSlash>
+
+                      <FirstTime>
+                        This is your first conversation with recipient.<br></br> Start the conversation by sending a
+                        message.
+                      </FirstTime>
+                    </Item>
+                  )}
                   {receivedIntents.find(
                     (x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did
                   )?.threadhash && (
@@ -933,7 +957,7 @@ const ItemText = styled.div`
   background-color: ${(props) => props.theme.default.bg};
   padding: 10px;
   border-radius: 14px;
-  text-align:center;
+  text-align: center;
   margin-bottom: 10px;
 
   @media (max-width: 1250px) {
@@ -954,7 +978,7 @@ const ItemTextSlash = styled.div`
   background-color: ${(props) => props.theme.default.bg};
   padding: 10px;
   border-radius: 14px;
-  text-align:center;
+  text-align: center;
   margin-bottom: 10px;
 
   @media (max-width: 1250px) {
@@ -970,8 +994,7 @@ const Image = styled.img`
   margin-right: 5px;
   position: relative;
   bottom: -2px;
-`
-
+`;
 
 const MessageTime = styled(ItemHV2)`
   width: 100%;
@@ -1084,18 +1107,17 @@ const HelloBox = styled(Box)`
 
 const WelcomeItem = styled(ItemVV2)`
   width: 369px;
-  display:flex;
-  justify-content :center;
+  display: flex;
+  justify-content: center;
   margin: auto auto;
   @media (max-width: 768px) {
     width: auto;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px){
+  @media (min-width: 1000px) and (max-width: 1060px) {
     width: 95%;
   }
-  
-`
+`;
 
 const WelcomeContent = styled.div`
   width: 304px;
@@ -1106,11 +1128,10 @@ const WelcomeContent = styled.div`
   margin: 10px auto;
   .icon {
     transform: rotate(-60deg);
-    color: #D53893;
+    color: #d53893;
     min-width: 17px;
   }
-  
-`
+`;
 
 const ItemBody = styled.div`
   @media (min-width: 768px) and (max-height: 800px) {
@@ -1122,16 +1143,16 @@ const ItemBody = styled.div`
     overflow-y: scroll;
     height: 150px;
   }
-`
+`;
 
 const TextInfo = styled.div`
-  align-items:center;
+  align-items: center;
   font-weight: 400;
   font-size: 15px;
   line-height: 130%;
   color: ${(props) => props.theme.default.secondaryColor};
   width: 274px;
-`
+`;
 
 const WelcomeMainText = styled(SpanV2)`
   background: ${(props) => props.theme.default.bg};
@@ -1173,7 +1194,7 @@ const WelcomeText = styled(SpanV2)`
 
 const WelcomeInfo = styled.div`
   background: ${(props) => props.theme.default.bg};
-  display:flex;
+  display: flex;
   flex-direction: column;
   width: 100%;
   padding: 30px 20px;
@@ -1181,17 +1202,17 @@ const WelcomeInfo = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const Atag = styled.a`
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 130%;
-    text-align: center;
-    color: #D53893;
-    cursor: pointer;
-    margin-bottom: 20px;
-`
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 130%;
+  text-align: center;
+  color: #d53893;
+  cursor: pointer;
+  margin-bottom: 20px;
+`;
 
 const WelcomeSubText = styled(SpanV2)`
   font-size: 15px;
@@ -1239,7 +1260,7 @@ const CustomScrollContent = styled(ScrollToBottom)`
     background: #cf1c84;
     border-radius: 10px;
   }
-`
+`;
 
 const FileUploadLoaderContainer = styled.div`
   border: none;
@@ -1248,6 +1269,6 @@ const FileUploadLoaderContainer = styled.div`
   background-color: transparent;
   margin-right: 2rem;
   color: rgb(58, 103, 137);
-`
+`;
 
 export default ChatBox;

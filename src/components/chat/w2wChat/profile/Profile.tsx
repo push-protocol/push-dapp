@@ -44,7 +44,6 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {/* if ensName is not null, use ensName, else use the sliced address */}
           {ensName ?? caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
         </SpanV2>
       </WalletDetailsContainer>
