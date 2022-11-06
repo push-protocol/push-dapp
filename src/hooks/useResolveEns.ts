@@ -8,10 +8,12 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 // Internal Configs
 import { appConfig } from 'config';
 
-export function useResolveEns(username: string): string {
-  const [ensName, setEnsName] = useState(null);
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
 
+
+export function useResolveEns(username: string):string[]{
+  const [ensName, setEnsName] = useState(null);
+  const [ensAvatar, setEnsAvatar] = useState(null);
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
   useEffect(() => {
     if (username) {
       const walletLowercase = caip10ToWallet(username).toLowerCase();
@@ -36,8 +38,16 @@ export function useResolveEns(username: string): string {
           setEnsName(null);
         }
       });
+   
+       provider.getAvatar(checksumWallet).then((avatar) => {
+        if (avatar) {
+          setEnsAvatar(avatar);
+        } else {
+          setEnsAvatar(null);
+        }
+      }).catch(setEnsName(null))
     }
   }, [currentChat]);
 
-  return ensName;
+  return [ensName, ensAvatar];
 }

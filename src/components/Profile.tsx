@@ -39,7 +39,7 @@ function Profile() {
 
     }
   }, [account]);
-
+  
   // to create blockies
 
   return (
