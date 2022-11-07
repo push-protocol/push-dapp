@@ -37,7 +37,7 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
         >
           <ImageV2
             alt="Profile"
-            src={ensAvatar || connectedUser.profilePicture}
+            src={ensAvatar ?? connectedUser.profilePicture}
           />
         </ItemVV2>
         <SpanV2

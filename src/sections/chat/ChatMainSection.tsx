@@ -34,6 +34,7 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { useResolveEns } from 'hooks/useResolveEns';
 
 export interface InboxChat {
   name: string;
@@ -109,6 +110,7 @@ const ChatMainSection = () => {
   const { connector, account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
+  const { ensAvatar } = useResolveEns(account);
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
@@ -157,7 +159,7 @@ const ChatMainSection = () => {
         toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 2,
-      })
+      });
     }
   }, [call]);
 
@@ -169,10 +171,10 @@ const ChatMainSection = () => {
         toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 3,
-      })
+      });
     }
   }, [callAccepted]);
-  
+
 
   // Rest of the loading logic
   useEffect(() => {
@@ -216,7 +218,7 @@ const ChatMainSection = () => {
       connectedUser = {
         // We only need to provide this information when it's a new user
         name: 'john-snow',
-        profilePicture:
+        profilePicture: ensAvatar ??
           'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
         wallets: caip10,
         ///

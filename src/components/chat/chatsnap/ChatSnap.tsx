@@ -86,7 +86,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
       hoverBackground={selected ? theme.chat.snapFocusBg : 'transparent'}
     >
       <ItemVV2 width="48px" maxWidth="48px" borderRadius="100%" overflow="hidden" margin="0 5px 0 0">
-        <ImageV2 alt={`Profile pic of ${username}`} src={ensAvatar || pfp} />
+        <ImageV2 alt={`Profile pic of ${username}`} src={ensAvatar ?? pfp} />
       </ItemVV2>
 
       <ItemVV2 margin="0 0 0 5px">

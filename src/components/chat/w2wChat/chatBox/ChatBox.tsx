@@ -756,7 +756,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 height="48px"
                 width="48px"
                 alt="Profile Picture"
-                src={ensAvatar || imageSource}
+                src={ensAvatar ?? imageSource}
                 borderRadius="100%"
                 overflow="hidden"
               />

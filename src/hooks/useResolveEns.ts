@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
-import { useContext,useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 // Internal Components
 import { caip10ToWallet } from 'helpers/w2w';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
@@ -9,8 +9,8 @@ import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import { appConfig } from 'config';
 
 interface ENSData {
-  ensName: string,
-  ensAvatar: string | null
+  ensName: string;
+  ensAvatar: string | null;
 }
 
 export function useResolveEns(username: string): ENSData {
@@ -43,13 +43,7 @@ export function useResolveEns(username: string): ENSData {
         }
       });
       // Check if the user has an ens avatar. If so, set it.
-      provider.getAvatar(checksumWallet).then((avatar) => {
-        if (avatar) {
-          setEnsAvatar(avatar);
-        } else {
-          setEnsAvatar(null);
-        }
-      });
+      provider.getAvatar(checksumWallet).then((avatar: string | null) => avatar && setEnsAvatar(avatar));
     }
   }, [currentChat]);
 
