@@ -212,12 +212,12 @@ const ChatMainSection = () => {
         account
       );
       connectedUser = { ...user, privateKey: privateKeyArmored };
-        
     } else {
+      const ensAvatar = await library.getAvatar(account);
       connectedUser = {
         // We only need to provide this information when it's a new user
         name: 'john-snow',
-        profilePicture:
+        profilePicture: ensAvatar ??
           'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
         wallets: caip10,
         ///
