@@ -19,7 +19,7 @@ export function useResolveEns(username: string): ensNameAndAvatar {
   /**
    * Create new state to store ensAvatar
    */
-   const [ensAvatar, setEnsAvatar] = useState(null);
+   const [ensAvatar, setEnsAvatar] = useState<string | null>(null);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
 
   useEffect(() => {
@@ -51,13 +51,7 @@ export function useResolveEns(username: string): ensNameAndAvatar {
        * if yes, set ensAvatar state to the ensAvatar linked to the checksum address
        * else, set state to null
        */
-       provider.getAvatar(checksumWallet).then((avatar) => {
-        if (avatar) {
-          setEnsAvatar(avatar);
-        } else {
-          setEnsAvatar(null);
-        }
-      })
+       provider.getAvatar(checksumWallet).then((avatar) => avatar ? setEnsAvatar(avatar) : setEnsAvatar(null)).catch((err) => setEnsAvatar(null))
     }
   }, [currentChat]);
 
