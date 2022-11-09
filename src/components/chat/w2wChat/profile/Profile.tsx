@@ -10,12 +10,14 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'sections/chat/ChatMainSection';
 import styled, { useTheme } from 'styled-components';
 import styles from './styles';
+import { useResolveEns } from 'hooks';
 
 const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
   const { connectedUser } = useContext(Context);
+  const [ensName, ensAvatar] = useResolveEns(connectedUser.wallets);
 
   return (
     <>
@@ -34,7 +36,7 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
         >
           <ImageV2
             alt="Profile"
-            src={connectedUser.profilePicture}
+            src={ensAvatar ?? connectedUser.profilePicture}
           />
         </ItemVV2>
         <SpanV2

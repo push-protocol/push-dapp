@@ -200,6 +200,7 @@ const ChatMainSection = () => {
       throw Error('Invalid DID');
     }
 
+    const ensAvatar = await library.getAvatar(account);
     // new user might not have a private key
     if (user && user.encryptedPrivateKey) {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
@@ -211,12 +212,13 @@ const ChatMainSection = () => {
         user.encryptedPrivateKey,
         account
       );
-      connectedUser = { ...user, privateKey: privateKeyArmored };
+      const profilePicture = ensAvatar ?? user.profilePicture;
+      connectedUser = { ...user, privateKey: privateKeyArmored, profilePicture };
     } else {
       connectedUser = {
         // We only need to provide this information when it's a new user
         name: 'john-snow',
-        profilePicture:
+        profilePicture: ensAvatar ?? 
           'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
         wallets: caip10,
         ///
@@ -233,7 +235,6 @@ const ChatMainSection = () => {
         privateKey: '',
       };
     }
-
     setBlockedLoading({
       enabled: false,
       title: "Step 4/4: Let's Chat ;)",

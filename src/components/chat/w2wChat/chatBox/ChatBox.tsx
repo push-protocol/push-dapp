@@ -90,7 +90,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let time = '';
 
   // get ens name
-  const ensName = useResolveEns(currentChat?.msg?.name);
+  const {ensName, ensAvatar} = useResolveEns(currentChat?.msg?.name);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -667,9 +667,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       {!viewChatBox ? (
         <WelcomeItem gap="25px">
           <WelcomeMainText theme={theme}>
-            <WelcomeText>
-            Say
-            </WelcomeText>
+            <WelcomeText>Say</WelcomeText>
             <ImageV2
               src={HandwaveIcon}
               alt="wave"
@@ -677,28 +675,34 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               width="auto"
               verticalAlign="middle"
               margin="0 13px"
-            /> 
-            <WelcomeText>
-            to Push Chat
-            </WelcomeText>
+            />
+            <WelcomeText>to Push Chat</WelcomeText>
           </WelcomeMainText>
-          
+
           <WelcomeInfo>
-            <SpanV2 fontWeight='500' fontSize='15px' lineHeight='130%'>Push Chat is in alpha and things might break.</SpanV2>
+            <SpanV2
+              fontWeight="500"
+              fontSize="15px"
+              lineHeight="130%"
+            >
+              Push Chat is in alpha and things might break.
+            </SpanV2>
 
-            <Atag href={'https://discord.gg/pushprotocol'} target='_blank'>We would love to hear your feedback</Atag>
-            
+            <Atag
+              href={'https://discord.gg/pushprotocol'}
+              target="_blank"
+            >
+              We would love to hear your feedback
+            </Atag>
+
             <ItemBody>
-            {InfoMessages.map((item) => 
-              <WelcomeContent key={item.id}>
-              <BsDashLg  className='icon'/>
-              <TextInfo>{item.content}</TextInfo>
-            </WelcomeContent>
-            )}
+              {InfoMessages.map((item) => (
+                <WelcomeContent key={item.id}>
+                  <BsDashLg className="icon" />
+                  <TextInfo>{item.content}</TextInfo>
+                </WelcomeContent>
+              ))}
             </ItemBody>
-
-
-
           </WelcomeInfo>
           {/* <WelcomeSubText theme={theme}>
             You haven’t started a conversation yet. Start a new chat by using the + button
@@ -756,7 +760,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 height="48px"
                 width="48px"
                 alt="Profile Picture"
-                src={imageSource}
+                src={ensAvatar ?? imageSource}
                 borderRadius="100%"
                 overflow="hidden"
               />
@@ -823,24 +827,36 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                         time = dateString;
                       }
                     }
-                    let intents = currentChat?.intent?.split('+')
+                    let intents = currentChat?.intent?.split('+');
                     return (
                       <div key={i}>
-                        {!showTime ? null : <Item>
-                          <MessageTime>{time}</ MessageTime>
+                        {!showTime ? null : (
+                          <Item>
+                            <MessageTime>{time}</MessageTime>
 
-                          {i === 0 && intents?.length === 2 &&(<ItemText>
-                            <Image src={Lock} />
-                            Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://docs.push.org/developers/concepts/push-chat-for-web3#encryption' target={'_blank'}> Click to learn more.</ItemLink></ItemText>)}
+                            {i === 0 && intents?.length === 2 && (
+                              <ItemText>
+                                <Image src={Lock} />
+                                Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
+                                <ItemLink
+                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                                  target={'_blank'}
+                                >
+                                  {' '}
+                                  Click to learn more.
+                                </ItemLink>
+                              </ItemText>
+                            )}
 
-                            {i === 0 && intents?.length === 1 &&(<ItemTextSlash>
-                            <Image src={LockSlash} />
-                            Messages are not encrypted till the user accepts the chat request.
-                            </ItemTextSlash>)}
-                        </Item>}
+                            {i === 0 && intents?.length === 1 && (
+                              <ItemTextSlash>
+                                <Image src={LockSlash} />
+                                Messages are not encrypted till the user accepts the chat request.
+                              </ItemTextSlash>
+                            )}
+                          </Item>
+                        )}
 
-                        
-                        
                         <Chats
                           msg={msg}
                           caip10={walletToCAIP10({ account, chainId })}
@@ -850,15 +866,18 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     );
                   })}
                   {messages && messages?.length === 0 && (
-                          <Item margin="30px 0px">
-                            <ItemTextSlash>
-                            <Image src={LockSlash} />
-                            Messages are not encrypted till the user accepts the chat request.
-                            </ItemTextSlash>
-                            
-                            <FirstTime>This is your first conversation with recipient.<br></br> Start the conversation by sending a message.</FirstTime>
-                            </Item>
-                        )}
+                    <Item margin="30px 0px">
+                      <ItemTextSlash>
+                        <Image src={LockSlash} />
+                        Messages are not encrypted till the user accepts the chat request.
+                      </ItemTextSlash>
+
+                      <FirstTime>
+                        This is your first conversation with recipient.<br></br> Start the conversation by sending a
+                        message.
+                      </FirstTime>
+                    </Item>
+                  )}
                   {receivedIntents.find(
                     (x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did
                   )?.threadhash && (
