@@ -808,7 +808,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
                     showTime = false;
                     if (i >= 0) {
-                      // console.log("Message",messages)
                       const duration = new Date(messages[i]?.timestamp);
                       const dateString = duration.toDateString();
                       if (dateString !== time || i === 0) {
