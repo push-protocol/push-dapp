@@ -850,7 +850,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid ${(props) => props.theme.default.border};
+  border-top: 1px solid ${(props) => props.theme.default.border};
   border-bottom:none;
   border-left:none;
   border-right:none;
@@ -862,6 +862,10 @@ const Container = styled.div`
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
+    border-bottom: 1px solid ${(props) => props.theme.default.border};
+    border-top:none;
+    border-left:none;
+    border-right:none;
   }
 `;
 
