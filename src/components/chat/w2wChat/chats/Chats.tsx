@@ -9,7 +9,8 @@ import styled from 'styled-components';
 import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
+// import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
+import { MessageIPFS } from 'types/Chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -18,6 +19,7 @@ import './W2wchats.css';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
+
 
 const infura_URL = appConfig.infuraApiUrl;
 interface ChatProps {
@@ -273,7 +275,7 @@ const TextMessage = styled.p`
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
-  font-weigth: 400;
+  font-weight: 400;
   margin: 0px;
 `;
 

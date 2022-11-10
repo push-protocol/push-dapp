@@ -17,7 +17,7 @@ import {BsDashLg} from 'react-icons/bs'
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { approveIntent, ConnectedUser, Feeds, MessageIPFSWithCID, User } from 'api';
+import { approveIntent } from 'api';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
@@ -28,11 +28,14 @@ import { useResolveEns } from 'hooks/useResolveEns';
 import { AppContext, Context } from 'sections/chat/ChatMainSection';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
-import { fetchInbox, fetchIntent, MessageIPFS } from 'helpers/w2w/ipfs';
+import { fetchInbox, fetchIntent } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png'
 import LockSlash from '../../../../assets/LockSlash.png'
+
+//Importing Interfaces
+import { ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/Chat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -41,6 +44,7 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
+
 
 const INFURA_URL = appConfig.infuraApiUrl;
 

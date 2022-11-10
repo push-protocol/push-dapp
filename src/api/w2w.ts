@@ -1,8 +1,9 @@
 import { InboxChat, ToastPosition } from 'sections/chat/ChatMainSection';
 // @ts-ignore
 import { appConfig } from 'config';
-import { MessageIPFS } from 'helpers/w2w/ipfs';
+// import { MessageIPFS } from 'helpers/w2w/ipfs';
 import { toast } from 'react-toastify';
+import { Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/Chat';
 
 let BASE_URL = appConfig.apiUrl;
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
@@ -11,46 +12,46 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
   BASE_URL = appConfig.apiUrl;
 }
 
-export interface Feeds {
-  // This property contains all the info to be displayed on the sidebar for the other peer's information
-  // Such as the decrypted message content and peer's profilePicture
-  msg: InboxChat;
-  did: string;
-  wallets: string;
-  profilePicture: string | null;
-  publicKey: string | null;
-  about: string | null;
-  threadhash: string | null;
-  intent: string | null;
-  intentSentBy: string | null;
-  intentTimestamp: Date;
-  combinedDID: string;
-  cid: string;
-}
+// export interface Feeds {
+//   // This property contains all the info to be displayed on the sidebar for the other peer's information
+//   // Such as the decrypted message content and peer's profilePicture
+//   msg: InboxChat;
+//   did: string;
+//   wallets: string;
+//   profilePicture: string | null;
+//   publicKey: string | null;
+//   about: string | null;
+//   threadhash: string | null;
+//   intent: string | null;
+//   intentSentBy: string | null;
+//   intentTimestamp: Date;
+//   combinedDID: string;
+//   cid: string;
+// }
 
-export interface User {
-  did: string;
-  wallets: string;
-  profilePicture: string | null;
-  publicKey: string;
-  encryptedPrivateKey: string;
-  encryptionType: string;
-  signature: string;
-  sigType: string;
-  about: string | null;
-  name: string | null;
-  numMsg: number;
-  allowedNumMsg: number;
-  linkedListHash?: string | null;
-}
+// export interface User {
+//   did: string;
+//   wallets: string;
+//   profilePicture: string | null;
+//   publicKey: string;
+//   encryptedPrivateKey: string;
+//   encryptionType: string;
+//   signature: string;
+//   sigType: string;
+//   about: string | null;
+//   name: string | null;
+//   numMsg: number;
+//   allowedNumMsg: number;
+//   linkedListHash?: string | null;
+// }
 
-export interface ConnectedUser extends User {
-  privateKey: string | null;
-}
+// export interface ConnectedUser extends User {
+//   privateKey: string | null;
+// }
 
-export interface MessageIPFSWithCID extends MessageIPFS {
-  cid: string;
-}
+// export interface MessageIPFSWithCID extends MessageIPFS {
+//   cid: string;
+// }
 
 // Done
 export const getInbox = async (did: string): Promise<Feeds[]> => {

@@ -20,7 +20,8 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { ConnectedUser, Feeds, User } from 'api';
+// import { ConnectedUser, Feeds, User } from 'api';
+import { ConnectedUser, Feeds, User } from 'types/Chat';
 import LoaderSpinner, {
   LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
   PROGRESS_POSITIONING
@@ -34,6 +35,7 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+
 
 export interface InboxChat {
   name: string;

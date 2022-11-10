@@ -1,20 +1,21 @@
-import { Feeds, getFromIPFS, getInbox } from "api"
+import {  getFromIPFS, getInbox } from "api"
 import { InboxChat } from "sections/chat/ChatMainSection"
+import { Feeds, MessageIPFS } from "types/Chat"
 
-export interface MessageIPFS {
-  fromCAIP10: string
-  toCAIP10: string
-  fromDID: string
-  toDID: string
-  messageType: string
-  messageContent: string
-  signature: string
-  sigType: string
-  link: string | null
-  timestamp?: number
-  encType: string
-  encryptedSecret: string
-}
+// export interface MessageIPFS {
+//   fromCAIP10: string
+//   toCAIP10: string
+//   fromDID: string
+//   toDID: string
+//   messageType: string
+//   messageContent: string
+//   signature: string
+//   sigType: string
+//   link: string | null
+//   timestamp?: number
+//   encType: string
+//   encryptedSecret: string
+// }
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {

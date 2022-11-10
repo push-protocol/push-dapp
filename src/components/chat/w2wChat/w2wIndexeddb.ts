@@ -1,5 +1,6 @@
-import { Feeds } from 'api';
-import { MessageIPFS } from 'helpers/w2w/ipfs';
+// import { Feeds } from 'api';
+import { Feeds, MessageIPFS } from 'types/Chat';
+// import { MessageIPFS } from 'helpers/w2w/ipfs';
 
 let db: IDBDatabase;
 
