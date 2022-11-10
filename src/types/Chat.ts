@@ -1,5 +1,3 @@
-import { InboxChat } from "sections/chat/ChatMainSection"
-
 export interface MessageIPFS {
     fromCAIP10: string
     toCAIP10: string
@@ -54,5 +52,61 @@ export interface Feeds {
     intentTimestamp: Date;
     combinedDID: string;
     cid: string;
+}
+
+export interface InboxChat {
+    name: string;
+    profilePicture: string;
+    timestamp: number;
+    fromDID: string;
+    toDID: string;
+    fromCAIP10: string;
+    toCAIP10: string;
+    lastMessage: string;
+    messageType: string;
+    encType: string;
+    signature: string;
+    signatureType: string;
+    encryptedSecret: string;
+}
+
+export interface BlockedLoadingI {
+    enabled: boolean;
+    title: string;
+    spinnerEnabled?: boolean;
+    spinnerSize?: number;
+    spinnerType?: number;
+    progressEnabled?: boolean;
+    progress?: number;
+    progressNotice?: string;
+}
+
+export interface AppContext {
+    currentChat: Feeds;
+    viewChatBox: boolean;
+    receivedIntents: Feeds[];
+    setReceivedIntents: (rIntent: Feeds[]) => void;
+    // did: DID;
+    // setDID: (did: DID) => void;
+    setSearchedUser: (searched: string) => void;
+    searchedUser: string;
+    setChat: (feed: Feeds) => void;
+    connectedUser: ConnectedUser;
+    setConnectedUser: (user: ConnectedUser) => void;
+    intents: Feeds[];
+    setIntents: (intents: Feeds[]) => void;
+    inbox: Feeds[];
+    setInbox: (inbox: Feeds[]) => void;
+    pendingRequests: number;
+    setPendingRequests: (pending: number) => void;
+    hasUserBeenSearched: boolean;
+    setHasUserBeenSearched: (searched: boolean) => void;
+    loadingMessage: string;
+    setLoadingMessage: (loadingMessage: string) => void;
+    setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
+    activeTab: number;
+    setActiveTab: (active: number) => void;
+    userShouldBeSearched: boolean;
+    setUserShouldBeSearched: (value: boolean) => void;
 }
 

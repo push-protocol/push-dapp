@@ -9,12 +9,14 @@ import Picker from 'emoji-picker-react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'sections/chat/ChatMainSection';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
+import { AppContext } from 'types/Chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
+
 
 interface ITypeBar {
   messageBeingSent: boolean;

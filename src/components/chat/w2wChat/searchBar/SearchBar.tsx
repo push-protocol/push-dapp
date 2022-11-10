@@ -13,15 +13,16 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { User } from 'api';
+// import { User } from 'api';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import {  Context } from 'sections/chat/ChatMainSection';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
+import { AppContext, User } from 'types/Chat';
 
 // Internal Configs
 

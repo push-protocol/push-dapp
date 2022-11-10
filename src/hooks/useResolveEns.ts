@@ -3,7 +3,8 @@ import { ethers } from 'ethers';
 import { useContext,useEffect, useState } from 'react';
 // Internal Components
 import { caip10ToWallet } from 'helpers/w2w';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import {  Context } from 'sections/chat/ChatMainSection';
+import { AppContext } from 'types/Chat';
 
 // Internal Configs
 import { appConfig } from 'config';

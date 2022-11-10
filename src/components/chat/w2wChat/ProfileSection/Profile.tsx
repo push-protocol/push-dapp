@@ -15,13 +15,14 @@ import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
 import { CID } from 'ipfs-http-client'
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext, Context } from 'sections/chat/ChatMainSection'
+import {  Context } from 'sections/chat/ChatMainSection'
 import { showCharacters } from './helpers'
 import './Profile.css'
 
 import { ChangeEvent } from 'react'
 import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
+import { AppContext } from 'types/Chat'
 
 interface ProfilePropsType {
   profilePicture: string

@@ -21,7 +21,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import * as PushNodeClient from 'api';
 // import { ConnectedUser, Feeds, User } from 'api';
-import { ConnectedUser, Feeds, User } from 'types/Chat';
+import { AppContext, BlockedLoadingI, ConnectedUser, Feeds, User } from 'types/Chat';
 import LoaderSpinner, {
   LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
   PROGRESS_POSITIONING
@@ -35,63 +35,6 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
-
-
-export interface InboxChat {
-  name: string;
-  profilePicture: string;
-  timestamp: number;
-  fromDID: string;
-  toDID: string;
-  fromCAIP10: string;
-  toCAIP10: string;
-  lastMessage: string;
-  messageType: string;
-  encType: string;
-  signature: string;
-  signatureType: string;
-  encryptedSecret: string;
-}
-
-export interface BlockedLoadingI {
-  enabled: boolean;
-  title: string;
-  spinnerEnabled?: boolean;
-  spinnerSize?: number;
-  spinnerType?: number;
-  progressEnabled?: boolean;
-  progress?: number;
-  progressNotice?: string;
-}
-
-export interface AppContext {
-  currentChat: Feeds;
-  viewChatBox: boolean;
-  receivedIntents: Feeds[];
-  setReceivedIntents: (rIntent: Feeds[]) => void;
-  // did: DID;
-  // setDID: (did: DID) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
-  setChat: (feed: Feeds) => void;
-  connectedUser: ConnectedUser;
-  setConnectedUser: (user: ConnectedUser) => void;
-  intents: Feeds[];
-  setIntents: (intents: Feeds[]) => void;
-  inbox: Feeds[];
-  setInbox: (inbox: Feeds[]) => void;
-  pendingRequests: number;
-  setPendingRequests: (pending: number) => void;
-  hasUserBeenSearched: boolean;
-  setHasUserBeenSearched: (searched: boolean) => void;
-  loadingMessage: string;
-  setLoadingMessage: (loadingMessage: string) => void;
-  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
-  activeTab: number;
-  setActiveTab: (active: number) => void;
-  userShouldBeSearched: boolean;
-  setUserShouldBeSearched: (value: boolean) => void;
-}
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
