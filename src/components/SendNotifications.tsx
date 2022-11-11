@@ -1447,6 +1447,7 @@ const ToggleOptionContainer = styled(ItemH)`
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: center;
+    margin-top:24px;
   }
 `;
 
@@ -1463,6 +1464,7 @@ const ToggleOption = styled(ItemH)`
   justify-content: space-between;
   @media (max-width: 640px) {
     width: 100%;
+    margin:5px 0px;
   }
 `;
 
