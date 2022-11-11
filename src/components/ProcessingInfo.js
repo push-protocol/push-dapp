@@ -10,9 +10,10 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
 
   return (
     <Section>
-      <TabSpace>
-        {progressInfo}
-      </TabSpace>
+       
+        <TabSpace>
+          {progressInfo}
+        </TabSpace>
 
       <LinearProgress
         sx={{
