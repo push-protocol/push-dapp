@@ -419,17 +419,17 @@ function CreateChannel() {
         <>
           <Section>
             <ItemHere>
-              <Tab type={stepFlow == 0 ? 'active' : 'inactive'} onClick={() => setStepFlow(0)}>
+              <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} onClick={() => setStepFlow(0)}>
                 <div>Staking Info</div>
-                <Step type={stepFlow == 0 ? 'active' : 'inactive'} />
+                <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
-              <Tab type={stepFlow == 1 ? 'active' : 'inactive'} onClick={() => setStepFlow(1)}>
+              <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} onClick={() => setStepFlow(1)}>
                 <div>Channel Info</div>
-                <Step type={stepFlow == 1 ? 'active' : 'inactive'} />
+                <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
-              <Tab type={stepFlow == 2 ? 'active' : 'inactive'} onClick={() => setStepFlow(2)}>
+              <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'} onClick={() => setStepFlow(2)}>
                 <div>Upload Logo</div>
-                <Step type={stepFlow == 2 ? 'active' : 'inactive'} />
+                <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
               </Tab>
               <Line />
             </ItemHere>
@@ -539,13 +539,11 @@ const Step = styled.div`
     type === 'active' &&
     css`
       background: #e20880;
-      // width: 100%;
     `};
 
     ${({ type }) =>
     type === 'inactive' &&
     css`
-      // width: 100%;
     `};
 `;
 
@@ -704,16 +702,23 @@ const Tab = styled.div`
     }
     `};
 
-    ${({ type }) =>
-    type === 'inactive' &&
+  ${({ active }) =>
+    active === 'active' &&
+    css`
+      color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+    ${({ active }) =>
+    active === 'inactive' &&
     css`
     @media (max-width: 768px) {
       width: 40%;
         div {
-          // visibility: hidden;
           font-size: 0px;
             @media (max-width: 768px) {
-                // color: transparent;
             }
         }
     }
