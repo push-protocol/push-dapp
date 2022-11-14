@@ -1,0 +1,113 @@
+.gifPciker_Body {
+    background-color: rgb(55, 55, 56);
+    width: 20rem;
+    height: 20rem;
+    position: absolute;
+    border-radius: 5px;
+    color: white;
+    border: 1px solid gray;
+    display: flex;
+    top: -19rem;
+    right: 8rem;
+    flex-direction: column;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.gifPicker_search_body {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.gifPicker_search {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    width: 80%;
+    height: 40px;
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: rgb(116, 115, 115);
+}
+
+.gifPicker_search_input {
+    width: 85%;
+}
+
+.gifPicker_search_input input {
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.text::placeholder {
+    color: white;
+}
+
+.text {
+    width: 100%;
+    color: white;
+
+}
+
+.gifPciker_i {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gifPciker_i i {
+    align-items: flex-start;
+}
+
+/* .gifPciker_Body::-webkit-scrollbar {
+    width: 5px;
+}
+
+.gifPciker_Body::-webkit-scrollbar-track {
+    background: rgb(55, 55, 56);
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+.gifPciker_Body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: transparent;
+} */
+
+.gifPicker_gifs {
+    display: flex;
+    overflow-y: auto;
+    margin-top: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 2;
+    flex-grow: initial;
+}
+
+.gifPicker_gifs::-webkit-scrollbar {
+    width: 7px;
+}
+
+.gifPicker_gifs::-webkit-scrollbar-track {
+    background: rgb(55, 55, 56);
+    border-radius: 10px;
+    opacity: 0.5;
+}
+
+.gifPicker_gifs::-webkit-scrollbar-thumb {
+    background: #ca599b;
+    border-radius: 10px;
+}
+
+.gifPicker_gifs img {
+    flex: 1;
+    cursor: pointer;
+    justify-content: end;
+    max-width: 45%;
+    padding: 5px;
+    height: 50%;
+    object-fit: cover;
+}
