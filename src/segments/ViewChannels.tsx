@@ -414,16 +414,7 @@ const ScrollItem = styled(Item)`
 `;
 
 const SearchContainer = styled(Item)`
-  // min-width: 320px;
   width: 100%;
-
-  @media (max-width: 768px) {
-    // min-width: 320px;
-  }
-
-  @media (max-width: 480px) {
-    // min-width: 210px;
-  }
 `;
 
 // Export Default
