@@ -181,7 +181,6 @@ const AnchorLink = styled.a`
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
-  // width:15em;
   white-space: nowrap;
   margin: 0 2em;
   &:hover {
@@ -219,7 +218,6 @@ const PoolShare = styled(ChannelMetaBox)`
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  // width:16em;
   margin: 0 0 0 2em;
   cursor: pointer;
   white-space: nowrap;

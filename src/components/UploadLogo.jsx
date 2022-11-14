@@ -278,7 +278,6 @@ const Pool = styled.div`
 
 const PoolShare = styled(ChannelMetaBox)`
   background: #e20880;
-  // background: #674c9f;
 `;
 
 const ButtonSpace = styled.div`

@@ -25,7 +25,6 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
           height: "6px",
           borderRadius: "20px",
           ["@media (max-width:600px)"]: {
-            // width: "10em",
             width: "100%",
           },
         }}
@@ -66,12 +65,6 @@ const TabSpace = styled.div`
   font-size: 18px;
   font-weight: 500;
 
-  // @media (max-width: 425px) {
-  //   min-width: 100%;
-  //   font-size: 12px;
-  //   height: auto;
-  //   text-align: center;
-  // }
 
   @media (max-width: 768px) {
     min-width: 100%;
@@ -89,7 +82,6 @@ const TabSpace = styled.div`
 const ItemSpace = styled.div`
   padding: 0px 0px;
   @media (max-width: 500px) {
-    // width: 100%;
     padding: 50px 30px;
   }
 

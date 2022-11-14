@@ -732,7 +732,6 @@ const ItemHere = styled.div`
   align-items: flex-end;
   @media (max-width: 768px) {
     display: flex;
-    // flex-direction: column;
     margin-top: 30px;
   }
   @media (max-width: 1224px) {
