@@ -1,5 +1,7 @@
-import {  getFromIPFS, getInbox } from "api"
-import { Feeds, InboxChat, MessageIPFS } from "types/chat"
+import { getFromIPFS, getInbox} from 'api'
+import { decryptAndVerifySignature } from 'helpers/w2w'
+import { InboxChat } from 'modules/chat/ChatModule'
+import { MessageIPFS,ConnectedUser, Feeds } from 'types/chat'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {
@@ -70,4 +72,38 @@ export const fetchIntent = async ({
   }
   intents = await fetchMessagesFromIPFS(intents)
   return intents
+}
+
+export const formatFileSize = (size: number): string => {
+  const i = Math.floor(Math.log(size) / Math.log(1024))
+  return `${(size / Math.pow(1024, i)).toFixed(1)} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}`
+}
+
+export const decryptFeeds = async ({
+  feeds,
+  connectedUser,
+}: {
+  feeds: Feeds[]
+  connectedUser: ConnectedUser
+}): Promise<Feeds[]> => {
+  for (let feed of feeds) {
+    if (feed.msg.encType !== 'PlainText' && feed.msg.encType !== null) {
+      // To do signature verification it depends on who has sent the message
+      let signatureValidationPubliKey: string
+      if (feed.msg.fromCAIP10 === connectedUser.wallets.split(',')[0]) {
+        signatureValidationPubliKey = connectedUser.publicKey
+      } else {
+        signatureValidationPubliKey = feed.publicKey
+      }
+
+      feed.msg.lastMessage = await decryptAndVerifySignature({
+        cipherText: feed.msg.lastMessage,
+        encryptedSecretKey: feed.msg.encryptedSecret,
+        publicKeyArmored: signatureValidationPubliKey,
+        signatureArmored: feed.msg.signature,
+        privateKeyArmored: connectedUser.privateKey
+      })
+    }
+  }
+  return feeds
 }

@@ -6,7 +6,7 @@ import { io } from 'socket.io-client';
 const VideoCallContext = createContext();
 
 // const socket = io('http://localhost:5000');
-const socket = io('https://warm-wildwood-81069.herokuapp.com');
+// const socket = io('https://warm-wildwood-81069.herokuapp.com');
 
 const VideoCallContextProvider = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState(false);

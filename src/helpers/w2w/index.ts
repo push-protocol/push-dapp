@@ -2,7 +2,8 @@ import * as PGP from './pgp'
 import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'
 import * as AES from './aes'
-import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
+import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'types/chat'
+// import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
 export const walletToCAIP10 = ({ account, chainId }: { account: string; chainId: number }): string => {
   if (account.includes('eip155:')) {
