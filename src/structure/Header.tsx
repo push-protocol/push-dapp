@@ -108,6 +108,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const bellPressed = () => {
     setShowLoginControls(!showLoginControls);
   };
+  
 
   return (
     <Container direction="row" padding="0px 15px">
@@ -131,7 +132,8 @@ function Header({ isDarkMode, darkModeToggle }) {
             </RightBarMobile>
           )}
         </RightBarContainer>
-
+        
+        {/* mobile navbar */}
         {navigationSetup && showNavBar && active && !error && (
           <NavMenuContainer tabletAlign="flex-start">
             <NavMenu>
@@ -250,9 +252,12 @@ const NavMenuContainer = styled(Item)`
   z-index: 1;
   align-items: flex-start;
 
-  background: ${(props) => props.theme.nav.hamburgerBg};
+  background: ${(props) => props.theme.default.bg};
+  // background: white;
   backdrop-filter: blur(30px);
   z-index: 11;
+  width: 300px;
+  box-shadow: 0 0 0 10000px rgba(0,0,0,0.9);
 `;
 
 const NavMenu = styled(Item)`
