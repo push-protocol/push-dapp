@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
-import React, { useRef } from "react";
+import React, { Fragment , useRef } from "react";
 
 // External Packages
 import styled from "styled-components";
@@ -90,10 +90,10 @@ const UploadLogo = ({
   };
 
   return (
-    <Section>
+    <Fragment>
       <Body>
         <Item align="center">
-          <H3 color=" #657795" margin="0px 0px" textTransform="none" weight="500" size="15px" spacing="0.05">
+          <H3 color=" #657795" margin="10px 0px" textTransform="none" weight="500" size="15px" spacing="0.05" textAlign='center'>
           Please upload a PNG, JPG. Crop the image to resize to 128px.  
           </H3>
         </Item>
@@ -128,7 +128,6 @@ const UploadLogo = ({
                       )}
                     </div>
                   ) : (
-                    // <ImageIcon />
                     <BsCloudUpload size={100} color='#8C99B0' style={{marginTop:'30px'}} />
                   )}
 
@@ -251,7 +250,7 @@ const UploadLogo = ({
 
 
       </Body>
-    </Section>
+    </Fragment>
   );
 };
 
@@ -279,7 +278,6 @@ const Pool = styled.div`
 
 const PoolShare = styled(ChannelMetaBox)`
   background: #e20880;
-  // background: #674c9f;
 `;
 
 const ButtonSpace = styled.div`
@@ -291,8 +289,9 @@ const ButtonSpace = styled.div`
 const Body = styled.div`
   margin: 50px auto 0px auto;
   width: 55%; 
-  @media (max-width: 600px) {
-    width: 95%; 
+  @media (max-width: 768px) {
+    min-width: 100%; 
+    margin: 10px auto 0px auto;
   }
   @media (max-width: 1224px) {
     width: 75%; 
@@ -307,7 +306,6 @@ const Space = styled.div`
   line-height: 150%;
   .bordered {
     display: flex;
-    // height: 250px;
     justify-content: center;
     border: 1px dashed #8C99B0;
     align-items: flex-end;
@@ -373,8 +371,9 @@ const Space = styled.div`
       }
       .text-div {
         display: flex;
-        font-size: 1rem;
-        line-height: 1rem;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 140%;
         color: #ccc;
         justify-content: center;
         .labeled {
@@ -388,8 +387,9 @@ const Space = styled.div`
         }
       }
       .text-below {
-        font-size: 1rem;
-        line-height: 1rem;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 140%;
         color: #657795;
         margin-right: 0.3rem;
       }
