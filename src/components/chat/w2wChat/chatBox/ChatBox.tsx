@@ -25,7 +25,7 @@ import * as w2wHelper from 'helpers/w2w/';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import useToast from 'hooks/useToast';
 import { useResolveEns } from 'hooks/useResolveEns';
-import {  Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { fetchInbox, fetchIntent } from 'helpers/w2w/ipfs';

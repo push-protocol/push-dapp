@@ -19,7 +19,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
 import { MdError } from 'react-icons/md';
-import {  Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
 import { AppContext, User } from 'types/Chat';

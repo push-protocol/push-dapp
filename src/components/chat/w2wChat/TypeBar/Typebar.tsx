@@ -9,7 +9,7 @@ import Picker from 'emoji-picker-react';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
 import { AppContext } from 'types/Chat';
