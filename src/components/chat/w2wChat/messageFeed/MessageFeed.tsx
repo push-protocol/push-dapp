@@ -8,7 +8,6 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
-// import { Feeds, User } from 'api';
 import { AppContext, Feeds, User } from 'types/Chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';

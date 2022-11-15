@@ -2,14 +2,11 @@
 import React, { useState } from 'react';
 
 // External Packages
-import cn from 'classnames';
 import styled from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { DID } from 'dids';
 import tickIcon from '../../../../assets/chat/tick.svg';
-// import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
 import { MessageIPFS } from 'types/Chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
@@ -21,7 +18,6 @@ import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 
 
-const infura_URL = appConfig.infuraApiUrl;
 interface ChatProps {
   msg: MessageIPFS;
   caip10: string;

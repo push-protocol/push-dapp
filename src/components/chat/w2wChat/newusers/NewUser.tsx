@@ -13,7 +13,7 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import * as PushNodeClient from 'api';
-import { Feeds, User } from 'api';
+import { Feeds, User } from '../../../../types/Chat';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';

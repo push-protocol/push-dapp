@@ -5,7 +5,7 @@ import React, { ChangeEvent, useContext, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import Picker from 'emoji-picker-react';
 
-// Internal Compoonents
+// Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallInfoI } from 'sections/video/VideoCallSection';

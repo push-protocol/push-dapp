@@ -15,7 +15,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import {BsDashLg} from 'react-icons/bs'
 
-// Internal Compoonents
+// Internal Components
 import * as PushNodeClient from 'api';
 import { approveIntent } from 'api';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -27,7 +27,7 @@ import useToast from 'hooks/useToast';
 import { useResolveEns } from 'hooks/useResolveEns';
 import { Context } from 'modules/chat/ChatModule';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
-import { caip10ToWallet, decryptAndVerifySignature, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
+import { caip10ToWallet, encryptAndSign, walletToCAIP10 } from '../../../../helpers/w2w';
 import { fetchInbox, fetchIntent } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';

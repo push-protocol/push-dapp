@@ -5,8 +5,7 @@ import React, { useContext, useState } from 'react';
 // External Packages
 import styled from 'styled-components';
 
-// Internal Compoonents
-// import { Feeds } from 'api';
+// Internal Components
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
