@@ -5,16 +5,18 @@ import React, { ChangeEvent, useContext, useRef, useState } from 'react';
 import styled, { useTheme } from 'styled-components';
 import Picker from 'emoji-picker-react';
 
-// Internal Compoonents
+// Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { AppContext, Context } from 'modules/chat/ChatModule';
+import { Context } from 'modules/chat/ChatModule';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
+import { AppContext } from 'types/chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
+
 
 interface ITypeBar {
   messageBeingSent: boolean;

@@ -14,10 +14,12 @@ import { ButtonV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStyling
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { MdCall, MdCallEnd } from 'react-icons/md';
-import { BlockedLoadingI } from 'modules/chat/ChatModule';
+import { BlockedLoadingI } from 'types/chat';
+// import { BlockedLoadingI } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
+
 
 // Interface
 export interface VideoCallInfoI {

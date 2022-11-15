@@ -18,7 +18,8 @@ import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
-import { Feeds } from 'api';
+// import { Feeds } from 'api';
+import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { fetchIntent } from 'helpers/w2w/ipfs';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -28,6 +29,7 @@ import { Context } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+
 
 
 // Chat Sections

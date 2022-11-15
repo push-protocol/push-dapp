@@ -1,4 +1,6 @@
-import { ConnectedUser } from "api";
+// import { ConnectedUser } from "api";
+
+import { ConnectedUser } from "types/chat";
 
 export function checkConnectedUser(connectedUser:ConnectedUser): boolean {
   if (
