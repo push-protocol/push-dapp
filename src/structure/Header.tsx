@@ -150,7 +150,7 @@ function Header({ isDarkMode, darkModeToggle }) {
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
-                <MobileNavigation />
+                <MobileNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
               </NavMenuInner>
             </NavMenu>
 

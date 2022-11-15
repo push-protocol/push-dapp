@@ -31,7 +31,7 @@ import GLOBALS from 'config/Globals';
 import MobileNavButton from 'components/MobileNavButton';
 
 // Create Header
-function MobileNavigation() {
+function MobileNavigation({showNavBar,setShowNavBar}) {
   const {
     channelDetails,
     delegatees,
@@ -416,7 +416,7 @@ function MobileNavigation() {
                   mutateTransformedList(section, true);
                 }}
                 id={data.id}>
-                <MobileNavButton item={section} data={data} sectionID={sectionID} active={section.active} bg='transparent' />
+                <MobileNavButton item={section} data={data} sectionID={sectionID} active={section.active} bg='transparent' showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
                
               </SectionInnerGroupContainer>
             </Item>
@@ -453,7 +453,7 @@ function MobileNavigation() {
                     }, 500);
                   }
                 }}>
-                <MobileNavButton item={section} data={data} sectionID={sectionID} active={section.active}
+                <MobileNavButton item={section} data={data} sectionID={sectionID} active={section.active} showNavBar={showNavBar} setShowNavBar={setShowNavBar}
                   bg='transparent' />
               </SectionInnerGroupContainer>
 
@@ -521,7 +521,7 @@ function MobileNavigation() {
                   // console.log(`Clicked  button`);
                   // mutateTransformedList(item)
                 }}>
-                <MobileNavButton item={item} data={data} sectionID={sectionID} active={item.active}
+                <MobileNavButton item={item} data={data} sectionID={sectionID} active={item.active} showNavBar={showNavBar} setShowNavBar={setShowNavBar}
                   bg='transparent' />
               </SectionInnerItemContainer>
             </SectionItem>

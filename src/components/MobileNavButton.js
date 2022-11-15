@@ -14,7 +14,7 @@ import { ItemVV2 } from './reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
 
 // Create Header
-function MobileNavButton({ item, data, sectionID, active, bg = 'none' }) {
+function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar, setShowNavBar }) {
   const theme = useTheme();
 
   let SelectedIcon;
@@ -73,6 +73,9 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none' }) {
           bg={bg}
           hover={'transparent'}
           hoverBG={'transparent'}
+          onClick={() => {
+            setShowNavBar(!showNavBar);
+          }}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 0rem">
