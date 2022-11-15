@@ -26,6 +26,7 @@ import { NavigationContext } from 'contexts/NavigationContext';
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';
+import MobileNavigation from './MobileNavigation';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -54,6 +55,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   React.useEffect(() => {
     // runs when navigation setup is updated, will run on init
     updateHeaderTag(location);
+    // console.log(Object.keys(navigationSetup))
   }, [navigationSetup]);
 
   // Change text based on change of location
@@ -148,21 +150,7 @@ function Header({ isDarkMode, darkModeToggle }) {
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
-                {Object.keys(navigationSetup.navigation).map(function (key) {
-                  return (
-                    <Item
-                      onClick={() => {
-                        setShowNavBar(!showNavBar);
-                      }}>
-                      <MobileNavButton
-                        item={navigationSetup.navigation[key]}
-                        data={navigationSetup.navigation[key].data}
-                        sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
-                        active={navigationSetup.navigation[key].active}
-                      />
-                    </Item>
-                  );
-                })}
+                <MobileNavigation />
               </NavMenuInner>
             </NavMenu>
 
@@ -282,7 +270,7 @@ const NavMenuInner = styled(Item)`
   align-items: flex-start;
   justify-content: flex-start;
   overflow-y: scroll;
-  // height: calc(100vh - 70px);
+  // height: calc(100vh - 100px);
 `;
 
 const Notice = styled.span`

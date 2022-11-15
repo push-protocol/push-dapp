@@ -24,19 +24,19 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none' }) {
   switch (sectionID) {
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE:
       SelectedIcon = LeftBarPrimaryItemIcon;
-    //   definedMargin = '5px';
+      definedMargin = '5px';
       break;
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
-    //   definedMargin = item.isSection ? '0px' : '5px';
+      definedMargin = item.isSection ? '0px' : '5px';
       break;
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
-    //   definedMargin = item.isSection ? '0px' : '5px';
+      definedMargin = item.isSection ? '0px' : '5px';
       break;
     default:
       SelectedIcon = item.isSection ? LeftBarPrimarySectionIcon : LeftBarPrimaryItemIcon;
-    //   definedMargin = item.isSection ? '0px' : '5px';
+      definedMargin = item.isSection ? '0px' : '5px';
   }
 
   if (data.isRoute) {
@@ -61,25 +61,25 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none' }) {
       {!data.loading && !data.hidden && (
         <RouteLogic
           style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
-        //   flex="1"
           title={`${data.title}`}
           to={`${data.href ? data.href : '#'}`}
           href={`${data.href ? data.href : '#'}`}
           alt={`${data.alt}`}
           target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
           disabled={data.disabled}
-          padding={'0px 0px'}
-          align="center"
-          width='100%'
+          radius="16px"
+          align="stretch"
+          margin={definedMargin}
           bg={bg}
-          active={active}
+          hover={'transparent'}
+          hoverBG={'transparent'}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 0rem">
               {data.iconFactory}
             </ItemHV2>
           ) : (
-            <ItemH align='center' margin='auto 0'>
+            <ItemH align="center">
               {!active ? (
                 <SelectedIcon
                   src={require(`../assets/${data.src}`)}
@@ -121,6 +121,11 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none' }) {
 const InheritedSectionGroupIcon = styled(Image)`
   height: 25px;
   width: 25px;
+  margin: 0 5px;
+
+  @media (max-width: 992px) {
+      margin: 0px 0px;
+  }
 
   ${(props) =>
     props.active &&
@@ -132,6 +137,11 @@ const InheritedSectionGroupIcon = styled(Image)`
 const InheritedSectionItemIcon = styled(Image)`
   height: 25px;
   width: 25px;
+  margin: 0 5px;
+
+  @media (max-width: 992px) {
+    margin: 0px 0px;
+}
 
   ${(props) =>
     props.active &&
