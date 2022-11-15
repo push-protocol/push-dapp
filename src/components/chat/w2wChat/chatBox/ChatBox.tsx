@@ -35,7 +35,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
-import { checkConnectedUser } from 'helpers/w2w/user';
+import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -90,9 +90,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string =
-        inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ||
-        receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
+      const latestThreadhash: string = getLatestThreadHash({inbox,receivedIntents,currentChat});
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -648,14 +646,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const checkIfIntentExist = (receivedIntents:PushNodeClient.Feeds[])=>{
-    console.log("receivedIntents",receivedIntents)
-    const intentReceived = receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
-    ?.threadhash
-    console.log("Intent received",intentReceived)
-
-    return intentReceived
-  }
 
   return (
     <Container>
@@ -805,7 +795,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                       </div>
                     );
                   })}
-                  {checkIfIntentExist(receivedIntents) && (
+                  {checkIfIntentExist({receivedIntents,currentChat,connectedUser}) && (
                     <Chats
                       msg={{
                         ...messages[0],
@@ -822,7 +812,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             </CustomScrollContent>
           </MessageContainer>
 
-          {checkIfIntentExist(receivedIntents) ? null : (
+          {checkIfIntentExist({receivedIntents,currentChat,connectedUser}) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
