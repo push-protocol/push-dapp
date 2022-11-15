@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
@@ -25,11 +25,13 @@ import { NavigationContext } from 'contexts/NavigationContext';
 
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
+import { useClickAway } from 'react-use';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
   // Get theme
   const theme = useTheme();
+  const navRef = useRef()
 
   // Get Web3 Context
   // const context = useWeb3React<Web3Provider>()
@@ -71,6 +73,10 @@ function Header({ isDarkMode, darkModeToggle }) {
       });
     }
   };
+
+  useClickAway(navRef, () => {
+    setShowNavBar(!showNavBar);
+  });
 
   async function handleChangeNetwork() {
     const chainIds = appConfig.allowedNetworks;
@@ -135,7 +141,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         
         {/* mobile navbar */}
         {navigationSetup && showNavBar && active && !error && (
-          <NavMenuContainer tabletAlign="flex-start">
+          <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
               <Profile isDarkMode={isDarkMode} />
 
@@ -253,7 +259,6 @@ const NavMenuContainer = styled(Item)`
   align-items: flex-start;
 
   background: ${(props) => props.theme.default.bg};
-  // background: white;
   backdrop-filter: blur(30px);
   z-index: 11;
   width: 300px;
