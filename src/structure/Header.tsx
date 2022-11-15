@@ -17,7 +17,7 @@ import styled, { css, useTheme } from 'styled-components';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
 
-import NavigationButton from 'components/NavigationButton';
+import MobileNavButton from 'components/MobileNavButton';
 import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
 
@@ -116,6 +116,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
   
 
+  // console.log(Object.keys(navigationSetup.navigation))
+
   return (
     <Container direction="row" padding="0px 15px">
       <ItemH justify="flex-start" flex="0">
@@ -152,7 +154,7 @@ function Header({ isDarkMode, darkModeToggle }) {
                       onClick={() => {
                         setShowNavBar(!showNavBar);
                       }}>
-                      <NavigationButton
+                      <MobileNavButton
                         item={navigationSetup.navigation[key]}
                         data={navigationSetup.navigation[key].data}
                         sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
@@ -269,19 +271,18 @@ const NavMenuContainer = styled(Item)`
 const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
-  // padding: 10px 10px;
-  // background: blue;
   width: 100%;
 `;
 
 const NavMenuInner = styled(Item)`
+  width: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: flex-start;
   overflow-y: scroll;
-  height: calc(100vh - 70px);
+  // height: calc(100vh - 70px);
 `;
 
 const Notice = styled.span`

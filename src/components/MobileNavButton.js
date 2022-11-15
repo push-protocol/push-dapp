@@ -14,7 +14,7 @@ import { ItemVV2 } from './reusables/SharedStylingV2';
 import GLOBALS from 'config/Globals';
 
 // Create Header
-function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
+function MobileNavButton({ item, data, sectionID, active, bg = 'none' }) {
   const theme = useTheme();
 
   let SelectedIcon;
@@ -24,19 +24,19 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   switch (sectionID) {
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE:
       SelectedIcon = LeftBarPrimaryItemIcon;
-      definedMargin = '5px';
+    //   definedMargin = '5px';
       break;
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.SECONDARY:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
-      definedMargin = item.isSection ? '0px' : '5px';
+    //   definedMargin = item.isSection ? '0px' : '5px';
       break;
     case GLOBALS.CONSTANTS.NAVBAR_SECTIONS.THIRD:
       SelectedIcon = item.isSection ? LeftBarSecondarySectionIcon : LeftBarSecondaryItemIcon;
-      definedMargin = item.isSection ? '0px' : '5px';
+    //   definedMargin = item.isSection ? '0px' : '5px';
       break;
     default:
       SelectedIcon = item.isSection ? LeftBarPrimarySectionIcon : LeftBarPrimaryItemIcon;
-      definedMargin = item.isSection ? '0px' : '5px';
+    //   definedMargin = item.isSection ? '0px' : '5px';
   }
 
   if (data.isRoute) {
@@ -61,26 +61,25 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
       {!data.loading && !data.hidden && (
         <RouteLogic
           style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
-          flex="1"
+        //   flex="1"
           title={`${data.title}`}
           to={`${data.href ? data.href : '#'}`}
           href={`${data.href ? data.href : '#'}`}
           alt={`${data.alt}`}
           target={data.isRoute ? null : data.newTab ? '_blank' : 'self'}
           disabled={data.disabled}
-          radius="16px"
-          align="stretch"
-          padding="12px"
-          margin={definedMargin}
+          padding={'0px 0px'}
+          align="center"
+          width='100%'
           bg={bg}
           active={active}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
-            <ItemHV2 justifyContent="flex-start" padding="0 2rem">
+            <ItemHV2 justifyContent="flex-start" padding="0 0rem">
               {data.iconFactory}
             </ItemHV2>
           ) : (
-            <ItemH align="center">
+            <ItemH align='center' margin='auto 0'>
               {!active ? (
                 <SelectedIcon
                   src={require(`../assets/${data.src}`)}
@@ -101,7 +100,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 flex="1"
                 weight={!active ? '300' : '600'}
                 spacing="0"
-                margin="0 5px"
+                margin="0 10px"
                 color={theme.nav.color}
                 size="16px">
                 {data.name}
@@ -118,37 +117,10 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
   );
 }
 
-// filter: ${(props) =>
-//   props.active
-//     ? "brightness(1)"
-//     : props.theme === themeDark
-//     ? "brightness(0) invert(1)"
-//     : "brightness(0)"};
-// opacity: ${(props) =>
-//   props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
-
-// transition: transform 0.1s ease-out;
-
-// filter: ${(props) =>
-//   props.active
-//     ? "brightness(1)"
-//     : props.theme === themeDark
-//     ? "brightness(0) invert(1)"
-//     : "brightness(0)"};
-// opacity: ${(props) =>
-//   props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
-
-// transition: transform 0.1s ease-out;
-
 // css styles
 const InheritedSectionGroupIcon = styled(Image)`
   height: 25px;
   width: 25px;
-  margin: 0 5px;
-
-  @media (max-width: 992px) {
-      margin: 0px 0px;
-  }
 
   ${(props) =>
     props.active &&
@@ -160,11 +132,6 @@ const InheritedSectionGroupIcon = styled(Image)`
 const InheritedSectionItemIcon = styled(Image)`
   height: 25px;
   width: 25px;
-  margin: 0 5px;
-
-  @media (max-width: 992px) {
-    margin: 0px 0px;
-}
 
   ${(props) =>
     props.active &&
@@ -185,4 +152,4 @@ const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
 const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 
 // Export Default
-export default NavigationButton;
+export default MobileNavButton;
