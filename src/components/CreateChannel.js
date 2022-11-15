@@ -271,6 +271,7 @@ function CreateChannel() {
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
+
       setProgress(50);
 
       const tx = await contract.createChannelWithFees(channelType, identityBytes, fees, {

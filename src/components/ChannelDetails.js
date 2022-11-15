@@ -24,7 +24,7 @@ import { appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
 ;
 
-const DATE_FORMAT = 'MMMM Do YYYY';
+const DATE_FORMAT = 'MMM DD YYYY';
 
 export default function ChannelDetails() {
   const { chainId } = useWeb3React();
