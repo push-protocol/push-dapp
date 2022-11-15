@@ -329,15 +329,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       } else {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', savedMsg.cid, savedMsg, 'cid');
         //Decrypting Message here because we want it to add in the setMessages Array as encrypted Message and also we are displaying the messages so encryption is done above and decryption is done to add it in the setMessages
-        // Decrypt message
-        savedMsg = await w2wHelper.decryptMessages({
-          savedMsg: savedMsg,
-          connectedUser,
-          account,
-          chainId,
-          currentChat,
-          inbox: [],
-        });
+        savedMsg.messageContent = message;
         setNewMessage('');
         setMessages([...messages, savedMsg]);
       }
