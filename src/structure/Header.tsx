@@ -164,7 +164,8 @@ function Header({ isDarkMode, darkModeToggle }) {
               </NavMenuInner>
             </NavMenu>
 
-            <Item position="absolute" top="15px" right="5px">
+            {/* cancel button */}
+            {/* <Item position="absolute" top="15px" right="5px">
               <Button
                 bg="transparent"
                 padding="5px"
@@ -174,7 +175,7 @@ function Header({ isDarkMode, darkModeToggle }) {
                 }}>
                 <AiOutlineClose size={30} color={theme.headerIconsBg} />
               </Button>
-            </Item>
+            </Item> */}
           </NavMenuContainer>
         )}
       </ItemH>
@@ -256,19 +257,21 @@ const NavMenuContainer = styled(Item)`
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 1;
-  align-items: flex-start;
 
   background: ${(props) => props.theme.default.bg};
   backdrop-filter: blur(30px);
   z-index: 11;
-  width: 300px;
+  width: 250px;
   box-shadow: 0 0 0 10000px rgba(0,0,0,0.9);
+  padding: 30px 30px;
 `;
 
 const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
-  padding: 10px 10px;
+  // padding: 10px 10px;
+  // background: blue;
+  width: 100%;
 `;
 
 const NavMenuInner = styled(Item)`

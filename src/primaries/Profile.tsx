@@ -141,6 +141,10 @@ const Container = styled.button`
   flex-direction: row;
   align-items: center;
   display: flex;
+  @media (max-width: 992px) {
+    width: 100%;
+    justify-content: flex-start;
+  }
 `
 const Wallet = styled.span`
   margin: 0px 10px;
@@ -154,6 +158,13 @@ const Wallet = styled.span`
   color: ${props => props.color};
   border-radius:17px;
   background: ${props => props.bg};
+  @media (max-width: 992px) {
+    width: 100%;
+    margin: 0px 0px;
+    justify-content: space-between;
+    border-radius: 13px;
+    background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
+  }
   ${({ isDarkMode,bg }) => isDarkMode && `
     border: solid 3px transparent;
     background-image: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%), linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
@@ -172,6 +183,7 @@ const Wallet = styled.span`
     cursor: pointer;
     pointer: hand;
   }
+  
 `
 const ToggleArrowImg = styled.div`
   margin-left: 2rem;
