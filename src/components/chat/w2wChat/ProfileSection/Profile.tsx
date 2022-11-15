@@ -21,7 +21,7 @@ import './Profile.css'
 import { ChangeEvent } from 'react'
 import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
-import { AppContext } from 'types/Chat'
+import { AppContext } from 'types/chat'
 
 interface ProfilePropsType {
   profilePicture: string

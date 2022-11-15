@@ -12,7 +12,7 @@ import { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import { Context } from 'modules/chat/ChatModule';
 import { FileMessageContent } from './Files/Files';
 import GifPicker from './Gifs/GifPicker';
-import { AppContext } from 'types/Chat';
+import { AppContext } from 'types/chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';

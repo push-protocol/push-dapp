@@ -3,7 +3,7 @@ import { ToastPosition } from 'modules/chat/ChatModule';
 import { appConfig } from 'config';
 // import { MessageIPFS } from 'helpers/w2w/ipfs';
 import { toast } from 'react-toastify';
-import { Feeds, MessageIPFSWithCID, User } from 'types/Chat';
+import { Feeds, MessageIPFSWithCID, User } from 'types/chat';
 
 let BASE_URL = appConfig.apiUrl;
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {

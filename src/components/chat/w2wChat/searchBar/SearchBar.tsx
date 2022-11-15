@@ -20,7 +20,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
-import { AppContext, User } from 'types/Chat';
+import { AppContext, User } from 'types/chat';
 
 // Internal Configs
 

@@ -1,5 +1,5 @@
 // import { MessageIPFS } from 'helpers/w2w/ipfs';
-import { MessageIPFS, MessageIPFSWithCID } from "types/Chat";
+import { MessageIPFS, MessageIPFSWithCID } from "types/chat";
 // @ts-ignore
 import { appConfig } from "config";
 

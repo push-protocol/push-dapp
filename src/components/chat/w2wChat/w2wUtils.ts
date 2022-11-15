@@ -1,7 +1,7 @@
 import { getFromIPFS, getInbox} from 'api'
 import { decryptAndVerifySignature } from 'helpers/w2w'
 import { InboxChat } from 'modules/chat/ChatModule'
-import { MessageIPFS,ConnectedUser, Feeds } from 'types/Chat'
+import { MessageIPFS,ConnectedUser, Feeds } from 'types/chat'
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {

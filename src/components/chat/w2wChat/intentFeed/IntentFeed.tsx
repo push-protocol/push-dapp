@@ -11,7 +11,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
 import './IntentFeed.css';
-import { AppContext, Feeds } from 'types/Chat';
+import { AppContext, Feeds } from 'types/chat';
 
 const style = {
   position: 'absolute' as 'absolute',

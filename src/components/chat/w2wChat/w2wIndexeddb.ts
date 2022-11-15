@@ -1,5 +1,5 @@
 // import { Feeds } from 'api';
-import { Feeds, MessageIPFS } from 'types/Chat';
+import { Feeds, MessageIPFS } from 'types/chat';
 
 let db: IDBDatabase;
 
@@ -21,7 +21,7 @@ export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
   index: 'did' | 'cid'
 ): Promise<IDBValidKey> => {
   return await new Promise((resolve, reject) => {
-    const openRequest = window.indexedDB.open('w2w_idxDb', 2);
+    const openRequest = window.indexedDB.open('w2w_idxDb', 3);
     openRequest.onupgradeneeded = (e: any) => {
       db = e.target.result;
       const cIDStore = db.createObjectStore('Inbox', { keyPath: 'did' });

@@ -2,7 +2,7 @@ import React from 'react'
 import './Files.css'
 import { FILE_ICON } from '../../stickers/stickerHelper'
 import { formatFileSize } from 'helpers/w2w'
-import { MessageIPFS } from 'types/Chat'
+import { MessageIPFS } from 'types/chat'
 
 interface FileProps {
   msg: MessageIPFS

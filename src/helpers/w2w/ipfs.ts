@@ -1,5 +1,5 @@
 import {  getFromIPFS, getInbox } from "api"
-import { Feeds, InboxChat, MessageIPFS } from "types/Chat"
+import { Feeds, InboxChat, MessageIPFS } from "types/chat"
 
 export const fetchMessagesFromIPFS = async (inbox: Feeds[]): Promise<Feeds[]> => {
   for (const i in inbox) {

@@ -7,7 +7,7 @@ import styled from 'styled-components';
 // Internal Components
 import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS } from 'types/Chat';
+import { MessageIPFS } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
