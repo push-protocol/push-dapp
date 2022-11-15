@@ -91,7 +91,6 @@ function Dropdown(props) {
                 weight="400"
                 size="16px"
                 cursor="pointer"
-                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}

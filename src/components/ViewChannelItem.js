@@ -850,7 +850,7 @@ const Container = styled.div`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  border: 1px solid ${(props) => props.theme.default.border};
+  border-top: 1px solid ${(props) => props.theme.default.border};
   border-bottom:none;
   border-left:none;
   border-right:none;
@@ -859,6 +859,14 @@ const Container = styled.div`
   padding: 25px 10px;
 
   align-self: stretch;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid ${(props) => props.theme.default.border};
+    border-top:none;
+    border-left:none;
+    border-right:none;
+  }
 `;
 
 const SkeletonWrapper = styled.div`
@@ -883,6 +891,11 @@ const ChannelLogo = styled.div`
   flex-direction: column;
   justify-content: center;
   align-self: flex-start;
+  @media (max-width: 768px) {
+      align-self: center;
+      min-width: 100px;
+      min-height: 100px;
+  }
 `;
 
 const ChannelLogoOuter = styled.div`
@@ -929,6 +942,10 @@ const ChannelTitle = styled(ItemH)`
   margin: 0;
   flex: initial;
   align-items: center;
+  @media (max-width: 768px) {
+    align-self: center;
+    margin-top: 10px;
+  }
 `;
 
 const ChannelTitleLink = styled.a`
@@ -986,6 +1003,10 @@ const ChannelDesc = styled.div`
   font-weight: 400;
   flex-direction: column;
   color: ${(props) => props.theme.color};
+  @media (max-width: 768px) {
+    align-self: center;
+    text-align: center;
+  }
 `;
 
 const ChannelDescLabel = styled.label`
@@ -999,6 +1020,9 @@ const ChannelMeta = styled.div`
   flex-direction: row;
   padding: 5px 0px;
   font-size: 13px;
+  @media (max-width: 768px) {
+    align-self: center;
+  }
 `;
 
 const ChannelMetaBox = styled.label`
@@ -1056,6 +1080,9 @@ const ChannelActions = styled.div`
   justify-content: flex-end;
   // justify-content: center;
   align-items: center;
+  @media (max-width: 768px) {
+    align-self: center;
+  }
 `;
 
 const ChannelActionButton = styled.button`
