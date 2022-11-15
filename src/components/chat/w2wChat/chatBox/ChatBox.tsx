@@ -41,7 +41,7 @@ import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
-import { checkConnectedUser } from 'helpers/w2w/user';
+import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 
@@ -98,9 +98,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string =
-        inbox.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash ||
-        receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID)?.threadhash;
+      const latestThreadhash: string = getLatestThreadHash({inbox,receivedIntents,currentChat});
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
@@ -258,7 +256,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   }, [currentChat]);
 
-  const fetchInboxApi = async (createdUser:ConnectedUser): Promise<Feeds> => {
+  const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
@@ -629,8 +627,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             ),
           });
         }
-      } 
-      
+      }
+
       setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
@@ -855,9 +853,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                             <FirstTime>This is your first conversation with recipient.<br></br> Start the conversation by sending a message.</FirstTime>
                             </Item>
                         )}
-                  {receivedIntents.find(
-                    (x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did
-                  )?.threadhash && (
+                  {checkIfIntentExist({receivedIntents,currentChat,connectedUser}) && (
                     <Chats
                       msg={{
                         ...messages[0],
@@ -874,8 +870,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             </CustomScrollContent>
           </MessageContainer>
 
-          {receivedIntents.find((x) => x.combinedDID === currentChat.combinedDID && x.msg.toDID === connectedUser.did)
-            ?.threadhash ? null : (
+          {checkIfIntentExist({receivedIntents,currentChat,connectedUser}) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -1234,7 +1229,7 @@ const CustomScrollContent = styled(ScrollToBottom)`
     background: #cf1c84;
     border-radius: 10px;
   }
-`
+`;
 
 const FileUploadLoaderContainer = styled.div`
   border: none;
@@ -1243,6 +1238,6 @@ const FileUploadLoaderContainer = styled.div`
   background-color: transparent;
   margin-right: 2rem;
   color: rgb(58, 103, 137);
-`
+`;
 
 export default ChatBox;
