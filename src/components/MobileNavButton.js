@@ -12,6 +12,7 @@ import { ItemVV2 } from './reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { nothing } from 'immer';
 
 // Create Header
 function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar, setShowNavBar }) {
@@ -74,7 +75,12 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
           hover={'transparent'}
           hoverBG={'transparent'}
           onClick={() => {
-            setShowNavBar(!showNavBar);
+            if(item.data.drilldown){
+                return nothing;
+            }
+            else {
+                setShowNavBar(!showNavBar);
+            }
           }}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (

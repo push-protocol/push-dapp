@@ -165,6 +165,7 @@ const Wallet = styled.span`
     border-radius: 13px;
     background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
   }
+  
   ${({ isDarkMode,bg }) => isDarkMode && `
     border: solid 3px transparent;
     background-image: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%), linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
@@ -207,14 +208,19 @@ const DropdownItem= styled(Item)`
   border:1px solid ${props => props.border};
   border-radius:24px;
   align-items:flex-start;
-  padding:1.3rem;
-  position:absolute;
+  padding: 1.3rem;
+  position: absolute;
   top:3.6rem;
   right:-0.5rem;
   z-index:10;
   @media (max-width: 992px) {
-    right: unset;
     align-items:flex-start;
+    // position: fixed;
+    // top: 0rem;
+    // right:0rem;
+
+    // width: 100vw;
+    // height: 100vh;
   }
 `
 
