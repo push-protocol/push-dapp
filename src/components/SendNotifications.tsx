@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as EpnsAPI from '@epnsproject/sdk-restapi';
+import * as PushAPI from '@pushprotocol/restapi';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
@@ -581,7 +581,7 @@ function SendNotifications() {
         const channelAddressInCaip = convertAddressToAddrCaip(channelAddress, chainId);
 
         const _signer = await library.getSigner(account);
-        await EpnsAPI.payloads.sendNotification({
+        await PushAPI.payloads.sendNotification({
           signer: _signer,
           type: parseInt(nfType), // target
           identityType: 2, // direct payload
@@ -629,6 +629,17 @@ function SendNotifications() {
         });
         //       console.log(res);
         //   });
+
+        // reseting the notif states
+        setNFType("1");
+        setNFMsg("");
+        setNFSubEnabled(false);
+        setNFSub("");
+        setNFCTAEnabled(false);
+        setNFCTA("");
+        setNFMediaEnabled(false);
+        setNFMedia("");
+        setNFInfo("");
       } catch (err) {
         setNFInfo('Send Notification Failed, please try again');
 

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 
-import { chainNameType, NotificationItem } from "@epnsproject/sdk-uiweb";
+import { chainNameType, NotificationItem } from "@pushprotocol/uiweb";
 import styled, { useTheme } from "styled-components";
 
 import { NotificationContext } from "contexts/NotificationContext";

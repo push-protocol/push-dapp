@@ -1,15 +1,11 @@
 import React, { useContext } from 'react';
 
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
-import { Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import styled, { useTheme } from 'styled-components';
-import styles from './styles';
 
 const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context

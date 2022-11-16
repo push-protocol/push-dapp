@@ -12,24 +12,25 @@ import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
-import IntentBar from 'components/chat/w2wChat/intentBar/intentBar';
-import IntentFeed from 'components/chat/w2wChat/intentFeed/intentFeed';
+import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
-import SearchBar from 'components/chat/w2wChat/searchBar/searchBar';
-import Sidebar from 'components/chat/w2wChat/sidebar/sidebar';
-import { Feeds } from 'api';
-import 'components/chat/w2wChat/sidebar/sidebar.css';
+import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
+import { checkConnectedUser } from 'helpers/w2w/user';
+// import { Feeds } from 'api';
+import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { decryptFeeds, fetchIntent } from 'components/chat/w2wChat/w2wUtils';
+import { fetchIntent } from 'helpers/w2w/ipfs';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
-import { Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+
+
 
 // Chat Sections
 // Divided into two, left and right
@@ -57,12 +58,12 @@ const ChatSidebarSection = () => {
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-    if (!(connectedUser.allowedNumMsg === 0 && connectedUser.numMsg === 0 && connectedUser.about === '' && connectedUser.signature === '' && connectedUser.encryptedPrivateKey === '' && connectedUser.publicKey === '')) {
+    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
     if (getIntent!== undefined) {
       let intents: Feeds[] = getIntent.body;
-      intents = await decryptFeeds({ feeds: intents, connectedUser });
+      intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
       setLoadingRequests(false);
@@ -76,7 +77,7 @@ const ChatSidebarSection = () => {
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
-    intents = await decryptFeeds({ feeds: intents, connectedUser });
+    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
