@@ -158,18 +158,18 @@ const ToastContent = styled.div`
   align-items: flex-start;
 `;
 const ToastTitle = styled.div`
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.019em;
   line-height: 1.4rem;
   letter-spacing: 0em;
   text-align: left;
   margin-bottom: 1%;
 `;
 const ToastMessage = styled.div`
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 400;
+  font-size: 15px;
   line-height: 1.3rem;
-  letter-spacing: 0em;
   text-align: left;
 `;
 
