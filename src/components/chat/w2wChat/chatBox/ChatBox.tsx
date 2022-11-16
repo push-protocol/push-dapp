@@ -208,9 +208,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 // Display messages for the first time
                 // else
                 if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                  setMessages((m) => [msgIPFS, ...m]);
-  
-                  //I did here because this is triggered when the intent is sent from the sender what it does is it shows loader until the message is received from the IPFS by creating a threadhash. Because of the react query this function is triggered after 3 secs and if their is no threadhash(in case of Intent) the else part is triggered which setMessages([]) to null.
+                  setMessages((m) => [msgIPFS, ...m]);  
                   setMessageBeingSent(false);
                 }
   
@@ -222,7 +220,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 }
               }
             }
-          // }
         }
       } else {
         setMessages([]);
