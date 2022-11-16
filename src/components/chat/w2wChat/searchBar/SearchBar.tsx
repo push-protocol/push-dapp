@@ -282,6 +282,10 @@ const Input = styled.input`
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;
   }
+  &::placeholder {
+  color: #657795;
+  }
+
 `;
 
 export default SearchBar;
