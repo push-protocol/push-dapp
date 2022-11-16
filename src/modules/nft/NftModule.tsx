@@ -126,7 +126,7 @@ function NftModule() {
                       We’ll be distributing one NFT a week (every Monday) to one community member who does something to
                       help us push the envelope forward.{' '}
                       <AMod
-                        href="https://medium.com/ethereum-push-notification-service/kicking-off-the-epns-nft-community-drops-6a5c49808cf"
+                        href="https://medium.com/push-protocol/announcing-volume-2-of-epns-rockstars-64f0b3246604"
                         target="_blank"
                         title="Read how to get $ROCKSTAR of Push (EPNS)">
                         Here are some ways by which you can get one!

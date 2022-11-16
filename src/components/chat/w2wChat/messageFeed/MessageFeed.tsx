@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
-import { Feeds, User } from 'api';
+import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -16,7 +16,7 @@ import { ethers } from 'ethers';
 import {  decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { checkConnectedUser } from 'helpers/w2w/user';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { fetchInbox } from 'helpers/w2w/ipfs';
@@ -25,7 +25,6 @@ import './MessageFeed.css';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-// Interfaces
 interface MessageFeedProps {
   filteredUserData: User[];
   hasUserBeenSearched: boolean;

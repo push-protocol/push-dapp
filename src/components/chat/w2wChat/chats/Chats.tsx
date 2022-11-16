@@ -2,14 +2,12 @@
 import React, { useState } from 'react';
 
 // External Packages
-import cn from 'classnames';
 import styled from 'styled-components';
 
 // Internal Components
 import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { DID } from 'dids';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS } from '../../../../helpers/w2w/ipfs';
+import { MessageIPFS } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -19,7 +17,6 @@ import './W2wchats.css';
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 
-// Interfaces
 interface ChatProps {
   msg: MessageIPFS;
   caip10: string;
@@ -276,7 +273,7 @@ const TextMessage = styled.p`
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
-  font-weigth: 400;
+  font-weight: 400;
   margin: 0px;
 `;
 

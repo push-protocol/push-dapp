@@ -14,12 +14,15 @@ import LoaderSpinner, {
 import { ButtonV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { BlockedLoadingI } from 'sections/chat/ChatMainSection';
+import { MdCall, MdCallEnd } from 'react-icons/md';
+import { BlockedLoadingI } from 'types/chat';
+// import { BlockedLoadingI } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 
-// Interfaces
+
+// Interface
 export interface VideoCallInfoI {
   address: string;
   fromPublicKeyArmored: string;

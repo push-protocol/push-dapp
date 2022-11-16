@@ -5,13 +5,13 @@ import React, { useContext, useState } from 'react';
 // External Packages
 import styled from 'styled-components';
 
-// Internal Compoonents
-import { Feeds } from 'api';
+// Internal Components
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import './IntentFeed.css';
+import { AppContext, Feeds } from 'types/chat';
 
 const style = {
   position: 'absolute' as 'absolute',

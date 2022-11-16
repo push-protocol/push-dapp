@@ -1,6 +1,9 @@
-// Internal Components
-import { MessageIPFS } from 'helpers/w2w/ipfs';
-import { MessageIPFSWithCID } from './w2w';
+// import { MessageIPFS } from 'helpers/w2w/ipfs';
+import { MessageIPFS, MessageIPFSWithCID } from "types/chat";
+// @ts-ignore
+import { appConfig } from "config";
+
+// import { MessageIPFSWithCID } from './w2w';
 
 // Internal Configs
 import { appConfig } from "config";

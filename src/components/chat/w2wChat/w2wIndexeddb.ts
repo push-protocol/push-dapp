@@ -1,6 +1,5 @@
-// Internal Components
-import { Feeds } from 'api';
-import { MessageIPFS } from 'helpers/w2w/ipfs';
+// import { Feeds } from 'api';
+import { Feeds, MessageIPFS } from 'types/chat';
 
 let db: IDBDatabase;
 

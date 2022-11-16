@@ -13,7 +13,6 @@ import Card from '@mui/material/Card'
 import CardMedia from '@mui/material/CardMedia'
 import IconButton from '@mui/material/IconButton'
 import Snackbar from '@mui/material/Snackbar'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { CID } from 'ipfs-http-client'
 
@@ -25,6 +24,7 @@ import { showCharacters } from './helpers'
 import './Profile.css'
 import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
+import { AppContext } from 'types/chat'
 
 // Interfaces
 interface ProfilePropsType {
