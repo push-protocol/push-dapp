@@ -326,7 +326,7 @@ function FaqModule() {
                   toggleShowAnswer(11);
                 }}
                 hover="#e20880">
-                <Span color={theme.color}>DHow do I use the Front-SDK?</Span>
+                <Span color={theme.color}>How do I use the Front-SDK?</Span>
                 <BsChevronExpand size={20} color={'#ddd'} />
               </Question>
 
