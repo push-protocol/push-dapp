@@ -295,7 +295,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 const SearchBar = styled.input`
   width: 100%;
   padding: 13px 40px;
-  /* border: none; */
   border: 1px solid;
   border-color: ${props => props.theme.viewChannelSearchBg};
   background: ${props => props.theme.viewChannelSearchBg};

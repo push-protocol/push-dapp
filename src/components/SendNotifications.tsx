@@ -629,6 +629,17 @@ function SendNotifications() {
         });
         //       console.log(res);
         //   });
+
+        // reseting the notif states
+        setNFType("1");
+        setNFMsg("");
+        setNFSubEnabled(false);
+        setNFSub("");
+        setNFCTAEnabled(false);
+        setNFCTA("");
+        setNFMediaEnabled(false);
+        setNFMedia("");
+        setNFInfo("");
       } catch (err) {
         setNFInfo('Send Notification Failed, please try again');
 

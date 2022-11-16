@@ -204,14 +204,12 @@ const NFTHelper = {
     const enableLogs = 0;
 
     return new Promise ((resolve, reject) => {
-             NFTHelper.getClaimable(tokenId, rewardsContract)
-            .then(async claimable => {
-              await NFTHelper.getTokenMetadata(tokenId, nftContract)
+             NFTHelper.getTokenMetadata(tokenId, nftContract)
               .then(async metadata => {
                 await NFTHelper.getOwnerOfTokenId(tokenId, nftContract)
                 .then(async owner => {
-                  if(tokenId != null && metadata != null && claimable != null && owner != null )
-                  resolve({id: tokenId, metadata, owner, claimable});
+                  if(tokenId != null && metadata != null && owner != null )
+                  resolve({id: tokenId, metadata, owner});
                 })
               })
             })
@@ -219,7 +217,7 @@ const NFTHelper = {
               console.log("!!!Error, getTokenData() --> %o", err);
               reject(err);
             });
-    })
+    
   },
 
   transferNFT: async (from, to, tokenId, contract) => {
@@ -239,6 +237,7 @@ const NFTHelper = {
   },
 
   getClaimable: async (tokenId, contract) => {
+    console.log(tokenId, contract);
     
     const enableLogs = 0;
 
