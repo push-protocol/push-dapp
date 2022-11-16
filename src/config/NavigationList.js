@@ -374,13 +374,13 @@ const NavigationList = {
 };
 
 // // remove secret feature
-if (
+// if (
   // window.location.hostname == 'app.epns.io' ||
-  window.location.hostname == 'staging.epns.io' ||
+  // window.location.hostname == 'staging.epns.io' ||
   // window.location.hostname == 'app.push.org' ||
-  window.location.hostname == 'staging.push.org'
-) {
-  delete NavigationList.primary.chat;
-}
+  // window.location.hostname == 'staging.push.org'
+// ) {
+//   delete NavigationList.primary.chat;
+// }
 
 export default NavigationList;
