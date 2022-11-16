@@ -153,19 +153,6 @@ function Header({ isDarkMode, darkModeToggle }) {
                 <MobileNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
               </NavMenuInner>
             </NavMenu>
-
-            {/* cancel button */}
-            {/* <Item position="absolute" top="15px" right="5px">
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineClose size={30} color={theme.headerIconsBg} />
-              </Button>
-            </Item> */}
           </NavMenuContainer>
         )}
       </ItemH>
