@@ -10,13 +10,18 @@ import Dropdown from '../components/Dropdown';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Item } from "./SharedStyling.js";
+import { Content, Item } from "./SharedStyling.js";
 import { envUtil } from 'helpers/UtilityHelper';
+import ProfileModal from 'components/ProfileModal';
+import useModal from 'hooks/useModal';
+
+
 
 // Create Header
 const Profile = ({isDarkMode}) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
+  const modalRef = React.useRef(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
@@ -24,6 +29,7 @@ const Profile = ({isDarkMode}) => {
   const [ens, setENS] = React.useState('');
   const [ensFetched, setENSFetched] = React.useState(false);
   const [showDropdown, setShowDropdown] = React.useState(false);
+  useClickAway(modalRef, () => showDropdown && setShowDropdown(false));
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
   const { deactivate } = context
@@ -53,7 +59,7 @@ const Profile = ({isDarkMode}) => {
   useClickAway(toggleArrowRef,dropdownRef, () => {
     setShowDropdown(false);
   });
-  
+
   React.useEffect(() => {
     if (account && account != '') {
       // Check if the address is the same
@@ -78,6 +84,8 @@ const Profile = ({isDarkMode}) => {
   }, [account]);
 
   // to create blockies
+
+
   return (
     <>
       {account && account !== "" && !error && (
@@ -108,19 +116,22 @@ const Profile = ({isDarkMode}) => {
             </ToggleArrowImg>
           </Wallet>
           {showDropdown && (
+            <Item 
+            position='absolute'
+            top='3.6rem'
+            right='-0.5rem'
+            ref={dropdownRef}
+            >
             <DropdownItem
-              ref={dropdownRef}
-              bg={theme.header.bg}
-              border={`1px solid ${theme.snackbarBorderColor}`}
-              radius="24px"
               align="flex-start"
-              padding="1.3rem"
-              position="absolute"
-              top="4.1rem"
-              right="-0.5rem"
+              ref={dropdownRef}
             >
               <Dropdown dropdownValues={dropdownValues} />
             </DropdownItem>
+            <ItemModal ref={modalRef}>
+              <ProfileModal showDropdown={showDropdown} setShowDropdown={setShowDropdown} dropdownValues={dropdownValues} />
+            </ItemModal>
+            </Item>
           )}
         </Container>
       )}
@@ -204,23 +215,32 @@ const ToggleArrowImg = styled.div`
 `;
 
 const DropdownItem= styled(Item)`
-  background: ${props => props.bg};
-  border:1px solid ${props => props.border};
-  border-radius:24px;
-  align-items:flex-start;
+  background: ${props => props.theme.header.bg};
+  border: 1px solid ${props => props.theme.snackbarBorderColor};
+  border-radius: 24px;
+  align-items: flex-start;
   padding: 1.3rem;
-  position: absolute;
-  top:3.6rem;
-  right:-0.5rem;
+  // position: absolute;
+  // top:3.6rem;
+  // right:-0.5rem;
   z-index:10;
-  @media (max-width: 992px) {
-    align-items:flex-start;
-    // position: fixed;
-    // top: 0rem;
-    // right:0rem;
+  @media (max-width: 425px) {
+    align-items: flex-start;
+    display: none;
+  }
+`
 
-    // width: 100vw;
-    // height: 100vh;
+const ItemModal = styled.div`
+  position: fixed;
+  // width: 100vw;
+  // height: 100vh;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  @media (min-width: 426px) {
+    display: none;
   }
 `
 
