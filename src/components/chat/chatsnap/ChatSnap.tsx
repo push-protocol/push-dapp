@@ -1,6 +1,5 @@
 // React + Web3 Essentials
-import { ethers } from 'ethers';
-import React, { useState } from 'react';
+import React from "react";
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -8,6 +7,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
+import { useResolveEns } from 'hooks/useResolveEns';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -52,14 +52,14 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
     ) {
       provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
     }
-
+    
     provider.lookupAddress(checksumWallet).then((ens) => {
       if (ens) {
         // const shorterUsername = caip10ToWallet(username).slice(0, 4) + '...' + caip10ToWallet(username).slice(-4);
         // setENSName(`${ens} (${shorterUsername})`);
         setENSName(ens);
       }
-    });
+    })
   }, []);
 
   // get short username

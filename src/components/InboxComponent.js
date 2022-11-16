@@ -3,7 +3,7 @@ import { Content, Item, Section } from 'primaries/SharedStyling';
 import React, { useEffect, useState } from 'react';
 import { FiSearch, FiSliders } from 'react-icons/fi';
 import Feedbox from 'segments/Feedbox';
-import Spambox from 'segments/Spambox';
+import SpamBox from 'segments/spam';
 import styled, { useTheme } from 'styled-components';
 
 const InboxComponent = () => {
@@ -54,7 +54,7 @@ const InboxComponent = () => {
       {showInbox ? (
         <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
       ) : (
-        <Spambox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
+        <SpamBox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
       )}
     </Container>
   );

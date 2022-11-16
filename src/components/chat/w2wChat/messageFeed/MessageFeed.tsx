@@ -8,21 +8,24 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
-import { Feeds, User } from 'api';
+import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ethers } from 'ethers';
-import { walletToCAIP10 } from 'helpers/w2w';
+import {  decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { checkConnectedUser } from 'helpers/w2w/user';
+import { Context } from 'modules/chat/ChatModule';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
-import { decryptFeeds, fetchInbox } from '../w2wUtils';
-import './messageFeed.css';
+import { fetchInbox } from 'helpers/w2w/ipfs';
+import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+
+
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -33,30 +36,29 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setIntents, setInbox, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
+  const { setChat, connectedUser, setInbox,receivedIntents,setActiveTab, activeTab,inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
     useContext<AppContext>(Context);
-  const { activeTab, setActiveTab } = useContext(Context);
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
-  const [isSameUser, setIsSameUser] = useState<boolean>(false);
-  const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [stopApi, setStopApi] = useState<boolean>(true);
   const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
-  const { chainId, account, library } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
+  const onFeedClick = (feed:Feeds):void => {
+    if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
+    {
+      setActiveTab(1);
+    }
+    setChat(feed);
+    setSelectedChatSnap(feed.threadhash);
+    setSearchedUser('');
+    setHasUserBeenSearched(false);
+  }
+
   const getInbox = async (): Promise<Feeds[]> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
@@ -131,16 +133,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInbox = async (): Promise<void> => {
-    if (
-      !(
-        connectedUser.allowedNumMsg === 0 &&
-        connectedUser.numMsg === 0 &&
-        connectedUser.about === '' &&
-        connectedUser.signature === '' &&
-        connectedUser.encryptedPrivateKey === '' &&
-        connectedUser.publicKey === ''
-      )
-    ) {
+    if (checkConnectedUser(connectedUser)) {
       await getInbox();
     }
     setMessagesLoading(false);
@@ -153,7 +146,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
-            setIsSameUser(true);
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -172,38 +164,45 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
             const desiredUser = inbox.filter((inb) => inb.did === user.did);
+
+
+            //the following code checks that User already present in the Intent or not
+            const IntentUser = receivedIntents.filter((userExist) => userExist.did === user.did);
+
             if (desiredUser.length) {
               feed = desiredUser[0];
-            } else {
-              feed = {
-                msg: {
-                  name: user.wallets.split(',')[0].toString(),
+            } else if(IntentUser.length){
+              feed = IntentUser[0];
+            }else {
+                feed = {
+                  msg: {
+                    name: user.wallets.split(',')[0].toString(),
+                    profilePicture: user.profilePicture,
+                    lastMessage: null,
+                    timestamp: null,
+                    messageType: null,
+                    signature: null,
+                    signatureType: null,
+                    encType: null,
+                    encryptedSecret: null,
+                    fromDID: null,
+                    fromCAIP10: null,
+                    toDID: null,
+                    toCAIP10: null,
+                  },
+                  wallets: user.wallets,
+                  did: user.did,
+                  threadhash: null,
                   profilePicture: user.profilePicture,
-                  lastMessage: null,
-                  timestamp: null,
-                  messageType: null,
-                  signature: null,
-                  signatureType: null,
-                  encType: null,
-                  encryptedSecret: null,
-                  fromDID: null,
-                  fromCAIP10: null,
-                  toDID: null,
-                  toCAIP10: null,
-                },
-                wallets: user.wallets,
-                did: user.did,
-                threadhash: null,
-                profilePicture: user.profilePicture,
-                about: user.about,
-                intent: null,
-                intentSentBy: null,
-                intentTimestamp: null,
-                publicKey: user.publicKey,
-                combinedDID: null,
-                cid: null,
-              };
-            }
+                  about: user.about,
+                  intent: null,
+                  intentSentBy: null,
+                  intentTimestamp: null,
+                  publicKey: user.publicKey,
+                  combinedDID: null,
+                  cid: null,
+                };
+              }
             setFeeds([feed]);
           }
         } else {
@@ -285,12 +284,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     }}
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
-                    onClick={(): void => {
-                      setChat(feed);
-                      setSelectedChatSnap(feed.threadhash);
-                      setSearchedUser('');
-                      setHasUserBeenSearched(false);
-                    }}
+                    onClick={(): void => onFeedClick(feed)}
                   />
                 </ItemVV2>
               ))

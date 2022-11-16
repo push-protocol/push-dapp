@@ -10,8 +10,8 @@ import { Waypoint } from "react-waypoint";
 import styled, { ThemeProvider, useTheme } from "styled-components";
 
 // Internal Compoonents
-import * as EpnsAPI from "@epnsproject/sdk-restapi";
-import { NotificationItem } from "@epnsproject/sdk-uiweb";
+import * as PushAPI from "@pushprotocol/restapi";
+import { NotificationItem } from "@pushprotocol/uiweb";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import SearchFilter from "components/SearchFilter";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
@@ -128,21 +128,21 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     if (loading || finishedFetching) return;
     setLoading(true);
     try {
-      // const { count, results } = await EpnsAPI.fetchNotifications({
+      // const { count, results } = await PushAPI.fetchNotifications({
       //   user: account,
       //   pageSize: NOTIFICATIONS_PER_PAGE,
       //   page,
       //   chainId,
       //   dev: true,
       // });
-      const results = await EpnsAPI.user.getFeeds({
+      const results = await PushAPI.user.getFeeds({
         user: user, // user address in CAIP
         raw: true,
         env: appConfig.pushNodesEnv,
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
-      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      const parsedResponse = PushAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
@@ -158,7 +158,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const results = await EpnsAPI.user.getFeeds({
+      const results = await PushAPI.user.getFeeds({
         user: user, // user address in CAIP
         env: appConfig.pushNodesEnv,
         raw: true,
@@ -168,7 +168,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      const parsedResponse = PushAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
@@ -200,7 +200,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const results = await EpnsAPI.user.getFeeds({
+      const results = await PushAPI.user.getFeeds({
         user: user, // user address in CAIP
         env: appConfig.pushNodesEnv,
         limit: 100000,
@@ -210,7 +210,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = EpnsAPI.utils.parseApiResponse(results);
+      const parsedResponse = PushAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
@@ -464,7 +464,7 @@ const Container = styled.div`
   justify-content: center;
   height: 100%;
   margin: 0 0 0 10px;
-  overflow:scroll;
+  /* overflow: scroll; */
 
   @media ${device.laptop} {
     

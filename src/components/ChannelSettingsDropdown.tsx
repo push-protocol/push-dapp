@@ -257,7 +257,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
       <div>
         <DropdownWrapper background={theme}>
           <ActiveChannelWrapper>
-            {onCoreNetwork && appConfig.appEnv !== 'prod' && (
+            {appConfig.appEnv !== 'prod' && (
               <ChannelActionButton
                 disabled={channelInactive}
                 onClick={() => !channelInactive && showAddSubgraphModal()}>
@@ -287,21 +287,21 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
               </div>
             </ChannelActionButton>
 
-            <ChannelActionButton isChannelDeactivated={isChannelDeactivated} onClick={toggleChannelActivationState}>
-              <div style={{ color: 'red' }}>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                  <CustomIcon src={redBellIcon} alt="red-bell" />
-                  <div style={{ width: '10px', color: 'red' }} />
-                  {!onCoreNetwork
-                    ? ''
-                    : isChannelBlocked
-                    ? 'Channel Blocked'
-                    : isChannelDeactivated
-                    ? 'Activate Channel'
-                    : 'Deactivate Channel'}
+            {onCoreNetwork &&
+              <ChannelActionButton isChannelDeactivated={isChannelDeactivated} onClick={toggleChannelActivationState}>
+                <div style={{ color: 'red' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <CustomIcon src={redBellIcon} alt="red-bell" />
+                    <div style={{ width: '10px', color: 'red' }} />
+                    {isChannelBlocked
+                      ? 'Channel Blocked'
+                      : isChannelDeactivated
+                      ? 'Activate Channel'
+                      : 'Deactivate Channel'}
+                  </div>
                 </div>
-              </div>
-            </ChannelActionButton>
+              </ChannelActionButton>
+            }
           </ActiveChannelWrapper>
         </DropdownWrapper>
 
@@ -360,8 +360,7 @@ const DropdownWrapper = styled.div`
   flex-direction: column-reverse;
   align-items: center;
   width: 240px;
-  height: 190px;
-  padding: 24px 4px;
+  padding: 16px 4px 24px 4px;
   background: ${(props) => props.background.backgroundBG};
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
