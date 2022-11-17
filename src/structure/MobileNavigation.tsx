@@ -502,6 +502,7 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
               <SectionInnerItemContainer
                 flex="1"
                 align="stretch"
+                padding='0px 20px'
                 zIndex={1}
                 refresh={refresh}
                 onClick={() => {

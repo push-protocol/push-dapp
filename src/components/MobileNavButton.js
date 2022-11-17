@@ -114,7 +114,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
                 margin="0 10px"
                 color={theme.nav.color}
                 minWidth='100px'
-                size="16px">
+                size="17px">
                 {data.name}
               </Span>
 

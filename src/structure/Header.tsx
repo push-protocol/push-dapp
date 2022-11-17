@@ -262,7 +262,8 @@ const NavMenuInner = styled(Item)`
   align-items: flex-start;
   justify-content: flex-start;
   overflow-y: scroll;
-  // height: calc(100vh - 100px);
+  margin-top: 20px;
+  height: calc(100vh - 100px);
 `;
 
 const Notice = styled.span`
