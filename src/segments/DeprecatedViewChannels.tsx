@@ -3,10 +3,9 @@ import { useWeb3React } from "@web3-react/core";
 import React from 'react';
 
 // External Packages
-import styled,{ ThemeProvider } from "styled-components";
+import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { Waypoint } from "react-waypoint";
-import { AiOutlineSearch } from "react-icons/ai";
 import queryString from 'query-string';
 
 // Internal Components
@@ -18,7 +17,6 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { postReq } from "api";
 
 // Internal Configs
-import { themeDark, themeLight } from "config/Themization";
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration

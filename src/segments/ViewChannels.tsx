@@ -15,7 +15,6 @@ import ViewChannelItem from "components/ViewChannelItem";
 import UtilityHelper, { MaskedChannels, MaskedPolygonChannels } from 'helpers/UtilityHelper';
 import { incrementPage, setChannelMeta, updateBulkSubscriptions } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { Item, ItemH } from "../primaries/SharedStyling";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";

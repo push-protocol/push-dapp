@@ -16,7 +16,7 @@ import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
 import { isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
-import { Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
+import { Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
 import './createChannel.css';
 import ProcessingInfo from './ProcessingInfo';

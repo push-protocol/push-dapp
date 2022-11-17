@@ -2,7 +2,6 @@
 import React from "react";
 
 // External Packages
-import styled, { css } from 'styled-components';
 
 // Internal Components
 import {Section, Content} from 'components/SharedStyling';

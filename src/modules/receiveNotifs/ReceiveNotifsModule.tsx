@@ -7,7 +7,7 @@ import styled, { useTheme } from "styled-components";
 
 // Internal Components
 import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import { Content, H2, H3, Item, Section, Span } from "../../primaries/SharedStyling";
+import { H2, Item, Section, Span } from "../../primaries/SharedStyling";
 import Info from "segments/Info";
 
 // Internal Configs

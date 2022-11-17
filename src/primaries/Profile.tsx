@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from 'ethers/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import React, { useRef } from "react";
 
 // External Packages

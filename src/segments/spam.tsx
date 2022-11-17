@@ -14,7 +14,6 @@ import { MdCheckCircle, MdError } from "react-icons/md";
 import * as PushAPI from '@pushprotocol/restapi';
 import { NotificationItem } from '@pushprotocol/uiweb';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { getReq, postReq } from 'api';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { Item } from 'primaries/SharedStyling';

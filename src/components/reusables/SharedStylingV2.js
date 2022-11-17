@@ -1,6 +1,5 @@
 // External Packages
-import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Configs
 import { themeLight } from 'config/Themization';

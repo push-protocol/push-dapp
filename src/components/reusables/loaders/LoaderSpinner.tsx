@@ -2,7 +2,7 @@
 import React from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components';
 
 // Internal Components
 import BlurBG from 'components/reusables/blurs/BlurBG';

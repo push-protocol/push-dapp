@@ -9,7 +9,6 @@ import styled, { useTheme } from 'styled-components';
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
-import styled, { useTheme } from 'styled-components';
 
 const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context

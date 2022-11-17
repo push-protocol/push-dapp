@@ -1,5 +1,5 @@
 // External Packages
-import { Slide, toast, ToastContainer, ToastOptions } from 'react-toastify';
+import { Slide, toast, ToastOptions } from 'react-toastify';
 
 // Internal Components
 import NotifToastUI from 'components/reusables/toasts/NotifToastUI';

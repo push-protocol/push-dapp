@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from 'ethers/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages

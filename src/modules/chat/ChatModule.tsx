@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { ConnectedUser, Feeds, User } from 'api';
+import { ConnectedUser, Feeds, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,

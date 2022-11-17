@@ -1,9 +1,9 @@
 // React + Web3 Essentials
-import {ethers,utils } from 'ethers';
+import {ethers } from 'ethers';
 
 // External Packages
 // const { getMessage, TypedData } = require('eip-712')
-import {  encrypt, recoverPersonalSignature, recoverTypedSignatureLegacy, recoverTypedSignature, recoverTypedSignature_v4} from 'eth-sig-util';
+import { recoverTypedSignature_v4} from 'eth-sig-util';
 
 // Constants
 const privateKey = "PRIVATE_KEY"

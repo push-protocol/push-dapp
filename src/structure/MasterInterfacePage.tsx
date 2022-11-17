@@ -14,7 +14,6 @@ import AirdropPage from 'pages/AirdropPage';
 import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 import ChannelsPage from 'pages/ChannelsPage';
 import ChatPage from 'pages/ChatPage';
-import NewChatPage from 'pages/ChatPageNew';
 import ComingSoonPage from 'pages/ComingSoonPage';
 import FAQPage from 'pages/FAQPage';
 import GovPage from 'pages/GovPage';

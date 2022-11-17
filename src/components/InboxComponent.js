@@ -1,12 +1,12 @@
 // React + Web3 Essentials
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
 import { FiSearch, FiSliders } from 'react-icons/fi';
 
 // Internal Components
-import { Content, Item, Section } from 'primaries/SharedStyling';
+import { Item } from 'primaries/SharedStyling';
 import Feedbox from 'segments/Feedbox';
 import SpamBox from 'segments/spam';
 

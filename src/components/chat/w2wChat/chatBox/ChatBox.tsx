@@ -33,8 +33,6 @@ import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png'
 import LockSlash from '../../../../assets/LockSlash.png'
-
-//Importing Interfaces
 import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal Configs

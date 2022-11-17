@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // External Packages
 import { useDispatch, useSelector } from "react-redux";
@@ -13,13 +13,11 @@ import ChannelLoading from "components/ChannelLoading";
 import ChannelSettings from "components/ChannelSettings";
 import CreateChannel from "components/CreateChannel";
 import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
-import { convertChainIdToChainCaip, getCAIP } from "helpers/CaipHelper";
-import { aliasChainIdsMapping, getAliasFromChannelDetails } from "helpers/UtilityHelper";
+import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
 import { useDeviceWidthCheck } from "hooks";
-import { setAliasAddress, setAliasAddressFromContract, setAliasEthAddress, setAliasVerified } from "redux/slices/adminSlice";
+import { setAliasAddress, setAliasAddressFromContract, setAliasVerified } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
-import { Content, Item, Section } from "../primaries/SharedStyling";
 
 // Internal Configs
 import { appConfig } from "config";

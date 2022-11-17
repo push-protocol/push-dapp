@@ -2,7 +2,7 @@
 import React, { useContext } from "react";
 
 // External Packages
-import { chainNameType, NotificationItem } from "@pushprotocol/uiweb";
+import { NotificationItem } from "@pushprotocol/uiweb";
 import styled, { useTheme } from "styled-components";
 import { ToastContainer } from 'react-toastify';
 

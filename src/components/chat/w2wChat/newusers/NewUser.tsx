@@ -1,10 +1,10 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from 'ethers/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { Web3Provider } from '@ethersproject/providers';
 import styled, { useTheme } from 'styled-components';
 import CloseIcon from '@material-ui/icons/Close';
 
@@ -19,6 +19,7 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
 import { Context } from 'modules/chat/ChatModule';
+
 
 function NewUser() {
   const theme = useTheme();

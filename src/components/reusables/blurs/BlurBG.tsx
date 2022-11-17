@@ -1,12 +1,10 @@
 // External Packages
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Components
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { Image, Item, Section } from 'primaries/SharedStyling';
 
 // Internal Configs
-import GLOBALS from "config/Globals";
 
 // Interfaces
 interface BlurBGPropsI {

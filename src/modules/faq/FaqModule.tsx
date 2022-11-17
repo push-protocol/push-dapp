@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { A, Button, Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
+import { A, Button, H2, Item, Section, Span } from 'primaries/SharedStyling';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';

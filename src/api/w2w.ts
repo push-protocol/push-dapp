@@ -1,7 +1,5 @@
 import { ToastPosition } from 'modules/chat/ChatModule';
 // @ts-ignore
-import { appConfig } from 'config';
-// import { MessageIPFS } from 'helpers/w2w/ipfs';
 import { toast } from 'react-toastify';
 import { Feeds, MessageIPFSWithCID, User } from 'types/chat';
 
