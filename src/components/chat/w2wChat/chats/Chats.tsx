@@ -5,13 +5,12 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 // Internal Components
-import { ImageV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
 import { MessageIPFS } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import './W2wchats.css';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -277,10 +276,9 @@ const TextMessage = styled.p`
   margin: 0px;
 `;
 
-const TimeStamp = styled.span`
+const TimeStamp = styled(ItemHV2)`
   min-width: 44px;
   font-size: 11px;
-  display: flex;
   justify-content: flex-end;
   align-items: flex-end;
   padding: 5px 0px 0px 5px;
@@ -323,7 +321,7 @@ const SenderMessage = styled.div`
   background: ${(props: any): string => props.color || '#ca599b'};
   border-radius: 16px 2px 16px 16px;
   display: flex;
-  justify-content: flex-strt;
+  justify-content: flex-start;
   align-items: center;
   color: #ffffff;
 `;
