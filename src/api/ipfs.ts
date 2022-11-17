@@ -1,9 +1,14 @@
-import { MessageIPFS } from 'helpers/w2w/ipfs';
-// @ts-ignore
-import { appConfig } from "config";
-import { MessageIPFSWithCID } from './w2w';
 
+import { MessageIPFS, MessageIPFSWithCID } from "types/chat";
+// @ts-ignore
+
+
+// Internal Configs
+import { appConfig } from "config";
+
+// Constants
 let BASE_URL = appConfig.apiUrl
+
 if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
   BASE_URL = appConfig.w2wApiUrl
 } else {

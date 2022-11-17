@@ -1,3 +1,4 @@
+// React + Web3 Essentials
 import { useEffect, useRef } from 'react';
 
 export function useClickAway(ref1:any, ref2:any, onClickAway:()=>void):void{

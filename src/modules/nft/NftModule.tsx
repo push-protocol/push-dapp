@@ -1,19 +1,23 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
 import React from 'react';
+
+// External Packages
 import ReactGA from 'react-ga';
-
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import styled, { css, useTheme } from 'styled-components';
-import { A, B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
-
 import { BsChevronExpand } from 'react-icons/bs';
 
-import { useWeb3React } from '@web3-react/core';
+// Internal Components
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { A, B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
 import AllNFTs from 'components/AllNFTs';
 import AllNFTsV2 from 'components/AllNFTsV2';
 import MyNFTs from 'components/MyNFTs';
 import MyNFTsV2 from 'components/MyNFTsV2';
 import TransferNFT from 'components/TransferNFT';
 import TransferNFTv2 from 'components/TransferNFTv2';
+
+// Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Create Header
@@ -87,14 +91,14 @@ function NftModule() {
                     toggleShowAnswer(1);
                   }}
                   hover="#e20880">
-                  <Span color={theme.color}>Does $ROCKSTAR of Push (EPNS) NFTs carry something along with NFTs?</Span>
+                  <Span color={theme.color}>Does $ROCKSTAR of Push (EPNS) Vol 2 NFTs carry something along with NFTs?</Span>
                   <BsChevronExpand size={20} color={'#ddd'} />
                 </Question>
 
                 {showAnswers[1] && (
                   <Answer>
                     <Span>
-                      Yes, Each <B>$ROCKSTAR</B> contains <B>2400 $PUSH</B> tokens that can be claimed instantly!!!{' '}
+                      Yes, Each <B>$ROCKSTAR_V2</B> contains <B>900 $PUSH</B> tokens that can be claimed instantly!!!{' '}
                       <AMod
                         href="https://medium.com/ethereum-push-notification-service/push-token-economics-d7f566c29b1a"
                         target="_blank"
@@ -122,7 +126,7 @@ function NftModule() {
                       We’ll be distributing one NFT a week (every Monday) to one community member who does something to
                       help us push the envelope forward.{' '}
                       <AMod
-                        href="https://medium.com/ethereum-push-notification-service/kicking-off-the-epns-nft-community-drops-6a5c49808cf"
+                        href="https://medium.com/push-protocol/announcing-volume-2-of-epns-rockstars-64f0b3246604"
                         target="_blank"
                         title="Read how to get $ROCKSTAR of Push (EPNS)">
                         Here are some ways by which you can get one!

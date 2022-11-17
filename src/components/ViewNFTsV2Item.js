@@ -158,7 +158,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
                   >Transfer</ActionTitle>
                 </UnsubscribeButton>
               }
-              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {/* {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
@@ -172,7 +172,7 @@ function ViewNFTV2Item({ NFTObject, setControlAt, setTokenId }) {
                     <ActionTitle hideit={txInProgress} >Rewards Claimed</ActionTitle>
                   }
                 </UnsubscribeButton>
-              }
+              } */}
             </ChannelActions>
           </ItemH>
         }

@@ -1,6 +1,10 @@
+// React + Web3 Essentials
 import React from "react";
 
+// External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
+
+// Internal Components
 import { Content, Item, Section } from '../primaries/SharedStyling';
 
 function ComingSoonPage(props) {

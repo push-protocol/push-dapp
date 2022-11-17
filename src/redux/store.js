@@ -1,4 +1,7 @@
+// External Packages
 import { combineReducers, configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+
+// Internal Components
 import adminReducer from './slices/adminSlice';
 import channelCreationReducer from './slices/channelCreationSlice';
 import channelReducer from './slices/channelSlice';

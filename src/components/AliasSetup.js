@@ -1,6 +1,11 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import FadeLoader from "react-spinners/FadeLoader";
 import styled, { css, useTheme } from "styled-components";
+
+// Internal Components
 import { Button, H3, Item, Section, Span } from "../primaries/SharedStyling";
 
 const AliasSetup = () => {

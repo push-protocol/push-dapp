@@ -1,12 +1,16 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import ReactGA from "react-ga";
-
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import styled, { useTheme } from "styled-components";
-import { Content, H2, H3, Item, Section, Span } from "../../primaries/SharedStyling";
 
+// Internal Components
+import { ItemVV2 } from "components/reusables/SharedStylingV2";
+import { H2, Item, Section, Span } from "../../primaries/SharedStyling";
 import Info from "segments/Info";
 
+// Internal Configs
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Create Header

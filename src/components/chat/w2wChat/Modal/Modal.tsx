@@ -1,7 +1,12 @@
+// React + Web3 Essentials
 import React from 'react'
-//import { ReactDOM } from 'react';
+
+// External Packages
 import ReactDOM from 'react-dom'
+
+// Internal Components
 import './Modal.css'
+
 const Modal = props => {
   if (!props.showImageModal) {
     return null

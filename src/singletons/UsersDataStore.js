@@ -1,3 +1,4 @@
+// Internal Components
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 // STATIC SINGLETON

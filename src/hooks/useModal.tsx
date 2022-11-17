@@ -1,9 +1,12 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { ThemeProvider, useTheme } from "styled-components";
-
-import { ShowLoaderToastType, ShowMessageToastType } from './useToast';
-
 import Backdrop from '@mui/material/Backdrop';
+
+// Internal Components
+import { ShowLoaderToastType, ShowMessageToastType } from './useToast';
 
 export type ModalInnerComponentType = { 
     onConfirm: (value?:any) => any, 

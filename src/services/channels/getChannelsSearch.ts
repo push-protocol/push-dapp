@@ -1,6 +1,8 @@
+// Internal Components
 import { getReq } from "api";
 import { channelsServiceEndpoints } from "helpers/RoutesHelper";
 
+// Types
 type Props = {
     page?: number,
     limit?: number,

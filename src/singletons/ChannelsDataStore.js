@@ -1,6 +1,8 @@
+// Internal Components
 import EPNSCoreHelper from "helpers/EPNSCoreHelper";
-
 import { getReq, postReq } from "api";
+
+// Internal Configs
 import { appConfig } from "config";
 
 // STATIC SINGLETON

@@ -1,6 +1,11 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import ReactGA from "react-ga";
 import styled from "styled-components";
+
+// Internal Components
 import Spambox from "segments/Spambox";
 
 // Create Header

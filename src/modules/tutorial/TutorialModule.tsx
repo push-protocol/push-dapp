@@ -1,14 +1,18 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import { useDispatch, useSelector } from "react-redux";
-
 import styled, { useTheme } from 'styled-components';
+import { BsChevronExpand } from 'react-icons/bs';
 
+// Internal Components
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { setRun } from "redux/slices/userJourneySlice";
 import { B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries/SharedStyling';
 
+// Internal Configs
 import GLOBALS, { device, globalsMargin } from "config/Globals";
-import { BsChevronExpand } from 'react-icons/bs';
 
 function TutorialModule() {
   const dispatch = useDispatch();

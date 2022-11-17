@@ -1,3 +1,4 @@
+// Constants
 export const STICKERS_URL =
   "https://cdn.jsdelivr.net/gh/naptestdev/zalo-stickers/data/favourite.json";
 

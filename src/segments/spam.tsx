@@ -3,17 +3,17 @@ import { useWeb3React } from '@web3-react/core';
 import React from 'react';
 
 // External Packages
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import { useClickAway } from 'react-use';
 import { Waypoint } from 'react-waypoint';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-import * as PushAPI from '@pushprotocol/restapi';
-import { NotificationItem } from '@pushprotocol/uiweb';
+import { MdCheckCircle, MdError } from "react-icons/md";
 
 // Internal Components
-import { getReq, postReq } from 'api';
+import * as PushAPI from '@pushprotocol/restapi';
+import { NotificationItem } from '@pushprotocol/uiweb';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { Item } from 'primaries/SharedStyling';
@@ -27,16 +27,16 @@ import SearchFilter from '../components/SearchFilter';
 import DisplayNotice from '../primaries/DisplayNotice';
 import NotificationToast from '../primaries/NotificationToast';
 import useToast from 'hooks/useToast';
-import { MdCheckCircle, MdError } from "react-icons/md";
 import { updateSubscriptionStatus } from 'redux/slices/channelSlice';
+import { ScrollItem } from './ViewChannels';
 
 // Internal Configs
 import { appConfig } from "config";
 import { device } from 'config/Globals';
-import { ScrollItem } from './ViewChannels';
-;
 
+// Constants
 const NOTIFICATIONS_PER_PAGE = 10;
+
 // Create Header
 const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
   const dispatch = useDispatch();

@@ -1,10 +1,11 @@
+// React + Web3 Essentials
 import React from "react";
 
-import styled, { css } from 'styled-components';
-import {Section, Content, Item, ItemH, Span, Anchor} from 'components/SharedStyling';
-
+// External Packages
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { Tooltip } from "@material-ui/core";
+
+// Internal Components
 
 // Faucet URLs
 function InfoTooltip({title, Infocolor="white"}) {
