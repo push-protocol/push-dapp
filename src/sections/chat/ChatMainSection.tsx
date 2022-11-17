@@ -7,9 +7,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ThreeIdConnect } from '@3id/connect';
 import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
 import { CeramicClient } from '@ceramicnetwork/http-client';
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { DID } from 'dids';
-import useToast from 'hooks/useToast';
 import { getResolver as keyDIDGetResolver } from 'key-did-resolver';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -30,11 +28,14 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import useToast from 'hooks/useToast';
+import CryptoHelper from 'helpers/CryptoHelper';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
-import CryptoHelper from 'helpers/CryptoHelper';
 
+// Interfaces
 export interface InboxChat {
   name: string;
   profilePicture: string;

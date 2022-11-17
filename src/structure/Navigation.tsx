@@ -14,7 +14,6 @@ import NavButton from 'components/NavButton';
 import NavigationButton from 'components/NavigationButton';
 import { NavigationLoaderButton } from 'components/NavigationLoaderButton';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import navigationList from 'config/NavigationList';
 import { NavigationContext } from 'contexts/NavigationContext';
 import { AnchorLink as Anchor, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { SEND_NOTIFICATION_STATES, setCanSend } from 'redux/slices/sendNotificationSlice';
@@ -28,6 +27,7 @@ import {
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
+import navigationList from 'config/NavigationList';
 
 // Create Header
 function Navigation() {

@@ -1,8 +1,10 @@
+// React + Web3 Essentials
 import React from "react";
 
-import styled, { css } from 'styled-components';
-import {Section, Content} from 'components/SharedStyling';
+// External Packages
 
+// Internal Components
+import {Section, Content} from 'components/SharedStyling';
 import CreateChannel from 'components/CreateChannel';
 
 // CREATE CHANNEL OWNER DASHBOARD

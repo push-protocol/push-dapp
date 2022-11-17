@@ -1,6 +1,8 @@
 /**
  * This file helps us to maintain the state of the user journey tutorial
  */
+
+// External Packages
  import { createSlice } from "@reduxjs/toolkit";
 
  const initialState = {

@@ -1,10 +1,17 @@
-import GLOBALS from 'config/Globals';
-import { Content, Item, Section } from 'primaries/SharedStyling';
-import React, { useEffect, useState } from 'react';
-import { FiSearch, FiSliders } from 'react-icons/fi';
-import Feedbox from 'segments/Feedbox';
-import Spambox from 'segments/Spambox';
+// React + Web3 Essentials
+import React, { useState } from 'react';
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
+import { FiSearch, FiSliders } from 'react-icons/fi';
+
+// Internal Components
+import { Item } from 'primaries/SharedStyling';
+import Feedbox from 'segments/Feedbox';
+import SpamBox from 'segments/spam';
+
+// Internal Configs
+import GLOBALS from 'config/Globals';
 
 const InboxComponent = () => {
   const [showInbox, setShowInbox] = useState(true);
@@ -54,7 +61,7 @@ const InboxComponent = () => {
       {showInbox ? (
         <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
       ) : (
-        <Spambox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
+        <SpamBox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
       )}
     </Container>
   );

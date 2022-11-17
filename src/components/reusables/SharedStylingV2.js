@@ -1,6 +1,8 @@
+// External Packages
+import styled from 'styled-components';
+
+// Internal Configs
 import { themeLight } from 'config/Themization';
-import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
 
 // Section covers the entire width and height
 export const SectionV2 = styled.section`
@@ -192,6 +194,7 @@ export const ImageV2 = styled.img`
   overflow: ${(props) => props.overflow || 'initial'};
   cursor: ${(props) => props.cursor || 'default'};
   filter: ${(props) => props.filter || 'none'};
+  alt: ${(props) => props.alt || 'Image'};
 `;
 
 export const AInlineV2 = styled.a`

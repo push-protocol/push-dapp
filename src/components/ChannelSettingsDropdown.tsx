@@ -4,12 +4,11 @@ import React from 'react';
 
 // External Packages
 import 'react-dropdown/style.css';
-import { AiOutlineDropbox, AiOutlineUserAdd, AiOutlineUserDelete, AiTwotoneDelete } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import { useClickAway } from 'react-use';
-import styled, { css, useTheme } from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { postReq } from 'api';

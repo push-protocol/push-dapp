@@ -1,29 +1,29 @@
-import CheckIcon from '@mui/icons-material/Check';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
-import { CardActionArea } from '@mui/material';
-import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardMedia from '@mui/material/CardMedia';
-import IconButton from '@mui/material/IconButton';
-import Snackbar from '@mui/material/Snackbar';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import { postIPFS } from 'api';
-import { updateUser } from 'api/w2w';
-import { CID } from 'ipfs-http-client';
-import React, { useContext, useEffect, useState } from 'react';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
-import { showCharacters } from './helpers';
+// React + Web3 Essentials
+import React, { ChangeEvent, useContext, useEffect, useState } from 'react'
 
-import { ChangeEvent } from 'react';
-import { FileMessageContent } from '../Files/Files';
-import styled from 'styled-components';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
-// import { H1, H2 } from 'primaries/SharedStyling'
+// External Packages
+import styled from 'styled-components'
+import CheckIcon from '@mui/icons-material/Check'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace'
+import { CardActionArea, IconButton } from '@mui/material'
+import MuiAlert, { AlertProps } from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardMedia from '@mui/material/CardMedia'
+import Snackbar from '@mui/material/Snackbar'
+import Typography from '@mui/material/Typography'
+import { CID } from 'ipfs-http-client'
 
+//Internal Components
+import { postIPFS } from 'api'
+import { updateUser } from 'api/w2w'
+import { Context } from 'sections/chat/ChatMainSection'
+import { showCharacters } from './helpers'
+import { FileMessageContent } from '../TypeBar/Files/Files'
+import { AppContext } from 'types/chat'
+
+// Interfaces
 interface ProfilePropsType {
   profilePicture: string;
   updateProfile: (image: string) => void;
