@@ -5,6 +5,7 @@ import React, { useRef } from "react";
 
 // External Packages
 import styled from "styled-components";
+import { BsCloudUpload } from 'react-icons/bs';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -13,7 +14,6 @@ import ImageClipper from "primaries/ImageClipper";
 import {
   Button, Content, FormSubmision, H3, Input, Item, Section, Span
 } from "primaries/SharedStyling";
-import { BsCloudUpload } from 'react-icons/bs';
 import { ReactComponent as ImageIcon } from "../assets/Image.svg";
 
 // Internal Configs

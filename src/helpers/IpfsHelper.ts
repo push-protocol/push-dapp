@@ -1,8 +1,14 @@
-import { appConfig } from "config";
+// External Packages
 import { create } from 'ipfs-http-client';
+
+// Internal Components
 import { ipfsUpload } from "services/ipfs";
 import { EnvHelper } from "./UtilityHelper";
 
+// Internal Configs
+import { appConfig } from "config";
+
+// Constants
 export const productionIpfsGateway: string = 'https://epns-gateway.infura-ipfs.io/ipfs/';
 export const developmentIpfsGateway: string = 'https://epns-testing.infura-ipfs.io/ipfs/';
 

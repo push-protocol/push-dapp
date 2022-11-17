@@ -1,11 +1,17 @@
+// React + Web3 Essentials
 import React from 'react';
-import ReactGA from 'react-ga';
 
-import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { A, Button, Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
+// External Packages
+import ReactGA from 'react-ga';
 import { BsChevronExpand } from 'react-icons/bs';
 import styled, { useTheme } from 'styled-components';
+
+// Internal Components
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { A, Button, H2, Item, Section, Span } from 'primaries/SharedStyling';
+
+// Internal Configs
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 function FaqModule() {
   ReactGA.pageview('/faq');

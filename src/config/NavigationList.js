@@ -1,4 +1,7 @@
+// Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+
+// Internal Configs
 import GLOBALS from 'config/Globals';
 import { themeDark, themeLight } from 'config/Themization';
 

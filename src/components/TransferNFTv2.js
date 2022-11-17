@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React from "react";
 
 // External Packages
@@ -13,8 +14,6 @@ import { Button, Content, FormSubmision, H2, Input, Item, Section, Span } from '
 // Internal Configs
 import { abis, addresses } from "config";
 
-
-const ethers = require('ethers');
 // Create Header
 function TransferNFTv2({ tokenId }) {
   const { account, library } = useWeb3React();

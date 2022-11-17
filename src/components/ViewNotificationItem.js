@@ -1,11 +1,11 @@
-import React from "react";
-import styled from 'styled-components';
-
-import Skeleton from '@yisheng90/react-loading';
-
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import moment from 'moment';
+import React from "react";
 
+// External Packages
+import styled from 'styled-components';
+import Skeleton from '@yisheng90/react-loading';
+import moment from 'moment';
 
 function ViewNotificationItem({ notificationObject }) {
   const { account, library } = useWeb3React();

@@ -10,10 +10,10 @@ import { useFetch } from '../../stickers/useFetchHook';
 import { useClickAway } from 'hooks/useClickAway';
 import './GifPicker.css';
 
-
 // Internal Configs
 import configs from 'config/W2WConfig';
 
+// Interfaces
 interface GifPickerProps {
   setIsOpened: (value: boolean) => void;
   onSelect: (gif: any) => void;

@@ -1,11 +1,14 @@
+// React + Web3 Essentials
 import React, { useContext } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import styled, { useTheme } from 'styled-components';
+
+// Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
-import styled, { useTheme } from 'styled-components';
 
 const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context

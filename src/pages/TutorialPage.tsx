@@ -1,10 +1,15 @@
+// React + Web3 Essentials
 import React, { useState } from "react";
-import ReactGA from "react-ga";
 
-import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import TutorialModule from "modules/tutorial/TutorialModule";
+// Extaernal Packages
+import ReactGA from "react-ga";
 import styled from 'styled-components';
 
+// Internal Components
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
+import TutorialModule from "modules/tutorial/TutorialModule";
+
+// Internal Configs
 import GLOBALS from "config/Globals";
 
 // Other Information section

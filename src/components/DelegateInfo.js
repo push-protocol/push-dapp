@@ -1,7 +1,12 @@
+// React + Web3 Essentials
 import React, { useEffect, useState } from "react";
+
+// External Packages
 import styled from "styled-components";
-import { useDeviceWidthCheck } from "hooks";
 import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
+
+// Internal Components
+import { useDeviceWidthCheck } from "hooks";
 import { Item } from "primaries/SharedStyling";
 
 const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {

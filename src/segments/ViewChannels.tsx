@@ -6,27 +6,25 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Waypoint } from "react-waypoint";
 import styled, { useTheme } from "styled-components";
+import { AiOutlineSearch } from "react-icons/ai";
 
 // Internal Compoonents
 import Faucets from "components/Faucets";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from "components/ViewChannelItem";
 import UtilityHelper, { MaskedChannels, MaskedPolygonChannels } from 'helpers/UtilityHelper';
-import { AiOutlineSearch } from "react-icons/ai";
 import { incrementPage, setChannelMeta, updateBulkSubscriptions } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { Item, ItemH } from "../primaries/SharedStyling";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import ChainsSelect from "components/ChainsSelect";
-
-// Api Services
-import { getChannels, getChannelsSearch, getUserSubscriptions } from "services";
+import { getChannels, getChannelsSearch, getUserSubscriptions } from "services"; // Api Services
 
 // Internal Configs
 import { appConfig } from "config";
 
+// Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing

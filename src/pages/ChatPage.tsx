@@ -1,9 +1,14 @@
+// React + Web3 Essentials
 import React from 'react';
 
-import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import ChatModule from 'modules/chat/ChatModule';
+// External Packages
 import styled, { useTheme } from 'styled-components';
 
+// Internal Components
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
+import ChatModule from 'modules/chat/ChatModule';
+
+// Internal Configs
 import GLOBALS from 'config/Globals';
 
 // Chat page

@@ -4,7 +4,7 @@ import React from "react";
 
 // External Packages
 import { useSelector } from "react-redux";
-import styled, { ThemeProvider, useTheme } from "styled-components";
+import styled, { useTheme } from "styled-components";
 
 // Internal Compoonents
 import { NotificationItem } from "@pushprotocol/uiweb";

@@ -1,8 +1,11 @@
+// React + Web3 Essentials
 import React, { useEffect, useState } from 'react';
 
+// External Packages
 import { toast } from 'react-toastify';
 import styled, { useTheme } from 'styled-components';
 
+// Internal Components
 import BlurBG from 'components/reusables/blurs/BlurBG';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -14,6 +17,8 @@ import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/P
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
+
+// Internal Configs
 import GLOBALS, { device } from 'config/Globals';
 
 // Helper Modules

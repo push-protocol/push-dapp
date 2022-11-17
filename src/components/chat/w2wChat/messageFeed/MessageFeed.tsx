@@ -25,8 +25,6 @@ import './MessageFeed.css';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
-
-
 interface MessageFeedProps {
   filteredUserData: User[];
   hasUserBeenSearched: boolean;
