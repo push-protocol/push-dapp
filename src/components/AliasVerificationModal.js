@@ -1,20 +1,19 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React, { useRef, useState } from 'react';
 
 // External Packages
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import { postReq } from "../api";
 import { Button, H2, H3, Input, Item, Span } from '../primaries/SharedStyling';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Internal Configs
 import { abis, addresses } from "config";
-
-const ethers = require("ethers");
 
 export default function AliasVerificationModal({
   onClose,

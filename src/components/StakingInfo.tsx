@@ -1,10 +1,17 @@
+// React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
-import { abis, addresses, appConfig } from "config";
 import { ethers } from "ethers";
+import React, { Fragment } from "react";
+
+// External Packages
+import styled, { useTheme } from "styled-components";
+
+// Internal Components
 import UtilityHelper from 'helpers/UtilityHelper';
 import { Button, Item, Span } from "primaries/SharedStyling";
-import React, { Fragment } from "react";
-import styled, { useTheme } from "styled-components";
+
+// Internal Configs
+import { abis, addresses, appConfig } from "config";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { chainId, library, account } = useWeb3React();

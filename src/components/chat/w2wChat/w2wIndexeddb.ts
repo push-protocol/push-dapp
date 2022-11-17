@@ -1,4 +1,3 @@
-// import { Feeds } from 'api';
 import { Feeds, MessageIPFS } from 'types/chat';
 
 let db: IDBDatabase;
@@ -85,7 +84,6 @@ export const addData = async <T extends string | MessageIPFS | Feeds[]>(
       return resolve(query.result);
     };
     query.onerror = (e: any) => {
-      console.log(e.target.error, dbName);
       return reject(e.target.error);
     };
     tx.oncomplete = () => {

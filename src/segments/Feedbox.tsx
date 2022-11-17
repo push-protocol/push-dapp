@@ -31,6 +31,7 @@ import { ScrollItem } from "./ViewChannels";
 import { appConfig } from "config";
 import { device } from "config/Globals";
 
+// Constants
 const NOTIFICATIONS_PER_PAGE = 10;
 
 // Create Header

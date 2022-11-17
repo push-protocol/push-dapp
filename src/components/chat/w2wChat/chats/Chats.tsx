@@ -17,7 +17,6 @@ import './W2wchats.css';
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 
-
 interface ChatProps {
   msg: MessageIPFS;
   caip10: string;
@@ -27,6 +26,9 @@ interface ChatProps {
 interface TextProps {
   content: string;
 }
+
+// Constants
+const infura_URL = appConfig.infuraApiUrl;
 const URL_REGEX =
   /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
 

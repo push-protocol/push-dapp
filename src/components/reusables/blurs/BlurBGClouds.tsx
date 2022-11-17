@@ -1,8 +1,10 @@
+// External Packages
+import styled from 'styled-components';
 
+// Internal Components
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS from "config/Globals";
-import { Image, Item, Section } from 'primaries/SharedStyling';
-import styled, { css, keyframes } from 'styled-components';
+
+// Internal Configs
 
 // Create Blur BG Clouds
 const BlurBGClouds = () => {

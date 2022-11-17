@@ -22,6 +22,7 @@ interface SpinnerPropsI {
   type: number;
 }
 
+// Constants
 export const SPINNER_TYPE = {
   PROCESSING: 1,
   WARNING: 2,

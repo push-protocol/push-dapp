@@ -1,36 +1,41 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import ReactGA from 'react-ga';
-import styled, { useTheme } from 'styled-components';
+import { ThreeIdConnect } from '@3id/connect';
+import { getResolver as threeIDDIDGetResolver } from '@ceramicnetwork/3id-did-resolver';
+import { CeramicClient } from '@ceramicnetwork/http-client';
+import { DID } from 'dids';
+import { getResolver as keyDIDGetResolver } from 'key-did-resolver';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { ConnectedUser, Feeds, User } from 'types/chat';
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ConnectedUser, Feeds, User } from 'api';
 import LoaderSpinner, {
-  LOADER_OVERLAY,
-  LOADER_SPINNER_TYPE,
-  LOADER_TYPE,
-  PROGRESS_POSITIONING,
+  LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE,
+  PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-
-// Internal Configs
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import useToast from 'hooks/useToast';
 import CryptoHelper from 'helpers/CryptoHelper';
 
+// Internal Configs
+import GLOBALS, { device } from 'config/Globals';
+
+// Interfaces
 export interface InboxChat {
   name: string;
   profilePicture: string;
@@ -63,6 +68,8 @@ export interface AppContext {
   viewChatBox: boolean;
   receivedIntents: Feeds[];
   setReceivedIntents: (rIntent: Feeds[]) => void;
+  // did: DID;
+  // setDID: (did: DID) => void;
   setSearchedUser: (searched: string) => void;
   searchedUser: string;
   setChat: (feed: Feeds) => void;
@@ -97,9 +104,10 @@ export const ToastPosition: ToastOptions = {
 
 export const Context = React.createContext<AppContext | null>(null);
 
-// Create Header
-function Chat() {
-  const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
+// Chat Sections
+// Divided into two, left and right
+const ChatMainSection = () => {
+  const { connector, account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
 
@@ -112,6 +120,8 @@ function Chat() {
     enabled: false,
     title: null,
   });
+  const [user, setUser] = useState();
+  const [did, setDID] = useState<DID>();
   const [searchedUser, setSearchedUser] = useState<string>('');
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
@@ -121,6 +131,7 @@ function Chat() {
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
 
+  const chatBoxToast = useToast();
   const queryClient = new QueryClient({});
 
   // For video calling
@@ -130,16 +141,6 @@ function Chat() {
     toPublicKeyArmored: null,
     privateKeyArmored: null,
     establishConnection: 0,
-  });
-
-  // React GA Analytics
-  ReactGA.pageview('/chat');
-
-  window.ethereum.on('accountsChanged', (account) => {
-    window.location.reload();
-  });
-  window.ethereum.on('networksChanged', () => {
-    window.location.reload();
   });
 
   useEffect(() => {
@@ -157,7 +158,7 @@ function Chat() {
         toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 2,
-      });
+      })
     }
   }, [call]);
 
@@ -169,9 +170,10 @@ function Chat() {
         toPublicKeyArmored: currentChat ? currentChat.publicKey : null,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 3,
-      });
+      })
     }
   }, [callAccepted]);
+  
 
   // Rest of the loading logic
   useEffect(() => {
@@ -218,6 +220,7 @@ function Chat() {
         profilePicture:
           'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
         wallets: caip10,
+        ///
         about: '',
         allowedNumMsg: 0,
         did: caip10,
@@ -266,138 +269,102 @@ function Chat() {
     }
   };
 
+  // RENDER
   return (
-    <Container>
-      <ItemHV2>
-        {!isLoading ? (
-          <QueryClientProvider client={queryClient}>
-            <Context.Provider
-              value={{
-                currentChat,
-                receivedIntents,
-                setReceivedIntents,
-                viewChatBox,
-                setChat,
-                setSearchedUser,
-                searchedUser,
-                connectedUser,
-                setConnectedUser,
-                intents,
-                setIntents,
-                inbox,
-                setInbox,
-                pendingRequests,
-                setPendingRequests,
-                hasUserBeenSearched,
-                setHasUserBeenSearched,
-                loadingMessage,
-                setLoadingMessage,
-                setBlockedLoading,
-                activeTab,
-                setActiveTab,
-                userShouldBeSearched,
-                setUserShouldBeSearched,
-              }}
-            >
-              <ChatSidebarContainer
-                flex="1"
-                maxWidth="340px"
-                minWidth="280px"
-                padding="10px 10px 10px 20px"
-                boxSizing="content-box"
-                background={theme.default.bg}
-                chatActive={viewChatBox}
-              >
-                <ChatSidebarSection />
-              </ChatSidebarContainer>
-              <ChatContainer
-                padding="10px 10px 10px 10px"
-                chatActive={viewChatBox}
-              >
-                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
-              </ChatContainer>
-            </Context.Provider>
-            {/* The rest of your application */}
-            <ReactQueryDevtools initialIsOpen={false} />
-          </QueryClientProvider>
-        ) : (
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
-        )}
-
-        {/* This always needs to be last */}
-        {blockedLoading.enabled && (
-          <LoaderSpinner
-            type={LOADER_TYPE.STANDALONE}
-            overlay={LOADER_OVERLAY.ONTOP}
-            blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-            title={blockedLoading.title}
-            width="50%"
-            spinnerEnabled={blockedLoading.spinnerEnabled}
-            spinnerSize={blockedLoading.spinnerSize}
-            spinnerType={blockedLoading.spinnerType}
-            progressEnabled={blockedLoading.progressEnabled}
-            progressPositioning={PROGRESS_POSITIONING.BOTTOM}
-            progress={blockedLoading.progress}
-            progressNotice={blockedLoading.progressNotice}
-          />
-        )}
-
-        {/* But video chat trumps this now!!! */}
-        {videoCallInfo.establishConnection > 0 && (
-          <VideoCallSection
-            videoCallInfo={videoCallInfo}
-            setVideoCallInfo={setVideoCallInfo}
-            endVideoCallHook={() => {
-              setVideoCallInfo({
-                address: null,
-                fromPublicKeyArmored: null,
-                toPublicKeyArmored: null,
-                privateKeyArmored: null,
-                establishConnection: 0,
-              });
+    <ItemHV2>
+      {!isLoading ? (
+        <QueryClientProvider client={queryClient}>
+          <Context.Provider
+            value={{
+              currentChat,
+              receivedIntents,
+              setReceivedIntents,
+              viewChatBox,
+              setChat,
+              setSearchedUser,
+              searchedUser,
+              connectedUser,
+              setConnectedUser,
+              intents,
+              setIntents,
+              inbox,
+              setInbox,
+              pendingRequests,
+              setPendingRequests,
+              hasUserBeenSearched,
+              setHasUserBeenSearched,
+              loadingMessage,
+              setLoadingMessage,
+              setBlockedLoading,
+              activeTab,
+              setActiveTab,
+              userShouldBeSearched,
+              setUserShouldBeSearched,
             }}
-          />
-        )}
-      </ItemHV2>
-    </Container>
+          >
+            <ChatSidebarContainer
+              flex="1"
+              maxWidth="340px"
+              minWidth="280px"
+              padding="10px 10px 10px 20px"
+              boxSizing="content-box"
+              background={theme.default.bg}
+              chatActive={viewChatBox}
+            >
+              <ChatSidebarSection />
+            </ChatSidebarContainer>
+            <ChatContainer
+              padding="10px 10px 10px 10px"
+              chatActive={viewChatBox}
+            >
+              <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
+            </ChatContainer>
+          </Context.Provider>
+          {/* The rest of your application */}
+          <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+      ) : (
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />
+      )}
+
+      {/* This always needs to be last */}
+      {blockedLoading.enabled && (
+        <LoaderSpinner
+          type={LOADER_TYPE.STANDALONE}
+          overlay={LOADER_OVERLAY.ONTOP}
+          blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+          title={blockedLoading.title}
+          width="50%"
+          spinnerEnabled={blockedLoading.spinnerEnabled}
+          spinnerSize={blockedLoading.spinnerSize}
+          spinnerType={blockedLoading.spinnerType}
+          progressEnabled={blockedLoading.progressEnabled}
+          progressPositioning={PROGRESS_POSITIONING.BOTTOM}
+          progress={blockedLoading.progress}
+          progressNotice={blockedLoading.progressNotice}
+        />
+      )}
+
+      {/* But video chat trumps this now!!! */}
+      {videoCallInfo.establishConnection > 0 && (
+        <VideoCallSection
+          videoCallInfo={videoCallInfo}
+          setVideoCallInfo={setVideoCallInfo}
+          endVideoCallHook={() => {
+            setVideoCallInfo({
+              address: null,
+              fromPublicKeyArmored: null,
+              toPublicKeyArmored: null,
+              privateKeyArmored: null,
+              establishConnection: 0
+            });
+          }}
+        />
+      )}
+    </ItemHV2>
   );
-}
-
-// css styles
-const Container = styled.div`
-	align-items: stretch;
-	align-self: stretch;
-  flex: 1;
-	background: ${(props) => props.theme.default.bg};
-	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
-	display: flex;
-	flex-direction: column;
-	flex: initial;
-	justify-content: center;
-	position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-
-  margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
-  
-  @media ${device.laptop} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
-  }
-
-  @media ${device.mobileM} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
-    border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-`;
+};
+export default ChatMainSection;
 
 const ChatSidebarContainer = styled(ItemVV2)`
   @media ${device.tablet} {
@@ -429,6 +396,3 @@ const ChatContainer = styled(ItemVV2)`
     z-index: 2;
   }
 `;
-
-// Export Default
-export default Chat;

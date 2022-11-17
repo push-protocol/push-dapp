@@ -1,20 +1,19 @@
 // React + Web3 Essentials
 import { useWeb3React } from "@web3-react/core";
+import { ethers } from 'ethers';
 import React from "react";
 
 // External Packages
 import styled, { css } from "styled-components";
+import { toast } from "react-toastify";
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { toast } from "react-toastify";
 import InfoTooltip from "../primaries/InfoTooltip";
 import { B, Button, H2, H3, Input, Item, ItemH, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
 import { abis, addresses } from "config";
-
-const ethers = require("ethers");
 
 const bn = function (number, defaultValue = null) { if (number == null) { if (defaultValue == null) { return null } number = defaultValue } return ethers.BigNumber.from(number) }
 
