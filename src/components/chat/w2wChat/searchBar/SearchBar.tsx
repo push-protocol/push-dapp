@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from 'ethers/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -22,8 +22,7 @@ import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
 import { AppContext, User } from 'types/chat';
 
-// Internal Configs
-
+// Interfaces
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;

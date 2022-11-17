@@ -1,6 +1,11 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import { useSelector } from "react-redux";
 import styled, { css } from "styled-components";
+
+// Internal Components
 import { Section } from "../primaries/SharedStyling";
 import AliasSetup from "./AliasSetup";
 import ChangeNetwork from "./ChangeNetwork";

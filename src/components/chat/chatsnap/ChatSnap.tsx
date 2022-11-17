@@ -10,7 +10,6 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveEns } from 'hooks/useResolveEns';
 
 // Internal Configs
-import { appConfig } from 'config';
 import GLOBALS from "config/Globals";
 
 // Interfaces

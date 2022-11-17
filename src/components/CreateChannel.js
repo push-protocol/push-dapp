@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
 // External Packages
@@ -15,7 +16,7 @@ import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
 import { isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
-import { Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
+import { Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
 import './createChannel.css';
 import ProcessingInfo from './ProcessingInfo';
@@ -25,9 +26,8 @@ import UploadLogo from './UploadLogo';
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 
-const ethers = require('ethers');
+// Constants
 const minStakeFees = 50;
-
 const coreChainId = appConfig.coreContractChain;
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 

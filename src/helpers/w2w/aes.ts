@@ -1,3 +1,4 @@
+// External Packages
 import CryptoJS from 'crypto-js'
 
 export function encrypt({ plainText, secretKey }: { plainText: string; secretKey: string }): string {

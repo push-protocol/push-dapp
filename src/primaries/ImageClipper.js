@@ -1,3 +1,4 @@
+// React + Web3 Essentials
 import React, {
   forwardRef,
   Fragment,
@@ -5,6 +6,8 @@ import React, {
   useImperativeHandle,
   useState,
 } from "react";
+
+// External Packages
 import Cropper from "react-easy-crop";
 import styledComponents from "styled-components";
 import Resizer from "react-image-file-resizer";

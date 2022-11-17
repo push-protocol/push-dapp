@@ -1,5 +1,8 @@
-import { useEffect } from 'react'
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core'
+import { useEffect } from 'react'
+
+// Internal Components
 import { injected } from 'connectors'
 
 export function useInactiveListener(suppress: boolean = false) {

@@ -1,4 +1,3 @@
-// import { Feeds } from 'api';
 import { Feeds, MessageIPFS } from 'types/chat';
 
 let db: IDBDatabase;

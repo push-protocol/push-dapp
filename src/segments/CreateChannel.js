@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import {ethers} from 'ethers';
 import React from "react";
 
 // External Packages
@@ -13,7 +14,6 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 // Internal Configs
 import { abis, addresses } from "config";
 
-const ethers = require('ethers');
 const ipfs = require('ipfs-api')()
 
 // Create Header

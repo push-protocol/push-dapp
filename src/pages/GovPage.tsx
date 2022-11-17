@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import ReactGA from "react-ga";
+import React from "react";
 
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
 import GovModule from "modules/gov/GovModule";
 import styled from 'styled-components';
 
-import GLOBALS from "config/Globals";
 
 // Other Information section
 const GovPage = () => {

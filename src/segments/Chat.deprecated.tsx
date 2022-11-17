@@ -1,10 +1,15 @@
+// React + Web3 Essentials
 import React from 'react'
-import styled, { useTheme } from 'styled-components'
 
+// External Packages
+import styled, { useTheme } from 'styled-components'
 import { ThemeProvider } from 'styled-components'
 
+// Internal Components
 import W2wIndex from 'components/chat/w2wChat/w2wIndex.deprecated'
 import { Item, ItemH } from 'components/SharedStyling'
+
+// Internal Configs
 import GLOBALS from 'config/Globals'
 
 // Create Header

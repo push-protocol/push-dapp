@@ -7,6 +7,7 @@ import styled, { ThemeProvider, useTheme } from "styled-components";
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
+// Types
 type ModalConfirmButtonType = {
     text:string,
     onClick: ()=>void,

@@ -3,11 +3,11 @@ import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import React from "react";
 
 // External Packages
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import styled, { css } from 'styled-components';
 
 // Internal Compoonents
 import Blockies from "components/BlockiesIdenticon";
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Create Header
 function Profile() {

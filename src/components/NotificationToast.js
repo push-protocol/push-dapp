@@ -1,11 +1,15 @@
-import React from "react";
-import styled, { css } from 'styled-components';
-
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import React from "react";
+
+// External Packages
+import styled, { css } from 'styled-components';
 import moment from 'moment';
 import { toast } from 'react-toastify';
+
+// Internal Components
+import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
 
 function NotificationToast({ notification, clearToast }) {
 

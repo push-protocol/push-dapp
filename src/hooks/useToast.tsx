@@ -1,14 +1,18 @@
-import React from "react";
-import { MdOutlineClose } from "react-icons/md";
-import FadeLoader from "react-spinners/FadeLoader";
-import { toast } from "react-toastify";
-import styled, { ThemeProvider, useTheme } from "styled-components";
+// React + Web3 Essentials
+import React from 'react';
 
-type LoaderToastType = { msg: string, loaderColor: string, textColor:string }
+// External Packages
+import { MdOutlineClose } from 'react-icons/md';
+import FadeLoader from 'react-spinners/FadeLoader';
+import { toast } from 'react-toastify';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
+
+// Types
+type LoaderToastType = { msg: string; loaderColor: string; textColor: string };
 
 const override: React.CSSProperties = {
   // width: "fit-content",
-  height: "45px",
+  height: '45px',
 };
 
 const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
@@ -20,34 +24,57 @@ const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
       margin={0}
       css={override}
     />
-    <LoaderMessage style={{
-      color: textColor
-    }}>{msg}</LoaderMessage>
+    <LoaderMessage
+      style={{
+        color: textColor,
+      }}
+    >
+      {msg}
+    </LoaderMessage>
   </LoaderNotification>
 );
 
-const CloseButton = ({ closeToast }) => (<Button onClick={closeToast}>
-  <MdOutlineClose color="#657795" size="100%" />
-</Button>)
+const CloseButton = ({ closeToast }) => (
+  <Button onClick={closeToast}>
+    <MdOutlineClose
+      color="#657795"
+      size="100%"
+    />
+  </Button>
+);
 
-export type ShowLoaderToastType = ({loaderMessage} : {loaderMessage: string}) => React.ReactText;
+export type ShowLoaderToastType = ({ loaderMessage }: { loaderMessage: string }) => React.ReactText;
 
-export type ShowMessageToastType = ({toastTitle, toastMessage, toastType, getToastIcon}:{toastTitle: string, toastMessage: string, toastType: "SUCCESS" | "ERROR", getToastIcon?: (size: number) => JSX.Element}) => void
+export type ShowMessageToastType = ({
+  toastTitle,
+  toastMessage,
+  toastType,
+  getToastIcon,
+}: {
+  toastTitle: string;
+  toastMessage: string;
+  toastType: 'SUCCESS' | 'ERROR';
+  getToastIcon?: (size: number) => JSX.Element;
+}) => void;
 
 const useToast = (
-    autoClose: number = 3000,
-    position: "top-left" | "top-right" | "bottom-left" | "bottom-right" = "top-right"
-  ) => {
+  autoClose: number = 3000,
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' = 'top-right'
+) => {
   const toastId = React.useRef(null);
   const themes = useTheme();
 
   let isLoaderToastShown = false;
 
-  const showLoaderToast : ShowLoaderToastType = ({loaderMessage}) => {
+  const showLoaderToast: ShowLoaderToastType = ({ loaderMessage }) => {
     isLoaderToastShown = true;
-    return toastId.current = toast(
+    return (toastId.current = toast(
       <ThemeProvider theme={themes}>
-        <LoaderToast msg={loaderMessage} loaderColor="#CF1C84" textColor={themes.toastTextColor} />
+        <LoaderToast
+          msg={loaderMessage}
+          loaderColor="#CF1C84"
+          textColor={themes.toastTextColor}
+        />
       </ThemeProvider>,
       {
         position,
@@ -62,30 +89,34 @@ const useToast = (
           background: themes.mainBg,
           border: `1px solid ${themes.toastBorderColor}`,
           boxShadow: `8px 8px 8px ${themes.toastShadowColor}`,
-          borderRadius: "20px",
-        }
-      })
-    }
+          borderRadius: '20px',
+        },
+      }
+    ));
+  };
 
-  const showMessageToast : ShowMessageToastType = ({toastTitle, toastMessage, toastType, getToastIcon}) => {
-    const toastUI = 
-    <Toast>
-      <ToastIcon>
-        {getToastIcon ? getToastIcon(30) : ""}
-      </ToastIcon>
-      <ToastContent>
-        <ToastTitle style={{
-          color: themes.fontColor
-        }}>
-          {toastTitle}
-        </ToastTitle>
-        <ToastMessage style={{
-          color: themes.toastTextColor
-        }}>
-          {toastMessage}
-        </ToastMessage>
-      </ToastContent>
-    </Toast>;
+  const showMessageToast: ShowMessageToastType = ({ toastTitle, toastMessage, toastType, getToastIcon }) => {
+    const toastUI = (
+      <Toast>
+        <ToastIcon>{getToastIcon ? getToastIcon(30) : ''}</ToastIcon>
+        <ToastContent>
+          <ToastTitle
+            style={{
+              color: themes.fontColor,
+            }}
+          >
+            {toastTitle}
+          </ToastTitle>
+          <ToastMessage
+            style={{
+              color: themes.toastTextColor,
+            }}
+          >
+            {toastMessage}
+          </ToastMessage>
+        </ToastContent>
+      </Toast>
+    );
 
     const toastRenderParams = {
       position,
@@ -98,33 +129,31 @@ const useToast = (
       closeButton: CloseButton,
       autoClose: autoClose,
       style: {
-        background: toastType === "SUCCESS" ? themes.toastSuccessBackground : themes.toastErrorBackground,
+        background: toastType === 'SUCCESS' ? themes.toastSuccessBackground : themes.toastErrorBackground,
         boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
-        borderRadius: "20px",
+        borderRadius: '20px',
       },
-    }
+    };
 
-    if(!isLoaderToastShown){
+    if (!isLoaderToastShown) {
       // render a new toast
-      toastId.current = toast(
-        toastUI,
-        {
-          ...toastRenderParams
-        }
-      );
+      toastId.current = toast(toastUI, {
+        ...toastRenderParams,
+      });
     }
 
     // update the old toast
     toast.update(toastId.current, {
       render: toastUI,
-      ...toastRenderParams 
+      ...toastRenderParams,
     });
-  }
+  };
 
   return {
-    showLoaderToast, showMessageToast
-  }
-}
+    showLoaderToast,
+    showMessageToast,
+  };
+};
 
 const LoaderNotification = styled.div`
   display: flex;
@@ -149,7 +178,7 @@ const Toast = styled.div`
   margin: 1.5% 1%;
 `;
 const ToastIcon = styled.div`
-  width:15%;
+  width: 15%;
   margin-right: 4%;
 `;
 const ToastContent = styled.div`
@@ -174,12 +203,12 @@ const ToastMessage = styled.div`
 `;
 
 const Button = styled.button`
-  cursor:pointer;
-  background:none;
-  margin:0;
-  padding:0;
+  cursor: pointer;
+  background: none;
+  margin: 0;
+  padding: 0;
   width: 1.3rem;
   height: 1.3rem;
-`
+`;
 
 export default useToast;
