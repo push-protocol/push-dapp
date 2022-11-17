@@ -1,9 +1,11 @@
+// React + Web3 Essentials
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 import styled from 'styled-components';
 
 import { ImageV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+
 
 const Modal = props => {
   if (!props.showImageModal) {

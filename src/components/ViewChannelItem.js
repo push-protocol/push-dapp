@@ -1,40 +1,41 @@
 // React + Web3 Essentials
-import { isCommunityResourcable } from "@ethersproject/providers";
-import { useWeb3React } from "@web3-react/core";
-import React, { useEffect } from "react";
+import { isCommunityResourcable } from '@ethersproject/providers';
+import { useWeb3React } from '@web3-react/core';
+import React, { useEffect } from 'react';
 
 // External Packages
-import Skeleton from "@yisheng90/react-loading";
-import { GoVerified } from "react-icons/go";
-import { IoMdPeople } from "react-icons/io";
-import { MdCheckCircle, MdError } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { toast as toaster } from "react-toastify";
-import "react-toastify/dist/ReactToastify.min.css";
-import styled, { css, useTheme } from "styled-components";
+import Skeleton from '@yisheng90/react-loading';
+import { GoVerified } from 'react-icons/go';
+import { IoMdPeople } from 'react-icons/io';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast as toaster } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
+import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import * as PushAPI from "@pushprotocol/restapi";
-import { postReq } from "api";
-import { Device } from "assets/Device";
-import MetaInfoDisplayer from "components/MetaInfoDisplayer";
+import * as PushAPI from '@pushprotocol/restapi';
+import { postReq } from 'api';
+import { Device } from 'assets/Device';
+import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import useToast from "hooks/useToast";
-import { cacheChannelInfo, cacheSubscribe, cacheUnsubscribe, updateSubscriptionStatus } from "redux/slices/channelSlice";
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import useToast from 'hooks/useToast';
 import {
-  addNewWelcomeNotif, incrementStepIndex
-} from "redux/slices/userJourneySlice";
-import ChannelTutorial, {
-  isChannelTutorialized
-} from "segments/ChannelTutorial";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
-import NotificationToast from "../primaries/NotificationToast";
-import { Image, ItemH, Span } from "../primaries/SharedStyling";
-import { aliasChainIdsMapping, MaskedPolygonChannels } from "helpers/UtilityHelper";
+  cacheChannelInfo,
+  cacheSubscribe,
+  cacheUnsubscribe,
+  updateSubscriptionStatus,
+} from 'redux/slices/channelSlice';
+import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourneySlice';
+import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
+import NotificationToast from '../primaries/NotificationToast';
+import { Image, ItemH, Span } from '../primaries/SharedStyling';
+import { aliasChainIdsMapping, MaskedPolygonChannels } from 'helpers/UtilityHelper';
 
 // Internal Configs
-import { appConfig } from "config";
+import { appConfig } from 'config';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -43,19 +44,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const themes = useTheme();
 
   const { run, stepIndex } = useSelector((state) => state.userJourney);
-  
 
-  const {
-    epnsReadProvider,
-    epnsWriteProvider,
-    epnsCommReadProvider,
-    pushAdminAddress,
-    ZERO_ADDRESS,
-  } = useSelector((state) => state.contracts);
-  const { canVerify } = useSelector((state) => state.admin);
-  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector(
-    (state) => state.channels
+  const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider, pushAdminAddress, ZERO_ADDRESS } = useSelector(
+    (state) => state.contracts
   );
+  const { canVerify } = useSelector((state) => state.admin);
+  const { channelsCache, CHANNEL_BLACKLIST, subscriptionStatus } = useSelector((state) => state.channels);
   const { account, library, chainId } = useWeb3React();
 
   const onCoreNetwork = chainId === appConfig.coreContractChain;
@@ -140,7 +134,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [isVerified, channelObject]);
 
   const EPNS_DOMAIN = {
-    name: "EPNS COMM V1",
+    name: 'EPNS COMM V1',
     chainId: chainId,
     verifyingContract: epnsCommReadProvider.address,
   };
@@ -152,9 +146,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       if (channelsCache[channelObject.channel]) {
         channelJson = channelsCache[channelObject.channel];
       } else {
-        channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(
-          channelObject.channel
-        );
+        channelJson = await ChannelsDataStore.instance.getChannelJsonAsync(channelObject.channel);
         dispatch(
           cacheChannelInfo({
             address: channelObject.channel,
@@ -185,8 +177,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     if (!channelObject) return;
     setIsVerified(
       Boolean(
-        (channelObject.verifiedBy &&
-          channelObject.verifiedBy !== ZERO_ADDRESS) ||
+        (channelObject.verifiedBy && channelObject.verifiedBy !== ZERO_ADDRESS) ||
           channelObject.channel === pushAdminAddress
       )
     );
@@ -196,34 +187,42 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   // toast customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+        spinnerColor={color}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
 
   // to subscribe
   const subscribe = async () => {
-    console.log("click executed");
+    console.log('click executed');
     subscribeAction(false);
   };
 
   const formatAddress = (addressText) => {
-    return addressText.length > 40
-      ? `${addressText.slice(0, 4)}....${addressText.slice(36)}`
-      : addressText;
+    return addressText.length > 40 ? `${addressText.slice(0, 4)}....${addressText.slice(36)}` : addressText;
   };
 
   // Toastify
   let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: "bottom-right",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    toaster.dark(
+      <LoaderToast
+        msg="Preparing Notification"
+        color="#fff"
+      />,
+      {
+        position: 'bottom-right',
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }
+    );
 
   const verifyChannel = () => {
     setvLoading(true);
@@ -232,10 +231,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       .verifyChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
-        console.log("Transaction Sent!");
+        console.log('Transaction Sent!');
 
         toaster.update(notificationToast(), {
-          render: "Transaction sent",
+          render: 'Transaction sent',
           type: toaster.TYPE.INFO,
           autoClose: 5000,
         });
@@ -245,9 +244,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         setIsVerified(true);
       })
       .catch((err) => {
-        console.log("!!!Error verifyChannel() --> %o", err);
+        console.log('!!!Error verifyChannel() --> %o', err);
         toaster.update(notificationToast(), {
-          render: "Transacion Failed: " + err.error?.message || "Unknown Error",
+          render: 'Transacion Failed: ' + err.error?.message || 'Unknown Error',
           type: toaster.TYPE.ERROR,
           autoClose: 5000,
         });
@@ -263,22 +262,22 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       .unverifyChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
-        console.log("Transaction Sent!");
+        console.log('Transaction Sent!');
 
         toaster.update(notificationToast(), {
-          render: "Transaction sent",
+          render: 'Transaction sent',
           type: toaster.TYPE.INFO,
           autoClose: 5000,
         });
 
         await tx.wait(1);
-        console.log("Transaction Mined!");
+        console.log('Transaction Mined!');
         setIsVerified(false);
       })
       .catch((err) => {
-        console.log("!!!Error handleSendMessage() --> %o", err);
+        console.log('!!!Error handleSendMessage() --> %o', err);
         toaster.update(notificationToast(), {
-          render: "Transacion Failed: " + err.error?.message || "Unknown Error",
+          render: 'Transacion Failed: ' + err.error?.message || 'Unknown Error',
           type: toaster.TYPE.ERROR,
           autoClose: 5000,
         });
@@ -291,10 +290,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       .blockChannel(channelObject.channel)
       .then(async (tx) => {
         console.log(tx);
-        console.log("Transaction Sent!");
+        console.log('Transaction Sent!');
 
         toaster.update(notificationToast(), {
-          render: "Transaction Sent",
+          render: 'Transaction Sent',
           type: toaster.TYPE.INFO,
           autoClose: 5000,
         });
@@ -303,9 +302,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         // console.log ("Transaction Mined!");
       })
       .catch((err) => {
-        console.log("!!!Error handleSendMessage() --> %o", err);
+        console.log('!!!Error handleSendMessage() --> %o', err);
         toaster.update(notificationToast(), {
-          render: "Transacion Failed: " + err.error.message,
+          render: 'Transacion Failed: ' + err.error.message,
           type: toaster.TYPE.ERROR,
           autoClose: 5000,
         });
@@ -346,51 +345,54 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   ._signTypedData(EPNS_DOMAIN, type, message);
       // subscribeToast.showToast("Waiting for Confirmation...");
 
-      subscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
+      subscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
       if (run) {
         const type = {
           Subscribe: [
-            { name: "channel", type: "address" },
-            { name: "subscriber", type: "address" },
-            { name: "action", type: "string" },
+            { name: 'channel', type: 'address' },
+            { name: 'subscriber', type: 'address' },
+            { name: 'action', type: 'string' },
           ],
         };
-        
+
         const message = {
           channel: channelAddress,
           subscriber: account,
-          action: "Subscribe",
+          action: 'Subscribe',
         };
 
-        await library
-          .getSigner(account)
-          ._signTypedData(EPNS_DOMAIN, type, message);
-        
-        console.log("in run");
+        await library.getSigner(account)._signTypedData(EPNS_DOMAIN, type, message);
+
+        console.log('in run');
         subscribeToast.showMessageToast({
-          toastTitle:"Success", 
-          toastMessage: "Successfully opted into channel !", 
-          toastType: "SUCCESS", 
-          getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
-        })
+          toastTitle: 'Success',
+          toastMessage: 'Successfully opted into channel !',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
 
         dispatch(
           addNewWelcomeNotif({
-            cta: "",
+            cta: '',
             title: channelJson.info,
             message: `Welcome to ${channelJson.name} Channel. From now onwards, you'll be getting notifications from this channel`,
             icon: channelJson.icon,
             url: channelJson.url,
-            sid: "",
+            sid: '',
             app: channelJson.name,
-            image: "",
+            image: '',
           })
         );
         setTxInProgress(false);
         setSubscribed(true);
         if (stepIndex === 5) {
-          console.log("this is working");
+          console.log('this is working');
           dispatch(incrementStepIndex());
         }
         return;
@@ -408,23 +410,33 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           setSubscriberCount(subscriberCount + 1);
 
           subscribeToast.showMessageToast({
-            toastTitle:"Success", 
-            toastMessage: "Successfully opted into channel !", 
-            toastType: "SUCCESS", 
-            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
-        })
+            toastTitle: 'Success',
+            toastMessage: 'Successfully opted into channel !',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
+          });
         },
         onError: () => {
           console.error('opt in error');
           subscribeToast.showMessageToast({
-            toastTitle:"Error", 
-            toastMessage: `There was an error opting into channel`, 
-            toastType:  "ERROR", 
-            getToastIcon: (size) => <MdError size={size} color="red" />
-          })
+            toastTitle: 'Error',
+            toastMessage: `There was an error opting into channel`,
+            toastType: 'ERROR',
+            getToastIcon: (size) => (
+              <MdError
+                size={size}
+                color="red"
+              />
+            ),
+          });
         },
-        env: appConfig.pushNodesEnv
-      })
+        env: appConfig.pushNodesEnv,
+      });
 
       // postReq("/channels/subscribe", {
       //   signature,
@@ -449,11 +461,16 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // });
     } catch (err) {
       subscribeToast.showMessageToast({
-        toastTitle:"Error", 
-        toastMessage: `There was an error opting into channel ( ${err.message} )`, 
-        toastType: "ERROR", 
-        getToastIcon: (size) => <MdError size={size} color="red" />
-      })
+        toastTitle: 'Error',
+        toastMessage: `There was an error opting into channel ( ${err.message} )`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
 
       console.log(err);
     } finally {
@@ -464,19 +481,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const copyToClipboard = (address) => {
     let hostname = window.location.hostname;
     // if we are on localhost, attach the port
-    if (hostname === "localhost") {
-      hostname = hostname + ":3000";
+    if (hostname === 'localhost') {
+      hostname = hostname + ':3000';
     }
     const url = `${hostname}/#/channels?channel=${address}`;
     // fallback for non navigator browser support
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(url);
     } else {
-      const el = document.createElement("textarea");
+      const el = document.createElement('textarea');
       el.value = url;
       document.body.appendChild(el);
       el.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       document.body.removeChild(el);
     }
   };
@@ -507,7 +524,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   .getSigner(account)
       //   ._signTypedData(EPNS_DOMAIN, type, message);
 
-      unsubscribeToast.showLoaderToast({loaderMessage: "Waiting for Confirmation..."});
+      unsubscribeToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
       const _signer = await library.getSigner(account);
       await PushAPI.channels.unsubscribe({
@@ -521,23 +538,33 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           setSubscriberCount(subscriberCount - 1);
 
           unsubscribeToast.showMessageToast({
-            toastTitle:"Success", 
-            toastMessage: "Successfully opted out of channel !", 
-            toastType: "SUCCESS", 
-            getToastIcon: (size) => <MdCheckCircle size={size} color="green" />
-          })
+            toastTitle: 'Success',
+            toastMessage: 'Successfully opted out of channel !',
+            toastType: 'SUCCESS',
+            getToastIcon: (size) => (
+              <MdCheckCircle
+                size={size}
+                color="green"
+              />
+            ),
+          });
         },
         onError: () => {
           console.error('opt out error');
           unsubscribeToast.showMessageToast({
-            toastTitle:"Error", 
-            toastMessage: `There was an error opting out of channel`, 
-            toastType: "ERROR", 
-            getToastIcon: (size) => <MdError size={size} color="red" />
-          })
+            toastTitle: 'Error',
+            toastMessage: `There was an error opting out of channel`,
+            toastType: 'ERROR',
+            getToastIcon: (size) => (
+              <MdError
+                size={size}
+                color="red"
+              />
+            ),
+          });
         },
-        env: appConfig.pushNodesEnv
-      })
+        env: appConfig.pushNodesEnv,
+      });
 
       // postReq("/channels/unsubscribe", {
       //   signature,
@@ -586,11 +613,16 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       //   });
     } catch (err) {
       unsubscribeToast.showMessageToast({
-        toastTitle:"Error", 
-        toastMessage: `There was an error opting out of channel ( ${err.message} )`, 
-        toastType: "ERROR", 
-        getToastIcon: (size) => <MdError size={size} color="red" />
-      })
+        toastTitle: 'Error',
+        toastMessage: `There was an error opting out of channel ( ${err.message} )`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
 
       console.log(err);
     } finally {
@@ -600,18 +632,16 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   const correctChannelTitleLink = () => {
     const channelLink = CTA_OVERRIDE_CACHE[channelObject.channel] || channelJson.url;
-    if(/(?:http|https):\/\//i.test(channelLink)) {
+    if (/(?:http|https):\/\//i.test(channelLink)) {
       window.open(channelLink, '_blank', 'noopener,noreferrer');
-    }
-    else{
+    } else {
       window.open(`https://${channelLink}`, '_blank', 'noopener,noreferrer');
     }
-  }
+  };
   const CTA_OVERRIDE_CACHE = {
-    "0xb1676B5Ab63F01F154bb9938F5e8999d9Da5444B": "https://boardroom.io/",
-    "0x7DA9A33d15413F499299687cC9d81DE84684E28E":
-      "https://rmm.realtoken.network/dashboard",
-    "0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be": "https://shapeshift.com",
+    '0xb1676B5Ab63F01F154bb9938F5e8999d9Da5444B': 'https://boardroom.io/',
+    '0x7DA9A33d15413F499299687cC9d81DE84684E28E': 'https://rmm.realtoken.network/dashboard',
+    '0x90A48D5CF7343B08dA12E067680B4C6dbfE551Be': 'https://shapeshift.com',
   };
   if (isBlocked) return <></>;
   if (isChannelBlacklisted) return <></>;
@@ -623,7 +653,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         <ChannelLogoOuter>
           <ChannelLogoInner>
             {loading ? (
-              <Skeleton color={themes.interfaceSkeleton} height="100%" />
+              <Skeleton
+                color={themes.interfaceSkeleton}
+                height="100%"
+              />
             ) : (
               <ChannelLogoImg src={`${channelJson.icon}`} />
             )}
@@ -640,29 +673,43 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               height={24}
             />
           ) : (
-            <ChannelTitleLink
-              onClick = {()=>correctChannelTitleLink()}
-            >
-              <Span style={{display: "flex", alignItems: "center"}}>
+            <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
+              <Span style={{ display: 'flex', alignItems: 'center' }}>
                 {channelJson.name}
                 {isVerified && (
-                  <Span margin="0px 5px" style={{display: "flex"}}>
+                  <Span
+                    margin="0px 5px"
+                    style={{ display: 'flex' }}
+                  >
                     <GoVerified
                       size={18}
                       color={themes.viewChannelVerifiedBadge}
                     />
                   </Span>
                 )}
-                {channelObject.channel && 
+                {channelObject.channel && (
                   <Span padding="0 0 0 5px">
-                    <Image src={`./svg/Ethereum.svg`} alt="Ethereum" width="20px" height="20px" />
+                    <Image
+                      src={`./svg/Ethereum.svg`}
+                      alt="Ethereum"
+                      width="20px"
+                      height="20px"
+                    />
                   </Span>
-                }
-                {channelObject.alias_address != null && channelObject.alias_address != "NULL" && appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) && !MaskedPolygonChannels[channelObject.channel] &&
-                  <Span padding="0 0 0 5px">
-                    <Image src={`./svg/Polygon.svg`} alt="Polygon" width="20px" height="20px" />
-                  </Span>
-                }
+                )}
+                {channelObject.alias_address != null &&
+                  channelObject.alias_address != 'NULL' &&
+                  appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) &&
+                  !MaskedPolygonChannels[channelObject.channel] && (
+                    <Span padding="0 0 0 5px">
+                      <Image
+                        src={`./svg/Polygon.svg`}
+                        alt="Polygon"
+                        width="20px"
+                        height="20px"
+                      />
+                    </Span>
+                  )}
               </Span>
             </ChannelTitleLink>
           )}
@@ -671,7 +718,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         <ChannelDesc>
           {loading ? (
             <>
-              <SkeletonWrapper atH={5} atW={100}>
+              <SkeletonWrapper
+                atH={5}
+                atW={100}
+              >
                 <Skeleton
                   color={themes.interfaceSkeleton}
                   width="100%"
@@ -679,7 +729,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 />
               </SkeletonWrapper>
 
-              <SkeletonWrapper atH={5} atW={100}>
+              <SkeletonWrapper
+                atH={5}
+                atW={100}
+              >
                 <Skeleton
                   color={themes.interfaceSkeleton}
                   width="100%"
@@ -687,7 +740,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 />
               </SkeletonWrapper>
 
-              <SkeletonWrapper atH={5} atW={100}>
+              <SkeletonWrapper
+                atH={5}
+                atW={100}
+              >
                 <Skeleton
                   color={themes.interfaceSkeleton}
                   width="40%"
@@ -703,15 +759,28 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         <ChannelMeta>
           {loading ? (
             <>
-              <SkeletonWrapper atH={10} atW={30} marginBottom="0">
+              <SkeletonWrapper
+                atH={10}
+                atW={30}
+                marginBottom="0"
+              >
                 <Skeleton color={themes.interfaceSkeleton} />
               </SkeletonWrapper>
             </>
           ) : (
-            <ItemH align="center" justify="flex-start" margin="0px -5px">
+            <ItemH
+              align="center"
+              justify="flex-start"
+              margin="0px -5px"
+            >
               <MetaInfoDisplayer
                 externalIcon={
-                  <Image src="./svg/users.svg" alt="users" width="14px"  height="14px"/>
+                  <Image
+                    src="./svg/users.svg"
+                    alt="users"
+                    width="14px"
+                    height="14px"
+                  />
                 }
                 internalIcon={null}
                 text={subscriberCount}
@@ -727,10 +796,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 color={themes.viewChannelPrimaryText}
                 onClick={() => {
                   copyToClipboard(channelJson.channel);
-                  setCopyText("copied");
+                  setCopyText('copied');
                 }}
                 onMouseEnter={() => {
-                  setCopyText("click to copy");
+                  setCopyText('click to copy');
                 }}
                 onMouseLeave={() => {
                   setCopyText(channelJson.channel);
@@ -767,30 +836,51 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               </SkeletonButton>
             )}
             {!loading && isPushAdmin && (
-              <SubscribeButton onClick={blockChannel} disabled={bLoading}>
+              <SubscribeButton
+                onClick={blockChannel}
+                disabled={bLoading}
+              >
                 {bLoading && (
                   <ActionLoader>
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={16}
+                      spinnerColor="#FFF"
+                    />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={bLoading}>Block channel</ActionTitle>
               </SubscribeButton>
             )}
             {!loading && (isPushAdmin || canVerify) && !isVerified && (
-              <SubscribeButton onClick={verifyChannel} disabled={vLoading}>
+              <SubscribeButton
+                onClick={verifyChannel}
+                disabled={vLoading}
+              >
                 {vLoading && (
                   <ActionLoader>
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={16}
+                      spinnerColor="#FFF"
+                    />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Verify Channel</ActionTitle>
               </SubscribeButton>
             )}
             {!loading && (isPushAdmin || canUnverify) && isVerified && (
-              <UnsubscribeButton onClick={unverifyChannel} disabled={vLoading}>
+              <UnsubscribeButton
+                onClick={unverifyChannel}
+                disabled={vLoading}
+              >
                 {vLoading && (
                   <ActionLoader>
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={16}
+                      spinnerColor="#FFF"
+                    />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={vLoading}>Unverify Channel</ActionTitle>
@@ -804,7 +894,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               >
                 {txInProgress && (
                   <ActionLoader>
-                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={16}
+                      spinnerColor="#FFF"
+                    />
                   </ActionLoader>
                 )}
                 <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
@@ -820,7 +914,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   >
                     {txInProgress && (
                       <ActionLoader>
-                        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#FFF" />
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={16}
+                          spinnerColor="#FFF"
+                        />
                       </ActionLoader>
                     )}
                     <ActionTitle hideit={txInProgress}>Opt-out</ActionTitle>
@@ -832,7 +930,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         </>
       )}
       {toast && (
-        <NotificationToast notification={toast} clearToast={clearToast} />
+        <NotificationToast
+          notification={toast}
+          clearToast={clearToast}
+        />
       )}
     </Container>
   );
@@ -851,9 +952,9 @@ const Container = styled.div`
   display: flex;
   flex-wrap: wrap;
   border: 1px solid ${(props) => props.theme.default.border};
-  border-bottom:none;
-  border-left:none;
-  border-right:none;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
   margin: 0px 5px;
   justify-content: center;
   padding: 25px 10px;
@@ -863,7 +964,7 @@ const Container = styled.div`
 
 const SkeletonWrapper = styled.div`
   overflow: hidden;
-  width: ${(props) => props.atW + "%" || "100%"};
+  width: ${(props) => props.atW + '%' || '100%'};
   height: ${(props) => props.atH}px;
   border-radius: ${(props) => props.borderRadius || 10}px;
   margin-bottom: ${(props) => props.marginBottom || 5}px;
@@ -934,7 +1035,7 @@ const ChannelTitle = styled(ItemH)`
 const ChannelTitleLink = styled.a`
   text-decoration: none;
   display: flex;
-  flex: 1;
+  flex: inherit;
   align-item: center;
   &:hover {
     text-decoration: underline;
@@ -946,7 +1047,7 @@ const ChannelTitleLink = styled.a`
     font-weight: 500;
     color: ${(props) => props.theme.viewChannelLink};
     font-size: 18px;
-    cursor:pointer;
+    cursor: pointer;
   }
 
   & > span > span {
@@ -1134,16 +1235,16 @@ const SkeletonButton = styled.div`
 const SubscribeButton = styled(ChannelActionButton)`
   background: #e20880;
   border-radius: 8px;
-  padding:9px 15px;
+  padding: 9px 15px;
   min-width: 80px;
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
   background: transparent;
-  color:${(props) => props.theme.viewChannelPrimaryText};
-  border:1px solid #BAC4D6; 
+  color: ${(props) => props.theme.viewChannelPrimaryText};
+  border: 1px solid #bac4d6;
   border-radius: 8px;
-  padding:9px 15px;
+  padding: 9px 15px;
   min-width: 80px;
 `;
 

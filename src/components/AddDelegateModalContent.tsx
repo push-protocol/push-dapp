@@ -1,13 +1,17 @@
+// React + Web3 Essentials
 import React from 'react';
-import styled from "styled-components";
 
+// External Packages
+import styled from "styled-components";
+import { useClickAway } from 'react-use';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+
+// Internal Components
 import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
 import ModalInput from 'primaries/SharedModalComponents/ModalInput';
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-
 import { ModalInnerComponentType } from "hooks/useModal";
-import { useClickAway } from 'react-use';
-import { MdCheckCircle, MdError } from 'react-icons/md';
+
 
 const AddDelegateModalContent = ({onConfirm : addDelegate, onClose, toastObject} : ModalInnerComponentType)=>{
     const delegateAddressInputRef = React.useRef<HTMLInputElement>();

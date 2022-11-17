@@ -1,17 +1,25 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
 import { useContext,useEffect, useState } from 'react';
+
 // Internal Components
 import { caip10ToWallet } from 'helpers/w2w';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { AppContext, MessageIPFS } from 'types/chat';
+import { Context } from 'modules/chat/ChatModule';
+import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
+
 
 // Internal Configs
 import { appConfig } from 'config';
 
+const getEnsFromIndexDb = async(checksumWallet:string):Promise<any> => {
+  const ensFromIndexDB: any = await intitializeDb<string>('Read', 'Wallets', checksumWallet, '', 'ens');
+  return ensFromIndexDB;
+}
+
 export function useResolveEns(username: string): string {
   const [ensName, setEnsName] = useState(null);
   const { currentChat }: AppContext = useContext<AppContext>(Context);
-
   useEffect(() => {
     if (username) {
       const walletLowercase = caip10ToWallet(username).toLowerCase();
@@ -27,13 +35,21 @@ export function useResolveEns(username: string): string {
       ) {
         provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
       }
-
-      provider.lookupAddress(checksumWallet).then((ens) => {
-        if (ens) {
-          console.log('in here');
-          setEnsName(ens);
-        } else {
-          setEnsName(null);
+      getEnsFromIndexDb(checksumWallet).then((ensFromIndexDb)=>{
+        if(ensFromIndexDb)
+        {
+          setEnsName(ensFromIndexDb?.body);
+        }
+        else{
+          provider.lookupAddress(checksumWallet).then(async(ens) => {
+            if (ens) {
+              setEnsName(ens);
+              await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, ens, 'ens');
+            } else {
+              setEnsName(null);
+              await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, null, 'ens');
+            }
+          });
         }
       });
     }

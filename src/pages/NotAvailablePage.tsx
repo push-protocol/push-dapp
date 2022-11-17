@@ -1,10 +1,16 @@
+// React + Web3 Essentials
+import { useWeb3React } from '@web3-react/core';
 import React from "react";
 
-import { useWeb3React } from '@web3-react/core';
-import { appConfig } from "config";
+// External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
+
+// Internal Components
 import { Content, Item, Section } from '../primaries/SharedStyling';
 import { networkName } from "helpers/UtilityHelper";
+
+// Internal Configs
+import { appConfig } from "config";
 
 function NotAvailablePage(props) {
   const themes = useTheme();

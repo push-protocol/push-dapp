@@ -1,30 +1,28 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from 'ethers/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
 import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
-import FadeLoader from 'react-spinners/FadeLoader';
 import styled, { useTheme } from 'styled-components';
 
-// Internal Compoonents
+// Internal Components
 import * as PushNodeClient from 'api';
-import { User } from 'api';
+// import { User } from 'api';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wChatHelper from 'helpers/w2w';
-import { MdError } from 'react-icons/md';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
+import { AppContext, User } from 'types/chat';
 
-// Internal Configs
-
+// Interfaces
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -283,6 +281,10 @@ const Input = styled.input`
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;
   }
+  &::placeholder {
+  color: #657795;
+  }
+
 `;
 
 export default SearchBar;

@@ -1,4 +1,7 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import FadeLoader from "react-spinners/FadeLoader";
 
 const override: React.CSSProperties = {
