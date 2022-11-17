@@ -1,6 +1,8 @@
+// Internal Components
 import { postReq } from "api";
 import { ipfsServiceEndpoints } from "helpers/RoutesHelper";
 
+// Types
 type Props = {
     input: string
 }

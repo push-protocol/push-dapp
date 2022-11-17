@@ -1,11 +1,16 @@
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { utils } from "ethers";
-import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, PolygonNetworks } from "helpers/UtilityHelper";
-import useToast from "hooks/useToast";
 import React from "react";
+
+// External Packages
 import { MdCheckCircle, MdError } from "react-icons/md";
 import styled, { useTheme } from "styled-components";
+
+// Internal Components
+import useToast from "hooks/useToast";
 import { Button, Item, Span } from "../primaries/SharedStyling";
+import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, PolygonNetworks } from "helpers/UtilityHelper";
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();

@@ -3,17 +3,17 @@ import React, { FC, useRef, useState } from 'react';
 
 // External Packages
 
-// Internal Compoonents
+// Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import { useFetch } from '../../stickers/useFetchHook';
 import { useClickAway } from 'hooks/useClickAway';
 import './GifPicker.css';
 
-
 // Internal Configs
 import configs from 'config/W2WConfig';
 
+// Interfaces
 interface GifPickerProps {
   setIsOpened: (value: boolean) => void;
   onSelect: (gif: any) => void;

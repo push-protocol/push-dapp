@@ -1,3 +1,4 @@
+// React + Web3 Essentials
 import React, { createContext, useState } from 'react';
 
 export const NotificationContext = createContext({

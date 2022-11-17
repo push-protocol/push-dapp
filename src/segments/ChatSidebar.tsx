@@ -1,3 +1,7 @@
+// React + Web3 Essentials
+import React from 'react'
+
+// External Packages
 import { makeStyles } from '@material-ui/core'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Avatar from '@mui/material/Avatar'
@@ -7,9 +11,10 @@ import Stack from '@mui/material/Stack'
 import MuiTab from '@mui/material/Tab'
 import MuiTabs from '@mui/material/Tabs'
 import Typography from '@mui/material/Typography'
-import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2'
-import React from 'react'
 import styled from 'styled-components'
+
+// Internal Components
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2'
 
 interface TabPanelProps {
   children?: React.ReactNode

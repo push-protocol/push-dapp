@@ -1,6 +1,10 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { ThemeProvider, useTheme } from "styled-components";
 
+// Types
 type ModalHeaderType = {
     heading:string, subHeading:string
 }

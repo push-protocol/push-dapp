@@ -1,5 +1,7 @@
+// React + Web3 Essentials
 import React from "react";
 
+// External Packages
 import { AiFillInfoCircle } from 'react-icons/ai';
 import { Tooltip } from "@material-ui/core";
 

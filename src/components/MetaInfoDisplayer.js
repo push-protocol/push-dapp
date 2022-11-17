@@ -1,8 +1,11 @@
+// React + Web3 Essentials
 import React from "react";
 
+// External Packages
 import styled from 'styled-components';
-import { A, Item, ItemH, Span } from '../primaries/SharedStyling';
 
+// Internal Components
+import { A, Item, ItemH, Span } from '../primaries/SharedStyling';
 import { Device } from "assets/Device";
 
 // Faucet URLs

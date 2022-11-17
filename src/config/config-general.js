@@ -7,6 +7,7 @@ export const config = {
 
 }
 
+// Internal Components
 import daiAbi from "./abis/dai";
 import epnsTokenAbi from "./abis/EPNS.json";
 import epnsCommAbi from "./abis/epnsCommunicator.json";
