@@ -170,8 +170,8 @@ const Typebar = ({
           >
             <img
               src="/svg/chats/smiley.svg"
-              height="24px"
-              width="24px"
+              height="32px"
+              width="32px"
               alt=""
             />
           </Icon>
@@ -224,8 +224,8 @@ const Typebar = ({
               <Icon filter={theme.snackbarBorderIcon}>
                 <img
                   src="/svg/chats/attachment.svg"
-                  height="24px"
-                  width="20px"
+                  height="24.5px"
+                  width="20.5px"
                   alt=""
                 />
               </Icon>
@@ -248,8 +248,8 @@ const Typebar = ({
                 <Icon onClick={handleSubmit}>
                   <img
                     src={`/svg/chats/send${isDarkMode ? '_dark' : ''}.svg`}
-                    height="27px"
-                    width="27px"
+                    height="27.5px"
+                    width="27.5px"
                     alt=""
                   />
                 </Icon>
@@ -274,7 +274,7 @@ const TypeBarContainer = styled.div`
   left: 9px;
   right: 9px;
   height: 55px;
-  padding: 16px;
+  padding:  0 16px 0 9px;
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;

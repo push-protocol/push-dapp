@@ -42,7 +42,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const Profile = (props: ProfilePropsType): JSX.Element => {
-  const { did, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { connectedUser }: AppContext = useContext<AppContext>(Context);
 
   const wallets = connectedUser.wallets.split(',');
   const [copiedDid, setCopiedDid] = useState<boolean>(false);
