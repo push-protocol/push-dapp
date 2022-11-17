@@ -1,9 +1,13 @@
+// React + Web3 Essentials
 import React from "react";
-import styled from 'styled-components';
 
+// External Packages
+import styled from 'styled-components';
+import * as dotenv from "dotenv";
+
+// Internal Components
 import ViewInfoItem from "components/ViewInfoItem";
 
-import * as dotenv from "dotenv";
 dotenv.config();
 
 // Other Information section

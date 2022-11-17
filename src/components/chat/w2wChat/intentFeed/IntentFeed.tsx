@@ -5,12 +5,27 @@ import React, { useContext, useState } from 'react';
 // External Packages
 import styled from 'styled-components';
 
-// Internal Compoonents
-import { Feeds } from 'api';
+// Internal Components
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, Feeds } from 'types/chat';
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: 400,
+  bgcolor: 'background.paper',
+  borderRadius: '20px',
+  boxShadow: 24,
+  p: 4,
+};
 
 const IntentFeed = ({isLoading}): JSX.Element => {
   const {

@@ -1,7 +1,10 @@
-import { isLedgerDappBrowserProvider } from '@pushprotocol/ledgerlive';
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { injected, ledgerLiveConnector } from 'connectors';
 import { useEffect, useState } from 'react';
+
+// Internal Components
+import { isLedgerDappBrowserProvider } from '@pushprotocol/ledgerlive';
+import { injected, ledgerLiveConnector } from 'connectors';
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React()

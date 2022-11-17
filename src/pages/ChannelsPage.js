@@ -1,10 +1,15 @@
+// React + Web3 Essentials
 import React, { useState } from "react";
 
+// External Packages
 import styled from 'styled-components';
 
+// Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS from "config/Globals";
 import ChannelsModule from "modules/channels/ChannelsModule";
+
+// Internal Configs
+import GLOBALS from "config/Globals";
 
 // Other Information section
 const ChannelsPage = ({ loadTeaser, playTeaser }) => {

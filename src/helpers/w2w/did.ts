@@ -1,3 +1,4 @@
+// External Packages
 import { EthereumAuthProvider, ThreeIdConnect } from '@3id/connect'
 import { CeramicApi } from '@ceramicnetwork/common'
 import { JWE } from 'did-jwt'

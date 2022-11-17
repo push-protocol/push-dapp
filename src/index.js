@@ -1,18 +1,23 @@
+// React + Web3 Essentials
+import { Web3ReactProvider } from "@web3-react/core";
+import { ethers } from "ethers";
 import React from "react";
+
+// External Packages
 import ReactDOM from "react-dom";
 import { HashRouter } from "react-router-dom";
-
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
-import { Web3ReactProvider } from "@web3-react/core";
-import { VideoCallContextProvider } from 'contexts/VideoCallContext';
-import { ethers } from "ethers";
 import { Provider } from "react-redux";
 
-import * as dotenv from "dotenv";
+// Internal Components
+import { VideoCallContextProvider } from 'contexts/VideoCallContext';
 import App from "./App";
 import "./index.css";
 import store from "./redux/store";
 import * as serviceWorker from "./serviceWorker";
+
+// Internal Configs
+import * as dotenv from "dotenv";
 
 // enable environmental variables across the entire application
 dotenv.config();

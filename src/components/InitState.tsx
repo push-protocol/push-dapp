@@ -1,18 +1,20 @@
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { abis, addresses, appConfig } from 'config';
 import { ethers } from 'ethers';
 import React, { useEffect } from 'react';
+
+// External Packages
 import { useDispatch, useSelector } from 'react-redux';
+
+// Internal Components
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
-
 import {
   setCommunicatorReadProvider,
   setCommunicatorWriteProvider,
   setCoreReadProvider,
   setCoreWriteProvider,
 } from 'redux/slices/contractSlice';
-
 import { getReq } from 'api';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
@@ -29,6 +31,10 @@ import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 
+// Internals Configs
+import { abis, addresses, appConfig } from 'config';
+
+// Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 const InitState = () => {
@@ -105,7 +111,7 @@ const InitState = () => {
         const channelDetail = await getChannelsSearch({
           page: 1,
           limit: 1,
-          query: account
+          query: account,
         });
         const subsCount = channelDetail[0].subscriber_count;
         dispatch(
@@ -131,40 +137,40 @@ const InitState = () => {
 
     const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
     try {
-      const delegations = await getUserDelegations({userCaipAddress: userAddressInCaip});
-        const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
-        let delegateeList: Array<{channel: string}> = [];
-        console.log(delegations);
-        if (
-          ((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) ||
-          (processingState === 0 && isChannelDetails)
-        ) {
-          if (onCoreNetwork) delegateeList.push({channel: account});
-          else {
-            if (aliasEthAddr) {
-              delegateeList.push({channel: aliasEthAddr});
-            }
+      const delegations = await getUserDelegations({ userCaipAddress: userAddressInCaip });
+      const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
+      let delegateeList: Array<{ channel: string }> = [];
+      console.log(delegations);
+      if (
+        ((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) ||
+        (processingState === 0 && isChannelDetails)
+      ) {
+        if (onCoreNetwork) delegateeList.push({ channel: account });
+        else {
+          if (aliasEthAddr) {
+            delegateeList.push({ channel: aliasEthAddr });
           }
         }
-        if (delegations) {
-          delegateeList.push(...delegations);
-        }
-        console.log(delegateeList);
-        if (delegateeList.length > 0) {
-          const channelInformationPromise = [...delegateeList].map(({channel}) => {
-            return ChannelsDataStore.instance
-              .getChannelJsonAsync(channel)
-              .then((res) => ({ ...res, address: channel }))
-              .catch(() => false);
-          });
-          const channelInformation = await Promise.all(channelInformationPromise);
-          dispatch(setDelegatees(channelInformation));
-        } else {
-          dispatch(setDelegatees([]));
-        }
-      } catch(err) {
-        console.log(err);
-      };
+      }
+      if (delegations) {
+        delegateeList.push(...delegations);
+      }
+      console.log(delegateeList);
+      if (delegateeList.length > 0) {
+        const channelInformationPromise = [...delegateeList].map(({ channel }) => {
+          return ChannelsDataStore.instance
+            .getChannelJsonAsync(channel)
+            .then((res) => ({ ...res, address: channel }))
+            .catch(() => false);
+        });
+        const channelInformation = await Promise.all(channelInformationPromise);
+        dispatch(setDelegatees(channelInformation));
+      } else {
+        dispatch(setDelegatees([]));
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

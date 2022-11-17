@@ -1,10 +1,12 @@
+// React + Web3 Essentials
 import React from 'react';
 
-import { themeDark, themeLight } from 'config/Themization';
-import { A, B, Button, H3, Item, ItemH, Span } from 'primaries/SharedStyling';
+// External Packages
 import styled from 'styled-components';
-
 import { useDispatch, useSelector } from 'react-redux';
+
+// Internal Components
+import { A, B, Button, H3, Item, ItemH, Span } from 'primaries/SharedStyling';
 import {
   incrementStepIndex,
   setIndex,
@@ -12,6 +14,9 @@ import {
   setTutorialContinous,
   setWelcomeNotifsEmpty,
 } from '../redux/slices/userJourneySlice';
+
+// Internal Configs
+import { themeDark, themeLight } from 'config/Themization';
 
 const UserJourneySteps = ({ darkMode }) => {
   const dispatch = useDispatch();

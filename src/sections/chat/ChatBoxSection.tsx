@@ -2,7 +2,6 @@
 import React from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import ChatBox from 'components/chat/w2wChat/chatBox/ChatBox';

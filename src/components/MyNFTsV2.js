@@ -71,6 +71,7 @@ function MyNFTs({ controlAt, setControlAt, setTokenId }) {
     setLoading(false);
     for (let i = 0; i < balance; i++) {
       let tokenId = await NFTHelper.getTokenOfOwnerByIndex(account, i, nftReadProvider)
+      if(tokenId < 1 || tokenId > 100) return;
       // let tokenURI = await NFTHelper.getTokenURIByIndex(tokenId, nftReadProvider);
       let NFTObject = await NFTHelper.getTokenData(tokenId, nftReadProvider, NFTRewardsV2Contract)
       let url = await callFunction(NFTObject.metadata)

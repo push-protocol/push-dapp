@@ -1,6 +1,11 @@
+// External Packages
 import { initializeApp } from "@firebase/app";
 import { getMessaging, getToken, onMessage } from "@firebase/messaging";
+
+// Internal Components
 import { postReq } from "api";
+
+// Internal Configs
 import { appConfig } from "config";
 
 // Initialize the Firebase app in the service worker by passing the generated config

@@ -1,8 +1,11 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled from 'styled-components';
 
+// Internal Components
 import { SectionV2 } from 'components/reusables/SharedStylingV2';
-
 import YieldFarmingModule from "modules/yield/YieldFarmingModule";
 
 // Other Information section

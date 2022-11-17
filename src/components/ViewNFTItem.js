@@ -8,14 +8,13 @@ import ReactPlayer from 'react-player';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css } from "styled-components";
+import Skeleton from '@yisheng90/react-loading';
+import { IoIosGift } from 'react-icons/io';
 
 // Internal Compoonents
 import { Device } from 'assets/Device';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Item, ItemH } from '../primaries/SharedStyling';
-
-import Skeleton from '@yisheng90/react-loading';
-import { IoIosGift } from 'react-icons/io';
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
@@ -155,7 +154,7 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                   >Transfer</ActionTitle>
                 </UnsubscribeButton>
               }
-              {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
+              {/* {!!account && !!library && onMainnetCore && account == NFTObject.owner && !loading &&
                 <UnsubscribeButton disabled={!NFTObject.claimable}>
                   {txInProgress &&
                     <ActionLoader>
@@ -164,12 +163,12 @@ function ViewNFTItem({ NFTObject, setControlAt, setTokenId }) {
                   }
                   {NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} onClick={() => { handleClaim(NFTObject.id) }}>Claim $PUSH</ActionTitle>
-                  }
+                  } 
                   {!NFTObject.claimable &&
                     <ActionTitle hideit={txInProgress} >Rewards Claimed</ActionTitle>
                   }
                 </UnsubscribeButton>
-              }
+              } */}
             </ChannelActions>
           </ItemH>
         }

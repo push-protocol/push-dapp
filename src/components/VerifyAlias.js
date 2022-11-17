@@ -1,19 +1,25 @@
+// React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { SpanV2 } from 'components/reusables/SharedStylingV2';
-import { abis, addresses, appConfig } from 'config';
-import GLOBALS from "config/Globals";
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { ethers } from 'ethers';
 import React, { useRef, useState } from 'react';
+
+// External Packages
+import styled, { css, useTheme } from 'styled-components';
 import { BsFillCheckCircleFill } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import FadeLoader from 'react-spinners/FadeLoader';
 import { useClickAway } from 'react-use';
+
+// Internal Components
+import { SpanV2 } from 'components/reusables/SharedStylingV2';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
-import styled, { css, useTheme } from 'styled-components';
 import { getReq, postReq } from '../api';
 import { A, Button, H3, Item, Section, Span } from '../primaries/SharedStyling';
 
-const ethers = require('ethers');
+// Internal Configs
+import { abis, addresses, appConfig } from 'config';
+import GLOBALS from "config/Globals";
 
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const theme = useTheme();
