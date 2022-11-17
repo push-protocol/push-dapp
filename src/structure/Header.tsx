@@ -241,6 +241,11 @@ const NavMenuContainer = styled(Item)`
   width: 250px;
   box-shadow: 0 0 0 10000px rgba(0,0,0,0.9);
   padding: 30px 30px;
+  
+
+  @media (min-width: 993px){
+    display: none;
+  }
 `;
 
 const NavMenu = styled(Item)`
