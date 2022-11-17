@@ -230,6 +230,7 @@ export const Span = styled.span`
   letter-spacing: ${(props) => props.spacing || "inherit"};
   text-align: ${(props) => props.textAlign || "initial"};
   border-radius: ${(props) => props.bRadius || "initial"};
+  min-width: ${(props) => props.minWidth || "auto"};
 
   position: ${(props) => props.pos || "initial"};
   right: ${(props) => props.right || "auto"};

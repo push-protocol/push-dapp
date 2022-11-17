@@ -62,6 +62,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
       {!data.loading && !data.hidden && (
         <RouteLogic
           style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
+          flex='1'
           title={`${data.title}`}
           to={`${data.href ? data.href : '#'}`}
           href={`${data.href ? data.href : '#'}`}
@@ -71,6 +72,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
           radius="16px"
           align="stretch"
           margin={definedMargin}
+          padding='10px 15px 10px 0px'
           bg={bg}
           hover={'transparent'}
           hoverBG={'transparent'}
@@ -111,6 +113,7 @@ function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar
                 spacing="0"
                 margin="0 10px"
                 color={theme.nav.color}
+                minWidth='100px'
                 size="16px">
                 {data.name}
               </Span>
