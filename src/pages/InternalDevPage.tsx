@@ -1,8 +1,12 @@
-
-import { Section } from 'components/SharedStyling';
-import GLOBALS from "config/Globals";
-import InternalDevModule from "modules/internal/InternalDevModule";
+// External Packages
 import styled from 'styled-components';
+
+// Internal Components
+import { Section } from 'components/SharedStyling';
+import InternalDevModule from "modules/internal/InternalDevModule";
+
+// Internal Configs
+import GLOBALS from "config/Globals";
 
 const InternalDevPage = () => {
   // RENDER

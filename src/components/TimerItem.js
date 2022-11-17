@@ -1,11 +1,15 @@
+// React + Web3 Essentials
 import React from "react";
 
+// External Packages
 import styled, { css } from 'styled-components';
+import { AiFillHeart } from 'react-icons/ai';
+
+// Internal Components
 import { Item, ItemH, Span, Anchor, Image } from 'components/SharedStyling';
 
+// Internal Configs
 import countdown from 'config/countdown';
-
-import { AiFillHeart } from 'react-icons/ai';
 
 // Create Header
 function TimerItem() {

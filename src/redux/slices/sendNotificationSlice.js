@@ -1,3 +1,4 @@
+// External Packages
 import { createSlice } from "@reduxjs/toolkit";
 
 const SEND_NOTIFICATION_STATES = {

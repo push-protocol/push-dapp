@@ -1,10 +1,16 @@
-import { getReq } from 'api';
-import axios from 'axios';
+// React + Web3 Essentials
 import { ethers } from 'ethers';
-import { convertAddressToAddrCaip } from './CaipHelper';
-import { IPFSGateway } from './IpfsHelper';
+
+// External Packages
+import axios from 'axios';
 //import { parseEther, bigNumber } from 'ethers/utils'
 
+// Internal Components
+import { getReq } from 'api';
+import { convertAddressToAddrCaip } from './CaipHelper';
+import { IPFSGateway } from './IpfsHelper';
+
+// Constants
 const COINDESK_CHANNEL_ADDR = '0xe56f1D3EDFFF1f25855aEF744caFE7991c224FFF';
 const COINDESK_HASH = '1+bafkreif643vf3cteadznccivnsk5uj26e3ls7onbshnldb3aej3omrxsau';
 const ENS_CHANNEL_ADDR = '0x983110309620D911731Ac0932219af06091b6744';

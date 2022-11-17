@@ -15,6 +15,7 @@ import ChannelOwnerDashboard from 'segments/ChannelOwnerDashboard';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
+// Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 
 // Create Header

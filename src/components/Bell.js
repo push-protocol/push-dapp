@@ -1,4 +1,7 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import styled, { css, keyframes } from 'styled-components';
 import { AnimateOnChange } from 'react-animation';
 
