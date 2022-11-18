@@ -120,8 +120,6 @@ function Header({ isDarkMode, darkModeToggle }) {
   };
   
 
-  // console.log(Object.keys(navigationSetup.navigation))
-
   return (
     <Container direction="row" padding="0px 15px">
       <ItemH justify="flex-start" flex="0">
@@ -130,19 +128,9 @@ function Header({ isDarkMode, darkModeToggle }) {
             <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
           </RightBarDesktop>
 
-          {active && !error && (
-            <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
-              </Button>
-            </RightBarMobile>
-          )}
+          <LogoMobile justify="flex-start" flex="0">
+            <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
+          </LogoMobile>
         </RightBarContainer>
         
         {/* mobile navbar */}
@@ -161,13 +149,13 @@ function Header({ isDarkMode, darkModeToggle }) {
 
       <ItemH justify="flex-end">
         {headerTag && active && !error && (
-          <HeaderTag align="flex-start" overflow="hidden" margin="0px 5px">
+          <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
               padding="8px 20px"
-              size="24px"
+              className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
             </Span>
@@ -184,6 +172,20 @@ function Header({ isDarkMode, darkModeToggle }) {
             moonColor="#787E99"
           />
         )}
+
+      {active && !error && (
+            <RightBarMobile>
+              <Button
+                bg="transparent"
+                padding="5px"
+                radius="4px"
+                onClick={() => {
+                  setShowNavBar(!showNavBar);
+                }}>
+                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
+              </Button>
+            </RightBarMobile>
+          )}
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
@@ -219,12 +221,19 @@ const RightBarDesktop = styled(ItemH)`
 `;
 
 const RightBarMobile = styled(ItemH)`
+  max-width: 50px !important;
   margin: 5px 5px 5px -5px;
 
   @media (min-width: 993px) {
     display: none;
   }
 `;
+
+ const LogoMobile = styled(ItemH)`
+    @media (min-width: 993px) {
+      display: none;
+    }
+ `
 
 const NavMenuContainer = styled(Item)`
   position: fixed;
@@ -291,8 +300,20 @@ const ThirdTheme = styled(Notice)`
 
 const HeaderTag = styled(Item)`
   flex: 1;
-  margin='5px 15px 5px 15px' @media (min-width: 993px) {
-    margin: '5px 10px';
+  margin: 0px 5px;
+   @media (min-width: 993px) {
+    margin: 5px 10px;
+  }
+
+  @media (max-width: 993px) {
+    margin: 5px 0px;
+  }
+  .text{
+    font-size: 24px;
+    
+    @media (max-width: 993px){
+      font-size: 20px;
+    }
   }
 `;
 
