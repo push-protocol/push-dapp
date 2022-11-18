@@ -10,7 +10,7 @@ import { Feeds } from 'api';
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { AppContext, Context } from 'modules/chat/ChatModule';
 import './IntentFeed.css';
 
 const style = {

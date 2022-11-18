@@ -15,7 +15,7 @@ import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
 import { CID } from 'ipfs-http-client'
 import React, { useContext, useEffect, useState } from 'react'
-import { AppContext, Context } from 'sections/chat/ChatMainSection'
+import { AppContext, Context } from 'modules/chat/ChatModule'
 import { showCharacters } from './helpers'
 import './Profile.css'
 

@@ -230,6 +230,7 @@ export const Span = styled.span`
   letter-spacing: ${(props) => props.spacing || "inherit"};
   text-align: ${(props) => props.textAlign || "initial"};
   border-radius: ${(props) => props.bRadius || "initial"};
+  min-width: ${(props) => props.minWidth || "auto"};
 
   position: ${(props) => props.pos || "initial"};
   right: ${(props) => props.right || "auto"};
@@ -378,6 +379,9 @@ export const RouterLink = styled(Link)`
       props.hover || (props.bg ? props.bg : "transparent")};
     display: none;
     z-index: -1;
+    // @media (max-width: 992px){
+    //   background: transparent;
+    // }
   }
 
   &:after {
@@ -390,6 +394,10 @@ export const RouterLink = styled(Link)`
     background: ${(props) => props.hoverBG || "#000"};
     opacity: 0;
     z-index: -1;
+    
+    // @media (max-width: 992px){
+    //   background: transparent;
+    // }
   }
 
   &:hover:before {

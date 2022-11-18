@@ -16,7 +16,7 @@ import { ethers } from 'ethers';
 import {  decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { checkConnectedUser } from 'helpers/w2w/user';
-import { AppContext, Context } from 'sections/chat/ChatMainSection';
+import { AppContext, Context } from 'modules/chat/ChatModule';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
 import { fetchInbox } from 'helpers/w2w/ipfs';

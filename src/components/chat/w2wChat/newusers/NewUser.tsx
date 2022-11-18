@@ -18,7 +18,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import * as w2wChatHelper from 'helpers/w2w';
 import { caip10ToWallet } from 'helpers/w2w';
 
-import { Context } from 'sections/chat/ChatMainSection';
+import { Context } from 'modules/chat/ChatModule';
 
 function NewUser() {
   const theme = useTheme();

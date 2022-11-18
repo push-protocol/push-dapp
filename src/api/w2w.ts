@@ -1,4 +1,4 @@
-import { InboxChat, ToastPosition } from 'sections/chat/ChatMainSection';
+import { InboxChat, ToastPosition } from 'modules/chat/ChatModule';
 // @ts-ignore
 import { appConfig } from 'config';
 import { MessageIPFS } from 'helpers/w2w/ipfs';

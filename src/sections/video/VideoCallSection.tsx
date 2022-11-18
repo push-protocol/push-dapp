@@ -14,7 +14,7 @@ import { ButtonV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStyling
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { MdCall, MdCallEnd } from 'react-icons/md';
-import { BlockedLoadingI } from 'sections/chat/ChatMainSection';
+import { BlockedLoadingI } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
