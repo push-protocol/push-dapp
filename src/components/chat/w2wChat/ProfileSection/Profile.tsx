@@ -18,12 +18,12 @@ import { CID } from 'ipfs-http-client'
 //Internal Components
 import { postIPFS } from 'api'
 import { updateUser } from 'api/w2w'
-import { Context } from 'sections/chat/ChatMainSection'
 import { showCharacters } from './helpers'
 import './Profile.css'
 import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
 import { AppContext } from 'types/chat'
+import { Context } from 'modules/chat/ChatModule'
 
 // Interfaces
 interface ProfilePropsType {
@@ -37,7 +37,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const Profile = (props: ProfilePropsType): JSX.Element => {
-  const { did, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { connectedUser }: AppContext = useContext<AppContext>(Context);
 
   const wallets = connectedUser.wallets.split(',');
   const [copiedDid, setCopiedDid] = useState<boolean>(false);

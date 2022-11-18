@@ -15,7 +15,6 @@ import { ButtonV2, ItemVV2, SectionV2 } from 'components/reusables/SharedStyling
 import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { BlockedLoadingI } from 'types/chat';
-// import { BlockedLoadingI } from 'sections/chat/ChatMainSection';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
