@@ -1,6 +1,10 @@
+// External Packages
 import axios from "axios";
+
+// Internal Configs
 import { appConfig } from "config";
 
+// Constants
 const BASE_URL = appConfig.apiUrl
 const TOOLING_BASE_URL = appConfig.toolingApiUrl
 

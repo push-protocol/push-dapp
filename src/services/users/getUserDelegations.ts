@@ -1,6 +1,8 @@
+// Internal Components
 import { getReq } from "api";
 import { usersServiceEndpoints } from "helpers/RoutesHelper"
 
+// Types
 type Props = {
     userCaipAddress: string;
 }

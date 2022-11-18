@@ -1,6 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
+// React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
   NoEthereumProviderError,
@@ -8,21 +9,23 @@ import {
 } from '@web3-react/injected-connector';
 import { ethers } from 'ethers';
 
+// External Packages
+import { useLocation } from 'react-router-dom';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
-
 import { AiOutlineClose, AiOutlineMenu } from 'react-icons/ai';
-
-import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import styled, { css, useTheme } from 'styled-components';
+
+// Internal Components
+import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
-
 import MobileNavButton from 'components/MobileNavButton';
+import NavigationButton from 'components/NavigationButton';
 import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
-
 import { NavigationContext } from 'contexts/NavigationContext';
 
+// Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';

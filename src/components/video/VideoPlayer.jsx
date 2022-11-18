@@ -1,11 +1,14 @@
-import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+// React + Web3 Essentials
 import React, { useContext } from 'react';
 
-import { VideoCallContext } from 'contexts/VideoCallContext';
-
-// Internal Compoonents
-import { ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+// External Packages
+import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import styled, { useTheme } from 'styled-components';
+
+// Internal Components
+import { VideoCallContext } from 'contexts/VideoCallContext';
+import { ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+
 
 const useStyles = makeStyles((theme) => ({
   video: {

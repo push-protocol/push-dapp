@@ -1,5 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import React, { useEffect } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -34,14 +36,13 @@ import {
   Span,
   TextField
 } from 'primaries/SharedStyling';
-import React, { useEffect } from 'react';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
 
 // Internal Configs
 import { appConfig } from 'config';
-const ethers = require('ethers');
 
+// Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 export const IOSSwitch = styled(Switch).attrs(() => ({

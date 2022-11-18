@@ -1,6 +1,8 @@
 /**
  * This file helps us maintain the channels fetched in state, such that when we leave the tab, the channels can be fetched from memory
  */
+
+// External Packages
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

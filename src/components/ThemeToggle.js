@@ -1,8 +1,9 @@
+// React + Web3 Essentials
 import React, { useState, useEffect } from "react";
 
+// Internal Components
 import { ReactComponent as MoonIcon } from "assets/moon.svg";
 import { ReactComponent as SunIcon } from "assets/sun.svg";
-
 import "components/ThemeToggleStyle.css";
 
 const updateTheme = (isDarkEnabled) => {

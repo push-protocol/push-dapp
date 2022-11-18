@@ -1,14 +1,18 @@
+// React + Web3 Essentials
 import React from "react";
 
-import { Button, Image, Item, ItemH, Span } from 'primaries/SharedStyling';
+// External Packages
 import styled, { useTheme } from 'styled-components';
-
 import { FaShareSquare, FaYoutube } from 'react-icons/fa';
 
+// Internal Components
+import { Button, Image, Item, ItemH, Span } from 'primaries/SharedStyling';
 import MetaInfoDisplayer from "components/MetaInfoDisplayer";
-
-import channelTuts from "config/channelTuts";
 import { ImageV2 } from "components/reusables/SharedStylingV2";
+
+// Internal Configs
+import channelTuts from "config/channelTuts";
+
 
 // Check channel has tutorial
 export const isChannelTutorialized = (addr) => {

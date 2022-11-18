@@ -1,6 +1,11 @@
-import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS from 'config/Globals';
+// External Packages
 import styled, { useTheme } from 'styled-components';
+
+// Internal Components
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+
+// Internal Configs
+import GLOBALS from 'config/Globals';
 
 // Interfaces
 interface ProgressBarPropsI {

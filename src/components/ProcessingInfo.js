@@ -1,9 +1,16 @@
-import LinearProgress from "@mui/material/LinearProgress";
-import { themeDark } from "config/Themization";
-import { H3, Item, Section } from "primaries/SharedStyling";
+// React + Web3 Essentials
 import React from "react";
-import FadeLoader from "react-spinners/FadeLoader";
+
+// External Packages
+import LinearProgress from "@mui/material/LinearProgress";
 import styled, { css, useTheme } from "styled-components";
+import FadeLoader from "react-spinners/FadeLoader";
+
+// Internal Components
+import { H3, Item, Section } from "primaries/SharedStyling";
+
+// Internal Configs
+import { themeDark } from "config/Themization";
 
 const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
   const themes = useTheme();

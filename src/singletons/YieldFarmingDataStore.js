@@ -1,7 +1,10 @@
+// React + Web3 Essentials
 import { ethers } from "ethers";
 
+// Internal Configs
 import { addresses, appConfig } from "config";
 
+// Constants
 const ONE_PUSH = ethers.BigNumber.from(1).mul(
   ethers.BigNumber.from(10).pow(ethers.BigNumber.from(18))
 );

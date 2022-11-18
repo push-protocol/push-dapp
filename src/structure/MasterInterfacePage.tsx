@@ -1,19 +1,19 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-
 import styled from 'styled-components';
-import { Anchor, Item } from '../primaries/SharedStyling';
-
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-
 import { VscClose } from 'react-icons/vsc';
 
+// Internal Components
+import { Anchor, Item } from '../primaries/SharedStyling';
 import AirdropPage from 'pages/AirdropPage';
 import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 import ChannelsPage from 'pages/ChannelsPage';
 import ChatPage from 'pages/ChatPage';
-import NewChatPage from 'pages/ChatPageNew';
 import ComingSoonPage from 'pages/ComingSoonPage';
 import FAQPage from 'pages/FAQPage';
 import GovPage from 'pages/GovPage';
@@ -28,6 +28,7 @@ import SupportPage from 'pages/SupportPage';
 import TutorialPage from 'pages/TutorialPage';
 import YieldFarmingPage from 'pages/YieldFarmingPage';
 
+// Internal Configs
 import GLOBALS from 'config/Globals';
 
 // Create Header

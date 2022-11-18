@@ -1,13 +1,10 @@
-import React, {
-  forwardRef,
-  Fragment,
-  useCallback,
-  useImperativeHandle,
-  useState,
-} from "react";
-import Cropper from "react-easy-crop";
-import styledComponents from "styled-components";
-import Resizer from "react-image-file-resizer";
+// React + Web3 Essentials
+import React, { forwardRef, Fragment, useCallback, useImperativeHandle, useState } from 'react';
+
+// External Packages
+import Cropper from 'react-easy-crop';
+import styledComponents from 'styled-components';
+import Resizer from 'react-image-file-resizer';
 
 const ImageClipper = forwardRef((props, ref) => {
   //   const [imageSrc, setImageSrc] = useState(null);
@@ -29,7 +26,7 @@ const ImageClipper = forwardRef((props, ref) => {
           const image = await resizeFile(croppedImage);
           onImageCropped(image);
         } else {
-          return "Nothing";
+          return 'Nothing';
         }
       } catch (e) {
         console.error(e);
@@ -39,25 +36,25 @@ const ImageClipper = forwardRef((props, ref) => {
 
   function toDataURL(url, callback) {
     var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
+    xhr.onload = function () {
       var reader = new FileReader();
-      reader.onloadend = function() {
+      reader.onloadend = function () {
         callback(reader.result);
       };
       reader.readAsDataURL(xhr.response);
     };
-    xhr.open("GET", url);
-    xhr.responseType = "blob";
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
     xhr.send();
   }
 
   async function getCroppedImg(imageSrc, pixelCrop) {
     const image = await createImage(imageSrc);
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = pixelCrop.width;
     canvas.height = pixelCrop.height;
-    const ctx = canvas.getContext("2d");
-    const fileName = "none.jpg";
+    const ctx = canvas.getContext('2d');
+    const fileName = 'none.jpg';
 
     ctx.drawImage(
       image,
@@ -80,11 +77,11 @@ const ImageClipper = forwardRef((props, ref) => {
         //   resolve(URL.createObjectURL(file));
         resolve(
           new File([file], fileName, {
-            type: "image/jpeg",
+            type: 'image/jpeg',
             lastModified: Date.now(),
           })
         );
-      }, "image/jpeg");
+      }, 'image/jpeg');
     });
   }
 
@@ -94,23 +91,23 @@ const ImageClipper = forwardRef((props, ref) => {
         file,
         128,
         128,
-        "JPEG",
+        'JPEG',
         80,
         0,
         (uri) => {
           resolve(uri);
           setCroppedImage(uri);
         },
-        "base64"
+        'base64'
       );
     });
 
   const createImage = (url) =>
     new Promise((resolve, reject) => {
       const image = new Image();
-      image.addEventListener("load", () => resolve(image));
-      image.addEventListener("error", (error) => reject(error));
-      image.setAttribute("crossOrigin", "anonymous"); // needed to avoid cross-origin issues on CodeSandbox
+      image.addEventListener('load', () => resolve(image));
+      image.addEventListener('error', (error) => reject(error));
+      image.setAttribute('crossOrigin', 'anonymous'); // needed to avoid cross-origin issues on CodeSandbox
       image.src = url;
     });
 
@@ -131,9 +128,9 @@ const ImageClipper = forwardRef((props, ref) => {
           // objectFit="vertical-cover"
           style={{
             containerStyle: {
-              width: "250px",
-              height: "250px",
-              position: "relative",
+              width: '250px',
+              height: '250px',
+              position: 'relative',
             },
           }}
         />

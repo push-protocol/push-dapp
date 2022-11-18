@@ -1,8 +1,13 @@
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled, { ThemeProvider, useTheme } from "styled-components";
 
+// Internal Components
 import { Input } from "../SharedStyling";
 
+// Types
 type ModalInputType = {
     title:string
 }

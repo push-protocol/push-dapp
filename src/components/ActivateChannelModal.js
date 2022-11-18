@@ -6,12 +6,13 @@ import Slider from "@material-ui/core/Slider";
 import { useClickAway } from "react-use";
 import styled from "styled-components";
 
-// Internal Compoonents
+// Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import {
   Button, Content, H3, Item, Section, Span
 } from "primaries/SharedStyling";
 
+// Constants
 const MIN_STAKE_FEES = 50;
 
 export default function ActivateChannelModal({

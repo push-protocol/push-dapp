@@ -1,10 +1,17 @@
-import GLOBALS from 'config/Globals';
-import { Content, Item, Section } from 'primaries/SharedStyling';
-import React, { useEffect, useState } from 'react';
+// React + Web3 Essentials
+import React, { useState } from 'react';
+
+// External Packages
+import styled, { useTheme } from 'styled-components';
 import { FiSearch, FiSliders } from 'react-icons/fi';
+
+// Internal Components
+import { Item } from 'primaries/SharedStyling';
 import Feedbox from 'segments/Feedbox';
 import SpamBox from 'segments/spam';
-import styled, { useTheme } from 'styled-components';
+
+// Internal Configs
+import GLOBALS from 'config/Globals';
 
 const InboxComponent = () => {
   const [showInbox, setShowInbox] = useState(true);

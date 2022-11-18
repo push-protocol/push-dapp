@@ -1,6 +1,11 @@
-import { useClickAway } from "hooks/useClickAway";
+// React + Web3 Essentials
 import React, { useRef } from "react";
+
+// External Packages
 import styled, { useTheme } from 'styled-components';
+
+// Internal Components
+import { useClickAway } from "hooks/useClickAway";
 import { Image, Item, ItemH } from '../primaries/SharedStyling';
 import Dropdown from "./Dropdown";
 

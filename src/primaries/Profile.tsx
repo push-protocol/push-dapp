@@ -1,12 +1,10 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from 'ethers/providers';
+import { Web3Provider } from '@ethersproject/providers';
 import React, { useRef } from "react";
 
 // External Packages
-import { useClickAway } from 'hooks/useClickAway';
 import styled, { useTheme } from 'styled-components';
-import Dropdown from '../components/Dropdown';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -14,8 +12,8 @@ import { Content, Item } from "./SharedStyling.js";
 import { envUtil } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
 import useModal from 'hooks/useModal';
-
-
+import Dropdown from '../components/Dropdown';
+import { useClickAway } from 'hooks/useClickAway';
 
 // Create Header
 const Profile = ({isDarkMode}) => {
