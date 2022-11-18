@@ -1,5 +1,4 @@
 import React, { useContext, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 
 // React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
