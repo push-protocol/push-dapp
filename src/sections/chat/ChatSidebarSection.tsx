@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { makeStyles } from '@material-ui/core';
 import Box from '@mui/material/Box';
 import MuiTab from '@mui/material/Tab';
 import MuiTabs from '@mui/material/Tabs';
@@ -205,7 +204,7 @@ const ChatSidebarSection = () => {
             />
           </>
         )}
-        {activeTab == 3 && <NewUser />}
+        {activeTab == 3 && <SearchBar/>}
       </ItemVV2>
 
       {/* Footer */}
