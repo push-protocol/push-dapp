@@ -68,7 +68,7 @@ export default function ChannelDetails() {
 
   return (
     <ItemVV2>
-      <AdaptiveMobileItemHV2 justifyContent="flex-start" alignSelf="stretch" margin="10px 0px 0px 0px">
+      <AdaptiveMobileItemHV22  justifyContent="flex-start" alignSelf="stretch" margin="10px 0px 0px 0px">
         <ImageSection src={channelDetails.icon}></ImageSection>
 
         <AdaptiveMobileItemVV2 alignItems="flex-start" padding="5px 0px">
@@ -78,7 +78,6 @@ export default function ChannelDetails() {
           </ChannelName>
 
           <AdaptiveMobileItemVV2 alignItems="flex-start" flex="initial" padding="5px 0px">
-            {/* <div style={{ width: "8px" }} /> */}
             {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified) ? (
               <AliasStateText>Alias Network Setup Pending</AliasStateText>
             ) : (
@@ -93,10 +92,10 @@ export default function ChannelDetails() {
               </AdaptiveMobileItemHV2>
             )}
 
-            <Date>{creationDate && <>Created {creationDate}</>}</Date>
+            {creationDate && <Date>Created {creationDate}</Date>}
           </AdaptiveMobileItemVV2>
         </AdaptiveMobileItemVV2>
-      </AdaptiveMobileItemHV2>
+      </AdaptiveMobileItemHV22>
 
       {isMobile && 
         <ItemHV2 zIndex="1" padding="0 0 20px 0">
@@ -137,6 +136,13 @@ const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
   @media ${device.mobileL} {
     justify-content: center;
+  }
+`
+
+const AdaptiveMobileItemHV22 = styled(ItemHV2)`
+  @media ${device.mobileL} {
+    justify-content: center;
+    flex-direction: column;
   }
 `
 
@@ -260,6 +266,8 @@ const Date = styled.div`
   font-size: 15px;
   line-height: 150%;
   @media ${device.mobileL} {
+    width: 100%;
+    flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
   }
