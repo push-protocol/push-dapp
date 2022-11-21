@@ -50,7 +50,7 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
         <ItemH padding="0 8px 0 0">
           <Image src={`./svg/${networkName[channelsNetworkId].split(' ')[0]}.svg`} alt="active chain" width="32px" height="32px" />
         </ItemH>
-        {networkName[channelsNetworkId].split(' ')[0]}
+         <Item className="text">{networkName[channelsNetworkId].split(' ')[0]}</Item>
         <ToggleArrowImg>
           <img
             alt="arrow"
@@ -91,7 +91,7 @@ const Container = styled.button`
   border: 0;
   outline: 0;
   justify-content: flex-start;
-  flex: 1,
+  flex: 1;
   flex-direction: row;
   align-items: center;
   display: flex;
@@ -117,6 +117,18 @@ const Faucet = styled.span`
     opacity: 0.75;
     cursor: pointer;
     pointer: hand;
+  }
+  @media (max-width: 768px){
+    border-radius: 37px;
+    height: 45px;
+    padding: 2px 10px;
+  }
+  .text{
+    display: flex;
+    color: ${props => props.theme.faucetText};
+    @media (max-width: 768px){
+      display: none;
+    }
   }
 `
 const ToggleArrowImg = styled.div`

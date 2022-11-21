@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { device } from 'config/Globals';
 import React from 'react';
 
 // External Packages
@@ -6,6 +7,7 @@ import { MdOutlineClose } from 'react-icons/md';
 import FadeLoader from 'react-spinners/FadeLoader';
 import { toast } from 'react-toastify';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
+import useMediaQuery from './useMediaQuery';
 
 // Types
 type LoaderToastType = { msg: string; loaderColor: string; textColor: string };
@@ -14,6 +16,7 @@ const override: React.CSSProperties = {
   // width: "fit-content",
   height: '45px',
 };
+
 
 const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
   <LoaderNotification>
@@ -63,6 +66,7 @@ const useToast = (
 ) => {
   const toastId = React.useRef(null);
   const themes = useTheme();
+  const isMobile = useMediaQuery(device.tablet);
 
   let isLoaderToastShown = false;
 
@@ -96,6 +100,7 @@ const useToast = (
   };
 
   const showMessageToast: ShowMessageToastType = ({ toastTitle, toastMessage, toastType, getToastIcon }) => {
+    
     const toastUI = (
       <Toast>
         <ToastIcon>{getToastIcon ? getToastIcon(30) : ''}</ToastIcon>
@@ -132,6 +137,7 @@ const useToast = (
         background: toastType === 'SUCCESS' ? themes.toastSuccessBackground : themes.toastErrorBackground,
         boxShadow: `10px 10px 10px ${themes.toastShadowColor}`,
         borderRadius: '20px',
+        margin: isMobile ? '20px' : '0px',
       },
     };
 

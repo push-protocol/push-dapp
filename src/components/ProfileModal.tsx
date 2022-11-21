@@ -1,54 +1,47 @@
-// React + Web3 Essentials
-import React from "react";
-
-// External Packages
+import React from 'react';
 import styled, { useTheme } from "styled-components";
 
-// Internal Components
-import {
-  A, Image, ItemH, RouterLink, Span
-} from "../primaries/SharedStyling.js";
+import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
+import { A, Button, Image, Item, ItemH, Span} from 'primaries/SharedStyling';
+import { AiOutlineClose } from 'react-icons/ai'
 
-// Create Dropdown
-function Dropdown(props) {
-  const theme = useTheme();
-  const copyToClipboard = (address) => {
-    if (navigator && navigator.clipboard) {
-      navigator.clipboard.writeText(address);
-    } else {
-      const el = document.createElement("textarea");
-      el.value = address;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
-    }
-  };
-  return (
+
+const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
+    const theme = useTheme()
+    // const delegateAddressInputRef = React.useRef<HTMLInputElement>();
+    // const handleClose = () => onClose();
+
+    // to close the modal upon a click on backdrop
+    // const containerRef = React.useRef(null);
+    // useClickAway(containerRef, () => onClose())
+
+    return(
+        <ModalContainer>
+            <Button
+                bg="transparent"
+                self='flex-end'
+                onClick={() => {
+                  setShowDropdown(!showDropdown);
+                    return 'nothing'
+                }}>
+                <AiOutlineClose size={30} color={theme.headerIconsBg} />
+              </Button>
+
+
     <>
-      {props.dropdownValues.map((dropdownValue) =>
+      {dropdownValues.map((dropdownValue) =>
         dropdownValue.id === "walletAddress" ? (
-          <ItemH
-            bg="linear-gradient(87.17deg, #F72C81 0%, #6C55AF 50%, #4FD5FF 100%)"
-            radius="17px"
-            padding="2px 12px"
-            wrap="nowrap"
-            margin="0px 0 8px 0"
-            width="max-content"
-          >
+          <ItemHead>
             <Span
               margin="11px 22px 11px 2px"
               weight="400"
               size="14px"
               textTransform="uppercase"
               color="#fff"
-              spacing="1px"
               width="max-content"
             >
-              <DesktopAddress>
-                {dropdownValue?.title}
-              </DesktopAddress>
               <MobileAddress>
+
               {dropdownValue?.title.substring(0, 6)}.....
                 {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
               </MobileAddress>
@@ -72,9 +65,9 @@ function Dropdown(props) {
                 copyToClipboard(dropdownValue?.value);
               }}
             />}
-          </ItemH>
+          </ItemHead>
         ) : (
-          <ItemH wrap="nowrap" margin="8px 0">
+          <BodyH>
              {dropdownValue?.invertedIcon && <Image
               src={dropdownValue.invertedIcon}
               alt="icon"
@@ -96,6 +89,7 @@ function Dropdown(props) {
                 weight="400"
                 size="16px"
                 cursor="pointer"
+                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}
@@ -117,23 +111,24 @@ function Dropdown(props) {
                 {dropdownValue.title}
               </A>
             )}
-          </ItemH>
+          </BodyH>
         )
       )}
     </>
-  );
+
+        </ModalContainer>
+    )
 }
 
-// css styles
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-`;
-const DropdownItem = styled.div`
-  display: flex;
-  margin: 1rem;
-`;
+const ModalContainer = styled.div`
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    background: ${props => props.theme.default.bg};;
+    align-items: flex-start;
+`
 
 const SpanAddress= styled(Span)`
   margin:11px 22px 11px 2px;
@@ -149,10 +144,23 @@ const MobileAddress= styled(SpanAddress)`
     display: none;
   }
 `
-const DesktopAddress = styled(SpanAddress)`
-  @media (max-width: 992px) {
-    display: none;
-  }
+
+const ItemHead = styled(ItemH)`
+    background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
+    border-radius: 13px;
+    padding: 2px 12px;
+    flex-wrap: nowrap;
+    margin:0px auto 8px auto;
+    width: 80%;
+    max-height: 42px !important;
+    justify-content: space-between
 `
-// Export Default
-export default Dropdown;
+
+const BodyH = styled(ItemH)`
+    wrap: nowrap;
+    margin: 8px 0;
+    max-height: 50px !important;
+    margin:0px 0 8px 40px;
+`
+
+export default ProfileModal;
