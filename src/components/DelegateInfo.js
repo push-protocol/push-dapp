@@ -114,7 +114,7 @@ const WalletAddressDisplay = styled.span`
     cursor: pointer;
   }
   @media (max-width: 700px) {
-    padding: 4px 15px;
+    padding: 4px 8px;
   }
 `;
 
