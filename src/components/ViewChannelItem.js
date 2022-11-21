@@ -773,6 +773,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               justify="flex-start"
               margin="0px -5px"
             >
+              <ItemBody>
               <MetaInfoDisplayer
                 externalIcon={
                   <Image
@@ -814,6 +815,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   playTeaser={playTeaser}
                 />
               )}
+              </ItemBody>
 
               {verifierDetails && (
                 <Subscribers>
@@ -1082,6 +1084,7 @@ const VerifiedBy = styled.span`
   display: flex;
   flex-direction: row;
   align-items: center;
+
 `;
 
 const VerifierIcon = styled.img`
@@ -1130,6 +1133,19 @@ const ChannelMeta = styled.div`
   }
 `;
 
+const ItemBody = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 768px) {
+    width: 100%;
+    align-self: center;
+    justify-content: center;
+  }
+`
+
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
   color: #fff;
@@ -1149,11 +1165,17 @@ const Subscribers = styled.div`
     padding-top: 1rem;
   }
 
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   @media (max-width: 768px) {
     width: 100%;
     flex-direction: column;
     align-self: center;
     text-align: center;
+    align-items: center;
   }
 `;
 
