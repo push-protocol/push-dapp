@@ -36,7 +36,7 @@ const SearchBar = () => {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    inbox
+    inbox,
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -89,7 +89,7 @@ const SearchBar = () => {
     return userCreated;
   };
 
-  const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
     if (searchAddress === '') {
       clearInput();
@@ -98,13 +98,13 @@ const SearchBar = () => {
     }
   };
 
-  const submitSearch = (event: React.FormEvent) => {
+  const submitSearch = (event: React.FormEvent): void => {
     //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
     event.preventDefault();
     handleSearch();
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (): Promise<void> => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
       let ens: string;
@@ -130,7 +130,7 @@ const SearchBar = () => {
     setIsLoadingSearch(false);
   };
 
-  async function handleUserSearch(userSearchData) {
+  const handleUserSearch = async (userSearchData: string): Promise<void> => {
     setIsLoadingSearch(true);
     const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
     let filteredData: User;
@@ -163,7 +163,7 @@ const SearchBar = () => {
     } else {
       setFilteredUserData([]);
     }
-  }
+  };
 
   function checkIsUserConnected(userData: User): boolean {
     let isPresent = false;
@@ -175,7 +175,7 @@ const SearchBar = () => {
     return isPresent;
   }
 
-  const clearInput = () => {
+  const clearInput = (): void => {
     setFilteredUserData([]);
     setSearchedUser('');
     setHasUserBeenSearched(false);
