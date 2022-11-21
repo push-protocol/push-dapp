@@ -128,19 +128,19 @@ export default function ChannelDetails() {
 
 const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     align-items: center;
   }
 `
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     justify-content: center;
   }
 `
 
 const AdaptiveMobileItemHV22 = styled(ItemHV2)`
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     justify-content: center;
     flex-direction: column;
   }
@@ -265,7 +265,7 @@ const Date = styled.div`
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     width: 100%;
     flex-wrap: wrap;
     flex-direction: column;
@@ -293,7 +293,7 @@ const ChannelName = styled.div`
   font-size: 30px;
   line-height: 141%;
   color: ${(props) => props.theme.color};
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     flex-direction: column;
     margin-top: 10px;
     font-size: 20px;
@@ -325,7 +325,7 @@ const SectionDes = styled.div`
   line-height: 140%;
   padding: 0px 20px 0px 10px;
   text-align: left;
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     text-align: center;
     margin-top: 10px;
     width:100%;
