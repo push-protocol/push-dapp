@@ -1100,6 +1100,9 @@ const VerifierName = styled.span`
   color: ${(props) => props.theme.color};
   font-size: 16px;
   letter-spacing: 0em;
+  @media (max-width: 1024px) {
+    margin-top: 10px;
+  }
 `;
 
 const ChannelDesc = styled.div`

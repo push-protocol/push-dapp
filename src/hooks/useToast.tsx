@@ -67,7 +67,6 @@ const useToast = (
   const toastId = React.useRef(null);
   const themes = useTheme();
   const isMobile = useMediaQuery(device.tablet);
-  console.log(isMobile)
 
   let isLoaderToastShown = false;
 
