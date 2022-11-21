@@ -274,6 +274,7 @@ const NavMenuInner = styled(Item)`
   justify-content: flex-start;
   overflow-y: scroll;
   margin-top: 20px;
+  padding-right: 20px;
   height: calc(100vh - 100px);
 `;
 
