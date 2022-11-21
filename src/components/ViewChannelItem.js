@@ -1296,6 +1296,9 @@ const SubscribeButton = styled(ChannelActionButton)`
   border-radius: 8px;
   padding: 9px 15px;
   min-width: 80px;
+  @media (max-width: 768px){
+    padding: 9px 30px;
+  }
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
