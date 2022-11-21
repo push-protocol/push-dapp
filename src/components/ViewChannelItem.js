@@ -817,8 +817,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
               {verifierDetails && (
                 <Subscribers>
-                  <VerifiedBy>Verified by:</VerifiedBy>
+                  <VerifiedBy>Verified by: 
                   <VerifierIcon src={verifierDetails.icon} />
+                  </VerifiedBy>
                   <VerifierName>{verifierDetails.name}</VerifierName>
                 </Subscribers>
               )}
@@ -1078,6 +1079,9 @@ const VerifiedBy = styled.span`
   line-height: 20px;
   letter-spacing: 0.05em;
   font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const VerifierIcon = styled.img`
@@ -1139,11 +1143,17 @@ const ChannelMetaBox = styled.label`
 
 const Subscribers = styled.div`
   display: flex;
-  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   @media ${Device.laptopL} {
     padding-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+    align-self: center;
+    text-align: center;
   }
 `;
 
