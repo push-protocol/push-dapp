@@ -244,8 +244,8 @@ const ChannelInfo = ({
         
           <Item width="12.2em" self="stretch" align="stretch" margin="70px auto 50px auto">
             <Button
-              bg="#CF1C84"
-              color="#fff"
+              bg="#F4DCEA"
+              color="#CF1C84"
               flex="1"
               radius="15px"
               padding="20px 10px"
@@ -257,7 +257,7 @@ const ChannelInfo = ({
               }}
             >
                <Span
-              color="#fff"
+              color="#CF1C84"
               weight="600"
               textTransform="none"
               line="22px"
