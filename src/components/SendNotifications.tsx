@@ -1478,6 +1478,7 @@ const SubmitButton = styled(Button)`
   color: #fff;
   @media (max-width: 640px) {
     width: 13rem;
+    padding: 20px 20px;
   }
   @media (max-width: 380px) {
     width: 9.5rem;
