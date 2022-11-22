@@ -365,7 +365,6 @@ const DropdownStyled = styled(Dropdown)`
     color: #000;
     border: 1px solid #bac4d6;
     border-radius: 12px;
-    border-top: 1px solid transparent;
     flex: 1;
     outline: none;
     height: 50px;
