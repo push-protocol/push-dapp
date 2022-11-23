@@ -102,8 +102,13 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
   }
 `;
 
+type NFTOptions = {
+  value: string;
+  label: string; 
+}
+
 // Set Notification Form Type | 0 is reserved for protocol storage
-const NFTypes = [
+const NFTypes: NFTOptions[] = [
   { value: '1', label: 'Broadcast' },
   // { value: "2", label: "Old Secret (IPFS Payload)" }, -- Deprecated
   { value: '3', label: 'Targeted' },
