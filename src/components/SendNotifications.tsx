@@ -104,10 +104,10 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
 
 // Set Notification Form Type | 0 is reserved for protocol storage
 const NFTypes = [
-  { value: '1', label: 'Broadcast (Direct Payload)' },
+  { value: '1', label: 'Broadcast' },
   // { value: "2", label: "Old Secret (IPFS Payload)" }, -- Deprecated
-  { value: '3', label: 'Targeted (Direct Payload)' },
-  { value: '4', label: 'Subset (Direct Payload)' },
+  { value: '3', label: 'Targeted' },
+  { value: '4', label: 'Subset' },
 ];
 const LIMITER_KEYS = ['Enter', ','];
 
