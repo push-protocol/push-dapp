@@ -51,7 +51,7 @@ const ChannelInfo = ({
   isAllFilledAndValid,
 }) => {
   const theme = useTheme();
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState<boolean>(true);
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
@@ -67,8 +67,9 @@ const ChannelInfo = ({
     } else {
       setDisabled(false);
     }
+
+    return ()=>setDisabled(true);
   }, [channelName, channelInfo, channelURL]);
-  console.log(disabled);
 
   return (
     <Section>
@@ -76,16 +77,7 @@ const ChannelInfo = ({
         padding="40px 0 0 0"
         align="flex-start"
       >
-        {/* <FormSubmision
-          flex="1"
-          direction="column"
-          margin="0px"
-          justify="center"
-          size="1.1rem"
-          onSubmit={handleCreateChannel}
-        > */}
         <Label style={{ color: theme.color }}>Channel Name</Label>
-
         <Item
           margin="7px 0px 0px 0px"
           flex="1"
@@ -126,23 +118,6 @@ const ChannelInfo = ({
               value={networkName[chainDetails]}
             />
           </DropdownStyledParent>
-
-          {/* <span
-            className="imgSpan"
-            data-tooltip="When sending notifications to Non-Ethereum Chains, the Channel Alias address will act as a native representation of your Channel on that blockchain."
-          >
-            <img
-              className="iImage"
-              src="/svg/info.svg"
-              style={{
-                width: "20px",
-                height: "20px",
-                marginTop: "0px",
-                marginBottom: "-2px",
-              }}
-            />
-
-              </span>  */}
         </Item>
 
         {chainDetails != coreChainId ? (
@@ -311,30 +286,6 @@ const ChannelInfo = ({
   );
 };
 
-const InputDiv = styled.div`
-  display: ${(props) => props.display || 'flex'};
-  flex: 1;
-  border: ${(props) => props.border || 'none'};
-  border-bottom: ${(props) => props.borderBottom || 'none'};
-  margin-bottom: ${(props) => props.marginBottom || 'none'};
-  width: ${(props) => props.width || 'none'};
-  visibility: ${(props) => props.visibility || ''};
-`;
-
-const SpanR = styled.div`
-  position: absolute;
-  bottom: 0px;
-  right: 0.8rem;
-  color: white;
-  z-index: 1;
-  margin-bottom: 5px;
-  padding: 5px;
-  background: #e20880;
-  border-radius: 20px;
-  align-items: center;
-  font-size: 16px;
-`;
-
 const Label = styled.div`
   font-style: normal;
   font-weight: 600;
@@ -390,8 +341,5 @@ const DropdownStyled = styled(Dropdown)`
   }
 `;
 
-const Body = styled.div`
-  margin: 40px auto 0px auto;
-`;
 
 export default ChannelInfo;
