@@ -8,8 +8,10 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Item } from "./SharedStyling.js";
+import { Content, Item } from "./SharedStyling.js";
 import { envUtil } from 'helpers/UtilityHelper';
+import ProfileModal from 'components/ProfileModal';
+import useModal from 'hooks/useModal';
 import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
 
@@ -17,6 +19,7 @@ import { useClickAway } from 'hooks/useClickAway';
 const Profile = ({isDarkMode}) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
+  const modalRef = React.useRef(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
@@ -24,6 +27,7 @@ const Profile = ({isDarkMode}) => {
   const [ens, setENS] = React.useState('');
   const [ensFetched, setENSFetched] = React.useState(false);
   const [showDropdown, setShowDropdown] = React.useState(false);
+  useClickAway(modalRef, () => showDropdown && setShowDropdown(false));
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
   const { deactivate } = context
@@ -53,7 +57,7 @@ const Profile = ({isDarkMode}) => {
   useClickAway(toggleArrowRef,dropdownRef, () => {
     setShowDropdown(false);
   });
-  
+
   React.useEffect(() => {
     if (account && account != '') {
       // Check if the address is the same
@@ -78,6 +82,8 @@ const Profile = ({isDarkMode}) => {
   }, [account]);
 
   // to create blockies
+
+
   return (
     <>
       {account && account !== "" && !error && (
@@ -108,19 +114,22 @@ const Profile = ({isDarkMode}) => {
             </ToggleArrowImg>
           </Wallet>
           {showDropdown && (
+            <Item 
+            position='absolute'
+            top='3.6rem'
+            right='-0.5rem'
+            ref={dropdownRef}
+            >
             <DropdownItem
-              ref={dropdownRef}
-              bg={theme.header.bg}
-              border={`1px solid ${theme.snackbarBorderColor}`}
-              radius="24px"
               align="flex-start"
-              padding="1.3rem"
-              position="absolute"
-              top="4.1rem"
-              right="-0.5rem"
+              ref={dropdownRef}
             >
               <Dropdown dropdownValues={dropdownValues} />
             </DropdownItem>
+            <ItemModal ref={modalRef}>
+              <ProfileModal showDropdown={showDropdown} setShowDropdown={setShowDropdown} dropdownValues={dropdownValues} />
+            </ItemModal>
+            </Item>
           )}
         </Container>
       )}
@@ -141,6 +150,10 @@ const Container = styled.button`
   flex-direction: row;
   align-items: center;
   display: flex;
+  @media (max-width: 992px) {
+    width: 100%;
+    justify-content: flex-start;
+  }
 `
 const Wallet = styled.span`
   margin: 0px 10px;
@@ -154,6 +167,14 @@ const Wallet = styled.span`
   color: ${props => props.color};
   border-radius:17px;
   background: ${props => props.bg};
+  @media (max-width: 992px) {
+    width: 100%;
+    margin: 0px 0px;
+    justify-content: space-between;
+    border-radius: 13px;
+    background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
+  }
+  
   ${({ isDarkMode,bg }) => isDarkMode && `
     border: solid 3px transparent;
     background-image: linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%), linear-gradient(107deg, rgba(226,8,128,1) 30%, rgba(103,76,159,1) 70%, rgba(53,197,243,1) 100%);
@@ -172,6 +193,7 @@ const Wallet = styled.span`
     cursor: pointer;
     pointer: hand;
   }
+  
 `
 const ToggleArrowImg = styled.div`
   margin-left: 2rem;
@@ -191,18 +213,32 @@ const ToggleArrowImg = styled.div`
 `;
 
 const DropdownItem= styled(Item)`
-  background: ${props => props.bg};
-  border:1px solid ${props => props.border};
-  border-radius:24px;
-  align-items:flex-start;
-  padding:1.3rem;
-  position:absolute;
-  top:3.6rem;
-  right:-0.5rem;
+  background: ${props => props.theme.header.bg};
+  border: 1px solid ${props => props.theme.snackbarBorderColor};
+  border-radius: 24px;
+  align-items: flex-start;
+  padding: 1.3rem;
+  // position: absolute;
+  // top:3.6rem;
+  // right:-0.5rem;
   z-index:10;
-  @media (max-width: 992px) {
-    right: unset;
-    align-items:flex-start;
+  @media (max-width: 425px) {
+    align-items: flex-start;
+    display: none;
+  }
+`
+
+const ItemModal = styled.div`
+  position: fixed;
+  // width: 100vw;
+  // height: 100vh;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  @media (min-width: 426px) {
+    display: none;
   }
 `
 

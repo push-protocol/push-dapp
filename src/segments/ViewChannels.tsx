@@ -208,10 +208,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     <Container>
       <ScrollItem>
         {!loading && (
-          <ItemH
-            padding="10px 0px"
-            flex="initial"
+          <ItemBar
           >
+            <ItemHBar>
             <SearchContainer
               flex="1"
               margin="10px"
@@ -237,14 +236,18 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               </Item>
             </SearchContainer>
 
+            
+            {appConfig.allowedNetworks.length > 1 && 
+              <Item flex="1"><ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} /></Item>
+            }
+
+              </ItemHBar>
+
             {!UtilityHelper.isMainnet(chainId) &&
               <Faucets />
             }
-            {appConfig.allowedNetworks.length > 1 && 
-              <ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} />
-            }
 
-          </ItemH>
+          </ItemBar>
         )}
 
         {/* render all channels depending on if we are searching or not */}
@@ -320,6 +323,27 @@ const SearchBar = styled.input`
   }
 `;
 
+const ItemHBar = styled.div`
+    width: 100%;
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: row important!;
+    justify-content: space-evenly;
+    @media (max-width: 768px) {
+      padding:  0px 0px;
+    }
+`
+
+const ItemBar = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+`
+
 const Container = styled.div`
   display: flex;
   flex: 1;
@@ -364,6 +388,10 @@ const ScrollItem = styled(Item)`
   padding:  5px 20px 10px 20px;
   overflow-y: auto;
 
+  @media (max-width: 768px) {
+    padding:  0px 0px 0px 0px;
+  }
+
   &::-webkit-scrollbar-track {
     background-color: ${props => props.theme.scrollBg};
     border-radius: 10px;
@@ -386,15 +414,7 @@ const ScrollItem = styled(Item)`
 `;
 
 const SearchContainer = styled(Item)`
-  min-width: 320px;
-
-  @media (max-width: 768px) {
-    min-width: 320px;
-  }
-
-  @media (max-width: 480px) {
-    min-width: 210px;
-  }
+  width: 100%;
 `;
 
 // Export Default

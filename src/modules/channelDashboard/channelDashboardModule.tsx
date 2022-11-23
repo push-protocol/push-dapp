@@ -73,7 +73,7 @@ const Container = styled(Section)`
     );
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
     width: calc(

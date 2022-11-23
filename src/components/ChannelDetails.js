@@ -24,7 +24,7 @@ import { appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
 ;
 
-const DATE_FORMAT = 'MMMM Do YYYY';
+const DATE_FORMAT = 'MMM DD YYYY';
 
 export default function ChannelDetails() {
   const { chainId } = useWeb3React();
@@ -68,7 +68,7 @@ export default function ChannelDetails() {
 
   return (
     <ItemVV2>
-      <AdaptiveMobileItemHV2 justifyContent="flex-start" alignSelf="stretch" margin="10px 0px 0px 0px">
+      <AdaptiveMobileItemHV22  justifyContent="flex-start" alignSelf="stretch" margin="10px 0px 0px 0px">
         <ImageSection src={channelDetails.icon}></ImageSection>
 
         <AdaptiveMobileItemVV2 alignItems="flex-start" padding="5px 0px">
@@ -78,7 +78,6 @@ export default function ChannelDetails() {
           </ChannelName>
 
           <AdaptiveMobileItemVV2 alignItems="flex-start" flex="initial" padding="5px 0px">
-            {/* <div style={{ width: "8px" }} /> */}
             {(onCoreNetwork && aliasAddrFromContract && !isAliasVerified) || (!onCoreNetwork && !isAliasVerified) ? (
               <AliasStateText>Alias Network Setup Pending</AliasStateText>
             ) : (
@@ -93,10 +92,10 @@ export default function ChannelDetails() {
               </AdaptiveMobileItemHV2>
             )}
 
-            <Date>{creationDate && <>Created {creationDate}</>}</Date>
+            {creationDate && <Date>Created {creationDate}</Date>}
           </AdaptiveMobileItemVV2>
         </AdaptiveMobileItemVV2>
-      </AdaptiveMobileItemHV2>
+      </AdaptiveMobileItemHV22>
 
       {isMobile && 
         <ItemHV2 zIndex="1" padding="0 0 20px 0">
@@ -129,14 +128,21 @@ export default function ChannelDetails() {
 
 const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     align-items: center;
   }
 `
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     justify-content: center;
+  }
+`
+
+const AdaptiveMobileItemHV22 = styled(ItemHV2)`
+  @media (max-width: 767px) {
+    justify-content: center;
+    flex-direction: column;
   }
 `
 
@@ -259,7 +265,9 @@ const Date = styled.div`
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
+    width: 100%;
+    flex-wrap: wrap;
     flex-direction: column;
     align-items: center;
   }
@@ -285,7 +293,7 @@ const ChannelName = styled.div`
   font-size: 30px;
   line-height: 141%;
   color: ${(props) => props.theme.color};
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     flex-direction: column;
     margin-top: 10px;
     font-size: 20px;
@@ -317,7 +325,7 @@ const SectionDes = styled.div`
   line-height: 140%;
   padding: 0px 20px 0px 10px;
   text-align: left;
-  @media ${device.mobileL} {
+  @media (max-width: 767px) {
     text-align: center;
     margin-top: 10px;
     width:100%;

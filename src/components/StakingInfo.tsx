@@ -5,6 +5,7 @@ import React, { Fragment } from "react";
 
 // External Packages
 import styled, { useTheme } from "styled-components";
+import { Content, Section } from "./SharedStyling";
 
 // Internal Components
 import UtilityHelper from 'helpers/UtilityHelper';
@@ -46,7 +47,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
   return (
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}
-        <Item padding="40px 0 0 0" self="stretch" align="flex-start" justify="center">
+        <ItemContent>
           <Item self="center" maxWidth="800px" width="100%">
             <TabSpace>
               <p>
@@ -60,7 +61,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
 
 
             <TextSpace>
-                <Span color={theme.default.secondaryColor} size="14px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
+                <Span color={theme.default.secondaryColor} size="15px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
 
                 {appConfig.appEnv !== 'prod' && 
                   <>
@@ -101,7 +102,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
             </Span>
           </Button>
         </Item>
-      </Item>
+      </ItemContent>
       {/* </Content> */}
     </Fragment>
   );
@@ -122,9 +123,9 @@ const TabSpace = styled.div`
     font-size: 20px;
     letter-spacing: -0.011em;
     margin-left:50px;
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
     margin-left:20px;
-    font-size: 14px;
+    font-size: 18px;
     }
   }
   b {
@@ -136,12 +137,23 @@ const TabSpace = styled.div`
     letter-spacing: -0.019em;
     color: #CF1C84;
     margin-right:50px;
-    @media (max-width: 600px) {
+    @media (max-width: 758px) {
     margin-right:20px;
-    font-size: 20px;
+    font-size: 26px;
     }
   }
 `;
+
+const ItemContent = styled(Item)`
+    padding: 40px 0 0 0;
+    self: stretch;
+    align: flex-start;
+    justify: center;
+
+    @media (max-width: 768px){
+      padding: 10px 0 0 0;
+    }
+`
 
 const TextSpace = styled.div`
   width: 97%;
@@ -160,6 +172,11 @@ const TextSpace = styled.div`
   @media (max-width: 1224px) {
     width: 100%; 
   }
+
+  @media (max-width: 768px) {
+    width: 100%; 
+    margin-top: 20px;
+  }
 `;
 
 const AnchorLink = styled.a`
@@ -171,7 +188,6 @@ const AnchorLink = styled.a`
   font-size: 16px;
   font-weight: 500;
   text-decoration: none;
-  // width:15em;
   white-space: nowrap;
   margin: 0 2em;
   &:hover {
@@ -209,7 +225,6 @@ const PoolShare = styled(ChannelMetaBox)`
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  // width:16em;
   margin: 0 0 0 2em;
   cursor: pointer;
   white-space: nowrap;

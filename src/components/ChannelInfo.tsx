@@ -1,6 +1,7 @@
+// @ts-nocheck
 // React + Web3 Essentials
 import { appConfig } from "config";
-import React, { useState } from "react";
+import React, { useEffect,useState } from "react";
 
 // External Packages
 import Dropdown from "react-dropdown";
@@ -39,6 +40,29 @@ const ChannelInfo = ({
   isAllFilledAndValid
 }) => {
   const theme = useTheme();
+  const [disabled,setDisabled] = useState(true)
+
+  const isEmpty = (field) => {
+    if (field.trim().length == 0) {
+      return true;
+    }
+
+    return false;
+  };
+
+  useEffect(() => {
+    if (
+      isEmpty(channelName) ||
+      isEmpty(channelInfo) ||
+      isEmpty(channelURL)
+    ){
+      setDisabled(true)
+    }
+    else{
+      setDisabled(false)
+    }
+  }, [channelName,channelInfo,channelURL])
+  console.log(disabled)
 
   return (
     <Section>
@@ -244,8 +268,9 @@ const ChannelInfo = ({
         
           <Item width="12.2em" self="stretch" align="stretch" margin="70px auto 50px auto">
             <Button
-              bg="#CF1C84"
-              color="#fff"
+              bg={disabled ? '#F4DCEA' : '#CF1C84'}
+              color={disabled ? '#CF1C84': '#fff'}
+              disabled={disabled}
               flex="1"
               radius="15px"
               padding="20px 10px"
@@ -257,7 +282,7 @@ const ChannelInfo = ({
               }}
             >
                <Span
-              color="#fff"
+              color={disabled ? '#CF1C84': '#fff'}
               weight="600"
               textTransform="none"
               line="22px"

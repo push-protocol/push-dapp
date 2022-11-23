@@ -35,7 +35,7 @@ export const MaskedPolygonChannels = {
  }
 
 export const MaskedChannels = {
-  '0x64F4fba925CbDe309acC875b8Af2feb07f2aCCA0': 1, // ETHIndia
+  '0x64F4fba925CbDe309acC875b8Af2feb07f2aCCA0': 0, // ETHIndia
   '0xDa63D70332139E6A8eCA7513f4b6E2E0Dc93b693': 1, 
   '0xAd95A5fE898679B927C266eB2eDfAbC7fe268C27': 1,
   '0x7101829b8C82184D59D1dAE4361DB057F85656a1': 1,

@@ -271,6 +271,7 @@ function CreateChannel() {
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
+
       setProgress(50);
 
       const tx = await contract.createChannelWithFees(channelType, identityBytes, fees, {
@@ -372,22 +373,17 @@ function CreateChannel() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Section margin="0px 0px 40px">
-        <Content padding="10px 20px 10px">
-          <Item align="center">
-            <H2 textTransform="uppercase" spacing="0.075em">
-              <Span weight="400" size="32px" color={theme.color}>
+      <BodySection>
+        <Content className='content'>
+          <Item align="center" className='center'>
+            <TextH2>
+              <Span className='text'>
                 Create Your Channel
               </Span>
-            </H2>
+            </TextH2>
             <Span
-              color={theme.default.secondaryColor}
-              weight="400"
-              size="16px"
-              textTransform="none"
-              textAlign="center"
-              spacing="0.03em"
-              margin="0px 0px">
+              className='body-text'
+              >
               Push (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your
               users.
             </Span>
@@ -400,7 +396,7 @@ function CreateChannel() {
             </Body>
           )}
         </Content>
-      </Section>
+      </BodySection>
 
       {!onCoreNetwork ? (
         <>
@@ -424,15 +420,15 @@ function CreateChannel() {
         <>
           <Section>
             <ItemHere>
-              <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} onClick={() => setStepFlow(0)}>
+              <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} onClick={() => setStepFlow(0)}>
                 <div>Staking Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
-              <Tab type={stepFlow >= 1 ? 'active' : 'inactive'} onClick={() => setStepFlow(1)}>
+              <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} onClick={() => setStepFlow(1)}>
                 <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
-              <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} onClick={() => setStepFlow(2)}>
+              <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'} onClick={() => setStepFlow(2)}>
                 <div>Upload Logo</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
               </Tab>
@@ -545,7 +541,63 @@ const Step = styled.div`
     css`
       background: #e20880;
     `};
+
+    ${({ type }) =>
+    type === 'inactive' &&
+    css`
+    `};
 `;
+
+const BodySection = styled(Section)`
+ margin: 0px 0px 40px;
+ 
+ .content {
+  padding: 10px 20px 10px;
+   .center {
+    .body-text {
+        color: ${(props) => props.theme.default.secondaryColor};
+        font-weight: 400;
+        font-size: 16px;
+        text-transform: none;
+        text-align: center;
+        letter-spacing: 0.03em;
+        margin: 0px 0px;
+
+        @media (max-width: 768px){
+          font-size: 14px;
+         }
+      }
+  }
+
+  @media (max-width: 768px){
+    padding: 0px 0px 0px;
+   }
+ }
+ @media (max-width: 768px){
+  margin: 0px 0px 0px;
+ }
+`
+
+const TextH2 = styled(H2)`
+  text-transform: uppercase;
+  margin: 20px 0px;
+
+  .text {
+    font-weight: 400; 
+    font-size: 32px;
+    color: ${(props) => props.theme.color};
+    @media (max-width: 768px){
+      font-weight: 500;
+      font-size: 26px;
+      line-height: 141%;
+      }
+  }
+
+  @media (max-width: 768px){
+     text-transform: capitalize;
+     margin: 0px 0px 12px 0px;
+  }
+`
 
 const Line = styled.div`
   position: absolute;
@@ -634,14 +686,43 @@ const Tab = styled.div`
     font-size: 16px;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     width: 100%;
+    div {
+      font-weight: 500;
+      font-size: 15px;
+    }
   }
 
   ${({ type }) =>
     type === 'active' &&
     css`
       color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+  ${({ active }) =>
+    active === 'active' &&
+    css`
+      color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+    ${({ active }) =>
+    active === 'inactive' &&
+    css`
+    @media (max-width: 768px) {
+      width: 40%;
+        div {
+          font-size: 0px;
+            @media (max-width: 768px) {
+            }
+        }
+    }
     `};
 `;
 
@@ -649,9 +730,10 @@ const ItemHere = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  @media (max-width: 600px) {
+  align-items: flex-end;
+  @media (max-width: 768px) {
     display: flex;
-    flex-direction: column;
+    margin-top: 30px;
   }
   @media (max-width: 1224px) {
     display: flex;

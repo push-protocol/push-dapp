@@ -773,6 +773,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               justify="flex-start"
               margin="0px -5px"
             >
+              <ItemBody>
               <MetaInfoDisplayer
                 externalIcon={
                   <Image
@@ -814,11 +815,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   playTeaser={playTeaser}
                 />
               )}
+              </ItemBody>
 
               {verifierDetails && (
                 <Subscribers>
-                  <VerifiedBy>Verified by:</VerifiedBy>
+                  <VerifiedBy>Verified by: 
                   <VerifierIcon src={verifierDetails.icon} />
+                  </VerifiedBy>
                   <VerifierName>{verifierDetails.name}</VerifierName>
                 </Subscribers>
               )}
@@ -960,6 +963,14 @@ const Container = styled.div`
   padding: 25px 10px;
 
   align-self: stretch;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid ${(props) => props.theme.default.border};
+    border-top:none;
+    border-left:none;
+    border-right:none;
+  }
 `;
 
 const SkeletonWrapper = styled.div`
@@ -984,6 +995,11 @@ const ChannelLogo = styled.div`
   flex-direction: column;
   justify-content: center;
   align-self: flex-start;
+  @media (max-width: 768px) {
+      align-self: center;
+      min-width: 100px;
+      min-height: 100px;
+  }
 `;
 
 const ChannelLogoOuter = styled.div`
@@ -1030,6 +1046,10 @@ const ChannelTitle = styled(ItemH)`
   margin: 0;
   flex: initial;
   align-items: center;
+  @media (max-width: 768px) {
+    align-self: center;
+    margin-top: 10px;
+  }
 `;
 
 const ChannelTitleLink = styled.a`
@@ -1061,6 +1081,10 @@ const VerifiedBy = styled.span`
   line-height: 20px;
   letter-spacing: 0.05em;
   font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
 `;
 
 const VerifierIcon = styled.img`
@@ -1076,6 +1100,9 @@ const VerifierName = styled.span`
   color: ${(props) => props.theme.color};
   font-size: 16px;
   letter-spacing: 0em;
+  @media (max-width: 1024px) {
+    margin-top: 10px;
+  }
 `;
 
 const ChannelDesc = styled.div`
@@ -1087,6 +1114,10 @@ const ChannelDesc = styled.div`
   font-weight: 400;
   flex-direction: column;
   color: ${(props) => props.theme.color};
+  @media (max-width: 768px) {
+    align-self: center;
+    text-align: center;
+  }
 `;
 
 const ChannelDescLabel = styled.label`
@@ -1100,7 +1131,23 @@ const ChannelMeta = styled.div`
   flex-direction: row;
   padding: 5px 0px;
   font-size: 13px;
+  @media (max-width: 768px) {
+    align-self: center;
+  }
 `;
+
+const ItemBody = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  @media (max-width: 768px) {
+    width: 100%;
+    align-self: center;
+    justify-content: center;
+  }
+`
 
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
@@ -1115,11 +1162,23 @@ const ChannelMetaBox = styled.label`
 
 const Subscribers = styled.div`
   display: flex;
-  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   @media ${Device.laptopL} {
     padding-top: 1rem;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    flex-direction: column;
+    align-self: center;
+    text-align: center;
+    align-items: center;
   }
 `;
 
@@ -1157,6 +1216,9 @@ const ChannelActions = styled.div`
   justify-content: flex-end;
   // justify-content: center;
   align-items: center;
+  @media (max-width: 768px) {
+    align-self: center;
+  }
 `;
 
 const ChannelActionButton = styled.button`
@@ -1237,6 +1299,9 @@ const SubscribeButton = styled(ChannelActionButton)`
   border-radius: 8px;
   padding: 9px 15px;
   min-width: 80px;
+  @media (max-width: 768px){
+    padding: 9px 30px;
+  }
 `;
 
 const UnsubscribeButton = styled(ChannelActionButton)`
