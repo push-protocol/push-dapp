@@ -649,7 +649,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       id: 4,
       content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
     },
-    { id: 5, content: 'Messages will be encrypted only if receiver of the message have encryption key' },
+    { id: 5, content: 'Messages will only be encrypted if the receiver has encryption keys' },
     {
       id: 6,
       content:
@@ -1121,7 +1121,7 @@ const WelcomeContent = styled.div`
 `;
 
 const ItemBody = styled.div`
-  @media (min-width: 768px) and (max-height: 1000px) {
+  @media (min-width: 768px) and (max-height: 1080px) {
     overflow-y: scroll;
     height: 300px;
   }
