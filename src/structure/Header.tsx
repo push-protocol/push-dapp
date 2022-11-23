@@ -1,3 +1,5 @@
+import React, { useContext, useRef } from 'react';
+
 // React + Web3 Essentials
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {
@@ -5,7 +7,6 @@ import {
   UserRejectedRequestError as UserRejectedRequestErrorInjected,
 } from '@web3-react/injected-connector';
 import { ethers } from 'ethers';
-import React, { useContext } from 'react';
 
 // External Packages
 import { useLocation } from 'react-router-dom';
@@ -17,6 +18,7 @@ import styled, { css, useTheme } from 'styled-components';
 import { Button, Item, ItemH, Section, Span } from 'primaries/SharedStyling';
 import { ReactComponent as EPNSLogoDark } from './assets/epnsDark.svg';
 import { ReactComponent as EPNSLogoLight } from './assets/epnsLight.svg';
+import MobileNavButton from 'components/MobileNavButton';
 import NavigationButton from 'components/NavigationButton';
 import Bell from 'primaries/Bell';
 import Profile from 'primaries/Profile';
@@ -25,11 +27,14 @@ import { NavigationContext } from 'contexts/NavigationContext';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
+import { useClickAway } from 'react-use';
+import MobileNavigation from './MobileNavigation';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
   // Get theme
   const theme = useTheme();
+  const navRef = useRef()
 
   // Get Web3 Context
   // const context = useWeb3React<Web3Provider>()
@@ -52,6 +57,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   React.useEffect(() => {
     // runs when navigation setup is updated, will run on init
     updateHeaderTag(location);
+    // console.log(Object.keys(navigationSetup))
   }, [navigationSetup]);
 
   // Change text based on change of location
@@ -71,6 +77,10 @@ function Header({ isDarkMode, darkModeToggle }) {
       });
     }
   };
+
+  useClickAway(navRef, () => {
+    setShowNavBar(!showNavBar);
+  });
 
   async function handleChangeNetwork() {
     const chainIds = appConfig.allowedNetworks;
@@ -108,6 +118,7 @@ function Header({ isDarkMode, darkModeToggle }) {
   const bellPressed = () => {
     setShowLoginControls(!showLoginControls);
   };
+  
 
   return (
     <Container direction="row" padding="0px 15px">
@@ -117,69 +128,34 @@ function Header({ isDarkMode, darkModeToggle }) {
             <Logo src={!isDarkMode ? 'push.svg' : 'pushDark.svg'} />
           </RightBarDesktop>
 
-          {active && !error && (
-            <RightBarMobile>
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
-              </Button>
-            </RightBarMobile>
-          )}
+          <LogoMobile justify="flex-start" flex="0">
+            <Logo src={!isDarkMode ? 'logo512.png' : 'logo512.png'} />
+          </LogoMobile>
         </RightBarContainer>
-
+        
+        {/* mobile navbar */}
         {navigationSetup && showNavBar && active && !error && (
-          <NavMenuContainer tabletAlign="flex-start">
+          <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
-                {Object.keys(navigationSetup.navigation).map(function (key) {
-                  return (
-                    <Item
-                      onClick={() => {
-                        setShowNavBar(!showNavBar);
-                      }}>
-                      <NavigationButton
-                        item={navigationSetup.navigation[key]}
-                        data={navigationSetup.navigation[key].data}
-                        sectionID={GLOBALS.CONSTANTS.NAVBAR_SECTIONS.MOBILE}
-                        active={navigationSetup.navigation[key].active}
-                      />
-                    </Item>
-                  );
-                })}
+                <MobileNavigation showNavBar={showNavBar} setShowNavBar={setShowNavBar} />
               </NavMenuInner>
             </NavMenu>
-
-            <Item position="absolute" top="15px" right="5px">
-              <Button
-                bg="transparent"
-                padding="5px"
-                radius="4px"
-                onClick={() => {
-                  setShowNavBar(!showNavBar);
-                }}>
-                <AiOutlineClose size={30} color={theme.headerIconsBg} />
-              </Button>
-            </Item>
           </NavMenuContainer>
         )}
       </ItemH>
 
       <ItemH justify="flex-end">
         {headerTag && active && !error && (
-          <HeaderTag align="flex-start" overflow="hidden" margin="0px 5px">
+          <HeaderTag align="flex-start" overflow="hidden">
             <Span
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
               padding="8px 20px"
-              size="24px"
+              className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
             </Span>
@@ -196,6 +172,20 @@ function Header({ isDarkMode, darkModeToggle }) {
             moonColor="#787E99"
           />
         )}
+
+      {active && !error && (
+            <RightBarMobile>
+              <Button
+                bg="transparent"
+                padding="5px"
+                radius="4px"
+                onClick={() => {
+                  setShowNavBar(!showNavBar);
+                }}>
+                <AiOutlineMenu size={30} color={theme.headerIconsBg} />
+              </Button>
+            </RightBarMobile>
+          )}
 
         <ItemH justify="flex-end" flex="initial">
           {!!error && <PrimaryTheme>{getErrorMessage(error)}</PrimaryTheme>}
@@ -231,12 +221,19 @@ const RightBarDesktop = styled(ItemH)`
 `;
 
 const RightBarMobile = styled(ItemH)`
+  max-width: 50px !important;
   margin: 5px 5px 5px -5px;
 
   @media (min-width: 993px) {
     display: none;
   }
 `;
+
+ const LogoMobile = styled(ItemH)`
+    @media (min-width: 993px) {
+      display: none;
+    }
+ `
 
 const NavMenuContainer = styled(Item)`
   position: fixed;
@@ -248,27 +245,37 @@ const NavMenuContainer = styled(Item)`
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 1;
-  align-items: flex-start;
 
-  background: ${(props) => props.theme.nav.hamburgerBg};
+  background: ${(props) => props.theme.default.bg};
   backdrop-filter: blur(30px);
   z-index: 11;
+  width: 250px;
+  box-shadow: 0 0 0 10000px rgba(0,0,0,0.9);
+  padding: 30px 30px;
+  
+
+  @media (min-width: 993px){
+    display: none;
+  }
 `;
 
 const NavMenu = styled(Item)`
   align-items: stretch;
   justify-content: flex-start;
-  padding: 10px 10px;
+  width: 100%;
 `;
 
 const NavMenuInner = styled(Item)`
+  width: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: flex-start;
   overflow-y: scroll;
-  height: calc(100vh - 70px);
+  margin-top: 20px;
+  padding-right: 20px;
+  height: calc(100vh - 100px);
 `;
 
 const Notice = styled.span`
@@ -294,8 +301,20 @@ const ThirdTheme = styled(Notice)`
 
 const HeaderTag = styled(Item)`
   flex: 1;
-  margin='5px 15px 5px 15px' @media (min-width: 993px) {
-    margin: '5px 10px';
+  margin: 0px 5px;
+   @media (min-width: 993px) {
+    margin: 5px 10px;
+  }
+
+  @media (max-width: 993px) {
+    margin: 5px 0px;
+  }
+  .text{
+    font-size: 24px;
+    
+    @media (max-width: 993px){
+      font-size: 20px;
+    }
   }
 `;
 

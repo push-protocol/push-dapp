@@ -12,9 +12,10 @@ import { ItemVV2 } from './reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { nothing } from 'immer';
 
 // Create Header
-function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
+function MobileNavButton({ item, data, sectionID, active, bg = 'none',showNavBar, setShowNavBar }) {
   const theme = useTheme();
 
   let SelectedIcon;
@@ -61,7 +62,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
       {!data.loading && !data.hidden && (
         <RouteLogic
           style={{ display: data.name === 'Hide' ? 'none' : 'block' }}
-          flex="1"
+          flex='1'
           title={`${data.title}`}
           to={`${data.href ? data.href : '#'}`}
           href={`${data.href ? data.href : '#'}`}
@@ -70,13 +71,22 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           disabled={data.disabled}
           radius="16px"
           align="stretch"
-          padding="12px"
           margin={definedMargin}
+          padding='10px 15px 10px 0px'
           bg={bg}
-          active={active}
+          hover={'transparent'}
+          hoverBG={'transparent'}
+          onClick={() => {
+            if(item.data.drilldown){
+                return nothing;
+            }
+            else {
+                setShowNavBar(!showNavBar);
+            }
+          }}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
-            <ItemHV2 justifyContent="flex-start" padding="0 2rem">
+            <ItemHV2 justifyContent="flex-start" padding="0 0rem">
               {data.iconFactory}
             </ItemHV2>
           ) : (
@@ -101,9 +111,10 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                 flex="1"
                 weight={!active ? '300' : '600'}
                 spacing="0"
-                margin="0 5px"
+                margin="0 10px"
                 color={theme.nav.color}
-                size="16px">
+                minWidth='100px'
+                size="17px">
                 {data.name}
               </Span>
 
@@ -117,28 +128,6 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
     </>
   );
 }
-
-// filter: ${(props) =>
-//   props.active
-//     ? "brightness(1)"
-//     : props.theme === themeDark
-//     ? "brightness(0) invert(1)"
-//     : "brightness(0)"};
-// opacity: ${(props) =>
-//   props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
-
-// transition: transform 0.1s ease-out;
-
-// filter: ${(props) =>
-//   props.active
-//     ? "brightness(1)"
-//     : props.theme === themeDark
-//     ? "brightness(0) invert(1)"
-//     : "brightness(0)"};
-// opacity: ${(props) =>
-//   props.active ? "1" : props.theme === themeDark ? "0.5" : "0.25"};
-
-// transition: transform 0.1s ease-out;
 
 // css styles
 const InheritedSectionGroupIcon = styled(Image)`
@@ -185,4 +174,4 @@ const LeftBarSecondarySectionIcon = styled(InheritedSectionGroupIcon)`
 const LeftBarSecondaryItemIcon = styled(InheritedSectionItemIcon)``;
 
 // Export Default
-export default NavigationButton;
+export default MobileNavButton;

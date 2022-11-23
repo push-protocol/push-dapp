@@ -40,9 +40,9 @@ const Faucets = () => {
   return (
     <Container>
       <Faucet color={theme.viewChannelSearchText} onClick={() => setShowDropdown(!showDropdown)} ref={toggleArrowRef}>
-        <ItemH padding="0 8px 0 0">
+        <ItemHBar>
           <Image src="./svg/gasPump.svg" alt="faucet" width="32px" height="32px" />
-        </ItemH>
+        </ItemHBar>
         Testnet Faucets
         <ToggleArrowImg>
           <img
@@ -83,16 +83,23 @@ const Container = styled.button`
   background: none;
   border: 0;
   outline: 0;
-  justify-content: flex-start;
-  flex: 1,
-  flex-direction: row;
-  align-items: center;
-  display: flex;
+  min-width: 230px;
+  
+  @media (max-width: 768px)
+  {
+    width: 100%;
+    padding: 0 0px 0px 8px;
+  }
 `
-const Faucet = styled.span`
+
+const ItemHBar = styled.div`
+  padding: 0 20px 0 0px;
+`
+const Faucet = styled.div`
   margin: 0px 5px;
   padding: 5px 15px;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   font-weight: 400;
@@ -111,9 +118,14 @@ const Faucet = styled.span`
     cursor: pointer;
     pointer: hand;
   }
+
+  @media (max-width: 768px){
+    flex: 1;
+  justify-content: flex-start;
+  }
 `
 const ToggleArrowImg = styled.div`
-  margin-left: 1rem;
+  margin-left: auto;
   filter: ${props => props.theme.faucetFilter};
   &:hover {
     cursor: pointer;
