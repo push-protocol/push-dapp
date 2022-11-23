@@ -1121,14 +1121,19 @@ const WelcomeContent = styled.div`
 `;
 
 const ItemBody = styled.div`
-  @media (min-width: 768px) and (max-height: 800px) {
+  @media (min-width: 768px) and (max-height: 1000px) {
     overflow-y: scroll;
     height: 300px;
   }
 
-  @media (min-width: 768px) and (max-height: 650px) {
+  @media (min-width: 768px) and (max-height: 768px) {
     overflow-y: scroll;
     height: 150px;
+  }
+
+  @media (min-width: 768px) and (max-height: 500px) {
+    overflow-y: scroll;
+    height: 100px;
   }
 `;
 
