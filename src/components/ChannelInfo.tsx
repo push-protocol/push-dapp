@@ -193,7 +193,7 @@ const ChannelInfo = ({
           flex="1"
           self="stretch"
           align="stretch"
-          style={{ marginTop: `${chainDetails === coreChainId ? '30px' : '20px'}`, position: 'relative' }}
+          style={{ marginTop: `${chainDetails === coreChainId ? '30px' : '30px'}`, position: 'relative' }}
         >
           <Item
             display="flex"
@@ -355,7 +355,7 @@ const DropdownStyledParent = styled.div`
   margin-top: 7px;
   flex: 1;
   .is-open {
-    margin-bottom: 5rem;
+    margin-bottom: 110px;
   }
 `;
 
