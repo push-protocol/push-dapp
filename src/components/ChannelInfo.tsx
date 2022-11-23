@@ -96,7 +96,6 @@ const ChannelInfo = ({
         >
           <Input
             required
-            // placeholder="Your Channel Name"
             maxlength="40"
             flex="1"
             padding="12px"
@@ -118,14 +117,11 @@ const ChannelInfo = ({
           margin="30px 0px 0px 0px"
         >
           <Label style={{ color: theme.color }}>Network</Label>
-
-          {/* dropdown */}
           <DropdownStyledParent>
             <DropdownStyled
               options={ALIAS_CHAINS}
               onChange={(option) => {
                 setChainDetails(option.value);
-                console.log(option);
               }}
               value={networkName[chainDetails]}
             />
@@ -159,7 +155,6 @@ const ChannelInfo = ({
             <Label style={{ color: theme.color }}>Channel Alias address</Label>
             <Input
               required
-              // placeholder="Your Channel Address"
               maxlength="40"
               flex="1"
               padding="12px"
@@ -215,7 +210,6 @@ const ChannelInfo = ({
           </Item>
           <TextField
             required
-            // placeholder="Your Channel's Short Description (250 Characters)"
             rows="4"
             maxlength="250"
             padding="12px"
@@ -249,7 +243,6 @@ const ChannelInfo = ({
           <Label style={{ color: theme.color }}>Channel Website URL</Label>
           <Input
             required
-            // placeholder="Your Channel Address"
             maxlength="40"
             flex="1"
             padding="12px"
