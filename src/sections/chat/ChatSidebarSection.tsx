@@ -12,7 +12,6 @@ import Typography from '@mui/material/Typography';
 
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
-import NewUser from 'components/chat/w2wChat/newusers/NewUser';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
