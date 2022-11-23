@@ -25,6 +25,7 @@ import { NavigationContext } from 'contexts/NavigationContext';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
+import ChainIndicator from 'primaries/ChainIndicator';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -202,6 +203,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           {!active && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {active && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
+              <ChainIndicator isDarkMode={isDarkMode} />
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '}
