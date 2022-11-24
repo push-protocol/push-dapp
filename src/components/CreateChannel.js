@@ -54,7 +54,6 @@ function CreateChannel() {
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState('');
   const [logoInfo, setLogoInfo] = React.useState('');
-  const [errorInfo, setErrorInfo] = useState('');
 
   //image upload states
   const [view, setView] = useState(false);
@@ -147,36 +146,7 @@ function CreateChannel() {
     return false;
   };
 
-  const isAllFilledAndValid = () => {
-    setErrorInfo('');
-    if (
-      isEmpty(channelName) ||
-      isEmpty(channelInfo) ||
-      isEmpty(channelURL) ||
-      (isEmpty(channelAlias) && chainDetails !== coreChainId)
-    ) {
-      setErrorInfo('Please enter the channel fields to continue.');
-      return false;
-    }
-    if (!isLengthValid(channelName, 125)) {
-      setErrorInfo('Channel Name should not exceed 125 characters! Please retry!');
-      return false;
-    }
-    if (!isLengthValid(channelURL, 125)) {
-      setErrorInfo('Channel Url should not exceed 125 characters! Please retry!');
-      return false;
-    }
-    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
-      setErrorInfo('Channel Alias address is invalid! Please enter a valid address!');
-      return false;
-    }
-    if (!isValidUrl(channelURL)) {
-      setErrorInfo('Channel URL is invalid! Please enter a valid url!');
-      return false;
-    }
-
-    return true;
-  };
+  
 
   const handleCreateChannel = async (e) => {
     // Check everything in order
@@ -184,16 +154,16 @@ function CreateChannel() {
 
     e.preventDefault();
 
-    if (!isAllFilledAndValid()) {
-      channelToast.showMessageToast({
-        toastTitle: 'Error',
-        toastMessage: `${errorInfo}`,
-        toastType: 'ERROR',
-        getToastIcon: (size) => <MdError size={size} color="red" />,
-      });
+    // if (!isAllFilledAndValid()) {
+    //   channelToast.showMessageToast({
+    //     toastTitle: 'Error',
+    //     toastMessage: `${errorInfo}`,
+    //     toastType: 'ERROR',
+    //     getToastIcon: (size) => <MdError size={size} color="red" />,
+    //   });
 
-      return false;
-    }
+    //   return false;
+    // }
 
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
@@ -475,8 +445,8 @@ function CreateChannel() {
                 setChannelURL={setChannelURL}
                 setChannelInfoDone={setChannelInfoDone}
                 setTxStatus={setTxStatus}
-                errorInfo={errorInfo}
-                isAllFilledAndValid={isAllFilledAndValid}
+                // errorInfo={errorInfo}
+                // isAllFilledAndValid={isAllFilledAndValid}
               />
 
               {processing === 1 ? (
