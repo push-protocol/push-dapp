@@ -9,7 +9,7 @@ import { FiLink } from 'react-icons/fi';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { aliasChainIdsMapping, isValidUrl, networkName } from 'helpers/UtilityHelper';
+import { aliasChainIdsMapping, isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
 import {
   Button,
   Content,
@@ -47,11 +47,13 @@ const ChannelInfo = ({
   setStepFlow,
   setChannelInfoDone,
   setTxStatus,
-  errorInfo,
-  isAllFilledAndValid,
+  // errorInfo,
+  // isAllFilledAndValid,
 }) => {
   const theme = useTheme();
   const [disabled, setDisabled] = useState<boolean>(true);
+  const [errorInfo, setErrorInfo] = useState({name: '',description: '', address: '', url: ''});
+
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
@@ -59,6 +61,76 @@ const ChannelInfo = ({
     }
 
     return false;
+  };
+
+  const isAllFilledAndValid = () => {
+    setErrorInfo('');
+
+    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
+      if (
+        isEmpty(channelName)
+      ) {
+        setErrorInfo(x => ({
+          ...x,
+          name: 'Please, enter the channel name.',
+        }));
+      }
+
+      if (isEmpty(channelInfo)) {
+        setErrorInfo(x => ({
+          ...x,
+          description: 'Please, enter the channel description',
+        }));
+      }
+
+      if (isEmpty(channelURL)) {
+        setErrorInfo(x => ({
+          ...x,
+          url: 'Please, enter the channel url',
+        }));
+      }
+
+      if (isEmpty(channelAlias) && chainDetails !== coreChainId) {
+        setErrorInfo(x => ({
+          ...x,
+          address:'Please, enter the channel address',
+        }));
+      }
+    return false
+  }
+
+    if (!isLengthValid(channelName, 125)) {
+      setErrorInfo(x => ({
+        ...x,
+        name: 'Channel Name should not exceed 125 characters! Please retry!',
+      }));
+      
+      return false;
+    }
+    if (!isLengthValid(channelURL, 125)) {
+      setErrorInfo(x => ({
+        ...x,
+        url: 'Channel Url should not exceed 125 characters! Please retry!',
+      }));
+      return false;
+    }
+    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
+      setErrorInfo(x => ({
+        ...x,
+        address: 'Channel Alias address is invalid! Please enter a valid address!',
+      }));
+      
+      return false;
+    }
+    if (!isValidUrl(channelURL)) {
+      setErrorInfo(x => ({
+        ...x,
+        url: 'Channel URL is invalid! Please enter a valid url!',
+      }));
+      return false;
+    }
+
+    return true;
   };
 
   useEffect(() => {
@@ -70,6 +142,8 @@ const ChannelInfo = ({
 
     return ()=>setDisabled(true);
   }, [channelName, channelInfo, channelURL]);
+
+  console.log(errorInfo)
 
   return (
     <Section>
@@ -102,6 +176,14 @@ const ChannelInfo = ({
             }}
           />
         </Item>
+        <Span
+            size="14px"
+            weight="400"
+            margin="7px 0px 0px 0px"
+            color={'red'}
+          >
+            {errorInfo?.name}
+          </Span>
         <Item
           flex="1"
           self="stretch"
@@ -155,8 +237,18 @@ const ChannelInfo = ({
             >
               Make sure you own this address as verification will take place.
             </Span>
+            <Span
+            size="14px"
+            weight="400"
+            margin="7px 0px 0px 0px"
+            color={'red'}
+          >
+            {errorInfo?.address}
+          </Span>
           </Item>
         ) : null}
+
+          
 
         <Item
           margin="30px 0px 0px 00px"
@@ -209,6 +301,15 @@ const ChannelInfo = ({
           </Span>
         </Item>
 
+        <Span
+            size="14px"
+            weight="400"
+            margin="7px 0px 0px 0px"
+            color={'red'}
+          >
+            {errorInfo?.description}
+          </Span>
+
         <Item
           margin="30px 0px 0px 0px"
           flex="1"
@@ -236,7 +337,16 @@ const ChannelInfo = ({
           />
         </Item>
 
-        {errorInfo?.length > 0 && (
+        <Span
+            size="14px"
+            weight="400"
+            margin="7px 0px 0px 0px"
+            color={'red'}
+          >
+            {errorInfo?.url}
+          </Span>
+
+        {/* {errorInfo?.length > 0 && (
           <Item
             margin="30px 0px 0px 0px"
             flex="1"
@@ -248,7 +358,7 @@ const ChannelInfo = ({
           >
             <div style={{ color: '#CF1C84' }}>{errorInfo}</div>
           </Item>
-        )}
+        )} */}
 
         <Item
           width="12.2em"
@@ -259,7 +369,7 @@ const ChannelInfo = ({
           <Button
             bg={disabled ? '#F4DCEA' : '#CF1C84'}
             color={disabled ? '#CF1C84' : '#fff'}
-            disabled={disabled}
+            // disabled={disabled}
             flex="1"
             radius="15px"
             padding="20px 10px"
