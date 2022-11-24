@@ -10,12 +10,14 @@ import notificationReducer from './slices/notificationSlice';
 import canSendNotification from "./slices/sendNotificationSlice";
 import spamReducer from './slices/spamSlice';
 import userJourneyReducer from './slices/userJourneySlice';
+import peerReducer from './slices/peerSlice';
 
 const rootReducer = combineReducers({
 	contracts: contractReducer,
 	channels: channelReducer,
 	channelCreation: channelCreationReducer,
 	admin: adminReducer,
+  peer: peerReducer,
 	notifications: notificationReducer,
 	spam: spamReducer,
 	userJourney: userJourneyReducer,

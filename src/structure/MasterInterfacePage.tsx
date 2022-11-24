@@ -30,6 +30,7 @@ import YieldFarmingPage from 'pages/YieldFarmingPage';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import RandomPage from 'pages/RandomPage';
 
 // Create Header
 function MasterInterfacePage() {
@@ -57,6 +58,7 @@ function MasterInterfacePage() {
           <Route path="receive" element={<ReceiveNotifsPage />} />
 
           <Route path="govern" element={<GovPage />} />
+          <Route path="random" element={<RandomPage />} />
 
           <Route path="yield" element={<YieldFarmingPage />} />
           <Route path="rockstar" element={<NFTPage />} />
