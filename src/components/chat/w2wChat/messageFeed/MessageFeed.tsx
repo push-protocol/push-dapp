@@ -51,7 +51,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
     setChat(feed);
     setSelectedChatSnap(feed.threadhash);
-    setSearchedUser('');
     setHasUserBeenSearched(false);
   }
 
