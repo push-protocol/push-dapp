@@ -265,7 +265,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const sendMessage = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     setMessageBeingSent(true);
-    // setLoading(true);
     let msg: MessageIPFSWithCID;
     let messageContent: string, encryptionType: string, aesEncryptedSecret: string, signature: string, sigType: string;
     try {
@@ -341,7 +340,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
-      // setLoading(true);
     }, 2000);
   };
 
@@ -381,7 +379,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     let activeChat = currentChat;
     activeChat.intent = updatedIntent;
     setChat(activeChat);
-    // setOpen(false);
 
     // displaying toast according to status
     if (status === 'Approved') {
@@ -631,7 +628,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       console.log(error);
       setMessageBeingSent(false);
     }
-    // setMessageBeingSent(false);
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
