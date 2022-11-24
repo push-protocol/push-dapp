@@ -13,7 +13,7 @@ import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
-import {BsDashLg} from 'react-icons/bs'
+import { BsDashLg } from 'react-icons/bs';
 
 // Internal Components
 import * as PushNodeClient from 'api';
@@ -31,8 +31,8 @@ import { caip10ToWallet, encryptAndSign, walletToCAIP10 } from '../../../../help
 import { fetchInbox, fetchIntent } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
-import Lock from '../../../../assets/Lock.png'
-import LockSlash from '../../../../assets/LockSlash.png'
+import Lock from '../../../../assets/Lock.png';
+import LockSlash from '../../../../assets/LockSlash.png';
 import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal Configs
@@ -42,7 +42,6 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
-
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -97,10 +96,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({inbox,receivedIntents,currentChat});
+      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat });
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
-        
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
@@ -160,71 +158,71 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           // }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
-        else if(messages.length ==0 ) {
-            while (messageCID) {
-              setLoading(true);
-              if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-                setLoading(false);
-                break;
+        else if (messages.length == 0) {
+          while (messageCID) {
+            setLoading(true);
+            if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
+              setLoading(false);
+              break;
+            } else {
+              const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
+              let msgIPFS: MessageIPFSWithCID;
+              if (messageFromIndexDB !== undefined) {
+                msgIPFS = messageFromIndexDB.body;
               } else {
-                const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-                let msgIPFS: MessageIPFSWithCID;
-                if (messageFromIndexDB !== undefined) {
-                  msgIPFS = messageFromIndexDB.body;
-                } else {
-                  const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-                  await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-                  msgIPFS = messageFromIPFS;
-                }
-  
-                //Decrypting Messages
-                msgIPFS = await w2wHelper.decryptMessages({
-                  savedMsg: msgIPFS,
-                  connectedUser,
-                  account,
-                  chainId,
-                  currentChat,
-                  inbox,
-                });
-  
-                // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
-                // const messagesSentInChat: MessageIPFS = messages.find(
-                //   (msg) =>
-                //     msg.link === '' &&
-                //     msg.encType === '' &&
-                //     msg.cid === '' &&
-                //     msg.messageContent === msgIPFS.messageContent &&
-                //     msg.messageType === msgIPFS.messageType
-                // );
-                // // Replace message that was inserted when sending a message
-                // if (messagesSentInChat) {
-                //   const newMessages = messages.map((x) => x);
-                //   const index = newMessages.findIndex(
-                //     (msg) =>
-                //       msg.link === '' &&
-                //       msg.encType === '' &&
-                //       msg.cid === '' &&
-                //       msg.messageContent === msgIPFS.messageContent &&
-                //       msg.messageType === msgIPFS.messageType
-                //   );
-                //   newMessages[index] = msgIPFS;
-                //   setMessages(newMessages);
-                // }
-                // Display messages for the first time
-                // else
-                if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                  setMessages((m) => [msgIPFS, ...m]);  
-                  setMessageBeingSent(false);
-                }
-  
-                const link = msgIPFS.link;
-                if (link) {
-                  messageCID = link;
-                } else {
-                  break;
-                }
+                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
+                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
+                msgIPFS = messageFromIPFS;
+              }
+
+              //Decrypting Messages
+              msgIPFS = await w2wHelper.decryptMessages({
+                savedMsg: msgIPFS,
+                connectedUser,
+                account,
+                chainId,
+                currentChat,
+                inbox,
+              });
+
+              // !FIX-ME : This will also be not called as when the messages are fetched from IndexDB or IPFS they are already present there and they are not duplicated so we can remove this below if statement only else is fine.
+              // const messagesSentInChat: MessageIPFS = messages.find(
+              //   (msg) =>
+              //     msg.link === '' &&
+              //     msg.encType === '' &&
+              //     msg.cid === '' &&
+              //     msg.messageContent === msgIPFS.messageContent &&
+              //     msg.messageType === msgIPFS.messageType
+              // );
+              // // Replace message that was inserted when sending a message
+              // if (messagesSentInChat) {
+              //   const newMessages = messages.map((x) => x);
+              //   const index = newMessages.findIndex(
+              //     (msg) =>
+              //       msg.link === '' &&
+              //       msg.encType === '' &&
+              //       msg.cid === '' &&
+              //       msg.messageContent === msgIPFS.messageContent &&
+              //       msg.messageType === msgIPFS.messageType
+              //   );
+              //   newMessages[index] = msgIPFS;
+              //   setMessages(newMessages);
+              // }
+              // Display messages for the first time
+              // else
+              if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
+                setMessages((m) => [msgIPFS, ...m]);
+                setMessageBeingSent(false);
+              }
+
+              const link = msgIPFS.link;
+              if (link) {
+                messageCID = link;
+              } else {
+                break;
               }
             }
+          }
         }
       } else {
         setMessages([]);
@@ -643,24 +641,29 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-
   const InfoMessages = [
-    {id: 1, content: 'You can send up to 10 chat requests in alpha'},
-  {id: 2, content: 'You can send a chat request to anyone including non-whitelisted users'},
-  {id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.'},
-  {id: 4, content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted'},
-  {id: 5, content: 'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.'},
-  {id: 6, content: 'Access to more chat requests and messages will be added in the near future'},
-  ]
+    { id: 1, content: 'You can send up to 10 chat requests in alpha' },
+    { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
+    { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
+    {
+      id: 4,
+      content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
+    },
+    { id: 5, content: 'Messages will only be encrypted if the receiver has encryption keys' },
+    {
+      id: 6,
+      content:
+        'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.',
+    },
+    { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
+  ];
 
   return (
     <Container>
       {!viewChatBox ? (
         <WelcomeItem gap="25px">
           <WelcomeMainText theme={theme}>
-            <WelcomeText>
-            Say
-            </WelcomeText>
+            <WelcomeText>Say</WelcomeText>
             <ImageV2
               src={HandwaveIcon}
               alt="wave"
@@ -668,28 +671,34 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               width="auto"
               verticalAlign="middle"
               margin="0 13px"
-            /> 
-            <WelcomeText>
-            to Push Chat
-            </WelcomeText>
+            />
+            <WelcomeText>to Push Chat</WelcomeText>
           </WelcomeMainText>
-          
+
           <WelcomeInfo>
-            <SpanV2 fontWeight='500' fontSize='15px' lineHeight='130%'>Push Chat is in alpha and things might break.</SpanV2>
+            <SpanV2
+              fontWeight="500"
+              fontSize="15px"
+              lineHeight="130%"
+            >
+              Push Chat is in alpha and things might break.
+            </SpanV2>
 
-            <Atag href={'https://discord.gg/pushprotocol'} target='_blank'>We would love to hear your feedback</Atag>
-            
+            <Atag
+              href={'https://discord.gg/pushprotocol'}
+              target="_blank"
+            >
+              We would love to hear your feedback
+            </Atag>
+
             <ItemBody>
-            {InfoMessages.map((item) => 
-              <WelcomeContent key={item.id}>
-              <BsDashLg  className='icon'/>
-              <TextInfo>{item.content}</TextInfo>
-            </WelcomeContent>
-            )}
+              {InfoMessages.map((item) => (
+                <WelcomeContent key={item.id}>
+                  <BsDashLg className="icon" />
+                  <TextInfo>{item.content}</TextInfo>
+                </WelcomeContent>
+              ))}
             </ItemBody>
-
-
-
           </WelcomeInfo>
           {/* <WelcomeSubText theme={theme}>
             You haven’t started a conversation yet. Start a new chat by using the + button
@@ -814,24 +823,36 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                         time = dateString;
                       }
                     }
-                    let intents = currentChat?.intent?.split('+')
+                    let intents = currentChat?.intent?.split('+');
                     return (
                       <div key={i}>
-                        {!showTime ? null : <Item>
-                          <MessageTime>{time}</ MessageTime>
+                        {!showTime ? null : (
+                          <Item>
+                            <MessageTime>{time}</MessageTime>
 
-                          {i === 0 && intents?.length === 2 &&(<ItemText>
-                            <Image src={Lock} />
-                            Messages are end-to-end encrypted. Only users in this chat can view or listen to them.<ItemLink href='https://docs.push.org/developers/concepts/push-chat-for-web3#encryption' target={'_blank'}> Click to learn more.</ItemLink></ItemText>)}
+                            {i === 0 && intents?.length === 2 && (
+                              <ItemText>
+                                <Image src={Lock} />
+                                Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
+                                <ItemLink
+                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                                  target={'_blank'}
+                                >
+                                  {' '}
+                                  Click to learn more.
+                                </ItemLink>
+                              </ItemText>
+                            )}
 
-                            {i === 0 && intents?.length === 1 &&(<ItemTextSlash>
-                            <Image src={LockSlash} />
-                            Messages are not encrypted till the user accepts the chat request.
-                            </ItemTextSlash>)}
-                        </Item>}
+                            {i === 0 && intents?.length === 1 && (
+                              <ItemTextSlash>
+                                <Image src={LockSlash} />
+                                Messages are not encrypted till the user accepts the chat request.
+                              </ItemTextSlash>
+                            )}
+                          </Item>
+                        )}
 
-                        
-                        
                         <Chats
                           msg={msg}
                           caip10={walletToCAIP10({ account, chainId })}
@@ -841,16 +862,19 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     );
                   })}
                   {messages && messages?.length === 0 && (
-                          <Item margin="30px 0px">
-                            <ItemTextSlash>
-                            <Image src={LockSlash} />
-                            Messages are not encrypted till the user accepts the chat request.
-                            </ItemTextSlash>
-                            
-                            <FirstTime>This is your first conversation with recipient.<br></br> Start the conversation by sending a message.</FirstTime>
-                            </Item>
-                        )}
-                  {checkIfIntentExist({receivedIntents,currentChat,connectedUser}) && (
+                    <Item margin="30px 0px">
+                      <ItemTextSlash>
+                        <Image src={LockSlash} />
+                        Messages are not encrypted till the user accepts the chat request.
+                      </ItemTextSlash>
+
+                      <FirstTime>
+                        This is your first conversation with recipient.<br></br> Start the conversation by sending a
+                        message.
+                      </FirstTime>
+                    </Item>
+                  )}
+                  {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) && (
                     <Chats
                       msg={{
                         ...messages[0],
@@ -867,7 +891,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             </CustomScrollContent>
           </MessageContainer>
 
-          {checkIfIntentExist({receivedIntents,currentChat,connectedUser}) ? null : (
+          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -920,7 +944,7 @@ const ItemText = styled.div`
   background-color: ${(props) => props.theme.default.bg};
   padding: 10px;
   border-radius: 14px;
-  text-align:center;
+  text-align: center;
   margin-bottom: 10px;
 
   @media (max-width: 1250px) {
@@ -941,7 +965,7 @@ const ItemTextSlash = styled.div`
   background-color: ${(props) => props.theme.default.bg};
   padding: 10px;
   border-radius: 14px;
-  text-align:center;
+  text-align: center;
   margin-bottom: 10px;
 
   @media (max-width: 1250px) {
@@ -957,8 +981,7 @@ const Image = styled.img`
   margin-right: 5px;
   position: relative;
   bottom: -2px;
-`
-
+`;
 
 const MessageTime = styled(ItemHV2)`
   width: 100%;
@@ -1071,18 +1094,17 @@ const HelloBox = styled(Box)`
 
 const WelcomeItem = styled(ItemVV2)`
   width: 369px;
-  display:flex;
-  justify-content :center;
+  display: flex;
+  justify-content: center;
   margin: auto auto;
   @media (max-width: 768px) {
     width: auto;
   }
 
-  @media (min-width: 1000px) and (max-width: 1060px){
+  @media (min-width: 1000px) and (max-width: 1060px) {
     width: 95%;
   }
-  
-`
+`;
 
 const WelcomeContent = styled.div`
   width: 304px;
@@ -1093,32 +1115,36 @@ const WelcomeContent = styled.div`
   margin: 10px auto;
   .icon {
     transform: rotate(-60deg);
-    color: #D53893;
+    color: #d53893;
     min-width: 17px;
   }
-  
-`
+`;
 
 const ItemBody = styled.div`
-  @media (min-width: 768px) and (max-height: 800px) {
+  @media (min-width: 768px) and (max-height: 1080px) {
     overflow-y: scroll;
     height: 300px;
   }
 
-  @media (min-width: 768px) and (max-height: 650px) {
+  @media (min-width: 768px) and (max-height: 768px) {
     overflow-y: scroll;
     height: 150px;
   }
-`
+
+  @media (min-width: 768px) and (max-height: 500px) {
+    overflow-y: scroll;
+    height: 100px;
+  }
+`;
 
 const TextInfo = styled.div`
-  align-items:center;
+  align-items: center;
   font-weight: 400;
   font-size: 15px;
   line-height: 130%;
   color: ${(props) => props.theme.default.secondaryColor};
   width: 274px;
-`
+`;
 
 const WelcomeMainText = styled(SpanV2)`
   background: ${(props) => props.theme.default.bg};
@@ -1160,7 +1186,7 @@ const WelcomeText = styled(SpanV2)`
 
 const WelcomeInfo = styled.div`
   background: ${(props) => props.theme.default.bg};
-  display:flex;
+  display: flex;
   flex-direction: column;
   width: 100%;
   padding: 30px 20px;
@@ -1168,17 +1194,17 @@ const WelcomeInfo = styled.div`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 
 const Atag = styled.a`
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 130%;
-    text-align: center;
-    color: #D53893;
-    cursor: pointer;
-    margin-bottom: 20px;
-`
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 130%;
+  text-align: center;
+  color: #d53893;
+  cursor: pointer;
+  margin-bottom: 20px;
+`;
 
 const WelcomeSubText = styled(SpanV2)`
   font-size: 15px;
