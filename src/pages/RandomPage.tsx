@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { QRCodeCanvas } from "qrcode.react";
 import CryptoHelper from 'helpers/CryptoHelper';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useWeb3React } from "@web3-react/core";
 
 const pvtKey = `
 -----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -67,6 +68,7 @@ rax1ZpPOJVJej3iBGmrmBQThYw==
 -----END PGP PRIVATE KEY BLOCK-----`;
 
 const RandomPage = () => {
+  const { account } = useWeb3React();
   const [myPeer, myPeerID] = usePeer();
   const [qrCodeText, setQrCodeText] = useState('');
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ const RandomPage = () => {
   const generateQRCodeText = () => {
     const secret = CryptoHelper.makeid(10);
     const encryptedPvtKey = CryptoHelper.encryptWithAES(pvtKey, secret);
-    setQrCodeText(`${secret}+${myPeerID}`);
+    setQrCodeText(`${secret}+${myPeerID}+${account}`);
     setEncryptedKey(encryptedPvtKey);
     setLoading(false);
     console.log(secret);
