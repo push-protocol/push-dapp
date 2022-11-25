@@ -80,7 +80,12 @@ const RandomPage = () => {
   const generateQRCodeText = () => {
     const secret = CryptoHelper.makeid(10);
     const encryptedPvtKey = CryptoHelper.encryptWithAES(pvtKey, secret);
-    setQrCodeText(`${secret}+${myPeerID}+${account}`);
+    const qrCodeData = {
+      aesSecret: secret,
+      peerId: myPeerID,
+      account: account
+    }
+    setQrCodeText(JSON.stringify(qrCodeData));
     setEncryptedKey(encryptedPvtKey);
     setLoading(false);
     console.log(secret);
