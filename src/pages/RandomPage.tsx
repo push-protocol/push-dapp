@@ -3,6 +3,7 @@ import usePeer from "hooks/usePeer";
 import { useSelector } from "react-redux";
 import { QRCodeCanvas } from "qrcode.react";
 import CryptoHelper from 'helpers/CryptoHelper';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 const pvtKey = `
 -----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -67,18 +68,19 @@ rax1ZpPOJVJej3iBGmrmBQThYw==
 
 const RandomPage = () => {
   const [myPeer, myPeerID] = usePeer();
-  const [hello, setHello] = useState(0);
   const [qrCodeText, setQrCodeText] = useState('');
+  const [loading, setLoading] = useState(true);
   const [encryptedKey, setEncryptedKey] = useState('');
   const { connectedPeerID } = useSelector((state: any) => state.peer);
 
-  console.log(hello, myPeerID, myPeer, connectedPeerID);
+  console.log(myPeerID, myPeer, connectedPeerID);
 
   const generateQRCodeText = () => {
     const secret = CryptoHelper.makeid(10);
     const encryptedPvtKey = CryptoHelper.encryptWithAES(pvtKey, secret);
     setQrCodeText(`${secret}+${myPeerID}`);
     setEncryptedKey(encryptedPvtKey);
+    setLoading(false);
     console.log(secret);
   }
 
@@ -86,14 +88,20 @@ const RandomPage = () => {
     <QRCodeCanvas
       id="qrCode"
       value={qrCodeText}
-      size={300}
-      bgColor={"#00ff00"}
+      size={264}
+      bgColor={"#fff"}
       level={"H"}
+      imageSettings={{
+        src: "./icon.jpg",
+        height: 64,
+        width: 64,
+        excavate: false
+      }}
     />
   );
 
   useEffect(() => {
-    if(!myPeerID) return;
+    if (!myPeerID) return;
     generateQRCodeText();
   }, [myPeerID]);
 
@@ -111,10 +119,17 @@ const RandomPage = () => {
   }, [connectedPeerID]);
 
   return (
-  <>
-    <div>{qrcode}</div>
-    <button onClick={() => setHello(hello + 1)}>Random Page</button>
-  </>);
+    <>
+      <h1 style={{textAlign: "center"}}>Scan for using Push Chat in Mobile</h1>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {loading ?
+          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={120} />
+          :
+          <>{qrcode}</>
+        }
+      </div>
+      {/* <button onClick={() => setHello(hello + 1)}>Random Page</button> */}
+    </>);
 }
 
 export default RandomPage;
