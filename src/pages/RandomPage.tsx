@@ -110,8 +110,7 @@ const RandomPage = () => {
     try {
       const conn = myPeer.connect(connectedPeerID);
       conn.on("open", () => {
-        // here you have conn.id
-        conn.send(`Hello There - ${encryptedKey}`);
+        conn.send({ encryptedPgpKey: encryptedKey });
       });
     } catch (error) {
       console.log("got error", error);
@@ -120,7 +119,7 @@ const RandomPage = () => {
 
   return (
     <>
-      <h1 style={{textAlign: "center"}}>Scan for using Push Chat in Mobile</h1>
+      <h1 style={{ textAlign: "center" }}>Scan for using Push Chat in Mobile</h1>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {loading ?
           <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={120} />
