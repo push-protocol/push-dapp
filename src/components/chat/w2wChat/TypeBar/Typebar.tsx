@@ -85,7 +85,7 @@ const Typebar = ({
       return;
     }
 
-    if (x === 13) {
+    if (x === 13 && !e.shiftKey) {
       handleSubmit(e);
     }
   };
