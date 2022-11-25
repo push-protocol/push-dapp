@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import Dropdown from 'react-dropdown';
 import { FiLink } from 'react-icons/fi';
 import styled, { useTheme } from 'styled-components';
+import { AiFillExclamationCircle } from 'react-icons/ai'
 
 // Internal Compoonents
 import { aliasChainIdsMapping, isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
@@ -145,6 +146,21 @@ const ChannelInfo = ({
 
   console.log(errorInfo)
 
+  const ErrorMessage = ({ message }) => {
+    return (
+      <Item display='flex' align='center' self='flex-start' direction='row' margin = '7px 0px'>
+            <AiFillExclamationCircle color='red' size='20' />
+            <Span 
+                size="14px"
+                weight="400"
+                margin="0px 5px"
+                color={'red'}>
+            {message}
+            </Span>
+          </Item>
+    )
+  }
+
   return (
     <Section>
       <Item
@@ -176,14 +192,8 @@ const ChannelInfo = ({
             }}
           />
         </Item>
-        <Span
-            size="14px"
-            weight="400"
-            margin="7px 0px 0px 0px"
-            color={'red'}
-          >
-            {errorInfo?.name}
-          </Span>
+        {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
+        
         <Item
           flex="1"
           self="stretch"
@@ -237,14 +247,7 @@ const ChannelInfo = ({
             >
               Make sure you own this address as verification will take place.
             </Span>
-            <Span
-            size="14px"
-            weight="400"
-            margin="7px 0px 0px 0px"
-            color={'red'}
-          >
-            {errorInfo?.address}
-          </Span>
+            {errorInfo?.address && (<ErrorMessage message = {errorInfo?.address} />)}
           </Item>
         ) : null}
 
@@ -300,15 +303,7 @@ const ChannelInfo = ({
             Brief description of your channel.
           </Span>
         </Item>
-
-        <Span
-            size="14px"
-            weight="400"
-            margin="7px 0px 0px 0px"
-            color={'red'}
-          >
-            {errorInfo?.description}
-          </Span>
+        {errorInfo?.description && (<ErrorMessage message = {errorInfo?.description} />)}
 
         <Item
           margin="30px 0px 0px 0px"
@@ -336,29 +331,7 @@ const ChannelInfo = ({
             }}
           />
         </Item>
-
-        <Span
-            size="14px"
-            weight="400"
-            margin="7px 0px 0px 0px"
-            color={'red'}
-          >
-            {errorInfo?.url}
-          </Span>
-
-        {/* {errorInfo?.length > 0 && (
-          <Item
-            margin="30px 0px 0px 0px"
-            flex="1"
-            self="center"
-            width="100%"
-            padding="1.5rem 0"
-            radius="12px"
-            bg="#F5F5FA"
-          >
-            <div style={{ color: '#CF1C84' }}>{errorInfo}</div>
-          </Item>
-        )} */}
+        {errorInfo?.url && (<ErrorMessage message = {errorInfo?.url} />)}
 
         <Item
           width="12.2em"
