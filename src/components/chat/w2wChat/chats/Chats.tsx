@@ -67,7 +67,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage>
-                <TextMessage>{msg.messageContent}</TextMessage>
+              { msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
                 {/* {messageBeingSent ? (
                   <p>✔️</p>
@@ -79,7 +79,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           ) : (
             <MessageWrapper align="row">
               <ReceivedMessage>
-                <TextMessage>{msg.messageContent}</TextMessage>
+              { msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
             </MessageWrapper>
@@ -97,7 +97,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                 textAlign="left"
                 color="#000"
               >
-                {msg.messageContent}
+                { msg.messageContent.split('\n').map(str => <p>{str}</p>)}
               </SpanV2>
               {messageBeingSent ? (
                 <SpanV2 margin="-5px 0 0 0">
@@ -296,12 +296,13 @@ const MessageWrapper = styled.div`
   flex-direction: ${(props: any): string => props.align || 'row'};
 `;
 
+
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
   left: 34px;
   max-width: 419px;
-  padding: ${(props: any): string => props.padding || '11px 11px 5px 24px'};
+  padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
   border-radius: 2px 16px 16px 16px;
@@ -309,6 +310,8 @@ const ReceivedMessage = styled.div`
   justify-content: space-between;
   align-items: center;
   color: #000000;
+  flex-direction: column;
+  align-items: baseline;
 `;
 
 const SenderMessage = styled.div`
@@ -317,11 +320,13 @@ const SenderMessage = styled.div`
   right: 34px;
   max-width: 419px;
   text-align: left;
-  padding: ${(props: any): string => props.padding || '11px 11px 5px 24px'};
+  padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ca599b'};
   border-radius: 16px 2px 16px 16px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   color: #ffffff;
+  flex-direction: column;
+  align-items: baseline;
 `;
