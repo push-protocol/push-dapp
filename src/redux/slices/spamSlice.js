@@ -1,6 +1,8 @@
 /**
  * This file helps us maintain the spamnotifications fetched in state, so when tabs are switched we can retain the notification information
  */
+
+ // External Packages
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

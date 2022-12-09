@@ -2,11 +2,10 @@
 import React from 'react';
 
 // External Packages
-import ChatBox from 'components/chat/w2wChat/chatBox/chatBox';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
+import ChatBox from 'components/chat/w2wChat/chatBox/ChatBox';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -17,7 +16,7 @@ const ChatBoxSection = ({ setVideoCallInfo }) => {
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch">
-      <ChatBox 
+      <ChatBox
         setVideoCallInfo={setVideoCallInfo}
       />
     </ItemVV2>

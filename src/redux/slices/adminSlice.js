@@ -2,6 +2,8 @@
  * This file helps us to maintain the state of the logged in user user(if they have an account)
  * as well as the privilidges the logged in user has
  */
+
+// External Packages
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

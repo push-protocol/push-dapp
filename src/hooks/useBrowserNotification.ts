@@ -1,4 +1,7 @@
+// React + Web3 Essentials
 import { useEffect, useState } from 'react';
+
+// External Packages
 import { toast } from "react-toastify";
 
 export function useBrowserNotification(account){

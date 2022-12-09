@@ -1,8 +1,13 @@
+// React + Web3 Essentials
 import React, { useEffect, useState } from "react";
+
+// External Packages
 import styled from "styled-components";
-import { useDeviceWidthCheck } from "hooks";
 import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
-import { Image, Item, Span } from "primaries/SharedStyling";
+
+// Internal Components
+import { useDeviceWidthCheck } from "hooks";
+import { Item, Span } from "primaries/SharedStyling";
 import UtilityHelper from "helpers/UtilityHelper";
 
 const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth, delegateChainId }) => {
@@ -120,7 +125,7 @@ const WalletAddressDisplay = styled.span`
     cursor: pointer;
   }
   @media (max-width: 700px) {
-    padding: 4px 15px;
+    padding: 4px 8px;
   }
 `;
 

@@ -1,9 +1,16 @@
-import LinearProgress from "@mui/material/LinearProgress";
-import { themeDark } from "config/Themization";
-import { H3, Item, Section } from "primaries/SharedStyling";
+// React + Web3 Essentials
 import React from "react";
-import FadeLoader from "react-spinners/FadeLoader";
+
+// External Packages
+import LinearProgress from "@mui/material/LinearProgress";
 import styled, { css, useTheme } from "styled-components";
+import FadeLoader from "react-spinners/FadeLoader";
+
+// Internal Components
+import { H3, Item, Section } from "primaries/SharedStyling";
+
+// Internal Configs
+import { themeDark } from "config/Themization";
 
 const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
   const themes = useTheme();
@@ -11,8 +18,11 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
   return (
     <Section>
       <TabSpace>
+        <ItemSpace>
         {progressInfo}
+        </ItemSpace>
       </TabSpace>
+
 
       <LinearProgress
         sx={{
@@ -22,7 +32,7 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
           height: "6px",
           borderRadius: "20px",
           ["@media (max-width:600px)"]: {
-            width: "10em",
+            width: "100%",
           },
         }}
         color="inherit"
@@ -30,7 +40,7 @@ const ProcessingInfo = ({ progress, processingInfo, progressInfo }) => {
         value={progress}
       />
 
-      <Item display="flex" direction="row" align="center" margin="20px 0px">
+      <Item display="flex" direction="row" align="center" margin="0px 0px">
         <FadeLoader color="#cf1c84" loading={true} height={13} width={2.5} />
         <H3
           margin="auto 15px"
@@ -61,23 +71,30 @@ const TabSpace = styled.div`
   line-height: 24px;
   font-size: 18px;
   font-weight: 500;
-  p {
-    padding: 0 200px;
-    text-align: center;
-    @media (max-width: 600px) {
-      padding: 0 10px;
-    }
-    @media (max-width: 1224px) {
-      padding: 0 50px;
-    }
-  }
-  @media (max-width: 600px) {
+
+
+  @media (max-width: 768px) {
+    min-width: 100%;
     font-size: 12px;
     height: auto;
+    text-align: center;
   }
-  @media (max-width: 1224px) {
+  @media (max-width: 1200px) {
     font-size: 16px;
+    width: 75%;
+    text-align: center;
   }
 `;
+
+const ItemSpace = styled.div`
+  padding: 0px 0px;
+  @media (max-width: 500px) {
+    padding: 50px 30px;
+  }
+
+  @media (max-width: 1700px) {
+    padding: 10px 40px;
+  }
+`
 
 export default ProcessingInfo;

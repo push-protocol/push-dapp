@@ -6,27 +6,25 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Waypoint } from "react-waypoint";
 import styled, { useTheme } from "styled-components";
+import { AiOutlineSearch } from "react-icons/ai";
 
 // Internal Compoonents
 import Faucets from "components/Faucets";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from "components/ViewChannelItem";
 import UtilityHelper, { MaskedChannels, MaskedPolygonChannels } from 'helpers/UtilityHelper';
-import { AiOutlineSearch } from "react-icons/ai";
 import { incrementPage, setChannelMeta, updateBulkSubscriptions } from "redux/slices/channelSlice";
 import { incrementStepIndex } from "redux/slices/userJourneySlice";
-import ChannelsDataStore from "singletons/ChannelsDataStore";
 import DisplayNotice from "../primaries/DisplayNotice";
 import { Item, ItemH } from "../primaries/SharedStyling";
 import { convertAddressToAddrCaip } from "helpers/CaipHelper";
 import ChainsSelect from "components/ChainsSelect";
-
-// Api Services
-import { getChannels, getChannelsSearch, getUserSubscriptions } from "services";
+import { getChannels, getChannelsSearch, getUserSubscriptions } from "services"; // Api Services
 
 // Internal Configs
 import { appConfig } from "config";
 
+// Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
 const SEARCH_TRIAL_LIMIT = 5; //ONLY TRY SEARCHING 5 TIMES BEFORE GIVING UP
 const DEBOUNCE_TIMEOUT = 500; //time in millisecond which we want to wait for then to finish typing
@@ -36,7 +34,7 @@ const SEARCH_LIMIT = 10;
 
 // Create Header
 function ViewChannels({ loadTeaser, playTeaser }) {
-  const themes = useTheme();
+  const theme = useTheme();
   const dispatch = useDispatch();
   const { account, chainId } = useWeb3React();
   const { channels, page, ZERO_ADDRESS } = useSelector((state: any) => state.channels);
@@ -210,10 +208,9 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     <Container>
       <ScrollItem>
         {!loading && (
-          <ItemH
-            padding="10px 0px"
-            flex="initial"
+          <ItemBar
           >
+            <ItemHBar>
             <SearchContainer
               flex="1"
               margin="10px"
@@ -235,18 +232,22 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 left="12px"
 
               >
-                <AiOutlineSearch size={20} style={{ color: themes.viewChannelSearchIcon }} />
+                <AiOutlineSearch size={20} style={{ color: '#657795' }} />
               </Item>
             </SearchContainer>
+
+            
+            {appConfig.allowedNetworks.length > 1 && 
+              <Item flex="1"><ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} /></Item>
+            }
+
+              </ItemHBar>
 
             {!UtilityHelper.isMainnet(chainId) &&
               <Faucets />
             }
-            {appConfig.allowedNetworks.length > 1 && 
-              <ChainsSelect channelsNetworkId={channelsNetworkId} setChannelsNetworkId={setChannelsNetworkId} />
-            }
 
-          </ItemH>
+          </ItemBar>
         )}
 
         {/* render all channels depending on if we are searching or not */}
@@ -295,7 +296,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 const SearchBar = styled.input`
   width: 100%;
   padding: 13px 40px;
-  border: none;
+  border: 1px solid;
+  border-color: ${props => props.theme.viewChannelSearchBg};
   background: ${props => props.theme.viewChannelSearchBg};
   color: ${props => props.theme.viewChannelSearchText};
   box-sizing: border-box;
@@ -309,6 +311,7 @@ const SearchBar = styled.input`
   }
   &::placeholder {
     letter-spacing: -0.019em;
+    color: #657795;
   }
   &:hover,
   &:active,
@@ -319,6 +322,27 @@ const SearchBar = styled.input`
     border: 1px solid #ec008c;
   }
 `;
+
+const ItemHBar = styled.div`
+    width: 100%;
+    padding: 10px 0px;
+    display: flex;
+    flex-direction: row important!;
+    justify-content: space-evenly;
+    @media (max-width: 768px) {
+      padding:  0px 0px;
+    }
+`
+
+const ItemBar = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    @media (max-width: 768px) {
+      flex-direction: column;
+    }
+`
 
 const Container = styled.div`
   display: flex;
@@ -364,6 +388,10 @@ const ScrollItem = styled(Item)`
   padding:  5px 20px 10px 20px;
   overflow-y: auto;
 
+  @media (max-width: 768px) {
+    padding:  0px 0px 0px 0px;
+  }
+
   &::-webkit-scrollbar-track {
     background-color: ${props => props.theme.scrollBg};
     border-radius: 10px;
@@ -386,15 +414,7 @@ const ScrollItem = styled(Item)`
 `;
 
 const SearchContainer = styled(Item)`
-  min-width: 320px;
-
-  @media (max-width: 768px) {
-    min-width: 320px;
-  }
-
-  @media (max-width: 480px) {
-    min-width: 210px;
-  }
+  width: 100%;
 `;
 
 // Export Default

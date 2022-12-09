@@ -1,4 +1,7 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 

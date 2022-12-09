@@ -1,5 +1,10 @@
+// React + Web3 Essentials
 import React from "react";
+
+// External Packages
 import styled, { useTheme } from "styled-components";
+
+// Internal Components
 import {
   A, Image, ItemH, RouterLink, Span
 } from "../primaries/SharedStyling.js";
@@ -91,7 +96,6 @@ function Dropdown(props) {
                 weight="400"
                 size="16px"
                 cursor="pointer"
-                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}

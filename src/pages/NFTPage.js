@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import ReactGA from "react-ga";
+// React + Web3 Essentials
+import React from "react";
 
-import { SectionV2 } from 'components/reusables/SharedStylingV2';
-import NftModule from "modules/nft/NftModule";
+// External Packages
 import styled from 'styled-components';
 
+// Internal Components
+import { SectionV2 } from 'components/reusables/SharedStylingV2';
+import NftModule from "modules/nft/NftModule";
+
+// Internal Configs
 import GLOBALS from "config/Globals";
 
 // Other Information section

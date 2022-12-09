@@ -1,5 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import React, { useEffect } from 'react';
 
 // External Packages
 import Switch from '@material-ui/core/Switch';
@@ -34,14 +36,13 @@ import {
   Span,
   TextField
 } from 'primaries/SharedStyling';
-import React, { useEffect } from 'react';
 import useToast from '../hooks/useToast';
 import PreviewNotif from './PreviewNotif';
 
 // Internal Configs
 import { appConfig } from 'config';
-const ethers = require('ethers');
 
+// Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 export const IOSSwitch = styled(Switch).attrs(() => ({
@@ -101,12 +102,17 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
   }
 `;
 
+type NFTOptions = {
+  value: string;
+  label: string; 
+}
+
 // Set Notification Form Type | 0 is reserved for protocol storage
-const NFTypes = [
-  { value: '1', label: 'Broadcast (Direct Payload)' },
+const NFTypes: NFTOptions[] = [
+  { value: '1', label: 'Broadcast' },
   // { value: "2", label: "Old Secret (IPFS Payload)" }, -- Deprecated
-  { value: '3', label: 'Targeted (Direct Payload)' },
-  { value: '4', label: 'Subset (Direct Payload)' },
+  { value: '3', label: 'Targeted' },
+  { value: '4', label: 'Subset' },
 ];
 const LIMITER_KEYS = ['Enter', ','];
 
@@ -629,6 +635,17 @@ function SendNotifications() {
         });
         //       console.log(res);
         //   });
+
+        // reseting the notif states
+        setNFType("1");
+        setNFMsg("");
+        setNFSubEnabled(false);
+        setNFSub("");
+        setNFCTAEnabled(false);
+        setNFCTA("");
+        setNFMediaEnabled(false);
+        setNFMedia("");
+        setNFInfo("");
       } catch (err) {
         setNFInfo('Send Notification Failed, please try again');
 
@@ -1436,6 +1453,7 @@ const ToggleOptionContainer = styled(ItemH)`
   @media (max-width: 640px) {
     flex-direction: column;
     align-items: center;
+    margin-top:24px;
   }
 `;
 
@@ -1452,6 +1470,7 @@ const ToggleOption = styled(ItemH)`
   justify-content: space-between;
   @media (max-width: 640px) {
     width: 100%;
+    margin:5px 0px;
   }
 `;
 
@@ -1464,6 +1483,7 @@ const SubmitButton = styled(Button)`
   color: #fff;
   @media (max-width: 640px) {
     width: 13rem;
+    padding: 20px 20px;
   }
   @media (max-width: 380px) {
     width: 9.5rem;

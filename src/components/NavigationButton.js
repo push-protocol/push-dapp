@@ -146,6 +146,10 @@ const InheritedSectionGroupIcon = styled(Image)`
   width: 25px;
   margin: 0 5px;
 
+  @media (max-width: 992px) {
+      margin: 0px 0px;
+  }
+
   ${(props) =>
     props.active &&
     css`
@@ -157,6 +161,10 @@ const InheritedSectionItemIcon = styled(Image)`
   height: 25px;
   width: 25px;
   margin: 0 5px;
+
+  @media (max-width: 992px) {
+    margin: 0px 0px;
+}
 
   ${(props) =>
     props.active &&

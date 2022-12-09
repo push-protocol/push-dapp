@@ -15,6 +15,7 @@ import ChannelOwnerDashboard from 'segments/ChannelOwnerDashboard';
 import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
+// Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 
 // Create Header
@@ -72,7 +73,7 @@ const Container = styled(Section)`
     );
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
     width: calc(

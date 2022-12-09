@@ -1,3 +1,4 @@
+// External Packages
 import { CeramicClient } from '@ceramicnetwork/http-client'
 import { Caip10Link } from '@ceramicnetwork/stream-caip10-link'
 import { CeramicApi } from '@ceramicnetwork/common'

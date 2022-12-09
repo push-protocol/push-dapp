@@ -1,9 +1,14 @@
+// React + Web3 Essentials
 import React from 'react';
-import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 
-import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
+// External Packages
+import { BiChevronDown, BiChevronUp } from 'react-icons/bi';
 import styled, { css, useTheme } from 'styled-components';
 
+// Internal Components
+import { Anchor, Image, ItemH, RouterLink, Span } from 'primaries/SharedStyling';
+
+// Internal Configs
 import GLOBALS from 'config/Globals';
 import { themeDark } from 'config/Themization';
 

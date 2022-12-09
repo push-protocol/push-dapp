@@ -165,7 +165,7 @@ const ShowDelegates = () => {
           {delegatees.map((delegate,idx) => {
             return (
               <Item
-                padding={!isMobile ? "25px":"12px"}
+                padding={!isMobile ? "25px":"10px"}
                 direction="row"
                 justify="space-between"
                 key={delegate.addr}
@@ -307,6 +307,11 @@ const OwnerButton = styled(Button)`
   font-size: 16px;
   color: #CF1C84;
   cursor: auto;
+
+  @media (max-width: 425px){
+    font-weight: 400;
+    font-size: 14px;
+  }
 `;
 
 const DelegatesInfoHeader = styled.div`
