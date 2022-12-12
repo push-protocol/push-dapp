@@ -9,17 +9,17 @@ import { appConfig } from 'config';
 
 // Utility Helper Functions
 const UtilityHelper = {
-  isMainnet: (chainId: number) => {
+  isMainnet: (chainId: number): boolean => {
     if (chainId === 1 || chainId === 137) {
       return true;
     }
   },
-  isPolygon: (chainId: number) => {
+  isPolygon: (chainId: number): boolean => {
     if (chainId === 137 || chainId === 80001) {
       return true;
     }
   },
-  isEthereum: (chainId: number) => {
+  isEthereum: (chainId: number): boolean => {
     if (chainId === 1 || chainId === 5) {
       return true;
     }

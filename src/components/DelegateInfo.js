@@ -7,7 +7,7 @@ import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
 
 // Internal Components
 import { useDeviceWidthCheck } from "hooks";
-import { Item, Span } from "primaries/SharedStyling";
+import { Span } from "primaries/SharedStyling";
 import UtilityHelper from "helpers/UtilityHelper";
 
 const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth, delegateChainId }) => {
