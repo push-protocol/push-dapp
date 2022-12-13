@@ -26,6 +26,7 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import { ChatTempContext } from 'contexts/ChatTempContext';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -99,6 +100,7 @@ export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
 function Chat() {
+  const { setPgpPvtKey } = useContext(ChatTempContext);
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
@@ -210,6 +212,7 @@ function Chat() {
         user.encryptedPrivateKey,
         account
       );
+      setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
       connectedUser = {
@@ -380,22 +383,19 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+  });
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
+  });
   }
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+  });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

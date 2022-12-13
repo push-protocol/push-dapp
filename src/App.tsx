@@ -17,6 +17,7 @@ import * as dotenv from 'dotenv';
 import InitState from 'components/InitState';
 import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
+import ChatTempContextProvider from 'contexts/ChatTempContext';
 import { EnvHelper } from 'helpers/UtilityHelper';
 import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
 import UserJourneySteps from 'segments/userJourneySteps';
@@ -74,7 +75,7 @@ export default function App() {
   }, [activatingConnector, connector]);
 
   useEffect(() => {
-    if(!account) return;
+    if (!account) return;
     dispatch(resetSpamSlice());
     dispatch(resetNotificationsSlice());
     dispatch(resetCanSendSlice());
@@ -173,50 +174,52 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
-            <Joyride
-              run={run}
-              steps={steps}
-              continuous={tutorialContinous}
-              stepIndex={stepIndex}
-              // hideFooter={true}
-              // primaryProps={false}
-              hideBackButton={true}
-              hideCloseButton={false}
-              disableScrolling={true}
-              disableScrollParentFix={true}
-              // disableFlip={true}
-              // showNextButton={false}
-              showSkipButton={false}
-              disableOverlayClose={true}
-              callback={handleJoyrideCallback}
-              styles={{
-                options: {
-                  arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                  backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
-                  overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
-                  primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
-                  textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
-                  zIndex: 1000,
-                },
-              }}
-            />
+            <ChatTempContextProvider>
+              <Joyride
+                run={run}
+                steps={steps}
+                continuous={tutorialContinous}
+                stepIndex={stepIndex}
+                // hideFooter={true}
+                // primaryProps={false}
+                hideBackButton={true}
+                hideCloseButton={false}
+                disableScrolling={true}
+                disableScrollParentFix={true}
+                // disableFlip={true}
+                // showNextButton={false}
+                showSkipButton={false}
+                disableOverlayClose={true}
+                callback={handleJoyrideCallback}
+                styles={{
+                  options: {
+                    arrowColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                    backgroundColor: darkMode ? themeDark.dynamicTutsBg : themeLight.dynamicTutsBg,
+                    overlayColor: darkMode ? themeDark.dynamicTutsBgOverlay : themeLight.dynamicTutsBgOverlay,
+                    primaryColor: darkMode ? themeDark.dynamicTutsPrimaryColor : themeLight.dynamicTutsPrimaryColor,
+                    textColor: darkMode ? themeDark.dynamicTutsFontColor : themeLight.dynamicTutsFontColor,
+                    zIndex: 1000,
+                  },
+                }}
+              />
 
-            <HeaderContainer>
-              <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
-            </HeaderContainer>
+              <HeaderContainer>
+                <Header isDarkMode={darkMode} darkModeToggle={toggleDarkMode} />
+              </HeaderContainer>
 
-            <ParentContainer
-              bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
-              headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
-              <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                <Navigation />
-              </LeftBarContainer>
+              <ParentContainer
+                bg={darkMode ? themeDark.backgroundBG : !active ? themeLight.connectWalletBg : themeLight.backgroundBG}
+                headerHeight={GLOBALS.CONSTANTS.HEADER_HEIGHT}>
+                <LeftBarContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                  <Navigation />
+                </LeftBarContainer>
 
-              <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                {/* Shared among all pages, load universal things here */}
-                <MasterInterfacePage />
-              </ContentContainer>
-            </ParentContainer>
+                <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                  {/* Shared among all pages, load universal things here */}
+                  <MasterInterfacePage />
+                </ContentContainer>
+              </ParentContainer>
+            </ChatTempContextProvider>
           </NavigationContextProvider>
         </>
       )}
