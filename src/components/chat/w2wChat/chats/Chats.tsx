@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
+import { TwitterTweetEmbed } from 'react-twitter-embed';
 
 // Internal Components
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -42,27 +43,79 @@ const Text = ({ content }: TextProps) => {
               href={word}
               target="_blank"
               rel="noreferrer"
-            >
-              {word}
-            </a>{' '}
+              >
+                {word}
+              </a>{' '}  
           </>
         ) : (
-          word + ' '
+          <>{word + ' '}</>
         );
       })}
     </p>
   );
 };
+
+const checkTwitterUrl=( msg : MessageIPFS)=>{
+  let tweetId="", messageType="";
+  const URL_REGEX = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+  const messageContent = msg.messageContent.split(' ');
+
+  for(let i=0;i<messageContent.length;i++){
+    if(URL_REGEX.test(messageContent[i]) && messageContent[i].includes('twitter')){
+      messageType="Twitter";
+      const wordArray= messageContent[i].split('/');
+      tweetId = wordArray[wordArray.length-1];
+      break;
+    }
+  }
+  return {tweetId, messageType};
+}
+
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: ChatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
   const time1 = time.toLocaleTimeString('en-US');
   const date = time1.slice(0, -6) + time1.slice(-2);
+  const {tweetId,messageType}=checkTwitterUrl(msg);
 
   return (
     <>
-      {msg.messageType === 'Text' ? (
+      {
+      messageType === 'Twitter' ? (
+        <>
+          {msg.fromCAIP10 === caip10 ? (
+            <MessageWrapper align="row-reverse">
+              <SenderMessage 
+                color="transparent"
+                padding="0px"
+              >
+                <TwitterTweetEmbed 
+                placeholder={<LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  spinnerSize={20}
+                />} 
+                tweetId={tweetId}
+                 />
+              </SenderMessage>
+            </MessageWrapper>
+          ) : (
+            <MessageWrapper align="row">
+              <ReceivedMessage
+                color="transparent"
+                padding="0px"
+              >
+              <TwitterTweetEmbed 
+                 placeholder={<LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  spinnerSize={20}
+                />} 
+                tweetId={tweetId} />
+              </ReceivedMessage>
+            </MessageWrapper>
+          )}
+        </>
+      ) : msg.messageType === 'Text' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
