@@ -54,11 +54,8 @@ const Typebar = ({
 
   useEffect(() => {
     if (textAreaRef) {
-      
-      textAreaRef.current.style.height = "0px";
+      textAreaRef.current.style.height = 25 + "px";
       const scrollHeight = textAreaRef.current.scrollHeight;
-
-      
       textAreaRef.current.style.height = scrollHeight + "px";
     }
   }, [textAreaRef, value]);
@@ -294,7 +291,7 @@ const TypeBarContainer = styled.div`
   right: 9px;
   /* height: 55px; */
   height:auto;
-  padding: 16px;
+  padding: 13px 16px 13px 16px;
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;
@@ -320,9 +317,13 @@ const TextInput = styled.textarea`
   resize: none;
   background: transparent;
   color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
-  &&::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+  &&::-webkit-scrollbar{
+    width: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+    height:50px;
   }
   ::placeholder {
     color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
