@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { ChangeEvent, useContext, useRef, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -46,9 +46,22 @@ const Typebar = ({
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filesUploading, setFileUploading] = useState<boolean>(false);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [value, setValue] = useState("");
 
   const theme = useTheme();
   const isDarkMode = theme.scheme === 'dark';
+
+  useEffect(() => {
+    if (textAreaRef) {
+      
+      textAreaRef.current.style.height = "0px";
+      const scrollHeight = textAreaRef.current.scrollHeight;
+
+      
+      textAreaRef.current.style.height = scrollHeight + "px";
+    }
+  }, [textAreaRef, value]);
 
   const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
     setNewMessage(newMessage + emojiObject.emoji);
@@ -91,6 +104,8 @@ const Typebar = ({
   };
 
   const textOnChange = (e: any): void => {
+    const val = e.target?.value;
+    setValue(val);
     if (!messageBeingSent) {
       setNewMessage(e.target.value);
     }
@@ -193,8 +208,11 @@ const Typebar = ({
               onKeyDown={handleKeyPress}
               onChange={textOnChange}
               value={newMessage}
+              rows={1}
+              ref={textAreaRef}
               autoFocus="autoFocus"
             />
+
           }
 
           <>
@@ -267,13 +285,15 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
+  align-items: end;
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
   left: 9px;
   right: 9px;
-  height: 55px;
+  /* height: 55px; */
+  height:auto;
   padding: 16px;
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
@@ -293,6 +313,7 @@ const TextInput = styled.textarea`
   font-size: 16px;
   width: 100%;
   height: 25px;
+  max-height: 75px;
   outline: none;
   padding-top: 4px;
   border: none;
@@ -307,6 +328,7 @@ const TextInput = styled.textarea`
     color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   }
 `;
+
 
 const GifDiv = styled.div`
   background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
