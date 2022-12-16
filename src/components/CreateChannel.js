@@ -154,16 +154,7 @@ function CreateChannel() {
 
     e.preventDefault();
 
-    // if (!isAllFilledAndValid()) {
-    //   channelToast.showMessageToast({
-    //     toastTitle: 'Error',
-    //     toastMessage: `${errorInfo}`,
-    //     toastType: 'ERROR',
-    //     getToastIcon: (size) => <MdError size={size} color="red" />,
-    //   });
-
-    //   return false;
-    // }
+   
 
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');

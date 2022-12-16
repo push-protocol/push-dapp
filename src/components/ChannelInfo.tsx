@@ -51,7 +51,7 @@ const ChannelInfo = ({
 }) => {
   const theme = useTheme();
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [errorInfo, setErrorInfo] = useState<string>({name: '',description: '', address: '', url: ''});
+  const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
 
 
   const isEmpty = (field) => {
@@ -62,7 +62,7 @@ const ChannelInfo = ({
     return false;
   };
 
-  const isAllFilledAndValid = () => {
+  const isAllFilledAndValid = (): boolean => {
     setErrorInfo('');
 
     if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
@@ -142,7 +142,6 @@ const ChannelInfo = ({
     return ()=>setDisabled(true);
   }, [channelName, channelInfo, channelURL]);
 
-  console.log(errorInfo)
 
   const ErrorMessage = ({ message }) => {
     return (
