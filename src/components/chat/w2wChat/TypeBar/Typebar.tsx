@@ -17,7 +17,6 @@ import { AppContext } from 'types/chat';
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
 
-
 interface ITypeBar {
   messageBeingSent: boolean;
   newMessage: string;
@@ -47,16 +46,16 @@ const Typebar = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filesUploading, setFileUploading] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
 
   const theme = useTheme();
   const isDarkMode = theme.scheme === 'dark';
 
   useEffect(() => {
     if (textAreaRef) {
-      textAreaRef.current.style.height = 25 + "px";
-      const scrollHeight = textAreaRef.current.scrollHeight;
-      textAreaRef.current.style.height = scrollHeight + "px";
+      textAreaRef.current.style.height = 25 + 'px';
+      const scrollHeight = textAreaRef.current?.scrollHeight;
+      textAreaRef.current.style.height = scrollHeight + 'px';
     }
   }, [textAreaRef, value]);
 
@@ -160,20 +159,22 @@ const Typebar = ({
   return (
     <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
       {messageBeingSent ? (
-        <ItemHV2
-          position="absolute"
-          top="0"
-          right="10px"
-          bottom="0"
-          justifyContent="flex-end"
-          background="transparent"
-        >
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-            width="100%"
-          />
-        </ItemHV2>
+        <SpinnerContainer>
+          <ItemHV2
+            position="absolute"
+            top="0"
+            right="10px"
+            bottom="0"
+            justifyContent="flex-end"
+            background="transparent"
+          >
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={40}
+              width="100%"
+            />
+          </ItemHV2>
+        </SpinnerContainer>
       ) : (
         <>
           <Icon
@@ -209,7 +210,6 @@ const Typebar = ({
               ref={textAreaRef}
               autoFocus="autoFocus"
             />
-
           }
 
           <>
@@ -290,10 +290,14 @@ const TypeBarContainer = styled.div`
   left: 9px;
   right: 9px;
   /* height: 55px; */
-  height:auto;
+  height: auto;
   padding: 13px 16px 13px 16px;
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
+`;
+
+const SpinnerContainer = styled.div`
+  height: 35px;
 `;
 
 const Icon = styled.i`
@@ -317,19 +321,18 @@ const TextInput = styled.textarea`
   resize: none;
   background: transparent;
   color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
-  &&::-webkit-scrollbar{
+  &&::-webkit-scrollbar {
     width: 4px;
   }
   ::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
-    height:50px;
+    height: 50px;
   }
   ::placeholder {
     color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   }
 `;
-
 
 const GifDiv = styled.div`
   background: ${(props) => props.theme.chat.gifContainerBg || '#F7F8FF'};
