@@ -48,12 +48,10 @@ const ChannelInfo = ({
   setStepFlow,
   setChannelInfoDone,
   setTxStatus,
-  // errorInfo,
-  // isAllFilledAndValid,
 }) => {
   const theme = useTheme();
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [errorInfo, setErrorInfo] = useState({name: '',description: '', address: '', url: ''});
+  const [errorInfo, setErrorInfo] = useState<string>({name: '',description: '', address: '', url: ''});
 
 
   const isEmpty = (field) => {
