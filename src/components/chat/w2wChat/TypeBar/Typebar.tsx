@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { ChangeEvent, useContext, useRef, useState } from 'react';
+import React, { ChangeEvent, useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -16,7 +16,6 @@ import { AppContext } from 'types/chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
-
 
 interface ITypeBar {
   messageBeingSent: boolean;
@@ -46,9 +45,19 @@ const Typebar = ({
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filesUploading, setFileUploading] = useState<boolean>(false);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const [value, setValue] = useState('');
 
   const theme = useTheme();
   const isDarkMode = theme.scheme === 'dark';
+
+  useEffect(() => {
+    if (textAreaRef) {
+      textAreaRef.current.style.height = 25 + 'px';
+      const scrollHeight = textAreaRef.current?.scrollHeight;
+      textAreaRef.current.style.height = scrollHeight + 'px';
+    }
+  }, [textAreaRef, value]);
 
   const addEmoji = (e: any, emojiObject: { emoji: any }): void => {
     setNewMessage(newMessage + emojiObject.emoji);
@@ -85,12 +94,14 @@ const Typebar = ({
       return;
     }
 
-    if (x === 13) {
+    if (x === 13 && !e.shiftKey) {
       handleSubmit(e);
     }
   };
 
   const textOnChange = (e: any): void => {
+    const val = e.target?.value;
+    setValue(val);
     if (!messageBeingSent) {
       setNewMessage(e.target.value);
     }
@@ -148,20 +159,22 @@ const Typebar = ({
   return (
     <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
       {messageBeingSent ? (
-        <ItemHV2
-          position="absolute"
-          top="0"
-          right="10px"
-          bottom="0"
-          justifyContent="flex-end"
-          background="transparent"
-        >
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-            width="100%"
-          />
-        </ItemHV2>
+        <SpinnerContainer>
+          <ItemHV2
+            position="absolute"
+            top="0"
+            right="10px"
+            bottom="0"
+            justifyContent="flex-end"
+            background="transparent"
+          >
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={40}
+              width="100%"
+            />
+          </ItemHV2>
+        </SpinnerContainer>
       ) : (
         <>
           <Icon
@@ -193,6 +206,8 @@ const Typebar = ({
               onKeyDown={handleKeyPress}
               onChange={textOnChange}
               value={newMessage}
+              rows={1}
+              ref={textAreaRef}
               autoFocus="autoFocus"
             />
           }
@@ -267,16 +282,22 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
+  align-items: end;
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
   left: 9px;
   right: 9px;
-  height: 55px;
-  padding: 16px;
+  /* height: 55px; */
+  height: auto;
+  padding: 13px 16px 13px 16px;
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
+`;
+
+const SpinnerContainer = styled.div`
+  height: 35px;
 `;
 
 const Icon = styled.i`
@@ -293,6 +314,7 @@ const TextInput = styled.textarea`
   font-size: 16px;
   width: 100%;
   height: 25px;
+  max-height: 75px;
   outline: none;
   padding-top: 4px;
   border: none;
@@ -300,8 +322,12 @@ const TextInput = styled.textarea`
   background: transparent;
   color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
   &&::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    width: 4px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+    height: 50px;
   }
   ::placeholder {
     color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
