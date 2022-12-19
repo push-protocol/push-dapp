@@ -182,6 +182,7 @@ function Chat() {
     }
   }, []);
 
+
   const connectUser = async (): Promise<void> => {
     // Getting User Info
     setBlockedLoading({
