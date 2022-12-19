@@ -12,11 +12,11 @@ import ChatModule from 'modules/chat/ChatModule';
 import GLOBALS from 'config/Globals';
 
 // Chat page
-const ChatPage = () => {
+const ChatPage = ({getUser,newUser}) => {
   // RENDER
   return (
     <Container>
-      <ChatModule />
+      <ChatModule getUser={getUser} newUser={newUser}/>
     </Container>
   );
 }

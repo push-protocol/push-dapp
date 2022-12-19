@@ -98,7 +98,7 @@ export const ToastPosition: ToastOptions = {
 export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
-function Chat() {
+function Chat({getUser,newUser}) {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
@@ -176,9 +176,10 @@ function Chat() {
   // Rest of the loading logic
   useEffect(() => {
     if (isLoading) {
+      setConnectedUser(newUser);
       connectUser();
     }
-  }, []);
+  }, [newUser]);
 
 
   const connectUser = async (): Promise<void> => {
@@ -191,47 +192,55 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
-    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-    const user: User = await PushNodeClient.getUser({ caip10 });
-    let connectedUser: ConnectedUser;
-
-    // TODO: Change this to do verification on ceramic to validate if did is valid
-    if (user?.did.includes('did:3:')) {
-      throw Error('Invalid DID');
+    if(!newUser){
+      await getUser();
     }
 
-    // new user might not have a private key
-    if (user && user.encryptedPrivateKey) {
-      if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
-        throw Error('Invalid user');
-      }
 
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
-        library.provider,
-        user.encryptedPrivateKey,
-        account
-      );
-      connectedUser = { ...user, privateKey: privateKeyArmored };
-    } else {
-      connectedUser = {
-        // We only need to provide this information when it's a new user
-        name: 'john-snow',
-        profilePicture:
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
-        wallets: caip10,
-        about: '',
-        allowedNumMsg: 0,
-        did: caip10,
-        encryptedPrivateKey: '',
-        encryptionType: '',
-        numMsg: 0,
-        publicKey: '',
-        sigType: '',
-        signature: '',
-        linkedListHash: '',
-        privateKey: '',
-      };
-    }
+    // const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
+    // const user: User = await PushNodeClient.getUser({ caip10 });
+    // let connectedUser: ConnectedUser;
+
+    // // TODO: Change this to do verification on ceramic to validate if did is valid
+    // if (user?.did.includes('did:3:')) {
+    //   throw Error('Invalid DID');
+    // }
+
+    // // new user might not have a private key
+    // if (user && user.encryptedPrivateKey) {
+    //   if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
+    //     throw Error('Invalid user');
+    //   }
+
+
+    //   // const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
+    //   //   library.provider,
+    //   //   user.encryptedPrivateKey,
+    //   //   account
+    //   // );
+    //   const privateKeyArmored = await getPrivateKey();
+    //   console.log("Private Key",privateKeyArmored);
+    //   connectedUser = { ...user, privateKey: privateKeyArmored };
+    // } else {
+    //   connectedUser = {
+    //     // We only need to provide this information when it's a new user
+    //     name: 'john-snow',
+    //     profilePicture:
+    //       'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
+    //     wallets: caip10,
+    //     about: '',
+    //     allowedNumMsg: 0,
+    //     did: caip10,
+    //     encryptedPrivateKey: '',
+    //     encryptionType: '',
+    //     numMsg: 0,
+    //     publicKey: '',
+    //     sigType: '',
+    //     signature: '',
+    //     linkedListHash: '',
+    //     privateKey: '',
+    //   };
+    // }
 
     setBlockedLoading({
       enabled: false,
@@ -241,7 +250,6 @@ function Chat() {
       progress: 100,
     });
 
-    setConnectedUser(connectedUser);
     setIsLoading(false);
   };
 
