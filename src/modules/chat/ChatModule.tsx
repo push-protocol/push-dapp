@@ -30,6 +30,7 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 export interface InboxChat {
   name: string;
@@ -98,8 +99,10 @@ export const ToastPosition: ToastOptions = {
 export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
-function Chat({getUser,newUser}) {
+function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
+
+  const {getUser,newUser} = useContext(ChatUserContext);
 
   const theme = useTheme();
 

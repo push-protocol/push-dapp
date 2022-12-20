@@ -16,7 +16,7 @@ const ChatPage = ({getUser,newUser}) => {
   // RENDER
   return (
     <Container>
-      <ChatModule getUser={getUser} newUser={newUser}/>
+      <ChatModule />
     </Container>
   );
 }
