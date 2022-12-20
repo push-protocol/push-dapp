@@ -63,7 +63,8 @@ const checkTwitterUrl=( msg : MessageIPFS)=>{
   for(let i=0;i<messageContent.length;i++){
     if(URL_REGEX.test(messageContent[i]) && messageContent[i].includes('twitter')){
       messageType="Twitter";
-      const wordArray= messageContent[i].split('/');
+      // Extracting tweetId
+      const wordArray= messageContent[i].split('?')[0].split('/'); // split url at '?' and take first element and split at '/'
       tweetId = wordArray[wordArray.length-1];
       break;
     }
