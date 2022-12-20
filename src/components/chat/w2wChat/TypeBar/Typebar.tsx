@@ -52,7 +52,7 @@ const Typebar = ({
   const isDarkMode = theme.scheme === 'dark';
 
   useEffect(() => {
-    if (textAreaRef) {
+    if (textAreaRef.current?.style) {
       textAreaRef.current.style.height = 25 + 'px';
       const scrollHeight = textAreaRef.current?.scrollHeight;
       textAreaRef.current.style.height = scrollHeight + 'px';
