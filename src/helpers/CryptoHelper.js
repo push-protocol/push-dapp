@@ -13,7 +13,7 @@ const CryptoHelper = {
       method: 'eth_getEncryptionPublicKey',
       params: [account], // you must have access to the specified account
     });
-    console.log(`Public Key: ${keyB64}`);
+    // console.log(`Public Key: ${keyB64}`);
     return keyB64;
   },
   // To Encrypt with AES

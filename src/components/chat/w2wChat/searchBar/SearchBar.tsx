@@ -112,6 +112,7 @@ const SearchBar = () => {
         const address = await provider.resolveName(searchedUser);
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
+        console.log("ENS Name",ens);
         if (ens) {
           handleUserSearch(ens);
         } else {

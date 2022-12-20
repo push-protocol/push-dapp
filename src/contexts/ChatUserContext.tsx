@@ -8,11 +8,14 @@ import CryptoHelper from 'helpers/CryptoHelper';
 
 export const ChatUserContext = createContext({
     newUser: null,
+    connectedUser:null,
+    setConnectedUser:(value:any) => {},
     getUser: (value: any) => {}
   });
 
 const ChatUserContextProvider = (props) => {
   const [newUser, setNewUser] = useState<ConnectedUser>();
+  const [connectedUser,setConnectedUser] = useState<ConnectedUser>();
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const getUser = async () => {
@@ -59,10 +62,11 @@ const ChatUserContextProvider = (props) => {
     }
 
     setNewUser(connectedUser);
+    setConnectedUser(connectedUser);
   };
 
   return (
-    <ChatUserContext.Provider value={{ getUser, newUser }}>
+    <ChatUserContext.Provider value={{ getUser, newUser, connectedUser, setConnectedUser }}>
       {props.children}
     </ChatUserContext.Provider>
   );

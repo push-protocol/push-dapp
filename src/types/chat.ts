@@ -91,8 +91,8 @@ export interface AppContext {
     setSearchedUser: (searched: string) => void;
     searchedUser: string;
     setChat: (feed: Feeds) => void;
-    connectedUser: ConnectedUser;
-    setConnectedUser: (user: ConnectedUser) => void;
+    // connectedUser: ConnectedUser;
+    // setConnectedUser: (user: ConnectedUser) => void;
     intents: Feeds[];
     setIntents: (intents: Feeds[]) => void;
     inbox: Feeds[];

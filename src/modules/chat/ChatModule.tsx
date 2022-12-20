@@ -67,8 +67,8 @@ export interface AppContext {
   setSearchedUser: (searched: string) => void;
   searchedUser: string;
   setChat: (feed: Feeds) => void;
-  connectedUser: ConnectedUser;
-  setConnectedUser: (user: ConnectedUser) => void;
+  // connectedUser: ConnectedUser;
+  // setConnectedUser: (user: ConnectedUser) => void;
   intents: Feeds[];
   setIntents: (intents: Feeds[]) => void;
   inbox: Feeds[];
@@ -102,7 +102,7 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const {getUser,newUser} = useContext(ChatUserContext);
+  const {getUser,newUser,connectedUser,setConnectedUser} = useContext(ChatUserContext);
 
   const theme = useTheme();
 
@@ -116,7 +116,7 @@ function Chat() {
     title: null,
   });
   const [searchedUser, setSearchedUser] = useState<string>('');
-  const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
+  // const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
