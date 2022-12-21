@@ -12,7 +12,7 @@ import ChatModule from 'modules/chat/ChatModule';
 import GLOBALS from 'config/Globals';
 
 // Chat page
-const ChatPage = ({getUser,newUser}) => {
+const ChatPage = () => {
   // RENDER
   return (
     <Container>

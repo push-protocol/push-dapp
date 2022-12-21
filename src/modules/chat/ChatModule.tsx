@@ -102,7 +102,7 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const {getUser,newUser,connectedUser,setConnectedUser} = useContext(ChatUserContext);
+  const { getUser, newUser, connectedUser, setConnectedUser } = useContext(ChatUserContext);
 
   const theme = useTheme();
 
@@ -184,7 +184,6 @@ function Chat() {
     }
   }, [newUser]);
 
-
   const connectUser = async (): Promise<void> => {
     // Getting User Info
     setBlockedLoading({
@@ -195,10 +194,9 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
-    if(!newUser){
+    if (!newUser) {
       await getUser();
     }
-
 
     // const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
     // const user: User = await PushNodeClient.getUser({ caip10 });
@@ -214,7 +212,6 @@ function Chat() {
     //   if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
     //     throw Error('Invalid user');
     //   }
-
 
     //   // const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
     //   //   library.provider,
