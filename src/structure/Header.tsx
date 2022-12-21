@@ -27,7 +27,7 @@ import { NavigationContext } from 'contexts/NavigationContext';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
-import ChainIndicator from 'primaries/ChainIndicator';
+import ChainIndicator from 'components/ChainIndicator';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
 

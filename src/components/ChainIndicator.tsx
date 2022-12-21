@@ -1,6 +1,5 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
 import React, { useRef } from "react";
 import { ethers } from 'ethers';
 
@@ -9,24 +8,22 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Item } from "./SharedStyling.js";
-import { EnvHelper, networkName, PolygonNetworks } from 'helpers/UtilityHelper';
-import Dropdown from '../components/Dropdown';
-import { useClickAway } from 'hooks/useClickAway';
+import Dropdown from './Dropdown';
+import { Item } from "../primaries/SharedStyling.js";
+import { networkName, PolygonNetworks } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
+import { useClickAway } from 'hooks/useClickAway';
 
 const ChainIndicator = ({isDarkMode}) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { error, account, library } = useWeb3React();
-  // Get theme
+  const { error, account } = useWeb3React();
   const theme = useTheme();
+  
   const [showDropdown, setShowDropdown] = React.useState(false);
+  const [dropdownValues, setDropdownValues] = React.useState([]);
   const [currentChainId, setCurrentChainId] = React.useState("");
-  // Get Web3 Context
-  const context = useWeb3React<Web3Provider>();
-  const { deactivate } = context;
-
+  
   // fetches the current chain Id and sets the current chain Id state
   const fetchCurrentChainId = async ()=>{
     const currentChainId = await window.ethereum.request({
@@ -35,6 +32,7 @@ const ChainIndicator = ({isDarkMode}) => {
     setCurrentChainId(currentChainId);
   }
 
+  // handles network change request
   async function handleChangeNetwork(chainId) {
     const chainIds = appConfig.allowedNetworks;
     if(chainIds.includes(chainId)){
@@ -62,58 +60,38 @@ const ChainIndicator = ({isDarkMode}) => {
       }
     }
   }
+
+  React.useEffect(() => {
+    fetchCurrentChainId();
+  }, []);
   
-  const dropdownValues = 
-    EnvHelper.isProd
-    ? 
-      [
-        {
-          id: "eth_mainnet",
-          value: 1,
-          title: "Ethereum Mainnet",
-          function: () => handleChangeNetwork(1),
-          invertedIcon: "./prod.svg",
-        },
-        {
-          id: "polygon_mainnet",
-          value: 137,
-          title: "Polygon Mainnet",
-          function: () => handleChangeNetwork(137),
-          invertedIcon: "./prod.svg",
-        },
-      ]
-    :
-    [
-      {
-        id: "eth_goerli",
-        value: 5,
-        title: "Ethereum Goerli",
-        function: () => handleChangeNetwork(5),
-        invertedIcon: "./prod.svg",
-      },
-      {
-        id: "polygon_mumbai",
-        value: 80001,
-        title: "Polygon Mumbai",
-        function: () => handleChangeNetwork(80001),
-        invertedIcon: "./prod.svg",
-      },
-    ];
+  React.useEffect(() => {
+    const dropdown = [];
+    appConfig.allowedNetworks.map((chainId) => {
+        const chainName = networkName[chainId];
+        dropdown.push({
+            id: chainId,
+            value: chainName,
+            title: chainName,
+            icon: `./svg/${networkName[chainId].split(' ')[0]}.svg`,
+            function: () => {
+              handleChangeNetwork(chainId);
+              setShowDropdown(false);
+            }
+        })
+    });
+    setDropdownValues(dropdown);
+  }, [appConfig]);
   
   useClickAway(toggleArrowRef,dropdownRef, () => {
     setShowDropdown(false);
   });
   
-  React.useEffect(() => {
-    fetchCurrentChainId();
-  }, []);
-
-  // to create blockies
   return (
     <>
       {account && account !== "" && !error && (
         <Container>
-          <Wallet 
+          <CurrentChain
             bg={theme.profileBG} 
             color={theme.profileText} 
             isDarkMode={isDarkMode}
@@ -134,7 +112,7 @@ const ChainIndicator = ({isDarkMode}) => {
                 src="/svg/arrow.svg"
               />
             </ToggleArrowImg>
-          </Wallet>
+          </CurrentChain>
           {showDropdown && (
             <DropdownItem
               ref={dropdownRef}
@@ -170,7 +148,7 @@ const Container = styled.button`
   align-items: center;
   display: flex;
 `
-const Wallet = styled.span`
+const CurrentChain = styled.span`
   margin: 0px 10px;
   padding: 4px 16px;
   height: 34px;
