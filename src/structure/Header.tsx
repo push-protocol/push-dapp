@@ -30,7 +30,7 @@ import GLOBALS from 'config/Globals';
 import ChainIndicator from 'components/ChainIndicator';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
-import ChainIndicator from 'primaries/ChainIndicator';
+import ChainIndicator from 'components/ChainIndicator';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
