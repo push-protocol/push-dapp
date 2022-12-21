@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from '@ethersproject/providers';
+import { InfuraProvider, Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -42,7 +42,9 @@ const SearchBar = () => {
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
-  const provider = ethers.getDefaultProvider();
+  // const provider = ethers.getDefaultProvider();
+  const projectId = process.env.REACT_APP_INFURA_API_KEY;
+  const provider = new InfuraProvider("homestead", projectId)
   const searchFeedToast = useToast();
 
   useEffect(() => {
