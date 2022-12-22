@@ -8,6 +8,7 @@ import { TrezorConnector } from '@web3-react/trezor-connector';
 
 // Internal Configs
 import { appConfig } from 'config';
+import { C } from 'components/SharedStyling';
 
 require('dotenv').config();
 const SUPPORTED_CHAIN_IDS = [...appConfig.allowedNetworks];
@@ -21,7 +22,35 @@ let RPC_URLS: { [chainId: number]: string } = {
 
 RPC_URLS = Object.assign(RPC_URLS, appConfig.aliasRPC);
 
+export function activateInjectedProvider(providerName: 'Metamask' | 'Brave') {
+  const { ethereum } = window;
+ if (!ethereum) {
+   return undefined;
+ }
+ if (!ethereum?.providers) {
+   return new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
+ }
+
+  let provider;
+  switch (providerName) {
+      case 'Brave':
+          provider = ethereum.providers.find(({ isBraveWallet }) => isBraveWallet);
+          break;
+      case 'Metamask':
+          provider = ethereum.providers.find(({isBraveWallet, isMetaMask}) => !isBraveWallet && isMetaMask);
+          console.log(provider)
+          break;
+  }
+
+  if (provider) {
+      ethereum.setSelectedProvider(provider);
+  }
+  return new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
+}
+
 export const injected = new InjectedConnector({ supportedChainIds: SUPPORTED_CHAIN_IDS });
+
+
 
 // Only receive messages from platform.apps.ledger.com
 export const ledgerLiveConnector = new LedgerHQFrameConnector();
@@ -47,6 +76,8 @@ export const trezor = new TrezorConnector({
   manifestEmail: 'support@epns.io',
   manifestAppUrl: 'https://staging.push.org',
 });
+
+
 
 //
 // export const frame = new FrameConnector({ supportedChainIds: [1] })

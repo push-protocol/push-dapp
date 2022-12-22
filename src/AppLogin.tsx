@@ -27,7 +27,7 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-import { injected, ledger, walletconnect } from 'connectors';
+import { activateInjectedProvider, injected, ledger, walletconnect } from 'connectors';
 import { useEagerConnect, useInactiveListener } from 'hooks';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
@@ -44,9 +44,10 @@ import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 
 // define the different type of connectors which we use
+
 const web3Connectors = {
   Injected: {
-    obj: injected,
+    obj: activateInjectedProvider('Metamask'),
     logolight: MMLogoLight,
     logodark: MMLogoDark,
     title: 'Metamask',
@@ -56,6 +57,12 @@ const web3Connectors = {
     logolight: WCLogoLight,
     logodark: WCLogoDark,
     title: 'Wallet Connect',
+  },
+  Brave: {
+    obj: activateInjectedProvider('Brave'),
+    logolight: MMLogoLight,
+    logodark: MMLogoDark,
+    title: 'Brave',
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
   Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
@@ -190,6 +197,7 @@ const AppLogin = ({ toggleDarkMode }) => {
                   alignSelf="stretch"
                   key={name}
                   onClick={() => {
+                    activateInjectedProvider(web3Connectors[name].title);
                     setActivatingConnector(currentConnector);
                     activate(currentConnector);
                   }}>
