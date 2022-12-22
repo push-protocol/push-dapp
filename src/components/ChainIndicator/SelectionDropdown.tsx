@@ -1,0 +1,172 @@
+// React + Web3 Essentials
+import React from 'react';
+
+// External Packages
+import styled, { useTheme } from 'styled-components';
+
+// Internal Components
+import { A, Image, ItemH, Span } from '../../primaries/SharedStyling';
+
+type DropdownProps = {
+  dropdownValues: any[];
+  textColor?: string;
+  iconFilter?: string;
+  hoverBGColor?: string;
+};
+
+// Create Dropdown
+function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
+  const theme = useTheme();
+  const copyToClipboard = (address) => {
+    if (navigator && navigator.clipboard) {
+      navigator.clipboard.writeText(address);
+    } else {
+      const el = document.createElement('textarea');
+      el.value = address;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+  };
+  return (
+    <>
+      {dropdownValues.map((dropdownValue) =>
+        dropdownValue.id === 'walletAddress' ? (
+          <ItemH
+            bg="linear-gradient(87.17deg, #F72C81 0%, #6C55AF 50%, #4FD5FF 100%)"
+            radius="17px"
+            padding="2px 12px"
+            wrap="nowrap"
+            margin="0px 0 8px 0"
+            width="max-content"
+          >
+            <Span
+              margin="11px 22px 11px 2px"
+              weight="400"
+              size="14px"
+              textTransform="uppercase"
+              color="#fff"
+              spacing="1px"
+              width="max-content"
+            >
+              <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
+              <MobileAddress>
+                {dropdownValue?.title.substring(0, 6)}.....
+                {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
+              </MobileAddress>
+            </Span>
+            {dropdownValue?.invertedIcon && (
+              <Image
+                src={dropdownValue?.invertedIcon}
+                alt="icon"
+                width="auto"
+                cursor="pointer"
+                filter="brightness(0) invert(1)"
+                onClick={() => {
+                  copyToClipboard(dropdownValue?.value);
+                }}
+              />
+            )}
+            {dropdownValue?.icon && (
+              <Image
+                src={dropdownValue?.icon}
+                alt="icon"
+                width="auto"
+                cursor="pointer"
+                onClick={() => {
+                  copyToClipboard(dropdownValue?.value);
+                }}
+              />
+            )}
+          </ItemH>
+        ) : (
+          <DropdownItemContainer hoverBGColor={hoverBGColor}>
+            {dropdownValue?.invertedIcon && (
+              <Image
+                src={dropdownValue.invertedIcon}
+                alt="icon"
+                width="max-content"
+                spacing="1px"
+                filter={iconFilter ? iconFilter : theme.snackbarBorderIcon}
+              />
+            )}
+            {dropdownValue?.icon && (
+              <Image
+                src={dropdownValue.icon}
+                alt="icon"
+                width="max-content"
+                spacing="1px"
+              />
+            )}
+            {!dropdownValue?.link && dropdownValue?.function && (
+              <Span
+                width="max-content"
+                color={textColor ? textColor : theme.snackbarBorderText}
+                margin="10px 20px"
+                weight="400"
+                size="16px"
+                cursor="pointer"
+                onClick={() => dropdownValue?.function()}
+              >
+                {dropdownValue.title}
+              </Span>
+            )}
+            {dropdownValue?.link && (
+              <A
+                width="max-content"
+                href={dropdownValue?.link}
+                target="_blank"
+                rel="nofollow"
+                margin="10px 20px"
+                weight="400"
+                size="16px"
+                width="max-content"
+                color={textColor ? textColor : theme.snackbarBorderText}
+                hoverBG="transparent"
+              >
+                {dropdownValue.title}
+              </A>
+            )}
+          </DropdownItemContainer>
+        )
+      )}
+    </>
+  );
+}
+
+// css styles
+const SpanAddress = styled(Span)`
+  margin: 11px 22px 11px 2px;
+  weight: 400;
+  size: 14px;
+  text-transform: uppercase;
+  color: #fff;
+  spacing: 1px;
+  width: max-content;
+`;
+const MobileAddress = styled(SpanAddress)`
+  @media (min-width: 993px) {
+    display: none;
+  }
+`;
+const DesktopAddress = styled(SpanAddress)`
+  @media (max-width: 992px) {
+    display: none;
+  }
+`;
+
+const DropdownItemContainer = styled(ItemH)`
+  width: 14rem;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  margin: 2px 0;
+  padding: 8px;
+  border-radius: 12px;
+
+  &:hover {
+    background-color: ${(props) => props.hoverBGColor || 'none'};
+  }
+`;
+
+export default Dropdown;
