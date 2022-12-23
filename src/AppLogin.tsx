@@ -34,6 +34,7 @@ import LedgerLogoDark from './assets/login/ledgerDark.svg';
 import LedgerLogoLight from './assets/login/ledgerLight.svg';
 import MMLogoDark from './assets/login/metamaskDark.svg';
 import MMLogoLight from './assets/login/metamaskLight.svg';
+import BraveLight from './assets/login/braveLight.svg';
 import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
@@ -60,8 +61,8 @@ const web3Connectors = {
   },
   Brave: {
     obj: activateInjectedProvider('Brave'),
-    logolight: MMLogoLight,
-    logodark: MMLogoDark,
+    logolight: BraveLight,
+    logodark: BraveLight,
     title: 'Brave',
   },
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
