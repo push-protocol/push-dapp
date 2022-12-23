@@ -8,10 +8,11 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 // Internal Components
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS } from 'types/chat';
+import { MessageIPFS,TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { checkTwitterUrl } from 'helpers/w2w/twitter';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -23,74 +24,22 @@ interface ChatProps {
   messageBeingSent: boolean;
   ApproveIntent?: Function;
 }
-interface TextProps {
-  content: string;
-}
 
 // Constants
 const infura_URL = appConfig.infuraApiUrl;
-const URL_REGEX =
-  /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
-
-const Text = ({ content }: TextProps) => {
-  const words = content.split(' ');
-  return (
-    <p>
-      {words.map((word: string) => {
-        return word.match(URL_REGEX) ? (
-          <>
-            <a
-              href={word}
-              target="_blank"
-              rel="noreferrer"
-              >
-                {word}
-              </a>{' '}  
-          </>
-        ) : (
-          <>{word + ' '}</>
-        );
-      })}
-    </p>
-  );
-};
-
-const checkTwitterUrl=( msg : MessageIPFS)=>{
-  let tweetId="", messageType="";
-  const URL_REGEX = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-  const messageContent = msg.messageContent.split(' ');
-
-  for(let i=0;i<messageContent.length;i++){
-    if(URL_REGEX.test(messageContent[i]) && messageContent[i].includes('twitter')){
-      
-      // Extracting tweetId
-      const wordArray= messageContent[i].split('?')[0].split('/'); // split url at '?' and take first element and split at '/'
-      if(wordArray.length>=6){
-        tweetId = wordArray[wordArray.length-1];
-        messageType="Twitter";
-        break;
-      }
-      else{
-        messageType="Text";
-        break;
-      }
-    }
-  }
-  return {tweetId, messageType};
-}
 
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: ChatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
-  const time1 = time.toLocaleTimeString('en-US');
-  const date = time1.slice(0, -6) + time1.slice(-2);
-  const {tweetId,messageType}=checkTwitterUrl(msg);
+  const time1:string = time.toLocaleTimeString('en-US');
+  const date :string= time1.slice(0, -6) + time1.slice(-2);
+  const {tweetId,messageType}:TwitterFeedReturnType=checkTwitterUrl({message:msg.messageContent});
 
   return (
     <>
       {
-      messageType === 'Twitter' ? (
+      messageType === 'TwitterFeedLink' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
