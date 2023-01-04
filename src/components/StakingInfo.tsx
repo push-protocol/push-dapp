@@ -86,6 +86,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
             flex="1"
             radius="15px"
             padding="20px 10px"
+            disabled={true}
             onClick={() => {
               setStakeFeesChoosen(true);
               setStepFlow(1);

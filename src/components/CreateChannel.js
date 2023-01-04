@@ -25,6 +25,7 @@ import UploadLogo from './UploadLogo';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
+import { Anchor } from './SharedStyling';
 
 // Constants
 const minStakeFees = 50;
@@ -337,6 +338,10 @@ function CreateChannel() {
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
+          <ItemWarning>
+                 ⚠️ Channel Creation is not available due to v1.5 Upgrade. Please check <ItemLink target={'_blank'} href='https://medium.com/push-protocol/introducing-push-protocol-v1-5-80eb39b55424'>this article</ItemLink> for more info.
+            </ItemWarning>
+
             <TextH2>
               <Span className='text'>
                 Create Your Channel
@@ -381,15 +386,21 @@ function CreateChannel() {
         <>
           <Section>
             <ItemHere>
-              <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} onClick={() => setStepFlow(0)}>
+              <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
+              //  onClick={() => setStepFlow(0)}
+               >
                 <div>Staking Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
-              <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} onClick={() => setStepFlow(1)}>
+              <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
+              // onClick={() => setStepFlow(1)}
+              >
                 <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
-              <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'} onClick={() => setStepFlow(2)}>
+              <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
+              //  onClick={() => setStepFlow(2)}
+               >
                 <div>Upload Logo</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
               </Tab>
@@ -508,6 +519,22 @@ const Step = styled.div`
     css`
     `};
 `;
+
+const ItemWarning = styled.div`
+  color: white;
+  text-align: center;
+  background: #F22E2E; 
+  flex: 1; 
+  padding: 10px 10px; 
+  margin: 10px 0px;
+  font-weight: 500;
+  border-radius: 10px;
+`
+
+const ItemLink = styled.a`
+  text-decoration: underline;
+  color: white;
+`
 
 const BodySection = styled(Section)`
  margin: 0px 0px 40px;
