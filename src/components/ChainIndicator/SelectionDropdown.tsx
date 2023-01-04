@@ -95,17 +95,16 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               <Image
                 src={dropdownValue.icon}
                 alt="icon"
-                width="max-content"
-                spacing="1px"
+                width="24px"
               />
             )}
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
                 width="max-content"
                 color={textColor ? textColor : theme.snackbarBorderText}
-                margin="10px 20px"
+                margin="8px 10px"
                 weight="400"
-                size="16px"
+                size="15px"
                 cursor="pointer"
                 onClick={() => dropdownValue?.function()}
               >
@@ -118,7 +117,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 href={dropdownValue?.link}
                 target="_blank"
                 rel="nofollow"
-                margin="10px 20px"
+                margin="8px 10px"
                 weight="400"
                 size="16px"
                 width="max-content"
@@ -157,11 +156,11 @@ const DesktopAddress = styled(SpanAddress)`
 `;
 
 const DropdownItemContainer = styled(ItemH)`
-  width: 14rem;
+  width: 11.5rem;
   justify-content: flex-start;
   flex-wrap: nowrap;
-  margin: 2px 0;
-  padding: 8px;
+  margin: 1px 0;
+  padding: 2px 8px;
   border-radius: 12px;
 
   &:hover {

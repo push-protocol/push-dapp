@@ -138,8 +138,12 @@ const ChainIndicator = ({ isDarkMode }) => {
             >
               <H3
                 color={theme.chainIndicatorHeading}
-                margin="0px 1px 9px 0"
+                margin="0px 1px 6px 0"
                 textTransform="none"
+                family="Strawford"
+                spacing="0.01rem"
+                weight="400"
+                size="15px"
               >
                 Select Network
               </H3>
@@ -172,11 +176,12 @@ const Container = styled.button`
   display: flex;
   @media ${device.tablet} {
     width: 100%;
+    margin-right: 20px;
   }
 `;
 const CurrentChain = styled.span`
-  margin: 0px 10px;
-  padding: 4px 12px;
+  margin: 0px 1px;
+  padding: 6px;
   height: 34px;
   display: flex;
   align-items: center;
@@ -208,8 +213,7 @@ const CurrentChain = styled.span`
     justify-content: space-between;
     border: none;
     background: none;
-    padding: 0;
-    margin: 10px 18px 25px 5px;
+    margin: 10px 16px 25px 5px;
     padding: 4px 0;
   }
 `;
@@ -222,10 +226,12 @@ const CurrentChainInfo = styled(ItemH)`
 
 const ChainName = styled(H3)`
   display: none;
+  font-family: "Strawford";
   text-transform: none;
   margin: 10px 0 10px 15px;
   weight: 400;
-  size: 16px;
+  size: 18px;
+  letter-spacing: -0.01em;
   cursor: pointer;
 
   @media ${device.tablet} {
@@ -255,14 +261,14 @@ const DropdownItem = styled(Item)`
   border: 1px solid ${(props) => props.border};
   border-radius: 16px;
   align-items: flex-start;
-  padding: 1.2rem;
+  padding: 1rem 0.9rem;
   position: absolute;
   top: 2.8rem;
-  right: 0.5rem;
+  right: 0rem;
   z-index: 10;
 
   @media ${device.tablet} {
-    right: -0.8rem;
+    right: 0.9rem;
     top: 3.5rem;
   }
 `;
