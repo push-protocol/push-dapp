@@ -339,7 +339,7 @@ function CreateChannel() {
         <Content className='content'>
           <Item align="center" className='center'>
           <ItemWarning>
-                 ⚠️ Channel Creation is not available due to v1.5 Upgrade. Please reach out on <ItemLink target={'_blank'} href='https://discord.gg/pushprotocol'>Discord</ItemLink> for more info.
+                 ⚠️ Channel Creation is not available due to v1.5 Upgrade. Please check this <ItemLink target={'_blank'} href='https://medium.com/push-protocol/introducing-push-protocol-v1-5-80eb39b55424'>article</ItemLink> for more info.
             </ItemWarning>
 
             <TextH2>
