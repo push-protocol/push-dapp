@@ -14,7 +14,7 @@ export const developmentIpfsGateway: string = 'https://epns-testing.infura-ipfs.
 
 export const IPFSGateway = EnvHelper.isProduction() ? productionIpfsGateway : developmentIpfsGateway;
 
-export const IPFSupload = async (input: string) => {
+export const IPFSupload = async (input: string):Promise<string> => {
   const bufferInput = Buffer.from(input);
   const projectId = appConfig.ipfsInfuraAPIKey;
   const projectSecret = appConfig.ipfsInfuraAPISecret;

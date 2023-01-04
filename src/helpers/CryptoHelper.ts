@@ -1,13 +1,13 @@
 // External Configs
-import * as metamaskSigUtil from "@metamask/eth-sig-util";
+import * as metamaskSigUtil from '@metamask/eth-sig-util';
 import { decrypt, encrypt } from 'eccrypto';
 import EthCrypto from 'eth-crypto';
 import { publicKeyConvert } from 'secp256k1-v4';
 
-var CryptoJS = require("crypto-js");
+var CryptoJS = require('crypto-js');
 
 const CryptoHelper = {
-  getPublicKey: async function (account) {
+  getPublicKey: async function (account: string): Promise<string> {
     console.log('Fetching Public Key');
     const keyB64 = await window.ethereum.request({
       method: 'eth_getEncryptionPublicKey',
@@ -17,20 +17,20 @@ const CryptoHelper = {
     return keyB64;
   },
   // To Encrypt with AES
-  encryptWithAES: function (message, key) {
+  encryptWithAES: function (message: string, key: string): string {
     return CryptoJS.AES.encrypt(message, key).toString();
   },
   // To Decrypt with AES
-  decryptWithAES: function (message, key) {
+  decryptWithAES: function (message: string, key: string): string {
     let bytes = CryptoJS.AES.decrypt(message, key);
     return bytes.toString(CryptoJS.enc.Utf8);
   },
   // To Encrypt Secret with Public key
-  encryptWithRPCEncryptionPublicKey: function (text, encryptionPublicKey) {
+  encryptWithRPCEncryptionPublicKey: function (text: string, encryptionPublicKey: string): string {
     const encryptedSecret = metamaskSigUtil.encrypt({
       publicKey: encryptionPublicKey,
       data: text,
-      version: 'x25519-xsalsa20-poly1305'
+      version: 'x25519-xsalsa20-poly1305',
     });
 
     const bufferRes = Buffer.from(JSON.stringify(encryptedSecret), 'utf8');
@@ -38,16 +38,19 @@ const CryptoHelper = {
 
     return result;
   },
-  encryptWithRPCEncryptionPublicKeyReturnRawData: function (text, encryptionPublicKey) {
+  encryptWithRPCEncryptionPublicKeyReturnRawData: function (
+    text: string,
+    encryptionPublicKey: string
+  ): metamaskSigUtil.EthEncryptedData {
     const encryptedSecret = metamaskSigUtil.encrypt({
       publicKey: encryptionPublicKey,
       data: text,
-      version: 'x25519-xsalsa20-poly1305'
+      version: 'x25519-xsalsa20-poly1305',
     });
 
     return encryptedSecret;
   },
-  decryptWithWalletRPCMethod: async function (provider, encryptedMessage, account) {
+  decryptWithWalletRPCMethod: async function (provider: any, encryptedMessage: string, account: string): Promise<any> {
     const result = await provider.request({
       method: 'eth_decrypt',
       params: [encryptedMessage, account],
@@ -56,7 +59,7 @@ const CryptoHelper = {
     return result;
   },
   // To Form Encryted Secret, no more than 15 characters supported
-  encryptWithECIES: async function (message, publicKey) {
+  encryptWithECIES: async function (message: string, publicKey: string): Promise<string> {
     const compressedKey = EthCrypto.publicKey.compress(publicKey);
 
     const encryptedSecret = await this.encryptWithPublicKey(message, compressedKey);
@@ -67,18 +70,16 @@ const CryptoHelper = {
     return encryptedSecret;
   },
   // To Form Decrypted Secret, no more than 15 characters supported
-  decryptWithECIES: async function (message, privateKey) {
+  decryptWithECIES: async function (message: string, privateKey: string): Promise<string> {
     // Message is always compressed, not using because sqlite2 has some error with this
     //const uncompressedMessage = EthCrypto.hex.decompress(message).substr(2); // to remove 0x
 
     return await this.decryptWithPrivateKey(message, privateKey);
   },
   // Encryption with public key
-  encryptWithPublicKey: async function (message, publicKey) {
+  encryptWithPublicKey: async function (message: string, publicKey: string): Promise<string> {
     // Convert compressed public key, starts with 03 or 04
-    const pubKeyUint8Array = Uint8Array.from(
-      new Buffer(publicKey, 'hex')
-    );
+    const pubKeyUint8Array = Uint8Array.from(new Buffer(publicKey, 'hex'));
     //console.log("[ENCRYPTION] Public Key Uint8Array: " + pubKeyUint8Array);
 
     const convertedKeyAsUint8Array = publicKeyConvert(pubKeyUint8Array, false);
@@ -90,22 +91,17 @@ const CryptoHelper = {
     const pubKey = new Buffer(convertedPublicKeyHex, 'hex');
     //console.log("[ENCRYPTION] pubkey getting sentout for encrypt: " + pubKey);
 
-    return encrypt(
-      pubKey,
-      Buffer(message)
-    ).then(encryptedBuffers => {
+    return encrypt(pubKey, new Buffer(message)).then((encryptedBuffers) => {
       const cipher = {
         iv: encryptedBuffers.iv.toString('hex'),
         ephemPublicKey: encryptedBuffers.ephemPublicKey.toString('hex'),
         ciphertext: encryptedBuffers.ciphertext.toString('hex'),
-        mac: encryptedBuffers.mac.toString('hex')
+        mac: encryptedBuffers.mac.toString('hex'),
       };
       // use compressed key because it's smaller
       // const compressedKey = new Buffer.from(publicKeyConvert(Web3Helper.getUint8ArrayFromHexStr(cipher.ephemPublicKey), true)).toString('hex')
-      const input = Uint8Array.from(
-        new Buffer(cipher.ephemPublicKey, 'hex')
-      );
-      const keyConvert = publicKeyConvert(input, true)
+      const input = Uint8Array.from(new Buffer(cipher.ephemPublicKey, 'hex'));
+      const keyConvert = publicKeyConvert(input, true);
       // console.log("[ENCRYPTION] Coverted key: " + keyConvert);
 
       const keyConvertBuffer = new Buffer(keyConvert);
@@ -113,7 +109,7 @@ const CryptoHelper = {
       // console.log(keyConvertBuffer);
 
       //console.log(keyConvert);
-      const compressedKey = keyConvertBuffer.toString('hex')
+      const compressedKey = keyConvertBuffer.toString('hex');
       // console.log("[ENCRYPTION] Compressed key in buffer : ");
       // console.log(compressedKey);
 
@@ -121,14 +117,14 @@ const CryptoHelper = {
         new Buffer(cipher.iv, 'hex'), // 16bit
         new Buffer(compressedKey, 'hex'), // 33bit
         new Buffer(cipher.mac, 'hex'), // 32bit
-        new Buffer(cipher.ciphertext, 'hex') // var bit
-      ]).toString('hex')
+        new Buffer(cipher.ciphertext, 'hex'), // var bit
+      ]).toString('hex');
 
-      return ret
+      return ret;
     });
   },
   // Decryption with public key
-  decryptWithPrivateKey: async function (message, privateKey) {
+  decryptWithPrivateKey: async function (message: any, privateKey: string): Promise<string> {
     let encrypted = message;
     const buf = new Buffer(encrypted, 'hex');
     // console.log("[DECRYPTION] Buffer Passed: " + buf);
@@ -137,12 +133,12 @@ const CryptoHelper = {
       iv: buf.toString('hex', 0, 16),
       ephemPublicKey: buf.toString('hex', 16, 49),
       mac: buf.toString('hex', 49, 81),
-      ciphertext: buf.toString('hex', 81, buf.length)
+      ciphertext: buf.toString('hex', 81, buf.length),
     };
     // decompress publicKey
     // encrypted.ephemPublicKey = new Buffer.from(publicKeyConvert(Web3Helper.getUint8ArrayFromHexStr(encrypted.ephemPublicKey), true)).toString('hex')
     const input = Uint8Array.from(new Buffer(encrypted.ephemPublicKey, 'hex'));
-    const keyConvert = publicKeyConvert(input, false)
+    const keyConvert = publicKeyConvert(input, false);
     // console.log("[DECRYPTION] Coverted key: " + keyConvert);
 
     const keyConvertBuffer = new Buffer(keyConvert);
@@ -150,29 +146,28 @@ const CryptoHelper = {
     // console.log(keyConvertBuffer);
 
     //console.log(keyConvert);
-    const uncompressedKey = keyConvertBuffer.toString('hex')
+    const uncompressedKey = keyConvertBuffer.toString('hex');
     // console.log("[DECRYPTION] Uncompressed key in buffer : ");
     // console.log(uncompressedKey);
 
     encrypted.ephemPublicKey = uncompressedKey;
-    const twoStripped = privateKey.substring(2)
+    const twoStripped = privateKey.substring(2);
 
     const encryptedBuffer = {
       iv: new Buffer(encrypted.iv, 'hex'),
       ephemPublicKey: new Buffer(encrypted.ephemPublicKey, 'hex'),
       ciphertext: new Buffer(encrypted.ciphertext, 'hex'),
-      mac: new Buffer(encrypted.mac, 'hex')
+      mac: new Buffer(encrypted.mac, 'hex'),
     };
 
-    return decrypt(
-      new Buffer(twoStripped, 'hex'),
-      encryptedBuffer
-    ).then(decryptedBuffer => decryptedBuffer.toString());
+    return decrypt(new Buffer(twoStripped, 'hex'), encryptedBuffer).then((decryptedBuffer) =>
+      decryptedBuffer.toString()
+    );
   },
   // Testing of Encryption and Decryption from Public to Private key
-  encryptionDecryptionPublicToPrivateTest: async function (privateKey) {
+  encryptionDecryptionPublicToPrivateTest: async function (privateKey: string) {
     const startTime = new Date();
-    console.log("[ENCRYPTION / DECRYPTION TEST STARTED] - " + startTime);
+    console.log('[ENCRYPTION / DECRYPTION TEST STARTED] - ' + startTime);
 
     const publicKey = EthCrypto.publicKeyByPrivateKey(privateKey);
     const compressedKey = EthCrypto.publicKey.compress(publicKey); // is String
@@ -181,26 +176,33 @@ const CryptoHelper = {
     // const bytesCompKey = Uint8Array.from(compressedKey);
     //console.log(bytesCompKey);
 
-    const msgToEncrypt = "PartialStringAS";
+    const msgToEncrypt = 'PartialStringAS';
     const msg = await this.encryptWithPublicKey(msgToEncrypt, compressedKey);
-    console.log("Encryped Message With compressed public key:" + msg);
+    console.log('Encryped Message With compressed public key:' + msg);
 
     const encryptionTime = new Date().getTime() - startTime.getTime();
-    console.log("[ENCRYPTION / DECRYPTION ENCRYPTION DONE] - " + encryptionTime / 1000 + " secs");
+    console.log('[ENCRYPTION / DECRYPTION ENCRYPTION DONE] - ' + encryptionTime / 1000 + ' secs');
 
     // Decrypt this message
     const decryptMsg = await this.decryptWithPrivateKey(msg, privateKey);
     console.log("[ENCRYPTION / DECRYPTION DECRYPTED MESSAGE] - '" + decryptMsg + "'");
 
     const decryptionTime = new Date().getTime() - startTime.getTime() - encryptionTime;
-    console.log("[ENCRYPTION / DECRYPTION DECRYPTION DONE] - " + decryptionTime / 1000 + " secs");
+    console.log('[ENCRYPTION / DECRYPTION DECRYPTION DONE] - ' + decryptionTime / 1000 + ' secs');
   },
   // To output messge payload if required
-  outputMsgPayload: async function (secret, subject, message, calltoaction, imageurl, pkey) {
+  outputMsgPayload: async function (
+    secret: string,
+    subject: string,
+    message: string,
+    calltoaction: string,
+    imageurl: string,
+    pkey: string
+  ) {
     // Output AES
-    console.log("[AES ENCRYTED FORMAT (" + new Date() + ")");
-    console.log("---------------------");
-    console.log("secret --> ");
+    console.log('[AES ENCRYTED FORMAT (' + new Date() + ')');
+    console.log('---------------------');
+    console.log('secret --> ');
     const secretEncrypted = await this.encryptWithECIES(secret, pkey);
     const asubE = this.encryptWithAES(subject, secret);
     const amsgE = this.encryptWithAES(message, secret);
@@ -208,26 +210,26 @@ const CryptoHelper = {
     const aimgE = this.encryptWithAES(imageurl, secret);
 
     console.log(secretEncrypted);
-    console.log("asub --> ");
+    console.log('asub --> ');
     console.log(asubE);
-    console.log("amsg --> ");
+    console.log('amsg --> ');
     console.log(amsgE);
-    console.log("acta --> ");
+    console.log('acta --> ');
     console.log(actaE);
-    console.log("aimg --> ");
+    console.log('aimg --> ');
     console.log(aimgE);
-    console.log("decrypted secret --> ");
+    console.log('decrypted secret --> ');
     console.log(await this.decryptWithECIES(secretEncrypted, pkey));
-    console.log("decrypted asub --> ");
+    console.log('decrypted asub --> ');
     console.log(this.decryptWithAES(asubE, secret));
-    console.log("decrypted amsg --> ");
+    console.log('decrypted amsg --> ');
     console.log(this.decryptWithAES(amsgE, secret));
-    console.log("decrypted acta --> ");
+    console.log('decrypted acta --> ');
     console.log(this.decryptWithAES(actaE, secret));
-    console.log("decrypted aimg --> ");
+    console.log('decrypted aimg --> ');
     console.log(this.decryptWithAES(aimgE, secret));
   },
-  makeid: function (length) {
+  makeid: function (length: number): string {
     var result = '[' + new Date().toISOString() + '] ';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var charactersLength = characters.length;
@@ -235,7 +237,7 @@ const CryptoHelper = {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  }
+  },
 };
 
 export default CryptoHelper;

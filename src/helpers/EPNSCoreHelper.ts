@@ -18,7 +18,7 @@ const ENS_HASH = '1+bafkreiekigkyezwrspignt7l7vsrjefjmogwmigy4eqtts277cu2p23ilm'
 // FeedDB Helper Function
 const EPNSCoreHelper = {
   // get gas price in dollars
-  getGasPriceInDollars: async (library) => {
+  getGasPriceInDollars: async (library:any):number => {
     const ethPrice = await axios
       .get('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
       .then(({ data }) => data.USD || 0);
@@ -29,7 +29,7 @@ const EPNSCoreHelper = {
   },
 
   // To get owner info
-  getOwnerInfo: async (contract) => {
+  getOwnerInfo: async (contract:ethers.Contract):Promise<any> => {
     const enableLogs = 0;
 
     return new Promise((resolve, reject) => {
@@ -46,7 +46,7 @@ const EPNSCoreHelper = {
         });
     });
   },
-  getVotingPower: async (delegateeAddress, contract, rawFormat = false) => {
+  getVotingPower: async (delegateeAddress:string, contract:ethers.Contract, rawFormat = false):Promise<string|number> => {
     let isAddress = await ethers.utils.isAddress(delegateeAddress);
     if (isAddress || delegateeAddress.endsWith('.eth')) {
       try {
@@ -62,7 +62,7 @@ const EPNSCoreHelper = {
     return '0.000';
   },
   // To get user info
-  getUserInfo: async (user, contract) => {
+  getUserInfo: async (user:string, contract:ethers.Contract):Promise<any> => {
     const enableLogs = 0;
 
     return new Promise((resolve, reject) => {
@@ -83,7 +83,7 @@ const EPNSCoreHelper = {
     });
   },
   // To retrieve a channel address from it's id
-  getChannelAddressFromID: async (channelID, contract) => {
+  getChannelAddressFromID: async (channelID:string, contract:ethers.Contract):Promise<string> => {
     return new Promise((resolve, reject) => {
       // To get channel info from a channel address
       contract
