@@ -93,7 +93,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                 fontSize="14px"
                 maxWidth="13rem"
                 fontWeight="400"
-                padding="0px 44px 10px 0px"
+                padding="0px 44px 0px 0px"
                 textAlign="left"
                 color="#000"
               >
@@ -302,7 +302,7 @@ const ReceivedMessage = styled.div`
   position: relative;
   left: 34px;
   max-width: 419px;
-  padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
+  padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
   border-radius: 2px 16px 16px 16px;
