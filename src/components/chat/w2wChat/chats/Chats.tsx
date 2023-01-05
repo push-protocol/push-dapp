@@ -268,7 +268,7 @@ const ImageMessage = styled.img`
 
 const TextMessage = styled.p`
   max-width: 300px;
-  padding: 0px 44px 10px 0px;
+  padding: 7px 44px 10px 0px;
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
@@ -312,6 +312,9 @@ const ReceivedMessage = styled.div`
   color: #000000;
   flex-direction: column;
   align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
 const SenderMessage = styled.div`
