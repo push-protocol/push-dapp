@@ -1,12 +1,12 @@
 // React + Web3 Essentials
-import { BigNumber, utils, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 
 // Internal Configs
 const claims = require('config/airdrop/claims.json');
 
 // Airdrop Helper Functions
 const AirdropHelper = {
-  combinedHash: (first:Buffer, second:any):Buffer => {
+  combinedHash: (first: Buffer, second: any): Buffer => {
     if (!first) {
       return second;
     }
@@ -21,12 +21,12 @@ const AirdropHelper = {
   },
 
   toNode: (index: number, account: string, amount: number) => {
-    const pairHex = utils.solidityKeccak256(['uint256', 'address', 'uint256'], [index, account, amount]);
+    const pairHex: string = utils.solidityKeccak256(['uint256', 'address', 'uint256'], [index, account, amount]);
     return Buffer.from(pairHex.slice(2), 'hex');
   },
 
-  verifyProof: (index: number, account: string, amount: number, proof: any, root: any): boolean => {
-    let pair = AirdropHelper.toNode(index, account, amount);
+  verifyProof: (index: number, account: string, amount: number, proof: any, root: Buffer): boolean => {
+    let pair: Buffer = AirdropHelper.toNode(index, account, amount);
     for (const item of proof) {
       pair = AirdropHelper.combinedHash(pair, item);
     }
@@ -46,7 +46,7 @@ const AirdropHelper = {
   },
 
   getRoot: (balances: any[]): boolean => {
-    let nodes = balances
+    let nodes: Buffer[] = balances
       .map(({ account, amount, index }) => AirdropHelper.toNode(index, account, amount))
       // sort by lexicographical order
       .sort(Buffer.compare);
@@ -56,7 +56,7 @@ const AirdropHelper = {
       return idx === 0 || !nodes[idx - 1].equals(el);
     });
 
-    const layers = [];
+    const layers: any[] = [];
     layers.push(nodes);
 
     // Get next layer until we reach the root
@@ -79,8 +79,8 @@ const AirdropHelper = {
     verified: boolean;
     claimable?: boolean;
   }> => {
-    const merkleRootHex = claims.merkleRoot;
-    const merkleRoot = Buffer.from(merkleRootHex.slice(2), 'hex');
+    const merkleRootHex: any = claims.merkleRoot;
+    const merkleRoot: Buffer = Buffer.from(merkleRootHex.slice(2), 'hex');
     if (claims.claims[user]) {
       const claim = claims.claims[user];
       const proof = claim.proof.map((p) => Buffer.from(p.slice(2), 'hex'));

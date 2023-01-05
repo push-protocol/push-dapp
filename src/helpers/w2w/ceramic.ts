@@ -8,15 +8,11 @@ export function createCeramic(): CeramicClient {
   return ceramic;
 }
 
-export async function getDIDFromWallet({
-  ceramicClient,
-  walletAddress,
-  chainId,
-}: {
-  ceramicClient: CeramicClient;
-  walletAddress: string;
-  chainId: number;
-}): Promise<string | null> {
+export async function getDIDFromWallet(
+  ceramicClient: CeramicClient,
+  walletAddress: string,
+  chainId: number,
+): Promise<string | null> {
   // Use later CAIP library to allow other chainIds
   if (chainId !== 1) {
     console.error('Wrong chainId!!!');

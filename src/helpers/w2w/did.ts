@@ -5,30 +5,21 @@ import { JWE } from 'did-jwt';
 import { ResolverRegistry } from 'did-resolver';
 import { DID, DIDProvider } from 'dids';
 
-export async function Get3IDDIDProvider({
-  threeIdConnect,
-  provider,
-  walletAddress,
-}: {
-  threeIdConnect: ThreeIdConnect;
-  provider: any;
-  walletAddress: string;
-}): Promise<DIDProvider> {
+export async function Get3IDDIDProvider(
+  threeIdConnect: ThreeIdConnect,
+  provider: any,
+  walletAddress: string,
+): Promise<DIDProvider> {
   await threeIdConnect.connect(new EthereumAuthProvider(provider, walletAddress));
   return threeIdConnect.getDidProvider();
 }
 
-export async function CreateDID({
-  keyDIDGetResolver,
-  threeIDGetResolver,
-  ceramic,
-  didProvider,
-}: {
-  keyDIDGetResolver: () => ResolverRegistry;
-  threeIDGetResolver: (ceramic: CeramicApi) => ResolverRegistry;
-  ceramic: any;
-  didProvider: DIDProvider;
-}): Promise<DID> {
+export async function CreateDID(
+  keyDIDGetResolver: () => ResolverRegistry,
+  threeIDGetResolver: (ceramic: CeramicApi) => ResolverRegistry,
+  ceramic: any,
+  didProvider: DIDProvider,
+): Promise<DID> {
   const threeIDResolver: ResolverRegistry = threeIDGetResolver(ceramic);
   const keyDIDResolver: ResolverRegistry = keyDIDGetResolver();
 
@@ -49,12 +40,12 @@ export async function CreateDID({
   return did;
 }
 
-export async function encrypt({ content, did }: { content: object | string; did: DID }): Promise<JWE> {
+export async function encrypt(content: object | string, did: DID ): Promise<JWE> {
   const jwe: JWE = await did.createDagJWE(content as unknown as Record<string, any>, [did.id]);
   return jwe;
 }
 
-export async function decrypt({ cipher, did }: { cipher: object; did: DID }): Promise<string> {
+export async function decrypt(cipher: object, did: DID ): Promise<string> {
   const cleartext: string = (await did.decryptDagJWE(cipher as JWE)) as unknown as string;
   return cleartext;
 }

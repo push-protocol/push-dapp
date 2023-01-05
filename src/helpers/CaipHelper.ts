@@ -43,7 +43,7 @@ export const convertAddressToAddrCaip = ({
 };
 
 export const convertAddrCaipToAddress = (addressInCaip: string): string => {
-  const caipArr = addressInCaip.split(':');
+  const caipArr: string[] = addressInCaip.split(':');
   if (caipArr.length == 3 && caipArr[0] == 'eip155') {
     return caipArr[2];
   } else {
@@ -57,7 +57,7 @@ export const convertChainIdToChainCaip = (chainId: number): string | null => {
 };
 
 export const convertChainCaipToChainId = (chainInCaip: string): string => {
-  const caipArr = chainInCaip.split(':');
+  const caipArr: string[] = chainInCaip.split(':');
   if (caipArr.length == 2 && caipArr[0] == 'eip155') {
     return caipArr[2];
   } else {
