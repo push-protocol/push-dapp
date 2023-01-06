@@ -23,6 +23,23 @@ const ERROR_TOAST_DEFAULTS = {
   draggable: true,
   progress: undefined,
 };
+interface ICreateTransactionObjectProps {
+  newDelegatee: string;
+  account: string;
+  epnsToken: ethers.Contract;
+  addresses: any;
+  signerObject: any;
+  library: any;
+  setTxLoading: (value: React.SetStateAction<boolean>) => void;
+}
+
+interface ICallDelegateAPIProps {
+  signature: any;
+  delegatee: string;
+  nonce: number;
+  expiry: string;
+  account: string;
+}
 
 const checkForDelegateError = async (gasEstimate: any, library: any): Promise<string | boolean> => {
   // return false if no error
@@ -37,15 +54,15 @@ const checkForDelegateError = async (gasEstimate: any, library: any): Promise<st
   return false;
 };
 
-export const createTransactionObject = async (
-  newDelegatee: string,
-  account: string,
-  epnsToken: ethers.Contract,
-  addresses: any,
-  signerObject: any,
-  library: any,
-  setTxLoading: (value: React.SetStateAction<boolean>) => void
-): Promise<any> => {
+export const createTransactionObject = async ({
+  newDelegatee,
+  account,
+  epnsToken,
+  addresses,
+  signerObject,
+  library,
+  setTxLoading,
+}: ICreateTransactionObjectProps): Promise<any> => {
   console.log('🚀 ~ file: ViewDelegateeItem.js ~ line 63 ~ createTransactionObject ~ newDelegatee', newDelegatee);
   const contractName: string = await epnsToken.name();
   const nonce: any = await epnsToken.nonces(account);
@@ -93,7 +110,7 @@ export const createTransactionObject = async (
       });
     }
     try {
-      await callDelegateAPI(signature, newDelegatee, nonce, expiry, account);
+      await callDelegateAPI({ signature, delegatee: newDelegatee, nonce, expiry, account });
       toast.dark('Successfully Delegated', {
         position: 'bottom-right',
         type: toast.TYPE.SUCCESS,
@@ -122,13 +139,13 @@ export const createTransactionObject = async (
   }
 };
 
-const callDelegateAPI = async (
-  signature: any,
-  delegatee: string,
-  nonce: number,
-  expiry: string,
-  account: string
-): Promise<void> => {
+const callDelegateAPI = async ({
+  signature,
+  delegatee,
+  nonce,
+  expiry,
+  account,
+}: ICallDelegateAPIProps): Promise<void> => {
   console.log(
     `🚀 ~ file: PushGovernance.tsx ~ line 271 ~ callDelegateAPI ~ signature obj delegator: ${account} signature: ${signature} delegatee: ${delegatee} nonce: ${nonce} expiry: ${expiry}  `
   );

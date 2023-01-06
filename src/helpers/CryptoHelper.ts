@@ -5,6 +5,26 @@ import EthCrypto from 'eth-crypto';
 import { publicKeyConvert } from 'secp256k1-v4';
 
 var CryptoJS = require('crypto-js');
+interface ICipherType {
+  iv: string;
+  ephemPublicKey: string;
+  ciphertext: string;
+  mac: string;
+}
+interface IEncryptedBufferType {
+  iv: Buffer;
+  ephemPublicKey: Buffer;
+  ciphertext: Buffer;
+  mac: Buffer;
+}
+interface IOutputMessagePayloadType {
+  secret: string;
+  subject: string;
+  message: string;
+  calltoaction: string;
+  imageurl: string;
+  pkey: string;
+}
 
 const CryptoHelper = {
   getPublicKey: async function (account: string): Promise<string> {
@@ -92,12 +112,7 @@ const CryptoHelper = {
     //console.log("[ENCRYPTION] pubkey getting sentout for encrypt: " + pubKey);
 
     return encrypt(pubKey, new Buffer(message)).then((encryptedBuffers) => {
-      const cipher: {
-        iv: string;
-        ephemPublicKey: string;
-        ciphertext: string;
-        mac: string;
-      } = {
+      const cipher: ICipherType = {
         iv: encryptedBuffers.iv.toString('hex'),
         ephemPublicKey: encryptedBuffers.ephemPublicKey.toString('hex'),
         ciphertext: encryptedBuffers.ciphertext.toString('hex'),
@@ -130,7 +145,7 @@ const CryptoHelper = {
   },
   // Decryption with public key
   decryptWithPrivateKey: async function (message: any, privateKey: string): Promise<string> {
-    let encrypted = message;
+    let encrypted: ICipherType = message;
     const buf: Buffer = new Buffer(encrypted, 'hex');
     // console.log("[DECRYPTION] Buffer Passed: " + buf);
 
@@ -158,12 +173,7 @@ const CryptoHelper = {
     encrypted.ephemPublicKey = uncompressedKey;
     const twoStripped: string = privateKey.substring(2);
 
-    const encryptedBuffer: {
-      iv: Buffer;
-      ephemPublicKey: Buffer;
-      ciphertext: Buffer;
-      mac: Buffer;
-    } = {
+    const encryptedBuffer: IEncryptedBufferType = {
       iv: new Buffer(encrypted.iv, 'hex'),
       ephemPublicKey: new Buffer(encrypted.ephemPublicKey, 'hex'),
       ciphertext: new Buffer(encrypted.ciphertext, 'hex'),
@@ -201,14 +211,14 @@ const CryptoHelper = {
     console.log('[ENCRYPTION / DECRYPTION DECRYPTION DONE] - ' + decryptionTime / 1000 + ' secs');
   },
   // To output messge payload if required
-  outputMsgPayload: async function (
-    secret: string,
-    subject: string,
-    message: string,
-    calltoaction: string,
-    imageurl: string,
-    pkey: string
-  ) {
+  outputMsgPayload: async function ({
+    secret,
+    subject,
+    message,
+    calltoaction,
+    imageurl,
+    pkey,
+  }: IOutputMessagePayloadType) {
     // Output AES
     console.log('[AES ENCRYTED FORMAT (' + new Date() + ')');
     console.log('---------------------');

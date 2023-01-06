@@ -4,6 +4,24 @@ import { BigNumber, ethers, utils } from 'ethers';
 // Internal Configs
 const claims = require('config/airdrop/claims.json');
 
+interface IVerifyProofProps {
+  index: number;
+  account: string;
+  amount: number;
+  proof: any;
+  root: Buffer;
+}
+
+interface IVerifyAddressReturnType {
+  index?: string;
+  account?: string;
+  amount?: number;
+  proof?: any;
+  merkleRoot?: Buffer;
+  verified: boolean;
+  claimable?: boolean;
+}
+
 // Airdrop Helper Functions
 const AirdropHelper = {
   combinedHash: (first: Buffer, second: any): Buffer => {
@@ -25,7 +43,7 @@ const AirdropHelper = {
     return Buffer.from(pairHex.slice(2), 'hex');
   },
 
-  verifyProof: (index: number, account: string, amount: number, proof: any, root: Buffer): boolean => {
+  verifyProof: ({ index, account, amount, proof, root }: IVerifyProofProps): boolean => {
     let pair: Buffer = AirdropHelper.toNode(index, account, amount);
     for (const item of proof) {
       pair = AirdropHelper.combinedHash(pair, item);
@@ -67,24 +85,19 @@ const AirdropHelper = {
     return layers[layers.length - 1][0];
   },
 
-  verifyAddress: async (
-    user: string,
-    contract: ethers.Contract
-  ): Promise<{
-    index?: string;
-    account?: string;
-    amount?: number;
-    proof?: any;
-    merkleRoot?: Buffer;
-    verified: boolean;
-    claimable?: boolean;
-  }> => {
+  verifyAddress: async (user: string, contract: ethers.Contract): Promise<IVerifyAddressReturnType> => {
     const merkleRootHex: any = claims.merkleRoot;
     const merkleRoot: Buffer = Buffer.from(merkleRootHex.slice(2), 'hex');
     if (claims.claims[user]) {
       const claim = claims.claims[user];
       const proof = claim.proof.map((p) => Buffer.from(p.slice(2), 'hex'));
-      const verified = AirdropHelper.verifyProof(claim.index, user, claim.amount, proof, merkleRoot);
+      const verified = AirdropHelper.verifyProof({
+        index: claim?.index,
+        account: user,
+        amount: claim?.amount,
+        proof,
+        root: merkleRoot,
+      });
       let txPromise = await contract.isClaimed(claim.index);
       const isClaimed = await txPromise;
       const claimable = !isClaimed;

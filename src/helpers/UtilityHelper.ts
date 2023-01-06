@@ -67,7 +67,7 @@ export const isValidAddress = (address: string): boolean => {
 }
 
 // Disable the browser notification on Metamask iphone mobile
-export const isUserAgentIphone = (userAgent):boolean => {
+export const isUserAgentIphone = (userAgent:any):boolean => {
   return userAgent.indexOf('iPhone') !== -1;
 };
 

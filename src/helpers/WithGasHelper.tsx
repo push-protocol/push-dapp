@@ -2,19 +2,28 @@
 import React from 'react';
 import { ethers } from 'ethers';
 
-export const executeDelegateTx = async (
-  delegateeAddress: string,
-  epnsToken: ethers.Contract,
-  toast: any,
-  setTxInProgress: React.Dispatch<React.SetStateAction<boolean>>,
-  library: any,
-  LoaderToast: ({ msg, color }: { msg: string,color: string }) => JSX.Element
-): Promise<void> => {
+interface IExecuteDelegateTxProps {
+  delegateeAddress: string;
+  epnsToken: ethers.Contract;
+  toast: any;
+  setTxInProgress: React.Dispatch<React.SetStateAction<boolean>>;
+  library: any;
+  LoaderToast: ({ msg, color }: { msg: string; color: string }) => JSX.Element;
+}
+
+export const executeDelegateTx = async ({
+  delegateeAddress,
+  epnsToken,
+  toast,
+  setTxInProgress,
+  library,
+  LoaderToast,
+}: IExecuteDelegateTxProps): Promise<void> => {
   console.log('delegateeAddress', delegateeAddress);
   let sendWithTxPromise: any;
   sendWithTxPromise = epnsToken.delegate(delegateeAddress);
   sendWithTxPromise
-    .then(async (tx) => {
+    .then(async (tx: any) => {
       let txToast = toast.dark(
         <LoaderToast
           msg="Waiting for Confirmation..."
@@ -51,7 +60,7 @@ export const executeDelegateTx = async (
         setTxInProgress(false);
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       toast.dark('Transaction Cancelled!', {
         position: 'bottom-right',
         type: toast.TYPE.ERROR,

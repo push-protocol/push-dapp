@@ -1,6 +1,11 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
 
+interface ITokenFunctionProps {
+  tokenId: string | number;
+  contract: ethers.Contract;
+}
+
 // FeedDB Helper Function
 const NFTHelper = {
   getNFTBalance: async (user: string, contract: ethers.Contract): Promise<number | string> => {
@@ -39,7 +44,7 @@ const NFTHelper = {
     });
   },
 
-  getOwnerOfTokenId: async (tokenId: string | number, contract: ethers.Contract): Promise<any> => {
+  getOwnerOfTokenId: async ({ tokenId, contract }: ITokenFunctionProps): Promise<any> => {
     const enableLogs: number = 0;
 
     return new Promise((resolve, reject) => {
@@ -90,7 +95,7 @@ const NFTHelper = {
     });
   },
 
-  getTokenMetadata: async (tokenId: string | number, contract: ethers.Contract): Promise<any> => {
+  getTokenMetadata: async ({ tokenId, contract }: ITokenFunctionProps): Promise<any> => {
     const enableLogs: number = 0;
 
     return new Promise((resolve, reject) => {
@@ -124,11 +129,11 @@ const NFTHelper = {
           for (let i = 0; i < balance; i++) {
             promises.push(
               NFTHelper.getTokenOfOwnerByIndex(owner, i, nftContract).then(async (tokenId) => {
-                await NFTHelper.getClaimable(tokenId, rewardsContract)
+                await NFTHelper.getClaimable({ tokenId, contract: rewardsContract })
                   .then(async (claimable) => {
                     console.log('🚀 ~ file: NFTHelper.js ~ line 102 ~ .then ~ claimable', claimable);
 
-                    await NFTHelper.getTokenMetadata(tokenId, nftContract).then(async (metadata) => {
+                    await NFTHelper.getTokenMetadata({ tokenId, contract: nftContract }).then(async (metadata) => {
                       if (tokenId != null && metadata != null && claimable != null)
                         NFTDetails.push({ id: tokenId, metadata, claimable });
                     });
@@ -165,11 +170,11 @@ const NFTHelper = {
             promises.push(
               NFTHelper.getTokenByIndex(i, nftContract)
                 .then(async (tokenId) => {
-                  await NFTHelper.getClaimable(tokenId, rewardsContract)
+                  await NFTHelper.getClaimable({ tokenId, contract: rewardsContract })
                     .then(async (claimable) => {
-                      await NFTHelper.getTokenMetadata(tokenId, nftContract)
+                      await NFTHelper.getTokenMetadata({ tokenId, contract: nftContract })
                         .then(async (metadata) => {
-                          await NFTHelper.getOwnerOfTokenId(tokenId, nftContract)
+                          await NFTHelper.getOwnerOfTokenId({ tokenId, contract: nftContract })
                             .then(async (owner) => {
                               if (tokenId != null && metadata != null && claimable != null && owner != null)
                                 NFTDetails.push({ id: tokenId, metadata, owner, claimable });
@@ -215,9 +220,9 @@ const NFTHelper = {
     const enableLogs: number = 0;
 
     return new Promise((resolve, reject) => {
-      NFTHelper.getTokenMetadata(tokenId, nftContract)
+      NFTHelper.getTokenMetadata({ tokenId, contract: nftContract })
         .then(async (metadata: any) => {
-          await NFTHelper.getOwnerOfTokenId(tokenId, nftContract).then(async (owner) => {
+          await NFTHelper.getOwnerOfTokenId({ tokenId, contract: nftContract }).then(async (owner) => {
             if (tokenId != null && metadata != null && owner != null) resolve({ id: tokenId, metadata, owner });
           });
         })
@@ -245,7 +250,7 @@ const NFTHelper = {
     });
   },
 
-  getClaimable: async (tokenId: string | number, contract: ethers.Contract): Promise<any> => {
+  getClaimable: async ({ tokenId, contract }: ITokenFunctionProps): Promise<any> => {
     console.log(tokenId, contract);
 
     const enableLogs: number = 0;
