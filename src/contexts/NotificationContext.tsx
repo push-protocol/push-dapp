@@ -6,12 +6,12 @@ export const NotificationContext = createContext({
   setNotificationRecieved: (value: number) => {}
 });
 
-const NotificationContextProvider = (props) => {
-  const [notificationReceived, setNotificationRecieved] = useState(null);
+const NotificationContextProvider:React.FC<React.ReactNode> = ({children}) => {
+  const [notificationReceived, setNotificationRecieved] = useState<number>(0);
   
   return (
     <NotificationContext.Provider value={{ notificationReceived, setNotificationRecieved }}>
-      {props.children}
+      {children}
     </NotificationContext.Provider>
   )
 }

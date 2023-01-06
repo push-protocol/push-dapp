@@ -23,12 +23,12 @@ interface payloadType {
   source: string;
 }
 
-const VideoCallContext = createContext({});
+const VideoCallContext = createContext(null);
 
 // const socket = io('http://localhost:5000');
 // const socket = io('https://warm-wildwood-81069.herokuapp.com');
 
-const VideoCallContextProvider = ({ children }) => {
+const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState<boolean>(false);
   const [callEnded, setCallEnded] = useState<boolean>(false);
   const [receiverPeerSignalled, setRecieverPeerSignalled] = useState<boolean>(false);
