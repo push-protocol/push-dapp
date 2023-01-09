@@ -17,8 +17,7 @@ const override: React.CSSProperties = {
   height: '45px',
 };
 
-
-const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
+const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType): any => (
   <LoaderNotification>
     <FadeLoader
       color={loaderColor}
@@ -37,7 +36,7 @@ const LoaderToast = ({ msg, loaderColor, textColor }: LoaderToastType) => (
   </LoaderNotification>
 );
 
-const CloseButton = ({ closeToast }) => (
+const CloseButton = ({ closeToast }): any => (
   <Button onClick={closeToast}>
     <MdOutlineClose
       color="#657795"
@@ -63,12 +62,12 @@ export type ShowMessageToastType = ({
 const useToast = (
   autoClose: number = 3000,
   position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' = 'top-right'
-) => {
-  const toastId = React.useRef(null);
-  const themes = useTheme();
-  const isMobile = useMediaQuery(device.tablet);
+): { showLoaderToast: ShowLoaderToastType; showMessageToast: ShowMessageToastType } => {
+  const toastId: any = React.useRef<any>(null);
+  const themes: any = useTheme();
+  const isMobile: boolean = useMediaQuery(device.tablet);
 
-  let isLoaderToastShown = false;
+  let isLoaderToastShown: boolean = false;
 
   const showLoaderToast: ShowLoaderToastType = ({ loaderMessage }) => {
     isLoaderToastShown = true;
@@ -100,7 +99,6 @@ const useToast = (
   };
 
   const showMessageToast: ShowMessageToastType = ({ toastTitle, toastMessage, toastType, getToastIcon }) => {
-    
     const toastUI = (
       <Toast>
         <ToastIcon>{getToastIcon ? getToastIcon(30) : ''}</ToastIcon>

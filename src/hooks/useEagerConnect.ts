@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { isLedgerDappBrowserProvider } from '@pushprotocol/ledgerlive';
 import { injected, ledgerLiveConnector } from 'connectors';
 
-export function useEagerConnect() {
+export function useEagerConnect():boolean {
   const { activate, active } = useWeb3React()
 
   const [tried, setTried] = useState(false)

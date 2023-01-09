@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react';
 // External Packages
 import { toast } from "react-toastify";
 
-export function useBrowserNotification(account){
-    const [triggerNotification, setTriggerNotification] = useState(false);
+export function useBrowserNotification(account:string):void{
+    const [triggerNotification, setTriggerNotification] = useState<boolean>(false);
      
     useEffect(() => {
       if (!("serviceWorker" in navigator)) return

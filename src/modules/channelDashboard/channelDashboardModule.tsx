@@ -22,11 +22,11 @@ export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of ne
 function ChannelDashboardModule() {
   ReactGA.pageview('/channel_dashboard');
 
-  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(true);
+  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState<boolean>(true);
 
   // toast related section
-  const [toast, showToast] = React.useState(null);
-  const clearToast = () => showToast(null);
+  const [toast, showToast] = React.useState<any>(null);
+  const clearToast = ():void => showToast(null);
 
   //clear toast variable after it is shown
   React.useEffect(() => {

@@ -14,12 +14,13 @@ export type SDKSocketHookOptions = {
   chainId?: number;
 };
 
-export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions):{epnsSDKSocket:any,
+  isSDKSocketConnected:boolean} => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
-  const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
+  const [isSDKSocketConnected, setIsSDKSocketConnected] = useState<boolean>(epnsSDKSocket?.connected);
   const { incomingCall, acceptCall } = useContext(VideoCallContext);
 
-  const addSocketEvents = () => {
+  const addSocketEvents = ():void => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
@@ -55,7 +56,7 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
     });
   };
 
-  const removeSocketEvents = () => {
+  const removeSocketEvents = ():void => {
     epnsSDKSocket?.off(EVENTS.CONNECT);
     epnsSDKSocket?.off(EVENTS.DISCONNECT);
     epnsSDKSocket?.off(EVENTS.USER_FEEDS);

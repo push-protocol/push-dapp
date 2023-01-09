@@ -12,18 +12,18 @@ import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 // Internal Configs
 import { appConfig } from 'config';
 
-const getEnsFromIndexDb = async(checksumWallet:string):Promise<any> => {
+const getEnsFromIndexDb = async(checksumWallet:string):Promise<string> => {
   const ensFromIndexDB: any = await intitializeDb<string>('Read', 'Wallets', checksumWallet, '', 'ens');
   return ensFromIndexDB;
 }
 
 export function useResolveEns(username: string): string {
-  const [ensName, setEnsName] = useState(null);
+  const [ensName, setEnsName] = useState<string>('');
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   useEffect(() => {
     if (username) {
-      const walletLowercase = caip10ToWallet(username).toLowerCase();
-      const checksumWallet = ethers.utils.getAddress(walletLowercase);
+      const walletLowercase:string = caip10ToWallet(username).toLowerCase();
+      const checksumWallet:string = ethers.utils.getAddress(walletLowercase);
 
       let provider = ethers.getDefaultProvider('mainnet');
       if (

@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useEffect, useState } from 'react';
 
-export function useDeviceWidthCheck(deviceWidth: number) {
+export function useDeviceWidthCheck(deviceWidth: number):boolean {
     const [width, setWidth] = useState<number>(window.innerWidth);
   
     function handleWindowSizeChange() {

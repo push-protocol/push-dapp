@@ -19,6 +19,16 @@ import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primar
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
+interface IUserType {
+  index?: string;
+  account?: string;
+  amount?: number;
+  proof?: any;
+  merkleRoot?: Buffer;
+  verified: boolean;
+  claimable?: boolean;
+}
+
 // Other Information section
 const AirdropModule = () => {
   const theme = useTheme();
@@ -26,15 +36,15 @@ const AirdropModule = () => {
   const { account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
-  const [controlAt, setControlAt] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [distributorContract, setDistributorContract] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  const [controlAt, setControlAt] = React.useState<number>(0);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [txInProgress, setTxInProgress] = React.useState<boolean>(false);
+  const [distributorContract, setDistributorContract] = React.useState<any>(null);
+  const [user, setUser] = React.useState<IUserType>();
 
-  const [showAnswers, setShowAnswers] = React.useState([]);
+  const [showAnswers, setShowAnswers] = React.useState<any[]>([]);
 
-  const toggleShowAnswer = (id) => {
+  const toggleShowAnswer = (id:number):void => {
     let newShowAnswers = [...showAnswers];
     newShowAnswers[id] = !newShowAnswers[id];
 
@@ -50,9 +60,9 @@ const AirdropModule = () => {
 
   React.useEffect(() => {
     if (!!(library && account)) {
-      let signer = library.getSigner(account);
+      let signer:any = library.getSigner(account);
       console.log(abis.distributor);
-      const signerInstance = new ethers.Contract(addresses.distributor, abis.distributor, signer);
+      const signerInstance:ethers.Contract = new ethers.Contract(addresses.distributor, abis.distributor, signer);
       setDistributorContract(signerInstance);
       // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       // setNFTRewardsContract(NFTRewardsInstance);
@@ -66,19 +76,19 @@ const AirdropModule = () => {
   }, [account, distributorContract]);
 
   // to check wh
-  const checkClaim = async () => {
-    let user = await AirdropHelper.verifyAddress(account, distributorContract);
+  const checkClaim = async ():Promise<void> => {
+    let user:IUserType = await AirdropHelper.verifyAddress(account, distributorContract);
     setUser(user);
     if (user) setLoading(false);
   };
 
   // to claim
-  const handleClaim = async (user) => {
+  const handleClaim = async (user:IUserType):Promise<void> => {
     if (distributorContract) {
       setTxInProgress(true);
-      let sendWithTxPromise;
-      sendWithTxPromise = await distributorContract.claim(user.index, user.account, user.amount, user.proof);
-      const tx = await sendWithTxPromise;
+      let sendWithTxPromise:any;
+      sendWithTxPromise = await distributorContract.claim(user.index!, user.account!, user.amount!, user.proof!);
+      const tx:any = await sendWithTxPromise;
       console.log(tx);
       console.log('waiting for tx to finish');
       let txToast = toast.dark(<LoaderToast msg="Waiting for Confirmation..." color="#35c5f3" />, {
@@ -100,7 +110,7 @@ const AirdropModule = () => {
         });
 
         setTxInProgress(false);
-      } catch (e) {
+      } catch (e:any) {
         toast.update(txToast, {
           render: 'Transaction Failed! (' + e.name + ')',
           type: toast.TYPE.ERROR,
@@ -114,14 +124,14 @@ const AirdropModule = () => {
   };
 
   // toast customize
-  const LoaderToast = ({ msg, color }) => (
+  const LoaderToast = ({ msg, color }:{msg:string,color:string}) => (
     <Toaster>
       <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
 
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
 
   return (
     <Container>
