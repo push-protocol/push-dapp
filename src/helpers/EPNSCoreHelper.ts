@@ -6,7 +6,7 @@ import axios from 'axios';
 //import { parseEther, bigNumber } from 'ethers/utils'
 
 // Internal Components
-import { getReq } from 'api';
+import { getReq } from '../api';
 import { convertAddressToAddrCaip } from './CaipHelper';
 import { IPFSGateway } from './IpfsHelper';
 
@@ -156,8 +156,8 @@ const EPNSCoreHelper = {
             }
           });
 
-          if (enableLogs) console.log('getChannelEvent() --> Filtered Channel: %o', filteredResponse);
-          resolve(filteredResponse);
+          if (enableLogs) console.log('getChannelEvent() --> Filtered Channel: %o', filteredResponse!);
+          resolve(filteredResponse!);
         })
         .catch((err: any) => {
           console.log('!!!Error, getChannelEvent() --> %o', err);

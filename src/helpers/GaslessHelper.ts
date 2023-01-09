@@ -5,11 +5,11 @@ import { ethers } from 'ethers';
 import { toast, ToastContent, ToastOptions } from 'react-toastify';
 
 // Internal Components
-import { toolingPostReq } from 'api/index';
-import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
+import { toolingPostReq } from '../api/index';
+import EPNSCoreHelper from './EPNSCoreHelper';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from '../config';
 
 // Constants
 const GAS_LIMIT = 50;

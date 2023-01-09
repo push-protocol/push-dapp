@@ -1,5 +1,5 @@
 // Internal Configs
-import { appConfig } from "config";
+import { appConfig } from "../config";
 
 // Constants
 const apiVersion: number = appConfig.pushNodeApiVersion;

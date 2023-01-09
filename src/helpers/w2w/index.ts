@@ -3,7 +3,7 @@ import * as PGP from './pgp'
 import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'
 import * as AES from './aes'
-import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'types/chat'
+import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat'
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
 export const walletToCAIP10 = ({ account, chainId }: { account: string; chainId: number }): string => {
@@ -82,7 +82,7 @@ export const decryptFeeds = async ({
       if (feed.msg.fromCAIP10 === connectedUser.wallets.split(',')[0]) {
         signatureValidationPubliKey = connectedUser.publicKey
       } else {
-        signatureValidationPubliKey = feed.publicKey
+        signatureValidationPubliKey = feed.publicKey!
       }
 
       feed.msg.lastMessage = await decryptAndVerifySignature({
@@ -90,7 +90,7 @@ export const decryptFeeds = async ({
         encryptedSecretKey: feed.msg.encryptedSecret,
         publicKeyArmored: signatureValidationPubliKey,
         signatureArmored: feed.msg.signature,
-        privateKeyArmored: connectedUser.privateKey
+        privateKeyArmored: connectedUser.privateKey!
       })
     }
   }
@@ -127,7 +127,7 @@ export const decryptMessages = async ({
           (x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]
         );
         if (latestUserInfo) {
-          signatureValidationPubliKey = latestUserInfo.publicKey;
+          signatureValidationPubliKey = latestUserInfo.publicKey!;
         }
       } else {
         signatureValidationPubliKey = currentChat.publicKey;
@@ -136,8 +136,8 @@ export const decryptMessages = async ({
     savedMsg.messageContent = await decryptAndVerifySignature({
       cipherText: savedMsg.messageContent,
       encryptedSecretKey: savedMsg.encryptedSecret,
-      privateKeyArmored: connectedUser.privateKey,
-      publicKeyArmored: signatureValidationPubliKey,
+      privateKeyArmored: connectedUser.privateKey!,
+      publicKeyArmored: signatureValidationPubliKey!,
       signatureArmored: savedMsg.signature,
     });
 

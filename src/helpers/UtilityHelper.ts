@@ -5,7 +5,7 @@ import { utils } from 'ethers';
 import { convertChainIdToChainCaip } from './CaipHelper';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from '../config';
 
 // Utility Helper Functions
 const UtilityHelper = {
@@ -13,6 +13,7 @@ const UtilityHelper = {
     if (chainId === 1 || chainId === 137) {
       return true;
     }
+    return false;
   },
 };
 
@@ -131,8 +132,8 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
     const aliasDetails = channelDetails['aliasDetails'];
     const aliasChainId = aliasChainIdsMapping[CORE_CHAIN_ID];
     const caipChainId = convertChainIdToChainCaip(aliasChainId);
-    if (aliasDetails[caipChainId]) {
-      return aliasDetails[caipChainId];
+    if (aliasDetails[caipChainId!]) {
+      return aliasDetails[caipChainId!];
     }
   } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
     if (channelDetails['chain_id'] === aliasChainIdsMapping[CORE_CHAIN_ID].toString()) {

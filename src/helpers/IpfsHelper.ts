@@ -2,11 +2,11 @@
 import { create } from 'ipfs-http-client';
 
 // Internal Components
-import { ipfsUpload } from 'services/ipfs';
+import { ipfsUpload } from '../services/ipfs';
 import { EnvHelper } from './UtilityHelper';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from '../config';
 
 // Constants
 export const productionIpfsGateway: string = 'https://epns-gateway.infura-ipfs.io/ipfs/';
