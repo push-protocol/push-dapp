@@ -98,7 +98,7 @@ export const ToastPosition: ToastOptions = {
 export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
-function Chat() {
+function Chat():JSX.Element {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
