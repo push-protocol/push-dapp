@@ -843,7 +843,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                             {i === 0 && intents?.length === 1 && (
                               <ItemTextSlash>
                                 <Image src={LockSlash} />
-                                Messages are not encrypted till the user accepts the chat request.
+                               {connectedUser?.publicKey ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
                               </ItemTextSlash>
                             )}
                           </Item>
@@ -861,7 +861,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     <Item margin="30px 0px">
                       <ItemTextSlash>
                         <Image src={LockSlash} />
-                        {connectedUser?.privateKey ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
+                        {connectedUser?.publicKey ? "Messages are encrypted" : "These Messages are not encrypted till the user accepts the chat request."}
                       </ItemTextSlash>
 
                       <FirstTime>
