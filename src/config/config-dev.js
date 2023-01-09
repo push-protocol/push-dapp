@@ -74,7 +74,7 @@ export const addresses = {
   epnscore: "0x23346b732d56d34ec4e890419fbfb8548216a799",
   epnsEthComm: "0xc064F30bac07e84500c97A04D21a9d1bfFC72Ec0", 
   epnsPolyComm: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504", // the ploygon comm contract
-  dai: "0x75Ab5AB1Eef154C0352Fc31D2428Cef80C7F8B33", //address for dai
+  pushToken: "0x2b9bE9259a4F5Ba6344c1b1c07911539642a2D33", //address for push token
   aDai: "0x31f30d9A5627eAfeC4433Ae2886Cf6cc3D25E772",
   staking: "0x8e129EF695F8761922F1AA38588292f8d8817bA5",
   yieldFarmPUSH: "0xb41cd6760d3b1d0d216851f63fda9573b04dd46e",
