@@ -1,6 +1,6 @@
 {
   "name": "@project/react-app",
-  "version": "0.3.29",
+  "version": "0.3.30",
   "homepage": "https://dev.epns.io",
   "browserslist": {
     "production": [
@@ -124,6 +124,7 @@
     "react-toastify": "9.0.3",
     "react-toggle-dark-mode": "1.0.4",
     "react-transition-group": "4.4.2",
+    "react-twitter-embed": "^4.0.4",
     "react-use": "^17.3.2",
     "react-wavify": "^1.5.4",
     "react-waypoint": "^9.0.3",
