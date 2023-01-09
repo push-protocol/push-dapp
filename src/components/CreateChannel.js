@@ -338,9 +338,9 @@ function CreateChannel() {
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
-          <ItemWarning>
+          {/* <ItemWarning>
                  ⚠️ Channel Creation is currently Paused due to Smart Contract v1.5 Upgrade. Please check <ItemLink target={'_blank'} href='https://medium.com/push-protocol/introducing-push-protocol-v1-5-80eb39b55424'>this article</ItemLink> for more info.
-            </ItemWarning>
+            </ItemWarning> */}
 
             <TextH2>
               <Span className='text'>
@@ -387,19 +387,19 @@ function CreateChannel() {
           <Section>
             <ItemHere>
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
-              //  onClick={() => setStepFlow(0)}
+               onClick={() => setStepFlow(0)}
                >
                 <div>Staking Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
-              // onClick={() => setStepFlow(1)}
+              onClick={() => setStepFlow(1)}
               >
                 <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
-              //  onClick={() => setStepFlow(2)}
+               onClick={() => setStepFlow(2)}
                >
                 <div>Upload Logo</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
