@@ -111,7 +111,7 @@ const ChainIndicator = ({ isDarkMode }) => {
               <CurrentChainInfo>
                 <Image
                   src={`./svg/${networkName[+currentChainId].split(' ')[0]}.svg`}
-                  width="max-content"
+                  width="28px"
                 />
                 {/* will be shown only on mob devices */}
                 <ChainName color={theme.chainIndicatorHeading}>{networkName[+currentChainId]}</ChainName>
@@ -188,7 +188,7 @@ const CurrentChain = styled.span`
   justify-content: center;
   background: ${(props) => props.bg};
   border: ${(props) => `1px solid ${props.borderColor}`};
-  border-radius: 17px;
+  border-radius: 19px;
   ${({ isDarkMode, bg }) =>
     isDarkMode &&
     `
@@ -240,7 +240,8 @@ const ChainName = styled(H3)`
 `;
 
 const ToggleArrowImg = styled.div`
-  margin-left: 0.6rem;
+  margin-left: 0.3rem;
+  margin-right: 0.2rem;
   filter: ${(props) => props.filter};
   &:hover {
     cursor: pointer;
@@ -254,6 +255,9 @@ const ToggleArrowImg = styled.div`
     transform: rotate(-360deg);
     transition: transform 0.25s;
   }
+  img{
+    width: 12px;
+  }
 `;
 
 const DropdownItem = styled(Item)`
@@ -263,7 +267,7 @@ const DropdownItem = styled(Item)`
   align-items: flex-start;
   padding: 1rem 0.9rem;
   position: absolute;
-  top: 2.8rem;
+  top: 3rem;
   right: 0rem;
   z-index: 10;
 
