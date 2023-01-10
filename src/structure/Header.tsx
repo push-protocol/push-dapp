@@ -259,7 +259,7 @@ const NavMenuContainer = styled(Item)`
   }
 `;
 
-const NavMenu = styled(Item)`
+const NavMenu = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   width: 100%;
