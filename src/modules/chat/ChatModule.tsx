@@ -135,7 +135,7 @@ function Chat():JSX.Element {
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-  window.ethereum.on('accountsChanged', (account) => {
+  window.ethereum.on('accountsChanged', (account:string) => {
     window.location.reload();
   });
   window.ethereum.on('networksChanged', () => {

@@ -20,12 +20,12 @@ import {
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // HELPER METHODS
-const validateEmail = (email) => {
+const validateEmail = (email:string):boolean => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
 
-const isEmpty = (field) => {
+const isEmpty = (field:string):boolean => {
   if (field.trim().length === 0) {
     return true;
   }
@@ -33,25 +33,25 @@ const isEmpty = (field) => {
   return false;
 };
 
-const SupportModule = () => {
+const SupportModule = ():JSX.Element => {
   // React GA Analytics
   ReactGA.pageview("/support");
 
   const contactFormTopics = ["Support", "Integrate", "Others"];
 
-  const [contactFormProcessing, setContactFormProcessing] = React.useState(0);
-  const [contactFormName, setContactFormName] = React.useState("");
-  const [contactFormEmail, setContactFormEmail] = React.useState("");
-  const [contactFormTopic, setContactFormTopic] = React.useState(
+  const [contactFormProcessing, setContactFormProcessing] = React.useState<number>(0);
+  const [contactFormName, setContactFormName] = React.useState<string>("");
+  const [contactFormEmail, setContactFormEmail] = React.useState<string>("");
+  const [contactFormTopic, setContactFormTopic] = React.useState<string>(
     contactFormTopics[0]
   );
-  const [contactFormSub, setContactFormSub] = React.useState("");
-  const [contactFormMsg, setContactFormMsg] = React.useState("");
-  const [contactFormError, setContactFormError] = React.useState("");
+  const [contactFormSub, setContactFormSub] = React.useState<string>("");
+  const [contactFormMsg, setContactFormMsg] = React.useState<string>("");
+  const [contactFormError, setContactFormError] = React.useState<string>("");
 
   const theme = useTheme();
 
-  const handleContactFormSubmit = (e) => {
+  const handleContactFormSubmit = (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Check everything in order

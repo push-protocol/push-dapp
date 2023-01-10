@@ -14,7 +14,7 @@ import Info from "segments/Info";
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
 // Create Header
-function ReceiveNotifsModule() {
+function ReceiveNotifsModule():JSX.Element {
   ReactGA.pageview("/receive");
 
   // get theme

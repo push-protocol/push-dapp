@@ -30,7 +30,7 @@ interface IUserType {
 }
 
 // Other Information section
-const AirdropModule = () => {
+const AirdropModule = ():JSX.Element => {
   const theme = useTheme();
 
   const { account, library, chainId } = useWeb3React();

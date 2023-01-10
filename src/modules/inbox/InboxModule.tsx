@@ -34,14 +34,14 @@ const InboxModule = () => {
 
   const dispatch = useDispatch();
   const { account, chainId, library } = useWeb3React();
-  const { epnsReadProvider, epnsCommReadProvider } = useSelector((state) => state.contracts);
+  const { epnsReadProvider, epnsCommReadProvider } = useSelector((state:any) => state.contracts);
 
   // toast related section
-  const [toast, showToast] = React.useState(null);
-  const clearToast = () => showToast(null);
+  const [toast, showToast] = React.useState<any>(null);
+  const clearToast = ():void => showToast(null);
 
   // whether secret notif are enabled
-  const [enabledSecretNotif, setEnabledSecretNotif] = React.useState(false);
+  const [enabledSecretNotif, setEnabledSecretNotif] = React.useState<boolean>(false);
 
   const themes = useTheme();
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
@@ -72,28 +72,28 @@ const InboxModule = () => {
   // }, [enabledSecretNotif]);
 
   React.useEffect(() => {
-    (async function init() {
-      const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
+    (async function init():Promise<void> {
+      const coreProvider:any = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
-      const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
+      const coreContractInstance:ethers.Contract = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
       // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork ? addresses.epnsEthComm : addresses.epnsPolyComm;
-      const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
+      const commAddress:any = onCoreNetwork ? addresses.epnsEthComm : addresses.epnsPolyComm;
+      const commContractInstance:ethers.Contract = new ethers.Contract(commAddress, abis.epnsComm, library);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
     })();
   }, [account, chainId]);
 
   // toast customize
-  const LoaderToast = ({ msg, color }) => (
+  const LoaderToast = ({ msg, color }:{msg:string,color:string}) => (
     <Toaster>
       <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={color} />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
 
-  const NormalToast = ({ msg }) => (
+  const NormalToast = ({ msg }:{msg:string}) => (
     <Toaster>
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
@@ -121,10 +121,10 @@ const InboxModule = () => {
     // save push admin to global state
     epnsReadProvider
       .pushChannelAdmin()
-      .then((response) => {
+      .then((response:any) => {
         dispatch(setPushAdmin(response));
       })
-      .catch((err) => {
+      .catch((err:any) => {
         console.log({ err });
       });
 

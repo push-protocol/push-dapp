@@ -18,10 +18,10 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
-const CHANNEL_TAB = 2; //Default to 1 which is the channel tab
+const CHANNEL_TAB:number = 2; //Default to 1 which is the channel tab
 
 // Create Header
-function ChannelDashboardPage() {
+function ChannelDashboardPage():JSX.Element {
   ReactGA.pageview('/send_notificaiton');
 
   const dispatch = useDispatch();
@@ -29,20 +29,20 @@ function ChannelDashboardPage() {
   const { epnsReadProvider, epnsWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
 
-  const CORE_CHAIN_ID = appConfig.coreContractChain;
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
+  const CORE_CHAIN_ID:number = appConfig.coreContractChain;
+  const onCoreNetwork:boolean = CORE_CHAIN_ID === chainId;
   const INITIAL_OPEN_TAB = CHANNEL_TAB; //if they are not on a core network.redirect then to the notifications page
 
-  const [controlAt, setControlAt] = React.useState(2);
-  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState(true);
-  const [aliasEthAccount, setAliasEthAccount] = React.useState(null);
-  const [aliasVerified, setAliasVerified] = React.useState(null); // null means error, false means unverified and true means verified
-  const [channelAdmin, setChannelAdmin] = React.useState(true);
-  const [channelJson, setChannelJson] = React.useState([]);
+  const [controlAt, setControlAt] = React.useState<number>(2);
+  const [adminStatusLoaded, setAdminStatusLoaded] = React.useState<boolean>(true);
+  const [aliasEthAccount, setAliasEthAccount] = React.useState<any>(null);
+  const [aliasVerified, setAliasVerified] = React.useState<boolean>(null); // null means error, false means unverified and true means verified
+  const [channelAdmin, setChannelAdmin] = React.useState<boolean>(true);
+  const [channelJson, setChannelJson] = React.useState<any[]>([]);
 
   // toast related section
-  const [toast, showToast] = React.useState(null);
-  const clearToast = () => showToast(null);
+  const [toast, showToast] = React.useState<any>(null);
+  const clearToast = ():void => showToast(null);
 
   //clear toast variable after it is shown
   React.useEffect(() => {

@@ -14,13 +14,13 @@ import { B, Button, Content, H2, H3, Item, Section, Span } from '../../primaries
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from "config/Globals";
 
-function TutorialModule() {
+function TutorialModule():JSX.Element {
   const dispatch = useDispatch();
   const theme = useTheme();
 
   const { run } = useSelector((state: any) => state.userJourney);
 
-  const onStart = () => {
+  const onStart = ():void => {
     if (run === false) {
       dispatch(setRun(true));
       // dispatch(incrementStepIndex());

@@ -22,8 +22,8 @@ import { showNotifcationToast } from 'components/reusables/toasts/toastControlle
 import GLOBALS, { device } from 'config/Globals';
 
 // Helper Modules
-const randomTextWithLines = (maxChar, maxLines) => {
-  var lines = '';
+const randomTextWithLines = (maxChar:number, maxLines:number):string => {
+  var lines:string = '';
   const numLines = Math.floor(Math.random() * maxLines + 1);
   for (var i = 0; i < numLines; i++) {
     if (i > 0) lines += '<br/>';
@@ -32,17 +32,17 @@ const randomTextWithLines = (maxChar, maxLines) => {
   return lines;
 };
 
-const randomText = (length) => {
-  var result = '';
-  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
-  var charactersLength = characters.length;
+const randomText = (length:number):string => {
+  var result:string = '';
+  var characters:string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
+  var charactersLength:number = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
 };
 
-const createRandomToast = () => {
+const createRandomToast = ():void => {
   toast.dark(randomTextWithLines(20, 1), {
     type: toast.TYPE.INFO,
     position: toast.POSITION.BOTTOM_RIGHT,
@@ -51,7 +51,7 @@ const createRandomToast = () => {
   });
 };
 
-const createNotificaionToast = () => {
+const createNotificaionToast = ():void => {
   const payload = {
     data: {
       app: 'Testing Channel',
@@ -82,8 +82,8 @@ const createNotificaionToast = () => {
 const InternalDevModule = () => {
   const theme = useTheme();
 
-  const [progress, setProgress] = useState(0);
-  const [randomText, setRandomText] = useState(null);
+  const [progress, setProgress] = useState<number>(0);
+  const [randomText, setRandomText] = useState<string>(null);
 
   useEffect(() => {
     // Do progress bar

@@ -17,40 +17,40 @@ import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Create Header
-function YieldFarmingModule() {
+function YieldFarmingModule(): JSX.Element {
   const { account, library, chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   const themes = useTheme();
 
-  const [poolStats, setPoolStats] = React.useState(null);
-  const [pushPoolStats, setPushPoolStats] = React.useState(null);
-  const [lpPoolStats, setLpPoolStats] = React.useState(null);
-  const [userDataPUSH, setUserDataPUSH] = React.useState(null);
-  const [userDataLP, setUserDataLP] = React.useState(null);
+  const [poolStats, setPoolStats] = React.useState<any>(null);
+  const [pushPoolStats, setPushPoolStats] = React.useState<any>(null);
+  const [lpPoolStats, setLpPoolStats] = React.useState<any>(null);
+  const [userDataPUSH, setUserDataPUSH] = React.useState<any>(null);
+  const [userDataLP, setUserDataLP] = React.useState<any>(null);
 
-  const [formattedDuration, setFormattedDuration] = React.useState('');
+  const [formattedDuration, setFormattedDuration] = React.useState<string>('');
 
-  const [epnsToken, setEpnsToken] = React.useState(null);
-  const [staking, setStaking] = React.useState(null);
-  const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState(null);
-  const [yieldFarmingLP, setYieldFarmingLP] = React.useState(null);
-  const [uniswapV2Router02, setUniswapV2Router02] = React.useState(null);
+  const [epnsToken, setEpnsToken] = React.useState<ethers.Contract>(null);
+  const [staking, setStaking] = React.useState<ethers.Contract>(null);
+  const [yieldFarmingPUSH, setYieldFarmingPUSH] = React.useState<ethers.Contract>(null);
+  const [yieldFarmingLP, setYieldFarmingLP] = React.useState<ethers.Contract>(null);
+  const [uniswapV2Router02, setUniswapV2Router02] = React.useState<ethers.Contract>(null);
 
   React.useEffect(() => {
     if (!onCoreNetwork) {
-      const url = window.location.origin;
+      const url: string = window.location.origin;
       window.location.replace(`${url}/#/notavailable`);
     }
   });
 
   const getPoolStats = React.useCallback(async () => {
-    const poolStats = await YieldFarmingDataStore.instance.getPoolStats();
+    const poolStats: any = await YieldFarmingDataStore.instance.getPoolStats();
 
     setPoolStats({ ...poolStats });
   }, [epnsToken, staking, yieldFarmingPUSH, yieldFarmingLP, uniswapV2Router02]);
 
-  const getPUSHPoolStats = React.useCallback(async () => {
+  const getPUSHPoolStats: any = React.useCallback(async () => {
     const pushPoolStats = await YieldFarmingDataStore.instance.getPUSHPoolStats();
 
     setPushPoolStats({ ...pushPoolStats });
@@ -58,7 +58,7 @@ function YieldFarmingModule() {
 
   const getLPPoolStats = React.useCallback(
     async (poolStats) => {
-      const lpPoolStats = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
+      const lpPoolStats: any = await YieldFarmingDataStore.instance.getLPPoolStats(poolStats);
 
       setLpPoolStats({ ...lpPoolStats });
     },
@@ -66,38 +66,38 @@ function YieldFarmingModule() {
   );
 
   const getUserDataPUSH = React.useCallback(async () => {
-    const userDataPUSH = await YieldFarmingDataStore.instance.getUserData(yieldFarmingPUSH);
+    const userDataPUSH: any = await YieldFarmingDataStore.instance.getUserData(yieldFarmingPUSH);
 
     setUserDataPUSH({ ...userDataPUSH });
   }, [yieldFarmingPUSH]);
 
   const getUserDataLP = React.useCallback(async () => {
-    const userDataLP = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
+    const userDataLP: any = await YieldFarmingDataStore.instance.getUserData(yieldFarmingLP);
 
     setUserDataLP({ ...userDataLP });
   }, [yieldFarmingLP]);
 
-  const formatTokens = (tokens) => {
+  const formatTokens = (tokens: any): string => {
     if (tokens) {
       return tokens.div(ethers.BigNumber.from(10).pow(18)).toString();
     }
   };
 
-  const getFormattedDuration = () => {
+  const getFormattedDuration = (): void => {
     if (poolStats?.epochEndTimestamp) {
-      const epochEndTimestamp = poolStats.epochEndTimestamp.toNumber();
+      const epochEndTimestamp: number = poolStats.epochEndTimestamp.toNumber();
 
-      const duration = epochEndTimestamp - Math.floor(new Date() / 1000);
+      const duration: number = epochEndTimestamp - Math.floor(new Date() / 1000);
 
       if (duration < 0) {
         getPoolStats();
       }
 
-      const day = parseInt(duration / 86400);
-      const hour = parseInt((duration - day * 86400) / 3600);
+      const day: number = parseInt(duration / 86400);
+      const hour: number = parseInt((duration - day * 86400) / 3600);
 
-      const minutes = parseInt((duration - (day * 86400 + hour * 3600)) / 60);
-      const seconds = duration - (day * 86400 + hour * 3600 + minutes * 60);
+      const minutes: number = parseInt((duration - (day * 86400 + hour * 3600)) / 60);
+      const seconds: number = duration - (day * 86400 + hour * 3600 + minutes * 60);
 
       setFormattedDuration(`${day}D ${hour}H ${minutes}M ${seconds}S`);
     }
@@ -167,7 +167,7 @@ function YieldFarmingModule() {
     }
   }, [poolStats]);
 
-  const syncData = async (poolStats) => {
+  const syncData = async (poolStats: any): Promise<void> => {
     getPUSHPoolStats();
     getLPPoolStats(poolStats);
 
@@ -175,7 +175,7 @@ function YieldFarmingModule() {
     getUserDataLP();
   };
 
-  function numberWithCommas(x) {
+  function numberWithCommas(x: number | string): string {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
@@ -185,7 +185,10 @@ function YieldFarmingModule() {
         {poolStats ? (
           <>
             <Content themes={themes.yieldBg}>
-              <ItemH margin="0px 15px 0px 15px" align="stretch">
+              <ItemH
+                margin="0px 15px 0px 15px"
+                align="stretch"
+              >
                 <StatsCard bg={themes.mainBg}>
                   <StatsHeading bg="#e20880">Total Value Locked</StatsHeading>
                   <StatsContent>
@@ -221,7 +224,10 @@ function YieldFarmingModule() {
                   <StatsContent>
                     <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
                     <StatsInnerSub>
-                      <a target="_blank" href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}>
+                      <a
+                        target="_blank"
+                        href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}
+                      >
                         Uniswap
                       </a>
                     </StatsInnerSub>
@@ -237,7 +243,10 @@ function YieldFarmingModule() {
               </Item>
             ) : (
               <Content padding="25px 0px">
-                <ItemH margin="0px 10px 0px 10px" align="stretch">
+                <ItemH
+                  margin="0px 10px 0px 10px"
+                  align="stretch"
+                >
                   {lpPoolStats && userDataLP ? (
                     <PoolCard
                       poolName={'Uniswap LP Pool (UNI-V2)'}

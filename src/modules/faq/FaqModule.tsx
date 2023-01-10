@@ -18,9 +18,9 @@ function FaqModule() {
 
   const theme = useTheme();
 
-  const [showAnswers, setShowAnswers] = React.useState([]);
+  const [showAnswers, setShowAnswers] = React.useState<any[]>([]);
 
-  const toggleShowAnswer = (id) => {
+  const toggleShowAnswer = (id:number):void => {
     let newShowAnswers = [...showAnswers];
     newShowAnswers[id] = !newShowAnswers[id];
 

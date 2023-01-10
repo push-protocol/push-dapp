@@ -19,7 +19,7 @@ import GLOBALS, { device, globalsMargin } from 'config/Globals';
 export const ALLOWED_CORE_NETWORK = appConfig.coreContractChain; //chainId of network which we have deployed the core contract on
 
 // Create Header
-function ChannelDashboardModule() {
+function ChannelDashboardModule():JSX.Element {
   ReactGA.pageview('/channel_dashboard');
 
   const [adminStatusLoaded, setAdminStatusLoaded] = React.useState<boolean>(true);
