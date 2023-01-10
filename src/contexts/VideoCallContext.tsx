@@ -6,7 +6,7 @@ import Peer from 'simple-peer';
 import { io } from 'socket.io-client';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from '../config';
 
 interface videoPayloadType {
   userToCall: string;
@@ -37,9 +37,9 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [call, setCall] = useState<any>({});
   const [me, setMe] = useState<string>('');
 
-  const myVideo = useRef();
-  const userVideo = useRef();
-  const connectionRef = useRef();
+  const myVideo = useRef<any>();
+  const userVideo = useRef<any>();
+  const connectionRef = useRef<any>();
 
   const initializeStream = async (address: string): Promise<void> => {
     try {
