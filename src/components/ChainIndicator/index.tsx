@@ -114,7 +114,7 @@ const ChainIndicator = ({ isDarkMode }) => {
                   width="28px"
                 />
                 {/* will be shown only on mob devices */}
-                <ChainName color={theme.chainIndicatorHeading}>{networkName[+currentChainId]}</ChainName>
+                <ChainName color={theme.chainIndicatorHeadingMobile}>{networkName[+currentChainId]}</ChainName>
               </CurrentChainInfo>
             )}
             <ToggleArrowImg filter={theme.chainIndicatorBorderColor}>
@@ -229,7 +229,7 @@ const ChainName = styled(H3)`
   font-family: "Strawford";
   text-transform: none;
   margin: 10px 0 10px 15px;
-  weight: 400;
+  font-weight: 400;
   size: 18px;
   letter-spacing: -0.01em;
   cursor: pointer;

@@ -158,6 +158,7 @@ const themeLight = {
   chainIndicatorHoverBG: "#F4F5FA",
   chainIndicatorDropdownBG: "#fff",
   chainIndicatorHeading: "#333333",
+  chainIndicatorHeadingMobile: "#000",
   chainIndicatorText: "#657795"
 };
 
@@ -323,6 +324,7 @@ const themeDark = {
   chainIndicatorHoverBG: "#393E46",
   chainIndicatorDropdownBG: "#2F3137",
   chainIndicatorHeading: "#C5CAE9",
+  chainIndicatorHeadingMobile: "#C5CAE9",
   chainIndicatorText: "#B6BCD6"
 };
 
