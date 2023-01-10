@@ -82,7 +82,7 @@ export const globalsMargin = {
     MOBILE: {
       TOP: '0px',
       RIGHT: '0px',
-      BOTTOM: '20px',
+      BOTTOM: '0px',
       LEFT: '0px',
     },
   },
