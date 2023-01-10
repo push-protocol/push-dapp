@@ -88,7 +88,6 @@ const Profile = ({isDarkMode}) => {
     <>
       {account && account !== "" && !error && (
         <Body>
-        {/* <Container> */}
           <Wallet 
             bg={theme.profileBG} 
             color={theme.profileText} 
@@ -132,7 +131,6 @@ const Profile = ({isDarkMode}) => {
             </ItemModal>
             </Item>
           )}
-        {/* </Container> */}
         </Body>
       )}
     </>
@@ -148,10 +146,6 @@ const Body = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  @media (max-width: 992px) {
-    // width: 100%;
-    // justify-content: flex-start;
-  }
 `
 
 const Wallet = styled.div`
