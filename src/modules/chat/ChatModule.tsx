@@ -392,7 +392,7 @@ const Container = styled.div`
 });
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
   globalsMargin.MINI_MODULES.MOBILE.BOTTOM

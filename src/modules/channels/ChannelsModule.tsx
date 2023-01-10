@@ -51,7 +51,7 @@ const Container = styled.div`
     border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} - ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM});
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};

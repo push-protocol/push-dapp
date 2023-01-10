@@ -200,8 +200,13 @@ const Container = styled(Section)`
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
   }
 `;
 
