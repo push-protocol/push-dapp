@@ -8,14 +8,14 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import SelectionDropdown from './SelectionDropdown';
-import { H3, Image, Item, ItemH } from '../SharedStyling.js';
+import Dropdown from './Dropdown';
+import { H3, Image, Item, ItemH } from './SharedStyling.js';
 import { networkName, PolygonNetworks } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 
 // Internal Configs
-import { device } from '../../config/Globals';
+import { device } from '../config/Globals';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
@@ -147,7 +147,7 @@ const ChainIndicator = ({ isDarkMode }) => {
               >
                 Select Network
               </H3>
-              <SelectionDropdown
+              <Dropdown
                 dropdownValues={dropdownValues}
                 hoverBGColor={theme.chainIndicatorHoverBG}
                 textColor={theme.chainIndicatorText}
