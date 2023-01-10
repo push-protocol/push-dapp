@@ -14,7 +14,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 
 // Internal Configs
 import { appConfig } from 'config';
-import GLOBALS from 'config/Globals';
+import GLOBALS, { device } from 'config/Globals';
 
 interface ChatProps {
   msg: MessageIPFS;
@@ -67,7 +67,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage>
-              { msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
                 {/* {messageBeingSent ? (
                   <p>✔️</p>
@@ -79,7 +79,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           ) : (
             <MessageWrapper align="row">
               <ReceivedMessage>
-              { msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
             </MessageWrapper>
@@ -89,16 +89,11 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
         <>
           <MessageWrapper align="row">
             <ReceivedMessage>
-              <SpanV2
-                fontSize="14px"
-                maxWidth="13rem"
-                fontWeight="400"
-                padding="0px 44px 0px 0px"
-                textAlign="left"
-                color="#000"
+              <MessageText
+
               >
-                { msg.messageContent.split('\n').map(str => <p>{str}</p>)}
-              </SpanV2>
+                {msg.messageContent.split('\n').map(str => <p>{str}</p>)}
+              </MessageText>
               {messageBeingSent ? (
                 <SpanV2 margin="-5px 0 0 0">
                   <LoaderSpinner
@@ -287,6 +282,20 @@ const TimeStamp = styled(ItemHV2)`
   bottom: 5px;
 `;
 
+const MessageText = styled(SpanV2)`
+  font-size:14px;
+  max-width : 13rem;
+  font-weight:400;
+  padding: 0px 44px 0px 0px;
+  text-align:left;
+  color:#000;
+
+  @media ${device.mobileM}{
+    padding: 0px 10px 0px 0px;
+    max-width: 8rem;
+  }
+`
+
 const MessageWrapper = styled.div`
   width: 100%;
   min-height: ${(props: any): string => props.height || '48px'};
@@ -315,6 +324,10 @@ const ReceivedMessage = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+ 
+
+
 `;
 
 const SenderMessage = styled.div`
