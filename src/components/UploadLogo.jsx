@@ -93,7 +93,7 @@ const UploadLogo = ({
     <Fragment>
       <Body>
         <Item align="center">
-          <H3 color=" #657795" margin="10px 0px" textTransform="none" weight="500" size="15px" spacing="0.05" textAlign='center'>
+          <H3 color=" #657795" margin="20px 0px" textTransform="none" weight="300" size="15px" spacing="0.05" textAlign='center'>
           Please upload a PNG, JPG. Crop the image to resize to 128px.  
           </H3>
         </Item>

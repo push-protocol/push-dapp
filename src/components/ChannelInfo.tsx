@@ -25,6 +25,7 @@ import {
   TextField,
 } from 'primaries/SharedStyling';
 import './createChannel.css';
+import { useDeviceWidthCheck } from 'hooks';
 
 const coreChainId = appConfig.coreContractChain;
 const aliasChainId = aliasChainIdsMapping[coreChainId];
@@ -50,6 +51,7 @@ const ChannelInfo = ({
   setTxStatus,
 }) => {
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(600)
   const [disabled, setDisabled] = useState<boolean>(true);
   const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
 
@@ -161,7 +163,7 @@ const ChannelInfo = ({
   return (
     <Section>
       <Item
-        padding="40px 0 0 0"
+        padding={isMobile ? "20px 0 0 0" :"40px 0 0 0"}
         align="flex-start"
       >
         <Label style={{ color: theme.color }}>Channel Name</Label>

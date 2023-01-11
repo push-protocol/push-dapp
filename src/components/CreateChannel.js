@@ -338,9 +338,9 @@ function CreateChannel() {
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
-          <ItemWarning>
+          {/* <ItemWarning>
                  ⚠️ Channel Creation is currently Paused due to Smart Contract v1.5 Upgrade. Please check <ItemLink target={'_blank'} href='https://medium.com/push-protocol/introducing-push-protocol-v1-5-80eb39b55424'>this article</ItemLink> for more info.
-            </ItemWarning>
+            </ItemWarning> */}
 
             <TextH2>
               <Span className='text'>
@@ -384,29 +384,29 @@ function CreateChannel() {
         </>
       ) : (
         <>
-          <Section>
+          {!(processing === 1 || processing === 3) &&(<Section>
             <ItemHere>
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
-              //  onClick={() => setStepFlow(0)}
+               onClick={() => setStepFlow(0)}
                >
                 <div>Staking Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
-              // onClick={() => setStepFlow(1)}
+              onClick={() => setStepFlow(1)}
               >
                 <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
-              //  onClick={() => setStepFlow(2)}
+               onClick={() => setStepFlow(2)}
                >
                 <div>Upload Logo</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
               </Tab>
               <Line />
             </ItemHere>
-          </Section>
+          </Section>)}
 
           {/* Stake Fees Section */}
           {stepFlow === 0 && (
@@ -552,7 +552,11 @@ const BodySection = styled(Section)`
         margin: 0px 0px;
 
         @media (max-width: 768px){
+          font-weight: 300;
           font-size: 14px;
+          text-align: center;
+          letter-spacing: 0em;
+          line-height: 140%;
          }
       }
   }
@@ -676,6 +680,7 @@ const Tab = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+    margin: 0px 4px;
     div {
       font-weight: 500;
       font-size: 15px;
@@ -721,7 +726,7 @@ const ItemHere = styled.div`
   align-items: flex-end;
   @media (max-width: 768px) {
     display: flex;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   @media (max-width: 1224px) {
     display: flex;
