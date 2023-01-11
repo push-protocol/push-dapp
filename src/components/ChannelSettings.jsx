@@ -23,7 +23,7 @@ export default function ChannelSettings() {
 
   return (
     <ItemHV2 ref={DropdownRef}>
-      <Settings active={isDropdownOpen} onClick={toggleDropdownHandler} />
+      <Settings active={isDropdownOpen?1:0} onClick={toggleDropdownHandler} />
       {isDropdownOpen && (
         <ChannelSettingsDropdown
           DropdownRef={DropdownRef}
