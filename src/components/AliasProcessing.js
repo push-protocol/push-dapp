@@ -88,6 +88,7 @@ const Tab = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
   margin: 0px 10px;
   color: #657795;
   div {
@@ -97,14 +98,44 @@ const Tab = styled.div`
     font-size: 16px;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     width: 100%;
+    margin: 0px 4px;
+    div {
+      font-weight: 500;
+      font-size: 15px;
+    }
   }
 
   ${({ type }) =>
-    type === "active" &&
+    type === 'active' &&
     css`
       color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+  ${({ active }) =>
+    active === 'active' &&
+    css`
+      color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+    ${({ active }) =>
+    active === 'inactive' &&
+    css`
+    @media (max-width: 768px) {
+      width: 40%;
+        div {
+          font-size: 0px;
+            @media (max-width: 768px) {
+            }
+        }
+    }
     `};
 `;
 
