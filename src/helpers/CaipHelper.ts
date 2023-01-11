@@ -32,13 +32,10 @@ export const getCAIP = (chainId: number): string | null => {
   }
 };
 
-export const convertAddressToAddrCaip = ({
-  userAddress,
-  chainId,
-}: {
-  userAddress: string;
-  chainId: number;
-}): string => {
+export const convertAddressToAddrCaip = (
+  userAddress: string,
+  chainId: number
+): string => {
   return `eip155:${chainId}:${userAddress}`;
 };
 

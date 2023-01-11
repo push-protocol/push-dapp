@@ -189,24 +189,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   /**
    * Function to deactivate a channel that has been deactivated
    */
-  const deactivateChannel = async () => {
-    if (!poolContrib) return;
-
-    const amountToBeConverted = parseInt('' + poolContrib) - 10;
-    console.log('Amount To be converted==>', amountToBeConverted);
-
-    const { data: response } = await postReq('/channels/getDaiToPush', {
-      value: amountToBeConverted,
-    });
-
-    const pushValue = response.response.data.quote.PUSH.price;
-
-    return (
-      epnsWriteProvider
-        // .deactivateChannel(amountsOut.toString().replace(/0+$/, "")) //use this to remove trailing zeros 1232323200000000 -> 12323232
-        .deactivateChannel(Math.floor(pushValue))
-    );
-  };
+  const deactivateChannel = () => epnsWriteProvider.deactivateChannel();
 
   const addDelegateToast = useToast();
   const addDelegate = async (walletAddress: string) => {

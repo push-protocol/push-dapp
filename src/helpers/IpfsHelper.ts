@@ -31,11 +31,11 @@ export const IPFSupload = async (input: string): Promise<string> => {
   });
 
   try {
-    // const storagePointer = await client.add(bufferInput, {pin: true});
-    // return storagePointer?.path;
+    const storagePointer = await client.add(bufferInput, {pin: true});
+    return storagePointer?.path;
 
-    const pathHash: string = await ipfsUpload({ input });
-    return pathHash;
+    // const pathHash = await ipfsUpload({ input });
+    // return pathHash;
   } catch (err) {
     throw Error(err);
   }
