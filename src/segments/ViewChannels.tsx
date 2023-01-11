@@ -204,7 +204,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
           <ItemHBar>
             <SearchContainer
               flex="1"
-              margin="10px"
             >
               <SearchBar
                 type="text"
@@ -328,9 +327,9 @@ const ItemHBar = styled.div`
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 0px 0px;
+    padding: 10px 10px;
   }
 `;
 
@@ -342,6 +341,7 @@ const ItemBar = styled.div`
   justify-content: space-evenly;
   @media (max-width: 768px) {
     flex-direction: column;
+    padding: 0px 0px 0px 0px;
   }
 `;
 
@@ -349,12 +349,10 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
-
   max-height: 100vh;
 `;
 
@@ -418,6 +416,7 @@ const ScrollItem = styled(Item)`
 
 const SearchContainer = styled(Item)`
   width: 100%;
+  margin-right: 10px;
 `;
 
 // Export Default

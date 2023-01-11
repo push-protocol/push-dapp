@@ -93,6 +93,7 @@ const themeLight = {
   viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#657795",
+  viewChannelPrimaryTextColor: "#494D5F",
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: '#000',
@@ -245,6 +246,7 @@ const themeDark = {
   viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#fff",
+  viewChannelPrimaryTextColor: "#fff",
 
 
   // -- -- View Channel Tuts
