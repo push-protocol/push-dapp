@@ -250,9 +250,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             (channel: any, index: any) =>
               channel &&
               channel.channel !== ZERO_ADDRESS && (
-                <>
+                <div key={channel.channel}>
                   <ViewChannelItems
-                    key={channel.channel}
                     self="stretch"
                   >
                     {!MaskedChannels[channel.channel] &&
@@ -268,7 +267,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   </ViewChannelItems>
 
                   {showWayPoint(index) && <Waypoint onEnter={updateCurrentPage} />}
-                </>
+                </div>
               )
           )}
         </div>

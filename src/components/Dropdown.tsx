@@ -35,6 +35,7 @@ function Dropdown(props) {
             wrap="nowrap"
             margin="0px 0 8px 0"
             width="max-content"
+            key={dropdownValue.id}
           >
             <Span
               margin="11px 22px 11px 2px"
@@ -74,7 +75,7 @@ function Dropdown(props) {
             />}
           </ItemH>
         ) : (
-          <ItemH wrap="nowrap" margin="8px 0">
+          <ItemH wrap="nowrap" margin="8px 0" key={dropdownValue.id}>
              {dropdownValue?.invertedIcon && <Image
               src={dropdownValue.invertedIcon}
               alt="icon"
