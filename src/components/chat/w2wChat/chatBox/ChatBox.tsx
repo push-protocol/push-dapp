@@ -861,7 +861,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     <Item margin="30px 0px">
                       <ItemTextSlash>
                         <Image src={LockSlash} />
-                        {connectedUser?.publicKey ? "Messages are encrypted" : "These Messages are not encrypted till the user accepts the chat request."}
+                        {connectedUser?.publicKey ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
                       </ItemTextSlash>
 
                       <FirstTime>
