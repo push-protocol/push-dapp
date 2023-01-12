@@ -1,6 +1,6 @@
 // @ts-nocheck
 // React + Web3 Essentials
-import { appConfig } from 'config';
+import { appConfig, CHAIN_DETAILS } from 'config';
 import React, { useEffect, useState } from 'react';
 
 // External Packages
@@ -27,12 +27,8 @@ import {
 import './createChannel.css';
 
 const coreChainId = appConfig.coreContractChain;
-const aliasChainId = aliasChainIdsMapping[coreChainId];
 
-const ALIAS_CHAINS = [
-  { value: coreChainId, label: networkName[coreChainId] },
-  { value: aliasChainId, label: networkName[aliasChainId] },
-];
+const ALIAS_CHAINS = appConfig.allowedNetworks.map((chainID: number) => ({ label: CHAIN_DETAILS[chainID].label, value: chainID }));
 
 const ChannelInfo = ({
   channelName,
@@ -204,7 +200,7 @@ const ChannelInfo = ({
               onChange={(option) => {
                 setChainDetails(option.value);
               }}
-              value={networkName[chainDetails]}
+              value={CHAIN_DETAILS[chainDetails].label}
             />
           </DropdownStyledParent>
         </Item>
@@ -234,6 +230,7 @@ const ChannelInfo = ({
               visibility={chainDetails === coreChainId ? 'hidden' : 'visible'}
               value={channelAlias}
               onChange={(e) => {
+                console.log(e);
                 setChannelAlias(e.target.value);
               }}
             />
