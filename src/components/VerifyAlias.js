@@ -33,8 +33,16 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const [success, setSuccess] = useState(false);
   const mainAddress = aliasEthAccount;
 
-  // Form signer and contract connection
-  // useClickAway(modalRef, () => onClose(loading !== ""));
+  const Faucets = {
+    80001: {
+      label: "Mumbai MATIC",
+      url: "https://faucet.polygon.technology/"
+    },
+    97: {
+      label: "Testnet BNB",
+      url: "https://testnet.bnbchain.org/faucet-smart"
+    }
+  }
 
   const checkAlias = async () => {
     if (mainAddress == aliasEthAccount) {
@@ -128,8 +136,8 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
           color={theme.default.secondaryColor}
         >
           You will need{' '}
-          <A href="https://faucet.polygon.technology/" target="_blank">
-            testnet mumbai matic
+          <A href={Faucets[chainId].url} target="_blank">
+            {Faucets[chainId].label}
           </A>{' '}
           to proceed.
         </SpanV2>
