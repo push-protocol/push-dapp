@@ -100,6 +100,13 @@ export const networkName = {
   80001: 'Polygon Mumbai',
 };
 
+export const chainNameBackendStandard = {
+  5: "ETH_TEST_GOERLI",
+  1: 'ETH_MAINNET',
+  137: 'POLYGON_MAINNET',
+  80001: 'POLYGON_TEST_MUMBAI',
+}
+
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,

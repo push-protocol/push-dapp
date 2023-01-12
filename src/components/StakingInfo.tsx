@@ -20,24 +20,24 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
   const theme = useTheme();
   
   //mint Dai
-  const mintDai = async () => {
+  const mintPushToken = async () => {
     try {
       var signer = library.getSigner(account);
-      let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
+      let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
       console.log({
-        daiContract,
+        pushTokenContract,
       });
       console.log(1);
-      let daiAmount = 1000;
-      const amount = ethers.utils.parseUnits(daiAmount.toString(), 18);
-      console.log(2);
-      var mintTransactionPromise = daiContract.mint(amount);
+      let pushTokenAmount = 100;
+      const amount = ethers.utils.parseUnits(pushTokenAmount.toString(), 18);
+      console.log(amount);
+      var mintTransactionPromise = pushTokenContract.mint(amount);
       console.log(3);
       const tx = await mintTransactionPromise;
       console.log(tx);
       await library.waitForTransaction(tx.hash);
       console.log(4);
-      setProcessingInfo("1000 Dai minted successfully!");
+      setProcessingInfo("100 Push Tokens minted successfully!");
       console.log("Transaction Completed");
     } catch (err) {
       console.log(err);
@@ -55,7 +55,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
               </p>
 
               <b>
-              {channelStakeFees} DAI
+              {channelStakeFees} $PUSH
               </b>
             </TabSpace>
 
@@ -69,10 +69,10 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
                     
                     <Minter
                       onClick={() => {
-                        mintDai();
+                        mintPushToken();
                       }}
                     >
-                        <PoolShare>Get Free DAI for Channel</PoolShare>
+                        <PoolShare>Get Free PUSH for Channel</PoolShare>
                     </Minter>
                   </>
                 }
@@ -86,7 +86,6 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
             flex="1"
             radius="15px"
             padding="20px 10px"
-            disabled={true}
             onClick={() => {
               setStakeFeesChoosen(true);
               setStepFlow(1);
