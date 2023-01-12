@@ -151,6 +151,15 @@ const themeLight = {
   snackbarBorderColor: "#E5E8F7",
   snackbarBorderText: "#000",
   snackbarBorderIcon: "none",
+
+  // Chain indicator
+  chainIndicatorBG: "#F4F5FA",
+  chainIndicatorBorderColor: "#BAC4D6",
+  chainIndicatorHoverBG: "#F4F5FA",
+  chainIndicatorDropdownBG: "#fff",
+  chainIndicatorHeading: "#333333",
+  chainIndicatorHeadingMobile: "#000",
+  chainIndicatorText: "#657795"
 };
 
 const themeDark = {
@@ -307,7 +316,16 @@ const themeDark = {
   //Snackbar
   snackbarBorderColor: "#4A4F67",
   snackbarBorderText: "#B6BCD6",
-  snackbarBorderIcon: "brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)"
+  snackbarBorderIcon: "brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)",
+  
+  // Chain indicator
+  chainIndicatorBG: "#2F3137",
+  chainIndicatorBorderColor: "#BAC4D6",
+  chainIndicatorHoverBG: "#393E46",
+  chainIndicatorDropdownBG: "#2F3137",
+  chainIndicatorHeading: "#C5CAE9",
+  chainIndicatorHeadingMobile: "#C5CAE9",
+  chainIndicatorText: "#B6BCD6"
 };
 
 module.exports = {

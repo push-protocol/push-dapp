@@ -29,6 +29,7 @@ import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
+import ChainIndicator from 'components/ChainIndicator';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -137,6 +138,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         {navigationSetup && showNavBar && active && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
+              <ChainIndicator isDarkMode={isDarkMode}/>
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
@@ -192,6 +194,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           {!active && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {active && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
+              <ChainIndicator isDarkMode={isDarkMode}/>
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '}
