@@ -32,10 +32,10 @@ import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
-import { aliasChainIdsMapping, MaskedPolygonChannels } from 'helpers/UtilityHelper';
+import { MaskedAliasChannels } from 'helpers/UtilityHelper';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig, CHAIN_DETAILS } from 'config';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -109,6 +109,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           ...response,
           channel: channelObject.channel,
           alias_address: channelObject.alias_address,
+          alias_blockchain_id: channelObject.alias_blockchain_id,
           subscriber_count: channelObject.subscriber_count,
         });
         fetchChannelJson();
@@ -699,11 +700,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 )}
                 {channelObject.alias_address != null &&
                   channelObject.alias_address != 'NULL' &&
-                  appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) &&
-                  !MaskedPolygonChannels[channelObject.channel] && (
+                  appConfig.allowedNetworks.includes(+channelObject.alias_blockchain_id) &&
+                  !MaskedAliasChannels[+channelObject.alias_blockchain_id]?.channelObject.channel && (
                     <Span padding="0 0 0 5px">
                       <Image
-                        src={`./svg/Polygon.svg`}
+                        src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
                         alt="Polygon"
                         width="20px"
                         height="20px"
