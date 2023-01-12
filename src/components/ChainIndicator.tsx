@@ -6,67 +6,25 @@ import { ethers } from 'ethers';
 // External Packages
 import styled, { useTheme } from 'styled-components';
 
-// Internal Compoonents
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+// Internal Components
 import Dropdown, { DropdownValueType } from './Dropdown';
 import { H3, Image, Item, ItemH } from './SharedStyling.js';
-import { networkName, PolygonNetworks } from 'helpers/UtilityHelper';
+import { networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 
 // Internal Configs
 import { SpanV2 } from './reusables/SharedStylingV2';
+import { handleChangeNetwork } from 'helpers/ChainHelper';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
   const dropdownRef = useRef(null);
-  const { error, account } = useWeb3React();
+  const { error, account, library, chainId:currentChainId } = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
 
   const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
   const [dropdownValues, setDropdownValues] = React.useState<DropdownValueType[]>([]);
-  const [currentChainId, setCurrentChainId] = React.useState<string>('');
-
-  // fetches the current chain Id and sets the current chain Id state
-  const fetchCurrentChainId: () => Promise<void> = async () => {
-    const currentChainId = await window.ethereum.request({
-      method: 'eth_chainId',
-    });
-    setCurrentChainId(currentChainId);
-  };
-
-  // handles network change request
-  const handleChangeNetwork: (chainId: number) => Promise<void> = async (chainId) => {
-    const chainIds = appConfig?.allowedNetworks;
-    if (chainIds.includes(chainId)) {
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: ethers.utils.hexValue(chainId) }],
-        });
-        // await fetchCurrentChainId();
-      } catch (switchError) {
-        // This error code indicates that the chain has not been added to MetaMask.
-        if (switchError.code === 4902) {
-          const networkDetails = { ...PolygonNetworks[chainId === 137 ? 'POLYGON_MAINNET' : 'MUMBAI_TESTNET'] };
-          try {
-            await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [networkDetails],
-            });
-            // await fetchCurrentChainId();
-          } catch (addError) {
-            console.error(addError);
-          }
-        }
-        console.log(switchError);
-      }
-    }
-  }
-
-  React.useEffect(() => {
-    fetchCurrentChainId();
-  }, []);
 
   React.useEffect(() => {
     const dropdown: DropdownValueType[] = [];
@@ -78,7 +36,7 @@ const ChainIndicator = ({ isDarkMode }) => {
         title: chainName,
         icon: `./svg/${networkName[chainId].split(' ')[0]}.svg`,
         function: () => {
-          handleChangeNetwork(chainId);
+          handleChangeNetwork(chainId, library.provider);
           setShowDropdown(false);
         },
       });
@@ -101,22 +59,14 @@ const ChainIndicator = ({ isDarkMode }) => {
             onClick={() => setShowDropdown(!showDropdown)}
             ref={toggleArrowRef}
           >
-            {currentChainId === '' ? (
-              <LoaderSpinner
-                type={LOADER_TYPE.SEAMLESS}
-                spinnerSize={20}
-                spinnerColor="#FFF"
+            <CurrentChainInfo>
+              <Image
+                src={`./svg/${networkName[+currentChainId].split(' ')[0]}.svg`}
+                width="28px"
               />
-            ) : (
-              <CurrentChainInfo>
-                <Image
-                  src={`./svg/${networkName[+currentChainId].split(' ')[0]}.svg`}
-                  width="28px"
-                />
-                {/* will be shown only on mob devices */}
-                <ChainName color={theme.chainIndicatorHeadingMobile}>{networkName[+currentChainId]}</ChainName>
-              </CurrentChainInfo>
-            )}
+              {/* will be shown only on mob devices */}
+              <ChainName color={theme.chainIndicatorHeadingMobile}>{networkName[+currentChainId]}</ChainName>
+            </CurrentChainInfo>
             <ToggleArrowImg filter={theme.chainIndicatorBorderColor}>
               <img
                 alt="arrow"
