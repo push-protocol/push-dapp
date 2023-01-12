@@ -5,14 +5,15 @@ import { utils } from 'ethers';
 import { convertChainIdToChainCaip } from './CaipHelper';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig } from '../config';
 
 // Utility Helper Functions
 const UtilityHelper = {
-  isMainnet: (chainId: number) => {
+  isMainnet: (chainId: number):boolean => {
     if (chainId === 1 || chainId === 137) {
       return true;
     }
+    return false;
   },
 };
 
@@ -67,7 +68,7 @@ export const isValidAddress = (address: string): boolean => {
 }
 
 // Disable the browser notification on Metamask iphone mobile
-export const isUserAgentIphone = (userAgent) => {
+export const isUserAgentIphone = (userAgent:any):boolean => {
   return userAgent.indexOf('iPhone') !== -1;
 };
 
@@ -83,10 +84,10 @@ export const EnvHelper = {
   isStaging: window.location.hostname === envUtil['staging'],
   isDev: window.location.hostname === envUtil['dev'],
   isLocalHost: window.location.hostname === envUtil['localhost'],
-  isProduction() {
+  isProduction():boolean {
     return this.isProd || this.isStaging || this.isDev;
   },
-  dappTitle() {
+  dappTitle():string {
     return `Push (EPNS) ${this.isStaging ? 'Staging' : this.isDev ? 'Dev' : ''} App`;
   },
 };
@@ -99,6 +100,13 @@ export const networkName = {
   80001: 'Polygon Mumbai',
 };
 
+export const chainNameBackendStandard = {
+  5: "ETH_TEST_GOERLI",
+  1: 'ETH_MAINNET',
+  137: 'POLYGON_MAINNET',
+  80001: 'POLYGON_TEST_MUMBAI',
+}
+
 export const aliasChainIdsMapping = {
   1: 137,
   42: 80001,
@@ -109,7 +117,7 @@ export const PolygonNetworks = {
   MUMBAI_TESTNET: {
     chainId: utils.hexValue(80001),
     chainName: 'Polygon Mumbai Testnet',
-    nativeCurrency: { name: 'tMATIC', symbol: 'tMATIC', decimals: 18 },
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://matic-mumbai.chainstacklabs.com', 'https://rpc-mumbai.maticvigil.com'],
     blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
   },
@@ -131,8 +139,8 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
     const aliasDetails = channelDetails['aliasDetails'];
     const aliasChainId = aliasChainIdsMapping[CORE_CHAIN_ID];
     const caipChainId = convertChainIdToChainCaip(aliasChainId);
-    if (aliasDetails[caipChainId]) {
-      return aliasDetails[caipChainId];
+    if (aliasDetails[caipChainId!]) {
+      return aliasDetails[caipChainId!];
     }
   } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
     if (channelDetails['chain_id'] === aliasChainIdsMapping[CORE_CHAIN_ID].toString()) {

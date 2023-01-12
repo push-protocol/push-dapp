@@ -257,7 +257,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx(newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast);
+      executeDelegateTx({newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast});
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
@@ -274,7 +274,7 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
-    await createTransactionObject(newDelegatee, account, epnsToken, addresses, signerObject, library, setTxInProgress);
+    await createTransactionObject({newDelegatee, account, epnsToken, addresses, signerObject, library, setTxLoading:setTxInProgress});
     toolingPostReq('/gov/prev_delegation', { walletAddress: account })
       .then((res) => {
         console.log('result', res.data.user);

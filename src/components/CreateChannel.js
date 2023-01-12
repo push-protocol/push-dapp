@@ -50,7 +50,7 @@ function CreateChannel() {
   const [channelURL, setChannelURL] = React.useState('');
   const [channelFile, setChannelFile] = React.useState(undefined);
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
-  const [daiAmountVal, setDaiAmountVal] = useState('');
+  const [pushTokenAmountVal, setPushTokenAmountVal] = useState('');
   const [txStatus, setTxStatus] = useState(2);
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState('');
@@ -67,18 +67,18 @@ function CreateChannel() {
   //checking DAI for user
   React.useEffect(() => {
     if (!onCoreNetwork) return;
-    const checkDaiFunc = async () => {
-      let checkDaiAmount = new ethers.Contract(addresses.dai, abis.dai, library);
+    const checkPushTokenApprovalFunc = async () => {
+      let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
 
-      let value = await checkDaiAmount.allowance(account, addresses.epnscore);
+      let value = await checkPushTokenApprovedAmount.allowance(account, addresses.epnscore);
       value = value?.toString();
       const convertedVal = ethers.utils.formatEther(value);
-      setDaiAmountVal(convertedVal);
+      setPushTokenAmountVal(convertedVal);
       if (convertedVal >= minStakeFees) {
         setChannelStakeFees(convertedVal);
       }
     };
-    checkDaiFunc();
+    checkPushTokenApprovalFunc();
   }, []);
 
   // timer
@@ -210,14 +210,14 @@ function CreateChannel() {
     var signer = library.getSigner(account);
     console.log(signer);
 
-    let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
+    let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
 
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
     try {
-      if (daiAmountVal < 50.0) {
-        var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
+      if (pushTokenAmountVal < 50.0) {
+        var sendTransactionPromise = pushTokenContract.approve(addresses.epnscore, fees);
         const tx = await sendTransactionPromise;
 
         console.log(tx);
@@ -236,7 +236,7 @@ function CreateChannel() {
 
       setProgress(50);
 
-      const tx = await contract.createChannelWithFees(channelType, identityBytes, fees, {
+      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, 0, {
         gasLimit: 1000000,
       });
 
@@ -357,7 +357,7 @@ function CreateChannel() {
           {txStatus === 0 && (
             <Body>
               <div>Transaction failed due to one of the following reasons:</div>
-              <p>1. There is not enough DAI in your wallet.</p>
+              <p>1. There is not enough $PUSH in your wallet.</p>
               <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
             </Body>
           )}

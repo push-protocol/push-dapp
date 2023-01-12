@@ -9,7 +9,7 @@ import styled, { useTheme } from "styled-components";
 // Internal Compoonents
 import { NotificationItem } from "@pushprotocol/uiweb";
 import { H2, Item, Span } from "../primaries/SharedStyling";
-import { networkName } from "helpers/UtilityHelper";
+import { chainNameBackendStandard } from "helpers/UtilityHelper";
 
 export default function PreviewNotif({ details }) {
   const { delegatees, channelDetails } = useSelector((state) => state.admin);
@@ -32,7 +32,7 @@ export default function PreviewNotif({ details }) {
           app={channelDetail.name}
           icon={channelDetail.icon}
           image={test?.aimg}
-          chainName={networkName[chainId]}
+          chainName={chainNameBackendStandard[chainId]}
           theme={theme.scheme}
         />
       )
