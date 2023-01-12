@@ -152,23 +152,24 @@ export const NETWORK_DETAILS = {
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
 
-export const getAliasFromChannelDetails = (channelDetails: Object | null | string): string | null => {
+export const getAliasFromChannelDetails = (channelDetails: Object | null | string): {address: string, chainId: string} | null => {
   if (!channelDetails || channelDetails === 'unfetched') return null;
 
   if (channelDetails['aliasDetails']) {
     const aliasDetails = channelDetails['aliasDetails'];
-    let aliasAddress;
+    const aliasDetail = {chainId: null, address: null};
     appConfig.allowedNetworks.forEach((chainID) => {
       const caipChainId = convertChainIdToChainCaip(chainID);
       if (aliasDetails[caipChainId!]) {
-        aliasAddress = aliasDetails[caipChainId!]
+        aliasDetail.address = aliasDetails[caipChainId!];
+        aliasDetail.chainId = chainID;
       }
     })
-    if(aliasAddress)
-      return aliasAddress;
+    if(aliasDetail.address)
+      return aliasDetail;
   } else if (channelDetails['address'] != null && channelDetails['address'] != '') {
-    if (channelDetails['chain_id'] === aliasChainIdsMapping[CORE_CHAIN_ID].toString()) {
-      return channelDetails['address'];
+    if (appConfig.allowedNetworks.includes(+channelDetails['chain_id'])) {
+      return {address: channelDetails['address'], chainId: channelDetails['chain_id']};
     }
   }
 
