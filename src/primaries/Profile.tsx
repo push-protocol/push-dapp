@@ -150,6 +150,7 @@ const Body = styled.div`
 
 const Wallet = styled.div`
   width: 210px;
+  margin: 0px 10px;
   box-sizing: border-box;
   padding: 4px 16px;
   height: 44px;
@@ -168,6 +169,7 @@ const Wallet = styled.div`
     justify-content: space-between;
     border-radius: 13px;
     background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
+    margin: 0px 0px;
   }
   
   ${({ isDarkMode,bg }) => isDarkMode && `
