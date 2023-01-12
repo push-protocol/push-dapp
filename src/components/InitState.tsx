@@ -32,7 +32,7 @@ import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
 
 // Internals Configs
-import { abis, addresses, appConfig } from 'config';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -51,7 +51,7 @@ const InitState = () => {
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
 
   useEffect(() => {
-    if (!library) return;
+    if (!library || !chainId) return;
 
     (async function init() {
       const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
@@ -60,7 +60,7 @@ const InitState = () => {
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
 
       // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork ? addresses.epnsEthComm : addresses.epnsPolyComm;
+      const commAddress = CHAIN_DETAILS[chainId].commAddress;
       const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
