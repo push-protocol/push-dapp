@@ -571,7 +571,7 @@ const BodySection = styled(Section)`
 `
 
 const TextH2 = styled(H2)`
-  text-transform: uppercase;
+  text-transform: capitalize;
   margin: 20px 0px;
 
   .text {
