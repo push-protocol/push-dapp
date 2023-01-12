@@ -102,7 +102,7 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const { getUser, newUser, connectedUser, setConnectedUser } = useContext(ChatUserContext);
+  const { getUser, connectedUser, setConnectedUser } = useContext(ChatUserContext);
 
   const theme = useTheme();
 
@@ -179,10 +179,10 @@ function Chat() {
   // Rest of the loading logic
   useEffect(() => {
     if (isLoading) {
-      setConnectedUser(newUser);
+      setConnectedUser(connectedUser);
       connectUser();
     }
-  }, [newUser]);
+  }, [connectedUser]);
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -194,7 +194,7 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
-    if (!newUser) {
+    if (!connectedUser) {
       await getUser();
     }
 
