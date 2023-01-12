@@ -7,6 +7,14 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
 
+export type DropdownValueType = {
+  id: number,
+  value: string,
+  title: string,
+  icon: string,
+  function: () => void,
+}
+
 type DropdownProps = {
   dropdownValues: any[];
   textColor?: string;

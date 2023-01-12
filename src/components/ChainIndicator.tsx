@@ -8,14 +8,14 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import Dropdown from './Dropdown';
+import Dropdown, { DropdownValueType } from './Dropdown';
 import { H3, Image, Item, ItemH } from './SharedStyling.js';
 import { networkName, PolygonNetworks } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';
 
 // Internal Configs
-import { device } from '../config/Globals';
+import { SpanV2 } from './reusables/SharedStylingV2';
 
 const ChainIndicator = ({ isDarkMode }) => {
   const toggleArrowRef = useRef(null);
@@ -23,12 +23,12 @@ const ChainIndicator = ({ isDarkMode }) => {
   const { error, account } = useWeb3React();
   const theme = useTheme();
 
-  const [showDropdown, setShowDropdown] = React.useState(false);
-  const [dropdownValues, setDropdownValues] = React.useState([]);
-  const [currentChainId, setCurrentChainId] = React.useState('');
+  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
+  const [dropdownValues, setDropdownValues] = React.useState<DropdownValueType[]>([]);
+  const [currentChainId, setCurrentChainId] = React.useState<string>('');
 
   // fetches the current chain Id and sets the current chain Id state
-  const fetchCurrentChainId = async () => {
+  const fetchCurrentChainId: () => Promise<void> = async () => {
     const currentChainId = await window.ethereum.request({
       method: 'eth_chainId',
     });
@@ -36,8 +36,8 @@ const ChainIndicator = ({ isDarkMode }) => {
   };
 
   // handles network change request
-  async function handleChangeNetwork(chainId) {
-    const chainIds = appConfig.allowedNetworks;
+  const handleChangeNetwork: (chainId: number) => Promise<void> = async (chainId) => {
+    const chainIds = appConfig?.allowedNetworks;
     if (chainIds.includes(chainId)) {
       try {
         await window.ethereum.request({
@@ -69,7 +69,7 @@ const ChainIndicator = ({ isDarkMode }) => {
   }, []);
 
   React.useEffect(() => {
-    const dropdown = [];
+    const dropdown: DropdownValueType[] = [];
     appConfig.allowedNetworks.map((chainId) => {
       const chainName = networkName[chainId];
       dropdown.push({
@@ -179,7 +179,7 @@ const Container = styled.button`
     margin-right: 20px;
   }
 `;
-const CurrentChain = styled.span`
+const CurrentChain = styled(SpanV2)`
   margin: 0px 1px;
   padding: 6px;
   height: 34px;
@@ -226,7 +226,7 @@ const CurrentChainInfo = styled(ItemH)`
 
 const ChainName = styled(H3)`
   display: none;
-  font-family: "Strawford";
+  font-family: 'Strawford';
   text-transform: none;
   margin: 10px 0 10px 15px;
   font-weight: 400;
@@ -255,7 +255,7 @@ const ToggleArrowImg = styled.div`
     transform: rotate(-360deg);
     transition: transform 0.25s;
   }
-  img{
+  img {
     width: 12px;
   }
 `;
