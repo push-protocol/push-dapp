@@ -10,7 +10,8 @@ import styled, { useTheme } from "styled-components";
 // Internal Components
 import useToast from "hooks/useToast";
 import { Button, Item, Span } from "../primaries/SharedStyling";
-import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, PolygonNetworks } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, NETWORK_DETAILS } from "helpers/UtilityHelper";
+import { CHAIN_DETAILS } from 'config';
 
 const ChangeNetwork = () => {
   const changeNetworkToast = useToast();
@@ -47,7 +48,7 @@ const ChangeNetwork = () => {
         try {
           await provider.request({
             method: 'wallet_addEthereumChain',
-            params: [polygonChainId === 80001 ? PolygonNetworks.MUMBAI_TESTNET : PolygonNetworks.POLYGON_MAINNET],
+            params: [NETWORK_DETAILS[CHAIN_DETAILS[polygonChainId].name]],
           });
         } catch (addError) {
           console.error(`Unable to add ${networkName[polygonChainId]} Network in wallet`);

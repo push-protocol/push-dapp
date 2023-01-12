@@ -113,8 +113,8 @@ export const aliasChainIdsMapping = {
   5: 80001
 };
 
-export const PolygonNetworks = {
-  MUMBAI_TESTNET: {
+export const NETWORK_DETAILS = {
+  POLYGON_TEST_MUMBAI: {
     chainId: utils.hexValue(80001),
     chainName: 'Polygon Mumbai Testnet',
     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
@@ -128,6 +128,20 @@ export const PolygonNetworks = {
     rpcUrls: ['https://polygon-rpc.com'],
     blockExplorerUrls: ['https://www.polygonscan.com/'],
   },
+  BSC_TESTNET: {
+    chainId: utils.hexValue(97),
+    chainName: 'Bsc Testnet',
+    nativeCurrency: { name: 'BSC', symbol: 'BSC', decimals: 18 },
+    rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
+    blockExplorerUrls: ['https://testnet.bscscan.com/'],
+  },
+  BSC_MAINNET: {
+    chainId: utils.hexValue(56),
+    chainName: 'Bsc Mainnet',
+    nativeCurrency: { name: 'BSC', symbol: 'BSC', decimals: 18 },
+    rpcUrls: ['https://bsc-dataseed.binance.org/'],
+    blockExplorerUrls: ['https://bscscan.com/'],
+  }
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
