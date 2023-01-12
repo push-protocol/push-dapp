@@ -98,6 +98,7 @@ export const networkName = {
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
+  97: "BSC Testnet"
 };
 
 export const chainNameBackendStandard = {
