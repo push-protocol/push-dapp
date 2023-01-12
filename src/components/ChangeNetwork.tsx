@@ -10,7 +10,7 @@ import styled, { useTheme } from "styled-components";
 // Internal Components
 import useToast from "hooks/useToast";
 import { Button, Item, Span } from "../primaries/SharedStyling";
-import { aliasChainIdsMapping, CORE_CHAIN_ID, networkName, NETWORK_DETAILS } from "helpers/UtilityHelper";
+import { aliasChainIdsMapping, CORE_CHAIN_ID, NETWORK_DETAILS, networkName } from "helpers/UtilityHelper";
 import { CHAIN_DETAILS } from 'config';
 
 const ChangeNetwork = () => {
