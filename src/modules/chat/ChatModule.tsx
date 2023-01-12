@@ -83,6 +83,8 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
+  receiverData : User;
+  setReceiverData :(receiverData: User) => void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -120,6 +122,7 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  const [receiverData,setReceiverData] = useState<User>();
 
   const queryClient = new QueryClient({});
 
@@ -298,6 +301,8 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
+                receiverData,
+                setReceiverData
               }}
             >
               <ChatSidebarContainer

@@ -75,6 +75,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
+    receiverData
   }: AppContext = useContext<AppContext>(Context);
   const [newMessage, setNewMessage] = useState<string>('');
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -84,6 +85,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
+  const [userDetails,setUserDetails] = useState<User>();
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
@@ -546,6 +548,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     };
   };
 
+  // console.log("searchedUser in Chatbox",searchedUser)
+  // console.log("receiverData", receiverData);
+  // console.log("Connecteduser",connectedUser)
+
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
       setMessageBeingSent(true);
@@ -561,6 +567,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           createdUser,
           message,
         });
+        setUserDetails(user);
+        console.log("User",user);
+        console.log("Created User",createdUser)
 
         const msg: MessageIPFSWithCID | string = await PushNodeClient.createIntent({
           toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0], chainId }),
@@ -574,6 +583,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           sigType: signature,
           encryptedSecret: aesEncryptedSecret,
         });
+
+        console.log("Message",msg);
 
         if (typeof msg === 'string') {
           if (msg.toLowerCase() === 'your wallet is not whitelisted') {
@@ -620,7 +631,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           });
         }
       }
-
       setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
@@ -861,7 +871,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     <Item margin="30px 0px">
                       <ItemTextSlash>
                         <Image src={LockSlash} />
-                        {connectedUser?.publicKey ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
+                        {receiverData ? "Messages are encrypted (We have receiver's PGP keys)" : "Messages are not encrypted till the user accepts the chat request.(We don't have receiver's PGP keys)"}
                       </ItemTextSlash>
 
                       <FirstTime>

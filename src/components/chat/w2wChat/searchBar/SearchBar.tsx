@@ -37,6 +37,7 @@ const SearchBar = () => {
     userShouldBeSearched,
     setUserShouldBeSearched,
     inbox,
+    setReceiverData,
   }: AppContext = useContext<AppContext>(Context);
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
@@ -110,6 +111,7 @@ const SearchBar = () => {
       let ens: string;
       try {
         const address = await provider.resolveName(searchedUser);
+        // console.log("Address",address)
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
         if (ens) {
@@ -138,9 +140,9 @@ const SearchBar = () => {
 
     if (userSearchData.length) {
       filteredData = await PushNodeClient.getUser({ caip10 });
+      setReceiverData(filteredData);
       // Checking whether user already present in contact list
       let isUserConnected = checkIsUserConnected(filteredData);
-
       if (filteredData !== null && isUserConnected) {
         if (activeTab !== 0) {
           setUserShouldBeSearched(true);
@@ -180,6 +182,7 @@ const SearchBar = () => {
     setSearchedUser('');
     setHasUserBeenSearched(false);
     setIsLoadingSearch(false);
+    setReceiverData();
   };
 
   return (
