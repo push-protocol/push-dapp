@@ -56,7 +56,7 @@ export default function ChannelDetails() {
   }, [channelDetails, canVerify]);
 
   React.useEffect(() => {
-    if (!channelDetails) return;
+    if (!channelDetails || !onCoreNetwork) return;
     (async function() {
       const bn = channelDetails.channelStartBlock.toString();
 

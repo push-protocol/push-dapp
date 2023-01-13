@@ -141,7 +141,6 @@ const InitState = () => {
       const delegations = await getUserDelegations({ userCaipAddress: userAddressInCaip });
       const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
       let delegateeList: Array<{ channel: string }> = [];
-      console.log(delegations);
       if (
         ((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) ||
         (processingState === 0 && isChannelDetails)
@@ -156,7 +155,6 @@ const InitState = () => {
       if (delegations) {
         delegateeList.push(...delegations);
       }
-      console.log(delegateeList);
       if (delegateeList.length > 0) {
         const channelInformationPromise = [...delegateeList].map(({ channel }) => {
           return ChannelsDataStore.instance
@@ -228,7 +226,6 @@ const InitState = () => {
         });
       } else {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
-        console.log(aliasEth, aliasVerified);
         if (aliasEth) {
           // await checkUserForChannelOwnership(aliasEth);
           const channelDetail = await PushAPI.channels.search({
