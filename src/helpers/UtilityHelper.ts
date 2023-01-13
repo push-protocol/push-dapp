@@ -117,7 +117,7 @@ export const PolygonNetworks = {
   MUMBAI_TESTNET: {
     chainId: utils.hexValue(80001),
     chainName: 'Polygon Mumbai Testnet',
-    nativeCurrency: { name: 'tMATIC', symbol: 'tMATIC', decimals: 18 },
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
     rpcUrls: ['https://matic-mumbai.chainstacklabs.com', 'https://rpc-mumbai.maticvigil.com'],
     blockExplorerUrls: ['https://mumbai.polygonscan.com/'],
   },
