@@ -21,7 +21,7 @@ import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import UsersDataStore from 'singletons/UsersDataStore';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 // Constants
@@ -72,13 +72,14 @@ const InboxModule = () => {
   // }, [enabledSecretNotif]);
 
   React.useEffect(() => {
+    if(!chainId) return;
     (async function init() {
       const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
 
       // inititalise the read contract for the core network
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
       // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork ? addresses.epnsEthComm : addresses.epnsPolyComm;
+      const commAddress = CHAIN_DETAILS[chainId].commAddress;
       const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));

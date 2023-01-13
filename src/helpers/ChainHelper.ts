@@ -2,8 +2,8 @@
 import { ethers } from 'ethers';
 
 // Internal Components
-import { PolygonNetworks } from 'helpers/UtilityHelper';
-import { appConfig } from 'config';
+import { NETWORK_DETAILS } from 'helpers/UtilityHelper';
+import { appConfig, CHAIN_DETAILS } from 'config';
 
 // handles network change request
 export const handleChangeNetwork: (
@@ -20,7 +20,7 @@ export const handleChangeNetwork: (
     } catch (switchError) {
       // This error code indicates that the chain has not been added to MetaMask.
       if (switchError.code === 4902) {
-        const networkDetails = { ...PolygonNetworks[chainId === 137 ? 'POLYGON_MAINNET' : 'MUMBAI_TESTNET'] };
+        const networkDetails = { ...NETWORK_DETAILS[CHAIN_DETAILS[chainId].name] };
         try {
           await provider.request({
             method: 'wallet_addEthereumChain',

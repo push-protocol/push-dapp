@@ -22,9 +22,9 @@ export const config = {
    * Allowed Networks
    */
   allowedNetworks: [
-    // 42, //for kovan
     5, // for eth goerli
     80001, //for mumbai polygon
+    97 // bsc testnet
   ],
 
   /** 
@@ -36,6 +36,7 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
+    97: "https://data-seed-prebsc-1-s1.binance.org:8545"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -90,4 +91,28 @@ export const addresses = {
   USDTAddress: "0x13512979ade267ab5100878e2e0f485b568328a4", // mainnet address //n
   rockstarV2: "0xA2b885e7065EA59a3251489715ca80DE5Ff642f8", //mainnet address
   NFTRewardsV2: "0xdc66567a990B7fa10730459537620857c9e03287", //mainnet address
+}
+
+export const CHAIN_DETAILS = {
+  5: {
+    label: "Ethereum Goerli",
+    name: "ETH_TEST_GOERLI",
+    chainId: 5,
+    rpcUrl: "https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
+    commAddress: "0xc064F30bac07e84500c97A04D21a9d1bfFC72Ec0"
+  }, 
+  80001: {
+    label: "Polygon Mumbai",
+    name: "POLYGON_TEST_MUMBAI",
+    chainId: 80001,
+    rpcUrl: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
+    commAddress: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504"
+  },
+  97: {
+    label: "BSC Testnet",
+    name: "BSC_TESTNET",
+    chainId: 97,
+    rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    commAddress: "0x4132061E3349ff36cFfCadA460E10Bd4f31F7ea8"
+  }
 }

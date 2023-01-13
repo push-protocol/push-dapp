@@ -30,9 +30,10 @@ import {
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internals Configs
-import { abis, addresses, appConfig } from 'config';
+import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -51,7 +52,7 @@ const InitState = () => {
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
 
   useEffect(() => {
-    if (!library) return;
+    if (!library || !chainId) return;
 
     (async function init() {
       const coreProvider = onCoreNetwork ? library : new ethers.providers.JsonRpcProvider(appConfig.coreRPC);
@@ -60,7 +61,7 @@ const InitState = () => {
       const coreContractInstance = new ethers.Contract(addresses.epnscore, abis.epnscore, coreProvider);
 
       // initialise the read contract for the communicator function
-      const commAddress = onCoreNetwork ? addresses.epnsEthComm : addresses.epnsPolyComm;
+      const commAddress = CHAIN_DETAILS[chainId].commAddress;
       const commContractInstance = new ethers.Contract(commAddress, abis.epnsComm, library);
       dispatch(setCommunicatorReadProvider(commContractInstance));
       dispatch(setCoreReadProvider(coreContractInstance));
@@ -118,7 +119,7 @@ const InitState = () => {
           setUserChannelDetails({
             ...response,
             ...channelJson,
-            subscriberCount: subsCount,
+            subscriber_count: subsCount,
           })
         );
         dispatch(setCoreChannelAdmin(ownerAccount));
@@ -140,7 +141,6 @@ const InitState = () => {
       const delegations = await getUserDelegations({ userCaipAddress: userAddressInCaip });
       const isChannelDetails = channelDetails && channelDetails !== 'unfetched';
       let delegateeList: Array<{ channel: string }> = [];
-      console.log(delegations);
       if (
         ((aliasAddress || aliasEthAddress) && aliasVerified && isChannelDetails) ||
         (processingState === 0 && isChannelDetails)
@@ -155,7 +155,6 @@ const InitState = () => {
       if (delegations) {
         delegateeList.push(...delegations);
       }
-      console.log(delegateeList);
       if (delegateeList.length > 0) {
         const channelInformationPromise = [...delegateeList].map(({ channel }) => {
           return ChannelsDataStore.instance
@@ -228,7 +227,14 @@ const InitState = () => {
       } else {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
         if (aliasEth) {
-          await checkUserForChannelOwnership(aliasEth);
+          // await checkUserForChannelOwnership(aliasEth);
+          const channelDetail = await PushAPI.channels.search({
+            page: 1,
+            limit: 1,
+            query: aliasEth,
+            env: appConfig.appEnv
+          });
+          if(channelDetail) dispatch(setUserChannelDetails(channelDetail[0]));
           if (!aliasVerified) {
             dispatch(setProcessingState(3));
           } else {
