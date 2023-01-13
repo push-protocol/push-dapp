@@ -96,6 +96,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   // get ens name
   const ensName = useResolveEns(currentChat?.msg?.name);
 
+
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat });
@@ -550,7 +551,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   // console.log("searchedUser in Chatbox",searchedUser)
   // console.log("receiverData", receiverData);
-  // console.log("Connecteduser",connectedUser)
+  console.log("Connecteduser",connectedUser)
+    console.log("Receiver Data",receiverData)
+    console.log("Current Chat",currentChat)
 
   const sendIntent = async ({ message, messageType }: { message: string; messageType: string }): Promise<void> => {
     try {
@@ -562,6 +565,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
         const user: User = await PushNodeClient.getUser({ caip10: currentChat.wallets.split(',')[0] });
+        console.log("Current Chat",currentChat)
+        console.log("User",user);
         const { messageContent, encryptionType, aesEncryptedSecret, signature } = await encryptingMessages({
           user,
           createdUser,
@@ -837,6 +842,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                             <MessageTime>{time}</MessageTime>
 
                             {i === 0 && intents?.length === 2 && (
+                              //This is Chat Tab where every message comes and when sender sends the Intent so it does come here
                               <ItemText>
                                 <Image src={Lock} />
                                 Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
@@ -851,9 +857,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                             )}
 
                             {i === 0 && intents?.length === 1 && (
+                              //This is Intents Tab in PushChat. Here we are seeing wrt to connectedUser. If connecteduser has PGP or not
+                              //This below message is also shown when a user sends an intent to receiver and waits till the receiver accepts the intent
                               <ItemTextSlash>
                                 <Image src={LockSlash} />
-                               {connectedUser?.publicKey ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
+                               {currentChat?.msg?.encType==='pgp' ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
                               </ItemTextSlash>
                             )}
                           </Item>
@@ -868,12 +876,12 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     );
                   })}
                   {messages && messages?.length === 0 && (
+                    //This part is from the sender side when it sends an Intent to any user (new or old)
                     <Item margin="30px 0px">
                       <ItemTextSlash>
                         <Image src={LockSlash} />
-                        {receiverData ? "Messages are encrypted (We have receiver's PGP keys)" : "Messages are not encrypted till the user accepts the chat request.(We don't have receiver's PGP keys)"}
+                        {receiverData?.publicKey ? "Messages are encrypted" : "Messages are not encrypted till the user accepts the chat request."}
                       </ItemTextSlash>
-
                       <FirstTime>
                         This is your first conversation with recipient.<br></br> Start the conversation by sending a
                         message.

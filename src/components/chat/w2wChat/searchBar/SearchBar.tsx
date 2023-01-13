@@ -140,6 +140,7 @@ const SearchBar = () => {
 
     if (userSearchData.length) {
       filteredData = await PushNodeClient.getUser({ caip10 });
+      console.log("Searched User Data",filteredData)
       setReceiverData(filteredData);
       // Checking whether user already present in contact list
       let isUserConnected = checkIsUserConnected(filteredData);

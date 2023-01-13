@@ -108,5 +108,7 @@ export interface AppContext {
     setActiveTab: (active: number) => void;
     userShouldBeSearched: boolean;
     setUserShouldBeSearched: (value: boolean) => void;
+    receiverData : User;
+    setReceiverData :(receiverData: User) => void; 
 }
 
