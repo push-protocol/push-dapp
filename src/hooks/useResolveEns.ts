@@ -53,6 +53,8 @@ export function useResolveEns(username: string): string {
         }
       });
     }
+    return ()=> setEnsName(null)
+    
   }, [currentChat]);
 
   return ensName;

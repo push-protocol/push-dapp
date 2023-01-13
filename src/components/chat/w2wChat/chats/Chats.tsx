@@ -77,7 +77,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage>
-                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map((str,index) => <TextMessage key={index}>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
                 {/* {messageBeingSent ? (
                   <p>✔️</p>
@@ -89,7 +89,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           ) : (
             <MessageWrapper align="row">
               <ReceivedMessage>
-                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map((str,index) => <TextMessage key={index}>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
             </MessageWrapper>
@@ -102,7 +102,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
               <MessageText
 
               >
-                {msg.messageContent.split('\n').map(str => <p>{str}</p>)}
+                {msg.messageContent.split('\n').map((str,index) => <p key={index}>{str}</p>)}
               </MessageText>
               {messageBeingSent ? (
                 <SpanV2 margin="-5px 0 0 0">

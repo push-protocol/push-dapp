@@ -92,6 +92,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   useEffect(() => {
     if (!channelObject.channel) return;
     setSubscribed(subscriptionStatus[channelObject.channel]);
+
+    return ()=> setSubscribed(false)
   }, [channelObject]);
 
   React.useEffect(() => {
@@ -114,11 +116,18 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         fetchChannelJson();
       });
     }
+
+    return ()=>{
+      setChannelObject({})
+      setIsBlocked(false)
+    }
   }, [account, channelObject, chainId]);
 
   React.useEffect(() => {
     if (!channelObjectProp) return;
     setChannelObject(channelObjectProp);
+
+    return ()=>setChannelObject({})
   }, [channelObjectProp]);
 
   React.useEffect(() => {
@@ -131,6 +140,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       .catch((err) => {
         console.log(channelObject.verifiedBy, err);
       });
+
+      return ()=> setVerifierDetails(null)
   }, [isVerified, channelObject]);
 
   const EPNS_DOMAIN = {
@@ -182,6 +193,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       )
     );
     setCanUnverify(channelObject.verifiedBy == account);
+
+    return ()=>{
+      setIsVerified(false)
+      setCanUnverify(false)
+    }
   }, [channelObject]);
 
   // toast customize

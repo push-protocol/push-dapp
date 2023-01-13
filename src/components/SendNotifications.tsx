@@ -52,7 +52,6 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
     thumb: 'thumb',
     track: 'track',
     checked: 'checked',
-    focusVisible: 'focusVisible',
   },
   disableRipple: true,
   focusVisibleClassName: 'focusVisible',
@@ -78,7 +77,7 @@ export const IOSSwitch = styled(Switch).attrs(() => ({
       }
     }
 
-    &.focusVisible &.thumb {
+    &.thumb {
       color: #52d869;
     }
   }
