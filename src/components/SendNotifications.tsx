@@ -121,7 +121,7 @@ function SendNotifications() {
   const theme = useTheme();
   const { account, library, chainId } = useWeb3React();
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
-  const { channelDetails, delegatees } = useSelector((state: any) => state.admin);
+  const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
   const { canSend } = useSelector((state: any) => {
     return state.canSend;
@@ -901,14 +901,14 @@ function SendNotifications() {
                 width="100%"
                 onSubmit={handleSendMessage}>
                 <Item flex="1" self="stretch" align="stretch" width="100%">
-                  {console.log(cannotDisplayDelegatees)}
                   {!cannotDisplayDelegatees && (
                     <Item flex="1" justify="flex-start" align="stretch">
                       <DropdownStyledParent>
                         <DropdownStyled
                           options={delegateeOptions}
                           onChange={(option: any) => {
-                            setChannelAddress(option.value);
+                            if(option.value == aliasEthAddr) setChannelAddress(account);
+                            else setChannelAddress(option.value);
                             setNFRecipient(option.value);
                           }}
                           placeholder="Select a Channel"
