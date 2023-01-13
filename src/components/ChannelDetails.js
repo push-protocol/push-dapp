@@ -38,7 +38,8 @@ export default function ChannelDetails() {
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
   const [creationDate, setCreationDate] = React.useState('');
-  const { channelState } = channelDetails;
+  let { channelState } = channelDetails;
+  if(!channelState) channelState = channelDetails['activation_status'];
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
 
@@ -84,7 +85,7 @@ export default function ChannelDetails() {
               <AdaptiveMobileItemHV2 justifyContent="flex-start">
                 <Subscribers>
                   <img style={{ width: '15px' }} src="/subcount.svg" alt="subscount"></img>
-                  <SubscribersCount>{channelDetails.subscriberCount}</SubscribersCount>
+                  <SubscribersCount>{channelDetails.subscriber_count}</SubscribersCount>
                 </Subscribers>
                 <ChanneStateText active={channelIsActive}>
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}

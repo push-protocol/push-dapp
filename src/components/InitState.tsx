@@ -30,6 +30,7 @@ import {
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { setPushAdmin } from 'redux/slices/contractSlice';
 import { getChannelsSearch, getUserDelegations } from 'services';
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internals Configs
 import { abis, addresses, appConfig, CHAIN_DETAILS } from 'config';
@@ -118,7 +119,7 @@ const InitState = () => {
           setUserChannelDetails({
             ...response,
             ...channelJson,
-            subscriberCount: subsCount,
+            subscriber_count: subsCount,
           })
         );
         dispatch(setCoreChannelAdmin(ownerAccount));
@@ -227,8 +228,16 @@ const InitState = () => {
         });
       } else {
         const { aliasEth, aliasVerified } = await checkUserForEthAlias();
+        console.log(aliasEth, aliasVerified);
         if (aliasEth) {
-          await checkUserForChannelOwnership(aliasEth);
+          // await checkUserForChannelOwnership(aliasEth);
+          const channelDetail = await PushAPI.channels.search({
+            page: 1,
+            limit: 1,
+            query: aliasEth,
+            env: appConfig.appEnv
+          });
+          if(channelDetail) dispatch(setUserChannelDetails(channelDetail[0]));
           if (!aliasVerified) {
             dispatch(setProcessingState(3));
           } else {

@@ -76,9 +76,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   let isOwner;
   if (!onCoreNetwork) {
-    isOwner = channelObject.alias_address === account;
+    isOwner = channelObject.alias_address == account;
   } else {
-    isOwner = channelObject.channel === account;
+    isOwner = channelObject.channel == account;
   }
 
   //clear toast variable after it is shown
@@ -891,22 +891,27 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               </UnsubscribeButton>
             )}
             {!loading && !subscribed && (
-              <SubscribeButton
-                onClick={subscribe}
-                disabled={txInProgress}
-                className="optin"
-              >
-                {txInProgress && (
-                  <ActionLoader>
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={16}
-                      spinnerColor="#FFF"
-                    />
-                  </ActionLoader>
+              <>
+                {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
+                {!isOwner && (
+                  <SubscribeButton
+                  onClick={subscribe}
+                  disabled={txInProgress}
+                  className="optin"
+                >
+                  {txInProgress && (
+                    <ActionLoader>
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={16}
+                        spinnerColor="#FFF"
+                      />
+                    </ActionLoader>
+                  )}
+                  <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                </SubscribeButton>
                 )}
-                <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-              </SubscribeButton>
+              </> 
             )}
             {!loading && subscribed && (
               <>
