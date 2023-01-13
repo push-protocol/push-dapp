@@ -130,7 +130,7 @@ function SendNotifications() {
 
   const [nfProcessing, setNFProcessing] = React.useState(0);
   const [channelAddress, setChannelAddress] = React.useState('');
-  const [nfRecipient, setNFRecipient] = React.useState('');
+  const [nfRecipient, setNFRecipient] = React.useState(account);
   const [multipleRecipients, setMultipleRecipients] = React.useState([]);
   const [tempRecipeint, setTempRecipient] = React.useState(''); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
   const [nfType, setNFType] = React.useState('1');
@@ -185,7 +185,7 @@ function SendNotifications() {
         }))
       );
       // default the channel address to the first one on the list which should be that of the user if they have a channel
-      setChannelAddress(delegatees[0].address);
+      setChannelAddress(account);
     }
   }, [delegatees, account]);
 
@@ -907,9 +907,14 @@ function SendNotifications() {
                         <DropdownStyled
                           options={delegateeOptions}
                           onChange={(option: any) => {
-                            if(option.value == aliasEthAddr) setChannelAddress(account);
-                            else setChannelAddress(option.value);
-                            setNFRecipient(option.value);
+                            if(option.value == aliasEthAddr) {
+                              setChannelAddress(account);
+                              setNFRecipient(account);
+                            }
+                            else {
+                              setChannelAddress(option.value);
+                              setNFRecipient(option.value);
+                            }
                           }}
                           placeholder="Select a Channel"
                           value={delegateeOptions[0]}

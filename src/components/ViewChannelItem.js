@@ -331,9 +331,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // };
 
       let channelAddress = channelObject.channel;
-      // if (!onCoreNetwork) {
-      //   channelAddress = channelObject.alias_address;
-      // }
+      if (!onCoreNetwork) {
+        channelAddress = channelObject.alias_address;
+      }
 
       // const message = {
       //   channel: channelAddress,
@@ -512,9 +512,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // };
 
       let channelAddress = channelObject.channel;
-      // if (!onCoreNetwork) {
-      //   channelAddress = channelObject.alias_address;
-      // }
+      if (!onCoreNetwork) {
+        channelAddress = channelObject.alias_address;
+      }
 
       // const message = {
       //   channel: channelAddress,
