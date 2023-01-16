@@ -112,10 +112,8 @@ const SearchBar = () => {
       let ens: string;
       try {
         const address = await provider.resolveName(searchedUser);
-        console.log("Address",address)
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
-        console.log("ENS",ens)
         if (ens) {
           handleUserSearch(ens);
         } else {
@@ -124,7 +122,6 @@ const SearchBar = () => {
           setHasUserBeenSearched(true);
         }
       } catch (err) {
-        console.log("Error",err)
         setIsInvalidAddress(true);
         setFilteredUserData([]);
         setHasUserBeenSearched(true);
