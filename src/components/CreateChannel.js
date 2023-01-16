@@ -50,7 +50,7 @@ function CreateChannel() {
   const [channelURL, setChannelURL] = React.useState('');
   const [channelFile, setChannelFile] = React.useState(undefined);
   const [channelStakeFees, setChannelStakeFees] = React.useState(minStakeFees);
-  const [daiAmountVal, setDaiAmountVal] = useState('');
+  const [pushTokenAmountVal, setPushTokenAmountVal] = useState('');
   const [txStatus, setTxStatus] = useState(2);
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState('');
@@ -67,18 +67,18 @@ function CreateChannel() {
   //checking DAI for user
   React.useEffect(() => {
     if (!onCoreNetwork) return;
-    const checkDaiFunc = async () => {
-      let checkDaiAmount = new ethers.Contract(addresses.dai, abis.dai, library);
+    const checkPushTokenApprovalFunc = async () => {
+      let checkPushTokenApprovedAmount = new ethers.Contract(addresses.pushToken, abis.pushToken, library);
 
-      let value = await checkDaiAmount.allowance(account, addresses.epnscore);
+      let value = await checkPushTokenApprovedAmount.allowance(account, addresses.epnscore);
       value = value?.toString();
       const convertedVal = ethers.utils.formatEther(value);
-      setDaiAmountVal(convertedVal);
+      setPushTokenAmountVal(convertedVal);
       if (convertedVal >= minStakeFees) {
         setChannelStakeFees(convertedVal);
       }
     };
-    checkDaiFunc();
+    checkPushTokenApprovalFunc();
   }, []);
 
   // timer
@@ -210,14 +210,14 @@ function CreateChannel() {
     var signer = library.getSigner(account);
     console.log(signer);
 
-    let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
+    let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
 
     // Pick between 50 DAI AND 25K DAI
     const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
 
     try {
-      if (daiAmountVal < 50.0) {
-        var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
+      if (pushTokenAmountVal < 50.0) {
+        var sendTransactionPromise = pushTokenContract.approve(addresses.epnscore, fees);
         const tx = await sendTransactionPromise;
 
         console.log(tx);
@@ -236,7 +236,7 @@ function CreateChannel() {
 
       setProgress(50);
 
-      const tx = await contract.createChannelWithFees(channelType, identityBytes, fees, {
+      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, 0, {
         gasLimit: 1000000,
       });
 
@@ -338,9 +338,9 @@ function CreateChannel() {
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
-          <ItemWarning>
+          {/* <ItemWarning>
                  ⚠️ Channel Creation is currently Paused due to Smart Contract v1.5 Upgrade. Please check <ItemLink target={'_blank'} href='https://medium.com/push-protocol/introducing-push-protocol-v1-5-80eb39b55424'>this article</ItemLink> for more info.
-            </ItemWarning>
+            </ItemWarning> */}
 
             <TextH2>
               <Span className='text'>
@@ -357,7 +357,7 @@ function CreateChannel() {
           {txStatus === 0 && (
             <Body>
               <div>Transaction failed due to one of the following reasons:</div>
-              <p>1. There is not enough DAI in your wallet.</p>
+              <p>1. There is not enough $PUSH in your wallet.</p>
               <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
             </Body>
           )}
@@ -387,19 +387,19 @@ function CreateChannel() {
           <Section>
             <ItemHere>
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
-              //  onClick={() => setStepFlow(0)}
+               onClick={() => setStepFlow(0)}
                >
                 <div>Staking Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
-              // onClick={() => setStepFlow(1)}
+              onClick={() => setStepFlow(1)}
               >
                 <div>Channel Info</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
-              //  onClick={() => setStepFlow(2)}
+               onClick={() => setStepFlow(2)}
                >
                 <div>Upload Logo</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />

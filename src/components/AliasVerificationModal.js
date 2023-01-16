@@ -13,7 +13,7 @@ import { Button, H2, H3, Input, Item, Span } from '../primaries/SharedStyling';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Internal Configs
-import { abis, addresses } from "config";
+import { abis, CHAIN_DETAILS } from "config";
 
 export default function AliasVerificationModal({
   onClose,
@@ -27,8 +27,8 @@ export default function AliasVerificationModal({
   const themes = useTheme();
 
   const modalRef = useRef(null);
-  const polygonCommsContract = new ethers.Contract(
-    addresses.epnsPolyComm,
+  const commContract = new ethers.Contract(
+    CHAIN_DETAILS[chainId].commAddress,
     abis.epnsComm,
     signer
   );
@@ -50,7 +50,7 @@ export default function AliasVerificationModal({
 
     const submitAlias = () => {
       setLoading("loading");
-      const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(
+      const anotherSendTxPromise = commContract.verifyChannelAlias(
         mainAddress
       );
       anotherSendTxPromise

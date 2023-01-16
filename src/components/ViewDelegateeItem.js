@@ -84,12 +84,12 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
  
     setTxLoading(true);
     if(transactionMode === 'withgas'){
-     await executeDelegateTx(delegateeAddress,epnsToken,toast,setTxLoading,library,LoaderToast);
+     await executeDelegateTx({delegateeAddress,epnsToken,toast,setTxInProgress:setTxLoading,library,LoaderToast});
      setTxInProgress(false); 
      return;
     }
     if (pushBalance < PUSH_BALANCE_TRESHOLD) {
-      // await  executeDelegateTx(delegateeAddress,epnsToken,toast,setTxLoading,library,LoaderToast)
+      // await  executeDelegateTx({delegateeAddress,epnsToken,toast,setTxInProgress:setTxLoading,library,LoaderToast})
       toast.dark("Atleast " + PUSH_BALANCE_TRESHOLD +" PUSH required for gasless delegation!", {
         position: "bottom-right",
         type: toast.TYPE.ERROR,
@@ -106,7 +106,7 @@ function ViewDelegateeItem({ delegateeObject, epnsToken, signerObject, pushBalan
     }
     if(!web3.utils.isAddress(delegateeAddress))
     delegateeAddress = await ens.getAddress(delegateeAddress);
-    await createTransactionObject(delegateeAddress,account,epnsToken,addresses,signerObject,library,setTxLoading);
+    await createTransactionObject({delegateeAddress,account,epnsToken,addresses,signerObject,library,setTxLoading});
     setTxInProgress(false);
     toolingPostReq('/gov/prev_delegation',{"walletAddress": account}).then(res=>{
       console.log("result",res.data.user)

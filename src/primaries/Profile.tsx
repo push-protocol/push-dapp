@@ -153,6 +153,7 @@ const Container = styled.button`
   @media (max-width: 992px) {
     width: 100%;
     justify-content: flex-start;
+    margin-right: 20px;
   }
 `
 const Wallet = styled.span`

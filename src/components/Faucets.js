@@ -34,6 +34,12 @@ const Faucets = () => {
       title: "Mumbai Faucet",
       link: "https://faucet.polygon.technology/",
     },
+    {
+      id: "97",
+      value: "BNB",
+      title: "BNB Faucet",
+      link: "https://testnet.bnbchain.org/faucet-smart",
+    }
   ];
 
   // render

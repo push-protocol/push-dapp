@@ -24,6 +24,7 @@ export const config = {
   allowedNetworks: [
     1, //for ethereum mainnet
     137, //for polygon mainnet
+    56, // for bsc mainnet
   ],
 
   /**
@@ -35,6 +36,7 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     137: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
+    56: "https://bsc-dataseed.binance.org/"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -73,7 +75,7 @@ export const addresses = {
   epnscore: '0x66329Fdd4042928BfCAB60b179e1538D56eeeeeE', // mainnet address core
   epnsEthComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address eth comm
   epnsPolyComm: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa', // mainnet address polygon comm
-  dai: '0x6B175474E89094C44Da98b954EedeAC495271d0F', // mainnet address
+  pushToken: '0xf418588522d5dd018b425E472991E52EBBeEEEEE', // mainnet address
   aDai: '0xcB1Fe6F440c49E9290c3eb7f158534c2dC374201', // mainnet address
   staking: '0xB72ff1e675117beDefF05a7D0a472c3844cfec85', // mainnet address
   yieldFarmPUSH: '0x6019B84E2eE9EB62BC42E32AB6375A7095886366', // mainnet address
@@ -90,3 +92,27 @@ export const addresses = {
   rockstarV2: '0xA2b885e7065EA59a3251489715ca80DE5Ff642f8', //mainnet address
   NFTRewardsV2: '0xdc66567a990B7fa10730459537620857c9e03287', //mainnet address
 };
+
+export const CHAIN_DETAILS = {
+  1: {
+    label: "Ethereum Mainnet",
+    name: "ETH_MAINNET",
+    chainId: 1,
+    rpcUrl: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  }, 
+  137: {
+    label: "Polygon Mainnet",
+    name: "POLYGON_MAINNET",
+    chainId: 137,
+    rpcUrl: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  },
+  56: {
+    label: "BSC Mainnet",
+    name: "BSC_MAINNET",
+    chainId: 56,
+    rpcUrl: "https://bsc-dataseed.binance.org/",
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  }
+}

@@ -3,7 +3,8 @@ export const config = {
   /** 
    * API Calls Related
    */
-  infuraAPIKey: 'e214e9781e104829bc93941508a45b58'
+  // infuraAPIKey: 'e214e9781e104829bc93941508a45b58'
+  infuraAPIKey: '1afc24a3e4c443a0990d6e5efc2ecde5'
 
 }
 
@@ -23,6 +24,7 @@ import rockstarV2Abi from "./abis/RockstarV2.json";
 import stakingAbi from "./abis/Staking.json";
 import UniswapV2Router02Abi from "./abis/UniswapV2Router02.json";
 import yieldFarmingAbi from "./abis/YieldFarm.json";
+import pushTokenAbi from "./abis/pushToken.json";
 
 export const abis = {
   erc20: erc20Abi,
@@ -31,6 +33,7 @@ export const abis = {
   epnsPolyComm: epnsCommAbi,
   epnsComm: epnsCommAbi,
   dai: daiAbi,
+  pushToken: pushTokenAbi,
   epnsToken: epnsTokenAbi,
   staking: stakingAbi,
   yieldFarming: yieldFarmingAbi,

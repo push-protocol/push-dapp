@@ -18,7 +18,7 @@ import { getReq, postReq } from '../api';
 import { A, Button, H3, Item, Section, Span } from '../primaries/SharedStyling';
 
 // Internal Configs
-import { abis, addresses, appConfig } from 'config';
+import { abis, appConfig, CHAIN_DETAILS } from 'config';
 import GLOBALS from "config/Globals";
 
 const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
@@ -28,13 +28,21 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   const dispatch = useDispatch();
 
   // const modalRef = useRef(null);
-  const polygonCommsContract = new ethers.Contract(addresses.epnsPolyComm, abis.epnsComm, signer);
+  const commContract = new ethers.Contract(CHAIN_DETAILS[chainId].commAddress, abis.epnsComm, signer);
   const [loading, setLoading] = useState('');
   const [success, setSuccess] = useState(false);
   const mainAddress = aliasEthAccount;
 
-  // Form signer and contract connection
-  // useClickAway(modalRef, () => onClose(loading !== ""));
+  const Faucets = {
+    80001: {
+      label: "Mumbai MATIC",
+      url: "https://faucet.polygon.technology/"
+    },
+    97: {
+      label: "Testnet BNB",
+      url: "https://testnet.bnbchain.org/faucet-smart"
+    }
+  }
 
   const checkAlias = async () => {
     if (mainAddress == aliasEthAccount) {
@@ -56,7 +64,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
 
   const submitAlias = () => {
     setLoading('Processing');
-    const anotherSendTxPromise = polygonCommsContract.verifyChannelAlias(mainAddress);
+    const anotherSendTxPromise = commContract.verifyChannelAlias(mainAddress);
     anotherSendTxPromise
       .then(async (tx) => {
         console.log(tx);
@@ -128,8 +136,8 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
           color={theme.default.secondaryColor}
         >
           You will need{' '}
-          <A href="https://faucet.polygon.technology/" target="_blank">
-            testnet mumbai matic
+          <A href={Faucets[chainId].url} target="_blank">
+            {Faucets[chainId].label}
           </A>{' '}
           to proceed.
         </SpanV2>
