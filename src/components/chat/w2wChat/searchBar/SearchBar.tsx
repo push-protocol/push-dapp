@@ -22,6 +22,8 @@ import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
 import { AppContext, User } from 'types/chat';
+import { useResolveEns } from 'hooks/useResolveEns';
+import { appConfig } from 'config';
 
 const SearchBar = () => {
   // get theme
@@ -44,7 +46,8 @@ const SearchBar = () => {
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   // const provider = ethers.getDefaultProvider();
   const projectId = process.env.REACT_APP_INFURA_API_KEY;
-  const provider = new InfuraProvider("homestead", projectId)
+  // const provider = new InfuraProvider("homestead", projectId)
+  const provider = new InfuraProvider("homestead", appConfig.infuraAPIKey)
   const searchFeedToast = useToast();
 
   useEffect(() => {
@@ -112,8 +115,10 @@ const SearchBar = () => {
       let ens: string;
       try {
         const address = await provider.resolveName(searchedUser);
+        console.log("Address",address)
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
+        console.log("ENS",ens)
         if (ens) {
           handleUserSearch(ens);
         } else {
@@ -122,6 +127,7 @@ const SearchBar = () => {
           setHasUserBeenSearched(true);
         }
       } catch (err) {
+        console.log("Error",err)
         setIsInvalidAddress(true);
         setFilteredUserData([]);
         setHasUserBeenSearched(true);

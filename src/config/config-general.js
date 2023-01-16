@@ -3,7 +3,8 @@ export const config = {
   /** 
    * API Calls Related
    */
-  infuraAPIKey: 'e214e9781e104829bc93941508a45b58'
+  // infuraAPIKey: 'e214e9781e104829bc93941508a45b58'
+  infuraAPIKey: '1afc24a3e4c443a0990d6e5efc2ecde5'
 
 }
 
