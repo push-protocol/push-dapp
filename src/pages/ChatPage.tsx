@@ -12,7 +12,7 @@ import ChatModule from 'modules/chat/ChatModule';
 import GLOBALS from 'config/Globals';
 
 // Chat page
-const ChatPage = () => {
+const ChatPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

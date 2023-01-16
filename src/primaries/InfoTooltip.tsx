@@ -6,7 +6,7 @@ import { AiFillInfoCircle } from 'react-icons/ai';
 import { Tooltip } from "@material-ui/core";
 
 // Faucet URLs
-function InfoTooltip({title, Infocolor="white"}) {
+function InfoTooltip({title, Infocolor="white"}:{title:string,Infocolor:string}):JSX.Element {
   // render
   return (
     <Tooltip style={{marginLeft: "5px"}} title={title}>

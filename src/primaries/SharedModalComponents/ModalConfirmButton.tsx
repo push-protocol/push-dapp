@@ -14,7 +14,7 @@ type ModalConfirmButtonType = {
     isLoading: boolean
 }
 
-const ModalConfirmButton = ({text, onClick, isLoading}:ModalConfirmButtonType)=>{
+const ModalConfirmButton = ({text, onClick, isLoading}:ModalConfirmButtonType):JSX.Element=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>

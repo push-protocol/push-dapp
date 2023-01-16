@@ -12,14 +12,14 @@ import { networkName } from "helpers/UtilityHelper";
 // Internal Configs
 import { appConfig } from "config";
 
-function NotAvailablePage(props) {
+function NotAvailablePage(props:any):JSX.Element {
   const themes = useTheme();
   const { chainId } = useWeb3React();
   const onCoreNetwork = chainId === appConfig.coreContractChain;
 
   React.useEffect(() => {
     if (onCoreNetwork) {
-      const url = window.location.origin;
+      const url:string = window.location.origin;
       window.location.replace(`${url}/#/channels`);
     }
   })

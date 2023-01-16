@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 
 // Other Information section
-const GovPage = () => {
+const GovPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

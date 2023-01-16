@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Spambox from "segments/Spambox";
 
 // Create Header
-function InboxPage() {
+function InboxPage():JSX.Element {
   ReactGA.pageview("/spam");
 
   // Render

@@ -5,10 +5,17 @@ import React from "react";
 import styled, { css, keyframes } from 'styled-components';
 import { AnimateOnChange } from 'react-animation';
 
+interface IBellPropType{
+  badgeCount: number;
+  bellPressedCB: any;
+  width: number|string;
+  height: number|string;
+}
+
 // Create Header
-function Bell({ badgeCount, bellPressedCB, width, height }) {
-  const [badge, setBadge] = React.useState(0);
-  const [ring, setRing] = React.useState(false);
+function Bell({ badgeCount, bellPressedCB, width, height }:IBellPropType):JSX.Element {
+  const [badge, setBadge] = React.useState<number>(0);
+  const [ring, setRing] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     // Set new badge count and ring the bell

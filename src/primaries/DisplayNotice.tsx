@@ -6,7 +6,7 @@ import { AnimateOnChange } from 'react-animation';
 import styled, { css } from 'styled-components';
 
 // Create Header
-const DisplayNotice = ({ title }) => {
+const DisplayNotice = ({ title }:{title:string}):JSX.Element => {
   return (
     <Container>
       <AnimateOnChange

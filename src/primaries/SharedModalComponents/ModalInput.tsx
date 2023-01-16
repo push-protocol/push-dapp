@@ -12,7 +12,7 @@ type ModalInputType = {
     title:string
 }
 
-const ModalInput = React.forwardRef<HTMLInputElement,  ModalInputType>(({title}, ref)=>{
+const ModalInput = React.forwardRef<HTMLInputElement,  ModalInputType>(({title}, ref):JSX.Element=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>

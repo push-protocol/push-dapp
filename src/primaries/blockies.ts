@@ -1,8 +1,8 @@
 (function() {
 	// The random number is a js implementation of the Xorshift PRNG
-	var randseed = new Array(4); // Xorshift: [x, y, z, w] 32 bit values
+	var randseed:number[] = new Array(4); // Xorshift: [x, y, z, w] 32 bit values
 
-	function seedrand(seed) {
+	function seedrand(seed:string):void {
 		for (var i = 0; i < randseed.length; i++) {
 			randseed[i] = 0;
 		}
@@ -11,9 +11,9 @@
 		}
 	}
 
-	function rand() {
+	function rand():number {
 		// based on Java's String.hashCode(), expanded to 4 32bit values
-		var t = randseed[0] ^ (randseed[0] << 11);
+		var t:number = randseed[0] ^ (randseed[0] << 11);
 
 		randseed[0] = randseed[1];
 		randseed[1] = randseed[2];
@@ -23,34 +23,34 @@
 		return (randseed[3]>>>0) / ((1 << 31)>>>0);
 	}
 
-	function createColor() {
+	function createColor():string {
 		//saturation is the whole color spectrum
-		var h = Math.floor(rand() * 360);
+		var h:number = Math.floor(rand() * 360);
 		//saturation goes from 40 to 100, it avoids greyish colors
-		var s = ((rand() * 60) + 40) + '%';
+		var s:string = ((rand() * 60) + 40) + '%';
 		//lightness can be anything from 0 to 100, but probabilities are a bell curve around 50%
-		var l = ((rand()+rand()+rand()+rand()) * 25) + '%';
+		var l :string= ((rand()+rand()+rand()+rand()) * 25) + '%';
 
-		var color = 'hsl(' + h + ',' + s + ',' + l + ')';
+		var color:string = 'hsl(' + h + ',' + s + ',' + l + ')';
 		return color;
 	}
 
-	function createImageData(size) {
-		var width = size; // Only support square icons for now
-		var height = size;
+	function createImageData(size):number[] {
+		var width:number = size; // Only support square icons for now
+		var height:number = size;
 
-		var dataWidth = Math.ceil(width / 2);
-		var mirrorWidth = width - dataWidth;
+		var dataWidth:number = Math.ceil(width / 2);
+		var mirrorWidth:number = width - dataWidth;
 
-		var data = [];
+		var data:number[] = [];
 		for(var y = 0; y < height; y++) {
-			var row = [];
+			var row:number[] = [];
 			for(var x = 0; x < dataWidth; x++) {
 				// this makes foreground and background color to have a 43% (1/2.3) probability
 				// spot color has 13% chance
 				row[x] = Math.floor(rand()*2.3);
 			}
-			var r = row.slice(0, mirrorWidth);
+			var r:number[] = row.slice(0, mirrorWidth);
 			r.reverse();
 			row = row.concat(r);
 
@@ -78,14 +78,14 @@
 		return newOpts;
 	}
 
-	function renderIcon(opts, canvas) {
+	function renderIcon(opts:any, canvas:HTMLCanvasElement):HTMLCanvasElement {
 		opts = buildOpts(opts || {});
-		var imageData = createImageData(opts.size);
-		var width = Math.sqrt(imageData.length);
+		var imageData:number[] = createImageData(opts.size);
+		var width:number = Math.sqrt(imageData.length);
 
 		canvas.width = canvas.height = opts.size * opts.scale;
 
-		var cc = canvas.getContext('2d');
+		var cc:CanvasRenderingContext2D = canvas.getContext('2d');
 		cc.fillStyle = opts.bgcolor;
 		cc.fillRect(0, 0, canvas.width, canvas.height);
 		cc.fillStyle = opts.color;
@@ -94,8 +94,8 @@
 
 			// if data is 0, leave the background
 			if(imageData[i]) {
-				var row = Math.floor(i / width);
-				var col = i % width;
+				var row:number = Math.floor(i / width);
+				var col:number = i % width;
 
 				// if data is 2, choose spot color, if 1 choose foreground
 				cc.fillStyle = (imageData[i] == 1) ? opts.color : opts.spotcolor;
@@ -106,8 +106,8 @@
 		return canvas;
 	}
 
-	function createIcon(opts) {
-		var canvas = document.createElement('canvas');
+	function createIcon(opts:any) : HTMLCanvasElement{
+		var canvas: HTMLCanvasElement = document.createElement('canvas');
 
 		renderIcon(opts, canvas);
 
@@ -127,3 +127,5 @@
 	}
 
 })();
+
+export default {}

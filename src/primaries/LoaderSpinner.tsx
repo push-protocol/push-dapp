@@ -9,7 +9,7 @@ const override: React.CSSProperties = {
     height: "45px",
 };
 
-const LoaderSpinner = () => {
+const LoaderSpinner = ():JSX.Element => {
     return (
         <FadeLoader
             color="#CF1C84"

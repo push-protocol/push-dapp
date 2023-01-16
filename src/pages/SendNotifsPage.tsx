@@ -12,7 +12,7 @@ import SendNotifsModule from "modules/sendNotifs/SendNotifsModule";
 import GLOBALS from "config/Globals";
 
 // Page structure
-const SendNotifsPage = () => {
+const SendNotifsPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

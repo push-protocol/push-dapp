@@ -7,7 +7,7 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 // Internal Components
 import { Content, Item, Section } from '../primaries/SharedStyling';
 
-function ComingSoonPage(props) {
+function ComingSoonPage(props:any):JSX.Element {
   const themes = useTheme();
 
   // Render
@@ -16,7 +16,6 @@ function ComingSoonPage(props) {
       <Section style={{ minHeight: '60vh' }}>
         <Content padding="0px 20px 0px">
           <Item align="center">
-            {console.log(props.theme)}
             <Heading color="#333" spacing="0.05em" size="4rem" weight={700}>
               Coming soon.
             </Heading>

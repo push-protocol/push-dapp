@@ -13,7 +13,7 @@ import { SupportModule } from "modules/support/SupportModule";
 import GLOBALS from "config/Globals";
 
 // Other Information section
-const SupportPage = () => {
+const SupportPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

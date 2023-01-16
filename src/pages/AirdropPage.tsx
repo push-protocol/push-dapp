@@ -13,7 +13,7 @@ import AirdropModule from "modules/airdrop/AirdropModule";
 import GLOBALS from "config/Globals";
 
 // Other Information section
-const AirdropPage = () => {
+const AirdropPage = ():JSX.Element => {
   // React GA Analytics
   ReactGA.pageview("/airdrop");
 

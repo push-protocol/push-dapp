@@ -12,13 +12,15 @@ import Cropper from "react-easy-crop";
 import styledComponents from "styled-components";
 import Resizer from "react-image-file-resizer";
 
-const ImageClipper = forwardRef((props, ref) => {
+const ImageClipper = forwardRef((props: {
+  children?: React.ReactNode;
+}, ref:React.ForwardedRef<any>):JSX.Element => {
   //   const [imageSrc, setImageSrc] = useState(null);
   const { imageSrc, onImageCropped } = props;
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [croppedImage, setCroppedImage] = useState(null);
+  const [crop, setCrop] = useState<{x:number,y:number}>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState<number>(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<any>(null);
+  const [croppedImage, setCroppedImage] = useState< string | ProgressEvent<FileReader> | Blob | File>(null);
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
@@ -40,7 +42,7 @@ const ImageClipper = forwardRef((props, ref) => {
     },
   }));
 
-  function toDataURL(url, callback) {
+  function toDataURL(url:string, callback:any) :void{
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
       var reader = new FileReader();
@@ -54,13 +56,13 @@ const ImageClipper = forwardRef((props, ref) => {
     xhr.send();
   }
 
-  async function getCroppedImg(imageSrc, pixelCrop) {
+  async function getCroppedImg(imageSrc:string, pixelCrop:any):Promise<any> {
     const image = await createImage(imageSrc);
-    const canvas = document.createElement("canvas");
+    const canvas:HTMLCanvasElement = document.createElement("canvas");
     canvas.width = pixelCrop.width;
     canvas.height = pixelCrop.height;
-    const ctx = canvas.getContext("2d");
-    const fileName = "none.jpg";
+    const ctx:CanvasRenderingContext2D = canvas.getContext("2d");
+    const fileName:string = "none.jpg";
 
     ctx.drawImage(
       image,
@@ -91,7 +93,7 @@ const ImageClipper = forwardRef((props, ref) => {
     });
   }
 
-  const resizeFile = (file) =>
+  const resizeFile = (file:any):Promise<any> =>
     new Promise((resolve) => {
       Resizer.imageFileResizer(
         file,
@@ -108,7 +110,7 @@ const ImageClipper = forwardRef((props, ref) => {
       );
     });
 
-  const createImage = (url) =>
+  const createImage = (url:string):Promise<any> =>
     new Promise((resolve, reject) => {
       const image = new Image();
       image.addEventListener("load", () => resolve(image));
@@ -117,7 +119,7 @@ const ImageClipper = forwardRef((props, ref) => {
       image.src = url;
     });
 
-  const onZoomChange = (zoom) => {
+  const onZoomChange = (zoom:number):void => {
     setZoom(zoom);
   };
   return (

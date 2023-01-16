@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Content, Item } from "./SharedStyling.js";
+import { Content, Item } from "./SharedStyling";
 import { envUtil } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
 import useModal from 'hooks/useModal';
@@ -16,18 +16,18 @@ import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
 
 // Create Header
-const Profile = ({isDarkMode}) => {
-  const toggleArrowRef = useRef(null);
-  const dropdownRef = useRef(null);
-  const modalRef = React.useRef(null);
+const Profile = ({isDarkMode}):JSX.Element => {
+  const toggleArrowRef = useRef< React.MutableRefObject<any>>(null);
+  const dropdownRef = useRef< React.MutableRefObject<any>>(null);
+  const modalRef = React.useRef< React.MutableRefObject<any>>(null);
   const { error, account, library } = useWeb3React();
   // Get theme
   const theme = useTheme();
-  const [address, setAddress] = React.useState('');
-  const [ens, setENS] = React.useState('');
-  const [ensFetched, setENSFetched] = React.useState(false);
-  const [showDropdown, setShowDropdown] = React.useState(false);
-  useClickAway(modalRef, () => showDropdown && setShowDropdown(false));
+  const [address, setAddress] = React.useState<string>('');
+  const [ens, setENS] = React.useState<string>('');
+  const [ensFetched, setENSFetched] = React.useState<boolean>(false);
+  const [showDropdown, setShowDropdown] = React.useState<boolean>(false);
+  useClickAway(modalRef,null, () => showDropdown && setShowDropdown(false));
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
   const { deactivate } = context
@@ -67,7 +67,7 @@ const Profile = ({isDarkMode}) => {
 
         // get ens
         library
-          .lookupAddress(account).then(function (name) {
+          .lookupAddress(account).then(function (name:string):void {
             setENS(name);
             setENSFetched(true);
             setAddress(account);
@@ -89,8 +89,8 @@ const Profile = ({isDarkMode}) => {
       {account && account !== "" && !error && (
         <Container>
           <Wallet 
-            bg={theme.profileBG} 
-            color={theme.profileText} 
+            bg={theme?.profileBG} 
+            color={theme?.profileText} 
             isDarkMode={isDarkMode}
             onClick={() => setShowDropdown(!showDropdown)} 
             ref={toggleArrowRef}>
@@ -105,7 +105,7 @@ const Profile = ({isDarkMode}) => {
               </>
             )}
             <ToggleArrowImg 
-              filter={isDarkMode?theme.snackbarBorderIcon:"brightness(0) invert(1)"}>
+              filter={isDarkMode?theme?.snackbarBorderIcon:"brightness(0) invert(1)"}>
               <img
                 alt="arrow"
                 className={`${showDropdown ? "down" : "up"}`}

@@ -5,10 +5,10 @@ import React from "react";
 import styled from 'styled-components';
 import { toast } from 'react-toastify';
 
-function NotificationToast({ notification, clearToast }) {
+function NotificationToast({ notification, clearToast }:{notification:any,clearToast:()=>void}):JSX.Element {
 
   // toast customize
-  const LoaderToast = ({color }) => (
+  const LoaderToast = ({color }:{color:string}) :JSX.Element=> (
       <Toaster>
       <div>{notification.notificationTitle}</div>
       <div>{notification.notificationBody}</div>

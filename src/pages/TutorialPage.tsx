@@ -13,7 +13,7 @@ import TutorialModule from "modules/tutorial/TutorialModule";
 import GLOBALS from "config/Globals";
 
 // Other Information section
-const TutorialPage = () => {
+const TutorialPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

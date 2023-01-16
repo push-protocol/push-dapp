@@ -13,7 +13,7 @@ import FaqModule from "modules/faq/FaqModule";
 import GLOBALS from "config/Globals";
 
 // Other Information section
-const FAQPage = () => {
+const FAQPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

@@ -8,7 +8,7 @@ import InternalDevModule from "modules/internal/InternalDevModule";
 // Internal Configs
 import GLOBALS from "config/Globals";
 
-const InternalDevPage = () => {
+const InternalDevPage = ():JSX.Element => {
   // RENDER
   return (
     <Container>

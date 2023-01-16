@@ -12,7 +12,7 @@ import ChannelsModule from "modules/channels/ChannelsModule";
 import GLOBALS from "config/Globals";
 
 // Other Information section
-const ChannelsPage = ({ loadTeaser, playTeaser }) => {
+const ChannelsPage = ({ loadTeaser, playTeaser }:{loadTeaser:React.Dispatch<any>,playTeaser:React.Dispatch<React.SetStateAction<boolean>>}):JSX.Element => {
   // RENDER
   return (
     <Container>

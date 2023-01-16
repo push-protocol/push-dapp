@@ -9,7 +9,7 @@ type ModalHeaderType = {
     heading:string, subHeading:string
 }
 
-const ModalHeader = ({heading, subHeading}:ModalHeaderType)=>{
+const ModalHeader = ({heading, subHeading}:ModalHeaderType):JSX.Element=>{
     const theme = useTheme();
     return(
         <ThemeProvider theme={theme}>
