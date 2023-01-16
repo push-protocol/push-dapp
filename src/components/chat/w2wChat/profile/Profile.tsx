@@ -15,7 +15,6 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
-  // const { connectedUser } = useContext(Context);
   const {connectedUser} = useContext(ChatUserContext);
 
   return (

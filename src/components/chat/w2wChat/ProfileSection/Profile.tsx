@@ -38,7 +38,6 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const Profile = (props: ProfilePropsType): JSX.Element => {
-  // const { connectedUser }: AppContext = useContext<AppContext>(Context);
   const {connectedUser} = useContext(ChatUserContext);
 
   const wallets = connectedUser.wallets.split(',');
