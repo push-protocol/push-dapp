@@ -32,10 +32,10 @@ import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
-import { aliasChainIdsMapping, MaskedPolygonChannels } from 'helpers/UtilityHelper';
+import { MaskedAliasChannels } from 'helpers/UtilityHelper';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { appConfig, CHAIN_DETAILS } from 'config';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -76,9 +76,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   let isOwner;
   if (!onCoreNetwork) {
-    isOwner = channelObject.alias_address === account;
+    isOwner = channelObject.alias_address == account;
   } else {
-    isOwner = channelObject.channel === account;
+    isOwner = channelObject.channel == account;
   }
 
   //clear toast variable after it is shown
@@ -109,6 +109,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
           ...response,
           channel: channelObject.channel,
           alias_address: channelObject.alias_address,
+          alias_blockchain_id: channelObject.alias_blockchain_id,
           subscriber_count: channelObject.subscriber_count,
         });
         fetchChannelJson();
@@ -330,9 +331,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // };
 
       let channelAddress = channelObject.channel;
-      // if (!onCoreNetwork) {
-      //   channelAddress = channelObject.alias_address;
-      // }
+      if (!onCoreNetwork) {
+        channelAddress = channelObject.alias_address;
+      }
 
       // const message = {
       //   channel: channelAddress,
@@ -511,9 +512,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       // };
 
       let channelAddress = channelObject.channel;
-      // if (!onCoreNetwork) {
-      //   channelAddress = channelObject.alias_address;
-      // }
+      if (!onCoreNetwork) {
+        channelAddress = channelObject.alias_address;
+      }
 
       // const message = {
       //   channel: channelAddress,
@@ -699,11 +700,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 )}
                 {channelObject.alias_address != null &&
                   channelObject.alias_address != 'NULL' &&
-                  appConfig.allowedNetworks.includes(aliasChainIdsMapping[appConfig.coreContractChain]) &&
-                  !MaskedPolygonChannels[channelObject.channel] && (
+                  appConfig.allowedNetworks.includes(+channelObject.alias_blockchain_id) &&
+                  !MaskedAliasChannels[+channelObject.alias_blockchain_id]?.channelObject.channel && (
                     <Span padding="0 0 0 5px">
                       <Image
-                        src={`./svg/Polygon.svg`}
+                        src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
                         alt="Polygon"
                         width="20px"
                         height="20px"
@@ -890,22 +891,27 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               </UnsubscribeButton>
             )}
             {!loading && !subscribed && (
-              <SubscribeButton
-                onClick={subscribe}
-                disabled={txInProgress}
-                className="optin"
-              >
-                {txInProgress && (
-                  <ActionLoader>
-                    <LoaderSpinner
-                      type={LOADER_TYPE.SEAMLESS}
-                      spinnerSize={16}
-                      spinnerColor="#FFF"
-                    />
-                  </ActionLoader>
+              <>
+                {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
+                {!isOwner && (
+                  <SubscribeButton
+                  onClick={subscribe}
+                  disabled={txInProgress}
+                  className="optin"
+                >
+                  {txInProgress && (
+                    <ActionLoader>
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={16}
+                        spinnerColor="#FFF"
+                      />
+                    </ActionLoader>
+                  )}
+                  <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                </SubscribeButton>
                 )}
-                <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-              </SubscribeButton>
+              </> 
             )}
             {!loading && subscribed && (
               <>

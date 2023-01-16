@@ -1,12 +1,14 @@
 {
   "name": "@project/react-app",
-  "version": "0.3.29",
+  "version": "0.3.31",
   "homepage": "https://dev.epns.io",
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
     ],
     "development": [
       "last 1 chrome version",
@@ -35,9 +37,9 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@pushprotocol/ledgerlive": "0.0.1",
-    "@pushprotocol/restapi": "^0.1.1",
+    "@pushprotocol/restapi": "0.3.0",
     "@pushprotocol/socket": "0.1.0",
-    "@pushprotocol/uiweb": "0.1.0",
+    "@pushprotocol/uiweb": "0.3.0",
     "@reduxjs/toolkit": "^1.7.1",
     "@syncfusion/ej2-react-calendars": "^19.4.56",
     "@testing-library/jest-dom": "^4.2.4",
@@ -124,6 +126,7 @@
     "react-toastify": "9.0.3",
     "react-toggle-dark-mode": "1.0.4",
     "react-transition-group": "4.4.2",
+    "react-twitter-embed": "^4.0.4",
     "react-use": "^17.3.2",
     "react-wavify": "^1.5.4",
     "react-waypoint": "^9.0.3",

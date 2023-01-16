@@ -3,18 +3,20 @@ import React, { useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
+import { TwitterTweetEmbed } from 'react-twitter-embed';
 
 // Internal Components
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS } from 'types/chat';
+import { MessageIPFS,TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { checkTwitterUrl } from 'helpers/w2w/twitter';
 
 // Internal Configs
 import { appConfig } from 'config';
-import GLOBALS from 'config/Globals';
+import GLOBALS, { device } from 'config/Globals';
 
 interface ChatProps {
   msg: MessageIPFS;
@@ -22,52 +24,60 @@ interface ChatProps {
   messageBeingSent: boolean;
   ApproveIntent?: Function;
 }
-interface TextProps {
-  content: string;
-}
 
 // Constants
 const infura_URL = appConfig.infuraApiUrl;
-const URL_REGEX =
-  /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
 
-const Text = ({ content }: TextProps) => {
-  const words = content.split(' ');
-  return (
-    <p>
-      {words.map((word: string) => {
-        return word.match(URL_REGEX) ? (
-          <>
-            <a
-              href={word}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {word}
-            </a>{' '}
-          </>
-        ) : (
-          word + ' '
-        );
-      })}
-    </p>
-  );
-};
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: ChatProps) {
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
-  const time1 = time.toLocaleTimeString('en-US');
-  const date = time1.slice(0, -6) + time1.slice(-2);
+  const time1:string = time.toLocaleTimeString('en-US');
+  const date :string= time1.slice(0, -6) + time1.slice(-2);
+  const {tweetId,messageType}:TwitterFeedReturnType=checkTwitterUrl({message:msg.messageContent});
 
   return (
     <>
-      {msg.messageType === 'Text' ? (
+      {
+      messageType === 'TwitterFeedLink' ? (
+        <>
+          {msg.fromCAIP10 === caip10 ? (
+            <MessageWrapper align="row-reverse">
+              <SenderMessage 
+                color="transparent"
+                padding="0px"
+              >
+                <TwitterTweetEmbed 
+                placeholder={<LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  spinnerSize={20}
+                />} 
+                tweetId={tweetId}
+                 />
+              </SenderMessage>
+            </MessageWrapper>
+          ) : (
+            <MessageWrapper align="row">
+              <ReceivedMessage
+                color="transparent"
+                padding="0px"
+              >
+              <TwitterTweetEmbed 
+                 placeholder={<LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  spinnerSize={20}
+                />} 
+                tweetId={tweetId} />
+              </ReceivedMessage>
+            </MessageWrapper>
+          )}
+        </>
+      ) : msg.messageType === 'Text' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
             <MessageWrapper align="row-reverse">
               <SenderMessage>
-              { msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
                 {/* {messageBeingSent ? (
                   <p>✔️</p>
@@ -79,7 +89,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
           ) : (
             <MessageWrapper align="row">
               <ReceivedMessage>
-              { msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
                 <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
             </MessageWrapper>
@@ -89,16 +99,11 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
         <>
           <MessageWrapper align="row">
             <ReceivedMessage>
-              <SpanV2
-                fontSize="14px"
-                maxWidth="13rem"
-                fontWeight="400"
-                padding="0px 44px 10px 0px"
-                textAlign="left"
-                color="#000"
+              <MessageText
+
               >
-                { msg.messageContent.split('\n').map(str => <p>{str}</p>)}
-              </SpanV2>
+                {msg.messageContent.split('\n').map(str => <p>{str}</p>)}
+              </MessageText>
               {messageBeingSent ? (
                 <SpanV2 margin="-5px 0 0 0">
                   <LoaderSpinner
@@ -268,7 +273,7 @@ const ImageMessage = styled.img`
 
 const TextMessage = styled.p`
   max-width: 300px;
-  padding: 0px 44px 10px 0px;
+  padding: 7px 44px 10px 0px;
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
@@ -287,6 +292,20 @@ const TimeStamp = styled(ItemHV2)`
   bottom: 5px;
 `;
 
+const MessageText = styled(SpanV2)`
+  font-size:14px;
+  max-width : 13rem;
+  font-weight:400;
+  padding: 0px 44px 0px 0px;
+  text-align:left;
+  color:#000;
+
+  @media ${device.mobileM}{
+    padding: 0px 10px 0px 0px;
+    max-width: 8rem;
+  }
+`
+
 const MessageWrapper = styled.div`
   width: 100%;
   min-height: ${(props: any): string => props.height || '48px'};
@@ -302,7 +321,7 @@ const ReceivedMessage = styled.div`
   position: relative;
   left: 34px;
   max-width: 419px;
-  padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
+  padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
   border-radius: 2px 16px 16px 16px;
@@ -312,6 +331,13 @@ const ReceivedMessage = styled.div`
   color: #000000;
   flex-direction: column;
   align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+ 
+
+
 `;
 
 const SenderMessage = styled.div`

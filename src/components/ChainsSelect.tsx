@@ -8,10 +8,9 @@ import styled, { useTheme } from 'styled-components';
 import { Image, Item, ItemH } from '../primaries/SharedStyling';
 import { useClickAway } from "hooks/useClickAway";
 import Dropdown from "./Dropdown";
-import { networkName } from "helpers/UtilityHelper";
 
 // Internal Configs
-import { appConfig } from "config";
+import { appConfig, CHAIN_DETAILS } from "config";
 
 // Faucet URLs
 const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
@@ -31,9 +30,9 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
     appConfig.allowedNetworks.map((chainId) => {
         dropdown.push({
             id: chainId,
-            value: networkName[chainId].split(' ')[0],
-            title: networkName[chainId].split(' ')[0],
-            icon: `./svg/${networkName[chainId].split(' ')[0]}.svg`,
+            value: CHAIN_DETAILS[chainId].label.split(' ')[0],
+            title: CHAIN_DETAILS[chainId].label.split(' ')[0],
+            icon: `./svg/${CHAIN_DETAILS[chainId].label.split(' ')[0]}.svg`,
             function: () => {
               setChannelsNetworkId(chainId);
               setShowDropdown(false);
@@ -48,9 +47,9 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
     <Container>
       <Faucet color={theme.viewChannelSearchText} onClick={() => setShowDropdown(!showDropdown)} ref={toggleArrowRef}>
         <ItemH padding="0 8px 0 0">
-          <Image src={`./svg/${networkName[channelsNetworkId].split(' ')[0]}.svg`} alt="active chain" width="32px" height="32px" />
+          <Image src={`./svg/${CHAIN_DETAILS[channelsNetworkId].label.split(' ')[0]}.svg`} alt="active chain" width="32px" height="32px" />
         </ItemH>
-         <Item className="text">{networkName[channelsNetworkId].split(' ')[0]}</Item>
+         <Item className="text">{CHAIN_DETAILS[channelsNetworkId].label.split(' ')[0]}</Item>
         <ToggleArrowImg>
           <img
             alt="arrow"

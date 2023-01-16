@@ -15,7 +15,7 @@ import CreateChannel from "components/CreateChannel";
 import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
 import { useDeviceWidthCheck } from "hooks";
-import { setAliasAddress, setAliasAddressFromContract, setAliasVerified } from "redux/slices/adminSlice";
+import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 
@@ -46,13 +46,13 @@ const ChannelOwnerDashboard = () => {
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
-  
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    const aliasAddress: (string | null) = getAliasFromChannelDetails(channelDetails);
+    const { address:aliasAddress, chainId:aliasChainId } = getAliasFromChannelDetails(channelDetails);
     if (aliasAddress) {
       dispatch(setAliasAddressFromContract(aliasAddress));
+      dispatch(setAliasChainId(aliasChainId));
       // dispatch(setAliasAddress(aliasAddress));
     } else {
       dispatch(setProcessingState(0));
