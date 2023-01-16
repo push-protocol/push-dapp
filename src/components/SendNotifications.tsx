@@ -121,7 +121,7 @@ function SendNotifications() {
   const theme = useTheme();
   const { account, library, chainId } = useWeb3React();
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
-  const { channelDetails, delegatees } = useSelector((state: any) => state.admin);
+  const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
   const { CHANNNEL_DEACTIVATED_STATE } = useSelector((state: any) => state.channels);
   const { canSend } = useSelector((state: any) => {
     return state.canSend;
@@ -130,7 +130,7 @@ function SendNotifications() {
 
   const [nfProcessing, setNFProcessing] = React.useState(0);
   const [channelAddress, setChannelAddress] = React.useState('');
-  const [nfRecipient, setNFRecipient] = React.useState('');
+  const [nfRecipient, setNFRecipient] = React.useState(account);
   const [multipleRecipients, setMultipleRecipients] = React.useState([]);
   const [tempRecipeint, setTempRecipient] = React.useState(''); // to temporarily hold the address of one recipient who would be entered into the recipeints array above.
   const [nfType, setNFType] = React.useState('1');
@@ -185,7 +185,7 @@ function SendNotifications() {
         }))
       );
       // default the channel address to the first one on the list which should be that of the user if they have a channel
-      setChannelAddress(delegatees[0].address);
+      setChannelAddress(account);
     }
   }, [delegatees, account]);
 
@@ -901,15 +901,20 @@ function SendNotifications() {
                 width="100%"
                 onSubmit={handleSendMessage}>
                 <Item flex="1" self="stretch" align="stretch" width="100%">
-                  {console.log(cannotDisplayDelegatees)}
                   {!cannotDisplayDelegatees && (
                     <Item flex="1" justify="flex-start" align="stretch">
                       <DropdownStyledParent>
                         <DropdownStyled
                           options={delegateeOptions}
                           onChange={(option: any) => {
-                            setChannelAddress(option.value);
-                            setNFRecipient(option.value);
+                            if(option.value == aliasEthAddr) {
+                              setChannelAddress(account);
+                              setNFRecipient(account);
+                            }
+                            else {
+                              setChannelAddress(option.value);
+                              setNFRecipient(option.value);
+                            }
                           }}
                           placeholder="Select a Channel"
                           value={delegateeOptions[0]}

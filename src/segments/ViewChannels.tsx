@@ -12,7 +12,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Faucets from 'components/Faucets';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from 'components/ViewChannelItem';
-import UtilityHelper, { MaskedChannels, MaskedPolygonChannels } from 'helpers/UtilityHelper';
+import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
 import { incrementPage, setChannelMeta, updateBulkSubscriptions } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
@@ -257,8 +257,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                   >
                     {!MaskedChannels[channel.channel] &&
                       (channelsNetworkId == appConfig.coreContractChain ||
-                        ((channelsNetworkId == channel.alias_blockchain_id || channel.alias_blockchain_id == '80001') &&
-                          !MaskedPolygonChannels[channel.channel])) && (
+                        (channelsNetworkId == channel.alias_blockchain_id &&
+                          !MaskedAliasChannels[channelsNetworkId]?.(channel.channel))) && (
                         <ViewChannelItem
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}

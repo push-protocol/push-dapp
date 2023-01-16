@@ -54,6 +54,11 @@ export interface Feeds {
     cid: string;
 }
 
+export interface TwitterFeedReturnType{
+    tweetId:string;
+    messageType:string;
+}
+
 export interface InboxChat {
     name: string;
     profilePicture: string;
