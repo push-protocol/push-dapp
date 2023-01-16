@@ -335,6 +335,7 @@ function CreateChannel() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Test>
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
@@ -497,6 +498,7 @@ function CreateChannel() {
           )}
         </>
       )}
+      </Test>
     </ThemeProvider>
   );
 }
@@ -519,6 +521,12 @@ const Step = styled.div`
     css`
     `};
 `;
+
+const Test = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+`
 
 const ItemWarning = styled.div`
   color: white;

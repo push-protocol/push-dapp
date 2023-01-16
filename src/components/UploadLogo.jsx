@@ -65,7 +65,6 @@ const UploadLogo = ({
   };
 
   return (
-    <Fragment>
       <Body>
         <Item align="center">
           <H3 color=" #657795" margin="20px 0px" textTransform="none" weight="300" size="15px" spacing="0.05" textAlign='center'>
@@ -208,7 +207,6 @@ const UploadLogo = ({
 
 
       </Body>
-    </Fragment>
   );
 };
 
