@@ -148,7 +148,7 @@ const InitState = () => {
         if (onCoreNetwork) delegateeList.push({ channel: account });
         else {
           if (aliasEthAddr) {
-            delegateeList.push({ channel: aliasEthAddr });
+            delegateeList.push({ channel: account });
           }
         }
       }
@@ -156,12 +156,26 @@ const InitState = () => {
         delegateeList.push(...delegations);
       }
       if (delegateeList.length > 0) {
-        const channelInformationPromise = [...delegateeList].map(({ channel }) => {
-          return ChannelsDataStore.instance
-            .getChannelJsonAsync(channel)
-            .then((res) => ({ ...res, address: channel }))
-            .catch(() => false);
-        });
+        let channelInformationPromise;
+        if(onCoreNetwork) {
+          channelInformationPromise = [...delegateeList].map(({ channel }) => {
+            return PushAPI.channels.search({
+              page: 1,
+              limit: 1,
+              query: channel,
+              env: appConfig.appEnv
+            });
+          });
+        } else {
+          channelInformationPromise = [...delegateeList].map(({ channel }) => {
+            const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId)
+            return getReq(`/v1/alias/${channelAddressInCaip}/channel`).then(
+              ({ data }) => PushAPI.channels.getChannel({
+              channel: convertAddressToAddrCaip(data.channel, chainId),
+              env: appConfig.appEnv
+            }));
+          });
+        }
         const channelInformation = await Promise.all(channelInformationPromise);
         dispatch(setDelegatees(channelInformation));
       } else {
