@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from '@ethersproject/providers';
+import { InfuraProvider, Web3Provider } from '@ethersproject/providers';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
@@ -22,6 +22,8 @@ import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
 import { AppContext, User } from 'types/chat';
+import { useResolveEns } from 'hooks/useResolveEns';
+import { appConfig } from 'config';
 
 const SearchBar = () => {
   // get theme
@@ -42,7 +44,7 @@ const SearchBar = () => {
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
-  const provider = ethers.getDefaultProvider();
+  const provider = new InfuraProvider("homestead", appConfig.infuraAPIKey)
   const searchFeedToast = useToast();
 
   useEffect(() => {
