@@ -152,7 +152,12 @@ export const NETWORK_DETAILS = {
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
 
-export const getAliasFromChannelDetails = (channelDetails: Object | null | string): {address: string, chainId: string} | null => {
+export type getAliasResponseType = {
+  address: string | null, 
+  chainId: string | null
+}
+
+export const getAliasFromChannelDetails = (channelDetails: Object | null | string): getAliasResponseType => {
   if (!channelDetails || channelDetails === 'unfetched') return null;
 
   if (channelDetails['aliasDetails']) {
@@ -173,7 +178,7 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
     }
   }
 
-  return null;
+  return {address: null, chainId: null};
 };
 
 export default UtilityHelper;
