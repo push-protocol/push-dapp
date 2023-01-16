@@ -45,9 +45,8 @@ const SearchBar = () => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   // const provider = ethers.getDefaultProvider();
-  const projectId = process.env.REACT_APP_INFURA_API_KEY;
-  // const provider = new InfuraProvider("homestead", projectId)
-  const provider = new InfuraProvider("homestead", appConfig.infuraAPIKey)
+  // const projectId = process.env.REACT_APP_INFURA_API_KEY;
+  const provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
   const searchFeedToast = useToast();
 
   useEffect(() => {
