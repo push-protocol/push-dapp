@@ -87,17 +87,18 @@ function YieldFarmingModule(): JSX.Element {
     if (poolStats?.epochEndTimestamp) {
       const epochEndTimestamp: number = poolStats.epochEndTimestamp.toNumber();
 
-      const duration: number = epochEndTimestamp - Math.floor(new Date() / 1000);
+      const newDate:unknown=new Date()
+      const duration: number = Math.floor(epochEndTimestamp - Math.floor(newDate as number / 1000));
 
       if (duration < 0) {
         getPoolStats();
       }
 
-      const day: number = parseInt(duration / 86400);
-      const hour: number = parseInt((duration - day * 86400) / 3600);
+      const day: number = Math.floor(duration / 86400);
+      const hour: number = Math.floor((duration - day * 86400) / 3600);
 
-      const minutes: number = parseInt((duration - (day * 86400 + hour * 3600)) / 60);
-      const seconds: number = duration - (day * 86400 + hour * 3600 + minutes * 60);
+      const minutes: number = Math.floor((duration - (day * 86400 + hour * 3600)) / 60);
+      const seconds: number = Math.floor(duration - (day * 86400 + hour * 3600 + minutes * 60));
 
       setFormattedDuration(`${day}D ${hour}H ${minutes}M ${seconds}S`);
     }
