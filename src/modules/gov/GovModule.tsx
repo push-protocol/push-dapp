@@ -257,7 +257,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx({newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast});
+      executeDelegateTx({ delegateeAddress:newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast});
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {

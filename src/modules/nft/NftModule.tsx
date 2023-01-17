@@ -51,7 +51,7 @@ function NftModule(): JSX.Element {
     setVersion(controlIndex);
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (e.target.checked) {
       setControlAt(0);
     } else {
