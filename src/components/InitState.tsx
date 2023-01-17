@@ -159,19 +159,17 @@ const InitState = () => {
         let channelInformationPromise;
         if(onCoreNetwork) {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            return PushAPI.channels.search({
-              page: 1,
-              limit: 1,
-              query: channel,
+            return PushAPI.channels.getChannel({
+              channel: convertAddressToAddrCaip(channel, chainId),
               env: appConfig.appEnv
-            });
+            })
           });
         } else {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
             const channelAddressInCaip = convertAddressToAddrCaip(channel, chainId)
             return getReq(`/v1/alias/${channelAddressInCaip}/channel`).then(
               ({ data }) => PushAPI.channels.getChannel({
-              channel: convertAddressToAddrCaip(data.channel, chainId),
+              channel: convertAddressToAddrCaip(data.channel, appConfig.coreContractChain),
               env: appConfig.appEnv
             }));
           });
