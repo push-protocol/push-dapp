@@ -170,7 +170,7 @@ function SendNotifications() {
     } else {
       setDelegateeOptions(
         delegatees.map((oneDelegatee: any) => ({
-          value: oneDelegatee.address,
+          value: (onCoreNetwork ? oneDelegatee.channel: oneDelegatee.alias_address),
           label: (
             <CustomDropdownItem>
               <img src={oneDelegatee.icon} alt="" />
@@ -185,7 +185,8 @@ function SendNotifications() {
         }))
       );
       // default the channel address to the first one on the list which should be that of the user if they have a channel
-      setChannelAddress(account);
+      if(onCoreNetwork) setChannelAddress(delegatees[0].channel);
+      else setChannelAddress(delegatees[0].alias_address);
     }
   }, [delegatees, account]);
 
