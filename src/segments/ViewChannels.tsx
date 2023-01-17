@@ -389,10 +389,6 @@ const ScrollItem = styled(Item)`
   padding: 5px 20px 10px 20px;
   overflow-y: auto;
 
-  @media (max-width: 768px) {
-    padding: 0px 0px 0px 0px;
-  }
-
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
     border-radius: 10px;
