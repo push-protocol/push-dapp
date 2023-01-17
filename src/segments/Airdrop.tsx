@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
@@ -12,21 +13,22 @@ import styled from 'styled-components';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import AirdropHelper from 'helpers/AirdropHelper';
 import { A, B, Button, Content, H2, H3, Item, Para, Section, Span } from 'primaries/SharedStyling';
+import {IVerifyAddressReturnType } from "types/helpers"
 
 // Internal Configs
 import { abis, addresses } from 'config';
 
 // Other Information section
 function Airdrop() {
-  const { account, library } = useWeb3React();
+  const { account, library } = useWeb3React<Web3Provider>();
 
-  const [controlAt, setControlAt] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
-  const [txInProgress, setTxInProgress] = React.useState(false);
-  const [distributorContract, setDistributorContract] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  const [controlAt, setControlAt] = React.useState<number>(0);
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [txInProgress, setTxInProgress] = React.useState<boolean>(false);
+  const [distributorContract, setDistributorContract] = React.useState<ethers.Contract>(null);
+  const [user, setUser] = React.useState<IVerifyAddressReturnType>(null);
 
-  const [showAnswers, setShowAnswers] = React.useState([]);
+  const [showAnswers, setShowAnswers] = React.useState<any[]>([]);
 
   const toggleShowAnswer = (id) => {
     let newShowAnswers = [...showAnswers];
@@ -37,8 +39,8 @@ function Airdrop() {
 
   React.useEffect(() => {
     if (!!(library && account)) {
-      let signer = library.getSigner(account);
-      const signerInstance = new ethers.Contract(addresses.distributor, abis.distributor, signer);
+      let signer:ethers.providers.JsonRpcSigner = library.getSigner(account);
+      const signerInstance:ethers.Contract = new ethers.Contract(addresses.distributor, abis.distributor, signer);
       setDistributorContract(signerInstance);
       // const NFTRewardsInstance = new ethers.Contract(addresses.NFTRewards, abis.NFTRewards, signer);
       // setNFTRewardsContract(NFTRewardsInstance);
@@ -52,17 +54,17 @@ function Airdrop() {
   }, [account, distributorContract]);
 
   // to check wh
-  const checkClaim = async () => {
-    let user = await AirdropHelper.verifyAddress(account, distributorContract);
+  const checkClaim = async ():Promise<void> => {
+    let user:IVerifyAddressReturnType = await AirdropHelper.verifyAddress(account, distributorContract);
     setUser(user);
     if (user) setLoading(false);
   };
 
   // to claim
-  const handleClaim = async (user) => {
+  const handleClaim = async (user:IVerifyAddressReturnType):Promise<void> => {
     if (distributorContract) {
       setTxInProgress(true);
-      let sendWithTxPromise;
+      let sendWithTxPromise:any;
       sendWithTxPromise = await distributorContract.claim(user.index, user.account, user.amount, user.proof);
       const tx = await sendWithTxPromise;
       console.log(tx);

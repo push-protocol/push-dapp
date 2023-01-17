@@ -8,7 +8,7 @@ import {Section, Content} from 'components/SharedStyling';
 import CreateChannel from 'components/CreateChannel';
 
 // CREATE CHANNEL OWNER DASHBOARD
-function ChannelCreationDashboard() {
+function ChannelCreationDashboard():JSX.Element {
   React.useEffect(() => {
 
   });

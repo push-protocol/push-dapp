@@ -72,7 +72,7 @@ const Requests = (): JSX.Element => {
 }
 
 const UserProfiles = (): JSX.Element => {
-  const [unread, setUnread] = React.useState(true)
+  const [unread, setUnread] = React.useState<boolean>(true)
   return (
     <UserProfileContainer width={'302px'}>
       <ProfileCard selected={true}>
@@ -178,7 +178,7 @@ const TabPanel = (props: TabPanelProps): JSX.Element => {
 const ChatSidebar = (): JSX.Element => {
   const requests = 1
   const classes = useStyles()
-  const [value, setValue] = React.useState(0)
+  const [value, setValue] = React.useState<number>(0)
 
   const handleChange = (event: React.SyntheticEvent, newValue: number): void => {
     setValue(newValue)

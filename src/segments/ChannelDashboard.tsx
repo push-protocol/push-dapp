@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
@@ -18,50 +19,50 @@ import { abis, addresses } from 'config';
 const ipfs = require('ipfs-api')();
 
 // Create Header
-function ChannelDashboard() {
-  const { active, error, account, library, chainId } = useWeb3React();
+function ChannelDashboard():JSX.Element {
+  const { active, error, account, library, chainId } = useWeb3React<Web3Provider>();
 
-  const [processing, setProcessing] = React.useState(false);
+  const [processing, setProcessing] = React.useState<boolean>(false);
 
-  const [recipient, setRecipient] = React.useState('');
-  const [secret, setSecret] = React.useState('');
-  const [type, setType] = React.useState('');
-  const [sub, setSub] = React.useState('');
-  const [msg, setMsg] = React.useState('');
-  const [cta, setCTA] = React.useState('');
-  const [img, setImg] = React.useState('');
+  const [recipient, setRecipient] = React.useState<string>('');
+  const [secret, setSecret] = React.useState<string>('');
+  const [type, setType] = React.useState<string>('');
+  const [sub, setSub] = React.useState<string>('');
+  const [msg, setMsg] = React.useState<string>('');
+  const [cta, setCTA] = React.useState<string>('');
+  const [img, setImg] = React.useState<string>('');
 
   React.useEffect(() => {});
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async ():Promise<void> => {
     // Check everything in order
     // skip this for now
     setProcessing(true);
 
-    var signer = library.getSigner(account);
-    let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
+    var signer:ethers.providers.JsonRpcSigner = library.getSigner(account);
+    let contract:ethers.Contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
-    let nsub = sub;
-    let nmsg = msg;
-    let secretEncrypted;
+    let nsub:string = sub;
+    let nmsg:string = msg;
+    let secretEncrypted:String;
 
-    let esub = sub;
-    let emsg = msg;
-    let ecta = cta;
-    let eimg = img;
+    let esub:string = sub;
+    let emsg:string = msg;
+    let ecta :string= cta;
+    let eimg:string = img;
 
     if (type === '2' || parseInt(type) == 2) {
       // Create secret
-      let secret = CryptoHelper.makeid(14);
+      let secret :string= CryptoHelper.makeid(14);
 
       // Encrypt payload and change sub and msg in notification
       nsub = 'You have a secret message!';
       nmsg = 'Open the app to see your secret message!';
 
       // get public key from EPNSCoreHelper
-      let k = await EPNSCoreHelper.getPublicKey(recipient, contract);
+      let k:string = await EPNSCoreHelper.getPublicKey(recipient, contract);
 
-      let publickey = k.toString().substring(2);
+      let publickey:string = k.toString().substring(2);
       console.log('This is public Key: ' + publickey);
 
       secretEncrypted = await CryptoHelper.encryptWithECIES(secret, publickey);
@@ -85,16 +86,16 @@ function ChannelDashboard() {
         aimg: eimg,
       },
     });
-    const ipfs = require('nano-ipfs-store').at('https://ipfs.infura.io:5001');
+    const ipfs:any = require('nano-ipfs-store').at('https://ipfs.infura.io:5001');
 
     console.log('sending payload');
-    const cid = await ipfs.add(input);
+    const cid:string = await ipfs.add(input);
     console.log('IPFS cid:', cid);
     //console.log(await ipfs.cat(cid));
 
     // Send Transaction
     // First Approve DAI
-    var anotherSendTxPromise = contract.sendMessage(recipient, type, cid, 1);
+    var anotherSendTxPromise:any = contract.sendMessage(recipient, type, cid, 1);
 
     anotherSendTxPromise.then(function (tx) {
       console.log(tx);

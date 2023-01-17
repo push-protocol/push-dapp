@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from "@web3-react/core";
 import React from "react";
 
@@ -40,7 +41,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const modalRef = React.useRef(null);
   useClickAway(modalRef, () => showFilter && setShowFilter(false));
 
-  const { account, library, chainId } = useWeb3React();
+  const { account, library, chainId } = useWeb3React<Web3Provider>();
   const { notifications, page, finishedFetching, toggle } = useSelector(
     (state: any) => state.notifications
   );
@@ -49,21 +50,21 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   let user = convertAddressToAddrCaip(account,chainId)
 
   // toast related section
-  const [toast, showToast] = React.useState(null);
+  const [toast, showToast] = React.useState<any>(null);
   const clearToast = () => showToast(null);
 
   const { run, welcomeNotifs } = useSelector((state: any) => state.userJourney);
 
-  const [limit, setLimit] = React.useState(10);
-  const [allNotf, setNotif] = React.useState([]);
-  const [filteredNotifications, setFilteredNotifications] = React.useState([]);
-  const [filter, setFilter] = React.useState(false);
-  const [allFilter, setAllFilter] = React.useState([]);
-  const [loadFilter, setLoadFilter] = React.useState(false);
-  const [bgUpdateLoading, setBgUpdateLoading] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [limit, setLimit] = React.useState<number>(10);
+  const [allNotf, setNotif] = React.useState<any[]>([]);
+  const [filteredNotifications, setFilteredNotifications] = React.useState<any[]>([]);
+  const [filter, setFilter] = React.useState<boolean>(false);
+  const [allFilter, setAllFilter] = React.useState<any[]>([]);
+  const [loadFilter, setLoadFilter] = React.useState<boolean>(false);
+  const [bgUpdateLoading, setBgUpdateLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
-  const NormalToast = ({ msg }) => (
+  const NormalToast = ({ msg }:{msg:string}) => (
     <Toaster>
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>

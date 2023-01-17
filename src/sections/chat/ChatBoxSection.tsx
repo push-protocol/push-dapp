@@ -6,13 +6,14 @@ import React from 'react';
 // Internal Compoonents
 import ChatBox from 'components/chat/w2wChat/chatBox/ChatBox';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import{ VideoCallInfoI } from 'sections/video/VideoCallSection';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
 // Chat Sections
 // Divided into two, left and right
-const ChatBoxSection = ({ setVideoCallInfo }) => {
+const ChatBoxSection = ({ setVideoCallInfo }:{setVideoCallInfo:React.Dispatch<React.SetStateAction<VideoCallInfoI>>}):JSX.Element => {
   // RENDER
   return (
     <ItemVV2 justifyContent="stretch">

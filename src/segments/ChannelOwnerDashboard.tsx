@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from "@web3-react/core";
 import React, { useEffect, useState } from "react";
 
@@ -22,6 +23,10 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 // Internal Configs
 import { appConfig } from "config";
 
+// interfaces
+
+interface IFetchChannelDetails {aliasAddress:string;aliasVerified:boolean}
+
 // Constants
 // interval after which alias details api will be called, in seconds
 const ALIAS_API_CALL_INTERVAL:number = 10;
@@ -30,9 +35,9 @@ const ALIAS_API_CALL_INTERVAL:number = 10;
 let intervalID = null;
 
 // CREATE CHANNEL OWNER DASHBOARD
-const ChannelOwnerDashboard = () => {
+const ChannelOwnerDashboard = ():JSX.Element => {
   const theme = useTheme();
-  const { account, chainId } = useWeb3React();
+  const { account, chainId } = useWeb3React<Web3Provider>();
   const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract} } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
 
@@ -44,7 +49,7 @@ const ChannelOwnerDashboard = () => {
 
   const CORE_CHAIN_ID: number = appConfig.coreContractChain;
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
-  const isMobile = useDeviceWidthCheck(600);
+  const isMobile:boolean = useDeviceWidthCheck(600);
 
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
@@ -60,8 +65,8 @@ const ChannelOwnerDashboard = () => {
     }
   }, [channelDetails, aliasAddrFromContract]);
 
-  const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress=null, isAliasVerified=null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
+  const fetchChannelDetails = async (address: string):Promise<IFetchChannelDetails> => {
+    let { aliasAddress=null, isAliasVerified=null }:{aliasAddress:string, isAliasVerified:boolean} = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
     if (aliasAddress == "NULL") aliasAddress = null;
 
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
@@ -71,7 +76,7 @@ const ChannelOwnerDashboard = () => {
     if (!onCoreNetwork || !aliasAddrFromContract || processingState === 0) return;
 
     intervalID = setInterval(async () => {
-      const { aliasAddress, aliasVerified } = await fetchChannelDetails(account);
+      const { aliasAddress, aliasVerified }:IFetchChannelDetails = await fetchChannelDetails(account);
       if (aliasAddress) {
         dispatch(setAliasAddress(aliasAddress));
         if (aliasVerified) {

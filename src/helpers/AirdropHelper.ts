@@ -1,6 +1,9 @@
 // React + Web3 Essentials
 import { BigNumber, ethers, utils } from 'ethers';
 
+// Internal Components
+import {IVerifyAddressReturnType } from "types/helpers"
+
 // Internal Configs
 const claims = require('config/airdrop/claims.json');
 
@@ -10,16 +13,6 @@ interface IVerifyProofProps {
   amount: number;
   proof: any;
   root: Buffer;
-}
-
-interface IVerifyAddressReturnType {
-  index?: string;
-  account?: string;
-  amount?: number;
-  proof?: any;
-  merkleRoot?: Buffer;
-  verified: boolean;
-  claimable?: boolean;
 }
 
 // Airdrop Helper Functions

@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import {ethers} from 'ethers';
 import React from "react";
@@ -17,25 +18,25 @@ import { abis, addresses } from "config";
 const ipfs = require('ipfs-api')()
 
 // Create Header
-function CreateChannel() {
-  const { active, error, account, library, chainId } = useWeb3React();
+function CreateChannel():JSX.Element {
+  const { active, error, account, library, chainId } = useWeb3React<Web3Provider>();
 
-  const [processing, setProcessing] = React.useState(false);
-  const [uploadDone, setUploadDone] = React.useState(false);
-  const [file, setFile] = React.useState(undefined);
+  const [processing, setProcessing] = React.useState<boolean>(false);
+  const [uploadDone, setUploadDone] = React.useState<boolean>(false);
+  const [file, setFile] = React.useState<ArrayBuffer|string>(undefined);
 
-  const [name, setName] = React.useState('');
-  const [desc, setDesc] = React.useState('');
-  const [url, setURL] = React.useState('');
+  const [name, setName] = React.useState<string>('');
+  const [desc, setDesc] = React.useState<string>('');
+  const [url, setURL] = React.useState<string>('');
 
   React.useEffect(() => {
 
   });
 
   // called every time a file's `status` changes
-  const handleChangeStatus = ({ meta, file }, status) => { console.log(status, meta, file) }
+  const handleChangeStatus = ({ meta, file }:any, status:any) => { console.log(status, meta, file) }
 
-  const onDropHandler=(files) =>{
+  const onDropHandler=(files:any) =>{
     //   var file = files[0]
     //   const reader = new FileReader();
     //   reader.onload = (event) => {
@@ -48,13 +49,13 @@ function CreateChannel() {
   }
 
   // receives array of files that are done uploading when submit button is clicked
-  const handleSubmit = (files, allFiles) => {
+  const handleSubmit = (files:any, allFiles:any):void => {
     setUploadDone(true);
 
     console.log(files.map(f => f.meta))
     allFiles.forEach(f => {
       var file = f.file;
-      var reader = new FileReader();
+      var reader:FileReader = new FileReader();
       reader.readAsDataURL(file);
       console.log(f.file);
       reader.onloadend = function (e) {
@@ -65,7 +66,7 @@ function CreateChannel() {
     console.log("andle Submit");
   }
 
-  const handleCreateChannel = async () => {
+  const handleCreateChannel = async ():Promise<void> => {
     // Check everything in order
     // skip this for now
     setProcessing(true);
@@ -75,7 +76,7 @@ function CreateChannel() {
     console.log(desc);
     console.log(url);
 
-    const input = JSON.stringify(
+    const input:string = JSON.stringify(
       {
         "name": name,
         "info": desc,
@@ -86,31 +87,31 @@ function CreateChannel() {
     const ipfs = require("nano-ipfs-store").at("https://ipfs.infura.io:5001");
 
     console.log("sending payload");
-    const cid = await ipfs.add(input);
+    const cid:string = await ipfs.add(input);
     console.log("IPFS cid:", cid);
     //console.log(await ipfs.cat(cid));
 
     // Send Transaction
     // First Approve DAI
-    var signer = library.getSigner(account);
+    var signer:ethers.providers.JsonRpcSigner = library.getSigner(account);
 
-    let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
+    let daiContract:ethers.Contract = new ethers.Contract(addresses.dai, abis.erc20, signer);
 
     // Pick between 50 DAI AND 25K DAI
-    let randomNumber = Math.ceil(Math.random() * 24949) + 50;
-    const fees = parseUnits(randomNumber.toString(), 18);
+    let randomNumber:number = Math.ceil(Math.random() * 24949) + 50;
+    const fees:ethers.BigNumber = ethers.utils.parseUnits(randomNumber.toString(), 18);
 
-    var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
+    var sendTransactionPromise:any = daiContract.approve(addresses.epnscore, fees);
     const tx = await sendTransactionPromise;
 
     console.log(tx);
     console.log("waiting for tx to finish");
     await library.waitForTransaction(tx.hash);
 
-    let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
+    let contract:ethers.Contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
     var anotherSendTxPromise = contract.createChannelWithFees(cid);
 
-    anotherSendTxPromise.then(function(tx) {
+    anotherSendTxPromise.then(function(tx:any) {
       console.log(tx);
       console.log("Check: " + account);
 

@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useState } from "react";
 
@@ -36,21 +37,21 @@ interface VideoCallSectionPropsI {
 }
 
 // Create Video Call
-const videoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }: VideoCallSectionPropsI) => {
-  const [isLoading, setLoading] = useState(true);
+const videoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }: VideoCallSectionPropsI):JSX.Element => {
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
     title: null,
   });
 
   // get account
-  const { account } = useWeb3React();
+  const { account } = useWeb3React<Web3Provider>();
 
   // get stream
   const { initializeStream, stream, answerCall, leaveCall, callUser } = useContext(VideoCallContext);
   
   React.useEffect(() => {
-    const setupStream = async () => {
+    const setupStream = async ():Promise<void> => {
       setBlockedLoading({
         enabled: true,
         title: 'Setting up Video...',

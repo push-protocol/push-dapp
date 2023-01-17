@@ -13,9 +13,24 @@ import { ImageV2 } from "components/reusables/SharedStylingV2";
 // Internal Configs
 import channelTuts from "config/channelTuts";
 
+//interfaces
+
+interface IChannelTutorial{
+  addr:string;
+  bgColor:string;
+  loadTeaser:React.Dispatch<any>;
+  playTeaser:React.Dispatch<React.SetStateAction<boolean>>; 
+}
+
+interface IGetChannelTutItemReturnType{
+  maintainer: string;
+  userjourneyyoutube: string;
+  userjourneyshort: string;
+  article: string;
+}
 
 // Check channel has tutorial
-export const isChannelTutorialized = (addr) => {
+export const isChannelTutorialized = (addr:string):boolean => {
   let keyFound = false;
   Object.entries(channelTuts).forEach(([key, value]) => {
     if (channelTuts[key].maintainer === addr) {
@@ -28,14 +43,14 @@ export const isChannelTutorialized = (addr) => {
 }
 
 // Channel Tutorial
-const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
+const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }:IChannelTutorial):JSX.Element => {
   const themes = useTheme();
 
   // set state
-  const [showTuts, setShowTuts] = React.useState(false);
+  const [showTuts, setShowTuts] = React.useState<boolean>(false);
 
   // helper functions
-  const getChannelTutItem = (addr) => {
+  const getChannelTutItem = (addr:string):IGetChannelTutItemReturnType => {
     let item = null;
 
     Object.entries(channelTuts).forEach(([key, value]) => {
@@ -48,7 +63,7 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
     return item;
   }
 
-  const item = getChannelTutItem(addr);
+  const item:IGetChannelTutItemReturnType = getChannelTutItem(addr);
 
   // render
   return (
