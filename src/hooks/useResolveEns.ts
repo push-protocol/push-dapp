@@ -35,7 +35,7 @@ export function useResolveEns(username: string): string {
       ) {
         provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
       }
-      getEnsFromIndexDb(checksumWallet).then((ensFromIndexDb)=>{
+      getEnsFromIndexDb(checksumWallet).then((ensFromIndexDb:any)=>{
         if(ensFromIndexDb)
         {
           setEnsName(ensFromIndexDb?.body);
