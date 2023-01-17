@@ -35,6 +35,23 @@ import { device } from "config/Globals";
 // Constants
 const NOTIFICATIONS_PER_PAGE = 10;
 
+//interfaces
+
+interface IOnDecrypt{
+  secret:string;
+  title:string;
+  message:string;
+  image:string;
+  cta:string;
+}
+
+interface IOnDecryptReturnType{
+  title:string;
+  body:string;
+  image:string;
+  cta:string;
+}
+
 // Create Header
 const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const dispatch = useDispatch();
@@ -98,8 +115,8 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     try {
       let filterNotif = [];
       for (const notif of allNotf) {
-        let timestamp;
-        const matches = notif.message.match(/\[timestamp:(.*?)\]/);
+        let timestamp:any;
+        const matches:any = notif.message.match(/\[timestamp:(.*?)\]/);
         if (matches) {
           timestamp = matches[1];
         } 
@@ -111,7 +128,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
         )
           filterNotif.push(notif);
       }
-      const newNotifs = filterNotif
+      const newNotifs:any = filterNotif
       setAllFilter(newNotifs)
     } catch (err) {
       console.log(err);
@@ -126,7 +143,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
     setFilteredNotifications(allFilter)
   }, [allFilter])
 
-  const loadNotifications = async () => {
+  const loadNotifications = async ():Promise<void> => {
     if (loading || finishedFetching) return;
     setLoading(true);
     try {
@@ -137,14 +154,14 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       //   chainId,
       //   dev: true,
       // });
-      const results = await PushAPI.user.getFeeds({
+      const results:any = await PushAPI.user.getFeeds({
         user: user, // user address in CAIP
         raw: true,
         env: appConfig.pushNodesEnv,
         page: page,
         limit: NOTIFICATIONS_PER_PAGE
       });
-      const parsedResponse = PushAPI.utils.parseApiResponse(results);
+      const parsedResponse:any = PushAPI.utils.parseApiResponse(results);
       dispatch(addPaginatedNotifications(parsedResponse));
       if (parsedResponse.length === 0) {
         dispatch(setFinishedFetching());
@@ -155,12 +172,12 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       setLoading(false);
     }
   };
-  const fetchLatestNotifications = async () => {
+  const fetchLatestNotifications = async ():Promise<void> => {
     if (loading || bgUpdateLoading) return;
     setBgUpdateLoading(true);
     setLoading(true);
     try {
-      const results = await PushAPI.user.getFeeds({
+      const results:any = await PushAPI.user.getFeeds({
         user: user, // user address in CAIP
         env: appConfig.pushNodesEnv,
         raw: true,
@@ -170,7 +187,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = PushAPI.utils.parseApiResponse(results);
+      const parsedResponse:any = PushAPI.utils.parseApiResponse(results);
       const map1 = new Map();
       const map2 = new Map();
       results.forEach( each => {
@@ -202,7 +219,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
   const fetchAllNotif = async () => {
     setLoadFilter(true);
     try {
-      const results = await PushAPI.user.getFeeds({
+      const results:any = await PushAPI.user.getFeeds({
         user: user, // user address in CAIP
         env: appConfig.pushNodesEnv,
         limit: 100000,
@@ -212,9 +229,9 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
       if (!notifications.length) {
         dispatch(incrementPage());
       }
-      const parsedResponse = PushAPI.utils.parseApiResponse(results);
-      const map1 = new Map();
-      const map2 = new Map();
+      const parsedResponse:any = PushAPI.utils.parseApiResponse(results);
+      const map1:Map<any,any> = new Map();
+      const map2:Map<any,any> = new Map();
       results.forEach( each => {
         map1.set(each.payload.data.sid , each.epoch);
         map2.set(each.payload.data.sid , each.sender);
@@ -264,22 +281,22 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
 
   };
 
-  const onDecrypt = async ({ secret, title, message, image, cta }) => {
+  const onDecrypt = async ({ secret, title, message, image, cta }:IOnDecrypt):Promise<IOnDecryptReturnType> => {
     let txToast;
     try {
-      let decryptedSecret = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
+      let decryptedSecret:string = await CryptoHelper.decryptWithWalletRPCMethod(library.provider, secret, account);
 
       // decrypt notification message
-      const decryptedBody = await CryptoHelper.decryptWithAES(message, decryptedSecret);
+      const decryptedBody:string = await CryptoHelper.decryptWithAES(message, decryptedSecret);
 
       // decrypt notification title
-      let decryptedTitle = await CryptoHelper.decryptWithAES(title, decryptedSecret);
+      let decryptedTitle:string = await CryptoHelper.decryptWithAES(title, decryptedSecret);
 
       // decrypt notification image
-      let decryptedImage = await CryptoHelper.decryptWithAES(image, decryptedSecret);
+      let decryptedImage:string = await CryptoHelper.decryptWithAES(image, decryptedSecret);
 
       // decrypt notification cta
-      let decryptedCta = await CryptoHelper.decryptWithAES(cta, decryptedSecret);
+      let decryptedCta:string = await CryptoHelper.decryptWithAES(cta, decryptedSecret);
       return { title: decryptedTitle, body: decryptedBody, image: decryptedImage, cta: decryptedCta };
     } catch (error) {
       if (error.code === 4001) {

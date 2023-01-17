@@ -11,7 +11,7 @@ import ViewInfoItem from "components/ViewInfoItem";
 dotenv.config();
 
 // Other Information section
-function Info() {
+function Info():JSX.Element {
 
   return (
     <Container>
