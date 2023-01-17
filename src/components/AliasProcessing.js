@@ -52,7 +52,7 @@ const ItemHere = styled.div`
   margin: 50px 0px 0px 0px;
   @media (max-width: 768px) {
     display: flex;
-    margin: 20px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
   }
   @media (max-width: 1224px) {
     display: flex;

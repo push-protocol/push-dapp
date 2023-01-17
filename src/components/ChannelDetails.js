@@ -330,6 +330,7 @@ const SectionDes = styled.div`
     font-weight: 300;
     margin-top: 10px;
     width:100%;
+    margin: 10px 0px 10px 0px;
     padding: 0 0 0 0;
   }
 `;
