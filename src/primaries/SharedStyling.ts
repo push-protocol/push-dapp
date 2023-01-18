@@ -2,7 +2,258 @@
 import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 
-export const Section = styled.section`
+interface ISectionProps{
+  align?:string;
+  direction?:string;
+  theme?:string;
+  gradient?:string;
+  margin?:string;
+  padding?:string;
+  overflow?:string;
+}
+
+interface IContentProps{
+  padding?:string;
+  theme?:string;
+  gradient?:string;
+}
+
+interface IItemProps{
+  wrap?:string;
+  position?:string;
+  bg?:string;
+  flex?:string|number;
+  direction?:string;
+  flexBasis?:string|number;
+  self?:string;
+  align?:string;
+  justify?:string;
+  padding?:string;
+  margin?:string;
+  minWidth?:string|number;
+  maxWidth?:string|number;
+  size?:string|number;
+  textAlign?:string;
+  filter?:string;
+  shadow?:string;
+  top?:string|number;
+  bottom?:string|number;
+  left?:string|number;
+  right?:string|number;
+  width?:string|number;
+  height?:string|number;
+  border?:string;
+  radius?:string|number;
+  overflow?:string;
+  zIndex?:number;
+  filterHover?:string;
+  hover?:string;
+  tabletMaxWidth?:string;
+  tabletAlign?:string;
+  tabletTextAlign?:string;
+}
+
+interface IItemHProps{
+  flex?:string|number;
+}
+
+interface IWaveInnerProps{
+  transform?:string;
+}
+
+interface IWaveOuterProps extends IWaveInnerProps{
+  bottom?:string;
+  top?:string;
+}
+
+interface IArcProps{
+  bottom?:string|number;
+  top?:string|number;
+  arcRGB?:string|number;
+}
+
+interface IBoldSpanProps{
+  color?:string;
+  weight?:number|string;
+}
+
+interface IHeaderProps extends IBoldSpanProps{
+  size?:string;
+  textTransform?:string;
+  margin?:string;
+  padding?:string;
+  spacing?:string;
+  family?:string;
+  textAlign?:string;
+  maxWidth?:string;
+}
+
+interface IImageProps{
+  width?:string;
+  cursor?:string;
+  height?:string;
+  filter?:string;
+}
+
+interface IParagraphProps{
+  flex?:string;
+  self?:string;
+  color?:string;
+  bg?:string;
+  weight?:number|string;
+  size?:string|number;
+  textTransform?:string;
+  margin?:string;
+  padding?:string;
+  lineHeight?:number|string;
+  spacing?:number|string;
+  textAlign?:string;
+}
+
+interface ISpanProps{
+  flex?:string;
+  self?:string;
+  color?:string;
+  bg?:string;
+  weight?:number|string;
+  size?:string;
+  textTransform?:string;
+  margin?:string;
+  padding?:string;
+  spacing?:number|string;
+  textAlign?:string;
+  bRadius?:string;
+  minWidth?:string|number;
+  pos?:string;
+  right?:string;
+  left?:string;
+  bottom?:string;
+  top?:string;
+  cursor?:string;
+  z?:number;
+}
+
+interface IAnchorProps{
+  direction?:string;
+  flex?:string;
+  self?:string;
+  align?:string;
+  justify?:string;
+  weight?:number|string;
+  size?:string|number;
+  color?:string;
+  bg?:string;
+  margin?:string;
+  padding?:string;
+  spacing?:number|string;
+  border?:string;
+  radius?:string;
+  width?:string;
+  overflow?:string;
+  filter?:string;
+  filterHover?:string;
+  hover?:string;
+  hoverBG?:string;
+}
+
+interface IAnchorLinkProps extends IAnchorProps{
+  theme?:any;
+}
+
+interface IRouterLinkProps{
+  direction?:string;
+  flex?:string;
+  self?:string;
+  align?:string;
+  justify?:string;
+  weight?:number|string;
+  size?:string;
+  color?:string;
+  bg?:string;
+  margin?:string;
+  padding?:string;
+  spacing?:number|string;
+  border?:string;
+  radius?:string;
+  width?:string;
+  overflow?:string;
+  filter?:string;
+  filterHover?:string;
+  hover?:string;
+  hoverBG?:string;
+}
+
+interface IButtonProps{
+  flex?:string;
+  self?:string;
+  align?:string;
+  justify?:string;
+  weight?:number|string;
+  size?:string;
+  color?:string;
+  bg?:string;
+  margin?:string;
+  padding?:string;
+  spacing?:number|string;
+  border?:string;
+  radius?:string;
+  textTransform?:string;
+  overflow?:string;
+  hover?:string;
+  hoverBG?:string;
+}
+
+interface IShowoffProps{
+  right?:string;
+  left?:string;
+  bottom?:string;
+  top?:string;
+  transform?:string;
+  opacity?:number|string;
+  tabletAlign?:string;
+  align?:string;
+  tabletRight?:string;
+  tabletLeft?:string;
+  tabletBottom?:string;
+  tabletTop?:string;
+  tabletTransform?:string;
+  tabletOpacity?:string|number;
+}
+
+interface IFormSubmissionProps{
+  flex?:string;
+  self?:string;
+  align?:string;
+  justify?:string;
+  weight?:number|string;
+  size?:string;
+  textTransform?:string;
+  color?:string;
+  bg?:string;
+  margin?:string;
+  padding?:string;
+  border?:string;
+  radius?:string;
+}
+
+interface ITextFieldProps extends IFormSubmissionProps{
+  outline?:string;
+  overflow?:string;
+  spacing?:number|string;
+  focusBorder?:string;
+}
+
+interface IInputProps extends ITextFieldProps{
+  display?:string;
+  visibility?:string;
+  maxllength?:string;
+  height?:string;
+  cursor?:string;
+  hand?:string;
+}
+
+
+export const Section = styled.section<ISectionProps>`
   display: flex;
   align-self: stretch;
   justify-content: center;
@@ -17,7 +268,7 @@ export const Section = styled.section`
   position: relative;
 `;
 
-export const Content = styled.div`
+export const Content = styled.div<IContentProps>`
   display: flex;
   flex-direction: column;
   padding: ${(props) => props.padding || "40px 0px"};
@@ -30,7 +281,7 @@ export const ItemBreak = styled.div`
   flex-basis: 100%;
 `;
 
-export const Item = styled.div`
+export const Item = styled.div<IItemProps>`
   display: flex;
   flex-direction: column;
   flex-wrap: ${(props) => props.wrap || "wrap"};
@@ -54,15 +305,11 @@ export const Item = styled.div`
   bottom: ${(props) => props.bottom || "auto"};
   left: ${(props) => props.left || "auto"};
   right: ${(props) => props.right || "auto"};
-
   width: ${(props) => props.width || "auto"};
   height: ${(props) => props.height || "auto"};
-
   border: ${(props) => props.border || "none"};
-
   border-radius: ${(props) => props.radius || "0px"};
   overflow: ${(props) => props.overflow || "initial"};
-
   z-index: ${(props) => props.zIndex || "auto"};
 
   &:hover & {
@@ -95,7 +342,7 @@ export const Item = styled.div`
   }
 `;
 
-export const ItemH = styled(Item)`
+export const ItemH = styled(Item)<IItemHProps>`
   flex-direction: row;
   flex: ${(props) => props.flex || "1"};
 
@@ -105,7 +352,7 @@ export const ItemH = styled(Item)`
   }
 `;
 
-export const WaveOuter = styled.div`
+export const WaveOuter = styled.div<IWaveOuterProps>`
   position: absolute;
   right: 0;
   left: 0;
@@ -114,7 +361,7 @@ export const WaveOuter = styled.div`
   transform: ${(props) => props.transform || "initial"};
 `;
 
-export const WaveInner = styled.div`
+export const WaveInner = styled.div<IWaveInnerProps>`
   position: absolute;
   right: 0;
   left: 0;
@@ -122,12 +369,11 @@ export const WaveInner = styled.div`
   transform: ${(props) => props.transform || "initial"};
 `;
 
-export const Arc = styled.div`
+export const Arc = styled.div<IArcProps>`
   position: absolute;
   overflow: hidden;
   width: 100%;
   height: 300px;
-
   bottom: ${(props) => props.bottom || "auto"};
   top: ${(props) => props.top || "auto"};
 
@@ -159,7 +405,7 @@ export const H1 = styled.h1`
   }
 `;
 
-export const H2 = styled.h2`
+export const H2 = styled.h2<IHeaderProps>`
   color: ${(props) => props.color || "#000"};
   font-weight: ${(props) => props.weight || 600};
   font-size: ${(props) => props.size || "2rem"};
@@ -172,7 +418,7 @@ export const H2 = styled.h2`
   text-align: ${(props) => props.textAlign || "inherit"};
 `;
 
-export const H3 = styled.h3`
+export const H3 = styled.h3<IHeaderProps>`
   color: ${(props) => props.color || "rgb(0 0 0 / 0.5)"};
   font-weight: ${(props) => props.weight || 300};
   font-size: ${(props) => props.size || "1rem"};
@@ -186,7 +432,7 @@ export const H3 = styled.h3`
   max-width: ${(props) => props.maxWidth || "initial"};
 `;
 
-export const Image = styled.img`
+export const Image = styled.img<IImageProps>`
   width: ${(props) => props.width || "100%"};
   cursor: ${(props) => props.cursor || "default"};
   height: ${(props) => props.height || "auto"};
@@ -194,10 +440,9 @@ export const Image = styled.img`
   filter: ${(props) => props.filter || "initial"};
 `;
 
-export const P = styled.p`
+export const P = styled.p<IParagraphProps>`
   flex: ${(props) => props.flex || "initial"};
   align-self: ${(props) => props.self || "auto"};
-
   color: ${(props) => props.color || "#000"};
   background: ${(props) => props.bg || "transparent"};
   font-weight: ${(props) => props.weight || 300};
@@ -210,17 +455,16 @@ export const P = styled.p`
   text-align: ${(props) => props.textAlign || "initial"};
 `;
 
-export const Para = styled(P)`
+export const Para = styled(P)<IParagraphProps>`
   font-weight: ${(props) => props.weight || 300};
   letter-spacing: ${(props) => props.spacing || "0.02em"};
   font-size: ${(props) => props.size || "1.1em"};
   color: ${(props) => props.color || "#000000ee"};
 `;
 
-export const Span = styled.span`
+export const Span = styled.span<ISpanProps>`
   flex: ${(props) => props.flex || "initial"};
   align-self: ${(props) => props.self || "auto"};
-
   color: ${(props) => props.color || "#000"};
   background: ${(props) => props.bg || "transparent"};
   font-weight: ${(props) => props.weight || 300};
@@ -232,7 +476,6 @@ export const Span = styled.span`
   text-align: ${(props) => props.textAlign || "initial"};
   border-radius: ${(props) => props.bRadius || "initial"};
   min-width: ${(props) => props.minWidth || "auto"};
-
   position: ${(props) => props.pos || "initial"};
   right: ${(props) => props.right || "auto"};
   left: ${(props) => props.left || "auto"};
@@ -242,7 +485,7 @@ export const Span = styled.span`
   z-index: ${(props) => props.z || "auto"};
 `;
 
-export const B = styled.span`
+export const B = styled.span<IBoldSpanProps>`
   color: ${(props) => props.color || "inherit"};
   font-weight: ${(props) => props.weight || "bold"};
 `;
@@ -253,7 +496,7 @@ export const LI = styled.li`
   margin: 10px 0px;
 `;
 
-export const Anchor = styled.a`
+export const Anchor = styled.a<IAnchorProps>`
   display: flex;
   flex-direction: ${(props) => props.direction || "row"};
   flex: ${(props) => props.flex || "initial"};
@@ -270,14 +513,11 @@ export const Anchor = styled.a`
   border: ${(props) => props.border || "none"};
   border-radius: ${(props) => props.radius || "0px"};
   width: ${(props) => props.width || "initial"};
-
   position: relative;
   text-decoration: none;
   overflow: ${(props) => props.overflow || "hidden"};
   z-index: 3;
-
   filter: ${(props) => props.filter || "none"};
-
   cursor: pointer;
   pointer: hand;
 
@@ -327,12 +567,12 @@ export const Anchor = styled.a`
   }
 `;
 
-export const AnchorLink = styled(Anchor)`
+export const AnchorLink = styled(Anchor)<IAnchorLinkProps>`
   background-color: ${(props) =>
     props.theme.scheme === "dark" ? props.bg : "#d1cdcd"};
 `;
 
-export const RouterLink = styled(Link)`
+export const RouterLink = styled(Link)<IRouterLinkProps>`
   display: flex;
   flex-direction: ${(props) => props.direction || "row"};
   flex: ${(props) => props.flex || "initial"};
@@ -349,14 +589,11 @@ export const RouterLink = styled(Link)`
   border: ${(props) => props.border || "none"};
   border-radius: ${(props) => props.radius || "0px"};
   width: ${(props) => props.width || "initial"};
-
   position: relative;
   text-decoration: none;
   overflow: ${(props) => props.overflow || "hidden"};
   z-index: 3;
-
   filter: ${(props) => props.filter || "none"};
-
   cursor: pointer;
   pointer: hand;
 
@@ -413,7 +650,7 @@ export const RouterLink = styled(Link)`
   }
 `;
 
-export const A = styled(Anchor)`
+export const A = styled(Anchor)<IAnchorProps>`
   display: inline;
   color: ${(props) => props.color || "#e1087f"};
   font-weight: ${(props) => props.weight || "300"};
@@ -434,7 +671,7 @@ export const C = styled(Anchor)`
   text-transform: initial;
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<IButtonProps>`
   display: flex;
   flex: ${(props) => props.flex || "initial"};
   align-self: ${(props) => props.self || "auto"};
@@ -450,12 +687,10 @@ export const Button = styled.button`
   border: ${(props) => props.border || "none"};
   border-radius: ${(props) => props.radius || "0px"};
   text-transform: ${(props) => props.textTransform || "initial"};
-
   position: relative;
   text-decoration: none;
   overflow: ${(props) => props.overflow || "hidden"};
   z-index: 3;
-
   cursor: pointer;
   pointer: hand;
 
@@ -500,7 +735,7 @@ export const Button = styled.button`
   }
 `;
 
-export const Showoff = styled.div`
+export const Showoff = styled.div<IShowoffProps>`
   position: absolute;
   right: ${(props) => props.right || "auto"};
   left: ${(props) => props.left || "auto"};
@@ -555,11 +790,10 @@ export const Showoff = styled.div`
   }
 `;
 
-export const FormSubmision = styled.form`
+export const FormSubmision = styled.form<IFormSubmissionProps>`
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-
   flex: ${(props) => props.flex || "initial"};
   align-self: ${(props) => props.self || "auto"};
   align-items: ${(props) => props.align || "center"};
@@ -576,7 +810,7 @@ export const FormSubmision = styled.form`
   position: relative;
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<IInputProps>`
   display: ${(props) => props.display || "flex"};
   flex: ${(props) => props.flex || "initial"};
   align-self: ${(props) => props.self || "auto"};
@@ -598,7 +832,6 @@ export const Input = styled.input`
   visibility: ${(props) => props.visibility || ""};
   width: ${(props) => props.maxllength};
   height: ${(props) => props.height};
-
   cursor: ${(props) => props.cursor || "initial"};
   pointer: ${(props) => props.hand || "initial"};
 
@@ -615,7 +848,7 @@ export const Input = styled.input`
   }
 `;
 
-export const TextField = styled.textarea`
+export const TextField = styled.textarea<ITextFieldProps>`
   display: flex;
   flex: ${(props) => props.flex || "initial"};
   align-self: ${(props) => props.self || "auto"};

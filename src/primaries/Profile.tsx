@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { Content, Item } from "./SharedStyling.js";
+import { Content, Item } from "./SharedStyling";
 import { envUtil } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
 import useModal from 'hooks/useModal';
