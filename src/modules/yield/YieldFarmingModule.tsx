@@ -87,7 +87,7 @@ function YieldFarmingModule(): JSX.Element {
     if (poolStats?.epochEndTimestamp) {
       const epochEndTimestamp: number = poolStats.epochEndTimestamp.toNumber();
 
-      const newDate:unknown=new Date()
+      const newDate:Date=new Date();
       const duration: number = Math.floor(epochEndTimestamp - Math.floor(newDate as number / 1000));
 
       if (duration < 0) {
