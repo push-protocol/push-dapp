@@ -91,13 +91,9 @@ export interface AppContext {
     viewChatBox: boolean;
     receivedIntents: Feeds[];
     setReceivedIntents: (rIntent: Feeds[]) => void;
-    // did: DID;
-    // setDID: (did: DID) => void;
     setSearchedUser: (searched: string) => void;
     searchedUser: string;
     setChat: (feed: Feeds) => void;
-    connectedUser: ConnectedUser;
-    setConnectedUser: (user: ConnectedUser) => void;
     intents: Feeds[];
     setIntents: (intents: Feeds[]) => void;
     inbox: Feeds[];

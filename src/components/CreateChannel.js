@@ -335,6 +335,7 @@ function CreateChannel() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Test>
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
@@ -384,7 +385,7 @@ function CreateChannel() {
         </>
       ) : (
         <>
-          <Section>
+          {!(processing === 1 || processing === 3) &&(<Section>
             <ItemHere>
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
                onClick={() => setStepFlow(0)}
@@ -406,7 +407,7 @@ function CreateChannel() {
               </Tab>
               <Line />
             </ItemHere>
-          </Section>
+          </Section>)}
 
           {/* Stake Fees Section */}
           {stepFlow === 0 && (
@@ -497,6 +498,7 @@ function CreateChannel() {
           )}
         </>
       )}
+      </Test>
     </ThemeProvider>
   );
 }
@@ -519,6 +521,12 @@ const Step = styled.div`
     css`
     `};
 `;
+
+const Test = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+`
 
 const ItemWarning = styled.div`
   color: white;
@@ -552,7 +560,11 @@ const BodySection = styled(Section)`
         margin: 0px 0px;
 
         @media (max-width: 768px){
+          font-weight: 300;
           font-size: 14px;
+          text-align: center;
+          letter-spacing: 0em;
+          line-height: 140%;
          }
       }
   }
@@ -567,7 +579,7 @@ const BodySection = styled(Section)`
 `
 
 const TextH2 = styled(H2)`
-  text-transform: uppercase;
+  text-transform: capitalize;
   margin: 20px 0px;
 
   .text {
@@ -676,6 +688,7 @@ const Tab = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+    margin: 0px 4px;
     div {
       font-weight: 500;
       font-size: 15px;
@@ -721,7 +734,7 @@ const ItemHere = styled.div`
   align-items: flex-end;
   @media (max-width: 768px) {
     display: flex;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   @media (max-width: 1224px) {
     display: flex;

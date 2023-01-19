@@ -19,7 +19,7 @@ const AliasSetup = () => {
     >
       <Span
         textAlign="center"
-        margin="60px 0px 0px 0px"
+        margin="30px 0px 0px 0px"
         color={themes.color}
         size="16px"
         textTransform="none"

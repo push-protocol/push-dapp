@@ -25,6 +25,7 @@ import { Context } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 
 
@@ -34,8 +35,10 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
-    useContext(Context);
+  const {  pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } = useContext(Context);
+
+  const {connectedUser} = useContext(ChatUserContext);
+
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 

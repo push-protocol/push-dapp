@@ -41,6 +41,7 @@ import PreviewNotif from './PreviewNotif';
 
 // Internal Configs
 import { appConfig } from 'config';
+import { useDeviceWidthCheck } from 'hooks';
 
 // Constants
 const CORE_CHAIN_ID = appConfig.coreContractChain;
@@ -119,6 +120,7 @@ const LIMITER_KEYS = ['Enter', ','];
 // Create Header
 function SendNotifications() {
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(425);
   const { account, library, chainId } = useWeb3React();
   const { epnsCommWriteProvider, epnsCommReadProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails, delegatees, aliasDetails: { aliasEthAddr } } = useSelector((state: any) => state.admin);
@@ -837,24 +839,25 @@ function SendNotifications() {
   return (
     <Container>
       <Body>
-        <Content padding="10px 20px 10px">
+        <Content padding={isMobile ? "0px 0px 0px" : "10px 20px 10px"}>
           <Item align="center">
             <H2
               textTransform="none"
-              weight="400"
-              size="32px"
+              weight={isMobile ? "500" : "400"}
+              size={isMobile ? "25px" : "32px"}
               color={theme.color}
               textAlign="center"
+              margin={isMobile ? "0px 0px" : "20px 0px"}
               style={{ width: '100%' }}>
               Send Notification
             </H2>
             <Span
               color={theme.default.secondaryColor}
-              weight="400"
-              size="15px"
+              weight={isMobile ? "300" : "400"}
+              size="14px"
               textTransform="none"
               spacing="0.03em"
-              margin="0px 0px"
+              margin={isMobile ? "10px 0px" : "0px 0px"}
               textAlign="center">
               Push (EPNS) makes it extremely easy to open and maintain a genuine channel of communication with your
               users.
@@ -986,9 +989,9 @@ function SendNotifications() {
                     <ToggleOptionContainer>
                       <ToggleOption>
                         <Span
-                          weight="600"
+                          weight={isMobile ? "500" : "600"}
                           textTransform="none"
-                          size="14px"
+                          size={isMobile ? "15px" : "14px"}
                           color="#1E1E1E"
                           padding="5px 15px"
                           radius="30px">
@@ -999,9 +1002,9 @@ function SendNotifications() {
 
                       <ToggleOption>
                         <Span
-                          weight="600"
+                          weight={isMobile ? "500" : "600"}
                           textTransform="none"
-                          size="14px"
+                          size={isMobile ? "15px" : "14px"}
                           color="#1E1E1E"
                           padding="5px 15px"
                           radius="30px">
@@ -1012,9 +1015,9 @@ function SendNotifications() {
 
                       <ToggleOption>
                         <Span
-                          weight="600"
-                          textTransform="none"
-                          size="14px"
+                         weight={isMobile ? "500" : "600"}
+                         textTransform="none"
+                         size={isMobile ? "15px" : "14px"}
                           color="#1E1E1E"
                           padding="5px 15px"
                           radius="30px">
@@ -1028,7 +1031,7 @@ function SendNotifications() {
 
                 {(nfType === '2' || nfType === '3' || nfType === '5') && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color }}>Recipient Wallet Address</Label>
+                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Recipient Wallet Address</Label>
                     <Input
                       maxlength="40"
                       flex="1"
@@ -1062,7 +1065,7 @@ function SendNotifications() {
                       ))}
                     </MultiRecipientsContainer>
                     <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                      <Label style={{ color: theme.color }}>Enter Recipients Wallet Addresses</Label>
+                      <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Enter Recipients Wallet Addresses</Label>
                       <Input
                         required={multipleRecipients.length === 0}
                         maxlength="40"
@@ -1096,7 +1099,7 @@ function SendNotifications() {
 
                 {nfType && nfSubEnabled && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color }}>Subject</Label>
+                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Subject</Label>
                     <Input
                       maxlength="40"
                       flex="1"
@@ -1119,7 +1122,7 @@ function SendNotifications() {
 
                 {nfType && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color }}>Notification Message</Label>
+                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Notification Message</Label>
                     <TextField
                       // placeholder="Your Channel's Short Description (250 Characters)"
                       rows="4"
@@ -1143,7 +1146,7 @@ function SendNotifications() {
 
                 {nfType && nfMediaEnabled && (
                   <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color }}>Media URL</Label>
+                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Media URL</Label>
                     <Input
                       maxlength="40"
                       flex="1"
@@ -1166,7 +1169,7 @@ function SendNotifications() {
 
                 {nfType && nfCTAEnabled && (
                   <Item margin="15px 0" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color }}>CTA Link</Label>
+                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>CTA Link</Label>
 
                     <Input
                       maxlength="40"
@@ -1287,6 +1290,11 @@ const ModifiedContent = styled(Content)`
   @media (max-width: 600px) {
     width: 90%;
   }
+
+  @media (max-width: 425px) {
+    padding-top: 0px;
+    width: 100%;
+  }
 `;
 
 const DropdownHeader = styled.div`
@@ -1362,8 +1370,9 @@ const DropdownStyled = styled(Dropdown)`
     line-height: 150%;
     align-items: center;
     padding: 0.75rem 1.18rem;
-    @media (max-width: 380px) {
-      font-size: 0.875rem;
+    @media (max-width: 425px) {
+      font-size: 16px;
+      font-weight: 500;
     }
   }
   .Dropdown-arrow {
@@ -1449,6 +1458,7 @@ const Body = styled.div`
   }
   @media (max-width: 600px) {
     width: 100%;
+    margin: 0px auto 0px auto;
   }
 `;
 

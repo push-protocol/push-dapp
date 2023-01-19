@@ -84,7 +84,7 @@ const NavBoxHolder = styled.div`
   @media (max-width: 768px) {
     flex-direction: column-reverse;
     justify-content: space-between;
-    margin: 40px 30px 0 30px;
+    margin: 40px 30px 20px 30px;
   }
 
   :after {

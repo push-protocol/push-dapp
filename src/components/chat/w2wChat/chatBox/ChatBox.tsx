@@ -42,6 +42,7 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -62,11 +63,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     currentChat,
     viewChatBox,
     searchedUser,
-    connectedUser,
     receivedIntents,
     inbox,
     intents,
-    setConnectedUser,
     setActiveTab,
     setChat,
     setInbox,
@@ -85,6 +84,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
+  const {connectedUser,setConnectedUser} = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
