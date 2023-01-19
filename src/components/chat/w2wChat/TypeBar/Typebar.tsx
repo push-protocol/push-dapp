@@ -16,6 +16,7 @@ import { AppContext } from 'types/chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 interface ITypeBar {
   messageBeingSent: boolean;
@@ -40,7 +41,8 @@ const Typebar = ({
   setOpenSuccessSnackBar,
   setSnackbarText,
 }: ITypeBar) => {
-  const { currentChat, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);

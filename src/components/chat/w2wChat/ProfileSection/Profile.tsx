@@ -24,6 +24,7 @@ import { FileMessageContent } from '../TypeBar/Files/Files'
 import styles from './styles'
 import { AppContext } from 'types/chat'
 import { Context } from 'modules/chat/ChatModule'
+import { ChatUserContext } from 'contexts/ChatUserContext'
 
 // Interfaces
 interface ProfilePropsType {
@@ -37,7 +38,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
 });
 
 const Profile = (props: ProfilePropsType): JSX.Element => {
-  const { connectedUser }: AppContext = useContext<AppContext>(Context);
+  const {connectedUser} = useContext(ChatUserContext);
 
   const wallets = connectedUser.wallets.split(',');
   const [copiedDid, setCopiedDid] = useState<boolean>(false);

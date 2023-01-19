@@ -30,6 +30,7 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 export interface InboxChat {
   name: string;
@@ -66,8 +67,6 @@ export interface AppContext {
   setSearchedUser: (searched: string) => void;
   searchedUser: string;
   setChat: (feed: Feeds) => void;
-  connectedUser: ConnectedUser;
-  setConnectedUser: (user: ConnectedUser) => void;
   intents: Feeds[];
   setIntents: (intents: Feeds[]) => void;
   inbox: Feeds[];
@@ -101,6 +100,8 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
+  const { getUser, connectedUser, setConnectedUser } = useContext(ChatUserContext);
+
   const theme = useTheme();
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
@@ -113,7 +114,6 @@ function Chat() {
     title: null,
   });
   const [searchedUser, setSearchedUser] = useState<string>('');
-  const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
@@ -176,10 +176,10 @@ function Chat() {
   // Rest of the loading logic
   useEffect(() => {
     if (isLoading) {
+      setConnectedUser(connectedUser);
       connectUser();
     }
-  }, []);
-
+  }, [connectedUser]);
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -191,46 +191,8 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
-    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-    const user: User = await PushNodeClient.getUser({ caip10 });
-    let connectedUser: ConnectedUser;
-
-    // TODO: Change this to do verification on ceramic to validate if did is valid
-    if (user?.did.includes('did:3:')) {
-      throw Error('Invalid DID');
-    }
-
-    // new user might not have a private key
-    if (user && user.encryptedPrivateKey) {
-      if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
-        throw Error('Invalid user');
-      }
-
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
-        library.provider,
-        user.encryptedPrivateKey,
-        account
-      );
-      connectedUser = { ...user, privateKey: privateKeyArmored };
-    } else {
-      connectedUser = {
-        // We only need to provide this information when it's a new user
-        name: 'john-snow',
-        profilePicture:
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
-        wallets: caip10,
-        about: '',
-        allowedNumMsg: 0,
-        did: caip10,
-        encryptedPrivateKey: '',
-        encryptionType: '',
-        numMsg: 0,
-        publicKey: '',
-        sigType: '',
-        signature: '',
-        linkedListHash: '',
-        privateKey: '',
-      };
+    if (!connectedUser) {
+      await getUser();
     }
 
     setBlockedLoading({
@@ -241,7 +203,6 @@ function Chat() {
       progress: 100,
     });
 
-    setConnectedUser(connectedUser);
     setIsLoading(false);
   };
 
