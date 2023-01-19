@@ -31,6 +31,9 @@ import { ChatTempContext } from 'contexts/ChatTempContext';
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import RandomPage from 'pages/RandomPage';
+import ChatQR from 'components/chat/w2wChat/ChatQR/ChatQR';
+import { generateKeyPair } from 'helpers/w2w/pgp';
 
 export interface InboxChat {
   name: string;
@@ -59,6 +62,7 @@ export interface BlockedLoadingI {
   progressNotice?: string;
 }
 
+
 export interface AppContext {
   currentChat: Feeds;
   viewChatBox: boolean;
@@ -84,6 +88,15 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
+  displayQR: boolean,
+  setDisplayQR: (displayQR: boolean)=>void;
+  pgpPvtKey: string,
+  setPgpPvtKey: (pgpPvtKey: string)=>void;
+  createUserIfNecessary: () => ConnectedUser;
+  // localPeer:localPeer;
+  // setLocalPeer: (localPeer:localPeer) =>void;
+  // connectedPeerID:connectedPeerID;
+  // setConnectedPeerID: (connectedPeer:connectedPeerID)=>void;
 }
 
 export const ToastPosition: ToastOptions = {
@@ -100,7 +113,6 @@ export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
 function Chat() {
-  const { setPgpPvtKey } = useContext(ChatTempContext);
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
   const theme = useTheme();
@@ -122,6 +134,17 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+
+  //Chat QR states
+  const [displayQR, setDisplayQR] = useState<boolean>(false);
+  const [pgpPvtKey,setPgpPvtKey] = useState(null);
+  const [localPeer,setLocalPeer]= useState({
+    peer:'',
+    peerID:''
+  })
+  const [connectedPeerID,setConnectedPeerID] = useState({
+    peerID:''
+  });
 
   const queryClient = new QueryClient({});
 
@@ -193,9 +216,13 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
+    console.log("This run");
+
     const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
     const user: User = await PushNodeClient.getUser({ caip10 });
     let connectedUser: ConnectedUser;
+
+    console.log("This run");
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
     if (user?.did.includes('did:3:')) {
@@ -213,9 +240,11 @@ function Chat() {
         user.encryptedPrivateKey,
         account
       );
+      console.log("Private Key here", privateKeyArmored);
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
+      console.log("New user")
       connectedUser = {
         // We only need to provide this information when it's a new user
         name: 'john-snow',
@@ -246,6 +275,69 @@ function Chat() {
 
     setConnectedUser(connectedUser);
     setIsLoading(false);
+  };
+
+  //this function generates PGP keys for the new users
+  const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
+    try {
+        // This is a new user
+        setBlockedLoading({
+          enabled: true,
+          title: 'Step 1/4: Generating secure keys for your account',
+          progressEnabled: true,
+          progress: 30,
+          progressNotice:
+            'This step is is only done for first time users and might take a few seconds. PGP keys are getting generated to provide you with secure yet seamless chat',
+        });
+        await new Promise((r) => setTimeout(r, 200));
+
+        const keyPairs = await generateKeyPair();
+        setBlockedLoading({
+          enabled: true,
+          title: 'Step 2/4: Encrypting your keys',
+          progressEnabled: true,
+          progress: 60,
+          progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!',
+        });
+
+        const walletPublicKey = await CryptoHelper.getPublicKey(account);
+        const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
+          keyPairs.privateKeyArmored,
+          walletPublicKey
+        );
+        const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
+        setBlockedLoading({
+          enabled: true,
+          title: 'Step 3/4: Syncing account info',
+          progressEnabled: true,
+          progress: 85,
+          progressNotice: 'This might take a couple of seconds as push nodes sync your info for the first time!',
+        });
+
+        const createdUser: User = await PushNodeClient.createUser({
+          caip10,
+          did: caip10,
+          publicKey: keyPairs.publicKeyArmored,
+          encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
+          encryptionType: 'x25519-xsalsa20-poly1305',
+          signature: 'xyz',
+          sigType: 'a',
+        });
+        const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
+        setConnectedUser(createdConnectedUser);
+        setPgpPvtKey(keyPairs.privateKeyArmored);
+
+        setBlockedLoading({
+          enabled: false,
+          title: 'Step 4/4: Done, Welcome to Push Chat!',
+          spinnerType: LOADER_SPINNER_TYPE.COMPLETED,
+          progressEnabled: true,
+          progress: 100,
+        });
+        return { createdUser: createdConnectedUser };
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const setActiveTab = (tab: number): void => {
@@ -301,6 +393,15 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
+                setDisplayQR,
+                displayQR,
+                createUserIfNecessary,
+                pgpPvtKey,
+                setPgpPvtKey,
+                setLocalPeer,
+                connectedPeerID,
+                setConnectedPeerID,
+                localPeer,
               }}
             >
               <ChatSidebarContainer
@@ -320,6 +421,19 @@ function Chat() {
               >
                 <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
               </ChatContainer>
+
+              {displayQR && (
+                <>
+                  <ChatQR
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  />
+                </>
+              )}
+
+
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
@@ -346,6 +460,19 @@ function Chat() {
           />
         )}
 
+        {/* {displayQR && (
+          <>
+            <ChatQR
+              type={LOADER_TYPE.STANDALONE}
+              overlay={LOADER_OVERLAY.ONTOP}
+              blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+              width="75%"
+              setDisplayQR={setDisplayQR}
+              displayQR={displayQR}
+            />
+          </>
+        )} */}
+
         {/* But video chat trumps this now!!! */}
         {videoCallInfo.establishConnection > 0 && (
           <VideoCallSection
@@ -363,7 +490,7 @@ function Chat() {
           />
         )}
       </ItemHV2>
-    </Container>
+    </Container >
   );
 }
 

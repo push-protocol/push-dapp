@@ -9,8 +9,10 @@ import styled, { useTheme } from 'styled-components';
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
+import { IconButton } from '@mui/material';
+import { AiOutlineEllipsis, AiOutlineMore } from 'react-icons/ai';
 
-const Profile = ({ setActiveTab }: any): JSX.Element => {
+const Profile = ({ setActiveTab,setShowQR,showQR }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
@@ -45,12 +47,16 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
-      {/* <IconButton aria-label="more">
-        <MoreVertIcon />
-      </IconButton> */}
+      <SettingsWrapper onClick={()=>setShowQR(!showQR)}>
+        <Settings />
+      </SettingsWrapper>
+
     </>
   );
 };
+
+const BottomContainer = styled.div`
+`;
 
 const WalletDetailsContainer = styled(Stack)`
   display: flex;
@@ -64,6 +70,21 @@ const DisplayText = styled(Typography)`
     font-size: ${(props): string => props.size || '14px'};
     font-weight: ${(props): string => props.weight || '500'};
   }
+`;
+
+const SettingsWrapper = styled.span`
+`;
+
+
+const Settings = styled(AiOutlineMore)`
+  position: relative;
+  width: 40px;
+  height: 36px;
+  // border: 1px solid #dfdee9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 400ms;
+  transform: ${(props) => (props.active ? 'rotateZ(90deg)' : 'none')};
 `;
 
 export default Profile;

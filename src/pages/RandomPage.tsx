@@ -17,6 +17,8 @@ const RandomPage = () => {
   const { connectedPeerID } = useSelector((state: any) => state.peer);
 
   console.log(myPeerID, myPeer, connectedPeerID);
+  console.log("ConnectedPeer ID",connectedPeerID);
+  console.log("Pgp Private key",pgpPvtKey)
 
   const generateQRCodeText = () => {
     const secret = CryptoHelper.makeid(10);
@@ -57,6 +59,7 @@ const RandomPage = () => {
     if (!connectedPeerID) return;
     try {
       const conn = myPeer.connect(connectedPeerID);
+      console.log("encryptedKey",encryptedKey)
       conn.on("open", () => {
         conn.send({ encryptedPgpKey: encryptedKey });
       });

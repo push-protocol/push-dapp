@@ -42,6 +42,7 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
+import { IconButton } from '@mui/material';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;

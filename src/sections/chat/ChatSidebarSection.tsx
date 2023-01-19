@@ -25,6 +25,9 @@ import { Context } from 'modules/chat/ChatModule';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { AiOutlineQrcode } from 'react-icons/ai';
+import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import ChatQR from 'components/chat/w2wChat/ChatQR/ChatQR';
 
 
 
@@ -34,13 +37,15 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } =
+  const { connectedUser, pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents,setBlockedLoading, setDisplayQR,displayQR } =
     useContext(Context);
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
+
+  const [showQR, setShowQR] = useState<boolean>(false);
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
@@ -57,7 +62,7 @@ const ChatSidebarSection = () => {
     if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
     }
-    if (getIntent!== undefined) {
+    if (getIntent !== undefined) {
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
@@ -72,9 +77,9 @@ const ChatSidebarSection = () => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
     let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
+    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-    if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+    if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     }
@@ -97,6 +102,18 @@ const ChatSidebarSection = () => {
       };
     }
   }, [loadingRequests]);
+
+
+  const generateQR = ()=>{
+    setBlockedLoading({
+      enabled: true,
+      title: 'Wallet is not whitelisted',
+      spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
+      progressEnabled: false,
+      progressNotice:
+        'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
+    });
+  }
 
   // RENDER
   return (
@@ -203,10 +220,20 @@ const ChatSidebarSection = () => {
             />
           </>
         )}
-        {activeTab == 3 && <SearchBar/>}
+        {activeTab == 3 && <SearchBar />}
       </ItemVV2>
 
       {/* Footer */}
+      {showQR ? (
+        <QRCodeContainer 
+        onClick={()=>setDisplayQR(!displayQR)}
+        >
+          <QROutline />
+          <TextQR>Link Mobile APP</TextQR>
+        </QRCodeContainer>
+      ) : null}
+
+
       <ItemVV2 flex="initial">
         <ItemVV2
           position="absolute"
@@ -217,13 +244,14 @@ const ChatSidebarSection = () => {
           background={theme.default.secondaryBg}
         ></ItemVV2>
         <ItemHV2
-          justifyContent="flext-start"
+          justifyContent="space-between"
           margin="15px 0px 5px 0px"
           padding="0px 10px"
         >
-          <ProfileHeader setActiveTab={setActiveTab} />
+          <ProfileHeader setActiveTab={setActiveTab} setShowQR={setShowQR} showQR={showQR} />
         </ItemHV2>
       </ItemVV2>
+
     </ItemVV2>
   );
 };
@@ -276,4 +304,39 @@ const Tab = styled(MuiTab)`
     font-size: 16px;
     color: #000000;
   }
+`;
+
+const QRCodeContainer = styled.div`
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px;
+gap: 9px;
+width: 200px;
+height: 48px;
+background: #FFFFFF;
+border: 1px solid #BAC4D6;
+box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+border-radius: 12px;
+cursor:pointer;
+position: absolute;
+z-index: 100;
+bottom: 45px;
+left: 85px;
+
+`;
+
+const QROutline = styled(AiOutlineQrcode)`
+width: 35px;
+height: 30px;
+`
+
+const TextQR = styled.p`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 140%;
+text-align: center;
+color: #657795;
 `;

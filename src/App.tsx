@@ -174,7 +174,7 @@ export default function App() {
           <GlobalStyle />
           <InitState />
           <NavigationContextProvider>
-            <ChatTempContextProvider>
+            {/* <ChatTempContextProvider> */}
               <Joyride
                 run={run}
                 steps={steps}
@@ -219,7 +219,7 @@ export default function App() {
                   <MasterInterfacePage />
                 </ContentContainer>
               </ParentContainer>
-            </ChatTempContextProvider>
+            {/* </ChatTempContextProvider> */}
           </NavigationContextProvider>
         </>
       )}

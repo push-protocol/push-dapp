@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Peer } from "peerjs";
 import { useDispatch, useSelector } from "react-redux";
-import { resetPeerSlice, setConnectedPeer, setLocalPeer } from "redux/slices/peerSlice";
+// import { resetPeerSlice, setConnectedPeer, setLocalPeer } from "redux/slices/peerSlice";
+// import { resetPeerSlice} from "redux/slices/peerSlice";
+import { Context } from "modules/chat/ChatModule";
 
 const usePeer = () => {
     const dispatch = useDispatch();
-    const {localPeer, localPeerID} = useSelector((state: any) => state.peer);
-    const [myPeer, setPeer] = useState(localPeer);
-    const [myPeerID, setMyPeerID] = useState(localPeerID);
+    // const {localPeer, localPeerID} = useSelector((state: any) => state.peer);
+    const { setLocalPeer,localPeer,setConnectedPeerID,connectedPeerID } = useContext(Context);
+    const [myPeer, setPeer] = useState(localPeer.peer);
+    // const [myPeer, setPeer] = useState(localPeer);
+    // const [myPeerID, setMyPeerID] = useState(localPeerID);
+    const [myPeerID, setMyPeerID] = useState(localPeer.peerID);
+
 
     const cleanUp = () => {
         if (myPeer) {
@@ -16,7 +22,9 @@ const usePeer = () => {
         }
         setPeer(null);
         setMyPeerID(null);
-        dispatch(resetPeerSlice());
+        setLocalPeer({peer:'',peerID:''})
+        setConnectedPeerID({peerID:''})
+        // dispatch(resetPeerSlice());
     }
 
     useEffect(() => {
@@ -27,7 +35,11 @@ const usePeer = () => {
           console.log(peer.id);
           setPeer(peer);
           setMyPeerID(peer.id);
-          dispatch(setLocalPeer({peer: peer, peerID: peer.id}))
+          setLocalPeer({
+            peer:peer,
+            peerID:peer.id
+          })
+        //   dispatch(setLocalPeer({peer: peer, peerID: peer.id}))
       })
 
       peer.on("connection", (connection) => {
@@ -35,7 +47,8 @@ const usePeer = () => {
         connection.on("data", (data) => {
           // Will print 'hi!'
           console.log("got data", data);
-          dispatch(setConnectedPeer({peerID: data.peerID}))
+          setConnectedPeerID({peerID:data.peerID})
+        //   dispatch(setConnectedPeer({peerID: data.peerID}))
         });
       });
 
