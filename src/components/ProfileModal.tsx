@@ -4,6 +4,7 @@ import styled, { useTheme } from "styled-components";
 import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
 import { A, Button, Image, Item, ItemH, Span} from 'primaries/SharedStyling';
 import { AiOutlineClose } from 'react-icons/ai'
+import { BsXLg } from 'react-icons/bs'
 
 
 const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
@@ -19,12 +20,13 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
         <ModalContainer>
             <Button
                 bg="transparent"
+                margin="10px 10px 10px 0px"
                 self='flex-end'
                 onClick={() => {
                   setShowDropdown(!showDropdown);
                     return 'nothing'
                 }}>
-                <AiOutlineClose size={30} color={theme.headerIconsBg} />
+                <BsXLg size={22} color={theme.headerIconsBg} />
               </Button>
 
 
@@ -34,8 +36,7 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
           <ItemHead>
             <Span
               margin="11px 22px 11px 2px"
-              weight="400"
-              size="14px"
+              size="16px"
               textTransform="uppercase"
               color="#fff"
               width="max-content"
@@ -124,20 +125,21 @@ const ModalContainer = styled.div`
     display: flex;
     flex: 1;
     flex-direction: column;
-    width: 100vw;
-    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
     background: ${props => props.theme.default.bg};;
     align-items: flex-start;
+    overflow: hidden;
 `
 
 const SpanAddress= styled(Span)`
-  margin:11px 22px 11px 2px;
-  weight:400;
-  size:14px;
-  text-transform:uppercase;
-  color:#fff;
-  spacing:1px;
-  width:max-content;
+  margin: 11px 22px 11px 2px;
+  font-weight: 600;
+  size: 15px;
+  text-transform: uppercase;
+  color: #fff;
+  width: max-content;
 `
 const MobileAddress= styled(SpanAddress)`
   @media (min-width: 993px) {

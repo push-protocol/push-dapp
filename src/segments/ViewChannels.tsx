@@ -204,7 +204,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
           <ItemHBar>
             <SearchContainer
               flex="1"
-              margin="10px"
             >
               <SearchBar
                 type="text"
@@ -328,9 +327,9 @@ const ItemHBar = styled.div`
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 0px 0px;
+    padding: 10px 10px;
   }
 `;
 
@@ -342,6 +341,7 @@ const ItemBar = styled.div`
   justify-content: space-evenly;
   @media (max-width: 768px) {
     flex-direction: column;
+    padding: 0px 0px 0px 0px;
   }
 `;
 
@@ -349,12 +349,10 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
-
   max-height: 100vh;
 `;
 
@@ -389,10 +387,6 @@ const ScrollItem = styled(Item)`
   padding: 5px 20px 10px 20px;
   overflow-y: auto;
 
-  @media (max-width: 768px) {
-    padding: 0px 0px 0px 0px;
-  }
-
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
     border-radius: 10px;
@@ -403,21 +397,38 @@ const ScrollItem = styled(Item)`
     width: 6px;
   }
 
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+  
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+
+
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-image: -webkit-gradient(
       linear,
       left top,
       left bottom,
-      color-stop(0.44, #35c5f3),
-      color-stop(0.72, #35b0f3),
-      color-stop(0.86, #35a1f3)
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
     );
   }
 `;
 
 const SearchContainer = styled(Item)`
   width: 100%;
+  margin-right: 10px;
 `;
 
 // Export Default

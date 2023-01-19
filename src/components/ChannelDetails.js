@@ -99,7 +99,7 @@ export default function ChannelDetails() {
       </AdaptiveMobileItemHV22>
 
       {isMobile && 
-        <ItemHV2 zIndex="1" padding="0 0 20px 0">
+        <ItemHV2 zIndex="1" padding="0 0 15px 0">
           <ChannelSettings />
         </ItemHV2>
       }
@@ -152,9 +152,9 @@ const ImageSection = styled.img`
   height: 128px;
   margin-right: 20px;
   border-radius: 32px;
-  @media ${device.mobileM} {
-    width: 70px;
-    height: 70px;
+  @media ${device.mobileL} {
+    width: 90px;
+    height: 90px;
     margin-right: 0px;
     border-radius: 20px;
   }
@@ -297,7 +297,8 @@ const ChannelName = styled.div`
   @media (max-width: 767px) {
     flex-direction: column;
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 26px;
+    margin-right: 0px;
   }
 `;
 
@@ -316,7 +317,6 @@ const SectionDate = styled.div`
 
 const SectionDes = styled.div`
   /* letter-spacing: 0.07em; */
-  letter-spacing: 0.025em;
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
   color: #657795;
@@ -328,8 +328,10 @@ const SectionDes = styled.div`
   text-align: left;
   @media (max-width: 767px) {
     text-align: center;
+    font-weight: 300;
     margin-top: 10px;
     width:100%;
-    padding: 0;
+    margin: 10px 0px 10px 0px;
+    padding: 0 0 0 0;
   }
 `;
