@@ -58,7 +58,7 @@ function MasterInterfacePage() {
           <Route path="receive" element={<ReceiveNotifsPage />} />
 
           <Route path="govern" element={<GovPage />} />
-          <Route path="random" element={<RandomPage />} />
+          {/* <Route path="random" element={<RandomPage />} /> */}
 
           <Route path="yield" element={<YieldFarmingPage />} />
           <Route path="rockstar" element={<NFTPage />} />

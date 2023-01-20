@@ -8,7 +8,7 @@ import { Context } from "modules/chat/ChatModule";
 const usePeer = () => {
     const dispatch = useDispatch();
     // const {localPeer, localPeerID} = useSelector((state: any) => state.peer);
-    const { setLocalPeer,localPeer,setConnectedPeerID,connectedPeerID } = useContext(Context);
+    const { setLocalPeer,localPeer,setConnectedPeerID } = useContext(Context);
     const [myPeer, setPeer] = useState(localPeer.peer);
     // const [myPeer, setPeer] = useState(localPeer);
     // const [myPeerID, setMyPeerID] = useState(localPeerID);

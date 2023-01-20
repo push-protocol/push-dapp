@@ -103,18 +103,6 @@ const ChatSidebarSection = () => {
     }
   }, [loadingRequests]);
 
-
-  const generateQR = ()=>{
-    setBlockedLoading({
-      enabled: true,
-      title: 'Wallet is not whitelisted',
-      spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
-      progressEnabled: false,
-      progressNotice:
-        'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
-    });
-  }
-
   // RENDER
   return (
     <ItemVV2>
