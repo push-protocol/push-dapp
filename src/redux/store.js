@@ -16,7 +16,6 @@ const rootReducer = combineReducers({
 	channels: channelReducer,
 	channelCreation: channelCreationReducer,
 	admin: adminReducer,
-//   peer: peerReducer,
 	notifications: notificationReducer,
 	spam: spamReducer,
 	userJourney: userJourneyReducer,
