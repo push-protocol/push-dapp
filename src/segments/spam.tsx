@@ -89,7 +89,10 @@ const SpamBox = ({ showFilter, setShowFilter, search, setSearch }) => {
     ETH_TEST_KOVAN: 42,
     ETH_TEST_GOERLI: 5,
     POLYGON_MAINNET: 137,
-    ETH_MAINNET: 1
+    ETH_MAINNET: 1,
+    BSC_TESTNET: 97,
+    BSC_MAINNET: 56,
+    FVM_TESTNET: 3141
   };
 
   const reset = () => setFilter(false);

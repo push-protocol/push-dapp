@@ -705,7 +705,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     <Span padding="0 0 0 5px">
                       <Image
                         src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
-                        alt="Polygon"
+                        alt={`${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}`}
                         width="20px"
                         height="20px"
                       />

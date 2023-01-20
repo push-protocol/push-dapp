@@ -103,7 +103,8 @@ export const networkName = {
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
-  97: "BSC Testnet"
+  97: "BSC Testnet",
+  3141: "FVM Hyperspace"
 };
 
 export const chainNameBackendStandard = {
@@ -111,6 +112,7 @@ export const chainNameBackendStandard = {
   1: 'ETH_MAINNET',
   137: 'POLYGON_MAINNET',
   80001: 'POLYGON_TEST_MUMBAI',
+  3141: "FVM_TESTNET"
 }
 
 export const aliasChainIdsMapping = {
@@ -147,6 +149,13 @@ export const NETWORK_DETAILS = {
     nativeCurrency: { name: 'BSC', symbol: 'BSC', decimals: 18 },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/'],
+  },
+  FVM_TESTNET: {
+    chainId: utils.hexValue(3141),
+    chainName: 'FVM Hyperspace Testnet',
+    nativeCurrency: { name: 'tFIL', symbol: 'tFIL', decimals: 18 },
+    rpcUrls: ['https://api.hyperspace.node.glif.io/rpc/v0/'],
+    blockExplorerUrls: ['https://hyperspace.filfox.info/'],
   }
 };
 

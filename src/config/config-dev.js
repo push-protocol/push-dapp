@@ -24,7 +24,8 @@ export const config = {
   allowedNetworks: [
     5, // for eth goerli
     80001, //for mumbai polygon
-    97 // bsc testnet
+    97, // bsc testnet
+    3141 // fvm testnet
   ],
 
   /** 
@@ -36,7 +37,8 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    97: "https://data-seed-prebsc-1-s1.binance.org:8545"
+    97: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    3141: "https://api.hyperspace.node.glif.io/rpc/v0/"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -114,5 +116,12 @@ export const CHAIN_DETAILS = {
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     commAddress: "0x4132061E3349ff36cFfCadA460E10Bd4f31F7ea8"
+  },
+  3141: {
+    label: "FVM Hyperspace",
+    name: "FVM_TESTNET",
+    chainId: 3141,
+    rpcUrl: "https://api.hyperspace.node.glif.io/rpc/v0/",
+    commAddress: "0x5a0D108dd58911DE6638889E1F7a40Cd133daaE2"
   }
 }
