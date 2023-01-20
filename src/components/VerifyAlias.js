@@ -41,6 +41,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     97: {
       label: "Testnet BNB",
       url: "https://testnet.bnbchain.org/faucet-smart"
+    },
+    3141: {
+      label: "Testnet FIL",
+      url: "https://hyperspace.yoga/#faucet"
     }
   }
 

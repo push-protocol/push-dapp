@@ -39,6 +39,12 @@ const Faucets = () => {
       value: "BNB",
       title: "BNB Faucet",
       link: "https://testnet.bnbchain.org/faucet-smart",
+    },
+    {
+      id: "3141",
+      value: "FIL",
+      title: "FIL Faucet",
+      link: "https://hyperspace.yoga/#faucet",
     }
   ];
 
