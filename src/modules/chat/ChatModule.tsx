@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { ConnectedUser, Feeds, User } from 'types/chat';
+import { AppContext, BlockedLoadingI, ConnectedUser, Feeds, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -31,58 +31,9 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
+import { useClickAway } from 'react-use';
 
-export interface InboxChat {
-  name: string;
-  profilePicture: string;
-  timestamp: number;
-  fromDID: string;
-  toDID: string;
-  fromCAIP10: string;
-  toCAIP10: string;
-  lastMessage: string;
-  messageType: string;
-  encType: string;
-  signature: string;
-  signatureType: string;
-  encryptedSecret: string;
-}
-
-export interface BlockedLoadingI {
-  enabled: boolean;
-  title: string;
-  spinnerEnabled?: boolean;
-  spinnerSize?: number;
-  spinnerType?: number;
-  progressEnabled?: boolean;
-  progress?: number;
-  progressNotice?: string;
-}
-
-export interface AppContext {
-  currentChat: Feeds;
-  viewChatBox: boolean;
-  receivedIntents: Feeds[];
-  setReceivedIntents: (rIntent: Feeds[]) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
-  setChat: (feed: Feeds) => void;
-  intents: Feeds[];
-  setIntents: (intents: Feeds[]) => void;
-  inbox: Feeds[];
-  setInbox: (inbox: Feeds[]) => void;
-  pendingRequests: number;
-  setPendingRequests: (pending: number) => void;
-  hasUserBeenSearched: boolean;
-  setHasUserBeenSearched: (searched: boolean) => void;
-  loadingMessage: string;
-  setLoadingMessage: (loadingMessage: string) => void;
-  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
-  activeTab: number;
-  setActiveTab: (active: number) => void;
-  userShouldBeSearched: boolean;
-  setUserShouldBeSearched: (value: boolean) => void;
-}
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -100,7 +51,7 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const { getUser, connectedUser, setConnectedUser } = useContext(ChatUserContext);
+  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } = useContext(ChatUserContext);
 
   const theme = useTheme();
 
@@ -109,10 +60,6 @@ function Chat() {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
-    enabled: false,
-    title: null,
-  });
   const [searchedUser, setSearchedUser] = useState<string>('');
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
@@ -122,6 +69,8 @@ function Chat() {
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
 
   const queryClient = new QueryClient({});
+
+  const containerRef = React.useRef(null);
 
   // For video calling
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
@@ -181,6 +130,11 @@ function Chat() {
     }
   }, [connectedUser]);
 
+  const closeQRModal = () => {
+    setDisplayQR(false);
+  }
+  useClickAway(containerRef, () => closeQRModal())
+
   const connectUser = async (): Promise<void> => {
     // Getting User Info
     setBlockedLoading({
@@ -230,7 +184,7 @@ function Chat() {
 
   return (
     <Container>
-      <ItemHV2>
+      <ItemHV2 ref={containerRef}>
         {!isLoading ? (
           <QueryClientProvider client={queryClient}>
             <Context.Provider
@@ -278,6 +232,17 @@ function Chat() {
               >
                 <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
               </ChatContainer>
+
+              {displayQR && (
+                <>
+                  <ChatQR
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  />
+                </>
+              )}
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
@@ -342,22 +307,19 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+  });
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
+  });
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+  });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 
