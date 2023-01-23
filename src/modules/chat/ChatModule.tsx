@@ -34,6 +34,7 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import RandomPage from 'pages/RandomPage';
 import ChatQR from 'components/chat/w2wChat/ChatQR/ChatQR';
 import { generateKeyPair } from 'helpers/w2w/pgp';
+import { useClickAway } from 'react-use';
 
 export interface InboxChat {
   name: string;
@@ -145,6 +146,7 @@ function Chat() {
   const [connectedPeerID,setConnectedPeerID] = useState({
     peerID:''
   });
+  const containerRef = React.useRef(null);
 
   const queryClient = new QueryClient({});
 
@@ -205,6 +207,11 @@ function Chat() {
     }
   }, []);
 
+  //for closing the QR from backdrop click
+  const closeQRModal = ()=>{
+    setDisplayQR(false);
+  }
+  useClickAway(containerRef, () => closeQRModal())
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -364,7 +371,7 @@ function Chat() {
 
   return (
     <Container>
-      <ItemHV2>
+      <ItemHV2 ref={containerRef}>
         {!isLoading ? (
           <QueryClientProvider client={queryClient}>
             <Context.Provider

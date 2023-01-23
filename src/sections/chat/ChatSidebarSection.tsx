@@ -28,6 +28,7 @@ import GLOBALS from 'config/Globals';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ChatQR from 'components/chat/w2wChat/ChatQR/ChatQR';
+import { useClickAway } from 'react-use';
 
 
 
@@ -46,7 +47,7 @@ const ChatSidebarSection = () => {
   const [loadingRequests, setLoadingRequests] = useState(true);
 
   const [showQR, setShowQR] = useState<boolean>(false);
-
+  const containerRef = React.useRef(null);
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
   };
@@ -56,6 +57,12 @@ const ChatSidebarSection = () => {
     // This will run when the page first loads
     resolveThreadhash();
   }, []);
+
+  const closeQRDropdown = ()=>{
+      setShowQR(false);
+  }
+
+  useClickAway(containerRef, () => closeQRDropdown())
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
@@ -105,10 +112,10 @@ const ChatSidebarSection = () => {
 
   // RENDER
   return (
-    <ItemVV2>
+    <ItemVV2 ref={containerRef}>
       {/* Header */}
       {activeTab == 0 || activeTab == 1 ? (
-        <ItemVV2 flex="initial">
+        <ItemVV2 flex="initial" ref={containerRef}>
           <ItemHV2>
             {/* Set active and onCLick to customize tab */}
             <TabButton
@@ -183,6 +190,7 @@ const ChatSidebarSection = () => {
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
+        ref={containerRef}
       >
         {activeTab == 0 && <SearchBar />}
         {activeTab == 1 && (

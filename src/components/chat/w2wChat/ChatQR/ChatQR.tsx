@@ -8,7 +8,7 @@ import { useWeb3React } from "@web3-react/core";
 import styled, { useTheme } from "styled-components";
 import { AiOutlineClose, AiOutlineQrcode } from "react-icons/ai";
 import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
-import GLOBALS from "config/Globals";
+import GLOBALS, { device } from "config/Globals";
 import BlurBG from "components/reusables/blurs/BlurBG";
 import { Context } from "modules/chat/ChatModule";
 
@@ -20,7 +20,7 @@ const ChatQR = ({
 }) => {
     const theme = useTheme();
     const { account } = useWeb3React();
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey,connectedPeerID } = useContext(Context);
+    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(Context);
     const [myPeer, myPeerID] = usePeer();
     const [qrCodeText, setQrCodeText] = useState('');
     const [loading, setLoading] = useState(true);
@@ -51,8 +51,8 @@ const ChatQR = ({
             level={"H"}
             imageSettings={{
                 src: "./icon.jpg",
-                height: 62,
-                width: 62,
+                height: 56,
+                width: 56,
                 excavate: false
             }}
         />
@@ -91,6 +91,7 @@ const ChatQR = ({
             left="0"
             zIndex="1000"
             padding="15px"
+            onClick={() => { setDisplayQR(!displayQR) }}
         >
             {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
 
@@ -99,10 +100,10 @@ const ChatQR = ({
             ) : (
                 <>
                     {pgpPvtKey ? (
-                        <ItemVV2
+                        <Container
                             flex="initial"
                             alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
-                            width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
+                            // width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
                             padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
                             borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                             border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
@@ -114,7 +115,7 @@ const ChatQR = ({
                             </CloseButtonContainer>
 
                             <QRContainer>
-                                <ItemHV2
+                                <TextContainer
                                     display="flex"
                                     justifyContent="center"
                                     flexDirection="column"
@@ -129,33 +130,14 @@ const ChatQR = ({
                                         <p>2. Tap Push Chat       or Sign in with Push Chat</p>
                                         <p>3. Tap Link Push Chat and point your phone to this code </p>
                                     </TextInfo>
-                                </ItemHV2>
+                                </TextContainer>
                                 <ItemHV2>
                                     {qrcode}
                                 </ItemHV2>
                             </QRContainer>
-                        </ItemVV2>
+                        </Container>
                     ) : (
-                        <>
-                            <ItemVV2
-                                flex="initial"
-                                // flexDirection={progressPositioning == PROGRESS_POSITIONING.TOP ? "column" : "column-reverse"}
-                                // flexDirection="row"
-                                alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
-                                width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
-                                padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-                                borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                                border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
-                                background={type == LOADER_TYPE.SEAMLESS ? 'initial' : theme.default.bg}
-                            >
-
-                                <CloseButtonContainer>
-                                    <CloseButton onClick={() => { setDisplayQR(!displayQR) }} />
-                                </CloseButtonContainer>
-
-                                PGP Not found
-                            </ItemVV2>
-                        </>
+                        null
                     )}
                 </>
             )}
@@ -169,6 +151,20 @@ const ChatQR = ({
 
 export default ChatQR;
 
+const Container = styled(ItemVV2)`
+    width:80%;
+    @media ${device.laptopL} {
+       width:85%;
+    }
+    @media ${device.tablet} {
+        width:95%;
+    }
+`
+const TextContainer = styled(ItemHV2)`
+@media (max-width:1234px) {
+    margin-top: 10px;
+ }
+`;
 
 const TextInfo = styled.div`
     font-family: 'Strawford';
@@ -194,6 +190,20 @@ const CloseButton = styled(AiOutlineClose)`
 
 const QRContainer = styled(ItemVV2)`
     flex-direction:row;
-    padding:0px 17px 17px 17px;
+    // padding:0px 17px 17px 17px;
     // height:400px !important;
+
+
+    @media (max-width:1234px) {
+       flex-direction:column-reverse;
+       padding:0px;
+    }
+
+    @media(max-width:992px){
+        flex-direction: row;
+    }
+
+    @media(max-width:964px){
+        flex-direction: column-reverse;
+    }
 `;
