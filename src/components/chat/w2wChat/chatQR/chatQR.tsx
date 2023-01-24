@@ -107,11 +107,12 @@ const ChatQR = ({
                             padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
                             borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                             border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
-                            background={type == LOADER_TYPE.SEAMLESS ? 'initial' : theme.default.bg}
+                            background={theme.nav.bg}
+                            
                         >
 
                             <CloseButtonContainer>
-                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} />
+                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{color:theme.default.color}}/>
                             </CloseButtonContainer>
 
                             <QRContainer>
@@ -124,8 +125,13 @@ const ChatQR = ({
                                     <H2V2
                                         fontSize="28px"
                                         textAlign="left"
+                                        style={{
+                                            color: theme.default.color,
+                                        }}
                                     >Set up Push Chat on your phone</H2V2>
-                                    <TextInfo>
+                                    <TextInfo style={{
+                                        color: theme.modalMessageColor,
+                                    }}>
                                         <p>1. Open an app using Push protocol</p>
                                         <p>2. Tap Push Chat       or Sign in with Push Chat</p>
                                         <p>3. Tap Link Push Chat and point your phone to this code </p>
@@ -159,6 +165,7 @@ const Container = styled(ItemVV2)`
     @media ${device.tablet} {
         width:95%;
     }
+    
 `
 const TextContainer = styled(ItemHV2)`
 @media (max-width:1234px) {
@@ -186,6 +193,7 @@ const CloseButtonContainer = styled.div`
 
 const CloseButton = styled(AiOutlineClose)`
     cursor:pointer;
+
 `;
 
 const QRContainer = styled(ItemVV2)`

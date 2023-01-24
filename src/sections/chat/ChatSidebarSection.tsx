@@ -191,7 +191,7 @@ useClickAway(containerRef, () => closeQRDropdown())
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
-        ref={containerRef}
+        onClick={()=>setShowQR(false)}
       >
         {activeTab == 0 && <SearchBar />}
         {activeTab == 1 && (
@@ -202,6 +202,7 @@ useClickAway(containerRef, () => closeQRDropdown())
               textAlign="start"
               margin="10px 0 0 0"
               color={theme.default.secondaryColor}
+              // ref={containerRef}
             >
               REQUESTS
             </SpanV2>
@@ -225,9 +226,15 @@ useClickAway(containerRef, () => closeQRDropdown())
       {showQR ? (
         <QRCodeContainer 
         onClick={()=>setDisplayQR(!displayQR)}
+        style={{
+          background:theme.default.bg,
+          borderColor: theme.LinkMobileAppBorder,
+          // color:theme.chat.sendMessageFontColor
+          color:theme.textcolor
+        }}
         >
           <QROutline />
-          <TextQR>Link Mobile APP</TextQR>
+          <TextQR >Link Mobile APP</TextQR>
         </QRCodeContainer>
       ) : null}
 
@@ -244,6 +251,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           justifyContent="space-between"
           margin="15px 0px 5px 0px"
           padding="0px 10px"
+          
         >
           <ProfileHeader setActiveTab={setActiveTab} setShowQR={setShowQR} showQR={showQR} />
         </ItemHV2>
@@ -333,5 +341,5 @@ font-weight: 400;
 font-size: 16px;
 line-height: 140%;
 text-align: center;
-color: #657795;
+// color: #657795;
 `;

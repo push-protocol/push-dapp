@@ -40,6 +40,7 @@ const SearchBar = () => {
     setUserShouldBeSearched,
     inbox,
   }: AppContext = useContext<AppContext>(Context);
+  const { error, account, library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
@@ -97,6 +98,12 @@ const SearchBar = () => {
       clearInput();
     } else {
       setSearchedUser(searchAddress);
+      console.log("searchAddress",searchAddress);
+      library.lookupAddress(searchAddress).then(function (name) {
+        console.log("Ens Name",name);
+      }).catch((err)=>{
+        console.log("error",err)
+      })
     }
   };
 

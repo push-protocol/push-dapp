@@ -160,7 +160,10 @@ const themeLight = {
   chainIndicatorDropdownBG: "#fff",
   chainIndicatorHeading: "#333333",
   chainIndicatorHeadingMobile: "#000",
-  chainIndicatorText: "#657795"
+  chainIndicatorText: "#657795",
+
+  LinkMobileAppBorder:"#bac9e5",
+  textcolor:"#657795"
 };
 
 const themeDark = {
@@ -327,7 +330,12 @@ const themeDark = {
   chainIndicatorDropdownBG: "#2F3137",
   chainIndicatorHeading: "#C5CAE9",
   chainIndicatorHeadingMobile: "#C5CAE9",
-  chainIndicatorText: "#B6BCD6"
+  chainIndicatorText: "#B6BCD6",
+
+  //QR Code related
+  LinkMobileAppBorder:"#717887",
+  textcolor:"#B6BCD6"
+
 };
 
 module.exports = {

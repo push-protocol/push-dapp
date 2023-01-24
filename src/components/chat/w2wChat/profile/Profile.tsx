@@ -49,7 +49,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
       {/* </Tooltip> */}
 
       <SettingsWrapper onClick={()=>setShowQR(!showQR)}>
-        <Settings />
+        <Settings style={{color:theme.default.color}}/>
       </SettingsWrapper>
 
 
