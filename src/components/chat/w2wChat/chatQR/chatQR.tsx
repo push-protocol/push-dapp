@@ -25,9 +25,8 @@ const ChatQR = ({
     const [qrCodeText, setQrCodeText] = useState('');
     const [loading, setLoading] = useState(true);
     const [encryptedKey, setEncryptedKey] = useState('');
-    // const { connectedPeerID } = useSelector((state: any) => state.peer);
 
-    console.log(myPeerID, myPeer, connectedPeerID.peerID);
+    // console.log(myPeerID, myPeer, connectedPeerID.peerID);
     const generateQRCodeText = () => {
         const secret = CryptoHelper.makeid(10);
         const encryptedPvtKey = CryptoHelper.encryptWithAES(pgpPvtKey, secret);
@@ -39,7 +38,7 @@ const ChatQR = ({
         setQrCodeText(JSON.stringify(qrCodeData));
         setEncryptedKey(encryptedPvtKey);
         setLoading(false);
-        console.log(secret);
+        // console.log(secret);
     }
 
     const qrcode = (
@@ -58,7 +57,6 @@ const ChatQR = ({
         />
     );
 
-    console.count();
 
     useEffect(() => {
         if (!myPeerID) return;

@@ -14,6 +14,8 @@ export const ChatUserContext = createContext({})
 const ChatUserContextProvider = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
+
+  //this blocked loading is a modal which shows during the PGP keys generation time
   const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
     enabled: false,
     title: null,
