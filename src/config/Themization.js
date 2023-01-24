@@ -163,7 +163,8 @@ const themeLight = {
   chainIndicatorText: "#657795",
 
   LinkMobileAppBorder:"#bac9e5",
-  textcolor:"#657795"
+  textcolor:"#657795",
+  chatQRbg:"#ffff"
 };
 
 const themeDark = {
@@ -334,7 +335,8 @@ const themeDark = {
 
   //QR Code related
   LinkMobileAppBorder:"#717887",
-  textcolor:"#B6BCD6"
+  textcolor:"#B6BCD6",
+  chatQRbg:"#292a2c"
 
 };
 
