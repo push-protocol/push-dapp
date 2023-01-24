@@ -86,28 +86,31 @@ export interface BlockedLoadingI {
     progressNotice?: string;
 }
 
+
 export interface AppContext {
-    currentChat: Feeds;
-    viewChatBox: boolean;
-    receivedIntents: Feeds[];
-    setReceivedIntents: (rIntent: Feeds[]) => void;
-    setSearchedUser: (searched: string) => void;
-    searchedUser: string;
-    setChat: (feed: Feeds) => void;
-    intents: Feeds[];
-    setIntents: (intents: Feeds[]) => void;
-    inbox: Feeds[];
-    setInbox: (inbox: Feeds[]) => void;
-    pendingRequests: number;
-    setPendingRequests: (pending: number) => void;
-    hasUserBeenSearched: boolean;
-    setHasUserBeenSearched: (searched: boolean) => void;
-    loadingMessage: string;
-    setLoadingMessage: (loadingMessage: string) => void;
-    setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
-    activeTab: number;
-    setActiveTab: (active: number) => void;
-    userShouldBeSearched: boolean;
-    setUserShouldBeSearched: (value: boolean) => void;
+  currentChat: Feeds;
+  viewChatBox: boolean;
+  receivedIntents: Feeds[];
+  setReceivedIntents: (rIntent: Feeds[]) => void;
+  setSearchedUser: (searched: string) => void;
+  searchedUser: string;
+  setChat: (feed: Feeds) => void;
+  intents: Feeds[];
+  setIntents: (intents: Feeds[]) => void;
+  inbox: Feeds[];
+  setInbox: (inbox: Feeds[]) => void;
+  pendingRequests: number;
+  setPendingRequests: (pending: number) => void;
+  hasUserBeenSearched: boolean;
+  setHasUserBeenSearched: (searched: boolean) => void;
+  loadingMessage: string;
+  setLoadingMessage: (loadingMessage: string) => void;
+  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
+  activeTab: number;
+  setActiveTab: (active: number) => void;
+  userShouldBeSearched: boolean;
+  setUserShouldBeSearched: (value: boolean) => void;
 }
+
+
 

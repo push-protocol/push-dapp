@@ -10,8 +10,9 @@ import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { AiOutlineMore } from 'react-icons/ai';
 
-const Profile = ({ setActiveTab }: any): JSX.Element => {
+const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
@@ -46,6 +47,12 @@ const Profile = ({ setActiveTab }: any): JSX.Element => {
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
+
+      <SettingsWrapper onClick={()=>setShowQR(!showQR)}>
+        <Settings style={{color:theme.default.color}}/>
+      </SettingsWrapper>
+
+
       {/* <IconButton aria-label="more">
         <MoreVertIcon />
       </IconButton> */}
@@ -65,6 +72,21 @@ const DisplayText = styled(Typography)`
     font-size: ${(props): string => props.size || '14px'};
     font-weight: ${(props): string => props.weight || '500'};
   }
+`;
+
+const SettingsWrapper = styled.span`
+`;
+
+
+const Settings = styled(AiOutlineMore)`
+  position: relative;
+  width: 40px;
+  height: 36px;
+  // border: 1px solid #dfdee9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 400ms;
+  transform: ${(props) => (props.active ? 'rotateZ(90deg)' : 'none')};
 `;
 
 export default Profile;

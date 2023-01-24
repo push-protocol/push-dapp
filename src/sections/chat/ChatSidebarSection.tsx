@@ -26,6 +26,8 @@ import { Context } from 'modules/chat/ChatModule';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { AiOutlineQrcode } from 'react-icons/ai';
+import { useClickAway } from 'react-use';
 
 
 
@@ -37,13 +39,15 @@ const ChatSidebarSection = () => {
 
   const {  pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } = useContext(Context);
 
-  const {connectedUser} = useContext(ChatUserContext);
+  const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
+  const [showQR, setShowQR] = useState<boolean>(false);
+  const containerRef = React.useRef(null);
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
@@ -54,6 +58,11 @@ const ChatSidebarSection = () => {
     // This will run when the page first loads
     resolveThreadhash();
   }, []);
+
+  const closeQRDropdown = ()=>{
+    setShowQR(false);
+}
+useClickAway(containerRef, () => closeQRDropdown())
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
@@ -103,11 +112,11 @@ const ChatSidebarSection = () => {
 
   // RENDER
   return (
-    <ItemVV2>
+    <ItemVV2 ref={containerRef}>
       {/* Header */}
       {activeTab == 0 || activeTab == 1 ? (
-        <ItemVV2 flex="initial">
-          <ItemHV2>
+        <ItemVV2 flex="initial" ref={containerRef}>
+          <ItemHV2 ref={containerRef}>
             {/* Set active and onCLick to customize tab */}
             <TabButton
               active={activeTab == 0 ? true : false}
@@ -140,7 +149,7 @@ const ChatSidebarSection = () => {
                 setActiveTab(1);
               }}
             >
-              <ItemHV2 alignItems="center">
+              <ItemHV2 alignItems="center" ref={containerRef}>
                 <SpanV2
                   flex="initial"
                   fontSize="16px"
@@ -167,6 +176,7 @@ const ChatSidebarSection = () => {
                     margin="0px 4px"
                     fontSize="12px"
                     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+
                   >
                     {pendingRequests}
                   </SpanV2>
@@ -181,6 +191,7 @@ const ChatSidebarSection = () => {
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
+        onClick={()=>setShowQR(false)}
       >
         {activeTab == 0 && <SearchBar />}
         {activeTab == 1 && (
@@ -191,6 +202,7 @@ const ChatSidebarSection = () => {
               textAlign="start"
               margin="10px 0 0 0"
               color={theme.default.secondaryColor}
+              // ref={containerRef}
             >
               REQUESTS
             </SpanV2>
@@ -210,6 +222,22 @@ const ChatSidebarSection = () => {
       </ItemVV2>
 
       {/* Footer */}
+
+      {showQR ? (
+        <QRCodeContainer 
+        onClick={()=>setDisplayQR(!displayQR)}
+        style={{
+          background:theme.default.bg,
+          borderColor: theme.LinkMobileAppBorder,
+          // color:theme.chat.sendMessageFontColor
+          color:theme.textcolor
+        }}
+        >
+          <QROutline />
+          <TextQR >Link Mobile APP</TextQR>
+        </QRCodeContainer>
+      ) : null}
+
       <ItemVV2 flex="initial">
         <ItemVV2
           position="absolute"
@@ -220,11 +248,12 @@ const ChatSidebarSection = () => {
           background={theme.default.secondaryBg}
         ></ItemVV2>
         <ItemHV2
-          justifyContent="flext-start"
+          justifyContent="space-between"
           margin="15px 0px 5px 0px"
           padding="0px 10px"
+          
         >
-          <ProfileHeader setActiveTab={setActiveTab} />
+          <ProfileHeader setActiveTab={setActiveTab} setShowQR={setShowQR} showQR={showQR} />
         </ItemHV2>
       </ItemVV2>
     </ItemVV2>
@@ -279,4 +308,38 @@ const Tab = styled(MuiTab)`
     font-size: 16px;
     color: #000000;
   }
+`;
+
+const QRCodeContainer = styled.div`
+display: flex;
+flex-direction: row;
+align-items: center;
+padding: 8px;
+gap: 9px;
+width: 200px;
+height: 48px;
+background: #FFFFFF;
+border: 1px solid #BAC4D6;
+box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+border-radius: 12px;
+cursor:pointer;
+position: absolute;
+z-index: 100;
+bottom: 45px;
+left: 85px;
+`;
+
+const QROutline = styled(AiOutlineQrcode)`
+width: 35px;
+height: 30px;
+`
+
+const TextQR = styled.p`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 16px;
+line-height: 140%;
+text-align: center;
+// color: #657795;
 `;
