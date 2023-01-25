@@ -27,7 +27,7 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
 
   useEffect(() => {
     const dropdown = [];
-    appConfig.allowedNetworks.map((chainId) => {
+    appConfig.allowedNetworks.map((chainId: number) => {
         dropdown.push({
             id: chainId,
             value: CHAIN_DETAILS[chainId].label.split(' ')[0],
