@@ -253,7 +253,6 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 <>
                   <ViewChannelItems
                     key={channel.channel}
-                    self="stretch"
                   >
                     {!MaskedChannels[channel.channel] &&
                       (channelsNetworkId == appConfig.coreContractChain ||

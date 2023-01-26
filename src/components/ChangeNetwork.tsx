@@ -25,7 +25,6 @@ const ChangeNetwork = () => {
     <Item
       margin="15px 20px 15px 20px"
       flex="1"
-      display="flex"
       direction="column"
     >
       <Span
@@ -35,7 +34,6 @@ const ChangeNetwork = () => {
         size="16px"
         textTransform="none"
         weight="500"
-        line="24px"
       >
         Change your wallet network to <TextPink>{CHAIN_DETAILS[aliasChainId]?.label}</TextPink> to
         start <br></br>
@@ -60,7 +58,6 @@ const ChangeNetwork = () => {
             color="#fff"
             weight="600"
             textTransform="none"
-            line="22px"
             size="16px"
           >
             Change Network

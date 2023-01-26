@@ -61,7 +61,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
 
 
             <TextSpace>
-                <Span color={theme.default.secondaryColor} size="15px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
+                <Span color={theme.default.secondaryColor} size="15px" weight="500" spacing="-0.011em" >Make sure you have sufficient balance before moving to the next steps.</Span>
 
                 {appConfig.appEnv !== 'prod' && 
                   <>
@@ -95,7 +95,6 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
               color="#fff"
               weight="600"
               textTransform="none"
-              line="22px"
               size="16px"
             >
               Next

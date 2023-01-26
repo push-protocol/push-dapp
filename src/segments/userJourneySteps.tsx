@@ -53,7 +53,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -202,7 +202,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -283,7 +283,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -353,7 +353,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -430,7 +430,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -473,7 +473,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -525,7 +525,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -577,7 +577,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -632,7 +632,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -722,7 +722,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -771,7 +771,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"
@@ -822,7 +822,7 @@ const UserJourneySteps = ({ darkMode }) => {
             </Span>
           </Item>
 
-          <ItemH self="stretch" items="stretch" margin="10px -10px -10px -10px">
+          <ItemH self="stretch" margin="10px -10px -10px -10px">
             <Button
               flex="1"
               margin="10px 10px"

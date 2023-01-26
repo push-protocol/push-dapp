@@ -129,7 +129,6 @@ const SupportModule = () => {
         <ItemVV2 alignSelf="stretch">
           <FormSubmision
             flex="1"
-            direction="row"
             self="stretch"
             margin="0px"
             size="1.1rem"
@@ -157,7 +156,6 @@ const SupportModule = () => {
                         onChange={(e) => {
                           setContactFormName(e.target.value);
                         }}
-                        autocomplete="name"
                         style={{
                         }}
                       />
@@ -194,7 +192,6 @@ const SupportModule = () => {
                         onChange={(e) => {
                           setContactFormEmail(e.target.value);
                         }}
-                        autocomplete="email"
                       />
                       {contactFormEmail.trim().length === 0 && (
                         <Span
@@ -244,7 +241,6 @@ const SupportModule = () => {
                       onChange={(e) => {
                         setContactFormSub(e.target.value);
                       }}
-                      autocomplete="on"
                     />
                     {contactFormSub.trim().length === 0 && (
                       <Span
@@ -271,7 +267,6 @@ const SupportModule = () => {
                     <ContactTextArea
                       required
                       placeholder="This is where you will tell us that secret, or a bug or whatever is on your mind."
-                      rows="6"
                       radius="4px"
                       padding="12px"
                       bg="#fff"
@@ -291,8 +286,6 @@ const SupportModule = () => {
                     color="#e20880"
                     bg="#000"
                     padding="10px 15px"
-                    columnGap="0px"
-                    rowGap="0px"
                   >
                     <FaCheckCircle size={24} color="#fff" />
                     <Span
@@ -339,7 +332,6 @@ const SupportModule = () => {
                     border={theme.buttonBd}
                     flex="1"
                     radius="4px"
-                    disabled={contactFormProcessing}
                     margin="15px"
                     padding="12px 15px"
                   >

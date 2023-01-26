@@ -38,7 +38,6 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
               size="14px"
               textTransform="uppercase"
               color="#fff"
-              width="max-content"
             >
               <MobileAddress>
 
@@ -72,24 +71,20 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
               src={dropdownValue.invertedIcon}
               alt="icon"
               width="max-content"
-              spacing="1px"
               filter={theme.snackbarBorderIcon}
             />}
             {dropdownValue?.icon && <Image
               src={dropdownValue.icon}
               alt="icon"
               width="max-content"
-              spacing="1px"
             />}
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
-                width="max-content"
                 color={theme.snackbarBorderText}
                 margin="10px 20px"
                 weight="400"
                 size="16px"
                 cursor="pointer"
-                width="max-content"
                 onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}
@@ -104,7 +99,6 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
                 margin="10px 20px"
                 weight="400"
                 size="16px"
-                width="max-content"
                 color={theme.snackbarBorderText}
                 hoverBG="transparent"
               >

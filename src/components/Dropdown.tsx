@@ -56,7 +56,6 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
               textTransform="uppercase"
               color="#fff"
               spacing="1px"
-              width="max-content"
             >
               <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
               <MobileAddress>
@@ -95,7 +94,6 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 src={dropdownValue.invertedIcon}
                 alt="icon"
                 width="max-content"
-                spacing="1px"
                 filter={iconFilter ? iconFilter : theme.snackbarBorderIcon}
               />
             )}
@@ -108,7 +106,6 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             )}
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
-                width="max-content"
                 color={textColor ? textColor : theme.snackbarBorderText}
                 margin="8px 10px"
                 weight="400"
@@ -128,7 +125,6 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 margin="8px 10px"
                 weight="400"
                 size="16px"
-                width="max-content"
                 color={textColor ? textColor : theme.snackbarBorderText}
                 hoverBG="transparent"
               >

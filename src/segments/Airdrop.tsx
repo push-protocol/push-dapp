@@ -156,12 +156,12 @@ function Airdrop() {
                   </EpicButton>
                 )}
                 {user.verified && !user.claimable && (
-                  <EpicButton theme="claimed" disabled={true}>
+                  <EpicButton theme="claimed">
                     $PUSH Tokens Claimed
                   </EpicButton>
                 )}
                 {!user.verified && (
-                  <EpicButton theme="noteligible" disabled={true}>
+                  <EpicButton theme="noteligible">
                     Not eligible for Gratitude Drop
                   </EpicButton>
                 )}

@@ -425,7 +425,6 @@ function MobileNavigation({showNavBar,setShowNavBar}) {
               <SectionInnerGroupContainer
                 flex="1"
                 align="stretch"
-                margintop="-10px"
                 zIndex={2}
                 refresh={refresh}
                 // id={section.data.name}
