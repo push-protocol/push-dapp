@@ -1129,6 +1129,7 @@ const ChannelDesc = styled.div`
 const ChannelDescLabel = styled.label`
   flex: 1;
   line-height: 165%;
+  color: ${(props) => props.theme.viewChannelPrimaryTextColor};
 `;
 
 const ChannelMeta = styled.div`
@@ -1317,6 +1318,9 @@ const UnsubscribeButton = styled(ChannelActionButton)`
   border-radius: 8px;
   padding: 9px 15px;
   min-width: 80px;
+  @media (max-width: 768px){
+    padding: 9px 30px;
+  }
 `;
 
 const OwnerButton = styled(ChannelActionButton)`

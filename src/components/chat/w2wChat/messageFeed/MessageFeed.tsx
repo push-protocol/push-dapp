@@ -24,6 +24,7 @@ import './MessageFeed.css';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -34,8 +35,10 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, connectedUser, setInbox,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext =
-    useContext<AppContext>(Context);
+  const { setChat, setInbox,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext = useContext<AppContext>(Context);
+
+  const {connectedUser} = useContext(ChatUserContext);
+
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);

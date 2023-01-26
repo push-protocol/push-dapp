@@ -166,7 +166,6 @@ export const createUser = async ({
   signature: string;
   sigType: string;
 }): Promise<User> => {
-  console.log('data', caip10, did);
   const response = await fetch(BASE_URL + '/v1/w2w/users', {
     method: 'POST',
     headers: {

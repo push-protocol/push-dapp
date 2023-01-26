@@ -29,6 +29,7 @@ import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
+import { useDeviceWidthCheck } from 'hooks';
 import ChainIndicator from 'components/ChainIndicator';
 
 // Create Header
@@ -119,6 +120,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   const bellPressed = () => {
     setShowLoginControls(!showLoginControls);
   };
+
+  const isMobile = useDeviceWidthCheck(600);
   
 
   return (
@@ -156,7 +159,7 @@ function Header({ isDarkMode, darkModeToggle }) {
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
-              padding="8px 20px"
+              padding={isMobile ? "8px 7px" : "8px 20px" }
               className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
@@ -209,6 +212,9 @@ const Container = styled(Section)`
   background: ${(props) => props.theme.header.bg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
   padding: 0 1.5rem;
+  @media (max-width: 425px) {
+    padding: 0 1rem;
+  }
 `;
 
 const Logo = styled.img`
@@ -224,8 +230,8 @@ const RightBarDesktop = styled(ItemH)`
 `;
 
 const RightBarMobile = styled(ItemH)`
-  max-width: 50px !important;
-  margin: 5px 5px 5px -5px;
+  max-width: 40px !important;
+  margin: 5px 0px 5px -5px;
 
   @media (min-width: 993px) {
     display: none;
@@ -262,7 +268,7 @@ const NavMenuContainer = styled(Item)`
   }
 `;
 
-const NavMenu = styled(Item)`
+const NavMenu = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   width: 100%;

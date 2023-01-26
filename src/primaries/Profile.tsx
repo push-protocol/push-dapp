@@ -87,7 +87,7 @@ const Profile = ({isDarkMode}) => {
   return (
     <>
       {account && account !== "" && !error && (
-        <Container>
+        <Body>
           <Wallet 
             bg={theme.profileBG} 
             color={theme.profileText} 
@@ -131,38 +131,32 @@ const Profile = ({isDarkMode}) => {
             </ItemModal>
             </Item>
           )}
-        </Container>
+        </Body>
       )}
     </>
   );
 }
 
 // css styles
-const Container = styled.button`
+const Body = styled.div`
+  flex: 1;
   position: relative;
   margin: 0;
   padding: 0;
-  background: none;
-  border: 0;
-  outline: 0;
-  justify-content: flex-start;
-  flex: 1,
   flex-direction: row;
   align-items: center;
-  display: flex;
-  @media (max-width: 992px) {
-    width: 100%;
-    justify-content: flex-start;
-    margin-right: 20px;
-  }
+  justify-content: flex-start;
 `
-const Wallet = styled.span`
+
+const Wallet = styled.div`
+  width: 210px;
   margin: 0px 10px;
+  box-sizing: border-box;
   padding: 4px 16px;
-  height: 34px;
+  height: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   font-weight: 600;
   font-size: 16px;
   color: ${props => props.color};
@@ -170,10 +164,12 @@ const Wallet = styled.span`
   background: ${props => props.bg};
   @media (max-width: 992px) {
     width: 100%;
-    margin: 0px 0px;
+    padding: 4px 15px;
+    box-sizing: border-box;
     justify-content: space-between;
     border-radius: 13px;
     background: linear-gradient(90deg, #5762C2 0%, #F72CBE 72.11%, #FF9C9C 100%);
+    margin: 0px 0px;
   }
   
   ${({ isDarkMode,bg }) => isDarkMode && `
