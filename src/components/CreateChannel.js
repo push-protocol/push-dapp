@@ -45,6 +45,13 @@ function CreateChannel() {
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
   const [chainDetails, setChainDetails] = React.useState(CORE_CHAIN_ID);
   const [channelName, setChannelName] = React.useState('');
+  /* 
+    if channelExpiryDate is undefined -> channel is not time bound 
+    if channelExpiryDate is null -> channel is time bound but user hasnt entered the date
+      null was used above to make it compatible with react-datetime-picker package
+    if channelExpiryDate is a date string -> channel is time bound and user has entered the date
+  */
+  const [channelExpiryDate, setChannelExpiryDate] = useState(undefined);
   const [channelAlias, setChannelAlias] = React.useState('');
   const [channelInfo, setChannelInfo] = React.useState('');
   const [channelURL, setChannelURL] = React.useState('');
@@ -63,6 +70,10 @@ function CreateChannel() {
 
   const [stepFlow, setStepFlow] = React.useState(0);
   const channelToast = useToast();
+
+  useEffect(()=>{
+    console.log(channelExpiryDate);
+  },[channelExpiryDate])
 
   //checking DAI for user
   React.useEffect(() => {
@@ -437,6 +448,7 @@ function CreateChannel() {
               <ChannelInfo
                 setStepFlow={setStepFlow}
                 channelName={channelName}
+                channelExpiryDate={channelExpiryDate}
                 channelAlias={channelAlias}
                 channelInfo={channelInfo}
                 channelURL={channelURL}
@@ -445,6 +457,7 @@ function CreateChannel() {
                 setChainDetails={setChainDetails}
                 setChannelInfo={setChannelInfo}
                 setChannelName={setChannelName}
+                setChannelExpiryDate={setChannelExpiryDate}
                 setChannelURL={setChannelURL}
                 setChannelInfoDone={setChannelInfoDone}
                 setTxStatus={setTxStatus}

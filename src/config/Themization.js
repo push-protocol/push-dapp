@@ -164,7 +164,12 @@ const themeLight = {
 
   LinkMobileAppBorder:"#bac9e5",
   textcolor:"#657795",
-  chatQRbg:"#ffff"
+  chatQRbg:"#ffff",
+
+  // toggle switch
+  toggleContainerBG: "#F4F5FA",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1"
 };
 
 const themeDark = {
@@ -336,8 +341,12 @@ const themeDark = {
   //QR Code related
   LinkMobileAppBorder:"#717887",
   textcolor:"#B6BCD6",
-  chatQRbg:"#292a2c"
+  chatQRbg:"#292a2c",
 
+  // toggle switch
+  toggleContainerBG: "#282A2E",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1"
 };
 
 module.exports = {
