@@ -355,7 +355,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
               <div style={{ textAlign: "center" }}>
                 <DisplayNotice
                   title="You currently have no notifications, try subscribing to some channels."
-                />
+                  />
               </div>
             )}
           {notifications && (
@@ -377,7 +377,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                     blockchain,
                     url
                   } = oneNotification;
-
+                  
                   // render the notification item
                   return (
                     <NotifsOuter key={`${message}+${title}`}>
@@ -391,33 +391,33 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                         theme={themes.scheme}
                         chainName={blockchain}
                         url={url}
-                      />
+                        />
                     </NotifsOuter>
                   );
                 })}
               {(filter
                 ? filteredNotifications
                 : notifications
-              ).map((oneNotification, index) => {
-                const {
-                  cta,
-                  title,
-                  message,
-                  app,
-                  icon,
-                  image,
-                  secret,
-                  notification,
-                  blockchain,
-                  url
-                } = oneNotification;
-                if (run) return;
-                // render the notification item
-                return (
-                  <NotifsOuter key={index}>
+                ).map((oneNotification, index) => {
+                  const {
+                    cta,
+                    title,
+                    message,
+                    app,
+                    icon,
+                    image,
+                    secret,
+                    notification,
+                    blockchain,
+                    url
+                  } = oneNotification;
+                  if (run) return;
+                  // render the notification item
+                  return (
+                    <NotifsOuter key={index}>
                     {showWayPoint(index) && (
                       <Waypoint onEnter={() => handlePagination()} />
-                    )}
+                      )}
                     <NotificationItem
                       notificationTitle={title}
                       notificationBody={message}
@@ -432,7 +432,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
                       chainName={blockchain}
                       theme={themes.scheme}
                       url={url}
-                    />
+                      />
                   </NotifsOuter>
                 );
               })}
@@ -447,7 +447,7 @@ const Feedbox = ({showFilter,setShowFilter,search,setSearch}) => {
 
           {toast && (
             <NotificationToast notification={toast} clearToast={clearToast} />
-          )}
+            )}
         </ScrollItem>
       </Container>
     </ThemeProvider>
@@ -459,20 +459,14 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  font-weight: 200;
+  height: 85%;
   align-content: center;
-  align-items: stretch;
+  align-items: center;
   justify-content: center;
-  height: 100%;
+  font-weight: 200;
   margin: 0 0 0 10px;
-  /* overflow: scroll; */
-
-  @media ${device.laptop} {
-    
-  }
-
-  @media ${device.mobileM} {
-  
+  @media ${device.tablet} {
+    height: 74%;
   }
 `;
 
