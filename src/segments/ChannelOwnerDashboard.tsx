@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 // External Packages
 import { useDispatch, useSelector } from "react-redux";
-import styled, { useTheme } from "styled-components";
+import styled, { css, useTheme } from "styled-components";
 
 // Internal Compoonents
 import AliasProcessing from "components/AliasProcessing";
@@ -21,10 +21,12 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 
 // Internal Configs
 import { appConfig } from "config";
+import { Button } from "components/SharedStyling";
+import EditChannel from "components/editChannel/EditChannel";
 
 // Constants
 // interval after which alias details api will be called, in seconds
-const ALIAS_API_CALL_INTERVAL:number = 10;
+const ALIAS_API_CALL_INTERVAL: number = 10;
 
 // interval id for calling search api
 let intervalID = null;
@@ -33,14 +35,15 @@ let intervalID = null;
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
-  const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract} } = useSelector((state: any) => state.admin);
+  const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract } } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
 
   const isChannelDetails = (channelDetails && channelDetails !== 'unfetched');
 
   const dispatch = useDispatch();
 
-  const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true); 
+  const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true);
+  const [editChannel, setEditChannel] = useState<boolean>(false);
 
   const CORE_CHAIN_ID: number = appConfig.coreContractChain;
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
@@ -49,7 +52,7 @@ const ChannelOwnerDashboard = () => {
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    const { address:aliasAddress, chainId:aliasChainId } = getAliasFromChannelDetails(channelDetails);
+    const { address: aliasAddress, chainId: aliasChainId } = getAliasFromChannelDetails(channelDetails);
     if (aliasAddress) {
       dispatch(setAliasAddressFromContract(aliasAddress));
       dispatch(setAliasChainId(aliasChainId));
@@ -61,7 +64,7 @@ const ChannelOwnerDashboard = () => {
   }, [channelDetails, aliasAddrFromContract]);
 
   const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress=null, isAliasVerified=null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
+    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
     if (aliasAddress == "NULL") aliasAddress = null;
 
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
@@ -95,6 +98,14 @@ const ChannelOwnerDashboard = () => {
     clearInterval(intervalID);
   }
 
+  const showEditChannel = () => {
+    setEditChannel(true);
+  }
+
+  const closeEditChannel = () => {
+    setEditChannel(false);
+  }
+
   return (
     <ItemHV2>
       {((channelDetails === 'unfetched') || processingState === null) &&
@@ -104,31 +115,64 @@ const ChannelOwnerDashboard = () => {
       {channelDetails !== 'unfetched' &&
         <ItemVV2 justifyContent={processingState === 0 && "flex-start"}>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && processingState === 0 && 
+          {!channelDetails && processingState === 0 &&
             <CreateChannel />
           }
-          
+
           {isChannelDetails && processingState !== null &&
             (
               <>
-                {channelDetails && !isMobile && 
-                  <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                    <ChannelSettings />
-                  </ItemHV2>
-                }
-                {channelDetails ? <ChannelDetails /> : ""}
+                {editChannel ? (
+                  <>
+                    <EditChannel closeEditChannel={closeEditChannel}/>
+                  </>
+                ) : (
+                  <>
+                    {channelDetails && !isMobile &&
+                      <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
+                        <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
+                        <ChannelSettings />
+                      </ItemHV2>
+                    }
+                    {channelDetails ? <ChannelDetails /> : ""}
+                  </>
+                )}
               </>
             )
           }
-          
+
           {/* processing box */}
           {processingState !== 0 && processingState !== null && isChannelDetails && (
-            <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
+            <>
+              <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
+            </>
           )}
         </ItemVV2>
       }
-      
+
     </ItemHV2>
   );
 }
 export default ChannelOwnerDashboard;
+
+const SubmitButton = styled(Button)`
+  width: 7rem;
+  background: #cf1c84;
+  color: #fff;
+  z-Index:0;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  margin-right: 20px;
+  border-radius: 8px;
+  padding: 11px 10px;
+  @media (max-width: 640px) {
+    width: 13rem;
+    padding: 20px 20px;
+  }
+  @media (max-width: 380px) {
+    width: 9.5rem;
+  }
+`;

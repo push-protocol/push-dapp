@@ -308,9 +308,12 @@ function CreateChannel() {
 
   useEffect(() => {
     if (croppedImage) {
+      console.log("Image cropped",croppedImage);
       toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
+        console.log("response",response);
         if (response.success) {
+          console.log("Cropped Image....",croppedImage);
           setChannelFile(croppedImage);
         }
       });

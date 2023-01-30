@@ -164,7 +164,20 @@ const themeLight = {
 
   LinkMobileAppBorder:"#bac9e5",
   textcolor:"#657795",
-  chatQRbg:"#ffff"
+  chatQRbg:"#ffff",
+
+  //Edit Channel 
+  logoBtnBg:"#F4DCEA",
+  logoBtnColor:"#D53893",
+  editFooterBg:"#F4F5FA",
+  editChannelPrimaryText:"#1E1E1E", //it is black
+  editChannelSecondaryText:"#657795",
+  editChannelInputbg:"#fff",
+  textAreaBorderColor:"1px solid #ADB0BE",
+  textAreaFocusBorder:"1px solid #f90e96",
+  verticalLineColor:"#ADB0BE"
+
+  
 };
 
 const themeDark = {
@@ -336,7 +349,18 @@ const themeDark = {
   //QR Code related
   LinkMobileAppBorder:"#717887",
   textcolor:"#B6BCD6",
-  chatQRbg:"#292a2c"
+  chatQRbg:"#292a2c",
+
+  //Edit Channel 
+  logoBtnBg:"#404650",
+  logoBtnColor:"#B6BCD6",
+  editFooterBg:"#404650",
+  editChannelPrimaryText:"#B6BCD6",
+  editChannelSecondaryText:"#787E99",
+  editChannelInputbg:"#282A2E",
+  textAreaBorderColor:"1px solid #4A4F67",
+  textAreaFocusBorder:"1px solid #D53893",
+  verticalLineColor:"#4A4F67"
 
 };
 
