@@ -47,7 +47,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   const [channelToShow, setChannelToShow] = useState([]);
   const [loadingChannel, setLoadingChannel] = useState(false);
   const [trialCount, setTrialCount] = useState(0);
-  const [channelsNetworkId, setChannelsNetworkId] = useState(chainId);
+  const [channelsNetworkId, setChannelsNetworkId] = useState<number>(chainId);
 
   const channelsVisited = page * CHANNELS_PER_PAGE;
 
@@ -254,10 +254,10 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                     key={channel.channel}
                     self="stretch"
                   >
-                    {!MaskedChannels[channel.channel] &&
+                    {!MaskedChannels[channel.channel] && channel &&
                       (channelsNetworkId == appConfig.coreContractChain ||
                         (channelsNetworkId == channel.alias_blockchain_id &&
-                          !MaskedAliasChannels[channelsNetworkId]?.(channel.channel))) && (
+                          !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
