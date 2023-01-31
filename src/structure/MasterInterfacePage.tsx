@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useState } from 'react';
 
 // External Packages
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
@@ -30,6 +30,13 @@ import YieldFarmingPage from 'pages/YieldFarmingPage';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import CryptoHelper from 'helpers/CryptoHelper';
+import * as PushNodeClient from 'api';
+import * as w2wHelper from 'helpers/w2w';
+import { User } from 'types/chat';
+import { ConnectedUser, Feeds } from 'types/chat';
 
 // Create Header
 function MasterInterfacePage() {

@@ -153,8 +153,8 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
             </Span>
           </Item>
         ) : (
-          <Item width="15em" self="stretch" align="stretch" margin="60px auto 0px auto">
-            <Button bg="#e20880" color="#fff" flex="1" radius="15px" padding="20px 10px" onClick={checkAlias}>
+          <Item width="15em" self="center" align="center" margin="60px auto 0px auto">
+            <Button bg="#e20880" color="#fff" radius="15px" padding="20px 10px" onClick={checkAlias}>
               <Span color="#fff" weight="600" textTransform="none" line="22px" size="16px">
                 Verify Alias Address
               </Span>

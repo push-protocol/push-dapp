@@ -284,32 +284,34 @@ const InboxModule = () => {
   // Render
   return (
     <Container>
-      {/* <Item>
-        <Item margin="16px 20px 0px 0px" self="self-end">
+      <Interface>
+        {/* <Item>
+          <Item margin="16px 20px 0px 0px" self="self-end">
           <Button
-            padding="12px"
-            direction="row"
-            border={`1px solid ${themes.faucetBorder}`}
-            bg={
-              themes.scheme === "light"
-                ? GLOBALS.COLORS.GRADIENT_PRIMARY
-                : GLOBALS.COLORS.GRADIENT_SECONDARY
-            }
-            radius="50px"
-            onClick={enableSecretNotif}
-            disabled={enabledSecretNotif}
+          padding="12px"
+          direction="row"
+          border={`1px solid ${themes.faucetBorder}`}
+          bg={
+            themes.scheme === "light"
+            ? GLOBALS.COLORS.GRADIENT_PRIMARY
+            : GLOBALS.COLORS.GRADIENT_SECONDARY
+          }
+          radius="50px"
+          onClick={enableSecretNotif}
+          disabled={enabledSecretNotif}
           >
-            <span style={{ color: "#fff" }}>
-              {enabledSecretNotif ? 'Secret Notifications are enabled' : 'Enable Secret Notifications'}
-            </span>
-            <></>
+          <span style={{ color: "#fff" }}>
+          {enabledSecretNotif ? 'Secret Notifications are enabled' : 'Enable Secret Notifications'}
+          </span>
+          <></>
           </Button>
-        </Item>
-      </Item> */}
-      <div className="joyride"></div>
-      <InboxComponent />
-      {/* <Feedbox /> */}
-      {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
+          </Item>
+        </Item> */}
+        <div className="joyride"></div>
+        <InboxComponent />
+        {/* <Feedbox /> */}
+        {toast && <NotificationToast notification={toast} clearToast={clearToast} />}
+      </Interface>
     </Container>
   );
 };
@@ -343,18 +345,24 @@ const Container = styled(Section)`
       100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.TABLET.TOP} -
         ${globalsMargin.BIG_MODULES.TABLET.BOTTOM}
     );
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
     height: calc(
       100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} -
         ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM}
     );
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  0 0;
   }
+`;
+
+const Interface = styled.div`
+  flex: 1;
+  display: flex;
+  overflow: hidden;
 `;
 
 const Toaster = styled.div`

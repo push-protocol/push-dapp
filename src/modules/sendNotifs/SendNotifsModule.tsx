@@ -185,7 +185,7 @@ const Container = styled(Section)`
   align-items: center;
   align-self: center;
   background: ${(props) => props.theme.default.bg};
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
   box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
   display: flex;
   flex-direction: column;
@@ -200,8 +200,18 @@ const Container = styled(Section)`
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
   }
 
-  @media ${device.mobileM} {
-    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+  @media ${device.mobileL} {
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.MOBILE.RIGHT} - ${globalsMargin.MINI_MODULES.MOBILE.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
+    min-height: calc(
+      100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} 
+    );
+    overflow-y: scroll;
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  0 0;
   }
 `;
 

@@ -17,7 +17,11 @@ const UtilityHelper = {
   },
 };
 
-export const MaskedAliasChannels = {
+export const MaskedAliasChannels:{
+  [x:number]: {
+    [y:string]: number
+  }
+} = {
   137: {
     '0x2dbf5aFead4759E6151590E4a8F6cD596B7044F8': 1,
     '0xe5b06bfd663C94005B8b159Cd320Fd7976549f9b': 1,
@@ -103,7 +107,8 @@ export const networkName = {
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
-  97: "BSC Testnet"
+  97: "BSC Testnet",
+  56: "BSC Mainnet"
 };
 
 export const chainNameBackendStandard = {

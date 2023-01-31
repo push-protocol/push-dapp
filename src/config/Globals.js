@@ -61,9 +61,9 @@ export const globalsMargin = {
     },
     MOBILE: {
       TOP: '0px',
-      RIGHT: '20px',
+      RIGHT: '0px',
       BOTTOM: '20px',
-      LEFT: '20px',
+      LEFT: '0px',
     },
   },
   BIG_MODULES: {
@@ -81,9 +81,9 @@ export const globalsMargin = {
     },
     MOBILE: {
       TOP: '0px',
-      RIGHT: '20px',
-      BOTTOM: '20px',
-      LEFT: '20px',
+      RIGHT: '0px',
+      BOTTOM: '0px',
+      LEFT: '0px',
     },
   },
 };

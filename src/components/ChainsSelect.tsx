@@ -27,7 +27,7 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
 
   useEffect(() => {
     const dropdown = [];
-    appConfig.allowedNetworks.map((chainId) => {
+    appConfig.allowedNetworks.map((chainId: number) => {
         dropdown.push({
             id: chainId,
             value: CHAIN_DETAILS[chainId].label.split(' ')[0],
@@ -96,7 +96,6 @@ const Container = styled.button`
   display: flex;
 `
 const Faucet = styled.span`
-  margin: 0px 5px;
   padding: 5px 15px;
   display: flex;
   align-items: center;
@@ -106,7 +105,7 @@ const Faucet = styled.span`
   font-size: 15px;
   background: ${props => props.theme.faucetBg};
   color: ${props => props.theme.faucetText};
-  border-radius:20px;
+  border-radius: 20px;
   &:hover {
     opacity: 0.9;
     cursor: pointer;
