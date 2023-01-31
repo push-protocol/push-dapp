@@ -32,7 +32,7 @@ function TutorialModule() {
     <Container>
       <ItemVV2>
 
-        <ItemVV2 align="stretch" justify="flex-start" margin="0px 0px 40px 0px">
+        <ItemVV2 justify="flex-start" margin="0px 0px 40px 0px">
           <H2>
             <Span weight="400" size="32px" color={theme.color}>
               Live Walkthrough
@@ -51,7 +51,7 @@ function TutorialModule() {
           </Span>
         </ItemVV2>
 
-        <ItemVV2 justify="flex-start">
+        <ItemVV2>
           <QnAItem>
             <Question
               onClick={() => { onStart() }}

@@ -220,7 +220,6 @@ function Chat() {
                 maxWidth="340px"
                 minWidth="280px"
                 padding="10px 10px 10px 20px"
-                boxSizing="content-box"
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >

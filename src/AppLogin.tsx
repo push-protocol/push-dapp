@@ -160,8 +160,7 @@ const AppLogin = ({ toggleDarkMode }) => {
           padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
           borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.LARGE}
           alignSelf="center"
-          flex="initial"
-          shadow="0px 0px 9px rgba(18, 8, 46, 0.04)">
+          flex="initial">
           <H2V2
             textTransform="none"
             color={theme.default.color}

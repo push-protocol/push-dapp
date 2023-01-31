@@ -24,7 +24,7 @@ function ReceiveNotifsModule() {
   return (
     <Container>
       <ItemVV2 alignItems="stretch">
-        <ItemVV2 align="stretch" justify="flex-start" margin="0px 0px 40px 0px">
+        <ItemVV2 justify="flex-start" margin="0px 0px 40px 0px">
           <H2>
             <Span weight="400" size="32px" color={theme.color}>
               Receive Notifications

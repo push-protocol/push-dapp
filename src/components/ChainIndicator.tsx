@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import Dropdown, { DropdownValueType } from './Dropdown';
-import { H3, Image, Item, ItemH } from './SharedStyling.js';
+import { H3, Image, Item, ItemH } from './SharedStyling';
 import { networkName } from 'helpers/UtilityHelper';
 import { appConfig } from 'config/index.js';
 import { useClickAway } from 'hooks/useClickAway';

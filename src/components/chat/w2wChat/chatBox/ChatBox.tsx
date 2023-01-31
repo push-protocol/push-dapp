@@ -728,7 +728,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             color={theme.default.color}
             background={theme.default.bg}
             padding="6px"
-            fontWeight="500"
             zIndex="998"
           >
             <ItemHV2

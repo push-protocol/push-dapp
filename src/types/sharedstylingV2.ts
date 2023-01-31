@@ -33,7 +33,7 @@ export interface IItemHV2Props extends ISectionV2Props {
   textAlign?: string;
   width?: string;
   top?: string;
-  zIndex?: string;
+  zIndex?: string | number;
   gap?: string;
   filterHover?: string;
   hover?: string;
