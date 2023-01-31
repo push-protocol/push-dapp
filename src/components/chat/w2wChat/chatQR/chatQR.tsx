@@ -11,6 +11,7 @@ import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import GLOBALS, { device } from "config/Globals";
 import BlurBG from "components/reusables/blurs/BlurBG";
 import { ChatUserContext } from "contexts/ChatUserContext";
+import chatBoxImage from "../../../../assets/chat/chatBox.svg";
 
 const ChatQR = ({
     type = LOADER_TYPE.STANDALONE,
@@ -117,16 +118,16 @@ const ChatQR = ({
                                 <TextContainer
                                 >
                                     <QRHeading
-                                        
                                         style={{
                                             color: theme.default.color,
                                         }}
                                     >Set up Push Chat on your phone</QRHeading>
-                                    <TextInfo style={{
-                                        color: theme.modalMessageColor,
-                                    }}>
+                                    <TextInfo >
                                         <p>1. Open an app using Push protocol</p>
-                                        <p>2. Tap Push Chat       or Sign in with Push Chat</p>
+                                        <p style={{display:"flex"}}>2. Tap Push Chat  
+                                            <ChatBoxImage src={chatBoxImage}/>
+                                            or Sign in with Push Chat
+                                        </p>
                                         <p>3. Tap Link Push Chat and point your phone to this code </p>
                                     </TextInfo>
                                 </TextContainer>
@@ -213,6 +214,11 @@ const CloseButton = styled(AiOutlineClose)`
     font-size:20px;
 
 `;
+
+const ChatBoxImage = styled.img`
+    height:18px;
+    margin:0px 5px;
+`
 
 const QRContainer = styled(ItemVV2)`
     flex-direction:column-reverse;
