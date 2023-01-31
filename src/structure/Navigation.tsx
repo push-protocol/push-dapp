@@ -408,7 +408,6 @@ function Navigation() {
                 flex="1"
                 align="stretch"
                 zIndex={2}
-                refresh={refresh}
                 // margintop="15px"
                 onClick={() => {
                   // console.log(`Clicked secondary button`);
@@ -425,7 +424,6 @@ function Navigation() {
                 align="stretch"
                 margintop="-10px"
                 zIndex={2}
-                refresh={refresh}
                 // id={section.data.name}
                 onClick={() => {
                   // const uid = section.data.uid;
@@ -491,7 +489,7 @@ function Navigation() {
     }
 
     let rendered = (
-      <SectionGroup align="stretch" margin="10px 0px" opened={opened} refresh={refresh}>
+      <SectionGroup align="stretch" margin="10px 0px" opened={opened} >
         {Object.keys(drilldown).map(function (key) {
           const item = drilldown[key];
           const data = item.data;
@@ -501,7 +499,6 @@ function Navigation() {
                 flex="1"
                 align="stretch"
                 zIndex={1}
-                refresh={refresh}
                 onClick={() => {
                   // console.log();
                   if (
