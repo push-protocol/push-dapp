@@ -45,7 +45,7 @@ const ChatQR = ({
         <QRCodeCanvas
             id="qrCode"
             value={qrCodeText}
-            size={250}
+            size={200}
             bgColor={"#fff"}
             level={"H"}
             imageSettings={{
@@ -115,18 +115,13 @@ const ChatQR = ({
 
                             <QRContainer>
                                 <TextContainer
-                                    display="flex"
-                                    justifyContent="center"
-                                    flexDirection="column"
-                                    alignItems="baseline"
                                 >
-                                    <H2V2
-                                        fontSize="28px"
-                                        textAlign="left"
+                                    <QRHeading
+                                        
                                         style={{
                                             color: theme.default.color,
                                         }}
-                                    >Set up Push Chat on your phone</H2V2>
+                                    >Set up Push Chat on your phone</QRHeading>
                                     <TextInfo style={{
                                         color: theme.modalMessageColor,
                                     }}>
@@ -156,20 +151,38 @@ const ChatQR = ({
 export default ChatQR;
 
 const Container = styled(ItemVV2)`
-    width:80%;
-    @media ${device.laptopL} {
-       width:85%;
-    }
+    width:75%;
+    padding: 10px 7px 20px 20px;
     @media ${device.tablet} {
         width:95%;
+    }
+
+    @media (min-width:1200px) and (max-width:1353px) {
+        width:87%;
     }
     
 `
 const TextContainer = styled(ItemHV2)`
+display:flex;
+justify-content :center;
+flex-direction:column;
+align-items:baseline;
+
 @media (max-width:1234px) {
     margin-top: 10px;
- }
+}
+
+@media (max-width:1199px){
+    justify-content: center;
+    align-items:center;
+}
+
 `;
+
+const QRHeading = styled.div`
+font-size:28px;
+text-align: left;
+`
 
 const TextInfo = styled.div`
     font-family: 'Strawford';
@@ -179,32 +192,43 @@ const TextInfo = styled.div`
     color: #657795;
     margin:10px 0px 0px 0px;
     padding-left: 10px;
+    @media (max-width:1199px){
+        padding-left: 40px; 
+    }
 `;
 
 const CloseButtonContainer = styled.div`
     width:100%;
     text-align:end;
     text-align: end;
-    padding: 0px 0px 5px 0px;
-    font-size: 25px;
+    padding-right:10px;
+
+    @media (max-width:1200px){
+        margin-bottom:20px;
+    }
 `;
 
 const CloseButton = styled(AiOutlineClose)`
     cursor:pointer;
+    font-size:20px;
 
 `;
 
 const QRContainer = styled(ItemVV2)`
-    flex-direction:row;
-    // padding:0px 17px 17px 17px;
-    // height:400px !important;
-    @media (max-width:1234px) {
-       flex-direction:column-reverse;
-       padding:0px;
+    flex-direction:column-reverse;
+    padding:0px;
+
+    @media (min-width:1200px) and (max-width:1300px) {
+        flex-direction:row;
+        padding: 26px 10px 40px 10px;
+
     }
-    @media(max-width:992px){
-        flex-direction: row;
+
+    @media (min-width:1300px){
+        flex-direction:row;
+        padding: 26px 30px 40px 30px;
     }
+
     @media(max-width:964px){
         flex-direction: column-reverse;
     }

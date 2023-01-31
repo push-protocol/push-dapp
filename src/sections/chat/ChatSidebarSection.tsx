@@ -234,7 +234,7 @@ useClickAway(containerRef, () => closeQRDropdown())
         }}
         >
           <QROutline />
-          <TextQR >Link Mobile APP</TextQR>
+          <TextQR >Link Mobile App</TextQR>
         </QRCodeContainer>
       ) : null}
 
