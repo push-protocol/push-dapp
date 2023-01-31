@@ -161,6 +161,10 @@ const Container = styled(ItemVV2)`
     @media (min-width:1200px) and (max-width:1353px) {
         width:87%;
     }
+
+    @media (min-width:866px) and (max-width:992px){
+        width:65%;
+    }
     
 `
 const TextContainer = styled(ItemHV2)`
@@ -170,7 +174,7 @@ flex-direction:column;
 align-items:baseline;
 
 @media (max-width:1234px) {
-    margin-top: 10px;
+    margin-top: 30px;
 }
 
 @media (max-width:1199px){
@@ -183,6 +187,9 @@ align-items:baseline;
 const QRHeading = styled.div`
 font-size:28px;
 text-align: left;
+@media (max-width:1199px){
+    padding-right: 40px; 
+}
 `
 
 const TextInfo = styled.div`
@@ -193,9 +200,6 @@ const TextInfo = styled.div`
     color: #657795;
     margin:10px 0px 0px 0px;
     padding-left: 10px;
-    @media (max-width:1199px){
-        padding-left: 40px; 
-    }
 `;
 
 const CloseButtonContainer = styled.div`
@@ -204,7 +208,7 @@ const CloseButtonContainer = styled.div`
     text-align: end;
     padding-right:10px;
 
-    @media (max-width:1200px){
+    @media (max-width:1199px){
         margin-bottom:20px;
     }
 `;
@@ -226,13 +230,13 @@ const QRContainer = styled(ItemVV2)`
 
     @media (min-width:1200px) and (max-width:1300px) {
         flex-direction:row;
-        padding: 26px 10px 40px 10px;
+        padding: 35px 20px 50px 10px;
 
     }
 
     @media (min-width:1300px){
         flex-direction:row;
-        padding: 26px 30px 40px 30px;
+        padding: 35px 30px 50px 30px;
     }
 
     @media(max-width:964px){

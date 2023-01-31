@@ -33,6 +33,8 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import { useClickAway } from 'react-use';
+import { useDeviceWidthCheck } from 'hooks';
+import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 
 
 export const ToastPosition: ToastOptions = {
@@ -67,7 +69,7 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
-
+  const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
   const containerRef = React.useRef(null);
@@ -233,7 +235,7 @@ function Chat() {
                 <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
               </ChatContainer>
 
-              {displayQR && (
+              {(displayQR && !isMobile) && (
                 <>
                   <ChatQR
                     type={LOADER_TYPE.STANDALONE}
@@ -241,8 +243,30 @@ function Chat() {
                     blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
                     width="75%"
                   />
+
+                  {/* <MobileView
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  /> */}
+
+                  
                 </>
               )}
+
+            {(displayQR && isMobile) && (
+              <>
+                 <MobileView
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  />
+              </>
+            )}
+
+
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
