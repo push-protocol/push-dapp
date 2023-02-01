@@ -98,7 +98,6 @@ const SearchBar = () => {
       clearInput();
     } else {
       setSearchedUser(searchAddress);
-      console.log("searchAddress",searchAddress);
       library.lookupAddress(searchAddress).then(function (name) {
         console.log("Ens Name",name);
       }).catch((err)=>{
@@ -117,8 +116,12 @@ const SearchBar = () => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
       let ens: string;
+      let address:string;
       try {
-        const address = await provider.resolveName(searchedUser);
+        address = await provider.resolveName(searchedUser);
+        if(!address){
+          address = await library.resolveName(searchedUser);
+        }
         // this ensures address are checksummed
         ens = ethers.utils.getAddress(address.toLowerCase());
         if (ens) {

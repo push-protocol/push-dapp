@@ -1,5 +1,6 @@
 // React + Web3 Essentials
 import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
 import { useContext,useEffect, useState } from 'react';
 
 // Internal Components
@@ -19,6 +20,7 @@ const getEnsFromIndexDb = async(checksumWallet:string):Promise<any> => {
 
 export function useResolveEns(username: string): string {
   const [ensName, setEnsName] = useState(null);
+  const { library } = useWeb3React();
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   useEffect(() => {
     if (username) {
@@ -35,8 +37,9 @@ export function useResolveEns(username: string): string {
       ) {
         provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
       }
+
       getEnsFromIndexDb(checksumWallet).then((ensFromIndexDb)=>{
-        if(ensFromIndexDb)
+        if(ensFromIndexDb?.body)
         {
           setEnsName(ensFromIndexDb?.body);
         }
@@ -50,6 +53,17 @@ export function useResolveEns(username: string): string {
               await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, null, 'ens');
             }
           });
+          if(!ensName){
+            library.lookupAddress(checksumWallet).then(async(ens) => {
+              if (ens) {
+                setEnsName(ens);
+                await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, ens, 'ens');
+              } else {
+                setEnsName(null);
+                await intitializeDb<MessageIPFS>('Insert', 'Wallets', checksumWallet, null, 'ens');
+              }
+            });
+          }
         }
       });
     }

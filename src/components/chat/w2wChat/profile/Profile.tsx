@@ -11,12 +11,16 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
+import { useResolveEns } from 'hooks/useResolveEns';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
   const {connectedUser} = useContext(ChatUserContext);
+
+  const profileENS=useResolveEns(connectedUser.wallets)
+
 
   return (
     <>
@@ -43,7 +47,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
+          {profileENS? profileENS:caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
