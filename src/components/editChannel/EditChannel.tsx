@@ -286,7 +286,7 @@ export default function EditChannel({ closeEditChannel }) {
 const EditChannelContainer = styled(ItemVV2)`
  padding: 0px;
   @media (min-width:1140px){
-    padding: 0px 5em 0px 5em;
+    padding: 15px 50px 0px 50px;
   }
 `;
 
@@ -354,22 +354,28 @@ const VerticalLine = styled.div`
   background:${(props) => props.theme.verticalLineColor};
   margin: 0px 4rem;
   @media (min-width:993px) and (max-width:1240px) {
-    margin:0px 2rem;
+    margin:0px 68px;
   }
   @media (min-width:600px) and (max-width:768px){
-    margin:0px 2rem;
+    margin:0px 68px;
   }
 `;
 
 const Footer = styled(ItemVV2)`
-  flex-direction: row;
-  justify-content: space-between;
-  background: ${(props) => props.theme.editFooterBg};
-  border-radius: 12px;
-  padding: 22px 32px;
+
+  // flex-direction: row;
+  // justify-content: space-between;
+    background: ${(props) => props.theme.editFooterBg};
+    border-radius: 12px;
+    padding: 23px 32px;
+    display: grid;
+    grid-auto-flow: column;
+    align-content: space-between;
+    justify-content: space-between;
+    grid-gap: 40px;
 
   @media (max-width:600px){
-    padding: 12px 3px;
+    padding: 16px;
   }
   
 `;
@@ -384,8 +390,9 @@ const FooterPrimaryText = styled.p`
   line-height: 24px;
 `;
 
-const FooterSecondaryText = styled.span`
+const FooterSecondaryText = styled.p`
 font-size: 12px;
+margin:0px;
 font-weight: 400;
 line-height: 130%;
 color: ${(props) => props.theme.editChannelSecondaryText};

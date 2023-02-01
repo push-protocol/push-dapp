@@ -34,38 +34,48 @@ const EditChannelForms = ({
         <Container>
             <Form onSubmit={editChannel} >
                 <FormContainer>
-                    <Label style={{ color: theme.editChannelPrimaryText }}>Channel Name</Label>
+
                     <Item
-                        margin="7px 0px 0px 0px"
-                        flex="1"
-                        self="stretch"
-                        align="stretch"
-                        // border={theme.textAreaBorderColor}
-                        radius="12px"
+                    margin="5px 0px 0px 0px"
+                    flex="1"
+                    self="stretch"
+                    align="stretch"
                     >
-                        <Input
-                            required
-                            maxlength="40"
+                        <Label style={{ color: theme.editChannelPrimaryText }}>Channel Name</Label>
+                        <Item
+                            margin="7px 0px 0px 0px"
                             flex="1"
-                            padding="12px"
-                            weight="400"
-                            size="15px"
-                            bg={theme.editChannelInputbg}
-                            color={theme.editChannelPrimaryText}
-                            border={theme.textAreaBorderColor}
-                            focusBorder={theme.textAreaFocusBorder}
+                            self="stretch"
+                            align="stretch"
+                            // border={theme.textAreaBorderColor}
                             radius="12px"
-                            height="25px"
-                            value={channelName}
-                            onChange={(e) => {
-                                setChannelName(e.target.value);
-                            }}
-                        />
+                        >
+                            <Input
+                                required
+                                maxlength="40"
+                                flex="1"
+                                padding="13px 13px 14px 16px"
+                                weight="400"
+                                size="15px"
+                                bg={theme.editChannelInputbg}
+                                color={theme.editChannelPrimaryText}
+                                border={theme.textAreaBorderColor}
+                                focusBorder={theme.textAreaFocusBorder}
+                                radius="12px"
+                                height="25px"
+                                value={channelName}
+                                onChange={(e) => {
+                                    setChannelName(e.target.value);
+                                }}
+                            />
+                        </Item>
+
                     </Item>
+
                     {/* {errorInfo?.name && (<ErrorMessage message={errorInfo?.name} />)} */}
 
                     <Item
-                        margin="30px 0px 0px 00px"
+                        margin="22px 0px 0px 00px"
                         flex="1"
                         self="stretch"
                         align="stretch"
@@ -93,13 +103,13 @@ const EditChannelForms = ({
                             required
                             rows="4"
                             maxlength="250"
-                            padding="12px"
+                            padding="12px 16px"
                             weight="400"
                             size="15px"
                             resize="none"
                             overflow="scroll"
-                            line-height= "140%"
-                            margin="7px 0px 0px 0px"
+                            line-height="140%"
+                            margin="10px 0px 0px 0px"
                             border={theme.textAreaBorderColor}
                             focusBorder={theme.textAreaFocusBorder}
                             radius="12px"
@@ -115,7 +125,7 @@ const EditChannelForms = ({
                     {/* {errorInfo?.description && (<ErrorMessage message={errorInfo?.description} />)} */}
 
                     <Item
-                        margin="30px 0px 0px 0px"
+                        margin="20px 0px 0px 0px"
                         flex="1"
                         self="stretch"
                         align="stretch"
@@ -125,9 +135,9 @@ const EditChannelForms = ({
                             required
                             maxlength="40"
                             flex="1"
-                            padding="12px"
+                            padding="12px 16px"
                             weight="400"
-                            size="16px"
+                            size="15px"
                             bg={theme.editChannelInputbg}
                             color={theme.editChannelPrimaryText}
                             height="25px"
