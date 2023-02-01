@@ -247,7 +247,13 @@ function CreateChannel() {
 
       setProgress(50);
 
-      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, 0, {
+      let timestampIfTimebound = 0;
+      if(channelExpiryDate) {
+        timestampIfTimebound = channelExpiryDate.getTime() / 1000;
+        console.log(timestampIfTimebound);
+      }
+
+      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
         gasLimit: 1000000,
       });
 
