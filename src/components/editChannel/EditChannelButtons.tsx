@@ -8,13 +8,8 @@ const EditChannelButtons = ({closeEditChannel,editChannel,pushDeposited}) => {
     return (
         <Container>
             <ButtonContainer>
-                <CancelButtons 
-                    onClick={closeEditChannel}
-                    style={{
-                    background:theme.default.bg,
-                    color:theme.logoBtnColor,
-                    border:"1px solid",
-                    }}>Cancel
+                <CancelButtons onClick={closeEditChannel}>
+                    Cancel
                 </CancelButtons>
                 
 
@@ -80,9 +75,24 @@ width: 10rem;
 `;
 
 const CancelButtons = styled(FooterButtons)`
-    margin-right:20px;
+    margin-right:14px;
+    background:${(props)=>props.theme.default.bg};
+    color:${(props)=>props.theme.logoBtnColor};
+    border:1px solid #CF1C84;
+
     @media (max-width:425px){
         margin-right:0px;
         margin-top:10px;
+    }
+
+    &:hover{
+        color:#AC106C;
+        border:border: 1px solid #AC106C;
+        background:transparent;
+        opacity:1;
+    }
+
+    &:after{
+        background:white;
     }
 `

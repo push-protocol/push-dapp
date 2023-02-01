@@ -254,7 +254,7 @@ export default function EditChannel({ closeEditChannel }) {
           {/* Verifying Spinner and Text */}
           <VerifyingContainer>
             <Spinner
-              size={40}
+              size={42}
               color={GLOBALS.COLORS.PRIMARY_PINK}
               type={LOADER_SPINNER_TYPE.PROCESSING}
             />
@@ -275,10 +275,6 @@ export default function EditChannel({ closeEditChannel }) {
         </>
       )}
 
-
-
-
-
     </EditChannelContainer>
   );
 }
@@ -297,10 +293,14 @@ const TickImage = styled.img`
 
 const EditableContainer = styled(ItemVV2)`
   flex-direction:row;
-  margin-bottom:50px;
+  margin-bottom:45px;
   @media (max-width:600px){
     flex-direction: column;
   }
+  @media(max-width:425px){
+    margin-bottom:40px;
+  }
+
 `
 
 const UploadButton = styled(Button)`
@@ -312,13 +312,14 @@ const UploadButton = styled(Button)`
     font-weight: 500;
     font-size: 14px;
     line-height: 17px;
+    padding:10px 12px;
 
 `
 
 const AdaptiveMobileItemHV22 = styled(ItemHV2)`
   flex:0;
-  margin:10px 0px 0px 0px;
-  padding:0px 10px 0px 0px;
+  // margin:10px 0px 0px 0px;
+  // padding:0px 10px 0px 0px;
     align-items: center;
     align-self: baseline;
     justify-content: center;
@@ -352,7 +353,7 @@ const VerticalLine = styled.div`
   height: 21.5rem;
   width:2px;
   background:${(props) => props.theme.verticalLineColor};
-  margin: 0px 4rem;
+  margin: 0px 68px;
   @media (min-width:993px) and (max-width:1240px) {
     margin:0px 68px;
   }
@@ -422,6 +423,7 @@ const TransactionText = styled.p`
   line-height: 22px;
   display: flex;
   align-items: center;
+  margin-left:12px;
   color: ${(props) => props.theme.editChannelPrimaryText};
 `
 

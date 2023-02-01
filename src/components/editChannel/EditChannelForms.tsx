@@ -162,8 +162,15 @@ const EditChannelForms = ({
 export default EditChannelForms;
 
 const Container = styled(Section)`
-    padding: 0px 0px 0px 10px;
     display:block;
+
+    @media (max-width:425px){
+        margin:28px 0px 0px 0px;
+    }
+
+    @media (max-width:600px){
+        margin:18px 0px 0px 0px;
+    }
 `;
 
 const Form = styled(FormSubmision)`
