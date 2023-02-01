@@ -250,7 +250,7 @@ function CreateChannel() {
       let timestampIfTimebound = 0;
       if(channelExpiryDate) {
         timestampIfTimebound = channelExpiryDate.getTime() / 1000;
-        console.log(timestampIfTimebound);
+        channelType = 4;
       }
 
       const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
