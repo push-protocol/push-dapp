@@ -62,7 +62,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [copyText, setCopyText] = React.useState(channelObject.channel);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
-
+console.log(channelObject)
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
