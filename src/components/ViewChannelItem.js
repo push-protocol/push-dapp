@@ -404,7 +404,7 @@ console.log(channelObject)
             <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
               <Span style={{ display: 'flex', alignItems: 'center' }}>
                 {channelObject.name}
-                {isVerified && (
+                {isVerified == 1 && (
                   <Span
                     margin="0px 5px"
                     style={{ display: 'flex' }}
