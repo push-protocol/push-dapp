@@ -128,7 +128,7 @@ const themeLight = {
   createColor: '#808080',
 
   // Modals
-  modalContentBackground: "white",
+  modalContentBackground: "#FFFFFF",
   modalBackdropBackground: `rgba(255,255,255,0.4)`,
   modalBorderColor: "#E5E8F6",
   modalMessageColor: "black",
@@ -136,6 +136,10 @@ const themeLight = {
   modalLoaderPrimary: "red",
   modalLoaderSecondary: "white",
   modalBackdropZIndex: 1000,
+
+  modalTextColor:"#657795",
+  modalbackgroundColor:"#F5F5FA",
+  modalImageBgColor:"rgba(0, 0, 0, 0.5)",
 
   // Toast Notifications
   toastTextColor: "#000",
@@ -312,7 +316,7 @@ const themeDark = {
   createColor: '#fff',
 
   // Modals
-  modalContentBackground: "#282a2e",
+  modalContentBackground: "#2F3137",
   modalBackdropBackground: `rgba(0,0,0,0.4)`,
   modalBorderColor: "#4A4F67",
   modalMessageColor: "#B6BCD6",
@@ -320,6 +324,10 @@ const themeDark = {
   modalLoaderPrimary: "red",
   modalLoaderSecondary: "white",
   modalBackdropZIndex: 1000,
+
+  modalTextColor:"#B6BCD6",
+  modalbackgroundColor:"#282A2E",
+  modalImageBgColor:"rgba(255, 255, 255, 0.1);",
 
   // Toast Notifications
   toastTextColor: "#B6BCD6",

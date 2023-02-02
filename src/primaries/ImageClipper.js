@@ -134,8 +134,6 @@ const ImageClipper = forwardRef((props, ref) => {
           // objectFit="vertical-cover"
           style={{
             containerStyle: {
-              width: "250px",
-              height: "250px",
               position: "relative",
               borderRadius: "20px",
             },

@@ -1,46 +1,31 @@
-//This will be removed as it is not needed anymore.
-
-
-
-import { useWeb3React } from '@web3-react/core';
-import BlurBG from 'components/reusables/blurs/BlurBG';
-import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { Button, Item } from 'components/SharedStyling';
-import GLOBALS from 'config/Globals';
 import ImageClipper from 'primaries/ImageClipper';
 import React, { useEffect, useRef, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { BsCloudUpload } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 import { useClickAway } from 'react-use';
-import styled, { useTheme } from "styled-components";
+import styled, { useTheme } from 'styled-components';
 
-const UploadLogoModalContent = ({
-    type = LOADER_TYPE.STANDALONE,
-    overlay = LOADER_OVERLAY.NORMAL,
-    blur = 0,
-    closeUploadModal,
-    setChannelLogo,
-    channelLogo,
-    setChannelFile,
-    setCroppedImage,
-    croppedImage
+const uploadLogoModal = ({
+     onClose,  InnerComponentProps
 }) => {
+    const {
+        setChannelLogo,
+        channelLogo,
+        croppedImage,
+        setCroppedImage,
+        setChannelFile,
+        imageSrc,
+        setImageSrc
+    } = InnerComponentProps;
 
-    // const handleClose = () => onClose();
     const theme = useTheme();
-
+    const childRef = useRef();
     const containerRef = React.useRef(null);
     useClickAway(containerRef, () => {
-        console.log("Done here")
-        closeUploadModal()
+        onClose()
     });
-
-    const childRef = useRef();
-    const { chainId, library, account } = useWeb3React();
-    const [view, setView] = useState(false);
-    const [imageSrc, setImageSrc] = useState(channelLogo);
-    // const [croppedImage, setCroppedImage] = useState(channelLogo);
 
     const handleDragOver = (e) => {
         e.preventDefault();
@@ -51,12 +36,13 @@ const UploadLogoModalContent = ({
         e.preventDefault();
         e.stopPropagation();
         //let's grab the image file
-        handleFile(e.dataTransfer, "transfer");
+        handleFile(e.dataTransfer, "transfer",e);
     };
 
-    const handleFile = async (file, path) => {
+    const handleFile = async (file, path,e) => {
+        e.preventDefault();
         setCroppedImage(undefined);
-        setView(true);
+        // setView(true);
 
         //you can carry out any file validations here...
         if (file?.files[0]) {
@@ -64,62 +50,31 @@ const UploadLogoModalContent = ({
             reader.readAsDataURL(file?.files[0]);
 
             reader.onloadend = function (e) {
-              console.log("Image src",reader.result);
+                console.log("Image src", reader.result);
                 setImageSrc(reader.result);
             };
-        } else {
-            return "Nothing....";
-        }
+        } 
     };
 
-   
-
-   
-
     return (
-        <ItemVV2
-            position={overlay == LOADER_OVERLAY.ONTOP ? 'absolute' : 'relative'}
-            alignSelf={overlay == LOADER_OVERLAY.ONTOP ? 'stretch' : 'center'}
-            flex="initial"
-            top="0"
-            right="0"
-            bottom="0"
-            left="0"
-            zIndex="1000"
-            padding="15px"
-            ref={containerRef}
-        // onClick={closeUploadModal}
-        >
+        <Container ref={containerRef}>
+            <ModalNav><CloseButton onClick={onClose} /></ModalNav>
 
-            {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
-
-
-            <ModalContainer
-                flex="initial"
-                alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
-                padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-                borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
-                background={theme.chatQRbg}
-
-            >
-
-                <ModalNav><CloseButton onClick={closeUploadModal} /></ModalNav>
-
+            <ModalContainer>
+                <ModalPrimaryText>Please upload a PNG, JPG. Crop the image to resize to 128px.</ModalPrimaryText>
                 <Space className="">
-                    <div>
+                    {/* <div> */}
+                    <div
+                        onDragOver={(e) => handleDragOver(e)}
+                        onDrop={(e) => handleOnDrop(e)}
+                        className="bordered"
+                    >
 
-                        <ModalPrimaryText>Please upload a PNG, JPG. Crop the image to resize to 128px.</ModalPrimaryText>
+                        <div className="inner">
 
-                        <div
-                            onDragOver={(e) => handleDragOver(e)}
-                            onDrop={(e) => handleOnDrop(e)}
-                            className="bordered"
-                        >
-                            <div className="inner">
-
-                                <div className="crop-div">
-                                    {croppedImage ? (
+                            <div className="crop-div">
+                                {croppedImage ? (
+                                    <div className="crop-innderdiv">
                                         <div>
                                             <img
                                                 alt="Cropped Img"
@@ -127,7 +82,9 @@ const UploadLogoModalContent = ({
                                                 className="croppedImage"
                                             />
                                         </div>
-                                    ) : (
+                                    </div>
+                                ) : (
+                                    <div className="crop-innderdiv">
                                         <ImageClipper
                                             className="cropper"
                                             imageSrc={imageSrc}
@@ -136,73 +93,74 @@ const UploadLogoModalContent = ({
                                             }
                                             ref={childRef}
                                         />
-                                    )}
-                                </div>
-
-
-
-                                <DragText >
-                                    <p className="text-below">
-                                        Drag and Drop or
-                                    </p>
-                                    <div className="text-div">
-                                        <label htmlFor="file-upload" className="labeled">
-                                            <div>Browse to Choose</div>
-                                            <input
-                                                id="file-upload"
-                                                accept="image/*"
-                                                name="file-upload"
-                                                hidden
-                                                onChange={(e) => handleFile(e.target, "target")}
-                                                type="file"
-                                                className="sr-only"
-                                                readOnly
-                                            />
-                                        </label>
                                     </div>
-                                </DragText>
+                                )}
                             </div>
+
+                            <DragText >
+                                <p className="text-below">
+                                    Drag and Drop or
+                                </p>
+                                <div className="text-div">
+                                    <label htmlFor="file-upload" className="labeled">
+                                        <div>Browse to Choose</div>
+                                        <input
+                                            id="file-upload"
+                                            accept="image/*"
+                                            name="file-upload"
+                                            hidden
+                                            onChange={(e) => handleFile(e.target, "target",e)}
+                                            type="file"
+                                            className="sr-only"
+                                            readOnly
+                                        />
+                                    </label>
+                                </div>
+                            </DragText>
                         </div>
                     </div>
+                    {/* </div> */}
+
                 </Space>
 
+
                 <ModalFooter>
-                    
                     {croppedImage ? (
                         <>
-                            <CropButton 
+                            <CropButton
                                 onClick={() => {
                                     setChannelLogo(croppedImage)
-                                    closeUploadModal()
-                            }}>Upload Image</CropButton> 
+                                    onClose();
+                                }}>Upload Image</CropButton>
                         </>
                     ) : (
                         <>
-                            <CropButton 
+                            <CropButton
                                 onClick={() => {
-                                childRef.current.showCroppedImage();
-                            }}>Crop Image</CropButton> 
-                        </>     
+                                    childRef.current.showCroppedImage();
+                                }}>Crop Image</CropButton>
+                        </>
                     )}
                 </ModalFooter>
 
-
             </ModalContainer>
 
-        </ItemVV2>
+
+        </Container>
     );
 };
 
-export default UploadLogoModalContent;
+export default uploadLogoModal;
 
-const ModalContainer = styled(ItemVV2)`
+const Container = styled.div`
+
+`
+
+const ModalContainer = styled.div`
     display:flex;
-    // width:80%;
     flex-direction: column;
-    margin: 2% 1%;
-    padding:30px 40px;
-    // width: 503px;
-    // height: 477px;
+    margin: 18px 10px 32px 10px;
+
 `
 
 const ModalPrimaryText = styled.p`
@@ -213,8 +171,9 @@ const ModalPrimaryText = styled.p`
     font-size: 15px;
     line-height: 140%;
     text-align: center;
-    color: #657795;
+    color: ${(props)=>props.theme.modalTextColor}
 `
+
 const ModalNav = styled.div`
     text-align: end;
     width: 100%;
@@ -222,12 +181,40 @@ const ModalNav = styled.div`
 
 const CloseButton = styled(AiOutlineClose)`
     cursor:pointer;
+    font-size:20px;
+    color: ${(props)=>props.theme.modalTextColor};
 
 `;
 
+const DragText = styled(Item)`
+display:flex;
+flex-direction:row;
+align-items:center;
+`
+
+const ModalFooter = styled(ItemVV2)`
+
+`
+
+const CropButton = styled(Button)`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+border-radius: 15px;
+align-items: center;
+text-align: center;
+background: #CF1C84;
+color:#fff;
+padding: 16px 27px;
+width: 10rem;
+`
+
 const Space = styled.div`
   width: 100%;
-  margin-bottom: 2rem;
+  margin: 24px 0px 44px 0px;
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
@@ -237,13 +224,12 @@ const Space = styled.div`
     border: 1px dashed #8C99B0;
     align-items: flex-end;
     border-radius: 12px;
-    padding: 6px;
-    background-color: #F5F5FA;
-    margin-top: 10px;
+    padding: 0px 50px 0px 50px;
+    background: ${(props)=>props.theme.modalbackgroundColor};
     .inner {
       margin-top: 0.25rem;
       text-align: center;
-      padding: 20px 10px 10px 10px;
+      padding: 23px 15px 23px 15px;
       width: 100%;
       .crop-div {
         width: 100%;
@@ -255,7 +241,17 @@ const Space = styled.div`
         justify-content: space-evenly;
         align-items: center;
         margin-right: auto;
+        .crop-innderdiv{
+            width: 100%;
+            background: ${(props)=>props.theme.modalImageBgColor};
+            border-radius: 20px;
+            padding: 17px 100px 17px 100px;
+            margin-bottom: 12px;
+        }
+
         div {
+            height:128px;
+            width:128px;
           .croppedImage {
             border-radius: 20px;
             @media (max-width: 768px) {
@@ -265,8 +261,8 @@ const Space = styled.div`
         }
         .cropper {
           border-radius: 20px;
-          width: 250px;
-          height: 250px;
+          width: 128px;
+          height: 128px;
         }
       }
       .check-space {
@@ -317,7 +313,7 @@ const Space = styled.div`
         font-weight: 400;
         font-size: 15px;
         line-height: 140%;
-        color: #657795;
+        color: ${(props)=>props.theme.modalTextColor};
         margin:0px 0.3rem 0px 0px;
       }
     }
@@ -351,29 +347,3 @@ const Space = styled.div`
     }
   }
 `;
-
-const DragText = styled(Item)`
-display:flex;
-flex-direction:row;
-align-items:center;
-`
-
-const ModalFooter = styled(ItemVV2)`
-
-`
-
-const CropButton = styled(Button)`
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 500;
-font-size: 18px;
-line-height: 22px;
-display: flex;
-border-radius: 15px;
-align-items: center;
-text-align: center;
-background: #CF1C84;
-color:#fff;
-padding: 16px 27px;
-width: 10rem;
-`

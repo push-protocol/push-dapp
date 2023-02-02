@@ -4,38 +4,28 @@ import { ethers } from 'ethers';
 import React, { useEffect, useState } from 'react';
 
 // External Packages
-import moment from 'moment';
-import { AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { getReq, postReq } from 'api';
 import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useDeviceWidthCheck } from 'hooks';
-import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import { Item } from '../../primaries/SharedStyling';
-import ChannelSettings from '../ChannelSettings';
-import ShowDelegates from '../ShowDelegates';
 
 // Internal Configs
 import { appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
-import { Button, H2, P, Span } from '../SharedStyling';
-import EditChannelButtons from './EditChannelButtons';
+import { Button } from '../SharedStyling';
 import EditChannelForms from './EditChannelForms';
 import useModal from 'hooks/useModal';
 import UploadLogoModalContent from './UploadLogoModalContent';
 import useToast from 'hooks/useToast';
 import { useClickAway } from 'react-use';
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import GLOABALS from 'config/Globals';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import VerifyLogo from '../../assets/Vector.svg';
-import { MdCheckCircle, MdError } from 'react-icons/md';
-
-const DATE_FORMAT = 'MMM DD YYYY';
+import { MdCheckCircle } from 'react-icons/md';
+import uploadLogoModal from './uploadLogoModal';
 
 export default function EditChannel({ closeEditChannel }) {
   const { chainId } = useWeb3React();
@@ -45,22 +35,18 @@ export default function EditChannel({ closeEditChannel }) {
     aliasDetails: { isAliasVerified, aliasAddrFromContract }
   } = useSelector((state) => state.admin);
   const theme = useTheme();
-  const { CHANNEL_ACTIVE_STATE, CHANNNEL_DEACTIVATED_STATE } = useSelector((state) => state.channels);
-  const { processingState } = useSelector((state) => state.channelCreation);
-  const [verifyingChannel, setVerifyingChannel] = React.useState([]);
-  const uploadModalRef = React.useRef(null);
 
-  const [channelName, setChannelName] = React.useState(channelDetails.name);
-  const [channelInfo, setChannelInfo] = React.useState(channelDetails.info);
-  const [channelURL, setChannelURL] = React.useState(channelDetails.url);
-  const [channelLogo, setChannelLogo] = React.useState(channelDetails.icon);
+  const [channelName, setChannelName] = React.useState(channelDetails?.name);
+  const [channelInfo, setChannelInfo] = React.useState(channelDetails?.info);
+  const [channelURL, setChannelURL] = React.useState(channelDetails?.url);
+  const [channelLogo, setChannelLogo] = React.useState(channelDetails?.icon);
   const [channelFile, setChannelFile] = React.useState(undefined);
-  const [croppedImage, setCroppedImage] = useState(channelLogo);
+  const [croppedImage, setCroppedImage] = useState(channelDetails?.icon);
+  const [imageSrc,setImageSrc] = useState(croppedImage);
   const [pushDeposited, setPushDeposited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const [showUploadLogoModal, setShowUploadLogoModal] = useState(false);
-  console.log("Modal", showUploadLogoModal);
   const editChannelToast = useToast();
 
 
@@ -68,34 +54,20 @@ export default function EditChannel({ closeEditChannel }) {
     setShowUploadLogoModal(false);
   }
 
-  let { channelState } = channelDetails;
-  console.log("Channel Details", channelDetails);
-  console.log("Channel State", channelState);
-
-
-  if (!channelState) channelState = channelDetails['activation_status'];
-  const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
-  const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
-
-  const CORE_CHAIN_ID = appConfig.coreContractChain;
-  const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
-    console.log("trigggered");
     closeUploadModal()
   });
 
 
   const editChannel = async (e) => {
-    console.log("Channel file", channelFile);
     let input = {
       name: channelName,
       info: channelInfo,
       url: channelURL,
       icon: channelFile
-      // icon: channelFile,
     }
 
     editChannelToast.showMessageToast({
@@ -103,26 +75,19 @@ export default function EditChannel({ closeEditChannel }) {
       toastMessage: `Channel Updated Successfully`,
       toastType: 'SUCCESS',
       getToastIcon: (size) =>
-      <MdCheckCircle
-      size={size}
-      color="green"
-    />,
+        <MdCheckCircle
+          size={size}
+          color="green"
+        />,
     });
 
-    console.log("Input payload", input);
   }
 
-
-
-  // const {
-  //   isModalOpen: isUploadLogoModalOpen,
-  //   showModal: showUploadLogoModal,
-  //   ModalComponent: UploadLogoComponent,
-  // } = useModal();
-
-  const confirmUploadLogo = () => {
-    console.log("Image uplaoded")
-  }
+  const {
+    isModalOpen: isUploadLogoModalOpen,
+    showModal: displayUplaodLogoModal,
+    ModalComponent: UploadLogoComponent,
+  } = useModal();
 
   useEffect(() => {
     if (croppedImage) {
@@ -135,10 +100,8 @@ export default function EditChannel({ closeEditChannel }) {
           setChannelFile(croppedImage);
         }
       });
-    } else {
-      return 'Nothing';
     }
-  }, [croppedImage]);
+  }, []);
 
   function toDataURL(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -193,25 +156,23 @@ export default function EditChannel({ closeEditChannel }) {
     <EditChannelContainer ref={containerRef}>
 
       {/* Modal to upload Logo */}
-      {showUploadLogoModal ? (
-        <UploadLogoModalContent
-          type={LOADER_TYPE.STANDALONE}
-          overlay={LOADER_OVERLAY.ONTOP}
-          blur={GLOABALS.ADJUSTMENTS.BLUR.DEFAULT}
-          closeUploadModal={closeUploadModal}
-          setChannelLogo={setChannelLogo}
-          channelLogo={channelLogo}
-          setChannelFile={setChannelFile}
-          setCroppedImage={setCroppedImage}
-          croppedImage={croppedImage}
-        />
+      {isUploadLogoModalOpen ? (
+        <UploadLogoComponent
+        InnerComponent={uploadLogoModal}
+        InnerComponentProps={
+          { setChannelLogo, channelLogo, croppedImage, setCroppedImage,setChannelFile,imageSrc,setImageSrc }
+        }
+      />
       ) : null}
-
+      
       <EditableContainer>
 
         <AdaptiveMobileItemHV22 >
           <ImageSection src={channelLogo}></ImageSection>
-          <UploadButton onClick={() => setShowUploadLogoModal(true)}>Upload Logo</UploadButton>
+          <UploadButton onClick={() => {
+            displayUplaodLogoModal()
+            setShowUploadLogoModal(true)
+          }}>Upload Logo</UploadButton>
         </AdaptiveMobileItemHV22>
 
         {!isMobile && <VerticalLine></VerticalLine>}
@@ -233,14 +194,14 @@ export default function EditChannel({ closeEditChannel }) {
       {/* This is Footer container that is present over the buttons */}
       <Footer>
         <div>
-          <FooterPrimaryText onClick={()=>setPushDeposited(!pushDeposited)}>Channel edit fee</FooterPrimaryText>
+          <FooterPrimaryText onClick={() => setPushDeposited(!pushDeposited)}>Channel edit fee</FooterPrimaryText>
           <FooterSecondaryText>Editing channel details requires fees to be deposited</FooterSecondaryText>
         </div>
 
         <ItemHV2
           flex="0"
         >
-          {pushDeposited? <TickImage src={VerifyLogo} /> : null}
+          {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
           <EditFee onClick={() => setIsLoading(!isLoading)}>
             50 PUSH
           </EditFee>
@@ -267,11 +228,22 @@ export default function EditChannel({ closeEditChannel }) {
       ) : (
         <>
           {/* This below is Footer Buttons i.e, Cancel and save changes */}
-          < EditChannelButtons
-            closeEditChannel={closeEditChannel}
-            editChannel={editChannel}
-            pushDeposited={pushDeposited}
-          />
+          <ButtonContainer>
+            <CancelButtons onClick={closeEditChannel}>
+              Cancel
+            </CancelButtons>
+
+            {pushDeposited ? (
+              <FooterButtons onClick={editChannel}>
+                Save Changes
+              </FooterButtons>)
+              : (
+                <FooterButtons >
+                  Deposit Push
+                </FooterButtons>
+              )}
+
+          </ButtonContainer>
         </>
       )}
 
@@ -285,10 +257,6 @@ const EditChannelContainer = styled(ItemVV2)`
     padding: 15px 50px 0px 50px;
   }
 `;
-
-const TickImage = styled.img`
-
-`
 
 
 const EditableContainer = styled(ItemVV2)`
@@ -316,10 +284,10 @@ const UploadButton = styled(Button)`
 
 `
 
+const TickImage = styled.img``
+
 const AdaptiveMobileItemHV22 = styled(ItemHV2)`
   flex:0;
-  // margin:10px 0px 0px 0px;
-  // padding:0px 10px 0px 0px;
     align-items: center;
     align-self: baseline;
     justify-content: center;
@@ -363,9 +331,6 @@ const VerticalLine = styled.div`
 `;
 
 const Footer = styled(ItemVV2)`
-
-  // flex-direction: row;
-  // justify-content: space-between;
     background: ${(props) => props.theme.editFooterBg};
     border-radius: 12px;
     padding: 23px 32px;
@@ -425,6 +390,66 @@ const TransactionText = styled.p`
   align-items: center;
   margin-left:12px;
   color: ${(props) => props.theme.editChannelPrimaryText};
+`
+
+//Footer Button's CSS
+const ButtonContainer = styled(ItemHV2)`
+    justify-content: end;
+    margin-top:35px;
+    @media (max-width:425px){
+        flex-direction:column-reverse;
+    }
+
+`;
+
+const FooterButtons = styled(Button)`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+border-radius: 15px;
+align-items: center;
+text-align: center;
+background: #CF1C84;
+color:#fff;
+padding: 16px 27px;
+width: 10rem;
+
+@media (min-width:425px) and (max-width:600px) {
+    font-size: 15px;
+    padding: 12px 12px;
+    width: 7rem;
+}
+
+@media (max-width:425px){
+    width: -webkit-fill-available;
+}
+
+`;
+
+const CancelButtons = styled(FooterButtons)`
+    margin-right:14px;
+    background:${(props) => props.theme.default.bg};
+    color:${(props) => props.theme.logoBtnColor};
+    border:1px solid #CF1C84;
+
+    @media (max-width:425px){
+        margin-right:0px;
+        margin-top:10px;
+    }
+
+    &:hover{
+        color:#AC106C;
+        border:border: 1px solid #AC106C;
+        background:transparent;
+        opacity:1;
+    }
+
+    &:after{
+        background:white;
+    }
 `
 
 
