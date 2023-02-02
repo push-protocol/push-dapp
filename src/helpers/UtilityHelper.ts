@@ -41,7 +41,9 @@ export const MaskedAliasChannels:{
   },
   56: {
 
-  }
+  },
+  80001: {},
+  97: {}
  }
 
 export const MaskedChannels = {
