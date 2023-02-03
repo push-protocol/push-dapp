@@ -152,18 +152,27 @@ const ChatQR = ({
 export default ChatQR;
 
 const Container = styled(ItemVV2)`
-    width:75%;
-    padding: 10px 7px 20px 20px;
+    width:856px; //for larger sizes 
+    padding: 20px;
+    
+    //for smaller sizes < 768px
     @media ${device.tablet} {
         width:95%;
     }
 
+    //for critical sizes 
     @media (min-width:1200px) and (max-width:1353px) {
         width:87%;
     }
 
-    @media (min-width:866px) and (max-width:992px){
-        width:65%;
+    // this one is for when chat and inbox are displayed and screen size is less
+    @media (min-width:769px) and (max-width:992px){
+        width: 620px;
+    }
+
+    //this one is for when chat and sidebar are displayed together and screen size is very less for chat
+    @media (min-width:993px) and (max-width:1199px){
+        width:540px;
     }
     
 `
@@ -173,8 +182,8 @@ justify-content :center;
 flex-direction:column;
 align-items:baseline;
 
-@media (max-width:1234px) {
-    margin-top: 30px;
+@media (max-width:1199px) {
+    margin-top: 36px;
 }
 
 @media (max-width:1199px){
@@ -206,10 +215,9 @@ const CloseButtonContainer = styled.div`
     width:100%;
     text-align:end;
     text-align: end;
-    padding-right:10px;
 
     @media (max-width:1199px){
-        margin-bottom:20px;
+        margin-bottom:30px;
     }
 `;
 
