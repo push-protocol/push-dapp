@@ -91,6 +91,8 @@ const uploadLogoModal = ({
                                             onImageCropped={(croppedImage) =>
                                                 setCroppedImage(croppedImage)
                                             }
+                                            width = "128px"
+                                            height = "128px"
                                             ref={childRef}
                                         />
                                     </div>

@@ -42,7 +42,7 @@ export default function EditChannel({ closeEditChannel }) {
   const [channelLogo, setChannelLogo] = React.useState(channelDetails?.icon);
   const [channelFile, setChannelFile] = React.useState(undefined);
   const [croppedImage, setCroppedImage] = useState(channelDetails?.icon);
-  const [imageSrc,setImageSrc] = useState(croppedImage);
+  const [imageSrc, setImageSrc] = useState(croppedImage);
   const [pushDeposited, setPushDeposited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -55,6 +55,8 @@ export default function EditChannel({ closeEditChannel }) {
   }
 
   const isMobile = useDeviceWidthCheck(600);
+
+  console.log("Run")
 
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
@@ -101,7 +103,7 @@ export default function EditChannel({ closeEditChannel }) {
         }
       });
     }
-  }, []);
+  }, [croppedImage]);
 
   function toDataURL(url, callback) {
     var xhr = new XMLHttpRequest();
@@ -156,15 +158,13 @@ export default function EditChannel({ closeEditChannel }) {
     <EditChannelContainer ref={containerRef}>
 
       {/* Modal to upload Logo */}
-      {isUploadLogoModalOpen ? (
         <UploadLogoComponent
-        InnerComponent={uploadLogoModal}
-        InnerComponentProps={
-          { setChannelLogo, channelLogo, croppedImage, setCroppedImage,setChannelFile,imageSrc,setImageSrc }
-        }
-      />
-      ) : null}
-      
+          InnerComponent={uploadLogoModal}
+          InnerComponentProps={
+            { setChannelLogo, channelLogo, croppedImage, setCroppedImage, setChannelFile, imageSrc, setImageSrc }
+          }
+        />
+
       <EditableContainer>
 
         <AdaptiveMobileItemHV22 >
