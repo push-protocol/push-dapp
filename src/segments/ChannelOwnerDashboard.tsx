@@ -23,6 +23,7 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 import { appConfig } from "config";
 import { Button } from "components/SharedStyling";
 import EditChannel from "components/editChannel/EditChannel";
+import useModal from "hooks/useModal";
 
 // Constants
 // interval after which alias details api will be called, in seconds
@@ -106,6 +107,13 @@ const ChannelOwnerDashboard = () => {
     setEditChannel(false);
   }
 
+  //here the useModal hook is used to display Upload Logo Modal
+  const {
+    isModalOpen: isUploadLogoModalOpen,
+    showModal: displayUplaodLogoModal,
+    ModalComponent: UploadLogoComponent,
+  } = useModal();
+
   return (
     <ItemHV2>
       {((channelDetails === 'unfetched') || processingState === null) &&
@@ -124,7 +132,12 @@ const ChannelOwnerDashboard = () => {
               <>
                 {editChannel ? (
                   <>
-                    <EditChannel closeEditChannel={closeEditChannel}/>
+                    <EditChannel 
+                    closeEditChannel={closeEditChannel} 
+                    UploadLogoComponent={UploadLogoComponent} 
+                    displayUplaodLogoModal={displayUplaodLogoModal}
+                    isUploadLogoModalOpen={isUploadLogoModalOpen}
+                    />
                   </>
                 ) : (
                   <>

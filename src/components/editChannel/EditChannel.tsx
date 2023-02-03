@@ -27,7 +27,12 @@ import VerifyLogo from '../../assets/Vector.svg';
 import { MdCheckCircle } from 'react-icons/md';
 import uploadLogoModal from './uploadLogoModal';
 
-export default function EditChannel({ closeEditChannel }) {
+export default function EditChannel({ 
+  closeEditChannel,
+  UploadLogoComponent,
+  displayUplaodLogoModal,
+  isUploadLogoModalOpen
+ }) {
   const { chainId } = useWeb3React();
   const {
     channelDetails,
@@ -56,8 +61,6 @@ export default function EditChannel({ closeEditChannel }) {
 
   const isMobile = useDeviceWidthCheck(600);
 
-  console.log("Run")
-
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => {
     closeUploadModal()
@@ -84,12 +87,6 @@ export default function EditChannel({ closeEditChannel }) {
     });
 
   }
-
-  const {
-    isModalOpen: isUploadLogoModalOpen,
-    showModal: displayUplaodLogoModal,
-    ModalComponent: UploadLogoComponent,
-  } = useModal();
 
   useEffect(() => {
     if (croppedImage) {
