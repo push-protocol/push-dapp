@@ -271,7 +271,7 @@ const ImageMessage = styled.img`
 `;
 
 const TextMessage = styled.p`
-  max-width: 300px;
+  max-width: 600px;
   padding: 7px 44px 10px 0px;
   font-size: 14px;
   word-wrap: break-word;
@@ -309,7 +309,7 @@ const MessageWrapper = styled.div`
   width: 100%;
   min-height: ${(props: any): string => props.height || '48px'};
   padding: 0;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: ${(props: any): string => props.align || 'row'};
 `;
@@ -335,7 +335,7 @@ const SenderMessage = styled.div`
   box-sizing: border-box;
   position: relative;
   right: 34px;
-  max-width: 419px;
+  max-width: 650px;
   text-align: left;
   padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ca599b'};
