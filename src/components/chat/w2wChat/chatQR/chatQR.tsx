@@ -111,7 +111,7 @@ const ChatQR = ({
                         >
 
                             <CloseButtonContainer>
-                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{color:theme.default.color}}/>
+                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{color:theme.default.secondaryColor}}/>
                             </CloseButtonContainer>
 
                             <QRContainer>
