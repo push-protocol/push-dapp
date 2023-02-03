@@ -29,6 +29,7 @@ import './createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
 import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
+import Tooltip from "./reusables/tooltip/Tooltip"
 import { device } from 'config/Globals';
 
 const coreChainId = appConfig.coreContractChain;
@@ -53,7 +54,7 @@ const ChannelInfo = ({
   setTxStatus,
 }) => {
   const theme = useTheme();
-  const isMobile = useDeviceWidthCheck(600)
+  const isMobile = useDeviceWidthCheck(769)
   const [disabled, setDisabled] = useState<boolean>(true);
   const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
 
@@ -197,24 +198,41 @@ const ChannelInfo = ({
                   />
                 {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
               </Item>
-
-            <TimeBoundToggleContainer>
-              <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
-                <Label style={{ color: theme.color }}>Time Bound</Label>
-                <NewIndicator>
-                  New
-                </NewIndicator>
-              </ItemHV2>
-              {/* Toggle should be off only when channelExpiryDate is undefined */}
-              <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
-                if(channelExpiryDate===undefined){
-                  // turn on the toggle
-                  return setChannelExpiryDate(null);
+            <Tooltip 
+              tooltipContent='Temporary channels will be deleted after expiry'
+              // disable the tooltip when time bound toggle is NOT on
+              isDisabled={channelExpiryDate===undefined}
+              placementProps={isMobile
+                ?
+                {
+                  bottom: "-63px",
+                  transform: "translateX(6%)",
                 }
-                // turn off the toggle
-                setChannelExpiryDate(undefined);
-              }} />
-            </TimeBoundToggleContainer>
+                :
+                {
+                  bottom: "-88px",
+                  transform: "translateX(16%)"
+                }
+              }
+            >
+              <TimeBoundToggleContainer>
+                <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
+                  <Label style={{ color: theme.color }}>Time Bound</Label>
+                  <NewIndicator>
+                    New
+                  </NewIndicator>
+                </ItemHV2>
+                {/* Toggle should be off only when channelExpiryDate is undefined */}
+                <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
+                  if(channelExpiryDate===undefined){
+                    // turn on the toggle
+                    return setChannelExpiryDate(null);
+                  }
+                  // turn off the toggle
+                  setChannelExpiryDate(undefined);
+                }} />
+              </TimeBoundToggleContainer>
+            </Tooltip>
           </TopInnerContainer>
         </Item>
 
@@ -453,22 +471,17 @@ const NewIndicator = styled(SpanV2)`
 `
 
 const TimeBoundToggleContainer = styled(ItemHV2)`
-  width: 25%;
-  min-width: 25%;
-  max-width: 25%;
+  height: 100%;
   margin-left: 1.3rem;
   padding: 12px 18px;
-  height: 25px;
+  
   flex: 1;
   align-items: center;
   border-radius: 15px;
   background: ${(props) => props.theme.toggleContainerBG};
   @media ${device.tablet} {
     box-sizing: border-box;
-    height: 3rem;
-    width: 100%;
-    min-width: 100%;
-    max-width: 100%;
+    height: fit-content;
     margin-left: 0;
     margin-top: 1.25rem;
   }
@@ -507,11 +520,10 @@ const CustomDateTimePicker = styled(DateTimePicker)`
     }
     
     .react-datetime-picker__inputGroup {
-        text-align: center !important;
+        margin: 0px !important;
+        margin-left: 12px !important;
         @media(max-width:850px){
                 width: 4rem !important;
-                margin-right: -2px !important;
-                margin: 0px !important;
             }
     }
     

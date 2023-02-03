@@ -7,15 +7,15 @@ type TogglePropsType = {
 
 const Toggle = ({ isToggleOn, onToggle }: TogglePropsType) => {
   return (
-    <ToggleContainer>
-      <ToggleInput
-        id="toggle-switch"
-        type="checkbox"
-        defaultChecked={isToggleOn}
-        onClick={onToggle}
-      />
-      <ToggleLabel htmlFor="toggle-switch" />
-    </ToggleContainer>
+      <ToggleContainer>
+        <ToggleInput
+          id="toggle-switch"
+          type="checkbox"
+          defaultChecked={isToggleOn}
+          onClick={onToggle}
+        />
+        <ToggleLabel htmlFor="toggle-switch" />
+      </ToggleContainer>
   );
 };
 
@@ -34,7 +34,6 @@ const ToggleLabel = styled.label`
   height: 20px;
   border-radius: 15px;
   background: ${(props) => props.theme.toggleInactiveBG};
-  cursor: pointer;
   &::after {
     content: '';
     display: block;
@@ -48,6 +47,7 @@ const ToggleLabel = styled.label`
 `;
 
 const ToggleInput = styled.input`
+  cursor: pointer;
   opacity: 0;
   z-index: 1;
   border-radius: 15px;
