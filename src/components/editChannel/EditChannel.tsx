@@ -12,7 +12,7 @@ import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { useDeviceWidthCheck } from 'hooks';
 
 // Internal Configs
-import { appConfig } from "config";
+import { addresses, appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
 import { Button } from '../SharedStyling';
 import EditChannelForms from './EditChannelForms';
@@ -26,15 +26,25 @@ import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import VerifyLogo from '../../assets/Vector.svg';
 import { MdCheckCircle } from 'react-icons/md';
 import uploadLogoModal from './uploadLogoModal';
+import { approvePushToken, getPushTokenApprovalAmount } from 'helpers';
+import { getCAIPObj } from 'helpers/CaipHelper';
+import { IPFSupload } from 'helpers/IpfsHelper';
 
 export default function EditChannel({ closeEditChannel }) {
-  const { chainId } = useWeb3React();
+  const { chainId, account, library } = useWeb3React();
   const {
     channelDetails,
     canVerify,
     aliasDetails: { isAliasVerified, aliasAddrFromContract }
   } = useSelector((state) => state.admin);
+  
+  const { epnsReadProvider, epnsWriteProvider} = useSelector(
+    (state) => state.contracts
+  );
   const theme = useTheme();
+
+  // it can be fetched from contract for dynamic, but making it const will be fast
+  const minFeesForAddChannel = 50;
 
   const [channelName, setChannelName] = React.useState(channelDetails?.name);
   const [channelInfo, setChannelInfo] = React.useState(channelDetails?.info);
@@ -45,10 +55,48 @@ export default function EditChannel({ closeEditChannel }) {
   const [imageSrc,setImageSrc] = useState(croppedImage);
   const [pushDeposited, setPushDeposited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [feesRequiredForEdit, setFeesRequiredForEdit] = useState(0);
+  const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
 
   const [showUploadLogoModal, setShowUploadLogoModal] = useState(false);
   const editChannelToast = useToast();
 
+  useEffect(() => {
+    if(!account) return;
+
+    (async function () {
+      const amount = await epnsReadProvider.channelUpdateCounter(account);
+      setFeesRequiredForEdit(minFeesForAddChannel*(amount+1));
+    })();
+  }, [account]);
+
+  useEffect(() => {
+    if(!account || !library) return;
+
+    (async function () {
+      const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
+        address: account,
+        provider: library,
+        contractAddress: addresses.epnscore
+      });
+      setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
+    })();
+  }, [account, library]);
+
+  const depositPush = async () => {
+    if(!library) return;
+
+    const signer = library.getSigner(account);
+    const response = await approvePushToken({
+      signer,
+      contractAddress: addresses.epnscore,
+      amount: (feesRequiredForEdit - pushApprovalAmount)
+    });
+
+    if(response) {
+      setPushApprovalAmount(feesRequiredForEdit);
+    }
+  }
 
   const closeUploadModal = () => {
     setShowUploadLogoModal(false);
@@ -61,26 +109,47 @@ export default function EditChannel({ closeEditChannel }) {
     closeUploadModal()
   });
 
-
   const editChannel = async (e) => {
-    let input = {
-      name: channelName,
-      info: channelInfo,
-      url: channelURL,
-      icon: channelFile
+    try {
+      const input = JSON.stringify({
+        name: channelName,
+        info: channelInfo,
+        url: channelURL,
+        icon: channelFile,
+        aliasDetails: channelDetails['aliasDetails'] || getCAIPObj({
+          chainId: parseInt(channelDetails['chain_id']),
+          address: channelDetails['address'],
+        }),
+      });
+
+      console.log(input);
+      const storagePointer = await IPFSupload(input);
+      console.log('IPFS storagePointer:', storagePointer);
+
+      const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
+      const newIdentityBytes = ethers.utils.toUtf8Bytes(identity);
+      const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
+
+      const tx = await epnsWriteProvider.updateChannelMeta(account, newIdentityBytes, parsedFees, {
+        gasLimit: 1000000
+      })
+
+      console.log(tx);
+      await tx.wait();
+
+      editChannelToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: `Channel Updated Successfully`,
+        toastType: 'SUCCESS',
+        getToastIcon: (size) =>
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />,
+      });
+    } catch (err) {
+      console.log(err.message);
     }
-
-    editChannelToast.showMessageToast({
-      toastTitle: 'Success',
-      toastMessage: `Channel Updated Successfully`,
-      toastType: 'SUCCESS',
-      getToastIcon: (size) =>
-        <MdCheckCircle
-          size={size}
-          color="green"
-        />,
-    });
-
   }
 
   const {
@@ -203,7 +272,7 @@ export default function EditChannel({ closeEditChannel }) {
         >
           {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
           <EditFee onClick={() => setIsLoading(!isLoading)}>
-            50 PUSH
+            {feesRequiredForEdit} PUSH
           </EditFee>
 
         </ItemHV2>
@@ -233,12 +302,12 @@ export default function EditChannel({ closeEditChannel }) {
               Cancel
             </CancelButtons>
 
-            {pushDeposited ? (
+            {(pushApprovalAmount >= feesRequiredForEdit) ? (
               <FooterButtons onClick={editChannel}>
                 Save Changes
               </FooterButtons>)
               : (
-                <FooterButtons >
+                <FooterButtons onClick={depositPush} >
                   Deposit Push
                 </FooterButtons>
               )}
