@@ -56,7 +56,7 @@ const ChannelInfo = ({
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(769)
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
+  const [errorInfo, setErrorInfo] = useState<{name:string, channelExpiryDate:string, description:string, address:string, url:string}>({name: '', channelExpiryDate:'', description: '', address: '', url: ''});
 
 
   const isEmpty = (field) => {
@@ -70,13 +70,22 @@ const ChannelInfo = ({
   const isAllFilledAndValid = (): boolean => {
     setErrorInfo('');
 
-    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
+    if (isEmpty(channelName) || isEmpty(channelExpiryDate) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
       if (
         isEmpty(channelName)
       ) {
         setErrorInfo(x => ({
           ...x,
           name: 'Please, enter the channel name.',
+        }));
+      }
+
+      if (
+        channelExpiryDate!==undefined && (channelExpiryDate===null || isEmpty(channelExpiryDate))
+      ) {
+        setErrorInfo(x => ({
+          ...x,
+          channelExpiryDate: 'Please, select the channel expiry date.',
         }));
       }
 
@@ -171,6 +180,7 @@ const ChannelInfo = ({
           self="stretch"
           align="stretch"
           height="fit-content"
+          min-height="fit-content"
         >
           <Label style={{ color: theme.color }}>Channel Name</Label>
           <TopInnerContainer>
@@ -178,6 +188,7 @@ const ChannelInfo = ({
                 flex="1"
                 self="stretch"
                 align="stretch"
+                height="fit-content"
               >
                   <Input
                     required
@@ -186,6 +197,7 @@ const ChannelInfo = ({
                     self="stretch"
                     align="stretch"
                     padding="12px"
+                    height="25px"
                     weight="400"
                     size="16px"
                     bg="white"
@@ -252,6 +264,7 @@ const ChannelInfo = ({
                 onChange={setChannelExpiryDate}
               />
             </DatePickerContainer>
+            {errorInfo?.channelExpiryDate && (<ErrorMessage message = {errorInfo?.channelExpiryDate} />)}
           </Item>
         }
         
@@ -471,7 +484,7 @@ const NewIndicator = styled(SpanV2)`
 `
 
 const TimeBoundToggleContainer = styled(ItemHV2)`
-  height: 100%;
+  height: 25px;
   margin-left: 1.3rem;
   padding: 12px 18px;
   
@@ -480,8 +493,6 @@ const TimeBoundToggleContainer = styled(ItemHV2)`
   border-radius: 15px;
   background: ${(props) => props.theme.toggleContainerBG};
   @media ${device.tablet} {
-    box-sizing: border-box;
-    height: fit-content;
     margin-left: 0;
     margin-top: 1.25rem;
   }

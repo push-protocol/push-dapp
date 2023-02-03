@@ -57,12 +57,10 @@ const Wrapper = styled.div`
   width: 34%;
   min-width: 34%;
   max-width: 34%;
-  height: 25px;
+  height: fit-content;
   display: inline-block;
   position: relative;
   @media ${device.tablet} {
-    box-sizing: border-box;
-    height: fit-content;
     width: 100%;
     min-width: 100%;
     max-width: 100%;
