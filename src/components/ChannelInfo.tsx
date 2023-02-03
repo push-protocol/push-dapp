@@ -31,6 +31,9 @@ import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
 import Tooltip from "./reusables/tooltip/Tooltip"
 import { device } from 'config/Globals';
+import showNewTag from 'helpers/getIsNewTagVisible';
+import NewTag from './NewTag';
+import getIsNewTagVisible from 'helpers/getIsNewTagVisible';
 
 const coreChainId = appConfig.coreContractChain;
 
@@ -55,6 +58,8 @@ const ChannelInfo = ({
 }) => {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(769)
+  const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-01T00:00:00.000"), 90);
+
   const [disabled, setDisabled] = useState<boolean>(true);
   const [errorInfo, setErrorInfo] = useState<{name:string, channelExpiryDate:string, description:string, address:string, url:string}>({name: '', channelExpiryDate:'', description: '', address: '', url: ''});
 
@@ -230,9 +235,7 @@ const ChannelInfo = ({
               <TimeBoundToggleContainer>
                 <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
                   <Label style={{ color: theme.color }}>Time Bound</Label>
-                  <NewIndicator>
-                    New
-                  </NewIndicator>
+                  {isNewTagVisible && <NewTag />}
                 </ItemHV2>
                 {/* Toggle should be off only when channelExpiryDate is undefined */}
                 <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
@@ -469,19 +472,6 @@ const Label = styled.div`
   letter-spacing: -0.011em;
   color: #1e1e1e;
 `;
-
-const NewIndicator = styled(SpanV2)`
-  font-family: 'Strawford';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 10px;
-  line-height: 140%;
-  color: #D53893;
-  background: #FFDBF0;
-  border-radius: 6px;
-  padding: 2px 6px;
-  margin-left: 5px;
-`
 
 const TimeBoundToggleContainer = styled(ItemHV2)`
   height: 25px;
