@@ -24,11 +24,13 @@ import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reu
 import GLOABALS from 'config/Globals';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import VerifyLogo from '../../assets/Vector.svg';
-import { MdCheckCircle } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import uploadLogoModal from './uploadLogoModal';
 import { approvePushToken, getPushTokenApprovalAmount } from 'helpers';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
+import { isEmpty } from 'helpers/InputValidation';
+import { isLengthValid, isValidUrl } from 'helpers/UtilityHelper';
 
 export default function EditChannel({ 
   closeEditChannel,
@@ -36,7 +38,7 @@ export default function EditChannel({
   displayUplaodLogoModal,
   isUploadLogoModalOpen
 }) {
-  const { chainId } = useWeb3React();
+  const { chainId, account, library } = useWeb3React();
   const {
     channelDetails,
     canVerify,
@@ -55,10 +57,15 @@ export default function EditChannel({
   const [channelInfo, setChannelInfo] = React.useState(channelDetails?.info);
   const [channelURL, setChannelURL] = React.useState(channelDetails?.url);
   const [channelLogo, setChannelLogo] = React.useState(channelDetails?.icon);
-  const [channelFile, setChannelFile] = React.useState(undefined);
+  // const [channelFile, setChannelFile] = React.useState(undefined);
+  const [channelFile, setChannelFile] = React.useState(channelDetails?.icon);
   const [croppedImage, setCroppedImage] = useState(channelDetails?.icon);
   const [imageSrc, setImageSrc] = useState(croppedImage);
   const [pushDeposited, setPushDeposited] = useState(false);
+
+  const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [feesRequiredForEdit, setFeesRequiredForEdit] = useState(0);
   const [pushApprovalAmount, setPushApprovalAmount] = useState(0);
@@ -71,7 +78,7 @@ export default function EditChannel({
 
     (async function () {
       const amount = await epnsReadProvider.channelUpdateCounter(account);
-      setFeesRequiredForEdit(minFeesForAddChannel*(amount+1));
+      setFeesRequiredForEdit(minFeesForAddChannel*(Number(amount)+1)); //50
     })();
   }, [account]);
 
@@ -85,10 +92,19 @@ export default function EditChannel({
         contractAddress: addresses.epnscore
       });
       setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
+      const amountToBeDeposit  = parseInt(pushTokenApprovalAmount);
+
+      if((amountToBeDeposit >= feesRequiredForEdit) && (amountToBeDeposit !=0 )  ){
+        setPushDeposited(true);
+      }else{
+        setPushDeposited(false);
+      }
+
     })();
   }, [account, library]);
 
   const depositPush = async () => {
+    setIsLoading(true);
     if(!library) return;
 
     const signer = library.getSigner(account);
@@ -99,8 +115,11 @@ export default function EditChannel({
     });
 
     if(response) {
+      setIsLoading(false);
       setPushApprovalAmount(feesRequiredForEdit);
+      setPushDeposited(true);
     }
+    setIsLoading(false);
   }
 
   const closeUploadModal = () => {
@@ -114,8 +133,84 @@ export default function EditChannel({
     closeUploadModal()
   });
 
+  const isAllFilledAndValid = (): boolean => {
+    setErrorInfo('');
+
+    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) ){
+      if (
+        isEmpty(channelName)
+      ) {
+        setErrorInfo(x => ({
+          ...x,
+          name: 'Please, enter the channel name.',
+        }));
+      }
+
+      if (isEmpty(channelInfo)) {
+        setErrorInfo(x => ({
+          ...x,
+          description: 'Please, enter the channel description',
+        }));
+      }
+
+      if (isEmpty(channelURL)) {
+        setErrorInfo(x => ({
+          ...x,
+          url: 'Please, enter the channel url',
+        }));
+      }
+
+      return false
+    }
+
+    if (!isLengthValid(channelName, 125)) {
+      setErrorInfo(x => ({
+        ...x,
+        name: 'Channel Name should not exceed 125 characters! Please retry!',
+      }));
+      
+      return false;
+    }
+    if (!isLengthValid(channelURL, 125)) {
+      setErrorInfo(x => ({
+        ...x,
+        url: 'Channel Url should not exceed 125 characters! Please retry!',
+      }));
+      return false;
+    }
+    if (!isValidUrl(channelURL)) {
+      setErrorInfo(x => ({
+        ...x,
+        url: 'Channel URL is invalid! Please enter a valid url!',
+      }));
+      return false;
+    }
+
+    return true;
+  };
+
+  const isDetailsAltered = (): boolean => {
+
+    if(channelName !== channelDetails?.name 
+      || 
+      channelInfo !== channelDetails?.info 
+      || 
+      channelURL!==channelDetails?.url || 
+      channelFile!==channelDetails?.icon
+      ) {
+        return false;
+    }else{
+      return true;
+    }
+
+  }
+
   const editChannel = async (e) => {
     try {
+
+      if (!isAllFilledAndValid()) return;
+
+      setIsLoading(true);
       const input = JSON.stringify({
         name: channelName,
         info: channelInfo,
@@ -135,12 +230,14 @@ export default function EditChannel({
       const newIdentityBytes = ethers.utils.toUtf8Bytes(identity);
       const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
 
+      
       const tx = await epnsWriteProvider.updateChannelMeta(account, newIdentityBytes, parsedFees, {
         gasLimit: 1000000
       })
 
       console.log(tx);
       await tx.wait();
+      setIsLoading(false);
 
       editChannelToast.showMessageToast({
         toastTitle: 'Success',
@@ -152,8 +249,19 @@ export default function EditChannel({
             color="green"
           />,
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (err) {
+      setIsLoading(false);
       console.log(err.message);
+      editChannelToast.showMessageToast({
+        toastTitle: 'Transaction failed',
+        toastMessage: 'Channel details are not changed',
+        toastType: 'ERROR',
+        getToastIcon: (size) =>
+        <MdError size={size} color="red" />,
+      });
     }
   }
 
@@ -226,9 +334,17 @@ export default function EditChannel({
       {/* Modal to upload Logo */}
         <UploadLogoComponent
           InnerComponent={uploadLogoModal}
-          InnerComponentProps={
-            { setChannelLogo, channelLogo, croppedImage, setCroppedImage, setChannelFile, imageSrc, setImageSrc }
-          }
+          InnerComponentProps={{ 
+              setChannelLogo, 
+              channelLogo, 
+              croppedImage, 
+              setCroppedImage, 
+              setChannelFile, 
+              imageSrc, 
+              setImageSrc, 
+              errorInfo, 
+              setErrorInfo 
+            }}
         />
 
       <EditableContainer>
@@ -252,6 +368,8 @@ export default function EditChannel({
           channelURL={channelURL}
           setChannelURL={setChannelURL}
           editChannel={editChannel}
+          errorInfo={errorInfo}
+          setErrorInfo={setErrorInfo}
         />
 
       </EditableContainer>
@@ -260,7 +378,7 @@ export default function EditChannel({
       {/* This is Footer container that is present over the buttons */}
       <Footer>
         <div>
-          <FooterPrimaryText onClick={() => setPushDeposited(!pushDeposited)}>Channel edit fee</FooterPrimaryText>
+          <FooterPrimaryText>Channel edit fee</FooterPrimaryText>
           <FooterSecondaryText>Editing channel details requires fees to be deposited</FooterSecondaryText>
         </div>
 
@@ -268,7 +386,7 @@ export default function EditChannel({
           flex="0"
         >
           {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
-          <EditFee onClick={() => setIsLoading(!isLoading)}>
+          <EditFee>
             {feesRequiredForEdit} PUSH
           </EditFee>
 
@@ -300,7 +418,10 @@ export default function EditChannel({
             </CancelButtons>
 
             {(pushApprovalAmount >= feesRequiredForEdit) ? (
-              <FooterButtons onClick={editChannel}>
+              <FooterButtons 
+              disabled = {isDetailsAltered()}
+              style = {{background: isDetailsAltered() ? " #F4DCEA" : "#CF1C84"}}
+              onClick={editChannel}>
                 Save Changes
               </FooterButtons>)
               : (

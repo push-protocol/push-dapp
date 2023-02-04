@@ -155,7 +155,7 @@ const ChannelOwnerDashboard = () => {
           }
 
           {/* processing box */}
-          {processingState !== 0 && processingState !== null && isChannelDetails && (
+          {processingState !== 0 && processingState !== null && isChannelDetails && !editChannel && (
             <>
               <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
             </>

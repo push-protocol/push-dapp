@@ -13,6 +13,8 @@ import {
     Span,
     TextField,
 } from 'primaries/SharedStyling';
+import { AiFillExclamationCircle } from 'react-icons/ai';
+import { isAllFilledAndValid } from 'helpers/InputValidation';
 
 const EditChannelForms = ({
     channelName,
@@ -21,14 +23,28 @@ const EditChannelForms = ({
     setChannelInfo,
     channelURL,
     setChannelURL,
-    editChannel
+    editChannel,
+    errorInfo,
+    setErrorInfo
 }) => {
 
     const theme = useTheme();
     // const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
 
-
-
+    const ErrorMessage = ({ message }) => {
+        return (
+            <Item display='flex' align='center' self='flex-start' direction='row' margin='7px 0px'>
+                <AiFillExclamationCircle color='red' size='20' />
+                <Span
+                    size="14px"
+                    weight="400"
+                    margin="0px 5px"
+                    color={'red'}>
+                    {message}
+                </Span>
+            </Item>
+        )
+    }
 
     return (
         <Container>
@@ -36,10 +52,10 @@ const EditChannelForms = ({
                 <FormContainer>
 
                     <Item
-                    margin="5px 0px 0px 0px"
-                    flex="1"
-                    self="stretch"
-                    align="stretch"
+                        margin="5px 0px 0px 0px"
+                        flex="1"
+                        self="stretch"
+                        align="stretch"
                     >
                         <Label style={{ color: theme.editChannelPrimaryText }}>Channel Name</Label>
                         <Item
@@ -72,7 +88,7 @@ const EditChannelForms = ({
 
                     </Item>
 
-                    {/* {errorInfo?.name && (<ErrorMessage message={errorInfo?.name} />)} */}
+                    {errorInfo?.name && (<ErrorMessage message={errorInfo?.name} />)}
 
                     <Item
                         margin="22px 0px 0px 00px"
@@ -122,7 +138,7 @@ const EditChannelForms = ({
                             autocomplete="off"
                         />
                     </Item>
-                    {/* {errorInfo?.description && (<ErrorMessage message={errorInfo?.description} />)} */}
+                    {errorInfo?.description && (<ErrorMessage message={errorInfo?.description} />)}
 
                     <Item
                         margin="20px 0px 0px 0px"
@@ -151,7 +167,7 @@ const EditChannelForms = ({
                             }}
                         />
                     </Item>
-                    {/* {errorInfo?.url && (<ErrorMessage message={errorInfo?.url} />)} */}
+                    {errorInfo?.url && (<ErrorMessage message={errorInfo?.url} />)}
 
                 </FormContainer>
             </Form>
