@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "type": "msedge",
+            "type": "chrome",
             "name": "http://localhost:3000/",
             "request": "launch",
             "url": "http://localhost:3000/#/chat"

@@ -22,7 +22,7 @@ import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
 import './SearchBar.css';
 import { AppContext, User } from 'types/chat';
-import { useResolveEns } from 'hooks/useResolveEns';
+import { useResolveAddress } from 'hooks/useResolveAddress';
 import { appConfig } from 'config';
 
 const SearchBar = () => {
@@ -38,7 +38,7 @@ const SearchBar = () => {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    inbox,
+    inbox
   }: AppContext = useContext<AppContext>(Context);
   const { error, account, library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
@@ -118,12 +118,15 @@ const SearchBar = () => {
       let ens: string;
       let address:string;
       try {
-        address = await provider.resolveName(searchedUser);
-        if(!address){
-          address = await library.resolveName(searchedUser);
-        }
-        // this ensures address are checksummed
-        ens = ethers.utils.getAddress(address.toLowerCase());
+        // address = await provider.resolveName(searchedUser);
+        // if(!address){
+        //   address = await library.resolveName(searchedUser);
+        // }
+        // // this ensures address are checksummed
+        // ens=ethers.utils.getAddress(address.toLowerCase());
+        
+        ens = useResolveAddress(searchedUser)
+        console.log("searched address",ens)
         if (ens) {
           handleUserSearch(ens);
         } else {
