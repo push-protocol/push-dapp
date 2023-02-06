@@ -227,7 +227,7 @@ const ChannelInfo = ({
                 }
                 :
                 {
-                  bottom: "-88px",
+                  bottom: "-63px",
                   transform: "translateX(16%)"
                 }
               }
