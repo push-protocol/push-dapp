@@ -57,10 +57,7 @@ const MobileView = ({
                             <TextContent>Open Push Chat and click on  
                                 <Settings style={{color:theme.default.color}}/>
                                 next to your user profile</TextContent>
-                            <TextContent>Click on Link Mobile App and scan the code</TextContent>
-                        {/* <TextContent> 1. Go to app.push.org on your computer </TextContent> */}
-                        {/* <TextContent> 2. Open Push Chat and click on      next to your user profile </TextContent> */}
-                        {/* <TextContent> 3. Click on Link Mobile App and scan the code</TextContent> */}
+                            <TextContent style={{marginTop:"5px"}}>Click on Link Mobile App and scan the code</TextContent>
                     </TextContents>
                 </TextContainer>
 
@@ -124,7 +121,7 @@ line-height: 141%;
 display: flex;
 align-items: center;
 text-align: center;
-color: #333333;
+color: ${(props)=>props.theme.default.color};
 
 `;
 
@@ -136,7 +133,7 @@ const TextContent = styled.li`
 font-weight: 400;
 font-size: 15px;
 line-height: 140%;
-color: #333333;
+color: #657795;
 `;
 
 const Settings = styled(AiOutlineMore)`

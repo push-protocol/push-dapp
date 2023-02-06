@@ -46,9 +46,11 @@ const ChatQR = ({
         <QRCodeCanvas
             id="qrCode"
             value={qrCodeText}
+            style={{ borderRadius: "19px" }}
             size={200}
             bgColor={"#fff"}
             level={"H"}
+            includeMargin={true}
             imageSettings={{
                 src: "./icon.jpg",
                 height: 56,
@@ -107,29 +109,37 @@ const ChatQR = ({
                             borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                             border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
                             background={theme.chatQRbg}
-                            
+
                         >
 
                             <CloseButtonContainer>
-                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{color:theme.default.secondaryColor}}/>
+                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{ color: theme.default.secondaryColor }} />
                             </CloseButtonContainer>
 
                             <QRContainer>
-                                <TextContainer
-                                >
+                                <TextContainer>
+
                                     <QRHeading
-                                        style={{
-                                            color: theme.default.color,
-                                        }}
                                     >Set up Push Chat on your phone</QRHeading>
                                     <TextInfo >
                                         <p>1. Open an app using Push protocol</p>
-                                        <p style={{display:"flex"}}>2. Tap Push Chat  
-                                            <ChatBoxImage src={chatBoxImage}/>
+                                        <p style={{ display: "flex" }}>2. Tap Push Chat
+                                            <ChatBoxImage src={chatBoxImage} />
                                             or Sign in with Push Chat
                                         </p>
                                         <p>3. Tap Link Push Chat and point your phone to this code </p>
                                     </TextInfo>
+
+                                    <div>
+                                        <NoteText>
+                                            <span style={{ color: "#E93636" }}>Note: </span>
+                                            The QR code enables mobile app that supports Push Protocol to read and send messages. Only scan it with mobile apps you trust.
+                                        </NoteText>
+                                    </div>
+
+
+
+
                                 </TextContainer>
                                 <ItemHV2>
                                     {qrcode}
@@ -181,9 +191,10 @@ display:flex;
 justify-content :center;
 flex-direction:column;
 align-items:baseline;
+width:460px;
 
 @media (max-width:1199px) {
-    margin-top: 36px;
+    margin: 36px auto 0px auto ;
 }
 
 @media (max-width:1199px){
@@ -193,9 +204,11 @@ align-items:baseline;
 
 `;
 
+
 const QRHeading = styled.div`
 font-size:28px;
 text-align: left;
+color: ${(props) => props.theme.default.color};
 @media (max-width:1199px){
     padding-right: 40px; 
 }
@@ -208,8 +221,18 @@ const TextInfo = styled.div`
     font-size: 18px;
     color: #657795;
     margin:10px 0px 0px 0px;
-    padding-left: 10px;
+    padding-left: 7px;
 `;
+
+const NoteText = styled.p`
+margin:0px;
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height:19px;
+color: #657795;
+`
 
 const CloseButtonContainer = styled.div`
     width:100%;
