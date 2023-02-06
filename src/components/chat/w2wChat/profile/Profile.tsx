@@ -19,7 +19,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
 
   const {connectedUser} = useContext(ChatUserContext);
 
-  const profileENS=useResolveEns(connectedUser.wallets)
+  const ensName=useResolveEns(connectedUser.wallets)
 
 
   return (
@@ -47,7 +47,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {profileENS? profileENS:caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
+          {ensName? ensName:caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
