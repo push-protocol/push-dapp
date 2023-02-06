@@ -34,7 +34,7 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents } = useContext(Context);
+  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser,hasUserBeenSearched, setReceivedIntents } = useContext(Context);
 
   const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
 
@@ -181,7 +181,7 @@ useClickAway(containerRef, () => closeQRDropdown())
         alignItems="stretch"
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && !searchedUser && <MessageFeed
+        {activeTab == 0 && (!searchedUser || (searchedUser && !hasUserBeenSearched)) && <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}
             isInvalidAddress={false}
