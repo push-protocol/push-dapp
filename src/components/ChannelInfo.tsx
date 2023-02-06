@@ -72,10 +72,14 @@ const ChannelInfo = ({
     return false;
   };
 
+  const isChannelExpiryDateEmpty = (channelExpiryDate) => {
+    return channelExpiryDate!==undefined && channelExpiryDate===null;
+  }
+
   const isAllFilledAndValid = (): boolean => {
     setErrorInfo('');
 
-    if (isEmpty(channelName) || isEmpty(channelExpiryDate) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
+    if (isEmpty(channelName) || isChannelExpiryDateEmpty(channelExpiryDate) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
       if (
         isEmpty(channelName)
       ) {
@@ -86,7 +90,7 @@ const ChannelInfo = ({
       }
 
       if (
-        channelExpiryDate!==undefined && (channelExpiryDate===null || isEmpty(channelExpiryDate))
+        isChannelExpiryDateEmpty(channelExpiryDate)
       ) {
         setErrorInfo(x => ({
           ...x,

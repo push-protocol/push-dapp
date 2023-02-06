@@ -71,10 +71,6 @@ function CreateChannel() {
   const [stepFlow, setStepFlow] = React.useState(0);
   const channelToast = useToast();
 
-  useEffect(()=>{
-    console.log(channelExpiryDate);
-  },[channelExpiryDate])
-
   //checking DAI for user
   React.useEffect(() => {
     if (!onCoreNetwork) return;
