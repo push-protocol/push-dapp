@@ -319,7 +319,7 @@ const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
   left: 34px;
-  max-width: 419px;
+  max-width: 650px;
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
