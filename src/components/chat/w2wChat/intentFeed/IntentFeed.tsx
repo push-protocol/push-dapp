@@ -3,12 +3,12 @@
 import React, { useContext, useState } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds } from 'types/chat';
 
@@ -28,6 +28,7 @@ const style = {
 };
 
 const IntentFeed = ({isLoading}): JSX.Element => {
+  const theme = useTheme();
   const {
     setChat,
     receivedIntents,
@@ -35,41 +36,50 @@ const IntentFeed = ({isLoading}): JSX.Element => {
   const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
 
   return (
-    <ItemVV2
-      alignSelf="stretch"
-      justifyContent="flex-start"
-      alignItems="stretch"
-    >
-      {/* Load the Intents */}
-      <ItemVV2 justifyContent="flex-start">
-        {isLoading && (
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-          />
-        )}
+    <>
+      <SpanV2
+        fontWeight="700"
+        fontSize="12px"
+        textAlign="start"
+        margin="10px 0 0 0"
+        color={theme.default.secondaryColor}
+        // ref={containerRef}
+      >
+        REQUESTS
+      </SpanV2>
+      <ItemVV2
+        alignSelf="stretch"
+        justifyContent="flex-start"
+        alignItems="stretch"
+      >
+        {/* Load the Intents */}
+        <ItemVV2 justifyContent="flex-start">
+          {isLoading && (
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={40}
+            />
+          )}
 
-        {!isLoading && receivedIntents?.length == 0 && (
-          <NoIntentMessage>You don't have any request yet Start a conversation by using the + button</NoIntentMessage>
-        )}
+          {!isLoading && receivedIntents?.length == 0 && (
+            <NoIntentMessage>You don't have any request yet Start a conversation by using the + button</NoIntentMessage>
+          )}
 
-        {!isLoading && receivedIntents?.length > 0 && (
-          <UserIntents>
-            {receivedIntents.map((intent: Feeds, i) => (
-              <ItemVV2
-                alignSelf="stretch"
-                flex="initial"
-                key={intent.threadhash || i}
-              >
-                <ChatSnap
+          {!isLoading && receivedIntents?.length > 0 && (
+            <UserIntents>
+              {receivedIntents.map((intent: Feeds, i) => (
+                <ItemVV2
+                  alignSelf="stretch"
+                  flex="initial"
+                  key={intent.threadhash || i}
+                >
+                  <ChatSnap
                     pfp={intent.profilePicture}
                     username={intent.msg.name}
-                    chatSnapMsg={
-                      {
-                        type: intent.msg.messageType,
-                        message: intent.msg.lastMessage,
-                      }
-                    }
+                    chatSnapMsg={{
+                      type: intent.msg.messageType,
+                      message: intent.msg.lastMessage,
+                    }}
                     timestamp={intent.msg.timestamp}
                     selected={intent.threadhash == selectedIntentSnap ? true : false}
                     onClick={(): void => {
@@ -77,12 +87,13 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                       setSelectedIntentSnap(intent.threadhash);
                     }}
                   />
-              </ItemVV2>
-            ))}
-          </UserIntents>
-        )}
+                </ItemVV2>
+              ))}
+            </UserIntents>
+          )}
+        </ItemVV2>
       </ItemVV2>
-    </ItemVV2>
+    </>
   );
 };
 

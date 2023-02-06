@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 
@@ -23,7 +22,6 @@ import { fetchInbox } from 'helpers/w2w/ipfs';
 import './MessageFeed.css';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 
 interface MessageFeedProps {
@@ -226,9 +224,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       searchFn();
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
-
   return (
     <ItemVV2
+      flex={6}
       alignItems="flex-start"
       justifyContent="flex-start"
     >
@@ -257,18 +255,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-                // To Test
-                // <ItemVV2
-                //   key={feed.threadhash || i}
-                //   onClick={(): void => {
-                //     setChat(feed);
-                //   }}
-                //   background="red"
-                //   margin="10px"
-                //   height="80px"
-                //   flex="initial"
-                // >
-                // </ItemVV2>
 
                 <ItemVV2
                   alignSelf="stretch"
@@ -296,10 +282,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   );
 };
 
-const SidebarWrapper = styled.section`
-  position: relative;
-`;
-
 const ArrowBend = styled.img`
   position: absolute;
   right: -23px;
@@ -313,26 +295,6 @@ const EmptyConnection = styled.div`
   color: #657795;
   font-size: 15px;
   margin-top: 25px;
-`;
-
-const InfoMessage = styled(ItemVV2)`
-  justify-content: flex-start;
-  position: relative;
-  text-align: center;
-  flex: initial;
-  color: ${(props) => props.theme.default.secondaryColor};
-  background: ${(props) => props.theme.default.secondaryBg};
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL};
-  padding: 10px;
-  margin: 0;
-`;
-
-const DisplayText = styled(Typography)`
-  && {
-    color: ${(props): string => props.color || '#000000'};
-    font-size: ${(props): string => props.size || '14px'};
-    font-weight: ${(props): string => props.weight || '500'};
-  }
 `;
 
 const UserChats = styled(ItemVV2)`

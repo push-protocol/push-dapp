@@ -5,10 +5,6 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import Box from '@mui/material/Box';
-import MuiTab from '@mui/material/Tab';
-import MuiTabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
 
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
@@ -28,6 +24,7 @@ import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { useClickAway } from 'react-use';
+import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 
 
 
@@ -37,7 +34,7 @@ const ChatSidebarSection = () => {
   // theme context
   const theme = useTheme();
 
-  const {  pendingRequests, setPendingRequests, receivedIntents, setReceivedIntents } = useContext(Context);
+  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents } = useContext(Context);
 
   const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
 
@@ -159,15 +156,6 @@ useClickAway(containerRef, () => closeQRDropdown())
                 >
                   Requests
                 </SpanV2>
-
-                {/* {loadingRequests && (
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    spinnerSize={12}
-                    spinnerColor={theme.default.secondaryColor}
-                  />
-                )} */}
-
                 {!loadingRequests && pendingRequests > 0 && (
                   <SpanV2
                     background={GLOBALS.COLORS.PRIMARY_PINK}
@@ -191,21 +179,15 @@ useClickAway(containerRef, () => closeQRDropdown())
       <ItemVV2
         justifyContent="flex-start"
         alignItems="stretch"
-        onClick={()=>setShowQR(false)}
       >
         {activeTab == 0 && <SearchBar />}
+        {activeTab == 0 && !searchedUser && <MessageFeed
+            hasUserBeenSearched={false}
+            filteredUserData={[]}
+            isInvalidAddress={false}
+          />}
         {activeTab == 1 && (
           <>
-            <SpanV2
-              fontWeight="700"
-              fontSize="12px"
-              textAlign="start"
-              margin="10px 0 0 0"
-              color={theme.default.secondaryColor}
-              // ref={containerRef}
-            >
-              REQUESTS
-            </SpanV2>
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
@@ -238,24 +220,9 @@ useClickAway(containerRef, () => closeQRDropdown())
         </QRCodeContainer>
       ) : null}
 
-      <ItemVV2 flex="initial">
-        <ItemVV2
-          position="absolute"
-          top="0"
-          left="0"
-          right="0"
-          height="1px"
-          background={theme.default.secondaryBg}
-        ></ItemVV2>
-        <ItemHV2
-          justifyContent="space-between"
-          margin="15px 0px 5px 0px"
-          padding="0px 10px"
-          
-        >
+      <ProfileContainer borderTop = {`1px solid ${theme.default.secondaryBg}`}>
           <ProfileHeader setActiveTab={setActiveTab} setShowQR={setShowQR} showQR={showQR} />
-        </ItemHV2>
-      </ItemVV2>
+      </ProfileContainer>
     </ItemVV2>
   );
 };
@@ -266,48 +233,12 @@ const TabButton = styled(ButtonV2)`
   pointer: hand;
 `;
 
-const Badge = styled.div`
-  box-sizing: border-box;
-  width: 30px;
-  height: 23px;
-  background: #cf1c84;
-  color: white;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-`;
-
-const DisplayText = styled(Typography)`
-  && {
-    color: ${(props): string => props.color || '#000000'};
-    font-size: ${(props): string => props.size || '14px'};
-    font-weight: ${(props): string => props.weight || '500'};
-  }
-`;
-
-const TabContainer = styled(Box)`
-  && {
-    width: 100%;
-    border-bottom: 2px;
-    border-color: divider;
-    display: flex;
-    justify-content: center;
-  }
-`;
-
-const Tabs = styled(MuiTabs)`
-  text-transform: unset;
-`;
-
-const Tab = styled(MuiTab)`
-  && {
-    text-transform: unset;
-    width: 150px;
-    font-size: 16px;
-    color: #000000;
-  }
+const ProfileContainer = styled(ItemHV2)`
+   flex: initial;
+   justify-content: space-between;
+   margin: 15px 0px 5px 0px;
+   padding: 14px 10px 0px 10px;
+   border-top: ${props => props.borderTop};
 `;
 
 const QRCodeContainer = styled.div`
