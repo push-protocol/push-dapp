@@ -18,6 +18,7 @@ import { fetchIntent } from 'helpers/w2w/ipfs';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
 import { Context } from 'modules/chat/ChatModule';
+import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -112,7 +113,10 @@ useClickAway(containerRef, () => closeQRDropdown())
     <ItemVV2 ref={containerRef}>
       {/* Header */}
       {activeTab == 0 || activeTab == 1 ? (
-        <ItemVV2 flex="initial" ref={containerRef}>
+        <ItemVV2
+          flex="initial"
+          ref={containerRef}
+        >
           <ItemHV2 ref={containerRef}>
             {/* Set active and onCLick to customize tab */}
             <TabButton
@@ -146,7 +150,10 @@ useClickAway(containerRef, () => closeQRDropdown())
                 setActiveTab(1);
               }}
             >
-              <ItemHV2 alignItems="center" ref={containerRef}>
+              <ItemHV2
+                alignItems="center"
+                ref={containerRef}
+              >
                 <SpanV2
                   flex="initial"
                   fontSize="16px"
@@ -164,7 +171,6 @@ useClickAway(containerRef, () => closeQRDropdown())
                     margin="0px 4px"
                     fontSize="12px"
                     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-
                   >
                     {pendingRequests}
                   </SpanV2>
@@ -181,11 +187,36 @@ useClickAway(containerRef, () => closeQRDropdown())
         alignItems="stretch"
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && !searchedUser && <MessageFeed
+        {activeTab == 0 && (
+          <CreateGroupContainer
+            // justifyContent="flex-start"
+            flex="none"
+            padding="20px 10px 24px 10px"
+            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
+            onClick={()=>{}}
+            background='transparent'
+            hover={theme.chat.snapFocusBg}
+            hoverBackground='transparent'
+          >
+            <CreateGroupIcon />
+            <SpanV2
+              margin="0 8px"
+              fontSize="16px"
+              fontWeight="500"
+              letterSpacing="-0.019em"
+              color={theme.default.secondaryColor}
+            >
+              Create Group
+            </SpanV2>
+          </CreateGroupContainer>
+        )}
+        {activeTab == 0 && !searchedUser && (
+          <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}
             isInvalidAddress={false}
-          />}
+          />
+        )}
         {activeTab == 1 && (
           <>
             <IntentFeed isLoading={loadingRequests} />
@@ -200,28 +231,32 @@ useClickAway(containerRef, () => closeQRDropdown())
             />
           </>
         )}
-        {activeTab == 3 && <SearchBar/>}
+        {activeTab == 3 && <SearchBar />}
       </ItemVV2>
 
       {/* Footer */}
 
       {showQR ? (
-        <QRCodeContainer 
-        onClick={()=>setDisplayQR(!displayQR)}
-        style={{
-          background:theme.default.bg,
-          borderColor: theme.LinkMobileAppBorder,
-          // color:theme.chat.sendMessageFontColor
-          color:theme.textcolor
-        }}
+        <QRCodeContainer
+          onClick={() => setDisplayQR(!displayQR)}
+          style={{
+            background: theme.default.bg,
+            borderColor: theme.LinkMobileAppBorder,
+            // color:theme.chat.sendMessageFontColor
+            color: theme.textcolor,
+          }}
         >
           <QROutline />
-          <TextQR >Link Mobile APP</TextQR>
+          <TextQR>Link Mobile APP</TextQR>
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer borderTop = {`1px solid ${theme.default.secondaryBg}`}>
-          <ProfileHeader setActiveTab={setActiveTab} setShowQR={setShowQR} showQR={showQR} />
+      <ProfileContainer borderTop={`1px solid ${theme.default.secondaryBg}`}>
+        <ProfileHeader
+          setActiveTab={setActiveTab}
+          setShowQR={setShowQR}
+          showQR={showQR}
+        />
       </ProfileContainer>
     </ItemVV2>
   );
@@ -273,4 +308,10 @@ font-size: 16px;
 line-height: 140%;
 text-align: center;
 // color: #657795;
+`;
+
+const CreateGroupContainer = styled(ButtonV2)`
+  flex-direction: row;
+  align-self: stretch;
+  justify-content:flex-start
 `;
