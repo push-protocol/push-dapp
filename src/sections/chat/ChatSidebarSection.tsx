@@ -4,6 +4,8 @@ import { useWeb3React } from '@web3-react/core';
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { AiOutlineQrcode } from 'react-icons/ai';
+import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
@@ -17,16 +19,43 @@ import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { fetchIntent } from 'helpers/w2w/ipfs';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
+import StyleHelper from 'helpers/StyleHelper'; 
+import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 import { Context } from 'modules/chat/ChatModule';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
+import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import { AiOutlineQrcode } from 'react-icons/ai';
-import { useClickAway } from 'react-use';
-import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 
+
+
+
+const createGroupOnMouseEnter = [{
+  name:'create-group-fill-icon',
+  property:'display',
+  value:'inline-block'
+},
+{
+  name:'create-group-icon',
+  property:'display',
+  value:'none'
+},
+];
+
+const createGroupOnMouseLeave = [{
+  name:'create-group-fill-icon',
+  property:'display',
+  value:'none'
+},
+{
+  name:'create-group-icon',
+  property:'display',
+  value:'inline-block'
+},
+];
 
 
 // Chat Sections
@@ -193,12 +222,19 @@ useClickAway(containerRef, () => closeQRDropdown())
             flex="none"
             padding="20px 10px 24px 10px"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={()=>{}}
-            background='transparent'
+            onClick={() => {}}
+            background="transparent"
             hover={theme.chat.snapFocusBg}
-            hoverBackground='transparent'
+            hoverBackground="transparent"
+            onMouseEnter={() => 
+             StyleHelper.changeStyle(createGroupOnMouseEnter)
+            }
+            onMouseLeave={() => 
+              StyleHelper.changeStyle(createGroupOnMouseLeave)
+            }
           >
-            <CreateGroupIcon />
+            <CreateGroupIcon id="create-group-icon" />
+            <CreateGroupFillIcon id="create-group-fill-icon" />
             <SpanV2
               margin="0 8px"
               fontSize="16px"
