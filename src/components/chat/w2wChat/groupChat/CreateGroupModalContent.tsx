@@ -9,8 +9,8 @@ import { useClickAway } from 'react-use';
 import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
 import ModalInput from 'primaries/SharedModalComponents/ModalInput';
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { ModalInnerComponentType } from 'hooks/useModal';
-import { ItemHV2,ItemVV2,SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ModalInnerComponentType } from 'hooks/useModalBlur';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -40,11 +40,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         focusBorder="2px solid #FFDBF0"
       />
       <ItemHV2>
-        <ItemVV2 border="1px solid black" borderRadius="12px 0px 0px 12px">
+        <ItemVV2
+          border="1px solid black"
+          borderRadius="12px 0px 0px 12px"
+        >
           <SpanV2>Public</SpanV2>
           <SpanV2>Chats are not encrypted</SpanV2>
         </ItemVV2>
-        <ItemVV2 border="1px solid black" borderRadius="0px 12px 12px 0px">
+        <ItemVV2
+          border="1px solid black"
+          borderRadius="0px 12px 12px 0px"
+        >
           <SpanV2>Private</SpanV2>
           <SpanV2>Chats are encrypted</SpanV2>
         </ItemVV2>

@@ -26,7 +26,7 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import useModal from 'hooks/useModal';
+import useModalBlur from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/CreateGroupModalContent';
 
@@ -144,7 +144,7 @@ function Chat() {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModal();
+  } = useModalBlur();
 
   const createGroup = () => console.log('group created');
 
