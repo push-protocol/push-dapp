@@ -356,7 +356,7 @@ const GovModule = () => {
                         {ensFetched && ens && <>{ens}</>}
                         {ensFetched && !ens && (
                           <>
-                            {shortenText(account,6,6)}
+                            {shortenText(account,6)}
                           </>
                         )}
                       </Wallet>

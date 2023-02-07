@@ -39,7 +39,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
 
   // get short username
   const walletAddress = caip10ToWallet(username);
-  const shortUsername = shortenText(walletAddress,8,8);
+  const shortUsername = shortenText(walletAddress,8);
 
   // format message here instead
   const message =

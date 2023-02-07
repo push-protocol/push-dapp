@@ -20,7 +20,7 @@ const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
       setAddressText(delegateAddress);
     } else {
       // clip address
-      const clippedAddrs = shortenText(delegateAddress,5,5);
+      const clippedAddrs = shortenText(delegateAddress,5);
       setAddressText(clippedAddrs);
     }
   }, [isMobile]);
