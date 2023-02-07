@@ -234,7 +234,7 @@ useClickAway(containerRef, () => closeQRDropdown())
         }}
         >
           <QROutline />
-          <TextQR >Link Mobile APP</TextQR>
+          <TextQR >Link Mobile App</TextQR>
         </QRCodeContainer>
       ) : null}
 
@@ -326,7 +326,15 @@ cursor:pointer;
 position: absolute;
 z-index: 100;
 bottom: 45px;
-left: 85px;
+
+@media (max-width:768px){
+right:30px;
+}
+
+@media(min-width:768px){
+  left:85px;
+}
+
 `;
 
 const QROutline = styled(AiOutlineQrcode)`
