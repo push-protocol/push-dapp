@@ -22,7 +22,7 @@ import ChannelsDataStore from "singletons/ChannelsDataStore";
 // Internal Configs
 import { appConfig } from "config";
 import { Button } from "components/SharedStyling";
-import EditChannel from "components/editChannel/EditChannel";
+import EditChannel from "modules/editChannel/EditChannel";
 import useModal from "hooks/useModal";
 
 // Constants

@@ -14,7 +14,7 @@ import { useDeviceWidthCheck } from 'hooks';
 // Internal Configs
 import { addresses, appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
-import { Button } from '../SharedStyling';
+import { Button } from '../../components/SharedStyling';
 import EditChannelForms from './EditChannelForms';
 import useModal from 'hooks/useModal';
 import UploadLogoModalContent from './UploadLogoModalContent';
