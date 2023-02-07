@@ -8,6 +8,7 @@ import { RiFileCopyFill, RiFileCopyLine } from "react-icons/ri";
 // Internal Components
 import { useDeviceWidthCheck } from "hooks";
 import { Item } from "primaries/SharedStyling";
+import { shortenText } from "helpers/UtilityHelper";
 
 const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
   const [addressText, setAddressText] = useState(delegateAddress);
@@ -19,10 +20,7 @@ const DelegateInfo = ({ delegateAddress, isDelegate, maxWidth }) => {
       setAddressText(delegateAddress);
     } else {
       // clip address
-      const clippedAddrs = `${delegateAddress.substring(
-        0,
-        5
-      )}.....${delegateAddress.substring(delegateAddress.length - 5)}`;
+      const clippedAddrs = shortenText(delegateAddress,5);
       setAddressText(clippedAddrs);
     }
   }, [isMobile]);
