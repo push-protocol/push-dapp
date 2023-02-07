@@ -29,6 +29,7 @@ import {
 } from 'components/reusables/SharedStylingV2';
 import { activateInjectedProvider, ledger, walletconnect } from 'connectors';
 import { isBrowserBrave } from 'helpers/UtilityHelper';
+import StyleHelper from './helpers/StyleHelper';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
 import LedgerLogoLight from './assets/login/ledgerLight.svg';
@@ -109,13 +110,13 @@ const AppLogin = ({ toggleDarkMode }) => {
   // Web3 React logic
   const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
-  const [isBrave,setIsBrave] = useState<boolean>(false);
+  const [isBraveBrowser,setIsBraveBrowser] = useState<boolean>(false);
 
 
   React.useEffect(() => {
     (async()=>{
       const response = await isBrowserBrave();
-      setIsBrave(response);
+      setIsBraveBrowser(response);
     })();
   }, []);
   
@@ -131,6 +132,16 @@ const AppLogin = ({ toggleDarkMode }) => {
   // SET LOADING
   const [loading, setLoading] = useState(true);
 
+  const onBraveWalletEnter = (title: string) => {
+    if (title == 'Brave' && isBraveBrowser) {
+      StyleHelper.changeStyle([{ name: 'brave-wallet-note-span', property: 'display', value: 'inline-block' }]);
+    }
+  };
+  const onBraveWalletLeave = (title: string) => {
+    if (title == 'Brave' && isBraveBrowser) {
+      StyleHelper.changeStyle([{ name: 'brave-wallet-note-span', property: 'display', value: 'none' }]);
+    }
+  };
   // RENDER
   return (
     <Container alignItems="center">
@@ -201,6 +212,8 @@ const AppLogin = ({ toggleDarkMode }) => {
                   margin="10px"
                   padding="10px"
                   hover={theme.default.hover}
+                  onMouseEnter = {()=>onBraveWalletEnter(title)}
+                  onMouseLeave = {()=>onBraveWalletLeave(title)}
                   background={theme.default.bg}
                   borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
                   minWidth="140px"
@@ -210,17 +223,40 @@ const AppLogin = ({ toggleDarkMode }) => {
                     activateInjectedProvider(web3Connectors[name].title);
                     setActivatingConnector(currentConnector);
                     activate(currentConnector);
-                  }}>
-                  <ImageV2 src={image} height="40px" width="50px" padding="5px" />
+                  }}
+                >
+                  <ItemHV2 justifyContent="flex-start">
+                    <ImageV2
+                      src={image}
+                      height="40px"
+                      width="50px"
+                      padding="5px"
+                    />
 
-                  <SpanV2
-                    padding="5px"
-                    textTransform="Capitalize"
-                    fontSize="18px"
-                    fontWeight="500"
-                    color={theme.default.color}>
-                    {title}
-                  </SpanV2>
+                    <SpanV2
+                      padding="5px"
+                      textTransform="Capitalize"
+                      fontSize="18px"
+                      fontWeight="500"
+                      color={theme.default.color}
+                    >
+                      {title}
+                    </SpanV2>
+                  </ItemHV2>
+                  {title == 'Brave' && isBraveBrowser && (
+                    <SpanV2
+                      fontWeight="300"
+                      fontSize="12px"
+                      textAlign="left"
+                      color="#575D73"
+                      padding="3px 0 0 12px"
+                      id="brave-wallet-note-span"
+                      display='none'
+                    >
+                      In order to use Brave Wallet, go to <BoldSpanV2>Settings &gt; Wallet</BoldSpanV2> and select{' '}
+                      <BoldSpanV2>Brave Wallet </BoldSpanV2>as your <BoldSpanV2>Default Ethereum Wallet</BoldSpanV2>.
+                    </SpanV2>
+                  )}
                 </LoginButton>
               );
             })}
@@ -256,11 +292,6 @@ const AppLogin = ({ toggleDarkMode }) => {
             .
           </SpanV2>
         </ItemVV2>
-        {isBrave && <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
-          <SpanV2 fontSize="14px" padding="5px 15px 25px 15px" lineHeight="140%" color={theme.default.color}>
-          Note: To use brave, set Default Ethereum wallet as ‘ Brave Wallet ‘, to use other  wallets set as ’ Brave Wallet (prefer extensions) ’.
-          </SpanV2>
-        </ItemVV2>}
       </ItemVV2>
     </Container>
   );
@@ -281,6 +312,11 @@ const Container = styled(SectionV2)`
 `;
 
 const LoginButton = styled(ButtonV2)`
-  flex-direction: row;
+  flex-direction: column;
   justify-content: flex-start;
-`
+`;
+
+const BoldSpanV2 =  styled(SpanV2)`
+  font-weight: 500;
+  color: #575D73;
+`;
