@@ -26,6 +26,9 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import useModal from 'hooks/useModal';
+import useToast from 'hooks/useToast';
+import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/CreateGroupModalContent';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -135,6 +138,16 @@ function Chat() {
   }
   useClickAway(containerRef, () => closeQRModal())
 
+  const createGroupToast = useToast();
+
+  const {
+    isModalOpen: isCreateGroupModalOpen,
+    showModal: showCreateGroupModal,
+    ModalComponent: CreateGroupModalComponent,
+  } = useModal();
+
+  const createGroup = () => console.log('group created');
+
   const connectUser = async (): Promise<void> => {
     // Getting User Info
     setBlockedLoading({
@@ -224,7 +237,7 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection />
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
@@ -232,6 +245,11 @@ function Chat() {
               >
                 <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
               </ChatContainer>
+              <CreateGroupModalComponent
+                InnerComponent={CreateGroupModalContent}
+                onConfirm={createGroup}
+                toastObject={createGroupToast}
+              />
 
               {displayQR && (
                 <>
