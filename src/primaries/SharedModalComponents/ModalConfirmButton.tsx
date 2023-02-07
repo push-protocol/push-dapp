@@ -60,7 +60,7 @@ const CustomButton = styled.button`
     font-size: 1.125rem;
     font-weight: 500;
     letter-spacing: 0em;
-    background-color:#CF1C84;
+    background-color:${props => props.backgroundColor || '#CF1C84'};
     border-radius:15px;
     padding: 5% 12%;
 `;
