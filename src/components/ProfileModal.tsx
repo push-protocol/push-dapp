@@ -41,7 +41,7 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
               width="max-content"
             >
               <MobileAddress>
-                {shortenText(dropdownValue?.title,6)}
+                {shortenText(dropdownValue?.title,6,6)}
              
               </MobileAddress>
             </Span>

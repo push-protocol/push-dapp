@@ -148,7 +148,7 @@ console.log(channelObject)
   };
 
   const formatAddress = (addressText) => {
-    return addressText.length > 40 ? `${shortenText(addressText,4)}` : addressText;
+    return addressText.length > 40 ? `${shortenText(addressText,4,6)}` : addressText;
   };
 
   const subscribeToast = useToast();

@@ -38,7 +38,7 @@ function Profile() {
           <>{ensName}</>
         }
         {!ensName &&
-          <>{shortenText(account,6)}</>
+          <>{shortenText(account,6,6)}</>
         }
         </Wallet>
       </Container>

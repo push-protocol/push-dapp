@@ -61,7 +61,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             >
               <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
               <MobileAddress>
-                {shortenText(dropdownValue?.title,6)}
+                {shortenText(dropdownValue?.title,6,6)}
               </MobileAddress>
             </Span>
             {dropdownValue?.invertedIcon && (

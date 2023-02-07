@@ -164,9 +164,8 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
   return {address: null, chainId: null};
 };
 
-export const shortenText = (str: string, substringLength: number):string => {
-  console.log(`${str.substring(0, substringLength)}.....${str.substring(-substringLength)}`)
-  return `${str.substring(0, substringLength)}.....${str.substring(str.length-substringLength)}`;
+export const shortenText = (str: string, substringLengthStart: number, substringLengthEnd: number):string => {
+  return `${str.substring(0, substringLengthStart)}...${str.substring(str.length-substringLengthEnd)}`;
 };
 
 export default UtilityHelper;

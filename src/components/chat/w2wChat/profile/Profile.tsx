@@ -43,7 +43,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {shortenText(account,8)}
+          {shortenText(account,8,7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}
