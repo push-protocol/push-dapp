@@ -7,24 +7,19 @@ import React, { useEffect, useState } from 'react';
 // External Packages
 import Joyride, { CallBackProps } from 'react-joyride';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
-import { DarkModeSwitch } from 'react-toggle-dark-mode';
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
 import ReactGA from 'react-ga';
 import * as dotenv from 'dotenv';
 
 // Internal Compoonents
 import InitState from 'components/InitState';
-import { injected, ledger, walletconnect } from 'connectors';
 import NavigationContextProvider from 'contexts/NavigationContext';
-import { EnvHelper } from 'helpers/UtilityHelper';
 import { useEagerConnect, useInactiveListener, useSDKSocket } from 'hooks';
 import UserJourneySteps from 'segments/userJourneySteps';
 import Header from 'structure/Header';
 import MasterInterfacePage from 'structure/MasterInterfacePage';
 import AppLogin from './AppLogin';
 import { SectionV2 } from './components/reusables/SharedStylingV2';
-import { A, B, C, H2, Image, Item, ItemH, P, Span } from './primaries/SharedStyling';
 import { setIndex, setRun, setWelcomeNotifsEmpty } from './redux/slices/userJourneySlice';
 import { resetSpamSlice } from 'redux/slices/spamSlice';
 import { resetNotificationsSlice } from 'redux/slices/notificationSlice';
@@ -49,12 +44,10 @@ const GlobalStyle = createGlobalStyle`
 export default function App() {
   const dispatch = useDispatch();
 
-  const { connector, activate, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connector, active, error, account, chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
-  const [currentTime, setcurrentTime] = React.useState(0);
 
   const { run, stepIndex, tutorialContinous } = useSelector((state: any) => state.userJourney);
-  const location = useLocation();
   // Build takes care of this now
   // const [title, setTitle] = useState(EnvHelper.dappTitle());
 
@@ -63,10 +56,6 @@ export default function App() {
   //   document.title = title;
   // }, [title]);
 
-  React.useEffect(() => {
-    const now = Date.now() / 1000;
-    setcurrentTime(now);
-  }, []);
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -102,6 +91,7 @@ export default function App() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+
 
   React.useEffect(() => {
     const data = localStorage.getItem('theme');

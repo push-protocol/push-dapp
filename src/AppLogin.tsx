@@ -27,8 +27,8 @@ import {
   SectionV2,
   SpanV2
 } from 'components/reusables/SharedStylingV2';
-import { activateInjectedProvider, injected, ledger, walletconnect } from 'connectors';
-import { useEagerConnect, useInactiveListener } from 'hooks';
+import { activateInjectedProvider, ledger, walletconnect } from 'connectors';
+import { isBrowserBrave } from 'helpers/UtilityHelper';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
 import LedgerLogoLight from './assets/login/ledgerLight.svg';
@@ -109,7 +109,16 @@ const AppLogin = ({ toggleDarkMode }) => {
   // Web3 React logic
   const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
+  const [isBrave,setIsBrave] = useState<boolean>(false);
 
+
+  React.useEffect(() => {
+    (async()=>{
+      const response = await isBrowserBrave();
+      setIsBrave(response);
+    })();
+  }, []);
+  
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -233,7 +242,7 @@ const AppLogin = ({ toggleDarkMode }) => {
 
         {/* Chainsafe Audit and Discord */}
         <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
-          <SpanV2 fontSize="14px" padding="25px 15px" lineHeight="140%" color={theme.default.color}>
+          <SpanV2 fontSize="14px" padding="25px 15px 0px 15px" lineHeight="140%" color={theme.default.color}>
             Note: The Push (EPNS) protocol has been under development for 1+ year, and completed a{' '}
             <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank">
               {' '}
@@ -247,6 +256,11 @@ const AppLogin = ({ toggleDarkMode }) => {
             .
           </SpanV2>
         </ItemVV2>
+        {isBrave && <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
+          <SpanV2 fontSize="14px" padding="5px 15px 25px 15px" lineHeight="140%" color={theme.default.color}>
+          Note: To use brave, set Default Ethereum wallet as ‘ Brave Wallet ‘, to use other  wallets set as ’ Brave Wallet (prefer extensions) ’.
+          </SpanV2>
+        </ItemVV2>}
       </ItemVV2>
     </Container>
   );

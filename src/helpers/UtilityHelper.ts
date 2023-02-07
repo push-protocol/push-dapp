@@ -71,6 +71,10 @@ export const isUserAgentIphone = (userAgent) => {
   return userAgent.indexOf('iPhone') !== -1;
 };
 
+export const isBrowserBrave = async() => {
+  return (navigator.brave &&  await navigator.brave.isBrave() || false);
+}
+
 export const envUtil = {
   prod: 'app.push.org',
   staging: 'staging.push.org',
