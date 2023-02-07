@@ -31,9 +31,8 @@ import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
 import Tooltip from "./reusables/tooltip/Tooltip"
 import { device } from 'config/Globals';
-import showNewTag from 'helpers/getIsNewTagVisible';
 import NewTag from './NewTag';
-import getIsNewTagVisible from 'helpers/getIsNewTagVisible';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
 
 const coreChainId = appConfig.coreContractChain;
 

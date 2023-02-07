@@ -14,7 +14,7 @@ import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
+import { CHANNEL_TYPE, isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
 import { Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
@@ -81,9 +81,6 @@ function CreateChannel() {
       value = value?.toString();
       const convertedVal = ethers.utils.formatEther(value);
       setPushTokenAmountVal(convertedVal);
-      if (convertedVal >= minStakeFees) {
-        setChannelStakeFees(convertedVal);
-      }
     };
     checkPushTokenApprovalFunc();
   }, []);
@@ -236,7 +233,7 @@ function CreateChannel() {
 
       let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
-      const channelType = 2; // Open Channel
+      let channelType = CHANNEL_TYPE["GENERAL"]; // Open Channel
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
@@ -246,7 +243,7 @@ function CreateChannel() {
       let timestampIfTimebound = 0;
       if(channelExpiryDate) {
         timestampIfTimebound = channelExpiryDate.getTime() / 1000;
-        channelType = 4;
+        channelType = CHANNEL_TYPE["TIMEBOUND"];
       }
 
       const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {

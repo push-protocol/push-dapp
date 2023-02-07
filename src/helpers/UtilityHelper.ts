@@ -181,4 +181,9 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
   return {address: null, chainId: null};
 };
 
+export const CHANNEL_TYPE = {
+  TIMEBOUND: 4,
+  GENERAL: 2
+}
+
 export default UtilityHelper;
