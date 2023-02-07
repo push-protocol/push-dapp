@@ -74,6 +74,16 @@ export const isValidUrl = (urlString: string): boolean => {
   return !!urlPattern.test(urlString);
 };
 
+export const findObject = (data: any,parentArray: any[],property: string ): boolean =>{
+  let isPresent = false;
+  parentArray.map((value) => {
+    if (value[property] == data[property]) {
+      isPresent = true;
+    }
+  });
+  return isPresent;
+}
+
 export const isValidAddress = (address: string): boolean => {
   return utils.isAddress(address);
 }
