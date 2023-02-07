@@ -46,7 +46,7 @@ const SearchBar = () => {
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
-  const provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
+  const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const searchFeedToast = useToast();
 
   useEffect(() => {

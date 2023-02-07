@@ -38,7 +38,7 @@ export function useResolveEns(address?: string, ens?: string):string {
 
   useEffect(() => {
     (async () => {
-      let provider = new ethers.providers.InfuraProvider('mainnet', appConfig.infuraAPIKey);
+      let provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
       if (address) {
         const walletLowercase = caip10ToWallet(address).toLowerCase();
         const checksumWallet = ethers.utils.getAddress(walletLowercase);
