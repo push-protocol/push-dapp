@@ -8,12 +8,13 @@ import { useClickAway } from 'react-use';
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { CreateGroupData } from './GroupDetailsContent';
-import { AddWallet } from './AddWalletContent';
-import { SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
+import { GroupDetailsContent } from './GroupDetailsContent';
+import { AddWalletContent } from './AddWalletContent';
+import { SpanV2, ItemHV2 } from 'components/reusables/SharedStylingV2';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const [createGroupState,setCreateGroupState]=React.useState<number>(1)
+  const [createGroupState, setCreateGroupState] = React.useState<number>(1);
   const themes = useTheme();
 
   const handleClose = () => onClose();
@@ -25,7 +26,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer ref={containerRef}>
-        <>
+        <ItemHV2 justifyContent="space-between">
+          <Back />
           <SpanV2
             fontWeight="500"
             fontSize="24px"
@@ -35,9 +37,9 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             Create Group
           </SpanV2>
           <Close />
-        </>
-        {createGroupState==1 && <CreateGroupData setCreateGroupState={setCreateGroupState}/>}
-        {createGroupState==2 && <AddWallet/>}
+        </ItemHV2>
+        {createGroupState == 1 && <GroupDetailsContent setCreateGroupState={setCreateGroupState} />}
+        {createGroupState == 2 && <AddWalletContent />}
       </ModalContainer>
     </ThemeProvider>
   );

@@ -14,7 +14,7 @@ import { ReactComponent as AddGroupIcon } from 'assets/chat/group-chat/creategro
 import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creategroupicondark.svg';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 
-export const CreateGroupData = ({setCreateGroupState}) => {
+export const GroupDetailsContent = ({setCreateGroupState}) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [groupName, setGroupName] = React.useState<string>('');
   const [groupDescription, setGroupDescription] = React.useState<string>('');
@@ -51,24 +51,8 @@ export const CreateGroupData = ({setCreateGroupState}) => {
     setGroupDescription(e.target.value);
   };
 
-//   // to close the modal upon a click on backdrop
-//   const containerRef = React.useRef(null);
-//   useClickAway(containerRef, () => handleClose());
-
   return (
     <ThemeProvider theme={themes}>
-      {/* <ModalContainer ref={containerRef}>
-        <>
-          <SpanV2
-            fontWeight="500"
-            fontSize="24px"
-            margin="0px 0px 42px 0px"
-            color={themes.modalMessageColor}
-          >
-            Create Group
-          </SpanV2>
-          <Close />
-        </> */}
         <GroupIconContainer onClick={handleUpload}>
           {themes.scheme == 'light' ? <AddGroupIcon /> : <AddGroupIconDark />}
           <FileInput
@@ -138,21 +122,9 @@ export const CreateGroupData = ({setCreateGroupState}) => {
           color={groupDescription && groupName && privacy ? '#FFFFF' : themes.modalConfirmButtonTextColor}
           border={`1px solid ${themes.modalConfirmButtonBorder}`}
         />
-      {/* </ModalContainer> */}
     </ThemeProvider>
   );
 };
-
-// const ModalContainer = styled.div`
-//   width: 399px;
-//   max-height: 500px;
-//   display: flex;
-//   flex-direction: column;
-//   box-sizing: border-box;
-//   padding: 32px 24px;
-//   margin: 0px;
-//   overflow-y: auto;
-// `;
 
 const GroupIconContainer = styled.div`
   width: 100%;
