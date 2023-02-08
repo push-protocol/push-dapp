@@ -8,16 +8,16 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
-import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
+import { shortenText } from 'helpers/UtilityHelper';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
   const {connectedUser} = useContext(ChatUserContext);
-
+  const account = caip10ToWallet(connectedUser?.wallets);
   return (
     <>
       {/* <Tooltip title="Profile" placement="top-start"> */}
@@ -43,7 +43,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {caip10ToWallet(connectedUser.wallets).slice(0, 8) + '...' + caip10ToWallet(connectedUser.wallets).slice(-7)}
+          {shortenText(account,8,7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}

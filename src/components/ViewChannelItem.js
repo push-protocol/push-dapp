@@ -27,7 +27,7 @@ import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourney
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
-import { MaskedAliasChannels } from 'helpers/UtilityHelper';
+import { MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from 'config';
@@ -148,7 +148,7 @@ console.log(channelObject)
   };
 
   const formatAddress = (addressText) => {
-    return addressText.length > 40 ? `${addressText.slice(0, 4)}....${addressText.slice(36)}` : addressText;
+    return addressText.length > 40 ? `${shortenText(addressText,4,6)}` : addressText;
   };
 
   const subscribeToast = useToast();
