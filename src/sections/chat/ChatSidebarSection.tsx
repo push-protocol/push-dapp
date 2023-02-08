@@ -194,15 +194,6 @@ const ChatSidebarSection = () => {
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 2 && (
-          <>
-            <Profile
-              profilePicture={updateProfileImage}
-              updateProfile={updateProfile}
-              setActiveTab={setActiveTab}
-            />
-          </>
-        )}
         {activeTab == 3 && <SearchBar/>}
       </ItemVV2>
 
