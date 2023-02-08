@@ -11,10 +11,13 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 type ModalConfirmButtonType = {
     text:string,
     onClick: ()=>void,
-    isLoading: boolean
+    isLoading: boolean,
+    color?:string,
+    backgroundColor?:string,
+    border?:string,
 }
 
-const ModalConfirmButton = ({text, onClick, isLoading}:ModalConfirmButtonType)=>{
+const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border}:ModalConfirmButtonType)=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>
@@ -26,7 +29,7 @@ const ModalConfirmButton = ({text, onClick, isLoading}:ModalConfirmButtonType)=>
                       <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" />
                     </LoaderContainer>
                     :
-                    <CustomButton onClick={onClick}>{text}</CustomButton>
+                    <CustomButton onClick={onClick} color={color} backgroundColor={backgroundColor} border={border}>{text}</CustomButton>
                 }
             </ModalButtonContainer>
         </ThemeProvider>
@@ -55,12 +58,13 @@ const CustomButton = styled.button`
     min-width: 50%;
     box-sizing: border-box;
     cursor:pointer;
-    color: white;
+    color: ${props=> props.color ||'white'};
     font-family: Strawford;
     font-size: 1.125rem;
     font-weight: 500;
     letter-spacing: 0em;
     background-color:${props => props.backgroundColor || '#CF1C84'};
+    border:${props=>props.border || '1px solid transparent'};
     border-radius:15px;
     padding: 5% 12%;
 `;

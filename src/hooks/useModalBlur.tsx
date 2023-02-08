@@ -80,7 +80,7 @@ const useModalBlur = () => {
               padding = '1.2% 2%'
               borderRadius = '1rem'
               boxShadow = 'none'
-              border={`10px solid ${themes.modalBorderColor}`}
+              border={`1px solid ${themes.modalBorderColor}`}
           >
             <InnerComponent
               onConfirm={onConfirm}

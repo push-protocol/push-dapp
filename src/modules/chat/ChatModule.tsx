@@ -28,7 +28,7 @@ import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import useModalBlur from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
-import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/CreateGroupModalContent';
+import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';

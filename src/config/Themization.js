@@ -136,6 +136,11 @@ const themeLight = {
   modalLoaderPrimary: "red",
   modalLoaderSecondary: "white",
   modalBackdropZIndex: 1000,
+  modalConfirmButtonBackground:'#F4DCEA',
+  modalConfirmButtonBorder:'#F4DCEA',
+  modalConfirmButtonTextColor:'#CF1C84',
+  modalOptionHoverBackgroundColor:'#F4F5FA',
+  modalInputBorderColor:'#C2CBDB',
 
   // Toast Notifications
   toastTextColor: "#000",
@@ -307,6 +312,11 @@ const themeDark = {
   modalLoaderPrimary: "red",
   modalLoaderSecondary: "white",
   modalBackdropZIndex: 1000,
+  modalConfirmButtonBackground:'#2F3137',
+  modalConfirmButtonBorder:'#787E99',
+  modalConfirmButtonTextColor:'#787E99',
+  modalOptionHoverBackgroundColor:'#4A4F67',
+  modalInputBorderColor:'#4A4F67',
 
   // Toast Notifications
   toastTextColor: "#B6BCD6",
