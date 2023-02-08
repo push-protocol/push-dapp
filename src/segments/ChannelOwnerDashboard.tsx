@@ -147,7 +147,7 @@ const ChannelOwnerDashboard = () => {
                         <ChannelSettings />
                       </ItemHV2>
                     }
-                    {channelDetails ? <ChannelDetails /> : ""}
+                    {channelDetails ? <ChannelDetails showEditChannel={showEditChannel}/> : ""}
                   </>
                 )}
               </>
@@ -181,11 +181,7 @@ const SubmitButton = styled(Button)`
   margin-right: 20px;
   border-radius: 8px;
   padding: 11px 10px;
-  @media (max-width: 640px) {
-    width: 13rem;
-    padding: 20px 20px;
-  }
-  @media (max-width: 380px) {
-    width: 9.5rem;
+  @media (min-width:600px) and (max-width:700px){
+    margin-right: 9px;
   }
 `;

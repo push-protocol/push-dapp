@@ -22,11 +22,13 @@ import ShowDelegates from './ShowDelegates';
 // Internal Configs
 import { appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
-;
+import { Button } from "components/SharedStyling";
 
 const DATE_FORMAT = 'MMM DD YYYY';
 
-export default function ChannelDetails() {
+export default function ChannelDetails({
+  showEditChannel
+}) {
   const { chainId } = useWeb3React();
   const {
     channelDetails,
@@ -100,6 +102,7 @@ export default function ChannelDetails() {
 
       {isMobile && 
         <ItemHV2 zIndex="1" padding="0 0 15px 0">
+          <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
           <ChannelSettings />
         </ItemHV2>
       }
@@ -334,4 +337,20 @@ const SectionDes = styled.div`
     margin: 10px 0px 10px 0px;
     padding: 0 0 0 0;
   }
+`;
+
+const SubmitButton = styled(Button)`
+  width: 7rem;
+  background: #D53A94;
+  color: #fff;
+  z-Index:0;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  margin-right: 9px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  
 `;
