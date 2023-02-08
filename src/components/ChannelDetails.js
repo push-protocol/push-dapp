@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // External Packages
 import moment from 'moment';
@@ -28,7 +28,7 @@ import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from '
 
 const DATE_FORMAT = 'DD MMM, YYYY';
 
-export default function ChannelDetails() {
+export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }) {
   const { chainId } = useWeb3React();
   const {
     channelDetails,
@@ -52,6 +52,10 @@ export default function ChannelDetails() {
   const channelExpiryDate = getDateFromTimestamp(channelDetails.expiryTime.toString() * 1000);
   const isChannelNotExpired = timeRemaining(channelDetails.expiryTime.toString() * 1000);
   const channelAutomaticExpiryDate = nextDaysDateFromTimestamp(channelDetails.expiryTime.toString() * 1000, 14);
+
+  useEffect(() => {
+    if(!isChannelNotExpired) setIsChannelExpired(true);
+  }, [isChannelNotExpired]);
 
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
@@ -97,15 +101,15 @@ export default function ChannelDetails() {
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
                 </ChanneStateText>
                 {
-                  channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && isChannelNotExpired &&
-                      <ItemHV2 background="#C5EFD1" flex='0' borderRadius="25px" margin="0 0 0 10px">
+                  channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && !isChannelExpired &&
+                      <ItemHV2 background="#C5EFD1" flex='0' borderRadius="25px" margin="0 0 0 10px" height="30px">
                         <ImageV2 width="16px" src="svg/ExpiresTimer.svg" alt="expiryTimer" padding="0 6px 0 9px" />
                         <SpanV2 color="#30CC8B" fontWeight="600" padding="0 9px 0 0">Expires on {channelExpiryDate}</SpanV2>
                       </ItemHV2>
                 }
                 {
-                  channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && !isChannelNotExpired &&
-                      <ItemHV2 background="#FFD8D8" flex='0' borderRadius="25px" margin="0 0 0 10px">
+                  channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && isChannelExpired &&
+                      <ItemHV2 background="#FFD8D8" flex='0' borderRadius="25px" margin="0 0 0 10px" height="30px">
                         <ImageV2 width="16px" src="svg/ExpiredTimer.svg" alt="expiryTimer" padding="0 6px 0 9px" />
                         <SpanV2 color="#E93636" fontWeight="600" padding="0 9px 0 0">Expired on {channelExpiryDate}</SpanV2>
                       </ItemHV2>
@@ -118,13 +122,13 @@ export default function ChannelDetails() {
         </AdaptiveMobileItemVV2>
       </AdaptiveMobileItemHV22>
 
-      {isMobile && 
+      {isMobile && !isChannelExpired &&
         <ItemHV2 zIndex="1" padding="0 0 15px 0">
           <ChannelSettings />
         </ItemHV2>
       }
 
-      {!isChannelNotExpired && 
+      {isChannelExpired && 
         <ItemVV2 alignItems="flex-start">
           <SectionDes margin="25px 0 0 0">
             <SpanV2 color="#D53A94">Note:</SpanV2>{" "}
