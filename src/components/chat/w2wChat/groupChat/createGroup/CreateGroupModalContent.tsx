@@ -8,8 +8,8 @@ import { useClickAway } from 'react-use';
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { CreateGroupData } from './CreateGroupData';
-import { AddWallet } from './AddWallet';
+import { CreateGroupData } from './GroupDetailsContent';
+import { AddWallet } from './AddWalletContent';
 import { SpanV2 } from 'components/reusables/SharedStylingV2';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
