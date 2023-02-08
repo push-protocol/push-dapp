@@ -1,7 +1,7 @@
 import { ToastPosition } from 'modules/chat/ChatModule';
 // @ts-ignore
 import { toast } from 'react-toastify';
-import { Feeds, MessageIPFSWithCID, User } from 'types/chat';
+import { Feeds, User } from 'types/chat';
 
 // Internal configs
 import { appConfig } from 'config';
@@ -101,53 +101,6 @@ export const getUser = async ({ did = '', caip10 = '' }: { did?: string; caip10?
   }
 };
 
-export const postMessage = async ({
-  fromCAIP10,
-  fromDID,
-  toDID,
-  toCAIP10,
-  messageContent,
-  messageType,
-  signature,
-  encType,
-  sigType,
-  encryptedSecret,
-}: {
-  fromCAIP10: string;
-  fromDID: string;
-  toCAIP10;
-  toDID: string;
-  messageContent: string;
-  messageType: string;
-  signature: string;
-  encType: string;
-  sigType: string;
-  encryptedSecret: string;
-}): Promise<MessageIPFSWithCID | string> => {
-  const response = await fetch(BASE_URL + '/v1/w2w/messages', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      fromCAIP10,
-      toCAIP10,
-      fromDID,
-      toDID,
-      messageContent,
-      messageType,
-      signature,
-      encType,
-      encryptedSecret,
-      sigType,
-    }),
-  });
-  if (response.status > 299) {
-    throw new Error('Error posting message');
-  }
-  const data: MessageIPFSWithCID | string = await response.json();
-  return data;
-};
 
 export const createUser = async ({
   caip10,
@@ -185,95 +138,6 @@ export const createUser = async ({
   return data;
 };
 
-export const approveIntent = async (
-  fromDID: string,
-  toDID: string,
-  status: string,
-  signature: string,
-  sigType: string
-): Promise<string> => {
-  const response = await fetch(BASE_URL + '/v1/w2w/intents', {
-    method: 'PUT',
-    headers: {
-      'content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      toDID,
-      fromDID,
-      status,
-      signature,
-      sigType,
-    }),
-  });
-  if (response.status < 200 || response.status > 299) {
-    throw new Error('Error changing intent status');
-  }
-  return await response.json();
-};
-
-export const createIntent = async ({
-  toDID,
-  fromDID,
-  fromCAIP10,
-  toCAIP10,
-  messageContent,
-  messageType,
-  signature,
-  encType,
-  sigType,
-  encryptedSecret,
-}: {
-  toDID: string;
-  fromDID: string;
-  fromCAIP10: string;
-  toCAIP10: string;
-  messageContent: string;
-  messageType: string;
-  signature: string;
-  encType: string;
-  sigType: string;
-  encryptedSecret: string;
-}): Promise<MessageIPFSWithCID | string> => {
-  let data: MessageIPFSWithCID | string;
-  if (messageContent.length > 0) {
-    const response = await fetch(BASE_URL + '/v1/w2w/intents', {
-      method: 'POST',
-      headers: {
-        'content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        toDID,
-        fromDID,
-        fromCAIP10,
-        toCAIP10,
-        messageContent,
-        messageType,
-        signature,
-        encType,
-        encryptedSecret,
-        sigType,
-      }),
-    });
-    data = await response.json();
-  } else {
-    const response = await fetch(BASE_URL + '/v1/w2w/intents', {
-      method: 'POST',
-      headers: {
-        'content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        toDID,
-        fromDID,
-        fromCAIP10,
-        messageType,
-        signature,
-        encType,
-      }),
-    });
-    data = await response.json();
-  }
-  return data;
-};
 
 export const updateUser = async ({
   did,
