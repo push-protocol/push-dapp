@@ -54,7 +54,7 @@ const useModalBlur = () => {
 
     return (
       <ThemeProvider theme={themes}>
-        <ItemHV2
+        {open && <ItemHV2
           position="absolute"
           alignSelf="stretch"
           flex="initial"
@@ -68,7 +68,7 @@ const useModalBlur = () => {
             blur={4}
             zIndex={1}
           />
-          <ItemVV2
+          <ItemHV2
               display = 'flex'
               position = 'relative'
               zIndex = {10}
@@ -78,17 +78,16 @@ const useModalBlur = () => {
               alignSelf = 'center'
               flex = 'initial'
               padding = '1.2% 2%'
-              borderRadius = '1rem'
+              borderRadius = '16px'
               boxShadow = 'none'
-              border={`1px solid ${themes.modalBorderColor}`}
           >
             <InnerComponent
               onConfirm={onConfirm}
               onClose={handleClose}
               toastObject={toastObject}
             />
-          </ItemVV2>
-        </ItemHV2>
+          </ItemHV2>
+        </ItemHV2>}
       </ThemeProvider>
     );
   };
