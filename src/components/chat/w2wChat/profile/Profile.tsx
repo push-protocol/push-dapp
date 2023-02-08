@@ -10,6 +10,7 @@ import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
+import { useResolveEns } from 'hooks/useResolveEns';
 import { shortenText } from 'helpers/UtilityHelper';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
@@ -17,6 +18,10 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
   const theme = useTheme();
 
   const {connectedUser} = useContext(ChatUserContext);
+
+  const ensName=useResolveEns(connectedUser.wallets)
+
+
   const account = caip10ToWallet(connectedUser?.wallets);
   return (
     <>
