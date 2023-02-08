@@ -26,6 +26,7 @@ import UploadLogo from './UploadLogo';
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import { Anchor } from './SharedStyling';
+import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
 
 // Constants
 const minStakeFees = 50;
@@ -104,40 +105,40 @@ function CreateChannel() {
     setUploadDone(true);
   };
 
-  const handleLogoSizeLimitation = (base64) => {
-    // Setup Error on higher size of 128px
-    var sizeOf = require('image-size');
-    var base64Data = base64.split(';base64,').pop();
-    var img = Buffer.from(base64Data, 'base64');
-    var dimensions = sizeOf(img);
+  // const handleLogoSizeLimitation = (base64) => {
+  //   // Setup Error on higher size of 128px
+  //   var sizeOf = require('image-size');
+  //   var base64Data = base64.split(';base64,').pop();
+  //   var img = Buffer.from(base64Data, 'base64');
+  //   var dimensions = sizeOf(img);
 
-    // Only proceed if image is equal to or less than 128
-    if (dimensions.width > 128 || dimensions.height > 128) {
-      console.log('Image size check failed... returning');
-      return {
-        success: 0,
-        info: 'Image size check failed, Image should be 128X128PX',
-      };
-    }
+  //   // Only proceed if image is equal to or less than 128
+  //   if (dimensions.width > 128 || dimensions.height > 128) {
+  //     console.log('Image size check failed... returning');
+  //     return {
+  //       success: 0,
+  //       info: 'Image size check failed, Image should be 128X128PX',
+  //     };
+  //   }
 
-    console.log(base64Data.charAt(0));
-    if (base64Data.charAt(0) === '/') {
-      return {
-        success: 1,
-        info: 'Image checks passed',
-      };
-    } else if (base64Data.charAt(0) === 'i') {
-      return {
-        success: 1,
-        info: 'Image checks passed',
-      };
-    } else {
-      return {
-        success: 0,
-        info: 'Image extension should be jpg or png',
-      };
-    }
-  };
+  //   console.log(base64Data.charAt(0));
+  //   if (base64Data.charAt(0) === '/') {
+  //     return {
+  //       success: 1,
+  //       info: 'Image checks passed',
+  //     };
+  //   } else if (base64Data.charAt(0) === 'i') {
+  //     return {
+  //       success: 1,
+  //       info: 'Image checks passed',
+  //     };
+  //   } else {
+  //     return {
+  //       success: 0,
+  //       info: 'Image extension should be jpg or png',
+  //     };
+  //   }
+  // };
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
@@ -322,19 +323,19 @@ function CreateChannel() {
     }
   }, [croppedImage]);
 
-  function toDataURL(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      var reader = new FileReader();
-      reader.onloadend = function () {
-        callback(reader.result);
-      };
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-    xhr.send();
-  }
+  // function toDataURL(url, callback) {
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.onload = function () {
+  //     var reader = new FileReader();
+  //     reader.onloadend = function () {
+  //       callback(reader.result);
+  //     };
+  //     reader.readAsDataURL(xhr.response);
+  //   };
+  //   xhr.open('GET', url);
+  //   xhr.responseType = 'blob';
+  //   xhr.send();
+  // }
 
   return (
     <ThemeProvider theme={theme}>
