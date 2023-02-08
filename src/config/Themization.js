@@ -164,7 +164,8 @@ const themeLight = {
 
   LinkMobileAppBorder:"#bac9e5",
   textcolor:"#657795",
-  chatQRbg:"#ffff"
+  chatQRbg:"#ffff",
+  qrBg:"#fff"
 };
 
 const themeDark = {
@@ -336,7 +337,8 @@ const themeDark = {
   //QR Code related
   LinkMobileAppBorder:"#717887",
   textcolor:"#B6BCD6",
-  chatQRbg:"#292a2c"
+  chatQRbg:"#292a2c",
+  qrBg:"#000"
 
 };
 
