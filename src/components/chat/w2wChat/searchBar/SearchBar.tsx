@@ -20,7 +20,6 @@ import useToast from 'hooks/useToast';
 import * as w2wChatHelper from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
-import './SearchBar.css';
 import { AppContext, User } from 'types/chat';
 import { useResolveEns } from 'hooks/useResolveEns';
 import { appConfig } from 'config';
