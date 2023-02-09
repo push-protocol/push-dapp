@@ -219,7 +219,7 @@ function Chat() {
             >
               <ChatSidebarContainer
                 flex="1"
-                maxWidth="340px"
+                maxWidth="310px"
                 minWidth="280px"
                 padding="10px 10px 10px 20px"
                 boxSizing="content-box"
