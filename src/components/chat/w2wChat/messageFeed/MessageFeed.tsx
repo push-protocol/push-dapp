@@ -5,6 +5,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
+import * as PushAPI from "@pushprotocol/restapi"
+
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
@@ -19,12 +21,12 @@ import { checkConnectedUser } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
-import { fetchInbox } from 'helpers/w2w/ipfs';
-import './MessageFeed.css';
+
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { appConfig } from '../../../../config';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -75,7 +77,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
+      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
@@ -178,7 +180,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   msg: {
                     name: user.wallets.split(',')[0].toString(),
                     profilePicture: user.profilePicture,
-                    lastMessage: null,
+                    messageContent: null,
                     timestamp: null,
                     messageType: null,
                     signature: null,
@@ -277,10 +279,10 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 >
                   <ChatSnap
                     pfp={feed.profilePicture}
-                    username={feed.msg.name}
+                    username={feed.wallets.split(',')[0].toString()}
                     chatSnapMsg={{
                       type: feed.msg.messageType,
-                      message: feed.msg.lastMessage,
+                      message: feed.msg.messageContent,
                     }}
                     timestamp={feed.msg.timestamp}
                     selected={feed.threadhash == selectedChatSnap ? true : false}
