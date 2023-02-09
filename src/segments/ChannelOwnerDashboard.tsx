@@ -16,7 +16,7 @@ import CreateChannel from "components/CreateChannel";
 import { ButtonV2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
 import { useDeviceWidthCheck } from "hooks";
-import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified } from "redux/slices/adminSlice";
+import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified, setUserChannelDetails } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
 import useToast from "hooks/useToast";
@@ -103,6 +103,7 @@ const ChannelOwnerDashboard = () => {
 
   const destroyChannel = async () => {
     try {
+      destroyChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
       const tx = await epnsWriteProvider.destroyTimeBoundChannel(account, {
         gasLimit: 1000000,
       });
@@ -116,9 +117,7 @@ const ChannelOwnerDashboard = () => {
         toastType: 'SUCCESS',
         getToastIcon: (size) => <MdError size={size} color="green" />,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      dispatch(setUserChannelDetails(null));
     } catch (err) {
       console.log(err);
       if (err.code == "ACTION_REJECTED") {

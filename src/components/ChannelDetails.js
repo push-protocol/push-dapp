@@ -54,6 +54,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }
   const channelAutomaticExpiryDate = nextDaysDateFromTimestamp(channelDetails.expiryTime.toString() * 1000, 14);
 
   useEffect(() => {
+    if(channelDetails.channelType != CHANNEL_TYPE["TIMEBOUND"]) return;
     if(!isChannelNotExpired) setIsChannelExpired(true);
   }, [isChannelNotExpired]);
 
@@ -102,14 +103,14 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }
                 </ChanneStateText>
                 {
                   channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && !isChannelExpired &&
-                      <ItemHV2 background="#C5EFD1" flex='0' borderRadius="25px" margin="0 0 0 10px" height="30px">
+                      <ItemHV2 background="#C5EFD1" flex='0' borderRadius="25px" margin="0 0 10px 10px" height="30px">
                         <ImageV2 width="16px" src="svg/ExpiresTimer.svg" alt="expiryTimer" padding="0 6px 0 9px" />
                         <SpanV2 color="#30CC8B" fontWeight="600" padding="0 9px 0 0">Expires on {channelExpiryDate}</SpanV2>
                       </ItemHV2>
                 }
                 {
                   channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && isChannelExpired &&
-                      <ItemHV2 background="#FFD8D8" flex='0' borderRadius="25px" margin="0 0 0 10px" height="30px">
+                      <ItemHV2 background="#FFD8D8" flex='0' borderRadius="25px" margin="0 0 10px 10px" height="30px">
                         <ImageV2 width="16px" src="svg/ExpiredTimer.svg" alt="expiryTimer" padding="0 6px 0 9px" />
                         <SpanV2 color="#E93636" fontWeight="600" padding="0 9px 0 0">Expired on {channelExpiryDate}</SpanV2>
                       </ItemHV2>
@@ -130,11 +131,11 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }
 
       {isChannelExpired && 
         <ItemVV2 alignItems="flex-start">
-          <SectionDes margin="25px 0 0 0">
-            <SpanV2 color="#D53A94">Note:</SpanV2>{" "}
-            Channel will auto delete on {" "}
-            <SpanV2 fontWeight="600">{channelAutomaticExpiryDate}</SpanV2>
-          </SectionDes>
+        <SectionDes margin="25px 0 0 0">
+          <SpanV2 color="#D53A94">Note:</SpanV2>{" "}
+          Channel will auto delete on {" "}
+          <SpanV2 fontWeight="600">{channelAutomaticExpiryDate}</SpanV2>
+        </SectionDes>
         </ItemVV2>
       }
 
@@ -215,6 +216,7 @@ const VerifyingName = styled.div``;
 const Subscribers = styled.div`
   width: 58px;
   height: 26px;
+  margin-bottom: 10px;
   background: #ffdbf0;
   color: #cf1c84;
   border-radius: 25px;
@@ -223,10 +225,6 @@ const Subscribers = styled.div`
   align-items: center;
   justify-content: space-evenly;
   padding: 2px;
-`;
-
-const Pill = styled.div`
-  color: ${(props) => (props.color ? props.color : '#fff')};
 `;
 
 const StateText = styled.div`
@@ -248,6 +246,7 @@ const ChanneStateText = styled(StateText)`
   color: ${(props) => (props.active ? '#2DBD81' : 'red')};
   background-color: #c6efd1;
   margin-left: 10px;
+  margin-bottom: 10px;
   ${(props) =>
     props.active &&
     `
