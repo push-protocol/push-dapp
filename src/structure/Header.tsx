@@ -29,6 +29,8 @@ import { appConfig } from 'config';
 import GLOBALS from 'config/Globals';
 import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
+import { useDeviceWidthCheck } from 'hooks';
+import ChainIndicator from 'components/ChainIndicator';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -106,7 +108,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
       else if (appConfig.coreContractChain === 5)
         return 'Unsupported Network, please connect to the Ethereum Goerli network or Polygon Mumbai network';
-      else return 'Unsupported Network, please connect to the Ethereum Mainnet network or Polygon Mainnet network';
+      else return 'Unsupported Network, please connect to the Ethereum, Polygon or BSC Mainnet';
     } else if (error instanceof UserRejectedRequestErrorInjected) {
       return 'Please authorize this website to access the dApp';
     } else {
@@ -118,6 +120,8 @@ function Header({ isDarkMode, darkModeToggle }) {
   const bellPressed = () => {
     setShowLoginControls(!showLoginControls);
   };
+
+  const isMobile = useDeviceWidthCheck(600);
   
 
   return (
@@ -137,6 +141,7 @@ function Header({ isDarkMode, darkModeToggle }) {
         {navigationSetup && showNavBar && active && !error && (
           <NavMenuContainer ref={navRef} tabletAlign="flex-start">
             <NavMenu>
+              <ChainIndicator isDarkMode={isDarkMode}/>
               <Profile isDarkMode={isDarkMode} />
 
               <NavMenuInner tabletAlign="flex-start">
@@ -154,7 +159,7 @@ function Header({ isDarkMode, darkModeToggle }) {
               textTransform="capitalize"
               spacing="-0.02em"
               weight="normal"
-              padding="8px 20px"
+              padding={isMobile ? "8px 7px" : "8px 20px" }
               className='text'
               color={!isDarkMode ? headerTag.light.fg : headerTag.dark.fg}>
               {headerTag.title}
@@ -192,6 +197,7 @@ function Header({ isDarkMode, darkModeToggle }) {
           {!active && !error && <ThirdTheme>Please connect to a Web3 Network</ThirdTheme>}
           {active && !showLoginControls && !error && (
             <RightBarDesktop justify="flex-end" flex="initial">
+              <ChainIndicator isDarkMode={isDarkMode}/>
               <Profile isDarkMode={isDarkMode} />
             </RightBarDesktop>
           )}{' '}
@@ -206,6 +212,9 @@ const Container = styled(Section)`
   background: ${(props) => props.theme.header.bg};
   height: ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px;
   padding: 0 1.5rem;
+  @media (max-width: 425px) {
+    padding: 0 1rem;
+  }
 `;
 
 const Logo = styled.img`
@@ -221,8 +230,8 @@ const RightBarDesktop = styled(ItemH)`
 `;
 
 const RightBarMobile = styled(ItemH)`
-  max-width: 50px !important;
-  margin: 5px 5px 5px -5px;
+  max-width: 40px !important;
+  margin: 5px 0px 5px -5px;
 
   @media (min-width: 993px) {
     display: none;
@@ -259,7 +268,7 @@ const NavMenuContainer = styled(Item)`
   }
 `;
 
-const NavMenu = styled(Item)`
+const NavMenu = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   width: 100%;

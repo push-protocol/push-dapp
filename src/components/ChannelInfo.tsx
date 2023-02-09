@@ -1,6 +1,6 @@
 // @ts-nocheck
 // React + Web3 Essentials
-import { appConfig } from 'config';
+import { appConfig, CHAIN_DETAILS } from 'config';
 import React, { useEffect, useState } from 'react';
 
 // External Packages
@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import { AiFillExclamationCircle } from 'react-icons/ai'
 
 // Internal Compoonents
-import { aliasChainIdsMapping, isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
+import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
 import {
   Button,
   Content,
@@ -25,14 +25,11 @@ import {
   TextField,
 } from 'primaries/SharedStyling';
 import './createChannel.css';
+import { useDeviceWidthCheck } from 'hooks';
 
 const coreChainId = appConfig.coreContractChain;
-const aliasChainId = aliasChainIdsMapping[coreChainId];
 
-const ALIAS_CHAINS = [
-  { value: coreChainId, label: networkName[coreChainId] },
-  { value: aliasChainId, label: networkName[aliasChainId] },
-];
+const ALIAS_CHAINS = appConfig.allowedNetworks.map((chainID: number) => ({ label: CHAIN_DETAILS[chainID].label, value: chainID }));
 
 const ChannelInfo = ({
   channelName,
@@ -50,6 +47,7 @@ const ChannelInfo = ({
   setTxStatus,
 }) => {
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(600)
   const [disabled, setDisabled] = useState<boolean>(true);
   const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
 
@@ -161,7 +159,7 @@ const ChannelInfo = ({
   return (
     <Section>
       <Item
-        padding="40px 0 0 0"
+        padding={isMobile ? "20px 0 0 0" :"40px 0 0 0"}
         align="flex-start"
       >
         <Label style={{ color: theme.color }}>Channel Name</Label>
@@ -204,7 +202,7 @@ const ChannelInfo = ({
               onChange={(option) => {
                 setChainDetails(option.value);
               }}
-              value={networkName[chainDetails]}
+              value={CHAIN_DETAILS[chainDetails].label}
             />
           </DropdownStyledParent>
         </Item>
@@ -234,6 +232,7 @@ const ChannelInfo = ({
               visibility={chainDetails === coreChainId ? 'hidden' : 'visible'}
               value={channelAlias}
               onChange={(e) => {
+                console.log(e);
                 setChannelAlias(e.target.value);
               }}
             />

@@ -17,15 +17,15 @@ const AliasProcessing = ({ aliasEthAccount, setAliasVerified }) => {
   return (
     <Section>
       <ItemHere>
-        <Tab type={processingState >= 1 ? "active" : "inactive"}>
+        <Tab type={processingState >= 1 ? "active" : "inactive"} active={processingState == 1 ? 'active' : 'inactive'}>
           <div>Waiting for Setup</div>
           <Step type={processingState >= 1 ? "active" : "inactive"} />
         </Tab>
-        <Tab type={processingState >= 2 ? "active" : "inactive"}>
+        <Tab type={processingState >= 2 ? "active" : "inactive"} active={processingState == 2 ? 'active' : 'inactive'}>
           <div>Change Network</div>
           <Step type={processingState >= 2 ? "active" : "inactive"} />
         </Tab>
-        <Tab type={processingState >= 3 ? "active" : "inactive"}>
+        <Tab type={processingState >= 3 ? "active" : "inactive"} active={processingState == 3 ? 'active' : 'inactive'}>
           <div>Verify Alias Network</div>
           <Step type={processingState >= 3 ? "active" : "inactive"} />
         </Tab>
@@ -48,10 +48,11 @@ const ItemHere = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: flex-end;
   margin: 50px 0px 0px 0px;
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     display: flex;
-    flex-direction: column;
+    margin: 0px 0px 0px 0px;
   }
   @media (max-width: 1224px) {
     display: flex;
@@ -88,6 +89,7 @@ const Tab = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
   margin: 0px 10px;
   color: #657795;
   div {
@@ -97,14 +99,44 @@ const Tab = styled.div`
     font-size: 16px;
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     width: 100%;
+    margin: 0px 4px;
+    div {
+      font-weight: 500;
+      font-size: 15px;
+    }
   }
 
   ${({ type }) =>
-    type === "active" &&
+    type === 'active' &&
     css`
       color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+  ${({ active }) =>
+    active === 'active' &&
+    css`
+      color: #e20880;
+      @media (max-width: 768px) {
+          width: 100%;
+    }
+    `};
+
+    ${({ active }) =>
+    active === 'inactive' &&
+    css`
+    @media (max-width: 768px) {
+      width: 40%;
+        div {
+          font-size: 0px;
+            @media (max-width: 768px) {
+            }
+        }
+    }
     `};
 `;
 

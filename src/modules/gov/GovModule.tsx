@@ -25,6 +25,7 @@ import { executeDelegateTx } from 'helpers/WithGasHelper';
 // Internal Configs
 import { abis, addresses,appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { shortenText } from 'helpers/UtilityHelper';
 const delegateesJSON = require('config/delegatees.json');
 
 // Constants
@@ -257,7 +258,7 @@ const GovModule = () => {
     }
 
     if (transactionMode === 'withgas') {
-      executeDelegateTx(newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast);
+      executeDelegateTx({newDelegatee, epnsToken, toast, setTxInProgress, library, LoaderToast});
       return;
     }
     if (tokenBalance < PUSH_BALANCE_TRESHOLD) {
@@ -274,7 +275,7 @@ const GovModule = () => {
       setTxInProgress(false);
       return;
     }
-    await createTransactionObject(newDelegatee, account, epnsToken, addresses, signerObject, library, setTxInProgress);
+    await createTransactionObject({newDelegatee, account, epnsToken, addresses, signerObject, library, setTxLoading:setTxInProgress});
     toolingPostReq('/gov/prev_delegation', { walletAddress: account })
       .then((res) => {
         console.log('result', res.data.user);
@@ -355,7 +356,7 @@ const GovModule = () => {
                         {ensFetched && ens && <>{ens}</>}
                         {ensFetched && !ens && (
                           <>
-                            {account.substring(0, 6)}.....{account.substring(account.length - 6)}
+                            {shortenText(account,6)}
                           </>
                         )}
                       </Wallet>

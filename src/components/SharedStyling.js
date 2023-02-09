@@ -180,7 +180,7 @@ export const H3 = styled.h3`
 export const Image = styled.img`
   display: flex;
   height: auto;
-  width: 100%;
+  width: ${props => props.width || '100%'} ;
 `
 
 export const P = styled.p`

@@ -544,14 +544,14 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  font-weight: 200;
+  height: 85%;
   align-content: center;
-  align-items: stretch;
-  height: 80%;
+  align-items: center;
   justify-content: center;
+  font-weight: 200;
   margin: 0 0 0 10px;
   @media ${device.tablet} {
-    height: 60%;
+    height: 74%;
   }
 `;
 

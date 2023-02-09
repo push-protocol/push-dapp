@@ -93,6 +93,7 @@ const themeLight = {
   viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#657795",
+  viewChannelPrimaryTextColor: "#494D5F",
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: '#000',
@@ -151,6 +152,20 @@ const themeLight = {
   snackbarBorderColor: "#E5E8F7",
   snackbarBorderText: "#000",
   snackbarBorderIcon: "none",
+
+  // Chain indicator
+  chainIndicatorBG: "#F4F5FA",
+  chainIndicatorBorderColor: "#BAC4D6",
+  chainIndicatorHoverBG: "#F4F5FA",
+  chainIndicatorDropdownBG: "#fff",
+  chainIndicatorHeading: "#333333",
+  chainIndicatorHeadingMobile: "#000",
+  chainIndicatorText: "#657795",
+
+  LinkMobileAppBorder:"#bac9e5",
+  textcolor:"#657795",
+  chatQRbg:"#ffff",
+  qrBg:"#fff"
 };
 
 const themeDark = {
@@ -245,6 +260,7 @@ const themeDark = {
   viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#fff",
+  viewChannelPrimaryTextColor: "#fff",
 
 
   // -- -- View Channel Tuts
@@ -307,7 +323,23 @@ const themeDark = {
   //Snackbar
   snackbarBorderColor: "#4A4F67",
   snackbarBorderText: "#B6BCD6",
-  snackbarBorderIcon: "brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)"
+  snackbarBorderIcon: "brightness(0) saturate(100%) invert(89%) sepia(8%) saturate(1567%) hue-rotate(191deg) brightness(86%) contrast(93%)",
+  
+  // Chain indicator
+  chainIndicatorBG: "#2F3137",
+  chainIndicatorBorderColor: "#BAC4D6",
+  chainIndicatorHoverBG: "#393E46",
+  chainIndicatorDropdownBG: "#2F3137",
+  chainIndicatorHeading: "#C5CAE9",
+  chainIndicatorHeadingMobile: "#C5CAE9",
+  chainIndicatorText: "#B6BCD6",
+
+  //QR Code related
+  LinkMobileAppBorder:"#717887",
+  textcolor:"#B6BCD6",
+  chatQRbg:"#292a2c",
+  qrBg:"#000"
+
 };
 
 module.exports = {

@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
 import * as PushNodeClient from 'api';
-import { ConnectedUser, Feeds, User } from 'types/chat';
+import { AppContext, BlockedLoadingI, ConnectedUser, Feeds, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -30,60 +30,12 @@ import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSectio
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import CryptoHelper from 'helpers/CryptoHelper';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
+import { useClickAway } from 'react-use';
+import { useDeviceWidthCheck } from 'hooks';
+import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 
-export interface InboxChat {
-  name: string;
-  profilePicture: string;
-  timestamp: number;
-  fromDID: string;
-  toDID: string;
-  fromCAIP10: string;
-  toCAIP10: string;
-  lastMessage: string;
-  messageType: string;
-  encType: string;
-  signature: string;
-  signatureType: string;
-  encryptedSecret: string;
-}
-
-export interface BlockedLoadingI {
-  enabled: boolean;
-  title: string;
-  spinnerEnabled?: boolean;
-  spinnerSize?: number;
-  spinnerType?: number;
-  progressEnabled?: boolean;
-  progress?: number;
-  progressNotice?: string;
-}
-
-export interface AppContext {
-  currentChat: Feeds;
-  viewChatBox: boolean;
-  receivedIntents: Feeds[];
-  setReceivedIntents: (rIntent: Feeds[]) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
-  setChat: (feed: Feeds) => void;
-  connectedUser: ConnectedUser;
-  setConnectedUser: (user: ConnectedUser) => void;
-  intents: Feeds[];
-  setIntents: (intents: Feeds[]) => void;
-  inbox: Feeds[];
-  setInbox: (inbox: Feeds[]) => void;
-  pendingRequests: number;
-  setPendingRequests: (pending: number) => void;
-  hasUserBeenSearched: boolean;
-  setHasUserBeenSearched: (searched: boolean) => void;
-  loadingMessage: string;
-  setLoadingMessage: (loadingMessage: string) => void;
-  setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
-  activeTab: number;
-  setActiveTab: (active: number) => void;
-  userShouldBeSearched: boolean;
-  setUserShouldBeSearched: (value: boolean) => void;
-}
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -101,6 +53,8 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
+  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } = useContext(ChatUserContext);
+
   const theme = useTheme();
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
@@ -108,20 +62,17 @@ function Chat() {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [blockedLoading, setBlockedLoading] = useState<BlockedLoadingI>({
-    enabled: false,
-    title: null,
-  });
   const [searchedUser, setSearchedUser] = useState<string>('');
-  const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
-
+  const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
+
+  const containerRef = React.useRef(null);
 
   // For video calling
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
@@ -176,10 +127,15 @@ function Chat() {
   // Rest of the loading logic
   useEffect(() => {
     if (isLoading) {
+      setConnectedUser(connectedUser);
       connectUser();
     }
-  }, []);
+  }, [connectedUser]);
 
+  const closeQRModal = () => {
+    setDisplayQR(false);
+  }
+  useClickAway(containerRef, () => closeQRModal())
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -191,46 +147,8 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
-    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
-    const user: User = await PushNodeClient.getUser({ caip10 });
-    let connectedUser: ConnectedUser;
-
-    // TODO: Change this to do verification on ceramic to validate if did is valid
-    if (user?.did.includes('did:3:')) {
-      throw Error('Invalid DID');
-    }
-
-    // new user might not have a private key
-    if (user && user.encryptedPrivateKey) {
-      if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
-        throw Error('Invalid user');
-      }
-
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
-        library.provider,
-        user.encryptedPrivateKey,
-        account
-      );
-      connectedUser = { ...user, privateKey: privateKeyArmored };
-    } else {
-      connectedUser = {
-        // We only need to provide this information when it's a new user
-        name: 'john-snow',
-        profilePicture:
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
-        wallets: caip10,
-        about: '',
-        allowedNumMsg: 0,
-        did: caip10,
-        encryptedPrivateKey: '',
-        encryptionType: '',
-        numMsg: 0,
-        publicKey: '',
-        sigType: '',
-        signature: '',
-        linkedListHash: '',
-        privateKey: '',
-      };
+    if (!connectedUser) {
+      await getUser();
     }
 
     setBlockedLoading({
@@ -241,7 +159,6 @@ function Chat() {
       progress: 100,
     });
 
-    setConnectedUser(connectedUser);
     setIsLoading(false);
   };
 
@@ -269,7 +186,7 @@ function Chat() {
 
   return (
     <Container>
-      <ItemHV2>
+      <ItemHV2 ref={containerRef}>
         {!isLoading ? (
           <QueryClientProvider client={queryClient}>
             <Context.Provider
@@ -317,6 +234,39 @@ function Chat() {
               >
                 <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
               </ChatContainer>
+
+              {(displayQR && !isMobile) && (
+                <>
+                  <ChatQR
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  />
+
+                  {/* <MobileView
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  /> */}
+
+                  
+                </>
+              )}
+
+            {(displayQR && isMobile) && (
+              <>
+                 <MobileView
+                    type={LOADER_TYPE.STANDALONE}
+                    overlay={LOADER_OVERLAY.ONTOP}
+                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                    width="75%"
+                  />
+              </>
+            )}
+
+
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
@@ -381,22 +331,19 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+  });
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
+  });
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+  });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

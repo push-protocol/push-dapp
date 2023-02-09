@@ -60,7 +60,7 @@ const InboxComponent = () => {
       </NavBoxHolder>
       {showInbox ? (
         <Feedbox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
-      ) : (
+        ) : (
         <SpamBox showFilter={showFilter} setShowFilter={setShowFilter} search={search} setSearch={setSearch} />
       )}
     </Container>
@@ -68,12 +68,8 @@ const InboxComponent = () => {
 };
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 100%;
   width: 100%;
-  align-items: stretch;
-  align-self: stretch;
 `;
 
 const NavBoxHolder = styled.div`
@@ -88,7 +84,7 @@ const NavBoxHolder = styled.div`
   @media (max-width: 768px) {
     flex-direction: column-reverse;
     justify-content: space-between;
-    margin: 40px 30px;
+    margin: 40px 30px 20px 30px;
   }
 
   :after {

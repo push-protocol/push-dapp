@@ -20,6 +20,7 @@ if (process.env.REACT_APP_DEPLOY_ENV == 'PROD') {
 // dynamic import
 const dynamicConfig = require(`./config-${appendName}`).config;
 const addresses = require(`./config-${appendName}`).addresses;
+const CHAIN_DETAILS = require(`./config-${appendName}`).CHAIN_DETAILS;
 
 const generalConfig = require('./config-general').config;
 const abis = require('./config-general').abis;
@@ -28,4 +29,4 @@ const abis = require('./config-general').abis;
 const appConfig = { ...dynamicConfig, ...generalConfig };
 
 // export it out
-export { appConfig, addresses, abis };
+export { appConfig, addresses, abis, CHAIN_DETAILS };

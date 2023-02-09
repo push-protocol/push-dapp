@@ -35,6 +35,6 @@
     "src/segments/ViewChannels.jsx",
     "src/components/SearchFilter.jsx",
     "src/components/chat/w2wChat/indexeddb.js", 
-    "src/contexts/VideoCallContext.tsx"  
-  ]
+    "src/contexts/VideoCallContext.js"  
+, "src/helpers/WithGasHelper.tsx"  ]
 }

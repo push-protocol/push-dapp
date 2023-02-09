@@ -13,31 +13,33 @@ import { Button, Item, Span } from "primaries/SharedStyling";
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
+import { useDeviceWidthCheck } from "hooks";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { chainId, library, account } = useWeb3React();
 
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(600)
   
   //mint Dai
-  const mintDai = async () => {
+  const mintPushToken = async () => {
     try {
       var signer = library.getSigner(account);
-      let daiContract = new ethers.Contract(addresses.dai, abis.dai, signer);
+      let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
       console.log({
-        daiContract,
+        pushTokenContract,
       });
       console.log(1);
-      let daiAmount = 1000;
-      const amount = ethers.utils.parseUnits(daiAmount.toString(), 18);
-      console.log(2);
-      var mintTransactionPromise = daiContract.mint(amount);
+      let pushTokenAmount = 100;
+      const amount = ethers.utils.parseUnits(pushTokenAmount.toString(), 18);
+      console.log(amount);
+      var mintTransactionPromise = pushTokenContract.mint(amount);
       console.log(3);
       const tx = await mintTransactionPromise;
       console.log(tx);
       await library.waitForTransaction(tx.hash);
       console.log(4);
-      setProcessingInfo("1000 Dai minted successfully!");
+      setProcessingInfo("100 Push Tokens minted successfully!");
       console.log("Transaction Completed");
     } catch (err) {
       console.log(err);
@@ -55,38 +57,38 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
               </p>
 
               <b>
-              {channelStakeFees} DAI
+              {channelStakeFees} $PUSH
               </b>
             </TabSpace>
 
 
             <TextSpace>
-                <Span color={theme.default.secondaryColor} size="15px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
+                <Span color={theme.default.secondaryColor} size="15px" weight="300" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
 
                 {appConfig.appEnv !== 'prod' && 
-                  <>
+                  <ItemBody>
                     <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
                     
                     <Minter
                       onClick={() => {
-                        mintDai();
+                        mintPushToken();
                       }}
                     >
-                        <PoolShare>Get Free DAI for Channel</PoolShare>
+                        <PoolShare>Get Free PUSH for Channel</PoolShare>
                     </Minter>
-                  </>
+
+                  </ItemBody>
                 }
             </TextSpace>
           </Item>
 
-        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto">
+        <Item width="12.2em" self="stretch" align="stretch" margin={isMobile ? "70px auto 50px auto" : "100px auto 50px auto"}>
           <Button
             bg="#e20880"
             color="#fff"
             flex="1"
             radius="15px"
             padding="20px 10px"
-            disabled={true}
             onClick={() => {
               setStakeFeesChoosen(true);
               setStepFlow(1);
@@ -125,8 +127,8 @@ const TabSpace = styled.div`
     letter-spacing: -0.011em;
     margin-left:50px;
     @media (max-width: 768px) {
-    margin-left:20px;
-    font-size: 18px;
+      margin-left:20px;
+      font-size: 18px;
     }
   }
   b {
@@ -195,12 +197,19 @@ const AnchorLink = styled.a`
     text-decoration: underline;
   }
   @media (max-width: 600px) {
-    margin-top:1em;
+    margin: 0 0em;
   }
 `;
 
-const Body = styled.div`
-  margin: 0px auto;
+const ItemBody = styled.div`
+    display: flex;
+    flex-direction: row;
+    @media (max-width: 600px) {
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1em;
+    }
 `
 
 const Minter = styled.div`
@@ -212,6 +221,8 @@ const Pool = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const ChannelMetaBox = styled.label`
@@ -232,9 +243,6 @@ const PoolShare = styled(ChannelMetaBox)`
   text-decoration: none;
   &:hover {
     text-decoration: underline;
-  }
-  @media (max-width: 600px) {
-    margin-top:1em;
   }
 `;
 

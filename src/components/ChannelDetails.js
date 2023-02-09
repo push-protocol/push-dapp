@@ -38,7 +38,8 @@ export default function ChannelDetails() {
   const { processingState } = useSelector((state) => state.channelCreation);
   const [verifyingChannel, setVerifyingChannel] = React.useState([]);
   const [creationDate, setCreationDate] = React.useState('');
-  const { channelState } = channelDetails;
+  let { channelState } = channelDetails;
+  if(!channelState) channelState = channelDetails['activation_status'];
   const channelIsActive = channelState === CHANNEL_ACTIVE_STATE;
   const channelIsDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
 
@@ -55,7 +56,7 @@ export default function ChannelDetails() {
   }, [channelDetails, canVerify]);
 
   React.useEffect(() => {
-    if (!channelDetails) return;
+    if (!channelDetails || !onCoreNetwork) return;
     (async function() {
       const bn = channelDetails.channelStartBlock.toString();
 
@@ -84,7 +85,7 @@ export default function ChannelDetails() {
               <AdaptiveMobileItemHV2 justifyContent="flex-start">
                 <Subscribers>
                   <img style={{ width: '15px' }} src="/subcount.svg" alt="subscount"></img>
-                  <SubscribersCount>{channelDetails.subscriberCount}</SubscribersCount>
+                  <SubscribersCount>{channelDetails.subscriber_count}</SubscribersCount>
                 </Subscribers>
                 <ChanneStateText active={channelIsActive}>
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
@@ -98,7 +99,7 @@ export default function ChannelDetails() {
       </AdaptiveMobileItemHV22>
 
       {isMobile && 
-        <ItemHV2 zIndex="1" padding="0 0 20px 0">
+        <ItemHV2 zIndex="1" padding="0 0 15px 0">
           <ChannelSettings />
         </ItemHV2>
       }
@@ -151,9 +152,9 @@ const ImageSection = styled.img`
   height: 128px;
   margin-right: 20px;
   border-radius: 32px;
-  @media ${device.mobileM} {
-    width: 70px;
-    height: 70px;
+  @media ${device.mobileL} {
+    width: 90px;
+    height: 90px;
     margin-right: 0px;
     border-radius: 20px;
   }
@@ -296,7 +297,8 @@ const ChannelName = styled.div`
   @media (max-width: 767px) {
     flex-direction: column;
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 26px;
+    margin-right: 0px;
   }
 `;
 
@@ -315,7 +317,6 @@ const SectionDate = styled.div`
 
 const SectionDes = styled.div`
   /* letter-spacing: 0.07em; */
-  letter-spacing: 0.025em;
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
   color: #657795;
@@ -327,8 +328,10 @@ const SectionDes = styled.div`
   text-align: left;
   @media (max-width: 767px) {
     text-align: center;
+    font-weight: 300;
     margin-top: 10px;
     width:100%;
-    padding: 0;
+    margin: 10px 0px 10px 0px;
+    padding: 0 0 0 0;
   }
 `;
