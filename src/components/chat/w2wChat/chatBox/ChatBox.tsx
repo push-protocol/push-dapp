@@ -27,7 +27,6 @@ import { useResolveEns } from 'hooks/useResolveEns';
 import { Context } from 'modules/chat/ChatModule';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
-import { fetchInbox, fetchIntent } from 'helpers/w2w/ipfs';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
@@ -89,7 +88,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let time = '';
 
   // get ens name
-  const ensName = useResolveEns(currentChat?.msg?.name);
+  const ensName = useResolveEns(currentChat?.wallets.split(',')[0].toString());
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -127,7 +126,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
           if (messageInChat === undefined) {
             setMessages((m) => [...m, msgIPFS]);
           }
-          // }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else if (messages.length == 0) {
@@ -202,9 +200,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser });
+      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account:account!, chainId:chainId! }), inboxes, 'did');
+      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
     }
@@ -266,15 +264,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       getIntent = await intitializeDb<string>(
         'Read',
         'Intent',
-        w2wHelper.walletToCAIP10({ account, chainId }),
+         walletToCAIP10({ account:account!, chainId:chainId! }),
         '',
         'did'
       );
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), intents, 'did');
+    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
+    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account:account!, chainId:chainId! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
     setReceivedIntents(intents);
@@ -552,9 +550,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               fontWeight="400"
               textAlign="start"
             >
-              {ensName && `${ensName} (${caip10ToWallet(currentChat.msg.name)})`}
+              {ensName && `${ensName} (${caip10ToWallet(currentChat.wallets.split(',')[0].toString())})`}
 
-              {!ensName && caip10ToWallet(currentChat.msg.name)}
+              {!ensName && caip10ToWallet(currentChat.wallets.split(',')[0].toString())}
             </SpanV2>
           </ItemHV2>
 
@@ -614,7 +612,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
                         <Chats
                           msg={msg}
-                          caip10={walletToCAIP10({ account, chainId })}
+                          caip10={walletToCAIP10({ account:account!, chainId:chainId! })}
                           messageBeingSent={messageBeingSent}
                         />
                       </div>
@@ -640,7 +638,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                         messageContent: 'Please accept to enable push chat from this wallet',
                         messageType: 'Intent',
                       }}
-                      caip10={walletToCAIP10({ account, chainId })}
+                      caip10={walletToCAIP10({ account:account!, chainId:chainId! })}
                       messageBeingSent={messageBeingSent}
                       ApproveIntent={() => ApproveIntent('Approved')}
                     />

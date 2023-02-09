@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 import { AiFillExclamationCircle } from 'react-icons/ai'
 
 // Internal Compoonents
-import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/UtilityHelper';
+import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
 import {
   Button,
   Content,

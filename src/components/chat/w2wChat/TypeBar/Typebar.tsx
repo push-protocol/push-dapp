@@ -86,7 +86,7 @@ const Typebar = ({
     // Send video request only when two users are chatting
     if (e.target.value === '/video' && currentChat.threadhash) {
       setVideoCallInfo({
-        address: caip10ToWallet(currentChat.msg.name),
+        address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
         fromPublicKeyArmored: connectedUser.publicKey,
         toPublicKeyArmored: currentChat.publicKey,
         privateKeyArmored: connectedUser.privateKey,

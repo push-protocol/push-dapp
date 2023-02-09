@@ -25,6 +25,7 @@ import { executeDelegateTx } from 'helpers/WithGasHelper';
 // Internal Configs
 import { abis, addresses,appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { shortenText } from 'helpers/UtilityHelper';
 const delegateesJSON = require('config/delegatees.json');
 
 // Constants
@@ -355,7 +356,7 @@ const GovModule = () => {
                         {ensFetched && ens && <>{ens}</>}
                         {ensFetched && !ens && (
                           <>
-                            {account.substring(0, 6)}.....{account.substring(account.length - 6)}
+                            {shortenText(account,6)}
                           </>
                         )}
                       </Wallet>
