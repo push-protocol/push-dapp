@@ -7,7 +7,6 @@ import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Input, TextField } from 'components/SharedStyling';
 import { ReactComponent as AddGroupIcon } from 'assets/chat/group-chat/creategroupicon.svg';
@@ -62,8 +61,8 @@ export const GroupDetailsContent = ({setCreateGroupState}) => {
         </GroupIconContainer>
         <TextFieldContainer>
           <TextFieldHeaderContainer>
-            <TextFieldHeading color={themes.modalMessageColor}>Group Name</TextFieldHeading>
-            <CharacterCount color={themes.modalMessageColor}>{groupName.length}</CharacterCount>
+            <TextFieldHeading color={themes.modalHeadingColor}>Group Name</TextFieldHeading>
+            <CharacterCount color={themes.modalSecondaryTextColor}>{groupName.length}</CharacterCount>
           </TextFieldHeaderContainer>
           <CustomInput
             ref={groupNameInputRef}
@@ -75,8 +74,8 @@ export const GroupDetailsContent = ({setCreateGroupState}) => {
         </TextFieldContainer>
         <TextFieldContainer>
           <TextFieldHeaderContainer>
-            <TextFieldHeading color={themes.modalMessageColor}>Group Description</TextFieldHeading>
-            <CharacterCount color={themes.modalMessageColor}>{groupDescription.length}</CharacterCount>
+            <TextFieldHeading color={themes.modalHeadingColor}>Group Description</TextFieldHeading>
+            <CharacterCount color={themes.modalSecondaryTextColor}>{groupDescription.length}</CharacterCount>
           </TextFieldHeaderContainer>
           <GroupDescription
             ref={groupDescriptionInputRef}
@@ -106,7 +105,7 @@ export const GroupDetailsContent = ({setCreateGroupState}) => {
                 <OptionText
                   fontWeight="400"
                   fontSize="12px"
-                  color={themes.modalMessageColor}
+                  color={themes.modalSecondaryTextColor}
                 >
                   {option.subTitle}
                 </OptionText>
@@ -139,6 +138,7 @@ const FileInput = styled.input`
 `;
 
 const TextFieldContainer = styled(ItemVV2)`
+  min-width:299px;
   margin-bottom: 28px;
 `;
 
@@ -189,6 +189,7 @@ const OptionContainer = styled(ItemVV2)`
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: ${(props) => props.borderRadius || '0px'};
   background-color: ${(props) => props.backgroundColor || 'transparent'};
+  min-width:150px;
   padding: 8px;
   cursor: pointer;
   &:hover {

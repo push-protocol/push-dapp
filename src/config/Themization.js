@@ -141,6 +141,14 @@ const themeLight = {
   modalConfirmButtonTextColor:'#CF1C84',
   modalOptionHoverBackgroundColor:'#F4F5FA',
   modalInputBorderColor:'#C2CBDB',
+  modalHeadingColor:'#333333',
+  modalPrimaryTextColor:'#1E1E1E',
+  modalSecondaryTextColor:'#657795',
+
+  // Group Profiles
+  groupSearchProfilBackground: '#F4F5FA',
+  groupButtonBackgroundColor:'#ADB0BE',
+  groupButtonTextColor:'#FFFFFF',
 
   // Toast Notifications
   toastTextColor: "#000",
@@ -317,6 +325,14 @@ const themeDark = {
   modalConfirmButtonTextColor:'#787E99',
   modalOptionHoverBackgroundColor:'#4A4F67',
   modalInputBorderColor:'#4A4F67',
+  modalHeadingColor:'#B6BCD6',
+  modalPrimaryTextColor:'#B6BCD6',
+  modalSecondaryTextColor:'#B6BCD6',
+
+  // Group Profiles
+  groupSearchProfilBackground: '#404650',
+  groupButtonBackgroundColor:'#2F3137',
+  groupButtonTextColor:'#787E99',
 
   // Toast Notifications
   toastTextColor: "#B6BCD6",

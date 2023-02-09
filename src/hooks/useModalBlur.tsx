@@ -65,7 +65,7 @@ const useModalBlur = () => {
           zIndex="10"
         >
           <BlurBG
-            blur={4}
+            blur={10}
             zIndex={1}
           />
           <ItemHV2
