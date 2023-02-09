@@ -219,9 +219,8 @@ const ChannelInfo = ({
                 {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
               </Item>
             <Tooltip 
-              tooltipContent='Temporary channels will be deleted after expiry'
+              tooltipContent='Timebound channels will be deleted after expiry'
               // disable the tooltip when time bound toggle is NOT on
-              isDisabled={channelExpiryDate===undefined}
               placementProps={isMobile
                 ?
                 {
