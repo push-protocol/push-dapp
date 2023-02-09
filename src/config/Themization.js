@@ -169,7 +169,7 @@ const themeLight = {
   // toggle switch
   toggleContainerBG: "#F4F5FA",
   toggleActiveBG: "#CF1C84",
-  toggleInactiveBG: "#A0A3B1"
+  toggleInactiveBG: "#A0A3B1",
   qrBg:"#fff",
 };
 
