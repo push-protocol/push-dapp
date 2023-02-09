@@ -31,6 +31,8 @@ import { MaskedAliasChannels } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from 'config';
+import Tooltip from './reusables/tooltip/Tooltip';
+import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -403,7 +405,24 @@ console.log(channelObject)
           ) : (
             <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
               <Span style={{ display: 'flex', alignItems: 'center' }}>
-                {channelObject.name}
+                <Tooltip 
+                  wrapperProps={{
+                    width: "fit-content", 
+                    maxWidth: "fit-content", 
+                    minWidth: "fit-content", 
+                    zIndex: "10",
+                  }} 
+                  placementProps={{
+                    background: "none",
+                    bottom: "20px",
+                    right: "-175px"
+                  }}
+                  tooltipContent={<UpdateChannelTooltipContent channelName='Ethereum Push Notification Service' channelDescription='The channel provides useful information, notifications, etc to all the users of the EPNS platform.' channelLogoSrc={`${channelObject.icon}`}/>}
+                  >
+                  {/* TODO: HAS TO BE CHANGED TO A i icon */}
+                  i&nbsp;
+                </Tooltip>
+                  {channelObject.name}
                 {isVerified == 1 && (
                   <Span
                     margin="0px 5px"
