@@ -8,6 +8,7 @@ import Dropdown from 'react-dropdown';
 import { FiLink } from 'react-icons/fi';
 import styled, { useTheme } from 'styled-components';
 import { AiFillExclamationCircle } from 'react-icons/ai'
+import DateTimePicker from "react-datetime-picker";
 
 // Internal Compoonents
 import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
@@ -26,6 +27,12 @@ import {
 } from 'primaries/SharedStyling';
 import './createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
+import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
+import Toggle from './reusables/toggle/Toggle';
+import Tooltip from "./reusables/tooltip/Tooltip"
+import { device } from 'config/Globals';
+import NewTag from './NewTag';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
 
 const coreChainId = appConfig.coreContractChain;
 
@@ -33,6 +40,7 @@ const ALIAS_CHAINS = appConfig.allowedNetworks.map((chainID: number) => ({ label
 
 const ChannelInfo = ({
   channelName,
+  channelExpiryDate,
   channelAlias,
   channelInfo,
   channelURL,
@@ -41,15 +49,18 @@ const ChannelInfo = ({
   setChainDetails,
   setChannelInfo,
   setChannelName,
+  setChannelExpiryDate,
   setChannelURL,
   setStepFlow,
   setChannelInfoDone,
   setTxStatus,
 }) => {
   const theme = useTheme();
-  const isMobile = useDeviceWidthCheck(600)
+  const isMobile = useDeviceWidthCheck(769)
+  const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-01T00:00:00.000"), 90);
+
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
+  const [errorInfo, setErrorInfo] = useState<{name:string, channelExpiryDate:string, description:string, address:string, url:string}>({name: '', channelExpiryDate:'', description: '', address: '', url: ''});
 
 
   const isEmpty = (field) => {
@@ -60,16 +71,29 @@ const ChannelInfo = ({
     return false;
   };
 
+  const isChannelExpiryDateEmpty = (channelExpiryDate) => {
+    return channelExpiryDate!==undefined && channelExpiryDate===null;
+  }
+
   const isAllFilledAndValid = (): boolean => {
     setErrorInfo('');
 
-    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
+    if (isEmpty(channelName) || isChannelExpiryDateEmpty(channelExpiryDate) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
       if (
         isEmpty(channelName)
       ) {
         setErrorInfo(x => ({
           ...x,
           name: 'Please, enter the channel name.',
+        }));
+      }
+
+      if (
+        isChannelExpiryDateEmpty(channelExpiryDate)
+      ) {
+        setErrorInfo(x => ({
+          ...x,
+          channelExpiryDate: 'Please, select the channel expiry date.',
         }));
       }
 
@@ -158,36 +182,96 @@ const ChannelInfo = ({
 
   return (
     <Section>
-      <Item
-        padding={isMobile ? "20px 0 0 0" :"40px 0 0 0"}
-        align="flex-start"
-      >
-        <Label style={{ color: theme.color }}>Channel Name</Label>
+      <MainContainer>
         <Item
-          margin="7px 0px 0px 0px"
           flex="1"
           self="stretch"
           align="stretch"
-          border="1px solid #BAC4D6"
-          radius="12px"
+          height="fit-content"
+          min-height="fit-content"
         >
-          <Input
-            required
-            maxlength="40"
-            flex="1"
-            padding="12px"
-            weight="400"
-            size="16px"
-            bg="white"
-            radius="12px"
-            height="25px"
-            value={channelName}
-            onChange={(e) => {
-              setChannelName(e.target.value);
-            }}
-          />
+          <Label style={{ color: theme.color }}>Channel Name</Label>
+          <TopInnerContainer>
+              <Item
+                flex="1"
+                self="stretch"
+                align="stretch"
+                height="fit-content"
+              >
+                  <Input
+                    required
+                    maxlength="40"
+                    flex="1"
+                    self="stretch"
+                    align="stretch"
+                    padding="12px"
+                    height="25px"
+                    weight="400"
+                    size="16px"
+                    bg="white"
+                    radius="12px"
+                    border="1px solid #BAC4D6"
+                    value={channelName}
+                    onChange={(e) => {
+                      setChannelName(e.target.value);
+                    }}
+                  />
+                {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
+              </Item>
+            <Tooltip 
+              tooltipContent='Timebound channels will be deleted after expiry'
+              // disable the tooltip when time bound toggle is NOT on
+              placementProps={isMobile
+                ?
+                {
+                  bottom: "-63px",
+                  transform: "translateX(6%)",
+                }
+                :
+                {
+                  bottom: "-63px",
+                  transform: "translateX(16%)"
+                }
+              }
+            >
+              <TimeBoundToggleContainer>
+                <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
+                  <Label style={{ color: theme.color }}>Time Bound</Label>
+                  {isNewTagVisible && <NewTag />}
+                </ItemHV2>
+                {/* Toggle should be off only when channelExpiryDate is undefined */}
+                <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
+                  if(channelExpiryDate===undefined){
+                    // turn on the toggle
+                    return setChannelExpiryDate(null);
+                  }
+                  // turn off the toggle
+                  setChannelExpiryDate(undefined);
+                }} />
+              </TimeBoundToggleContainer>
+            </Tooltip>
+          </TopInnerContainer>
         </Item>
-        {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
+
+        {
+          channelExpiryDate !== undefined && 
+          <Item
+            flex="1"
+            self="stretch"
+            align="stretch"
+            margin="30px 0px 0px 0px"
+          >
+            <Label style={{ color: theme.color }}>Channel Expiry Date</Label>
+            <DatePickerContainer>
+              <CustomDateTimePicker
+                className="date"
+                value={channelExpiryDate}
+                onChange={setChannelExpiryDate}
+              />
+            </DatePickerContainer>
+            {errorInfo?.channelExpiryDate && (<ErrorMessage message = {errorInfo?.channelExpiryDate} />)}
+          </Item>
+        }
         
         <Item
           flex="1"
@@ -360,10 +444,27 @@ const ChannelInfo = ({
             </Span>
           </Button>
         </Item>
-      </Item>
+      </MainContainer>
     </Section>
   );
 };
+
+const MainContainer = styled(Item)`
+  align-items: "flex-start";
+  padding: 40px 140px 0 140px;
+  @media ${device.laptop} {
+    padding: 20px 0 0 0;
+  }
+`
+
+const TopInnerContainer = styled(ItemHV2)`
+  align-items: flex-start;
+  height: fit-content;
+  margin-top: 7px;
+  @media ${device.tablet} {
+    flex-direction: column;
+  }
+`
 
 const Label = styled.div`
   font-style: normal;
@@ -373,6 +474,93 @@ const Label = styled.div`
   letter-spacing: -0.011em;
   color: #1e1e1e;
 `;
+
+const TimeBoundToggleContainer = styled(ItemHV2)`
+  height: 25px;
+  margin-left: 1.3rem;
+  padding: 12px 18px;
+  
+  flex: 1;
+  align-items: center;
+  border-radius: 15px;
+  background: ${(props) => props.theme.toggleContainerBG};
+  @media ${device.tablet} {
+    margin-left: 0;
+    margin-top: 1.25rem;
+  }
+`
+
+const DatePickerContainer = styled.div`
+  margin-top: 7px;
+  background-color: white;
+  color: #000;
+  border: 1px solid #bac4d6;
+  display: flex;
+  flex-direction: row;
+  border-radius: 12px;
+  justify-content: space-between;
+  align-items: center;
+  height: 48px;
+  /* margin-bottom: 28px; */
+
+  position: relative;
+  margin-top:  ${(props) => (props.mttop ? props.mttop : "")};
+  @media(max-width:600px){
+    margin-top:  ${(props) => (props.mtop ? props.mtop : "")};
+  }
+`
+
+const CustomDateTimePicker = styled(DateTimePicker)`
+  padding-right: 4px;
+    flex: 6;
+    display: flex;
+    align-items: center !important;
+    font-family: Strawford, Source Sans Pro;
+    .react-datetime-picker__wrapper {
+        border: 0px !important;
+        border-radius: 5px !important;
+        height: 40px !important;
+    }
+    
+    .react-datetime-picker__inputGroup {
+        margin: 0px !important;
+        margin-left: 12px !important;
+        @media(max-width:850px){
+                width: 4rem !important;
+            }
+    }
+    
+    .react-datetime-picker__inputGroup__input {
+        font-weight: 500 !important;
+    }
+    .react-datetime-picker__inputGroup__input{
+        font-weight: 500 !important;
+        color: #000;
+    }
+
+    .react-datetime-picker__button svg {
+        stroke: #000;
+    }
+    .react-datetime-picker__button{
+        @media(max-width:850px){
+                margin: 4px !important;
+                padding: 0px !important;
+            }
+    }
+    .react-datetime-picker__inputGroup__input--hasLeadingZero {
+        font-weight: 500 !important;
+    }
+    .react-datetime-picker__inputGroup__minute {
+        font-weight: 400 !important;
+    }
+
+    .react-datetime-picker__clock {
+        display: none;
+    }
+    .react-datetime-picker__inputGroup__divider {
+        font-weight: 400;
+    }
+`
 
 const DropdownStyledParent = styled.div`
   margin-top: 7px;

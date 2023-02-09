@@ -173,8 +173,15 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
   return {address: null, chainId: null};
 };
 
+
+export const CHANNEL_TYPE = {
+  TIMEBOUND: 4,
+  GENERAL: 2
+}
+
 export const shortenText = (str: string, substringLengthStart: number, substringLengthEnd?: number):string => {
   return `${str.substring(0, substringLengthStart)}...${str.substring(str.length-(substringLengthEnd??substringLengthStart))}`;
 };
+
 
 export default UtilityHelper;

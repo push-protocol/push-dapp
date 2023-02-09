@@ -14,7 +14,7 @@ import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { networkName } from 'helpers/UtilityHelper';
+import { CHANNEL_TYPE, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
 import { Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
@@ -45,6 +45,13 @@ function CreateChannel() {
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
   const [chainDetails, setChainDetails] = React.useState(CORE_CHAIN_ID);
   const [channelName, setChannelName] = React.useState('');
+  /* 
+    if channelExpiryDate is undefined -> channel is not time bound 
+    if channelExpiryDate is null -> channel is time bound but user hasnt entered the date
+      null was used above to make it compatible with react-datetime-picker package
+    if channelExpiryDate is a date string -> channel is time bound and user has entered the date
+  */
+  const [channelExpiryDate, setChannelExpiryDate] = useState(undefined);
   const [channelAlias, setChannelAlias] = React.useState('');
   const [channelInfo, setChannelInfo] = React.useState('');
   const [channelURL, setChannelURL] = React.useState('');
@@ -74,9 +81,6 @@ function CreateChannel() {
       value = value?.toString();
       const convertedVal = ethers.utils.formatEther(value);
       setPushTokenAmountVal(convertedVal);
-      if (convertedVal >= minStakeFees) {
-        setChannelStakeFees(convertedVal);
-      }
     };
     checkPushTokenApprovalFunc();
   }, []);
@@ -229,14 +233,20 @@ function CreateChannel() {
 
       let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
-      const channelType = 2; // Open Channel
+      let channelType = CHANNEL_TYPE["GENERAL"]; // Open Channel
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
 
       setProgress(50);
 
-      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, 0, {
+      let timestampIfTimebound = 0;
+      if(channelExpiryDate) {
+        timestampIfTimebound = channelExpiryDate.getTime() / 1000;
+        channelType = CHANNEL_TYPE["TIMEBOUND"];
+      }
+
+      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
         gasLimit: 1000000,
       });
 
@@ -437,6 +447,7 @@ function CreateChannel() {
               <ChannelInfo
                 setStepFlow={setStepFlow}
                 channelName={channelName}
+                channelExpiryDate={channelExpiryDate}
                 channelAlias={channelAlias}
                 channelInfo={channelInfo}
                 channelURL={channelURL}
@@ -445,6 +456,7 @@ function CreateChannel() {
                 setChainDetails={setChainDetails}
                 setChannelInfo={setChannelInfo}
                 setChannelName={setChannelName}
+                setChannelExpiryDate={setChannelExpiryDate}
                 setChannelURL={setChannelURL}
                 setChannelInfoDone={setChannelInfoDone}
                 setTxStatus={setTxStatus}
