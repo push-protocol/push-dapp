@@ -13,7 +13,7 @@ import { ReactComponent as AddGroupIcon } from 'assets/chat/group-chat/creategro
 import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creategroupicondark.svg';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 
-export const GroupDetailsContent = ({setCreateGroupState}) => {
+export const GroupDetailsContent = ({ setCreateGroupState }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [groupName, setGroupName] = React.useState<string>('');
   const [groupDescription, setGroupDescription] = React.useState<string>('');
@@ -52,75 +52,75 @@ export const GroupDetailsContent = ({setCreateGroupState}) => {
 
   return (
     <ThemeProvider theme={themes}>
-        <GroupIconContainer onClick={handleUpload}>
-          {themes.scheme == 'light' ? <AddGroupIcon /> : <AddGroupIconDark />}
-          <FileInput
-            type="file"
-            ref={fileUploadInputRef}
-          />
-        </GroupIconContainer>
-        <TextFieldContainer>
-          <TextFieldHeaderContainer>
-            <TextFieldHeading color={themes.modalHeadingColor}>Group Name</TextFieldHeading>
-            <CharacterCount color={themes.modalSecondaryTextColor}>{groupName.length}</CharacterCount>
-          </TextFieldHeaderContainer>
-          <CustomInput
-            ref={groupNameInputRef}
-            onChange={handleGroupName}
-            padding="0.8rem"
-            borderColor={themes.modalInputBorderColor}
-            color={themes.modalMessageColor}
-          />
-        </TextFieldContainer>
-        <TextFieldContainer>
-          <TextFieldHeaderContainer>
-            <TextFieldHeading color={themes.modalHeadingColor}>Group Description</TextFieldHeading>
-            <CharacterCount color={themes.modalSecondaryTextColor}>{groupDescription.length}</CharacterCount>
-          </TextFieldHeaderContainer>
-          <GroupDescription
-            ref={groupDescriptionInputRef}
-            onChange={handleGroupDescription}
-            borderColor={themes.modalInputBorderColor}
-            color={themes.modalMessageColor}
-          />
-        </TextFieldContainer>
-        <ItemHV2>
-          {options.map((option) => {
-            return (
-              <OptionContainer
-                borderRadius={option.id == 1 ? '12px 0px 0px 12px' : '0px 12px 12px 0px'}
-                hoverBackground={themes.modalOptionHoverBackgroundColor}
-                borderColor={themes.modalInputBorderColor}
-                backgroundColor={option.id == privacy ? themes.modalOptionHoverBackgroundColor : 'transparent'}
-                key={option.id}
-                onClick={() => setPrivacy(option.id)}
-              >
-                <OptionText
-                  fontWeight="500"
-                  fontSize="18px"
-                  color={themes.modalMessageColor}
-                >
-                  {option.title}
-                </OptionText>
-                <OptionText
-                  fontWeight="400"
-                  fontSize="12px"
-                  color={themes.modalSecondaryTextColor}
-                >
-                  {option.subTitle}
-                </OptionText>
-              </OptionContainer>
-            );
-          })}
-        </ItemHV2>
-        <ModalConfirmButton
-          text="Next"
-          onClick={()=>setCreateGroupState(2)}
-          isLoading={isLoading}
-          backgroundColor={groupDescription && groupName && privacy ? '#CF1C84' : themes.modalConfirmButtonBackground}
-          color={groupDescription && groupName && privacy ? '#FFFFF' : themes.modalConfirmButtonTextColor}
-          border={`1px solid ${themes.modalConfirmButtonBorder}`}
+      <GroupIconContainer onClick={handleUpload}>
+        {themes.scheme == 'light' ? <AddGroupIcon /> : <AddGroupIconDark />}
+        <FileInput
+          type="file"
+          ref={fileUploadInputRef}
         />
+      </GroupIconContainer>
+      <TextFieldContainer>
+        <TextFieldHeaderContainer>
+          <TextFieldHeading color={themes.modalHeadingColor}>Group Name</TextFieldHeading>
+          <CharacterCount color={themes.modalSecondaryTextColor}>{groupName.length}</CharacterCount>
+        </TextFieldHeaderContainer>
+        <CustomInput
+          ref={groupNameInputRef}
+          onChange={handleGroupName}
+          padding="0.8rem"
+          borderColor={themes.modalInputBorderColor}
+          color={themes.modalMessageColor}
+        />
+      </TextFieldContainer>
+      <TextFieldContainer>
+        <TextFieldHeaderContainer>
+          <TextFieldHeading color={themes.modalHeadingColor}>Group Description</TextFieldHeading>
+          <CharacterCount color={themes.modalSecondaryTextColor}>{groupDescription.length}</CharacterCount>
+        </TextFieldHeaderContainer>
+        <GroupDescription
+          ref={groupDescriptionInputRef}
+          onChange={handleGroupDescription}
+          borderColor={themes.modalInputBorderColor}
+          color={themes.modalMessageColor}
+        />
+      </TextFieldContainer>
+      <ItemHV2>
+        {options.map((option) => {
+          return (
+            <OptionContainer
+              borderRadius={option.id == 1 ? '12px 0px 0px 12px' : '0px 12px 12px 0px'}
+              hoverBackground={themes.modalOptionHoverBackgroundColor}
+              borderColor={themes.modalInputBorderColor}
+              backgroundColor={option.id == privacy ? themes.modalOptionHoverBackgroundColor : 'transparent'}
+              key={option.id}
+              onClick={() => setPrivacy(option.id)}
+            >
+              <OptionText
+                fontWeight="500"
+                fontSize="18px"
+                color={themes.modalMessageColor}
+              >
+                {option.title}
+              </OptionText>
+              <OptionText
+                fontWeight="400"
+                fontSize="12px"
+                color={themes.modalSecondaryTextColor}
+              >
+                {option.subTitle}
+              </OptionText>
+            </OptionContainer>
+          );
+        })}
+      </ItemHV2>
+      <ModalConfirmButton
+        text="Next"
+        onClick={() => (groupDescription && groupName && privacy ? setCreateGroupState(2) : setCreateGroupState(1))}
+        isLoading={isLoading}
+        backgroundColor={groupDescription && groupName && privacy ? '#CF1C84' : themes.modalConfirmButtonBackground}
+        color={groupDescription && groupName && privacy ? '#FFFFF' : themes.modalConfirmButtonTextColor}
+        border={`1px solid ${themes.modalConfirmButtonBorder}`}
+      />
     </ThemeProvider>
   );
 };
@@ -138,7 +138,7 @@ const FileInput = styled.input`
 `;
 
 const TextFieldContainer = styled(ItemVV2)`
-  min-width:299px;
+  min-width: 299px;
   margin-bottom: 28px;
 `;
 
@@ -189,7 +189,7 @@ const OptionContainer = styled(ItemVV2)`
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: ${(props) => props.borderRadius || '0px'};
   background-color: ${(props) => props.backgroundColor || 'transparent'};
-  min-width:150px;
+  min-width: 150px;
   padding: 8px;
   cursor: pointer;
   &:hover {

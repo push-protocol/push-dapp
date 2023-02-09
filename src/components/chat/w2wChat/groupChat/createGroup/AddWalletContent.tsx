@@ -14,13 +14,12 @@ import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removeligh
 import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import Profile from 'assets/chat/group-chat/profile.svg';
-
 //import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 export const AddWalletContent = () => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
-  const [searchResult, setSearchResult] = React.useState<number>(1);
+  const [searchResult, setSearchResult] = React.useState<number>(0);
   const [completed, setCompleted] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
@@ -28,6 +27,10 @@ export const AddWalletContent = () => {
 
   const onChangeSearchBox = (e) => {
     setSearchedUser(e.target.value);
+  };
+
+  const handleUserSearch = () => {
+    console.log('Search');
   };
 
   const clearInput = () => {
@@ -53,7 +56,7 @@ export const AddWalletContent = () => {
             01/09 Members
           </SpanV2>
         </LabelContainer>
-        <SearchBarContent onSubmit={() => {}}>
+        <SearchBarContent onSubmit={handleUserSearch}>
           <Input
             type="text"
             value={searchedUser}
@@ -77,18 +80,7 @@ export const AddWalletContent = () => {
                 spinnerColor={theme.default.secondaryColor}
               />
             )} */}
-            {searchedUser.length > 0 && (
-              // <ItemVV2
-              //   position="absolute"
-              //   alignItems="flex-end"
-              //   width="24px"
-              //   height="24px"
-              //   top="17.5px"
-              //   right="17.5px"
-              // >
-              <Clear onClick={clearInput} />
-              // </ItemVV2>
-            )}
+            {searchedUser.length > 0 && <Clear onClick={clearInput} />}
             {searchedUser.length == 0 && (
               <SearchIcon
                 style={{ cursor: 'pointer' }}
@@ -98,34 +90,52 @@ export const AddWalletContent = () => {
           </ItemVV2>
         </SearchBarContent>
       </SearchbarContainer>
-      <ItemVV2 justifyContent="flex-start">
-        <WalletProfileContainer background={theme.groupSearchProfilBackground}>
-          <WalletProfile>
-            <ImageV2
-              src={Profile}
-              width="48px"
-              height="48px"
-              borderRadius="48px"
-              margin="0px 12px 0px 0px"
-            />
-            <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
-          </WalletProfile>
-          {theme.scheme == 'light' ? <AddLight /> : <AddDark />}
-        </WalletProfileContainer>
-        <WalletProfileContainer background={theme.groupSearchProfilBackground}>
-          <WalletProfile>
-            <ImageV2
-              src={Profile}
-              width="48px"
-              height="48px"
-              borderRadius="48px"
-              margin="0px 12px 0px 0px"
-            />
-            <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
-          </WalletProfile>
-          {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
-        </WalletProfileContainer>
-      </ItemVV2>
+      {searchResult > 0 ? (
+        <MemberList marginTop="8px">
+          <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+            <WalletProfile>
+              <ImageV2
+                src={Profile}
+                width="48px"
+                height="48px"
+                borderRadius="48px"
+                margin="0px 12px 0px 0px"
+              />
+              <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
+            </WalletProfile>
+            {theme.scheme == 'light' ? <AddLight /> : <AddDark />}
+          </WalletProfileContainer>
+        </MemberList>
+      ) : (
+        <MemberList marginTop="16px">
+          <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+            <WalletProfile>
+              <ImageV2
+                src={Profile}
+                width="48px"
+                height="48px"
+                borderRadius="48px"
+                margin="0px 12px 0px 0px"
+              />
+              <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
+            </WalletProfile>
+            {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
+          </WalletProfileContainer>
+          <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+            <WalletProfile>
+              <ImageV2
+                src={Profile}
+                width="48px"
+                height="48px"
+                borderRadius="48px"
+                margin="0px 12px 0px 0px"
+              />
+              <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
+            </WalletProfile>
+            {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
+          </WalletProfileContainer>
+        </MemberList>
+      )}
       <ModalConfirmButton
         text="Create Group"
         onClick={() => {}}
@@ -162,7 +172,7 @@ const Input = styled.input`
   min-width: 445px;
   height: 48px;
   padding: 13px 60px 13px 21px;
-  margin: 10px 0px 17px 0px;
+  margin: 10px 0px 0px;
   border-radius: 99px;
   border: 1px solid transparent !important;
   background-color: ${(props) => props.theme.chat.snapFocusBg};
@@ -181,6 +191,9 @@ const Input = styled.input`
   &::placeholder {
     color: #657795;
   }
+  @media (max-width: 480px) {
+    min-width: 300px;
+  }
 `;
 
 const WalletProfileContainer = styled(ItemHV2)`
@@ -193,4 +206,9 @@ const WalletProfileContainer = styled(ItemHV2)`
 
 const WalletProfile = styled(ItemHV2)`
   justify-content: flex-start;
+`;
+
+const MemberList = styled(ItemVV2)`
+  margin-top: ${(props) => props.marginTop || '8px'};
+  justify-content: 'flex-start';
 `;
