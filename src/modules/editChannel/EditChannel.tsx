@@ -108,12 +108,8 @@ export default function EditChannel({
   const depositPush = async () => {
     setIsLoading(true);
     if(!library) return;
-
-
-    editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-
     const signer = library.getSigner(account);
-
+    editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
     try{
       const response = await approvePushToken({
         signer,
@@ -136,30 +132,30 @@ export default function EditChannel({
             />
           ),
         });
-      }else{
-        editChannelToast.showMessageToast({
-          toastTitle: 'Transaction failed',
-          toastMessage: 'Push are not Approved!',
-          toastType: 'ERROR',
-          getToastIcon: (size) =>
-          <MdError size={size} color="red" />,
-        });
       }
-
-
     }catch(err){
-      console.log("Error",err);
-      console.error(err);
+      console.log(err);
+      if (err.code == "ACTION_REJECTED") {
+        // EIP-1193 userRejectedRequest error
+        editChannelToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `User denied message signature.`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
+      } else {
+        editChannelToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `There was an error in approving PUSH Token`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
+
+        console.log('Error --> %o', err);
+        console.log({ err });
+      }
     }
-
-    // const response = await approvePushToken({
-    //   signer,
-    //   contractAddress: addresses.epnscore,
-    //   amount: (feesRequiredForEdit - pushApprovalAmount)
-    // });
     setIsLoading(false);
-
-    
   }
 
   const closeUploadModal = () => {
@@ -262,7 +258,6 @@ export default function EditChannel({
         }),
       });
 
-      editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
 
       console.log(input);
       const storagePointer = await IPFSupload(input);
@@ -272,7 +267,7 @@ export default function EditChannel({
       const newIdentityBytes = ethers.utils.toUtf8Bytes(identity);
       const parsedFees = ethers.utils.parseUnits(feesRequiredForEdit.toString(), 18);
 
-      
+      editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
       const tx = await epnsWriteProvider.updateChannelMeta(account, newIdentityBytes, parsedFees, {
         gasLimit: 1000000
       })
@@ -291,19 +286,31 @@ export default function EditChannel({
             color="green"
           />,
       });
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 2000);
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (err) {
       setIsLoading(false);
       console.log(err.message);
-      editChannelToast.showMessageToast({
-        toastTitle: 'Transaction failed',
-        toastMessage: 'Channel details are not changed',
-        toastType: 'ERROR',
-        getToastIcon: (size) =>
-        <MdError size={size} color="red" />,
-      });
+
+      if (err.code == "ACTION_REJECTED") {
+        // EIP-1193 userRejectedRequest error
+        editChannelToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `User denied message signature.`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
+      } else {
+        editChannelToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `There was an error in updating channel Details`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
+        console.log('Error --> %o', err);
+        console.log({ err });
+      }
     }
   }
 
@@ -419,7 +426,7 @@ export default function EditChannel({
               </FooterButtons>)
               : (
                 <FooterButtons onClick={depositPush} >
-                  Approve Push
+                  Approve PUSH
                 </FooterButtons>
               )}
 

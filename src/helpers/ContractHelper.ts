@@ -37,7 +37,8 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
     await tx.wait();
     return true;
   } catch (err) {
-    console.log(err.message);
-    return false;
+    console.log(err);
+    throw err;
+    // return false;
   }
 };

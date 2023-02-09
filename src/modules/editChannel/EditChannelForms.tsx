@@ -49,21 +49,21 @@ const EditChannelForms = ({
         )
     }
 
-    // const handleUrlChange = (e)=>{
-    //     const response = e.target.value;
-    //     setUrlDetails(response);
-    //     if (!isValidUrl(response)) {
-    //         setErrorInfo(x => ({
-    //           ...x,
-    //           url: 'Channel URL is invalid! Please enter a valid url!',
-    //         }));
-        
-    //     }else{
-    //         setChannelURL(response);
-    //     }
+    const handleUrlChange = (e)=>{
+        const response = e.target.value;
+        if (!isValidUrl(response)) {
+            setErrorInfo(x => ({
+              ...x,
+              url: 'Channel URL is invalid! Please enter a valid url!',
+            }));
+            setChannelURL(response);
+        }else{
+            setErrorInfo('');
+            setChannelURL(response);
+        }
 
 
-    // }
+    }
 
     return (
         <Container>
@@ -183,8 +183,8 @@ const EditChannelForms = ({
                             value={channelURL}
                             // value={urlDetails}
                             onChange={(e) => {
-                                // handleUrlChange(e);
-                                setChannelURL(e.target.value);
+                                handleUrlChange(e);
+                                // setChannelURL(e.target.value);
                             }}
                         />
                     </Item>
