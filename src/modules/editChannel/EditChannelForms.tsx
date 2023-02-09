@@ -15,6 +15,7 @@ import {
 } from 'primaries/SharedStyling';
 import { AiFillExclamationCircle } from 'react-icons/ai';
 import { isAllFilledAndValid } from 'helpers/InputValidation';
+import { isValidUrl } from 'helpers/UtilityHelper';
 
 const EditChannelForms = ({
     channelName,
@@ -30,6 +31,8 @@ const EditChannelForms = ({
 
     const theme = useTheme();
     // const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
+    // const [urlDetails,setUrlDetails] = useState(channelURL);
+
 
     const ErrorMessage = ({ message }) => {
         return (
@@ -45,6 +48,22 @@ const EditChannelForms = ({
             </Item>
         )
     }
+
+    // const handleUrlChange = (e)=>{
+    //     const response = e.target.value;
+    //     setUrlDetails(response);
+    //     if (!isValidUrl(response)) {
+    //         setErrorInfo(x => ({
+    //           ...x,
+    //           url: 'Channel URL is invalid! Please enter a valid url!',
+    //         }));
+        
+    //     }else{
+    //         setChannelURL(response);
+    //     }
+
+
+    // }
 
     return (
         <Container>
@@ -162,7 +181,9 @@ const EditChannelForms = ({
                             focusBorder={theme.textAreaFocusBorder}
                             radius="12px"
                             value={channelURL}
+                            // value={urlDetails}
                             onChange={(e) => {
+                                // handleUrlChange(e);
                                 setChannelURL(e.target.value);
                             }}
                         />

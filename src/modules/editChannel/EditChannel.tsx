@@ -74,6 +74,7 @@ export default function EditChannel({
   const [showUploadLogoModal, setShowUploadLogoModal] = useState(false);
   const editChannelToast = useToast();
 
+
   useEffect(() => {
     if(!account) return;
 
@@ -108,19 +109,57 @@ export default function EditChannel({
     setIsLoading(true);
     if(!library) return;
 
-    const signer = library.getSigner(account);
-    const response = await approvePushToken({
-      signer,
-      contractAddress: addresses.epnscore,
-      amount: (feesRequiredForEdit - pushApprovalAmount)
-    });
 
-    if(response) {
-      setIsLoading(false);
-      setPushApprovalAmount(feesRequiredForEdit);
-      setPushDeposited(true);
+    editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
+    const signer = library.getSigner(account);
+
+    try{
+      const response = await approvePushToken({
+        signer,
+        contractAddress: addresses.epnscore,
+        amount: (feesRequiredForEdit - pushApprovalAmount)
+      });
+      console.log("response",response)
+      if(response) {
+        setIsLoading(false);
+        setPushApprovalAmount(feesRequiredForEdit);
+        setPushDeposited(true);
+        editChannelToast.showMessageToast({
+          toastTitle: 'Success',
+          toastMessage: 'Successfully approved Push!',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
+      }else{
+        editChannelToast.showMessageToast({
+          toastTitle: 'Transaction failed',
+          toastMessage: 'Push are not Approved!',
+          toastType: 'ERROR',
+          getToastIcon: (size) =>
+          <MdError size={size} color="red" />,
+        });
+      }
+
+
+    }catch(err){
+      console.log("Error",err);
+      console.error(err);
     }
+
+    // const response = await approvePushToken({
+    //   signer,
+    //   contractAddress: addresses.epnscore,
+    //   amount: (feesRequiredForEdit - pushApprovalAmount)
+    // });
     setIsLoading(false);
+
+    
   }
 
   const closeUploadModal = () => {
@@ -223,6 +262,8 @@ export default function EditChannel({
         }),
       });
 
+      editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+
       console.log(input);
       const storagePointer = await IPFSupload(input);
       console.log('IPFS storagePointer:', storagePointer);
@@ -250,9 +291,9 @@ export default function EditChannel({
             color="green"
           />,
       });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
     } catch (err) {
       setIsLoading(false);
       console.log(err.message);
@@ -378,7 +419,7 @@ export default function EditChannel({
               </FooterButtons>)
               : (
                 <FooterButtons onClick={depositPush} >
-                  Deposit Push
+                  Approve Push
                 </FooterButtons>
               )}
 
