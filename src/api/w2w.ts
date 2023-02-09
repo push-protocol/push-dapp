@@ -1,7 +1,6 @@
-import { ToastPosition } from 'modules/chat/ChatModule';
+
 // @ts-ignore
-import { toast } from 'react-toastify';
-import { Feeds, MessageIPFSWithCID, User } from 'types/chat';
+import { MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal configs
 import { appConfig } from 'config';
@@ -14,59 +13,6 @@ if (window.location.hostname === 'localhost' || window.location.hostname === '12
 } else {
   BASE_URL = appConfig.apiUrl;
 }
-
-// Done
-export const getInbox = async (did: string): Promise<Feeds[]> => {
-  let retry = 0;
-  for (let i = 0; i < 3; i++) {
-    try {
-      const path = BASE_URL + '/v1/w2w/users/' + did + '/messages';
-      const response = await fetch(path, {
-        method: 'GET',
-      });
-      if (response.status >= 500) continue;
-      const data: Feeds[] = await response.json();
-      return data;
-    } catch (err) {
-      // if (retry > 1) {
-      //   toast.error('An Error Occurred! Please Reload the Page', ToastPosition);
-      // }
-      console.log('Error in the API call', err);
-      retry++;
-      continue;
-    }
-  }
-};
-
-// TODO: Delete this function since it's calling the same endpoint as the `getInbox` above.
-// Done
-export const getIntents = async (did: string): Promise<Feeds[]> => {
-  let retry = 0;
-
-  for (let i = 0; i < 3; i++) {
-    try {
-      const response = await fetch(BASE_URL + '/v1/w2w/inbox/did', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          did,
-        }),
-      });
-      const intents: Feeds[] = await response.json();
-      return intents;
-    } catch (err) {
-      console.log('Retry', retry);
-      if (retry > 1) {
-        toast.error("Chat request can't be loaded! Please try again later", ToastPosition);
-      }
-      console.log('Error in the API call', err);
-      retry++;
-      continue;
-    }
-  }
-};
 
 export const getUser = async ({ did = '', caip10 = '' }: { did?: string; caip10?: string }): Promise<User> => {
   let retry = 0;

@@ -17,7 +17,11 @@ const UtilityHelper = {
   },
 };
 
-export const MaskedAliasChannels = {
+export const MaskedAliasChannels:{
+  [x:number]: {
+    [y:string]: number
+  }
+} = {
   137: {
     '0x2dbf5aFead4759E6151590E4a8F6cD596B7044F8': 1,
     '0xe5b06bfd663C94005B8b159Cd320Fd7976549f9b': 1,
@@ -37,8 +41,19 @@ export const MaskedAliasChannels = {
   },
   56: {
 
-  }
+  },
+  80001: {},
+  97: {}
  }
+ export const findObject = (data: any,parentArray: any[],property: string ): boolean =>{
+  let isPresent = false;
+  parentArray.map((value) => {
+    if (value[property] == data[property]) {
+      isPresent = true;
+    }
+  });
+  return isPresent;
+}
 
 export const MaskedChannels = {
   '0x64F4fba925CbDe309acC875b8Af2feb07f2aCCA0': 0, // ETHIndia
@@ -51,31 +66,7 @@ export const MaskedChannels = {
   '0xcf3224c64FF2d5b18b5e4460b1103FF9037eFAC2': 1
 }
 
-export const isLengthValid = (data: string, len: number): boolean => {
-  return data.length <= len;
-};
 
-export const isValidUrl = (urlString: string): boolean => {
-  var urlPattern = new RegExp(
-    '^((?:https|http):\\/\\/)' + // validate protocol
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // validate domain name
-      '((\\d{1,3}\\.){3}\\d{1,3}))' + // validate OR ip (v4) address
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // validate port and path
-      '(\\?[;&a-z\\d%_.~+=-]*)?' + // validate query string
-      '(\\#[-a-z\\d_]*)?$',
-    'i'
-  ); // validate fragment locator
-  return !!urlPattern.test(urlString);
-};
-
-export const isValidAddress = (address: string): boolean => {
-  return utils.isAddress(address);
-}
-
-// Disable the browser notification on Metamask iphone mobile
-export const isUserAgentIphone = (userAgent:any):boolean => {
-  return userAgent.indexOf('iPhone') !== -1;
-};
 
 export const envUtil = {
   prod: 'app.push.org',
@@ -103,7 +94,8 @@ export const networkName = {
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
-  97: "BSC Testnet"
+  97: "BSC Testnet",
+  56: "BSC Mainnet"
 };
 
 export const chainNameBackendStandard = {
@@ -181,9 +173,15 @@ export const getAliasFromChannelDetails = (channelDetails: Object | null | strin
   return {address: null, chainId: null};
 };
 
+
 export const CHANNEL_TYPE = {
   TIMEBOUND: 4,
   GENERAL: 2
 }
+
+export const shortenText = (str: string, substringLengthStart: number, substringLengthEnd?: number):string => {
+  return `${str.substring(0, substringLengthStart)}...${str.substring(str.length-(substringLengthEnd??substringLengthStart))}`;
+};
+
 
 export default UtilityHelper;

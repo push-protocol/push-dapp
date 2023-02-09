@@ -170,6 +170,7 @@ const themeLight = {
   toggleContainerBG: "#F4F5FA",
   toggleActiveBG: "#CF1C84",
   toggleInactiveBG: "#A0A3B1"
+  qrBg:"#fff",
 };
 
 const themeDark = {
@@ -342,6 +343,7 @@ const themeDark = {
   LinkMobileAppBorder:"#717887",
   textcolor:"#B6BCD6",
   chatQRbg:"#292a2c",
+  qrBg:"#000",
 
   // toggle switch
   toggleContainerBG: "#282A2E",

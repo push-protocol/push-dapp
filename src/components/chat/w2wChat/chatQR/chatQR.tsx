@@ -11,6 +11,7 @@ import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import GLOBALS, { device } from "config/Globals";
 import BlurBG from "components/reusables/blurs/BlurBG";
 import { ChatUserContext } from "contexts/ChatUserContext";
+import chatBoxImage from "../../../../assets/chat/chatBox.svg";
 
 const ChatQR = ({
     type = LOADER_TYPE.STANDALONE,
@@ -45,9 +46,11 @@ const ChatQR = ({
         <QRCodeCanvas
             id="qrCode"
             value={qrCodeText}
-            size={250}
+            style={{ borderRadius: "19px" }}
+            size={200}
             bgColor={"#fff"}
             level={"H"}
+            includeMargin={true}
             imageSettings={{
                 src: "./icon.jpg",
                 height: 56,
@@ -106,34 +109,37 @@ const ChatQR = ({
                             borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                             border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
                             background={theme.chatQRbg}
-                            
+
                         >
 
                             <CloseButtonContainer>
-                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{color:theme.default.color}}/>
+                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{ color: theme.default.secondaryColor }} />
                             </CloseButtonContainer>
 
                             <QRContainer>
-                                <TextContainer
-                                    display="flex"
-                                    justifyContent="center"
-                                    flexDirection="column"
-                                    alignItems="baseline"
-                                >
-                                    <H2V2
-                                        fontSize="28px"
-                                        textAlign="left"
-                                        style={{
-                                            color: theme.default.color,
-                                        }}
-                                    >Set up Push Chat on your phone</H2V2>
-                                    <TextInfo style={{
-                                        color: theme.modalMessageColor,
-                                    }}>
+                                <TextContainer>
+
+                                    <QRHeading
+                                    >Set up Push Chat on your phone</QRHeading>
+                                    <TextInfo >
                                         <p>1. Open an app using Push protocol</p>
-                                        <p>2. Tap Push Chat       or Sign in with Push Chat</p>
+                                        <p style={{ display: "flex" }}>2. Tap Push Chat
+                                            <ChatBoxImage src={chatBoxImage} />
+                                            or Sign in with Push Chat
+                                        </p>
                                         <p>3. Tap Link Push Chat and point your phone to this code </p>
                                     </TextInfo>
+
+                                    <div>
+                                        <NoteText>
+                                            <span style={{ color: "#E93636" }}>Note: </span>
+                                            The QR code enables mobile app that supports Push Protocol to read and send messages. Only scan it with mobile apps you trust.
+                                        </NoteText>
+                                    </div>
+
+
+
+
                                 </TextContainer>
                                 <ItemHV2>
                                     {qrcode}
@@ -156,20 +162,57 @@ const ChatQR = ({
 export default ChatQR;
 
 const Container = styled(ItemVV2)`
-    width:80%;
-    @media ${device.laptopL} {
-       width:85%;
-    }
+    width:856px; //for larger sizes 
+    padding: 20px;
+    
+    //for smaller sizes < 768px
     @media ${device.tablet} {
         width:95%;
+    }
+
+    //for critical sizes 
+    @media (min-width:1200px) and (max-width:1353px) {
+        width:87%;
+    }
+
+    // this one is for when chat and inbox are displayed and screen size is less
+    @media (min-width:769px) and (max-width:992px){
+        width: 620px;
+    }
+
+    //this one is for when chat and sidebar are displayed together and screen size is very less for chat
+    @media (min-width:993px) and (max-width:1199px){
+        width:540px;
     }
     
 `
 const TextContainer = styled(ItemHV2)`
-@media (max-width:1234px) {
-    margin-top: 10px;
- }
+display:flex;
+justify-content :center;
+flex-direction:column;
+align-items:baseline;
+width:460px;
+
+@media (max-width:1199px) {
+    margin: 36px auto 0px auto ;
+}
+
+@media (max-width:1199px){
+    justify-content: center;
+    align-items:center;
+}
+
 `;
+
+
+const QRHeading = styled.div`
+font-size:28px;
+text-align: left;
+color: ${(props) => props.theme.default.color};
+@media (max-width:1199px){
+    padding-right: 40px; 
+}
+`
 
 const TextInfo = styled.div`
     font-family: 'Strawford';
@@ -178,33 +221,55 @@ const TextInfo = styled.div`
     font-size: 18px;
     color: #657795;
     margin:10px 0px 0px 0px;
-    padding-left: 10px;
+    padding-left: 7px;
 `;
+
+const NoteText = styled.p`
+margin:0px;
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height:19px;
+color: #657795;
+`
 
 const CloseButtonContainer = styled.div`
     width:100%;
     text-align:end;
     text-align: end;
-    padding: 0px 0px 5px 0px;
-    font-size: 25px;
+
+    @media (max-width:1199px){
+        margin-bottom:30px;
+    }
 `;
 
 const CloseButton = styled(AiOutlineClose)`
     cursor:pointer;
+    font-size:20px;
 
 `;
 
+const ChatBoxImage = styled.img`
+    height:18px;
+    margin:0px 5px;
+`
+
 const QRContainer = styled(ItemVV2)`
-    flex-direction:row;
-    // padding:0px 17px 17px 17px;
-    // height:400px !important;
-    @media (max-width:1234px) {
-       flex-direction:column-reverse;
-       padding:0px;
+    flex-direction:column-reverse;
+    padding:0px;
+
+    @media (min-width:1200px) and (max-width:1300px) {
+        flex-direction:row;
+        padding: 35px 20px 50px 10px;
+
     }
-    @media(max-width:992px){
-        flex-direction: row;
+
+    @media (min-width:1300px){
+        flex-direction:row;
+        padding: 35px 30px 50px 30px;
     }
+
     @media(max-width:964px){
         flex-direction: column-reverse;
     }
