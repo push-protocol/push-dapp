@@ -26,7 +26,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from '../../../../config';
-import { checkIfGroup, getName } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from '../../../../helpers/w2w/groupChat';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -229,13 +229,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
-
-  const getProfilePicture = (feed:Feeds):string => {
-    if(checkIfGroup(feed))
-    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA4ElEQVR4AcXBsW3EMAxA0R9CG7jVDgQEeAEv4/pWSAZw7WW0gAEB3EGtZ7i0hAsGhxR87+v7Z30TWO8Dr00lMqrhXcuLiJBMSCYkKzzs1vmPNhWvzY536oYnJBOSCckKfzh1w9utEzl1w9utExGSCcmEZIWHUQ1vt84ndut4oxoRIZmQTEhWdut8YlQj0qbital4bXY8IZmQTEhWeBjViLSpREY1Im0qnpBMSCYkKzy0qXijGt6pG5H1PvDaVCJCMiGZkKycuuGt94HXpuJdC6E2FW9Uw7uWF56QTEgmJPsFcBk6PuFgEa0AAAAASUVORK5CYII=";
-    else return feed?.profilePicture;
-  }
-
   return (
     <ItemVV2
       alignItems="flex-start"
@@ -277,10 +270,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
 
-                    chatSnapMsg={{
-                      type: feed.msg.messageType,
-                      message: feed.msg.messageContent,
-                    }}
+                    chatSnapMsg={getChatsnapMessage(feed)}
                     timestamp={feed.msg.timestamp}
                     selected={i == selectedChatSnap ? true : false}
                     onClick={(): void => onFeedClick(feed,i)}

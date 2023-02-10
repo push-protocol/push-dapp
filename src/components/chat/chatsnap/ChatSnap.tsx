@@ -48,10 +48,11 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
       return username;
     return shortUsername;
   }
+
   // format message here instead
   const message =
     chatSnapMsg.type === 'Text' ? (
-      <SpanV2 color={theme.default.secondaryColor}>
+      <SpanV2 color={theme.default.secondaryColor} fontSize="15px" fontWeight="400">
         {chatSnapMsg.message.length > 25 ? chatSnapMsg.message.slice(0, 25) + '...' : chatSnapMsg.message}
       </SpanV2>
     ) : chatSnapMsg.type === 'Image' ? (
@@ -137,7 +138,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           )}
         </ItemHV2>
 
-       {!isGroup && <ItemHV2
+       <ItemHV2
           alignItems="flex-end"
           margin="2px 0 2px 0"
         >
@@ -149,7 +150,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           >
             {message}
           </SpanV2>
-        </ItemHV2>}
+        </ItemHV2>
       </ItemVV2>
     </ChatSnapContainer>
   );

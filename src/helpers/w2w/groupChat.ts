@@ -15,3 +15,16 @@ export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;
   else return feed?.wallets.split(',')[0].toString();
 };
+
+export const getChatsnapMessage = (feed: Feeds) => {
+  if (checkIfGroup(feed) && !feed.msg.messageContent) {
+    return {
+      type: 'Text',
+      message: 'Group successfully created!',
+    };
+  }
+  return {
+    type: feed.msg.messageType,
+    message: feed.msg.messageContent,
+  };
+};
