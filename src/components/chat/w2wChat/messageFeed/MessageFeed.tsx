@@ -141,6 +141,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setMessagesLoading(false);
   };
 
+  console.log(feeds)
+
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();

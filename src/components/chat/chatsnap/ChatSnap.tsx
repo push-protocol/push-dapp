@@ -83,7 +83,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   // get date
   let date = null;
-  if (timestamp !== null) {
+  if (timestamp) {
     const time = new Date(timestamp);
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2);
   }
