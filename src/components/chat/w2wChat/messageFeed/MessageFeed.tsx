@@ -26,6 +26,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from '../../../../config';
+import { checkIfGroup, getName } from '../../../../helpers/w2w/groupChat';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -228,17 +229,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
-  const checkIfGroup = (feed:Feeds):boolean => {
-    return feed.hasOwnProperty('groupInformation') && feed?.groupInformation;
-  }
-
-  const getName = (feed:Feeds):string=>{
-    
-    console.log(feeds)
-   if(checkIfGroup(feed))
-     return feed?.groupInformation?.groupName;
-     else return feed?.wallets.split(',')[0].toString();
-  }
 
   const getProfilePicture = (feed:Feeds):string => {
     if(checkIfGroup(feed))
