@@ -44,6 +44,7 @@ import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'hel
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { checkIfGroup } from '../../../../helpers/w2w/groupChat';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -85,6 +86,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
+  const [isGroup,setIsGroup] = useState<boolean>(false);
   const {connectedUser,setConnectedUser} = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
@@ -92,8 +94,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let showTime = false;
   let time = '';
 
-  // get ens name
-  const ensName = useResolveEns(currentChat?.wallets.split(',')[0].toString());
+
+  useEffect(()=> {
+     setIsGroup(checkIfGroup(currentChat));
+  });
+
+  //get ens name
+  const ensName = useResolveEns(!isGroup?currentChat?.wallets?.split(',')[0].toString():null);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
@@ -184,6 +191,15 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
+  // useEffect(()=>{
+  //   if(currentChat)
+  //   {
+  //     const isGroup = checkIfGroup(currentChat);
+  //     setIsGroup(isGroup);
+  //   }
+   
+  // });
+
   useEffect(() => {
     setLoading(true);
     if (currentChat) {
@@ -201,6 +217,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       }
     }
   }, [currentChat]);
+
+
+  const getDisplayName = () => {
+    if(ensName)
+      return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
+    if(isGroup)
+      return currentChat?.groupInformation?.groupName;
+    if(currentChat?.wallets)
+      return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
+  }
 
   const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
@@ -715,9 +741,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
               fontWeight="400"
               textAlign="start"
             >
-              {ensName && `${ensName} (${caip10ToWallet(currentChat.wallets.split(',')[0].toString())})`}
-
-              {!ensName && caip10ToWallet(currentChat.wallets.split(',')[0].toString())}
+            {getDisplayName()}
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
@@ -815,10 +839,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                         Messages are not encrypted till the user accepts the chat request.
                       </ItemTextSlash>
 
-                      <FirstTime>
+                     {!isGroup &&  <FirstTime>
                         This is your first conversation with recipient.<br></br> Start the conversation by sending a
                         message.
-                      </FirstTime>
+                      </FirstTime>}
                     </Item>
                   )}
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) && (
