@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 // External Packages
 import { useDispatch, useSelector } from "react-redux";
 import styled, { useTheme } from "styled-components";
+import { MdError } from 'react-icons/md';
 
 // Internal Compoonents
 import AliasProcessing from "components/AliasProcessing";
@@ -12,12 +13,13 @@ import ChannelDetails from "components/ChannelDetails";
 import ChannelLoading from "components/ChannelLoading";
 import ChannelSettings from "components/ChannelSettings";
 import CreateChannel from "components/CreateChannel";
-import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+import { ButtonV2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
 import { useDeviceWidthCheck } from "hooks";
-import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified } from "redux/slices/adminSlice";
+import { setAliasAddress, setAliasAddressFromContract, setAliasChainId, setAliasVerified, setUserChannelDetails } from "redux/slices/adminSlice";
 import { setProcessingState } from "redux/slices/channelCreationSlice";
 import ChannelsDataStore from "singletons/ChannelsDataStore";
+import useToast from "hooks/useToast";
 
 // Internal Configs
 import { appConfig } from "config";
@@ -35,12 +37,16 @@ const ChannelOwnerDashboard = () => {
   const { account, chainId } = useWeb3React();
   const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract} } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
+  const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
 
   const isChannelDetails = (channelDetails && channelDetails !== 'unfetched');
+
+  const destroyChannelToast = useToast();
 
   const dispatch = useDispatch();
 
   const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true); 
+  const [isChannelExpired, setIsChannelExpired] = useState<boolean>(false);
 
   const CORE_CHAIN_ID: number = appConfig.coreContractChain;
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
@@ -95,6 +101,44 @@ const ChannelOwnerDashboard = () => {
     clearInterval(intervalID);
   }
 
+  const destroyChannel = async () => {
+    try {
+      destroyChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
+      const tx = await epnsWriteProvider.destroyTimeBoundChannel(account, {
+        gasLimit: 1000000,
+      });
+
+      console.log(tx);
+      console.log('Check: ' + account);
+      await tx.wait();
+      destroyChannelToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: `Successfully deleted the channel`,
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => <MdError size={size} color="green" />,
+      });
+      dispatch(setUserChannelDetails(null));
+    } catch (err) {
+      console.log(err);
+      if (err.code == "ACTION_REJECTED") {
+        // EIP-1193 userRejectedRequest error
+        destroyChannelToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `User denied message signature.`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
+      } else {
+        destroyChannelToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `There was an error in deleting the channel`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => <MdError size={size} color="red" />,
+        });
+      }
+    }
+  }
+
   return (
     <ItemHV2>
       {((channelDetails === 'unfetched') || processingState === null) &&
@@ -113,10 +157,23 @@ const ChannelOwnerDashboard = () => {
               <>
                 {channelDetails && !isMobile && 
                   <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                    <ChannelSettings />
+                    {!isChannelExpired && <ChannelSettings />}
+                    {isChannelExpired && onCoreNetwork &&
+                      <DestroyChannelBtn 
+                        onClick={destroyChannel}
+                        background="#E93636" 
+                        color="#fff" 
+                        height="36px" 
+                        width="123px" 
+                        borderRadius="8px"
+                        fontSize="14px"
+                      >
+                        Delete Channel
+                      </DestroyChannelBtn>
+                    }
                   </ItemHV2>
                 }
-                {channelDetails ? <ChannelDetails /> : ""}
+                {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} /> : ""}
               </>
             )
           }
@@ -131,4 +188,10 @@ const ChannelOwnerDashboard = () => {
     </ItemHV2>
   );
 }
+
 export default ChannelOwnerDashboard;
+
+const DestroyChannelBtn = styled(ButtonV2)`
+  height: ${props => (props.height || "100%")};
+  width: ${props => (props.width || "100%")};
+`;

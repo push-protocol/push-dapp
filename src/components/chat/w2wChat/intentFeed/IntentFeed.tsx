@@ -75,11 +75,13 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                 >
                   <ChatSnap
                     pfp={intent.profilePicture}
-                    username={intent.msg.name}
-                    chatSnapMsg={{
-                      type: intent.msg.messageType,
-                      message: intent.msg.lastMessage,
-                    }}
+                    username={intent.wallets.split(',')[0].toString()}
+                    chatSnapMsg={
+                      {
+                        type: intent.msg.messageType,
+                        message: intent.msg.messageContent,
+                      }
+                    }
                     timestamp={intent.msg.timestamp}
                     selected={intent.threadhash == selectedIntentSnap ? true : false}
                     onClick={(): void => {

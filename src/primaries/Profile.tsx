@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Content, Item } from "./SharedStyling.js";
-import { envUtil } from 'helpers/UtilityHelper';
+import { envUtil, shortenText } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
 import useModal from 'hooks/useModal';
 import Dropdown from '../components/Dropdown';
@@ -100,8 +100,7 @@ const Profile = ({isDarkMode}) => {
             {ensFetched && ens && <>{ens}</>}
             {ensFetched && !ens && (
               <>
-                {account.substring(0, 6)}.....
-                {account.substring(account.length - 6)}
+                {shortenText(account,6)}
               </>
             )}
             <ToggleArrowImg 

@@ -7,6 +7,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import Box from '@mui/material/Box';
+import MuiTab from '@mui/material/Tab';
+import MuiTabs from '@mui/material/Tabs';
+import Typography from '@mui/material/Typography';
+import * as PushAPI from "@pushprotocol/restapi"
+
 
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
@@ -16,7 +22,6 @@ import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { fetchIntent } from 'helpers/w2w/ipfs';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
 import StyleHelper from 'helpers/StyleHelper'; 
@@ -29,7 +34,10 @@ import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/cr
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { AiOutlineQrcode } from 'react-icons/ai';
+import { useClickAway } from 'react-use';
+import { appConfig } from '../../config';
 
 
 
@@ -110,7 +118,7 @@ useClickAway(containerRef, () => closeQRDropdown())
   const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
+    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
@@ -259,16 +267,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 2 && (
-          <>
-            <Profile
-              profilePicture={updateProfileImage}
-              updateProfile={updateProfile}
-              setActiveTab={setActiveTab}
-            />
-          </>
-        )}
-        {activeTab == 3 && <SearchBar />}
+        {activeTab == 3 && <SearchBar/>}
       </ItemVV2>
 
       {/* Footer */}
@@ -284,7 +283,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           }}
         >
           <QROutline />
-          <TextQR>Link Mobile APP</TextQR>
+          <TextQR >Link Mobile App</TextQR>
         </QRCodeContainer>
       ) : null}
 
@@ -329,7 +328,15 @@ cursor:pointer;
 position: absolute;
 z-index: 100;
 bottom: 45px;
-left: 85px;
+
+@media (max-width:768px){
+right:30px;
+}
+
+@media(min-width:768px){
+  left:85px;
+}
+
 `;
 
 const QROutline = styled(AiOutlineQrcode)`

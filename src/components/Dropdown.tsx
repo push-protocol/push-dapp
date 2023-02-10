@@ -1,4 +1,5 @@
 // React + Web3 Essentials
+import { shortenText } from 'helpers/UtilityHelper';
 import React from 'react';
 
 // External Packages
@@ -60,8 +61,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             >
               <DesktopAddress>{dropdownValue?.title}</DesktopAddress>
               <MobileAddress>
-                {dropdownValue?.title.substring(0, 6)}.....
-                {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
+                {shortenText(dropdownValue?.title,6)}
               </MobileAddress>
             </Span>
             {dropdownValue?.invertedIcon && (
