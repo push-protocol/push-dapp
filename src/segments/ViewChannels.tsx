@@ -23,6 +23,12 @@ import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services';
 
 // Internal Configs
 import { appConfig } from 'config';
+import InfoImage from "../assets/info.svg";
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
+
+// import Tooltip from './reusables/tooltip/Tooltip';
+// import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -266,7 +272,6 @@ console.log(channels)
                         />
                       )}
                   </ViewChannelItems>
-
                   {showWayPoint(index) && <Waypoint onEnter={updateCurrentPage} />}
                 </>
               )
@@ -332,6 +337,13 @@ const ItemHBar = styled.div`
   @media (max-width: 768px) {
     padding: 10px 10px;
   }
+`;
+const ImageInfo = styled.img`
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+    align-items: center;
+    align-self: center;
 `;
 
 const ItemBar = styled.div`

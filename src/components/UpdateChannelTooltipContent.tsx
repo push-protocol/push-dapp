@@ -85,7 +85,8 @@ const ChannelName = styled(H2V2)`
 const ChannelDesc = styled(H2V2)`
   color: ${(props) => props.theme.tooltipContentDesc};
   font-weight: 300;
-  font-size: 0.625rem;
+  font-size: 9px;
   text-align: left;
+  margin-top: 3px;
 `;
 export default UpdateChannelTooltipContent;

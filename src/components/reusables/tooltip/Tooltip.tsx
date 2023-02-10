@@ -40,16 +40,17 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
   }, [isDisabled]);
 
   return (
-    <Wrapper
-      style={wrapperProps}
-      onMouseEnter={isDisabled ? () => {} : showTip}
-      onFocus={isDisabled ? () => {} : showTip}
-      onMouseLeave={isDisabled ? () => {} : hideTip}
-      onBlur={isDisabled ? () => {} : hideTip}
-    >
-      {children}
-      {!isDisabled && active && <Content style={placementProps}>{tooltipContent}</Content>}
-    </Wrapper>
+    // <Wrapper
+    //   style={wrapperProps}
+    //   onMouseEnter={isDisabled ? () => {} : showTip}
+    //   onFocus={isDisabled ? () => {} : showTip}
+    //   onMouseLeave={isDisabled ? () => {} : hideTip}
+    //   onBlur={isDisabled ? () => {} : hideTip}
+    // >
+    //   {children}
+    //   {!isDisabled && active && <Content style={placementProps}>{tooltipContent}</Content>}
+    // </Wrapper>
+    <Content style={placementProps}>{tooltipContent}</Content>
   );
 };
 
@@ -71,15 +72,16 @@ const Content = styled.div`
   width: 200px;
   position: absolute;
   border-radius: 2px 12px 12px 12px;
-  padding: 0.5rem 1rem;
+  // padding: 0.5rem 1rem;
   color: #fff;
   background: #131313;
   font-family: 'Strawford';
   font-style: normal;
   font-weight: 400;
   font-size: 0.9rem;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
   line-height: 21px;
-  z-index: 2;
+  z-index: 10;
   &::before {
     bottom: 100%;
     border-bottom-color: #131313;
