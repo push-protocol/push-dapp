@@ -26,21 +26,28 @@ interface ChatSnapPropsI {
   timestamp: number;
   selected: boolean;
   onClick?: Function;
+  isGroup: boolean;
 }
 
 // Other Information section
-const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
+const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
   // get theme
   const theme = useTheme();
-
   // get ens name
-  const ensName = useResolveEns(username);
+  const ensName = useResolveEns(!isGroup?username:null);
   // get reverse name
 
   // get short username
-  const walletAddress = caip10ToWallet(username);
-  const shortUsername = shortenText(walletAddress,8,7);
+  const walletAddress = !isGroup?caip10ToWallet(username):null;
+  const shortUsername = !isGroup?shortenText(walletAddress,8,7):null;
 
+  const getDisplayName = () => {
+    if(ensName)
+      return ensName;
+    if(isGroup)
+      return username;
+    return shortUsername;
+  }
   // format message here instead
   const message =
     chatSnapMsg.type === 'Text' ? (
@@ -117,8 +124,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
             flex="1"
             fontSize="14px"
           >
-            {ensName && ensName}
-            {!ensName && shortUsername}
+           {getDisplayName()}
           </SpanV2>
           {date && (
             <SpanV2
@@ -131,7 +137,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
           )}
         </ItemHV2>
 
-        <ItemHV2
+       {!isGroup && <ItemHV2
           alignItems="flex-end"
           margin="2px 0 2px 0"
         >
@@ -143,7 +149,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
           >
             {message}
           </SpanV2>
-        </ItemHV2>
+        </ItemHV2>}
       </ItemVV2>
     </ChatSnapContainer>
   );

@@ -26,6 +26,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 import GLOBALS from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from '../../../../config';
+import { checkIfGroup, getName } from '../../../../helpers/w2w/groupChat';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -43,18 +44,18 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);
-  const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
+  const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
-  const onFeedClick = (feed:Feeds):void => {
+  const onFeedClick = (feed:Feeds,i:number):void => {
     if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
     {
       setActiveTab(1);
     }
     setChat(feed);
-    setSelectedChatSnap(feed.threadhash);
+    setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
   }
 
@@ -228,6 +229,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
+
+  const getProfilePicture = (feed:Feeds):string => {
+    if(checkIfGroup(feed))
+    return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAA4ElEQVR4AcXBsW3EMAxA0R9CG7jVDgQEeAEv4/pWSAZw7WW0gAEB3EGtZ7i0hAsGhxR87+v7Z30TWO8Dr00lMqrhXcuLiJBMSCYkKzzs1vmPNhWvzY536oYnJBOSCckKfzh1w9utEzl1w9utExGSCcmEZIWHUQ1vt84ndut4oxoRIZmQTEhWdut8YlQj0qbital4bXY8IZmQTEhWeBjViLSpREY1Im0qnpBMSCYkKzy0qXijGt6pG5H1PvDaVCJCMiGZkKycuuGt94HXpuJdC6E2FW9Uw7uWF56QTEgmJPsFcBk6PuFgEa0AAAAASUVORK5CYII=";
+    else return feed?.profilePicture;
+  }
+
   return (
     <ItemVV2
       alignItems="flex-start"
@@ -258,18 +266,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-                // To Test
-                // <ItemVV2
-                //   key={feed.threadhash || i}
-                //   onClick={(): void => {
-                //     setChat(feed);
-                //   }}
-                //   background="red"
-                //   margin="10px"
-                //   height="80px"
-                //   flex="initial"
-                // >
-                // </ItemVV2>
 
                 <ItemVV2
                   alignSelf="stretch"
@@ -277,15 +273,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   key={feed.threadhash || i}
                 >
                   <ChatSnap
-                    pfp={feed.profilePicture}
-                    username={feed.wallets.split(',')[0].toString()}
+                    pfp={getProfilePicture(feed)}
+                    username={getName(feed)}
+                    isGroup = {checkIfGroup(feed)}
+
                     chatSnapMsg={{
                       type: feed.msg.messageType,
                       message: feed.msg.messageContent,
                     }}
                     timestamp={feed.msg.timestamp}
-                    selected={feed.threadhash == selectedChatSnap ? true : false}
-                    onClick={(): void => onFeedClick(feed)}
+                    selected={i == selectedChatSnap ? true : false}
+                    onClick={(): void => onFeedClick(feed,i)}
                   />
                 </ItemVV2>
               ))
