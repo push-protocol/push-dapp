@@ -144,7 +144,7 @@ const TextFieldContainer = styled(ItemVV2)`
 
 const GroupDescription = styled(TextField)`
   resize: none;
-  width: 100%;
+  width: 299px;;
   height: 121px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
@@ -176,7 +176,7 @@ const CharacterCount = styled(SpanV2)`
 
 const CustomInput = styled(Input)`
   box-sizing: border-box;
-  width: 100%;
+  width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
   padding: 0.8rem;

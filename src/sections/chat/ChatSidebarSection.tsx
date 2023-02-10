@@ -13,7 +13,6 @@ import MuiTabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 import * as PushAPI from "@pushprotocol/restapi"
 
-
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import ProfileHeader from 'components/chat/w2wChat/profile';
@@ -34,9 +33,6 @@ import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/cr
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import { AiOutlineQrcode } from 'react-icons/ai';
-import { useClickAway } from 'react-use';
 import { appConfig } from '../../config';
 
 

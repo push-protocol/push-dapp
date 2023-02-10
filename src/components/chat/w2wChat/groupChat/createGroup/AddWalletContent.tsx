@@ -1,8 +1,12 @@
 // React + Web3 Essentials
 import React from 'react';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
+import * as PushAPI from '@pushprotocol/restapi';
+import { MdError } from 'react-icons/md';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
@@ -14,7 +18,15 @@ import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removeligh
 import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import Profile from 'assets/chat/group-chat/profile.svg';
+import { displayDefaultUser } from 'helpers/w2w/user';
 //import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import * as w2wChatHelper from 'helpers/w2w';
+import { AppContext, User } from 'types/chat';
+import * as PushNodeClient from 'api';
+import useToast from 'hooks/useToast';
+
+// Internal configs
+import { appConfig } from 'config';
 
 export const AddWalletContent = () => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
@@ -22,15 +34,117 @@ export const AddWalletContent = () => {
   const [searchResult, setSearchResult] = React.useState<number>(0);
   const [completed, setCompleted] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const [filteredUserData, setFilteredUserData] = React.useState<any>([]);
+  const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
+  const [hasUserBeenSearched, setHasUserBeenSearched] = React.useState<boolean>(false);
+  const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
+  const { library } = useWeb3React();
 
   const theme = useTheme();
+  const searchFeedToast = useToast();
+
+  React.useEffect(() => {
+    if (isInValidAddress) {
+      searchFeedToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Invalid Address',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+  }, [isInValidAddress]);
 
   const onChangeSearchBox = (e) => {
     setSearchedUser(e.target.value);
   };
 
-  const handleUserSearch = () => {
-    console.log('Search');
+  // const handleUserSearch = () => {
+  //   console.log('Search');
+  // };
+
+  const handleSearch = async (): Promise<void> => {
+    if (!ethers.utils.isAddress(searchedUser)) {
+      setIsLoadingSearch(true);
+      let address: string;
+      try {
+        address = await provider.resolveName(searchedUser);
+        if (!address) {
+          address = await library.resolveName(searchedUser);
+        }
+        // this ensures address are checksummed
+        address = ethers.utils.getAddress(address.toLowerCase());
+
+        console.log('searched address', address);
+        if (address) {
+          handleUserSearch(address);
+        } else {
+          setIsInvalidAddress(true);
+          setFilteredUserData([]);
+          setHasUserBeenSearched(true);
+        }
+      } catch (err) {
+        setIsInvalidAddress(true);
+        setFilteredUserData([]);
+        setHasUserBeenSearched(true);
+      }
+    } else {
+      handleUserSearch(searchedUser);
+    }
+    setIsLoadingSearch(false);
+  };
+
+  const handleUserSearch = async (userSearchData: string): Promise<void> => {
+    setIsLoadingSearch(true);
+    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
+    let filteredData: User;
+    setHasUserBeenSearched(true);
+
+    if (userSearchData.length) {
+      filteredData = await PushNodeClient.getUser({ caip10 });
+
+      if (filteredData !== null) {
+        setFilteredUserData(filteredData);
+      }
+      // User is not in the protocol. Create new user
+      else {
+        if (ethers.utils.isAddress(userSearchData)) {
+          const displayUser = displayDefaultUser({ caip10 });
+          setFilteredUserData([displayUser]);
+        } else {
+          setIsInvalidAddress(true);
+          setFilteredUserData([]);
+        }
+      }
+    } else {
+      setFilteredUserData([]);
+    }
+  };
+
+  const handleCreateGroup = async (): Promise<any> => {
+    try{
+      console.log("Creating group")
+      const createGroupRes = await PushAPI.chat.createGroup({
+        groupName: 'Gropu1',
+        groupDescription: 'Description1',
+        members: ['0x1322fdfdf'],
+        groupImage:
+          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
+        admins: ['0x1322fdfdf'],
+        isPublic: true,
+        groupCreator: 'Admin',
+        account:account
+      });
+      console.log("createGroup Response",createGroupRes)
+    }
+    catch(e){
+      console.log("Error in creating group",e)
+    }
   };
 
   const clearInput = () => {
@@ -138,7 +252,7 @@ export const AddWalletContent = () => {
       )}
       <ModalConfirmButton
         text="Create Group"
-        onClick={() => {}}
+        onClick={() => handleCreateGroup()}
         isLoading={isLoading}
         backgroundColor={completed ? '#CF1C84' : theme.groupButtonBackgroundColor}
         color={completed ? '#FFFFF' : theme.groupButtonTextColor}
