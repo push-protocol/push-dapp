@@ -24,6 +24,7 @@ export const config = {
   allowedNetworks: [
     1, //for ethereum mainnet
     137, //for polygon mainnet
+    56, // for bsc mainnet
   ],
 
   /**
@@ -35,6 +36,7 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     137: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
+    56: "https://bsc-dataseed.binance.org/"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -90,3 +92,27 @@ export const addresses = {
   rockstarV2: '0xA2b885e7065EA59a3251489715ca80DE5Ff642f8', //mainnet address
   NFTRewardsV2: '0xdc66567a990B7fa10730459537620857c9e03287', //mainnet address
 };
+
+export const CHAIN_DETAILS = {
+  1: {
+    label: "Ethereum Mainnet",
+    name: "ETH_MAINNET",
+    chainId: 1,
+    rpcUrl: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  }, 
+  137: {
+    label: "Polygon Mainnet",
+    name: "POLYGON_MAINNET",
+    chainId: 137,
+    rpcUrl: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  },
+  56: {
+    label: "BSC Mainnet",
+    name: "BSC_MAINNET",
+    chainId: 56,
+    rpcUrl: "https://bsc-dataseed.binance.org/",
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  }
+}

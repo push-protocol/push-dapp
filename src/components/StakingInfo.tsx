@@ -13,11 +13,13 @@ import { Button, Item, Span } from "primaries/SharedStyling";
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
+import { useDeviceWidthCheck } from "hooks";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { chainId, library, account } = useWeb3React();
 
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(600)
   
   //mint Dai
   const mintPushToken = async () => {
@@ -61,10 +63,10 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
 
 
             <TextSpace>
-                <Span color={theme.default.secondaryColor} size="15px" weight="500" spacing="-0.011em" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
+                <Span color={theme.default.secondaryColor} size="15px" weight="300" line="30px">Make sure you have sufficient balance before moving to the next steps.</Span>
 
                 {appConfig.appEnv !== 'prod' && 
-                  <>
+                  <ItemBody>
                     <AnchorLink href='https://faucet.paradigm.xyz/' target="_blank">ETH Faucet</AnchorLink>
                     
                     <Minter
@@ -74,12 +76,13 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
                     >
                         <PoolShare>Get Free PUSH for Channel</PoolShare>
                     </Minter>
-                  </>
+
+                  </ItemBody>
                 }
             </TextSpace>
           </Item>
 
-        <Item width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto">
+        <Item width="12.2em" self="stretch" align="stretch" margin={isMobile ? "70px auto 50px auto" : "100px auto 50px auto"}>
           <Button
             bg="#e20880"
             color="#fff"
@@ -124,8 +127,8 @@ const TabSpace = styled.div`
     letter-spacing: -0.011em;
     margin-left:50px;
     @media (max-width: 768px) {
-    margin-left:20px;
-    font-size: 18px;
+      margin-left:20px;
+      font-size: 18px;
     }
   }
   b {
@@ -194,12 +197,19 @@ const AnchorLink = styled.a`
     text-decoration: underline;
   }
   @media (max-width: 600px) {
-    margin-top:1em;
+    margin: 0 0em;
   }
 `;
 
-const Body = styled.div`
-  margin: 0px auto;
+const ItemBody = styled.div`
+    display: flex;
+    flex-direction: row;
+    @media (max-width: 600px) {
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1em;
+    }
 `
 
 const Minter = styled.div`
@@ -211,6 +221,8 @@ const Pool = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const ChannelMetaBox = styled.label`
@@ -231,9 +243,6 @@ const PoolShare = styled(ChannelMetaBox)`
   text-decoration: none;
   &:hover {
     text-decoration: underline;
-  }
-  @media (max-width: 600px) {
-    margin-top:1em;
   }
 `;
 

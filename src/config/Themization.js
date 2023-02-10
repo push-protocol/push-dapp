@@ -93,6 +93,7 @@ const themeLight = {
   viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#657795",
+  viewChannelPrimaryTextColor: "#494D5F",
 
   // -- -- View Channel Tuts
   viewChannelTutsTitleBg: '#000',
@@ -159,7 +160,17 @@ const themeLight = {
   chainIndicatorDropdownBG: "#fff",
   chainIndicatorHeading: "#333333",
   chainIndicatorHeadingMobile: "#000",
-  chainIndicatorText: "#657795"
+  chainIndicatorText: "#657795",
+
+  LinkMobileAppBorder:"#bac9e5",
+  textcolor:"#657795",
+  chatQRbg:"#ffff",
+
+  // toggle switch
+  toggleContainerBG: "#F4F5FA",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1",
+  qrBg:"#fff",
 };
 
 const themeDark = {
@@ -254,6 +265,7 @@ const themeDark = {
   viewChannelSecondaryText: "#D53893",
   viewChannelSecondaryIcon: "#D53893",
   viewChannelPrimaryText: "#fff",
+  viewChannelPrimaryTextColor: "#fff",
 
 
   // -- -- View Channel Tuts
@@ -325,7 +337,18 @@ const themeDark = {
   chainIndicatorDropdownBG: "#2F3137",
   chainIndicatorHeading: "#C5CAE9",
   chainIndicatorHeadingMobile: "#C5CAE9",
-  chainIndicatorText: "#B6BCD6"
+  chainIndicatorText: "#B6BCD6",
+
+  //QR Code related
+  LinkMobileAppBorder:"#717887",
+  textcolor:"#B6BCD6",
+  chatQRbg:"#292a2c",
+  qrBg:"#000",
+
+  // toggle switch
+  toggleContainerBG: "#282A2E",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1"
 };
 
 module.exports = {

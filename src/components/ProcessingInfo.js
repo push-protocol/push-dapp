@@ -88,11 +88,11 @@ const TabSpace = styled.div`
 
 const ItemSpace = styled.div`
   padding: 0px 0px;
-  @media (max-width: 500px) {
+  @media (max-width: 768px) {
     padding: 50px 30px;
   }
 
-  @media (max-width: 1700px) {
+  @media (min-width: 768px) and (max-width: 1700px) {
     padding: 10px 40px;
   }
 `

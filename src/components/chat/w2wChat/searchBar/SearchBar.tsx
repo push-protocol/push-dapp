@@ -20,8 +20,10 @@ import useToast from 'hooks/useToast';
 import * as w2wChatHelper from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import MessageFeed from '../messageFeed/MessageFeed';
-import './SearchBar.css';
 import { AppContext, User } from 'types/chat';
+import { appConfig } from 'config';
+import { findObject } from 'helpers/UtilityHelper';
+import { displayDefaultUser } from 'helpers/w2w/user';
 
 const SearchBar = () => {
   // get theme
@@ -36,13 +38,14 @@ const SearchBar = () => {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    inbox,
+    inbox
   }: AppContext = useContext<AppContext>(Context);
+  const {library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
-  const provider = ethers.getDefaultProvider();
+  const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const searchFeedToast = useToast();
 
   useEffect(() => {
@@ -69,25 +72,6 @@ const SearchBar = () => {
     }
   }, [isInValidAddress]);
 
-  const displayDefaultUser = ({ caip10 }: { caip10: string }): User => {
-    const profilePicture = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==`;
-    const userCreated: User = {
-      did: caip10,
-      wallets: caip10,
-      publicKey: 'temp',
-      profilePicture: profilePicture,
-      encryptedPrivateKey: 'temp',
-      encryptionType: 'temp',
-      signature: 'temp',
-      sigType: 'temp',
-      about: null,
-      name: null,
-      numMsg: 1,
-      allowedNumMsg: 100,
-      linkedListHash: null,
-    };
-    return userCreated;
-  };
 
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
@@ -107,13 +91,18 @@ const SearchBar = () => {
   const handleSearch = async (): Promise<void> => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
-      let ens: string;
+      let address:string;
       try {
-        const address = await provider.resolveName(searchedUser);
+        address = await provider.resolveName(searchedUser);
+        if(!address){
+          address = await library.resolveName(searchedUser);
+        }
         // this ensures address are checksummed
-        ens = ethers.utils.getAddress(address.toLowerCase());
-        if (ens) {
-          handleUserSearch(ens);
+        address=ethers.utils.getAddress(address.toLowerCase());
+        
+        console.log("searched address",address)
+        if (address) {
+          handleUserSearch(address);
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -139,7 +128,7 @@ const SearchBar = () => {
     if (userSearchData.length) {
       filteredData = await PushNodeClient.getUser({ caip10 });
       // Checking whether user already present in contact list
-      let isUserConnected = checkIsUserConnected(filteredData);
+      let isUserConnected = findObject(filteredData,inbox,'did');
 
       if (filteredData !== null && isUserConnected) {
         if (activeTab !== 0) {
@@ -165,15 +154,6 @@ const SearchBar = () => {
     }
   };
 
-  function checkIsUserConnected(userData: User): boolean {
-    let isPresent = false;
-    inbox.map((user) => {
-      if (user?.did == userData?.did) {
-        isPresent = true;
-      }
-    });
-    return isPresent;
-  }
 
   const clearInput = (): void => {
     setFilteredUserData([]);
@@ -306,21 +286,6 @@ const SearchBarContent = styled.form`
   position: relative;
   display: flex;
   flex: 1;
-`;
-
-const Close = styled(CloseIcon)`
-  position: absolute;
-  top: 23px;
-  right: 55px;
-  cursor: pointer;
-`;
-
-const SearchLoader = styled.div`
-  position: absolute;
-  top: 20px;
-  right: 15px;
-  height: 25px;
-  width: 20px;
 `;
 
 const Input = styled.input`
