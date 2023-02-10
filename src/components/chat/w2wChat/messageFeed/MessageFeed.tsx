@@ -273,7 +273,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     isGroup = {checkIfGroup(feed)}
 
                     chatSnapMsg={getChatsnapMessage(feed)}
-                    timestamp={feed.msg.timestamp}
+                    timestamp={feed.msg.timestamp??feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
                     onClick={(): void => onFeedClick(feed,i)}
                   />
