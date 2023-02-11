@@ -104,13 +104,14 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat });
+      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat,isGroup });
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
+  
         if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
@@ -167,7 +168,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 currentChat,
                 inbox,
               });
-
+console.log(msgIPFS)
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
@@ -190,15 +191,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   };
 
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
-
-  // useEffect(()=>{
-  //   if(currentChat)
-  //   {
-  //     const isGroup = checkIfGroup(currentChat);
-  //     setIsGroup(isGroup);
-  //   }
-   
-  // });
 
   useEffect(() => {
     setLoading(true);
