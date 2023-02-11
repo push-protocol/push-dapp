@@ -61,7 +61,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
+      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
@@ -78,7 +78,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
@@ -141,7 +141,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setMessagesLoading(false);
   };
 
-  console.log(feeds)
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
@@ -149,7 +148,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
+          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account })) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -272,7 +271,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
 
-                    chatSnapMsg={getChatsnapMessage(feed)}
+                    chatSnapMsg={getChatsnapMessage(feed,account)}
                     timestamp={feed.msg.timestamp??feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
                     onClick={(): void => onFeedClick(feed,i)}

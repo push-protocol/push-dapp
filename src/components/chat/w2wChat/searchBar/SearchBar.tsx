@@ -121,7 +121,7 @@ const SearchBar = () => {
 
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
     setIsLoadingSearch(true);
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
+    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
     setHasUserBeenSearched(true);
 
