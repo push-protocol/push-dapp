@@ -34,6 +34,7 @@ import { appConfig, CHAIN_DETAILS } from 'config';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import InfoImage from "../assets/info.svg";
+import VerifiedTooltipContent from './VerifiedTooltipContent';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -412,12 +413,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     width: "fit-content",
                     maxWidth: "fit-content",
                     minWidth: "fit-content",
-                    zIndex: "10",
+                    // zIndex: "10",
                   }}
                   placementProps={{
                     background: "none",
-                    bottom: "20px",
-                    right: "-175px"
+                    bottom: "25px",
+                    // right: "-175px",
+                    left:"5px"
                   }}
                   tooltipContent={
                     <UpdateChannelTooltipContent
@@ -426,21 +428,61 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       channelLogoSrc={`${channelObject.icon}`}
                     />}
                 >
-                  {/* TODO: HAS TO BE CHANGED TO A i icon */}
-                  <ImageInfo src={InfoImage} />
-                  {/* i&nbsp; */}
+                  <div>
+                    <ImageInfo src={InfoImage} />
+
+                  </div>
                 </Tooltip>
 
                 {channelObject.name}
+
                 {isVerified == 1 && (
                   <Span
                     margin="0px 5px"
                     style={{ display: 'flex' }}
                   >
-                    <GoVerified
+
+
+
+                    <Tooltip
+                      wrapperProps={{
+                        width: "fit-content",
+                        maxWidth: "fit-content",
+                        minWidth: "fit-content",
+                        // zIndex: "10",
+                      }}
+                      placementProps={{
+                        background: "none",
+                        // borderRadius: "0.125rem 1rem 1rem 1rem",
+                        bottom: "28px", //above display
+                        // top: "20px", //for lower displaying
+                        // right: "-175px",
+                        left:"7px",
+                        width:"125px"
+                      }}
+                      tooltipContent={
+                        <VerifiedTooltipContent/>
+
+                      }
+                    >
+                      {/* TODO: HAS TO BE CHANGED TO A i icon */}
+                      <div style={{cursor:"pointer"}}>
+                        <GoVerified
+                          size={18}
+                          color={themes.viewChannelVerifiedBadge}
+                        />
+
+                      </div>
+                    </Tooltip>
+
+
+
+
+
+                    {/* <GoVerified
                       size={18}
                       color={themes.viewChannelVerifiedBadge}
-                    />
+                    /> */}
                   </Span>
                 )}
                 {(channelObject && channelObject?.channel) && (

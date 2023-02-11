@@ -14,6 +14,14 @@ type TooltipProps = {
   wrapperProps?:{}
 };
 
+// window.onmousemove = function (e) {
+//   var x = e.clientX,
+//       y = e.clientY;
+//       console.log("hehe: ",x,y)
+//   // tooltipSpan.style.top = (y + 20) + 'px';
+//   // tooltipSpan.style.left = (x + 20) + 'px';
+// };
+
 const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled, placementProps, wrapperProps }) => {
   let timeoutId: NodeJS.Timeout;
   const [active, setActive] = React.useState(false);
@@ -40,17 +48,18 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
   }, [isDisabled]);
 
   return (
-    // <Wrapper
-    //   style={wrapperProps}
-    //   onMouseEnter={isDisabled ? () => {} : showTip}
-    //   onFocus={isDisabled ? () => {} : showTip}
-    //   onMouseLeave={isDisabled ? () => {} : hideTip}
-    //   onBlur={isDisabled ? () => {} : hideTip}
-    // >
-    //   {children}
-    //   {!isDisabled && active && <Content style={placementProps}>{tooltipContent}</Content>}
-    // </Wrapper>
-    <Content style={placementProps}>{tooltipContent}</Content>
+    <Wrapper
+      style={wrapperProps}
+      onMouseEnter={isDisabled ? () => {} : showTip}
+      onFocus={isDisabled ? () => {} : showTip}
+      onMouseLeave={isDisabled ? () => {} : hideTip}
+      onBlur={isDisabled ? () => {} : hideTip}
+    >
+      {/* <Content style={placementProps}>{tooltipContent}</Content> */}
+      {children}
+      {!isDisabled && active && <Content style={placementProps}>{tooltipContent}</Content>}
+    </Wrapper>
+    // <Content style={placementProps}>{tooltipContent}</Content>
   );
 };
 
@@ -72,6 +81,7 @@ const Content = styled.div`
   width: 200px;
   position: absolute;
   border-radius: 2px 12px 12px 12px;
+  
   // padding: 0.5rem 1rem;
   color: #fff;
   background: #131313;
@@ -86,6 +96,7 @@ const Content = styled.div`
     bottom: 100%;
     border-bottom-color: #131313;
   }
+
 `;
 
 export default Tooltip;
