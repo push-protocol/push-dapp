@@ -665,9 +665,6 @@ console.log(msgIPFS)
               ))}
             </ItemBody>
           </WelcomeInfo>
-          {/* <WelcomeSubText theme={theme}>
-            You haven’t started a conversation yet. Start a new chat by using the + button
-          </WelcomeSubText> */}
         </WelcomeItem>
       ) : (
         <>
@@ -1111,7 +1108,7 @@ const TextInfo = styled.div`
 
 const WelcomeMainText = styled(SpanV2)`
   background: ${(props) => props.theme.default.bg};
-  padding: 20px 55px;
+  padding: 20px 0px;
   border-radius: 2px 28px 28px 28px;
   font-size: 28px;
   font-weight: 500;
@@ -1152,7 +1149,7 @@ const WelcomeInfo = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 30px 20px;
+  padding: 30px 0;
   border-radius: 28px;
   @media (max-width: 768px) {
     display: none;
