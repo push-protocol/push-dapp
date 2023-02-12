@@ -71,7 +71,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                 key={intent.threadhash || i}
               >
                 <ChatSnap
-                     pfp ={getProfilePicture(intent)}
+                    pfp ={getProfilePicture(intent)}
                     username={getName(intent)}
                     isGroup={checkIfGroup(intent)}
                     chatSnapMsg={getChatsnapMessage(intent,account,true)}

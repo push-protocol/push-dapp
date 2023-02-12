@@ -358,7 +358,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
 
     let activeChat = currentChat;
-    //yaha pe thoda sa change kr skte h intent:"Approved set kr skte h "
     activeChat.intent = updatedIntent.data;
     setChat(activeChat);
 
