@@ -143,6 +143,16 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
+  groupName:string;
+  setGroupName:(value:string)=>void;
+  groupDescription:string;
+  setGroupDescription:(value:string)=>void;
+  groupImage:string;
+  setGroupImage:(value:string)=>void;
+  groupType:string;
+  setGroupType:(value:string)=>void;
+  createGroupState:number;
+  setCreateGroupState:(value:number)=>void;
 }
 
 

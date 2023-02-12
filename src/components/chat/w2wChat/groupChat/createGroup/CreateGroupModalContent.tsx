@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext } from 'react';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -12,9 +12,12 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { GroupDetailsContent } from './GroupDetailsContent';
 import { AddWalletContent } from './AddWalletContent';
 import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AppContext } from 'types/chat';
+import { Context } from 'modules/chat/ChatModule';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const [createGroupState, setCreateGroupState] = React.useState<number>(1);
+  //const [createGroupState, setCreateGroupState] = React.useState<number>(1);
+  const { createGroupState, setCreateGroupState }: AppContext = useContext<AppContext>(Context);
   const themes = useTheme();
 
   const handlePrevious = () => {
@@ -54,7 +57,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             style={{ cursor: 'pointer', marginTop: '8px' }}
           />
         </ItemHV2>
-        {createGroupState == 1 && <GroupDetailsContent setCreateGroupState={setCreateGroupState} />}
+        {createGroupState == 1 && <GroupDetailsContent />}
         {createGroupState == 2 && <AddWalletContent />}
       </ModalContainer>
     </ThemeProvider>

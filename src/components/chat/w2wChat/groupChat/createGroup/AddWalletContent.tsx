@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 
@@ -24,20 +24,25 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { AppContext, User } from 'types/chat';
 import * as PushNodeClient from 'api';
 import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { shortenText } from 'helpers/UtilityHelper';
 
 // Internal configs
 import { appConfig } from 'config';
 
 export const AddWalletContent = () => {
+  const { groupName, groupDescription, groupImage, groupType, connectedUser }: AppContext =
+    useContext<AppContext>(Context);
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
   const [searchResult, setSearchResult] = React.useState<number>(0);
   const [completed, setCompleted] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [filteredUserData, setFilteredUserData] = React.useState<any>([]);
+  const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
   const [hasUserBeenSearched, setHasUserBeenSearched] = React.useState<boolean>(false);
+  const [memberList, setMemberList] = React.useState<any[]>([]);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const { library } = useWeb3React();
 
@@ -64,11 +69,24 @@ export const AddWalletContent = () => {
     setSearchedUser(e.target.value);
   };
 
-  // const handleUserSearch = () => {
+  // const handleUserSearch = (e) => {
+  //   e.preventDefault()
   //   console.log('Search');
   // };
 
-  const handleSearch = async (): Promise<void> => {
+  const addMemberToList = (member) => {
+    setMemberList((prev) => [...prev, member]);
+    setFilteredUserData('');
+  };
+
+  const removeMemberFromList = (member) => {
+    const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
+    setMemberList(filteredMembers);
+  };
+
+  const handleSearch = async (e): Promise<void> => {
+    e.preventDefault();
+    console.log('Search');
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
       let address: string;
@@ -85,12 +103,12 @@ export const AddWalletContent = () => {
           handleUserSearch(address);
         } else {
           setIsInvalidAddress(true);
-          setFilteredUserData([]);
+          setFilteredUserData(null);
           setHasUserBeenSearched(true);
         }
       } catch (err) {
         setIsInvalidAddress(true);
-        setFilteredUserData([]);
+        setFilteredUserData(null);
         setHasUserBeenSearched(true);
       }
     } else {
@@ -115,40 +133,57 @@ export const AddWalletContent = () => {
       else {
         if (ethers.utils.isAddress(userSearchData)) {
           const displayUser = displayDefaultUser({ caip10 });
-          setFilteredUserData([displayUser]);
+          setFilteredUserData(displayUser);
         } else {
           setIsInvalidAddress(true);
-          setFilteredUserData([]);
+          setFilteredUserData(null);
         }
       }
     } else {
-      setFilteredUserData([]);
+      setFilteredUserData(null);
     }
   };
 
   const handleCreateGroup = async (): Promise<any> => {
-    try{
-      console.log("Creating group")
+    console.log(
+      'Data\n groupname',
+      groupName,
+      '\ngroupDescription',
+      groupDescription,
+      '\nmembers',
+      memberList,
+      '\ngroupImage',
+      groupImage,
+      '\nisPublic',
+      groupType == 'public' ? true : false,
+      '\ngroupCreator',
+      account,
+      '\naccount',
+      account,
+      '\npgpPrivateKey',
+      connectedUser?.privateKey
+    );
+    try {
       const createGroupRes = await PushAPI.chat.createGroup({
-        groupName: 'Gropu1',
-        groupDescription: 'Description1',
-        members: ['0x1322fdfdf'],
-        groupImage:
-          'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==',
-        admins: ['0x1322fdfdf'],
-        isPublic: true,
-        groupCreator: 'Admin',
-        account:account
+        groupName: groupName,
+        groupDescription: groupDescription,
+        members: memberList,
+        groupImage: groupImage,
+        admins: [],
+        isPublic: groupType == 'public' ? true : false,
+        groupCreator: account,
+        account: account,
+        pgpPrivateKey: connectedUser?.privateKey,
       });
-      console.log("createGroup Response",createGroupRes)
-    }
-    catch(e){
-      console.log("Error in creating group",e)
+      console.log('createGroup Response', createGroupRes);
+    } catch (e) {
+      console.log('Error in creating group', e);
     }
   };
 
   const clearInput = () => {
     setSearchedUser('');
+    setFilteredUserData(null);
   };
 
   return (
@@ -167,10 +202,10 @@ export const AddWalletContent = () => {
             fontWeight={400}
             fontSize="14px"
           >
-            01/09 Members
+            {`${memberList?.length} / ${10 - memberList?.length} Members`}
           </SpanV2>
         </LabelContainer>
-        <SearchBarContent onSubmit={handleUserSearch}>
+        <SearchBarContent onSubmit={handleSearch}>
           <Input
             type="text"
             value={searchedUser}
@@ -204,25 +239,64 @@ export const AddWalletContent = () => {
           </ItemVV2>
         </SearchBarContent>
       </SearchbarContainer>
-      {searchResult > 0 ? (
+      {filteredUserData ? (
         <MemberList marginTop="8px">
           <WalletProfileContainer background={theme.groupSearchProfilBackground}>
             <WalletProfile>
-              <ImageV2
-                src={Profile}
+              <ItemVV2
                 width="48px"
-                height="48px"
-                borderRadius="48px"
+                maxWidth="48px"
+                borderRadius="100%"
+                overflow="hidden"
                 margin="0px 12px 0px 0px"
-              />
-              <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
+              >
+                <ImageV2 src={filteredUserData?.profilePicture} />
+              </ItemVV2>
+              <SpanV2 color={theme.modalPrimaryTextColor}>
+                {shortenText(filteredUserData.wallets.split(':')[1], 6)}
+              </SpanV2>
             </WalletProfile>
-            {theme.scheme == 'light' ? <AddLight /> : <AddDark />}
+            <ItemVV2
+              alignItems="flex-end"
+              maxWidth="30px"
+              style={{ cursor: 'pointer' }}
+              onClick={() => addMemberToList(filteredUserData)}
+            >
+              {theme.scheme == 'light' ? <AddLight /> : <AddDark />}
+            </ItemVV2>
           </WalletProfileContainer>
         </MemberList>
       ) : (
         <MemberList marginTop="16px">
-          <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+          {memberList.map((member, index) => (
+            <WalletProfileContainer
+              background={theme.groupSearchProfilBackground}
+              key={index}
+            >
+              <WalletProfile>
+                <ItemVV2
+                  width="48px"
+                  maxWidth="48px"
+                  borderRadius="100%"
+                  overflow="hidden"
+                  margin="0px 12px 0px 0px"
+                >
+                  <ImageV2 src={member?.profilePicture} />
+                </ItemVV2>
+                <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(member.wallets.split(':')[1], 6)}</SpanV2>
+              </WalletProfile>
+              <ItemVV2
+                alignItems="flex-end"
+                maxWidth="30px"
+                style={{ cursor: 'pointer' }}
+                onClick={() => removeMemberFromList(member)}
+              >
+                {' '}
+                {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
+              </ItemVV2>
+            </WalletProfileContainer>
+          ))}
+          {/* <WalletProfileContainer background={theme.groupSearchProfilBackground}>
             <WalletProfile>
               <ImageV2
                 src={Profile}
@@ -233,29 +307,16 @@ export const AddWalletContent = () => {
               />
               <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
             </WalletProfile>
-            {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
-          </WalletProfileContainer>
-          <WalletProfileContainer background={theme.groupSearchProfilBackground}>
-            <WalletProfile>
-              <ImageV2
-                src={Profile}
-                width="48px"
-                height="48px"
-                borderRadius="48px"
-                margin="0px 12px 0px 0px"
-              />
-              <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
-            </WalletProfile>
-            {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
-          </WalletProfileContainer>
+            <SpanV2>{theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}</SpanV2>
+          </WalletProfileContainer> */}
         </MemberList>
       )}
       <ModalConfirmButton
         text="Create Group"
         onClick={() => handleCreateGroup()}
         isLoading={isLoading}
-        backgroundColor={completed ? '#CF1C84' : theme.groupButtonBackgroundColor}
-        color={completed ? '#FFFFF' : theme.groupButtonTextColor}
+        backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
+        color={theme.groupButtonTextColor}
         border={`1px solid ${theme.modalConfirmButtonBorder}`}
       />
     </ThemeProvider>
@@ -267,10 +328,13 @@ const SearchbarContainer = styled(ItemVV2)`
 `;
 
 const LabelContainer = styled(ItemHV2)`
-  width: 100%;
+  min-width: 445px;
   justify-content: space-between;
   margin: 0px;
   margin-bottom: 8px;
+  @media (max-width: 480px) {
+    min-width: 300px;
+  }
 `;
 
 const SearchBarContent = styled.form`
@@ -314,8 +378,13 @@ const WalletProfileContainer = styled(ItemHV2)`
   padding: 8px;
   margin: 0px 0px 8px 0px;
   justify-content: space-between;
+  min-width: 445px;
+  box-sizing: border-box;
   align-items: center;
   border-radius: 16px;
+  @media (max-width: 480px) {
+    min-width: 300px;
+  }
 `;
 
 const WalletProfile = styled(ItemHV2)`
