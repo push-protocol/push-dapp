@@ -14,8 +14,7 @@ import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
-import * as PushAPI from "@pushprotocol/restapi"
-
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import * as PushNodeClient from 'api';
@@ -34,6 +33,10 @@ import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
 import LockSlash from '../../../../assets/LockSlash.png';
+import { ReactComponent as Info } from 'assets/chat/groupChat/info.svg';
+import { ReactComponent as More } from 'assets/chat/groupChat/more.svg';
+import { ReactComponent as InfoDark } from 'assets/chat/groupChat/infodark.svg';
+import { ReactComponent as MoreDark } from 'assets/chat/groupChat/moredark.svg';
 import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal Configs
@@ -60,7 +63,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
+const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const {
     currentChat,
     viewChatBox,
@@ -86,32 +89,32 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [isGroup,setIsGroup] = useState<boolean>(false);
-  const {connectedUser,setConnectedUser} = useContext(ChatUserContext);
+  const [isGroup, setIsGroup] = useState<boolean>(false);
+  const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
+  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
   let time = '';
 
-
-  useEffect(()=> {
-     setIsGroup(checkIfGroup(currentChat));
+  useEffect(() => {
+    setIsGroup(checkIfGroup(currentChat));
   });
 
   //get ens name
-  const ensName = useResolveEns(!isGroup?currentChat?.wallets?.split(',')[0].toString():null);
+  const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat,isGroup });
+      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
-  
+
         if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
@@ -133,7 +136,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             currentChat,
             inbox,
           });
-
 
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
@@ -168,7 +170,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 currentChat,
                 inbox,
               });
-console.log(msgIPFS)
+              console.log(msgIPFS);
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
@@ -210,22 +212,18 @@ console.log(msgIPFS)
     }
   }, [currentChat]);
 
-
   const getDisplayName = () => {
-    if(ensName)
-      return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
-    if(isGroup)
-      return currentChat?.groupInformation?.groupName;
-    if(currentChat?.wallets)
-      return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
-  }
+    if (ensName) return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
+    if (isGroup) return currentChat?.groupInformation?.groupName;
+    if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
+  };
 
   const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account:account! }), inboxes, 'did');
+      let inboxes: Feeds[] = await PushAPI.chat.chats({ account: account!, env: appConfig.appEnv, toDecrypt: false });
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: account! }), inboxes, 'did');
       inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
@@ -263,10 +261,10 @@ console.log(msgIPFS)
         sigType = pgpSignatureType;
       }
       let savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
-        fromCAIP10: walletToCAIP10({ account:account!}),
-        fromDID: walletToCAIP10({ account:account!}),
-        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0]}),
-        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0]}),
+        fromCAIP10: walletToCAIP10({ account: account! }),
+        fromDID: walletToCAIP10({ account: account! }),
+        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
+        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
         messageContent,
         messageType,
         signature,
@@ -316,18 +314,12 @@ console.log(msgIPFS)
     setLoading(true);
     let getIntent;
     if (checkConnectedUser(connectedUser)) {
-      getIntent = await intitializeDb<string>(
-        'Read',
-        'Intent',
-         walletToCAIP10({ account:account!}),
-        '',
-        'did'
-      );
+      getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account:account!}), intents, 'did');
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
+    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
     setReceivedIntents(intents);
@@ -407,7 +399,7 @@ console.log(msgIPFS)
           keyPairs.privateKeyArmored,
           walletPublicKey
         );
-        const caip10: string = walletToCAIP10({ account:account!});
+        const caip10: string = walletToCAIP10({ account: account! });
         setBlockedLoading({
           enabled: true,
           title: 'Step 3/4: Syncing account info',
@@ -460,14 +452,14 @@ console.log(msgIPFS)
         try {
           const ens: string = await provider.resolveName(searchedUser);
           if (ens) {
-            caip10 = walletToCAIP10({ account:account!});
+            caip10 = walletToCAIP10({ account: account! });
           }
         } catch (err) {
           console.log(err);
           return;
         }
       } else {
-        caip10 = walletToCAIP10({ account:account!});
+        caip10 = walletToCAIP10({ account: account! });
       }
       await PushNodeClient.createUser({
         caip10,
@@ -535,7 +527,7 @@ console.log(msgIPFS)
           toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
           toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
           fromDID: walletToCAIP10({ account: account! }),
-          fromCAIP10: walletToCAIP10({ account:account! }),
+          fromCAIP10: walletToCAIP10({ account: account! }),
           messageContent,
           messageType,
           signature,
@@ -730,7 +722,7 @@ console.log(msgIPFS)
               fontWeight="400"
               textAlign="start"
             >
-            {getDisplayName()}
+              {getDisplayName()}
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
@@ -757,6 +749,20 @@ console.log(msgIPFS)
                 </OptionContainer>
               )}
             </MoreOptions> */}
+            <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
+              <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
+              {showGroupInfo && (
+                <GroupInfo
+                  onClick={() => {
+                    showGroupInfoModal();
+                    setShowGroupInfo(false);
+                  }}
+                >
+                  <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
+                  <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
+                </GroupInfo>
+              )}
+            </MoreOptions>
           </ItemHV2>
 
           <MessageContainer>
@@ -815,7 +821,7 @@ console.log(msgIPFS)
 
                         <Chats
                           msg={msg}
-                          caip10={walletToCAIP10({ account:account!})}
+                          caip10={walletToCAIP10({ account: account! })}
                           messageBeingSent={messageBeingSent}
                         />
                       </div>
@@ -828,10 +834,12 @@ console.log(msgIPFS)
                         Messages are not encrypted till the user accepts the chat request.
                       </ItemTextSlash>
 
-                     {!isGroup &&  <FirstTime>
-                        This is your first conversation with recipient.<br></br> Start the conversation by sending a
-                        message.
-                      </FirstTime>}
+                      {!isGroup && (
+                        <FirstTime>
+                          This is your first conversation with recipient.<br></br> Start the conversation by sending a
+                          message.
+                        </FirstTime>
+                      )}
                     </Item>
                   )}
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) && (
@@ -841,7 +849,7 @@ console.log(msgIPFS)
                         messageContent: 'Please accept to enable push chat from this wallet',
                         messageType: 'Intent',
                       }}
-                      caip10={walletToCAIP10({ account:account! })}
+                      caip10={walletToCAIP10({ account: account! })}
                       messageBeingSent={messageBeingSent}
                       ApproveIntent={() => ApproveIntent('Approved')}
                     />
@@ -970,6 +978,19 @@ const MessageContainer = styled(ItemVV2)`
   height: calc(100% - 140px);
 `;
 
+const GroupInfo = styled(ItemHV2)`
+  position: absolute;
+  top: 32px;
+  right: 26px;
+  width: 200px;
+  border: 1px solid ${(props) => props.theme.default.border};
+  background-color: ${(props) => props.theme.default.bg};
+  border-radius: 12px;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 8px;
+`;
+
 const UserInfo = styled.div`
   width: fit-content;
   display: flex;
@@ -1015,6 +1036,12 @@ const OptionContainer = styled.div`
 
 const MoreOptions = styled.div`
   position: relative;
+  height: 100%;
+  max-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;
 
 const Icon = styled.i`
