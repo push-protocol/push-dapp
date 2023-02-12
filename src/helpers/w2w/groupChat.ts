@@ -47,3 +47,9 @@ export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boole
     message: feed.msg.messageContent,
   };
 };
+
+export const getIntentMessage = (feed:Feeds,isGroup:boolean) =>{
+    if(isGroup)
+     return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
+     return 'Please accept to enable push chat from this wallet';
+}
