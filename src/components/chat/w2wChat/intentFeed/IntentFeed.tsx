@@ -39,10 +39,6 @@ const IntentFeed = ({isLoading}): JSX.Element => {
 
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
 
-  console.log("received intents",receivedIntents);
-
-  const isIntent = true;
-
   return (
     <ItemVV2
       alignSelf="stretch"

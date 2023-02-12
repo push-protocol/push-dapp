@@ -19,8 +19,6 @@ export const getName = (feed: Feeds): string => {
 
 export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boolean) => {
 
-  console.log("Feeds: ",feed)
-
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
     if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account})) {
       return {
