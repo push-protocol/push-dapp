@@ -44,12 +44,12 @@ const ModalInputContainer = styled.div`
 
 const InputTitle =  styled.h4`
     font-family: Strawford;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: ${props=> props.fontSize || '0.95rem'};
+    font-weight: ${props => props.fontWeight || '600'};
     letter-spacing: 0em;
     margin:0;
     padding:0;
-    margin-bottom: 3%;
+    margin-bottom: ${ props=> props.marginBottom || '3%'};
 `
 
 const CustomInput = styled(Input)`

@@ -271,7 +271,7 @@ const SearchBar = () => {
             spinnerSize={40}
           />
         ) : (
-          <MessageFeed
+          searchedUser && <MessageFeed
             hasUserBeenSearched={activeTab !== 3 ? hasUserBeenSearched : true}
             filteredUserData={filteredUserData}
             isInvalidAddress={isInValidAddress}

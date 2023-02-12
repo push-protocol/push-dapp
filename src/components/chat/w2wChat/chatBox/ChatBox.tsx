@@ -33,10 +33,10 @@ import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
 import LockSlash from '../../../../assets/LockSlash.png';
-import { ReactComponent as Info } from 'assets/chat/groupChat/info.svg';
-import { ReactComponent as More } from 'assets/chat/groupChat/more.svg';
-import { ReactComponent as InfoDark } from 'assets/chat/groupChat/infodark.svg';
-import { ReactComponent as MoreDark } from 'assets/chat/groupChat/moredark.svg';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
+import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
+import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
+import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal Configs

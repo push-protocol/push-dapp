@@ -26,9 +26,10 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import useModalBlur from 'hooks/useModal';
 import useToast from 'hooks/useToast';
 import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfoModalContent';
+import useModalBlur from 'hooks/useModalBlur';
+import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -72,6 +73,12 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  const [groupName,setGroupName]=useState<string>('');
+  const [groupDescription,setGroupDescription]=useState<string>('');
+  const [groupImage,setGroupImage]=useState<string>('');
+  const [groupType,setGroupType]=useState<string>('')
+  const [createGroupState, setCreateGroupState] = React.useState<number>(1);
+
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
@@ -147,6 +154,16 @@ function Chat() {
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
   } = useModalBlur();
+
+  const createGroupToast = useToast();
+
+  const {
+    isModalOpen: isCreateGroupModalOpen,
+    showModal: showCreateGroupModal,
+    ModalComponent: CreateGroupModalComponent,
+  } = useModalBlur();
+
+  const createGroup = () => console.log('group created');
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -227,6 +244,16 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
+                groupName,
+                setGroupName,
+                groupDescription,
+                setGroupDescription,
+                groupImage,
+                setGroupImage,
+                groupType,
+                setGroupType,
+                createGroupState,
+                setCreateGroupState
               }}
             >
               <ChatSidebarContainer
@@ -238,7 +265,7 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection />
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
@@ -250,6 +277,11 @@ function Chat() {
                 InnerComponent={GroupInfoModalContent}
                 onConfirm={() => {}}
                 toastObject={groupInfoToast}
+                />
+              <CreateGroupModalComponent
+                InnerComponent={CreateGroupModalContent}
+                onConfirm={createGroup}
+                toastObject={createGroupToast}
               />
 
               {displayQR && !isMobile && (
