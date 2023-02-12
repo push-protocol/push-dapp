@@ -179,6 +179,7 @@ function Chat() {
     if (feed) {
       setViewChatBox(true);
       setCurrentChat(feed);
+      console.log("currentChat",feed)
     } else {
       setViewChatBox(false);
     }
