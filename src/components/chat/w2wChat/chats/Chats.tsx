@@ -293,9 +293,9 @@ const TimeStamp = styled(ItemHV2)`
 
 const MessageText = styled(SpanV2)`
   font-size:14px;
-  max-width : 13rem;
+  // max-width : 13rem;
   font-weight:400;
-  padding: 0px 44px 0px 0px;
+  padding: 0px 20px 0px 0px;
   text-align:left;
   color:#000;
 
@@ -327,8 +327,11 @@ const ReceivedMessage = styled.div`
   display: flex;
   justify-content: flex-start;
   color: #000000;
-  flex-direction: column;
-  align-items: baseline;
+  // flex-direction: column;
+  // align-items: baseline;
+  flex-direction: row;
+    align-items: center;
+    padding: 9px 17px;
 `;
 
 const SenderMessage = styled.div`

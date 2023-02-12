@@ -86,8 +86,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [isGroup,setIsGroup] = useState<boolean>(false);
-  const {connectedUser,setConnectedUser} = useContext(ChatUserContext);
+  const [isGroup, setIsGroup] = useState<boolean>(false);
+  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
@@ -95,23 +95,23 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   let time = '';
 
 
-  useEffect(()=> {
-     setIsGroup(checkIfGroup(currentChat));
+  useEffect(() => {
+    setIsGroup(checkIfGroup(currentChat));
   });
 
   //get ens name
-  const ensName = useResolveEns(!isGroup?currentChat?.wallets?.split(',')[0].toString():null);
+  const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat,isGroup });
+      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
-  
+
         if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
@@ -168,7 +168,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 currentChat,
                 inbox,
               });
-console.log(msgIPFS)
+              console.log(msgIPFS)
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
@@ -212,11 +212,11 @@ console.log(msgIPFS)
 
 
   const getDisplayName = () => {
-    if(ensName)
+    if (ensName)
       return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
-    if(isGroup)
+    if (isGroup)
       return currentChat?.groupInformation?.groupName;
-    if(currentChat?.wallets)
+    if (currentChat?.wallets)
       return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
   }
 
@@ -224,8 +224,8 @@ console.log(msgIPFS)
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account:account! }), inboxes, 'did');
+      let inboxes: Feeds[] = await PushAPI.chat.chats({ account: account!, env: appConfig.appEnv, toDecrypt: false });
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: account! }), inboxes, 'did');
       inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
@@ -263,10 +263,10 @@ console.log(msgIPFS)
         sigType = pgpSignatureType;
       }
       let savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
-        fromCAIP10: walletToCAIP10({ account:account!}),
-        fromDID: walletToCAIP10({ account:account!}),
-        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0]}),
-        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0]}),
+        fromCAIP10: walletToCAIP10({ account: account! }),
+        fromDID: walletToCAIP10({ account: account! }),
+        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
+        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
         messageContent,
         messageType,
         signature,
@@ -319,15 +319,15 @@ console.log(msgIPFS)
       getIntent = await intitializeDb<string>(
         'Read',
         'Intent',
-         walletToCAIP10({ account:account!}),
+        walletToCAIP10({ account: account! }),
         '',
         'did'
       );
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account:account!}), intents, 'did');
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
+    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
     setReceivedIntents(intents);
@@ -338,16 +338,30 @@ console.log(msgIPFS)
     setMessageBeingSent(true);
     const { createdUser } = await createUserIfNecessary();
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
-    const updatedIntent: string = await approveIntent(
-      currentChat.intentSentBy,
-      createdUser.wallets.split(',')[0],
-      status,
-      '1',
-      'sigType'
-    );
+
+    let updatedIntent: any;
+
+    if (isGroup) {
+      updatedIntent = await PushAPI.chat.approve({
+        status: 'Approved',
+        account: account!,
+        senderAddress: currentChat.groupInformation?.chatId,
+        env: appConfig.appEnv,
+      });
+    } else {
+      updatedIntent = await PushAPI.chat.approve({
+        status: 'Approved',
+        account: account!,
+        senderAddress: currentChat.intentSentBy,
+        env: appConfig.appEnv,
+      });
+    }
+
     let activeChat = currentChat;
-    activeChat.intent = updatedIntent;
+    //yaha pe thoda sa change kr skte h intent:"Approved set kr skte h "
+    activeChat.intent = updatedIntent.data;
     setChat(activeChat);
+
 
     // displaying toast according to status
     if (status === 'Approved') {
@@ -407,7 +421,7 @@ console.log(msgIPFS)
           keyPairs.privateKeyArmored,
           walletPublicKey
         );
-        const caip10: string = walletToCAIP10({ account:account!});
+        const caip10: string = walletToCAIP10({ account: account! });
         setBlockedLoading({
           enabled: true,
           title: 'Step 3/4: Syncing account info',
@@ -460,14 +474,14 @@ console.log(msgIPFS)
         try {
           const ens: string = await provider.resolveName(searchedUser);
           if (ens) {
-            caip10 = walletToCAIP10({ account:account!});
+            caip10 = walletToCAIP10({ account: account! });
           }
         } catch (err) {
           console.log(err);
           return;
         }
       } else {
-        caip10 = walletToCAIP10({ account:account!});
+        caip10 = walletToCAIP10({ account: account! });
       }
       await PushNodeClient.createUser({
         caip10,
@@ -535,7 +549,7 @@ console.log(msgIPFS)
           toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
           toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
           fromDID: walletToCAIP10({ account: account! }),
-          fromCAIP10: walletToCAIP10({ account:account! }),
+          fromCAIP10: walletToCAIP10({ account: account! }),
           messageContent,
           messageType,
           signature,
@@ -730,7 +744,7 @@ console.log(msgIPFS)
               fontWeight="400"
               textAlign="start"
             >
-            {getDisplayName()}
+              {getDisplayName()}
             </SpanV2>
             {/* <MoreOptions>
               <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
@@ -815,7 +829,7 @@ console.log(msgIPFS)
 
                         <Chats
                           msg={msg}
-                          caip10={walletToCAIP10({ account:account!})}
+                          caip10={walletToCAIP10({ account: account! })}
                           messageBeingSent={messageBeingSent}
                         />
                       </div>
@@ -828,24 +842,38 @@ console.log(msgIPFS)
                         Messages are not encrypted till the user accepts the chat request.
                       </ItemTextSlash>
 
-                     {!isGroup &&  <FirstTime>
+                      {!isGroup && <FirstTime>
                         This is your first conversation with recipient.<br></br> Start the conversation by sending a
                         message.
                       </FirstTime>}
                     </Item>
                   )}
-                  {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) && (
+                  {(checkIfIntentExist({ receivedIntents, currentChat, connectedUser })) && (
                     <Chats
                       msg={{
                         ...messages[0],
                         messageContent: 'Please accept to enable push chat from this wallet',
                         messageType: 'Intent',
                       }}
-                      caip10={walletToCAIP10({ account:account! })}
+                      caip10={walletToCAIP10({ account: account! })}
                       messageBeingSent={messageBeingSent}
                       ApproveIntent={() => ApproveIntent('Approved')}
                     />
                   )}
+
+                  {(isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser,isGroup })) && (
+                    <Chats
+                      msg={{
+                        ...messages[0],
+                        messageContent: `You were invited to the group ${getDisplayName()}. Please accept to continue messaging in this group`,
+                        messageType: 'Intent',
+                      }}
+                      caip10={walletToCAIP10({ account: account! })}
+                      messageBeingSent={messageBeingSent}
+                      ApproveIntent={() => ApproveIntent('Approved')}
+                    />
+                  )}
+
                 </>
               )}
             </CustomScrollContent>

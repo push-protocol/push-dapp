@@ -14,10 +14,13 @@ export const getProfilePicture = (feed: Feeds): string => {
 
 export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;
-  else return feed?.wallets.split(',')[0].toString();
+  else return feed.wallets?.split(',')[0].toString();
 };
 
-export const getChatsnapMessage = (feed: Feeds, account: string) => {
+export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boolean) => {
+
+  console.log("Feeds: ",feed)
+
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
     if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account})) {
       return {
@@ -25,10 +28,20 @@ export const getChatsnapMessage = (feed: Feeds, account: string) => {
         message: 'Group successfully created!',
       };
     } else {
-      return {
-        type: 'Text',
-        message: 'Joined group successfully',
-      };
+
+      if(isIntent){
+        return {
+          type: 'Text',
+          message: 'Group Invite Received',
+        };
+      }else{
+        return {
+          type: 'Text',
+          message: 'Joined group successfully',
+        };
+      }
+
+      
     }
   }
   return {

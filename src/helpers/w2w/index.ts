@@ -16,7 +16,7 @@ export const walletToCAIP10 = ({ account }: { account: string }): string => {
 };
 
 export const caip10ToWallet = (wallet: string): string => {
-  wallet = wallet.replace('eip155:', '');
+  wallet = wallet?.replace('eip155:', '');
   return wallet;
 };
 
