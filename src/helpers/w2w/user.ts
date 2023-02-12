@@ -38,11 +38,25 @@ type GetLatestThreadHashPropRtpe = {
   inbox: Feeds[];
   receivedIntents: Feeds[];
   currentChat: Feeds;
+  isGroup: boolean;
 };
-export const getLatestThreadHash = ({ inbox, receivedIntents, currentChat }: GetLatestThreadHashPropRtpe): string => {
-  const latestThreadHash =
-    inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
-    receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
+export const getLatestThreadHash = ({
+  inbox,
+  receivedIntents,
+  currentChat,
+  isGroup,
+}: GetLatestThreadHashPropRtpe): string => {
+  let latestThreadHash = '';
+  if (isGroup) {
+    latestThreadHash =
+      inbox?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash ||
+      receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash;
+  } else {
+    latestThreadHash =
+      inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
+      receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
+  }
+
   return latestThreadHash;
 };
 
