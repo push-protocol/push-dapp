@@ -363,7 +363,7 @@ const ItemBar = styled.div`
 
     position: sticky;
     top: 0px;
-    background: white;
+    background: ${(props)=>props.theme.default.bg};
     z-index: 10;
 
    
