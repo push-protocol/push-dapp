@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import styled from 'styled-components';
 import { H2V2, ImageV2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';
 
@@ -5,15 +6,18 @@ type UpdateChannelTooltipContentProps = {
   channelName: string;
   channelDescription: string;
   channelLogoSrc: string;
+  height:number
 };
 
 const UpdateChannelTooltipContent = ({
   channelName,
   channelDescription,
   channelLogoSrc,
+  height
 }: UpdateChannelTooltipContentProps) => {
+
   return (
-    <Container>
+    <Container style={{borderRadius : height<200 ? "0.125rem 1rem 1rem 1rem" : "1rem 1rem 1rem 0.125rem"}}>
       <TopHeading>Channel was recently updated</TopHeading>
       <TopSubHeading>Previously</TopSubHeading>
       <Content>
@@ -35,7 +39,7 @@ const Container = styled(ItemVV2)`
   height: 7.5rem;
   max-height: 7.5rem;
   background: ${(props) => props.theme.default.bg};
-  border-radius: 1rem 1rem 1rem 0.125rem;
+  // border-radius: 0.125rem 1rem 1rem 1rem;
   justify-content: flex-start;
   align-items: flex-start;
   padding: 0.75rem 0.25rem 0.75rem 1rem;

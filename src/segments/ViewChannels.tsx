@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -176,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-  console.log(channels)
+  // console.log(channels)
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -204,17 +204,12 @@ function ViewChannels({ loadTeaser, playTeaser }) {
     }, SEARCH_DELAY);
   }, []);
 
-const handleScroll = (e)=>{
-  console.log("scroll",e.currentTarget.scrollTop);
-}
-
-
   return (
     <Container>
-      <ScrollItem onScroll={handleScroll}>
+      <ScrollItem id="scroll">
 
         {!loading && (
-          <ItemBar>
+          <ItemBar id="searchBar" >
             <ItemHBar>
               <SearchContainer
                 flex="1"
@@ -259,15 +254,19 @@ const handleScroll = (e)=>{
 
 
         {/* render all channels depending on if we are searching or not */}
-        <div style={{position:"absolute",top:"100px"}}>
+        <div style={{ position: "absolute", top: "100px" }} >
           {(search ? channelToShow : channels).map(
             (channel: any, index: any) =>
               channel &&
               channel.channel !== ZERO_ADDRESS && (
                 <>
                   <ViewChannelItems
+                    // onMouseEnter={() => {
+                    //   handleHeight(channel.channel);
+                    // }}
                     key={channel.channel}
                     self="stretch"
+                    // id={channel.channel}
                   >
 
                     {!MaskedChannels[channel.channel] && channel &&
@@ -275,6 +274,7 @@ const handleScroll = (e)=>{
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
+                          
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}

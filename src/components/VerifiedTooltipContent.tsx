@@ -3,9 +3,11 @@ import styled from 'styled-components';
 import { H2V2, ItemVV2 } from './reusables/SharedStylingV2';
 import PushLogo from "../assets/PushLogo.svg";
 
-const VerifiedTooltipContent = () => {
+const VerifiedTooltipContent = ({
+  height
+}) => {
     return (
-        <Container>
+        <Container style={{borderRadius: height < 150 ? "0.125rem 1rem 1rem 1rem" : "1rem 1rem 1rem 0.125rem"}}>
             <Heading>Verified By</Heading>
             <Logo src={PushLogo}/>
         </Container>
@@ -22,8 +24,8 @@ const Container = styled(ItemVV2)`
   max-height: 37px;
   background: #131313;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-  border-radius: 1rem 1rem 1rem 0.125rem; //above one
-//   border-radius: 0.125rem 1rem 1rem 1rem; //below displaying
+  // border-radius: 1rem 1rem 1rem 0.125rem; //above one
+  // border-radius: 0.125rem 1rem 1rem 1rem; //below displaying
   justify-content: flex-start;
   align-items: flex-start;
   padding:8px 16px;

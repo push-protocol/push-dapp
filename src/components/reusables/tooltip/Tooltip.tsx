@@ -8,26 +8,19 @@ type TooltipProps = {
   // for aligning the tooltip acc. to requirement
   placementProps?: {
     bottom?: string,
-    right?:string,
+    right?: string,
     transform?: string
   },
-  wrapperProps?:{}
+  wrapperProps?: {},
+  key:any,
 };
-
-// window.onmousemove = function (e) {
-//   var x = e.clientX,
-//       y = e.clientY;
-//       console.log("hehe: ",x,y)
-//   // tooltipSpan.style.top = (y + 20) + 'px';
-//   // tooltipSpan.style.left = (x + 20) + 'px';
-// };
 
 const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled, placementProps, wrapperProps }) => {
   let timeoutId: NodeJS.Timeout;
   const [active, setActive] = React.useState(false);
 
   const showTip = () => {
-    if(!active){
+    if (!active) {
       // show the tooltip after 500ms
       timeoutId = setTimeout(() => {
         setActive(true);
@@ -40,27 +33,28 @@ const Tooltip: React.FC<TooltipProps> = ({ children, tooltipContent, isDisabled,
     setActive(false);
   };
 
-  React.useEffect(()=>{
-    if(isDisabled===false){
-        // if isDisabled has been changed to false then show the tooltip
-        return showTip();
+  React.useEffect(() => {
+    if (isDisabled === false) {
+      // if isDisabled has been changed to false then show the tooltip
+      return showTip();
     }
   }, [isDisabled]);
 
-  return (
-    <Wrapper
-      style={wrapperProps}
-      onMouseEnter={isDisabled ? () => {} : showTip}
-      onFocus={isDisabled ? () => {} : showTip}
-      onMouseLeave={isDisabled ? () => {} : hideTip}
-      onBlur={isDisabled ? () => {} : hideTip}
-    >
-      {/* <Content style={placementProps}>{tooltipContent}</Content> */}
+return (
+  <Wrapper
+    style={wrapperProps}
+    onMouseEnter={isDisabled ? () => { } : showTip}
+    onFocus={isDisabled ? () => { } : showTip}
+    onMouseLeave={isDisabled ? () => { } : hideTip}
+    onBlur={isDisabled ? () => { } : hideTip}
+  >
+    <div >
       {children}
-      {!isDisabled && active && <Content style={placementProps}>{tooltipContent}</Content>}
-    </Wrapper>
-    // <Content style={placementProps}>{tooltipContent}</Content>
-  );
+
+    </div>
+    {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
+  </Wrapper>
+);
 };
 
 const Wrapper = styled.div`

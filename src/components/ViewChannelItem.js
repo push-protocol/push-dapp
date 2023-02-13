@@ -64,9 +64,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(channelObject.channel);
+  const [tooltTipHeight, setToolTipheight] = React.useState(0);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
-  console.log(channelObject)
+  // console.log(channelObject)
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
@@ -378,9 +379,17 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   if (isBlocked) return <></>;
   if (isChannelBlacklisted) return <></>;
 
+
+  const handleHeight = (e) => {
+    const containerHeight = document.getElementById(channelObject?.channel)?.getBoundingClientRect();
+    setToolTipheight(containerHeight?.top);
+  }
+
   // render
   return (
-    <Container key={channelObject.channel}>
+    <Container key={channelObject.channel}
+      id={channelObject.channel}
+    >
       <ChannelLogo>
         <ChannelLogoOuter>
           <ChannelLogoInner>
@@ -405,7 +414,9 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               height={24}
             />
           ) : (
-            <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
+            <ChannelTitleLink
+              onClick={() => correctChannelTitleLink()}
+            >
 
               <Span style={{ display: 'flex', alignItems: 'center' }}>
                 <Tooltip
@@ -415,22 +426,35 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     minWidth: "fit-content",
                     // zIndex: "10",
                   }}
-                  placementProps={{
-                    background: "none",
-                    bottom: "25px",
-                    // right: "-175px",
-                    left:"5px"
-                  }}
+                  placementProps={
+                    tooltTipHeight < 200 ? {
+                      background: "none",
+                      // bottom: "25px",
+                      top: "20px",
+                      // right: "-175px",
+                      left: "5px"
+                    } : {
+                      background: "none",
+                      bottom: "25px",
+                      // top: "20px",
+                      // right: "-175px",
+                      left: "5px"
+                    }
+                  }
                   tooltipContent={
                     <UpdateChannelTooltipContent
+                      height={tooltTipHeight}
                       channelName='Ethereum Push Notification Service'
                       channelDescription='The channel provides useful information, notifications, etc to all the users of the EPNS platform.'
                       channelLogoSrc={`${channelObject.icon}`}
                     />}
                 >
-                  <div>
+                  <div
+                    onMouseEnter={() => {
+                      handleHeight(channelObject.channel);
+                    }}
+                  >
                     <ImageInfo src={InfoImage} />
-
                   </div>
                 </Tooltip>
 
@@ -441,32 +465,36 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     margin="0px 5px"
                     style={{ display: 'flex' }}
                   >
-
-
-
                     <Tooltip
                       wrapperProps={{
                         width: "fit-content",
                         maxWidth: "fit-content",
                         minWidth: "fit-content",
-                        // zIndex: "10",
                       }}
-                      placementProps={{
-                        background: "none",
-                        // borderRadius: "0.125rem 1rem 1rem 1rem",
-                        bottom: "28px", //above display
-                        // top: "20px", //for lower displaying
-                        // right: "-175px",
-                        left:"7px",
-                        width:"125px"
-                      }}
+                      placementProps={
+                        tooltTipHeight < 150 ? {
+                          background: "none",
+                          top: "20px", //for lower displaying
+                          left: "7px",
+                          width: "125px"
+                        } :
+                          {
+                            background: "none",
+                            bottom: "28px", //above display
+                            left: "7px",
+                            width: "125px"
+                          }}
                       tooltipContent={
-                        <VerifiedTooltipContent/>
+                        <VerifiedTooltipContent
+                          height={tooltTipHeight}
+                        />
 
                       }
                     >
                       {/* TODO: HAS TO BE CHANGED TO A i icon */}
-                      <div style={{cursor:"pointer"}}>
+                      <div style={{ cursor: "pointer" }} onMouseEnter={() => {
+                        handleHeight(channelObject.channel);
+                      }}>
                         <GoVerified
                           size={18}
                           color={themes.viewChannelVerifiedBadge}
