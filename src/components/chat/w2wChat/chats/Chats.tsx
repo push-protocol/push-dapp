@@ -35,7 +35,6 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
   const time1:string = time.toLocaleTimeString('en-US');
   const date :string= time1.slice(0, -6) + time1.slice(-2);
   const {tweetId,messageType}:TwitterFeedReturnType=checkTwitterUrl({message:msg.messageContent});
-
   return (
     <>
       {
@@ -326,18 +325,10 @@ const ReceivedMessage = styled.div`
   text-align: left;
   border-radius: 2px 16px 16px 16px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;
   color: #000000;
   flex-direction: column;
   align-items: baseline;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
- 
-
-
 `;
 
 const SenderMessage = styled.div`
@@ -351,7 +342,6 @@ const SenderMessage = styled.div`
   border-radius: 16px 2px 16px 16px;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;

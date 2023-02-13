@@ -182,6 +182,17 @@ const themeLight = {
   verticalLineColor:"#ADB0BE"
 
   
+  // toggle switch
+  toggleContainerBG: "#F4F5FA",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1",
+
+  // tooltip
+  tooltipTopHeading: "#333333",
+  tooltipTopSubHeading: "#333333",
+  tooltipContentHeading: "#CF1C84",
+  tooltipContentDesc:"#494D5F",
+  tooltipIconBorderClr: "#E6E7EC",
 };
 
 const themeDark = {
@@ -370,6 +381,17 @@ const themeDark = {
   textAreaFocusBorder:"1px solid #D53893",
   verticalLineColor:"#4A4F67"
 
+  // toggle switch
+  toggleContainerBG: "#282A2E",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1",
+
+  // tooltip
+  tooltipTopHeading: "#D4DCEA",
+  tooltipTopSubHeading: "#B6BCD6",
+  tooltipContentHeading: "#CF1C84",
+  tooltipContentDesc: "#B6BCD6",
+  tooltipIconBorderClr: "#E6E7EC",
 };
 
 module.exports = {
