@@ -179,7 +179,7 @@ const themeLight = {
   editChannelInputbg:"#fff",
   textAreaBorderColor:"1px solid #ADB0BE",
   textAreaFocusBorder:"1px solid #f90e96",
-  verticalLineColor:"#ADB0BE"
+  verticalLineColor:"#ADB0BE",
 
   
   // toggle switch
@@ -379,7 +379,7 @@ const themeDark = {
   editChannelInputbg:"#282A2E",
   textAreaBorderColor:"1px solid #4A4F67",
   textAreaFocusBorder:"1px solid #D53893",
-  verticalLineColor:"#4A4F67"
+  verticalLineColor:"#4A4F67",
 
   // toggle switch
   toggleContainerBG: "#282A2E",
