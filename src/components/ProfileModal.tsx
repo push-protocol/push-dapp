@@ -1,10 +1,9 @@
 import React from 'react';
 import styled, { useTheme } from "styled-components";
 
-import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
 import { A, Button, Image, Item, ItemH, Span} from 'primaries/SharedStyling';
-import { AiOutlineClose } from 'react-icons/ai'
 import { BsXLg } from 'react-icons/bs'
+import { shortenText } from 'helpers/UtilityHelper';
 
 
 const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
@@ -42,9 +41,8 @@ const ProfileModal = ({ showDropdown, setShowDropdown, dropdownValues })=>{
               width="max-content"
             >
               <MobileAddress>
-
-              {dropdownValue?.title.substring(0, 6)}.....
-                {dropdownValue?.title.substring(dropdownValue?.title.length - 6)}
+                {shortenText(dropdownValue?.title,6)}
+             
               </MobileAddress>
             </Span>
            {dropdownValue?.invertedIcon && <Image

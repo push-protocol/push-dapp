@@ -24,7 +24,7 @@ export const config = {
   allowedNetworks: [
     1, //for ethereum mainnet
     137, //for polygon mainnet
-    56, // for bsc mainnet
+    56, // for bnb mainnet
   ],
 
   /**
@@ -109,8 +109,8 @@ export const CHAIN_DETAILS = {
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
   },
   56: {
-    label: "BSC Mainnet",
-    name: "BSC_MAINNET",
+    label: "BNB Mainnet",
+    name: "BNB_MAINNET",
     chainId: 56,
     rpcUrl: "https://bsc-dataseed.binance.org/",
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"

@@ -60,14 +60,13 @@ export interface TwitterFeedReturnType{
 }
 
 export interface InboxChat {
-    name: string;
-    profilePicture: string;
+    link: string;
     timestamp: number;
     fromDID: string;
     toDID: string;
     fromCAIP10: string;
     toCAIP10: string;
-    lastMessage: string;
+    messageContent: string;
     messageType: string;
     encType: string;
     signature: string;
