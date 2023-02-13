@@ -65,6 +65,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
         {
+         setFeeds(inboxes)
          setInbox(inboxes);
         }
         return inboxes;
@@ -74,7 +75,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       }
     }
   };
-  console.log(feeds)
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
@@ -103,7 +103,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
@@ -136,7 +135,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const updateInbox = async (): Promise<void> => {
     if (checkConnectedUser(connectedUser)) {
-      console.log("in here")
       await getInbox();
     }
     setMessagesLoading(false);
@@ -223,6 +221,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               ),
             });
           }
+
           setFeeds([]);
         }
         setMessagesLoading(false);
