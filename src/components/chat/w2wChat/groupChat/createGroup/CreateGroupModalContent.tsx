@@ -15,19 +15,19 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { GroupDetailsContent } from './GroupDetailsContent';
 import { AddWalletContent } from './AddWalletContent';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import {ChatUserContext} from '../../../../../contexts/ChatUserContext';
+import { ChatUserContext } from '../../../../../contexts/ChatUserContext';
 import { appConfig } from '../../../../../config';
 import useToast from 'hooks/useToast';
 import { MdError } from 'react-icons/md';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const [createGroupState, setCreateGroupState] =  React.useState<number>(1);
+  const [createGroupState, setCreateGroupState] = React.useState<number>(1);
   const [groupNameData, setGroupNameData] = React.useState<string>('');
   const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
   const [groupImageData, setGroupImageData] = React.useState<string>('');
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [memberList, setMemberList] = React.useState<any>([]);
-  const {connectedUser} = useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
   const createGroupToast = useToast();
@@ -44,7 +44,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   useClickAway(containerRef, () => handleClose());
 
   const handleCreateGroup = async (): Promise<any> => {
-    
+
     try {
       const memberWalletList = memberList.map(member => member.wallets);
       console.log(
@@ -106,15 +106,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       >
         <ItemHV2
           alignItems="flex-start"
+          justifyContent="space-between"
+          margin="0px 0px 62px 0px"
         >
-             {createGroupState == 2 && <Back
+          {createGroupState == 2 && <Back
             onClick={handlePrevious}
             style={{ cursor: 'pointer' }}
           />}
           <SpanV2
             fontWeight="500"
             fontSize="24px"
-            margin="0px 12px 42px 12px"
+            // margin="0px 12px 42px 12px"
             color={themes.modalMessageColor}
           >
             Create Group
@@ -127,19 +129,19 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
-            createGroupState = {createGroupState}
+            createGroupState={createGroupState}
             groupDescriptionData={groupDescriptionData}
-            groupImageData = {groupImageData}
-            groupTypeObject = {groupTypeObject}
-            handleGroupNameData = {setGroupNameData}
-            handleGroupDescriptionData = {setGroupDescriptionData}
-            handleGroupImageData = {setGroupImageData}
-            handleGroupTypeObject = {setGroupTypeObject}
-            handleCreateGroupState = {setCreateGroupState}
+            groupImageData={groupImageData}
+            groupTypeObject={groupTypeObject}
+            handleGroupNameData={setGroupNameData}
+            handleGroupDescriptionData={setGroupDescriptionData}
+            handleGroupImageData={setGroupImageData}
+            handleGroupTypeObject={setGroupTypeObject}
+            handleCreateGroupState={setCreateGroupState}
 
           />
         )}
-        {createGroupState == 2 && <AddWalletContent handleCreateGroup={handleCreateGroup} memberList = {memberList} handleMemberList = {setMemberList} />}
+        {createGroupState == 2 && <AddWalletContent handleCreateGroup={handleCreateGroup} memberList={memberList} handleMemberList={setMemberList} />}
       </ModalContainer>
     </ThemeProvider>
   );

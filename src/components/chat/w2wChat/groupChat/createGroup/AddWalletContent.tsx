@@ -25,8 +25,9 @@ import { shortenText } from 'helpers/UtilityHelper';
 
 // Internal configs
 import { appConfig } from 'config';
+import MemberListContainer from './MemberListContainer';
 
-export const AddWalletContent = ({handleCreateGroup,memberList, handleMemberList}) => {
+export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList }) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { chainId } = useWeb3React<ethers.providers.Web3Provider>();
@@ -120,7 +121,8 @@ export const AddWalletContent = ({handleCreateGroup,memberList, handleMemberList
     }
   };
 
-
+  console.log("Filetered Data", filteredUserData);
+  console.log("Member List Data", memberList)
 
   const clearInput = () => {
     setSearchedUser('');
@@ -157,16 +159,16 @@ export const AddWalletContent = ({handleCreateGroup,memberList, handleMemberList
           <ItemVV2
             position="absolute"
             alignItems="flex-end"
-            width="24px"
+            width="40px"
             height="24px"
             top="22px"
             right="16px"
           >
             {searchedUser.length > 0 && <Clear onClick={clearInput} />}
-            {searchedUser.length == 0 && (
+            {searchedUser.length >= 0 && (
               <SearchIcon
                 style={{ cursor: 'pointer' }}
-                onClick={() => {}}
+                onClick={handleSearch}
               />
             )}
           </ItemVV2>
@@ -174,7 +176,16 @@ export const AddWalletContent = ({handleCreateGroup,memberList, handleMemberList
       </SearchbarContainer>
       {filteredUserData ? (
         <MemberList marginTop="8px">
-          <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+
+          <MemberListContainer
+            memberData={filteredUserData}
+            handleMemberList={handleMemberList}
+            setFilteredUserData={setFilteredUserData}
+            members={false}
+          />
+
+
+          {/* <WalletProfileContainer background={theme.groupSearchProfilBackground}>
             <WalletProfile>
               <ItemVV2
                 width="48px"
@@ -193,41 +204,53 @@ export const AddWalletContent = ({handleCreateGroup,memberList, handleMemberList
               alignItems="flex-end"
               maxWidth="30px"
               style={{ cursor: 'pointer' }}
-              onClick={() => addMemberToList(filteredUserData)}
-            >
+              onClick={() => addMemberToList(filteredUserData)}>
               {theme.scheme == 'light' ? <AddLight /> : <AddDark />}
             </ItemVV2>
-          </WalletProfileContainer>
+          </WalletProfileContainer> */}
         </MemberList>
       ) : (
-        <MemberList marginTop="16px">
+        <MemberList marginTop="8px">
           {memberList.map((member, index) => (
-            <WalletProfileContainer
-              background={theme.groupSearchProfilBackground}
+
+            <MemberListContainer
               key={index}
-            >
-              <WalletProfile>
-                <ItemVV2
-                  width="48px"
-                  maxWidth="48px"
-                  borderRadius="100%"
-                  overflow="hidden"
-                  margin="0px 12px 0px 0px"
-                >
-                  <ImageV2 src={member?.profilePicture} />
-                </ItemVV2>
-                <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(member.wallets.split(':')[1], 6)}</SpanV2>
-              </WalletProfile>
-              <ItemVV2
-                alignItems="flex-end"
-                maxWidth="30px"
-                style={{ cursor: 'pointer' }}
-                onClick={() => removeMemberFromList(member)}
-              >
-                {' '}
-                {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
-              </ItemVV2>
-            </WalletProfileContainer>
+              memberData={member}
+              handleMemberList={handleMemberList}
+              setFilteredUserData={setFilteredUserData}
+              members={true}
+              memberList={memberList}
+            />
+
+
+
+
+            // <WalletProfileContainer
+            //   background={theme.groupSearchProfilBackground}
+            //   key={index}
+            // >
+            //   <WalletProfile>
+            //     <ItemVV2
+            //       width="48px"
+            //       maxWidth="48px"
+            //       borderRadius="100%"
+            //       overflow="hidden"
+            //       margin="0px 12px 0px 0px"
+            //     >
+            //       <ImageV2 src={member?.profilePicture} />
+            //     </ItemVV2>
+            //     <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(member.wallets.split(':')[1], 6)}</SpanV2>
+            //   </WalletProfile>
+            //   <ItemVV2
+            //     alignItems="flex-end"
+            //     maxWidth="30px"
+            //     style={{ cursor: 'pointer' }}
+            //     onClick={() => removeMemberFromList(member)}
+            //   >
+            //     {' '}
+            //     {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
+            //   </ItemVV2>
+            // </WalletProfileContainer>
           ))}
         </MemberList>
       )}
