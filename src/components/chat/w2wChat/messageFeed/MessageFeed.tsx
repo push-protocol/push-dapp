@@ -64,7 +64,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         setFeeds(inboxes);
-        setInbox(inboxes);
+        // setInbox(inboxes);
         return inboxes;
       } else {
         let inboxes: Feeds[] = await fetchInboxApi();
@@ -134,6 +134,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const updateInbox = async (): Promise<void> => {
     if (checkConnectedUser(connectedUser)) {
+      console.log("in here")
       await getInbox();
     }
     setMessagesLoading(false);

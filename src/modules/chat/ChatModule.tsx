@@ -72,10 +72,6 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
-  const [groupName,setGroupName]=useState<string>('');
-  const [groupDescription,setGroupDescription]=useState<string>('');
-  const [groupImage,setGroupImage]=useState<string>('');
-  const [groupType,setGroupType]=useState<string>('')
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -153,7 +149,6 @@ function Chat() {
     ModalComponent: CreateGroupModalComponent,
   } = useModalBlur();
 
-  const createGroup = () => console.log('group created');
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -254,7 +249,6 @@ function Chat() {
               </ChatContainer>
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
-                onConfirm={createGroup}
                 toastObject={createGroupToast}
               />
 

@@ -695,7 +695,7 @@ console.log(msgIPFS)
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="998"
+            zIndex="1"
           >
             <ItemHV2
               height="48px"

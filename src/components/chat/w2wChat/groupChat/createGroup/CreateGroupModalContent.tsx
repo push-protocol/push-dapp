@@ -16,6 +16,9 @@ import { GroupDetailsContent } from './GroupDetailsContent';
 import { AddWalletContent } from './AddWalletContent';
 import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import {ChatUserContext} from '../../../../../contexts/ChatUserContext';
+import { appConfig } from '../../../../../config';
+import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] =  React.useState<number>(1);
@@ -27,6 +30,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const {connectedUser} = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
+  const createGroupToast = useToast();
+
 
   const handlePrevious = () => {
     setCreateGroupState(1);
@@ -39,26 +44,27 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   useClickAway(containerRef, () => handleClose());
 
   const handleCreateGroup = async (): Promise<any> => {
-    console.log(
-      'Data\n groupname',
-      groupNameData,
-      '\ngroupDescription',
-      groupDescriptionData,
-      '\nmembers',
-      memberList,
-      '\ngroupImage',
-      groupImageData,
-      '\nisPublic',
-      groupTypeObject.groupTypeData == 'public' ? true : false,
-      '\ngroupCreator',
-      account,
-      '\naccount',
-      account,
-      '\npgpPrivateKey',
-      connectedUser?.privateKey
-    );
+    
     try {
       const memberWalletList = memberList.map(member => member.wallets);
+      console.log(
+        'Data\n groupname',
+        groupNameData,
+        '\ngroupDescription',
+        groupDescriptionData,
+        '\nmembers',
+        memberWalletList,
+        '\ngroupImage',
+        groupImageData,
+        '\nisPublic',
+        groupTypeObject.groupTypeData == 'public' ? true : false,
+        '\ngroupCreator',
+        account,
+        '\naccount',
+        account,
+        '\npgpPrivateKey',
+        connectedUser?.privateKey
+      );
       const createGroupRes = await PushAPI.chat.createGroup({
         groupName: groupNameData,
         groupDescription: groupDescriptionData,
@@ -69,8 +75,25 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         groupCreator: account!,
         account: account!,
         pgpPrivateKey: connectedUser?.privateKey,
+        env: appConfig.appEnv
       });
-      console.log('createGroup Response', createGroupRes);
+      if (typeof createGroupRes !== 'string') {
+        handleClose();
+      } else {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: 'Invalid Address',
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+        handleClose();
+      }
+
     } catch (e) {
       console.log('Error in creating group', e);
     }
@@ -82,17 +105,16 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         ref={containerRef}
       >
         <ItemHV2
-          justifyContent="space-between"
           alignItems="flex-start"
         >
-          <Back
+             {createGroupState == 2 && <Back
             onClick={handlePrevious}
             style={{ cursor: 'pointer' }}
-          />
+          />}
           <SpanV2
             fontWeight="500"
             fontSize="24px"
-            margin="0px 0px 42px 0px"
+            margin="0px 12px 42px 12px"
             color={themes.modalMessageColor}
           >
             Create Group
@@ -124,7 +146,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 500px;
+  max-height: 600px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

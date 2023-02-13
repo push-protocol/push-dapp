@@ -27,6 +27,7 @@ export type ModalType = {
   };
 };
 
+
 const useModalBlur = () => {
   const [open, setOpen] = React.useState(false);
 
@@ -66,7 +67,7 @@ const useModalBlur = () => {
         >
           <BlurBG
             blur={10}
-            zIndex={1}
+            zIndex={2}
           />
           <ItemHV2
               display = 'flex'
@@ -75,7 +76,7 @@ const useModalBlur = () => {
               width = 'fit-content'
               height = 'fit-content'
               background={themes.modalContentBackground}
-              alignSelf = 'center'
+              alignSelf = "center"
               flex = 'initial'
               padding = '1.2% 2%'
               borderRadius = '16px'
