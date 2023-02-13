@@ -284,16 +284,14 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  /* align-items: center; */
-  align-items: end;
+  align-items: center; 
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
   left: 9px;
   right: 9px;
-  /* height: 55px; */
   height: auto;
-  padding: 13px 16px 13px 16px;
+  padding: 13px 16px;
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;
@@ -318,7 +316,6 @@ const TextInput = styled.textarea`
   height: 25px;
   max-height: 75px;
   outline: none;
-  padding-top: 4px;
   border: none;
   resize: none;
   background: transparent;
