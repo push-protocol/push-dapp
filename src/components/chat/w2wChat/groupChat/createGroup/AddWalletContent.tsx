@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-import * as PushAPI from '@pushprotocol/restapi';
+
 import { MdError } from 'react-icons/md';
 
 // Internal Components
@@ -17,32 +17,21 @@ import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
 import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removelight.svg';
 import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
-import Profile from 'assets/chat/group-chat/profile.svg';
 import { displayDefaultUser } from 'helpers/w2w/user';
-//import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import * as w2wChatHelper from 'helpers/w2w';
-import { AppContext, User } from 'types/chat';
 import * as PushNodeClient from 'api';
 import useToast from 'hooks/useToast';
-import { Context } from 'modules/chat/ChatModule';
 import { shortenText } from 'helpers/UtilityHelper';
 
 // Internal configs
 import { appConfig } from 'config';
 
-export const AddWalletContent = () => {
-  const { groupName, groupDescription, groupImage, groupType, connectedUser }: AppContext =
-    useContext<AppContext>(Context);
+export const AddWalletContent = ({handleCreateGroup,memberList, handleMemberList}) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
-  const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
-  const [searchResult, setSearchResult] = React.useState<number>(0);
-  const [completed, setCompleted] = React.useState<boolean>(false);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId } = useWeb3React<ethers.providers.Web3Provider>();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
-  const [hasUserBeenSearched, setHasUserBeenSearched] = React.useState<boolean>(false);
-  const [memberList, setMemberList] = React.useState<any[]>([]);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const { library } = useWeb3React();
 
@@ -69,26 +58,20 @@ export const AddWalletContent = () => {
     setSearchedUser(e.target.value);
   };
 
-  // const handleUserSearch = (e) => {
-  //   e.preventDefault()
-  //   console.log('Search');
-  // };
-
   const addMemberToList = (member) => {
-    setMemberList((prev) => [...prev, member]);
+    handleMemberList((prev) => [...prev, member]);
     setFilteredUserData('');
   };
 
   const removeMemberFromList = (member) => {
     const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
-    setMemberList(filteredMembers);
+    handleMemberList(filteredMembers);
   };
 
   const handleSearch = async (e): Promise<void> => {
     e.preventDefault();
     console.log('Search');
     if (!ethers.utils.isAddress(searchedUser)) {
-      setIsLoadingSearch(true);
       let address: string;
       try {
         address = await provider.resolveName(searchedUser);
@@ -97,31 +80,24 @@ export const AddWalletContent = () => {
         }
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
-
-        console.log('searched address', address);
         if (address) {
           handleUserSearch(address);
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData(null);
-          setHasUserBeenSearched(true);
         }
       } catch (err) {
         setIsInvalidAddress(true);
         setFilteredUserData(null);
-        setHasUserBeenSearched(true);
       }
     } else {
       handleUserSearch(searchedUser);
     }
-    setIsLoadingSearch(false);
   };
 
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
-    setIsLoadingSearch(true);
     const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
     let filteredData: User;
-    setHasUserBeenSearched(true);
 
     if (userSearchData.length) {
       filteredData = await PushNodeClient.getUser({ caip10 });
@@ -144,42 +120,7 @@ export const AddWalletContent = () => {
     }
   };
 
-  const handleCreateGroup = async (): Promise<any> => {
-    console.log(
-      'Data\n groupname',
-      groupName,
-      '\ngroupDescription',
-      groupDescription,
-      '\nmembers',
-      memberList,
-      '\ngroupImage',
-      groupImage,
-      '\nisPublic',
-      groupType == 'public' ? true : false,
-      '\ngroupCreator',
-      account,
-      '\naccount',
-      account,
-      '\npgpPrivateKey',
-      connectedUser?.privateKey
-    );
-    try {
-      const createGroupRes = await PushAPI.chat.createGroup({
-        groupName: groupName,
-        groupDescription: groupDescription,
-        members: memberList,
-        groupImage: groupImage,
-        admins: [],
-        isPublic: groupType == 'public' ? true : false,
-        groupCreator: account,
-        account: account,
-        pgpPrivateKey: connectedUser?.privateKey,
-      });
-      console.log('createGroup Response', createGroupRes);
-    } catch (e) {
-      console.log('Error in creating group', e);
-    }
-  };
+
 
   const clearInput = () => {
     setSearchedUser('');
@@ -221,14 +162,6 @@ export const AddWalletContent = () => {
             top="22px"
             right="16px"
           >
-            {/* {isLoadingSearch && (
-              <LoaderSpinner
-                type={LOADER_TYPE.SEAMLESS}
-                width="auto"
-                spinnerSize={24}
-                spinnerColor={theme.default.secondaryColor}
-              />
-            )} */}
             {searchedUser.length > 0 && <Clear onClick={clearInput} />}
             {searchedUser.length == 0 && (
               <SearchIcon
@@ -296,19 +229,6 @@ export const AddWalletContent = () => {
               </ItemVV2>
             </WalletProfileContainer>
           ))}
-          {/* <WalletProfileContainer background={theme.groupSearchProfilBackground}>
-            <WalletProfile>
-              <ImageV2
-                src={Profile}
-                width="48px"
-                height="48px"
-                borderRadius="48px"
-                margin="0px 12px 0px 0px"
-              />
-              <SpanV2 color={theme.modalPrimaryTextColor}>0x12344...AD23S</SpanV2>
-            </WalletProfile>
-            <SpanV2>{theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}</SpanV2>
-          </WalletProfileContainer> */}
         </MemberList>
       )}
       <ModalConfirmButton

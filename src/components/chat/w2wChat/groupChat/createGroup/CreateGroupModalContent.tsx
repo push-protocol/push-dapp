@@ -1,9 +1,12 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
+import { ethers } from 'ethers';
+import * as PushAPI from "@pushprotocol/restapi";
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
@@ -11,13 +14,18 @@ import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { GroupDetailsContent } from './GroupDetailsContent';
 import { AddWalletContent } from './AddWalletContent';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { AppContext } from 'types/chat';
-import { Context } from 'modules/chat/ChatModule';
+import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import {ChatUserContext} from '../../../../../contexts/ChatUserContext';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  //const [createGroupState, setCreateGroupState] = React.useState<number>(1);
-  const { createGroupState, setCreateGroupState }: AppContext = useContext<AppContext>(Context);
+  const [createGroupState, setCreateGroupState] =  React.useState<number>(1);
+  const [groupNameData, setGroupNameData] = React.useState<string>('');
+  const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
+  const [groupImageData, setGroupImageData] = React.useState<string>('');
+  const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
+  const [memberList, setMemberList] = React.useState<any>([]);
+  const {connectedUser} = useContext(ChatUserContext);
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
 
   const handlePrevious = () => {
@@ -30,6 +38,43 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
 
+  const handleCreateGroup = async (): Promise<any> => {
+    console.log(
+      'Data\n groupname',
+      groupNameData,
+      '\ngroupDescription',
+      groupDescriptionData,
+      '\nmembers',
+      memberList,
+      '\ngroupImage',
+      groupImageData,
+      '\nisPublic',
+      groupTypeObject.groupTypeData == 'public' ? true : false,
+      '\ngroupCreator',
+      account,
+      '\naccount',
+      account,
+      '\npgpPrivateKey',
+      connectedUser?.privateKey
+    );
+    try {
+      const memberWalletList = memberList.map(member => member.wallets);
+      const createGroupRes = await PushAPI.chat.createGroup({
+        groupName: groupNameData,
+        groupDescription: groupDescriptionData,
+        members: memberWalletList,
+        groupImage: groupImageData,
+        admins: [],
+        isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
+        groupCreator: account!,
+        account: account!,
+        pgpPrivateKey: connectedUser?.privateKey,
+      });
+      console.log('createGroup Response', createGroupRes);
+    } catch (e) {
+      console.log('Error in creating group', e);
+    }
+  };
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer
@@ -57,8 +102,22 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             style={{ cursor: 'pointer', marginTop: '8px' }}
           />
         </ItemHV2>
-        {createGroupState == 1 && <GroupDetailsContent />}
-        {createGroupState == 2 && <AddWalletContent />}
+        {createGroupState == 1 && (
+          <GroupDetailsContent
+            groupNameData={groupNameData}
+            createGroupState = {createGroupState}
+            groupDescriptionData={groupDescriptionData}
+            groupImageData = {groupImageData}
+            groupTypeObject = {groupTypeObject}
+            handleGroupNameData = {setGroupNameData}
+            handleGroupDescriptionData = {setGroupDescriptionData}
+            handleGroupImageData = {setGroupImageData}
+            handleGroupTypeObject = {setGroupTypeObject}
+            handleCreateGroupState = {setCreateGroupState}
+
+          />
+        )}
+        {createGroupState == 2 && <AddWalletContent handleCreateGroup={handleCreateGroup} memberList = {memberList} handleMemberList = {setMemberList} />}
       </ModalContainer>
     </ThemeProvider>
   );

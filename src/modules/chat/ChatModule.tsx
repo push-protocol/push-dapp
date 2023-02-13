@@ -76,7 +76,6 @@ function Chat() {
   const [groupDescription,setGroupDescription]=useState<string>('');
   const [groupImage,setGroupImage]=useState<string>('');
   const [groupType,setGroupType]=useState<string>('')
-  const [createGroupState, setCreateGroupState] = React.useState<number>(1);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -234,16 +233,6 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
-                groupName,
-                setGroupName,
-                groupDescription,
-                setGroupDescription,
-                groupImage,
-                setGroupImage,
-                groupType,
-                setGroupType,
-                createGroupState,
-                setCreateGroupState
               }}
             >
               <ChatSidebarContainer
