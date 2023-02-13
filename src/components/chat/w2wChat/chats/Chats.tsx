@@ -8,7 +8,7 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 // Internal Components
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS,TwitterFeedReturnType } from 'types/chat';
+import { MessageIPFS, TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -32,224 +32,222 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
-  const time1:string = time.toLocaleTimeString('en-US');
-  const date :string= time1.slice(0, -6) + time1.slice(-2);
-  const {tweetId,messageType}:TwitterFeedReturnType=checkTwitterUrl({message:msg.messageContent});
+  const time1: string = time.toLocaleTimeString('en-US');
+  const date: string = time1.slice(0, -6) + time1.slice(-2);
+  const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   return (
     <>
       {
-      messageType === 'TwitterFeedLink' ? (
-        <>
-          {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
-              <SenderMessage 
-                color="transparent"
-                padding="0px"
-              >
-                <TwitterTweetEmbed 
-                placeholder={<LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={20}
-                />} 
-                tweetId={tweetId}
-                 />
-              </SenderMessage>
-            </MessageWrapper>
-          ) : (
-            <MessageWrapper align="row">
-              <ReceivedMessage
-                color="transparent"
-                padding="0px"
-              >
-              <TwitterTweetEmbed 
-                 placeholder={<LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={20}
-                />} 
-                tweetId={tweetId} />
-              </ReceivedMessage>
-            </MessageWrapper>
-          )}
-        </>
-      ) : msg.messageType === 'Text' ? (
-        <>
-          {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
-              <SenderMessage>
-                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
-                <TimeStamp>{date}</TimeStamp>
-                {/* {messageBeingSent ? (
+        messageType === 'TwitterFeedLink' ? (
+          <>
+            {msg.fromCAIP10 === caip10 ? (
+              <MessageWrapper align="row-reverse">
+                <SenderMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <TwitterTweetEmbed
+                    placeholder={<LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
+                    />}
+                    tweetId={tweetId}
+                  />
+                </SenderMessage>
+              </MessageWrapper>
+            ) : (
+              <MessageWrapper align="row">
+                <ReceivedMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <TwitterTweetEmbed
+                    placeholder={<LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
+                    />}
+                    tweetId={tweetId} />
+                </ReceivedMessage>
+              </MessageWrapper>
+            )}
+          </>
+        ) : msg.messageType === 'Text' ? (
+          <>
+            {msg.fromCAIP10 === caip10 ? (
+              <MessageWrapper align="row-reverse">
+                <SenderMessage>
+                  {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                  <TimeStamp>{date}</TimeStamp>
+                  {/* {messageBeingSent ? (
                   <p>✔️</p>
                 ) : (
                   <p>✔️ ✔️</p>
                 )} */}
-              </SenderMessage>
-            </MessageWrapper>
-          ) : (
+                </SenderMessage>
+              </MessageWrapper>
+            ) : (
+              <MessageWrapper align="row">
+                <ReceivedMessage>
+                  {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                  <TimeStamp>{date}</TimeStamp>
+                </ReceivedMessage>
+              </MessageWrapper>
+            )}
+          </>
+        ) : msg.messageType === 'Intent' ? (
+          <>
             <MessageWrapper align="row">
-              <ReceivedMessage>
-                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
-                <TimeStamp>{date}</TimeStamp>
-              </ReceivedMessage>
-            </MessageWrapper>
-          )}
-        </>
-      ) : msg.messageType === 'Intent' ? (
-        <>
-          <MessageWrapper align="row">
-            <ReceivedMessage>
-              <MessageText
-
-              >
-                {msg.messageContent.split('\n').map(str => <p>{str}</p>)}
-              </MessageText>
-              {messageBeingSent ? (
-                <SpanV2 margin="-5px 0 0 0">
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    spinnerSize={40}
+              <IntentMessage>
+                <MessageText>
+                  {msg.messageContent.split('\n').map(str => <p>{str}</p>)}
+                </MessageText>
+                {messageBeingSent ? (
+                  <SpanV2 margin="-5px 0 0 0">
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={40}
+                    />
+                  </SpanV2>
+                ) : (
+                  <ImageV2
+                    src={tickIcon}
+                    alt="tick"
+                    width="39px"
+                    height="39px"
+                    cursor="pointer"
+                    onClick={() => ApproveIntent()}
+                    margin="-5px 0 0 0"
                   />
-                </SpanV2>
-              ) : (
-                <ImageV2
-                  src={tickIcon}
-                  alt="tick"
-                  width="39px"
-                  height="39px"
-                  cursor="pointer"
-                  onClick={() => ApproveIntent()}
-                  margin="-5px 0 0 0"
-                />
-              )}
-            </ReceivedMessage>
-          </MessageWrapper>
-        </>
-      ) : msg.messageType === 'Image' ? (
-        <>
-          {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper
-              height="138px"
-              align="row-reverse"
-            >
-              <SenderMessage
-                color="transparent"
-                padding="0px"
-              >
-                <ImageMessage
-                  src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
-                  onClick={() => {
-                    setShowImageModal(true);
-                    setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content);
-                  }}
-                />
-              </SenderMessage>
+                )}
+              </IntentMessage>
             </MessageWrapper>
-          ) : (
-            <MessageWrapper
-              height="138px"
-              align="row"
-            >
-              <ReceivedMessage
-                color="transparent"
-                padding="0px"
+          </>
+        ) : msg.messageType === 'Image' ? (
+          <>
+            {msg.fromCAIP10 === caip10 ? (
+              <MessageWrapper
+                height="138px"
+                align="row-reverse"
               >
-                <ImageMessage
-                  src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
-                  onClick={() => {
-                    setShowImageModal(true);
-                    setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content);
-                  }}
-                />
-              </ReceivedMessage>
-            </MessageWrapper>
-          )}
+                <SenderMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <ImageMessage
+                    src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
+                    onClick={() => {
+                      setShowImageModal(true);
+                      setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content);
+                    }}
+                  />
+                </SenderMessage>
+              </MessageWrapper>
+            ) : (
+              <MessageWrapper
+                height="138px"
+                align="row"
+              >
+                <ReceivedMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <ImageMessage
+                    src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
+                    onClick={() => {
+                      setShowImageModal(true);
+                      setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content);
+                    }}
+                  />
+                </ReceivedMessage>
+              </MessageWrapper>
+            )}
 
-          {showImageModal && (
-            <Modal
-              showImageModal={showImageModal}
-              onClose={() => setShowImageModal(false)}
-              src={imageUrl}
-              time={msg.timestamp}
-            />
-          )}
-        </>
-      ) : msg.messageType === 'GIF' ? (
-        <>
-          {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper
-              height="170px"
-              align="row-reverse"
-            >
-              <SenderMessage
-                color="transparent"
-                padding="0px"
+            {showImageModal && (
+              <Modal
+                showImageModal={showImageModal}
+                onClose={() => setShowImageModal(false)}
+                src={imageUrl}
+                time={msg.timestamp}
+              />
+            )}
+          </>
+        ) : msg.messageType === 'GIF' ? (
+          <>
+            {msg.fromCAIP10 === caip10 ? (
+              <MessageWrapper
+                height="170px"
+                align="row-reverse"
               >
-                <ImageMessage
-                  src={msg.messageContent}
-                  borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} 0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
-                  onClick={() => {
-                    setShowImageModal(true);
-                    setImageUrl(msg.messageContent);
-                  }}
-                />
-              </SenderMessage>
-            </MessageWrapper>
-          ) : (
-            <MessageWrapper
-              height="170px"
-              align="row"
-            >
-              <ReceivedMessage
-                color="transparent"
-                padding="0px"
+                <SenderMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <ImageMessage
+                    src={msg.messageContent}
+                    borderRadius={`${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} 0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
+                    onClick={() => {
+                      setShowImageModal(true);
+                      setImageUrl(msg.messageContent);
+                    }}
+                  />
+                </SenderMessage>
+              </MessageWrapper>
+            ) : (
+              <MessageWrapper
+                height="170px"
+                align="row"
               >
-                <ImageMessage
-                  src={msg.messageContent}
-                  borderRadius={`0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
-                  onClick={() => {
-                    setShowImageModal(true);
-                    setImageUrl(msg.messageContent);
-                  }}
-                />
-              </ReceivedMessage>
-            </MessageWrapper>
-          )}
-          {showImageModal && (
-            <Modal
-              showImageModal={showImageModal}
-              onClose={() => setShowImageModal(false)}
-              src={imageUrl}
-              time={msg.timestamp}
-            />
-          )}
-        </>
-      ) : msg.messageType === 'File' ? (
-        <>
-          {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
-              <SenderMessage
-                color="transparent"
-                padding="0px"
-              >
-                <FileMessage>
-                  <Files msg={msg} />
-                </FileMessage>
-              </SenderMessage>
-            </MessageWrapper>
-          ) : (
-            <MessageWrapper align="row">
-              <ReceivedMessage
-                color="transparent"
-                padding="0px"
-              >
-                <FileMessage>
-                  <Files msg={msg} />
-                </FileMessage>
-              </ReceivedMessage>
-            </MessageWrapper>
-          )}
-        </>
-      ) : null}
+                <ReceivedMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <ImageMessage
+                    src={msg.messageContent}
+                    borderRadius={`0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
+                    onClick={() => {
+                      setShowImageModal(true);
+                      setImageUrl(msg.messageContent);
+                    }}
+                  />
+                </ReceivedMessage>
+              </MessageWrapper>
+            )}
+            {showImageModal && (
+              <Modal
+                showImageModal={showImageModal}
+                onClose={() => setShowImageModal(false)}
+                src={imageUrl}
+                time={msg.timestamp}
+              />
+            )}
+          </>
+        ) : msg.messageType === 'File' ? (
+          <>
+            {msg.fromCAIP10 === caip10 ? (
+              <MessageWrapper align="row-reverse">
+                <SenderMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <FileMessage>
+                    <Files msg={msg} />
+                  </FileMessage>
+                </SenderMessage>
+              </MessageWrapper>
+            ) : (
+              <MessageWrapper align="row">
+                <ReceivedMessage
+                  color="transparent"
+                  padding="0px"
+                >
+                  <FileMessage>
+                    <Files msg={msg} />
+                  </FileMessage>
+                </ReceivedMessage>
+              </MessageWrapper>
+            )}
+          </>
+        ) : null}
     </>
   );
 }
@@ -333,6 +331,10 @@ const ReceivedMessage = styled.div`
     align-items: center;
     padding: 9px 17px;
 `;
+
+const IntentMessage = styled(ReceivedMessage)`
+  width:80%;
+`
 
 const SenderMessage = styled.div`
   box-sizing: border-box;

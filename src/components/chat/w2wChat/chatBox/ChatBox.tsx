@@ -637,6 +637,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
+
   return (
     <Container>
       {!viewChatBox ? (
@@ -827,11 +828,22 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                           </Item>
                         )}
 
-                        <Chats
-                          msg={msg}
-                          caip10={walletToCAIP10({ account: account! })}
-                          messageBeingSent={messageBeingSent}
-                        />
+                        {
+                          (isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })) ? (
+                            <Chats
+                              msg={''}
+                              caip10={walletToCAIP10({ account: account! })}
+                              messageBeingSent={messageBeingSent}
+                            />
+                          ) : (
+                            <Chats
+                              msg={msg}
+                              caip10={walletToCAIP10({ account: account! })}
+                              messageBeingSent={messageBeingSent}
+                            />
+                          )
+                        }
+
                       </div>
                     );
                   })}
@@ -861,7 +873,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                     />
                   )}
 
-                  {(isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser,isGroup })) && (
+                  {(isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })) && (
                     <Chats
                       msg={{
                         ...messages[0],

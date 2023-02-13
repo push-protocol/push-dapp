@@ -269,7 +269,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     pfp={getProfilePicture(feed)}
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
-
                     chatSnapMsg={getChatsnapMessage(feed,account,false)}
                     timestamp={feed.msg.timestamp??feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}

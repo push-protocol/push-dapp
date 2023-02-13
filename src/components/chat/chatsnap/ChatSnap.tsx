@@ -34,17 +34,17 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   // get theme
   const theme = useTheme();
   // get ens name
-  const ensName = useResolveEns(!isGroup?username:null);
+  const ensName = useResolveEns(!isGroup ? username : null);
   // get reverse name
 
   // get short username
-  const walletAddress = !isGroup?caip10ToWallet(username):null;
-  const shortUsername = !isGroup?shortenText(walletAddress,8,7):null;
+  const walletAddress = !isGroup ? caip10ToWallet(username) : null;
+  const shortUsername = !isGroup ? shortenText(walletAddress, 8, 7) : null;
 
   const getDisplayName = () => {
-    if(ensName)
+    if (ensName)
       return ensName;
-    if(isGroup)
+    if (isGroup)
       return username;
     return shortUsername;
   }
@@ -125,7 +125,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
             flex="1"
             fontSize="14px"
           >
-           {getDisplayName()}
+            {getDisplayName()}
           </SpanV2>
           {date && (
             <SpanV2
@@ -138,7 +138,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           )}
         </ItemHV2>
 
-       <ItemHV2
+        <ItemHV2
           alignItems="flex-end"
           margin="2px 0 2px 0"
         >
@@ -148,7 +148,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
             textAlign="start"
             fontWeight="400"
           >
-            {message}
+            {isGroup ? "Group Invitation Received" : ( message )}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
