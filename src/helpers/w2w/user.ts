@@ -29,17 +29,17 @@ export const checkIfIntentExist = ({
   connectedUser,
   isGroup
 }: CheckIfIntentExistPropType): boolean => {
-  let threadHash: boolean;
+  let val: boolean;
   if (isGroup) {
-    threadHash =  (receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId))  ? true :false
+    val =  (receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId))  ? true :false
     ;
   }else{
-    threadHash = receivedIntents?.find(
+    val = receivedIntents?.find(
       (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
     ) ? true : false
   }
 
-  return threadHash;
+  return val;
 };
 
 type GetLatestThreadHashPropRtpe = {

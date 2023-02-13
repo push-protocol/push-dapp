@@ -44,7 +44,7 @@ import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'hel
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { checkIfGroup } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -168,7 +168,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 currentChat,
                 inbox,
               });
-              console.log(msgIPFS)
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
@@ -340,22 +339,12 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
 
     let updatedIntent: any;
-
-    if (isGroup) {
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
         account: account!,
-        senderAddress: currentChat.groupInformation?.chatId,
+        senderAddress: isGroup?currentChat.groupInformation?.chatId:currentChat.intentSentBy,
         env: appConfig.appEnv,
       });
-    } else {
-      updatedIntent = await PushAPI.chat.approve({
-        status: 'Approved',
-        account: account!,
-        senderAddress: currentChat.intentSentBy,
-        env: appConfig.appEnv,
-      });
-    }
 
     let activeChat = currentChat;
     //yaha pe thoda sa change kr skte h intent:"Approved set kr skte h "
@@ -747,31 +736,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             >
               {getDisplayName()}
             </SpanV2>
-            {/* <MoreOptions>
-              <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
-                <MoreVertIcon />
-              </IconButton>
-              {showOption && (
-                <OptionContainer>
-                  <Option>
-                    <Icon>
-                      <img src="/svg/chats/nickname.svg" height="24px" width="24px" alt="nickname" />
-                    </Icon>
-                    <Typography ml={1} variant="subtitle2">
-                      Give Nickname
-                    </Typography>
-                  </Option>
-                  <Option>
-                    <Icon>
-                      <img src="/svg/chats/block.svg" height="24px" width="24px" alt="block" />
-                    </Icon>
-                    <Typography ml={1} variant="subtitle2">
-                      Block User
-                    </Typography>
-                  </Option>
-                </OptionContainer>
-              )}
-            </MoreOptions> */}
           </ItemHV2>
 
           <MessageContainer>
@@ -860,24 +824,11 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                       </FirstTime>}
                     </Item>
                   )}
-                  {(checkIfIntentExist({ receivedIntents, currentChat, connectedUser })) && (
+                  {(checkIfIntentExist({ receivedIntents, currentChat, connectedUser,isGroup })) && (
                     <Chats
                       msg={{
                         ...messages[0],
-                        messageContent: 'Please accept to enable push chat from this wallet',
-                        messageType: 'Intent',
-                      }}
-                      caip10={walletToCAIP10({ account: account! })}
-                      messageBeingSent={messageBeingSent}
-                      ApproveIntent={() => ApproveIntent('Approved')}
-                    />
-                  )}
-
-                  {(isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })) && (
-                    <Chats
-                      msg={{
-                        ...messages[0],
-                        messageContent: `You were invited to the group ${getDisplayName()}. Please accept to continue messaging in this group`,
+                        messageContent: getIntentMessage(currentChat,isGroup),
                         messageType: 'Intent',
                       }}
                       caip10={walletToCAIP10({ account: account! })}
