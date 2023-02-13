@@ -4,6 +4,8 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
+import * as PushAPI from "@pushprotocol/restapi"
+
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
@@ -18,11 +20,11 @@ import { checkConnectedUser } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
-import { fetchInbox } from 'helpers/w2w/ipfs';
-import './MessageFeed.css';
 
 // Internal Configs
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { appConfig } from '../../../../config';
+import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from '../../../../helpers/w2w/groupChat';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -40,24 +42,24 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);
-  const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
+  const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
-  const onFeedClick = (feed:Feeds):void => {
+  const onFeedClick = (feed:Feeds,i:number):void => {
     if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
     {
       setActiveTab(1);
     }
     setChat(feed);
-    setSelectedChatSnap(feed.threadhash);
+    setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
   }
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
+      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
@@ -73,8 +75,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
+      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
@@ -143,7 +145,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
+          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account })) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -176,7 +178,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   msg: {
                     name: user.wallets.split(',')[0].toString(),
                     profilePicture: user.profilePicture,
-                    lastMessage: null,
+                    messageContent: null,
                     timestamp: null,
                     messageType: null,
                     signature: null,
@@ -262,15 +264,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   key={feed.threadhash || i}
                 >
                   <ChatSnap
-                    pfp={feed.profilePicture}
-                    username={feed.msg.name}
-                    chatSnapMsg={{
-                      type: feed.msg.messageType,
-                      message: feed.msg.lastMessage,
-                    }}
-                    timestamp={feed.msg.timestamp}
-                    selected={feed.threadhash == selectedChatSnap ? true : false}
-                    onClick={(): void => onFeedClick(feed)}
+                    pfp={getProfilePicture(feed)}
+                    username={getName(feed)}
+                    isGroup = {checkIfGroup(feed)}
+                    chatSnapMsg={getChatsnapMessage(feed,account,false)}
+                    timestamp={feed.msg.timestamp??feed.intentTimestamp}
+                    selected={i == selectedChatSnap ? true : false}
+                    onClick={(): void => onFeedClick(feed,i)}
                   />
                 </ItemVV2>
               ))

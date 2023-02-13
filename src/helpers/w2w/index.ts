@@ -6,7 +6,7 @@ import * as AES from './aes'
 import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat'
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
-export const walletToCAIP10 = ({ account, chainId }: { account: string; chainId: number }): string => {
+export const walletToCAIP10 = ({ account }: { account: string;}): string => {
   if (account.includes('eip155:')) {
     return account
   }
@@ -85,8 +85,8 @@ export const decryptFeeds = async ({
         signatureValidationPubliKey = feed.publicKey!
       }
 
-      feed.msg.lastMessage = await decryptAndVerifySignature({
-        cipherText: feed.msg.lastMessage,
+      feed.msg.messageContent = await decryptAndVerifySignature({
+        cipherText: feed.msg.messageContent,
         encryptedSecretKey: feed.msg.encryptedSecret,
         publicKeyArmored: signatureValidationPubliKey,
         signatureArmored: feed.msg.signature,
@@ -110,7 +110,6 @@ export const decryptMessages = async ({
   savedMsg,
   connectedUser,
   account,
-  chainId,
   currentChat,
   inbox
 }:
@@ -119,7 +118,7 @@ export const decryptMessages = async ({
   if (savedMsg.encType !== 'PlainText' && savedMsg.encType !== null) {
     // To do signature verification it depends on who has sent the message
     let signatureValidationPubliKey: string;
-    if (savedMsg.fromCAIP10 === walletToCAIP10({ account, chainId })) {
+    if (savedMsg.fromCAIP10 === walletToCAIP10({ account })) {
       signatureValidationPubliKey = connectedUser.publicKey;
     } else {
       if (!currentChat.publicKey) {

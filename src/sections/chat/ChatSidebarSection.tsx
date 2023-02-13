@@ -11,12 +11,10 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import ProfileHeader from 'components/chat/w2wChat/profile';
-import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { fetchIntent } from 'helpers/w2w/ipfs';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
 import StyleHelper from 'helpers/StyleHelper'; 
@@ -94,7 +92,7 @@ useClickAway(containerRef, () => closeQRDropdown())
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
     if (checkConnectedUser(connectedUser)) {
-      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }), '', 'did');
+      getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
     }
     if (getIntent!== undefined) {
       let intents: Feeds[] = getIntent.body;
@@ -110,8 +108,8 @@ useClickAway(containerRef, () => closeQRDropdown())
   const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await fetchIntent({ userId: didOrWallet, intentStatus: 'Pending' });
-    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account, chainId }),intents, 'did');
+    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
+    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }),intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setPendingRequests(intents?.length);
@@ -258,16 +256,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 2 && (
-          <>
-            <Profile
-              profilePicture={updateProfileImage}
-              updateProfile={updateProfile}
-              setActiveTab={setActiveTab}
-            />
-          </>
-        )}
-        {activeTab == 3 && <SearchBar />}
+        {activeTab == 3 && <SearchBar/>}
       </ItemVV2>
 
       {/* Footer */}
@@ -283,7 +272,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           }}
         >
           <QROutline />
-          <TextQR>Link Mobile APP</TextQR>
+          <TextQR >Link Mobile App</TextQR>
         </QRCodeContainer>
       ) : null}
 
@@ -328,7 +317,15 @@ cursor:pointer;
 position: absolute;
 z-index: 100;
 bottom: 45px;
-left: 85px;
+
+@media (max-width:768px){
+right:30px;
+}
+
+@media(min-width:768px){
+  left:85px;
+}
+
 `;
 
 const QROutline = styled(AiOutlineQrcode)`
