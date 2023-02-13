@@ -206,7 +206,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
+      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false, pgpPrivateKey: connectedUser.privateKey});
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account:account!, chainId:chainId! }), inboxes, 'did');
       inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
       setInbox(inboxes);
@@ -308,7 +308,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
+    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false, pgpPrivateKey: connectedUser.privateKey});
     await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account:account!, chainId:chainId! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);

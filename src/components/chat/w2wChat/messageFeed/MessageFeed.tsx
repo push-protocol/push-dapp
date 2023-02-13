@@ -76,7 +76,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
+      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false, pgpPrivateKey: connectedUser.privateKey});
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
       inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
