@@ -12,21 +12,52 @@ import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import Profile from 'assets/chat/group-chat/profile.svg';
+import Message from 'assets/chat/group-chat/chat.svg';
+import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
+import RemoveAdmin from 'assets/chat/group-chat/removeadmin.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { shortenText } from 'helpers/UtilityHelper';
+import Dropdown from 'components/Dropdown';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
+  const dropdownRef = React.useRef<any>(null);
+
+  const memberDropdown = [{ title: 'Message user', icon: Message, function: () => messageUser() }];
+  const adminDropdown = [
+    { title: 'Message user', icon: Message, function: () => messageUser() },
+    { title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
+    { title: 'Remove', icon: RemoveAdmin, function: () => removeGroupAdmin() },
+  ];
 
   const theme = useTheme();
+
+  const messageUser = () => {
+    console.log('messaging');
+    setShowMoreOption(null);
+  };
+
+  const makeGroupAdmin = () => {
+    console.log('make group admin');
+    setShowMoreOption(null);
+  };
+
+  const removeGroupAdmin = () => {
+    console.log('remove group admin');
+    setShowMoreOption(null);
+  };
 
   const handleClose = () => onClose();
 
   // to close the modal upon a click on backdrop
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
+
+  useClickAway(dropdownRef, () => setShowMoreOption(null));
+
   return (
     <ThemeProvider theme={theme}>
       <ModalContainer
@@ -65,12 +96,16 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             overflow="hidden"
             margin="0px 16px 0px 0px"
           >
-            <ImageV2 src={Profile} />
+            <ImageV2
+              src={currentChat?.groupInformation?.groupImageCID}
+              alt="Group Image"
+            />
           </ItemVV2>
           <ItemVV2 alignItems="flex-start">
             <SpanV2
               fontSize="20px"
               fontWeight={500}
+              color={theme.default.color}
             >
               {currentChat?.groupInformation?.groupName}
             </SpanV2>
@@ -92,6 +127,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             fontSize="18px"
             fontWeight={500}
             margin="0px 0px 5px 0px"
+            color={theme.default.color}
           >
             Group Description
           </SpanV2>
@@ -170,8 +206,26 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                       Admin
                     </SpanV2>
                   )}
-                  {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
+                  <ItemVV2
+                    maxWidth="40px"
+                    onClick={() => setShowMoreOption(member?.wallets)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
+                  </ItemVV2>
                 </ItemHV2>
+                {showMoreOption == member?.wallets && (
+                  <DropdownContainer ref={dropdownRef}>
+                    <Dropdown
+                      dropdownValues={
+                        currentChat?.groupInformation?.groupAdmins?.some((admin) => admin.wallets === member.wallets)
+                          ? adminDropdown
+                          : memberDropdown
+                      }
+                      hoverBGColor={theme.chat.snapFocusBg}
+                    />
+                  </DropdownContainer>
+                )}
               </ProfileCard>
             );
           })}
@@ -188,7 +242,7 @@ const ModalContainer = styled.div`
   box-sizing: border-box;
   border-radius: 16px;
   background-color: ${(props) => props.background};
-  padding: 32px 24px;
+  padding: 5px 10px;
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -214,6 +268,7 @@ const InfoContainer = styled(ItemHV2)`
 
 const ProfileCard = styled(ItemHV2)`
   justify-content: space-between;
+  position: relative;
   padding: 8px 16px;
   border-radius: 16px;
   box-sizing: border-box;
@@ -230,6 +285,7 @@ const ProfileContainer = styled.div`
   min-width: 445px;
   max-height: 280px;
   overflow-y: auto;
+  overflow-x: hidden;
   &&::-webkit-scrollbar {
     width: 4px;
   }
@@ -238,5 +294,19 @@ const ProfileContainer = styled.div`
   }
   @media (max-width: 480px) {
     min-width: 300px;
+  }
+`;
+
+const DropdownContainer = styled(ItemVV2)`
+  position: absolute;
+  top: 27px;
+  right: -178px;
+  border-radius: 16px;
+  padding: 14px 8px;
+  background: ${(props) => props.theme.modalContentBackground};
+  z-index: 11;
+  @media (max-width: 480px) {
+    top: 44px;
+    right: 7px;
   }
 `;

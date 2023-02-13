@@ -14,6 +14,7 @@ import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
+import { useClickAway } from 'react-use';
 import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
@@ -91,12 +92,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
+  const groupInfoRef = React.useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
   let time = '';
+
+  useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   useEffect(() => {
     setIsGroup(checkIfGroup(currentChat));
@@ -758,6 +762,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       showGroupInfoModal();
                       setShowGroupInfo(false);
                     }}
+                    ref={groupInfoRef}
                   >
                     <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
                     <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
@@ -983,7 +988,7 @@ const MessageContainer = styled(ItemVV2)`
 const GroupInfo = styled(ItemHV2)`
   position: absolute;
   top: 32px;
-  right: 26px;
+  right: 15px;
   width: 200px;
   border: 1px solid ${(props) => props.theme.default.border};
   background-color: ${(props) => props.theme.default.bg};
