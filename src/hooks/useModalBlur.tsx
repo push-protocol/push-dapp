@@ -66,7 +66,7 @@ const useModalBlur = () => {
         >
           <BlurBG
             blur={10}
-            zIndex={1}
+            zIndex={2}
           />
           <ItemHV2
               display = 'flex'

@@ -687,7 +687,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             background={theme.default.bg}
             padding="6px"
             fontWeight="500"
-            zIndex="998"
+            zIndex={1}
           >
             <ItemHV2
               height="48px"
@@ -749,20 +749,22 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 </OptionContainer>
               )}
             </MoreOptions> */}
-            <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
-              <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
-              {showGroupInfo && (
-                <GroupInfo
-                  onClick={() => {
-                    showGroupInfoModal();
-                    setShowGroupInfo(false);
-                  }}
-                >
-                  <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
-                  <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
-                </GroupInfo>
-              )}
-            </MoreOptions>
+            {currentChat.groupInformation && (
+              <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
+                <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
+                {showGroupInfo && (
+                  <GroupInfo
+                    onClick={() => {
+                      showGroupInfoModal();
+                      setShowGroupInfo(false);
+                    }}
+                  >
+                    <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
+                    <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
+                  </GroupInfo>
+                )}
+              </MoreOptions>
+            )}
           </ItemHV2>
 
           <MessageContainer>
