@@ -62,7 +62,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [copyText, setCopyText] = React.useState(channelObject.channel);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
-console.log(channelObject)
+
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
@@ -129,17 +129,7 @@ console.log(channelObject)
     verifyingContract: epnsCommReadProvider.address,
   };
 
-  // toast customize
-  const LoaderToast = ({ msg, color }) => (
-    <Toaster>
-      <LoaderSpinner
-        type={LOADER_TYPE.SEAMLESS}
-        spinnerSize={30}
-        spinnerColor={color}
-      />
-      <ToasterMsg>{msg}</ToasterMsg>
-    </Toaster>
-  );
+  const generalToast = useToast();
 
   // to subscribe
   const subscribe = async () => {
@@ -149,6 +139,135 @@ console.log(channelObject)
 
   const formatAddress = (addressText) => {
     return addressText.length > 40 ? `${shortenText(addressText,4,6)}` : addressText;
+  };
+
+  const verifyChannel = () => {
+    setvLoading(true);
+    // post op
+    epnsWriteProvider
+      .verifyChannel(channelObject.channel)
+      .then(async (tx) => {
+        console.log(tx);
+        console.log('Transaction Sent!');
+
+        generalToast.showMessageToast({
+          toastTitle: 'Success',
+          toastMessage: 'Transaction Sent!',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
+
+        await tx.wait(1);
+        console.log ("Transaction Mined!");
+        setIsVerified(true);
+      })
+      .catch((err) => {
+        console.log('!!!Error verifyChannel() --> %o', err);
+        generalToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `There was an error verifying the channel`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+      })
+      .finally(() => {
+        setvLoading(false);
+      });
+  };
+
+  const unverifyChannel = () => {
+    setvLoading(true);
+    epnsWriteProvider
+      .unverifyChannel(channelObject.channel)
+      .then(async (tx) => {
+        console.log(tx);
+        console.log('Transaction Sent!');
+
+        generalToast.showMessageToast({
+          toastTitle: 'Success',
+          toastMessage: 'Transaction Sent!',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
+
+        await tx.wait(1);
+        console.log('Transaction Mined!');
+        setIsVerified(false);
+      })
+      .catch((err) => {
+        console.log('!!!Error handleSendMessage() --> %o', err);
+        generalToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `There was an error unverifying the channel`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+      });
+    setvLoading(false);
+  };
+
+  const blockChannel = () => {
+    setBLoading(true);
+    epnsWriteProvider
+      .blockChannel(channelObject.channel)
+      .then(async (tx) => {
+        console.log(tx);
+        console.log('Transaction Sent!');
+
+        generalToast.showMessageToast({
+          toastTitle: 'Success',
+          toastMessage: 'Transaction Sent!',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
+
+        await tx.wait(1);
+        console.log ("Transaction Mined!");
+      })
+      .catch((err) => {
+        console.log('!!!Error handleSendMessage() --> %o', err);
+        generalToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: `There was an error blocking the channel`,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+      })
+      .finally(() => {
+        // post op
+        setBLoading(false);
+        setIsBlocked(true);
+      });
   };
 
   const subscribeToast = useToast();
