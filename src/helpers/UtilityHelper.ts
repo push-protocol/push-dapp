@@ -94,8 +94,8 @@ export const networkName = {
   1: 'Ethereum Mainnet',
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
-  97: "BSC Testnet",
-  56: "BSC Mainnet"
+  97: "BNB Testnet",
+  56: "BNB Mainnet"
 };
 
 export const chainNameBackendStandard = {
@@ -126,17 +126,17 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://polygon-rpc.com'],
     blockExplorerUrls: ['https://www.polygonscan.com/'],
   },
-  BSC_TESTNET: {
+  BNB_TESTNET: {
     chainId: utils.hexValue(97),
-    chainName: 'BSC Testnet',
-    nativeCurrency: { name: 'BSC', symbol: 'BSC', decimals: 18 },
+    chainName: 'BNB Testnet',
+    nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     rpcUrls: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
     blockExplorerUrls: ['https://testnet.bscscan.com/'],
   },
-  BSC_MAINNET: {
+  BNB_MAINNET: {
     chainId: utils.hexValue(56),
-    chainName: 'BSC Mainnet',
-    nativeCurrency: { name: 'BSC', symbol: 'BSC', decimals: 18 },
+    chainName: 'BNB Mainnet',
+    nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/'],
   }
