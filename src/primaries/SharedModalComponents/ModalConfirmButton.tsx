@@ -40,7 +40,7 @@ const ModalButtonContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 9%;
+    margin-top: 55px;
 `
 
 const LoaderContainer = styled.div`
@@ -66,7 +66,8 @@ const CustomButton = styled.button`
     background-color:${props => props.backgroundColor || '#CF1C84'};
     border:${props=>props.border || '1px solid transparent'};
     border-radius:15px;
-    padding: 5% 12%;
+    // padding: 5% 12%;
+    padding:16px 17px;
 `;
 
 export default ModalConfirmButton

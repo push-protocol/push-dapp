@@ -11,21 +11,10 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds } from 'types/chat';
+import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from 'helpers/w2w/groupChat';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: 400,
-  bgcolor: 'background.paper',
-  borderRadius: '20px',
-  boxShadow: 24,
-  p: 4,
-};
 
 const IntentFeed = ({isLoading}): JSX.Element => {
   const theme = useTheme();
@@ -33,7 +22,9 @@ const IntentFeed = ({isLoading}): JSX.Element => {
     setChat,
     receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
-  const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
+  const [selectedIntentSnap, setSelectedIntentSnap] = useState<number>();
+
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
 
   return (
     <>
@@ -65,28 +56,24 @@ const IntentFeed = ({isLoading}): JSX.Element => {
             <NoIntentMessage>You don't have any request yet Start a conversation by using the + button</NoIntentMessage>
           )}
 
-          {!isLoading && receivedIntents?.length > 0 && (
-            <UserIntents>
-              {receivedIntents.map((intent: Feeds, i) => (
-                <ItemVV2
-                  alignSelf="stretch"
-                  flex="initial"
-                  key={intent.threadhash || i}
-                >
-                  <ChatSnap
-                    pfp={intent.profilePicture}
-                    username={intent.wallets.split(',')[0].toString()}
-                    chatSnapMsg={
-                      {
-                        type: intent.msg.messageType,
-                        message: intent.msg.messageContent,
-                      }
-                    }
+        {!isLoading && receivedIntents?.length > 0 && (
+          <UserIntents>
+            {receivedIntents.map((intent: Feeds, i) => (
+              <ItemVV2
+                alignSelf="stretch"
+                flex="initial"
+                key={intent.threadhash || i}
+              >
+                <ChatSnap
+                    pfp ={getProfilePicture(intent)}
+                    username={getName(intent)}
+                    isGroup={checkIfGroup(intent)}
+                    chatSnapMsg={getChatsnapMessage(intent,account,true)}
                     timestamp={intent.msg.timestamp}
-                    selected={intent.threadhash == selectedIntentSnap ? true : false}
+                    selected={i == selectedIntentSnap ? true : false}
                     onClick={(): void => {
                       setChat(intent);
-                      setSelectedIntentSnap(intent.threadhash);
+                      setSelectedIntentSnap(i);
                     }}
                   />
                 </ItemVV2>

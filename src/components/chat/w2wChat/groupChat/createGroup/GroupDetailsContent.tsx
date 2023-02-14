@@ -1,9 +1,9 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import React from 'react';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-// import { useClickAway } from 'react-use';
+
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
@@ -11,29 +11,21 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { Input, TextField } from 'components/SharedStyling';
 import { ReactComponent as AddGroupIcon } from 'assets/chat/group-chat/creategroupicon.svg';
 import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creategroupicondark.svg';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { Context } from 'modules/chat/ChatModule';
-import { AppContext } from 'types/chat';
 
-export const GroupDetailsContent = () => {
-  const {
-    setGroupName,
-    groupDescription,
-    setGroupDescription,
-    groupImage,
-    setGroupImage,
-    groupType,
-    setGroupType,
-    setCreateGroupState
-  }: AppContext = useContext<AppContext>(Context);
+
+export const GroupDetailsContent = ({
+  groupNameData,
+  groupDescriptionData,
+  groupImageData,
+  groupTypeObject,
+  handleGroupImageData,
+  handleGroupNameData,
+  handleGroupDescriptionData,
+  handleGroupTypeObject,
+  handleCreateGroupState,
+}) => {
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [groupNameData, setGroupNameData] = React.useState<string>('');
-  const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
-  const [groupImageData, setGroupImageData] = React.useState<string>('');
-  const [groupTypeData, setGroupTypeData] = React.useState<string>('');
-  const [groupTypeId, setGroupTypeId] = React.useState<number>();
-  const groupNameInputRef = React.useRef<HTMLInputElement>();
-  const groupDescriptionInputRef = React.useRef<HTMLInputElement>();
   const fileUploadInputRef = React.useRef<HTMLInputElement>();
 
   const options = [
@@ -59,26 +51,27 @@ export const GroupDetailsContent = () => {
     reader.readAsDataURL(file);
 
     reader.onload = () => {
-      setGroupImageData(reader.result);
+      handleGroupImageData(reader.result);
     };
   };
+
+  const handleNextClick = () =>{
+    if (groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData) {
+      handleCreateGroupState(2);
+    } else {
+      handleCreateGroupState(1);
+    }
+  }
 
   const handleUpload = (e) => {
     fileUploadInputRef.current.click();
   };
 
   const handleGroupName = (e) => {
-    setGroupNameData(e.target.value);
+    handleGroupNameData(e.target.value);
   };
   const handleGroupDescription = (e) => {
-    setGroupDescriptionData(e.target.value);
-  };
-
-  const handleGroupDetails = () => {
-    setGroupName(groupNameData);
-    setGroupDescription(groupDescriptionData);
-    setGroupImage(groupImageData);
-    setGroupType(groupTypeData);
+    handleGroupDescriptionData(e.target.value);
   };
 
   return (
@@ -124,7 +117,7 @@ export const GroupDetailsContent = () => {
           <CharacterCount color={themes.modalSecondaryTextColor}>{150 - groupDescriptionData.length}</CharacterCount>
         </TextFieldHeaderContainer>
         <GroupDescription
-          // ref={groupDescriptionInputRef}
+          value={groupDescriptionData}
           onChange={handleGroupDescription}
           borderColor={themes.modalInputBorderColor}
           color={themes.modalMessageColor}
@@ -137,11 +130,10 @@ export const GroupDetailsContent = () => {
               borderRadius={option.id == 1 ? '12px 0px 0px 12px' : '0px 12px 12px 0px'}
               hoverBackground={themes.modalOptionHoverBackgroundColor}
               borderColor={themes.modalInputBorderColor}
-              backgroundColor={option.id == groupTypeId ? themes.modalOptionHoverBackgroundColor : 'transparent'}
+              backgroundColor={option.id == groupTypeObject?.groupTypeId ? themes.modalOptionHoverBackgroundColor : 'transparent'}
               key={option.id}
               onClick={() => {
-                setGroupTypeData(option.value);
-                setGroupTypeId(option.id);
+                handleGroupTypeObject({groupTypeData:option.value,groupTypeId:option.id});
               }}
             >
               <OptionText
@@ -165,31 +157,16 @@ export const GroupDetailsContent = () => {
       <ModalConfirmButton
         text="Next"
         onClick={() => {
-          if (groupDescriptionData && groupNameData && groupTypeData && groupImageData) {
-            console.log(
-              'Data complted description',
-              groupDescriptionData,
-              'name',
-              groupNameData,
-              'type',
-              groupTypeData,
-              'Image',
-              groupImageData
-            );
-            handleGroupDetails();
-            setCreateGroupState(2);
-          } else {
-            setCreateGroupState(1);
-          }
+         handleNextClick()
         }}
         isLoading={isLoading}
         backgroundColor={
-          groupDescriptionData && groupNameData && groupTypeData && groupImageData
+          groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
             ? '#CF1C84'
             : themes.modalConfirmButtonBackground
         }
         color={
-          groupDescriptionData && groupNameData && groupTypeData && groupImageData
+          groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
             ? '#FFFFF'
             : themes.modalConfirmButtonTextColor
         }

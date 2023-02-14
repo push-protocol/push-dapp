@@ -12,8 +12,7 @@ import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api';
-import { AppContext, BlockedLoadingI, ConnectedUser, Feeds, User } from 'types/chat';
+import { AppContext,  Feeds } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -22,7 +21,6 @@ import LoaderSpinner, {
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
@@ -33,7 +31,6 @@ import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/creat
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import CryptoHelper from 'helpers/CryptoHelper';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import { useClickAway } from 'react-use';
@@ -73,11 +70,6 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
-  const [groupName,setGroupName]=useState<string>('');
-  const [groupDescription,setGroupDescription]=useState<string>('');
-  const [groupImage,setGroupImage]=useState<string>('');
-  const [groupType,setGroupType]=useState<string>('')
-  const [createGroupState, setCreateGroupState] = React.useState<number>(1);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -163,7 +155,6 @@ function Chat() {
     ModalComponent: CreateGroupModalComponent,
   } = useModalBlur();
 
-  const createGroup = () => console.log('group created');
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -227,8 +218,6 @@ function Chat() {
                 setChat,
                 setSearchedUser,
                 searchedUser,
-                connectedUser,
-                setConnectedUser,
                 intents,
                 setIntents,
                 inbox,
@@ -244,16 +233,6 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
-                groupName,
-                setGroupName,
-                groupDescription,
-                setGroupDescription,
-                groupImage,
-                setGroupImage,
-                groupType,
-                setGroupType,
-                createGroupState,
-                setCreateGroupState
               }}
             >
               <ChatSidebarContainer
@@ -280,7 +259,6 @@ function Chat() {
                 />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
-                onConfirm={createGroup}
                 toastObject={createGroupToast}
               />
 

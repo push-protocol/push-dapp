@@ -63,9 +63,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        if(JSON.stringify(feeds)!==JSON.stringify(inboxes)){
-          setFeeds(inboxes);
-        setInbox(inboxes);
+       
+        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
+        {
+         setFeeds(inboxes)
+         setInbox(inboxes);
         }
         return inboxes;
       } else {
@@ -74,7 +76,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       }
     }
   };
-
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
@@ -103,7 +104,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
@@ -140,7 +140,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
     setMessagesLoading(false);
   };
-
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
@@ -222,6 +221,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               ),
             });
           }
+
           setFeeds([]);
         }
         setMessagesLoading(false);
@@ -270,8 +270,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     pfp={getProfilePicture(feed)}
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
-
-                    chatSnapMsg={getChatsnapMessage(feed,account)}
+                    chatSnapMsg={getChatsnapMessage(feed,account!,false)}
                     timestamp={feed.msg.timestamp??feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
                     onClick={(): void => onFeedClick(feed,i)}

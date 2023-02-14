@@ -99,7 +99,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             margin="0px 16px 0px 0px"
           >
             <ImageV2
-              src={currentChat?.groupInformation?.groupImageCID}
+              src={currentChat?.groupInformation?.groupImage}
               alt="Group Image"
             />
           </ItemVV2>

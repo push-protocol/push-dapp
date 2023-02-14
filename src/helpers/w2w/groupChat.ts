@@ -8,16 +8,17 @@ export const checkIfGroup = (feed: Feeds): boolean => {
 
 export const getProfilePicture = (feed: Feeds): string => {
   if (checkIfGroup(feed))
-    return `https://gateway.ipfs.io/ipfs/${feed?.groupInformation?.groupImageCID}`;
+    return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
 };
 
 export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;
-  else return feed?.wallets.split(',')[0].toString();
+  else return feed.wallets?.split(',')[0].toString();
 };
 
-export const getChatsnapMessage = (feed: Feeds, account: string) => {
+export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boolean) => {
+
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
     if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account})) {
       return {
@@ -25,10 +26,21 @@ export const getChatsnapMessage = (feed: Feeds, account: string) => {
         message: 'Group successfully created!',
       };
     } else {
-      return {
-        type: 'Text',
-        message: 'Joined group successfully',
-      };
+
+      if(isIntent){
+        console.log("in intent")
+        return {
+          type: 'Text',
+          message: 'Group Invite Received',
+        };
+      }else{
+        return {
+          type: 'Text',
+          message: 'Joined group successfully',
+        };
+      }
+
+      
     }
   }
   return {
@@ -36,3 +48,9 @@ export const getChatsnapMessage = (feed: Feeds, account: string) => {
     message: feed.msg.messageContent,
   };
 };
+
+export const getIntentMessage = (feed:Feeds,isGroup:boolean) =>{
+    if(isGroup)
+     return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
+     return 'Please accept to enable push chat from this wallet';
+}
