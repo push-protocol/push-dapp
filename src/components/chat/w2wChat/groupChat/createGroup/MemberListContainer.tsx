@@ -5,32 +5,28 @@ import React from 'react';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
-import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
-import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removelight.svg';
-import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
+
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
+import { User } from '../../../../../types/chat';
 
+
+type MemberListContainerType = {
+  memberData:User,
+  handleMemberList: (member:User)=>void,
+  lightIcon:any,
+  darkIcon:any
+}
 const MemberListContainer = ({
     memberData,
     handleMemberList,
-    setFilteredUserData,
-    members,
-    memberList
-}) => {
+    lightIcon,
+    darkIcon
+}:MemberListContainerType) => {
 
   const theme = useTheme();
 
-  const addMemberToList = (member) => {
-    handleMemberList((prev) => [...prev, member]);
-    setFilteredUserData('');
-  };
-
-  const removeMemberFromList = (member) => {
-    const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
-    handleMemberList(filteredMembers);
-  };
+  
 
     return (
         <WalletProfileContainer background={theme.groupSearchProfilBackground}>
@@ -53,13 +49,10 @@ const MemberListContainer = ({
               maxWidth="30px"
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                members ? removeMemberFromList(memberData) : addMemberToList(memberData)
+                handleMemberList(memberData)
                 }}>
                 {
-                    members ? 
-                        theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />
-                     : 
-                        theme.scheme == 'light' ? <AddLight /> : <AddDark />
+                   theme.scheme == 'light' ? lightIcon:darkIcon
                 }
 
             </ItemVV2>
@@ -85,9 +78,4 @@ const WalletProfileContainer = styled(ItemHV2)`
 
 const WalletProfile = styled(ItemHV2)`
   justify-content: flex-start;
-`;
-
-const MemberList = styled(ItemVV2)`
-  margin-top: ${(props) => props.marginTop || '8px'};
-  justify-content: 'flex-start';
 `;

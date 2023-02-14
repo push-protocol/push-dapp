@@ -47,24 +47,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 
     try {
       const memberWalletList = memberList.map(member => member.wallets);
-      console.log(
-        'Data\n groupname',
-        groupNameData,
-        '\ngroupDescription',
-        groupDescriptionData,
-        '\nmembers',
-        memberWalletList,
-        '\ngroupImage',
-        groupImageData,
-        '\nisPublic',
-        groupTypeObject.groupTypeData == 'public' ? true : false,
-        '\ngroupCreator',
-        account,
-        '\naccount',
-        account,
-        '\npgpPrivateKey',
-        connectedUser?.privateKey
-      );
       const createGroupRes = await PushAPI.chat.createGroup({
         groupName: groupNameData,
         groupDescription: groupDescriptionData,
@@ -82,7 +64,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
-          toastMessage: 'Invalid Address',
+          toastMessage: 'Unable to create group',
           toastType: 'ERROR',
           getToastIcon: (size) => (
             <MdError
@@ -116,7 +98,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           <SpanV2
             fontWeight="500"
             fontSize="24px"
-            // margin="0px 12px 42px 12px"
             color={themes.modalMessageColor}
           >
             Create Group

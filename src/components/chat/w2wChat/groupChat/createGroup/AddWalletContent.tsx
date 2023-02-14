@@ -10,7 +10,7 @@ import { MdError } from 'react-icons/md';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
@@ -21,11 +21,12 @@ import { displayDefaultUser } from 'helpers/w2w/user';
 import * as w2wChatHelper from 'helpers/w2w';
 import * as PushNodeClient from 'api';
 import useToast from 'hooks/useToast';
-import { shortenText } from 'helpers/UtilityHelper';
 
 // Internal configs
 import { appConfig } from 'config';
 import MemberListContainer from './MemberListContainer';
+import { User } from '../../../../../types/chat';
+import { findObject } from '../../../../../helpers/UtilityHelper';
 
 export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList }) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
@@ -59,19 +60,9 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     setSearchedUser(e.target.value);
   };
 
-  const addMemberToList = (member) => {
-    handleMemberList((prev) => [...prev, member]);
-    setFilteredUserData('');
-  };
-
-  const removeMemberFromList = (member) => {
-    const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
-    handleMemberList(filteredMembers);
-  };
 
   const handleSearch = async (e): Promise<void> => {
     e.preventDefault();
-    console.log('Search');
     if (!ethers.utils.isAddress(searchedUser)) {
       let address: string;
       try {
@@ -121,12 +112,36 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     }
   };
 
-  console.log("Filetered Data", filteredUserData);
-  console.log("Member List Data", memberList)
 
   const clearInput = () => {
     setSearchedUser('');
     setFilteredUserData(null);
+  };
+
+  const addMemberToList = (member:User) => {
+    if(findObject(member,memberList,'wallets'))
+    {
+      searchFeedToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Address is already added',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+    else{
+    handleMemberList((prev) => [...prev, member]);
+    }
+    setFilteredUserData('');
+  };
+
+  const removeMemberFromList = (member:User) => {
+    const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
+    handleMemberList(filteredMembers);
   };
 
   return (
@@ -179,35 +194,11 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
 
           <MemberListContainer
             memberData={filteredUserData}
-            handleMemberList={handleMemberList}
-            setFilteredUserData={setFilteredUserData}
-            members={false}
+            handleMemberList={addMemberToList}
+            lightIcon = {<AddLight />}
+            darkIcon = {<AddDark />}
           />
 
-
-          {/* <WalletProfileContainer background={theme.groupSearchProfilBackground}>
-            <WalletProfile>
-              <ItemVV2
-                width="48px"
-                maxWidth="48px"
-                borderRadius="100%"
-                overflow="hidden"
-                margin="0px 12px 0px 0px"
-              >
-                <ImageV2 src={filteredUserData?.profilePicture} />
-              </ItemVV2>
-              <SpanV2 color={theme.modalPrimaryTextColor}>
-                {shortenText(filteredUserData.wallets.split(':')[1], 6)}
-              </SpanV2>
-            </WalletProfile>
-            <ItemVV2
-              alignItems="flex-end"
-              maxWidth="30px"
-              style={{ cursor: 'pointer' }}
-              onClick={() => addMemberToList(filteredUserData)}>
-              {theme.scheme == 'light' ? <AddLight /> : <AddDark />}
-            </ItemVV2>
-          </WalletProfileContainer> */}
         </MemberList>
       ) : (
         <MemberList marginTop="8px">
@@ -216,41 +207,11 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
             <MemberListContainer
               key={index}
               memberData={member}
-              handleMemberList={handleMemberList}
-              setFilteredUserData={setFilteredUserData}
-              members={true}
-              memberList={memberList}
+              handleMemberList={removeMemberFromList}
+              lightIcon = {<RemoveLight />}
+              darkIcon = {<RemoveDark />}
             />
-
-
-
-
-            // <WalletProfileContainer
-            //   background={theme.groupSearchProfilBackground}
-            //   key={index}
-            // >
-            //   <WalletProfile>
-            //     <ItemVV2
-            //       width="48px"
-            //       maxWidth="48px"
-            //       borderRadius="100%"
-            //       overflow="hidden"
-            //       margin="0px 12px 0px 0px"
-            //     >
-            //       <ImageV2 src={member?.profilePicture} />
-            //     </ItemVV2>
-            //     <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(member.wallets.split(':')[1], 6)}</SpanV2>
-            //   </WalletProfile>
-            //   <ItemVV2
-            //     alignItems="flex-end"
-            //     maxWidth="30px"
-            //     style={{ cursor: 'pointer' }}
-            //     onClick={() => removeMemberFromList(member)}
-            //   >
-            //     {' '}
-            //     {theme.scheme == 'light' ? <RemoveLight /> : <RemoveDark />}
-            //   </ItemVV2>
-            // </WalletProfileContainer>
+          
           ))}
         </MemberList>
       )}
@@ -317,22 +278,6 @@ const Input = styled.input`
   }
 `;
 
-const WalletProfileContainer = styled(ItemHV2)`
-  padding: 8px;
-  margin: 0px 0px 8px 0px;
-  justify-content: space-between;
-  min-width: 445px;
-  box-sizing: border-box;
-  align-items: center;
-  border-radius: 16px;
-  @media (max-width: 480px) {
-    min-width: 300px;
-  }
-`;
-
-const WalletProfile = styled(ItemHV2)`
-  justify-content: flex-start;
-`;
 
 const MemberList = styled(ItemVV2)`
   margin-top: ${(props) => props.marginTop || '8px'};

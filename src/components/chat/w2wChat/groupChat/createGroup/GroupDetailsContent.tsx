@@ -55,6 +55,14 @@ export const GroupDetailsContent = ({
     };
   };
 
+  const handleNextClick = () =>{
+    if (groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData) {
+      handleCreateGroupState(2);
+    } else {
+      handleCreateGroupState(1);
+    }
+  }
+
   const handleUpload = (e) => {
     fileUploadInputRef.current.click();
   };
@@ -149,21 +157,7 @@ export const GroupDetailsContent = ({
       <ModalConfirmButton
         text="Next"
         onClick={() => {
-          if (groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData) {
-            console.log(
-              'Data complted description',
-              groupDescriptionData,
-              'name',
-              groupNameData,
-              'type',
-              groupTypeObject?.groupTypeData,
-              'Image',
-              groupImageData
-            );
-            handleCreateGroupState(2);
-          } else {
-            handleCreateGroupState(1);
-          }
+         handleNextClick()
         }}
         isLoading={isLoading}
         backgroundColor={
