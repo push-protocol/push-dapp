@@ -62,7 +62,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
-        console.log(inboxes)
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
        
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
@@ -271,7 +270,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     pfp={getProfilePicture(feed)}
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
-                    chatSnapMsg={getChatsnapMessage(feed,account,false)}
+                    chatSnapMsg={getChatsnapMessage(feed,account!,false)}
                     timestamp={feed.msg.timestamp??feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
                     onClick={(): void => onFeedClick(feed,i)}

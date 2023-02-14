@@ -4,6 +4,8 @@ import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'
 import * as AES from './aes'
 import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat'
+import { checkIfGroup } from './groupChat'
+import { getUser } from '../../api/w2w'
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
 export const walletToCAIP10 = ({ account }: { account: string;}): string => {
@@ -82,16 +84,21 @@ export const decryptFeeds = async ({
       if (feed.msg.fromCAIP10 === connectedUser.wallets.split(',')[0]) {
         signatureValidationPubliKey = connectedUser.publicKey
       } else {
-        signatureValidationPubliKey = feed.publicKey!
+        if (checkIfGroup(feed) && !feed.publicKey) 
+         feed.publicKey = (await getUser({ caip10: feed.msg.fromCAIP10 })).publicKey;
+        signatureValidationPubliKey = feed.publicKey!;
       }
-
-      feed.msg.messageContent = await decryptAndVerifySignature({
-        cipherText: feed.msg.messageContent,
-        encryptedSecretKey: feed.msg.encryptedSecret,
-        publicKeyArmored: signatureValidationPubliKey,
-        signatureArmored: feed.msg.signature,
-        privateKeyArmored: connectedUser.privateKey!
-      })
+      try {
+        feed.msg.messageContent = await decryptAndVerifySignature({
+          cipherText: feed.msg.messageContent,
+          encryptedSecretKey: feed.msg.encryptedSecret,
+          publicKeyArmored: signatureValidationPubliKey,
+          signatureArmored: feed.msg.signature,
+          privateKeyArmored: connectedUser.privateKey!,
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
   return feeds
@@ -129,16 +136,20 @@ export const decryptMessages = async ({
           signatureValidationPubliKey = latestUserInfo.publicKey!;
         }
       } else {
-        signatureValidationPubliKey = currentChat.publicKey;
+        signatureValidationPubliKey = currentChat.publicKey!;
       }
     }
-    savedMsg.messageContent = await decryptAndVerifySignature({
-      cipherText: savedMsg.messageContent,
-      encryptedSecretKey: savedMsg.encryptedSecret,
-      privateKeyArmored: connectedUser.privateKey!,
-      publicKeyArmored: signatureValidationPubliKey!,
-      signatureArmored: savedMsg.signature,
-    });
+    try {
+      savedMsg.messageContent = await decryptAndVerifySignature({
+        cipherText: savedMsg.messageContent,
+        encryptedSecretKey: savedMsg.encryptedSecret,
+        privateKeyArmored: connectedUser.privateKey!,
+        publicKeyArmored: signatureValidationPubliKey!,
+        signatureArmored: savedMsg.signature,
+      });
+    } catch (e) {
+      console.log(e);
+    }
 
   }
 
