@@ -11,10 +11,12 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
+import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import Profile from 'assets/chat/group-chat/profile.svg';
 import Message from 'assets/chat/group-chat/chat.svg';
 import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import RemoveAdmin from 'assets/chat/group-chat/removeadmin.svg';
+import Remove from 'assets/chat/group-chat/remove.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
@@ -25,13 +27,6 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
   const dropdownRef = React.useRef<any>(null);
-
-  const memberDropdown = [{ title: 'Message user', icon: Message, function: () => messageUser() }];
-  const adminDropdown = [
-    { title: 'Message user', icon: Message, function: () => messageUser() },
-    { title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { title: 'Remove', icon: RemoveAdmin, function: () => removeGroupAdmin() },
-  ];
 
   const theme = useTheme();
 
@@ -45,10 +40,17 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const removeGroupAdmin = () => {
+  const removeMember = () => {
     console.log('remove group admin');
     setShowMoreOption(null);
   };
+
+  const memberDropdown = [{ title: 'Message user', icon: Message, function: () => messageUser() }];
+  const adminDropdown = [
+    { title: 'Message user', icon: Message, function: () => messageUser() },
+    { title: 'Dismiss as admin', icon: RemoveAdmin, function: () => dismissGroupAdmin() },
+    { title: 'Remove', icon: Remove, function: () => removeMember() },
+  ];
 
   const handleClose = () => onClose();
 
@@ -170,6 +172,21 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
+        {/* <ItemHV2
+          border={`1px solid ${theme.default.border}`}
+          borderRadius="16px"
+          padding="15px 24px"
+          margin="0px 0px 15px 0px"
+        >
+          <ItemVV2
+            maxWidth="40px"
+            onClick={() => setShowMoreOption(member?.wallets)}
+            style={{ cursor: 'pointer' }}
+          >
+            <AddMember />
+          </ItemVV2>
+          <SpanV2 color={theme.default.color} fontWeight="500" fontSize="18px">Add more wallets</SpanV2>
+        </ItemHV2> */}
         <ProfileContainer>
           {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
             return (
