@@ -45,7 +45,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const memberDropdown = [{ title: 'Message user', icon: Message, function: () => messageUser() }];
+  const memberDropdown = [{ id:'message_user', value:"", title: 'Message user', icon: Message, function: () => messageUser() }];
   const adminDropdown = [
     { title: 'Message user', icon: Message, function: () => messageUser() },
     { title: 'Dismiss as admin', icon: RemoveAdmin, function: () => dismissGroupAdmin() },
@@ -172,21 +172,6 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
-        {/* <ItemHV2
-          border={`1px solid ${theme.default.border}`}
-          borderRadius="16px"
-          padding="15px 24px"
-          margin="0px 0px 15px 0px"
-        >
-          <ItemVV2
-            maxWidth="40px"
-            onClick={() => setShowMoreOption(member?.wallets)}
-            style={{ cursor: 'pointer' }}
-          >
-            <AddMember />
-          </ItemVV2>
-          <SpanV2 color={theme.default.color} fontWeight="500" fontSize="18px">Add more wallets</SpanV2>
-        </ItemHV2> */}
         <ProfileContainer>
           {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
             return (
@@ -285,9 +270,9 @@ const InfoContainer = styled(ItemHV2)`
 
 const ProfileCard = styled(ItemHV2)`
   justify-content: space-between;
-  position: relative;
   padding: 8px 16px;
   border-radius: 16px;
+  position: unset;
   box-sizing: border-box;
   background-color: ${(props) => props.theme.chat.snapFocusBg};
   margin-bottom: 8px;
@@ -316,8 +301,8 @@ const ProfileContainer = styled.div`
 
 const DropdownContainer = styled(ItemVV2)`
   position: absolute;
-  top: 27px;
-  right: -178px;
+  left: 86%;
+  top: 72%;
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};

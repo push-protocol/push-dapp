@@ -25,6 +25,7 @@ type DropdownProps = {
 
 // Create Dropdown
 function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
+  console.log(dropdownValues)
   const theme = useTheme();
   const copyToClipboard = (address) => {
     if (navigator && navigator.clipboard) {
