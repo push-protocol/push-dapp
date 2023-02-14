@@ -783,6 +783,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                           }
                           caip10={walletToCAIP10({ account: account! })}
                           messageBeingSent={messageBeingSent}
+                          isGroup={isGroup}
                         />
                       </div>
                     );
@@ -812,6 +813,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                       caip10={walletToCAIP10({ account: account! })}
                       messageBeingSent={messageBeingSent}
                       ApproveIntent={() => ApproveIntent('Approved')}
+                      isGroup={isGroup}
                     />
                   )}
                 </>
