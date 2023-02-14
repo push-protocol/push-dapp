@@ -225,7 +225,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
-        receiverAddress: currentChat?.wallets.split(',')[0],
+        receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBycurrentChat?.wallets.split(',')[0],
         account: account!,
         pgpPrivateKey: connectedUser?.privateKey,
         apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
