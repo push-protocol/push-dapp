@@ -30,7 +30,7 @@ import { approvePushToken, getPushTokenApprovalAmount } from 'helpers';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
 import { isEmpty } from 'helpers/InputValidation';
-import { isLengthValid, isValidUrl } from 'helpers/UtilityHelper';
+import { isLengthValid, isValidUrl } from 'helpers/ValidationHelper';
 import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
 
 export default function EditChannel({ 

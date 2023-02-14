@@ -1,4 +1,4 @@
-import { isLengthValid, isValidAddress, isValidUrl } from "./UtilityHelper";
+import { isLengthValid, isValidAddress, isValidUrl } from "./ValidationHelper";
 
 
 

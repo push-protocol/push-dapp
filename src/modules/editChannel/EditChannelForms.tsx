@@ -15,7 +15,7 @@ import {
 } from 'primaries/SharedStyling';
 import { AiFillExclamationCircle } from 'react-icons/ai';
 import { isAllFilledAndValid } from 'helpers/InputValidation';
-import { isValidUrl } from 'helpers/UtilityHelper';
+import { isValidUrl } from 'helpers/ValidationHelper';
 
 const EditChannelForms = ({
     channelName,
