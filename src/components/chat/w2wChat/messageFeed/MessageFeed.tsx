@@ -140,7 +140,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setMessagesLoading(false);
   };
 
-
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();
@@ -270,8 +269,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     pfp={getProfilePicture(feed)}
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
-
-                    chatSnapMsg={getChatsnapMessage(feed,account)}
+                    chatSnapMsg={getChatsnapMessage(feed,account,false)}
                     timestamp={feed.msg.timestamp??feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
                     onClick={(): void => onFeedClick(feed,i)}

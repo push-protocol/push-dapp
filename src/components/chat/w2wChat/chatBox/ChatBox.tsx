@@ -5,7 +5,6 @@ import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
@@ -14,12 +13,10 @@ import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
-import * as PushAPI from "@pushprotocol/restapi"
-
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import * as PushNodeClient from 'api';
-import { approveIntent } from 'api';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
@@ -44,7 +41,7 @@ import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'hel
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { checkIfGroup } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -86,32 +83,31 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const [isGroup,setIsGroup] = useState<boolean>(false);
-  const {connectedUser,setConnectedUser} = useContext(ChatUserContext);
+  const [isGroup, setIsGroup] = useState<boolean>(false);
+  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
   let time = '';
 
-
-  useEffect(()=> {
-     setIsGroup(checkIfGroup(currentChat));
+  useEffect(() => {
+    setIsGroup(checkIfGroup(currentChat));
   });
 
   //get ens name
-  const ensName = useResolveEns(!isGroup?currentChat?.wallets?.split(',')[0].toString():null);
+  const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat,isGroup });
+      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
       let messageCID = latestThreadhash;
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
-  
+
         if (latestThreadhash !== currentChat?.threadhash) {
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
@@ -133,7 +129,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             currentChat,
             inbox,
           });
-
 
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
@@ -168,7 +163,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 currentChat,
                 inbox,
               });
-console.log(msgIPFS)
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
@@ -210,22 +204,18 @@ console.log(msgIPFS)
     }
   }, [currentChat]);
 
-
   const getDisplayName = () => {
-    if(ensName)
-      return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
-    if(isGroup)
-      return currentChat?.groupInformation?.groupName;
-    if(currentChat?.wallets)
-      return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
-  }
+    if (ensName) return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
+    if (isGroup) return currentChat?.groupInformation?.groupName;
+    if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
+  };
 
   const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account:account! }), inboxes, 'did');
+      let inboxes: Feeds[] = await PushAPI.chat.chats({ account: account!, env: appConfig.appEnv, toDecrypt: false });
+      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: account! }), inboxes, 'did');
       inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
@@ -263,10 +253,10 @@ console.log(msgIPFS)
         sigType = pgpSignatureType;
       }
       let savedMsg: MessageIPFSWithCID | string = await PushNodeClient.postMessage({
-        fromCAIP10: walletToCAIP10({ account:account!}),
-        fromDID: walletToCAIP10({ account:account!}),
-        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0]}),
-        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0]}),
+        fromCAIP10: walletToCAIP10({ account: account! }),
+        fromDID: walletToCAIP10({ account: account! }),
+        toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
+        toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
         messageContent,
         messageType,
         signature,
@@ -316,18 +306,12 @@ console.log(msgIPFS)
     setLoading(true);
     let getIntent;
     if (checkConnectedUser(connectedUser)) {
-      getIntent = await intitializeDb<string>(
-        'Read',
-        'Intent',
-         walletToCAIP10({ account:account!}),
-        '',
-        'did'
-      );
+      getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
-    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account:account!}), intents, 'did');
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
+    await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
     setPendingRequests(intents?.length);
     setReceivedIntents(intents);
@@ -338,15 +322,18 @@ console.log(msgIPFS)
     setMessageBeingSent(true);
     const { createdUser } = await createUserIfNecessary();
     // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
-    const updatedIntent: string = await approveIntent(
-      currentChat.intentSentBy,
-      createdUser.wallets.split(',')[0],
-      status,
-      '1',
-      'sigType'
-    );
+
+    let updatedIntent: any;
+    updatedIntent = await PushAPI.chat.approve({
+      status: 'Approved',
+      account: account!,
+      senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
+      env: appConfig.appEnv,
+    });
+
     let activeChat = currentChat;
-    activeChat.intent = updatedIntent;
+    //yaha pe thoda sa change kr skte h intent:"Approved set kr skte h "
+    activeChat.intent = updatedIntent.data;
     setChat(activeChat);
 
     // displaying toast according to status
@@ -407,7 +394,7 @@ console.log(msgIPFS)
           keyPairs.privateKeyArmored,
           walletPublicKey
         );
-        const caip10: string = walletToCAIP10({ account:account!});
+        const caip10: string = walletToCAIP10({ account: account! });
         setBlockedLoading({
           enabled: true,
           title: 'Step 3/4: Syncing account info',
@@ -460,14 +447,14 @@ console.log(msgIPFS)
         try {
           const ens: string = await provider.resolveName(searchedUser);
           if (ens) {
-            caip10 = walletToCAIP10({ account:account!});
+            caip10 = walletToCAIP10({ account: account! });
           }
         } catch (err) {
           console.log(err);
           return;
         }
       } else {
-        caip10 = walletToCAIP10({ account:account!});
+        caip10 = walletToCAIP10({ account: account! });
       }
       await PushNodeClient.createUser({
         caip10,
@@ -535,7 +522,7 @@ console.log(msgIPFS)
           toDID: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
           toCAIP10: walletToCAIP10({ account: currentChat.wallets.split(',')[0] }),
           fromDID: walletToCAIP10({ account: account! }),
-          fromCAIP10: walletToCAIP10({ account:account! }),
+          fromCAIP10: walletToCAIP10({ account: account! }),
           messageContent,
           messageType,
           signature,
@@ -730,33 +717,8 @@ console.log(msgIPFS)
               fontWeight="400"
               textAlign="start"
             >
-            {getDisplayName()}
+              {getDisplayName()}
             </SpanV2>
-            {/* <MoreOptions>
-              <IconButton aria-label="more" onClick={(): void => setShowOption((option) => !option)}>
-                <MoreVertIcon />
-              </IconButton>
-              {showOption && (
-                <OptionContainer>
-                  <Option>
-                    <Icon>
-                      <img src="/svg/chats/nickname.svg" height="24px" width="24px" alt="nickname" />
-                    </Icon>
-                    <Typography ml={1} variant="subtitle2">
-                      Give Nickname
-                    </Typography>
-                  </Option>
-                  <Option>
-                    <Icon>
-                      <img src="/svg/chats/block.svg" height="24px" width="24px" alt="block" />
-                    </Icon>
-                    <Typography ml={1} variant="subtitle2">
-                      Block User
-                    </Typography>
-                  </Option>
-                </OptionContainer>
-              )}
-            </MoreOptions> */}
           </ItemHV2>
 
           <MessageContainer>
@@ -814,8 +776,12 @@ console.log(msgIPFS)
                         )}
 
                         <Chats
-                          msg={msg}
-                          caip10={walletToCAIP10({ account:account!})}
+                          msg={
+                            isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
+                              ? ''
+                              : msg
+                          }
+                          caip10={walletToCAIP10({ account: account! })}
                           messageBeingSent={messageBeingSent}
                         />
                       </div>
@@ -828,20 +794,22 @@ console.log(msgIPFS)
                         Messages are not encrypted till the user accepts the chat request.
                       </ItemTextSlash>
 
-                     {!isGroup &&  <FirstTime>
-                        This is your first conversation with recipient.<br></br> Start the conversation by sending a
-                        message.
-                      </FirstTime>}
+                      {!isGroup && (
+                        <FirstTime>
+                          This is your first conversation with recipient.<br></br> Start the conversation by sending a
+                          message.
+                        </FirstTime>
+                      )}
                     </Item>
                   )}
-                  {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) && (
+                  {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
                       msg={{
                         ...messages[0],
-                        messageContent: 'Please accept to enable push chat from this wallet',
+                        messageContent: getIntentMessage(currentChat, isGroup),
                         messageType: 'Intent',
                       }}
-                      caip10={walletToCAIP10({ account:account! })}
+                      caip10={walletToCAIP10({ account: account! })}
                       messageBeingSent={messageBeingSent}
                       ApproveIntent={() => ApproveIntent('Approved')}
                     />
@@ -877,17 +845,6 @@ const SpinnerWrapper = styled.div`
   height: 90px;
 `;
 
-const FirstConversation = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #657795;
-  margin: 59px 0px 0px 0px;
-  padding: 0px 50px;
-`;
 
 const ItemLink = styled.a`
   color: ${(props) => props.theme.default.secondaryColor};
@@ -970,62 +927,6 @@ const MessageContainer = styled(ItemVV2)`
   height: calc(100% - 140px);
 `;
 
-const UserInfo = styled.div`
-  width: fit-content;
-  display: flex;
-  align-items: center;
-`;
-
-const ChatHeader = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  top: 9px;
-  left: 9px;
-  right: 9px;
-  height: 55px;
-  border-radius: 29px;
-  color: ${(props) => props.theme.default.color};
-  background: ${(props) => props.theme.default.bg};
-  padding: 6px;
-  font-weight: 500;
-`;
-
-const Option = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const OptionContainer = styled.div`
-  position: absolute;
-  top: 55px;
-  right: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 19px;
-  width: 193px;
-  background: #ffffff;
-  border-radius: 16px;
-  z-index: 100;
-`;
-
-const MoreOptions = styled.div`
-  position: relative;
-`;
-
-const Icon = styled.i`
-  filter: ${(props) => props.filter};
-  padding: 0px;
-  display: flex;
-  margin-left: 5px;
-  &:hover {
-    cursor: pointer;
-  }
-`;
 
 const Container = styled(Content)`
   box-sizing: border-box;
@@ -1039,17 +940,6 @@ const Container = styled(Content)`
   font-weight: 400;
   justify-content: center;
   position: relative;
-`;
-
-const HelloBox = styled(Box)`
-  background: #ffffff;
-  border-radius: 2px 28px 28px 28px;
-  padding: 24px 70px 27px 70px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-  margin-bottom: 10px;
 `;
 
 const WelcomeItem = styled(ItemVV2)`
@@ -1166,21 +1056,6 @@ const Atag = styled.a`
   margin-bottom: 20px;
 `;
 
-const WelcomeSubText = styled(SpanV2)`
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 19px;
-  max-width: 17rem;
-  color: ${(props) => props.theme.default.seconddaryColor};
-  @media only screen and (max-width: 1115px) and (min-width: 991px) {
-    font-size: 13px;
-    max-width: 15rem;
-  }
-  @media only screen and (max-width: 780px) and (min-width: 711px) {
-    font-size: 13px;
-    max-width: 14rem;
-  }
-`;
 
 const TabletBackButton = styled(ButtonV2)`
   display: none;
@@ -1190,11 +1065,6 @@ const TabletBackButton = styled(ButtonV2)`
   }
 `;
 
-const MessageLoader = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: end;
-`;
 
 const CustomScrollContent = styled(ScrollToBottom)`
   padding-right: 0px;
@@ -1214,13 +1084,5 @@ const CustomScrollContent = styled(ScrollToBottom)`
   }
 `;
 
-const FileUploadLoaderContainer = styled.div`
-  border: none;
-  font-size: 1.8rem;
-  border-radius: 5px;
-  background-color: transparent;
-  margin-right: 2rem;
-  color: rgb(58, 103, 137);
-`;
 
 export default ChatBox;

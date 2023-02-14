@@ -7,16 +7,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
-import Box from '@mui/material/Box';
-import MuiTab from '@mui/material/Tab';
-import MuiTabs from '@mui/material/Tabs';
-import Typography from '@mui/material/Typography';
-import * as PushAPI from "@pushprotocol/restapi"
 
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import ProfileHeader from 'components/chat/w2wChat/profile';
-import Profile from 'components/chat/w2wChat/ProfileSection/Profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Feeds } from 'types/chat';
@@ -33,7 +27,6 @@ import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/cr
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { appConfig } from '../../config';
 
 
 
