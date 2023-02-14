@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Compoonents
 import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { useDeviceWidthCheck } from 'hooks';
+import FaucetInfo from 'components/FaucetInfo';
 
 // Internal Configs
 import { addresses, appConfig } from "config";
@@ -26,7 +27,7 @@ import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import VerifyLogo from '../../assets/Vector.svg';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import uploadLogoModal from './uploadLogoModal';
-import { approvePushToken, getPushTokenApprovalAmount } from 'helpers';
+import { approvePushToken, getPushTokenApprovalAmount, mintPushToken } from 'helpers';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
 import { isEmpty } from 'helpers/InputValidation';
@@ -314,6 +315,11 @@ export default function EditChannel({
     }
   }
 
+  // mint PUSH token
+  const mintPushTokenHandler = async (noOfTokens: number) => {
+    await mintPushToken({noOfTokens, library, account});
+  };
+
   useEffect(() => {
     if (croppedImage) {
       console.log("Image cropped", croppedImage);
@@ -381,7 +387,6 @@ export default function EditChannel({
           <FooterPrimaryText>Channel edit fee</FooterPrimaryText>
           <FooterSecondaryText>Editing channel details requires fees to be deposited</FooterSecondaryText>
         </div>
-
         <ItemHV2
           flex="0"
         >
@@ -389,10 +394,9 @@ export default function EditChannel({
           <EditFee>
             {feesRequiredForEdit} PUSH
           </EditFee>
-
         </ItemHV2>
-
       </Footer>
+      <FaucetInfo containerProps={{width: "100%"}} onMintPushToken={mintPushTokenHandler} />
 
       {isLoading ? (
         <>
@@ -448,7 +452,7 @@ const EditChannelContainer = styled(ItemVV2)`
 
 const EditableContainer = styled(ItemVV2)`
   flex-direction:row;
-  margin-bottom:45px;
+  margin-bottom: 10px;
   @media (max-width:600px){
     flex-direction: column;
   }
@@ -519,13 +523,14 @@ const VerticalLine = styled.div`
 
 const Footer = styled(ItemVV2)`
     background: ${(props) => props.theme.editFooterBg};
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 23px 32px;
     display: grid;
     grid-auto-flow: column;
     align-content: space-between;
     justify-content: space-between;
     grid-gap: 40px;
+    transform: translateY(40px);
 
   @media (max-width:600px){
     padding: 16px;

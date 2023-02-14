@@ -14,9 +14,10 @@ import { useWeb3React } from '@web3-react/core';
 
 type FaucetInfoType = {
   onMintPushToken: (noOfTokens: number) => void;
+  containerProps?: {} 
 };
 
-const FaucetInfo = ({ onMintPushToken }: FaucetInfoType) => {
+const FaucetInfo = ({ onMintPushToken, containerProps }: FaucetInfoType) => {
   const { account, library } = useWeb3React();
   const isProd = appConfig.appEnv === 'prod';
 
@@ -40,7 +41,7 @@ const FaucetInfo = ({ onMintPushToken }: FaucetInfoType) => {
   return (
     <>
       {isFaucetVisible ? (
-        <TextSpace>
+        <TextSpace style={containerProps}>
           <InfoText>
             {isProd
               ? 'You do not have sufficient PUSH Tokens. Swap to add more PUSH.'
