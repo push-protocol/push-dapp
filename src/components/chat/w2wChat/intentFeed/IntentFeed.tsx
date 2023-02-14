@@ -15,20 +15,6 @@ import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from 'he
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: 400,
-  bgcolor: 'background.paper',
-  borderRadius: '20px',
-  boxShadow: 24,
-  p: 4,
-};
 
 const IntentFeed = ({isLoading}): JSX.Element => {
   const theme = useTheme();
@@ -36,7 +22,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
     setChat,
     receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
-  const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
+  const [selectedIntentSnap, setSelectedIntentSnap] = useState<number>();
 
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
 
@@ -84,10 +70,10 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                     isGroup={checkIfGroup(intent)}
                     chatSnapMsg={getChatsnapMessage(intent,account,true)}
                     timestamp={intent.msg.timestamp}
-                    selected={intent.threadhash == selectedIntentSnap ? true : false}
+                    selected={i == selectedIntentSnap ? true : false}
                     onClick={(): void => {
                       setChat(intent);
-                      setSelectedIntentSnap(intent.threadhash);
+                      setSelectedIntentSnap(i);
                     }}
                   />
                 </ItemVV2>

@@ -8,7 +8,7 @@ export const checkIfGroup = (feed: Feeds): boolean => {
 
 export const getProfilePicture = (feed: Feeds): string => {
   if (checkIfGroup(feed))
-    return feed?.groupInformation?.groupImageCID!;
+    return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
 };
 

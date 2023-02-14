@@ -62,7 +62,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
+        console.log(inboxes)
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+       
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
         {
          setFeeds(inboxes)

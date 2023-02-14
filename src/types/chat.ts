@@ -47,7 +47,7 @@ export interface IGroup {
     numberOfNFTs?: number,
     contractAddressERC20?: string,
     numberOfERC20?: number,
-    groupImageCID: string,
+    groupImage: string,
     groupName: string,
     groupDescription: string,
     groupCreator: string,
@@ -56,7 +56,8 @@ export interface IGroup {
   export interface UserInfo {
     wallets: string,
     publicKey: string,
-    name: string
+    name: string,
+    image:string,
   }
 export interface Feeds {
     // This property contains all the info to be displayed on the sidebar for the other peer's information
@@ -75,7 +76,7 @@ export interface Feeds {
     cid?: string;
     groupInformation?: {
       groupName: string,
-      groupImageCID: string,
+      groupImage: string,
       groupMembers: UserInfo[],
       groupAdmins: UserInfo[],
       isPublic: boolean,

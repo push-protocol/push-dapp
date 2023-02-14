@@ -10,6 +10,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
+import * as PushAPI from "@pushprotocol/restapi";
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
@@ -27,6 +28,7 @@ import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/cr
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { appConfig } from '../../config';
 
 
 
