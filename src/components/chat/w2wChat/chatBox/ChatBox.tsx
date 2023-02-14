@@ -207,13 +207,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
   };
 
-  const fetchInboxApi = async (createdUser: ConnectedUser): Promise<Feeds> => {
+  const fetchInboxApi = async (): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
       // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
       // will be undefined since it was not updated right after the intent was sent
       let inboxes: Feeds[] = await PushAPI.chat.chats({ account: account!, env: appConfig.appEnv, toDecrypt: false });
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: account! }), inboxes, 'did');
-      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
+      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
     }
@@ -286,9 +286,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   async function ApproveIntent(status: string): Promise<void> {
     setMessageBeingSent(true);
-    // We must use createdUser here for getting the wallet instead of using the `account` since the user can be created at the moment of sending the intent
 
     let updatedIntent: any;
+    try {
     updatedIntent = await PushAPI.chat.approve({
       status: 'Approved',
       account: account!,
@@ -297,26 +297,8 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     });
 
     let activeChat = currentChat;
-    //yaha pe thoda sa change kr skte h intent:"Approved set kr skte h "
     activeChat.intent = updatedIntent.data;
     setChat(activeChat);
-
-    // displaying toast according to status
-    if (status === 'Approved') {
-      chatBoxToast.showMessageToast({
-        toastTitle: 'Success',
-        toastMessage: 'Request approved',
-        toastType: 'SUCCESS',
-        getToastIcon: (size) => (
-          <MdCheckCircle
-            size={size}
-            color="green"
-          />
-        ),
-      });
-      let activeChat = currentChat;
-      activeChat.intent = updatedIntent.data;
-      setChat(activeChat);
 
       // displaying toast according to status
       if (status === 'Approved') {
