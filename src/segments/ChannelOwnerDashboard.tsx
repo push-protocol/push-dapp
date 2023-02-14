@@ -174,43 +174,34 @@ const ChannelOwnerDashboard = () => {
           {isChannelDetails && processingState !== null &&
             (
               <>
-                {channelDetails && !isMobile && 
-                  <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                    {!isChannelExpired && <ChannelSettings />}
-                    {isChannelExpired && onCoreNetwork &&
-                      <DestroyChannelBtn 
-                        onClick={destroyChannel}
-                        background="#E93636" 
-                        color="#fff" 
-                        height="36px" 
-                        width="123px" 
-                        borderRadius="8px"
-                        fontSize="14px"
-                      >
-                        Delete Channel
-                      </DestroyChannelBtn>
-                    }
-                  </ItemHV2>
-                }
-                {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} /> : ""}
                 {editChannel ? (
-                  <>
-                    <EditChannel 
+                  <EditChannel 
                     closeEditChannel={closeEditChannel} 
                     UploadLogoComponent={UploadLogoComponent} 
                     displayUplaodLogoModal={displayUplaodLogoModal}
                     isUploadLogoModalOpen={isUploadLogoModalOpen}
-                    />
-                  </>
+                  />
                 ) : (
                   <>
-                    {channelDetails && !isMobile &&
+                    {channelDetails && !isMobile && 
                       <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                        <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
-                        <ChannelSettings />
+                        {!isChannelExpired && <><SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton><ChannelSettings /></>}
+                        {isChannelExpired && onCoreNetwork &&
+                          <DestroyChannelBtn 
+                            onClick={destroyChannel}
+                            background="#E93636" 
+                            color="#fff" 
+                            height="36px" 
+                            width="123px" 
+                            borderRadius="8px"
+                            fontSize="14px"
+                          >
+                            Delete Channel
+                          </DestroyChannelBtn>
+                        }
                       </ItemHV2>
                     }
-                    {channelDetails ? <ChannelDetails showEditChannel={showEditChannel}/> : ""}
+                    {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel}/> : ""}
                   </>
                 )}
               </>
@@ -232,11 +223,11 @@ const ChannelOwnerDashboard = () => {
 
 export default ChannelOwnerDashboard;
 
-<<<<<<< HEAD
 const DestroyChannelBtn = styled(ButtonV2)`
   height: ${props => (props.height || "100%")};
-  width: ${props => (props.width || "100%")};
-=======
+  width: ${props => (props.width || "100%")}`;
+
+
 const SubmitButton = styled(Button)`
   width: 7rem;
   background: #cf1c84;
@@ -253,5 +244,4 @@ const SubmitButton = styled(Button)`
   @media (min-width:600px) and (max-width:700px){
     margin-right: 9px;
   }
->>>>>>> origin/New-Edit-Channel-branch
 `;
