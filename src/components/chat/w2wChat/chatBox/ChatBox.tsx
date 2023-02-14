@@ -202,7 +202,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       // will be undefined since it was not updated right after the intent was sent
       let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
       await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account:account!, chainId:chainId! }), inboxes, 'did');
-      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: createdUser });
+      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
     }

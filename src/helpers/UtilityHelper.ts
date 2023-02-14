@@ -46,12 +46,16 @@ export const MaskedAliasChannels:{
   97: {}
  }
  export const findObject = (data: any,parentArray: any[],property: string ): boolean =>{
+  console.log(data)
+  console.log(parentArray)
   let isPresent = false;
+  if(data) {
   parentArray.map((value) => {
     if (value[property] == data[property]) {
       isPresent = true;
     }
   });
+  }
   return isPresent;
 }
 
