@@ -14,6 +14,7 @@ import { Button, Item, Span } from "primaries/SharedStyling";
 import { abis, addresses } from "config";
 import { useDeviceWidthCheck } from "hooks";
 import { device } from "config/Globals";
+import { mintPushToken } from "helpers";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
   const { library, account } = useWeb3React();
@@ -22,27 +23,8 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
   
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
-    try {
-      var signer = library.getSigner(account);
-      let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
-      console.log({
-        pushTokenContract,
-      });
-      console.log(1);
-      let pushTokenAmount = noOfTokens;
-      const amount = ethers.utils.parseUnits(pushTokenAmount.toString(), 18);
-      console.log(amount);
-      var mintTransactionPromise = pushTokenContract.mint(amount);
-      console.log(3);
-      const tx = await mintTransactionPromise;
-      console.log(tx);
-      await library.waitForTransaction(tx.hash);
-      console.log(4);
-      setProcessingInfo(noOfTokens+" PUSH Tokens minted successfully!");
-      console.log("Transaction Completed");
-    } catch (err) {
-      console.log(err);
-    }
+    const resString = await mintPushToken({noOfTokens, library, account})
+    setProcessingInfo(resString);
   };
 
   return (
@@ -138,6 +120,7 @@ const ItemContent = styled(Item)`
     self: stretch;
     align: flex-start;
     justify: center;
+    width: 100%;
 `
 
 export default StakingInfo;

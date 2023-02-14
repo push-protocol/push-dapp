@@ -6,53 +6,80 @@ import { ButtonV2, ImageV2, SpanV2 } from './reusables/SharedStylingV2';
 import swapIcon from '../assets/icons/swapIcon.svg';
 
 // Internal Configs
-import { appConfig } from 'config';
+import { addresses, appConfig } from 'config';
 import { device } from 'config/Globals';
+import { useEffect, useState } from 'react';
+import { getHasEnoughPushToken } from 'helpers';
+import { useWeb3React } from '@web3-react/core';
 
 type FaucetInfoType = {
   onMintPushToken: (noOfTokens: number) => void;
 };
 
 const FaucetInfo = ({ onMintPushToken }: FaucetInfoType) => {
+  const { account, library } = useWeb3React();
   const isProd = appConfig.appEnv === 'prod';
 
+  const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    /* 
+      checks whether address has enough PUSH or not
+      if yes then we dont show the faucet component
+      otherwise we do
+    */
+    (async () => {
+      const hasEnoughPushToken = await getHasEnoughPushToken({
+        address: account,
+        provider: library,
+      });
+      setIsFaucetVisible(!hasEnoughPushToken);
+    })();
+  }, []);
+
   return (
-    <TextSpace>
-      <InfoText>
-        {isProd
-          ? 'You do not have sufficient PUSH Tokens. Swap to add more PUSH.'
-          : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
-      </InfoText>
-      {isProd ? (
-        <SwapTokensButton>
-          <ImageV2
-            width="12px"
-            height="12px"
-            margin="0 0.5rem 0 0"
-            src={swapIcon}
-          />
-          <ButtonLabel>Swap Tokens for PUSH</ButtonLabel>
-        </SwapTokensButton>
+    <>
+      {isFaucetVisible ? (
+        <TextSpace>
+          <InfoText>
+            {isProd
+              ? 'You do not have sufficient PUSH Tokens. Swap to add more PUSH.'
+              : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
+          </InfoText>
+          {isProd ? (
+            <SwapTokensButton>
+              <ImageV2
+                width="12px"
+                height="12px"
+                margin="0 0.5rem 0 0"
+                src={swapIcon}
+              />
+              <ButtonLabel>Swap Tokens for PUSH</ButtonLabel>
+            </SwapTokensButton>
+          ) : (
+            <ItemBody>
+              <AnchorLink
+                href="https://chaindrop.org/?chainid=5&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+                target="_blank"
+              >
+                <NumberIcon>1</NumberIcon>
+                <PoolShare>Goerli ETH Faucet</PoolShare>
+              </AnchorLink>
+              <Minter
+                onClick={() => {
+                  onMintPushToken(1000);
+                }}
+              >
+                <NumberIcon>2</NumberIcon>
+                <PoolShare>Get Testnet PUSH</PoolShare>
+              </Minter>
+            </ItemBody>
+          )}
+        </TextSpace>
       ) : (
-        <ItemBody>
-          <AnchorLink
-            href="https://chaindrop.org/?chainid=5&token=0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
-            target="_blank"
-          >
-            <NumberIcon>1</NumberIcon>
-            <PoolShare>Goerli ETH Faucet</PoolShare>
-          </AnchorLink>
-          <Minter
-            onClick={() => {
-              onMintPushToken(1000);
-            }}
-          >
-            <NumberIcon>2</NumberIcon>
-            <PoolShare>Get Testnet PUSH</PoolShare>
-          </Minter>
-        </ItemBody>
+        ''
       )}
-    </TextSpace>
+    </>
   );
 };
 
