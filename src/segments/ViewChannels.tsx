@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,12 @@ import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services';
 
 // Internal Configs
 import { appConfig } from 'config';
+import InfoImage from "../assets/info.svg";
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
+
+// import Tooltip from './reusables/tooltip/Tooltip';
+// import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -170,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-console.log(channels)
+  // console.log(channels)
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -197,76 +203,84 @@ console.log(channels)
       setSearch(parsedChannel);
     }, SEARCH_DELAY);
   }, []);
+
   return (
     <Container>
-      {!loading && (
-        <ItemBar>
-          <ItemHBar>
-            <SearchContainer
-              flex="1"
-            >
-              <SearchBar
-                type="text"
-                value={search}
-                onChange={(e: any) => {
-                  setSearchPage(1);
-                  setSearch(e.target.value);
-                }}
-                className="input"
-                placeholder={`Search by Name or ${account.slice(0, 6)}`}
-              />
-              <Item
-                position="absolute"
-                top="0"
-                bottom="0"
-                left="12px"
+      <ScrollItem id="scroll">
+
+        {!loading && (
+          <ItemBar id="searchBar" >
+            <ItemHBar>
+              <SearchContainer
+                flex="1"
               >
-                <AiOutlineSearch
-                  size={20}
-                  style={{ color: '#657795' }}
+                <SearchBar
+                  type="text"
+                  value={search}
+                  onChange={(e: any) => {
+                    setSearchPage(1);
+                    setSearch(e.target.value);
+                  }}
+                  className="input"
+                  placeholder={`Search by Name or ${account.slice(0, 6)}`}
                 />
-              </Item>
-            </SearchContainer>
+                <Item
+                  position="absolute"
+                  top="0"
+                  bottom="0"
+                  left="12px"
+                >
+                  <AiOutlineSearch
+                    size={20}
+                    style={{ color: '#657795' }}
+                  />
+                </Item>
+              </SearchContainer>
 
-            {appConfig.allowedNetworks.length > 1 && (
-              <Item flex="1">
-                <ChainsSelect
-                  channelsNetworkId={channelsNetworkId}
-                  setChannelsNetworkId={setChannelsNetworkId}
-                />
-              </Item>
-            )}
-          </ItemHBar>
+              {appConfig.allowedNetworks.length > 1 && (
+                <Item flex="1">
+                  <ChainsSelect
+                    channelsNetworkId={channelsNetworkId}
+                    setChannelsNetworkId={setChannelsNetworkId}
+                  />
+                </Item>
+              )}
+            </ItemHBar>
 
-          {!UtilityHelper.isMainnet(chainId) && <Faucets />}
-        </ItemBar>
-      )}
+            {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+          </ItemBar>
+        )}
 
-      <ScrollItem>
+
+
         {/* render all channels depending on if we are searching or not */}
-        <div>
+        <div style={{ position: "absolute", top: "100px" }} >
           {(search ? channelToShow : channels).map(
             (channel: any, index: any) =>
               channel &&
               channel.channel !== ZERO_ADDRESS && (
                 <>
                   <ViewChannelItems
+                    // onMouseEnter={() => {
+                    //   handleHeight(channel.channel);
+                    // }}
                     key={channel.channel}
                     self="stretch"
+                    // id={channel.channel}
                   >
-                 
+
                     {!MaskedChannels[channel.channel] && channel &&
                       (channelsNetworkId == appConfig.coreContractChain ||
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
+                          
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
                         />
                       )}
                   </ViewChannelItems>
-
                   {showWayPoint(index) && <Waypoint onEnter={updateCurrentPage} />}
                 </>
               )
@@ -325,7 +339,7 @@ const SearchBar = styled.input`
 
 const ItemHBar = styled.div`
   width: 100%;
-  padding: 10px 0px;
+  padding: 10px 0px 0px;
   display: flex;
   flex-direction: row important!;
   // justify-content: space-evenly;
@@ -333,12 +347,26 @@ const ItemHBar = styled.div`
     padding: 10px 10px;
   }
 `;
+const ImageInfo = styled.img`
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+    align-items: center;
+    align-self: center;
+`;
 
 const ItemBar = styled.div`
   padding: 5px 15px 10px 20px;
   width: 100%;
   display: flex;
   flex-direction: row;
+
+    position: sticky;
+    top: 0px;
+    background: ${(props)=>props.theme.default.bg};
+    z-index: 10;
+
+   
   justify-content: space-evenly;
   @media (max-width: 768px) {
     flex-direction: column;
@@ -363,6 +391,8 @@ const ContainerInfo = styled.div`
 
 const ViewChannelItems = styled.div`
   align-self: stretch;
+  // position: absolute;
+  // top: 70px;
 `;
 
 const CenteredContainerInfo = styled.div`
@@ -385,8 +415,10 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
 
   flex: 1;
-  padding: 5px 20px 10px 20px;
+  padding: 0px 20px 10px 20px;
   overflow-y: auto;
+
+  position:relative;
 
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};

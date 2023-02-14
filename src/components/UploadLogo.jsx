@@ -48,6 +48,7 @@ const UploadLogo = ({
   };
 
   const handleFile = async (file, path) => {
+    console.log("This is called",file);
     setCroppedImage(undefined);
     setView(true);
 
@@ -57,6 +58,7 @@ const UploadLogo = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
+        console.log("image src",reader.result);
         setImageSrc(reader.result);
       };
     } else {
