@@ -26,6 +26,9 @@ import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import useModalBlur from 'hooks/useModalBlur';
+import useToast from 'hooks/useToast';
+import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
@@ -69,6 +72,7 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
@@ -136,6 +140,15 @@ function Chat() {
     setDisplayQR(false);
   }
   useClickAway(containerRef, () => closeQRModal())
+
+  const createGroupToast = useToast();
+
+  const {
+    isModalOpen: isCreateGroupModalOpen,
+    showModal: showCreateGroupModal,
+    ModalComponent: CreateGroupModalComponent,
+  } = useModalBlur();
+
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -226,7 +239,7 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection />
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
@@ -234,6 +247,10 @@ function Chat() {
               >
                 <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
               </ChatContainer>
+              <CreateGroupModalComponent
+                InnerComponent={CreateGroupModalContent}
+                toastObject={createGroupToast}
+              />
 
               {(displayQR && !isMobile) && (
                 <>

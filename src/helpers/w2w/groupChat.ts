@@ -8,7 +8,7 @@ export const checkIfGroup = (feed: Feeds): boolean => {
 
 export const getProfilePicture = (feed: Feeds): string => {
   if (checkIfGroup(feed))
-    return `https://gateway.ipfs.io/ipfs/${feed?.groupInformation?.groupImageCID}`;
+    return feed?.groupInformation?.groupImageCID!;
   else return feed?.profilePicture!;
 };
 

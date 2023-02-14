@@ -63,8 +63,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        setFeeds(inboxes);
-        setInbox(inboxes);
+        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
+        {
+         setFeeds(inboxes)
+         setInbox(inboxes);
+        }
         return inboxes;
       } else {
         let inboxes: Feeds[] = await fetchInboxApi();
@@ -72,7 +75,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       }
     }
   };
-
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
@@ -101,7 +103,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
@@ -219,6 +220,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               ),
             });
           }
+
           setFeeds([]);
         }
         setMessagesLoading(false);

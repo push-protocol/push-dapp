@@ -30,7 +30,6 @@ import GLOBALS from 'config/Globals';
 
 
 
-
 const createGroupOnMouseEnter = [{
   name:'create-group-fill-icon',
   property:'display',
@@ -58,7 +57,7 @@ const createGroupOnMouseLeave = [{
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = () => {
+const ChatSidebarSection = ({showCreateGroupModal}) => {
   // theme context
   const theme = useTheme();
 
@@ -220,7 +219,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             flex="none"
             padding="20px 10px 24px 10px"
             borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.MID}
-            onClick={() => {}}
+            onClick={() => showCreateGroupModal()}
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
@@ -244,6 +243,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             </SpanV2>
           </CreateGroupContainer>
         )}
+        
         {activeTab == 0 && !searchedUser && (
           <MessageFeed
             hasUserBeenSearched={false}
