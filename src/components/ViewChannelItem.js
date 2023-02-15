@@ -82,6 +82,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [pushAdminAddress, account])
 
   useEffect(async () => {
+    if(!channelObject.channel) return;
+
+    const channelDetailsFromContract = await epnsReadProvider.channels(channelObject.channel);
+    console.log(channelDetailsFromContract);
+  }, [channelObject.channel]);
+
+  useEffect(async () => {
     if (!channelObject || !channelObject.channel) return;
 
     setSubscriberCount(channelObject.subscriber_count);
