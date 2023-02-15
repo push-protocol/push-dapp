@@ -17,6 +17,7 @@ import { AppContext } from 'types/chat';
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
   isGroup: boolean;
@@ -25,8 +26,8 @@ interface ITypeBar {
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }) => void;
-  sendIntent: ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
+  sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;
   setSnackbarText: (SnackbarText: string) => void;
@@ -112,13 +113,14 @@ const Typebar = ({
   };
 
   const sendGif = (url: string): void => {
-    if (currentChat?.intent === null && !isGroup) {
-      sendIntent({ message: url, messageType: 'GIF' });
-    } else {
+    if (currentChat.threadhash || isGroup) {
       sendMessage({
         message: url,
         messageType: 'GIF',
       });
+     
+    } else {
+      sendIntent({ message: url, messageType: 'GIF' });
     }
   };
 
@@ -144,13 +146,15 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.threadhash && !isGroup) {
-            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
-          } else {
+          if (currentChat.threadhash || isGroup) {
+
             sendMessage({
               message: JSON.stringify(fileMessageContent),
               messageType,
             });
+          } else {
+            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
+
           }
           setFileUploading(false);
         };
