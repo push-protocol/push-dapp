@@ -8,7 +8,7 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 // Internal Components
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS, TwitterFeedReturnType } from 'types/chat';
+import { Feeds, MessageIPFS, TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -16,9 +16,10 @@ import { checkTwitterUrl } from 'helpers/w2w/twitter';
 import { useResolveEns } from 'hooks/useResolveEns';
 import { caip10ToWallet } from 'helpers/w2w';
 import { shortenText } from 'helpers/UtilityHelper';
-import Profile from 'assets/chat/group-chat/profile.svg';
 import { AppContext } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
+import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
+import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -35,7 +36,7 @@ interface ChatProps {
 // Constants
 const infura_URL = appConfig.infuraApiUrl;
 
-const getProfilePicture = (currentChat, address) => {
+const getProfilePicture = (currentChat: Feeds, address: string): string => {
   const senderProfile = currentChat?.groupInformation?.groupMembers?.filter((chat) => chat.wallets == address);
   return senderProfile[0]?.image;
 };
@@ -57,7 +58,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       {messageType === 'TwitterFeedLink' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
+            <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"
                 padding="0px"
@@ -72,70 +73,36 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   tweetId={tweetId}
                 />
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper align="row">
-              <ItemHV2
-                position="relative"
-                left={isGroup ? '34px' : '0px'}
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+            >
+              <ReceivedMessage
+                color="transparent"
+                padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
-                {isGroup && (
-                  <ItemVV2
-                    height="100%"
-                    maxWidth="36px"
-                    justifyContent="flex-start"
-                  >
-                    <ImageContainer
-                      maxHeight="36px"
-                      maxWidth="36px"
-                      borderRadius="50%"
-                      overflow="hidden"
-                    >
-                      <ImageV2
-                        width="36px"
-                        height="36px"
-                        src={profilePicture}
-                        alt="Sender Profile"
-                      />
-                    </ImageContainer>
-                  </ItemVV2>
-                )}
-                <ItemVV2 alignItems="flex-start">
-                  {isGroup && (
-                    <SpanV2
-                      position="relative"
-                      fontSize="15px"
-                      fontWeight="500"
-                      left="34px"
-                      margin="0px 0px 7px 0px"
-                    >
-                      {ensName ? ensName : walletAddress}
-                    </SpanV2>
-                  )}
-                  <ReceivedMessage
-                    color="transparent"
-                    padding="0px"
-                    left={isGroup ? '8px' : '34px'}
-                  >
-                    <TwitterTweetEmbed
-                      placeholder={
-                        <LoaderSpinner
-                          type={LOADER_TYPE.SEAMLESS}
-                          spinnerSize={20}
-                        />
-                      }
-                      tweetId={tweetId}
+                <TwitterTweetEmbed
+                  placeholder={
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
                     />
-                  </ReceivedMessage>
-                </ItemVV2>
-              </ItemHV2>
-            </MessageWrapper>
+                  }
+                  tweetId={tweetId}
+                />
+              </ReceivedMessage>
+            </ReceivedMessageWrapper>
           )}
         </>
       ) : msg.messageType === 'Text' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
+            <SentMessageWrapper align="row-reverse">
               <SenderMessage>
                 {msg.messageContent.split('\n').map((str) => (
                   <TextMessage>{str}</TextMessage>
@@ -147,128 +114,62 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   <p>✔️ ✔️</p>
                 )} */}
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper align="row">
-              <ItemHV2
-                position="relative"
-                left={isGroup ? '34px' : '0px'}
-              >
-                {isGroup && (
-                  <ItemVV2
-                    height="100%"
-                    maxWidth="36px"
-                    justifyContent="flex-start"
-                  >
-                    <ImageContainer
-                      maxHeight="36px"
-                      maxWidth="36px"
-                      borderRadius="50%"
-                      overflow="hidden"
-                    >
-                      <ImageV2
-                        src={profilePicture}
-                        alt="Sender Profile"
-                      />
-                    </ImageContainer>
-                  </ItemVV2>
-                )}
-                <ItemVV2 alignItems="flex-start">
-                  {isGroup && (
-                    <SpanV2
-                      position="relative"
-                      fontSize="15px"
-                      fontWeight="500"
-                      left="8px"
-                      margin="0px 0px 7px 0px"
-                    >
-                      {ensName ? ensName : walletAddress}
-                    </SpanV2>
-                  )}
-                  <ReceivedMessage left={isGroup ? '8px' : '34px'}>
-                    {msg.messageContent.split('\n').map((str) => (
-                      <TextMessage>{str}</TextMessage>
-                    ))}
-                    <TimeStamp>{date}</TimeStamp>
-                  </ReceivedMessage>
-                </ItemVV2>
-              </ItemHV2>
-            </MessageWrapper>
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+            >
+              <ReceivedMessage left={isGroup ? '8px' : '34px'}>
+                {msg.messageContent.split('\n').map((str) => (
+                  <TextMessage>{str}</TextMessage>
+                ))}
+                <TimeStamp>{date}</TimeStamp>
+              </ReceivedMessage>
+            </ReceivedMessageWrapper>
           )}
         </>
       ) : msg.messageType === 'Intent' ? (
         <>
-          <MessageWrapper align="row">
-            <ItemHV2
-              position="relative"
-              left={isGroup ? '34px' : '0px'}
-            >
-              {isGroup && (
-                <ItemVV2
-                  height="100%"
-                  maxWidth="36px"
-                  justifyContent="flex-start"
-                >
-                  <ImageContainer
-                    maxHeight="36px"
-                    maxWidth="36px"
-                    borderRadius="50%"
-                    overflow="hidden"
-                  >
-                    <ImageV2
-                      width="36px"
-                      height="36px"
-                      src={profilePicture}
-                      alt="Sender Profile"
-                    />
-                  </ImageContainer>
-                </ItemVV2>
+          <ReceivedMessageWrapper
+            align="row"
+            isGroup={isGroup}
+            sender={ensName ? ensName : walletAddress}
+            profilePicture={profilePicture}
+          >
+            <IntentMessage left={isGroup ? '8px' : '34px'}>
+              <MessageText>
+                {msg.messageContent.split('\n').map((str) => (
+                  <p>{str}</p>
+                ))}
+              </MessageText>
+              {messageBeingSent ? (
+                <SpanV2 margin="-5px 0 0 0">
+                  <LoaderSpinner
+                    type={LOADER_TYPE.SEAMLESS}
+                    spinnerSize={40}
+                  />
+                </SpanV2>
+              ) : (
+                <ImageV2
+                  src={tickIcon}
+                  alt="tick"
+                  width="39px"
+                  height="39px"
+                  cursor="pointer"
+                  onClick={() => ApproveIntent()}
+                  margin="-5px 0 0 0"
+                />
               )}
-              <ItemVV2 alignItems="flex-start">
-                {isGroup && (
-                  <SpanV2
-                    position="relative"
-                    fontSize="15px"
-                    fontWeight="500"
-                    left="34px"
-                    margin="0px 0px 7px 0px"
-                  >
-                    {ensName ? ensName : walletAddress}
-                  </SpanV2>
-                )}
-                <IntentMessage left={isGroup ? '8px' : '34px'}>
-                  <MessageText>
-                    {msg.messageContent.split('\n').map((str) => (
-                      <p>{str}</p>
-                    ))}
-                  </MessageText>
-                  {messageBeingSent ? (
-                    <SpanV2 margin="-5px 0 0 0">
-                      <LoaderSpinner
-                        type={LOADER_TYPE.SEAMLESS}
-                        spinnerSize={40}
-                      />
-                    </SpanV2>
-                  ) : (
-                    <ImageV2
-                      src={tickIcon}
-                      alt="tick"
-                      width="39px"
-                      height="39px"
-                      cursor="pointer"
-                      onClick={() => ApproveIntent()}
-                      margin="-5px 0 0 0"
-                    />
-                  )}
-                </IntentMessage>
-              </ItemVV2>
-            </ItemHV2>
-          </MessageWrapper>
+            </IntentMessage>
+          </ReceivedMessageWrapper>
         </>
       ) : msg.messageType === 'Image' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper
+            <SentMessageWrapper
               height="138px"
               align="row-reverse"
             >
@@ -284,65 +185,29 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   }}
                 />
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper
+            <ReceivedMessageWrapper
               height="138px"
               align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
             >
-              <ItemHV2
-                position="relative"
-                left={isGroup ? '34px' : '0px'}
+              <ReceivedMessage
+                color="transparent"
+                padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
-                {isGroup && (
-                  <ItemVV2
-                    height="100%"
-                    maxWidth="36px"
-                    justifyContent="flex-start"
-                  >
-                    <ImageContainer
-                      maxHeight="36px"
-                      maxWidth="36px"
-                      borderRadius="50%"
-                      overflow="hidden"
-                    >
-                      <ImageV2
-                        width="36px"
-                        height="36px"
-                        src={profilePicture}
-                        alt="Sender Profile"
-                      />
-                    </ImageContainer>
-                  </ItemVV2>
-                )}
-                <ItemVV2 alignItems="flex-start">
-                  {isGroup && (
-                    <SpanV2
-                      position="relative"
-                      fontSize="15px"
-                      fontWeight="500"
-                      left="34px"
-                      margin="0px 0px 7px 0px"
-                    >
-                      {ensName ? ensName : walletAddress}
-                    </SpanV2>
-                  )}
-                  <ReceivedMessage
-                    color="transparent"
-                    padding="0px"
-                    left={isGroup ? '8px' : '34px'}
-                  >
-                    <ImageMessage
-                      src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
-                      onClick={() => {
-                        setShowImageModal(true);
-                        setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content);
-                      }}
-                    />
-                  </ReceivedMessage>
-                </ItemVV2>
-              </ItemHV2>
-            </MessageWrapper>
+                <ImageMessage
+                  src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
+                  onClick={() => {
+                    setShowImageModal(true);
+                    setImageUrl((JSON.parse(msg.messageContent) as FileMessageContent).content);
+                  }}
+                />
+              </ReceivedMessage>
+            </ReceivedMessageWrapper>
           )}
 
           {showImageModal && (
@@ -357,7 +222,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       ) : msg.messageType === 'GIF' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper
+            <SentMessageWrapper
               height="170px"
               align="row-reverse"
             >
@@ -374,66 +239,30 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   }}
                 />
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper
+            <ReceivedMessageWrapper
               height="170px"
               align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
             >
-              <ItemHV2
-                position="relative"
-                left={isGroup ? '34px' : '0px'}
+              <ReceivedMessage
+                color="transparent"
+                padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
-                {isGroup && (
-                  <ItemVV2
-                    height="100%"
-                    maxWidth="36px"
-                    justifyContent="flex-start"
-                  >
-                    <ImageContainer
-                      maxHeight="36px"
-                      maxWidth="36px"
-                      borderRadius="50%"
-                      overflow="hidden"
-                    >
-                      <ImageV2
-                        width="36px"
-                        height="36px"
-                        src={profilePicture}
-                        alt="Sender Profile"
-                      />
-                    </ImageContainer>
-                  </ItemVV2>
-                )}
-                <ItemVV2 alignItems="flex-start">
-                  {isGroup && (
-                    <SpanV2
-                      position="relative"
-                      fontSize="15px"
-                      fontWeight="500"
-                      left="34px"
-                      margin="0px 0px 7px 0px"
-                    >
-                      {ensName ? ensName : walletAddress}
-                    </SpanV2>
-                  )}
-                  <ReceivedMessage
-                    color="transparent"
-                    padding="0px"
-                    left={isGroup ? '8px' : '34px'}
-                  >
-                    <ImageMessage
-                      src={msg.messageContent}
-                      borderRadius={`0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
-                      onClick={() => {
-                        setShowImageModal(true);
-                        setImageUrl(msg.messageContent);
-                      }}
-                    />
-                  </ReceivedMessage>
-                </ItemVV2>
-              </ItemHV2>
-            </MessageWrapper>
+                <ImageMessage
+                  src={msg.messageContent}
+                  borderRadius={`0 ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL} ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL}`}
+                  onClick={() => {
+                    setShowImageModal(true);
+                    setImageUrl(msg.messageContent);
+                  }}
+                />
+              </ReceivedMessage>
+            </ReceivedMessageWrapper>
           )}
           {showImageModal && (
             <Modal
@@ -447,7 +276,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       ) : msg.messageType === 'File' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
+            <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"
                 padding="0px"
@@ -456,58 +285,24 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   <Files msg={msg} />
                 </FileMessage>
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper align="row">
-              <ItemHV2
-                position="relative"
-                left={isGroup ? '34px' : '0px'}
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+            >
+              <ReceivedMessage
+                color="transparent"
+                padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
-                {isGroup && (
-                  <ItemVV2
-                    height="100%"
-                    maxWidth="36px"
-                    justifyContent="flex-start"
-                  >
-                    <ImageContainer
-                      maxHeight="36px"
-                      maxWidth="36px"
-                      borderRadius="50%"
-                      overflow="hidden"
-                    >
-                      <ImageV2
-                        width="36px"
-                        height="36px"
-                        src={profilePicture}
-                        alt="Sender Profile"
-                      />
-                    </ImageContainer>
-                  </ItemVV2>
-                )}
-                <ItemVV2 alignItems="flex-start">
-                  {isGroup && (
-                    <SpanV2
-                      position="relative"
-                      fontSize="15px"
-                      fontWeight="500"
-                      left="34px"
-                      margin="0px 0px 7px 0px"
-                    >
-                      {ensName ? ensName : walletAddress}
-                    </SpanV2>
-                  )}
-                  <ReceivedMessage
-                    color="transparent"
-                    padding="0px"
-                    left={isGroup ? '8px' : '34px'}
-                  >
-                    <FileMessage>
-                      <Files msg={msg} />
-                    </FileMessage>
-                  </ReceivedMessage>
-                </ItemVV2>
-              </ItemHV2>
-            </MessageWrapper>
+                <FileMessage>
+                  <Files msg={msg} />
+                </FileMessage>
+              </ReceivedMessage>
+            </ReceivedMessageWrapper>
           )}
         </>
       ) : null}
@@ -566,15 +361,6 @@ const MessageText = styled(SpanV2)`
   }
 `;
 
-const MessageWrapper = styled.div`
-  width: 100%;
-  min-height: ${(props: any): string => props.height || '48px'};
-  padding: 0;
-  margin-bottom: 5px;
-  display: flex;
-  flex-direction: ${(props: any): string => props.align || 'row'};
-`;
-
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
@@ -612,8 +398,4 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
-`;
-
-const ImageContainer = styled(ItemVV2)`
-  max-height: ${(props) => props.maxHeight || '36px'};
 `;
