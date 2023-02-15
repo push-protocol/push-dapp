@@ -396,7 +396,7 @@ export default function EditChannel({
           </EditFee>
         </ItemHV2>
       </Footer>
-      <FaucetInfo containerProps={{width: "100%"}} onMintPushToken={mintPushTokenHandler} />
+      <FaucetInfo noOfPushTokensToCheck={feesRequiredForEdit} containerProps={{width: "100%"}} onMintPushToken={mintPushTokenHandler} />
 
       {isLoading ? (
         <>
@@ -587,7 +587,7 @@ const TransactionText = styled.p`
 //Footer Button's CSS
 const ButtonContainer = styled(ItemHV2)`
     justify-content: end;
-    margin-top:35px;
+    margin-top:80px;
     @media (max-width:425px){
         flex-direction:column-reverse;
     }

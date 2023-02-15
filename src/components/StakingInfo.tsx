@@ -41,7 +41,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
               {channelStakeFees} PUSH
               </b>
             </TabSpace>
-            <FaucetInfo onMintPushToken={mintPushTokenHandler}  />
+            <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />
           </Item>
 
         <Item width="12.2em" self="stretch" align="stretch" margin={isMobile ? "70px auto 50px auto" : "100px auto 50px auto"}>

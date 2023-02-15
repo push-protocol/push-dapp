@@ -27,17 +27,19 @@ export const getPushTokenApprovalAmount = async ({
 type HasEnoughPushToken = {
   address: string;
   provider: Provider;
+  noOfPushTokensToCheck: number;
 };
 export const getHasEnoughPushToken = async ({
   address,
   provider,
+  noOfPushTokensToCheck,
 }: HasEnoughPushToken): Promise<boolean> => {
   try {
     const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
     
     const ownedPushToken: BigNumber = await pushTokenContract.balanceOf(address);
     const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
-    return ownedPushTokenNum>=50;
+    return ownedPushTokenNum>=noOfPushTokensToCheck;
   } catch (err) {
     console.log(err.message);
   }

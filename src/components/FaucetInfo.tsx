@@ -14,10 +14,11 @@ import { useWeb3React } from '@web3-react/core';
 
 type FaucetInfoType = {
   onMintPushToken: (noOfTokens: number) => void;
-  containerProps?: {} 
+  noOfPushTokensToCheck: number;
+  containerProps?: {};
 };
 
-const FaucetInfo = ({ onMintPushToken, containerProps }: FaucetInfoType) => {
+const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: FaucetInfoType) => {
   const { account, library } = useWeb3React();
   const isProd = appConfig.appEnv === 'prod';
 
@@ -33,6 +34,7 @@ const FaucetInfo = ({ onMintPushToken, containerProps }: FaucetInfoType) => {
       const hasEnoughPushToken = await getHasEnoughPushToken({
         address: account,
         provider: library,
+        noOfPushTokensToCheck,
       });
       setIsFaucetVisible(!hasEnoughPushToken);
     })();
