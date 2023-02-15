@@ -24,6 +24,7 @@ export default class ChannelsDataStore {
     channelsCount: -1,
     channelsMeta: {},
     channelsJson: {},
+    channelJsonStartBlock: {},
     subscribers: {},
     subscribersCount: {},
 
@@ -590,15 +591,6 @@ export default class ChannelsDataStore {
           ).then((response) => {
             return response;
           });
-          // console.log(await this.state.channelsMeta, channelAddress);
-          // const getAliasAddress = EPNSCoreHelper.getAliasAddressFromChannelAddress(
-          //   channelAddress, this.state.chainId
-          // )
-          // .then((response) => {
-          //   objResponse.alias_address = response;
-          // });
-
-          // await Promise.all([getAliasAddress, getChannelJson]);
 
           console.log(
             "getChannelJsonAsync() [Address: %s] --> %o",
@@ -608,6 +600,35 @@ export default class ChannelsDataStore {
           resolve(getChannelJson);
         } catch (err) {
           console.log("!!!Error, getChannelJsonAsync() --> %o", err);
+          reject(err);
+        }
+      }
+    });
+  };
+
+  // To get a single channel meta via id
+  getChannelJsonStartBlockAsync = async (channelAddress) => {
+    return new Promise(async (resolve, reject) => {
+      if (this.state.channelJsonStartBlock[channelAddress]) {
+        // console.log("getChannelJsonStartBlockAsync() [CACHED] --> %o", this.state.channelsJson[channelAddress]);
+        resolve(this.state.channelJsonStartBlock[channelAddress]);
+      } else {
+        try {
+          const getChannelJson = await EPNSCoreHelper.getChannelJsonFromChannelAddressStartBlock(
+            channelAddress,
+            this.state.epnsReadProvider,
+          ).then((response) => {
+            return response;
+          });
+
+          console.log(
+            "getChannelJsonStartBlockAsync() [Address: %s] --> %o",
+            getChannelJson
+          );
+          this.state.channelJsonStartBlock[channelAddress] = getChannelJson;
+          resolve(getChannelJson);
+        } catch (err) {
+          console.log("!!!Error, getChannelJsonStartBlockAsync() --> %o", err);
           reject(err);
         }
       }
