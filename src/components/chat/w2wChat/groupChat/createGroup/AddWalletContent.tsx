@@ -234,7 +234,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           isLoading={isLoading}
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF'  : theme.groupButtonTextColor}
-          // border={`1px solid ${theme.modalConfirmButtonBorder}`}
+          border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
           TopMargin="60px"
         />
 

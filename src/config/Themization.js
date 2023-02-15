@@ -146,6 +146,8 @@ const themeLight = {
   modalSecondaryTextColor:'#657795',
   modalSearchBarBorderColor:'#BAC4D6',
   modalSearchBarBackground:'#FFF',
+  blurModalContentBackground:'#FFF',
+  modalInputBackgrundColor:'#FFF',
 
   // Group Profiles
   groupSearchProfilBackground: '#F4F5FA',
@@ -331,13 +333,17 @@ const themeDark = {
   modalConfirmButtonBackground:'#2F3137',
   modalConfirmButtonBorder:'#787E99',
   modalConfirmButtonTextColor:'#787E99',
-  modalOptionHoverBackgroundColor:'#4A4F67',
+  modalOptionHoverBackgroundColor:'#404650;',
   modalInputBorderColor:'#4A4F67',
   modalHeadingColor:'#B6BCD6',
   modalPrimaryTextColor:'#B6BCD6',
   modalSecondaryTextColor:'#B6BCD6',
   modalSearchBarBorderColor:'#4A4F67',
   modalSearchBarBackground:'#282A2E',
+  blurModalContentBackground:'#2F3137',
+  modalInputBackgrundColor:'#282A2E',
+
+
   // Group Profiles
   groupSearchProfilBackground: '#404650',
   groupButtonBackgroundColor:'#2F3137',

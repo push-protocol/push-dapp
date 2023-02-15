@@ -75,7 +75,7 @@ const useModalBlur = () => {
               zIndex = {10}
               width = 'fit-content'
               height = 'fit-content'
-              background={themes.modalContentBackground}
+              background={themes.blurModalContentBackground}
               alignSelf = "center"
               flex = 'initial'
               padding = '1.2% 2%'

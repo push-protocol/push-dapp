@@ -174,7 +174,9 @@ export const GroupDetailsContent = ({
               ? '#FFF'
               : themes.modalConfirmButtonTextColor
           }
-          // border={`1px solid ${themes.modalConfirmButtonBorder}`}
+          border={groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+              ? 'none'
+              : `1px solid ${themes.modalConfirmButtonBorder}`}
           TopMargin="28px"
         />
       </Container>
@@ -208,6 +210,7 @@ const GroupDescription = styled(TextField)`
   resize: none;
   width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
+  background:${(props)=>props.theme.modalInputBackgrundColor};
   border-radius: 12px;
   padding: 13px 16px;
   font-family: 'Strawford';
@@ -244,6 +247,7 @@ const CustomInput = styled(Input)`
   width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
+  background:${(props)=>props.theme.modalInputBackgrundColor};
   padding:8px 16px;
   font-family: 'Strawford';
   font-style: normal;
