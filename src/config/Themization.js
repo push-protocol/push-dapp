@@ -144,11 +144,13 @@ const themeLight = {
   modalHeadingColor:'#333333',
   modalPrimaryTextColor:'#1E1E1E',
   modalSecondaryTextColor:'#657795',
+  modalSearchBarBorderColor:'#BAC4D6',
+  modalSearchBarBackground:'#FFF',
 
   // Group Profiles
   groupSearchProfilBackground: '#F4F5FA',
   groupButtonBackgroundColor:'#ADB0BE',
-  groupButtonTextColor:'#FFFFFF',
+  groupButtonTextColor:'#FFF',
 
   // Toast Notifications
   toastTextColor: "#000",
@@ -334,7 +336,8 @@ const themeDark = {
   modalHeadingColor:'#B6BCD6',
   modalPrimaryTextColor:'#B6BCD6',
   modalSecondaryTextColor:'#B6BCD6',
-
+  modalSearchBarBorderColor:'#4A4F67',
+  modalSearchBarBackground:'#282A2E',
   // Group Profiles
   groupSearchProfilBackground: '#404650',
   groupButtonBackgroundColor:'#2F3137',

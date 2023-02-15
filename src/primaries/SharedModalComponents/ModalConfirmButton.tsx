@@ -15,13 +15,18 @@ type ModalConfirmButtonType = {
     color?:string,
     backgroundColor?:string,
     border?:string,
+    TopMargin?:string,
 }
 
-const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border}:ModalConfirmButtonType)=>{
+const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,TopMargin}:ModalConfirmButtonType)=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>
-            <ModalButtonContainer>
+            <ModalButtonContainer
+                style={{
+                    marginTop: TopMargin ? TopMargin : "55px"
+                }}
+            >
                 {
                     isLoading 
                     ? 
@@ -29,7 +34,14 @@ const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,bord
                       <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" />
                     </LoaderContainer>
                     :
-                    <CustomButton onClick={onClick} color={color} backgroundColor={backgroundColor} border={border}>{text}</CustomButton>
+                    <CustomButton 
+                    onClick={onClick} 
+                    color={color} 
+                    backgroundColor={backgroundColor} 
+                    border={border}
+                    >
+                        {text}
+                    </CustomButton>
                 }
             </ModalButtonContainer>
         </ThemeProvider>
@@ -40,7 +52,7 @@ const ModalButtonContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 55px;
+    // margin-top: 55px;
 `
 
 const LoaderContainer = styled.div`
@@ -67,7 +79,7 @@ const CustomButton = styled.button`
     border:${props=>props.border || '1px solid transparent'};
     border-radius:15px;
     // padding: 5% 12%;
-    padding:16px 17px;
+    padding:16px;
 `;
 
 export default ModalConfirmButton
