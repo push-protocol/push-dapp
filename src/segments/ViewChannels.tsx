@@ -206,55 +206,56 @@ function ViewChannels({ loadTeaser, playTeaser }) {
 
   return (
     <Container>
-      <ScrollItem id="scroll">
 
-        {!loading && (
-          <ItemBar id="searchBar" >
-            <ItemHBar>
-              <SearchContainer
-                flex="1"
+      {!loading && (
+        <ItemBar>
+          <ItemHBar>
+            <SearchContainer
+              flex="1"
+            >
+              <SearchBar
+                type="text"
+                value={search}
+                onChange={(e: any) => {
+                  setSearchPage(1);
+                  setSearch(e.target.value);
+                }}
+                className="input"
+                placeholder={`Search by Name or ${account.slice(0, 6)}`}
+              />
+              <Item
+                position="absolute"
+                top="0"
+                bottom="0"
+                left="12px"
               >
-                <SearchBar
-                  type="text"
-                  value={search}
-                  onChange={(e: any) => {
-                    setSearchPage(1);
-                    setSearch(e.target.value);
-                  }}
-                  className="input"
-                  placeholder={`Search by Name or ${account.slice(0, 6)}`}
+                <AiOutlineSearch
+                  size={20}
+                  style={{ color: '#657795' }}
                 />
-                <Item
-                  position="absolute"
-                  top="0"
-                  bottom="0"
-                  left="12px"
-                >
-                  <AiOutlineSearch
-                    size={20}
-                    style={{ color: '#657795' }}
-                  />
-                </Item>
-              </SearchContainer>
+              </Item>
+            </SearchContainer>
 
-              {appConfig.allowedNetworks.length > 1 && (
-                <Item flex="1">
-                  <ChainsSelect
-                    channelsNetworkId={channelsNetworkId}
-                    setChannelsNetworkId={setChannelsNetworkId}
-                  />
-                </Item>
-              )}
-            </ItemHBar>
+            {appConfig.allowedNetworks.length > 1 && (
+              <Item flex="1">
+                <ChainsSelect
+                  channelsNetworkId={channelsNetworkId}
+                  setChannelsNetworkId={setChannelsNetworkId}
+                />
+              </Item>
+            )}
+          </ItemHBar>
 
-            {!UtilityHelper.isMainnet(chainId) && <Faucets />}
-          </ItemBar>
-        )}
+          {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+        </ItemBar>
+      )}
 
 
 
+
+      <ScrollItem>
         {/* render all channels depending on if we are searching or not */}
-        <div style={{ position: "absolute", top: "100px" }} >
+        <div >
           {(search ? channelToShow : channels).map(
             (channel: any, index: any) =>
               channel &&
@@ -266,7 +267,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                     // }}
                     key={channel.channel}
                     self="stretch"
-                    // id={channel.channel}
+                  // id={channel.channel}
                   >
 
                     {!MaskedChannels[channel.channel] && channel &&
@@ -274,7 +275,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
-                          
+
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
@@ -339,7 +340,7 @@ const SearchBar = styled.input`
 
 const ItemHBar = styled.div`
   width: 100%;
-  padding: 10px 0px 0px;
+  padding: 10px 0px ;
   display: flex;
   flex-direction: row important!;
   // justify-content: space-evenly;
@@ -360,13 +361,6 @@ const ItemBar = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row;
-
-    position: sticky;
-    top: 0px;
-    background: ${(props)=>props.theme.default.bg};
-    z-index: 10;
-
-   
   justify-content: space-evenly;
   @media (max-width: 768px) {
     flex-direction: column;
@@ -417,8 +411,6 @@ const ScrollItem = styled(Item)`
   flex: 1;
   padding: 0px 20px 10px 20px;
   overflow-y: auto;
-
-  position:relative;
 
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
