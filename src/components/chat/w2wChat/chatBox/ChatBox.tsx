@@ -40,6 +40,7 @@ import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'hel
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { MessagetypeType } from '../../../../types/chat';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -208,7 +209,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   };
 
-  const sendMessage = async ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }): Promise<void> => {
+  const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
     setMessageBeingSent(true);
     try {
       const sendResponse = await PushAPI.chat.send({
@@ -342,7 +343,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     messageType,
   }: {
     message: string;
-    messageType: 'Text' | 'Image' | 'File';
+    messageType: MessagetypeType;
   }): Promise<void> => {
     try {
       setMessageBeingSent(true);
