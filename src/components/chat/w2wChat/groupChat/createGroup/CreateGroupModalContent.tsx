@@ -54,7 +54,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         groupImage: groupImageData,
         admins: [],
         isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
-        groupCreator: account!,
         account: account!,
         pgpPrivateKey: connectedUser?.privateKey,
         env: appConfig.appEnv

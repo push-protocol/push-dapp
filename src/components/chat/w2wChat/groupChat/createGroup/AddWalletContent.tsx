@@ -154,7 +154,6 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
-  console.log("Member List", memberList)
 
   return (
     <ThemeProvider theme={theme}>
@@ -235,7 +234,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF'  : theme.groupButtonTextColor}
           border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
-          TopMargin="60px"
+          topMargin="60px"
         />
 
       </Container>
@@ -273,7 +272,6 @@ const Input = styled.input`
   flex: 1;
   min-width: 445px;
   height: 48px;
-  // padding: 13px 60px 13px 21px;
   padding: 0px 60px 0px 16px;
   margin: 10px 0px 0px;
   border-radius: 99px;
@@ -302,6 +300,5 @@ const Input = styled.input`
 
 
 const MemberList = styled(ItemVV2)`
-  // margin-top: ${(props) => props.marginTop || '8px'};
   justify-content: 'flex-start';
 `;

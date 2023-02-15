@@ -15,16 +15,16 @@ type ModalConfirmButtonType = {
     color?:string,
     backgroundColor?:string,
     border?:string,
-    TopMargin?:string,
+    topMargin?:string,
 }
 
-const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,TopMargin}:ModalConfirmButtonType)=>{
+const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,topMargin}:ModalConfirmButtonType)=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>
             <ModalButtonContainer
                 style={{
-                    marginTop: TopMargin ? TopMargin : "55px"
+                    marginTop: topMargin ? topMargin : "55px"
                 }}
             >
                 {

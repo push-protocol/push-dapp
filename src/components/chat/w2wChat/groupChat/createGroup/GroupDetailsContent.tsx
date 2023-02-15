@@ -177,7 +177,7 @@ export const GroupDetailsContent = ({
           border={groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
               ? 'none'
               : `1px solid ${themes.modalConfirmButtonBorder}`}
-          TopMargin="28px"
+          topMargin="28px"
         />
       </Container>
     </ThemeProvider>
