@@ -475,7 +475,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       // zIndex: "10",
                     }}
                     placementProps={
-                      tooltTipHeight < 200 ? {
+                      tooltTipHeight < 250 ? {
                         background: "none",
                         // bottom: "25px",
                         top: "20px",
@@ -521,7 +521,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         minWidth: "fit-content",
                       }}
                       placementProps={
-                        tooltTipHeight < 150 ? {
+                        tooltTipHeight < 160 ? {
                           background: "none",
                           top: "20px", //for lower displaying
                           left: "7px",

@@ -17,7 +17,7 @@ const UpdateChannelTooltipContent = ({
 }: UpdateChannelTooltipContentProps) => {
 
   return (
-    <Container style={{borderRadius : height<200 ? "0.125rem 1rem 1rem 1rem" : "1rem 1rem 1rem 0.125rem"}}>
+    <Container style={{borderRadius : height < 250 ? "0.125rem 1rem 1rem 1rem" : "1rem 1rem 1rem 0.125rem"}}>
       <TopHeading>Channel was recently updated</TopHeading>
       <TopSubHeading>Previously</TopSubHeading>
       <Content>
