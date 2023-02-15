@@ -9,19 +9,16 @@ import { useClickAway } from 'react-use';
 // Internal Components
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
-import Profile from 'assets/chat/group-chat/profile.svg';
 import Message from 'assets/chat/group-chat/chat.svg';
 import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
 import Remove from 'assets/chat/group-chat/remove.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
-import { caip10ToWallet } from 'helpers/w2w';
 import Dropdown from 'components/Dropdown';
 
-export const ProfileCard = ({ key, member }) => {
+export const ProfileCard = ({ key, member, isAccountOwnerAdmin }) => {
   const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const dropdownRef = React.useRef<any>(null);
   const theme = useTheme();
   useClickAway(dropdownRef, () => setShowMoreOption(null));
@@ -105,9 +102,9 @@ export const ProfileCard = ({ key, member }) => {
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={
-              member?.isAdmin && caip10ToWallet(member.wallets) === account
+              member?.isAdmin && isAccountOwnerAdmin
                 ? ownerDropdown
-                : member?.isAdmin
+                : isAccountOwnerAdmin
                 ? adminDropdown
                 : memberDropdown
             }

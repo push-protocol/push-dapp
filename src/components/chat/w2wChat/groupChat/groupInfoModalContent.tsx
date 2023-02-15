@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import { ethers } from 'ethers';
+import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
@@ -11,12 +13,16 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'types/chat';
+import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ProfileCard } from './groupInfo/ProfileCard';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
-  const dropdownRef = React.useRef<any>(null);
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
+    (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
+  );
 
   const theme = useTheme();
 
@@ -144,6 +150,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
               <ProfileCard
                 key={index}
                 member={member}
+                isAccountOwnerAdmin={isAccountOwnerAdmin}
               />
             );
           })}
