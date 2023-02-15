@@ -39,8 +39,8 @@ import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'hel
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { checkIfGroup, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 import { MessagetypeType } from '../../../../types/chat';
+import { checkIfGroup, getIntentMessage, getProfilePicture } from '../../../../helpers/w2w/groupChat';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -192,11 +192,12 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
         // even though the user was still on the same chat.
         setMessages([]);
+        const image = getProfilePicture(currentChat);
         try {
-          CID.parse(currentChat.profilePicture); // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${currentChat.profilePicture}`);
+          CID.parse(image); // Will throw exception if invalid CID
+          setImageSource(INFURA_URL + `${image}`);
         } catch (err) {
-          setImageSource(currentChat.profilePicture);
+          setImageSource(image);
         }
       }
     }
