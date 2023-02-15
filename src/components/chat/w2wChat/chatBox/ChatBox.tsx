@@ -39,6 +39,7 @@ import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'hel
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getIntentMessage, getProfilePicture } from '../../../../helpers/w2w/groupChat';
 
 // Constants
@@ -220,13 +221,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
   };
 
-  const sendMessage = async ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }): Promise<void> => {
+  const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
     setMessageBeingSent(true);
     try {
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
-        receiverAddress: currentChat?.wallets.split(',')[0],
+        receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets.split(',')[0],
         account: account!,
         pgpPrivateKey: connectedUser?.privateKey,
         apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
@@ -350,7 +351,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     messageType,
   }: {
     message: string;
-    messageType: 'Text' | 'Image' | 'File';
+    messageType: MessagetypeType;
   }): Promise<void> => {
     try {
       setMessageBeingSent(true);
@@ -422,6 +423,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       console.log(error);
       setMessageBeingSent(false);
     }
+    setTimeout(() => {
+      setMessageBeingSent(false);
+    }, 2000);
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -665,6 +669,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 newMessage={newMessage}
                 setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
+                isGroup = {isGroup}
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
