@@ -124,7 +124,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       if(channelObjectFromHash[property] != channelObjectStartBlock[property])
         isChanged = true;
     })
-    console.log(isChanged);
+    
     setShowChannelChangedWarning(isChanged);
   }, [channelObjectFromHash, channelObjectStartBlock])
 
