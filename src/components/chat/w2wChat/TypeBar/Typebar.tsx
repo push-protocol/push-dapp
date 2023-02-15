@@ -19,19 +19,21 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 
 interface ITypeBar {
+  isGroup: boolean;
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
   sendMessage: ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }) => void;
-  sendIntent: ({ message, messageType }: { message: string; messageType: string }) => void;
+  sendIntent: ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;
   setSnackbarText: (SnackbarText: string) => void;
 }
 
 const Typebar = ({
+  isGroup,
   messageBeingSent,
   setNewMessage,
   newMessage,
@@ -69,7 +71,7 @@ const Typebar = ({
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault();
     if (newMessage.trim() !== '') {
-      if (currentChat.threadhash) {
+      if (currentChat.threadhash || isGroup) {
         sendMessage({
           message: newMessage,
           messageType: 'Text',
@@ -110,7 +112,7 @@ const Typebar = ({
   };
 
   const sendGif = (url: string): void => {
-    if (currentChat?.intent === null) {
+    if (currentChat?.intent === null && !isGroup) {
       sendIntent({ message: url, messageType: 'GIF' });
     } else {
       sendMessage({
@@ -142,7 +144,7 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.threadhash) {
+          if (!currentChat.threadhash && !isGroup) {
             sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
           } else {
             sendMessage({

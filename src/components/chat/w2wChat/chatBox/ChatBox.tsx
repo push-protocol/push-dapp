@@ -421,6 +421,9 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       console.log(error);
       setMessageBeingSent(false);
     }
+    setTimeout(() => {
+      setMessageBeingSent(false);
+    }, 2000);
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
@@ -664,6 +667,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 newMessage={newMessage}
                 setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
+                isGroup = {isGroup}
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
