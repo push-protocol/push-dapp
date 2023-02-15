@@ -18,7 +18,7 @@ import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from '../../../../../contexts/ChatUserContext';
 import { appConfig } from '../../../../../config';
 import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -60,6 +60,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         env: appConfig.appEnv
       });
       if (typeof createGroupRes !== 'string') {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Success',
+          toastMessage: 'Group created successfully',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
         handleClose();
       } else {
         createGroupToast.showMessageToast({
