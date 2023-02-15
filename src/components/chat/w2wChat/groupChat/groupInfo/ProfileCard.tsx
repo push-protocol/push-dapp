@@ -71,7 +71,7 @@ export const ProfileCard = ({ key, member, isAccountOwnerAdmin }) => {
         <SpanV2
           fontSize="18px"
           fontWeight="400"
-          color={theme.default.color}
+          color={theme.modalProfileTextColor}
         >
           {shortenText(member?.wallets?.split(':')[1], 6)}
         </SpanV2>

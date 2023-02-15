@@ -144,6 +144,8 @@ const themeLight = {
   modalHeadingColor:'#333333',
   modalPrimaryTextColor:'#1E1E1E',
   modalSecondaryTextColor:'#657795',
+  modalDescriptionTextColor:'#575D73',
+  modalProfileTextColor:'#1E1E1E',
 
   // Group Profiles
   groupSearchProfilBackground: '#F4F5FA',
@@ -334,6 +336,8 @@ const themeDark = {
   modalHeadingColor:'#B6BCD6',
   modalPrimaryTextColor:'#B6BCD6',
   modalSecondaryTextColor:'#B6BCD6',
+  modalDescriptionTextColor:'#787E99',
+  modalProfileTextColor:'#B6BCD6',
 
   // Group Profiles
   groupSearchProfilBackground: '#404650',

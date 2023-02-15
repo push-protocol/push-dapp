@@ -50,7 +50,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             fontWeight="500"
             fontSize="24px"
             margin="0px 0px 42px 0px"
-            color={theme.modalMessageColor}
+            color={theme.default.color}
           >
             Group Info
           </SpanV2>
@@ -86,7 +86,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             <SpanV2
               fontSize="16px"
               fontWeight={500}
-              color={theme.default.secondaryColor}
+              color={theme.modalDescriptionTextColor}
             >
               {`${currentChat?.groupInformation?.groupMembers?.length} members`}
             </SpanV2>
@@ -101,7 +101,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             fontSize="18px"
             fontWeight={500}
             margin="0px 0px 5px 0px"
-            color={theme.default.color}
+            color={theme.modalProfileTextColor}
           >
             Group Description
           </SpanV2>
@@ -109,7 +109,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             fontSize="18px"
             fontWeight={400}
             justifyContent="flex-start"
-            style={{ color: `${theme.default.secondaryColor}` }}
+            style={{ color: `${theme.modalDescriptionTextColor}` }}
           >
             {currentChat?.groupInformation?.groupDescription
               ? currentChat?.groupInformation?.groupDescription
@@ -138,7 +138,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             <SpanV2
               fontSize="12px"
               fontWeight="400"
-              color={theme.default.secondaryColor}
+              color={theme.modalIconColor}
             >
               {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
             </SpanV2>
@@ -167,7 +167,7 @@ const ModalContainer = styled.div`
   box-sizing: border-box;
   border-radius: 16px;
   background-color: ${(props) => props.background};
-  padding: 5px 10px;
+  padding: 0px;
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

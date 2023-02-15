@@ -27,7 +27,11 @@ export type ModalType = {
   };
 };
 
-const useModalBlur = () => {
+export type ModalProps={
+  padding?:string
+}
+
+const useModalBlur = ({padding}:ModalProps) => {
   const [open, setOpen] = React.useState(false);
 
   // hacky fix to prevent background scroll when modal is open
@@ -77,7 +81,7 @@ const useModalBlur = () => {
               background={themes.modalContentBackground}
               alignSelf = 'center'
               flex = 'initial'
-              padding = '1.2% 2%'
+              padding = {padding? padding:'1.2% 2%'}
               borderRadius = '16px'
               boxShadow = 'none'
           >
