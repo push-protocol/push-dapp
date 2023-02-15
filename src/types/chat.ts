@@ -58,6 +58,7 @@ export interface IGroup {
     publicKey: string,
     name: string,
     image:string,
+    isAdmin:boolean,
   }
 export interface Feeds {
     // This property contains all the info to be displayed on the sidebar for the other peer's information
