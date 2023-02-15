@@ -84,16 +84,20 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                     height="100%"
                     maxWidth="36px"
                     justifyContent="flex-start"
-                    borderRadius="100%"
                   >
-                    <ItemVV2 height="36px" width="36px" borderRadius="100%" overflow="hidden">
-                    <ImageV2
-                      width="36px"
-                      height="36px"
-                      src={profilePicture}
-                      alt="Sender Profile"
-                    />
-                    </ItemVV2>
+                    <ImageContainer
+                      maxHeight="36px"
+                      maxWidth="36px"
+                      borderRadius="50%"
+                      overflow="hidden"
+                    >
+                      <ImageV2
+                        width="36px"
+                        height="36px"
+                        src={profilePicture}
+                        alt="Sender Profile"
+                      />
+                    </ImageContainer>
                   </ItemVV2>
                 )}
                 <ItemVV2 alignItems="flex-start">
@@ -156,12 +160,17 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                     maxWidth="36px"
                     justifyContent="flex-start"
                   >
-                    <ImageV2
-                      width="36px"
-                      height="36px"
-                      src={profilePicture}
-                      alt="Sender Profile"
-                    />
+                    <ImageContainer
+                      maxHeight="36px"
+                      maxWidth="36px"
+                      borderRadius="50%"
+                      overflow="hidden"
+                    >
+                      <ImageV2
+                        src={profilePicture}
+                        alt="Sender Profile"
+                      />
+                    </ImageContainer>
                   </ItemVV2>
                 )}
                 <ItemVV2 alignItems="flex-start">
@@ -199,14 +208,20 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   height="100%"
                   maxWidth="36px"
                   justifyContent="flex-start"
-                  borderRadius="100%"
                 >
-                  <ImageV2
-                    width="36px"
-                    height="36px"
-                    src={profilePicture}
-                    alt="Sender Profile"
-                  />
+                  <ImageContainer
+                    maxHeight="36px"
+                    maxWidth="36px"
+                    borderRadius="50%"
+                    overflow="hidden"
+                  >
+                    <ImageV2
+                      width="36px"
+                      height="36px"
+                      src={profilePicture}
+                      alt="Sender Profile"
+                    />
+                  </ImageContainer>
                 </ItemVV2>
               )}
               <ItemVV2 alignItems="flex-start">
@@ -284,14 +299,20 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                     height="100%"
                     maxWidth="36px"
                     justifyContent="flex-start"
-                    borderRadius="100%"
                   >
-                    <ImageV2
-                      width="36px"
-                      height="36px"
-                      src={profilePicture}
-                      alt="Sender Profile"
-                    />
+                    <ImageContainer
+                      maxHeight="36px"
+                      maxWidth="36px"
+                      borderRadius="50%"
+                      overflow="hidden"
+                    >
+                      <ImageV2
+                        width="36px"
+                        height="36px"
+                        src={profilePicture}
+                        alt="Sender Profile"
+                      />
+                    </ImageContainer>
                   </ItemVV2>
                 )}
                 <ItemVV2 alignItems="flex-start">
@@ -368,14 +389,20 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                     height="100%"
                     maxWidth="36px"
                     justifyContent="flex-start"
-                    borderRadius="100%"
                   >
-                    <ImageV2
-                      width="36px"
-                      height="36px"
-                      src={profilePicture}
-                      alt="Sender Profile"
-                    />
+                    <ImageContainer
+                      maxHeight="36px"
+                      maxWidth="36px"
+                      borderRadius="50%"
+                      overflow="hidden"
+                    >
+                      <ImageV2
+                        width="36px"
+                        height="36px"
+                        src={profilePicture}
+                        alt="Sender Profile"
+                      />
+                    </ImageContainer>
                   </ItemVV2>
                 )}
                 <ItemVV2 alignItems="flex-start">
@@ -441,14 +468,20 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                     height="100%"
                     maxWidth="36px"
                     justifyContent="flex-start"
-                    borderRadius="100%"
                   >
-                    <ImageV2
-                      width="36px"
-                      height="36px"
-                      src={profilePicture}
-                      alt="Sender Profile"
-                    />
+                    <ImageContainer
+                      maxHeight="36px"
+                      maxWidth="36px"
+                      borderRadius="50%"
+                      overflow="hidden"
+                    >
+                      <ImageV2
+                        width="36px"
+                        height="36px"
+                        src={profilePicture}
+                        alt="Sender Profile"
+                      />
+                    </ImageContainer>
                   </ItemVV2>
                 )}
                 <ItemVV2 alignItems="flex-start">
@@ -579,4 +612,8 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
+`;
+
+const ImageContainer = styled(ItemVV2)`
+  max-height: ${(props) => props.maxHeight || '36px'};
 `;
