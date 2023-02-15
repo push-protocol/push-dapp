@@ -25,7 +25,7 @@ export const config = {
     // 42, //for kovan
     5, // for goerli
     80001, //for mumbai polygon
-    97 // bsc testnet
+    97 // bnb testnet
   ],
 
   /** 
@@ -110,8 +110,8 @@ export const CHAIN_DETAILS = {
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
   },
   97: {
-    label: "BSC Testnet",
-    name: "BSC_TESTNET",
+    label: "BNB Testnet",
+    name: "BNB_TESTNET",
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"

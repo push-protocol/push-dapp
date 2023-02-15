@@ -24,7 +24,7 @@ export const config = {
   allowedNetworks: [
     5, // for eth goerli
     80001, //for mumbai polygon
-    97 // bsc testnet
+    97 // bnb testnet
   ],
 
   /** 
@@ -109,8 +109,8 @@ export const CHAIN_DETAILS = {
     commAddress: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504"
   },
   97: {
-    label: "BSC Testnet",
-    name: "BSC_TESTNET",
+    label: "BNB Testnet",
+    name: "BNB_TESTNET",
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     commAddress: "0x4132061E3349ff36cFfCadA460E10Bd4f31F7ea8"

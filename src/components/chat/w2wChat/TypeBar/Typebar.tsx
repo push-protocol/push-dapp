@@ -24,7 +24,7 @@ interface ITypeBar {
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: string }) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: string }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;

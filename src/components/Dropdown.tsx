@@ -49,6 +49,8 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             wrap="nowrap"
             margin="0px 0 8px 0"
             width="max-content"
+            style={{cursor: "pointer"}}
+            onClick={() => dropdownValue?.function()}
           >
             <Span
               margin="11px 22px 11px 2px"
@@ -89,7 +91,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             )}
           </ItemH>
         ) : (
-          <DropdownItemContainer hoverBGColor={hoverBGColor}>
+          <DropdownItemContainer hoverBGColor={hoverBGColor} onClick={() => dropdownValue?.function()}>
             {dropdownValue?.invertedIcon && (
               <Image
                 src={dropdownValue.invertedIcon}
@@ -104,6 +106,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 src={dropdownValue.icon}
                 alt="icon"
                 width="24px"
+                cursor="pointer"
               />
             )}
             {!dropdownValue?.link && dropdownValue?.function && (
@@ -114,7 +117,6 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 weight="400"
                 size="15px"
                 cursor="pointer"
-                onClick={() => dropdownValue?.function()}
               >
                 {dropdownValue.title}
               </Span>
@@ -170,6 +172,7 @@ const DropdownItemContainer = styled(ItemH)`
   margin: 1px 0;
   padding: 2px 8px;
   border-radius: 12px;
+  cursor: pointer;
 
   &:hover {
     background-color: ${(props) => props.hoverBGColor || 'none'};
