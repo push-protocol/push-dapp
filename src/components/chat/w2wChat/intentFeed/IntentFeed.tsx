@@ -11,7 +11,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds } from 'types/chat';
-import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from 'helpers/w2w/groupChat';
+import { checkIfGroup, getChatsnapMessage, getGroupImage,getName,  } from 'helpers/w2w/groupChat';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 
@@ -65,7 +65,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
                 key={intent.threadhash || i}
               >
                 <ChatSnap
-                    pfp ={getProfilePicture(intent)}
+                    pfp ={getGroupImage(intent)}
                     username={getName(intent)}
                     isGroup={checkIfGroup(intent)}
                     chatSnapMsg={getChatsnapMessage(intent,account,true)}

@@ -21,9 +21,11 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ProfileCard } from './ProfileCard';
+import { getDefaultFeed } from '../../../../../helpers/w2w/user';
+import { Feeds } from '../../../../../types/chat';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat ,setChat}: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
@@ -36,9 +38,11 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 
   const handleClose = () => onClose();
 
-  const messageUser = () => {
-    console.log('messaging');
+  const messageUser = async() => {
+    let feed:Feeds = await getDefaultFeed(showMoreOption);
+    setChat(feed);
     setShowMoreOption(null);
+    handleClose();
   };
 
   const makeGroupAdmin = () => {
@@ -208,7 +212,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
           {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
             return (
               <ProfileCard
-                key={index}
+                key={`${member.wallet}${index}`}
                 member={member}
                 dropdownValues={
                   member?.isAdmin && isAccountOwnerAdmin

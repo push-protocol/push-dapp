@@ -24,7 +24,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 // Internal Configs
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from '../../../../config';
-import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -267,7 +267,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   key={feed.threadhash || i}
                 >
                   <ChatSnap
-                    pfp={getProfilePicture(feed)}
+                    pfp={getGroupImage(feed)}
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
                     chatSnapMsg={getChatsnapMessage(feed,account!,false)}
