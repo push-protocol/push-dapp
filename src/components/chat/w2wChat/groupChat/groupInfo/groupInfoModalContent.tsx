@@ -23,8 +23,10 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
-import { appConfig } from 'config';
 import { convertToWalletAddressList, getUpdatedAdminList } from '../../../../../helpers/w2w/groupChat';
+
+//Internal Configs
+import { appConfig } from 'config';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
