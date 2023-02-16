@@ -595,30 +595,29 @@ const ButtonContainer = styled(ItemHV2)`
 `;
 
 const FooterButtons = styled(Button)`
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 500;
-font-size: 18px;
-line-height: 22px;
-display: flex;
-border-radius: 15px;
-align-items: center;
-text-align: center;
-background: #CF1C84;
-color:#fff;
-padding: 16px 27px;
-width: 10rem;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  border-radius: 15px;
+  align-items: center;
+  text-align: center;
+  background: #CF1C84;
+  color:#fff;
+  padding: 16px 27px;
+  width: 12rem;
 
-@media (min-width:425px) and (max-width:600px) {
-    font-size: 15px;
-    padding: 12px 12px;
-    width: 7rem;
-}
+  @media (min-width:425px) and (max-width:600px) {
+      font-size: 15px;
+      padding: 12px 12px;
+      width: 8rem;
+  }
 
-@media (max-width:425px){
-    width: -webkit-fill-available;
-}
-
+  @media (max-width:425px){
+      width: -webkit-fill-available;
+  }
 `;
 
 const CancelButtons = styled(FooterButtons)`

@@ -38,7 +38,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
       });
       setIsFaucetVisible(!hasEnoughPushToken);
     })();
-  }, []);
+  }, [noOfPushTokensToCheck]);
 
   return (
     <>
