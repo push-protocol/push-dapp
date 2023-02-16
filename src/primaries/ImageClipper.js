@@ -14,7 +14,7 @@ import Resizer from "react-image-file-resizer";
 
 const ImageClipper = forwardRef((props, ref) => {
   //   const [imageSrc, setImageSrc] = useState(null);
-  const { imageSrc, onImageCropped } = props;
+  const { imageSrc, onImageCropped, width,height } = props;
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -134,8 +134,8 @@ const ImageClipper = forwardRef((props, ref) => {
           // objectFit="vertical-cover"
           style={{
             containerStyle: {
-              width: "250px",
-              height: "250px",
+              width: width ? width : "250px",
+              height: height? height : "250px",
               position: "relative",
               borderRadius: "20px",
             },

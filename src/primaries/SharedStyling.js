@@ -634,7 +634,8 @@ export const TextField = styled.textarea`
   outline: ${(props) => props.outline || "none"};
   overflow: ${(props) => props.overflow || "hidden"};
   position: relative;
-  resize: vertical;
+  resize: ${(props)=>props.resize || "vertical"};
+  // resize: vertical;
 
   &:focus {
     border: ${(props) => props.focusBorder || ""};
