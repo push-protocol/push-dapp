@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
+import axios from "axios";
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
@@ -28,6 +29,7 @@ import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
 import { MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from 'config';
@@ -35,6 +37,7 @@ import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import InfoImage from "../assets/info.svg";
 import VerifiedTooltipContent from './VerifiedTooltipContent';
+import { IPFSGateway } from 'helpers/IpfsHelper';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -65,6 +68,10 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(channelObject.channel);
   const [tooltTipHeight, setToolTipheight] = React.useState(0);
+  const [channelIcon, setChannelIcon] = React.useState("");
+  const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
+  const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
+  const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
   
@@ -80,6 +87,46 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
   }, [pushAdminAddress, account])
+
+  const fetchChannelJsonWithBlock = async () => {
+    try {
+      const channelJson = await ChannelsDataStore.instance.getChannelJsonStartBlockAsync(channelObject.channel);
+      return channelJson;
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  useEffect(async () => {
+    if(!channelObject.ipfshash) return;
+
+    const IPFS_GATEWAY = IPFSGateway;
+    const url = IPFS_GATEWAY + channelObject.ipfshash;
+    const response = await axios.get(url);
+
+    setChannelObjectFromHash(response.data);
+    setChannelIcon(response.data.icon)
+  }, [channelObject]);
+
+  useEffect(async () => {
+    if(!channelObject.channel) return;
+    
+    const channelJsonStartBlock = await fetchChannelJsonWithBlock();
+    setChannelObjectStartBlock(channelJsonStartBlock);
+  }, [channelObject.channel]);
+
+  useEffect(() => {
+    if(Object.keys(channelObjectFromHash).length == 0 || Object.keys(channelObjectStartBlock).length == 0) return;
+
+    let isChanged = false;
+    const propertiesToBeChecked = ["name", "icon", "info"];
+    propertiesToBeChecked.forEach((property) => {
+      if(channelObjectFromHash[property] != channelObjectStartBlock[property])
+        isChanged = true;
+    })
+    
+    setShowChannelChangedWarning(isChanged);
+  }, [channelObjectFromHash, channelObjectStartBlock])
 
   useEffect(async () => {
     if (!channelObject || !channelObject.channel) return;
@@ -322,7 +369,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             cta: '',
             title: channelObject.info,
             message: `Welcome to ${channelObject.name} Channel. From now onwards, you'll be getting notifications from this channel`,
-            icon: channelObject.icon,
+            icon: channelIcon,
             url: channelObject.url,
             sid: '',
             app: channelObject.name,
@@ -518,7 +565,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 height="100%"
               />
             ) : (
-              <ChannelLogoImg src={`${channelObject.icon}`} />
+              <ChannelLogoImg src={`${channelIcon}`} />
             )}
           </ChannelLogoInner>
         </ChannelLogoOuter>
@@ -538,44 +585,46 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             >
 
               <Span style={{ display: 'flex', alignItems: 'center' }}>
-                <Tooltip
-                  wrapperProps={{
-                    width: "fit-content",
-                    maxWidth: "fit-content",
-                    minWidth: "fit-content",
-                    // zIndex: "10",
-                  }}
-                  placementProps={
-                    tooltTipHeight < 200 ? {
-                      background: "none",
-                      // bottom: "25px",
-                      top: "20px",
-                      // right: "-175px",
-                      left: "5px"
-                    } : {
-                      background: "none",
-                      bottom: "25px",
-                      // top: "20px",
-                      // right: "-175px",
-                      left: "5px"
-                    }
-                  }
-                  tooltipContent={
-                    <UpdateChannelTooltipContent
-                      height={tooltTipHeight}
-                      channelName='Ethereum Push Notification Service'
-                      channelDescription='The channel provides useful information, notifications, etc to all the users of the EPNS platform.'
-                      channelLogoSrc={`${channelObject.icon}`}
-                    />}
-                >
-                  <div
-                    onMouseEnter={() => {
-                      handleHeight(channelObject.channel);
+                {showChannelChangedWarning &&
+                  <Tooltip
+                    wrapperProps={{
+                      width: "fit-content",
+                      maxWidth: "fit-content",
+                      minWidth: "fit-content",
+                      // zIndex: "10",
                     }}
+                    placementProps={
+                      tooltTipHeight < 250 ? {
+                        background: "none",
+                        // bottom: "25px",
+                        top: "20px",
+                        // right: "-175px",
+                        left: "5px"
+                      } : {
+                        background: "none",
+                        bottom: "25px",
+                        // top: "20px",
+                        // right: "-175px",
+                        left: "5px"
+                      }
+                    }
+                    tooltipContent={
+                      <UpdateChannelTooltipContent
+                        height={tooltTipHeight}
+                        channelName={channelObjectStartBlock.name}
+                        channelDescription={channelObjectStartBlock.info}
+                        channelLogoSrc={channelObjectStartBlock.icon}
+                      />}
                   >
-                    <ImageInfo src={InfoImage} />
-                  </div>
-                </Tooltip>
+                    <div
+                      onMouseEnter={() => {
+                        handleHeight(channelObject.channel);
+                      }}
+                    >
+                      <ImageInfo src={InfoImage} />
+                    </div>
+                  </Tooltip>
+                }
 
                 {channelObject.name}
 
@@ -591,7 +640,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         minWidth: "fit-content",
                       }}
                       placementProps={
-                        tooltTipHeight < 150 ? {
+                        tooltTipHeight < 160 ? {
                           background: "none",
                           top: "20px", //for lower displaying
                           left: "7px",

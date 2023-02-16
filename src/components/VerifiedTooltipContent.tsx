@@ -7,7 +7,7 @@ const VerifiedTooltipContent = ({
   height
 }) => {
     return (
-        <Container style={{borderRadius: height < 150 ? "0.125rem 1rem 1rem 1rem" : "1rem 1rem 1rem 0.125rem"}}>
+        <Container style={{borderRadius: height < 160 ? "0.125rem 1rem 1rem 1rem" : "1rem 1rem 1rem 0.125rem"}}>
             <Heading>Verified By</Heading>
             <Logo src={PushLogo}/>
         </Container>
