@@ -14,7 +14,7 @@ export const ReceivedMessageWrapper = (props): JSX.Element => {
         position="relative"
         left={props?.isGroup ? '34px' : '0px'}
       >
-        {props?.isGroup && (
+        {props?.isGroup && props?.profilePicture && props.msgType !== 'Intent' && (
           <ItemVV2
             height="100%"
             maxWidth="36px"
@@ -34,7 +34,7 @@ export const ReceivedMessageWrapper = (props): JSX.Element => {
           </ItemVV2>
         )}
         <ItemVV2 alignItems="flex-start">
-          {props?.isGroup && (
+          {props?.isGroup && props.msgType !== 'Intent'&& (
             <SpanV2
               position="relative"
               fontSize="15px"

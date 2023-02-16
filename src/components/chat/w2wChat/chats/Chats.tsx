@@ -116,6 +116,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               isGroup={isGroup}
               sender={ensName ? ensName : walletAddress}
               profilePicture={profilePicture}
+              msgType={msg.messageType}
             >
               <ReceivedMessage left={isGroup ? '8px' : '34px'}>
                 {msg.messageContent.split('\n').map((str) => (
@@ -133,6 +134,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             isGroup={isGroup}
             sender={ensName ? ensName : walletAddress}
             profilePicture={profilePicture}
+            msgType={msg.messageType}
           >
             <IntentMessage left={isGroup ? '8px' : '34px'}>
               <MessageText>
