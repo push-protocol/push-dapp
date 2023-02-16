@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
-import { ethers } from 'ethers';
-import { useWeb3React } from '@web3-react/core';
+import React from 'react';
+
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -10,11 +9,9 @@ import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg'
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
-import { caip10ToWallet } from 'helpers/w2w';
 import Dropdown from 'components/Dropdown';
 
 export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setShowMoreOption, dropdownRef }) => {
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
 
   return (
@@ -27,10 +24,10 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
           overflow="hidden"
           margin="0px 12px 0px 0px"
         >
-          <ImageV2 src={member?.image} />
+          <ImageV2 height="100%" objectFit="cover" src={member?.image} />
         </ItemVV2>
         <SpanV2
-          fontSize="18px"
+          fontSize="15px"
           fontWeight="400"
           color={theme.modalProfileTextColor}
         >
@@ -43,23 +40,23 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
             background="#F4DCEA"
             color="#D53A94"
             borderRadius="8px"
-            padding="4px 10px"
+            padding="6px"
             fontWeight="500"
-            fontSize="12px"
-            lineHeight="16.8px"
+            fontSize="10px"
           >
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallets) !== account && (
+        {/* {caip10ToWallet(member?.wallets) !== account && ( */}
           <ItemVV2
-            maxWidth="40px"
+            maxWidth="4px"
+            padding="0 20px 0 0"
             onClick={() => setShowMoreOption(member?.wallets)}
             style={{ cursor: 'pointer' }}
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
-        )}
+        {/* )} */}
       </ItemHV2>
       {showMoreOption == member?.wallets && (
         <DropdownContainer ref={dropdownRef}>

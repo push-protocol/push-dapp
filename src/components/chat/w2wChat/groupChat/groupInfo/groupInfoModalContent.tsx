@@ -109,12 +109,15 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
         >
           <ItemVV2
             width="64px"
+            height="64px"
             maxWidth="64px"
             borderRadius="16px"
             overflow="hidden"
             margin="0px 16px 0px 0px"
           >
             <ImageV2
+              height="100%"
+              objectFit="cover"
               src={currentChat?.groupInformation?.groupImage}
               alt="Group Image"
             />
@@ -139,7 +142,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 
         <DescriptionContainer
           alignItems="flex-start"
-          margin="0px 0px 16px 0px"
+          margin="0px 0px 18px 0px"
         >
           <SpanV2
             fontSize="18px"
@@ -193,7 +196,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             <AddMember />
             <SpanV2
               color={theme.modalProfileTextColor}
-              margin="0px 0px 0px 15.5px"
+              margin="0px  14px"
               fontSize="18px"
               fontWeight="400"
             >
@@ -260,7 +263,7 @@ const AddWalletContainer = styled(ItemHV2)`
   border: 1px solid ${(props) => props.theme.default.border};
   border-radius: 16px;
   padding: 15px 24px;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
   cursor:pointer;
 `;
 
