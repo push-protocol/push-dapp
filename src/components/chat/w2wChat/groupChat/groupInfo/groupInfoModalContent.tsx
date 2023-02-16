@@ -271,6 +271,7 @@ const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  padding-right:3px;
   align-items: center;
   min-width: 445px;
   max-height: 280px;
