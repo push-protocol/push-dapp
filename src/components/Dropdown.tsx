@@ -10,7 +10,7 @@ import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
 
 export type DropdownValueType = {
   id: number,
-  value: string,
+  value?: string,
   title: string,
   icon: string,
   function: () => void,

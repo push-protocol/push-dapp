@@ -4,58 +4,19 @@ import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
-import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
-import Message from 'assets/chat/group-chat/chat.svg';
-import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
-import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
-import Remove from 'assets/chat/group-chat/remove.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
+import { caip10ToWallet } from 'helpers/w2w';
 import Dropdown from 'components/Dropdown';
 
-export const ProfileCard = ({ key, member, isAccountOwnerAdmin }) => {
-  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
-  const dropdownRef = React.useRef<any>(null);
+export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setShowMoreOption, dropdownRef }) => {
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const theme = useTheme();
-  useClickAway(dropdownRef, () => setShowMoreOption(null));
 
-  const messageUser = () => {
-    console.log('messaging');
-    setShowMoreOption(null);
-  };
-
-  const makeGroupAdmin = () => {
-    console.log('make group admin');
-    setShowMoreOption(null);
-  };
-
-  const dismissGroupAdmin = () => {
-    console.log('make group admin');
-    setShowMoreOption(null);
-  };
-
-  const removeMember = () => {
-    console.log('remove group admin');
-    setShowMoreOption(null);
-  };
-
-  const memberDropdown = [
-    { id: 'message_user', value: '', title: 'Message user', icon: Message, function: () => messageUser() },
-  ];
-  const ownerDropdown = [
-    { title: 'Message user', icon: Message, function: () => messageUser() },
-    { title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
-    { title: 'Remove', icon: Remove, function: () => removeMember() },
-  ];
-  const adminDropdown = [
-    { title: 'Message user', icon: Message, function: () => messageUser() },
-    { title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { title: 'Remove', icon: Remove, function: () => removeMember() },
-  ];
   return (
     <ProfileCardItem key={key}>
       <ItemHV2 justifyContent="flex-start">
@@ -90,24 +51,20 @@ export const ProfileCard = ({ key, member, isAccountOwnerAdmin }) => {
             Admin
           </SpanV2>
         )}
-        <ItemVV2
-          maxWidth="40px"
-          onClick={() => setShowMoreOption(member?.wallets)}
-          style={{ cursor: 'pointer' }}
-        >
-          {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
-        </ItemVV2>
+        {caip10ToWallet(member?.wallets) !== account && (
+          <ItemVV2
+            maxWidth="40px"
+            onClick={() => setShowMoreOption(member?.wallets)}
+            style={{ cursor: 'pointer' }}
+          >
+            {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
+          </ItemVV2>
+        )}
       </ItemHV2>
       {showMoreOption == member?.wallets && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
-            dropdownValues={
-              member?.isAdmin && isAccountOwnerAdmin
-                ? ownerDropdown
-                : isAccountOwnerAdmin
-                ? adminDropdown
-                : memberDropdown
-            }
+            dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>

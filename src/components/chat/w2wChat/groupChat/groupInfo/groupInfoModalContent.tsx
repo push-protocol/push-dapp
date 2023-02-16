@@ -11,22 +11,66 @@ import { ModalInnerComponentType } from 'hooks/useModal';
 import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
+import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
+import Message from 'assets/chat/group-chat/chat.svg';
+import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
+import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
+import Remove from 'assets/chat/group-chat/remove.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
-import { ProfileCard } from './groupInfo/ProfileCard';
+import { ProfileCard } from './ProfileCard';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
     (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
   );
+  const dropdownRef = React.useRef<any>(null);
+  useClickAway(dropdownRef, () => setShowMoreOption(null));
 
   const theme = useTheme();
 
   const handleClose = () => onClose();
+
+  const messageUser = () => {
+    console.log('messaging');
+    setShowMoreOption(null);
+  };
+
+  const makeGroupAdmin = () => {
+    console.log('make group admin');
+    setShowMoreOption(null);
+  };
+
+  const dismissGroupAdmin = () => {
+    console.log('make group admin');
+    setShowMoreOption(null);
+  };
+
+  const removeMember = () => {
+    console.log('remove group admin');
+    setShowMoreOption(null);
+  };
+
+  const memberDropdown = [
+    { id: 'message_user', value: '', title: 'Message user', icon: Message, function: () => messageUser() },
+  ];
+
+  const ownerDropdown = [
+    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
+    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() },
+  ];
+
+  const adminDropdown = [
+    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
+    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() },
+  ];
 
   // to close the modal upon a click on backdrop
   const containerRef = React.useRef(null);
@@ -144,13 +188,35 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
+        {isAccountOwnerAdmin && currentChat?.groupInformation?.groupMembers?.length < 10 && (
+          <AddWalletContainer>
+            <AddMember />
+            <SpanV2
+              color={theme.modalProfileTextColor}
+              margin="0px 0px 0px 15.5px"
+              fontSize="18px"
+              fontWeight="400"
+            >
+              Add more wallets
+            </SpanV2>
+          </AddWalletContainer>
+        )}
         <ProfileContainer>
           {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
             return (
               <ProfileCard
                 key={index}
                 member={member}
-                isAccountOwnerAdmin={isAccountOwnerAdmin}
+                dropdownValues={
+                  member?.isAdmin && isAccountOwnerAdmin
+                    ? ownerDropdown
+                    : isAccountOwnerAdmin
+                    ? adminDropdown
+                    : memberDropdown
+                }
+                showMoreOption={showMoreOption}
+                setShowMoreOption={setShowMoreOption}
+                dropdownRef={dropdownRef}
               />
             );
           })}
@@ -161,11 +227,10 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 };
 
 const ModalContainer = styled.div`
-  max-height: 500px;
+  max-height: 517px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  border-radius: 16px;
   background-color: ${(props) => props.background};
   padding: 0px;
   margin: 0px;
@@ -189,6 +254,13 @@ const InfoContainer = styled(ItemHV2)`
   @media (max-width: 480px) {
     min-width: 300px;
   }
+`;
+
+const AddWalletContainer = styled(ItemHV2)`
+  border: 1px solid ${(props) => props.theme.default.border};
+  border-radius: 16px;
+  padding: 15px 24px;
+  margin-bottom: 8px;
 `;
 
 const ProfileContainer = styled.div`

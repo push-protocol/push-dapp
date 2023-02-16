@@ -25,7 +25,7 @@ import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import useToast from 'hooks/useToast';
-import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfoModalContent';
+import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
 import useModalBlur from 'hooks/useModalBlur';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 
