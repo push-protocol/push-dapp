@@ -158,10 +158,6 @@ function CreateChannel() {
     // Check everything in order
     // skip this for now
 
-    e.preventDefault();
-
-   
-
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
 
@@ -404,49 +400,27 @@ function CreateChannel() {
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
                onClick={() => setStepFlow(0)}
                >
-                <div>Staking Info</div>
+                <div>Channel Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
               onClick={() => setStepFlow(1)}
               >
-                <div>Channel Info</div>
+                <div>Upload Logo</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
                onClick={() => setStepFlow(2)}
                >
-                <div>Upload Logo</div>
+                <div>Staking Info</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
               </Tab>
               <Line />
             </ItemHere>
           </Section>)}
 
-          {/* Stake Fees Section */}
-          {stepFlow === 0 && (
-            <ItemVV2>
-              <StakingInfo
-                channelStakeFees={channelStakeFees}
-                setStakeFeesChoosen={setStakeFeesChoosen}
-                setStepFlow={setStepFlow}
-                setProcessingInfo={setProcessingInfo}
-              />
-
-              {processing === 1 ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.STANDALONE}
-                  overlay={LOADER_OVERLAY.ONTOP}
-                  blur={5}
-                  title="Channel Creation in Progress"
-                  completed={false}
-                />
-              ) : null}
-            </ItemVV2>
-          )}
-
           {/* Channel Entry */}
-          {stepFlow === 1 && (
+          {stepFlow === 0 && (
             <ItemVV2>
               <ChannelInfo
                 setStepFlow={setStepFlow}
@@ -466,22 +440,22 @@ function CreateChannel() {
                 setTxStatus={setTxStatus}
                 // errorInfo={errorInfo}
                 // isAllFilledAndValid={isAllFilledAndValid}
-              />
+                />
 
               {processing === 1 ? (
                 <LoaderSpinner
-                  type={LOADER_TYPE.STANDALONE}
-                  overlay={LOADER_OVERLAY.ONTOP}
-                  blur={5}
-                  title="Channel Creation in Progress"
-                  completed={false}
+                type={LOADER_TYPE.STANDALONE}
+                overlay={LOADER_OVERLAY.ONTOP}
+                blur={5}
+                title="Channel Creation in Progress"
+                completed={false}
                 />
-              ) : null}
+                ) : null}
             </ItemVV2>
           )}
 
           {/* Image Upload Section */}
-          {stepFlow === 2 && (
+          {stepFlow === 1 && (
             <ItemVV2>
               <UploadLogo
                 croppedImage={croppedImage}
@@ -492,8 +466,30 @@ function CreateChannel() {
                 setView={setView}
                 setImageSrc={setImageSrc}
                 setProcessingInfo={setProcessingInfo}
-                handleCreateChannel={handleCreateChannel}
                 logoInfo={logoInfo}
+                setStepFlow={setStepFlow}
+                />
+
+              {processing === 1 ? (
+                <LoaderSpinner
+                type={LOADER_TYPE.STANDALONE}
+                overlay={LOADER_OVERLAY.ONTOP}
+                blur={5}
+                title="Channel Creation in Progress"
+                completed={false}
+                />
+                ) : null}
+            </ItemVV2>
+          )}
+
+          {/* Stake Fees Section */}
+          {stepFlow === 2 && (
+            <ItemVV2>
+              <StakingInfo
+                channelStakeFees={channelStakeFees}
+                setStakeFeesChoosen={setStakeFeesChoosen}
+                setProcessingInfo={setProcessingInfo}
+                handleCreateChannel={handleCreateChannel}
               />
 
               {processing === 1 ? (

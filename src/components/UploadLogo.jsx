@@ -29,8 +29,8 @@ const UploadLogo = ({
   setView,
   setImageSrc,
   setProcessingInfo,
-  handleCreateChannel,
-  logoInfo
+  logoInfo,
+  setStepFlow
 }) => {
   const childRef = useRef();
   const { chainId, library, account } = useWeb3React();
@@ -168,12 +168,15 @@ const UploadLogo = ({
         </Item>): (
 
               <FormSubmision
-              flex="1"
-              direction="column"
-              margin="0px"
-              justify="center"
-              size="1.1rem"
-              onSubmit={handleCreateChannel}
+                flex="1"
+                direction="column"
+                margin="0px"
+                justify="center"
+                size="1.1rem"
+                onSubmit={(e)=>{
+                  e.preventDefault();
+                  setStepFlow(2);
+                }}
               >
               <Item
                 width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto"
@@ -199,7 +202,7 @@ const UploadLogo = ({
                       line="22px"
                       size="16px"
                       type="submit"
-                      value="Create Channel"
+                      value="Next"
                     />
                   )}
                 </Button>
