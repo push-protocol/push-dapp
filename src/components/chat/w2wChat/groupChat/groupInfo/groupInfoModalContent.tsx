@@ -70,6 +70,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
         pgpPrivateKey: connectedUser?.privateKey,
         env: appConfig.appEnv,
       });
+      handleClose();
       console.log('Updated group', updateResponse);
     } catch (e) {
       console.log('Error while adding admin', e);
@@ -77,7 +78,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const dismissGroupAdmin = async() => {
+  const dismissGroupAdmin = async () => {
     let selectedMemberAddress = caip10ToWallet(showMoreOption);
     const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
 
@@ -96,6 +97,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
         pgpPrivateKey: connectedUser?.privateKey,
         env: appConfig.appEnv,
       });
+      handleClose();
       console.log('Updated group', updateResponse);
     } catch (e) {
       console.log('Error while dismissing admin', e);
