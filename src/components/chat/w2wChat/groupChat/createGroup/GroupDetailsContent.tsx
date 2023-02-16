@@ -69,7 +69,7 @@ export const GroupDetailsContent = ({
 
   return (
     <ThemeProvider theme={themes}>
-      <Container>
+      <Container >
         <GroupIconContainer onClick={handleUpload}>
           {groupImageData ? (
             <ImageV2
@@ -186,6 +186,7 @@ export const GroupDetailsContent = ({
 
 const Container = styled.div`
   padding: 42px 26px 0px 26px;
+  overflow-y:auto;
 `;
 
 const GroupIconContainer = styled.div`
