@@ -50,13 +50,13 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
   return 'Please accept to enable push chat from this wallet';
 };
 
-export const covertToWalletAddressList = (memberList) => {
+export const convertToWalletAddressList = (memberList) => {
   return memberList?.map((member) => member.wallets);
 };
 
 export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove: boolean): Array<string> => {
   const existingAdmins = feed?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
-  const groupAdminList = covertToWalletAddressList(existingAdmins);
+  const groupAdminList = convertToWalletAddressList(existingAdmins);
   if (!toRemove) {
     return [...groupAdminList, walletAddress];
   } else {

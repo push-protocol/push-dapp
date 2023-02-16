@@ -24,7 +24,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import { appConfig } from 'config';
-import { getUpdatedAdminList, getWalletAddressList } from '../../../../../helpers/w2w/groupChat';
+import { convertToWalletAddressList, getUpdatedAdminList } from '../../../../../helpers/w2w/groupChat';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
@@ -47,7 +47,7 @@ console.log(currentChat)
   };
 
   const makeGroupAdmin = async () => {
-    const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
+    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers);
     const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,false);
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
@@ -70,7 +70,7 @@ console.log(currentChat)
   };
 
   const dismissGroupAdmin = async () => {
-    const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
+    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers);
     const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,true);
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
