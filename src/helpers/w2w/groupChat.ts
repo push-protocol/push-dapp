@@ -26,7 +26,6 @@ export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: bool
       };
     } else {
       if (isIntent) {
-        console.log('in intent');
         return {
           type: 'Text',
           message: 'Group Invite Received',
