@@ -261,6 +261,7 @@ const AddWalletContainer = styled(ItemHV2)`
   border-radius: 16px;
   padding: 15px 24px;
   margin-bottom: 8px;
+  cursor:pointer;
 `;
 
 const ProfileContainer = styled.div`
