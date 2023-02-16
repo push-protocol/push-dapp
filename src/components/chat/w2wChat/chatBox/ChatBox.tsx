@@ -550,6 +550,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
                 src={imageSource}
                 borderRadius="100%"
                 overflow="hidden"
+                objectFit="cover"
               />
             </ItemHV2>
 

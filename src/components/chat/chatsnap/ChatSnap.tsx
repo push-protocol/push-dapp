@@ -111,6 +111,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           height="100%"
           alt={`Profile pic of ${username}`}
           src={pfp}
+          objectFit="cover"
         />
       </ItemVV2>
 
