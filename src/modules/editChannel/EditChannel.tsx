@@ -18,7 +18,6 @@ import GLOBALS, { device } from "config/Globals";
 import { Button } from '../../components/SharedStyling';
 import EditChannelForms from './EditChannelForms';
 import useModal from 'hooks/useModal';
-import UploadLogoModalContent from './UploadLogoModalContent';
 import useToast from 'hooks/useToast';
 import { useClickAway } from 'react-use';
 import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';

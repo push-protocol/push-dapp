@@ -6,11 +6,13 @@ import { ButtonV2, ImageV2, SpanV2 } from './reusables/SharedStylingV2';
 import swapIcon from '../assets/icons/swapIcon.svg';
 
 // Internal Configs
-import { addresses, appConfig } from 'config';
+import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
 import { useWeb3React } from '@web3-react/core';
+import useModal from 'hooks/useModal';
+import { UniswapWidgetModal } from './UniswapWidget';
 
 type FaucetInfoType = {
   onMintPushToken: (noOfTokens: number) => void;
@@ -23,6 +25,12 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
+
+  const {
+    isModalOpen: isUniswapWidgetModalOpen,
+    showModal: showUniswapWidgetModal,
+    ModalComponent: UniswapWidgetModalComponent,
+  } = useModal();
 
   useEffect(() => {
     /* 
@@ -50,7 +58,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
               : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
           </InfoText>
           {isProd ? (
-            <SwapTokensButton>
+            <SwapTokensButton onClick={showUniswapWidgetModal}>
               <ImageV2
                 width="12px"
                 height="12px"
@@ -82,6 +90,13 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
       ) : (
         ''
       )}
+      {isUniswapWidgetModalOpen &&
+        <UniswapWidgetModalComponent 
+          InnerComponent={UniswapWidgetModal} 
+          InnerComponentProps={{defaultPushTokenAmount: noOfPushTokensToCheck}} 
+          extraOuterPadding="0px"
+        />
+      }
     </>
   );
 };
