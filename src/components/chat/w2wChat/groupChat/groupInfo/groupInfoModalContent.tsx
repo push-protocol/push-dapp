@@ -21,6 +21,7 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ProfileCard } from './ProfileCard';
+import { DropdownValueType } from '../../../../Dropdown';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
@@ -56,20 +57,20 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const memberDropdown = [
-    { id: 'message_user', value: '', title: 'Message user', icon: Message, function: () => messageUser() },
+  const memberDropdown:DropdownValueType[] = [
+    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
 
-  const ownerDropdown = [
+  const ownerDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(),textColor:'#ED5858' },
   ];
 
-  const adminDropdown = [
+  const adminDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() ,textColor:'#ED5858'},
   ];
 
   // to close the modal upon a click on backdrop
