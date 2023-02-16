@@ -51,7 +51,8 @@ export interface IGroup {
     groupName: string,
     groupDescription: string,
     groupCreator: string,
-    isPublic: boolean
+    isPublic: boolean,
+    chatId:string
   }
   export interface UserInfo {
     wallets: string,

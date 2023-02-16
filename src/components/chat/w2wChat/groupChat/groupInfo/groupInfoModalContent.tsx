@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core';
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
@@ -20,10 +21,13 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
+import { appConfig } from 'config';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
@@ -41,13 +45,61 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const makeGroupAdmin = () => {
-    console.log('make group admin');
+  const getWalletAddressList = (memberList) => {
+    return memberList?.map((member) => member.wallets);
+  };
+
+  const makeGroupAdmin = async () => {
+    let selectedMemberAddress = caip10ToWallet(showMoreOption);
+    const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
+    const memberToBecomeAdmin = currentChat?.groupInformation?.groupMembers?.filter(
+      (member) => caip10ToWallet(member.wallets) == selectedMemberAddress
+    );
+    const groupAdminList = getWalletAddressList(existingAdmins);
+    const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
+    const newAdminList = [...groupAdminList, memberToBecomeAdmin[0].wallets];
+    try {
+      const updateResponse = await PushAPI.chat.updateGroup({
+        chatId: currentChat?.groupInformation?.chatId,
+        groupName: currentChat?.groupInformation?.groupName,
+        groupDescription: currentChat?.groupInformation?.groupDescription,
+        groupImage: currentChat?.groupInformation?.groupImage,
+        members: groupMemberList,
+        admins: newAdminList,
+        account: account!,
+        pgpPrivateKey: connectedUser?.privateKey,
+        env: appConfig.appEnv,
+      });
+      console.log('Updated group', updateResponse);
+    } catch (e) {
+      console.log('Error while adding admin', e);
+    }
     setShowMoreOption(null);
   };
 
-  const dismissGroupAdmin = () => {
-    console.log('make group admin');
+  const dismissGroupAdmin = async() => {
+    let selectedMemberAddress = caip10ToWallet(showMoreOption);
+    const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
+
+    const groupAdminList = getWalletAddressList(existingAdmins);
+    const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
+    const newAdminList = groupAdminList.filter((wallet) => caip10ToWallet(wallet) !== selectedMemberAddress);
+    try {
+      const updateResponse = await PushAPI.chat.updateGroup({
+        chatId: currentChat?.groupInformation?.chatId,
+        groupName: currentChat?.groupInformation?.groupName,
+        groupDescription: currentChat?.groupInformation?.groupDescription,
+        groupImage: currentChat?.groupInformation?.groupImage,
+        members: groupMemberList,
+        admins: newAdminList,
+        account: account!,
+        pgpPrivateKey: connectedUser?.privateKey,
+        env: appConfig.appEnv,
+      });
+      console.log('Updated group', updateResponse);
+    } catch (e) {
+      console.log('Error while dismissing admin', e);
+    }
     setShowMoreOption(null);
   };
 
@@ -56,9 +108,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const memberDropdown = [
-    { id: 'message_user', value: '', title: 'Message user', icon: Message, function: () => messageUser() },
-  ];
+  const memberDropdown = [{ id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }];
 
   const ownerDropdown = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
@@ -264,14 +314,14 @@ const AddWalletContainer = styled(ItemHV2)`
   border-radius: 16px;
   padding: 15px 24px;
   margin-bottom: 15px;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding-right:3px;
+  padding-right: 3px;
   align-items: center;
   min-width: 445px;
   max-height: 280px;
