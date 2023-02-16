@@ -13,7 +13,7 @@ import { getHasEnoughPushToken } from 'helpers';
 import { useWeb3React } from '@web3-react/core';
 
 type FaucetInfoType = {
-  onMintPushToken: (noOfTokens: number) => void;
+  onMintPushToken: (noOfTokens: number) => Promise<void>;
   noOfPushTokensToCheck: number;
   containerProps?: {};
 };
@@ -23,21 +23,25 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
+  
+  /* 
+    checks whether address has enough PUSH or not
+    if yes then hide the faucet component
+    otherwise we show it
+  */
+  const checkSetFaucetVisibility = async () => {
+    const hasEnoughPushToken = await getHasEnoughPushToken({
+      address: account,
+      provider: library,
+      noOfPushTokensToCheck,
+    });
+    setIsFaucetVisible(!hasEnoughPushToken);
+  };
 
   useEffect(() => {
-    /* 
-      checks whether address has enough PUSH or not
-      if yes then we dont show the faucet component
-      otherwise we do
-    */
-    (async () => {
-      const hasEnoughPushToken = await getHasEnoughPushToken({
-        address: account,
-        provider: library,
-        noOfPushTokensToCheck,
-      });
-      setIsFaucetVisible(!hasEnoughPushToken);
-    })();
+    (async ()=>{
+        await checkSetFaucetVisibility();
+    })()
   }, [noOfPushTokensToCheck]);
 
   return (
@@ -69,8 +73,9 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
                 <PoolShare>Goerli ETH Faucet</PoolShare>
               </AnchorLink>
               <Minter
-                onClick={() => {
-                  onMintPushToken(1000);
+                onClick={async () => {
+                  await onMintPushToken(1000);
+                  await checkSetFaucetVisibility();
                 }}
               >
                 <NumberIcon>2</NumberIcon>
