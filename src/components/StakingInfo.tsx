@@ -16,7 +16,7 @@ import { useDeviceWidthCheck } from "hooks";
 import { device } from "config/Globals";
 import { mintPushToken } from "helpers";
 
-const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProcessingInfo}) => {
+const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { library, account } = useWeb3React();
 
   const isMobile = useDeviceWidthCheck(600)
@@ -53,7 +53,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
             padding="20px 10px"
             onClick={() => {
               setStakeFeesChoosen(true);
-              setStepFlow(1);
+              handleCreateChannel();
             }}
           >
             <Span
@@ -63,7 +63,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
               line="22px"
               size="16px"
             >
-              Next
+              Create Channel
             </Span>
           </Button>
         </Item>
