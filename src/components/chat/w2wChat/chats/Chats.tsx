@@ -108,11 +108,6 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
                   <TextMessage>{str}</TextMessage>
                 ))}
                 <TimeStamp>{date}</TimeStamp>
-                {/* {messageBeingSent ? (
-                  <p>✔️</p>
-                ) : (
-                  <p>✔️ ✔️</p>
-                )} */}
               </SenderMessage>
             </SentMessageWrapper>
           ) : (
@@ -349,7 +344,6 @@ const TimeStamp = styled(ItemHV2)`
 
 const MessageText = styled(SpanV2)`
   font-size: 14px;
-  // max-width : 13rem;
   font-weight: 400;
   padding: 0px 20px 0px 0px;
   text-align: left;
@@ -373,8 +367,6 @@ const ReceivedMessage = styled.div`
   display: flex;
   justify-content: flex-start;
   color: #000000;
-  // flex-direction: column;
-  // align-items: baseline;
   flex-direction: row;
   align-items: center;
   padding: 9px 17px;
