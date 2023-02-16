@@ -58,6 +58,7 @@ export interface IGroup {
     publicKey: string,
     name: string,
     image:string,
+    isAdmin:boolean,
   }
 export interface Feeds {
     // This property contains all the info to be displayed on the sidebar for the other peer's information
@@ -144,6 +145,16 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
+  groupName:string;
+  setGroupName:(value:string)=>void;
+  groupDescription:string;
+  setGroupDescription:(value:string)=>void;
+  groupImage:string;
+  setGroupImage:(value:string)=>void;
+  groupType:string;
+  setGroupType:(value:string)=>void;
+  createGroupState:number;
+  setCreateGroupState:(value:number)=>void;
 }
 
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';

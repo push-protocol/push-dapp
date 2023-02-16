@@ -148,6 +148,8 @@ const themeLight = {
   modalSearchBarBackground:'#FFF',
   blurModalContentBackground:'#FFF',
   modalInputBackgrundColor:'#FFF',
+  modalDescriptionTextColor:'#575D73',
+  modalProfileTextColor:'#1E1E1E',
 
   // Group Profiles
   groupSearchProfilBackground: '#F4F5FA',
@@ -342,7 +344,8 @@ const themeDark = {
   modalSearchBarBackground:'#282A2E',
   blurModalContentBackground:'#2F3137',
   modalInputBackgrundColor:'#282A2E',
-
+  modalDescriptionTextColor:'#787E99',
+  modalProfileTextColor:'#B6BCD6',
 
   // Group Profiles
   groupSearchProfilBackground: '#404650',

@@ -13,6 +13,7 @@ import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
+import { useClickAway } from 'react-use';
 import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
@@ -30,7 +31,11 @@ import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
 import LockSlash from '../../../../assets/LockSlash.png';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
+import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
+import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
+import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
+import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -56,11 +61,10 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props,
   );
 });
 
-const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
+const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const {
     currentChat,
     viewChatBox,
-    searchedUser,
     receivedIntents,
     inbox,
     setActiveTab,
@@ -82,12 +86,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
-  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
+  const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
+  const groupInfoRef = React.useRef<HTMLInputElement>(null);
+  const { connectedUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
   let time = '';
+
+  useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   useEffect(() => {
     setIsGroup(checkIfGroup(currentChat));
@@ -288,7 +296,6 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
   async function ApproveIntent(status: string): Promise<void> {
     setMessageBeingSent(true);
-
     let updatedIntent: any;
     try {
     updatedIntent = await PushAPI.chat.approve({
@@ -562,6 +569,23 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
             >
               {getDisplayName()}
             </SpanV2>
+            {currentChat.groupInformation && (
+              <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
+                <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
+                {showGroupInfo && (
+                  <GroupInfo
+                    onClick={() => {
+                      showGroupInfoModal();
+                      setShowGroupInfo(false);
+                    }}
+                    ref={groupInfoRef}
+                  >
+                    <ItemVV2 maxWidth="32px">{theme.scheme == 'light' ? <Info /> : <InfoDark />}</ItemVV2>
+                    <SpanV2 color={theme.default.secondaryColor}>Group Info</SpanV2>
+                  </GroupInfo>
+                )}
+              </MoreOptions>
+            )}
           </ItemHV2>
 
           <MessageContainer>
@@ -691,7 +715,6 @@ const SpinnerWrapper = styled.div`
   height: 90px;
 `;
 
-
 const ItemLink = styled.a`
   color: ${(props) => props.theme.default.secondaryColor};
   text-decoration: none;
@@ -773,6 +796,28 @@ const MessageContainer = styled(ItemVV2)`
   height: calc(100% - 140px);
 `;
 
+const GroupInfo = styled(ItemHV2)`
+  position: absolute;
+  top: 32px;
+  right: 15px;
+  width: 200px;
+  border: 1px solid ${(props) => props.theme.default.border};
+  background-color: ${(props) => props.theme.default.bg};
+  border-radius: 12px;
+  justify-content: flex-start;
+  gap: 9px;
+  padding: 8px;
+`;
+
+const MoreOptions = styled.div`
+  position: relative;
+  height: 100%;
+  max-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
 
 const Container = styled(Content)`
   box-sizing: border-box;
@@ -902,7 +947,6 @@ const Atag = styled.a`
   margin-bottom: 20px;
 `;
 
-
 const TabletBackButton = styled(ButtonV2)`
   display: none;
 
@@ -910,7 +954,6 @@ const TabletBackButton = styled(ButtonV2)`
     display: initial;
   }
 `;
-
 
 const CustomScrollContent = styled(ScrollToBottom)`
   padding-right: 0px;
@@ -929,6 +972,5 @@ const CustomScrollContent = styled(ScrollToBottom)`
     border-radius: 10px;
   }
 `;
-
 
 export default ChatBox;

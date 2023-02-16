@@ -125,7 +125,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
-            createGroupState={createGroupState}
             groupDescriptionData={groupDescriptionData}
             groupImageData={groupImageData}
             groupTypeObject={groupTypeObject}

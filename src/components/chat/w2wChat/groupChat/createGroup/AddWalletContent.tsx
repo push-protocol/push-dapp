@@ -5,12 +5,11 @@ import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
-
 import { MdError } from 'react-icons/md';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import {  ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
