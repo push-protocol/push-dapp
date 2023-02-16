@@ -30,7 +30,7 @@ import { findObject } from '../../../../../helpers/UtilityHelper';
 export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList }) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { chainId } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
@@ -126,6 +126,10 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
 
     if (findObject(member, memberList, 'wallets')) {
       errorMessage = 'Address is already added'
+    }
+
+    if(member?.wallets === w2wChatHelper.walletToCAIP10({account})){
+      errorMessage = 'Group Creator cannot be added as Member'
     }
 
     if (errorMessage) {
