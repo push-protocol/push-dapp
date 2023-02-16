@@ -78,7 +78,7 @@ export const decryptFeeds = async ({
   connectedUser: ConnectedUser
 }): Promise<Feeds[]> => {
   for (let feed of feeds) {
-    if (feed.msg.encType !== 'PlainText' && feed.msg.encType !== null) {
+    if (feed.msg.encType !== 'PlainText' && feed.msg.encType !== null && feed.msg.messageContent) {
       // To do signature verification it depends on who has sent the message
       let signatureValidationPubliKey: string
       if (feed.msg.fromCAIP10 === connectedUser.wallets.split(',')[0]) {
