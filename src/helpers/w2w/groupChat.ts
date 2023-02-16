@@ -7,8 +7,7 @@ export const checkIfGroup = (feed: Feeds): boolean => {
 };
 
 export const getProfilePicture = (feed: Feeds): string => {
-  if (checkIfGroup(feed))
-    return feed?.groupInformation?.groupImage!;
+  if (checkIfGroup(feed)) return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
 };
 
@@ -17,40 +16,45 @@ export const getName = (feed: Feeds): string => {
   else return feed.wallets?.split(',')[0].toString();
 };
 
-export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boolean) => {
-
+export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: boolean) => {
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
-    if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account})) {
+
+    if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account })) {
       return {
         type: 'Text',
         message: 'Group successfully created!',
       };
     } else {
-
-      if(isIntent){
-        console.log("in intent")
+      if (isIntent) {
         return {
           type: 'Text',
           message: 'Group Invite Received',
         };
-      }else{
+      } else {
         return {
           type: 'Text',
           message: 'Joined group successfully',
         };
       }
-
-      
     }
   }
+
+  //Group is there and feeds are also there in the group but it is an Intent
+  if (checkIfGroup(feed) && isIntent) {
+    return {
+      type: 'Text',
+      message: 'Group Invite Received',
+    };
+  }
+
   return {
     type: feed.msg.messageType,
     message: feed.msg.messageContent,
   };
 };
 
-export const getIntentMessage = (feed:Feeds,isGroup:boolean) =>{
-    if(isGroup)
-     return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
-     return 'Please accept to enable push chat from this wallet';
-}
+export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
+  if (isGroup)
+    return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
+  return 'Please accept to enable push chat from this wallet';
+};
