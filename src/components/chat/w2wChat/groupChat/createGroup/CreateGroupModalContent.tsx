@@ -18,7 +18,7 @@ import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from '../../../../../contexts/ChatUserContext';
 import { appConfig } from '../../../../../config';
 import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -54,12 +54,22 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         groupImage: groupImageData,
         admins: [],
         isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
-        groupCreator: account!,
         account: account!,
         pgpPrivateKey: connectedUser?.privateKey,
         env: appConfig.appEnv
       });
       if (typeof createGroupRes !== 'string') {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Success',
+          toastMessage: 'Group created successfully',
+          toastType: 'SUCCESS',
+          getToastIcon: (size) => (
+            <MdCheckCircle
+              size={size}
+              color="green"
+            />
+          ),
+        });
         handleClose();
       } else {
         createGroupToast.showMessageToast({
@@ -83,13 +93,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer
-        background={themes.modalContentBackground}
-        ref={containerRef}
+        // background={themes.modalContentBackground}
+        // ref={containerRef}
+        style={{
+          padding: createGroupState == 2 ? "20px 17px 32px"  : "20px 6px 32px"
+        }}
       >
         <ItemHV2
-          alignItems="flex-start"
-          justifyContent="space-between"
-          margin="0px 0px 62px 0px"
+          justifyContent={createGroupState == 2 ? "space-between" :  "center"}
+          // margin="0px 0px 62px 0px"
+          align-items="center"
+          
         >
           {createGroupState == 2 && <Back
             onClick={handlePrevious}
@@ -98,13 +112,14 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           <SpanV2
             fontWeight="500"
             fontSize="24px"
-            color={themes.modalMessageColor}
+            color={themes.fontColor}
+            flex="1"
           >
             Create Group
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', marginTop: '8px' }}
+            style={{ cursor: 'pointer' }}
           />
         </ItemHV2>
         {createGroupState == 1 && (
@@ -134,7 +149,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   background-color: ${(props) => props.background};
-  padding: 32px 24px;
+  // padding: 20px 6px 32px 6px;
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

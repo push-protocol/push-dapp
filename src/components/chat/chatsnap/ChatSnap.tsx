@@ -111,6 +111,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           height="100%"
           alt={`Profile pic of ${username}`}
           src={pfp}
+          objectFit="cover"
         />
       </ItemVV2>
 
@@ -150,7 +151,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
             textAlign="start"
             fontWeight="400"
           >
-            {isGroup ? "Group Invitation Received" : ( message )}
+            {message}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>

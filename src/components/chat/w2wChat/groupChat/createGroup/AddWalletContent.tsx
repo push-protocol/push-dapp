@@ -118,12 +118,21 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     setFilteredUserData(null);
   };
 
-  const addMemberToList = (member:User) => {
-    if(findObject(member,memberList,'wallets'))
-    {
+  const addMemberToList = (member: User) => {
+    let errorMessage = '';
+
+    if (memberList?.length >= 9) {
+      errorMessage = 'No More Addresses can be added'
+    }
+
+    if (findObject(member, memberList, 'wallets')) {
+      errorMessage = 'Address is already added'
+    }
+
+    if (errorMessage) {
       searchFeedToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Address is already added',
+        toastMessage: `${errorMessage}`,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -132,100 +141,110 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           />
         ),
       });
+    } else {
+      handleMemberList((prev) => [ member, ...prev]);
     }
-    else{
-    handleMemberList((prev) => [...prev, member]);
-    }
+
     setFilteredUserData('');
+    clearInput();
   };
 
-  const removeMemberFromList = (member:User) => {
+  const removeMemberFromList = (member: User) => {
     const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
     handleMemberList(filteredMembers);
   };
 
+
   return (
     <ThemeProvider theme={theme}>
-      <SearchbarContainer>
-        <LabelContainer>
-          <SpanV2
-            color={theme.modalHeadingColor}
-            fontWeight={500}
-            fontSize="18px"
-          >
-            Add Wallets
-          </SpanV2>
-          <SpanV2
-            color={theme.modalSecondaryTextColor}
-            fontWeight={400}
-            fontSize="14px"
-          >
-            {`${memberList?.length} / ${10 - memberList?.length} Members`}
-          </SpanV2>
-        </LabelContainer>
-        <SearchBarContent onSubmit={handleSearch}>
-          <Input
-            type="text"
-            value={searchedUser}
-            onChange={onChangeSearchBox}
-            placeholder="Search name.eth or 0x123..."
-            color={theme.modalPrimaryTextColor}
-          />
-          <ItemVV2
-            position="absolute"
-            alignItems="flex-end"
-            width="40px"
-            height="24px"
-            top="22px"
-            right="16px"
-          >
-            {searchedUser.length > 0 && <Clear onClick={clearInput} />}
-            {searchedUser.length >= 0 && (
-              <SearchIcon
-                style={{ cursor: 'pointer' }}
-                onClick={handleSearch}
-              />
-            )}
-          </ItemVV2>
-        </SearchBarContent>
-      </SearchbarContainer>
-      {filteredUserData ? (
-        <MemberList marginTop="8px">
-
-          <MemberListContainer
-            memberData={filteredUserData}
-            handleMemberList={addMemberToList}
-            lightIcon = {<AddLight />}
-            darkIcon = {<AddDark />}
-          />
-
-        </MemberList>
-      ) : (
-        <MemberList marginTop="8px">
-          {memberList.map((member, index) => (
+      <Container>
+        <SearchbarContainer>
+          <LabelContainer>
+            <SpanV2
+              color={theme.modalHeadingColor}
+              fontWeight={500}
+              fontSize="18px"
+            >
+              Add Wallets
+            </SpanV2>
+            <SpanV2
+              color={theme.modalSecondaryTextColor}
+              fontWeight={400}
+              fontSize="14px"
+            >
+              {`0${memberList?.length} / 09 Members`}
+            </SpanV2>
+          </LabelContainer>
+          <SearchBarContent onSubmit={handleSearch}>
+            <Input
+              type="text"
+              value={searchedUser}
+              onChange={onChangeSearchBox}
+              placeholder="Search name.eth or 0x123..."
+              color={theme.modalPrimaryTextColor}
+            />
+            <ItemVV2
+              position="absolute"
+              alignItems="flex-end"
+              width="40px"
+              height="24px"
+              top="22px"
+              right="16px"
+            >
+              {searchedUser.length > 0 && <Clear onClick={clearInput} />}
+              {searchedUser.length >= 0 && (
+                <SearchIcon
+                  style={{ cursor: 'pointer' }}
+                  onClick={handleSearch}
+                />
+              )}
+            </ItemVV2>
+          </SearchBarContent>
+        </SearchbarContainer>
+        {filteredUserData ? (
+          <MemberList >
 
             <MemberListContainer
-              key={index}
-              memberData={member}
-              handleMemberList={removeMemberFromList}
-              lightIcon = {<RemoveLight />}
-              darkIcon = {<RemoveDark />}
+              memberData={filteredUserData}
+              handleMemberList={addMemberToList}
+              lightIcon={<AddLight />}
+              darkIcon={<AddDark />}
             />
-          
-          ))}
-        </MemberList>
-      )}
-      <ModalConfirmButton
-        text="Create Group"
-        onClick={() => handleCreateGroup()}
-        isLoading={isLoading}
-        backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
-        color={theme.groupButtonTextColor}
-        border={`1px solid ${theme.modalConfirmButtonBorder}`}
-      />
+
+          </MemberList>
+        ) : (
+          <MultipleMemberList >
+            {memberList.map((member, index) => (
+
+              <MemberListContainer
+                key={index}
+                memberData={member}
+                handleMemberList={removeMemberFromList}
+                lightIcon={<RemoveLight />}
+                darkIcon={<RemoveDark />}
+              />
+
+            ))}
+          </MultipleMemberList>
+        )}
+        <ModalConfirmButton
+          text="Create Group"
+          onClick={() => handleCreateGroup()}
+          isLoading={isLoading}
+          backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
+          color={memberList?.length > 0 ? '#FFF'  : theme.groupButtonTextColor}
+          border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
+          topMargin="60px"
+        />
+
+      </Container>
     </ThemeProvider>
   );
 };
+
+const Container = styled.div`
+  margin-top:62px;
+`;
 
 const SearchbarContainer = styled(ItemVV2)`
   margin-bottom: 8px;
@@ -235,7 +254,7 @@ const LabelContainer = styled(ItemHV2)`
   min-width: 445px;
   justify-content: space-between;
   margin: 0px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   @media (max-width: 480px) {
     min-width: 300px;
   }
@@ -253,11 +272,12 @@ const Input = styled.input`
   flex: 1;
   min-width: 445px;
   height: 48px;
-  padding: 13px 60px 13px 21px;
+  padding: 0px 60px 0px 16px;
   margin: 10px 0px 0px;
   border-radius: 99px;
-  border: 1px solid transparent !important;
-  background-color: ${(props) => props.theme.chat.snapFocusBg};
+  border: 1px solid ;
+  border-color:${(props)=>props.theme.modalSearchBarBorderColor};
+  background: ${(props) => props.theme.modalSearchBarBackground};
   color: ${(props) => props.color || '#000'};
   &:focus {
     outline: none;
@@ -280,6 +300,52 @@ const Input = styled.input`
 
 
 const MemberList = styled(ItemVV2)`
-  margin-top: ${(props) => props.marginTop || '8px'};
   justify-content: 'flex-start';
+`;
+
+
+const MultipleMemberList = styled.div`
+  overflow-y:auto;
+  height:fit-content;
+  max-height:216px;
+  padding: 0px 2px;
+  overflow-x:hidden;
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 6px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+  
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
+    );
+  }
+
+
 `;
