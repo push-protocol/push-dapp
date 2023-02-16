@@ -50,7 +50,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   };
 
   const makeGroupAdmin = async () => {
-    let selectedMemberAddress = caip10ToWallet(showMoreOption);
+    const selectedMemberAddress = caip10ToWallet(showMoreOption);
     const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
     const memberToBecomeAdmin = currentChat?.groupInformation?.groupMembers?.filter(
       (member) => caip10ToWallet(member.wallets) == selectedMemberAddress
@@ -79,9 +79,8 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   };
 
   const dismissGroupAdmin = async () => {
-    let selectedMemberAddress = caip10ToWallet(showMoreOption);
+    const selectedMemberAddress = caip10ToWallet(showMoreOption);
     const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
-
     const groupAdminList = getWalletAddressList(existingAdmins);
     const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
     const newAdminList = groupAdminList.filter((wallet) => caip10ToWallet(wallet) !== selectedMemberAddress);
