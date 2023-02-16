@@ -141,7 +141,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
         ),
       });
     } else {
-      handleMemberList((prev) => [...prev, member]);
+      handleMemberList((prev) => [ member, ...prev]);
     }
 
     setFilteredUserData('');
@@ -212,7 +212,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
 
           </MemberList>
         ) : (
-          <MemberList >
+          <MultipleMemberList >
             {memberList.map((member, index) => (
 
               <MemberListContainer
@@ -224,7 +224,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               />
 
             ))}
-          </MemberList>
+          </MultipleMemberList>
         )}
         <ModalConfirmButton
           text="Create Group"
@@ -300,4 +300,51 @@ const Input = styled.input`
 
 const MemberList = styled(ItemVV2)`
   justify-content: 'flex-start';
+`;
+
+
+const MultipleMemberList = styled.div`
+  overflow-y:auto;
+  height:fit-content;
+  max-height:216px;
+  padding: 0px 2px;
+  overflow-x:hidden;
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 6px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+  
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
+    );
+  }
+
+
 `;
