@@ -24,6 +24,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import { appConfig } from 'config';
+import { getUpdatedAdminList, getWalletAddressList } from '../../../../../helpers/w2w/groupChat';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
@@ -35,7 +36,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setShowMoreOption(null));
-
+console.log(currentChat)
   const theme = useTheme();
 
   const handleClose = () => onClose();
@@ -45,19 +46,9 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     setShowMoreOption(null);
   };
 
-  const getWalletAddressList = (memberList) => {
-    return memberList?.map((member) => member.wallets);
-  };
-
   const makeGroupAdmin = async () => {
-    const selectedMemberAddress = caip10ToWallet(showMoreOption);
-    const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
-    const memberToBecomeAdmin = currentChat?.groupInformation?.groupMembers?.filter(
-      (member) => caip10ToWallet(member.wallets) == selectedMemberAddress
-    );
-    const groupAdminList = getWalletAddressList(existingAdmins);
     const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
-    const newAdminList = [...groupAdminList, memberToBecomeAdmin[0].wallets];
+    const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,false);
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
         chatId: currentChat?.groupInformation?.chatId,
@@ -79,11 +70,8 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   };
 
   const dismissGroupAdmin = async () => {
-    const selectedMemberAddress = caip10ToWallet(showMoreOption);
-    const existingAdmins = currentChat?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
-    const groupAdminList = getWalletAddressList(existingAdmins);
     const groupMemberList = getWalletAddressList(currentChat?.groupInformation?.groupMembers);
-    const newAdminList = groupAdminList.filter((wallet) => caip10ToWallet(wallet) !== selectedMemberAddress);
+    const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,true);
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
         chatId: currentChat?.groupInformation?.chatId,

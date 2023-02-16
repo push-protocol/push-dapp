@@ -1,4 +1,4 @@
-import { walletToCAIP10 } from '.';
+import { caip10ToWallet, walletToCAIP10 } from '.';
 import { Feeds } from '../../types/chat';
 
 export const checkIfGroup = (feed: Feeds): boolean => {
@@ -7,8 +7,7 @@ export const checkIfGroup = (feed: Feeds): boolean => {
 };
 
 export const getProfilePicture = (feed: Feeds): string => {
-  if (checkIfGroup(feed))
-    return feed?.groupInformation?.groupImage!;
+  if (checkIfGroup(feed)) return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
 };
 
@@ -17,30 +16,26 @@ export const getName = (feed: Feeds): string => {
   else return feed.wallets?.split(',')[0].toString();
 };
 
-export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boolean) => {
-
+export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: boolean) => {
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
-    if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account})) {
+    if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account })) {
       return {
         type: 'Text',
         message: 'Group successfully created!',
       };
     } else {
-
-      if(isIntent){
-        console.log("in intent")
+      if (isIntent) {
+        console.log('in intent');
         return {
           type: 'Text',
           message: 'Group Invite Received',
         };
-      }else{
+      } else {
         return {
           type: 'Text',
           message: 'Joined group successfully',
         };
       }
-
-      
     }
   }
   return {
@@ -49,8 +44,23 @@ export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?:boole
   };
 };
 
-export const getIntentMessage = (feed:Feeds,isGroup:boolean) =>{
-    if(isGroup)
-     return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
-     return 'Please accept to enable push chat from this wallet';
-}
+export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
+  if (isGroup)
+    return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
+  return 'Please accept to enable push chat from this wallet';
+};
+
+export const covertToWalletAddressList = (memberList) => {
+  return memberList?.map((member) => member.wallets);
+};
+
+export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove: boolean): Array<string> => {
+  const existingAdmins = feed?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
+  const groupAdminList = covertToWalletAddressList(existingAdmins);
+  if (!toRemove) {
+    return [...groupAdminList, walletAddress];
+  } else {
+    const newAdminList = groupAdminList.filter((wallet) => wallet !== walletAddress);
+    return newAdminList;
+  }
+};
