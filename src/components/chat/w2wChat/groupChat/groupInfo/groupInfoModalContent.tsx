@@ -27,7 +27,7 @@ import { Feeds } from '../../../../../types/chat';
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat ,setChat}: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
+  const [showMoreOption, setShowMoreOption] = React.useState<string|null>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
     (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
   );
@@ -39,7 +39,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const handleClose = () => onClose();
 
   const messageUser = async() => {
-    let feed:Feeds = await getDefaultFeed(showMoreOption);
+    let feed:Feeds = await getDefaultFeed({walletAddress:showMoreOption!});
     setChat(feed);
     setShowMoreOption(null);
     handleClose();

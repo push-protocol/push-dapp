@@ -1,7 +1,6 @@
-
-import * as PushAPI from "@pushprotocol/restapi";
-import { ConnectedUser,Feeds, User } from "types/chat";
-import { appConfig } from "../../config";
+import * as PushAPI from '@pushprotocol/restapi';
+import { ConnectedUser, Feeds, User } from 'types/chat';
+import { appConfig } from '../../config';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -22,23 +21,26 @@ type CheckIfIntentExistPropType = {
   receivedIntents: Feeds[];
   currentChat: Feeds;
   connectedUser: ConnectedUser;
-  isGroup:boolean;
+  isGroup: boolean;
 };
 
 export const checkIfIntentExist = ({
   receivedIntents,
   currentChat,
   connectedUser,
-  isGroup
+  isGroup,
 }: CheckIfIntentExistPropType): boolean => {
   let val: boolean;
   if (isGroup) {
-    val =  (receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId))  ? true :false
-    ;
-  }else{
+    val = receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
+      ? true
+      : false;
+  } else {
     val = receivedIntents?.find(
       (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
-    ) ? true : false
+    )
+      ? true
+      : false;
   }
 
   return val;
@@ -90,12 +92,20 @@ export const displayDefaultUser = ({ caip10 }: { caip10: string }): User => {
   return userCreated;
 };
 
-export const getDefaultFeed = async(walletAddress?:string):Feeds =>{
-  const user = await PushAPI.user.get({
-    account: walletAddress!,
-    env:appConfig.appEnv,
-  });
- const feed = {
+export const getDefaultFeed = async ({
+  walletAddress,
+  userData,
+}: {
+  walletAddress?: string;
+  userData?: User;
+}): Feeds => {
+  const user =
+    userData ??
+    (await PushAPI.user.get({
+      account: walletAddress!,
+      env: appConfig.appEnv,
+    }));
+  const feed = {
     msg: {
       name: user.wallets.split(',')[0].toString(),
       profilePicture: user.profilePicture,
@@ -122,7 +132,7 @@ export const getDefaultFeed = async(walletAddress?:string):Feeds =>{
     publicKey: user.publicKey,
     combinedDID: null,
     cid: null,
-    groupInformation: undefined
-  };  
-return feed;
-}
+    groupInformation: undefined,
+  };
+  return feed;
+};

@@ -5,6 +5,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 import * as PushAPI from "@pushprotocol/restapi"
+import { MdError } from 'react-icons/md';
+import { ethers } from 'ethers';
 
 
 // Internal Components
@@ -13,18 +15,18 @@ import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ethers } from 'ethers';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
-import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
+import { getDefaultFeed } from '../../../../helpers/w2w/user';
 
 // Internal Configs
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from '../../../../config';
-import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
+
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -176,34 +178,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             } else if(IntentUser.length){
               feed = IntentUser[0];
             }else {
-                feed = {
-                  msg: {
-                    name: user.wallets.split(',')[0].toString(),
-                    profilePicture: user.profilePicture,
-                    messageContent: null,
-                    timestamp: null,
-                    messageType: null,
-                    signature: null,
-                    signatureType: null,
-                    encType: null,
-                    encryptedSecret: null,
-                    fromDID: null,
-                    fromCAIP10: null,
-                    toDID: null,
-                    toCAIP10: null,
-                  },
-                  wallets: user.wallets,
-                  did: user.did,
-                  threadhash: null,
-                  profilePicture: user.profilePicture,
-                  about: user.about,
-                  intent: null,
-                  intentSentBy: null,
-                  intentTimestamp: null,
-                  publicKey: user.publicKey,
-                  combinedDID: null,
-                  cid: null,
-                };
+                feed = await getDefaultFeed({userData:user});
               }
             setFeeds([feed]);
           }
