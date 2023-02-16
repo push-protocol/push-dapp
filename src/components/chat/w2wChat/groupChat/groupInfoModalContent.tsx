@@ -35,7 +35,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   return (
     <ThemeProvider theme={theme}>
       <ModalContainer
-        background={theme.modalContentBackground}
+        background={theme.blurModalContentBackground}
         ref={containerRef}
       >
         <ItemHV2

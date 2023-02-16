@@ -157,5 +157,5 @@ export interface AppContext {
   setCreateGroupState:(value:number)=>void;
 }
 
-
+export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';
 

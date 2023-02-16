@@ -78,8 +78,8 @@ const useModalBlur = ({padding}:ModalProps) => {
               zIndex = {10}
               width = 'fit-content'
               height = 'fit-content'
-              background={themes.modalContentBackground}
-              alignSelf = 'center'
+              background={themes.blurModalContentBackground}
+              alignSelf = "center"
               flex = 'initial'
               padding = {padding? padding:'1.2% 2%'}
               borderRadius = '16px'

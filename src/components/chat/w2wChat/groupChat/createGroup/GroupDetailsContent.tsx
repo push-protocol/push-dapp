@@ -55,7 +55,7 @@ export const GroupDetailsContent = ({
     };
   };
 
-  const handleNextClick = () =>{
+  const handleNextClick = () => {
     if (groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData) {
       handleCreateGroupState(2);
     } else {
@@ -67,114 +67,126 @@ export const GroupDetailsContent = ({
     fileUploadInputRef.current.click();
   };
 
-  const handleGroupName = (e) => {
-    handleGroupNameData(e.target.value);
-  };
-  const handleGroupDescription = (e) => {
-    handleGroupDescriptionData(e.target.value);
-  };
-
   return (
     <ThemeProvider theme={themes}>
-      <GroupIconContainer onClick={handleUpload}>
-        {groupImageData ? (
-          <ImageV2
-            src={groupImageData}
-            width="128px"
-            height="128px"
-            style={{ objectFit: 'contain' }}
+      <Container>
+        <GroupIconContainer onClick={handleUpload}>
+          {groupImageData ? (
+            <ImageV2
+              src={groupImageData}
+              width="128px"
+              height="128px"
+              style={{ objectFit: 'contain' }}
+            />
+          ) : themes.scheme == 'light' ? (
+            <AddGroupIcon />
+          ) : (
+            <AddGroupIconDark />
+          )}
+          <FileInput
+            type="file"
+            ref={fileUploadInputRef}
+            onChange={getFileString}
+            accept="image/*"
           />
-        ) : themes.scheme == 'light' ? (
-          <AddGroupIcon />
-        ) : (
-          <AddGroupIconDark />
-        )}
-        <FileInput
-          type="file"
-          ref={fileUploadInputRef}
-          onChange={getFileString}
-          accept="image/*"
+        </GroupIconContainer>
+        <TextFieldContainer>
+          <TextFieldHeaderContainer>
+            <TextFieldHeading color={themes.modalHeadingColor}>Group Name</TextFieldHeading>
+            <CharacterCount color={themes.modalSecondaryTextColor}>{50 - groupNameData.length}</CharacterCount>
+          </TextFieldHeaderContainer>
+          <CustomInput
+            type="text"
+            value={groupNameData}
+            // ref={groupNameInputRef}
+            onChange={(e) => handleGroupNameData(e.target.value.slice(0, 50))}
+            borderColor={themes.modalInputBorderColor}
+            color={themes.modalMessageColor}
+          />
+
+        </TextFieldContainer>
+        <TextFieldContainer>
+          <TextFieldHeaderContainer>
+            <TextFieldHeading color={themes.modalHeadingColor}>Group Description</TextFieldHeading>
+            <CharacterCount color={themes.modalSecondaryTextColor}>{150 - groupDescriptionData.length}</CharacterCount>
+          </TextFieldHeaderContainer>
+          <GroupDescription
+            rows="4"
+            value={groupDescriptionData}
+            onChange={(e) => handleGroupDescriptionData(e.target.value.slice(0, 150))}
+            borderColor={themes.modalInputBorderColor}
+            color={themes.modalMessageColor}
+          />
+        </TextFieldContainer>
+        <ItemVV2
+        alignItems="baseline"
+        >
+          <TextFieldHeading color={themes.modalHeadingColor}>Group Type</TextFieldHeading>
+          <ItemHV2
+            margin='16px 0px 0px 0px'
+          >
+
+            {options.map((option) => {
+              return (
+                <OptionContainer
+                  borderRadius={option.id == 1 ? '12px 0px 0px 12px' : '0px 12px 12px 0px'}
+                  hoverBackground={themes.modalOptionHoverBackgroundColor}
+                  borderColor={themes.modalInputBorderColor}
+                  backgroundColor={option.id == groupTypeObject?.groupTypeId ? themes.modalOptionHoverBackgroundColor : 'transparent'}
+                  key={option.id}
+                  onClick={() => {
+                    handleGroupTypeObject({ groupTypeData: option.value, groupTypeId: option.id });
+                  }}
+                >
+                  <OptionText
+                    fontWeight="500"
+                    fontSize="18px"
+                    color={themes.modalMessageColor}
+                    margin="0px 0px 2px 0px"
+                  >
+                    {option.title}
+                  </OptionText>
+                  <OptionText
+                    fontWeight="400"
+                    fontSize="12px"
+                    color={themes.modalSecondaryTextColor}
+                  >
+                    {option.subTitle}
+                  </OptionText>
+                </OptionContainer>
+              );
+            })}
+          </ItemHV2>
+        </ItemVV2>
+        <ModalConfirmButton
+          text="Next"
+          onClick={() => {
+            handleNextClick()
+          }}
+          isLoading={isLoading}
+          backgroundColor={
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+              ? '#CF1C84'
+              : themes.modalConfirmButtonBackground
+          }
+          color={
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+              ? '#FFF'
+              : themes.modalConfirmButtonTextColor
+          }
+          border={groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+              ? 'none'
+              : `1px solid ${themes.modalConfirmButtonBorder}`}
+          topMargin="28px"
         />
-      </GroupIconContainer>
-      <TextFieldContainer>
-        <TextFieldHeaderContainer>
-          <TextFieldHeading color={themes.modalHeadingColor}>Group Name</TextFieldHeading>
-          <CharacterCount color={themes.modalSecondaryTextColor}>{50 - groupNameData.length}</CharacterCount>
-        </TextFieldHeaderContainer>
-        <CustomInput
-          type="text"
-          value={groupNameData}
-          // ref={groupNameInputRef}
-          onChange={handleGroupName}
-          padding="0.8rem"
-          borderColor={themes.modalInputBorderColor}
-          color={themes.modalMessageColor}
-        />
-      </TextFieldContainer>
-      <TextFieldContainer>
-        <TextFieldHeaderContainer>
-          <TextFieldHeading color={themes.modalHeadingColor}>Group Description</TextFieldHeading>
-          <CharacterCount color={themes.modalSecondaryTextColor}>{150 - groupDescriptionData.length}</CharacterCount>
-        </TextFieldHeaderContainer>
-        <GroupDescription
-          value={groupDescriptionData}
-          onChange={handleGroupDescription}
-          borderColor={themes.modalInputBorderColor}
-          color={themes.modalMessageColor}
-        />
-      </TextFieldContainer>
-      <ItemHV2>
-        {options.map((option) => {
-          return (
-            <OptionContainer
-              borderRadius={option.id == 1 ? '12px 0px 0px 12px' : '0px 12px 12px 0px'}
-              hoverBackground={themes.modalOptionHoverBackgroundColor}
-              borderColor={themes.modalInputBorderColor}
-              backgroundColor={option.id == groupTypeObject?.groupTypeId ? themes.modalOptionHoverBackgroundColor : 'transparent'}
-              key={option.id}
-              onClick={() => {
-                handleGroupTypeObject({groupTypeData:option.value,groupTypeId:option.id});
-              }}
-            >
-              <OptionText
-                fontWeight="500"
-                fontSize="18px"
-                color={themes.modalMessageColor}
-              >
-                {option.title}
-              </OptionText>
-              <OptionText
-                fontWeight="400"
-                fontSize="12px"
-                color={themes.modalSecondaryTextColor}
-              >
-                {option.subTitle}
-              </OptionText>
-            </OptionContainer>
-          );
-        })}
-      </ItemHV2>
-      <ModalConfirmButton
-        text="Next"
-        onClick={() => {
-         handleNextClick()
-        }}
-        isLoading={isLoading}
-        backgroundColor={
-          groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
-            ? '#CF1C84'
-            : themes.modalConfirmButtonBackground
-        }
-        color={
-          groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
-            ? '#FFFFF'
-            : themes.modalConfirmButtonTextColor
-        }
-        border={`1px solid ${themes.modalConfirmButtonBorder}`}
-      />
+      </Container>
     </ThemeProvider>
   );
 };
+
+const Container = styled.div`
+  padding: 42px 26px 0px 26px;
+`;
 
 const GroupIconContainer = styled.div`
   width: 100%;
@@ -182,6 +194,7 @@ const GroupIconContainer = styled.div`
   justify-content: center;
   cursor: pointer;
   margin-bottom: 28px;
+  // margin:42px 0px 28px 0px;
 `;
 
 const FileInput = styled.input`
@@ -196,12 +209,17 @@ const TextFieldContainer = styled(ItemVV2)`
 const GroupDescription = styled(TextField)`
   resize: none;
   width: 299px;
-  height: 121px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
+  background:${(props)=>props.theme.modalInputBackgrundColor};
   border-radius: 12px;
-  padding: 0.8rem;
+  padding: 13px 16px;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 130%;
   &:focus {
-    border: 2px solid #ffdbf0;
+    border: 1px solid #ffdbf0;
   }
 `;
 
@@ -229,11 +247,22 @@ const CustomInput = styled(Input)`
   width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
-  padding: 0.8rem;
+  background:${(props)=>props.theme.modalInputBackgrundColor};
+  padding:8px 16px;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 150%;
+  letter-spacing: -0.019em;
   &:focus {
-    border: 2px solid #ffdbf0;
+    border: 1px solid #ffdbf0;
   }
 `;
+
+const OptionsContainer = styled(ItemVV2)`
+`;
+
 
 const OptionContainer = styled(ItemVV2)`
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
@@ -241,7 +270,7 @@ const OptionContainer = styled(ItemVV2)`
   background-color: ${(props) => props.backgroundColor || 'transparent'};
   box-sizing: border-box;
   min-width: 150px;
-  padding: 8px;
+  padding: 11px 9px;
   cursor: pointer;
   &:hover {
     background-color: ${(props) => props.hoverBackground || 'transparent'};
