@@ -95,9 +95,13 @@ export const displayDefaultUser = ({ caip10 }: { caip10: string }): User => {
 export const getDefaultFeed = async ({
   walletAddress,
   userData,
+  inbox,
+  intents
 }: {
   walletAddress?: string;
   userData?: User;
+  inbox: Feeds[];
+  intents: Feeds[];
 }): Feeds => {
   const user =
     userData ??
@@ -105,7 +109,18 @@ export const getDefaultFeed = async ({
       account: walletAddress!,
       env: appConfig.appEnv,
     }));
-  const feed = {
+    let feed:Feeds ={};
+    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+
+    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+
+    if (inboxUser.length) {
+      feed = inboxUser[0];
+    } else if(intentUser.length){
+      feed = intentUser[0];
+    }
+    else {
+   feed = {
     msg: {
       name: user.wallets.split(',')[0].toString(),
       profilePicture: user.profilePicture,
@@ -134,5 +149,6 @@ export const getDefaultFeed = async ({
     cid: null,
     groupInformation: undefined,
   };
+}
   return feed;
 };

@@ -43,6 +43,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + time1.slice(-2);
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
+  console.log(msg)
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10).toLowerCase(), 6);
   const ensName = useResolveEns(msg.fromCAIP10);
   const profilePicture = getMemberProfilePicture(currentChat);

@@ -167,19 +167,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
-            const desiredUser = inbox.filter((inb) => inb.did === user.did);
-
-
-            //the following code checks that User already present in the Intent or not
-            const IntentUser = receivedIntents.filter((userExist) => userExist.did === user.did);
-
-            if (desiredUser.length) {
-              feed = desiredUser[0];
-            } else if(IntentUser.length){
-              feed = IntentUser[0];
-            }else {
-                feed = await getDefaultFeed({userData:user});
-              }
+                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
             setFeeds([feed]);
           }
         } else {
