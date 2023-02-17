@@ -65,7 +65,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-       
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
         {
          setFeeds(inboxes)

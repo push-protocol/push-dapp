@@ -109,11 +109,13 @@ export const getDefaultFeed = async ({
       account: walletAddress!,
       env: appConfig.appEnv,
     }));
+    console.log(user)
     let feed:Feeds ={};
     const inboxUser = inbox.filter((inb) => inb.did === user.did);
 
     const intentUser = intents.filter((userExist) => userExist.did === user.did);
-
+    console.log(inboxUser)
+    console.log(intentUser)
     if (inboxUser.length) {
       feed = inboxUser[0];
     } else if(intentUser.length){

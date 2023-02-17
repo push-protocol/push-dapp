@@ -3,6 +3,8 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 
 // Internal Components
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
@@ -10,9 +12,13 @@ import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
+import { caip10ToWallet } from '../../../../../helpers/w2w';
+
 
 export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setShowMoreOption, dropdownRef }) => {
   const theme = useTheme();
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+
 
   return (
     <ProfileCardItem key={key}>
@@ -47,7 +53,7 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
             Admin
           </SpanV2>
         )}
-        {/* {caip10ToWallet(member?.wallets) !== account && ( */}
+        {caip10ToWallet(member?.wallets) !== account && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
@@ -56,7 +62,7 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
-        {/* )} */}
+        )}
       </ItemHV2>
       {showMoreOption == member?.wallets && (
         <DropdownContainer ref={dropdownRef}>

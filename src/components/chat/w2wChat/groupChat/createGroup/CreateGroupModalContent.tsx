@@ -96,14 +96,14 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         // background={themes.modalContentBackground}
         // ref={containerRef}
         style={{
-          padding: createGroupState == 2 ? "20px 17px 32px"  : "20px 6px 32px"
+          padding: createGroupState == 2 ? "20px 17px 32px" : "20px 6px 32px"
         }}
       >
         <ItemHV2
-          justifyContent={createGroupState == 2 ? "space-between" :  "center"}
+          justifyContent={createGroupState == 2 ? "space-between" : "center"}
           // margin="0px 0px 62px 0px"
           align-items="center"
-          
+
         >
           {createGroupState == 2 && <Back
             onClick={handlePrevious}
