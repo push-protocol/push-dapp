@@ -45,6 +45,7 @@ const ChannelInfo = ({
   channelInfo,
   channelURL,
   chainDetails,
+  errorInfo,
   setChannelAlias,
   setChainDetails,
   setChannelInfo,
@@ -54,13 +55,13 @@ const ChannelInfo = ({
   setStepFlow,
   setChannelInfoDone,
   setTxStatus,
+  isAllFilledAndValid
 }) => {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(769)
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-01T00:00:00.000"), 90);
 
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [errorInfo, setErrorInfo] = useState<{name:string, channelExpiryDate:string, description:string, address:string, url:string}>({name: '', channelExpiryDate:'', description: '', address: '', url: ''});
 
 
   const isEmpty = (field) => {
@@ -74,85 +75,6 @@ const ChannelInfo = ({
   const isChannelExpiryDateEmpty = (channelExpiryDate) => {
     return channelExpiryDate!==undefined && channelExpiryDate===null;
   }
-
-  const isAllFilledAndValid = (): boolean => {
-    setErrorInfo('');
-
-    if (isEmpty(channelName) || isChannelExpiryDateEmpty(channelExpiryDate) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
-      if (
-        isEmpty(channelName)
-      ) {
-        setErrorInfo(x => ({
-          ...x,
-          name: 'Please, enter the channel name.',
-        }));
-      }
-
-      if (
-        isChannelExpiryDateEmpty(channelExpiryDate)
-      ) {
-        setErrorInfo(x => ({
-          ...x,
-          channelExpiryDate: 'Please, select the channel expiry date.',
-        }));
-      }
-
-      if (isEmpty(channelInfo)) {
-        setErrorInfo(x => ({
-          ...x,
-          description: 'Please, enter the channel description',
-        }));
-      }
-
-      if (isEmpty(channelURL)) {
-        setErrorInfo(x => ({
-          ...x,
-          url: 'Please, enter the channel url',
-        }));
-      }
-
-      if (isEmpty(channelAlias) && chainDetails !== coreChainId) {
-        setErrorInfo(x => ({
-          ...x,
-          address:'Please, enter the channel address',
-        }));
-      }
-    return false
-  }
-
-    if (!isLengthValid(channelName, 125)) {
-      setErrorInfo(x => ({
-        ...x,
-        name: 'Channel Name should not exceed 125 characters! Please retry!',
-      }));
-      
-      return false;
-    }
-    if (!isLengthValid(channelURL, 125)) {
-      setErrorInfo(x => ({
-        ...x,
-        url: 'Channel Url should not exceed 125 characters! Please retry!',
-      }));
-      return false;
-    }
-    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
-      setErrorInfo(x => ({
-        ...x,
-        address: 'Channel Alias address is invalid! Please enter a valid address!',
-      }));
-      
-      return false;
-    }
-    if (!isValidUrl(channelURL)) {
-      setErrorInfo(x => ({
-        ...x,
-        url: 'Channel URL is invalid! Please enter a valid url!',
-      }));
-      return false;
-    }
-
-    return true;
-  };
 
   useEffect(() => {
     if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL)) {
