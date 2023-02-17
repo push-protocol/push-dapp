@@ -11,6 +11,7 @@ import { useResolveEns } from 'hooks/useResolveEns';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { shortenText } from 'helpers/UtilityHelper';
 
 // Interfaces
 export interface ChatSnapMsgI {
@@ -37,7 +38,8 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
   // get reverse name
 
   // get short username
-  const shortUsername = caip10ToWallet(username).slice(0, 8) + '...' + caip10ToWallet(username).slice(-7);
+  const walletAddress = caip10ToWallet(username);
+  const shortUsername = shortenText(walletAddress,8,7);
 
   // format message here instead
   const message =

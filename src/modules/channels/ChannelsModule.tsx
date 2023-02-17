@@ -48,14 +48,16 @@ const Container = styled.div`
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.TABLET};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.TABLET.TOP} - ${globalsMargin.BIG_MODULES.TABLET.BOTTOM});
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+
   }
 
-  @media ${device.mobileM} {
+  @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.BIG_MODULES.MOBILE};
     height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.BIG_MODULES.MOBILE.TOP} - ${globalsMargin.BIG_MODULES.MOBILE.BOTTOM});
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
-    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE} ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE}  0 0;
+
   }
 `;
 

@@ -71,10 +71,11 @@ const ShowDelegates = () => {
     setRemoveModalOpen(true);
   }
   
+  
   return (
     <>
     <Section>
-      <Content padding="20px 0px">
+      <Content padding={isMobile ? "20px 10px" : "20px 0px"}>
       <Item align="flex-start">
           <DelegatesInfoHeader style={{color : theme.color}}>Channel Delegates </DelegatesInfoHeader>
           <div style={{height:'4px'}}/>
@@ -91,7 +92,7 @@ const ShowDelegates = () => {
       self="stretch"
       align="stretch"
       margin="10px 0px 30px 0px"
-      radius={isMobile ? "10px" : "20px"}
+      radius={"20px"}
       border="1px solid #D4DCEA;"
     >
       {isActiveDelegateDropdown && delegatees && 
@@ -103,7 +104,7 @@ const ShowDelegates = () => {
           {delegatees.map((delegate,idx) => {
             return (
               <Item
-                padding={!isMobile ? "25px":"10px"}
+                padding={!isMobile ? "25px 25px":"18px 18px"}
                 direction="row"
                 justify="space-between"
                 key={delegate}
@@ -162,13 +163,19 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDeleg
           </div>
         </div>
           :
-          <div style={{color:theme.secondaryColor,textAlign:'right',width:'100%'}}>
+          <TextStyle>
             Delegate
-          </div>
+          </TextStyle>
         }
       </RemoveButtonUI>
   )
 }
+
+const TextStyle = styled.div`
+  color: ${props => props.theme.default.secondaryColor};
+  text-align: right;
+  width: 100%;
+`
 
 const ChannelActionButton = styled.button`
   border: 0;

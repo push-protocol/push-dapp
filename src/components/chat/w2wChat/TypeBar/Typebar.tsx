@@ -16,6 +16,8 @@ import { AppContext } from 'types/chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
   messageBeingSent: boolean;
@@ -23,7 +25,7 @@ interface ITypeBar {
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: string }) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: string }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;
@@ -40,7 +42,8 @@ const Typebar = ({
   setOpenSuccessSnackBar,
   setSnackbarText,
 }: ITypeBar) => {
-  const { currentChat, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -84,7 +87,7 @@ const Typebar = ({
     // Send video request only when two users are chatting
     if (e.target.value === '/video' && currentChat.threadhash) {
       setVideoCallInfo({
-        address: caip10ToWallet(currentChat.msg.name),
+        address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
         fromPublicKeyArmored: connectedUser.publicKey,
         toPublicKeyArmored: currentChat.publicKey,
         privateKeyArmored: connectedUser.privateKey,

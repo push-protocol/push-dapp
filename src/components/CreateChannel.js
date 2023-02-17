@@ -14,7 +14,7 @@ import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { getCAIPObj } from 'helpers/CaipHelper';
 import { IPFSupload } from 'helpers/IpfsHelper';
-import { isLengthValid, isValidAddress, isValidUrl, networkName } from 'helpers/UtilityHelper';
+import { CHANNEL_TYPE, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
 import { Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
 import ChannelInfo from './ChannelInfo';
@@ -45,6 +45,13 @@ function CreateChannel() {
   const [channelInfoDone, setChannelInfoDone] = React.useState(false);
   const [chainDetails, setChainDetails] = React.useState(CORE_CHAIN_ID);
   const [channelName, setChannelName] = React.useState('');
+  /* 
+    if channelExpiryDate is undefined -> channel is not time bound 
+    if channelExpiryDate is null -> channel is time bound but user hasnt entered the date
+      null was used above to make it compatible with react-datetime-picker package
+    if channelExpiryDate is a date string -> channel is time bound and user has entered the date
+  */
+  const [channelExpiryDate, setChannelExpiryDate] = useState(undefined);
   const [channelAlias, setChannelAlias] = React.useState('');
   const [channelInfo, setChannelInfo] = React.useState('');
   const [channelURL, setChannelURL] = React.useState('');
@@ -74,9 +81,6 @@ function CreateChannel() {
       value = value?.toString();
       const convertedVal = ethers.utils.formatEther(value);
       setPushTokenAmountVal(convertedVal);
-      if (convertedVal >= minStakeFees) {
-        setChannelStakeFees(convertedVal);
-      }
     };
     checkPushTokenApprovalFunc();
   }, []);
@@ -229,14 +233,20 @@ function CreateChannel() {
 
       let contract = new ethers.Contract(addresses.epnscore, abis.epnscore, signer);
 
-      const channelType = 2; // Open Channel
+      let channelType = CHANNEL_TYPE["GENERAL"]; // Open Channel
       const identity = '1+' + storagePointer; // IPFS Storage Type and HASH
       const identityBytes = ethers.utils.toUtf8Bytes(identity);
 
 
       setProgress(50);
 
-      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, 0, {
+      let timestampIfTimebound = 0;
+      if(channelExpiryDate) {
+        timestampIfTimebound = channelExpiryDate.getTime() / 1000;
+        channelType = CHANNEL_TYPE["TIMEBOUND"];
+      }
+
+      const tx = await contract.createChannelWithPUSH(channelType, identityBytes, fees, timestampIfTimebound, {
         gasLimit: 1000000,
       });
 
@@ -335,6 +345,7 @@ function CreateChannel() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Test>
       <BodySection>
         <Content className='content'>
           <Item align="center" className='center'>
@@ -357,7 +368,7 @@ function CreateChannel() {
           {txStatus === 0 && (
             <Body>
               <div>Transaction failed due to one of the following reasons:</div>
-              <p>1. There is not enough DAI in your wallet.</p>
+              <p>1. There is not enough $PUSH in your wallet.</p>
               <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
             </Body>
           )}
@@ -384,7 +395,7 @@ function CreateChannel() {
         </>
       ) : (
         <>
-          <Section>
+          {!(processing === 1 || processing === 3) &&(<Section>
             <ItemHere>
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
                onClick={() => setStepFlow(0)}
@@ -406,7 +417,7 @@ function CreateChannel() {
               </Tab>
               <Line />
             </ItemHere>
-          </Section>
+          </Section>)}
 
           {/* Stake Fees Section */}
           {stepFlow === 0 && (
@@ -436,6 +447,7 @@ function CreateChannel() {
               <ChannelInfo
                 setStepFlow={setStepFlow}
                 channelName={channelName}
+                channelExpiryDate={channelExpiryDate}
                 channelAlias={channelAlias}
                 channelInfo={channelInfo}
                 channelURL={channelURL}
@@ -444,6 +456,7 @@ function CreateChannel() {
                 setChainDetails={setChainDetails}
                 setChannelInfo={setChannelInfo}
                 setChannelName={setChannelName}
+                setChannelExpiryDate={setChannelExpiryDate}
                 setChannelURL={setChannelURL}
                 setChannelInfoDone={setChannelInfoDone}
                 setTxStatus={setTxStatus}
@@ -497,6 +510,7 @@ function CreateChannel() {
           )}
         </>
       )}
+      </Test>
     </ThemeProvider>
   );
 }
@@ -519,6 +533,12 @@ const Step = styled.div`
     css`
     `};
 `;
+
+const Test = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+`
 
 const ItemWarning = styled.div`
   color: white;
@@ -552,7 +572,11 @@ const BodySection = styled(Section)`
         margin: 0px 0px;
 
         @media (max-width: 768px){
+          font-weight: 300;
           font-size: 14px;
+          text-align: center;
+          letter-spacing: 0em;
+          line-height: 140%;
          }
       }
   }
@@ -567,7 +591,7 @@ const BodySection = styled(Section)`
 `
 
 const TextH2 = styled(H2)`
-  text-transform: uppercase;
+  text-transform: capitalize;
   margin: 20px 0px;
 
   .text {
@@ -676,6 +700,7 @@ const Tab = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+    margin: 0px 4px;
     div {
       font-weight: 500;
       font-size: 15px;
@@ -721,7 +746,7 @@ const ItemHere = styled.div`
   align-items: flex-end;
   @media (max-width: 768px) {
     display: flex;
-    margin-top: 30px;
+    margin-top: 20px;
   }
   @media (max-width: 1224px) {
     display: flex;

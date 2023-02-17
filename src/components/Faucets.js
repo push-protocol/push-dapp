@@ -34,6 +34,12 @@ const Faucets = () => {
       title: "Mumbai Faucet",
       link: "https://faucet.polygon.technology/",
     },
+    {
+      id: "97",
+      value: "BNB",
+      title: "BNB Faucet",
+      link: "https://testnet.bnbchain.org/faucet-smart",
+    }
   ];
 
   // render
@@ -88,7 +94,7 @@ const Container = styled.button`
   @media (max-width: 768px)
   {
     width: 100%;
-    padding: 0 0px 0px 8px;
+    // padding: 0 0px 0px 0px;
   }
 `
 
@@ -96,7 +102,7 @@ const ItemHBar = styled.div`
   padding: 0 20px 0 0px;
 `
 const Faucet = styled.div`
-  margin: 0px 5px;
+  margin: 0px 10px;
   padding: 5px 15px;
   display: flex;
   flex-direction: row;
@@ -107,7 +113,7 @@ const Faucet = styled.div`
   font-size: 15px;
   background: ${props => props.theme.faucetBg};
   color: ${props => props.theme.faucetText};
-  border-radius:20px;
+  border-radius: 20px;
   &:hover {
     opacity: 0.9;
     cursor: pointer;
@@ -120,7 +126,8 @@ const Faucet = styled.div`
   }
 
   @media (max-width: 768px){
-    flex: 1;
+  border-radius: 37px;
+  flex: 1;
   justify-content: flex-start;
   }
 `

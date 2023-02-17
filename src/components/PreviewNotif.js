@@ -10,14 +10,18 @@ import styled, { useTheme } from "styled-components";
 import { NotificationItem } from "@pushprotocol/uiweb";
 import { H2, Item, Span } from "../primaries/SharedStyling";
 import { chainNameBackendStandard } from "helpers/UtilityHelper";
+import { appConfig } from 'config';
+
+// Constants
+const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 export default function PreviewNotif({ details }) {
   const { delegatees, channelDetails } = useSelector((state) => state.admin);
   const { chainId } = useWeb3React();
-
+  const onCoreNetwork = CORE_CHAIN_ID === chainId;
   let channelDetail;
   channelDetail = delegatees.filter(
-    (delegateeInfo) => delegateeInfo.address == details.channelAddress
+    (delegateeInfo) => (onCoreNetwork ? delegateeInfo.channel : delegateeInfo.alias_address) == details.channelAddress
   )[0];
   if (!channelDetail) channelDetail = channelDetails;
 

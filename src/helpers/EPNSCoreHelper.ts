@@ -144,7 +144,11 @@ const EPNSCoreHelper = {
 
       contract
         .queryFilter(filter, block, block)
-        .then((response: any) => {
+        .then(async (response: any) => {
+          if(response.length == 0) {
+            const res = await contract.queryFilter(contract.filters.AddChannel(channel), startBlock, startBlock);
+            response = res;
+          }
           let filteredResponse: string;
 
           if (enableLogs) console.log('getChannelEvent() --> Finding: %s in | %o |', channel, response);
