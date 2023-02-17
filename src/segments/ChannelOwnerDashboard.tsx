@@ -23,10 +23,13 @@ import useToast from "hooks/useToast";
 
 // Internal Configs
 import { appConfig } from "config";
+import { Button } from "components/SharedStyling";
+import EditChannel from "modules/editChannel/EditChannel";
+import useModal from "hooks/useModal";
 
 // Constants
 // interval after which alias details api will be called, in seconds
-const ALIAS_API_CALL_INTERVAL:number = 10;
+const ALIAS_API_CALL_INTERVAL: number = 10;
 
 // interval id for calling search api
 let intervalID = null;
@@ -35,7 +38,7 @@ let intervalID = null;
 const ChannelOwnerDashboard = () => {
   const theme = useTheme();
   const { account, chainId } = useWeb3React();
-  const { channelDetails, delegatees, aliasDetails: {aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract} } = useSelector((state: any) => state.admin);
+  const { channelDetails, delegatees, aliasDetails: { aliasAddr, aliasEthAddr, isAliasVerified, aliasAddrFromContract } } = useSelector((state: any) => state.admin);
   const { processingState } = useSelector((state: any) => state.channelCreation);
   const { epnsWriteProvider } = useSelector((state: any) => state.contracts);
 
@@ -44,9 +47,10 @@ const ChannelOwnerDashboard = () => {
   const destroyChannelToast = useToast();
 
   const dispatch = useDispatch();
-
-  const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true); 
+ 
   const [isChannelExpired, setIsChannelExpired] = useState<boolean>(false);
+  const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true);
+  const [editChannel, setEditChannel] = useState<boolean>(false);
 
   const CORE_CHAIN_ID: number = appConfig.coreContractChain;
   const onCoreNetwork: boolean = CORE_CHAIN_ID === chainId;
@@ -55,7 +59,7 @@ const ChannelOwnerDashboard = () => {
   useEffect(() => {
     if (!onCoreNetwork || !channelDetails || aliasAddrFromContract || channelDetails === 'unfetched') return;
 
-    const { address:aliasAddress, chainId:aliasChainId } = getAliasFromChannelDetails(channelDetails);
+    const { address: aliasAddress, chainId: aliasChainId } = getAliasFromChannelDetails(channelDetails);
     if (aliasAddress) {
       dispatch(setAliasAddressFromContract(aliasAddress));
       dispatch(setAliasChainId(aliasChainId));
@@ -67,7 +71,7 @@ const ChannelOwnerDashboard = () => {
   }, [channelDetails, aliasAddrFromContract]);
 
   const fetchChannelDetails = async (address: string) => {
-    let { aliasAddress=null, isAliasVerified=null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
+    let { aliasAddress = null, isAliasVerified = null } = await ChannelsDataStore.instance.getChannelDetailsFromAddress(address);
     if (aliasAddress == "NULL") aliasAddress = null;
 
     return { aliasAddress: aliasAddress, aliasVerified: isAliasVerified };
@@ -139,6 +143,21 @@ const ChannelOwnerDashboard = () => {
     }
   }
 
+  const showEditChannel = () => {
+    setEditChannel(true);
+  }
+
+  const closeEditChannel = () => {
+    setEditChannel(false);
+  }
+
+  //here the useModal hook is used to display Upload Logo Modal
+  const {
+    isModalOpen: isUploadLogoModalOpen,
+    showModal: displayUplaodLogoModal,
+    ModalComponent: UploadLogoComponent,
+  } = useModal();
+
   return (
     <ItemHV2>
       {((channelDetails === 'unfetched') || processingState === null) &&
@@ -148,43 +167,57 @@ const ChannelOwnerDashboard = () => {
       {channelDetails !== 'unfetched' &&
         <ItemVV2 justifyContent={processingState === 0 && "flex-start"}>
           {/* display the create channel page if there are no details */}
-          {!channelDetails && processingState === 0 && 
+          {!channelDetails && processingState === 0 &&
             <CreateChannel />
           }
-          
+
           {isChannelDetails && processingState !== null &&
             (
               <>
-                {channelDetails && !isMobile && 
-                  <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                    {!isChannelExpired && <ChannelSettings />}
-                    {isChannelExpired && onCoreNetwork &&
-                      <DestroyChannelBtn 
-                        onClick={destroyChannel}
-                        background="#E93636" 
-                        color="#fff" 
-                        height="36px" 
-                        width="123px" 
-                        borderRadius="8px"
-                        fontSize="14px"
-                      >
-                        Delete Channel
-                      </DestroyChannelBtn>
+                {editChannel ? (
+                  <EditChannel 
+                    closeEditChannel={closeEditChannel} 
+                    UploadLogoComponent={UploadLogoComponent} 
+                    displayUplaodLogoModal={displayUplaodLogoModal}
+                    isUploadLogoModalOpen={isUploadLogoModalOpen}
+                  />
+                ) : (
+                  <>
+                    {channelDetails && !isMobile && 
+                      <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
+                        {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
+                        {!isChannelExpired && <ChannelSettings />}
+                        {isChannelExpired && onCoreNetwork &&
+                          <DestroyChannelBtn 
+                            onClick={destroyChannel}
+                            background="#E93636" 
+                            color="#fff" 
+                            height="36px" 
+                            width="123px" 
+                            borderRadius="8px"
+                            fontSize="14px"
+                          >
+                            Delete Channel
+                          </DestroyChannelBtn>
+                        }
+                      </ItemHV2>
                     }
-                  </ItemHV2>
-                }
-                {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} /> : ""}
+                    {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel} destroyChannel={destroyChannel} /> : ""}
+                  </>
+                )}
               </>
             )
           }
-          
+
           {/* processing box */}
-          {processingState !== 0 && processingState !== null && isChannelDetails && (
-            <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
+          {processingState !== 0 && processingState !== null && isChannelDetails && !editChannel && (
+            <>
+              <AliasProcessing aliasEthAccount={aliasEthAddr} setAliasVerified={setAliasVerified} />
+            </>
           )}
         </ItemVV2>
       }
-      
+
     </ItemHV2>
   );
 }
@@ -193,5 +226,23 @@ export default ChannelOwnerDashboard;
 
 const DestroyChannelBtn = styled(ButtonV2)`
   height: ${props => (props.height || "100%")};
-  width: ${props => (props.width || "100%")};
+  width: ${props => (props.width || "100%")}`;
+
+
+const SubmitButton = styled(Button)`
+  width: 7rem;
+  background: #cf1c84;
+  color: #fff;
+  z-Index:0;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  margin-right: 20px;
+  border-radius: 8px;
+  padding: 11px 10px;
+  @media (min-width:600px) and (max-width:700px){
+    margin-right: 9px;
+  }
 `;

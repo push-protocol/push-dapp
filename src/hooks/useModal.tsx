@@ -9,19 +9,22 @@ import Backdrop from '@mui/material/Backdrop';
 import { ShowLoaderToastType, ShowMessageToastType } from './useToast';
 
 export type ModalInnerComponentType = { 
-    onConfirm: (value?:any) => any, 
+    onConfirm ?: (value?:any) => any, 
     onClose?: () => void,
-    toastObject: {
+    toastObject ?: {
         showLoaderToast: ShowLoaderToastType, showMessageToast: ShowMessageToastType
-    } 
+    },
+    InnerComponentProps ?: any,
 };
 
 export type ModalType = {
-    InnerComponent:({ onConfirm, onClose } : ModalInnerComponentType ) => JSX.Element,
-    onConfirm: (value?:any) => any,
-    toastObject: {
+    InnerComponent:({} : ModalInnerComponentType ) => JSX.Element,
+    onConfirm ?: (value?:any) => any,
+    extraOuterPadding?: string,
+    toastObject ?: {
         showLoaderToast: ShowLoaderToastType, showMessageToast: ShowMessageToastType
-    }
+    },
+    InnerComponentProps ?: any,
 }
 
 const useModal = () => {
@@ -46,7 +49,7 @@ const useModal = () => {
         setOpen(false);
     }
 
-    const ModalComponent = ({ InnerComponent, onConfirm, toastObject } : ModalType)=>{
+    const ModalComponent = ({ InnerComponent, onConfirm, toastObject, InnerComponentProps, extraOuterPadding } : ModalType)=>{
         const themes = useTheme();
 
         return(
@@ -59,11 +62,14 @@ const useModal = () => {
                     justifyContent: "center",
                     alignItems: "center",
                 }}>
-                    <ModalBody style={{
+                    <ModalBody 
+                      style={{
                         background:themes.modalContentBackground,
                         border: `1px solid ${themes.modalBorderColor}`,
-                    }}>
-                        <InnerComponent onConfirm={onConfirm} onClose={handleClose} toastObject={toastObject} />
+                      }}
+                      padding={extraOuterPadding}
+                    >
+                        <InnerComponent onConfirm={onConfirm} onClose={handleClose} toastObject={toastObject} InnerComponentProps={InnerComponentProps}/>
                     </ModalBody>
                 </Backdrop>
             </ThemeProvider>
@@ -75,12 +81,12 @@ const useModal = () => {
 }
 
 const ModalBody = styled.div`
-    width: fit-content;
-    height: fit-content;
-    border-radius: 1rem;
-    padding: 1.2% 2%;
-    box-shadow: none;
-    backdrop-filter: blur(10px);
+  // width: fit-content;
+  // height: fit-content;
+  border-radius: 1rem;
+  padding: ${(props) => props.padding || "1.2% 2%"};
+  box-shadow: none;
+  backdrop-filter: blur(10px);
 `
 
 export default useModal
