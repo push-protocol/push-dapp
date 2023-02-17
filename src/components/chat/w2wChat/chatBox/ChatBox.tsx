@@ -88,7 +88,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser,getUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
@@ -227,6 +227,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
     setMessageBeingSent(true);
+    if (!connectedUser.privateKey) {
+      await getUser();
+    }
     try {
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
@@ -358,6 +361,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   }): Promise<void> => {
     try {
       setMessageBeingSent(true);
+      if (!connectedUser.privateKey) {
+        await getUser();
+      }
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||

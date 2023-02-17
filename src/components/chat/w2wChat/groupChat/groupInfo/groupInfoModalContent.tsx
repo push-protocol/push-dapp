@@ -212,8 +212,8 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
         <ProfileContainer>
           {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
             return (
-              <ProfileCard
-                key={`${member.wallet}${index}`}
+             member && <ProfileCard
+                key={index}
                 member={member}
                 dropdownValues={
                   member?.isAdmin && isAccountOwnerAdmin
