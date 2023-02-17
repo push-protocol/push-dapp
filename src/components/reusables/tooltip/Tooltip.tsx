@@ -76,7 +76,7 @@ const Content = styled.div`
   position: absolute;
   border-radius: 2px 12px 12px 12px;
   
-  // padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
   color: #fff;
   background: #131313;
   font-family: 'Strawford';

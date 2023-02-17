@@ -202,7 +202,7 @@ const ChannelOwnerDashboard = () => {
                         }
                       </ItemHV2>
                     }
-                    {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel}/> : ""}
+                    {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel} destroyChannel={destroyChannel} /> : ""}
                   </>
                 )}
               </>
