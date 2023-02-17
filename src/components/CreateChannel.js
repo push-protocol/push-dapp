@@ -446,7 +446,7 @@ function CreateChannel() {
           {txStatus === 0 && (
             <Body>
               <div>Transaction failed due to one of the following reasons:</div>
-              <p>1. There is not enough $PUSH in your wallet.</p>
+              <p>1. There is not enough PUSH in your wallet.</p>
               <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
             </Body>
           )}
