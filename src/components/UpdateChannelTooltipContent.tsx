@@ -41,6 +41,7 @@ const Container = styled(ItemVV2)`
   background: ${(props) => props.theme.default.bg};
   // border-radius: 0.125rem 1rem 1rem 1rem;
   justify-content: flex-start;
+  border: 1px solid rgba(173, 176, 190, 0.2);
   align-items: flex-start;
   padding: 0.75rem 0.25rem 0.75rem 1rem;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
