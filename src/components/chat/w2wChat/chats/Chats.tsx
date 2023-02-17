@@ -37,7 +37,7 @@ interface ChatProps {
 const infura_URL = appConfig.infuraApiUrl;
 
 const getProfilePicture = (currentChat: Feeds, address: string): string => {
-  const senderProfile = currentChat?.groupInformation?.groupMembers?.filter((chat) => chat.wallets == address);
+  const senderProfile = currentChat?.groupInformation?.groupMembers?.filter((chat) => chat?.wallets == address);
   return senderProfile[0]?.image;
 };
 
