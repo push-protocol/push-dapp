@@ -49,9 +49,12 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
-  const channelExpiryDate = getDateFromTimestamp(channelDetails.expiryTime.toString() * 1000);
-  const isChannelNotExpired = timeRemaining(channelDetails.expiryTime.toString() * 1000);
-  const channelAutomaticExpiryDate = nextDaysDateFromTimestamp(channelDetails.expiryTime.toString() * 1000, 14);
+  // BEGIN CHANGE
+  // Added this inline if-else condition because of a bug that when connecting to Mumbai, the channelDetails.expiryType is undefined, so the toString() is throwing an exception
+  const channelExpiryDate = channelDetails.expiryTime ? getDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000) : ''
+  const isChannelNotExpired = channelDetails.expiryTime ? timeRemaining(channelDetails.expiryTime?.toString() * 1000) : true
+  const channelAutomaticExpiryDate = channelDetails.expiryTime ? nextDaysDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000, 14) : ''
+  // END CHANGE
 
   useEffect(() => {
     if(channelDetails.channelType != CHANNEL_TYPE["TIMEBOUND"]) return;
