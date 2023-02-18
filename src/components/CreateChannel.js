@@ -22,6 +22,7 @@ import './createChannel.css';
 import ProcessingInfo from './ProcessingInfo';
 import StakingInfo from './StakingInfo';
 import UploadLogo from './UploadLogo';
+import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
