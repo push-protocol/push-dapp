@@ -6,9 +6,17 @@ export const checkIfGroup = (feed: Feeds): boolean => {
   return false;
 };
 
-export const getProfilePicture = (feed: Feeds): string => {
+export const getGroupImage = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
+};
+
+export const getMemberProfilePicture = (feed: Feeds) => {
+  if (checkIfGroup(feed)) {
+    const senderProfile = feed?.groupInformation?.groupMembers?.filter((chat) => chat.wallets == feed.msg.fromCAIP10)!;
+    return senderProfile[0]?.image;
+  }
+  return null;
 };
 
 export const getName = (feed: Feeds): string => {

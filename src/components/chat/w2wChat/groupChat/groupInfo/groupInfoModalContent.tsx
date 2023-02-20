@@ -21,12 +21,14 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ProfileCard } from './ProfileCard';
+import { getDefaultFeed } from '../../../../../helpers/w2w/user';
+import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat ,setChat,inbox,receivedIntents}: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
+  const [showMoreOption, setShowMoreOption] = React.useState<string|null>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
     (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
   );
@@ -37,9 +39,11 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 
   const handleClose = () => onClose();
 
-  const messageUser = () => {
-    console.log('messaging');
+  const messageUser = async() => {
+    let feed:Feeds = await getDefaultFeed({walletAddress:showMoreOption!,inbox,intents:receivedIntents});
+    setChat(feed);
     setShowMoreOption(null);
+    handleClose();
   };
 
   const makeGroupAdmin = () => {

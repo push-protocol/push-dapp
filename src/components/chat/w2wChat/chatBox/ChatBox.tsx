@@ -41,7 +41,7 @@ import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
-import { checkIfGroup, getIntentMessage, getProfilePicture } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -95,12 +95,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const theme = useTheme();
   let showTime = false;
   let time = '';
-
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
-
-  useEffect(() => {
-    setIsGroup(checkIfGroup(currentChat));
-  });
 
   //get ens name
   const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
@@ -201,10 +196,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
+        setIsGroup(checkIfGroup(currentChat));
         // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
         // even though the user was still on the same chat.
         setMessages([]);
-        const image = getProfilePicture(currentChat);
+        const image = getGroupImage(currentChat);
         try {
           CID.parse(image); // Will throw exception if invalid CID
           setImageSource(INFURA_URL + `${image}`);

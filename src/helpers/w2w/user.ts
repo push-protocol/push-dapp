@@ -1,7 +1,8 @@
+import * as PushAPI from '@pushprotocol/restapi';
+import { ConnectedUser, Feeds, User } from 'types/chat';
+import { appConfig } from '../../config';
 
-import { ConnectedUser,Feeds, User } from "types/chat";
 import * as PushNodeClient from 'api';
-import * as PushAPI from "@pushprotocol/restapi";
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -22,23 +23,26 @@ type CheckIfIntentExistPropType = {
   receivedIntents: Feeds[];
   currentChat: Feeds;
   connectedUser: ConnectedUser;
-  isGroup:boolean;
+  isGroup: boolean;
 };
 
 export const checkIfIntentExist = ({
   receivedIntents,
   currentChat,
   connectedUser,
-  isGroup
+  isGroup,
 }: CheckIfIntentExistPropType): boolean => {
   let val: boolean;
   if (isGroup) {
-    val =  (receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId))  ? true :false
-    ;
-  }else{
+    val = receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
+      ? true
+      : false;
+  } else {
     val = receivedIntents?.find(
       (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
-    ) ? true : false
+    )
+      ? true
+      : false;
   }
 
   return val;
@@ -90,6 +94,68 @@ export const displayDefaultUser = ({ caip10 }: { caip10: string }): User => {
   return userCreated;
 };
 
+export const getDefaultFeed = async ({
+  walletAddress,
+  userData,
+  inbox,
+  intents
+}: {
+  walletAddress?: string;
+  userData?: User;
+  inbox: Feeds[];
+  intents: Feeds[];
+}): Feeds => {
+  const user =
+    userData ??
+    (await PushAPI.user.get({
+      account: walletAddress!,
+      env: appConfig.appEnv,
+    }));
+    console.log(user)
+    let feed:Feeds ={};
+    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+
+    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+    console.log(inboxUser)
+    console.log(intentUser)
+    if (inboxUser.length) {
+      feed = inboxUser[0];
+    } else if(intentUser.length){
+      feed = intentUser[0];
+    }
+    else {
+   feed = {
+    msg: {
+      name: user.wallets.split(',')[0].toString(),
+      profilePicture: user.profilePicture,
+      messageContent: null,
+      timestamp: null,
+      messageType: null,
+      signature: null,
+      signatureType: null,
+      encType: null,
+      encryptedSecret: null,
+      fromDID: null,
+      fromCAIP10: null,
+      toDID: null,
+      toCAIP10: null,
+    },
+    wallets: user.wallets,
+    did: user.did,
+    threadhash: null,
+    profilePicture: user.profilePicture,
+    about: user.about,
+    intent: null,
+    intentSentBy: null,
+    intentTimestamp: null,
+    publicKey: user.publicKey,
+    combinedDID: null,
+    cid: null,
+    groupInformation: undefined,
+  };
+}
+  return feed;
+};
 export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Promise<ConnectedUser> => {
   let decryptedPrivateKey;
     let user:User;
