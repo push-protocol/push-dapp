@@ -64,3 +64,19 @@ export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove
     return newAdminList;
   }
 };
+
+export const getUpdatedMemberList = (currentChat:Feeds,walletAddress:string) =>{
+  const remainingMembers = currentChat?.groupInformation?.groupMembers?.filter((i)=>i.wallets !== walletAddress);
+  // const members = convertToWalletAddressList(remainingMembers);
+  
+  return remainingMembers;
+}
+
+export const getAdminList = (members) =>{
+
+  console.log("member",members);
+  const admin = members.filter((admin)=>admin.isAdmin == true);
+  return convertToWalletAddressList(admin);
+
+}
+ 

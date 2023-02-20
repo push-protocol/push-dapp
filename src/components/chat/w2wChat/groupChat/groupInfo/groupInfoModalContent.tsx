@@ -23,13 +23,15 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
-import { convertToWalletAddressList, getUpdatedAdminList } from '../../../../../helpers/w2w/groupChat';
+import { convertToWalletAddressList, getUpdatedAdminList, getUpdatedMemberList } from '../../../../../helpers/w2w/groupChat';
 
 //Internal Configs
 import { appConfig } from 'config';
+import useToast from 'hooks/useToast';
+import { MdError } from 'react-icons/md';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat,setChat }: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
@@ -40,6 +42,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   useClickAway(dropdownRef, () => setShowMoreOption(null));
 console.log(currentChat)
   const theme = useTheme();
+  const groupInfoToast = useToast();
 
   const handleClose = () => onClose();
 
@@ -51,6 +54,7 @@ console.log(currentChat)
   const makeGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers);
     const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,false);
+    console.log("Members",groupMemberList)
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
         chatId: currentChat?.groupInformation?.chatId,
@@ -67,6 +71,17 @@ console.log(currentChat)
       console.log('Updated group', updateResponse);
     } catch (e) {
       console.log('Error while adding admin', e);
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `Cannot Make Admin `,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
     }
     setShowMoreOption(null);
   };
@@ -90,12 +105,62 @@ console.log(currentChat)
       console.log('Updated group', updateResponse);
     } catch (e) {
       console.log('Error while dismissing admin', e);
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `Cannot Dismiss Admin`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
     }
     setShowMoreOption(null);
   };
 
-  const removeMember = () => {
-    console.log('remove group admin');
+  const removeMember = async() => {
+    const updatedMemberList = getUpdatedMemberList(currentChat,showMoreOption);
+    console.log("CurrentChat group",updatedMemberList);
+
+    const updatedMemberWalletAddress = convertToWalletAddressList(updatedMemberList);
+    console.log("updatedMemberWalletAddress",updatedMemberWalletAddress)
+
+    const admin = convertToWalletAddressList(updatedMemberList.filter((admin)=>admin.isAdmin == true));
+    console.log("Admin",admin)
+    try {
+      const updateResponse = await PushAPI.chat.updateGroup({
+        chatId: currentChat?.groupInformation?.chatId,
+        groupName: currentChat?.groupInformation?.groupName,
+        groupDescription: currentChat?.groupInformation?.groupDescription,
+        groupImage: currentChat?.groupInformation?.groupImage,
+        members: updatedMemberWalletAddress,
+        admins: admin,
+        account: account!,
+        pgpPrivateKey: connectedUser?.privateKey,
+        env: appConfig.appEnv,
+      });
+
+      console.log("Update response",updateResponse);
+      console.log('removed member');
+      // setChat(currentChat);
+      handleClose();
+
+    } catch (error) {
+      console.log("Error",error);
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `Cannot Remove Member`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
     setShowMoreOption(null);
   };
 

@@ -53,6 +53,8 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const ensName = useResolveEns(msg.fromCAIP10);
   const profilePicture = isGroup ? getProfilePicture(currentChat, msg.fromCAIP10) : null;
 
+  // console.log("CurrentChat",currentChat,msg);
+
   return (
     <>
       {messageType === 'TwitterFeedLink' ? (
