@@ -35,17 +35,18 @@ import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { AppContext, ConnectedUser, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-
-// Internal Configs
-import { appConfig } from 'config';
-import GLOBALS, { device } from 'config/Globals';
-import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID } from 'types/chat';
+import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getIntentMessage, getProfilePicture } from '../../../../helpers/w2w/groupChat';
+
+// Internal Configs
+import { appConfig } from 'config';
+import GLOBALS, { device } from 'config/Globals';
+
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -88,7 +89,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
-  const { connectedUser,getUser } = useContext(ChatUserContext);
+  const { connectedUser,setConnectedUser } = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
@@ -194,9 +195,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useEffect(() => {
     setLoading(true);
-    if (!connectedUser.privateKey) {
-       getUser();
-    }
+    // if (!connectedUser.privateKey) {
+    //    getUser();
+    // }
     if (currentChat) {
       if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
@@ -233,14 +234,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
-    setMessageBeingSent(true);
+    setMessageBeingSent(true);    
+    const user = await getUserWithDecryptedPvtKey(connectedUser);
     try {
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
         receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets.split(',')[0],
         account: account!,
-        pgpPrivateKey: connectedUser?.privateKey,
+        pgpPrivateKey:((connectedUser?.privateKey)!== '')?connectedUser?.privateKey:user.privateKey,
         apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
         env: appConfig.appEnv,
       });
@@ -278,6 +280,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
+      setConnectedUser(user);
     }, 2000);
   };
 
@@ -370,12 +373,13 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
+        const user = await getUserWithDecryptedPvtKey(connectedUser);
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
           receiverAddress: currentChat?.wallets.split(',')[0],
           account: account!,
-          pgpPrivateKey: connectedUser?.privateKey,
+          pgpPrivateKey: ((connectedUser?.privateKey)!== '')?connectedUser?.privateKey:user.privateKey,
           apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
           env: appConfig.appEnv,
         });
@@ -435,6 +439,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
+      setConnectedUser(user);
     }, 2000);
   };
 
