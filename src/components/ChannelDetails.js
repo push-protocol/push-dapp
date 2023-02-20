@@ -11,7 +11,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import { getReq, postReq } from 'api';
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
