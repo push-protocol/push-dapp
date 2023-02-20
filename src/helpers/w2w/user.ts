@@ -2,6 +2,8 @@ import * as PushAPI from '@pushprotocol/restapi';
 import { ConnectedUser, Feeds, User } from 'types/chat';
 import { appConfig } from '../../config';
 
+import * as PushNodeClient from 'api';
+
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
     !(
@@ -154,3 +156,16 @@ export const getDefaultFeed = async ({
 }
   return feed;
 };
+export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Promise<ConnectedUser> => {
+  let decryptedPrivateKey;
+    let user:User;
+    if(!connectedUser.privateKey)
+    {
+       user = await PushNodeClient.getUser({ caip10:connectedUser.wallets });
+       decryptedPrivateKey = await PushAPI.chat.decryptWithWalletRPCMethod(
+        user.encryptedPrivateKey,
+        connectedUser.wallets
+      );
+    }
+  return {...user,privateKey:decryptedPrivateKey};
+}
