@@ -29,8 +29,8 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const { currentChat ,setChat,inbox,receivedIntents}: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showMoreOption, setShowMoreOption] = React.useState<string|null>(null);
-  const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
-    (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
+  const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
+    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setShowMoreOption(null));
@@ -60,7 +60,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     console.log('remove group admin');
     setShowMoreOption(null);
   };
-
+console.log(currentChat)
   const memberDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
@@ -88,17 +88,14 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
         ref={containerRef}
       >
         <ItemHV2
-          justifyContent="space-between"
+          justifyContent="center"
           alignItems="flex-start"
         >
-          <Back
-            onClick={() => {}}
-            style={{ cursor: 'pointer' }}
-          />
           <SpanV2
             fontWeight="500"
             fontSize="24px"
             margin="0px 0px 42px 0px"
+            flex="1"
             color={theme.default.color}
           >
             Group Info
@@ -140,7 +137,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
               fontWeight={500}
               color={theme.modalDescriptionTextColor}
             >
-              {`${currentChat?.groupInformation?.groupMembers?.length} members`}
+              {`${currentChat?.groupInformation?.members?.length} members`}
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
@@ -196,7 +193,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
-        {isAccountOwnerAdmin && currentChat?.groupInformation?.groupMembers?.length < 10 && (
+        {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
           <AddWalletContainer>
             <AddMember />
             <SpanV2
@@ -210,7 +207,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
           </AddWalletContainer>
         )}
         <ProfileContainer>
-          {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
+          {currentChat?.groupInformation?.members?.map((member, index) => {
             return (
              member && <ProfileCard
                 key={index}
@@ -240,7 +237,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   background-color: ${(props) => props.background};
-  padding: 0px;
+  padding: 20px 6px 32px;
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

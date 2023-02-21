@@ -39,10 +39,12 @@ export interface ConnectedUser extends User {
 export interface Member {
     wallet: string;
     publicKey: string;
+    image: string;
+    isAdmin: boolean;
   }
 export interface IGroup {
     members: Array<Member>,
-    admins: Array<string>,
+    pendingMembers: Array<Member>,
     contractAddressNFT?: string
     numberOfNFTs?: number,
     contractAddressERC20?: string,
@@ -51,14 +53,7 @@ export interface IGroup {
     groupName: string,
     groupDescription: string,
     groupCreator: string,
-    isPublic: boolean
-  }
-  export interface UserInfo {
-    wallets: string,
-    publicKey: string,
-    name: string,
-    image:string,
-    isAdmin:boolean,
+    isPublic: number,
   }
 export interface Feeds {
     // This property contains all the info to be displayed on the sidebar for the other peer's information
@@ -75,19 +70,7 @@ export interface Feeds {
     intentTimestamp: Date;
     combinedDID: string;
     cid?: string;
-    groupInformation?: {
-      groupName: string,
-      groupImage: string,
-      groupMembers: UserInfo[],
-      groupAdmins: UserInfo[],
-      isPublic: boolean,
-      contractAddressNFT: string,
-      numberOfNFTs: number,
-      contractAddressERC20: string,
-      numberOfERC20: number,
-      verificationProof: string,
-      groupCreator: string
-    }
+    groupInformation?: IGroup
 }
 
 export interface TwitterFeedReturnType{

@@ -92,16 +92,10 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   };
   return (
     <ThemeProvider theme={themes}>
-      <ModalContainer
-        // background={themes.modalContentBackground}
-        // ref={containerRef}
-        style={{
-          padding: createGroupState == 2 ? "20px 17px 32px" : "20px 6px 32px"
-        }}
+      <ModalContainer createGroupState={createGroupState}
       >
         <ItemHV2
           justifyContent={createGroupState == 2 ? "space-between" : "center"}
-          // margin="0px 0px 62px 0px"
           align-items="center"
 
         >
@@ -148,7 +142,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   background-color: ${(props) => props.background};
-  // padding: 20px 6px 32px 6px;
+  padding: ${(props) => props.createGroupState == 2 ? "20px 17px 32px" : "20px 6px 32px"};
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

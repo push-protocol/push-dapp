@@ -19,7 +19,7 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
-import { getMemberProfilePicture } from '../../../../helpers/w2w/groupChat';
+import { getMemberDetails } from '../../../../helpers/w2w/groupChat';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 
 // Internal Configs
@@ -45,7 +45,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveEns(msg.fromCAIP10);
-  const profilePicture = getMemberProfilePicture(currentChat);
+  const profilePicture = isGroup?(getMemberDetails(currentChat))?.image:null;
 
   return (
     <>

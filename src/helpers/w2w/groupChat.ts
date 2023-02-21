@@ -11,13 +11,13 @@ export const getGroupImage = (feed: Feeds): string => {
   else return feed?.profilePicture!;
 };
 
-export const getMemberProfilePicture = (feed: Feeds) => {
-  if (checkIfGroup(feed)) {
-    const senderProfile = feed?.groupInformation?.groupMembers?.filter((chat) => chat.wallets == feed.msg.fromCAIP10)!;
-    return senderProfile[0]?.image;
-  }
-  return null;
+export const getMemberDetails = (feed:Feeds) => {
+    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat.wallet == feed.msg.fromCAIP10)!;
+    return senderProfile[0];
+
 };
+
+
 
 export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;

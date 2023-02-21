@@ -126,13 +126,12 @@ export const getDefaultFeed = async ({
     else {
    feed = {
     msg: {
-      name: user.wallets.split(',')[0].toString(),
-      profilePicture: user.profilePicture,
       messageContent: null,
       timestamp: null,
       messageType: null,
       signature: null,
       signatureType: null,
+      link: null,
       encType: null,
       encryptedSecret: null,
       fromDID: null,
