@@ -9,13 +9,15 @@ import { MdError } from 'react-icons/md';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import {  ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
 import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removelight.svg';
 import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
+import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
+import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import * as w2wChatHelper from 'helpers/w2w';
 import * as PushNodeClient from 'api';
@@ -24,20 +26,27 @@ import useToast from 'hooks/useToast';
 // Internal configs
 import { appConfig } from 'config';
 import MemberListContainer from './MemberListContainer';
-import { User } from '../../../../../types/chat';
+import { AppContext, User } from '../../../../../types/chat';
 import { findObject } from '../../../../../helpers/UtilityHelper';
+import { Context } from 'modules/chat/ChatModule';
 
-export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList }) => {
+export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList, handlePrevious, handleClose, title }) => {
+  const { currentChat }: AppContext = React.useContext<AppContext>(Context);
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
+
+  const [groupMembers,setGroupMembers] = React.useState(currentChat?.groupInformation?.groupMembers)
+
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const { library } = useWeb3React();
 
   const theme = useTheme();
   const searchFeedToast = useToast();
+
+  // console.log("Group Members",groupMembers,currentChat);
 
   React.useEffect(() => {
     if (isInValidAddress) {
@@ -120,6 +129,8 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const addMemberToList = (member: User) => {
     let errorMessage = '';
 
+    // const checkIfMemberisAlreadyPresent = groupMembers.
+
     if (memberList?.length >= 9) {
       errorMessage = 'No More Addresses can be added'
     }
@@ -128,7 +139,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
       errorMessage = 'Address is already added'
     }
 
-    if(member?.wallets === w2wChatHelper.walletToCAIP10({account})){
+    if (member?.wallets === w2wChatHelper.walletToCAIP10({ account })) {
       errorMessage = 'Group Creator cannot be added as Member'
     }
 
@@ -145,7 +156,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
         ),
       });
     } else {
-      handleMemberList((prev) => [ member, ...prev]);
+      handleMemberList((prev) => [member, ...prev]);
     }
 
     setFilteredUserData('');
@@ -157,10 +168,41 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
+  const themes = useTheme();
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
+
+        <ItemHV2
+          justifyContent={"space-between"}
+          margin="0px 0px 62px 0px"
+          align-items="center"
+
+        >
+           <Back
+            onClick={handlePrevious}
+            style={{ cursor: 'pointer' }}
+          />
+          <SpanV2
+            fontWeight="500"
+            fontSize="24px"
+            color={themes.fontColor}
+            flex="1"
+          >
+            {title}
+          </SpanV2>
+          <Close
+            onClick={() => handleClose()}
+            style={{ cursor: 'pointer' }}
+          />
+        </ItemHV2>
+
+
+
+
+
+
         <SearchbarContainer>
           <LabelContainer>
             <SpanV2
@@ -235,7 +277,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           onClick={() => handleCreateGroup()}
           isLoading={isLoading}
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
-          color={memberList?.length > 0 ? '#FFF'  : theme.groupButtonTextColor}
+          color={memberList?.length > 0 ? '#FFF' : theme.groupButtonTextColor}
           border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
           topMargin="60px"
         />
@@ -246,7 +288,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
 };
 
 const Container = styled.div`
-  margin-top:62px;
+  // margin-top:62px;
 `;
 
 const SearchbarContainer = styled(ItemVV2)`
@@ -279,7 +321,7 @@ const Input = styled.input`
   margin: 10px 0px 0px;
   border-radius: 99px;
   border: 1px solid ;
-  border-color:${(props)=>props.theme.modalSearchBarBorderColor};
+  border-color:${(props) => props.theme.modalSearchBarBorderColor};
   background: ${(props) => props.theme.modalSearchBarBackground};
   color: ${(props) => props.color || '#000'};
   &:focus {

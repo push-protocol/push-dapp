@@ -44,7 +44,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   useClickAway(containerRef, () => handleClose());
 
   const handleCreateGroup = async (): Promise<any> => {
-
+    console.log("Member list",memberList);
     try {
       const memberWalletList = memberList.map(member => member.wallets);
       const createGroupRes = await PushAPI.chat.createGroup({
@@ -99,16 +99,14 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           padding: createGroupState == 2 ? "20px 17px 32px" : "20px 6px 32px"
         }}
       >
-        <ItemHV2
-          justifyContent={createGroupState == 2 ? "space-between" : "center"}
+        {/* This below one is displayed only for the first page where user gets input fields */}
+        {createGroupState == 1 && (
+          <ItemHV2
+          justifyContent={"center"}
           // margin="0px 0px 62px 0px"
           align-items="center"
 
         >
-          {createGroupState == 2 && <Back
-            onClick={handlePrevious}
-            style={{ cursor: 'pointer' }}
-          />}
           <SpanV2
             fontWeight="500"
             fontSize="24px"
@@ -122,6 +120,9 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             style={{ cursor: 'pointer' }}
           />
         </ItemHV2>
+        )}
+
+        {/* This is basically where we get input fields for adding details of the group like image, title, desc, etc. */}
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
@@ -136,7 +137,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 
           />
         )}
-        {createGroupState == 2 && <AddWalletContent handleCreateGroup={handleCreateGroup} memberList={memberList} handleMemberList={setMemberList} />}
+
+        {/* Here we display the add wallet modal where we can search and add the wallet addresses */}
+        {createGroupState == 2 &&
+          <AddWalletContent
+            handleCreateGroup={handleCreateGroup}
+            memberList={memberList}
+            handleMemberList={setMemberList}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
+            title={"Create Group"}
+          />}
       </ModalContainer>
     </ThemeProvider>
   );
