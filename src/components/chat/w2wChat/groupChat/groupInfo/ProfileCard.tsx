@@ -37,7 +37,7 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
           fontWeight="400"
           color={theme.modalProfileTextColor}
         >
-          {shortenText(member?.wallets?.split(':')[1], 6)}
+          {shortenText(member?.wallet?.split(':')[1], 6)}
         </SpanV2>
       </ItemHV2>
       <ItemHV2 justifyContent="flex-end">
@@ -53,18 +53,18 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallets) !== account && (
+        {caip10ToWallet(member?.wallet) !== account && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
-            onClick={() => setShowMoreOption(member?.wallets)}
+            onClick={() => setShowMoreOption(member?.wallet)}
             style={{ cursor: 'pointer' }}
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
         )}
       </ItemHV2>
-      {showMoreOption == member?.wallets && (
+      {showMoreOption == member?.wallet && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}

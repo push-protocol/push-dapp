@@ -21,6 +21,8 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ProfileCard } from './ProfileCard';
+import { getDefaultFeed } from '../../../../../helpers/w2w/user';
+import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
 import * as PushAPI from '@pushprotocol/restapi';
@@ -30,17 +32,16 @@ import { convertToWalletAddressList } from 'helpers/w2w/groupChat';
 
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
+  const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
   // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const [groupMembers,setGroupMembers] = React.useState(currentChat?.groupInformation?.groupMembers);
-
+  const [groupMembers, setGroupMembers] = React.useState(currentChat?.groupInformation?.members);
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const [showMoreOption, setShowMoreOption] = React.useState<string | null>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
-    (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
+    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setShowMoreOption(null));
@@ -49,9 +50,11 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 
   const handleClose = () => onClose();
 
-  const messageUser = () => {
-    console.log('messaging');
+  const messageUser = async () => {
+    let feed: Feeds = await getDefaultFeed({ walletAddress: showMoreOption!, inbox, intents: receivedIntents });
+    setChat(feed);
     setShowMoreOption(null);
+    handleClose();
   };
 
   const makeGroupAdmin = () => {
@@ -68,7 +71,6 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     console.log('remove group admin');
     setShowMoreOption(null);
   };
-
   const memberDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
@@ -92,39 +94,39 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const handleAddMoreWalletAddress = async () => {
 
     const newMembersToAdd = memberList.map(member => member.wallets);
-    const alreadyPresentMembers = groupMembers.map(member => member.wallets)
-    const members = [...alreadyPresentMembers,...newMembersToAdd];
+    const alreadyPresentMembers = groupMembers.map(member => member.wallet)
+    const members = [...alreadyPresentMembers, ...newMembersToAdd];
 
-    const admin = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers.filter((admin)=>admin.isAdmin == true));
+    const admin = convertToWalletAddressList(currentChat?.groupInformation?.members.filter((admin) => admin.isAdmin == true));
 
     try {
       const response = await PushAPI.chat.updateGroup({
-        chatId:currentChat?.groupInformation?.chatId,
-        groupName:currentChat?.groupInformation?.groupName,
-        groupDescription:currentChat?.groupInformation?.groupDescription,
-        groupImage:currentChat?.groupInformation?.groupImage,
-        members:members,
+        chatId: currentChat?.groupInformation?.chatId,
+        groupName: currentChat?.groupInformation?.groupName,
+        groupDescription: currentChat?.groupInformation?.groupDescription,
+        groupImage: currentChat?.groupInformation?.groupImage,
+        members: members,
         admins: admin,
-        account:account!,
-        pgpPrivateKey:connectedUser?.privateKey,
-        env:appConfig.appEnv
+        account: account!,
+        pgpPrivateKey: connectedUser?.privateKey,
+        env: appConfig.appEnv
       })
 
-      console.log("response",response);
+      console.log("response", response);
       handleClose();
-      
+
     } catch (error) {
-      console.log("Error",error)
+      console.log("Error", error)
     }
 
     console.log("Handle More Wallet Address");
   }
 
-  const handlePrevious = ()=>{
+  const handlePrevious = () => {
     setShowAddMoreWalletModal(false);
   }
 
-  const handleCloseAddWalletModal=()=>{
+  const handleCloseAddWalletModal = () => {
     setShowAddMoreWalletModal(false);
   }
 
@@ -134,20 +136,18 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
         background={theme.blurModalContentBackground}
         ref={containerRef}
       >
+
         {!showAddMoreWalletModal && (
-          <div>
+          <>
             <ItemHV2
-              justifyContent="space-between"
+              justifyContent="center"
               alignItems="flex-start"
             >
-              <Back
-                onClick={() => { }}
-                style={{ cursor: 'pointer' }}
-              />
               <SpanV2
                 fontWeight="500"
                 fontSize="24px"
                 margin="0px 0px 42px 0px"
+                flex="1"
                 color={theme.default.color}
               >
                 Group Info
@@ -189,7 +189,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                   fontWeight={500}
                   color={theme.modalDescriptionTextColor}
                 >
-                  {`${currentChat?.groupInformation?.groupMembers?.length} members`}
+                  {`${currentChat?.groupInformation?.members?.length} members`}
                 </SpanV2>
               </ItemVV2>
             </InfoContainer>
@@ -245,7 +245,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                 </SpanV2>
               </ItemVV2>
             </InfoContainer>
-            {isAccountOwnerAdmin && currentChat?.groupInformation?.pendingMembers?.length < 10 && (
+            {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
               <AddWalletContainer onClick={() => setShowAddMoreWalletModal(true)}>
                 <AddMember />
                 <SpanV2
@@ -259,7 +259,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
               </AddWalletContainer>
             )}
             <ProfileContainer>
-              {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
+              {currentChat?.groupInformation?.members?.map((member, index) => {
                 return (
                   member && <ProfileCard
                     key={index}
@@ -275,12 +275,16 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                     setShowMoreOption={setShowMoreOption}
                     dropdownRef={dropdownRef}
                   />
-                );
+                )
               })}
             </ProfileContainer>
-
-          </div>
+          </>
         )}
+
+
+
+
+
 
 
         {showAddMoreWalletModal && (
@@ -307,7 +311,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   background-color: ${(props) => props.background};
-  padding: 0px;
+  padding: 20px 6px 32px;
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

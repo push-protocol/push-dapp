@@ -6,10 +6,18 @@ export const checkIfGroup = (feed: Feeds): boolean => {
   return false;
 };
 
-export const getProfilePicture = (feed: Feeds): string => {
+export const getGroupImage = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
 };
+
+export const getMemberDetails = (feed:Feeds) => {
+    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat.wallet == feed.msg.fromCAIP10)!;
+    return senderProfile? senderProfile[0]: null;
+
+};
+
+
 
 export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;
@@ -60,16 +68,16 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
 };
 
 export const convertToWalletAddressList = (memberList)=>{
-  return memberList?.map((member)=>member.wallets)
+  return memberList?.map((member)=>member.wallet)
 }
 
 
 
-export const MemberAlreadyPresent = (feed:Feeds,walletAddress:string)=>{
+export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{
 
-  console.log("group chat",feed,walletAddress)
+  console.log("group chat",member,groupMembers)
 
-  const memberCheck = feed?.groupInformation?.groupMembers?.find((x)=>x.wallets == walletAddress);
+  const memberCheck = groupMembers?.find((x)=>x.wallet == member.wallets);
   console.log("Member ",memberCheck);
   if(memberCheck){
     console.log("Member ",memberCheck);

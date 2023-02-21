@@ -92,12 +92,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   };
   return (
     <ThemeProvider theme={themes}>
-      <ModalContainer
-        // background={themes.modalContentBackground}
-        // ref={containerRef}
-        style={{
-          padding: createGroupState == 2 ? "20px 17px 32px" : "20px 6px 32px"
-        }}
+      <ModalContainer createGroupState={createGroupState}
       >
         {/* This below one is displayed only for the first page where user gets input fields */}
         {createGroupState == 1 && (
@@ -160,7 +155,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   background-color: ${(props) => props.background};
-  // padding: 20px 6px 32px 6px;
+  padding: ${(props) => props.createGroupState == 2 ? "20px 17px 32px" : "20px 6px 32px"};
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

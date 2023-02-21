@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { TwitterTweetEmbed } from 'react-twitter-embed';
 
 // Internal Components
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
 import { Feeds, MessageIPFS, TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
@@ -19,11 +19,12 @@ import { shortenText } from 'helpers/UtilityHelper';
 import { AppContext } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
+import { getMemberDetails } from '../../../../helpers/w2w/groupChat';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 
 // Internal Configs
-import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
+
 
 interface ChatProps {
   msg: MessageIPFS;
@@ -33,13 +34,6 @@ interface ChatProps {
   isGroup?: boolean;
 }
 
-// Constants
-const infura_URL = appConfig.infuraApiUrl;
-
-const getProfilePicture = (currentChat: Feeds, address: string): string => {
-  const senderProfile = currentChat?.groupInformation?.groupMembers?.filter((chat) => chat?.wallets == address);
-  return senderProfile[0]?.image;
-};
 
 export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup }: ChatProps) {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
@@ -51,7 +45,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveEns(msg.fromCAIP10);
-  const profilePicture = isGroup ? getProfilePicture(currentChat, msg.fromCAIP10) : null;
+  const profilePicture = isGroup?(getMemberDetails(currentChat))?.image:null;
 
   return (
     <>

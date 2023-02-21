@@ -4,7 +4,7 @@ import * as DIDHelper from './did'
 import * as Ceramic from './ceramic'
 import * as AES from './aes'
 import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat'
-import { checkIfGroup } from './groupChat'
+import { checkIfGroup, getMemberDetails } from './groupChat'
 import { getUser } from '../../api/w2w'
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
@@ -85,7 +85,7 @@ export const decryptFeeds = async ({
         signatureValidationPubliKey = connectedUser.publicKey
       } else {
         if (checkIfGroup(feed) && !feed.publicKey) 
-         feed.publicKey = (await getUser({ caip10: feed.msg.fromCAIP10 })).publicKey;
+         feed.publicKey = (getMemberDetails(feed)).publicKey;
         signatureValidationPubliKey = feed.publicKey!;
       }
       try {

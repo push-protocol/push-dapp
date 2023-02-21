@@ -130,10 +130,11 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const addMemberToList = (member: User) => {
     let errorMessage = '';
 
-    console.log("Member List",member,groupMembers);
+    console.log("Member List",member,groupMembers,currentChat);
 
     //this checks if the member is already present in the currentChat or not
-    const checkIfMemberisAlreadyPresent = findObject(member, groupMembers, 'wallets');
+    // const checkIfMemberisAlreadyPresent = findObject(member, groupMembers, 'wallets');
+    const checkIfMemberisAlreadyPresent = MemberAlreadyPresent(member, groupMembers);
     console.log("X", checkIfMemberisAlreadyPresent);
 
     if (checkIfMemberisAlreadyPresent) {
@@ -297,7 +298,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF' : theme.groupButtonTextColor}
           border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
-          topMargin="60px"
+          topMargin="40px"
         />
 
       </Container>
