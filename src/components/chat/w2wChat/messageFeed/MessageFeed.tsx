@@ -5,6 +5,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 import * as PushAPI from "@pushprotocol/restapi"
+import { MdError } from 'react-icons/md';
+import { ethers } from 'ethers';
 
 
 // Internal Components
@@ -13,18 +15,18 @@ import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ethers } from 'ethers';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
 import { checkConnectedUser } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
-import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
+import { getDefaultFeed } from '../../../../helpers/w2w/user';
 
 // Internal Configs
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { appConfig } from '../../../../config';
-import { checkIfGroup, getChatsnapMessage, getName, getProfilePicture } from '../../../../helpers/w2w/groupChat';
+
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -63,7 +65,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-       
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
         {
          setFeeds(inboxes)
@@ -165,46 +166,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
-            const desiredUser = inbox.filter((inb) => inb.did === user.did);
-
-
-            //the following code checks that User already present in the Intent or not
-            const IntentUser = receivedIntents.filter((userExist) => userExist.did === user.did);
-
-            if (desiredUser.length) {
-              feed = desiredUser[0];
-            } else if(IntentUser.length){
-              feed = IntentUser[0];
-            }else {
-                feed = {
-                  msg: {
-                    name: user.wallets.split(',')[0].toString(),
-                    profilePicture: user.profilePicture,
-                    messageContent: null,
-                    timestamp: null,
-                    messageType: null,
-                    signature: null,
-                    signatureType: null,
-                    encType: null,
-                    encryptedSecret: null,
-                    fromDID: null,
-                    fromCAIP10: null,
-                    toDID: null,
-                    toCAIP10: null,
-                  },
-                  wallets: user.wallets,
-                  did: user.did,
-                  threadhash: null,
-                  profilePicture: user.profilePicture,
-                  about: user.about,
-                  intent: null,
-                  intentSentBy: null,
-                  intentTimestamp: null,
-                  publicKey: user.publicKey,
-                  combinedDID: null,
-                  cid: null,
-                };
-              }
+                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
             setFeeds([feed]);
           }
         } else {
@@ -267,7 +229,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   key={feed.threadhash || i}
                 >
                   <ChatSnap
-                    pfp={getProfilePicture(feed)}
+                    pfp={getGroupImage(feed)}
                     username={getName(feed)}
                     isGroup = {checkIfGroup(feed)}
                     chatSnapMsg={getChatsnapMessage(feed,account!,false)}

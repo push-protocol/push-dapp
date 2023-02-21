@@ -24,17 +24,20 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import { convertToWalletAddressList, getUpdatedAdminList } from '../../../../../helpers/w2w/groupChat';
+import { getDefaultFeed } from '../../../../../helpers/w2w/user';
+import { Feeds } from '../../../../../types/chat';
+import { DropdownValueType } from '../../../../Dropdown';
 
 //Internal Configs
 import { appConfig } from 'config';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat ,setChat,inbox,receivedIntents}: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
-  const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
-    (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
+  const [showMoreOption, setShowMoreOption] = React.useState<string|null>(null);
+  const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
+    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setShowMoreOption(null));
@@ -43,14 +46,19 @@ console.log(currentChat)
 
   const handleClose = () => onClose();
 
-  const messageUser = () => {
-    console.log('messaging');
+  const messageUser = async() => {
+    let feed:Feeds = await getDefaultFeed({walletAddress:showMoreOption!,inbox,intents:receivedIntents});
+    setChat(feed);
     setShowMoreOption(null);
+    handleClose();
   };
 
   const makeGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers);
+    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.members);
     const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,false);
+
+    console.log("Input",groupMemberList,newAdminList)
+
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
         chatId: currentChat?.groupInformation?.chatId,
@@ -63,7 +71,7 @@ console.log(currentChat)
         pgpPrivateKey: connectedUser?.privateKey,
         env: appConfig.appEnv,
       });
-      handleClose();
+      // handleClose();
       console.log('Updated group', updateResponse);
     } catch (e) {
       console.log('Error while adding admin', e);
@@ -72,7 +80,7 @@ console.log(currentChat)
   };
 
   const dismissGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers);
+    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.members);
     const newAdminList = getUpdatedAdminList(currentChat,showMoreOption,true);
     try {
       const updateResponse = await PushAPI.chat.updateGroup({
@@ -99,18 +107,20 @@ console.log(currentChat)
     setShowMoreOption(null);
   };
 
-  const memberDropdown = [{ id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }];
-
-  const ownerDropdown = [
+  const memberDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
-    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() },
   ];
 
-  const adminDropdown = [
+  const ownerDropdown:DropdownValueType[] = [
+    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
+    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(),textColor:'#ED5858' },
+  ];
+
+  const adminDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() ,textColor:'#ED5858'},
   ];
 
   // to close the modal upon a click on backdrop
@@ -124,17 +134,14 @@ console.log(currentChat)
         ref={containerRef}
       >
         <ItemHV2
-          justifyContent="space-between"
+          justifyContent="center"
           alignItems="flex-start"
         >
-          <Back
-            onClick={() => {}}
-            style={{ cursor: 'pointer' }}
-          />
           <SpanV2
             fontWeight="500"
             fontSize="24px"
             margin="0px 0px 42px 0px"
+            flex="1"
             color={theme.default.color}
           >
             Group Info
@@ -176,7 +183,7 @@ console.log(currentChat)
               fontWeight={500}
               color={theme.modalDescriptionTextColor}
             >
-              {`${currentChat?.groupInformation?.groupMembers?.length} members`}
+              {`${currentChat?.groupInformation?.members?.length} members`}
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
@@ -232,7 +239,7 @@ console.log(currentChat)
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
-        {isAccountOwnerAdmin && currentChat?.groupInformation?.groupMembers?.length < 10 && (
+        {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
           <AddWalletContainer>
             <AddMember />
             <SpanV2
@@ -246,9 +253,9 @@ console.log(currentChat)
           </AddWalletContainer>
         )}
         <ProfileContainer>
-          {currentChat?.groupInformation?.groupMembers?.map((member, index) => {
+          {currentChat?.groupInformation?.members?.map((member, index) => {
             return (
-              <ProfileCard
+             member && <ProfileCard
                 key={index}
                 member={member}
                 dropdownValues={
@@ -276,7 +283,7 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   background-color: ${(props) => props.background};
-  padding: 0px;
+  padding: 20px 6px 32px;
   margin: 0px;
   overflow-y: auto;
   &::-webkit-scrollbar {

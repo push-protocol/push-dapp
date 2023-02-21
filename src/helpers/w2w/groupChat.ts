@@ -1,15 +1,23 @@
 import { caip10ToWallet, walletToCAIP10 } from '.';
-import { Feeds } from '../../types/chat';
+import { Feeds, Member } from '../../types/chat';
 
 export const checkIfGroup = (feed: Feeds): boolean => {
   if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation) return true;
   return false;
 };
 
-export const getProfilePicture = (feed: Feeds): string => {
+export const getGroupImage = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupImage!;
   else return feed?.profilePicture!;
 };
+
+export const getMemberDetails = (feed:Feeds) => {
+    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat.wallet == feed.msg.fromCAIP10)!;
+    return senderProfile? senderProfile[0]: null;
+
+};
+
+
 
 export const getName = (feed: Feeds): string => {
   if (checkIfGroup(feed)) return feed?.groupInformation?.groupName!;
@@ -18,6 +26,7 @@ export const getName = (feed: Feeds): string => {
 
 export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: boolean) => {
   if (checkIfGroup(feed) && !feed.msg.messageContent) {
+
     if (feed?.groupInformation?.groupCreator === walletToCAIP10({ account })) {
       return {
         type: 'Text',
@@ -25,7 +34,6 @@ export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: bool
       };
     } else {
       if (isIntent) {
-        console.log('in intent');
         return {
           type: 'Text',
           message: 'Group Invite Received',
@@ -38,6 +46,15 @@ export const getChatsnapMessage = (feed: Feeds, account: string, isIntent?: bool
       }
     }
   }
+
+  //Group is there and feeds are also there in the group but it is an Intent
+  if (checkIfGroup(feed) && isIntent) {
+    return {
+      type: 'Text',
+      message: 'Group Invite Received',
+    };
+  }
+
   return {
     type: feed.msg.messageType,
     message: feed.msg.messageContent,
@@ -50,12 +67,12 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
   return 'Please accept to enable push chat from this wallet';
 };
 
-export const convertToWalletAddressList = (memberList) => {
-  return memberList?.map((member) => member.wallets);
+export const convertToWalletAddressList = (memberList:Member[]) => {
+  return memberList?.map((member) => member.wallet);
 };
 
 export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove: boolean): Array<string> => {
-  const existingAdmins = feed?.groupInformation?.groupMembers?.filter((admin) => admin.isAdmin == true);
+  const existingAdmins = feed?.groupInformation?.members?.filter((admin) => admin.isAdmin == true);
   const groupAdminList = convertToWalletAddressList(existingAdmins);
   if (!toRemove) {
     return [...groupAdminList, walletAddress];
