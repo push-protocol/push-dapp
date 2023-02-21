@@ -192,7 +192,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
-        {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
+        {/* {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
           <AddWalletContainer>
             <AddMember />
             <SpanV2
@@ -204,7 +204,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
               Add more wallets
             </SpanV2>
           </AddWalletContainer>
-        )}
+        )} */}
         <ProfileContainer>
           {currentChat?.groupInformation?.members?.map((member, index) => {
             return (
