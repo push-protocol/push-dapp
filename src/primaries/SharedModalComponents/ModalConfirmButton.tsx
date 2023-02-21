@@ -16,9 +16,10 @@ type ModalConfirmButtonType = {
     backgroundColor?:string,
     border?:string,
     topMargin?:string,
+    loaderTitle?: string,
 }
 
-const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,topMargin}:ModalConfirmButtonType)=>{
+const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,border,topMargin,loaderTitle}:ModalConfirmButtonType)=>{
     const themes = useTheme();
     return(
         <ThemeProvider theme={themes}>
@@ -31,7 +32,8 @@ const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,bord
                     isLoading 
                     ? 
                     <LoaderContainer>
-                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" />
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" title={loaderTitle??''}
+ />
                     </LoaderContainer>
                     :
                     <CustomButton 

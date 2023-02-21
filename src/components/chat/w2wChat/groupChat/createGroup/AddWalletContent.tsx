@@ -27,9 +27,8 @@ import MemberListContainer from './MemberListContainer';
 import { User } from '../../../../../types/chat';
 import { findObject } from '../../../../../helpers/UtilityHelper';
 
-export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList }) => {
+export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList,isLoading }) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
@@ -234,6 +233,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           text="Create Group"
           onClick={() => handleCreateGroup()}
           isLoading={isLoading}
+          loaderTitle = "Creating group"
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF'  : theme.groupButtonTextColor}
           border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}

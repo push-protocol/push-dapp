@@ -1,8 +1,10 @@
 import * as PushAPI from '@pushprotocol/restapi';
-import { ConnectedUser, Feeds, User } from 'types/chat';
+import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
 import { appConfig } from '../../config';
-
+import * as w2wHelper from 'helpers/w2w/';
 import * as PushNodeClient from 'api';
+import { walletToCAIP10 } from '.';
+import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -98,39 +100,43 @@ export const getDefaultFeed = async ({
   walletAddress,
   userData,
   inbox,
-  intents
+  intents,
 }: {
   walletAddress?: string;
   userData?: User;
   inbox: Feeds[];
   intents: Feeds[];
-}): Feeds => {
+}): Promise<Feeds> => {
+  
   const user =
     userData ??
     (await PushAPI.user.get({
       account: walletAddress!,
       env: appConfig.appEnv,
     }));
-    console.log(user)
-    let feed:Feeds ={};
+    let feed:Feeds;
     const inboxUser = inbox.filter((inb) => inb.did === user.did);
 
     const intentUser = intents.filter((userExist) => userExist.did === user.did);
-    console.log(inboxUser)
-    console.log(intentUser)
     if (inboxUser.length) {
       feed = inboxUser[0];
     } else if(intentUser.length){
       feed = intentUser[0];
     }
     else {
-   feed = {
+   feed = getDefaultFeedObject(user);
+}
+  return feed;
+};
+
+export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
+  const feed = {
     msg: {
       messageContent: null,
       timestamp: null,
       messageType: null,
       signature: null,
-      signatureType: null,
+      sigType: null,
       link: null,
       encType: null,
       encryptedSecret: null,
@@ -150,11 +156,11 @@ export const getDefaultFeed = async ({
     publicKey: user.publicKey,
     combinedDID: null,
     cid: null,
-    groupInformation: undefined,
+    groupInformation: groupInformation??undefined,
   };
-}
   return feed;
-};
+}
+
 export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Promise<ConnectedUser> => {
   let decryptedPrivateKey;
     let user:User;
@@ -170,3 +176,11 @@ export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Pro
     }
     return connectedUser;
 }
+
+
+export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
+  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: false });
+  await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
+  inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
+  return inboxes
+};

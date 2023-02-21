@@ -19,13 +19,19 @@ import { ChatUserContext } from '../../../../../contexts/ChatUserContext';
 import { appConfig } from '../../../../../config';
 import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
+import { AppContext, Feeds } from 'types/chat';
+import { Context } from 'modules/chat/ChatModule';
+import { fetchInbox } from 'helpers/w2w/user';
+import LoaderSpinner, { LOADER_TYPE }  from 'components/reusables/loaders/LoaderSpinner';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
+  const { setChat,setInbox,inbox}: AppContext = useContext<AppContext>(Context);
   const [groupNameData, setGroupNameData] = React.useState<string>('');
   const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
   const [groupImageData, setGroupImageData] = React.useState<string>('');
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
   const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
@@ -42,9 +48,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   // to close the modal upon a click on backdrop
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
-
   const handleCreateGroup = async (): Promise<any> => {
-
+    setIsLoading(true);
     try {
       const memberWalletList = memberList.map(member => member.wallets);
       const createGroupRes = await PushAPI.chat.createGroup({
@@ -59,6 +64,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         env: appConfig.appEnv
       });
       if (typeof createGroupRes !== 'string') {
+        const inboxes:Feeds[] = await fetchInbox(connectedUser);
+        setInbox(inboxes);
         createGroupToast.showMessageToast({
           toastTitle: 'Success',
           toastMessage: 'Group created successfully',
@@ -89,9 +96,13 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
     } catch (e) {
       console.log('Error in creating group', e);
     }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
   return (
     <ThemeProvider theme={themes}>
+
       <ModalContainer createGroupState={createGroupState}
       >
         <ItemHV2
@@ -130,7 +141,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 
           />
         )}
-        {createGroupState == 2 && <AddWalletContent handleCreateGroup={handleCreateGroup} memberList={memberList} handleMemberList={setMemberList} />}
+        {createGroupState == 2 && <AddWalletContent handleCreateGroup={handleCreateGroup} memberList={memberList} handleMemberList={setMemberList} isLoading={isLoading} />}
       </ModalContainer>
     </ThemeProvider>
   );

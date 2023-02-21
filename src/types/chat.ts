@@ -43,22 +43,22 @@ export interface Member {
     isAdmin: boolean;
   }
 export interface IGroup {
-    members: Array<Member>,
-    pendingMembers: Array<Member>,
-    contractAddressNFT?: string
-    numberOfNFTs?: number,
-    contractAddressERC20?: string,
-    numberOfERC20?: number,
-    groupImage: string,
-    groupName: string,
-    groupDescription: string,
-    groupCreator: string,
-    isPublic: number,
+  members: { wallet: string, publicKey: string, isAdmin: boolean, image: string }[],
+  pendingMembers: { wallet: string, publicKey: string, isAdmin: boolean, image: string }[],
+  contractAddressERC20: string | null,
+  numberOfERC20: number,
+  contractAddressNFT: string | null,
+  numberOfNFTTokens: number,
+  verificationProof: string,
+  groupImage: string | null,
+  groupName: string,
+  isPublic: boolean,
+  groupDescription: string | null,
+  groupCreator: string,
+  chatId: string
   }
 export interface Feeds {
-    // This property contains all the info to be displayed on the sidebar for the other peer's information
-    // Such as the decrypted message content and peer's profilePicture
-    msg: InboxChat;
+    msg: MessageIPFS;
     did: string;
     wallets: string;
     profilePicture: string | null;
@@ -78,20 +78,6 @@ export interface TwitterFeedReturnType{
     messageType:string;
 }
 
-export interface InboxChat {
-    link: string;
-    timestamp: number;
-    fromDID: string;
-    toDID: string;
-    fromCAIP10: string;
-    toCAIP10: string;
-    messageContent: string;
-    messageType: string;
-    encType: string;
-    signature: string;
-    signatureType: string;
-    encryptedSecret: string;
-}
 
 export interface BlockedLoadingI {
     enabled: boolean;

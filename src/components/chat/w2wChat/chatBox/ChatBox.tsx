@@ -36,7 +36,7 @@ import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID } from 'types/chat';
-import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
+import { checkConnectedUser, checkIfIntentExist, fetchInbox, getLatestThreadHash, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -90,7 +90,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
   const { connectedUser,setConnectedUser } = useContext(ChatUserContext);
-  const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
@@ -190,11 +189,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useEffect(() => {
     setLoading(true);
-    // if (!connectedUser.privateKey) {
-    //    getUser();
-    // }
     if (currentChat) {
-      if (currentChat.combinedDID !== chatCurrentCombinedDID) {
         setChatCurrentCombinedDID(currentChat.combinedDID);
         setIsGroup(checkIfGroup(currentChat));
         // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
@@ -207,7 +202,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         } catch (err) {
           setImageSource(image);
         }
-      }
     }
   }, [currentChat]);
 
@@ -219,11 +213,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const fetchInboxApi = async (): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
-      // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
-      // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await PushAPI.chat.chats({ account: account!, env: appConfig.appEnv, toDecrypt: false });
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: account! }), inboxes, 'did');
-      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
+      const inboxes:Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
     }

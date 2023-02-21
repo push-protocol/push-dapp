@@ -60,7 +60,6 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     console.log('remove group admin');
     setShowMoreOption(null);
   };
-console.log(currentChat)
   const memberDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
