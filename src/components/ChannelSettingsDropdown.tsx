@@ -21,10 +21,10 @@ import cubeIcon from '../assets/icons/cube.png';
 import redBellIcon from '../assets/icons/redBellSlash.png';
 import userMinusIcon from '../assets/icons/userCircleMinus.png';
 import userPlusIcon from '../assets/icons/userCirclePlus.png';
-import ActivateChannelModal from './ActivateChannelModal';
 import AddDelegateModalContent from './AddDelegateModalContent';
 import AddSubgraphModalContent from './AddSubgraphModalContent';
 import ChannelDeactivateModalContent from './ChannelDeactivateModalContent';
+import ChannelReactivateModalContent from './ChannelReactivateModalContent';
 import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
 // Internal Configs
@@ -47,7 +47,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const { account, library, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
-  const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE, CHANNEL_ACTIVE_STATE } = useSelector(
+  const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector(
     (state: any) => state.channels
   );
 
@@ -60,6 +60,11 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
     isModalOpen: isDeactivateChannelModalOpen,
     showModal: showDeactivateChannelModal,
     ModalComponent: DeactivateChannelModalComponent,
+  } = useModal();
+  const {
+    isModalOpen: isReactivateChannelModalOpen,
+    showModal: showReactivateChannelModal,
+    ModalComponent: ReactivateChannelModalComponent,
   } = useModal();
   const {
     isModalOpen: isAddDelegateModalOpen,
@@ -81,13 +86,13 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const closeDropdownCondition =
     isDropdownOpen &&
     !isDeactivateChannelModalOpen &&
+    !isReactivateChannelModalOpen &&
     !isAddDelegateModalOpen &&
     !isRemoveDelegateModalOpen &&
     !isAddSubgraphModalOpen;
   useClickAway(DropdownRef, () => closeDropdownCondition && closeDropdown());
 
   const [loading, setLoading] = React.useState(false);
-  const [showActivateChannelPopup, setShowActivateChannelPopup] = React.useState(false);
   const [channelStakeFees, setChannelStakeFees] = React.useState(MIN_STAKE_FEES);
   const [poolContrib, setPoolContrib] = React.useState(0);
 
@@ -124,66 +129,17 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const toggleChannelActivationState = () => {
     if (isChannelBlocked) return;
     if (isChannelDeactivated) {
-      setShowActivateChannelPopup(true);
+      showReactivateChannelModal();
     } else {
       showDeactivateChannelModal();
     }
   };
 
+  const reactivateChannelToast = useToast();
   /**
    * Function to activate a channel that has been deactivated
    */
-  const activateChannel = async () => {
-    // First Approve DAI
-    setLoading(true);
-    var signer = library.getSigner(account);
-    let daiContract = new ethers.Contract(addresses.dai, abis.erc20, signer);
-    const fees = ethers.utils.parseUnits(channelStakeFees.toString(), 18);
-    var sendTransactionPromise = daiContract.approve(addresses.epnscore, fees);
-    const tx = await sendTransactionPromise;
-
-    console.log(tx);
-    console.log('waiting for tx to finish');
-
-    await library.waitForTransaction(tx.hash);
-    await epnsWriteProvider
-      .reactivateChannel(fees)
-      .then(async (tx: any) => {
-        console.log(tx);
-        console.log('Transaction Sent!');
-
-        toaster.update(notificationToast(), {
-          render: 'Reactivating Channel',
-          type: toaster.TYPE.INFO,
-          autoClose: 5000,
-        });
-
-        await tx.wait(1);
-        toaster.update(notificationToast(), {
-          render: 'Channel Reactivated',
-          type: toaster.TYPE.INFO,
-          autoClose: 5000,
-        });
-        dispatch(
-          setUserChannelDetails({
-            ...channelDetails,
-            channelState: CHANNEL_ACTIVE_STATE,
-          })
-        );
-      })
-      .catch((err: any) => {
-        console.log('!!!Error reactivateChannel() --> %o', err);
-        toaster.update(notificationToast(), {
-          render: 'Transacion Failed: ' + err.error?.message || err.message,
-          type: toaster.TYPE.ERROR,
-          autoClose: 5000,
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-        setShowActivateChannelPopup(false);
-      });
-  };
+  const activateChannel = epnsWriteProvider.reactivateChannel;
 
   const deactivateChannelToast = useToast();
   /**
@@ -287,8 +243,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
           </ActiveChannelWrapper>
         </DropdownWrapper>
 
-        {/* modal to display the activate channel popup */}
-        {showActivateChannelPopup && (
+        {/* {showActivateChannelPopup && (
           <ActivateChannelModal
             onClose={() => {
               if (showActivateChannelPopup) {
@@ -300,7 +255,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
             setChannelStakeFees={setChannelStakeFees}
             channelStakeFees={channelStakeFees}
           />
-        )}
+        )} */}
       </div>
 
       {/* deactivate channel modal */}
@@ -308,6 +263,13 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={ChannelDeactivateModalContent}
         onConfirm={deactivateChannel}
         toastObject={deactivateChannelToast}
+      />
+
+      {/* reactivate channel modal */}
+      <ReactivateChannelModalComponent
+        InnerComponent={ChannelReactivateModalContent}
+        onConfirm={activateChannel}
+        toastObject={reactivateChannelToast}
       />
 
       {/* modal to add a delegate */}
