@@ -26,6 +26,7 @@ import { AddWalletContent } from '../createGroup/AddWalletContent';
 import * as PushAPI from '@pushprotocol/restapi';
 import { appConfig } from 'config';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { convertToWalletAddressList } from 'helpers/w2w/groupChat';
 
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
@@ -38,7 +39,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const [memberList, setMemberList] = React.useState<any>([]);
   const [groupMembers,setGroupMembers] = React.useState(currentChat?.groupInformation?.groupMembers);
 
-  const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
+  const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
@@ -90,22 +91,27 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 
   const handleAddMoreWalletAddress = async () => {
 
-    // const updatedMemberList = 
+    const newMembersToAdd = memberList.map(member => member.wallets);
+    const alreadyPresentMembers = groupMembers.map(member => member.wallets)
+    const members = [...alreadyPresentMembers,...newMembersToAdd];
+
+    const admin = convertToWalletAddressList(currentChat?.groupInformation?.groupMembers.filter((admin)=>admin.isAdmin == true));
 
     try {
-      
-      // const response = await PushAPI.chat.updateGroup({
-      //   chatId:currentChat?.groupInformation?.chatId,
-      //   groupName:currentChat?.groupInformation?.groupName,
-      //   groupDescription:currentChat?.groupInformation?.groupDescription,
-      //   groupImage:currentChat?.groupInformation?.groupImage,
-      //   members:updatedMemberList,
-      //   admins: admin,
-      //   account:account!,
-      //   pgpPrivateKey:connectedUser?.privateKey,
-      //   env:appConfig.appEnv
+      const response = await PushAPI.chat.updateGroup({
+        chatId:currentChat?.groupInformation?.chatId,
+        groupName:currentChat?.groupInformation?.groupName,
+        groupDescription:currentChat?.groupInformation?.groupDescription,
+        groupImage:currentChat?.groupInformation?.groupImage,
+        members:members,
+        admins: admin,
+        account:account!,
+        pgpPrivateKey:connectedUser?.privateKey,
+        env:appConfig.appEnv
+      })
 
-      // })
+      console.log("response",response);
+      handleClose();
       
     } catch (error) {
       console.log("Error",error)
@@ -239,7 +245,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                 </SpanV2>
               </ItemVV2>
             </InfoContainer>
-            {isAccountOwnerAdmin && currentChat?.groupInformation?.groupMembers?.length < 10 && (
+            {isAccountOwnerAdmin && currentChat?.groupInformation?.pendingMembers?.length < 10 && (
               <AddWalletContainer onClick={() => setShowAddMoreWalletModal(true)}>
                 <AddMember />
                 <SpanV2

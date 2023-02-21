@@ -31,7 +31,7 @@ import { findObject } from '../../../../../helpers/UtilityHelper';
 import { Context } from 'modules/chat/ChatModule';
 import { MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 
-export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList, handlePrevious, handleClose, title,groupMembers }) => {
+export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList, handlePrevious, handleClose, title, groupMembers }) => {
   const { currentChat }: AppContext = React.useContext<AppContext>(Context);
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -47,7 +47,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const theme = useTheme();
   const searchFeedToast = useToast();
 
-  console.log("Group Members",currentChat,memberList);
+  // console.log("Group Members", currentChat, memberList);
 
   React.useEffect(() => {
     if (isInValidAddress) {
@@ -130,15 +130,21 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const addMemberToList = (member: User) => {
     let errorMessage = '';
 
-    //this checks if the member is already present in the currentChat or not
-    const checkIfMemberisAlreadyPresent = findObject(member,memberList,'wallets');
-    console.log("X",checkIfMemberisAlreadyPresent);
+    console.log("Member List",member,groupMembers);
 
-    if(checkIfMemberisAlreadyPresent){
+    //this checks if the member is already present in the currentChat or not
+    const checkIfMemberisAlreadyPresent = findObject(member, groupMembers, 'wallets');
+    console.log("X", checkIfMemberisAlreadyPresent);
+
+    if (checkIfMemberisAlreadyPresent) {
       errorMessage = "This Member is Already present in the group"
     }
 
-    if (memberList?.length >= 9) {
+    // if (groupMembers && memberList?.length + groupMembers?.length >= 9) {
+    //   errorMessage = 'No More Addresses can be added'
+    // }
+
+    if (memberList?.length + groupMembers?.length >= 9) {
       errorMessage = 'No More Addresses can be added'
     }
 
@@ -175,7 +181,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
-  console.log("Group Members",groupMembers)
+  console.log("Group Members", groupMembers)
 
   const themes = useTheme();
   var totalNumberofMembers = '9';
@@ -190,7 +196,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           align-items="center"
 
         >
-           <Back
+          <Back
             onClick={handlePrevious}
             style={{ cursor: 'pointer' }}
           />
@@ -227,8 +233,9 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               fontWeight={400}
               fontSize="14px"
             >
-             { `0${memberList?.length} / 0${totalNumberofMembers - groupMembers?.length} Members`}
-             
+              {`0${memberList?.length + groupMembers?.length} / 09 Members`}
+              {/* { `0${memberList?.length} / 09 Members`} */}
+
             </SpanV2>
           </LabelContainer>
           <SearchBarContent onSubmit={handleSearch}>
@@ -284,7 +291,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           </MultipleMemberList>
         )}
         <ModalConfirmButton
-          text={groupMembers.length>0 ? "Add to Group" : "Create Group"}
+          text={groupMembers.length > 0 ? "Add to Group" : "Create Group"}
           onClick={() => handleCreateGroup()}
           isLoading={isLoading}
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}

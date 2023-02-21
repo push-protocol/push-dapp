@@ -59,6 +59,12 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
   return 'Please accept to enable push chat from this wallet';
 };
 
+export const convertToWalletAddressList = (memberList)=>{
+  return memberList?.map((member)=>member.wallets)
+}
+
+
+
 export const MemberAlreadyPresent = (feed:Feeds,walletAddress:string)=>{
 
   console.log("group chat",feed,walletAddress)
