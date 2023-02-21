@@ -58,3 +58,16 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
     return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
   return 'Please accept to enable push chat from this wallet';
 };
+
+export const MemberAlreadyPresent = (feed:Feeds,walletAddress:string)=>{
+
+  console.log("group chat",feed,walletAddress)
+
+  const memberCheck = feed?.groupInformation?.groupMembers?.find((x)=>x.wallets == walletAddress);
+  console.log("Member ",memberCheck);
+  if(memberCheck){
+    console.log("Member ",memberCheck);
+    return true;
+  }
+  return false;
+}

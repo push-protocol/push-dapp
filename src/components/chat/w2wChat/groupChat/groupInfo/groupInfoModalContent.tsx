@@ -23,13 +23,20 @@ import { Context } from 'modules/chat/ChatModule';
 import { ProfileCard } from './ProfileCard';
 import { DropdownValueType } from '../../../../Dropdown';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
+import * as PushAPI from '@pushprotocol/restapi';
+import { appConfig } from 'config';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showMoreOption, setShowMoreOption] = React.useState<string>(null);
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
+  // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
   const [memberList, setMemberList] = React.useState<any>([]);
+  const [groupMembers,setGroupMembers] = React.useState(currentChat?.groupInformation?.groupMembers);
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.groupMembers?.some(
     (member) => caip10ToWallet(member?.wallets) === account && member?.isAdmin
@@ -81,7 +88,29 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
 
-  const handleAddMoreWalletAddress = () => {
+  const handleAddMoreWalletAddress = async () => {
+
+    // const updatedMemberList = 
+
+    try {
+      
+      // const response = await PushAPI.chat.updateGroup({
+      //   chatId:currentChat?.groupInformation?.chatId,
+      //   groupName:currentChat?.groupInformation?.groupName,
+      //   groupDescription:currentChat?.groupInformation?.groupDescription,
+      //   groupImage:currentChat?.groupInformation?.groupImage,
+      //   members:updatedMemberList,
+      //   admins: admin,
+      //   account:account!,
+      //   pgpPrivateKey:connectedUser?.privateKey,
+      //   env:appConfig.appEnv
+
+      // })
+      
+    } catch (error) {
+      console.log("Error",error)
+    }
+
     console.log("Handle More Wallet Address");
   }
 
@@ -256,6 +285,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             handlePrevious={handlePrevious}
             handleClose={handleCloseAddWalletModal}
             title={"Add More Wallets"}
+            groupMembers={groupMembers}
           />
         )}
 

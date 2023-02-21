@@ -29,8 +29,9 @@ import MemberListContainer from './MemberListContainer';
 import { AppContext, User } from '../../../../../types/chat';
 import { findObject } from '../../../../../helpers/UtilityHelper';
 import { Context } from 'modules/chat/ChatModule';
+import { MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 
-export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList, handlePrevious, handleClose, title }) => {
+export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList, handlePrevious, handleClose, title,groupMembers }) => {
   const { currentChat }: AppContext = React.useContext<AppContext>(Context);
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -38,7 +39,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
 
-  const [groupMembers,setGroupMembers] = React.useState(currentChat?.groupInformation?.groupMembers)
+  // const [groupMembers,setGroupMembers] = React.useState(currentChat?.groupInformation?.groupMembers)
 
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const { library } = useWeb3React();
@@ -46,7 +47,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const theme = useTheme();
   const searchFeedToast = useToast();
 
-  // console.log("Group Members",groupMembers,currentChat);
+  console.log("Group Members",currentChat,memberList);
 
   React.useEffect(() => {
     if (isInValidAddress) {
@@ -129,7 +130,13 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
   const addMemberToList = (member: User) => {
     let errorMessage = '';
 
-    // const checkIfMemberisAlreadyPresent = groupMembers.
+    //this checks if the member is already present in the currentChat or not
+    const checkIfMemberisAlreadyPresent = findObject(member,memberList,'wallets');
+    console.log("X",checkIfMemberisAlreadyPresent);
+
+    if(checkIfMemberisAlreadyPresent){
+      errorMessage = "This Member is Already present in the group"
+    }
 
     if (memberList?.length >= 9) {
       errorMessage = 'No More Addresses can be added'
@@ -168,7 +175,10 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
+  console.log("Group Members",groupMembers)
+
   const themes = useTheme();
+  var totalNumberofMembers = '9';
 
   return (
     <ThemeProvider theme={theme}>
@@ -217,7 +227,8 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               fontWeight={400}
               fontSize="14px"
             >
-              {`0${memberList?.length} / 09 Members`}
+             { `0${memberList?.length} / 0${totalNumberofMembers - groupMembers?.length} Members`}
+             
             </SpanV2>
           </LabelContainer>
           <SearchBarContent onSubmit={handleSearch}>
@@ -273,7 +284,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           </MultipleMemberList>
         )}
         <ModalConfirmButton
-          text="Create Group"
+          text={groupMembers.length>0 ? "Add to Group" : "Create Group"}
           onClick={() => handleCreateGroup()}
           isLoading={isLoading}
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}

@@ -147,6 +147,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             handlePrevious={handlePrevious}
             handleClose={handleClose}
             title={"Create Group"}
+            groupMembers={[]}
           />}
       </ModalContainer>
     </ThemeProvider>

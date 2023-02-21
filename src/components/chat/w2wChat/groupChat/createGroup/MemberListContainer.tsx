@@ -38,7 +38,12 @@ const MemberListContainer = ({
                 overflow="hidden"
                 margin="0px 12px 0px 0px"
               >
-                <ImageV2 src={memberData?.profilePicture} />
+                {memberData?.profilePicture ? (
+                  <ImageV2 src={ memberData?.profilePicture } />
+                ) : (
+                  <ImageV2 src={ memberData?.image } />
+                )}
+                
               </ItemVV2>
               <SpanV2 color={theme.modalPrimaryTextColor}>
                 {shortenText(memberData.wallets.split(':')[1], 8,6)}
