@@ -362,6 +362,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     message: string;
     messageType: MessagetypeType;
   }): Promise<void> => {
+    let user;
     try {
       setMessageBeingSent(true);
       if (
@@ -369,7 +370,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
-        const user = await getUserWithDecryptedPvtKey(connectedUser);
+         user = await getUserWithDecryptedPvtKey(connectedUser);
+         console.log("in here send intent")
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,

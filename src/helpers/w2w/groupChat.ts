@@ -13,7 +13,7 @@ export const getGroupImage = (feed: Feeds): string => {
 
 export const getMemberDetails = (feed:Feeds) => {
     const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat.wallet == feed.msg.fromCAIP10)!;
-    return senderProfile[0];
+    return senderProfile? senderProfile[0]: null;
 
 };
 

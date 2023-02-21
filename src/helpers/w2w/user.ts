@@ -165,6 +165,8 @@ export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Pro
         user.encryptedPrivateKey,
         connectedUser.wallets
       );
+      return {...user,privateKey:decryptedPrivateKey};
+
     }
-  return {...user,privateKey:decryptedPrivateKey};
+    return connectedUser;
 }
