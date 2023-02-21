@@ -41,7 +41,7 @@ const MemberListContainer = ({
                 <ImageV2 src={memberData?.profilePicture} />
               </ItemVV2>
               <SpanV2 color={theme.modalPrimaryTextColor}>
-                {shortenText(memberData.wallet.split(':')[1], 8,6)}
+                {shortenText(memberData.wallets.split(':')[1], 8,6)}
               </SpanV2>
             </WalletProfile>
             <ItemVV2
