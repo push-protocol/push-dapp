@@ -626,35 +626,25 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           <Item>
                             <MessageTime>{time}</MessageTime>
 
-                            {i === 0 &&
-                              intents?.length === 2 &&
-                              (isGroup ? (
-                                <ItemText>
-                                  <Image src={currentChat?.groupInformation?.isPublic ? Lock : LockSlash} />
-                                  {currentChat?.groupInformation?.isPublic
+                            {i === 0 && intents?.length === 2 && (
+                              <ItemText>
+                                <Image
+                                  src={isGroup ? (currentChat?.groupInformation?.isPublic ? Lock : LockSlash) : Lock}
+                                />
+                                {isGroup
+                                  ? currentChat?.groupInformation?.isPublic
                                     ? 'Messages are not encrypted.'
-                                    : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'}
-                                  <ItemLink
-                                    href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
-                                    target={'_blank'}
-                                  >
-                                    {' '}
-                                    Click to learn more.
-                                  </ItemLink>
-                                </ItemText>
-                              ) : (
-                                <ItemText>
-                                  <Image src={Lock} />
-                                  Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
-                                  <ItemLink
-                                    href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
-                                    target={'_blank'}
-                                  >
-                                    {' '}
-                                    Click to learn more.
-                                  </ItemLink>
-                                </ItemText>
-                              ))}
+                                    : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'
+                                  : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'}
+                                <ItemLink
+                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                                  target={'_blank'}
+                                >
+                                  {' '}
+                                  Click to learn more.
+                                </ItemLink>
+                              </ItemText>
+                            )}
 
                             {i === 0 && intents?.length === 1 && (
                               <ItemTextSlash>
