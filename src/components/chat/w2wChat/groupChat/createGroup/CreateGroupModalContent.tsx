@@ -48,6 +48,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
   const handleCreateGroup = async (): Promise<any> => {
+    if(memberList.length) {
     setIsLoading(true);
     try {
       const memberWalletList = memberList.map(member => member.wallets);
@@ -110,6 +111,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);
+  }
   };
   return (
     <ThemeProvider theme={themes}>
