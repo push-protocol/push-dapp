@@ -81,3 +81,8 @@ export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove
     return newAdminList;
   }
 };
+
+export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
+  const members = feed?.groupInformation?.members?.filter((i) => i.wallet !== walletAddress);
+  return convertToWalletAddressList(members);
+}

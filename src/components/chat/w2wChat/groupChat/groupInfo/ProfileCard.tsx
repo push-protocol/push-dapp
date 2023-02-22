@@ -15,7 +15,7 @@ import Dropdown from 'components/Dropdown';
 import { caip10ToWallet } from '../../../../../helpers/w2w';
 
 
-export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setShowMoreOption, dropdownRef }) => {
+export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddress, setSelectedMemeberAddress, dropdownRef }) => {
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
 
@@ -57,14 +57,14 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
-            onClick={() => setShowMoreOption(member?.wallet)}
+            onClick={() => setSelectedMemeberAddress(member?.wallet)}
             style={{ cursor: 'pointer' }}
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
         )}
       </ItemHV2>
-      {showMoreOption == member?.wallet && (
+      {selectedMemeberAddress == member?.wallet && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}
