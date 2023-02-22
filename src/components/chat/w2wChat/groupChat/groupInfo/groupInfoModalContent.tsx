@@ -72,6 +72,9 @@ console.log(currentChat)
         env: appConfig.appEnv,
       });
       handleClose();
+      const updatedCurrentChat = currentChat;
+      updatedCurrentChat.groupInformation = updateResponse;
+      setChat(updatedCurrentChat);
       console.log('Updated group', updateResponse);
     } catch (e) {
       console.log('Error while adding admin', e);
@@ -105,6 +108,10 @@ console.log(currentChat)
         pgpPrivateKey: connectedUser?.privateKey,
         env: appConfig.appEnv,
       });
+
+      const updatedCurrentChat = currentChat;
+      updatedCurrentChat.groupInformation = updateResponse;
+      setChat(updatedCurrentChat);
       handleClose();
     } catch (e) {
       console.log('Error while dismissing admin', e);
@@ -139,6 +146,9 @@ console.log(currentChat)
         env: appConfig.appEnv,
       });
       handleClose();
+      const updatedCurrentChat = currentChat;
+      updatedCurrentChat.groupInformation = updateResponse;
+      setChat(updatedCurrentChat);
     } catch (error) {
       console.log("Error",error);
       createGroupToast.showMessageToast({
