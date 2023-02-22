@@ -48,6 +48,7 @@ import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
+import { HeaderMessage } from '../HeaderMessage/HeaderMessage';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -194,17 +195,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useEffect(() => {
     setLoading(true);
     if (currentChat) {
-        setIsGroup(checkIfGroup(currentChat));
-        // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
-        // even though the user was still on the same chat.
-        setMessages([]);
-        const image = getGroupImage(currentChat);
-        try {
-          CID.parse(image); // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${image}`);
-        } catch (err) {
-          setImageSource(image);
-        }
+      setIsGroup(checkIfGroup(currentChat));
+      // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
+      // even though the user was still on the same chat.
+      setMessages([]);
+      const image = getGroupImage(currentChat);
+      try {
+        CID.parse(image); // Will throw exception if invalid CID
+        setImageSource(INFURA_URL + `${image}`);
+      } catch (err) {
+        setImageSource(image);
+      }
     }
   }, [currentChat]);
 
@@ -628,40 +629,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                         time = dateString;
                       }
                     }
-                    let intents = currentChat?.intent?.split('+');
                     return (
                       <div key={i}>
                         {!showTime ? null : (
-                          <Item>
-                            <MessageTime>{time}</MessageTime>
-
-                            {i === 0 && intents?.length === 2 && (
-                              <ItemText>
-                                <Image
-                                  src={isGroup ? (currentChat?.groupInformation?.isPublic ? Lock : LockSlash) : Lock}
-                                />
-                                {isGroup
-                                  ? currentChat?.groupInformation?.isPublic
-                                    ? 'Messages are not encrypted.'
-                                    : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'
-                                  : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'}
-                                <ItemLink
-                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
-                                  target={'_blank'}
-                                >
-                                  {' '}
-                                  Click to learn more.
-                                </ItemLink>
-                              </ItemText>
-                            )}
-
-                            {i === 0 && intents?.length === 1 && (
-                              <ItemTextSlash>
-                                <Image src={LockSlash} />
-                                Messages are not encrypted till the user accepts the chat request.
-                              </ItemTextSlash>
-                            )}
-                          </Item>
+                          <HeaderMessage
+                            currentChat={currentChat}
+                            index={i}
+                            time={time}
+                            isGroup={isGroup}
+                          />
                         )}
 
                         <Chats
@@ -677,21 +653,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       </div>
                     );
                   })}
-                  {messages && messages?.length === 0 && (
-                    <Item margin="30px 0px">
-                      <ItemTextSlash>
-                        <Image src={LockSlash} />
-                        Messages are not encrypted till the user accepts the chat request.
-                      </ItemTextSlash>
-
-                      {!isGroup && (
-                        <FirstTime>
-                          This is your first conversation with recipient.<br></br> Start the conversation by sending a
-                          message.
-                        </FirstTime>
-                      )}
-                    </Item>
-                  )}
+                  <HeaderMessage
+                    messages={messages}
+                    isGroup={isGroup}
+                    currentChat={currentChat}
+                  />
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
                       msg={{
@@ -735,74 +701,6 @@ const SpinnerWrapper = styled.div`
   width: 100%;
   margin-top: 20px;
   height: 90px;
-`;
-
-const ItemLink = styled.a`
-  color: ${(props) => props.theme.default.secondaryColor};
-  text-decoration: none;
-  cursor: pointer;
-`;
-
-const ItemText = styled.div`
-  color: ${(props) => props.theme.default.secondaryColor};
-  max-width: 556px;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 130%;
-  background-color: ${(props) => props.theme.default.bg};
-  padding: 10px;
-  border-radius: 14px;
-  text-align: center;
-  margin-bottom: 10px;
-
-  @media (max-width: 1250px) {
-    width: 70%;
-  }
-
-  @media (max-width: 771px) {
-    width: 80%;
-  }
-`;
-
-const ItemTextSlash = styled.div`
-  color: ${(props) => props.theme.default.secondaryColor};
-  width: auto;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 130%;
-  background-color: ${(props) => props.theme.default.bg};
-  padding: 10px;
-  border-radius: 14px;
-  text-align: center;
-  margin-bottom: 10px;
-
-  @media (max-width: 1250px) {
-    width: 70%;
-  }
-
-  @media (max-width: 771px) {
-    width: 80%;
-  }
-`;
-const Image = styled.img`
-  width: 10px;
-  margin-right: 5px;
-  position: relative;
-  bottom: -2px;
-`;
-
-const MessageTime = styled(ItemHV2)`
-  width: 100%;
-  font-size: 11px;
-  color: ${(props) => props.theme.default.secondaryColor};
-  margin: 15px 0px;
-`;
-
-const FirstTime = styled(ItemHV2)`
-  width: 100%;
-  font-size: 13px;
-  color: ${(props) => props.theme.default.secondaryColor};
-  margin: 15px 0px;
 `;
 
 const MessageContainer = styled(ItemVV2)`
