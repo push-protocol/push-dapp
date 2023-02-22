@@ -156,6 +156,8 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
+  console.log("filteredUserData",filteredUserData)
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -194,7 +196,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               right="16px"
             >
               {searchedUser.length > 0 && <Clear onClick={clearInput} />}
-              {searchedUser.length >= 0 && (
+              {searchedUser.length >= 0 && !filteredUserData && (
                 <SearchIcon
                   style={{ cursor: 'pointer' }}
                   onClick={handleSearch}
@@ -304,6 +306,7 @@ const Input = styled.input`
 
 const MemberList = styled(ItemVV2)`
   justify-content: 'flex-start';
+  padding: 0px 2px;
 `;
 
 
