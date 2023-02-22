@@ -85,7 +85,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
@@ -190,7 +189,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useEffect(() => {
     setLoading(true);
     if (currentChat) {
-        setChatCurrentCombinedDID(currentChat.combinedDID);
         setIsGroup(checkIfGroup(currentChat));
         // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
         // even though the user was still on the same chat.
@@ -422,7 +420,18 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
-      console.log(error);
+      console.error(error.message);
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot send request, Try again later',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
       setMessageBeingSent(false);
     }
     setTimeout(() => {

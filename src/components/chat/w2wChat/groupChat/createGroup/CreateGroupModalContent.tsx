@@ -22,11 +22,10 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox } from 'helpers/w2w/user';
-import LoaderSpinner, { LOADER_TYPE }  from 'components/reusables/loaders/LoaderSpinner';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
-  const { setChat,setInbox,inbox}: AppContext = useContext<AppContext>(Context);
+  const { setInbox}: AppContext = useContext<AppContext>(Context);
   const [groupNameData, setGroupNameData] = React.useState<string>('');
   const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
   const [groupImageData, setGroupImageData] = React.useState<string>('');
@@ -81,7 +80,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
-          toastMessage: 'Unable to create group',
+          toastMessage: createGroupRes,
           toastType: 'ERROR',
           getToastIcon: (size) => (
             <MdError
@@ -94,7 +93,19 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       }
 
     } catch (e) {
-      console.log('Error in creating group', e);
+      console.error('Error in creating group', e.message);
+      createGroupToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: e.message,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      handleClose();
     }
     setTimeout(() => {
       setIsLoading(false);
