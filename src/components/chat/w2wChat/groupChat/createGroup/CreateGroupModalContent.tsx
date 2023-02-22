@@ -22,13 +22,14 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox } from 'helpers/w2w/user';
+import { profilePicture } from 'config/W2WConfig';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
   const { setInbox}: AppContext = useContext<AppContext>(Context);
   const [groupNameData, setGroupNameData] = React.useState<string>('');
   const [groupDescriptionData, setGroupDescriptionData] = React.useState<string>('');
-  const [groupImageData, setGroupImageData] = React.useState<string>('');
+  const [groupImageData, setGroupImageData] = React.useState<string>(null);
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
@@ -56,7 +57,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         groupName: groupNameData,
         groupDescription: groupDescriptionData,
         members: memberWalletList,
-        groupImage: groupImageData,
+        groupImage: groupImageData??profilePicture,
         admins: [],
         isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
         account: account!,
