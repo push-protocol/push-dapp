@@ -29,6 +29,7 @@ import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
+import { useDeviceWidthCheck } from 'hooks';
 
 const ethers = require('ethers');
 
@@ -54,6 +55,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const theme = useTheme();
   const { channelState } = channelDetails;
   const onCoreNetwork = ALLOWED_CORE_NETWORK === chainId;
+  const isMobile = useDeviceWidthCheck(425);
 
   // modals
   const {
@@ -270,6 +272,9 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={ChannelReactivateModalContent}
         onConfirm={activateChannel}
         toastObject={reactivateChannelToast}
+        placementMargin={
+          isMobile ? "10rem 1rem 0 1rem": ""
+        }
       />
 
       {/* modal to add a delegate */}

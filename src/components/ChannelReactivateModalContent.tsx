@@ -240,7 +240,6 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         <AdaptiveMobileItemHV22
           justifyContent="flex-start"
           alignSelf="stretch"
-          margin="10px 0px 0px 0px"
         >
           <ImageSection src={channelDetails.icon}></ImageSection>
 
@@ -282,10 +281,7 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
         </AdaptiveMobileItemHV22>
 
         <Footer>
-          <div>
-            <FooterPrimaryText>Channel reactivation fee</FooterPrimaryText>
-            <FooterSecondaryText>Reactivating channel requires fees to be deposited</FooterSecondaryText>
-          </div>
+          <FooterPrimaryText>Channel reactivation fee</FooterPrimaryText>
           <ItemHV2 flex="0">
             {pushDeposited ? <TickImage src={VerifyLogo} /> : null}
             <ReactivateFee>{50} PUSH</ReactivateFee>
@@ -323,17 +319,34 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
 const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
+  @media ${device.mobileL} {
+    padding: 0.5rem;
+  }
 `;
 
 const Header = styled(ItemHV2)`
-  margin: 1rem 0rem 2rem 0rem;
+  margin: 0.6rem 0rem 1.4rem 0rem;
+  @media ${device.laptop} {
+    margin: 0.5rem 0rem 1.2rem 0rem;
+  }
+  /* @media ${device.mobileS} {
+    margin: 0.5rem 0rem 1.2rem 0rem;
+  } */
 `;
 
 const HeaderHeading = styled(H2V2)`
+  color: ${(props) => props.theme.tooltipTopHeading};
   width: 90%;
   text-align: center;
   font-weight: 500;
   font-size: 1.5rem;
+
+  @media ${device.laptop} {
+    font-size: 1.2rem;
+  }
+  @media ${device.mobileL} {
+    width: 85%;
+  }
 `;
 
 const AdaptiveMobileItemVV2 = styled(ItemVV2)`
@@ -360,6 +373,10 @@ const ImageSection = styled.img`
   height: 128px;
   margin-right: 20px;
   border-radius: 32px;
+  @media ${device.laptop} {
+    width: 100px;
+    height: 100px;
+  }
   @media ${device.mobileL} {
     width: 90px;
     height: 90px;
@@ -388,6 +405,10 @@ const Subscribers = styled.div`
   align-items: center;
   justify-content: space-evenly;
   padding: 2px;
+  @media ${device.laptop} {
+    width: 52px;
+    height: 22px;
+  }
 `;
 
 const StateText = styled.div`
@@ -402,6 +423,9 @@ const StateText = styled.div`
   height: 26px;
   background-color: pink;
   font-family: Strawford, Source Sans Pro;
+  @media ${device.laptop} {
+    padding: 1px 8px;
+  }
 `;
 
 const ChanneStateText = styled(StateText)`
@@ -457,6 +481,9 @@ const Date = styled.div`
   font-weight: 500;
   font-size: 15px;
   line-height: 150%;
+  @media ${device.laptop} {
+    margin: 5px 0;
+  }
   @media (max-width: 767px) {
     width: 100%;
     flex-wrap: wrap;
@@ -474,20 +501,22 @@ const ChannelName = styled.div`
   font-size: 30px;
   line-height: 141%;
   color: ${(props) => props.theme.color};
+  @media ${device.laptop} {
+    font-size: 26px;
+  }
   @media (max-width: 767px) {
     flex-direction: column;
     margin-top: 10px;
     font-size: 26px;
     margin-right: 0px;
+    text-align: center;
   }
 `;
 
-const Footer = styled(ItemVV2)`
+const Footer = styled(ItemHV2)`
   background: ${(props) => props.theme.editFooterBg};
   border-radius: 20px;
   padding: 23px 32px;
-  display: grid;
-  grid-auto-flow: column;
   align-content: space-between;
   justify-content: space-between;
   grid-gap: 40px;
@@ -495,6 +524,12 @@ const Footer = styled(ItemVV2)`
 
   @media (max-width: 600px) {
     padding: 16px;
+  }
+  @media ${device.mobileL} {
+    flex-direction: column;
+    justify-content: center;
+    grid-gap: 10px;
+    width: 90%;
   }
 `;
 
@@ -506,14 +541,10 @@ const FooterPrimaryText = styled.p`
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
-`;
-
-const FooterSecondaryText = styled.p`
-  font-size: 12px;
-  margin: 0px;
-  font-weight: 400;
-  line-height: 130%;
-  color: ${(props) => props.theme.editChannelSecondaryText};
+  @media ${device.mobileL} {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const TickImage = styled.img``;
@@ -526,6 +557,10 @@ const ReactivateFee = styled.p`
   font-weight: 500;
   font-size: 20px;
   line-height: 24px;
+  @media ${device.mobileL} {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const ButtonContainer = styled(ItemHV2)`
@@ -559,8 +594,8 @@ const ConfirmButton = styled(Button)`
     width: 8rem;
   }
 
-  @media (max-width: 425px) {
-    width: -webkit-fill-available;
+  @media ${device.mobileL} {
+    width: 80%;
   }
 `;
 
