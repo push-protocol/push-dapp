@@ -746,7 +746,7 @@ const ItemLink = styled.a`
 
 const ItemText = styled.div`
   color: ${(props) => props.theme.default.secondaryColor};
-  width: auto;
+  max-width: 556px;
   font-weight: 400;
   font-size: 13px;
   line-height: 130%;
