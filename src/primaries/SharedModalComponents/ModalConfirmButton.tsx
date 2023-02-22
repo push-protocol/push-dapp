@@ -32,7 +32,7 @@ const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,bord
                     isLoading 
                     ? 
                     <LoaderContainer>
-                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" title={loaderTitle??''}
+                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" title={loaderTitle??''} titleColor='#fff'
  />
                     </LoaderContainer>
                     :
@@ -62,6 +62,7 @@ const LoaderContainer = styled.div`
     justify-content: center;
     align-items: center;
     min-width: 50%;
+    color: #fff;
     box-sizing: border-box;
     background-color:#CF1C84;
     border-radius:15px;

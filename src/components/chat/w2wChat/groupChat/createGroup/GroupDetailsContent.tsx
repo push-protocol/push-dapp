@@ -83,7 +83,6 @@ export const GroupDetailsContent = ({
       groupDescriptionData &&
       groupNameData &&
       groupTypeObject?.groupTypeData &&
-      groupImageData &&
       handleValidation()
     ) {
       handleCreateGroupState(2);
@@ -192,17 +191,17 @@ export const GroupDetailsContent = ({
           }}
           isLoading={isLoading}
           backgroundColor={
-            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData 
               ? '#CF1C84'
               : themes.modalConfirmButtonBackground
           }
           color={
-            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData
               ? '#FFF'
               : themes.modalConfirmButtonTextColor
           }
           border={
-            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData
               ? 'none'
               : `1px solid ${themes.modalConfirmButtonBorder}`
           }

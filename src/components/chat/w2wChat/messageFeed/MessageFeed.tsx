@@ -186,12 +186,14 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       searchFn();
     }
   }, [props.hasUserBeenSearched, props.filteredUserData,inbox]);
+
   return (
     <ItemVV2
       flex={6}
       alignItems="flex-start"
       justifyContent="flex-start"
     >
+      {/* hey there */}
       {activeTab !== 3 && (
         <SpanV2
           fontWeight="700"
@@ -265,7 +267,7 @@ const UserChats = styled(ItemVV2)`
   flex: 1 1 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 0px;
+  height: 80px;
   flex-flow: column;
 
   &&::-webkit-scrollbar {
