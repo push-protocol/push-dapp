@@ -85,7 +85,9 @@ export const decryptFeeds = async ({
         signatureValidationPubliKey = connectedUser.publicKey
       } else {
         if (checkIfGroup(feed) && !feed.publicKey) 
-         feed.publicKey = (getMemberDetails(feed)).publicKey;
+        { const member = getMemberDetails(feed);
+         feed.publicKey = member?member.publicKey:'';
+        }
         signatureValidationPubliKey = feed.publicKey!;
       }
       try {

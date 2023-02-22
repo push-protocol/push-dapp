@@ -136,7 +136,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
               fontWeight={500}
               color={theme.modalDescriptionTextColor}
             >
-              {`${currentChat?.groupInformation?.members?.length} members`}
+              {`${(currentChat?.groupInformation?.members)?(currentChat?.groupInformation?.members?.length):0} members`}
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
