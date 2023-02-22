@@ -106,7 +106,6 @@ console.log(currentChat)
     console.log('remove group admin');
     setShowMoreOption(null);
   };
-
   const memberDropdown:DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
@@ -239,7 +238,7 @@ console.log(currentChat)
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
-        {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
+        {/* {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
           <AddWalletContainer>
             <AddMember />
             <SpanV2
@@ -251,7 +250,7 @@ console.log(currentChat)
               Add more wallets
             </SpanV2>
           </AddWalletContainer>
-        )}
+        )} */}
         <ProfileContainer>
           {currentChat?.groupInformation?.members?.map((member, index) => {
             return (

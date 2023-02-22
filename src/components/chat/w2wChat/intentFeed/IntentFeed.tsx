@@ -62,7 +62,7 @@ const IntentFeed = ({isLoading}): JSX.Element => {
               <ItemVV2
                 alignSelf="stretch"
                 flex="initial"
-                key={intent.threadhash || i}
+                key={`${intent.threadhash}${i}`}
               >
                 <ChatSnap
                     pfp ={getGroupImage(intent)}

@@ -53,7 +53,7 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallet) !== account && (
+        {/* {caip10ToWallet(member?.wallet) !== account && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
@@ -62,16 +62,16 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
-        )}
+        )} */}
       </ItemHV2>
-      {showMoreOption == member?.wallet && (
+      {/* {showMoreOption == member?.wallet && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
-      )}
+      )} */}
     </ProfileCardItem>
   );
 };

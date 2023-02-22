@@ -4,7 +4,6 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
-import * as PushAPI from "@pushprotocol/restapi"
 import { MdError } from 'react-icons/md';
 import { ethers } from 'ethers';
 
@@ -17,7 +16,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
-import { checkConnectedUser } from 'helpers/w2w/user';
+import { checkConnectedUser, fetchInbox } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { intitializeDb } from '../w2wIndexeddb';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -25,7 +24,6 @@ import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 
 // Internal Configs
-import { appConfig } from '../../../../config';
 
 
 interface MessageFeedProps {
@@ -79,9 +77,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      let inboxes: Feeds[] = await PushAPI.chat.chats({account:account!,env:appConfig.appEnv, toDecrypt:false});
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account }), inboxes, 'did');
-      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+      const inboxes:Feeds[] = await fetchInbox(connectedUser);
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
         setInbox(inboxes);
@@ -141,7 +137,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
     setMessagesLoading(false);
   };
-
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();
@@ -190,7 +185,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       };
       searchFn();
     }
-  }, [props.hasUserBeenSearched, props.filteredUserData]);
+  }, [props.hasUserBeenSearched, props.filteredUserData,inbox]);
   return (
     <ItemVV2
       flex={6}
@@ -226,7 +221,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"
-                  key={feed.threadhash || i}
+                  key={`${feed.threadhash}${i}`}
                 >
                   <ChatSnap
                     pfp={getGroupImage(feed)}
