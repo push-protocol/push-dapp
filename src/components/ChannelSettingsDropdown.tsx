@@ -19,6 +19,7 @@ import useToast from 'hooks/useToast';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import cubeIcon from '../assets/icons/cube.png';
 import redBellIcon from '../assets/icons/redBellSlash.png';
+import greenBellIcon from "../assets/icons/greenBell.svg"
 import userMinusIcon from '../assets/icons/userCircleMinus.png';
 import userPlusIcon from '../assets/icons/userCirclePlus.png';
 import AddDelegateModalContent from './AddDelegateModalContent';
@@ -229,9 +230,19 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
 
             {onCoreNetwork &&
               <ChannelActionButton isChannelDeactivated={isChannelDeactivated} onClick={toggleChannelActivationState}>
-                <div style={{ color: 'red' }}>
+                <div
+                  style={{ color: isChannelBlocked
+                      ? 'red'
+                      : isChannelDeactivated
+                      ? '#30CC8B'
+                      : 'red' }}
+                >
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                    <CustomIcon src={redBellIcon} alt="red-bell" />
+                  {isChannelBlocked
+                      ? <CustomIcon src={redBellIcon} alt="red-bell" />
+                      : isChannelDeactivated
+                      ? <CustomIcon src={greenBellIcon} alt="green-bell" />
+                      : <CustomIcon src={redBellIcon} alt="red-bell" />}
                     <div style={{ width: '10px', color: 'red' }} />
                     {isChannelBlocked
                       ? 'Channel Blocked'
