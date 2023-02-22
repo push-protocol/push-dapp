@@ -36,7 +36,13 @@ import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID } from 'types/chat';
-import { checkConnectedUser, checkIfIntentExist, fetchInbox, getLatestThreadHash, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
+import {
+  checkConnectedUser,
+  checkIfIntentExist,
+  fetchInbox,
+  getLatestThreadHash,
+  getUserWithDecryptedPvtKey,
+} from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -46,7 +52,6 @@ import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpe
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -89,7 +94,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
-  const { connectedUser,setConnectedUser } = useContext(ChatUserContext);
+  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
@@ -190,18 +195,18 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useEffect(() => {
     setLoading(true);
     if (currentChat) {
-        setChatCurrentCombinedDID(currentChat.combinedDID);
-        setIsGroup(checkIfGroup(currentChat));
-        // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
-        // even though the user was still on the same chat.
-        setMessages([]);
-        const image = getGroupImage(currentChat);
-        try {
-          CID.parse(image); // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${image}`);
-        } catch (err) {
-          setImageSource(image);
-        }
+      setChatCurrentCombinedDID(currentChat.combinedDID);
+      setIsGroup(checkIfGroup(currentChat));
+      // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
+      // even though the user was still on the same chat.
+      setMessages([]);
+      const image = getGroupImage(currentChat);
+      try {
+        CID.parse(image); // Will throw exception if invalid CID
+        setImageSource(INFURA_URL + `${image}`);
+      } catch (err) {
+        setImageSource(image);
+      }
     }
   }, [currentChat]);
 
@@ -213,14 +218,20 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const fetchInboxApi = async (): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
-      const inboxes:Feeds[] = await fetchInbox(connectedUser);
+      const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
     }
   };
 
-  const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
-    setMessageBeingSent(true);    
+  const sendMessage = async ({
+    message,
+    messageType,
+  }: {
+    message: string;
+    messageType: MessagetypeType;
+  }): Promise<void> => {
+    setMessageBeingSent(true);
     const user = await getUserWithDecryptedPvtKey(connectedUser);
     try {
       const sendResponse = await PushAPI.chat.send({
@@ -228,7 +239,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         messageType: messageType,
         receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets.split(',')[0],
         account: account!,
-        pgpPrivateKey:((connectedUser?.privateKey)!== '')?connectedUser?.privateKey:user.privateKey,
+        pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
         apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
         env: appConfig.appEnv,
       });
@@ -290,16 +301,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setMessageBeingSent(true);
     let updatedIntent: any;
     try {
-    updatedIntent = await PushAPI.chat.approve({
-      status: 'Approved',
-      account: account!,
-      senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
-      env: appConfig.appEnv,
-    });
+      updatedIntent = await PushAPI.chat.approve({
+        status: 'Approved',
+        account: account!,
+        senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
+        env: appConfig.appEnv,
+      });
 
-    let activeChat = currentChat;
-    activeChat.intent = updatedIntent.data;
-    setChat(activeChat);
+      let activeChat = currentChat;
+      activeChat.intent = updatedIntent.data;
+      setChat(activeChat);
 
       // displaying toast according to status
       if (status === 'Approved') {
@@ -360,14 +371,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
-         user = await getUserWithDecryptedPvtKey(connectedUser);
-         console.log("in here send intent")
+        user = await getUserWithDecryptedPvtKey(connectedUser);
+        console.log('in here send intent');
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
           receiverAddress: currentChat?.wallets.split(',')[0],
           account: account!,
-          pgpPrivateKey: ((connectedUser?.privateKey)!== '')?connectedUser?.privateKey:user.privateKey,
+          pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
           apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
           env: appConfig.appEnv,
         });
@@ -615,19 +626,35 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           <Item>
                             <MessageTime>{time}</MessageTime>
 
-                            {i === 0 && intents?.length === 2 && (
-                              <ItemText>
-                                <Image src={Lock} />
-                                Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
-                                <ItemLink
-                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
-                                  target={'_blank'}
-                                >
-                                  {' '}
-                                  Click to learn more.
-                                </ItemLink>
-                              </ItemText>
-                            )}
+                            {i === 0 &&
+                              intents?.length === 2 &&
+                              (isGroup ? (
+                                <ItemText>
+                                  <Image src={currentChat?.groupInformation?.isPublic ? Lock : LockSlash} />
+                                  {currentChat?.groupInformation?.isPublic
+                                    ? 'Messages are not encrypted.'
+                                    : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'}
+                                  <ItemLink
+                                    href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                                    target={'_blank'}
+                                  >
+                                    {' '}
+                                    Click to learn more.
+                                  </ItemLink>
+                                </ItemText>
+                              ) : (
+                                <ItemText>
+                                  <Image src={Lock} />
+                                  Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
+                                  <ItemLink
+                                    href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                                    target={'_blank'}
+                                  >
+                                    {' '}
+                                    Click to learn more.
+                                  </ItemLink>
+                                </ItemText>
+                              ))}
 
                             {i === 0 && intents?.length === 1 && (
                               <ItemTextSlash>
@@ -692,7 +719,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 newMessage={newMessage}
                 setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
-                isGroup = {isGroup}
+                isGroup={isGroup}
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
@@ -719,7 +746,7 @@ const ItemLink = styled.a`
 
 const ItemText = styled.div`
   color: ${(props) => props.theme.default.secondaryColor};
-  width: 556px;
+  width: auto;
   font-weight: 400;
   font-size: 13px;
   line-height: 130%;
