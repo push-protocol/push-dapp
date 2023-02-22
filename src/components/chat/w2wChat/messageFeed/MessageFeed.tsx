@@ -139,10 +139,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      console.log("X")
       updateInbox();
     } else {
-      console.log("Y")
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
           if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account })) {
@@ -164,7 +162,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
                 feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
-                console.log("Feed",feed,user,inbox,receivedIntents)
             setFeeds([feed]);
           }
         } else {
