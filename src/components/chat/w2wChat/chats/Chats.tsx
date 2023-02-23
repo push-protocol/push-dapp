@@ -45,7 +45,8 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveEns(msg.fromCAIP10);
-  const profilePicture = isGroup?(getMemberDetails(currentChat))?.image:null;
+  const profilePicture = isGroup?(getMemberDetails(currentChat,msg))?.image:null;
+
 
   return (
     <>
