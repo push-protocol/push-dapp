@@ -96,8 +96,6 @@ export interface AppContext {
   viewChatBox: boolean;
   receivedIntents: Feeds[];
   setReceivedIntents: (rIntent: Feeds[]) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
   setChat: (feed: Feeds) => void;
   intents: Feeds[];
   setIntents: (intents: Feeds[]) => void;
@@ -124,8 +122,8 @@ export interface AppContext {
   setGroupType:(value:string)=>void;
   createGroupState:number;
   setCreateGroupState:(value:number)=>void;
-  isSearchedUserExist:boolean;
-  setIsSearchedUserExist:(value:boolean)=>void;
+  filteredUserData:User[];
+  setFilteredUserData:(value:User[])=>void;
 }
 
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';

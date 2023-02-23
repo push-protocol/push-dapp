@@ -78,7 +78,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
-    setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
@@ -436,7 +435,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         }
       }
 
-      setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {

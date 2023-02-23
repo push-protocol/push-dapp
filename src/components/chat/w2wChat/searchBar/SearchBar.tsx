@@ -30,21 +30,19 @@ const SearchBar = () => {
   const theme = useTheme();
 
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     activeTab,
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    isSearchedUserExist,
-    setIsSearchedUserExist,
+    filteredUserData,
+    setFilteredUserData,
     inbox,
   }: AppContext = useContext<AppContext>(Context);
   const { library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
-  const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
+  const [searchedUser, setSearchedUser] = useState<string>('');
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
@@ -135,7 +133,6 @@ const SearchBar = () => {
           setActiveTab(0);
         }
         setFilteredUserData([filteredData]);
-        setIsSearchedUserExist(true)
       }
       // User is not in the protocol. Create new user
       else {
@@ -144,7 +141,6 @@ const SearchBar = () => {
           setActiveTab(3);
           const displayUser = displayDefaultUser({ caip10 });
           setFilteredUserData([displayUser]);
-          setIsSearchedUserExist(true)
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -272,7 +268,7 @@ const SearchBar = () => {
           spinnerSize={40}
         />
       ) : (
-        isSearchedUserExist && (
+        filteredUserData.length > 0 && (
           <MessageFeed
             hasUserBeenSearched={activeTab !== 3 ? hasUserBeenSearched : true}
             filteredUserData={filteredUserData}

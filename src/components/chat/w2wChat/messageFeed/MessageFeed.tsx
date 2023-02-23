@@ -41,7 +41,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     activeTab,
     inbox,
     setHasUserBeenSearched,
-    setIsSearchedUserExist,
+    setFilteredUserData,
+    filteredUserData,
   }: AppContext = useContext<AppContext>(Context);
 
   const { connectedUser } = useContext(ChatUserContext);
@@ -61,6 +62,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setChat(feed);
     setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
+    filteredUserData.length > 0 ? setFilteredUserData([]) : null;
   };
 
   const getInbox = async (): Promise<Feeds[]> => {
@@ -236,10 +238,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                     chatSnapMsg={getChatsnapMessage(feed, account!, false)}
                     timestamp={feed.msg.timestamp ?? feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
-                    onClick={(): void => {
-                      onFeedClick(feed, i);
-                      setIsSearchedUserExist(false);
-                    }}
+                    onClick={(): void => onFeedClick(feed, i)}
                   />
                 </ItemVV2>
               ))

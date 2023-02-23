@@ -10,7 +10,7 @@ import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
 import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
-import * as PushAPI from "@pushprotocol/restapi";
+import * as PushAPI from '@pushprotocol/restapi';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { checkConnectedUser } from 'helpers/w2w/user';
@@ -18,13 +18,12 @@ import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import * as w2wHelper from 'helpers/w2w/';
-import StyleHelper from 'helpers/StyleHelper'; 
+import StyleHelper from 'helpers/StyleHelper';
 import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
-
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -32,44 +31,49 @@ import { appConfig } from '../../config';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import NewTag from 'components/NewTag';
 
-
-
-const createGroupOnMouseEnter = [{
-  name:'create-group-fill-icon',
-  property:'display',
-  value:'inline-block'
-},
-{
-  name:'create-group-icon',
-  property:'display',
-  value:'none'
-},
+const createGroupOnMouseEnter = [
+  {
+    name: 'create-group-fill-icon',
+    property: 'display',
+    value: 'inline-block',
+  },
+  {
+    name: 'create-group-icon',
+    property: 'display',
+    value: 'none',
+  },
 ];
 
-const createGroupOnMouseLeave = [{
-  name:'create-group-fill-icon',
-  property:'display',
-  value:'none'
-},
-{
-  name:'create-group-icon',
-  property:'display',
-  value:'inline-block'
-},
+const createGroupOnMouseLeave = [
+  {
+    name: 'create-group-fill-icon',
+    property: 'display',
+    value: 'none',
+  },
+  {
+    name: 'create-group-icon',
+    property: 'display',
+    value: 'inline-block',
+  },
 ];
-
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({showCreateGroupModal}) => {
+const ChatSidebarSection = ({ showCreateGroupModal }) => {
   // theme context
   const theme = useTheme();
 
-  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents,isSearchedUserExist } = useContext(Context);
+  const {
+    pendingRequests,
+    setPendingRequests,
+    receivedIntents,
+    setReceivedIntents,
+    filteredUserData,
+  } = useContext(Context);
 
-  const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
+  const isNewTagVisible = getIsNewTagVisible(new Date('2023-02-22T00:00:00.000'), 90);
 
-  const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
+  const { connectedUser, displayQR, setDisplayQR } = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
@@ -89,17 +93,17 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
     resolveThreadhash();
   }, []);
 
-  const closeQRDropdown = ()=>{
+  const closeQRDropdown = () => {
     setShowQR(false);
-}
-useClickAway(containerRef, () => closeQRDropdown())
+  };
+  useClickAway(containerRef, () => closeQRDropdown());
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
     if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
     }
-    if (getIntent!== undefined) {
+    if (getIntent !== undefined) {
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setPendingRequests(intents?.length);
@@ -113,10 +117,10 @@ useClickAway(containerRef, () => closeQRDropdown())
   const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(',')[0];
-    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
-    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }),intents, 'did');
+    let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
+    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-    if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+    if (JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
       setPendingRequests(intents?.length);
       setReceivedIntents(intents);
     }
@@ -219,7 +223,7 @@ useClickAway(containerRef, () => closeQRDropdown())
         alignItems="stretch"
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && (
+        {activeTab == 0 && filteredUserData.length == 0 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
             flex="none"
@@ -229,12 +233,8 @@ useClickAway(containerRef, () => closeQRDropdown())
             background="transparent"
             hover={theme.chat.snapFocusBg}
             hoverBackground="transparent"
-            onMouseEnter={() => 
-             StyleHelper.changeStyle(createGroupOnMouseEnter)
-            }
-            onMouseLeave={() => 
-              StyleHelper.changeStyle(createGroupOnMouseLeave)
-            }
+            onMouseEnter={() => StyleHelper.changeStyle(createGroupOnMouseEnter)}
+            onMouseLeave={() => StyleHelper.changeStyle(createGroupOnMouseLeave)}
           >
             <CreateGroupIcon id="create-group-icon" />
             <CreateGroupFillIcon id="create-group-fill-icon" />
@@ -250,8 +250,8 @@ useClickAway(containerRef, () => closeQRDropdown())
             {isNewTagVisible && <NewTag />}
           </CreateGroupContainer>
         )}
-        
-        {activeTab == 0 && !isSearchedUserExist && (
+
+        {activeTab == 0 && filteredUserData.length == 0 && (
           <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}
@@ -263,7 +263,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 3 && <SearchBar/>}
+        {activeTab == 3 && <SearchBar />}
       </ItemVV2>
 
       {/* Footer */}
@@ -279,7 +279,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           }}
         >
           <QROutline />
-          <TextQR >Link Mobile App</TextQR>
+          <TextQR>Link Mobile App</TextQR>
         </QRCodeContainer>
       ) : null}
 
@@ -301,57 +301,56 @@ const TabButton = styled(ButtonV2)`
 `;
 
 const ProfileContainer = styled(ItemHV2)`
-   flex: initial;
-   justify-content: space-between;
-   margin: 15px 0px 5px 0px;
-   padding: 14px 10px 0px 10px;
-   border-top: ${props => props.borderTop};
+  flex: initial;
+  justify-content: space-between;
+  margin: 15px 0px 5px 0px;
+  padding: 14px 10px 0px 10px;
+  border-top: ${(props) => props.borderTop};
 `;
 
 const QRCodeContainer = styled.div`
-display: flex;
-flex-direction: row;
-align-items: center;
-padding: 8px;
-gap: 9px;
-width: 200px;
-height: 48px;
-background: #FFFFFF;
-border: 1px solid #BAC4D6;
-box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
-border-radius: 12px;
-cursor:pointer;
-position: absolute;
-z-index: 100;
-bottom: 45px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 8px;
+  gap: 9px;
+  width: 200px;
+  height: 48px;
+  background: #ffffff;
+  border: 1px solid #bac4d6;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 100;
+  bottom: 45px;
 
-@media (max-width:768px){
-right:30px;
-}
+  @media (max-width: 768px) {
+    right: 30px;
+  }
 
-@media(min-width:768px){
-  left:85px;
-}
-
+  @media (min-width: 768px) {
+    left: 85px;
+  }
 `;
 
 const QROutline = styled(AiOutlineQrcode)`
-width: 35px;
-height: 30px;
-`
+  width: 35px;
+  height: 30px;
+`;
 
 const TextQR = styled.p`
-font-family: 'Strawford';
-font-style: normal;
-font-weight: 400;
-font-size: 16px;
-line-height: 140%;
-text-align: center;
-// color: #657795;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 140%;
+  text-align: center;
+  // color: #657795;
 `;
 
 const CreateGroupContainer = styled(ButtonV2)`
   flex-direction: row;
   align-self: stretch;
-  justify-content:flex-start
+  justify-content: flex-start;
 `;
