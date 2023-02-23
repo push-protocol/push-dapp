@@ -44,7 +44,6 @@ import {
   getUserWithDecryptedPvtKey,
 } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
-import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
@@ -633,7 +632,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       <div key={i}>
                         {!showTime ? null : (
                           <HeaderMessage
-                            currentChat={currentChat}
                             index={i}
                             time={time}
                             isGroup={isGroup}
@@ -656,7 +654,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   <HeaderMessage
                     messages={messages}
                     isGroup={isGroup}
-                    currentChat={currentChat}
                   />
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
