@@ -29,6 +29,8 @@ import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/cr
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import NewTag from 'components/NewTag';
 
 
 
@@ -64,6 +66,8 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   const theme = useTheme();
 
   const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents } = useContext(Context);
+
+  const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
   const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
 
@@ -243,6 +247,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             >
               Create Group
             </SpanV2>
+            {isNewTagVisible && <NewTag />}
           </CreateGroupContainer>
         )}
         

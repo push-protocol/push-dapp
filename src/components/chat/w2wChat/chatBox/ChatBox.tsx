@@ -36,17 +36,22 @@ import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID } from 'types/chat';
-import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
+import {
+  checkConnectedUser,
+  checkIfIntentExist,
+  fetchInbox,
+  getLatestThreadHash,
+  getUserWithDecryptedPvtKey,
+} from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
-import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
+import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -85,12 +90,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
-  const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
-  const { connectedUser,setConnectedUser } = useContext(ChatUserContext);
-  const provider = ethers.getDefaultProvider();
+  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const chatBoxToast = useToast();
   const theme = useTheme();
   let showTime = false;
@@ -190,23 +193,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useEffect(() => {
     setLoading(true);
-    // if (!connectedUser.privateKey) {
-    //    getUser();
-    // }
     if (currentChat) {
-      if (currentChat.combinedDID !== chatCurrentCombinedDID) {
-        setChatCurrentCombinedDID(currentChat.combinedDID);
-        setIsGroup(checkIfGroup(currentChat));
-        // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
-        // even though the user was still on the same chat.
-        setMessages([]);
-        const image = getGroupImage(currentChat);
-        try {
-          CID.parse(image); // Will throw exception if invalid CID
-          setImageSource(INFURA_URL + `${image}`);
-        } catch (err) {
-          setImageSource(image);
-        }
+      setIsGroup(checkIfGroup(currentChat));
+      // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
+      // even though the user was still on the same chat.
+      setMessages([]);
+      const image = getGroupImage(currentChat);
+      try {
+        CID.parse(image); // Will throw exception if invalid CID
+        setImageSource(INFURA_URL + `${image}`);
+      } catch (err) {
+        setImageSource(image);
       }
     }
   }, [currentChat]);
@@ -219,18 +216,20 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const fetchInboxApi = async (): Promise<Feeds> => {
     if (checkConnectedUser(connectedUser)) {
-      // Update inbox. We do this because otherwise the currentChat.threadhash after sending the first intent
-      // will be undefined since it was not updated right after the intent was sent
-      let inboxes: Feeds[] = await PushAPI.chat.chats({ account: account!, env: appConfig.appEnv, toDecrypt: false });
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: account! }), inboxes, 'did');
-      inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
+      const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
     }
   };
 
-  const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
-    setMessageBeingSent(true);    
+  const sendMessage = async ({
+    message,
+    messageType,
+  }: {
+    message: string;
+    messageType: MessagetypeType;
+  }): Promise<void> => {
+    setMessageBeingSent(true);
     const user = await getUserWithDecryptedPvtKey(connectedUser);
     try {
       const sendResponse = await PushAPI.chat.send({
@@ -238,7 +237,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         messageType: messageType,
         receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets.split(',')[0],
         account: account!,
-        pgpPrivateKey:((connectedUser?.privateKey)!== '')?connectedUser?.privateKey:user.privateKey,
+        pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
         apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
         env: appConfig.appEnv,
       });
@@ -246,6 +245,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (typeof sendResponse !== 'string') {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
+        const updatedCurrentChat = currentChat;
+        updatedCurrentChat.msg = sendResponse;
+        setChat(updatedCurrentChat);
         setNewMessage('');
         setMessages([...messages, sendResponse]);
       } else {
@@ -274,10 +276,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
+   
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
-    }, 2000);
+    }, 3000);
   };
 
   async function resolveThreadhash(): Promise<void> {
@@ -300,16 +303,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setMessageBeingSent(true);
     let updatedIntent: any;
     try {
-    updatedIntent = await PushAPI.chat.approve({
-      status: 'Approved',
-      account: account!,
-      senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
-      env: appConfig.appEnv,
-    });
+      updatedIntent = await PushAPI.chat.approve({
+        status: 'Approved',
+        account: account!,
+        senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
+        env: appConfig.appEnv,
+      });
 
-    let activeChat = currentChat;
-    activeChat.intent = updatedIntent.data;
-    setChat(activeChat);
+      let activeChat = currentChat;
+      activeChat.intent = updatedIntent.data;
+      setChat(activeChat);
 
       // displaying toast according to status
       if (status === 'Approved') {
@@ -370,14 +373,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
-         user = await getUserWithDecryptedPvtKey(connectedUser);
-         console.log("in here send intent")
+        user = await getUserWithDecryptedPvtKey(connectedUser);
+        console.log('in here send intent');
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
           receiverAddress: currentChat?.wallets.split(',')[0],
           account: account!,
-          pgpPrivateKey: ((connectedUser?.privateKey)!== '')?connectedUser?.privateKey:user.privateKey,
+          pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
           apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
           env: appConfig.appEnv,
         });
@@ -432,7 +435,18 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
-      console.log(error);
+      console.error(error.message);
+      chatBoxToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Cannot send request, Try again later',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
       setMessageBeingSent(false);
     }
     setTimeout(() => {
@@ -618,34 +632,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                         time = dateString;
                       }
                     }
-                    let intents = currentChat?.intent?.split('+');
                     return (
                       <div key={i}>
                         {!showTime ? null : (
-                          <Item>
-                            <MessageTime>{time}</MessageTime>
-
-                            {i === 0 && intents?.length === 2 && (
-                              <ItemText>
-                                <Image src={Lock} />
-                                Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
-                                <ItemLink
-                                  href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
-                                  target={'_blank'}
-                                >
-                                  {' '}
-                                  Click to learn more.
-                                </ItemLink>
-                              </ItemText>
-                            )}
-
-                            {i === 0 && intents?.length === 1 && (
-                              <ItemTextSlash>
-                                <Image src={LockSlash} />
-                                Messages are not encrypted till the user accepts the chat request.
-                              </ItemTextSlash>
-                            )}
-                          </Item>
+                          <HeaderMessage
+                            index={i}
+                            time={time}
+                            isGroup={isGroup}
+                          />
                         )}
 
                         <Chats
@@ -661,21 +655,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       </div>
                     );
                   })}
-                  {messages && messages?.length === 0 && (
-                    <Item margin="30px 0px">
-                      <ItemTextSlash>
-                        <Image src={LockSlash} />
-                        Messages are not encrypted till the user accepts the chat request.
-                      </ItemTextSlash>
-
-                      {!isGroup && (
-                        <FirstTime>
-                          This is your first conversation with recipient.<br></br> Start the conversation by sending a
-                          message.
-                        </FirstTime>
-                      )}
-                    </Item>
-                  )}
+                  <HeaderMessage
+                    messages={messages}
+                    isGroup={isGroup}
+                  />
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
                       msg={{
@@ -702,7 +685,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 newMessage={newMessage}
                 setVideoCallInfo={setVideoCallInfo}
                 sendMessage={sendMessage}
-                isGroup = {isGroup}
+                isGroup={isGroup}
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
@@ -719,74 +702,6 @@ const SpinnerWrapper = styled.div`
   width: 100%;
   margin-top: 20px;
   height: 90px;
-`;
-
-const ItemLink = styled.a`
-  color: ${(props) => props.theme.default.secondaryColor};
-  text-decoration: none;
-  cursor: pointer;
-`;
-
-const ItemText = styled.div`
-  color: ${(props) => props.theme.default.secondaryColor};
-  width: 556px;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 130%;
-  background-color: ${(props) => props.theme.default.bg};
-  padding: 10px;
-  border-radius: 14px;
-  text-align: center;
-  margin-bottom: 10px;
-
-  @media (max-width: 1250px) {
-    width: 70%;
-  }
-
-  @media (max-width: 771px) {
-    width: 80%;
-  }
-`;
-
-const ItemTextSlash = styled.div`
-  color: ${(props) => props.theme.default.secondaryColor};
-  width: auto;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 130%;
-  background-color: ${(props) => props.theme.default.bg};
-  padding: 10px;
-  border-radius: 14px;
-  text-align: center;
-  margin-bottom: 10px;
-
-  @media (max-width: 1250px) {
-    width: 70%;
-  }
-
-  @media (max-width: 771px) {
-    width: 80%;
-  }
-`;
-const Image = styled.img`
-  width: 10px;
-  margin-right: 5px;
-  position: relative;
-  bottom: -2px;
-`;
-
-const MessageTime = styled(ItemHV2)`
-  width: 100%;
-  font-size: 11px;
-  color: ${(props) => props.theme.default.secondaryColor};
-  margin: 15px 0px;
-`;
-
-const FirstTime = styled(ItemHV2)`
-  width: 100%;
-  font-size: 13px;
-  color: ${(props) => props.theme.default.secondaryColor};
-  margin: 15px 0px;
 `;
 
 const MessageContainer = styled(ItemVV2)`

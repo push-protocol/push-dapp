@@ -71,7 +71,7 @@ export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddres
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
-      )}
+      )} 
     </ProfileCardItem>
   );
 };

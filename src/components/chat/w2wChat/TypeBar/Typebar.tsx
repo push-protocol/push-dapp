@@ -73,7 +73,6 @@ const Typebar = ({
     e.preventDefault();
     if (newMessage.trim() !== '') {
       if (currentChat.threadhash || isGroup) {
-        console.log("in here")
         sendMessage({
           message: newMessage,
           messageType: 'Text',

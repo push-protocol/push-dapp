@@ -4,14 +4,14 @@ import React from 'react';
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
-
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Input, TextField } from 'components/SharedStyling';
 import { ReactComponent as AddGroupIcon } from 'assets/chat/group-chat/creategroupicon.svg';
 import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creategroupicondark.svg';
-
+import { isLengthValid } from 'helpers/ValidationHelper';
+import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -24,9 +24,12 @@ export const GroupDetailsContent = ({
   handleGroupTypeObject,
   handleCreateGroupState,
 }) => {
-
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const fileUploadInputRef = React.useRef<HTMLInputElement>();
+  const [errorInfo, setErrorInfo] = React.useState<{ name: string; description: string }>({
+    name: '',
+    description: '',
+  });
 
   const options = [
     {
@@ -55,13 +58,38 @@ export const GroupDetailsContent = ({
     };
   };
 
+  const handleValidation = () => {
+    if (!isLengthValid(groupNameData, 50)) {
+      setErrorInfo((x) => ({
+        ...x,
+        name: 'Group Name should not exceed 50 characters! Please retry!',
+      }));
+
+      return false;
+    }
+    if (!isLengthValid(groupDescriptionData, 150, 3)) {
+      setErrorInfo((x) => ({
+        ...x,
+        description: 'Group Description should not exceed 150 characters! Please retry!',
+      }));
+
+      return false;
+    }
+    return true;
+  };
+
   const handleNextClick = () => {
-    if (groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData) {
+    if (
+      groupDescriptionData &&
+      groupNameData &&
+      groupTypeObject?.groupTypeData &&
+      handleValidation()
+    ) {
       handleCreateGroupState(2);
     } else {
       handleCreateGroupState(1);
     }
-  }
+  };
 
   const handleUpload = (e) => {
     fileUploadInputRef.current.click();
@@ -69,7 +97,7 @@ export const GroupDetailsContent = ({
 
   return (
     <ThemeProvider theme={themes}>
-      <Container >
+      <Container>
         <GroupIconContainer onClick={handleUpload}>
           {groupImageData ? (
             <ImageV2
@@ -103,7 +131,7 @@ export const GroupDetailsContent = ({
             borderColor={themes.modalInputBorderColor}
             color={themes.modalMessageColor}
           />
-
+          {errorInfo?.name && <ErrorMessage message={errorInfo?.name} />}
         </TextFieldContainer>
         <TextFieldContainer>
           <TextFieldHeaderContainer>
@@ -117,22 +145,20 @@ export const GroupDetailsContent = ({
             borderColor={themes.modalInputBorderColor}
             color={themes.modalMessageColor}
           />
+          {errorInfo?.description && <ErrorMessage message={errorInfo?.description} />}
         </TextFieldContainer>
-        <ItemVV2
-        alignItems="baseline"
-        >
+        <ItemVV2 alignItems="baseline">
           <TextFieldHeading color={themes.modalHeadingColor}>Group Type</TextFieldHeading>
-          <ItemHV2
-            margin='16px 0px 0px 0px'
-          >
-
+          <ItemHV2 margin="16px 0px 0px 0px">
             {options.map((option) => {
               return (
                 <OptionContainer
                   borderRadius={option.id == 1 ? '12px 0px 0px 12px' : '0px 12px 12px 0px'}
                   hoverBackground={themes.modalOptionHoverBackgroundColor}
                   borderColor={themes.modalInputBorderColor}
-                  backgroundColor={option.id == groupTypeObject?.groupTypeId ? themes.modalOptionHoverBackgroundColor : 'transparent'}
+                  backgroundColor={
+                    option.id == groupTypeObject?.groupTypeId ? themes.modalOptionHoverBackgroundColor : 'transparent'
+                  }
                   key={option.id}
                   onClick={() => {
                     handleGroupTypeObject({ groupTypeData: option.value, groupTypeId: option.id });
@@ -161,22 +187,24 @@ export const GroupDetailsContent = ({
         <ModalConfirmButton
           text="Next"
           onClick={() => {
-            handleNextClick()
+            handleNextClick();
           }}
           isLoading={isLoading}
           backgroundColor={
-            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData 
               ? '#CF1C84'
               : themes.modalConfirmButtonBackground
           }
           color={
-            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData
               ? '#FFF'
               : themes.modalConfirmButtonTextColor
           }
-          border={groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData && groupImageData
+          border={
+            groupDescriptionData && groupNameData && groupTypeObject?.groupTypeData
               ? 'none'
-              : `1px solid ${themes.modalConfirmButtonBorder}`}
+              : `1px solid ${themes.modalConfirmButtonBorder}`
+          }
           topMargin="28px"
         />
       </Container>
@@ -186,7 +214,7 @@ export const GroupDetailsContent = ({
 
 const Container = styled.div`
   padding: 42px 26px 0px 26px;
-  overflow-y:auto;
+  overflow-y: auto;
 `;
 
 const GroupIconContainer = styled.div`
@@ -195,7 +223,6 @@ const GroupIconContainer = styled.div`
   justify-content: center;
   cursor: pointer;
   margin-bottom: 28px;
-  // margin:42px 0px 28px 0px;
 `;
 
 const FileInput = styled.input`
@@ -204,6 +231,7 @@ const FileInput = styled.input`
 
 const TextFieldContainer = styled(ItemVV2)`
   min-width: 299px;
+  max-width: 333px;
   margin-bottom: 28px;
 `;
 
@@ -211,7 +239,7 @@ const GroupDescription = styled(TextField)`
   resize: none;
   width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
-  background:${(props)=>props.theme.modalInputBackgrundColor};
+  background: ${(props) => props.theme.modalInputBackgrundColor};
   border-radius: 12px;
   padding: 13px 16px;
   font-family: 'Strawford';
@@ -248,8 +276,8 @@ const CustomInput = styled(Input)`
   width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
-  background:${(props)=>props.theme.modalInputBackgrundColor};
-  padding:8px 16px;
+  background: ${(props) => props.theme.modalInputBackgrundColor};
+  padding: 8px 16px;
   font-family: 'Strawford';
   font-style: normal;
   font-weight: 500;
@@ -261,9 +289,7 @@ const CustomInput = styled(Input)`
   }
 `;
 
-const OptionsContainer = styled(ItemVV2)`
-`;
-
+const OptionsContainer = styled(ItemVV2)``;
 
 const OptionContainer = styled(ItemVV2)`
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};

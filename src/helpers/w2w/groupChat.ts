@@ -1,5 +1,15 @@
-import { caip10ToWallet, walletToCAIP10 } from '.';
-import { Feeds, Member } from '../../types/chat';
+import { appConfig } from 'config';
+import { walletToCAIP10 } from '.';
+import { ConnectedUser, Feeds, Member } from '../../types/chat';
+import * as PushAPI from "@pushprotocol/restapi";
+
+
+type UpdateGroupType = {
+  currentChat:Feeds,
+  connectedUser:ConnectedUser,
+  adminList:Array<string>,
+  memeberList:Array<string>,
+}
 
 export const checkIfGroup = (feed: Feeds): boolean => {
   if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation) return true;
@@ -85,4 +95,28 @@ export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove
 export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
   const members = feed?.groupInformation?.members?.filter((i) => i.wallet !== walletAddress);
   return convertToWalletAddressList(members);
+}
+
+
+
+export const updateGroup = async(options:UpdateGroupType) => {
+  const { currentChat, connectedUser,adminList,memeberList } = options;
+  const updateResponse = await PushAPI.chat.updateGroup({
+    chatId: currentChat?.groupInformation?.chatId,
+    groupName: currentChat?.groupInformation?.groupName,
+    groupDescription: currentChat?.groupInformation?.groupDescription,
+    groupImage: currentChat?.groupInformation?.groupImage,
+    members: memeberList,
+    admins: adminList,
+    account: connectedUser?.wallets.split(',')[0]!,
+    pgpPrivateKey: connectedUser?.privateKey,
+    env: appConfig.appEnv,
+  });
+  let updatedCurrentChat = null;
+  if(typeof updateResponse !== 'string')
+  {
+    updatedCurrentChat = currentChat;
+    updatedCurrentChat.groupInformation = updateResponse;
+  }
+  return {updateResponse,updatedCurrentChat};
 }

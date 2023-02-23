@@ -23,7 +23,12 @@ import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
-import { convertToWalletAddressList, getUpdatedAdminList, getUpdatedMemberList } from '../../../../../helpers/w2w/groupChat';
+import {
+  convertToWalletAddressList,
+  getUpdatedAdminList,
+  getUpdatedMemberList,
+  updateGroup,
+} from '../../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
@@ -34,23 +39,22 @@ import useToast from 'hooks/useToast';
 import { MdError } from 'react-icons/md';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat ,setChat,inbox,receivedIntents}: AppContext = useContext<AppContext>(Context);
+  const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const createGroupToast = useToast();
-  const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string|null>(null);
+  const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
-console.log(currentChat)
   const theme = useTheme();
 
   const handleClose = () => onClose();
 
-  const messageUser = async() => {
-    let feed:Feeds = await getDefaultFeed({walletAddress:selectedMemeberAddress!,inbox,intents:receivedIntents});
+  const messageUser = async () => {
+    let feed: Feeds = await getDefaultFeed({ walletAddress: selectedMemeberAddress!, inbox, intents: receivedIntents });
     setChat(feed);
     setSelectedMemeberAddress(null);
     handleClose();
@@ -58,29 +62,32 @@ console.log(currentChat)
 
   const makeGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.members);
-    const newAdminList = getUpdatedAdminList(currentChat,selectedMemeberAddress,false);
+    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
     try {
-      const updateResponse = await PushAPI.chat.updateGroup({
-        chatId: currentChat?.groupInformation?.chatId,
-        groupName: currentChat?.groupInformation?.groupName,
-        groupDescription: currentChat?.groupInformation?.groupDescription,
-        groupImage: currentChat?.groupInformation?.groupImage,
-        members: groupMemberList,
-        admins: newAdminList,
-        account: account!,
-        pgpPrivateKey: connectedUser?.privateKey,
-        env: appConfig.appEnv,
-      });
-      handleClose();
-      const updatedCurrentChat = currentChat;
-      updatedCurrentChat.groupInformation = updateResponse;
-      setChat(updatedCurrentChat);
-      console.log('Updated group', updateResponse);
+      const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
+      if (typeof updateResponse !== 'string') {
+        handleClose();
+       if(updatedCurrentChat)
+        setChat(updatedCurrentChat);
+      } else {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: updateResponse,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="green"
+            />
+          ),
+        });
+        handleClose();
+      }
     } catch (e) {
-      console.log('Error while adding admin', e);
+      console.error('Error while adding admin', e);
       createGroupToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot Assign Admin',
+        toastMessage: e.message,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -95,29 +102,32 @@ console.log(currentChat)
 
   const dismissGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.members);
-    const newAdminList = getUpdatedAdminList(currentChat,selectedMemeberAddress,true);
+    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
     try {
-      const updateResponse = await PushAPI.chat.updateGroup({
-        chatId: currentChat?.groupInformation?.chatId,
-        groupName: currentChat?.groupInformation?.groupName,
-        groupDescription: currentChat?.groupInformation?.groupDescription,
-        groupImage: currentChat?.groupInformation?.groupImage,
-        members: groupMemberList,
-        admins: newAdminList,
-        account: account!,
-        pgpPrivateKey: connectedUser?.privateKey,
-        env: appConfig.appEnv,
-      });
-
-      const updatedCurrentChat = currentChat;
-      updatedCurrentChat.groupInformation = updateResponse;
-      setChat(updatedCurrentChat);
-      handleClose();
+      const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
+      if (typeof updateResponse !== 'string') {
+        handleClose();
+       if(updatedCurrentChat)
+        setChat(updatedCurrentChat);
+      } else {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: updateResponse,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="green"
+            />
+          ),
+        });
+        handleClose();
+      }
     } catch (e) {
-      console.log('Error while dismissing admin', e);
+      console.error('Error while dismissing admin', e);
       createGroupToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot Dismiss Admin',
+        toastMessage: e.message,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -131,29 +141,34 @@ console.log(currentChat)
   };
 
   const removeMember = async () => {
-    const updatedMemberList = getUpdatedMemberList(currentChat,selectedMemeberAddress);
-    const adminList = getUpdatedAdminList(currentChat,selectedMemeberAddress,true);
+    const updatedMemberList = getUpdatedMemberList(currentChat, selectedMemeberAddress);
+    const adminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
     try {
-      const updateResponse = await PushAPI.chat.updateGroup({
-        chatId: currentChat?.groupInformation?.chatId,
-        groupName: currentChat?.groupInformation?.groupName,
-        groupDescription: currentChat?.groupInformation?.groupDescription,
-        groupImage: currentChat?.groupInformation?.groupImage,
-        members: updatedMemberList,
-        admins: adminList,
-        account: account!,
-        pgpPrivateKey: connectedUser?.privateKey,
-        env: appConfig.appEnv,
-      });
-      handleClose();
-      const updatedCurrentChat = currentChat;
-      updatedCurrentChat.groupInformation = updateResponse;
-      setChat(updatedCurrentChat);
+      const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList,memeberList:updatedMemberList});
+
+      if (typeof updateResponse !== 'string') {
+        handleClose();
+        if(updatedCurrentChat)
+        setChat(updatedCurrentChat);
+      } else {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: updateResponse,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="green"
+            />
+          ),
+        });
+        handleClose();
+      }
     } catch (error) {
-      console.log("Error",error);
+      console.error('Error in removing memeber', error);
       createGroupToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Cannot remove Member',
+        toastMessage: error.message,
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -163,24 +178,22 @@ console.log(currentChat)
         ),
       });
     }
-    console.log('remove group admin');
     setSelectedMemeberAddress(null);
   };
-
-  const memberDropdown:DropdownValueType[] = [
+  const memberDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
 
-  const ownerDropdown:DropdownValueType[] = [
+  const ownerDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(),textColor:'#ED5858' },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
   ];
 
-  const adminDropdown:DropdownValueType[] = [
+  const adminDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() ,textColor:'#ED5858'},
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
   ];
 
   // to close the modal upon a click on backdrop
@@ -243,7 +256,7 @@ console.log(currentChat)
               fontWeight={500}
               color={theme.modalDescriptionTextColor}
             >
-              {`${currentChat?.groupInformation?.members?.length} members`}
+              {`${currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0} members`}
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
@@ -299,7 +312,7 @@ console.log(currentChat)
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
-        {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
+        {/* {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
           <AddWalletContainer>
             <AddMember />
             <SpanV2
@@ -311,24 +324,26 @@ console.log(currentChat)
               Add more wallets
             </SpanV2>
           </AddWalletContainer>
-        )}
+        )} */}
         <ProfileContainer>
           {currentChat?.groupInformation?.members?.map((member, index) => {
             return (
-             member && <ProfileCard
-                key={index}
-                member={member}
-                dropdownValues={
-                  member?.isAdmin && isAccountOwnerAdmin
-                    ? ownerDropdown
-                    : isAccountOwnerAdmin
-                    ? adminDropdown
-                    : memberDropdown
-                }
-                selectedMemeberAddress={selectedMemeberAddress}
-                setSelectedMemeberAddress={setSelectedMemeberAddress}
-                dropdownRef={dropdownRef}
-              />
+              member && (
+                <ProfileCard
+                  key={index}
+                  member={member}
+                  dropdownValues={
+                    member?.isAdmin && isAccountOwnerAdmin
+                      ? ownerDropdown
+                      : isAccountOwnerAdmin
+                      ? adminDropdown
+                      : memberDropdown
+                  }
+                  selectedMemeberAddress={selectedMemeberAddress}
+                  setSelectedMemeberAddress={setSelectedMemeberAddress}
+                  dropdownRef={dropdownRef}
+                />
+              )
             );
           })}
         </ProfileContainer>
@@ -339,7 +354,7 @@ console.log(currentChat)
 
 const ModalContainer = styled.div`
   // max-height: 517px;
-  max-height:652px;
+  max-height: 652px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

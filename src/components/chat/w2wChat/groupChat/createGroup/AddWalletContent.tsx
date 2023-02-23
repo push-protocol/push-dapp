@@ -27,9 +27,8 @@ import MemberListContainer from './MemberListContainer';
 import { User } from '../../../../../types/chat';
 import { findObject } from '../../../../../helpers/UtilityHelper';
 
-export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList }) => {
+export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList,isLoading }) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
@@ -157,6 +156,8 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
+  console.log("filteredUserData",filteredUserData)
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -195,7 +196,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               right="16px"
             >
               {searchedUser.length > 0 && <Clear onClick={clearInput} />}
-              {searchedUser.length >= 0 && (
+              {searchedUser.length >= 0 && !filteredUserData && (
                 <SearchIcon
                   style={{ cursor: 'pointer' }}
                   onClick={handleSearch}
@@ -234,6 +235,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
           text="Create Group"
           onClick={() => handleCreateGroup()}
           isLoading={isLoading}
+          loaderTitle = "Creating group"
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF'  : theme.groupButtonTextColor}
           border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
@@ -304,6 +306,7 @@ const Input = styled.input`
 
 const MemberList = styled(ItemVV2)`
   justify-content: 'flex-start';
+  padding: 0px 2px;
 `;
 
 
