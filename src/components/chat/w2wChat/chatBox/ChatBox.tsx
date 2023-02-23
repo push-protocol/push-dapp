@@ -32,6 +32,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
 import LockSlash from '../../../../assets/LockSlash.png';
 import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+import videoCallIcon from "../../../../assets/icons/videoCallIcon.svg"
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -41,6 +42,7 @@ import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -424,6 +426,16 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
+  const startVideoCallHandler = ()=>{
+    setVideoCallInfo({
+      address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
+      fromPublicKeyArmored: connectedUser.publicKey,
+      toPublicKeyArmored: currentChat.publicKey,
+      privateKeyArmored: connectedUser.privateKey,
+      establishConnection: 1,
+    });
+  }
+
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
     { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
@@ -552,6 +564,23 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
 
               {!ensName && caip10ToWallet(currentChat.wallets.split(',')[0].toString())}
             </SpanV2>
+
+            {/* Video call button */}
+            <Tooltip 
+              tooltipContent='Video Call'
+              placementProps={{
+                bottom:"1.4rem",
+                transform:"translateX(-92%)",
+                borderRadius: "12px 12px 2px 12px",
+                width: "70px"
+
+              }}
+              wrapperProps={{width:"fit-content", minWidth:"fit-content" }}
+            >
+              <VideoCallButton onClick={startVideoCallHandler}>
+                <ImageV2 src={videoCallIcon} />
+              </VideoCallButton>
+            </Tooltip>
           </ItemHV2>
 
           <MessageContainer>
@@ -1017,5 +1046,14 @@ const FileUploadLoaderContainer = styled.div`
   margin-right: 2rem;
   color: rgb(58, 103, 137);
 `;
+
+const VideoCallButton = styled(ButtonV2)`
+  cursor: pointer;
+  width: 1.75rem;
+  max-width: 1.75rem;
+  min-width: 1.75rem;
+  background: none;
+  margin-right: 2rem;
+`
 
 export default ChatBox;

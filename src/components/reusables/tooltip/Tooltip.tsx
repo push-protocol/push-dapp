@@ -9,7 +9,9 @@ type TooltipProps = {
   placementProps?: {
     bottom?: string,
     right?:string,
-    transform?: string
+    transform?: string,
+    borderRadius?: string,
+    width?: string,
   },
   wrapperProps?:{}
 };
