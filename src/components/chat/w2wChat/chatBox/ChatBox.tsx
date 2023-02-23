@@ -201,7 +201,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useEffect(() => {
     setLoading(true);
     if (currentChat) {
-      // console.log("UseEffect")
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
@@ -382,7 +381,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
         user = await getUserWithDecryptedPvtKey(connectedUser);
-        console.log('in here send intent');
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
