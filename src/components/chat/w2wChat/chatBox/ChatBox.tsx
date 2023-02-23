@@ -44,11 +44,10 @@ import {
   getUserWithDecryptedPvtKey,
 } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
-import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
-import { HeaderMessage } from '../HeaderMessage/HeaderMessage';
+import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
 import { appConfig } from 'config';
