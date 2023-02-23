@@ -190,7 +190,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       };
       searchFn();
     }
-  }, [props.hasUserBeenSearched, props.filteredUserData, inbox]);
+  }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   return (
     <ItemVV2

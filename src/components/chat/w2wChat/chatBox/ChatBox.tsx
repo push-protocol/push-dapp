@@ -105,8 +105,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
+      let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
+      
+      if(latestThreadhash === undefined){
+        latestThreadhash = messages[messages?.length - 1]?.cid;
+      }
+
       let messageCID = latestThreadhash;
+
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
@@ -245,6 +251,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (typeof sendResponse !== 'string') {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
+        const updatedCurrentChat = currentChat;
+        updatedCurrentChat.msg = sendResponse;
+        setChat(updatedCurrentChat);
         setNewMessage('');
         setMessages([...messages, sendResponse]);
       } else {
@@ -273,10 +282,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
+   
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
-    }, 2000);
+    }, 3000);
   };
 
   async function resolveThreadhash(): Promise<void> {
@@ -370,7 +380,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
         user = await getUserWithDecryptedPvtKey(connectedUser);
-        console.log('in here send intent');
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
@@ -474,6 +483,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     },
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
+
 
   return (
     <Container>
