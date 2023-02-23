@@ -166,14 +166,26 @@ export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
 export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Promise<ConnectedUser> => {
   let decryptedPrivateKey;
     let user:User;
-    if(!connectedUser.privateKey)
+
+
+    if(!connectedUser.publicKey)
     {
+
        user = await PushNodeClient.getUser({ caip10:connectedUser.wallets });
-       decryptedPrivateKey = await PushAPI.chat.decryptWithWalletRPCMethod(
-        user.encryptedPrivateKey,
-        connectedUser.wallets
-      );
-      return {...user,privateKey:decryptedPrivateKey};
+       if(!user){
+        return connectedUser
+       }else{
+        decryptedPrivateKey = await PushAPI.chat.decryptWithWalletRPCMethod(
+          user.encryptedPrivateKey,
+          connectedUser.wallets.split(':')[1]
+        );
+        return {...user,privateKey:decryptedPrivateKey};
+       }
+       
+
+      
+
+      
 
     }
     return connectedUser;

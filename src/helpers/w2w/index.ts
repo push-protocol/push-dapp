@@ -81,11 +81,11 @@ export const decryptFeeds = async ({
     if (feed.msg.encType !== 'PlainText' && feed.msg.encType !== null && feed.msg.messageContent) {
       // To do signature verification it depends on who has sent the message
       let signatureValidationPubliKey: string
-      if (feed.msg.fromCAIP10 === connectedUser.wallets.split(',')[0]) {
+      if (feed.msg.fromCAIP10 === connectedUser.wallets) {
         signatureValidationPubliKey = connectedUser.publicKey
       } else {
         if (checkIfGroup(feed) && !feed.publicKey) 
-        { const member = getMemberDetails(feed);
+        { const member = getMemberDetails(feed,feed.msg);
          feed.publicKey = member?member.publicKey:'';
         }
         signatureValidationPubliKey = feed.publicKey!;

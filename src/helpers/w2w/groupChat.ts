@@ -15,6 +15,7 @@ export const getMemberDetails = (feed:Feeds,msg:any) => {
 
     const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet == msg?.fromCAIP10)!;
 
+
     return senderProfile? senderProfile[0]: null;
 
 };

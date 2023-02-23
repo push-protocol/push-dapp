@@ -112,7 +112,7 @@ useClickAway(containerRef, () => closeQRDropdown())
 
   const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }),intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });

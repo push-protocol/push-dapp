@@ -21,7 +21,7 @@ import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
-import { fetchInbox } from 'helpers/w2w/user';
+import { fetchInbox, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
@@ -33,7 +33,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const { connectedUser } = useContext(ChatUserContext);
+  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
   const createGroupToast = useToast();
@@ -49,9 +49,14 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
   const handleCreateGroup = async (): Promise<any> => {
+
+    const user = await getUserWithDecryptedPvtKey(connectedUser);
+
     if(memberList.length) {
     setIsLoading(true);
     try {
+
+
       const memberWalletList = memberList.map(member => member.wallets);
       const createGroupRes = await PushAPI.chat.createGroup({
         groupName: groupNameData,
@@ -61,7 +66,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         admins: [],
         isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
         account: account!,
-        pgpPrivateKey: connectedUser?.privateKey,
+        pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
         env: appConfig.appEnv
       });
       if (typeof createGroupRes !== 'string') {
@@ -111,6 +116,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
     }
     setTimeout(() => {
       setIsLoading(false);
+      setConnectedUser(user);
     }, 2000);
   }
   };
