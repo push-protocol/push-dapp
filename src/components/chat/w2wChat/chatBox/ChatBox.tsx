@@ -636,7 +636,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       <div key={i}>
                         {!showTime ? null : (
                           <HeaderMessage
-                            currentChat={currentChat}
                             index={i}
                             time={time}
                             isGroup={isGroup}
@@ -659,7 +658,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   <HeaderMessage
                     messages={messages}
                     isGroup={isGroup}
-                    currentChat={currentChat}
                   />
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
