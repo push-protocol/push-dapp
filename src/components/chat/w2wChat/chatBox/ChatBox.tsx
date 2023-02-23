@@ -44,11 +44,10 @@ import {
   getUserWithDecryptedPvtKey,
 } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
-import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
-import { HeaderMessage } from '../HeaderMessage/HeaderMessage';
+import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -269,6 +268,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (typeof sendResponse !== 'string') {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
+        const updatedCurrentChat = currentChat;
+        updatedCurrentChat.msg = sendResponse;
+        setChat(updatedCurrentChat);
         setNewMessage('');
         setMessages([...messages, sendResponse]);
       } else {
@@ -297,10 +299,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
+   
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
-    }, 2000);
+    }, 3000);
   };
 
   async function resolveThreadhash(): Promise<void> {
@@ -658,7 +661,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       <div key={i}>
                         {!showTime ? null : (
                           <HeaderMessage
-                            currentChat={currentChat}
                             index={i}
                             time={time}
                             isGroup={isGroup}
@@ -681,7 +683,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   <HeaderMessage
                     messages={messages}
                     isGroup={isGroup}
-                    currentChat={currentChat}
                   />
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats

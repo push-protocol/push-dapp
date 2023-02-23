@@ -9,17 +9,19 @@ import Lock from 'assets/Lock.png';
 import LockSlash from 'assets/LockSlash.png';
 import { Item } from 'primaries/SharedStyling';
 import { ItemHV2 } from 'components/reusables/SharedStylingV2';
-import { Feeds, MessageIPFSWithCID } from 'types/chat';
+import { AppContext, MessageIPFSWithCID } from 'types/chat';
+import { Context } from 'modules/chat/ChatModule';
 
 type HeaderMessageType = {
-  currentChat?: Feeds;
   time?: string;
   isGroup?: boolean;
   index?: number;
   messages?: MessageIPFSWithCID[];
 };
 
-export const HeaderMessage = ({ currentChat, time, isGroup, index, messages }: HeaderMessageType) => {
+export const HeaderMessage = ({ time, isGroup, index, messages }: HeaderMessageType) => {
+  const { currentChat }: AppContext = React.useContext<AppContext>(Context);
+
   let intents = currentChat?.intent?.split('+');
   return (
     <>
