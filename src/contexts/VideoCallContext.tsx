@@ -39,6 +39,11 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const userVideo = useRef<any>();
   const connectionRef = useRef<any>();
 
+  /**
+   * Initializes the local stream and sets the local stream to the user's video element.           
+   * @param {string} address - the address of the user who is calling the function           
+   * @returns None           
+   */
   const initializeLocalStream = async (address: string): Promise<void> => {
     console.log("INITIALIZE LOCAL STREAM");
 
@@ -52,6 +57,12 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
+  /**
+   * Call the user with the given address.       
+   * @param {string} fromAddress - The address of the user who is calling.       
+   * @param {string} toAddress - The address of the user who is being called.       
+   * @returns None       
+   */
   const callUser = (fromAddress: string, toAddress: string): void => {
     console.log("CALL USER");
 
@@ -125,6 +136,11 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     connectionRef.current = peer;
   };
 
+  /**
+   * Handles incoming calls.           
+   * @param {any} videoMeta - the video meta data of the incoming call.           
+   * @returns None           
+   */
   const incomingCall = (videoMeta: any) => {
     console.log("INCOMING CALL");
     
@@ -139,6 +155,12 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
+  /**
+   * Answer a call from a user.           
+   * @param {string} toAddress - The address of the user to answer the call from.           
+   * @param {string} fromAddress - The address of the user to answer the call to.           
+   * @returns None           
+   */
   const answerCall = (toAddress: string, fromAddress: string): void => {
     console.log("ANSWER CALL");
 
@@ -225,6 +247,11 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     connectionRef.current = peer2;
   };
 
+  /**
+   * Accepts a call from a user.           
+   * @param {VideoMeta} videoMeta - The video meta data of the peer.           
+   * @returns None           
+   */
   const acceptCall = (videoMeta) => {
     console.log("ACCEPT CALL");
 
@@ -236,6 +263,10 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
+  /**
+   * Leave the call.           
+   * @returns None           
+   */
   const leaveCall = () => {
     console.log("LEAVE CALL");
 

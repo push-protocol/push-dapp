@@ -60,6 +60,7 @@ const videoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
       // await new Promise(r => setTimeout(r, 200));
       
       try {
+        // initialize the local stream for the given account
         if(!localStream){
           await initializeLocalStream(account);
         }
