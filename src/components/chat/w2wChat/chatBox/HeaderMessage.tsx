@@ -30,7 +30,7 @@ export const HeaderMessage = ({ time, isGroup, index, messages }: HeaderMessageT
 
         {!isGroup && index === 0 && (
           <>
-            {intents.length === 2 && (
+            {intents?.length === 2 && (
               <ItemText>
                 <Image src={Lock} />
                 Messages are end-to-end encrypted. Only users in this chat can view or listen to them.
