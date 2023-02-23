@@ -52,11 +52,9 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 
     const user = await getUserWithDecryptedPvtKey(connectedUser);
 
-    if(memberList.length) {
+    if(memberList.length>=2) {
     setIsLoading(true);
     try {
-
-
       const memberWalletList = memberList.map(member => member.wallets);
       const createGroupRes = await PushAPI.chat.createGroup({
         groupName: groupNameData,
@@ -118,6 +116,19 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       setIsLoading(false);
       setConnectedUser(user);
     }, 2000);
+  }
+  else{
+    createGroupToast.showMessageToast({
+      toastTitle: 'Error',
+      toastMessage: 'Need atleast 3 members to create a group! Please retry!',
+      toastType: 'ERROR',
+      getToastIcon: (size) => (
+        <MdError
+          size={size}
+          color="red"
+        />
+      ),
+    });
   }
   };
   return (
