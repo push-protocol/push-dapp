@@ -245,6 +245,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (typeof sendResponse !== 'string') {
         await intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
+        const updatedCurrentChat = currentChat;
+        updatedCurrentChat.msg = sendResponse;
+        setChat(updatedCurrentChat);
         setNewMessage('');
         setMessages([...messages, sendResponse]);
       } else {
@@ -273,10 +276,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
+   
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
-    }, 2000);
+    }, 3000);
   };
 
   async function resolveThreadhash(): Promise<void> {
