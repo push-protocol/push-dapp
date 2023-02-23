@@ -111,5 +111,5 @@ export interface AppContext {
   setUserShouldBeSearched: (value: boolean) => void;
 }
 
-
+export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';
 

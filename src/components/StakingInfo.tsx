@@ -57,7 +57,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setStepFlow,setProc
               </p>
 
               <b>
-              {channelStakeFees} $PUSH
+              {channelStakeFees} PUSH
               </b>
             </TabSpace>
 

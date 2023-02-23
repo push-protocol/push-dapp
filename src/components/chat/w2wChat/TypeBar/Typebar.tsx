@@ -17,6 +17,7 @@ import { AppContext } from 'types/chat';
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
   messageBeingSent: boolean;
@@ -24,7 +25,7 @@ interface ITypeBar {
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: 'Text' | 'Image' | 'File' }) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: string }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;
