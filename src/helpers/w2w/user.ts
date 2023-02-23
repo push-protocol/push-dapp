@@ -65,10 +65,16 @@ export const getLatestThreadHash = ({
 }: GetLatestThreadHashPropRtpe): string => {
   let latestThreadHash = '';
   if (isGroup) {
+
+    console.log("Is Group",isGroup,inbox,currentChat)
+
     latestThreadHash =
       inbox?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash ||
       receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash;
   } else {
+
+    console.log("Is Not Group",isGroup,inbox,currentChat)
+
     latestThreadHash =
       inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
       receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
