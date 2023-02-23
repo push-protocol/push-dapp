@@ -12,7 +12,7 @@ import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
-import { AppContext,  Feeds } from 'types/chat';
+import { AppContext,  Feeds, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -63,13 +63,13 @@ function Chat() {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [searchedUser, setSearchedUser] = useState<string>('');
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -215,8 +215,6 @@ function Chat() {
                 setReceivedIntents,
                 viewChatBox,
                 setChat,
-                setSearchedUser,
-                searchedUser,
                 intents,
                 setIntents,
                 inbox,
@@ -232,6 +230,8 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
+                filteredUserData,
+                setFilteredUserData
               }}
             >
               <ChatSidebarContainer

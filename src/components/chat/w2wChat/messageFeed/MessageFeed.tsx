@@ -35,7 +35,7 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext = useContext<AppContext>(Context);
+  const { setChat, setInbox,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
 
   const {connectedUser} = useContext(ChatUserContext);
 
@@ -55,6 +55,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setChat(feed);
     setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
+    filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
 
   const getInbox = async (): Promise<Feeds[]> => {

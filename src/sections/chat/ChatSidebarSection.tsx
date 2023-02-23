@@ -65,7 +65,7 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   // theme context
   const theme = useTheme();
 
-  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents } = useContext(Context);
+  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
@@ -219,7 +219,7 @@ useClickAway(containerRef, () => closeQRDropdown())
         alignItems="stretch"
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && (
+        {activeTab == 0 && filteredUserData.length==0 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
             flex="none"
@@ -251,7 +251,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           </CreateGroupContainer>
         )}
         
-        {activeTab == 0 && !searchedUser && (
+        {activeTab == 0 && filteredUserData.length==0 && (
           <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}

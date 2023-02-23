@@ -30,19 +30,19 @@ const SearchBar = () => {
   const theme = useTheme();
 
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     activeTab,
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    inbox
+    filteredUserData,
+    setFilteredUserData,
+    inbox,
   }: AppContext = useContext<AppContext>(Context);
   const { library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
-  const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
+  const [searchedUser, setSearchedUser] = useState<string>('');
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
@@ -72,7 +72,6 @@ const SearchBar = () => {
     }
   }, [isInValidAddress]);
 
-
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
     if (searchAddress === '') {
@@ -100,7 +99,7 @@ const SearchBar = () => {
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
 
-        console.log("searched address", address)
+        console.log('searched address', address);
         if (address) {
           handleUserSearch(address);
         } else {
@@ -136,6 +135,7 @@ const SearchBar = () => {
           setActiveTab(0);
         }
         setFilteredUserData([filteredData]);
+        setSearchedUser('')
       }
       // User is not in the protocol. Create new user
       else {
@@ -144,6 +144,7 @@ const SearchBar = () => {
           setActiveTab(3);
           const displayUser = displayDefaultUser({ caip10 });
           setFilteredUserData([displayUser]);
+          setSearchedUser('')
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -153,7 +154,6 @@ const SearchBar = () => {
       setFilteredUserData([]);
     }
   };
-
 
   const clearInput = (): void => {
     setFilteredUserData([]);
@@ -266,18 +266,20 @@ const SearchBar = () => {
         )}
       </ItemHV2>
 
-        {isLoadingSearch ? (
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-          />
-        ) : (
-          searchedUser && (<MessageFeed
+      {isLoadingSearch ? (
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          spinnerSize={40}
+        />
+      ) : (
+        filteredUserData.length > 0 && (
+          <MessageFeed
             hasUserBeenSearched={activeTab !== 3 ? hasUserBeenSearched : true}
             filteredUserData={filteredUserData}
             isInvalidAddress={isInValidAddress}
-          />)
-        )}
+          />
+        )
+      )}
     </ItemVV2>
   );
 };
