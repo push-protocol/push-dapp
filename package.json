@@ -39,7 +39,7 @@
     "@pushprotocol/ledgerlive": "0.0.1",
     "@pushprotocol/restapi": "0.6.0",
     "@pushprotocol/socket": "0.3.0",
-    "@pushprotocol/uiweb": "0.4.0",
+    "@pushprotocol/uiweb": "0.4.3",
     "@reduxjs/toolkit": "^1.7.1",
     "@syncfusion/ej2-react-calendars": "^19.4.56",
     "@testing-library/jest-dom": "^4.2.4",
