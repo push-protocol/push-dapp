@@ -105,35 +105,28 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      console.log("Get Message from CID")
       let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
       
       if(latestThreadhash === undefined){
-        console.log("Here")
         latestThreadhash = messages[messages?.length - 1]?.cid;
       }
 
       let messageCID = latestThreadhash;
 
-      console.log("Threadhash",latestThreadhash,messages,messageCID);
       if (latestThreadhash) {
-        console.log("If latestThreadhash is running")
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
         // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
         // We only enter on this if condition when we receive or send new messages
 
         if (latestThreadhash !== currentChat?.threadhash) {
-          console.log("If currentChat is running")
           // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
           const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
           let msgIPFS: MessageIPFSWithCID;
           if (messageFromIndexDB !== undefined) {
-            console.log("messageFromIndexDB",messageFromIndexDB.body)
             msgIPFS = messageFromIndexDB.body;
           } else {
             const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-            console.log("messageFromIPFS",messageFromIPFS)
             await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
             msgIPFS = messageFromIPFS;
           }
@@ -151,29 +144,23 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
           if (messageInChat === undefined) {
-            console.log("Running");
             setMessages((m) => [...m, msgIPFS]);
           }
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else if (messages.length == 0) {
-          console.log("Else currentChat is running")
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-              console.log("If messageFromIndexDB is running")
               setLoading(false);
               break;
             } else {
-              console.log("Else messageFromIndexDB is running")
               const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
               let msgIPFS: MessageIPFSWithCID;
               if (messageFromIndexDB !== undefined) {
-                console.log("messageFromIndexDB",messageFromIndexDB.body)
                 msgIPFS = messageFromIndexDB.body;
               } else {
                 const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-                console.log("messageFromIPFS",messageFromIPFS)
                 await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
                 msgIPFS = messageFromIPFS;
               }
@@ -202,7 +189,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           }
         }
       } else {
-        console.log("Else latestThreadhash is running")
         setMessages([]);
       }
     }
@@ -212,10 +198,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
-    console.log("UseEffect")
     setLoading(true);
     if (currentChat) {
-      // console.log("UseEffect")
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
@@ -251,7 +235,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     message: string;
     messageType: MessagetypeType;
   }): Promise<void> => {
-    console.log("Message Send")
     setMessageBeingSent(true);
     const user = await getUserWithDecryptedPvtKey(connectedUser);
     try {
@@ -397,7 +380,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
         user = await getUserWithDecryptedPvtKey(connectedUser);
-        console.log('in here send intent');
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
@@ -502,7 +484,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
-  console.log("Messages",messages,currentChat)
 
   return (
     <Container>
