@@ -70,6 +70,7 @@ function Chat() {
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  const [isSearchedUserExist,setIsSearchedUserExist]=useState<boolean>(false);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -232,6 +233,8 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
+                isSearchedUserExist,
+                setIsSearchedUserExist
               }}
             >
               <ChatSidebarContainer

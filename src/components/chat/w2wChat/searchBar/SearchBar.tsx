@@ -38,7 +38,9 @@ const SearchBar = () => {
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    inbox
+    isSearchedUserExist,
+    setIsSearchedUserExist,
+    inbox,
   }: AppContext = useContext<AppContext>(Context);
   const { library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
@@ -72,7 +74,6 @@ const SearchBar = () => {
     }
   }, [isInValidAddress]);
 
-
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
     if (searchAddress === '') {
@@ -99,8 +100,6 @@ const SearchBar = () => {
         }
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
-
-        console.log("searched address", address)
         if (address) {
           handleUserSearch(address);
         } else {
@@ -136,6 +135,7 @@ const SearchBar = () => {
           setActiveTab(0);
         }
         setFilteredUserData([filteredData]);
+        setIsSearchedUserExist(true)
       }
       // User is not in the protocol. Create new user
       else {
@@ -144,6 +144,7 @@ const SearchBar = () => {
           setActiveTab(3);
           const displayUser = displayDefaultUser({ caip10 });
           setFilteredUserData([displayUser]);
+          setIsSearchedUserExist(true)
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -153,7 +154,6 @@ const SearchBar = () => {
       setFilteredUserData([]);
     }
   };
-
 
   const clearInput = (): void => {
     setFilteredUserData([]);
@@ -266,18 +266,20 @@ const SearchBar = () => {
         )}
       </ItemHV2>
 
-        {isLoadingSearch ? (
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-          />
-        ) : (
-          searchedUser && (<MessageFeed
+      {isLoadingSearch ? (
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          spinnerSize={40}
+        />
+      ) : (
+        isSearchedUserExist && (
+          <MessageFeed
             hasUserBeenSearched={activeTab !== 3 ? hasUserBeenSearched : true}
             filteredUserData={filteredUserData}
             isInvalidAddress={isInValidAddress}
-          />)
-        )}
+          />
+        )
+      )}
     </ItemVV2>
   );
 };

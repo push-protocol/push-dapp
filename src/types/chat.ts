@@ -124,6 +124,8 @@ export interface AppContext {
   setGroupType:(value:string)=>void;
   createGroupState:number;
   setCreateGroupState:(value:number)=>void;
+  isSearchedUserExist:boolean;
+  setIsSearchedUserExist:(value:boolean)=>void;
 }
 
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';

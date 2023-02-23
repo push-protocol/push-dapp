@@ -7,7 +7,6 @@ import styled, { useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
 import { ethers } from 'ethers';
 
-
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
 import { AppContext, Feeds, User } from 'types/chat';
@@ -25,7 +24,6 @@ import { getDefaultFeed } from '../../../../helpers/w2w/user';
 
 // Internal Configs
 
-
 interface MessageFeedProps {
   filteredUserData: User[];
   hasUserBeenSearched: boolean;
@@ -35,9 +33,18 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext = useContext<AppContext>(Context);
+  const {
+    setChat,
+    setInbox,
+    receivedIntents,
+    setActiveTab,
+    activeTab,
+    inbox,
+    setHasUserBeenSearched,
+    setIsSearchedUserExist,
+  }: AppContext = useContext<AppContext>(Context);
 
-  const {connectedUser} = useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -47,15 +54,14 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
-  const onFeedClick = (feed:Feeds,i:number):void => {
-    if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
-    {
+  const onFeedClick = (feed: Feeds, i: number): void => {
+    if ((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length) {
       setActiveTab(1);
     }
     setChat(feed);
     setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
-  }
+  };
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
@@ -63,10 +69,9 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
-        {
-         setFeeds(inboxes)
-         setInbox(inboxes);
+        if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+          setFeeds(inboxes);
+          setInbox(inboxes);
         }
         return inboxes;
       } else {
@@ -77,7 +82,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   };
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      const inboxes:Feeds[] = await fetchInbox(connectedUser);
+      const inboxes: Feeds[] = await fetchInbox(connectedUser);
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
         setInbox(inboxes);
@@ -161,7 +166,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
-                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
+            feed = await getDefaultFeed({ userData: user, inbox, intents: receivedIntents });
             setFeeds([feed]);
           }
         } else {
@@ -185,7 +190,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       };
       searchFn();
     }
-  }, [props.hasUserBeenSearched, props.filteredUserData,inbox]);
+  }, [props.hasUserBeenSearched, props.filteredUserData, inbox]);
 
   return (
     <ItemVV2
@@ -213,13 +218,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && !messagesLoading && activeTab!==3 ? (
+            {!feeds?.length && !messagesLoading && activeTab !== 3 ? (
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"
@@ -228,11 +232,14 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
                   <ChatSnap
                     pfp={getGroupImage(feed)}
                     username={getName(feed)}
-                    isGroup = {checkIfGroup(feed)}
-                    chatSnapMsg={getChatsnapMessage(feed,account!,false)}
-                    timestamp={feed.msg.timestamp??feed.intentTimestamp}
+                    isGroup={checkIfGroup(feed)}
+                    chatSnapMsg={getChatsnapMessage(feed, account!, false)}
+                    timestamp={feed.msg.timestamp ?? feed.intentTimestamp}
                     selected={i == selectedChatSnap ? true : false}
-                    onClick={(): void => onFeedClick(feed,i)}
+                    onClick={(): void => {
+                      onFeedClick(feed, i);
+                      setIsSearchedUserExist(false);
+                    }}
                   />
                 </ItemVV2>
               ))
