@@ -1,8 +1,9 @@
 // React + Web3 Essentials
 import { utils } from 'ethers';
 
-export const isLengthValid = (data: string, len: number): boolean => {
-    return data.length <= len;
+export const isLengthValid = (data: string, upperLen?: number,lowerLen?:number): boolean => {
+    lowerLen = lowerLen?? 1;
+    return ((data.length >= lowerLen) && (data.length <= upperLen));
   };
   
   export const isValidUrl = (urlString: string): boolean => {

@@ -5,32 +5,26 @@ import React, { useEffect, useState } from 'react';
 
 // External Packages
 import Dropdown from 'react-dropdown';
-import { FiLink } from 'react-icons/fi';
 import styled, { useTheme } from 'styled-components';
-import { AiFillExclamationCircle } from 'react-icons/ai'
 import DateTimePicker from "react-datetime-picker";
 
 // Internal Compoonents
 import {
   Button,
-  Content,
-  FormSubmision,
-  H3,
   Input,
   Item,
-  ItemH,
-  P,
   Section,
   Span,
   TextField,
 } from 'primaries/SharedStyling';
 import './createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
-import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
+import { ItemHV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
 import Tooltip from "./reusables/tooltip/Tooltip"
 import { device } from 'config/Globals';
 import NewTag from './NewTag';
+import ErrorMessage from './reusables/errorMessageLabel/errorMessageLabel';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
 
 const coreChainId = appConfig.coreContractChain;
@@ -85,21 +79,6 @@ const ChannelInfo = ({
     return ()=>setDisabled(true);
   }, [channelName, channelInfo, channelURL]);
 
-
-  const ErrorMessage = ({ message }) => {
-    return (
-      <Item display='flex' align='center' self='flex-start' direction='row' margin = '7px 0px'>
-            <AiFillExclamationCircle color='red' size='20' />
-            <Span 
-                size="14px"
-                weight="400"
-                margin="0px 5px"
-                color={'red'}>
-            {message}
-            </Span>
-          </Item>
-    )
-  }
 
   return (
     <Section>
@@ -351,7 +330,7 @@ const ChannelInfo = ({
               if (!isAllFilledAndValid()) return;
               setTxStatus(2);
               setChannelInfoDone(true);
-              setStepFlow(2);
+              setStepFlow(1);
             }}
           >
             <Span
