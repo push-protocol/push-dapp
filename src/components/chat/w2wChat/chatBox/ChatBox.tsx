@@ -53,11 +53,7 @@ import { HeaderMessage } from './HeaderMessage';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
-import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import { MessagetypeType } from '../../../../types/chat';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Constants
