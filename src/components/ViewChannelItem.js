@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
+import axios from "axios";
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
@@ -28,9 +29,15 @@ import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial
 import NotificationToast from '../primaries/NotificationToast';
 import { Image, ItemH, Span } from '../primaries/SharedStyling';
 import { MaskedAliasChannels, shortenText } from 'helpers/UtilityHelper';
+import ChannelsDataStore from 'singletons/ChannelsDataStore';
 
 // Internal Configs
 import { appConfig, CHAIN_DETAILS } from 'config';
+import Tooltip from './reusables/tooltip/Tooltip';
+import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
+import InfoImage from "../assets/info.svg";
+import VerifiedTooltipContent from './VerifiedTooltipContent';
+import { IPFSGateway } from 'helpers/IpfsHelper';
 
 // Create Header
 function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
@@ -60,9 +67,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [canUnverify, setCanUnverify] = React.useState(false);
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(channelObject.channel);
+  const [tooltTipHeight, setToolTipheight] = React.useState(0);
+  const [channelIcon, setChannelIcon] = React.useState("");
+  const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
+  const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
+  const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
-
+  
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
@@ -76,12 +88,52 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     setIsPushAdmin(pushAdminAddress == account);
   }, [pushAdminAddress, account])
 
+  const fetchChannelJsonWithBlock = async () => {
+    try {
+      const channelJson = await ChannelsDataStore.instance.getChannelJsonStartBlockAsync(channelObject.channel);
+      return channelJson;
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   useEffect(async () => {
-    if(!channelObject || !channelObject.channel) return;
+    if(!channelObject.ipfshash) return;
+
+    const IPFS_GATEWAY = IPFSGateway;
+    const url = IPFS_GATEWAY + channelObject.ipfshash;
+    const response = await axios.get(url);
+
+    setChannelObjectFromHash(response.data);
+    setChannelIcon(response.data.icon)
+  }, [channelObject]);
+
+  useEffect(async () => {
+    if(!channelObject.channel) return;
     
+    const channelJsonStartBlock = await fetchChannelJsonWithBlock();
+    setChannelObjectStartBlock(channelJsonStartBlock);
+  }, [channelObject.channel]);
+
+  useEffect(() => {
+    if(Object.keys(channelObjectFromHash).length == 0 || Object.keys(channelObjectStartBlock).length == 0) return;
+
+    let isChanged = false;
+    const propertiesToBeChecked = ["name", "icon", "info"];
+    propertiesToBeChecked.forEach((property) => {
+      if(channelObjectFromHash[property] != channelObjectStartBlock[property])
+        isChanged = true;
+    })
+    
+    setShowChannelChangedWarning(isChanged);
+  }, [channelObjectFromHash, channelObjectStartBlock])
+
+  useEffect(async () => {
+    if (!channelObject || !channelObject.channel) return;
+
     setSubscriberCount(channelObject.subscriber_count);
 
-    if(!channelObject.verified_status) {
+    if (!channelObject.verified_status) {
       setLoading(false);
     } else {
       let verifierAddress = null;
@@ -89,7 +141,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         verifierAddress = response.verifiedBy;
       });
 
-      if(channelsCache[verifierAddress]) {
+      if (channelsCache[verifierAddress]) {
         setVerifierDetails(channelsCache[verifierAddress]);
       } else {
         const verifierAddrDetails = await PushAPI.channels.getChannel({
@@ -317,7 +369,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             cta: '',
             title: channelObject.info,
             message: `Welcome to ${channelObject.name} Channel. From now onwards, you'll be getting notifications from this channel`,
-            icon: channelObject.icon,
+            icon: channelIcon,
             url: channelObject.url,
             sid: '',
             app: channelObject.name,
@@ -493,9 +545,17 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   if (isBlocked) return <></>;
   if (isChannelBlacklisted) return <></>;
 
+
+  const handleHeight = (e) => {
+    const containerHeight = document.getElementById(channelObject?.channel)?.getBoundingClientRect();
+    setToolTipheight(containerHeight?.top);
+  }
+
   // render
   return (
-    <Container key={channelObject.channel}>
+    <Container key={channelObject.channel}
+      id={channelObject.channel}
+    >
       <ChannelLogo>
         <ChannelLogoOuter>
           <ChannelLogoInner>
@@ -505,7 +565,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 height="100%"
               />
             ) : (
-              <ChannelLogoImg src={`${channelObject.icon}`} />
+              <ChannelLogoImg src={`${channelIcon}`} />
             )}
           </ChannelLogoInner>
         </ChannelLogoOuter>
@@ -520,18 +580,105 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               height={24}
             />
           ) : (
-            <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
+            <ChannelTitleLink
+              onClick={() => correctChannelTitleLink()}
+            >
+
               <Span style={{ display: 'flex', alignItems: 'center' }}>
+                {showChannelChangedWarning &&
+                  <Tooltip
+                    wrapperProps={{
+                      width: "fit-content",
+                      maxWidth: "fit-content",
+                      minWidth: "fit-content",
+                      // zIndex: "10",
+                    }}
+                    placementProps={
+                      tooltTipHeight < 250 ? {
+                        background: "none",
+                        // bottom: "25px",
+                        top: "20px",
+                        // right: "-175px",
+                        left: "5px"
+                      } : {
+                        background: "none",
+                        bottom: "25px",
+                        // top: "20px",
+                        // right: "-175px",
+                        left: "5px"
+                      }
+                    }
+                    tooltipContent={
+                      <UpdateChannelTooltipContent
+                        height={tooltTipHeight}
+                        channelName={channelObjectStartBlock.name}
+                        channelDescription={channelObjectStartBlock.info}
+                        channelLogoSrc={channelObjectStartBlock.icon}
+                      />}
+                  >
+                    <div
+                      onMouseEnter={() => {
+                        handleHeight(channelObject.channel);
+                      }}
+                    >
+                      <ImageInfo src={InfoImage} />
+                    </div>
+                  </Tooltip>
+                }
+
                 {channelObject.name}
+
                 {isVerified == 1 && (
                   <Span
                     margin="0px 5px"
                     style={{ display: 'flex' }}
                   >
-                    <GoVerified
+                    <Tooltip
+                      wrapperProps={{
+                        width: "fit-content",
+                        maxWidth: "fit-content",
+                        minWidth: "fit-content",
+                      }}
+                      placementProps={
+                        tooltTipHeight < 160 ? {
+                          background: "none",
+                          top: "20px", //for lower displaying
+                          left: "7px",
+                          width: "125px"
+                        } :
+                          {
+                            background: "none",
+                            bottom: "28px", //above display
+                            left: "7px",
+                            width: "125px"
+                          }}
+                      tooltipContent={
+                        <VerifiedTooltipContent
+                          height={tooltTipHeight}
+                        />
+
+                      }
+                    >
+                      {/* TODO: HAS TO BE CHANGED TO A i icon */}
+                      <div style={{ cursor: "pointer" }} onMouseEnter={() => {
+                        handleHeight(channelObject.channel);
+                      }}>
+                        <GoVerified
+                          size={18}
+                          color={themes.viewChannelVerifiedBadge}
+                        />
+
+                      </div>
+                    </Tooltip>
+
+
+
+
+
+                    {/* <GoVerified
                       size={18}
                       color={themes.viewChannelVerifiedBadge}
-                    />
+                    /> */}
                   </Span>
                 )}
                 {(channelObject && channelObject?.channel) && (
@@ -556,7 +703,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         height="20px"
                       />
                     </Span>
-                  )} 
+                  )}
               </Span>
             </ChannelTitleLink>
           )}
@@ -621,53 +768,53 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               margin="0px -5px"
             >
               <ItemBody>
-              <MetaInfoDisplayer
-                externalIcon={
-                  <Image
-                    src="./svg/users.svg"
-                    alt="users"
-                    width="14px"
-                    height="14px"
-                  />
-                }
-                internalIcon={null}
-                text={subscriberCount}
-                padding="5.3px 10px"
-                bgColor={themes.viewChannelSecondaryBG}
-                color={themes.viewChannelSecondaryText}
-              />
-
-              <MetaInfoDisplayer
-                text={formatAddress(copyText)}
-                bgColor={themes.viewChannelSearchBg}
-                padding="6px 16px"
-                color={themes.viewChannelPrimaryText}
-                onClick={() => {
-                  copyToClipboard(channelObject.channel);
-                  setCopyText('copied');
-                }}
-                onMouseEnter={() => {
-                  setCopyText('click to copy');
-                }}
-                onMouseLeave={() => {
-                  setCopyText(channelObject.channel);
-                }}
-              />
-
-              {isChannelTutorialized(channelObject.channel) && (
-                <ChannelTutorial
-                  addr={channelObject.channel}
-                  bgColor={themes.viewChannelSearchBg}
-                  loadTeaser={loadTeaser}
-                  playTeaser={playTeaser}
+                <MetaInfoDisplayer
+                  externalIcon={
+                    <Image
+                      src="./svg/users.svg"
+                      alt="users"
+                      width="14px"
+                      height="14px"
+                    />
+                  }
+                  internalIcon={null}
+                  text={subscriberCount}
+                  padding="5.3px 10px"
+                  bgColor={themes.viewChannelSecondaryBG}
+                  color={themes.viewChannelSecondaryText}
                 />
-              )}
+
+                <MetaInfoDisplayer
+                  text={formatAddress(copyText)}
+                  bgColor={themes.viewChannelSearchBg}
+                  padding="6px 16px"
+                  color={themes.viewChannelPrimaryText}
+                  onClick={() => {
+                    copyToClipboard(channelObject.channel);
+                    setCopyText('copied');
+                  }}
+                  onMouseEnter={() => {
+                    setCopyText('click to copy');
+                  }}
+                  onMouseLeave={() => {
+                    setCopyText(channelObject.channel);
+                  }}
+                />
+
+                {isChannelTutorialized(channelObject.channel) && (
+                  <ChannelTutorial
+                    addr={channelObject.channel}
+                    bgColor={themes.viewChannelSearchBg}
+                    loadTeaser={loadTeaser}
+                    playTeaser={playTeaser}
+                  />
+                )}
               </ItemBody>
 
               {verifierDetails && (
                 <Subscribers>
-                  <VerifiedBy>Verified by: 
-                  <VerifierIcon src={verifierDetails.icon} />
+                  <VerifiedBy>Verified by:
+                    <VerifierIcon src={verifierDetails.icon} />
                   </VerifiedBy>
                   <VerifierName>{verifierDetails.name}</VerifierName>
                 </Subscribers>
@@ -741,23 +888,23 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 {isOwner && <OwnerButton disabled>Owner</OwnerButton>}
                 {!isOwner && (
                   <SubscribeButton
-                  onClick={subscribe}
-                  disabled={txInProgress}
-                  className="optin"
-                >
-                  {txInProgress && (
-                    <ActionLoader>
-                      <LoaderSpinner
-                        type={LOADER_TYPE.SEAMLESS}
-                        spinnerSize={16}
-                        spinnerColor="#FFF"
-                      />
-                    </ActionLoader>
-                  )}
-                  <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
-                </SubscribeButton>
+                    onClick={subscribe}
+                    disabled={txInProgress}
+                    className="optin"
+                  >
+                    {txInProgress && (
+                      <ActionLoader>
+                        <LoaderSpinner
+                          type={LOADER_TYPE.SEAMLESS}
+                          spinnerSize={16}
+                          spinnerColor="#FFF"
+                        />
+                      </ActionLoader>
+                    )}
+                    <ActionTitle hideit={txInProgress}>Opt-In</ActionTitle>
+                  </SubscribeButton>
                 )}
-              </> 
+              </>
             )}
             {!loading && subscribed && (
               <>
@@ -877,6 +1024,14 @@ const ChannelLogoImg = styled.img`
   width: 100%;
   border-radius: 20px;
   overflow: hidden;
+`;
+
+const ImageInfo = styled.img`
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+    align-items: center;
+    align-self: center;
 `;
 
 const ChannelInfo = styled.div`

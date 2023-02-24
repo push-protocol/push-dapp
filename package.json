@@ -37,7 +37,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@pushprotocol/ledgerlive": "0.0.1",
-    "@pushprotocol/restapi": "0.6.0",
+    "@pushprotocol/restapi": "0.7.1",
     "@pushprotocol/socket": "0.3.0",
     "@pushprotocol/uiweb": "0.4.3",
     "@reduxjs/toolkit": "^1.7.1",
@@ -46,6 +46,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "@types/dotenv": "8.2.0",
+    "@uniswap/widgets": "^2.33.0",
     "@web3-react/core": "6.1.9",
     "@web3-react/injected-connector": "6.0.7",
     "@web3-react/ledger-connector": "6.1.9",
@@ -87,6 +88,7 @@
     "ipfs-api": "26.1.2",
     "ipfs-core": "0.14.3",
     "ipfs-http-client": "^57.0.3",
+    "jotai-immer": "^0.2.0",
     "key-did-resolver": "2.0.4",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
@@ -140,6 +142,7 @@
     "timeago.js": "^4.0.2",
     "typescript": "^3.7.5",
     "url": "0.11.0",
+    "web3": "^1.8.2",
     "web3modal": "1.9.7"
   },
   "devDependencies": {

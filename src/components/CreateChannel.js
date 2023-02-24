@@ -27,6 +27,7 @@ import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHel
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import { Anchor } from './SharedStyling';
+import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
 
 // Constants
 const minStakeFees = 50;
@@ -110,40 +111,40 @@ function CreateChannel() {
     setUploadDone(true);
   };
 
-  const handleLogoSizeLimitation = (base64) => {
-    // Setup Error on higher size of 128px
-    var sizeOf = require('image-size');
-    var base64Data = base64.split(';base64,').pop();
-    var img = Buffer.from(base64Data, 'base64');
-    var dimensions = sizeOf(img);
+  // const handleLogoSizeLimitation = (base64) => {
+  //   // Setup Error on higher size of 128px
+  //   var sizeOf = require('image-size');
+  //   var base64Data = base64.split(';base64,').pop();
+  //   var img = Buffer.from(base64Data, 'base64');
+  //   var dimensions = sizeOf(img);
 
-    // Only proceed if image is equal to or less than 128
-    if (dimensions.width > 128 || dimensions.height > 128) {
-      console.log('Image size check failed... returning');
-      return {
-        success: 0,
-        info: 'Image size check failed, Image should be 128X128PX',
-      };
-    }
+  //   // Only proceed if image is equal to or less than 128
+  //   if (dimensions.width > 128 || dimensions.height > 128) {
+  //     console.log('Image size check failed... returning');
+  //     return {
+  //       success: 0,
+  //       info: 'Image size check failed, Image should be 128X128PX',
+  //     };
+  //   }
 
-    console.log(base64Data.charAt(0));
-    if (base64Data.charAt(0) === '/') {
-      return {
-        success: 1,
-        info: 'Image checks passed',
-      };
-    } else if (base64Data.charAt(0) === 'i') {
-      return {
-        success: 1,
-        info: 'Image checks passed',
-      };
-    } else {
-      return {
-        success: 0,
-        info: 'Image extension should be jpg or png',
-      };
-    }
-  };
+  //   console.log(base64Data.charAt(0));
+  //   if (base64Data.charAt(0) === '/') {
+  //     return {
+  //       success: 1,
+  //       info: 'Image checks passed',
+  //     };
+  //   } else if (base64Data.charAt(0) === 'i') {
+  //     return {
+  //       success: 1,
+  //       info: 'Image checks passed',
+  //     };
+  //   } else {
+  //     return {
+  //       success: 0,
+  //       info: 'Image extension should be jpg or png',
+  //     };
+  //   }
+  // };
 
   const isEmpty = (field) => {
     if (field.trim().length == 0) {
@@ -239,7 +240,7 @@ function CreateChannel() {
 
       return false;
     }
-
+    
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
 
@@ -397,9 +398,12 @@ function CreateChannel() {
 
   useEffect(() => {
     if (croppedImage) {
+      console.log("Image cropped",croppedImage);
       toDataURL(croppedImage, function (dataUrl) {
         const response = handleLogoSizeLimitation(dataUrl);
+        console.log("response",response);
         if (response.success) {
+          console.log("Cropped Image....",croppedImage);
           setChannelFile(croppedImage);
         }
       });
@@ -408,19 +412,19 @@ function CreateChannel() {
     }
   }, [croppedImage]);
 
-  function toDataURL(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      var reader = new FileReader();
-      reader.onloadend = function () {
-        callback(reader.result);
-      };
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.open('GET', url);
-    xhr.responseType = 'blob';
-    xhr.send();
-  }
+  // function toDataURL(url, callback) {
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.onload = function () {
+  //     var reader = new FileReader();
+  //     reader.onloadend = function () {
+  //       callback(reader.result);
+  //     };
+  //     reader.readAsDataURL(xhr.response);
+  //   };
+  //   xhr.open('GET', url);
+  //   xhr.responseType = 'blob';
+  //   xhr.send();
+  // }
 
   return (
     <ThemeProvider theme={theme}>
@@ -479,49 +483,27 @@ function CreateChannel() {
               <Tab type={stepFlow >= 0 ? 'active' : 'inactive'} active={stepFlow == 0 ? 'active' : 'inactive'} 
                onClick={() => setStepFlow(0)}
                >
-                <div>Staking Info</div>
+                <div>Channel Info</div>
                 <Step type={stepFlow >= 0 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 1 ? 'active' : 'inactive'}  active={stepFlow == 1 ? 'active' : 'inactive'} 
               onClick={() => setStepFlow(1)}
               >
-                <div>Channel Info</div>
+                <div>Upload Logo</div>
                 <Step type={stepFlow >= 1 ? 'active' : 'inactive'} />
               </Tab>
               <Tab type={stepFlow >= 2 ? 'active' : 'inactive'} active={stepFlow == 2 ? 'active' : 'inactive'}
                onClick={() => setStepFlow(2)}
                >
-                <div>Upload Logo</div>
+                <div>Staking Info</div>
                 <Step type={stepFlow >= 2 ? 'active' : 'inactive'} />
               </Tab>
               <Line />
             </ItemHere>
           </Section>)}
 
-          {/* Stake Fees Section */}
-          {stepFlow === 0 && (
-            <ItemVV2>
-              <StakingInfo
-                channelStakeFees={channelStakeFees}
-                setStakeFeesChoosen={setStakeFeesChoosen}
-                setStepFlow={setStepFlow}
-                setProcessingInfo={setProcessingInfo}
-              />
-
-              {processing === 1 ? (
-                <LoaderSpinner
-                  type={LOADER_TYPE.STANDALONE}
-                  overlay={LOADER_OVERLAY.ONTOP}
-                  blur={5}
-                  title="Channel Creation in Progress"
-                  completed={false}
-                />
-              ) : null}
-            </ItemVV2>
-          )}
-
           {/* Channel Entry */}
-          {stepFlow === 1 && (
+          {stepFlow === 0 && (
             <ItemVV2>
               <ChannelInfo
                 setStepFlow={setStepFlow}
@@ -545,18 +527,18 @@ function CreateChannel() {
 
               {processing === 1 ? (
                 <LoaderSpinner
-                  type={LOADER_TYPE.STANDALONE}
-                  overlay={LOADER_OVERLAY.ONTOP}
-                  blur={5}
-                  title="Channel Creation in Progress"
-                  completed={false}
+                type={LOADER_TYPE.STANDALONE}
+                overlay={LOADER_OVERLAY.ONTOP}
+                blur={5}
+                title="Channel Creation in Progress"
+                completed={false}
                 />
-              ) : null}
+                ) : null}
             </ItemVV2>
           )}
 
           {/* Image Upload Section */}
-          {stepFlow === 2 && (
+          {stepFlow === 1 && (
             <ItemVV2>
               <UploadLogo
                 croppedImage={croppedImage}
@@ -567,8 +549,30 @@ function CreateChannel() {
                 setView={setView}
                 setImageSrc={setImageSrc}
                 setProcessingInfo={setProcessingInfo}
-                handleCreateChannel={handleCreateChannel}
                 logoInfo={logoInfo}
+                setStepFlow={setStepFlow}
+                />
+
+              {processing === 1 ? (
+                <LoaderSpinner
+                type={LOADER_TYPE.STANDALONE}
+                overlay={LOADER_OVERLAY.ONTOP}
+                blur={5}
+                title="Channel Creation in Progress"
+                completed={false}
+                />
+                ) : null}
+            </ItemVV2>
+          )}
+
+          {/* Stake Fees Section */}
+          {stepFlow === 2 && (
+            <ItemVV2>
+              <StakingInfo
+                channelStakeFees={channelStakeFees}
+                setStakeFeesChoosen={setStakeFeesChoosen}
+                setProcessingInfo={setProcessingInfo}
+                handleCreateChannel={handleCreateChannel}
               />
 
               {processing === 1 ? (

@@ -9,10 +9,11 @@ import styled, { useTheme } from 'styled-components';
 import { A, Image, ItemH, Span } from '../primaries/SharedStyling';
 
 export type DropdownValueType = {
-  id: number,
-  value: string,
+  id: number|string,
+  value?: string,
   title: string,
   icon: string,
+  textColor?: string,
   function: () => void,
 }
 
@@ -23,9 +24,17 @@ type DropdownProps = {
   hoverBGColor?: string;
 };
 
+
 // Create Dropdown
 function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: DropdownProps) {
+
   const theme = useTheme();
+
+  const getTextColor = (dropdownValue:DropdownValueType) => {
+    return dropdownValue.textColor ? dropdownValue.textColor:textColor? textColor : theme.snackbarBorderText;
+  }
+
+ 
   const copyToClipboard = (address) => {
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(address);
@@ -112,7 +121,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
             {!dropdownValue?.link && dropdownValue?.function && (
               <Span
                 width="max-content"
-                color={textColor ? textColor : theme.snackbarBorderText}
+                color={getTextColor(dropdownValue)}
                 margin="8px 10px"
                 weight="400"
                 size="15px"
@@ -131,7 +140,7 @@ function Dropdown({ dropdownValues, textColor, iconFilter, hoverBGColor }: Dropd
                 weight="400"
                 size="16px"
                 width="max-content"
-                color={textColor ? textColor : theme.snackbarBorderText}
+                color={getTextColor(dropdownValue)}
                 hoverBG="transparent"
               >
                 {dropdownValue.title}
