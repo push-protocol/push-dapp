@@ -20,19 +20,21 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
+  isGroup: boolean;
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
-  sendIntent: ({ message, messageType }: { message: string; messageType: string }) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
+  sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;
   setSnackbarText: (SnackbarText: string) => void;
 }
 
 const Typebar = ({
+  isGroup,
   messageBeingSent,
   setNewMessage,
   newMessage,
@@ -70,7 +72,7 @@ const Typebar = ({
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault();
     if (newMessage.trim() !== '') {
-      if (currentChat.threadhash) {
+      if (currentChat.threadhash || isGroup) {
         sendMessage({
           message: newMessage,
           messageType: 'Text',
@@ -111,13 +113,14 @@ const Typebar = ({
   };
 
   const sendGif = (url: string): void => {
-    if (currentChat?.intent === null) {
-      sendIntent({ message: url, messageType: 'GIF' });
-    } else {
+    if (currentChat.threadhash || isGroup) {
       sendMessage({
         message: url,
         messageType: 'GIF',
       });
+     
+    } else {
+      sendIntent({ message: url, messageType: 'GIF' });
     }
   };
 
@@ -143,13 +146,15 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.threadhash) {
-            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
-          } else {
+          if (currentChat.threadhash || isGroup) {
+
             sendMessage({
               message: JSON.stringify(fileMessageContent),
               messageType,
             });
+          } else {
+            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
+
           }
           setFileUploading(false);
         };

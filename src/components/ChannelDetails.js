@@ -76,6 +76,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
     })();
   }, [channelDetails]);
 
+
   return (
     <ItemVV2>
       <AdaptiveMobileItemHV22  justifyContent="flex-start" alignSelf="stretch" margin="10px 0px 0px 0px">

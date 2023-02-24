@@ -42,7 +42,6 @@ export function useResolveEns(address?: string, ens?: string):string {
       if (address) {
         const walletLowercase = caip10ToWallet(address).toLowerCase();
         const checksumWallet = ethers.utils.getAddress(walletLowercase);
-
         if (ethers.utils.isAddress(checksumWallet)) {
           try {
           let ensFromIndexDb = await getEnsFromIndexDb(checksumWallet);
@@ -55,6 +54,10 @@ export function useResolveEns(address?: string, ens?: string):string {
             if (ensResponse) {
               setEnsName(ensResponse);
             }
+            else
+            {
+              setEnsName(null)
+            }
           }
           catch (e) {
             console.log('Error in resolving ens');
@@ -65,6 +68,9 @@ export function useResolveEns(address?: string, ens?: string):string {
           console.log('Error fetching ens from indexDB');
         }
         }
+      }
+      else{
+        setEnsName(null)
       }
     })();
   }, [currentChat]);

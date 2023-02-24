@@ -26,26 +26,34 @@ interface ChatSnapPropsI {
   timestamp: number;
   selected: boolean;
   onClick?: Function;
+  isGroup: boolean;
 }
 
 // Other Information section
-const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: ChatSnapPropsI) => {
+const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
   // get theme
   const theme = useTheme();
-
   // get ens name
-  const ensName = useResolveEns(username);
+  const ensName = useResolveEns(!isGroup ? username : null);
   // get reverse name
-
+  
   // get short username
-  const walletAddress = caip10ToWallet(username);
-  const shortUsername = shortenText(walletAddress,8,7);
+  const walletAddress = !isGroup ? caip10ToWallet(username) : null;
+  const shortUsername = !isGroup ? shortenText(walletAddress, 8, 7) : null;
+
+  const getDisplayName = () => {
+    if (ensName)
+      return ensName;
+    if (isGroup)
+      return username;
+    return shortUsername;
+  }
 
   // format message here instead
   const message =
     chatSnapMsg.type === 'Text' ? (
-      <SpanV2 color={theme.default.secondaryColor}>
-        {chatSnapMsg.message.length > 25 ? chatSnapMsg.message.slice(0, 25) + '...' : chatSnapMsg.message}
+      <SpanV2 color={theme.default.secondaryColor} fontSize="15px" fontWeight="400">
+        {chatSnapMsg.message?.length > 25 ? chatSnapMsg.message?.slice(0, 25) + '...' : chatSnapMsg.message}
       </SpanV2>
     ) : chatSnapMsg.type === 'Image' ? (
       <SpanV2 color={theme.default.secondaryColor}>
@@ -75,7 +83,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
 
   // get date
   let date = null;
-  if (timestamp !== null) {
+  if (timestamp) {
     const time = new Date(timestamp);
     date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2);
   }
@@ -93,14 +101,17 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
     >
       <ItemVV2
         width="48px"
+        height="48px"
         maxWidth="48px"
         borderRadius="100%"
         overflow="hidden"
         margin="0 5px 0 0"
       >
         <ImageV2
+          height="100%"
           alt={`Profile pic of ${username}`}
           src={pfp}
+          objectFit="cover"
         />
       </ItemVV2>
 
@@ -117,8 +128,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick }: 
             flex="1"
             fontSize="14px"
           >
-            {ensName && ensName}
-            {!ensName && shortUsername}
+            {getDisplayName()}
           </SpanV2>
           {date && (
             <SpanV2
