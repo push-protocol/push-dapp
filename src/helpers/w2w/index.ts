@@ -99,7 +99,7 @@ export const decryptFeeds = async ({
           privateKeyArmored: connectedUser.privateKey!,
         });
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     }
   }
@@ -152,7 +152,7 @@ export const decryptMessages = async ({
         signatureArmored: savedMsg.signature,
       });
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   }
 
