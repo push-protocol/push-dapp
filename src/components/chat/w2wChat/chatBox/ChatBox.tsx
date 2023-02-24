@@ -36,7 +36,7 @@ import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash } from 'helpers/w2w/user';
+import { checkConnectedUser, checkIfIntentExist, getLatestThreadHash, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { Item } from 'primaries/SharedStyling';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -81,7 +81,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [chatCurrentCombinedDID, setChatCurrentCombinedDID] = useState<string>('');
-  const {connectedUser} = useContext(ChatUserContext);
+  const {connectedUser, setConnectedUser} = useContext(ChatUserContext);
   const provider = ethers.getDefaultProvider();
   const chatBoxToast = useToast();
   const theme = useTheme();
@@ -212,12 +212,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
   const sendMessage = async ({ message, messageType }: { message: string; messageType: MessagetypeType }): Promise<void> => {
     setMessageBeingSent(true);
     try {
+      const user = await getUserWithDecryptedPvtKey(connectedUser);
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
         receiverAddress: currentChat?.wallets.split(',')[0],
         account: account!,
-        pgpPrivateKey: connectedUser?.privateKey,
+        pgpPrivateKey:  connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
         apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
         env: appConfig.appEnv,
       });
@@ -255,6 +256,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
+      setConnectedUser(user);
     }, 2000);
   };
 
@@ -345,6 +347,7 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
     message: string;
     messageType: MessagetypeType;
   }): Promise<void> => {
+    let user;
     try {
       setMessageBeingSent(true);
       if (
@@ -352,12 +355,13 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
+        user = await getUserWithDecryptedPvtKey(connectedUser);
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
           receiverAddress: currentChat?.wallets.split(',')[0],
           account: account!,
-          pgpPrivateKey: connectedUser?.privateKey,
+          pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
           apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
           env: appConfig.appEnv,
         });
@@ -415,6 +419,10 @@ const ChatBox = ({ setVideoCallInfo }): JSX.Element => {
       console.log(error);
       setMessageBeingSent(false);
     }
+    setTimeout(() => {
+      setMessageBeingSent(false);
+      setConnectedUser(user);
+    }, 2000);
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {

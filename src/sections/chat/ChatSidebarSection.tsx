@@ -44,6 +44,7 @@ const ChatSidebarSection = () => {
   const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
+  console.log(connectedUser)
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
