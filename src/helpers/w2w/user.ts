@@ -1,5 +1,11 @@
-
-import { ConnectedUser,Feeds, User } from "types/chat";
+import * as PushAPI from '@pushprotocol/restapi';
+import { ConnectedUser, Feeds, IGroup, User } from 'types/chat';
+import { appConfig } from '../../config';
+import * as w2wHelper from 'helpers/w2w/';
+import * as PushNodeClient from 'api';
+import { walletToCAIP10 } from '.';
+import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
+import { profilePicture } from 'config/W2WConfig';
 
 export function checkConnectedUser(connectedUser: ConnectedUser): boolean {
   if (
@@ -20,34 +26,60 @@ type CheckIfIntentExistPropType = {
   receivedIntents: Feeds[];
   currentChat: Feeds;
   connectedUser: ConnectedUser;
+  isGroup: boolean;
 };
 
 export const checkIfIntentExist = ({
   receivedIntents,
   currentChat,
   connectedUser,
-}: CheckIfIntentExistPropType): string => {
-  const threadHash = receivedIntents?.find(
-    (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
-  )?.threadhash;
+  isGroup,
+}: CheckIfIntentExistPropType): boolean => {
+  let val: boolean;
+  if (isGroup) {
+    val = receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)
+      ? true
+      : false;
+  } else {
+    val = receivedIntents?.find(
+      (x) => x?.combinedDID === currentChat?.combinedDID && x?.msg?.toDID === connectedUser?.did
+    )
+      ? true
+      : false;
+  }
 
-  return threadHash;
+  return val;
 };
 
 type GetLatestThreadHashPropRtpe = {
   inbox: Feeds[];
   receivedIntents: Feeds[];
   currentChat: Feeds;
+  isGroup: boolean;
 };
-export const getLatestThreadHash = ({ inbox, receivedIntents, currentChat }: GetLatestThreadHashPropRtpe): string => {
-  const latestThreadHash =
-    inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
-    receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
+export const getLatestThreadHash = ({
+  inbox,
+  receivedIntents,
+  currentChat,
+  isGroup,
+}: GetLatestThreadHashPropRtpe): string => {
+  let latestThreadHash = '';
+  if (isGroup) {
+
+    latestThreadHash =
+      inbox?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash ||
+      receivedIntents?.find((x) => x?.groupInformation?.chatId === currentChat?.groupInformation?.chatId)?.threadhash;
+  } else {
+
+    latestThreadHash =
+      inbox?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash ||
+      receivedIntents?.find((x) => x?.combinedDID === currentChat?.combinedDID)?.threadhash;
+  }
+
   return latestThreadHash;
 };
 
 export const displayDefaultUser = ({ caip10 }: { caip10: string }): User => {
-  const profilePicture = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAvklEQVR4AcXBsW2FMBiF0Y8r3GQb6jeBxRauYRpo4yGQkMd4A7kg7Z/GUfSKe8703fKDkTATZsJsrr0RlZSJ9r4RLayMvLmJjnQS1d6IhJkwE2bT13U/DBzp5BN73xgRZsJMmM1HOolqb/yWiWpvjJSUiRZWopIykTATZsJs5g+1N6KSMiO1N/5DmAkzYTa9Lh6MhJkwE2ZzSZlo7xvRwson3txERzqJhJkwE2bT6+JhoKTMJ2pvjAgzYSbMfgDlXixqjH6gRgAAAABJRU5ErkJggg==`;
   const userCreated: User = {
     did: caip10,
     wallets: caip10,
@@ -64,4 +96,105 @@ export const displayDefaultUser = ({ caip10 }: { caip10: string }): User => {
     linkedListHash: null,
   };
   return userCreated;
+};
+
+export const getDefaultFeed = async ({
+  walletAddress,
+  userData,
+  inbox,
+  intents,
+}: {
+  walletAddress?: string;
+  userData?: User;
+  inbox: Feeds[];
+  intents: Feeds[];
+}): Promise<Feeds> => {
+  
+  const user =
+    userData ??
+    (await PushAPI.user.get({
+      account: walletAddress!,
+      env: appConfig.appEnv,
+    }));
+    let feed:Feeds;
+    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+
+    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+    if (inboxUser.length) {
+      feed = inboxUser[0];
+    } else if(intentUser.length){
+      feed = intentUser[0];
+    }
+    else {
+   feed = getDefaultFeedObject(user);
+}
+  return feed;
+};
+
+export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
+  const feed = {
+    msg: {
+      messageContent: null,
+      timestamp: null,
+      messageType: null,
+      signature: null,
+      sigType: null,
+      link: null,
+      encType: null,
+      encryptedSecret: null,
+      fromDID: null,
+      fromCAIP10: null,
+      toDID: null,
+      toCAIP10: null,
+    },
+    wallets: user.wallets,
+    did: user.did,
+    threadhash: null,
+    profilePicture: user.profilePicture,
+    about: user.about,
+    intent: null,
+    intentSentBy: null,
+    intentTimestamp: null,
+    publicKey: user.publicKey,
+    combinedDID: null,
+    cid: null,
+    groupInformation: groupInformation??undefined,
+  };
+  return feed;
+}
+
+export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Promise<ConnectedUser> => {
+  let decryptedPrivateKey;
+    let user:User;
+
+
+    if(!connectedUser.publicKey)
+    {
+
+       user = await PushNodeClient.getUser({ caip10:connectedUser.wallets });
+       if(!user){
+        return connectedUser
+       }else{
+        decryptedPrivateKey = await PushAPI.chat.decryptWithWalletRPCMethod(
+          user.encryptedPrivateKey,
+          connectedUser.wallets.split(':')[1]
+        );
+        return {...user,privateKey:decryptedPrivateKey};
+       }
+       
+
+      
+
+      
+
+    }
+    return connectedUser;
+}
+
+
+export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
+  let inboxes:Feeds[] = await PushAPI.chat.chats({ account: connectedUser.wallets!, env: appConfig.appEnv, toDecrypt: false });
+  await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
+  inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
+  return inboxes
 };

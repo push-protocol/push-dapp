@@ -39,6 +39,8 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
         if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('videoMeta')) {
           const videoMeta = JSON.parse(payload['data']['videoMeta']);
 
+          console.log("RECIEVED CALL FEED", videoMeta);
+
           if (videoMeta.status == 1) {
             // incoming call
             incomingCall(videoMeta);

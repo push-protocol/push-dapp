@@ -3,7 +3,6 @@ import React, { createContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import Peer from 'simple-peer';
-import { io } from 'socket.io-client';
 
 // Internal Configs
 import { appConfig } from '../config';
@@ -25,42 +24,55 @@ interface payloadType {
 
 const VideoCallContext = createContext(null);
 
-// const socket = io('http://localhost:5000');
-// const socket = io('https://warm-wildwood-81069.herokuapp.com');
-
 const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [callAccepted, setCallAccepted] = useState<boolean>(false);
   const [callEnded, setCallEnded] = useState<boolean>(false);
   const [receiverPeerSignalled, setRecieverPeerSignalled] = useState<boolean>(false);
-  const [stream, setStream] = useState<MediaStream>();
+  const [localStream, setLocalStream] = useState<MediaStream>();
   const [name, setName] = useState<string>('Joe');
   const [call, setCall] = useState<any>({});
   const [me, setMe] = useState<string>('');
+
+  const [incomingStreams, setIncomingStreams] = useState<MediaStream[]>([]);
 
   const myVideo = useRef<any>();
   const userVideo = useRef<any>();
   const connectionRef = useRef<any>();
 
-  const initializeStream = async (address: string): Promise<void> => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      setStream(stream);
-      myVideo.current.srcObject = stream;
-      setMe(address);
+  /**
+   * Initializes the local stream and sets the local stream to the user's video element.           
+   * @param {string} address - the address of the user who is calling the function           
+   * @returns None           
+   */
+  const initializeLocalStream = async (address: string): Promise<void> => {
+    console.log("INITIALIZE LOCAL STREAM");
 
-      // socket.on('callUser', ({ from, name: callerName, signal }) => {
-      //   setCall({ isReceivingCall: true, from, name: callerName, signal });
-      // });
+    try {
+      const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      setLocalStream(localStream);
+      myVideo.current.srcObject = localStream;
+      setMe(address);
     } catch (err) {
-      console.log('Error in getting self stream', err);
+      console.log('Error in getting self localStream', err);
     }
   };
 
-  let peer = null;
+  /**
+   * Call the user with the given address.       
+   * @param {string} fromAddress - The address of the user who is calling.       
+   * @param {string} toAddress - The address of the user who is being called.       
+   * @returns None       
+   */
   const callUser = (fromAddress: string, toAddress: string): void => {
-    peer = new Peer({ initiator: true, trickle: false, stream });
+    console.log("CALL USER");
+
+    console.log("LOCAL STREAM CALL USER", localStream);
+    const peer = new Peer({ initiator: true, trickle: false, stream: localStream });
 
     peer.on('signal', (data) => {
+      console.log("CALL USER ME SIGAL CALLBACK CHALA");
+      
+
       // send a notification to the user
       // Prepare post request
       // 1 is call initiated, 2 is call answered
@@ -102,27 +114,38 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         body: JSON.stringify(payload),
       };
       fetch(`${appConfig.w2wApiUrl}/v1/payloads/video/poc`, requestOptions);
-
-      //socket.emit('callUser', { userToCall: address, signalData: data, from: me, name });
     });
+
+    peer.on('connect', () => {
+      // wait for 'connect' event before using the data channel
+      peer.send('hey reciever, how is it going?')
+    })
+    
+    peer.on('data', data => {
+      // got a data channel message
+      console.log('got a message from reciever: ' + data)
+    })
 
     peer.on('stream', (currentStream: MediaStream) => {
+      console.log("GOT STREAM BACK IN CALLUSER");
+      
       userVideo.current.srcObject = currentStream;
+      userVideo.current.play();
     });
-
-    // socket.on('callAccepted', (signal) => {
-    //   setCallAccepted(true);
-
-    //   peer.signal(signal);
-    // });
 
     connectionRef.current = peer;
   };
 
+  /**
+   * Handles incoming calls.           
+   * @param {any} videoMeta - the video meta data of the incoming call.           
+   * @returns None           
+   */
   const incomingCall = (videoMeta: any) => {
+    console.log("INCOMING CALL");
+    
     if (!call.isReceivingCall) {
       console.log('Setting Incoming Call');
-      // console.log(videoMeta);
       setCall({
         isReceivingCall: true,
         from: videoMeta.fromUser,
@@ -132,13 +155,28 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
+  /**
+   * Answer a call from a user.           
+   * @param {string} toAddress - The address of the user to answer the call from.           
+   * @param {string} fromAddress - The address of the user to answer the call to.           
+   * @returns None           
+   */
   const answerCall = (toAddress: string, fromAddress: string): void => {
+    console.log("ANSWER CALL");
+
     setCallAccepted(true);
-    const peer2: any = new Peer({ initiator: false, trickle: false, stream });
+    console.log("LOCAL STREAM ANSWER CALL", localStream);
+    
+    const peer2: any = new Peer({ initiator: false, trickle: false, stream: localStream });
+    console.log("answer call pe data", call);
+    peer2.signal(call.signal);
 
     console.log('Sending Payload for answer call - Step 1');
 
-    peer2.once('signal', (data) => {
+    peer2.on('signal', (data) => {
+      console.log("ANSWER CALL ME SIGAL CALLBACK CHALA");
+      console.log("RECIEVER PEER SIGNALED", receiverPeerSignalled)
+
       // send answer call notification
       // Prepare post request
       // 1 is call initiated, 2 is call answered, 3 is completed
@@ -189,15 +227,34 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
       // socket.emit('answerCall', { signal: data, to: call.from });
     });
 
+    peer2.on('connect', () => {
+      // wait for 'connect' event before using the data channel
+      peer2.send('hey caller, how is it going?')
+    })
+    
+    peer2.on('data', data => {
+      // got a data channel message
+      console.log('got a message from caller: ' + data)
+    })
+
     peer2.on('stream', (currentStream: MediaStream) => {
+      console.log("GOT STREAM BACK IN ANSWERCALL");
+      
       userVideo.current.srcObject = currentStream;
+      userVideo.current.play();
     });
 
-    peer2.signal(call.signal);
     connectionRef.current = peer2;
   };
 
+  /**
+   * Accepts a call from a user.           
+   * @param {VideoMeta} videoMeta - The video meta data of the peer.           
+   * @returns None           
+   */
   const acceptCall = (videoMeta) => {
+    console.log("ACCEPT CALL");
+
     if (!callAccepted) {
       setCallAccepted(true);
       console.log('Accepted Call Data', videoMeta);
@@ -206,7 +263,13 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
+  /**
+   * Leave the call.           
+   * @returns None           
+   */
   const leaveCall = () => {
+    console.log("LEAVE CALL");
+
     setCallEnded(true);
     setRecieverPeerSignalled(false);
     setCallAccepted(false);
@@ -218,12 +281,12 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   return (
     <VideoCallContext.Provider
       value={{
-        initializeStream,
+        initializeLocalStream,
         call,
         callAccepted,
         myVideo,
         userVideo,
-        stream,
+        localStream,
         name,
         setName,
         callEnded,

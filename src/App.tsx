@@ -44,6 +44,7 @@ dotenv.config();
 const GlobalStyle = createGlobalStyle`
   body {
     background: ${(props) => props.theme.header.bg} !important;
+    padding-right: 0 !important;
   }
 `;
 

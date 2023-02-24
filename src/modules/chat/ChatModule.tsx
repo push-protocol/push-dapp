@@ -12,8 +12,7 @@ import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
-import * as PushNodeClient from 'api';
-import { AppContext, BlockedLoadingI, ConnectedUser, Feeds, User } from 'types/chat';
+import { AppContext,  Feeds, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -22,20 +21,21 @@ import LoaderSpinner, {
   PROGRESS_POSITIONING,
 } from 'components/reusables/loaders/LoaderSpinner';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import * as w2wHelper from 'helpers/w2w';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
+import useToast from 'hooks/useToast';
+import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
+import useModalBlur from 'hooks/useModalBlur';
+import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import CryptoHelper from 'helpers/CryptoHelper';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import { useClickAway } from 'react-use';
 import { useDeviceWidthCheck } from 'hooks';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
-
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -53,7 +53,8 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } = useContext(ChatUserContext);
+  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
+    useContext(ChatUserContext);
 
   const theme = useTheme();
 
@@ -62,13 +63,14 @@ function Chat() {
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
-  const [searchedUser, setSearchedUser] = useState<string>('');
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
   const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
+  const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
+
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
 
@@ -134,8 +136,25 @@ function Chat() {
 
   const closeQRModal = () => {
     setDisplayQR(false);
-  }
-  useClickAway(containerRef, () => closeQRModal())
+  };
+  useClickAway(containerRef, () => closeQRModal());
+
+  const groupInfoToast = useToast();
+
+  const {
+    isModalOpen: isGroupInfoModalOpen,
+    showModal: showGroupInfoModal,
+    ModalComponent: GroupInfoModalComponent,
+  } = useModalBlur({padding:isMobile?"24px":"24px 36px"});
+
+  const createGroupToast = useToast();
+
+  const {
+    isModalOpen: isCreateGroupModalOpen,
+    showModal: showCreateGroupModal,
+    ModalComponent: CreateGroupModalComponent,
+  } = useModalBlur({padding:null});
+
 
   const connectUser = async (): Promise<void> => {
     // Getting User Info
@@ -196,10 +215,6 @@ function Chat() {
                 setReceivedIntents,
                 viewChatBox,
                 setChat,
-                setSearchedUser,
-                searchedUser,
-                connectedUser,
-                setConnectedUser,
                 intents,
                 setIntents,
                 inbox,
@@ -215,6 +230,8 @@ function Chat() {
                 setActiveTab,
                 userShouldBeSearched,
                 setUserShouldBeSearched,
+                filteredUserData,
+                setFilteredUserData
               }}
             >
               <ChatSidebarContainer
@@ -226,16 +243,25 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection />
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
                 chatActive={viewChatBox}
               >
-                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} />
+                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal}/>
               </ChatContainer>
+              <GroupInfoModalComponent
+                InnerComponent={GroupInfoModalContent}
+                onConfirm={() => {}}
+                toastObject={groupInfoToast}
+                />
+              <CreateGroupModalComponent
+                InnerComponent={CreateGroupModalContent}
+                toastObject={createGroupToast}
+              />
 
-              {(displayQR && !isMobile) && (
+              {displayQR && !isMobile && (
                 <>
                   <ChatQR
                     type={LOADER_TYPE.STANDALONE}
@@ -250,23 +276,19 @@ function Chat() {
                     blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
                     width="75%"
                   /> */}
-
-                  
                 </>
               )}
 
-            {(displayQR && isMobile) && (
-              <>
-                 <MobileView
+              {displayQR && isMobile && (
+                <>
+                  <MobileView
                     type={LOADER_TYPE.STANDALONE}
                     overlay={LOADER_OVERLAY.ONTOP}
                     blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
                     width="75%"
                   />
-              </>
-            )}
-
-
+                </>
+              )}
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
@@ -331,19 +353,22 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-  });
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
+  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+});
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
-  });
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
+  globalsMargin.MINI_MODULES.TABLET.BOTTOM
+});
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-  });
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
+  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+});
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

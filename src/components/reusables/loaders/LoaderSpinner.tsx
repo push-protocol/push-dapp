@@ -20,6 +20,7 @@ interface LoaderSpinnerPropsI {
   blur?: number;
   title?: string;
   width?: string;
+  titleColor?: string;
   spinnerEnabled?: boolean;
   spinnerSize?: number;
   spinnerColor?: string;
@@ -57,6 +58,7 @@ const LoaderSpinner = ({
   overlay = LOADER_OVERLAY.NORMAL,
   blur = 0,
   title = null,
+  titleColor = null,
   width = 'auto',
   spinnerEnabled = true,
   spinnerSize = 42,
@@ -125,7 +127,7 @@ const LoaderSpinner = ({
             <SpanV2
               padding="10px"
               fontWeight="500"
-              color={theme.default.color}
+              color={titleColor??theme.default.color}
             >
               {title}
             </SpanV2>
