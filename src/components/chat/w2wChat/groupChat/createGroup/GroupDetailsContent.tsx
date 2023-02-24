@@ -88,7 +88,7 @@ export const GroupDetailsContent = ({
     if (!isLengthValid(groupDescriptionData, 150, 3)) {
       setErrorInfo((x) => ({
         ...x,
-        description: 'Group Description should not exceed 150 characters! Please retry!',
+        description: 'Group Description should be between 3 to 150 characters! Please retry!',
       }));
 
       return false;

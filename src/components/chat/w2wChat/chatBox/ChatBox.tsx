@@ -132,15 +132,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           }
 
           // Decrypt message
-          msgIPFS = await w2wHelper.decryptMessages({
-            savedMsg: msgIPFS,
-            connectedUser,
-            account,
-            chainId,
-            currentChat,
-            inbox,
-          });
-
+          
+            msgIPFS = await w2wHelper.decryptMessages({
+              savedMsg: msgIPFS,
+              connectedUser,
+              account,
+              chainId,
+              currentChat,
+              inbox,
+            });
+       
+          
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
           if (messageInChat === undefined) {
