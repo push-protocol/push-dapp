@@ -130,7 +130,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
           {!isChannelExpired 
             ? 
             <>
-              <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
+              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
               <ChannelSettings />
             </>
             :
