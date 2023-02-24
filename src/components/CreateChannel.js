@@ -22,6 +22,7 @@ import './createChannel.css';
 import ProcessingInfo from './ProcessingInfo';
 import StakingInfo from './StakingInfo';
 import UploadLogo from './UploadLogo';
+import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
@@ -63,6 +64,7 @@ function CreateChannel() {
   const [progress, setProgress] = React.useState(0);
   const [progressInfo, setProgressInfo] = React.useState('');
   const [logoInfo, setLogoInfo] = React.useState('');
+  const [errorInfo, setErrorInfo] = React.useState({name: '',description: '', address: '', url: ''});
 
   //image upload states
   const [view, setView] = useState(false);
@@ -152,12 +154,93 @@ function CreateChannel() {
     return false;
   };
 
-  
+  const isAllFilledAndValid = () => {
+    setErrorInfo('');
+
+    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
+      if (
+        isEmpty(channelName)
+      ) {
+        setErrorInfo(x => ({
+          ...x,
+          name: 'Please, enter the channel name.',
+        }));
+      }
+
+      if (isEmpty(channelInfo)) {
+        setErrorInfo(x => ({
+          ...x,
+          description: 'Please, enter the channel description',
+        }));
+      }
+
+      if (isEmpty(channelURL)) {
+        setErrorInfo(x => ({
+          ...x,
+          url: 'Please, enter the channel url',
+        }));
+      }
+
+      if (isEmpty(channelAlias) && chainDetails !== coreChainId) {
+        setErrorInfo(x => ({
+          ...x,
+          address:'Please, enter the channel address',
+        }));
+      }
+    return false
+  }
+
+    if (!isLengthValid(channelName, 125)) {
+      setErrorInfo(x => ({
+        ...x,
+        name: 'Channel Name should not exceed 125 characters! Please retry!',
+      }));
+
+      return false;
+    }
+    if (!isLengthValid(channelURL, 125)) {
+      setErrorInfo(x => ({
+        ...x,
+        url: 'Channel Url should not exceed 125 characters! Please retry!',
+      }));
+      return false;
+    }
+    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
+      setErrorInfo(x => ({
+        ...x,
+        address: 'Channel Alias address is invalid! Please enter a valid address!',
+      }));
+
+      return false;
+    }
+    if (!isValidUrl(channelURL)) {
+      setErrorInfo(x => ({
+        ...x,
+        url: 'Channel URL is invalid! Please enter a valid url!',
+      }));
+      return false;
+    }
+
+    return true;
+  };
 
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
 
+    e.preventDefault();
+
+    if (!isAllFilledAndValid()) {
+      channelToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `${errorInfo.name || errorInfo.description || errorInfo.address || errorInfo.url || "Please enter the channel details"}`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
+
+      return false;
+    }
+    
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
 
@@ -368,7 +451,7 @@ function CreateChannel() {
           {txStatus === 0 && (
             <Body>
               <div>Transaction failed due to one of the following reasons:</div>
-              <p>1. There is not enough $PUSH in your wallet.</p>
+              <p>1. There is not enough PUSH in your wallet.</p>
               <p>2. Gas price increased due to network congestion. Adjust gas limit manually.</p>
             </Body>
           )}
@@ -438,9 +521,9 @@ function CreateChannel() {
                 setChannelURL={setChannelURL}
                 setChannelInfoDone={setChannelInfoDone}
                 setTxStatus={setTxStatus}
-                // errorInfo={errorInfo}
-                // isAllFilledAndValid={isAllFilledAndValid}
-                />
+                errorInfo={errorInfo}
+                isAllFilledAndValid={isAllFilledAndValid}
+              />
 
               {processing === 1 ? (
                 <LoaderSpinner

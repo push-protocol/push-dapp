@@ -47,7 +47,7 @@ const videoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   const { account } = useWeb3React();
 
   // get stream
-  const { initializeStream, stream, answerCall, leaveCall, callUser } = useContext(VideoCallContext);
+  const { initializeLocalStream, localStream, answerCall, leaveCall, callUser } = useContext(VideoCallContext);
   
   React.useEffect(() => {
     const setupStream = async () => {
@@ -60,13 +60,21 @@ const videoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
       // await new Promise(r => setTimeout(r, 200));
       
       try {
-        await initializeStream(account);
-
-        // send notification with id 
-        if (videoCallInfo.establishConnection == 1) {
-          callUser(account, videoCallInfo.address);
-        } else if (videoCallInfo.establishConnection == 2) {
-          // do nothing video player should handle that
+        // initialize the local stream for the given account
+        if(!localStream){
+          await initializeLocalStream(account);
+        }
+        else{
+          // send notification with id 
+          if (videoCallInfo.establishConnection == 1) {
+            console.log("CALLING A USER");
+            console.log("fromAddress", account);
+            console.log("toAddress", videoCallInfo.address);
+            
+            callUser(account, videoCallInfo.address);
+          } else if (videoCallInfo.establishConnection == 2) {
+            // do nothing video player should handle that
+          }
         }
 
         setBlockedLoading({
@@ -87,7 +95,7 @@ const videoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
     }
 
     setupStream();
-  }, []);
+  }, [localStream]);
 
   // RENDER
   return (

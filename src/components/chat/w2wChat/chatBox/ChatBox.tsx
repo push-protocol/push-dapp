@@ -31,11 +31,12 @@ import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
 import LockSlash from '../../../../assets/LockSlash.png';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+import videoCallIcon from "../../../../assets/icons/videoCallIcon.svg"
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID } from 'types/chat';
 import {
   checkConnectedUser,
   checkIfIntentExist,
@@ -52,6 +53,8 @@ import { HeaderMessage } from './HeaderMessage';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
+import { Item } from 'primaries/SharedStyling';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -468,6 +471,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
+  const startVideoCallHandler = ()=>{
+    setVideoCallInfo({
+      address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
+      fromPublicKeyArmored: connectedUser.publicKey,
+      toPublicKeyArmored: currentChat.publicKey,
+      privateKeyArmored: connectedUser.privateKey,
+      establishConnection: 1,
+    });
+  }
+
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
     { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
@@ -596,6 +609,24 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             >
               {getDisplayName()}
             </SpanV2>
+
+            {/* Video call button */}
+            <Tooltip 
+              tooltipContent='Video Call'
+              placementProps={{
+                bottom:"1.4rem",
+                transform:"translateX(-92%)",
+                borderRadius: "12px 12px 2px 12px",
+                width: "70px"
+
+              }}
+              wrapperProps={{width:"fit-content", minWidth:"fit-content" }}
+            >
+              <VideoCallButton onClick={startVideoCallHandler}>
+                <ImageV2 src={videoCallIcon} />
+              </VideoCallButton>
+            </Tooltip>
+
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
                 <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
@@ -900,5 +931,23 @@ const CustomScrollContent = styled(ScrollToBottom)`
     border-radius: 10px;
   }
 `;
+
+const FileUploadLoaderContainer = styled.div`
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
+`;
+
+const VideoCallButton = styled(ButtonV2)`
+  cursor: pointer;
+  width: 1.75rem;
+  max-width: 1.75rem;
+  min-width: 1.75rem;
+  background: none;
+  margin-right: 2rem;
+`
 
 export default ChatBox;
