@@ -409,7 +409,7 @@ const ChannelInfo = ({
               if (!isAllFilledAndValid()) return;
               setTxStatus(2);
               setChannelInfoDone(true);
-              setStepFlow(2);
+              setStepFlow(1);
             }}
           >
             <Span
