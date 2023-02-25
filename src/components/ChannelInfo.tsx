@@ -216,7 +216,6 @@ const ChannelInfo = ({
               visibility={chainDetails === coreChainId ? 'hidden' : 'visible'}
               value={channelAlias}
               onChange={(e) => {
-                console.log(e);
                 setChannelAlias(e.target.value);
               }}
             />
