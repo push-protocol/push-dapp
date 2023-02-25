@@ -611,7 +611,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
-            <Tooltip 
+            {/* <Tooltip 
               tooltipContent='Video Call'
               placementProps={{
                 bottom:"1.4rem",
@@ -625,7 +625,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               <VideoCallButton onClick={startVideoCallHandler}>
                 <ImageV2 src={videoCallIcon} />
               </VideoCallButton>
-            </Tooltip>
+            </Tooltip> */}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
