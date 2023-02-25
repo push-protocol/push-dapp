@@ -680,7 +680,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           />
                         )}
 
-                      {msg.messageType !=='Encrypted' &&  <Chats
+                       <Chats
                           msg={
                             isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
                               ? ''
@@ -689,7 +689,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           caip10={walletToCAIP10({ account: account! })}
                           messageBeingSent={messageBeingSent}
                           isGroup={isGroup}
-                        />}
+                        />
                       </div>
                     );
                   })}
