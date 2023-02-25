@@ -7,6 +7,7 @@ import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
 import { checkIfGroup, getMemberDetails } from './groupChat';
 import { getUser } from '../../api/w2w';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
+const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
 
 export const walletToCAIP10 = ({ account }: { account: string }): string => {
   if (account.includes('eip155:')) {
@@ -66,7 +67,7 @@ export const decryptAndVerifySignature = async ({
     cipherText: encryptedSecretKey,
     toPrivateKeyArmored: privateKeyArmored,
   });
-  await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
+  // await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
   return AES.decrypt({ cipherText, secretKey });
 };
 
@@ -100,8 +101,10 @@ export const decryptFeeds = async ({
         });
       } catch (e) {
         // console.log(e);
-        feed.msg.messageType = 'Text';
-        feed.msg.messageContent = 'message encrypted before you joined';
+        if(e.message == decryptionErrorMsg){
+          feed.msg.messageType = 'Text';
+          feed.msg.messageContent = 'message encrypted before you joined';
+        }
       }
     }
   }
@@ -155,8 +158,10 @@ export const decryptMessages = async ({
       });
     } catch (e) {
       // console.log(e);
-      savedMsg.messageType = 'Text';
-      savedMsg.messageContent = 'message encrypted before you joined';
+      if(e.message == decryptionErrorMsg){
+        savedMsg.messageType = 'Text';
+        savedMsg.messageContent = 'message encrypted before you joined';
+      }
     }
   }
 
