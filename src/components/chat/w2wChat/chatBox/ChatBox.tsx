@@ -483,8 +483,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
-    { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
-    { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
+    // { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
+    // { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
     {
       id: 4,
       content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
