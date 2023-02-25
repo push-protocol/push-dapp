@@ -585,7 +585,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             >
 
               <Span style={{ display: 'flex', alignItems: 'center' }}>
-                {showChannelChangedWarning &&
+                {/* {showChannelChangedWarning &&
                   <Tooltip
                     wrapperProps={{
                       width: "fit-content",
@@ -624,7 +624,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       <ImageInfo src={InfoImage} />
                     </div>
                   </Tooltip>
-                }
+                } */}
 
                 {channelObject.name}
 
@@ -633,7 +633,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     margin="0px 5px"
                     style={{ display: 'flex' }}
                   >
-                    <Tooltip
+                    {/* <Tooltip
                       wrapperProps={{
                         width: "fit-content",
                         maxWidth: "fit-content",
@@ -658,18 +658,18 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         />
 
                       }
-                    >
+                    > */}
                       {/* TODO: HAS TO BE CHANGED TO A i icon */}
-                      <div style={{ cursor: "pointer" }} onMouseEnter={() => {
+                      {/* <div style={{ cursor: "pointer" }} onMouseEnter={() => {
                         handleHeight(channelObject.channel);
-                      }}>
+                      }}> */}
                         <GoVerified
                           size={18}
                           color={themes.viewChannelVerifiedBadge}
                         />
 
-                      </div>
-                    </Tooltip>
+                      {/* </div> */}
+                    {/* </Tooltip> */}
 
 
 

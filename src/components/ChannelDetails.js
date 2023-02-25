@@ -128,12 +128,13 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
       {isMobile && 
         <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
           {!isChannelExpired 
-            ? 
+            && 
             <>
-              <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
+              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
               <ChannelSettings />
             </>
-            :
+          }
+          {isChannelExpired && onCoreNetwork &&
             <DestroyChannelBtn 
               onClick={destroyChannel}
               background="#E93636" 
