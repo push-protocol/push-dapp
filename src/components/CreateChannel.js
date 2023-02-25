@@ -227,8 +227,8 @@ function CreateChannel() {
   const handleCreateChannel = async (e) => {
     // Check everything in order
     // skip this for now
-
-    e.preventDefault();
+    
+    // e.preventDefault();
 
     if (!isAllFilledAndValid()) {
       channelToast.showMessageToast({
