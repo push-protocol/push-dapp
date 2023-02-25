@@ -100,7 +100,8 @@ export const decryptFeeds = async ({
         });
       } catch (e) {
         // console.log(e);
-        feed.msg.messageType = 'Encrypted';
+        feed.msg.messageType = 'Text';
+        feed.msg.messageContent = 'message encrypted before you joined';
       }
     }
   }
@@ -154,7 +155,8 @@ export const decryptMessages = async ({
       });
     } catch (e) {
       // console.log(e);
-      savedMsg.messageType = 'Encrypted';
+      savedMsg.messageType = 'Text';
+      savedMsg.messageContent = 'message encrypted before you joined';
     }
   }
 
