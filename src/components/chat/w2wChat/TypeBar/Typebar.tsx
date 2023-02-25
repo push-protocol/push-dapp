@@ -290,14 +290,13 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  /* align-items: center; */
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
   left: 9px;
   right: 9px;
-  /* height: 55px; */
+
   height: auto;
   padding: 13px 16px 13px 16px;
   border-radius: 13px;
@@ -339,6 +338,7 @@ const TextInput = styled.textarea`
   }
   ::placeholder {
     color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
+    padding-top: 5px;
   }
 `;
 
