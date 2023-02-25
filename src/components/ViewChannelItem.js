@@ -660,6 +660,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       }
                     >
                       {/* TODO: HAS TO BE CHANGED TO A i icon */}
+
                       {/* <div style={{ cursor: "pointer" }} onMouseEnter={() => {
                         handleHeight(channelObject.channel);
                       }}> */} 
