@@ -482,8 +482,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
-    { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
-    { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
+    // { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
+    // { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
     {
       id: 4,
       content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
@@ -609,8 +609,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
-            <Tooltip
-              tooltipContent="Video Call"
+
+            {/* <Tooltip 
+              tooltipContent='Video Call'
               placementProps={{
                 bottom: '1.4rem',
                 transform: 'translateX(-92%)',
@@ -622,7 +623,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               <VideoCallButton onClick={startVideoCallHandler}>
                 <ImageV2 src={videoCallIcon} />
               </VideoCallButton>
-            </Tooltip>
+            </Tooltip> */}
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
