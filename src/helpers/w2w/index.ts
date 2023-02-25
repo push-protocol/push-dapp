@@ -8,6 +8,8 @@ import { checkIfGroup, getMemberDetails } from './groupChat';
 import { getUser } from '../../api/w2w';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 
+
+const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
 export const walletToCAIP10 = ({ account }: { account: string }): string => {
   if (account.includes('eip155:')) {
     return account;
@@ -66,7 +68,7 @@ export const decryptAndVerifySignature = async ({
     cipherText: encryptedSecretKey,
     toPrivateKeyArmored: privateKeyArmored,
   });
-  await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
+  // await PGP.verifySignature({ messageContent: cipherText, signatureArmored, publicKeyArmored });
   return AES.decrypt({ cipherText, secretKey });
 };
 
@@ -99,9 +101,10 @@ export const decryptFeeds = async ({
           privateKeyArmored: connectedUser.privateKey!,
         });
       } catch (e) {
-        // console.log(e);
+        if(e.message == decryptionErrorMsg){
         feed.msg.messageType = 'Text';
         feed.msg.messageContent = 'message encrypted before you joined';
+        }
       }
     }
   }
@@ -154,9 +157,10 @@ export const decryptMessages = async ({
         signatureArmored: savedMsg.signature,
       });
     } catch (e) {
-      // console.log(e);
+      if(e.message == decryptionErrorMsg){
       savedMsg.messageType = 'Text';
       savedMsg.messageContent = 'message encrypted before you joined';
+      }
     }
   }
 

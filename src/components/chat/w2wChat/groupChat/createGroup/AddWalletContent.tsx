@@ -156,7 +156,6 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     handleMemberList(filteredMembers);
   };
 
-  console.log("filteredUserData",filteredUserData)
 
 
   return (
