@@ -55,7 +55,13 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
       <SpanV2 color={theme.default.secondaryColor} fontSize="15px" fontWeight="400">
         {chatSnapMsg.message?.length > 25 ? chatSnapMsg.message?.slice(0, 25) + '...' : chatSnapMsg.message}
       </SpanV2>
-    ) : chatSnapMsg.type === 'Image' ? (
+    ) : chatSnapMsg.type === 'Encrypted' ? (
+      <SpanV2 color={theme.default.secondaryColor}>
+
+       
+      </SpanV2>
+    ) :
+    chatSnapMsg.type === 'Image' ? (
       <SpanV2 color={theme.default.secondaryColor}>
         <i
           className="fa fa-picture-o"
@@ -130,7 +136,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           >
             {getDisplayName()}
           </SpanV2>
-          {date && (
+          {date && chatSnapMsg.type !== 'Encrypted' && (
             <SpanV2
               color={theme.default.secondaryColor}
               fontWeight="500"
@@ -151,7 +157,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
             textAlign="start"
             fontWeight="400"
           >
-            {message}
+           {message}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>

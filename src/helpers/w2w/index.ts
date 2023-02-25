@@ -100,6 +100,7 @@ export const decryptFeeds = async ({
         });
       } catch (e) {
         // console.log(e);
+        feed.msg.messageType = 'Encrypted';
       }
     }
   }
@@ -153,6 +154,7 @@ export const decryptMessages = async ({
       });
     } catch (e) {
       // console.log(e);
+      savedMsg.messageType = 'Encrypted';
     }
   }
 
