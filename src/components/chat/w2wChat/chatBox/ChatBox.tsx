@@ -109,8 +109,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     if (currentChat) {
       let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
 
+
       //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
       if (latestThreadhash === undefined) {
+
         latestThreadhash = messages[messages?.length - 1]?.cid;
       }
 
@@ -136,14 +138,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
           // Decrypt message
 
-          msgIPFS = await w2wHelper.decryptMessages({
-            savedMsg: msgIPFS,
-            connectedUser,
-            account,
-            chainId,
-            currentChat,
-            inbox,
-          });
+          
+            msgIPFS = await w2wHelper.decryptMessages({
+              savedMsg: msgIPFS,
+              connectedUser,
+              account,
+              chainId,
+              currentChat,
+              inbox,
+            });
+       
 
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
@@ -470,7 +474,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const startVideoCallHandler = () => {
+
+  const startVideoCallHandler = ()=>{
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
@@ -478,7 +483,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
     });
+
   };
+
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
@@ -496,6 +503,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     },
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
+
 
   return (
     <Container>
@@ -613,12 +621,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             {/* <Tooltip 
               tooltipContent='Video Call'
               placementProps={{
-                bottom: '1.4rem',
-                transform: 'translateX(-92%)',
-                borderRadius: '12px 12px 2px 12px',
-                width: '70px',
+                bottom:"1.4rem",
+                transform:"translateX(-92%)",
+                borderRadius: "12px 12px 2px 12px",
+                width: "70px"
+
               }}
-              wrapperProps={{ width: 'fit-content', minWidth: 'fit-content' }}
+              wrapperProps={{width:"fit-content", minWidth:"fit-content" }}
+
             >
               <VideoCallButton onClick={startVideoCallHandler}>
                 <ImageV2 src={videoCallIcon} />
@@ -678,6 +688,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           />
                         )}
 
+
                         {msg.messageType !== 'Encrypted' && (
                           <Chats
                             msg={
@@ -690,6 +701,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         )}
+
                       </div>
                     );
                   })}
@@ -948,6 +960,8 @@ const VideoCallButton = styled(ButtonV2)`
   min-width: 1.75rem;
   background: none;
   margin-right: 2rem;
+
 `;
+
 
 export default ChatBox;
