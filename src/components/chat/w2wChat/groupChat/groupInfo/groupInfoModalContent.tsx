@@ -245,10 +245,10 @@ const ModalContainer = styled.div`
 `;
 
 const DescriptionContainer = styled(ItemVV2)`
-  min-width: 445px;
+  max-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
-    min-width: 300px;
+    max-width: 300px;
   }
 `;
 

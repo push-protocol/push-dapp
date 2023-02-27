@@ -637,7 +637,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
-                <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
+                <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
                 {showGroupInfo && (
                   <GroupInfo
                     onClick={() => {
