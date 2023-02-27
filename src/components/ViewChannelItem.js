@@ -116,6 +116,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   }, [channelObject.channel]);
 
   useEffect(() => {
+    if(channelObjectFromHash &&channelObjectStartBlock){
     if(Object.keys(channelObjectFromHash).length == 0 || Object.keys(channelObjectStartBlock).length == 0) return;
 
     let isChanged = false;
@@ -126,6 +127,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     })
     
     setShowChannelChangedWarning(isChanged);
+  }
   }, [channelObjectFromHash, channelObjectStartBlock])
 
   useEffect(async () => {
