@@ -5,30 +5,28 @@ import React, { useEffect } from 'react';
 
 // External Packages
 import moment from 'moment';
-import { AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
-import { getReq, postReq } from 'api';
-import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import { Item } from '../primaries/SharedStyling';
 import ChannelSettings from './ChannelSettings';
 import ShowDelegates from './ShowDelegates';
 
 // Internal Configs
 import { appConfig } from "config";
-import GLOBALS, { device } from "config/Globals";
+import { device } from "config/Globals";
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
 ;
+import { Button } from "components/SharedStyling";
 
 const DATE_FORMAT = 'DD MMM, YYYY';
 
-export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }) {
+export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, showEditChannel, destroyChannel
+}) {
   const { chainId } = useWeb3React();
   const {
     channelDetails,
@@ -49,9 +47,12 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
-  const channelExpiryDate = getDateFromTimestamp(channelDetails.expiryTime.toString() * 1000);
-  const isChannelNotExpired = timeRemaining(channelDetails.expiryTime.toString() * 1000);
-  const channelAutomaticExpiryDate = nextDaysDateFromTimestamp(channelDetails.expiryTime.toString() * 1000, 14);
+  // BEGIN CHANGE
+  // Added this inline if-else condition because of a bug that when connecting to Mumbai, the channelDetails.expiryType is undefined, so the toString() is throwing an exception
+  const channelExpiryDate = channelDetails.expiryTime ? getDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000) : ''
+  const isChannelNotExpired = channelDetails.expiryTime ? timeRemaining(channelDetails.expiryTime?.toString() * 1000) : true
+  const channelAutomaticExpiryDate = channelDetails.expiryTime ? nextDaysDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000, 14) : ''
+  // END CHANGE
 
   useEffect(() => {
     if(channelDetails.channelType != CHANNEL_TYPE["TIMEBOUND"]) return;
@@ -124,9 +125,28 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired }
         </AdaptiveMobileItemVV2>
       </AdaptiveMobileItemHV22>
 
-      {isMobile && !isChannelExpired &&
-        <ItemHV2 zIndex="1" padding="0 0 15px 0">
-          <ChannelSettings />
+      {isMobile && 
+        <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
+          {!isChannelExpired 
+            && 
+            <>
+              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
+              <ChannelSettings />
+            </>
+          }
+          {isChannelExpired && onCoreNetwork &&
+            <DestroyChannelBtn 
+              onClick={destroyChannel}
+              background="#E93636" 
+              color="#fff" 
+              height="36px" 
+              width="123px" 
+              borderRadius="8px"
+              fontSize="14px"
+            >
+              Delete Channel
+            </DestroyChannelBtn>
+          }
         </ItemHV2>
       }
 
@@ -169,6 +189,10 @@ const AdaptiveMobileItemVV2 = styled(ItemVV2)`
     align-items: center;
   }
 `
+
+const DestroyChannelBtn = styled(ButtonV2)`
+  height: ${props => (props.height || "100%")};
+  width: ${props => (props.width || "100%")}`;
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
   @media (max-width: 767px) {
@@ -371,4 +395,20 @@ const SectionDes = styled.div`
     margin: 10px 0px 10px 0px;
     padding: 0 0 0 0;
   }
+`;
+
+const SubmitButton = styled(Button)`
+  width: fit-content;
+  background: #D53A94;
+  color: #fff;
+  z-Index:0;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  margin-right: 9px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  
 `;

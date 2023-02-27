@@ -65,7 +65,7 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   // theme context
   const theme = useTheme();
 
-  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents } = useContext(Context);
+  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
@@ -112,7 +112,7 @@ useClickAway(containerRef, () => closeQRDropdown())
 
   const fetchIntentApi = async (): Promise<Feeds[]> => {
     // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
     await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }),intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
@@ -219,7 +219,7 @@ useClickAway(containerRef, () => closeQRDropdown())
         alignItems="stretch"
       >
         {activeTab == 0 && <SearchBar />}
-        {activeTab == 0 && (
+        {activeTab == 0 && filteredUserData.length==0 && (
           <CreateGroupContainer
             // justifyContent="flex-start"
             flex="none"
@@ -251,7 +251,7 @@ useClickAway(containerRef, () => closeQRDropdown())
           </CreateGroupContainer>
         )}
         
-        {activeTab == 0 && !searchedUser && (
+        {activeTab == 0 && filteredUserData.length==0 && (
           <MessageFeed
             hasUserBeenSearched={false}
             filteredUserData={[]}

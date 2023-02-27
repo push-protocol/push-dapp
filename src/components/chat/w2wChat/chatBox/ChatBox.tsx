@@ -31,11 +31,12 @@ import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
 import Lock from '../../../../assets/Lock.png';
 import LockSlash from '../../../../assets/LockSlash.png';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+import videoCallIcon from '../../../../assets/icons/videoCallIcon.svg';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID } from 'types/chat';
 import {
   checkConnectedUser,
   checkIfIntentExist,
@@ -52,6 +53,8 @@ import { HeaderMessage } from './HeaderMessage';
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
+import { Item } from 'primaries/SharedStyling';
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -78,7 +81,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setInbox,
     setHasUserBeenSearched,
     setPendingRequests,
-    setSearchedUser,
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
@@ -105,8 +107,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
-      const latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
+      let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
+
+
+      //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
+      if (latestThreadhash === undefined) {
+
+        latestThreadhash = messages[messages?.length - 1]?.cid;
+      }
+
       let messageCID = latestThreadhash;
+
       if (latestThreadhash) {
         // Check if cid is present in messages state. If yes, ignore, if not, append to array
 
@@ -126,14 +137,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           }
 
           // Decrypt message
-          msgIPFS = await w2wHelper.decryptMessages({
-            savedMsg: msgIPFS,
-            connectedUser,
-            account,
-            chainId,
-            currentChat,
-            inbox,
-          });
+
+          
+            msgIPFS = await w2wHelper.decryptMessages({
+              savedMsg: msgIPFS,
+              connectedUser,
+              account,
+              chainId,
+              currentChat,
+              inbox,
+            });
+       
 
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
@@ -276,7 +290,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
-   
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
@@ -290,7 +303,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
     }
     // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(',')[0];
+    const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
     await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
@@ -374,7 +387,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         !currentChat.intent.includes(currentChat.wallets.split(',')[0])
       ) {
         user = await getUserWithDecryptedPvtKey(connectedUser);
-        console.log('in here send intent');
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
@@ -431,7 +443,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         }
       }
 
-      setSearchedUser('');
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
@@ -462,10 +473,23 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
+
+  const startVideoCallHandler = ()=>{
+    setVideoCallInfo({
+      address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
+      fromPublicKeyArmored: connectedUser.publicKey,
+      toPublicKeyArmored: currentChat.publicKey,
+      privateKeyArmored: connectedUser.privateKey,
+      establishConnection: 1,
+    });
+
+  };
+
+
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
-    { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
-    { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
+    // { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
+    // { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
     {
       id: 4,
       content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
@@ -478,6 +502,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     },
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
+
 
   return (
     <Container>
@@ -589,6 +614,26 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             >
               {getDisplayName()}
             </SpanV2>
+
+            {/* Video call button */}
+
+            {/* <Tooltip 
+              tooltipContent='Video Call'
+              placementProps={{
+                bottom:"1.4rem",
+                transform:"translateX(-92%)",
+                borderRadius: "12px 12px 2px 12px",
+                width: "70px"
+
+              }}
+              wrapperProps={{width:"fit-content", minWidth:"fit-content" }}
+
+            >
+              <VideoCallButton onClick={startVideoCallHandler}>
+                <ImageV2 src={videoCallIcon} />
+              </VideoCallButton>
+            </Tooltip> */}
+
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
                 <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
@@ -642,16 +687,20 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           />
                         )}
 
-                        <Chats
-                          msg={
-                            isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
-                              ? ''
-                              : msg
-                          }
-                          caip10={walletToCAIP10({ account: account! })}
-                          messageBeingSent={messageBeingSent}
-                          isGroup={isGroup}
-                        />
+
+                       
+                          <Chats
+                            msg={
+                              isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
+                                ? ''
+                                : msg
+                            }
+                            caip10={walletToCAIP10({ account: account! })}
+                            messageBeingSent={messageBeingSent}
+                            isGroup={isGroup}
+                          />
+                        
+
                       </div>
                     );
                   })}
@@ -893,5 +942,25 @@ const CustomScrollContent = styled(ScrollToBottom)`
     border-radius: 10px;
   }
 `;
+
+const FileUploadLoaderContainer = styled.div`
+  border: none;
+  font-size: 1.8rem;
+  border-radius: 5px;
+  background-color: transparent;
+  margin-right: 2rem;
+  color: rgb(58, 103, 137);
+`;
+
+const VideoCallButton = styled(ButtonV2)`
+  cursor: pointer;
+  width: 1.75rem;
+  max-width: 1.75rem;
+  min-width: 1.75rem;
+  background: none;
+  margin-right: 2rem;
+
+`;
+
 
 export default ChatBox;

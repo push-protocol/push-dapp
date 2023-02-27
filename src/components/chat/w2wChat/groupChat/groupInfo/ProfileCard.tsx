@@ -53,7 +53,7 @@ export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddres
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallet) !== account && (
+        {caip10ToWallet(member?.wallet) !== account && !(member?.isAdmin) && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"

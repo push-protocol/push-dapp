@@ -5,7 +5,6 @@ import { useWeb3React } from '@web3-react/core';
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
-import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
@@ -34,7 +33,6 @@ import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 
 //Internal Configs
-import { appConfig } from 'config';
 import useToast from 'hooks/useToast';
 import { MdError } from 'react-icons/md';
 
@@ -66,7 +64,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     try {
       const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
       if (typeof updateResponse !== 'string') {
-        handleClose();
+        setSelectedMemeberAddress(null)
        if(updatedCurrentChat)
         setChat(updatedCurrentChat);
       } else {
@@ -81,7 +79,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             />
           ),
         });
-        handleClose();
+        setSelectedMemeberAddress(null)
       }
     } catch (e) {
       console.error('Error while adding admin', e);
@@ -106,7 +104,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     try {
       const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
       if (typeof updateResponse !== 'string') {
-        handleClose();
+        setSelectedMemeberAddress(null)
        if(updatedCurrentChat)
         setChat(updatedCurrentChat);
       } else {
@@ -121,7 +119,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             />
           ),
         });
-        handleClose();
+        setSelectedMemeberAddress(null)
       }
     } catch (e) {
       console.error('Error while dismissing admin', e);
@@ -147,7 +145,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
       const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList,memeberList:updatedMemberList});
 
       if (typeof updateResponse !== 'string') {
-        handleClose();
+        setSelectedMemeberAddress(null)
         if(updatedCurrentChat)
         setChat(updatedCurrentChat);
       } else {
@@ -162,7 +160,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             />
           ),
         });
-        handleClose();
+        setSelectedMemeberAddress(null)
       }
     } catch (error) {
       console.error('Error in removing memeber', error);
@@ -185,13 +183,13 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   ];
 
   const ownerDropdown: DropdownValueType[] = [
-    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
+    // { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
     { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
   ];
 
   const adminDropdown: DropdownValueType[] = [
-    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
+    // { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
     { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
   ];
@@ -337,7 +335,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                       ? ownerDropdown
                       : isAccountOwnerAdmin
                       ? adminDropdown
-                      : memberDropdown
+                      : []
                   }
                   selectedMemeberAddress={selectedMemeberAddress}
                   setSelectedMemeberAddress={setSelectedMemeberAddress}

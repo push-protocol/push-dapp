@@ -3,6 +3,7 @@ import React from 'react';
 
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
+import * as PushAPI from "@pushprotocol/restapi";
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
@@ -12,6 +13,7 @@ import { ReactComponent as AddGroupIcon } from 'assets/chat/group-chat/creategro
 import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creategroupicondark.svg';
 import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
+import { appConfig } from 'config';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -58,7 +60,23 @@ export const GroupDetailsContent = ({
     };
   };
 
-  const handleValidation = () => {
+  const handleValidation = async() => {
+    try{
+      const getGroupResponse = await PushAPI.chat.getGroupByName({groupName:groupNameData,env:appConfig.appEnv});
+      if(typeof getGroupResponse !== 'string')
+      {
+        setErrorInfo((x) => ({
+          ...x,
+          name: 'Group Name should be unique! Please retry!',
+        }));
+  
+        return false;
+      }
+    }
+    catch(e){
+      
+    }
+   
     if (!isLengthValid(groupNameData, 50)) {
       setErrorInfo((x) => ({
         ...x,
@@ -70,7 +88,7 @@ export const GroupDetailsContent = ({
     if (!isLengthValid(groupDescriptionData, 150, 3)) {
       setErrorInfo((x) => ({
         ...x,
-        description: 'Group Description should not exceed 150 characters! Please retry!',
+        description: 'Group Description should be between 3 to 150 characters! Please retry!',
       }));
 
       return false;
@@ -78,12 +96,12 @@ export const GroupDetailsContent = ({
     return true;
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = async() => {
     if (
       groupDescriptionData &&
       groupNameData &&
       groupTypeObject?.groupTypeData &&
-      handleValidation()
+      await handleValidation()
     ) {
       handleCreateGroupState(2);
     } else {
