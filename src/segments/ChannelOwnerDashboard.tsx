@@ -165,7 +165,7 @@ const ChannelOwnerDashboard = () => {
       }
 
       {channelDetails !== 'unfetched' &&
-        <ItemVV2 justifyContent={processingState === 0 && "flex-start"}>
+        <ItemVV2 justifyContent={processingState === 0 && "flex-start"} height="fit-content">
           {/* display the create channel page if there are no details */}
           {!channelDetails && processingState === 0 &&
             <CreateChannel />
