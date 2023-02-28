@@ -109,15 +109,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   //get ens name
   const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
-  // const getRemovedMembers = async(removedMembersAddressArray:Set<string>) => {
-  //   if(removedMembersAddressArray?.size)
-  //   {
-  //     let membersRes = await PushAPI.user.getBatch({account:account,env:appConfig.appEnv},Array.from(removedMembersAddressArray));
-  //     if(JSON.stringify(membersRes)!== JSON.stringify(removedMembers))
-  //       setRemovedMembers(membersRes);
-  //   }
-  // }
-
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
@@ -197,12 +188,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               });
             
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                // if(isGroup)
-                // {
-                //   const memeberDetails = getMemberDetails(currentChat,msgIPFS?.fromCAIP10);
-                //   if(!memeberDetails)
-                //    removedMembersAddressArray.add(msgIPFS?.fromCAIP10);
-                // }
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
               }
@@ -211,7 +196,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               if (link) {
                 messageCID = link;
               } else {
-               //  await getRemovedMembers(removedMembersAddressArray);
                 break;
               }
             }
