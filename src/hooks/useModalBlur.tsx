@@ -61,6 +61,7 @@ const useModalBlur = ({padding}:ModalProps) => {
         {open && <ItemHV2
           position="absolute"
           alignSelf="stretch"
+          alignItems="flex-start"
           flex="initial"
           top="0"
           right="0"

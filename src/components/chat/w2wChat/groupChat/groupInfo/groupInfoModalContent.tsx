@@ -29,6 +29,8 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const { currentChat ,setChat,inbox,receivedIntents}: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showMoreOption, setShowMoreOption] = React.useState<string|null>(null);
+  const [adminList,setAdminList]=React.useState<any>([])
+  const [memberList,setMemberList]=React.useState<any>([])
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
@@ -36,6 +38,17 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   useClickAway(dropdownRef, () => setShowMoreOption(null));
 
   const theme = useTheme();
+
+  React.useState(()=>{
+    const admins=currentChat?.groupInformation?.members?.filter (member=> member?.isAdmin==true)
+    const members=currentChat?.groupInformation?.members?.filter (member=> member?.isAdmin==false)
+    setAdminList(admins)
+    setMemberList(members)
+    return ()=>{
+      setAdminList([])
+      setMemberList([])
+    }
+  },[])
 
   const handleClose = () => onClose();
 
@@ -206,7 +219,25 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
           </AddWalletContainer>
         )} */}
         <ProfileContainer>
-          {currentChat?.groupInformation?.members?.map((member, index) => {
+          {adminList.map((member, index) => {
+            return (
+             member && <ProfileCard
+                key={index}
+                member={member}
+                dropdownValues={
+                  member?.isAdmin && isAccountOwnerAdmin
+                    ? ownerDropdown
+                    : isAccountOwnerAdmin
+                    ? adminDropdown
+                    : memberDropdown
+                }
+                showMoreOption={showMoreOption}
+                setShowMoreOption={setShowMoreOption}
+                dropdownRef={dropdownRef}
+              />
+            );
+          })}
+          {memberList.map((member, index) => {
             return (
              member && <ProfileCard
                 key={index}
@@ -231,16 +262,26 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 };
 
 const ModalContainer = styled.div`
-  max-height: 517px;
+  max-height: 75vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  border-radius:16px;
   background-color: ${(props) => props.background};
-  padding: 20px 6px 32px;
+  padding: 36px 24px;
   margin: 0px;
   overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 0px;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #d53a94;
+  }
+  @media (max-width: 480px) {
+    max-height:90vh;
+    min-width:95vw;
+    padding: 24px 10px;
   }
 `;
 
@@ -275,7 +316,8 @@ const ProfileContainer = styled.div`
   padding-right:3px;
   align-items: center;
   min-width: 445px;
-  max-height: 280px;
+  max-height: 50%;
+  min-height:216px;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {

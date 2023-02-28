@@ -53,7 +53,7 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
             Admin
           </SpanV2>
         )}
-        {/* {caip10ToWallet(member?.wallet) !== account && (
+         {caip10ToWallet(member?.wallet) !== account && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
@@ -62,16 +62,16 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
-        )} */}
+        )} 
       </ItemHV2>
-      {/* {showMoreOption == member?.wallet && (
+       {showMoreOption == member?.wallet && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
-      )} */}
+      )} 
     </ProfileCardItem>
   );
 };
@@ -90,13 +90,13 @@ const ProfileCardItem = styled(ItemHV2)`
 const DropdownContainer = styled(ItemVV2)`
   position: absolute;
   left: 86%;
-  top: 72%;
+  top: 70%;
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
   z-index: 11;
   @media (max-width: 480px) {
-    top: 44px;
-    right: 7px;
+    left: 25%;
+    top: 70%;
   }
 `;
