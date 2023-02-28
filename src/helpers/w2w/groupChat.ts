@@ -21,9 +21,9 @@ export const getGroupImage = (feed: Feeds): string => {
   else return feed?.profilePicture!;
 };
 
-export const getMemberDetails = (feed:Feeds,msg:any) => {
+export const getMemberDetails = (feed:Feeds,walletAddress:string) => {
 
-    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet == msg?.fromCAIP10)!;
+    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet == walletAddress)!;
 
 
     return senderProfile? senderProfile[0]: null;
@@ -111,7 +111,7 @@ export const updateGroup = async(options:UpdateGroupType) => {
     groupImage: currentChat?.groupInformation?.groupImage,
     members: memeberList,
     admins: adminList,
-    account: connectedUser?.wallets.split(',')[0]!,
+    account: connectedUser?.wallets,
     pgpPrivateKey: connectedUser?.privateKey,
     env: appConfig.appEnv,
   });

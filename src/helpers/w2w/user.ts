@@ -26,7 +26,7 @@ type CheckIfIntentExistPropType = {
   receivedIntents: Feeds[];
   currentChat: Feeds;
   connectedUser: ConnectedUser;
-  isGroup: boolean;
+  isGroup?: boolean;
 };
 
 export const checkIfIntentExist = ({

@@ -18,8 +18,7 @@ import { caip10ToWallet } from '../../../../../helpers/w2w';
 export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddress, setSelectedMemeberAddress, dropdownRef }) => {
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-
-
+  
   return (
     <ProfileCardItem key={key}>
       <ItemHV2 justifyContent="flex-start">
@@ -53,7 +52,7 @@ export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddres
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallet) !== account && !(member?.isAdmin) && (
+        {caip10ToWallet(member?.wallet) !== account && (dropdownValues.length>0) && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
