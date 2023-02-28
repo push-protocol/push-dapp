@@ -311,7 +311,7 @@ function FaqModule() {
                     Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up">
+                      href="https://docs.push.org/developers/developer-tooling/push-sdk">
                       Backend SDKs
                     </AMod>{' '}
                     and{' '}
