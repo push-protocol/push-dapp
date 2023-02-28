@@ -20,17 +20,17 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { Context } from 'modules/chat/ChatModule';
-import { ProfileCard } from './ProfileCard';
+import { ProfileCards } from './ProfileCard';
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 
 export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
-  const { currentChat ,setChat,inbox,receivedIntents}: AppContext = useContext<AppContext>(Context);
+  const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  const [showMoreOption, setShowMoreOption] = React.useState<string|null>(null);
-  const [adminList,setAdminList]=React.useState<any>([])
-  const [memberList,setMemberList]=React.useState<any>([])
+  const [showMoreOption, setShowMoreOption] = React.useState<string | null>(null);
+  const [adminList, setAdminList] = React.useState<any>([]);
+  const [memberList, setMemberList] = React.useState<any>([]);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
@@ -39,21 +39,21 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 
   const theme = useTheme();
 
-  React.useState(()=>{
-    const admins=currentChat?.groupInformation?.members?.filter (member=> member?.isAdmin==true)
-    const members=currentChat?.groupInformation?.members?.filter (member=> member?.isAdmin==false)
-    setAdminList(admins)
-    setMemberList(members)
-    return ()=>{
-      setAdminList([])
-      setMemberList([])
-    }
-  },[])
+  React.useState(() => {
+    const admins = currentChat?.groupInformation?.members?.filter((member) => member?.isAdmin == true);
+    const members = currentChat?.groupInformation?.members?.filter((member) => member?.isAdmin == false);
+    setAdminList(admins);
+    setMemberList(members);
+    return () => {
+      setAdminList([]);
+      setMemberList([]);
+    };
+  }, []);
 
   const handleClose = () => onClose();
 
-  const messageUser = async() => {
-    let feed:Feeds = await getDefaultFeed({walletAddress:showMoreOption!,inbox,intents:receivedIntents});
+  const messageUser = async () => {
+    let feed: Feeds = await getDefaultFeed({ walletAddress: showMoreOption!, inbox, intents: receivedIntents });
     setChat(feed);
     setShowMoreOption(null);
     handleClose();
@@ -73,20 +73,20 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     console.log('remove group admin');
     setShowMoreOption(null);
   };
-  const memberDropdown:DropdownValueType[] = [
+  const memberDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
   ];
 
-  const ownerDropdown:DropdownValueType[] = [
+  const ownerDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(),textColor:'#ED5858' },
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
   ];
 
-  const adminDropdown:DropdownValueType[] = [
+  const adminDropdown: DropdownValueType[] = [
     { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
     { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember() ,textColor:'#ED5858'},
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
   ];
 
   // to close the modal upon a click on backdrop
@@ -149,7 +149,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
               fontWeight={500}
               color={theme.modalDescriptionTextColor}
             >
-              {`${(currentChat?.groupInformation?.members)?(currentChat?.groupInformation?.members?.length):0} members`}
+              {`${currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0} members`}
             </SpanV2>
           </ItemVV2>
         </InfoContainer>
@@ -219,42 +219,26 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
           </AddWalletContainer>
         )} */}
         <ProfileContainer>
-          {adminList.map((member, index) => {
-            return (
-             member && <ProfileCard
-                key={index}
-                member={member}
-                dropdownValues={
-                  member?.isAdmin && isAccountOwnerAdmin
-                    ? ownerDropdown
-                    : isAccountOwnerAdmin
-                    ? adminDropdown
-                    : memberDropdown
-                }
-                showMoreOption={showMoreOption}
-                setShowMoreOption={setShowMoreOption}
-                dropdownRef={dropdownRef}
-              />
-            );
-          })}
-          {memberList.map((member, index) => {
-            return (
-             member && <ProfileCard
-                key={index}
-                member={member}
-                dropdownValues={
-                  member?.isAdmin && isAccountOwnerAdmin
-                    ? ownerDropdown
-                    : isAccountOwnerAdmin
-                    ? adminDropdown
-                    : memberDropdown
-                }
-                showMoreOption={showMoreOption}
-                setShowMoreOption={setShowMoreOption}
-                dropdownRef={dropdownRef}
-              />
-            );
-          })}
+           <ProfileCards
+            memberList={adminList}
+            showMoreOption={showMoreOption}
+            isAccountOwnerAdmin={isAccountOwnerAdmin}
+            setShowMoreOption={setShowMoreOption}
+            dropdownRef={dropdownRef}
+            ownerDropdown={ownerDropdown}
+            adminDropdown={adminDropdown}
+            memberDropdown={memberDropdown}
+          />
+          <ProfileCards
+            memberList={memberList}
+            showMoreOption={showMoreOption}
+            isAccountOwnerAdmin={isAccountOwnerAdmin}
+            setShowMoreOption={setShowMoreOption}
+            dropdownRef={dropdownRef}
+            ownerDropdown={ownerDropdown}
+            adminDropdown={adminDropdown}
+            memberDropdown={memberDropdown}
+          />
         </ProfileContainer>
       </ModalContainer>
     </ThemeProvider>
@@ -266,21 +250,19 @@ const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  border-radius:16px;
+  border-radius: 16px;
   background-color: ${(props) => props.background};
   padding: 36px 24px;
   margin: 0px;
+  overflow:hidden;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
-    width: 4px;
-  }
-  &&::-webkit-scrollbar-thumb {
-    background: #d53a94;
+    width: 0px;
   }
   @media (max-width: 480px) {
-    max-height:90vh;
-    min-width:95vw;
+    max-height: 90vh;
+    min-width: 95vw;
     padding: 24px 10px;
   }
 `;
@@ -306,18 +288,18 @@ const AddWalletContainer = styled(ItemHV2)`
   border-radius: 16px;
   padding: 15px 24px;
   margin-bottom: 15px;
-  cursor:pointer;
+  cursor: pointer;
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding-right:3px;
+  padding-right: 3px;
   align-items: center;
   min-width: 445px;
   max-height: 50%;
-  min-height:216px;
+  min-height: 216px;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
