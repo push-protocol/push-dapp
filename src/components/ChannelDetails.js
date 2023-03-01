@@ -352,6 +352,7 @@ const ChannelName = styled.div`
   font-family: Strawford, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
+  margin-top: 40px;
   font-weight: 500;
   font-size: 30px;
   line-height: 141%;
