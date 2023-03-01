@@ -130,7 +130,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
           {!isChannelExpired 
             && 
             <>
-              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
+              <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
               <ChannelSettings />
             </>
           }
@@ -355,6 +355,7 @@ const ChannelName = styled.div`
   font-weight: 500;
   font-size: 30px;
   line-height: 141%;
+  text-align:center;
   color: ${(props) => props.theme.color};
   @media (max-width: 767px) {
     flex-direction: column;
