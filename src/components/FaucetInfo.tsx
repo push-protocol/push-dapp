@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
 import { useWeb3React } from '@web3-react/core';
 import useModal from 'hooks/useModal';
-import { UniswapWidgetModal } from './UniswapWidget';
+// import { UniswapWidgetModal } from './UniswapWidget';
 
 type FaucetInfoType = {
   onMintPushToken: (noOfTokens: number) => Promise<void>;
@@ -97,7 +97,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
       )}
       {isUniswapWidgetModalOpen &&
         <UniswapWidgetModalComponent 
-          InnerComponent={UniswapWidgetModal} 
+          // InnerComponent={UniswapWidgetModal} 
           InnerComponentProps={{defaultPushTokenAmount: noOfPushTokensToCheck}} 
           extraOuterPadding="0px"
         />
