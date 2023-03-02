@@ -9,11 +9,6 @@ import { getUser } from '../../api/w2w';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
 const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
 
-<<<<<<< HEAD
-
-const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
-=======
->>>>>>> prod
 export const walletToCAIP10 = ({ account }: { account: string }): string => {
   if (account.includes('eip155:')) {
     return account;
@@ -105,16 +100,10 @@ export const decryptFeeds = async ({
           privateKeyArmored: connectedUser.privateKey!,
         });
       } catch (e) {
-<<<<<<< HEAD
-        if(e.message == decryptionErrorMsg){
-        feed.msg.messageType = 'Text';
-        feed.msg.messageContent = 'message encrypted before you joined';
-=======
         // console.log(e);
         if(e.message == decryptionErrorMsg){
           feed.msg.messageType = 'Text';
           feed.msg.messageContent = 'message encrypted before you joined';
->>>>>>> prod
         }
       }
     }
@@ -168,16 +157,10 @@ export const decryptMessages = async ({
         signatureArmored: savedMsg.signature,
       });
     } catch (e) {
-<<<<<<< HEAD
-      if(e.message == decryptionErrorMsg){
-      savedMsg.messageType = 'Text';
-      savedMsg.messageContent = 'message encrypted before you joined';
-=======
       // console.log(e);
       if(e.message == decryptionErrorMsg){
         savedMsg.messageType = 'Text';
         savedMsg.messageContent = 'message encrypted before you joined';
->>>>>>> prod
       }
     }
   }

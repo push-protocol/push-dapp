@@ -187,7 +187,7 @@ const ChannelOwnerDashboard = () => {
                       <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
                         {/* {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>} */}
                         {!isChannelExpired && <ChannelSettings />}
-                        {isChannelExpired && onCoreNetwork &&
+                        {/* {isChannelExpired && onCoreNetwork &&
                           <DestroyChannelBtn 
                             onClick={destroyChannel}
                             background="#E93636" 
@@ -199,7 +199,7 @@ const ChannelOwnerDashboard = () => {
                           >
                             Delete Channel
                           </DestroyChannelBtn>
-                        }
+                        } */}
                       </ItemHV2>
                     }
                     {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel} destroyChannel={destroyChannel} /> : ""}
