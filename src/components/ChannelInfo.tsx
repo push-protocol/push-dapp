@@ -118,7 +118,7 @@ const ChannelInfo = ({
                   />
                 {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
               </Item>
-            <Tooltip 
+            {/* <Tooltip 
               tooltipContent='Timebound channels will be deleted after expiry'
               // disable the tooltip when time bound toggle is NOT on
               placementProps={isMobile
@@ -138,9 +138,9 @@ const ChannelInfo = ({
                 <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
                   <Label style={{ color: theme.color }}>Time Bound</Label>
                   {isNewTagVisible && <NewTag />}
-                </ItemHV2>
+                </ItemHV2> */}
                 {/* Toggle should be off only when channelExpiryDate is undefined */}
-                <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
+                {/* <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
                   if(channelExpiryDate===undefined){
                     // turn on the toggle
                     return setChannelExpiryDate(null);
@@ -149,7 +149,7 @@ const ChannelInfo = ({
                   setChannelExpiryDate(undefined);
                 }} />
               </TimeBoundToggleContainer>
-            </Tooltip>
+            </Tooltip> */}
           </TopInnerContainer>
         </Item>
 
@@ -216,7 +216,6 @@ const ChannelInfo = ({
               visibility={chainDetails === coreChainId ? 'hidden' : 'visible'}
               value={channelAlias}
               onChange={(e) => {
-                console.log(e);
                 setChannelAlias(e.target.value);
               }}
             />

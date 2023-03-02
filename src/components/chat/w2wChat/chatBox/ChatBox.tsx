@@ -137,7 +137,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           }
 
           // Decrypt message
-
           
             msgIPFS = await w2wHelper.decryptMessages({
               savedMsg: msgIPFS,
@@ -148,7 +147,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
               inbox,
             });
        
-
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
           if (messageInChat === undefined) {
@@ -290,7 +288,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
-
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
@@ -474,7 +471,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-
   const startVideoCallHandler = ()=>{
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
@@ -617,7 +613,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             </SpanV2>
 
             {/* Video call button */}
+<<<<<<< HEAD
 
+=======
+>>>>>>> prod
             {/* <Tooltip 
               tooltipContent='Video Call'
               placementProps={{
@@ -628,7 +627,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
               }}
               wrapperProps={{width:"fit-content", minWidth:"fit-content" }}
+<<<<<<< HEAD
 
+=======
+>>>>>>> prod
             >
               <VideoCallButton onClick={startVideoCallHandler}>
                 <ImageV2 src={videoCallIcon} />
@@ -960,8 +962,6 @@ const VideoCallButton = styled(ButtonV2)`
   min-width: 1.75rem;
   background: none;
   margin-right: 2rem;
-
 `;
-
 
 export default ChatBox;

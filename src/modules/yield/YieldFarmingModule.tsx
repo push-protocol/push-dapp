@@ -5,6 +5,7 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { CiWarning } from "react-icons/ci";
 
 // Internal Compoonents
 import PoolCard from 'components/PoolCard';
@@ -15,6 +16,8 @@ import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyli
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { H2V2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
@@ -182,10 +185,39 @@ function YieldFarmingModule() {
   return (
     <Container>
       <Section>
+        {/* Warning for incentive */}
+        <SpanV2
+          padding="1rem 1.5rem"
+          margin="0 1rem"
+          borderRadius="20px"
+          background="#CF1C84"
+          color="#fff"
+          textAlign="left"
+        >
+          <ItemHV2 style={{marginBottom: "0.6rem"}} justifyContent="flex-start">
+            <CiWarning size={23} />
+            <H2V2
+              color="#fff"
+              fontSize="1.5rem"
+              style={{marginLeft:"0.3rem"}}
+            >
+              Note -
+            </H2V2>
+          </ItemHV2>
+          A new proposal has been put forward in PUSH DAO, if approved staking will be extended till Dec 31st, 2023. For
+          more details please go to
+          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://gov.push.org/t/extend-the-push-eth-push-liquidity-rewards-program/1335" target='_blank'>
+            here
+          </AInlineV2>
+        </SpanV2>
+
         {poolStats ? (
           <>
             <Content themes={themes.yieldBg}>
-              <ItemH margin="0px 15px 0px 15px" align="stretch">
+              <ItemH
+                margin="0px 15px 0px 15px"
+                align="stretch"
+              >
                 <StatsCard bg={themes.mainBg}>
                   <StatsHeading bg="#e20880">Total Value Locked</StatsHeading>
                   <StatsContent>
@@ -221,7 +253,10 @@ function YieldFarmingModule() {
                   <StatsContent>
                     <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
                     <StatsInnerSub>
-                      <a target="_blank" href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}>
+                      <a
+                        target="_blank"
+                        href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}
+                      >
                         Uniswap
                       </a>
                     </StatsInnerSub>
@@ -237,7 +272,10 @@ function YieldFarmingModule() {
               </Item>
             ) : (
               <Content padding="25px 0px">
-                <ItemH margin="0px 10px 0px 10px" align="stretch">
+                <ItemH
+                  margin="0px 10px 0px 10px"
+                  align="stretch"
+                >
                   {lpPoolStats && userDataLP ? (
                     <PoolCard
                       poolName={'Uniswap LP Pool (UNI-V2)'}
