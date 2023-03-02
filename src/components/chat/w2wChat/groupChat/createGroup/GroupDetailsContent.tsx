@@ -230,7 +230,6 @@ const Container = styled.div`
   }
   &&::-webkit-scrollbar-thumb {
     background: #d53a94;
-    border-radius: 4px;
     border-bottom:200px solid transparent;
     background-clip:padding-box;
   }

@@ -317,7 +317,6 @@ const MultipleMemberList = styled.div`
 
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
-    border-radius: 10px;
   }
 
   &::-webkit-scrollbar {
