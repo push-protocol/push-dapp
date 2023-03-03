@@ -154,7 +154,8 @@ export const GroupIconModalContent = ({ onClose, InnerComponentProps }: ModalInn
 };
 
 const Container = styled.div`
-  max-height: 75vh;
+  max-height: 72vh;
+  max-width:20vw;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -234,7 +235,7 @@ const Space = styled.div`
     border: 1px dashed #8c99b0;
     align-items: flex-end;
     border-radius: 12px;
-    padding: 0px 50px 0px 50px;
+    padding: 0px;
     background: ${(props) => props.theme.modalbackgroundColor};
     .inner {
       margin-top: 0.25rem;
@@ -255,7 +256,7 @@ const Space = styled.div`
           width: 100%;
           background: ${(props) => props.theme.modalImageBgColor};
           border-radius: 20px;
-          padding: 17px 100px 17px 100px;
+          padding: 17px 50px;
           margin-bottom: 12px;
           @media (max-width:768px){
             width:40%;
