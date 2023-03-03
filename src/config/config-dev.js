@@ -38,7 +38,7 @@ export const config = {
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
     97: "https://data-seed-prebsc-1-s1.binance.org:8545",
-    420: ""
+    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -121,7 +121,7 @@ export const CHAIN_DETAILS = {
     label: "Optimism Goerli",
     name: "OPTIMISM_TESTNET",
     chainId: 420,
-    rpcUrl: '',
+    rpcUrl: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
     commAddress: '0x4305D572F2bf38Fc2AE8D0172055b1EFd18F57a6'
   }
 }

@@ -150,14 +150,14 @@ export const NETWORK_DETAILS = {
     chainId: utils.hexValue(420),
     chainName: 'Optimism Testnet',
     nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
-    rpcUrl: [],
+    rpcUrl: ['https://endpoints.omniatech.io/v1/op/goerli/public'],
     blockExplorerUrls: ['https://goerli-optimism.etherscan.io/']
   },
   OPTIMISM_MAINNET: {
     chainId: utils.hexValue(10),
     chainName: 'Optimism Mainnet',
     nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
-    rpcUrl: [],
+    rpcUrl: ['https://endpoints.omniatech.io/v1/op/mainnet/public'],
     blockExplorerUrls: ['https://optimistic.etherscan.io/']
   },
 };
