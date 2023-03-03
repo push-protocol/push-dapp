@@ -287,7 +287,6 @@ const Container = styled.div`
   }
   @media (max-width: 480px) {
     max-height: 90vh;
-    padding: 24px 10px;
     &&::-webkit-scrollbar-thumb {
       border-bottom: 400px solid transparent;
     }
@@ -306,7 +305,7 @@ const InfoContainer = styled(ItemHV2)`
   max-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
-    max-width: 300px;
+    min-width: 300px;
   }
 `;
 
