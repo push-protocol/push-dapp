@@ -101,6 +101,7 @@ export const networkName = {
   97: "BNB Testnet",
   56: "BNB Mainnet",
   420: "Optimism Goerli",
+  10: "Optimism Mainnet"
 };
 
 export const chainNameBackendStandard = {
@@ -151,6 +152,13 @@ export const NETWORK_DETAILS = {
     nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
     rpcUrl: [],
     blockExplorerUrls: ['https://goerli-optimism.etherscan.io/']
+  },
+  OPTIMISM_MAINNET: {
+    chainId: utils.hexValue(10),
+    chainName: 'Optimism Mainnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrl: [],
+    blockExplorerUrls: ['https://optimistic.etherscan.io/']
   },
 };
 

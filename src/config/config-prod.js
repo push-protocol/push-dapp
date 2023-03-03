@@ -36,7 +36,8 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     137: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    56: "https://bsc-dataseed.binance.org/"
+    56: "https://bsc-dataseed.binance.org/",
+    10: ""
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -114,5 +115,12 @@ export const CHAIN_DETAILS = {
     chainId: 56,
     rpcUrl: "https://bsc-dataseed.binance.org/",
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  },
+  10: {
+    label: "Optimism Mainnet",
+    name: "OPTIMISM_MAINNET",
+    chainId: 10,
+    rpcUrl: '',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
   }
 }
