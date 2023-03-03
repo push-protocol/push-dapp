@@ -61,7 +61,7 @@ export const GroupIconModalContent = ({ onClose, InnerComponentProps }: ModalInn
         ref={containerRef}
       >
         <ModalNav>
-          <CloseButton onClick={()=>handleClose()} />
+          <CloseButton onClick={handleClose} />
         </ModalNav>
 
         <ModalContainer>
@@ -154,7 +154,7 @@ export const GroupIconModalContent = ({ onClose, InnerComponentProps }: ModalInn
 };
 
 const Container = styled.div`
-  max-height: 65vh;
+  max-height: 75vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

@@ -129,7 +129,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   };
   return (
     <ThemeProvider theme={themes}>
-      <ModalContainer createGroupState={createGroupState}>
+      <ModalContainer ref={containerRef} createGroupState={createGroupState}>
         <ItemHV2
           justifyContent={createGroupState == 2 ? 'space-between' : 'center'}
           align-items="center"
@@ -180,7 +180,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 600px;
+  max-height: 517px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
