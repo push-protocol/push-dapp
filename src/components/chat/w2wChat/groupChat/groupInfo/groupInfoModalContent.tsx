@@ -145,6 +145,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                 fontSize="20px"
                 fontWeight={500}
                 color={theme.default.color}
+                textAlign="left"
               >
                 {currentChat?.groupInformation?.groupName}
               </SpanV2>
@@ -302,10 +303,10 @@ const DescriptionContainer = styled(ItemVV2)`
 `;
 
 const InfoContainer = styled(ItemHV2)`
-  min-width: 445px;
+  max-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
-    min-width: 300px;
+    max-width: 300px;
   }
 `;
 
@@ -325,7 +326,6 @@ const ProfileContainer = styled.div`
   align-items: center;
   min-width: 445px;
   max-height: 216px;
-  min-height: 216px;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
