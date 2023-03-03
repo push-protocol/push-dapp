@@ -31,14 +31,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const VideoPlayer = () => {
-  const { name, callAccepted, myVideo, userVideo, callEnded, me, stream, call } = useContext(VideoCallContext);
+  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
   const classes = useStyles();
 
   return (
     <ItemVV2
       overflow="hidden"
     >
-      {stream && (
+      {localStream && (
         <OwnVideo playsInline muted ref={myVideo} autoPlay className={callAccepted && !callEnded ? 'connectionAccepted' : null} />
       )}
       {callAccepted && !callEnded && (

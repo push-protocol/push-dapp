@@ -62,7 +62,7 @@ const ChannelTutorial = ({ addr, bgColor, loadTeaser, playTeaser }) => {
         setShowTuts(false);
         console.log("exit")
       }}
-      zIndex="10"
+      zIndex="9"
     >
       {showTuts &&
         <Item

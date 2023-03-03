@@ -30,19 +30,19 @@ const SearchBar = () => {
   const theme = useTheme();
 
   const {
-    setSearchedUser,
-    searchedUser,
     hasUserBeenSearched,
     setHasUserBeenSearched,
     activeTab,
     setActiveTab,
     userShouldBeSearched,
     setUserShouldBeSearched,
-    inbox
+    filteredUserData,
+    setFilteredUserData,
+    inbox,
   }: AppContext = useContext<AppContext>(Context);
-  const {library } = useWeb3React();
+  const { library } = useWeb3React();
   const { chainId } = useWeb3React<Web3Provider>();
-  const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
+  const [searchedUser, setSearchedUser] = useState<string>('');
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
@@ -72,7 +72,6 @@ const SearchBar = () => {
     }
   }, [isInValidAddress]);
 
-
   const onChangeSearchBox = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
     let searchAddress = event.target.value;
     if (searchAddress === '') {
@@ -91,16 +90,16 @@ const SearchBar = () => {
   const handleSearch = async (): Promise<void> => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
-      let address:string;
+      let address: string;
       try {
         address = await provider.resolveName(searchedUser);
-        if(!address){
+        if (!address) {
           address = await library.resolveName(searchedUser);
         }
         // this ensures address are checksummed
-        address=ethers.utils.getAddress(address.toLowerCase());
-        
-        console.log("searched address",address)
+        address = ethers.utils.getAddress(address.toLowerCase());
+
+        console.log('searched address', address);
         if (address) {
           handleUserSearch(address);
         } else {
@@ -121,14 +120,14 @@ const SearchBar = () => {
 
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
     setIsLoadingSearch(true);
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
+    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
     setHasUserBeenSearched(true);
 
     if (userSearchData.length) {
       filteredData = await PushNodeClient.getUser({ caip10 });
       // Checking whether user already present in contact list
-      let isUserConnected = findObject(filteredData,inbox,'did');
+      let isUserConnected = findObject(filteredData, inbox, 'did');
 
       if (filteredData !== null && isUserConnected) {
         if (activeTab !== 0) {
@@ -136,6 +135,7 @@ const SearchBar = () => {
           setActiveTab(0);
         }
         setFilteredUserData([filteredData]);
+        setSearchedUser('')
       }
       // User is not in the protocol. Create new user
       else {
@@ -144,6 +144,7 @@ const SearchBar = () => {
           setActiveTab(3);
           const displayUser = displayDefaultUser({ caip10 });
           setFilteredUserData([displayUser]);
+          setSearchedUser('')
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -153,7 +154,6 @@ const SearchBar = () => {
       setFilteredUserData([]);
     }
   };
-
 
   const clearInput = (): void => {
     setFilteredUserData([]);
@@ -166,6 +166,7 @@ const SearchBar = () => {
     <ItemVV2
       alignItems="stretch"
       justifyContent="flex-start"
+      flex="0"
     >
       {activeTab === 3 && (
         <ItemHV2
@@ -264,20 +265,21 @@ const SearchBar = () => {
           </ItemVV2>
         )}
       </ItemHV2>
-      <ItemVV2 justifyContent="flex-start">
-        {isLoadingSearch ? (
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-          />
-        ) : (
+
+      {isLoadingSearch ? (
+        <LoaderSpinner
+          type={LOADER_TYPE.SEAMLESS}
+          spinnerSize={40}
+        />
+      ) : (
+        filteredUserData.length > 0 && (
           <MessageFeed
             hasUserBeenSearched={activeTab !== 3 ? hasUserBeenSearched : true}
             filteredUserData={filteredUserData}
             isInvalidAddress={isInValidAddress}
           />
-        )}
-      </ItemVV2>
+        )
+      )}
     </ItemVV2>
   );
 };
