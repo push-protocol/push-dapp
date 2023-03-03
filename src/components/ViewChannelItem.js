@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast as toaster } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 import styled, { css, useTheme } from 'styled-components';
-import axios from "axios";
+import axios from 'axios';
 
 // Internal Compoonents
 import * as PushAPI from '@pushprotocol/restapi';
@@ -20,10 +20,7 @@ import MetaInfoDisplayer from 'components/MetaInfoDisplayer';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import useToast from 'hooks/useToast';
-import {
-  cacheChannelInfo,
-  updateSubscriptionStatus,
-} from 'redux/slices/channelSlice';
+import { cacheChannelInfo, updateSubscriptionStatus } from 'redux/slices/channelSlice';
 import { addNewWelcomeNotif, incrementStepIndex } from 'redux/slices/userJourneySlice';
 import ChannelTutorial, { isChannelTutorialized } from 'segments/ChannelTutorial';
 import NotificationToast from '../primaries/NotificationToast';
@@ -35,7 +32,7 @@ import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import { appConfig, CHAIN_DETAILS } from 'config';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
-import InfoImage from "../assets/info.svg";
+import InfoImage from '../assets/info.svg';
 import VerifiedTooltipContent from './VerifiedTooltipContent';
 import { IPFSGateway } from 'helpers/IpfsHelper';
 
@@ -68,13 +65,13 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const [verifierDetails, setVerifierDetails] = React.useState(null);
   const [copyText, setCopyText] = React.useState(channelObject.channel);
   const [tooltTipHeight, setToolTipheight] = React.useState(0);
-  const [channelIcon, setChannelIcon] = React.useState("");
+  const [channelIcon, setChannelIcon] = React.useState('');
   const [channelObjectFromHash, setChannelObjectFromHash] = React.useState({});
   const [channelObjectStartBlock, setChannelObjectStartBlock] = React.useState({});
   const [showChannelChangedWarning, setShowChannelChangedWarning] = React.useState(false);
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
-  
+
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
   const [toast, showToast] = React.useState(null);
@@ -82,11 +79,11 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
   useEffect(() => {
     setSubscribed(subscriptionStatus[channelObject.channel]);
-  }, [subscriptionStatus])
+  }, [subscriptionStatus]);
 
   useEffect(() => {
     setIsPushAdmin(pushAdminAddress == account);
-  }, [pushAdminAddress, account])
+  }, [pushAdminAddress, account]);
 
   const fetchChannelJsonWithBlock = async () => {
     try {
@@ -98,37 +95,36 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   };
 
   useEffect(async () => {
-    if(!channelObject.ipfshash) return;
+    if (!channelObject.ipfshash) return;
 
     const IPFS_GATEWAY = IPFSGateway;
     const url = IPFS_GATEWAY + channelObject.ipfshash;
     const response = await axios.get(url);
 
-    if(response.data) setChannelObjectFromHash(response.data);
-    if(response.data.icon) setChannelIcon(response.data.icon)
+    if (response.data) setChannelObjectFromHash(response.data);
+    if (response.data.icon) setChannelIcon(response.data.icon);
   }, [channelObject]);
 
   useEffect(async () => {
-    if(!channelObject.channel) return;
-    
+    if (!channelObject.channel) return;
+
     const channelJsonStartBlock = await fetchChannelJsonWithBlock();
-    if(channelJsonStartBlock) setChannelObjectStartBlock(channelJsonStartBlock);
+    if (channelJsonStartBlock) setChannelObjectStartBlock(channelJsonStartBlock);
   }, [channelObject.channel]);
 
   useEffect(() => {
-    if(channelObjectFromHash && channelObjectStartBlock){
-    if(Object.keys(channelObjectFromHash).length == 0 || Object.keys(channelObjectStartBlock).length == 0) return;
+    if (channelObjectFromHash && channelObjectStartBlock) {
+      if (Object.keys(channelObjectFromHash).length == 0 || Object.keys(channelObjectStartBlock).length == 0) return;
 
-    let isChanged = false;
-    const propertiesToBeChecked = ["name", "icon", "info"];
-    propertiesToBeChecked.forEach((property) => {
-      if(channelObjectFromHash[property] != channelObjectStartBlock[property])
-        isChanged = true;
-    })
-    
-    setShowChannelChangedWarning(isChanged);
-  }
-  }, [channelObjectFromHash, channelObjectStartBlock])
+      let isChanged = false;
+      const propertiesToBeChecked = ['name', 'icon', 'info'];
+      propertiesToBeChecked.forEach((property) => {
+        if (channelObjectFromHash[property] != channelObjectStartBlock[property]) isChanged = true;
+      });
+
+      setShowChannelChangedWarning(isChanged);
+    }
+  }, [channelObjectFromHash, channelObjectStartBlock]);
 
   useEffect(async () => {
     if (!channelObject || !channelObject.channel) return;
@@ -148,7 +144,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       } else {
         const verifierAddrDetails = await PushAPI.channels.getChannel({
           channel: convertAddressToAddrCaip(verifierAddress, appConfig.coreContractChain),
-          env: appConfig.appEnv
+          env: appConfig.appEnv,
         });
         dispatch(
           cacheChannelInfo({
@@ -192,7 +188,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   };
 
   const formatAddress = (addressText) => {
-    return addressText.length > 40 ? `${shortenText(addressText,4,6)}` : addressText;
+    return addressText.length > 40 ? `${shortenText(addressText, 4, 6)}` : addressText;
   };
 
   const verifyChannel = () => {
@@ -217,7 +213,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         });
 
         await tx.wait(1);
-        console.log ("Transaction Mined!");
+        console.log('Transaction Mined!');
         setIsVerified(true);
       })
       .catch((err) => {
@@ -301,7 +297,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
         });
 
         await tx.wait(1);
-        console.log ("Transaction Mined!");
+        console.log('Transaction Mined!');
       })
       .catch((err) => {
         console.log('!!!Error handleSendMessage() --> %o', err);
@@ -328,7 +324,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const subscribeAction = async () => {
     setTxInProgress(true);
     try {
-
       let channelAddress = channelObject.channel;
       if (!onCoreNetwork) {
         channelAddress = channelObject.alias_address;
@@ -547,15 +542,15 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   if (isBlocked) return <></>;
   if (isChannelBlacklisted) return <></>;
 
-
   const handleHeight = (e) => {
     const containerHeight = document.getElementById(channelObject?.channel)?.getBoundingClientRect();
     setToolTipheight(containerHeight?.top);
-  }
+  };
 
   // render
   return (
-    <Container key={channelObject.channel}
+    <Container
+      key={channelObject.channel}
       id={channelObject.channel}
     >
       <ChannelLogo>
@@ -582,60 +577,63 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               height={24}
             />
           ) : (
-            <ChannelTitleLink
-              onClick={() => correctChannelTitleLink()}
-            >
-
-              <Span style={{ display: 'flex', alignItems: 'center' }}>
-                {/* {showChannelChangedWarning &&
-                  <Tooltip
-                    wrapperProps={{
-                      width: "fit-content",
-                      maxWidth: "fit-content",
-                      minWidth: "fit-content",
-                      // zIndex: "10",
+            <>
+              {showChannelChangedWarning && (
+                <Tooltip
+                  wrapperProps={{
+                    width: 'fit-content',
+                    maxWidth: 'fit-content',
+                    minWidth: 'fit-content',
+                    position:'absolute',
+                    top:'8px'
+                    // zIndex: "10",
+                  }}
+                  placementProps={
+                    tooltTipHeight < 250
+                      ? {
+                          background: 'none',
+                          // bottom: "25px",
+                          top: '20px',
+                          // right: "-175px",
+                          left: '5px',
+                        }
+                      : {
+                          background: 'none',
+                          bottom: '25px',
+                          // top: "20px",
+                          // right: "-175px",
+                          left: '5px',
+                        }
+                  }
+                  tooltipContent={
+                    <UpdateChannelTooltipContent
+                      height={tooltTipHeight}
+                      channelName={channelObjectStartBlock.name}
+                      channelDescription={channelObjectStartBlock.info}
+                      channelLogoSrc={channelObjectStartBlock.icon}
+                    />
+                  }
+                >
+                  <div
+                    onMouseEnter={() => {
+                      handleHeight(channelObject.channel);
                     }}
-                    placementProps={
-                      tooltTipHeight < 250 ? {
-                        background: "none",
-                        // bottom: "25px",
-                        top: "20px",
-                        // right: "-175px",
-                        left: "5px"
-                      } : {
-                        background: "none",
-                        bottom: "25px",
-                        // top: "20px",
-                        // right: "-175px",
-                        left: "5px"
-                      }
-                    }
-                    tooltipContent={
-                      <UpdateChannelTooltipContent
-                        height={tooltTipHeight}
-                        channelName={channelObjectStartBlock.name}
-                        channelDescription={channelObjectStartBlock.info}
-                        channelLogoSrc={channelObjectStartBlock.icon}
-                      />}
                   >
-                    <div
-                      onMouseEnter={() => {
-                        handleHeight(channelObject.channel);
-                      }}
+                    <ImageInfo src={InfoImage} />
+                  </div>
+                </Tooltip>
+              )}
+
+              <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
+                <Span style={{ display: 'flex', textIndent: showChannelChangedWarning ? '1.5rem': '0rem' }}>
+                  <ChannelName>{channelObject.name}</ChannelName>
+
+                  {isVerified == 1 && (
+                    <Span
+                      margin="0px 5px"
+                      style={{ display: 'flex' }}
                     >
-                      <ImageInfo src={InfoImage} />
-                    </div>
-                  </Tooltip>
-                } */}
-
-                {channelObject.name}
-
-                {isVerified == 1 && (
-                  <Span
-                    margin="0px 5px"
-                    style={{ display: 'flex' }}
-                  >
-                    {/* <Tooltip
+                      {/* <Tooltip
                       wrapperProps={{
                         width: "fit-content",
                         maxWidth: "fit-content",
@@ -665,49 +663,47 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       {/* <div style={{ cursor: "pointer" }} onMouseEnter={() => {
                         handleHeight(channelObject.channel);
                       }}> */}
-                        <GoVerified
-                          size={18}
-                          color={themes.viewChannelVerifiedBadge}
-                        />
+                      <GoVerified
+                        size={18}
+                        color={themes.viewChannelVerifiedBadge}
+                      />
 
                       {/* </div> */}
-                    {/* </Tooltip> */}
+                      {/* </Tooltip> */}
 
-
-
-
-
-                    {/* <GoVerified
+                      {/* <GoVerified
                       size={18}
                       color={themes.viewChannelVerifiedBadge}
                     /> */}
-                  </Span>
-                )}
-                {(channelObject && channelObject?.channel) && (
-                  <Span padding="0 0 0 5px">
-                    <Image
-                      src={`./svg/Ethereum.svg`}
-                      alt="Ethereum"
-                      width="20px"
-                      height="20px"
-                    />
-                  </Span>
-                )}
-                {(channelObject && channelObject?.alias_address != null &&
-                  channelObject?.alias_address != 'NULL' &&
-                  appConfig.allowedNetworks.includes(+channelObject?.alias_blockchain_id) &&
-                  !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel]) && (
+                    </Span>
+                  )}
+                  {channelObject && channelObject?.channel && (
                     <Span padding="0 0 0 5px">
                       <Image
-                        src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
-                        alt="Polygon"
+                        src={`./svg/Ethereum.svg`}
+                        alt="Ethereum"
                         width="20px"
                         height="20px"
                       />
                     </Span>
                   )}
-              </Span>
-            </ChannelTitleLink>
+                  {channelObject &&
+                    channelObject?.alias_address != null &&
+                    channelObject?.alias_address != 'NULL' &&
+                    appConfig.allowedNetworks.includes(+channelObject?.alias_blockchain_id) &&
+                    !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
+                      <Span padding="0 0 0 5px">
+                        <Image
+                          src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
+                          alt="Polygon"
+                          width="20px"
+                          height="20px"
+                        />
+                      </Span>
+                    )}
+                </Span>
+              </ChannelTitleLink>
+            </>
           )}
         </ChannelTitle>
 
@@ -815,7 +811,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
               {verifierDetails && (
                 <Subscribers>
-                  <VerifiedBy>Verified by:
+                  <VerifiedBy>
+                    Verified by:
                     <VerifierIcon src={verifierDetails.icon} />
                   </VerifiedBy>
                   <VerifierName>{verifierDetails.name}</VerifierName>
@@ -968,9 +965,9 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid ${(props) => props.theme.default.border};
-    border-top:none;
-    border-left:none;
-    border-right:none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
   }
 `;
 
@@ -997,9 +994,9 @@ const ChannelLogo = styled.div`
   justify-content: center;
   align-self: flex-start;
   @media (max-width: 768px) {
-      align-self: center;
-      min-width: 100px;
-      min-height: 100px;
+    align-self: center;
+    min-width: 100px;
+    min-height: 100px;
   }
 `;
 
@@ -1032,8 +1029,8 @@ const ImageInfo = styled.img`
   margin-right: 5px;
   display: flex;
   justify-content: center;
-    align-items: center;
-    align-self: center;
+  align-items: center;
+  align-self: center;
 `;
 
 const ChannelInfo = styled.div`
@@ -1049,8 +1046,17 @@ const ChannelInfo = styled.div`
   }
 `;
 
+const ChannelName = styled.div`
+  word-break: break-word;
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`;
+
 const ChannelTitle = styled(ItemH)`
   padding: 5px 10px 5px 0px;
+  position: relative;
   justify-content: flex-start;
   margin: 0;
   flex: initial;
@@ -1093,7 +1099,6 @@ const VerifiedBy = styled.span`
   display: flex;
   flex-direction: row;
   align-items: center;
-
 `;
 
 const VerifierIcon = styled.img`
@@ -1157,7 +1162,7 @@ const ItemBody = styled.div`
     align-self: center;
     justify-content: center;
   }
-`
+`;
 
 const ChannelMetaBox = styled.label`
   margin: 0px 5px;
@@ -1309,7 +1314,7 @@ const SubscribeButton = styled(ChannelActionButton)`
   border-radius: 8px;
   padding: 9px 15px;
   min-width: 80px;
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     padding: 9px 30px;
   }
 `;
@@ -1321,7 +1326,7 @@ const UnsubscribeButton = styled(ChannelActionButton)`
   border-radius: 8px;
   padding: 9px 15px;
   min-width: 80px;
-  @media (max-width: 768px){
+  @media (max-width: 768px) {
     padding: 9px 30px;
   }
 `;

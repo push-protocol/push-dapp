@@ -1,18 +1,18 @@
 // External Packages
-import { EthereumAuthProvider, ThreeIdConnect } from '@3id/connect';
+// import { EthereumAuthProvider, ThreeIdConnect } from '@3id/connect';
 import { CeramicApi } from '@ceramicnetwork/common';
 import { JWE } from 'did-jwt';
 import { ResolverRegistry } from 'did-resolver';
 import { DID, DIDProvider } from 'dids';
 
-export async function Get3IDDIDProvider(
-  threeIdConnect: ThreeIdConnect,
-  provider: any,
-  walletAddress: string,
-): Promise<DIDProvider> {
-  await threeIdConnect.connect(new EthereumAuthProvider(provider, walletAddress));
-  return threeIdConnect.getDidProvider();
-}
+// export async function Get3IDDIDProvider(
+//   threeIdConnect: ThreeIdConnect,
+//   provider: any,
+//   walletAddress: string,
+// ): Promise<DIDProvider> {
+//   await threeIdConnect.connect(new EthereumAuthProvider(provider, walletAddress));
+//   return threeIdConnect.getDidProvider();
+// }
 
 export async function CreateDID(
   keyDIDGetResolver: () => ResolverRegistry,

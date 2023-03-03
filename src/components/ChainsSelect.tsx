@@ -132,6 +132,11 @@ const Faucet = styled.span`
 const ToggleArrowImg = styled.div`
   margin-left: 1rem;
   filter: ${props => props.theme.faucetFilter};
+
+  @media (max-width: 768px){
+    margin-left:0rem;
+  }
+
   &:hover {
     cursor: pointer;
   }

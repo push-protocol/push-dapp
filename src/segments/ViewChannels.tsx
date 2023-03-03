@@ -338,7 +338,8 @@ const SearchBar = styled.input`
 `;
 
 const ItemHBar = styled.div`
-  width: 100%;
+  // width: 100%;
+  width:-webkit-fill-available;
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
@@ -357,7 +358,8 @@ const ImageInfo = styled.img`
 
 const ItemBar = styled.div`
   padding: 5px 15px 10px 20px;
-  width: 100%;
+  // width: 100%;
+  width:-webkit-fill-available;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

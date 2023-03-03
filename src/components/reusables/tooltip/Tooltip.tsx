@@ -56,6 +56,7 @@ return (
     </div>
     {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
   </Wrapper>
+
 );
 };
 
