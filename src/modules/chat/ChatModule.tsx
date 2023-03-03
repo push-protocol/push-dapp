@@ -153,7 +153,7 @@ function Chat() {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:null});
+  } = useModalBlur({padding:'0px'});
 
 
   const connectUser = async (): Promise<void> => {
