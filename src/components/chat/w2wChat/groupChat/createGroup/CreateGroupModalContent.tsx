@@ -190,8 +190,12 @@ const ModalContainer = styled.div`
   padding: ${(props) => (props.createGroupState == 2 ? '32px 36px' : '32px 24px')};
   margin: 0px;
   overflow-y: auto;
-  &&::-webkit-scrollbar {
-    width: 0px;
+  & > div::-webkit-scrollbar {
+    width: 4px;
+  }
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
   }
   @media ${device.mobileL} {
     max-height: 80vh;
