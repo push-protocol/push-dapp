@@ -153,7 +153,7 @@ function Chat() {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:null});
+  } = useModalBlur({padding:'0px'});
 
 
   const connectUser = async (): Promise<void> => {
@@ -378,7 +378,7 @@ const ChatSidebarContainer = styled(ItemVV2)`
     top: 0;
     bottom: 0;
     right: 0;
-    width: 100%;
+    width: 95%;
     margin-right: ${(props) => (props.chatActive ? '20%' : '0%')};
     opacity: ${(props) => (props.chatActive ? '0' : '1')};
     transition: margin-right 0.25s;
@@ -394,7 +394,7 @@ const ChatContainer = styled(ItemVV2)`
     top: 0;
     bottom: 0;
     left: 0;
-    width: 100%;
+    width: 95%;
     margin-left: ${(props) => (props.chatActive ? '0%' : '100%')};
     transition: margin-left 0.25s;
     max-width: initial;
