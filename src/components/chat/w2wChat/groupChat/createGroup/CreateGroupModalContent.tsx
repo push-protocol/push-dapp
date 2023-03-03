@@ -23,6 +23,8 @@ import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
+import { useDeviceWidthCheck } from 'hooks';
+import { device } from 'config/Globals';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -37,6 +39,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
   const createGroupToast = useToast();
+  const isMobile = useDeviceWidthCheck(600);
 
   const handlePrevious = () => {
     setCreateGroupState(1);
@@ -92,7 +95,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
               />
             ),
           });
-          handleClose();
         }
       } catch (e) {
         console.error('Error in creating group', e.message);
@@ -107,7 +109,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             />
           ),
         });
-        handleClose();
       }
       setTimeout(() => {
         setIsLoading(false);
@@ -150,7 +151,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px', top: '7px' }}
           />
         </ItemHV2>
         {createGroupState == 1 && (
@@ -180,15 +181,25 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 517px;
+  max-height: 75vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  border-radius: 16px;
   background-color: ${(props) => props.background};
-  padding: ${(props) => (props.createGroupState == 2 ? '20px 17px 32px' : '20px 6px 32px')};
+  padding: ${(props) => (props.createGroupState == 2 ? '32px 36px' : '32px 24px')};
   margin: 0px;
   overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 0px;
+  & > div::-webkit-scrollbar {
+    width: 4px;
+  }
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+  }
+  @media ${device.mobileL} {
+    max-height: 80vh;
+    min-width: 95vw;
+    padding: ${(props) => (props.createGroupState == 2 ? '32px 24px' : '32px 0px')};
   }
 `;

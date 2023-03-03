@@ -144,7 +144,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
         ),
       });
     } else {
-      handleMemberList((prev) => [ member, ...prev]);
+      handleMemberList((prev) => [...prev,member]);
     }
 
     setFilteredUserData('');
@@ -195,10 +195,9 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               right="16px"
             >
               {searchedUser.length > 0 && <Clear onClick={clearInput} />}
-              {searchedUser.length >= 0 && !filteredUserData && (
+              {searchedUser.length == 0 && !filteredUserData && (
                 <SearchIcon
                   style={{ cursor: 'pointer' }}
-                  onClick={handleSearch}
                 />
               )}
             </ItemVV2>
@@ -276,7 +275,7 @@ const Input = styled.input`
   flex: 1;
   min-width: 445px;
   height: 48px;
-  padding: 0px 60px 0px 16px;
+  padding: 0px 50px 0px 16px;
   margin: 10px 0px 0px;
   border-radius: 99px;
   border: 1px solid ;
@@ -298,7 +297,7 @@ const Input = styled.input`
     color: #657795;
   }
   @media (max-width: 480px) {
-    min-width: 300px;
+    min-width: 337px;
   }
 `;
 
@@ -318,7 +317,6 @@ const MultipleMemberList = styled.div`
 
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
-    border-radius: 10px;
   }
 
   &::-webkit-scrollbar {
@@ -328,6 +326,7 @@ const MultipleMemberList = styled.div`
 
   @media (max-width: 768px) {
     padding: 0px 0px 0px 0px;
+    max-height:35vh;
 
     &::-webkit-scrollbar-track {
       background-color: none;

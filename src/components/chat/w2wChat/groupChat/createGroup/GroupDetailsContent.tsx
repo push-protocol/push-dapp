@@ -98,10 +98,6 @@ export const GroupDetailsContent = ({
     }
   };
 
-  const handleUpload = (e) => {
-    fileUploadInputRef.current.click();
-  };
-
   return (
     <ThemeProvider theme={themes}>
       <Container>
@@ -161,7 +157,7 @@ export const GroupDetailsContent = ({
         </TextFieldContainer>
         <ItemVV2 alignItems="baseline">
           <TextFieldHeading color={themes.modalHeadingColor}>Group Type</TextFieldHeading>
-          <ItemHV2 margin="16px 0px 0px 0px">
+          <OptionsContainer>
             {options.map((option) => {
               return (
                 <OptionContainer
@@ -194,7 +190,7 @@ export const GroupDetailsContent = ({
                 </OptionContainer>
               );
             })}
-          </ItemHV2>
+          </OptionsContainer>
         </ItemVV2>
         <ModalConfirmButton
           text="Next"
@@ -225,8 +221,23 @@ export const GroupDetailsContent = ({
 };
 
 const Container = styled.div`
-  padding: 42px 26px 0px 26px;
+  padding: 42px 26px 0px;
   overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #d53a94;
+    border-bottom:200px solid transparent;
+    background-clip:padding-box;
+  }
+  @media (max-width: 480px) {
+    padding: 42px 24px 0px;
+    &&::-webkit-scrollbar-thumb {
+      border-bottom:400px solid transparent;
+    }
+  }
 `;
 
 const GroupIconContainer = styled.div`
@@ -249,10 +260,11 @@ const TextFieldContainer = styled(ItemVV2)`
 
 const GroupDescription = styled(TextField)`
   resize: none;
-  width: 299px;
+  min-width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   background: ${(props) => props.theme.modalInputBackgrundColor};
   border-radius: 12px;
+  box-sizing: border-box;
   padding: 13px 16px;
   font-family: 'Strawford';
   font-style: normal;
@@ -261,6 +273,9 @@ const GroupDescription = styled(TextField)`
   line-height: 130%;
   &:focus {
     border: 1px solid #ffdbf0;
+  }
+  @media (max-width: 480px) {
+    min-width: 318px;
   }
 `;
 
@@ -285,7 +300,8 @@ const CharacterCount = styled(SpanV2)`
 `;
 
 const CustomInput = styled(Input)`
-  width: 299px;
+  min-width: 299px;
+  box-sizing: border-box;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
   background: ${(props) => props.theme.modalInputBackgrundColor};
@@ -299,9 +315,16 @@ const CustomInput = styled(Input)`
   &:focus {
     border: 1px solid #ffdbf0;
   }
+  @media (max-width: 480px) {
+    min-width: 318px;
+  }
 `;
 
-const OptionsContainer = styled(ItemVV2)``;
+const OptionsContainer = styled(ItemHV2)`
+  margin: 16px 0px 0px;
+  box-sizing: border-box;
+  align-items: center;
+`;
 
 const OptionContainer = styled(ItemVV2)`
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
@@ -309,7 +332,7 @@ const OptionContainer = styled(ItemVV2)`
   background-color: ${(props) => props.backgroundColor || 'transparent'};
   box-sizing: border-box;
   min-width: 150px;
-  padding: 11px 9px;
+  padding: 8px;
   cursor: pointer;
   &:hover {
     background-color: ${(props) => props.hoverBackground || 'transparent'};

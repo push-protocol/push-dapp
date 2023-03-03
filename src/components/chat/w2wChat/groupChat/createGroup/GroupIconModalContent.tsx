@@ -173,7 +173,7 @@ const Container = styled.div`
 const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 18px 10px 32px 10px;
+  margin: 18px 10px 0px 10px;
 `;
 
 const ModalPrimaryText = styled.p`
