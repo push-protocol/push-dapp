@@ -259,6 +259,7 @@ function Chat() {
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
+                onConfirm={() => {}}
               />
 
               {displayQR && !isMobile && (

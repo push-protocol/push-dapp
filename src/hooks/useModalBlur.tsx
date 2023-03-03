@@ -10,21 +10,23 @@ import BlurBG from '../components/reusables/blurs/BlurBG';
 import { ItemHV2, ItemVV2 } from '../components/reusables/SharedStylingV2';
 
 export type ModalInnerComponentType = {
-  onConfirm: (value?: any) => any;
+  onConfirm?: (value?: any) => any;
   onClose?: () => void;
-  toastObject: {
+  toastObject?: {
     showLoaderToast: ShowLoaderToastType;
     showMessageToast: ShowMessageToastType;
   };
+  InnerComponentProps ?: any,
 };
 
 export type ModalType = {
-  InnerComponent: ({ onConfirm, onClose }: ModalInnerComponentType) => JSX.Element;
-  onConfirm: (value?: any) => any;
-  toastObject: {
+  InnerComponent: ({ onConfirm, onClose,InnerComponentProps }: ModalInnerComponentType) => JSX.Element;
+  onConfirm?: (value?: any) => any;
+  toastObject?: {
     showLoaderToast: ShowLoaderToastType;
     showMessageToast: ShowMessageToastType;
   };
+  InnerComponentProps ?: any,
 };
 
 export type ModalProps={
@@ -53,7 +55,7 @@ const useModalBlur = ({padding}:ModalProps) => {
     setOpen(false);
   };
 
-  const ModalComponent = ({ InnerComponent, onConfirm, toastObject }: ModalType) => {
+  const ModalComponent = ({ InnerComponent, onConfirm, toastObject, InnerComponentProps }: ModalType) => {
     const themes = useTheme();
 
     return (
@@ -89,6 +91,7 @@ const useModalBlur = ({padding}:ModalProps) => {
               onConfirm={onConfirm}
               onClose={handleClose}
               toastObject={toastObject}
+              InnerComponentProps={InnerComponentProps}
             />
           </ItemHV2>
         </ItemHV2>}
