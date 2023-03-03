@@ -24,6 +24,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { fetchInbox, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
 import { useDeviceWidthCheck } from 'hooks';
+import { device } from 'config/Globals';
 
 export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
   const [createGroupState, setCreateGroupState] = React.useState<number>(1);
@@ -108,7 +109,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             />
           ),
         });
-        handleClose();
       }
       setTimeout(() => {
         setIsLoading(false);
@@ -151,7 +151,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'5px' : '4px', top: '7px' }}
+            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px', top: '7px' }}
           />
         </ItemHV2>
         {createGroupState == 1 && (
@@ -193,7 +193,7 @@ const ModalContainer = styled.div`
   &&::-webkit-scrollbar {
     width: 0px;
   }
-  @media (max-width: 480px) {
+  @media ${device.mobileL} {
     max-height: 80vh;
     min-width: 95vw;
     padding: ${(props) => (props.createGroupState == 2 ? '32px 24px' : '32px 0px')};
