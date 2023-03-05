@@ -9,12 +9,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from "styled-components";
 
+
+
 // Internal Compoonents
 import { ModalInnerComponentType } from "hooks/useModal";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import CloseButtonSvg from "../assets/XCircle.svg";
 import BellIconSvg from "../assets/BellIcon.svg";
+import { ItemVV2 } from './reusables/SharedStylingV2';
+
+
+//Internal Configs
+import GLOBALS, { device } from "config/Globals";
+import Spinner from './reusables/spinners/SpinnerUnit';
 
 const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: ModalInnerComponentType) => {
     const themes = useTheme();
@@ -80,60 +88,42 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
     return (
         <ThemeProvider theme={themes}>
             <ModalContainer ref={containerRef}>
-                <ModalMessage style={{
-                    color: themes.modalMessageColor,
-                }}>
-                    Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
-                </ModalMessage>
-                <ButtonContainer>
-                    {/* <IconButton
-                        onClick={handleClose}
-                        style={{ padding: "0", marginRight: "0.5rem" }}
-                        sx={{ "&:hover": { backgroundColor: "transparent" } }}
-                        children={
-                            <MdHighlightOff size="2.6rem" style={{
-                                color: themes.modalIconColor,
-                            }} />}
-                    /> */}
+                {isLoading ? (
+                    <VerifyingContainer>
+                        <Spinner
+                            size={42}
+                            color={GLOBALS.COLORS.PRIMARY_PINK}
+                            type={LOADER_SPINNER_TYPE.PROCESSING}
+                        />
+                        <TransactionText>
+                            Verifying
+                        </TransactionText>
 
+                    </VerifyingContainer>
+                ) : (
+                    <>
+                        <ModalMessage style={{
+                            color: themes.modalMessageColor,
+                        }}>
+                            Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
+                        </ModalMessage>
+                        <ButtonContainer>
 
-                    <CloseButtonSVG src={CloseButtonSvg} onClick={handleClose} />
+                            <CloseButtonSVG src={CloseButtonSvg} onClick={handleClose} />
 
-                    {/* <IconButton
-                        onClick={handleConfirm}
-                        style={{ padding: "0" }}
-                        sx={{ "&:hover": { backgroundColor: "#E93636" } }}
-                        children={
-                            isLoading
-                                ?
-                                <div style={{
-                                    height: "34px", width: "34px", background: "red", borderRadius: "50%", padding: "3px"
-                                }}>
-                                    <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={34} />
-                                </div>
-                                :
-                                // <RiNotificationOffLine size="2.2rem" style={{
-                                //     color: "white", background: "red", borderRadius: "50%", padding: "8px"
-                                // }}
-                                // />
+                            <BellIconContainer onClick={handleConfirm}>
                                 <BellIconImage src={BellIconSvg} />
-                        }
-                    /> */}
-
-                    <BellIconContainer onClick={handleConfirm}>
-                        {isLoading ? (
-                            <>
-                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} spinnerColor={"#ffff"} />
-                            </>
-                        ) : (
-                        <BellIconImage src={BellIconSvg} />
-
-                        )}
-                    </BellIconContainer>
+                            </BellIconContainer>
 
 
-                </ButtonContainer>
+                        </ButtonContainer>
+                    </>
+                )}
             </ModalContainer>
+
+
+
+
         </ThemeProvider>
     )
 }
@@ -149,6 +139,22 @@ const ModalContainer = styled.div`
         width:350px;
     }
 
+`
+
+const VerifyingContainer = styled(ItemVV2)`
+  flex-direction:row;
+//   margin-top:33px;
+`
+const TransactionText = styled.p`
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  margin-left:12px;
+  color: ${(props) => props.theme.editChannelPrimaryText};
 `
 
 const ModalMessage = styled.div`
