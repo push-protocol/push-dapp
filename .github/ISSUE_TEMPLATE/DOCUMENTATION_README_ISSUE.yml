@@ -12,7 +12,7 @@ body:
       description: Please describe the behavior you are expecting
       placeholder: Short and explicit description of your desired behaviour...
     validations:
-      required: true
+      required: false
   - type: textarea
     id: current-behaviour
     attributes:
@@ -20,7 +20,7 @@ body:
       description: Please describe the current behavior
       placeholder: What is the current behavior?...
     validations:
-      required: true
+      required: false
   - type: textarea
     id: reprod
     attributes:
@@ -30,7 +30,7 @@ body:
         1. Go to '...'
         2. Click on '....'
         3. Scroll down to '....'
-        4. See UI
+        4. See it
       render: bash
     validations:
       required: false
