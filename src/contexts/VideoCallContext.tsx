@@ -107,6 +107,16 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
       console.log('got a message from reciever: ' + data);
     });
 
+    peer.on('connect', () => {
+      // wait for 'connect' event before using the data channel
+      peer.send('hey reciever, how is it going?')
+    })
+    
+    peer.on('data', data => {
+      // got a data channel message
+      console.log('got a message from reciever: ' + data)
+    })
+
     peer.on('stream', (currentStream: MediaStream) => {
       console.log('GOT STREAM BACK IN CALLUSER');
 
@@ -191,13 +201,13 @@ const VideoCallContextProvider: React.FC<React.ReactNode> = ({ children }) => {
     console.log('LOCAL STREAM ANSWER CALL', localStream);
 
     const peer2: any = new Peer({ initiator: false, trickle: false, stream: localStream });
-    console.log('answer call pe data', call);
+    console.log('answer call data', call);
     peer2.signal(call.signal);
 
     console.log('Sending Payload for answer call - Step 1');
 
     peer2.on('signal', (data) => {
-      console.log('ANSWER CALL ME SIGAL CALLBACK CHALA');
+      console.log('ANSWER CALL ->  SIGNAL CALLBACK FIRED');
       console.log('RECIEVER PEER SIGNALED', receiverPeerSignalled);
 
       // send answer call notification
