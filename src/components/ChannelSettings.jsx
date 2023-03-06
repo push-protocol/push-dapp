@@ -8,10 +8,12 @@ import styled from 'styled-components';
 // Internal Compoonents
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import ChannelSettingsDropdown from './ChannelSettingsDropdown';
+import { useTheme } from '@emotion/react';
 
 export default function ChannelSettings() {
   const DropdownRef = React.useRef(null);
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
+  const theme = useTheme();
 
   const toggleDropdownHandler = () => {
     setIsDropdownOpen((prevVal) => !prevVal);
@@ -55,7 +57,8 @@ const Settings = styled(AiOutlineEllipsis)`
   position: relative;
   width: 40px;
   height: 36px;
-  border: 1px solid #dfdee9;
+  border: 1px solid;
+  border-color: ${(props)=>props.theme.default.borderColor};
   border-radius: 8px;
   cursor: pointer;
   transition: 400ms;
