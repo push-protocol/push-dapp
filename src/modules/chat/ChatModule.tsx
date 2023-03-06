@@ -145,7 +145,7 @@ function Chat() {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:isMobile?"24px":"24px 36px"});
+  } = useModalBlur({padding:"0px"});
 
   const createGroupToast = useToast();
 
@@ -239,7 +239,7 @@ function Chat() {
                 maxWidth="310px"
                 minWidth="280px"
                 padding="10px 10px 10px 20px"
-                boxSizing="content-box"
+                boxSizing="border-box"
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >

@@ -44,8 +44,12 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   const getDisplayName = () => {
     if (ensName)
       return ensName;
-    if (isGroup)
-      return username;
+    if (isGroup){
+      if(username?.length>20)
+       return username.substring(0,20)+'...';
+      else
+        return username;
+    }
     return shortUsername;
   }
 
