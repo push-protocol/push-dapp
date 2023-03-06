@@ -263,7 +263,7 @@ const ModalContainer = styled.div`
     width: 0px;
   }
   @media (max-width: 480px) {
-    min-width: 95vw;
+    max-width: 95vw;
   }
 `;
 
@@ -297,7 +297,7 @@ const DescriptionContainer = styled(ItemVV2)`
   max-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
-    max-width: 300px;
+    min-width: 300px;
   }
 `;
 
