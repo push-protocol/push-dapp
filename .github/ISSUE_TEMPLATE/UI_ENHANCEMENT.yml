@@ -6,21 +6,21 @@ labels: [
 ]
 body:
   - type: textarea
-    id: expected-behaviour
+    id: expected-ui
     attributes:
       label: "Expected UI"
       description: Please describe the UI you are expecting
       placeholder: Short and explicit description of your desired UI...
     validations:
-      required: true
+      required: false
   - type: textarea
-    id: current-behaviour
+    id: current-ui
     attributes:
       label: "Current UI"
       description: Please describe the current UI
       placeholder: What is the current UI behaviour?...
     validations:
-      required: true
+      required: false
   - type: input
     id: figma-url
     attributes:
@@ -30,9 +30,19 @@ body:
     validations:
       required: false
   - type: textarea
-    id: screenshot
+    id: expected-screenshot
     attributes:
-      label: "Screenshots"
+      label: "Expected UI Screenshots"
+      description: If applicable, add screenshots to help explain your enhancement.
+      value: |
+        ![DESCRIPTION](LINK.png)
+      render: bash
+    validations:
+      required: false
+  - type: textarea
+    id: current-screenshot
+    attributes:
+      label: "Current UI Screenshots"
       description: If applicable, add screenshots to help explain your enhancement.
       value: |
         ![DESCRIPTION](LINK.png)
