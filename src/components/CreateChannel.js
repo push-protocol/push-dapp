@@ -282,13 +282,13 @@ function CreateChannel() {
     console.log('IPFS storagePointer:', storagePointer);
     // setProcessingInfo("Payload Uploaded, Approval to transfer DAI...");
     //console.log(await ipfs.cat(storagePointer));
-
+    
     channelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
     setProcessingInfo('Payload Uploaded');
     setProgressInfo('Please complete the transaction in your wallet to continue.');
-
+    
     setProgress(10);
-
+    
     // Send Transaction
     // First Approve DAI
     var signer = library.getSigner(account);
@@ -367,7 +367,7 @@ function CreateChannel() {
         }, 2000);
       }
     } catch (err) {
-      if (err.code === 4001) {
+      if (err.code === 4001 || err.code==="ACTION_REJECTED") {
         // EIP-1193 userRejectedRequest error
         channelToast.showMessageToast({
           toastTitle: 'Error',

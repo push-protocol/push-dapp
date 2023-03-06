@@ -176,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-  
+
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -236,8 +236,20 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             </SearchContainer>
+            
+            {UtilityHelper.isMainnet(chainId) && (
+              <Item flex="1">
+              <ChainsSelect
+                channelsNetworkId={channelsNetworkId}
+                setChannelsNetworkId={setChannelsNetworkId}
+              />
+            </Item>
+            )}
 
-            {appConfig.allowedNetworks.length > 1 && (
+          </ItemHBar>
+
+          <FaucetBar>
+            {appConfig.allowedNetworks.length > 1 && !UtilityHelper.isMainnet(chainId) && (
               <Item flex="1">
                 <ChainsSelect
                   channelsNetworkId={channelsNetworkId}
@@ -245,9 +257,13 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             )}
-          </ItemHBar>
 
-          {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+            {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+
+
+          </FaucetBar>
+
+
         </ItemBar>
       )}
 
@@ -345,9 +361,19 @@ const ItemHBar = styled.div`
   flex-direction: row important!;
   // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 10px 10px;
+    padding: 10px 4px 10px 10px;
   }
 `;
+
+const FaucetBar = styled.div`
+  display: flex;
+  
+  @media (max-width: 768px) {
+    flex-direction: row-reverse;
+    padding-right: 10px; 
+  }
+`;
+
 const ImageInfo = styled.img`
   margin-right: 5px;
   display: flex;

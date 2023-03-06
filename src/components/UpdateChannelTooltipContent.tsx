@@ -45,6 +45,12 @@ const Container = styled(ItemVV2)`
   align-items: flex-start;
   padding: 0.75rem 0.25rem 0.75rem 1rem;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+
+  @media (max-width:400px){
+    width:16.75rem;
+  }
+
+
 `;
 
 const TopHeading = styled(H2V2)`
