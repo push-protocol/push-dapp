@@ -59,7 +59,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   };
 
   const makeGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.members);
+    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members,...currentChat?.groupInformation?.pendingMembers]);
     const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
     try {
       const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
@@ -99,7 +99,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   };
 
   const dismissGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList(currentChat?.groupInformation?.members);
+    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members,...currentChat?.groupInformation?.pendingMembers]);
     const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
     try {
       const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});

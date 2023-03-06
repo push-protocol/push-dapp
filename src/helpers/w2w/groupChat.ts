@@ -97,7 +97,7 @@ export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove
 
 export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
   const members = feed?.groupInformation?.members?.filter((i) => i.wallet !== walletAddress);
-  return convertToWalletAddressList(members);
+  return convertToWalletAddressList([...members,...feed?.groupInformation?.pendingMembers]);
 }
 
 
