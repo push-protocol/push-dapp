@@ -30,6 +30,19 @@ body:
     validations:
       required: false
   - type: textarea
+    id: reprod
+    attributes:
+      label: "Steps to Reproduce"
+      description: Please enter an explicit description of your issue
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See UI
+      render: bash
+    validations:
+      required: false
+  - type: textarea
     id: expected-screenshot
     attributes:
       label: "Expected UI Screenshots"
