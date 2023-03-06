@@ -17,7 +17,7 @@ body:
     id: current-behaviour
     attributes:
       label: "Current Behaviour"
-      description: Please describe the behavior you are expecting
+      description: Please describe the current behavior
       placeholder: What is the current behavior?...
     validations:
       required: true
