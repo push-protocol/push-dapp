@@ -138,6 +138,10 @@ const ModalContainer = styled.div`
     @media (max-width:500px){
         width:350px;
     }
+    @media (max-width:400px){
+        width:300px;
+        flex-direction:column;
+    }
 
 `
 
@@ -166,6 +170,9 @@ const ModalMessage = styled.div`
     @media (max-width:500px){
         margin-right:20px;
     }
+    @media (max-width:400px){
+        margin: 14px 6px 24px 6px;
+    }
 `
 
 const CloseButtonSVG = styled.img`
@@ -179,6 +186,9 @@ const ButtonContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    @media (max-width:400px){
+        align-self:end;
+    }
 `
 
 const BellIconContainer = styled.div`
