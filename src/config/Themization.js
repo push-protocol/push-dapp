@@ -10,6 +10,7 @@ const themeLight = {
     color: '#000',
     secondaryColor: '#657795',
     hover: '#F3F3FF',
+    borderColor:'#dfdee9',
   },
 
   // Login Theme
@@ -119,6 +120,8 @@ const themeLight = {
 
   color: '#000',
 
+  dropdownTextColor:'#000',
+
   channelBg: '#fafafa',
 
   button: '#000',
@@ -226,6 +229,7 @@ const themeDark = {
     color: '#FFF',
     secondaryColor: '#B6BCD6',
     hover: '#00000033',
+    borderColor:'#4A4F67',
   },
 
   // Login Theme
@@ -327,6 +331,8 @@ const themeDark = {
   qnaBgBorder: '#666',
 
   color: '#fff',
+
+  dropdownTextColor:'#B6BCD6',
 
   yieldBg: '#ddd',
 
