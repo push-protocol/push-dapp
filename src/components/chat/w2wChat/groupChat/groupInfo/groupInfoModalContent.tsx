@@ -101,6 +101,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
       <ModalContainer
         background={theme.blurModalContentBackground}
         ref={containerRef}
+        isMobile={isMobile}
       >
         <ItemHV2
           justifyContent="center"
@@ -120,7 +121,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
             style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? '10px' : '36px', top: '5px' }}
           />
         </ItemHV2>
-        <Container isMobile={isMobile}>
+        <Container>
           <InfoContainer
             justifyContent="flex-start"
             margin="0px 0px 29px 0px"
@@ -258,7 +259,7 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  padding: 24px 0px;
+  padding: ${(props) => (props.isMobile ? '24px 24px 20px 24px' : '24px 36px 20px 36px')};
   &&::-webkit-scrollbar {
     width: 0px;
   }
@@ -274,7 +275,6 @@ const Container = styled.div`
   box-sizing: border-box;
   background-color: ${(props) => props.background};
   margin: 0px;
-  padding: ${(props) => (props.isMobile ? '0px 10px' : '0px 36px')};
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
