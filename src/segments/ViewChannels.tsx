@@ -176,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-  
+
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -237,6 +237,12 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               </Item>
             </SearchContainer>
 
+
+          </ItemHBar>
+
+          <FaucetBar>
+
+
             {appConfig.allowedNetworks.length > 1 && (
               <Item flex="1">
                 <ChainsSelect
@@ -245,9 +251,13 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             )}
-          </ItemHBar>
 
-          {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+            {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+
+
+          </FaucetBar>
+
+
         </ItemBar>
       )}
 
@@ -348,6 +358,16 @@ const ItemHBar = styled.div`
     padding: 10px 10px;
   }
 `;
+
+const FaucetBar = styled.div`
+  display: flex;
+  padding-right: 10px; 
+  
+  @media (max-width: 768px) {
+    flex-direction: row-reverse;
+  }
+`;
+
 const ImageInfo = styled.img`
   margin-right: 5px;
   display: flex;
