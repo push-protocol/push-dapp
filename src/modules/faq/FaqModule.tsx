@@ -243,7 +243,7 @@ function FaqModule() {
                     itself. Find the entire channel creation process{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/create-your-first-channel">
+                      href="https://docs.push.org/developers/developer-guides/create-your-notif-channel">
                       here
                     </AMod>
                     .
@@ -311,13 +311,13 @@ function FaqModule() {
                     Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/sending-notifications/server-workflow/backend-sdk-quick-set-up">
+                      href="https://docs.push.org/developers/developer-tooling/push-sdk">
                       Backend SDKs
                     </AMod>{' '}
                     and{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/working-with-showrunners">
+                      href="https://docs.push.org/developers/developer-tooling/showrunners-framework">
                       Showrunners
                     </AMod>
                     . Check them out.
@@ -342,7 +342,7 @@ function FaqModule() {
                     Push (EPNS) Documentation hub contains in-depth details on how to use our{' '}
                     <AMod
                       target="_blank"
-                      href="https://docs.epns.io/developer-zone/developer-guides/integrating-with-front-end-sdk">
+                      href="https://docs.push.org/developers/developer-tooling/push-sdk">
                       Front-end SDK
                     </AMod>
                     .

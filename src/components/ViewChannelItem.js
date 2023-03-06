@@ -93,7 +93,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       const channelJson = await ChannelsDataStore.instance.getChannelJsonStartBlockAsync(channelObject.channel);
       return channelJson;
     } catch (err) {
-      console.log(err.message);
+      console.log(err);
     }
   };
 
@@ -104,18 +104,19 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     const url = IPFS_GATEWAY + channelObject.ipfshash;
     const response = await axios.get(url);
 
-    setChannelObjectFromHash(response.data);
-    setChannelIcon(response.data.icon)
+    if(response.data) setChannelObjectFromHash(response.data);
+    if(response.data.icon) setChannelIcon(response.data.icon)
   }, [channelObject]);
 
   useEffect(async () => {
     if(!channelObject.channel) return;
     
     const channelJsonStartBlock = await fetchChannelJsonWithBlock();
-    setChannelObjectStartBlock(channelJsonStartBlock);
+    if(channelJsonStartBlock) setChannelObjectStartBlock(channelJsonStartBlock);
   }, [channelObject.channel]);
 
   useEffect(() => {
+    if(channelObjectFromHash && channelObjectStartBlock){
     if(Object.keys(channelObjectFromHash).length == 0 || Object.keys(channelObjectStartBlock).length == 0) return;
 
     let isChanged = false;
@@ -126,6 +127,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     })
     
     setShowChannelChangedWarning(isChanged);
+  }
   }, [channelObjectFromHash, channelObjectStartBlock])
 
   useEffect(async () => {
@@ -585,7 +587,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             >
 
               <Span style={{ display: 'flex', alignItems: 'center' }}>
-                {showChannelChangedWarning &&
+                {/* {showChannelChangedWarning &&
                   <Tooltip
                     wrapperProps={{
                       width: "fit-content",
@@ -624,7 +626,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       <ImageInfo src={InfoImage} />
                     </div>
                   </Tooltip>
-                }
+                } */}
 
                 {channelObject.name}
 
@@ -633,7 +635,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     margin="0px 5px"
                     style={{ display: 'flex' }}
                   >
-                    <Tooltip
+                    {/* <Tooltip
                       wrapperProps={{
                         width: "fit-content",
                         maxWidth: "fit-content",
@@ -658,18 +660,18 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         />
 
                       }
-                    >
+                    > */}
                       {/* TODO: HAS TO BE CHANGED TO A i icon */}
-                      <div style={{ cursor: "pointer" }} onMouseEnter={() => {
+                      {/* <div style={{ cursor: "pointer" }} onMouseEnter={() => {
                         handleHeight(channelObject.channel);
-                      }}>
+                      }}> */}
                         <GoVerified
                           size={18}
                           color={themes.viewChannelVerifiedBadge}
                         />
 
-                      </div>
-                    </Tooltip>
+                      {/* </div> */}
+                    {/* </Tooltip> */}
 
 
 

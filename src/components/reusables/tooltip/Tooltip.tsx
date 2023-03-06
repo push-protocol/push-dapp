@@ -8,8 +8,10 @@ type TooltipProps = {
   // for aligning the tooltip acc. to requirement
   placementProps?: {
     bottom?: string,
-    right?: string,
-    transform?: string
+    right?:string,
+    transform?: string,
+    borderRadius?: string,
+    width?: string
   },
   wrapperProps?: {},
   key:any,

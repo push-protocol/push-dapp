@@ -165,7 +165,7 @@ const ChannelOwnerDashboard = () => {
       }
 
       {channelDetails !== 'unfetched' &&
-        <ItemVV2 justifyContent={processingState === 0 && "flex-start"}>
+        <ItemVV2 justifyContent={processingState === 0 && "flex-start"} height="fit-content">
           {/* display the create channel page if there are no details */}
           {!channelDetails && processingState === 0 &&
             <CreateChannel />
@@ -185,7 +185,7 @@ const ChannelOwnerDashboard = () => {
                   <>
                     {channelDetails && !isMobile && 
                       <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                        {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
+                        {/* {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>} */}
                         {!isChannelExpired && <ChannelSettings />}
                         {isChannelExpired && onCoreNetwork &&
                           <DestroyChannelBtn 

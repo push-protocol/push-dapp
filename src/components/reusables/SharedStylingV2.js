@@ -195,6 +195,7 @@ export const ImageV2 = styled.img`
   cursor: ${(props) => props.cursor || 'default'};
   filter: ${(props) => props.filter || 'none'};
   alt: ${(props) => props.alt || 'Image'};
+  object-fit:${(props)=>props.objectFit || 'fill'};
 `;
 
 export const AInlineV2 = styled.a`
