@@ -176,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-  
+
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -237,6 +237,12 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               </Item>
             </SearchContainer>
 
+
+          </ItemHBar>
+
+          <FaucetBar>
+
+
             {appConfig.allowedNetworks.length > 1 && (
               <Item flex="1">
                 <ChainsSelect
@@ -245,9 +251,13 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             )}
-          </ItemHBar>
 
-          {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+            {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+
+
+          </FaucetBar>
+
+
         </ItemBar>
       )}
 
@@ -338,15 +348,26 @@ const SearchBar = styled.input`
 `;
 
 const ItemHBar = styled.div`
-  width: 100%;
+  // width: 100%;
+  width:-webkit-fill-available;
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
   // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 10px 10px;
+    padding: 10px 4px 10px 10px;
   }
 `;
+
+const FaucetBar = styled.div`
+  display: flex;
+  
+  @media (max-width: 768px) {
+    flex-direction: row-reverse;
+    padding-right: 10px; 
+  }
+`;
+
 const ImageInfo = styled.img`
   margin-right: 5px;
   display: flex;
@@ -357,7 +378,8 @@ const ImageInfo = styled.img`
 
 const ItemBar = styled.div`
   padding: 5px 15px 10px 20px;
-  width: 100%;
+  // width: 100%;
+  width:-webkit-fill-available;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
