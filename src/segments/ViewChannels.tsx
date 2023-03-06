@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,7 +12,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import Faucets from 'components/Faucets';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import ViewChannelItem from 'components/ViewChannelItem';
-import UtilityHelper, { MaskedChannels, MaskedPolygonChannels } from 'helpers/UtilityHelper';
+import UtilityHelper, { MaskedAliasChannels, MaskedChannels } from 'helpers/UtilityHelper';
 import { incrementPage, setChannelMeta, updateBulkSubscriptions } from 'redux/slices/channelSlice';
 import { incrementStepIndex } from 'redux/slices/userJourneySlice';
 import DisplayNotice from '../primaries/DisplayNotice';
@@ -23,6 +23,12 @@ import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services';
 
 // Internal Configs
 import { appConfig } from 'config';
+import InfoImage from "../assets/info.svg";
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
+
+// import Tooltip from './reusables/tooltip/Tooltip';
+// import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -47,7 +53,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
   const [channelToShow, setChannelToShow] = useState([]);
   const [loadingChannel, setLoadingChannel] = useState(false);
   const [trialCount, setTrialCount] = useState(0);
-  const [channelsNetworkId, setChannelsNetworkId] = useState(chainId);
+  const [channelsNetworkId, setChannelsNetworkId] = useState<number>(chainId);
 
   const channelsVisited = page * CHANNELS_PER_PAGE;
 
@@ -170,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-
+  
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -197,14 +203,16 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setSearch(parsedChannel);
     }, SEARCH_DELAY);
   }, []);
+
   return (
     <Container>
+
+
       {!loading && (
         <ItemBar>
           <ItemHBar>
             <SearchContainer
               flex="1"
-              margin="10px"
             >
               <SearchBar
                 type="text"
@@ -243,7 +251,8 @@ function ViewChannels({ loadTeaser, playTeaser }) {
         </ItemBar>
       )}
 
-      <ScrollItem>
+
+      <ScrollItem id="scroll">
         {/* render all channels depending on if we are searching or not */}
         <div>
           {(search ? channelToShow : channels).map(
@@ -252,21 +261,26 @@ function ViewChannels({ loadTeaser, playTeaser }) {
               channel.channel !== ZERO_ADDRESS && (
                 <>
                   <ViewChannelItems
+                    // onMouseEnter={() => {
+                    //   handleHeight(channel.channel);
+                    // }}
                     key={channel.channel}
                     self="stretch"
+                  // id={channel.channel}
                   >
-                    {!MaskedChannels[channel.channel] &&
+
+                    {!MaskedChannels[channel.channel] && channel &&
                       (channelsNetworkId == appConfig.coreContractChain ||
-                        ((channelsNetworkId == channel.alias_blockchain_id || channel.alias_blockchain_id == '80001') &&
-                          !MaskedPolygonChannels[channel.channel])) && (
+                        (channelsNetworkId == channel.alias_blockchain_id &&
+                          !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
+
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
                         />
                       )}
                   </ViewChannelItems>
-
                   {showWayPoint(index) && <Waypoint onEnter={updateCurrentPage} />}
                 </>
               )
@@ -328,10 +342,17 @@ const ItemHBar = styled.div`
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 0px 0px;
+    padding: 10px 10px;
   }
+`;
+const ImageInfo = styled.img`
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+    align-items: center;
+    align-self: center;
 `;
 
 const ItemBar = styled.div`
@@ -342,6 +363,7 @@ const ItemBar = styled.div`
   justify-content: space-evenly;
   @media (max-width: 768px) {
     flex-direction: column;
+    padding: 0px 0px 0px 0px;
   }
 `;
 
@@ -349,12 +371,10 @@ const Container = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-
   font-weight: 200;
   align-content: center;
   align-items: center;
   justify-content: center;
-
   max-height: 100vh;
 `;
 
@@ -364,6 +384,8 @@ const ContainerInfo = styled.div`
 
 const ViewChannelItems = styled.div`
   align-self: stretch;
+  // position: absolute;
+  // top: 70px;
 `;
 
 const CenteredContainerInfo = styled.div`
@@ -386,12 +408,8 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
 
   flex: 1;
-  padding: 5px 20px 10px 20px;
+  padding: 0px 20px 10px 20px;
   overflow-y: auto;
-
-  @media (max-width: 768px) {
-    padding: 0px 0px 0px 0px;
-  }
 
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
@@ -403,21 +421,38 @@ const ScrollItem = styled(Item)`
     width: 6px;
   }
 
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+  
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+
+
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-image: -webkit-gradient(
       linear,
       left top,
       left bottom,
-      color-stop(0.44, #35c5f3),
-      color-stop(0.72, #35b0f3),
-      color-stop(0.86, #35a1f3)
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
     );
   }
 `;
 
 const SearchContainer = styled(Item)`
   width: 100%;
+  margin-right: 10px;
 `;
 
 // Export Default

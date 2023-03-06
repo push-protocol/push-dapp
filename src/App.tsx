@@ -37,12 +37,14 @@ import Navigation from 'structure/Navigation';
 import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
+import ChatUserContextProvider from 'contexts/ChatUserContext';
 
 dotenv.config();
 
 const GlobalStyle = createGlobalStyle`
   body {
     background: ${(props) => props.theme.header.bg} !important;
+    padding-right: 0 !important;
   }
 `;
 
@@ -213,8 +215,10 @@ export default function App() {
               </LeftBarContainer>
 
               <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                {/* Shared among all pages, load universal things here */}
-                <MasterInterfacePage />
+                <ChatUserContextProvider>
+                  {/* Shared among all pages, load universal things here */}
+                  <MasterInterfacePage />
+                </ChatUserContextProvider>
               </ContentContainer>
             </ParentContainer>
           </NavigationContextProvider>

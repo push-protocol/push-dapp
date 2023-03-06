@@ -16,21 +16,25 @@ import { AppContext } from 'types/chat';
 
 // Internal Configs
 import { caip10ToWallet } from 'helpers/w2w';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { MessagetypeType } from '../../../../types/chat';
 
 interface ITypeBar {
+  isGroup: boolean;
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
   setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
   videoCallInfo: VideoCallInfoI;
-  sendMessage: ({ message, messageType }: { message: string; messageType: string }) => void;
-  sendIntent: ({ message, messageType }: { message: string; messageType: string }) => void;
+  sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
+  sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar: boolean;
   setSnackbarText: (SnackbarText: string) => void;
 }
 
 const Typebar = ({
+  isGroup,
   messageBeingSent,
   setNewMessage,
   newMessage,
@@ -40,7 +44,8 @@ const Typebar = ({
   setOpenSuccessSnackBar,
   setSnackbarText,
 }: ITypeBar) => {
-  const { currentChat, connectedUser }: AppContext = useContext<AppContext>(Context);
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +72,7 @@ const Typebar = ({
   const handleSubmit = (e: { preventDefault: () => void }): void => {
     e.preventDefault();
     if (newMessage.trim() !== '') {
-      if (currentChat.threadhash) {
+      if (currentChat.threadhash || isGroup) {
         sendMessage({
           message: newMessage,
           messageType: 'Text',
@@ -84,7 +89,7 @@ const Typebar = ({
     // Send video request only when two users are chatting
     if (e.target.value === '/video' && currentChat.threadhash) {
       setVideoCallInfo({
-        address: caip10ToWallet(currentChat.msg.name),
+        address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
         fromPublicKeyArmored: connectedUser.publicKey,
         toPublicKeyArmored: currentChat.publicKey,
         privateKeyArmored: connectedUser.privateKey,
@@ -108,13 +113,14 @@ const Typebar = ({
   };
 
   const sendGif = (url: string): void => {
-    if (currentChat?.intent === null) {
-      sendIntent({ message: url, messageType: 'GIF' });
-    } else {
+    if (currentChat.threadhash || isGroup) {
       sendMessage({
         message: url,
         messageType: 'GIF',
       });
+     
+    } else {
+      sendIntent({ message: url, messageType: 'GIF' });
     }
   };
 
@@ -140,13 +146,15 @@ const Typebar = ({
             type: file.type,
             size: file.size,
           };
-          if (!currentChat.threadhash) {
-            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
-          } else {
+          if (currentChat.threadhash || isGroup) {
+
             sendMessage({
               message: JSON.stringify(fileMessageContent),
               messageType,
             });
+          } else {
+            sendIntent({ message: JSON.stringify(fileMessageContent), messageType: messageType });
+
           }
           setFileUploading(false);
         };
@@ -282,14 +290,13 @@ export default Typebar;
 const TypeBarContainer = styled.div`
   position: absolute;
   display: flex;
-  /* align-items: center; */
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
   bottom: 9px;
   left: 9px;
   right: 9px;
-  /* height: 55px; */
+
   height: auto;
   padding: 13px 16px 13px 16px;
   border-radius: 13px;
@@ -331,6 +338,7 @@ const TextInput = styled.textarea`
   }
   ::placeholder {
     color: ${(props) => props.theme.chat.sendMessageFontColor || 'black'};
+    padding-top: 5px;
   }
 `;
 

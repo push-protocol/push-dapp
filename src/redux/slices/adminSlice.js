@@ -15,6 +15,7 @@ const initialState = {
     aliasAddrFromContract: null,
     aliasEthAddr: null,
     isAliasVerified: null,
+    aliasChainId: null
   },
   delegatees: null,
   canVerify: false,
@@ -46,6 +47,9 @@ export const contractSlice = createSlice({
     setAliasEthAddress: (state, action) => {
       state.aliasDetails["aliasEthAddr"] = action.payload;
     },
+    setAliasChainId: (state, action) => {
+      state.aliasDetails["aliasChainId"] = action.payload;
+    },
     setAliasVerified: (state, action) => {
       state.aliasDetails["isAliasVerified"] = action.payload;
     },
@@ -62,6 +66,7 @@ export const {
   setAliasAddress,
   setAliasAddressFromContract,
   setAliasEthAddress,
+  setAliasChainId
 } = contractSlice.actions;
 
 export default contractSlice.reducer;

@@ -144,7 +144,11 @@ const EPNSCoreHelper = {
 
       contract
         .queryFilter(filter, block, block)
-        .then((response: any) => {
+        .then(async (response: any) => {
+          if(response.length == 0) {
+            const res = await contract.queryFilter(contract.filters.AddChannel(channel), startBlock, startBlock);
+            response = res;
+          }
           let filteredResponse: string;
 
           if (enableLogs) console.log('getChannelEvent() --> Finding: %s in | %o |', channel, response);
@@ -172,7 +176,7 @@ const EPNSCoreHelper = {
     return new Promise((resolve, reject) => {
       // Split Channel Identity, delimeter of identity is "+"
       if (!identity) {
-        reject('There is no identity file for channel:', channel);
+        reject(`There is no identity file for channel: ${channel}`);
       }
       const ids = identity?.split('+') || []; // First segment is storage type, second is the pointer to it
 
@@ -227,6 +231,39 @@ const EPNSCoreHelper = {
             channel,
             response.channelStartBlock.toNumber(),
             response.channelUpdateBlock.toNumber(),
+            contract
+          )
+        )
+        .then((response) => {
+          // add little hack for now to change coindesk's descriptioon
+          const hash: any =
+            channel === COINDESK_CHANNEL_ADDR ? COINDESK_HASH : channel === ENS_CHANNEL_ADDR ? ENS_HASH : response;
+          return EPNSCoreHelper.getJsonFileFromIdentity(hash, channel);
+          // return EPNSCoreHelper.getJsonFileFromIdentity(response, channel)
+        })
+        .then((response: any) => {
+          if (enableLogs) console.log('getChannelJsonFromChannelAddress() --> %o', response);
+          resolve(response);
+        })
+        .catch((err: any) => {
+          console.log('!!!Error, getChannelJsonFromChannelAddress() --> %o', err);
+          reject(err);
+        });
+    });
+  },
+  // Helper to get Channel from Channel's address and block number
+  getChannelJsonFromChannelAddressStartBlock: async (channel: string, contract: ethers.Contract): Promise<any> => {
+    if (channel === null) return;
+    const enableLogs: number = 0;
+
+    return new Promise((resolve, reject) => {
+      // To get channel info from a channel address and block
+      EPNSCoreHelper.getChannelInfo(channel, contract)
+        .then((response) =>
+          EPNSCoreHelper.getChannelEvent(
+            channel,
+            response.channelStartBlock.toNumber(),
+            response.channelStartBlock.toNumber(),
             contract
           )
         )

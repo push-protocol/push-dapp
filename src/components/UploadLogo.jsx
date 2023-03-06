@@ -29,8 +29,8 @@ const UploadLogo = ({
   setView,
   setImageSrc,
   setProcessingInfo,
-  handleCreateChannel,
-  logoInfo
+  logoInfo,
+  setStepFlow
 }) => {
   const childRef = useRef();
   const { chainId, library, account } = useWeb3React();
@@ -48,6 +48,7 @@ const UploadLogo = ({
   };
 
   const handleFile = async (file, path) => {
+    console.log("This is called",file);
     setCroppedImage(undefined);
     setView(true);
 
@@ -57,6 +58,7 @@ const UploadLogo = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
+        console.log("image src",reader.result);
         setImageSrc(reader.result);
       };
     } else {
@@ -65,10 +67,9 @@ const UploadLogo = ({
   };
 
   return (
-    <Fragment>
       <Body>
         <Item align="center">
-          <H3 color=" #657795" margin="10px 0px" textTransform="none" weight="500" size="15px" spacing="0.05" textAlign='center'>
+          <H3 color=" #657795" margin="20px 0px" textTransform="none" weight="300" size="15px" spacing="0.05" textAlign='center'>
           Please upload a PNG, JPG. Crop the image to resize to 128px.  
           </H3>
         </Item>
@@ -167,12 +168,15 @@ const UploadLogo = ({
         </Item>): (
 
               <FormSubmision
-              flex="1"
-              direction="column"
-              margin="0px"
-              justify="center"
-              size="1.1rem"
-              onSubmit={handleCreateChannel}
+                flex="1"
+                direction="column"
+                margin="0px"
+                justify="center"
+                size="1.1rem"
+                onSubmit={(e)=>{
+                  e.preventDefault();
+                  setStepFlow(2);
+                }}
               >
               <Item
                 width="12.2em" self="stretch" align="stretch" margin="100px auto 50px auto"
@@ -198,7 +202,7 @@ const UploadLogo = ({
                       line="22px"
                       size="16px"
                       type="submit"
-                      value="Create Channel"
+                      value="Next"
                     />
                   )}
                 </Button>
@@ -208,7 +212,6 @@ const UploadLogo = ({
 
 
       </Body>
-    </Fragment>
   );
 };
 
