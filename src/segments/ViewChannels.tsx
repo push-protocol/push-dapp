@@ -355,16 +355,16 @@ const ItemHBar = styled.div`
   flex-direction: row important!;
   // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 10px 10px;
+    padding: 10px 4px 10px 10px;
   }
 `;
 
 const FaucetBar = styled.div`
   display: flex;
-  padding-right: 10px; 
   
   @media (max-width: 768px) {
     flex-direction: row-reverse;
+    padding-right: 10px; 
   }
 `;
 
