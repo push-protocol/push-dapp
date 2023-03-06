@@ -1,12 +1,12 @@
 name: "🐛 Bug Report"
-description: Create a new ticket for a bug.
+description: Create a bug report to help us improve.
 title: "🐛 [BUG] - <title>"
 labels: [
   "bug"
 ]
 body:
   - type: textarea
-    id: ecpected-behaviour
+    id: expected-behaviour
     attributes:
       label: "Expected Behaviour"
       description: Please describe the behavior you are expecting
@@ -16,7 +16,7 @@ body:
   - type: textarea
     id: current-behaviour
     attributes:
-      label: "Current Behaviourion"
+      label: "Current Behaviour"
       description: Please describe the behavior you are expecting
       placeholder: What is the current behavior?...
     validations:
@@ -63,7 +63,7 @@ body:
         - Staging (staging.push.org)
         - Dev (dev.push.org)
     validations:
-      required: false
+      required: true
   - type: dropdown
     id: browsers
     attributes:
