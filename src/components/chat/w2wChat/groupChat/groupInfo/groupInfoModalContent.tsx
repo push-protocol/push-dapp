@@ -31,6 +31,7 @@ import {
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
+import { useDeviceWidthCheck } from 'hooks';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
@@ -48,7 +49,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
   const theme = useTheme();
-
+  const isMobile = useDeviceWidthCheck(600);
   const handleClose = () => onClose();
 
   const messageUser = async () => {
@@ -203,6 +204,7 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
       <ModalContainer
         background={theme.blurModalContentBackground}
         ref={containerRef}
+        isMobile={isMobile}
       >
         <ItemHV2
           justifyContent="center"
@@ -219,111 +221,114 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', marginTop: '8px' }}
+            style={{ cursor: 'pointer', position: 'absolute', right:'0px', top: '5px' }}
           />
         </ItemHV2>
-        <InfoContainer
-          justifyContent="flex-start"
-          margin="0px 0px 29px 0px"
-        >
-          <ItemVV2
-            width="64px"
-            height="64px"
-            maxWidth="64px"
-            borderRadius="16px"
-            overflow="hidden"
-            margin="0px 16px 0px 0px"
-          >
-            <ImageV2
-              height="100%"
-              objectFit="cover"
-              src={currentChat?.groupInformation?.groupImage}
-              alt="Group Image"
-            />
-          </ItemVV2>
-          <ItemVV2 alignItems="flex-start">
-            <SpanV2
-              fontSize="20px"
-              fontWeight={500}
-              color={theme.default.color}
-            >
-              {currentChat?.groupInformation?.groupName}
-            </SpanV2>
-            <SpanV2
-              fontSize="16px"
-              fontWeight={500}
-              color={theme.modalDescriptionTextColor}
-            >
-              {`${currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0} members`}
-            </SpanV2>
-          </ItemVV2>
-        </InfoContainer>
-
-        <DescriptionContainer
-          alignItems="flex-start"
-          margin="0px 0px 18px 0px"
-        >
-          <SpanV2
-            fontSize="18px"
-            fontWeight={500}
-            margin="0px 0px 5px 0px"
-            color={theme.modalProfileTextColor}
-          >
-            Group Description
-          </SpanV2>
-          <ItemHV2
-            fontSize="18px"
-            fontWeight={400}
+          <InfoContainer
             justifyContent="flex-start"
-            style={{ color: `${theme.modalDescriptionTextColor}` }}
+            margin="0px 0px 29px 0px"
           >
-            {currentChat?.groupInformation?.groupDescription
-              ? currentChat?.groupInformation?.groupDescription
-              : 'No Description Added'}
-          </ItemHV2>
-        </DescriptionContainer>
-        <InfoContainer
-          justifyContent="flex-start"
-          padding="15px 24px 15px 18px"
-          borderRadius="16px"
-          border={`1px solid ${theme.default.border}`}
-          margin="0px 0px 21px 0px"
-        >
-          <Lock />
-          <ItemVV2
+            <ItemVV2
+              width="64px"
+              height="64px"
+              maxWidth="64px"
+              borderRadius="16px"
+              overflow="hidden"
+              margin="0px 16px 0px 0px"
+            >
+              <ImageV2
+                height="100%"
+                objectFit="cover"
+                src={currentChat?.groupInformation?.groupImage}
+                alt="Group Image"
+              />
+            </ItemVV2>
+            <ItemVV2 alignItems="flex-start">
+              <SpanV2
+                fontSize="20px"
+                fontWeight={500}
+                color={theme.default.color}
+                textAlign="left"
+              >
+                {currentChat?.groupInformation?.groupName}
+              </SpanV2>
+              <SpanV2
+                fontSize="16px"
+                fontWeight={500}
+                color={theme.modalDescriptionTextColor}
+              >
+                {`${
+                  currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0
+                } members`}
+              </SpanV2>
+            </ItemVV2>
+          </InfoContainer>
+
+          <DescriptionContainer
             alignItems="flex-start"
-            margin="0px 0px 0px 12px"
+            margin="0px 0px 18px 0px"
           >
             <SpanV2
               fontSize="18px"
-              fontWeight="500"
-              color={theme.default.color}
-            >
-              {currentChat?.groupInformation?.isPublic ? 'Public' : 'Private'}
-            </SpanV2>
-            <SpanV2
-              fontSize="12px"
-              fontWeight="400"
-              color={theme.modalIconColor}
-            >
-              {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
-            </SpanV2>
-          </ItemVV2>
-        </InfoContainer>
-        {/* {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
-          <AddWalletContainer>
-            <AddMember />
-            <SpanV2
+              fontWeight={500}
+              margin="0px 0px 5px 0px"
               color={theme.modalProfileTextColor}
-              margin="0px  14px"
-              fontSize="18px"
-              fontWeight="400"
             >
-              Add more wallets
+              Group Description
             </SpanV2>
-          </AddWalletContainer>
-        )} */}
-        <ProfileContainer>
+            <ItemHV2
+              fontSize="18px"
+              fontWeight={400}
+              justifyContent="flex-start"
+              style={{ color: `${theme.modalDescriptionTextColor}` }}
+            >
+              {currentChat?.groupInformation?.groupDescription
+                ? currentChat?.groupInformation?.groupDescription
+                : 'No Description Added'}
+            </ItemHV2>
+          </DescriptionContainer>
+          <InfoContainer
+            justifyContent="flex-start"
+            padding="15px 24px 15px 18px"
+            borderRadius="16px"
+            border={`1px solid ${theme.default.border}`}
+            margin="0px 0px 21px 0px"
+          >
+            <Lock />
+            <ItemVV2
+              alignItems="flex-start"
+              margin="0px 0px 0px 12px"
+            >
+              <SpanV2
+                fontSize="18px"
+                fontWeight="500"
+                color={theme.default.color}
+              >
+                {currentChat?.groupInformation?.isPublic ? 'Public' : 'Private'}
+              </SpanV2>
+              <SpanV2
+                fontSize="12px"
+                fontWeight="400"
+                color={theme.modalIconColor}
+              >
+                {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
+              </SpanV2>
+            </ItemVV2>
+          </InfoContainer>
+          {/* {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
+            <AddWalletContainer>
+              <AddMember />
+              <SpanV2
+                color={theme.modalProfileTextColor}
+                margin="0px  14px"
+                fontSize="18px"
+                fontWeight="400"
+              >
+                Add more wallets
+              </SpanV2>
+            </AddWalletContainer>
+          )} */}
+          <ProfileContainer>
           {currentChat?.groupInformation?.members?.map((member, index) => {
             return (
               member && (
@@ -351,22 +356,35 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
 };
 
 const ModalContainer = styled.div`
-  // max-height: 517px;
-  max-height: 652px;
+  box-sizing: border-box;
+  border-radius: 16px;
+  background-color: ${(props) => props.background};
+  margin: 0px;
+  max-height: 710px;
+  max-width: 517px;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  background-color: ${(props) => props.background};
-  padding: 20px 6px 32px;
-  margin: 0px;
   overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 0px;
+  overflow-x: hidden;
+  & > div::-webkit-scrollbar {
+    width: 4px;
   }
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+  }
+  @media (max-width: 480px) {
+    max-height: 90vh;
+    &&::-webkit-scrollbar-thumb {
+      border-bottom: 400px solid transparent;
+    }
+  }
+  padding: ${(props) => (props.isMobile ? '24px 24px 20px 24px' : '24px 36px 20px 36px')};
 `;
 
+
 const DescriptionContainer = styled(ItemVV2)`
-  min-width: 445px;
+  max-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
@@ -374,7 +392,7 @@ const DescriptionContainer = styled(ItemVV2)`
 `;
 
 const InfoContainer = styled(ItemHV2)`
-  min-width: 445px;
+  max-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
@@ -396,14 +414,15 @@ const ProfileContainer = styled.div`
   padding-right: 3px;
   align-items: center;
   min-width: 445px;
-  max-height: 280px;
+  max-height: 216px;
   overflow-y: auto;
   overflow-x: hidden;
-  &&::-webkit-scrollbar {
+  & > div::-webkit-scrollbar {
     width: 4px;
   }
-  &&::-webkit-scrollbar-thumb {
-    background: #d53a94;
+  & > div::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
   }
   @media (max-width: 480px) {
     min-width: 300px;

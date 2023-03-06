@@ -24,6 +24,7 @@ import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
 import useToast from 'hooks/useToast';
 import { useResolveEns } from 'hooks/useResolveEns';
+import { useDeviceWidthCheck } from 'hooks';
 import { Context } from 'modules/chat/ChatModule';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
@@ -100,6 +101,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const chatBoxToast = useToast();
   let removedMembersAddressArray;
   const theme = useTheme();
+  const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
   let time = '';
 
@@ -115,7 +117,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     
       //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
       if (latestThreadhash === undefined) {
-
         latestThreadhash = messages[messages?.length - 1]?.cid;
       }
 
@@ -141,16 +142,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
           // Decrypt message
 
-          
-            msgIPFS = await w2wHelper.decryptMessages({
-              savedMsg: msgIPFS,
-              connectedUser,
-              account,
-              chainId,
-              currentChat,
-              inbox,
-            });
-       
+          msgIPFS = await w2wHelper.decryptMessages({
+            savedMsg: msgIPFS,
+            connectedUser,
+            account,
+            chainId,
+            currentChat,
+            inbox,
+          });
 
           //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
           const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
@@ -229,7 +228,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const getDisplayName = () => {
     if (ensName) return `${ensName} (${caip10ToWallet(currentChat?.wallets?.split(',')[0].toString())})`;
-    if (isGroup) return currentChat?.groupInformation?.groupName;
+    if (isGroup)
+      return isMobile
+        ? currentChat?.groupInformation?.groupName.length > 25
+          ? currentChat?.groupInformation?.groupName?.slice(0, 25) + '...'
+          : currentChat?.groupInformation?.groupName
+        : currentChat?.groupInformation?.groupName;
     if (currentChat?.wallets) return caip10ToWallet(currentChat?.wallets?.split(',')[0].toString());
   };
 
@@ -476,8 +480,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-
-  const startVideoCallHandler = ()=>{
+  const startVideoCallHandler = () => {
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
@@ -485,9 +488,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
     });
-
   };
-
 
   const InfoMessages = [
     { id: 1, content: 'You can send up to 10 chat requests in alpha' },
@@ -505,7 +506,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     },
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
-
 
   return (
     <Container>
@@ -639,7 +639,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
             {currentChat.groupInformation && (
               <MoreOptions onClick={() => setShowGroupInfo(!showGroupInfo)}>
-                <SpanV2>{theme.scheme == 'light' ? <More /> : <MoreDark />}</SpanV2>
+                <ItemHV2 padding="0px 11px 0px 0px">{theme.scheme == 'light' ? <More /> : <MoreDark />}</ItemHV2>
                 {showGroupInfo && (
                   <GroupInfo
                     onClick={() => {
@@ -701,7 +701,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             caip10={walletToCAIP10({ account: account! })}
                             messageBeingSent={messageBeingSent}
                             isGroup={isGroup}
-                            removedMembers = {isGroup? removedMembers:null}
                           />
                         
 
@@ -963,8 +962,6 @@ const VideoCallButton = styled(ButtonV2)`
   min-width: 1.75rem;
   background: none;
   margin-right: 2rem;
-
 `;
-
 
 export default ChatBox;

@@ -61,6 +61,7 @@ const useModalBlur = ({padding}:ModalProps) => {
         {open && <ItemHV2
           position="absolute"
           alignSelf="stretch"
+          alignItems="flex-start"
           flex="initial"
           top="0"
           right="0"
@@ -69,7 +70,7 @@ const useModalBlur = ({padding}:ModalProps) => {
           zIndex="10"
         >
           <BlurBG
-            blur={10}
+            blur={8}
             zIndex={2}
           />
           <ItemHV2

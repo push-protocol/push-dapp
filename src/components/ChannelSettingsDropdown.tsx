@@ -19,6 +19,7 @@ import useToast from 'hooks/useToast';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import cubeIcon from '../assets/icons/cube.png';
 import redBellIcon from '../assets/icons/redBellSlash.png';
+import greenBellIcon from '../assets/GreenBellIcon.svg';
 import userMinusIcon from '../assets/icons/userCircleMinus.png';
 import userPlusIcon from '../assets/icons/userCirclePlus.png';
 import ActivateChannelModal from './ActivateChannelModal';
@@ -271,17 +272,23 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
 
             {onCoreNetwork &&
               <ChannelActionButton isChannelDeactivated={isChannelDeactivated} onClick={toggleChannelActivationState}>
-                <div style={{ color: 'red' }}>
+                <ActiveChannelButton isChannelDeactivated={isChannelDeactivated}>
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                    <CustomIcon src={redBellIcon} alt="red-bell" />
+
+                    {isChannelDeactivated ? (
+                      <CustomIcon src={greenBellIcon} alt='green-bell' />
+                    ) : (
+                      <CustomIcon src={redBellIcon} alt="red-bell" />
+                    )}
+
                     <div style={{ width: '10px', color: 'red' }} />
                     {isChannelBlocked
                       ? 'Channel Blocked'
                       : isChannelDeactivated
-                      ? 'Activate Channel'
-                      : 'Deactivate Channel'}
+                        ? 'Activate Channel'
+                        : 'Deactivate Channel'}
                   </div>
-                </div>
+                </ActiveChannelButton>
               </ChannelActionButton>
             }
           </ActiveChannelWrapper>
@@ -347,8 +354,16 @@ const DropdownWrapper = styled.div`
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e8f7;
+  border: 1px solid;
+  border-color: ${(props)=>props.theme.default.borderColor};
   border-radius: 16px;
   justify-content: space-between;
+
+  @media (max-width:600px){
+    left:-90px;
+    top:24px;
+  }
+
 `;
 
 const ActiveChannelWrapper = styled.div`
@@ -384,7 +399,7 @@ const ChannelActionButton = styled.button`
   border-radius: 5px;
   position: relative;
   background: ${(props) => props.theme.backgroundBG};
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.dropdownTextColor};
   height: 23px;
   font-family: 'monospace, monospace';
   font-style: normal;
@@ -404,6 +419,11 @@ const ChannelActionButton = styled.button`
   }
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
+
+const ActiveChannelButton = styled.div`
+  color :  ${(props) => props.isChannelDeactivated ? '#30CC8B' : 'red '}
+`;
+
 
 const CustomIcon = styled.img`
   width: 25px;
