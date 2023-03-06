@@ -24,4 +24,4 @@ body:
         - Staging (staging.push.org)
         - Dev (dev.push.org)
     validations:
-      required: true
+      required: false
