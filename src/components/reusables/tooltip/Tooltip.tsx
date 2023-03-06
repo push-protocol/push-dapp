@@ -56,6 +56,7 @@ return (
     </div>
     {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
   </Wrapper>
+  
 );
 };
 
@@ -74,11 +75,11 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
-  width: 200px;
+  // width: 200px;
   position: absolute;
   border-radius: 2px 12px 12px 12px;
   
-  padding: 0.5rem 1rem;
+  // padding: 0.5rem 1rem;
   color: #fff;
   background: #131313;
   font-family: 'Strawford';
