@@ -73,6 +73,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
   const isVerified = channelObject.verified_status;
   const isBlocked = channelObject.blocked;
   const isMobile = useDeviceWidthCheck(600);
+  const mobileToolTip = useDeviceWidthCheck(500);
 
   // ------ toast related section
   const isChannelBlacklisted = CHANNEL_BLACKLIST.includes(channelObject.channel);
@@ -580,7 +581,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                 height={24}
               />
             ) : (
-              <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
+              <ChannelTitleLink>
                 <ChannelTitleSpan>
                   <Span>
                     {showChannelChangedWarning && (
@@ -598,14 +599,14 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                                 // bottom: "25px",
                                 top: '20px',
                                 // right: "-175px",
-                                left: '5px',
+                                left: mobileToolTip ? '-100px' : '5px',
                               }
                             : {
                                 background: 'none',
                                 bottom: '25px',
                                 // top: "20px",
                                 // right: "-175px",
-                                left: '5px',
+                                left: mobileToolTip ? '-100px' : '5px',
                               }
                         }
                         tooltipContent={
@@ -627,7 +628,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       </Tooltip>
                     )}
 
-                    {channelObject.name}
+                    <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
                   </Span>
 
                   {isVerified == 1 && (
@@ -708,34 +709,36 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
       )}
 
       {!isMobile && (
-        <ChannelLogo>
-          <ChannelLogoOuter>
-            <ChannelLogoInner>
-              {loading ? (
-                <Skeleton
-                  color={themes.interfaceSkeleton}
-                  height="100%"
-                />
-              ) : (
-                <ChannelLogoImg src={`${channelIcon}`} />
-              )}
-            </ChannelLogoInner>
-          </ChannelLogoOuter>
-        </ChannelLogo>
+        <>
+          <ChannelLogo>
+            <ChannelLogoOuter>
+              <ChannelLogoInner>
+                {loading ? (
+                  <Skeleton
+                    color={themes.interfaceSkeleton}
+                    height="100%"
+                  />
+                ) : (
+                  <ChannelLogoImg src={`${channelIcon}`} />
+                )}
+              </ChannelLogoInner>
+            </ChannelLogoOuter>
+          </ChannelLogo>
+        </>
       )}
 
       <ChannelInfo>
-        <ChannelTitle>
-          {loading ? (
-            <Skeleton
-              color={themes.interfaceSkeleton}
-              width="50%"
-              height={24}
-            />
-          ) : (
-            <ChannelTitleLink onClick={() => correctChannelTitleLink()}>
-              <ChannelTitleSpan>
-                <Span>
+        {!isMobile && (
+          <ChannelTitle>
+            {loading ? (
+              <Skeleton
+                color={themes.interfaceSkeleton}
+                width="50%"
+                height={24}
+              />
+            ) : (
+              <ChannelTitleLink>
+                <Span style={{ display: 'flex', alignItems: 'center' }}>
                   {showChannelChangedWarning && (
                     <Tooltip
                       wrapperProps={{
@@ -774,87 +777,87 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         onMouseEnter={() => {
                           handleHeight(channelObject.channel);
                         }}
+                        style={{cursor:'pointer'}}
                       >
                         <ImageInfo src={InfoImage} />
                       </div>
                     </Tooltip>
                   )}
 
-                  {channelObject.name}
-                </Span>
+                  <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
 
-                {isVerified == 1 && (
-                  <Span
-                    margin="3px 5px 0px"
-                    style={{ display: 'flex' }}
-                  >
-                    <Tooltip
-                      wrapperProps={{
-                        width: 'fit-content',
-                        maxWidth: 'fit-content',
-                        minWidth: 'fit-content',
-                      }}
-                      placementProps={
-                        tooltTipHeight < 160
-                          ? {
-                              background: 'none',
-                              top: '20px', //for lower displaying
-                              left: '7px',
-                              width: '125px',
-                            }
-                          : {
-                              background: 'none',
-                              bottom: '28px', //above display
-                              left: '7px',
-                              width: '125px',
-                            }
-                      }
-                      tooltipContent={<VerifiedTooltipContent height={tooltTipHeight} />}
+                  {isVerified == 1 && (
+                    <Span
+                      margin="3px 5px 0px"
+                      style={{ display: 'flex' }}
                     >
-                      {/* TODO: HAS TO BE CHANGED TO A i icon */}
-                      <div
-                        style={{ cursor: 'pointer' }}
-                        onMouseEnter={() => {
-                          handleHeight(channelObject.channel);
+                      <Tooltip
+                        wrapperProps={{
+                          width: 'fit-content',
+                          maxWidth: 'fit-content',
+                          minWidth: 'fit-content',
                         }}
+                        placementProps={
+                          tooltTipHeight < 160
+                            ? {
+                                background: 'none',
+                                top: '20px', //for lower displaying
+                                left: '7px',
+                                width: '125px',
+                              }
+                            : {
+                                background: 'none',
+                                bottom: '28px', //above display
+                                left: '7px',
+                                width: '125px',
+                              }
+                        }
+                        tooltipContent={<VerifiedTooltipContent height={tooltTipHeight} />}
                       >
-                        <GoVerified
-                          size={18}
-                          color={themes.viewChannelVerifiedBadge}
-                        />
-                      </div>
-                    </Tooltip>
-
-                    {channelObject && channelObject?.channel && (
+                        {/* TODO: HAS TO BE CHANGED TO A i icon */}
+                        <div
+                          style={{ cursor: 'pointer' }}
+                          onMouseEnter={() => {
+                            handleHeight(channelObject.channel);
+                          }}
+                        >
+                          <GoVerified
+                            size={18}
+                            color={themes.viewChannelVerifiedBadge}
+                          />
+                        </div>
+                      </Tooltip>
+                    </Span>
+                  )}
+                  {channelObject && channelObject?.channel && (
+                    <Span padding="0 0 0 5px">
+                      <Image
+                        src={`./svg/Ethereum.svg`}
+                        alt="Ethereum"
+                        width="20px"
+                        height="20px"
+                      />
+                    </Span>
+                  )}
+                  {channelObject &&
+                    channelObject?.alias_address != null &&
+                    channelObject?.alias_address != 'NULL' &&
+                    appConfig.allowedNetworks.includes(+channelObject?.alias_blockchain_id) &&
+                    !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
                       <Span padding="0 0 0 5px">
                         <Image
-                          src={`./svg/Ethereum.svg`}
-                          alt="Ethereum"
+                          src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
+                          alt="Polygon"
                           width="20px"
                           height="20px"
                         />
                       </Span>
                     )}
-                    {channelObject &&
-                      channelObject?.alias_address != null &&
-                      channelObject?.alias_address != 'NULL' &&
-                      appConfig.allowedNetworks.includes(+channelObject?.alias_blockchain_id) &&
-                      !MaskedAliasChannels[+channelObject?.alias_blockchain_id][channelObject?.channel] && (
-                        <Span padding="0 0 0 5px">
-                          <Image
-                            src={`./svg/${CHAIN_DETAILS[+channelObject.alias_blockchain_id]?.label?.split(' ')[0]}.svg`}
-                            alt="Polygon"
-                            width="20px"
-                            height="20px"
-                          />
-                        </Span>
-                      )}
-                  </Span>
-                )}
-              </ChannelTitleSpan>
-            </ChannelTitleLink>
-          )}
-        </ChannelTitle>
+                </Span>
+              </ChannelTitleLink>
+            )}
+          </ChannelTitle>
+        )}
 
         <ChannelDesc>
           {loading ? (
@@ -1245,7 +1248,7 @@ const ChannelTitleLink = styled.a`
     pointer: hand;
   }
 
-  & > span {
+  & > span > span {
     font-weight: 500;
     color: ${(props) => props.theme.viewChannelLink};
     font-size: 18px;
@@ -1265,7 +1268,7 @@ const ChannelTitleSpan = styled(Span)`
     align-items: baseline;
     flex-direction: column;
   }
-  & > span {
+  & > span > span {
     font-weight: 500;
     color: ${(props) => props.theme.viewChannelLink};
     font-size: 18px;
