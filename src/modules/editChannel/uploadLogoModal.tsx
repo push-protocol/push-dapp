@@ -8,148 +8,149 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 const uploadLogoModal = ({
-     onClose,  InnerComponentProps
+  onClose, InnerComponentProps
 }) => {
-    const {
-        setChannelLogo,
-        channelLogo,
-        croppedImage,
-        setCroppedImage,
-        setChannelFile,
-        imageSrc,
-        setImageSrc
-    } = InnerComponentProps;
+  const {
+    setChannelLogo,
+    channelLogo,
+    croppedImage,
+    setCroppedImage,
+    setChannelFile,
+    imageSrc,
+    setImageSrc
+  } = InnerComponentProps;
 
-    const theme = useTheme();
-    const childRef = useRef();
-    const containerRef = React.useRef(null);
-    useClickAway(containerRef, () => {
-        onClose()
-    });
+  const theme = useTheme();
+  const childRef = useRef();
+  const containerRef = React.useRef(null);
+  useClickAway(containerRef, () => {
+    onClose()
+  });
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-    };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
 
-    const handleOnDrop = (e) => {
-        //prevent the browser from opening the image
-        e.preventDefault();
-        e.stopPropagation();
-        //let's grab the image file
-        handleFile(e.dataTransfer, "transfer",e);
-    };
+  const handleOnDrop = (e) => {
+    //prevent the browser from opening the image
+    e.preventDefault();
+    e.stopPropagation();
+    //let's grab the image file
+    handleFile(e.dataTransfer, "transfer", e);
+  };
 
-    const handleFile = async (file, path,e) => {
-        e.preventDefault();
-        setCroppedImage(undefined);
-        // setView(true);
+  const handleFile = async (file, path, e) => {
+    e.preventDefault();
+    setCroppedImage(undefined);
+    // setView(true);
 
-        //you can carry out any file validations here...
-        if (file?.files[0]) {
-            var reader = new FileReader();
-            reader.readAsDataURL(file?.files[0]);
+    //you can carry out any file validations here...
+    if (file?.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(file?.files[0]);
 
-            reader.onloadend = function (e) {
-                console.log("Image src", reader.result);
-                setImageSrc(reader.result);
-            };
-        } 
-    };
+      reader.onloadend = function (e) {
+        console.log("Image src", reader.result);
+        setImageSrc(reader.result);
+      };
+    }
+  };
 
-    return (
-        <Container ref={containerRef}>
-            <ModalNav><CloseButton onClick={onClose} /></ModalNav>
+  return (
+    <Container ref={containerRef}>
+      <ModalNav><CloseButton onClick={onClose} /></ModalNav>
 
-            <ModalContainer>
-                <ModalPrimaryText>Please upload a PNG, JPG. Crop the image to resize to 128px.</ModalPrimaryText>
-                <Space className="">
-                    {/* <div> */}
-                    <div
-                        onDragOver={(e) => handleDragOver(e)}
-                        onDrop={(e) => handleOnDrop(e)}
-                        className="bordered"
-                    >
+      <ModalContainer>
+        <ModalPrimaryText>Please upload a PNG, JPG. Crop the image to resize to 128px.</ModalPrimaryText>
+        <Space className="">
+          {/* <div> */}
+          <div
+            onDragOver={(e) => handleDragOver(e)}
+            onDrop={(e) => handleOnDrop(e)}
+            className="bordered"
+          >
 
-                        <div className="inner">
+            <div className="inner">
 
-                            <div className="crop-div">
-                                {croppedImage ? (
-                                    <div className="crop-innderdiv">
-                                        <div>
-                                            <img
-                                                alt="Cropped Img"
-                                                src={croppedImage}
-                                                className="croppedImage"
-                                            />
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="crop-innderdiv">
-                                        <ImageClipper
-                                            className="cropper"
-                                            imageSrc={imageSrc}
-                                            onImageCropped={(croppedImage) =>
-                                                setCroppedImage(croppedImage)
-                                            }
-                                            width = "128px"
-                                            height = "128px"
-                                            ref={childRef}
-                                        />
-                                    </div>
-                                )}
-                            </div>
-
-                            <DragText >
-                                <p className="text-below">
-                                    Drag and Drop or
-                                </p>
-                                <div className="text-div">
-                                    <label htmlFor="file-upload" className="labeled">
-                                        <div>Browse to Choose</div>
-                                        <input
-                                            id="file-upload"
-                                            accept="image/*"
-                                            name="file-upload"
-                                            hidden
-                                            onChange={(e) => handleFile(e.target, "target",e)}
-                                            type="file"
-                                            className="sr-only"
-                                            readOnly
-                                        />
-                                    </label>
-                                </div>
-                            </DragText>
-                        </div>
+              <div className="crop-div">
+                {croppedImage ? (
+                  <div className="crop-innderdiv">
+                    <div>
+                      <img
+                        alt="Cropped Img"
+                        src={croppedImage}
+                        className="croppedImage"
+                      />
                     </div>
-                    {/* </div> */}
+                  </div>
+                ) : (
+                  <div className="crop-innderdiv">
+                    <ImageClipper
+                      className="cropper"
+                      imageSrc={imageSrc}
+                      onImageCropped={(croppedImage) =>
+                        setCroppedImage(croppedImage)
+                      }
+                      width="128px"
+                      height="128px"
+                      ref={childRef}
+                    />
+                  </div>
+                )}
+              </div>
 
-                </Space>
+              <DragText >
+                <p className="text-below">
+                  Drag and Drop or
+                </p>
+                <div className="text-div">
+                  <label htmlFor="file-upload" className="labeled">
+                    <div>Browse to Choose</div>
+                    <input
+                      id="file-upload"
+                      accept="image/*"
+                      name="file-upload"
+                      hidden
+                      onChange={(e) => handleFile(e.target, "target", e)}
+                      type="file"
+                      className="sr-only"
+                      readOnly
+                    />
+                  </label>
+                </div>
+              </DragText>
+            </div>
+          </div>
+          {/* </div> */}
+
+        </Space>
 
 
-                <ModalFooter>
-                    {croppedImage ? (
-                        <>
-                            <CropButton
-                                onClick={() => {
-                                    setChannelLogo(croppedImage)
-                                    onClose();
-                                }}>Upload Image</CropButton>
-                        </>
-                    ) : (
-                        <>
-                            <CropButton
-                                onClick={() => {
-                                    childRef.current.showCroppedImage();
-                                }}>Crop Image</CropButton>
-                        </>
-                    )}
-                </ModalFooter>
+        <ModalFooter>
+          {croppedImage ? (
+            <>
+              <UploadButton
+                onClick={() => {
+                  setChannelLogo(croppedImage)
+                  onClose();
+                }}>Upload Image
+              </UploadButton>
+            </>
+          ) : (
+            <>
+              <CropButton
+                onClick={() => {
+                  childRef.current.showCroppedImage();
+                }}>Crop Image</CropButton>
+            </>
+          )}
+        </ModalFooter>
 
-            </ModalContainer>
+      </ModalContainer>
 
 
-        </Container>
-    );
+    </Container>
+  );
 };
 
 export default uploadLogoModal;
@@ -173,7 +174,7 @@ const ModalPrimaryText = styled.p`
     font-size: 15px;
     line-height: 140%;
     text-align: center;
-    color: ${(props)=>props.theme.modalTextColor}
+    color: ${(props) => props.theme.modalTextColor}
 `
 
 const ModalNav = styled.div`
@@ -184,7 +185,7 @@ const ModalNav = styled.div`
 const CloseButton = styled(AiOutlineClose)`
     cursor:pointer;
     font-size:20px;
-    color: ${(props)=>props.theme.modalTextColor};
+    color: ${(props) => props.theme.modalTextColor};
 
 `;
 
@@ -211,7 +212,23 @@ text-align: center;
 background: #CF1C84;
 color:#fff;
 padding: 16px 27px;
-width: 10rem;
+width: 12rem;
+`
+
+const UploadButton = styled(Button)`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 22px;
+display: flex;
+border-radius: 15px;
+align-items: center;
+text-align: center;
+background: #CF1C84;
+color:#fff;
+padding: 16px 18px;
+width: 12rem;
 `
 
 const Space = styled.div`
@@ -227,7 +244,7 @@ const Space = styled.div`
     align-items: flex-end;
     border-radius: 12px;
     padding: 0px 50px 0px 50px;
-    background: ${(props)=>props.theme.modalbackgroundColor};
+    background: ${(props) => props.theme.modalbackgroundColor};
     .inner {
       margin-top: 0.25rem;
       text-align: center;
@@ -245,20 +262,24 @@ const Space = styled.div`
         margin-right: auto;
         .crop-innderdiv{
             width: 100%;
-            background: ${(props)=>props.theme.modalImageBgColor};
+            background: ${(props) => props.theme.modalImageBgColor};
             border-radius: 20px;
             padding: 17px 100px 17px 100px;
+            @media (max-width: 768px) {
+              padding: 17px 2px 17px;
+            }
+
             margin-bottom: 12px;
         }
 
         div {
             height:128px;
-            width:128px;
+            // width:128px;
           .croppedImage {
             border-radius: 20px;
-            @media (max-width: 768px) {
-              margin-top: 1rem;
-            }
+            // @media (max-width: 768px) {
+            //   margin-top: 1rem;
+            // }
           }
         }
         .cropper {
@@ -315,7 +336,7 @@ const Space = styled.div`
         font-weight: 400;
         font-size: 15px;
         line-height: 140%;
-        color: ${(props)=>props.theme.modalTextColor};
+        color: ${(props) => props.theme.modalTextColor};
         margin:0px 0.3rem 0px 0px;
       }
     }

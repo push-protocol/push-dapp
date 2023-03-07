@@ -236,14 +236,20 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             </SearchContainer>
-
+            
+            {UtilityHelper.isMainnet(chainId) && (
+              <Item flex="1">
+              <ChainsSelect
+                channelsNetworkId={channelsNetworkId}
+                setChannelsNetworkId={setChannelsNetworkId}
+              />
+            </Item>
+            )}
 
           </ItemHBar>
 
           <FaucetBar>
-
-
-            {appConfig.allowedNetworks.length > 1 && (
+            {appConfig.allowedNetworks.length > 1 && !UtilityHelper.isMainnet(chainId) && (
               <Item flex="1">
                 <ChainsSelect
                   channelsNetworkId={channelsNetworkId}
