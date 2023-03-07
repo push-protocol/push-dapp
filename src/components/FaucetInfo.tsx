@@ -115,9 +115,9 @@ const TextSpace = styled.div`
   align-items: center;
   margin: 0 auto;
   background: #f4dcea;
-  border-radius: 28px;
+  border-radius: 0px 0px 28px 28px;
   padding: 32px 32px 20px 32px;
-  margin-top:28px;
+  margin-top:24px;
   @media ${device.tablet} {
     width: 100%;
     flex-direction: column;
