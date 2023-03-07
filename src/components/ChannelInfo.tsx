@@ -153,7 +153,7 @@ const ChannelInfo = ({
           </TopInnerContainer>
         </Item>
 
-        {
+        {/* {
           channelExpiryDate !== undefined && 
           <Item
             flex="1"
@@ -171,7 +171,7 @@ const ChannelInfo = ({
             </DatePickerContainer>
             {errorInfo?.channelExpiryDate && (<ErrorMessage message = {errorInfo?.channelExpiryDate} />)}
           </Item>
-        }
+        } */}
         
         <Item
           flex="1"
