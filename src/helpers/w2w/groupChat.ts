@@ -1,5 +1,15 @@
+import { appConfig } from 'config';
 import { walletToCAIP10 } from '.';
-import { Feeds } from '../../types/chat';
+import { ConnectedUser, Feeds, Member } from '../../types/chat';
+import * as PushAPI from "@pushprotocol/restapi";
+
+
+type UpdateGroupType = {
+  currentChat:Feeds,
+  connectedUser:ConnectedUser,
+  adminList:Array<string>,
+  memeberList:Array<string>,
+}
 
 export const checkIfGroup = (feed: Feeds): boolean => {
   if (feed?.hasOwnProperty('groupInformation') && feed?.groupInformation) return true;
@@ -11,9 +21,9 @@ export const getGroupImage = (feed: Feeds): string => {
   else return feed?.profilePicture!;
 };
 
-export const getMemberDetails = (feed:Feeds,msg:any) => {
+export const getMemberDetails = (feed:Feeds,walletAddress:string) => {
 
-    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet == msg?.fromCAIP10)!;
+    const senderProfile = feed?.groupInformation?.members?.filter((chat) => chat?.wallet == walletAddress)!;
 
 
     return senderProfile? senderProfile[0]: null;
@@ -69,3 +79,67 @@ export const getIntentMessage = (feed: Feeds, isGroup: boolean) => {
     return `You were invited to the group ${feed?.groupInformation?.groupName}. Please accept to continue messaging in this group`;
   return 'Please accept to enable push chat from this wallet';
 };
+
+export const convertToWalletAddressList = (memberList:Member[]) => {
+  return memberList?.map((member) => member.wallet);
+};
+
+export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove: boolean): Array<string> => {
+  const existingAdmins = feed?.groupInformation?.members?.filter((admin) => admin.isAdmin == true);
+  const groupAdminList = convertToWalletAddressList(existingAdmins);
+  if (!toRemove) {
+    return [...groupAdminList, walletAddress];
+  } else {
+    const newAdminList = groupAdminList.filter((wallet) => wallet !== walletAddress);
+    return newAdminList;
+  }
+};
+
+export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
+  const members = feed?.groupInformation?.members?.filter((i) => i.wallet !== walletAddress);
+  return convertToWalletAddressList([...members,...feed?.groupInformation?.pendingMembers]);
+}
+
+
+
+export const updateGroup = async(options:UpdateGroupType) => {
+  const { currentChat, connectedUser,adminList,memeberList } = options;
+  const updateResponse = await PushAPI.chat.updateGroup({
+    chatId: currentChat?.groupInformation?.chatId,
+    groupName: currentChat?.groupInformation?.groupName,
+    groupDescription: currentChat?.groupInformation?.groupDescription,
+    groupImage: currentChat?.groupInformation?.groupImage,
+    members: memeberList,
+    admins: adminList,
+    account: connectedUser?.wallets,
+    pgpPrivateKey: connectedUser?.privateKey,
+    env: appConfig.appEnv,
+  });
+  let updatedCurrentChat = null;
+  if(typeof updateResponse !== 'string')
+  {
+    updatedCurrentChat = currentChat;
+    updatedCurrentChat.groupInformation = updateResponse;
+  }
+  return {updateResponse,updatedCurrentChat};
+}
+
+
+export const rearrangeMembers = (currentChat,connectedUser) => {
+  currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
+  currentChat?.groupInformation?.members.some(
+    (member, idx) =>
+      member?.wallet == currentChat?.groupInformation?.groupCreator &&
+      currentChat?.groupInformation?.members.unshift(
+        currentChat?.groupInformation?.members.splice(idx, 1)[0]
+      )
+  );
+  currentChat?.groupInformation?.members.some(
+    (member, idx) =>
+      member?.wallet == connectedUser.wallets &&
+      currentChat?.groupInformation?.members.unshift(
+        currentChat?.groupInformation?.members.splice(idx, 1)[0]
+      )
+  );
+  return currentChat;
+}

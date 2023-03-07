@@ -151,7 +151,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px', top: '7px' }}
+            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px' }}
           />
         </ItemHV2>
         {createGroupState == 1 && (
@@ -181,15 +181,16 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 75vh;
+  max-height: 80vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
   border-radius: 16px;
   background-color: ${(props) => props.background};
-  padding: ${(props) => (props.createGroupState == 2 ? '32px 36px' : '32px 24px')};
+  padding: ${(props) => (props.createGroupState == 2 ? '32px 36px' : '32px 17px')};
   margin: 0px;
   overflow-y: auto;
+  overflow-x: hidden;
   & > div::-webkit-scrollbar {
     width: 4px;
   }
@@ -199,7 +200,8 @@ const ModalContainer = styled.div`
   }
   @media ${device.mobileL} {
     max-height: 80vh;
-    min-width: 95vw;
+    min-width: 93vw;
+    max-width: 95vw;
     padding: ${(props) => (props.createGroupState == 2 ? '32px 24px' : '32px 0px')};
   }
 `;

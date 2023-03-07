@@ -48,7 +48,7 @@ import {
 import Typebar from '../TypeBar/Typebar';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
-import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getGroupImage, getIntentMessage, getMemberDetails } from '../../../../helpers/w2w/groupChat';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
@@ -95,13 +95,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
+  const [removedMembers, setRemovedMembers] = useState<any>();
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const chatBoxToast = useToast();
+  let removedMembersAddressArray;
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
   let time = '';
+
+ 
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //get ens name
@@ -110,7 +114,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const getMessagesFromCID = async (): Promise<void> => {
     if (currentChat) {
       let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
-
+    
       //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
       if (latestThreadhash === undefined) {
         latestThreadhash = messages[messages?.length - 1]?.cid;
@@ -155,6 +159,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else if (messages.length == 0) {
+           removedMembersAddressArray = new Set<string>();
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -180,6 +185,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 currentChat,
                 inbox,
               });
+            
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
                 setMessages((m) => [msgIPFS, ...m]);
                 setMessageBeingSent(false);
@@ -235,7 +241,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     if (checkConnectedUser(connectedUser)) {
       const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
-      return inboxes.find((x) => x.wallets.split(',')[0] === currentChat.wallets.split(',')[0]);
+      return inboxes.find((x) => x.wallets.split(':')[0] === currentChat.wallets.split(':')[0]);
     }
   };
 
@@ -252,10 +258,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
-        receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets.split(',')[0],
+        receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets,
         account: account!,
         pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
-        apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
         env: appConfig.appEnv,
       });
 
@@ -293,7 +298,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         ),
       });
     }
-
     setTimeout(() => {
       setMessageBeingSent(false);
       setConnectedUser(user);
@@ -388,16 +392,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(',')[0])
+        !currentChat.intent.includes(currentChat.wallets.split(':')[0])
       ) {
         user = await getUserWithDecryptedPvtKey(connectedUser);
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
-          receiverAddress: currentChat?.wallets.split(',')[0],
+          receiverAddress: currentChat?.wallets.split(':')[0],
           account: account!,
           pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
-          apiKey: 'tAWEnggQ9Z.UaDBNjrvlJZx3giBTIQDcT8bKQo1O1518uF1Tea7rPwfzXv2ouV5rX9ViwgJUrXm',
           env: appConfig.appEnv,
         });
 
@@ -479,7 +482,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   const startVideoCallHandler = () => {
     setVideoCallInfo({
-      address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
+      address: caip10ToWallet(currentChat.wallets.toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
       toPublicKeyArmored: currentChat.publicKey,
       privateKeyArmored: connectedUser.privateKey,
@@ -687,16 +690,20 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                           />
                         )}
 
-                        <Chats
-                          msg={
-                            isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
-                              ? ''
-                              : msg
-                          }
-                          caip10={walletToCAIP10({ account: account! })}
-                          messageBeingSent={messageBeingSent}
-                          isGroup={isGroup}
-                        />
+
+                       
+                          <Chats
+                            msg={
+                              isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
+                                ? ''
+                                : msg
+                            }
+                            caip10={walletToCAIP10({ account: account! })}
+                            messageBeingSent={messageBeingSent}
+                            isGroup={isGroup}
+                          />
+                        
+
                       </div>
                     );
                   })}
