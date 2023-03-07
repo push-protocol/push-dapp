@@ -47,7 +47,7 @@ const ChannelOwnerDashboard = () => {
   const destroyChannelToast = useToast();
 
   const dispatch = useDispatch();
- 
+
   const [isChannelExpired, setIsChannelExpired] = useState<boolean>(false);
   const [channelDetailsLoading, setChannelDetailsLoading] = useState<boolean>(true);
   const [editChannel, setEditChannel] = useState<boolean>(false);
@@ -175,31 +175,31 @@ const ChannelOwnerDashboard = () => {
             (
               <>
                 {editChannel ? (
-                  <EditChannel 
-                    closeEditChannel={closeEditChannel} 
-                    UploadLogoComponent={UploadLogoComponent} 
+                  <EditChannel
+                    closeEditChannel={closeEditChannel}
+                    UploadLogoComponent={UploadLogoComponent}
                     displayUplaodLogoModal={displayUplaodLogoModal}
                     isUploadLogoModalOpen={isUploadLogoModalOpen}
                   />
                 ) : (
                   <>
-                    {channelDetails && !isMobile && 
+                    {channelDetails && !isMobile &&
                       <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
-                        {/* {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>} */}
+                        {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
                         {!isChannelExpired && <ChannelSettings />}
-                        {/* {isChannelExpired && onCoreNetwork &&
-                          <DestroyChannelBtn 
+                        {isChannelExpired && onCoreNetwork &&
+                          <DestroyChannelBtn
                             onClick={destroyChannel}
-                            background="#E93636" 
-                            color="#fff" 
-                            height="36px" 
-                            width="123px" 
+                            background="#E93636"
+                            color="#fff"
+                            height="36px"
+                            width="123px"
                             borderRadius="8px"
                             fontSize="14px"
                           >
                             Delete Channel
                           </DestroyChannelBtn>
-                        } */}
+                        }
                       </ItemHV2>
                     }
                     {channelDetails ? <ChannelDetails isChannelExpired={isChannelExpired} setIsChannelExpired={setIsChannelExpired} showEditChannel={showEditChannel} destroyChannel={destroyChannel} /> : ""}

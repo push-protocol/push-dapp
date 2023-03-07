@@ -24,12 +24,12 @@ interface ITypeBar {
   messageBeingSent: boolean;
   newMessage: string;
   setNewMessage: (newMessage: string) => void;
-  setVideoCallInfo: (videoCallInfo: VideoCallInfoI) => void;
-  videoCallInfo: VideoCallInfoI;
+  setVideoCallInfo?: (videoCallInfo: VideoCallInfoI) => void;
+  videoCallInfo?: VideoCallInfoI;
   sendMessage: ({ message, messageType }: { message: string; messageType: MessagetypeType}) => void;
   sendIntent: ({ message, messageType }: { message: string; messageType: MessagetypeType }) => void;
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
-  openReprovalSnackbar: boolean;
+  openReprovalSnackbar?: boolean;
   setSnackbarText: (SnackbarText: string) => void;
 }
 
@@ -89,7 +89,7 @@ const Typebar = ({
     // Send video request only when two users are chatting
     if (e.target.value === '/video' && currentChat.threadhash) {
       setVideoCallInfo({
-        address: caip10ToWallet(currentChat.wallets.split(',')[0].toString()),
+        address: caip10ToWallet(currentChat.wallets.toString()),
         fromPublicKeyArmored: connectedUser.publicKey,
         toPublicKeyArmored: currentChat.publicKey,
         privateKeyArmored: connectedUser.privateKey,

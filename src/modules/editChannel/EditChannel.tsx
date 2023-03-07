@@ -33,7 +33,7 @@ import { isEmpty } from 'helpers/InputValidation';
 import { isLengthValid, isValidUrl } from 'helpers/ValidationHelper';
 import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
 
-export default function EditChannel({ 
+export default function EditChannel({
   closeEditChannel,
   UploadLogoComponent,
   displayUplaodLogoModal,
@@ -45,8 +45,8 @@ export default function EditChannel({
     canVerify,
     aliasDetails: { isAliasVerified, aliasAddrFromContract }
   } = useSelector((state) => state.admin);
-  
-  const { epnsReadProvider, epnsWriteProvider} = useSelector(
+
+  const { epnsReadProvider, epnsWriteProvider } = useSelector(
     (state) => state.contracts
   );
   const theme = useTheme();
@@ -64,7 +64,7 @@ export default function EditChannel({
   const [imageSrc, setImageSrc] = useState(croppedImage);
   const [pushDeposited, setPushDeposited] = useState(false);
 
-  const [errorInfo, setErrorInfo] = useState<{name:string, description:string, address:string, url:string}>({name: '',description: '', address: '', url: ''});
+  const [errorInfo, setErrorInfo] = useState<{ name: string, description: string, address: string, url: string }>({ name: '', description: '', address: '', url: '' });
 
 
   const [isLoading, setIsLoading] = useState(false);
@@ -76,16 +76,16 @@ export default function EditChannel({
 
 
   useEffect(() => {
-    if(!account) return;
+    if (!account) return;
 
     (async function () {
       const amount = await epnsReadProvider.channelUpdateCounter(account);
-      setFeesRequiredForEdit(minFeesForAddChannel*(Number(amount)+1)); //50
+      setFeesRequiredForEdit(minFeesForAddChannel * (Number(amount) + 1)); //50
     })();
   }, [account]);
 
   useEffect(() => {
-    if(!account || !library) return;
+    if (!account || !library) return;
 
     (async function () {
       const pushTokenApprovalAmount = await getPushTokenApprovalAmount({
@@ -94,11 +94,11 @@ export default function EditChannel({
         contractAddress: addresses.epnscore
       });
       setPushApprovalAmount(parseInt(pushTokenApprovalAmount));
-      const amountToBeDeposit  = parseInt(pushTokenApprovalAmount);
+      const amountToBeDeposit = parseInt(pushTokenApprovalAmount);
 
-      if((amountToBeDeposit >= feesRequiredForEdit) && (amountToBeDeposit !=0 )  ){
+      if ((amountToBeDeposit >= feesRequiredForEdit) && (amountToBeDeposit != 0)) {
         setPushDeposited(true);
-      }else{
+      } else {
         setPushDeposited(false);
       }
 
@@ -107,17 +107,17 @@ export default function EditChannel({
 
   const depositPush = async () => {
     setIsLoading(true);
-    if(!library) return;
+    if (!library) return;
     const signer = library.getSigner(account);
     editChannelToast.showLoaderToast({ loaderMessage: 'Waiting for Confirmation...' });
-    try{
+    try {
       const response = await approvePushToken({
         signer,
         contractAddress: addresses.epnscore,
         amount: (feesRequiredForEdit - pushApprovalAmount)
       });
-      console.log("response",response)
-      if(response) {
+      console.log("response", response)
+      if (response) {
         setIsLoading(false);
         setPushApprovalAmount(feesRequiredForEdit);
         setPushDeposited(true);
@@ -133,7 +133,7 @@ export default function EditChannel({
           ),
         });
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
       if (err.code == "ACTION_REJECTED") {
         // EIP-1193 userRejectedRequest error
@@ -172,7 +172,7 @@ export default function EditChannel({
   const isAllFilledAndValid = (): boolean => {
     setErrorInfo('');
 
-    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL) ){
+    if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL)) {
       if (
         isEmpty(channelName)
       ) {
@@ -204,7 +204,7 @@ export default function EditChannel({
         ...x,
         name: 'Channel Name should not exceed 125 characters! Please retry!',
       }));
-      
+
       return false;
     }
     if (!isLengthValid(channelURL, 125)) {
@@ -227,15 +227,15 @@ export default function EditChannel({
 
   const isDetailsAltered = (): boolean => {
 
-    if(channelName !== channelDetails?.name 
-      || 
-      channelInfo !== channelDetails?.info 
-      || 
-      channelURL!==channelDetails?.url || 
-      channelFile!==channelDetails?.icon
-      ) {
-        return false;
-    }else{
+    if (channelName !== channelDetails?.name
+      ||
+      channelInfo !== channelDetails?.info
+      ||
+      channelURL !== channelDetails?.url ||
+      channelFile !== channelDetails?.icon
+    ) {
+      return false;
+    } else {
       return true;
     }
 
@@ -316,7 +316,7 @@ export default function EditChannel({
 
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
-    await mintPushToken({noOfTokens, library, account});
+    await mintPushToken({ noOfTokens, library, account });
   };
 
   useEffect(() => {
@@ -337,20 +337,20 @@ export default function EditChannel({
     <EditChannelContainer ref={containerRef}>
 
       {/* Modal to upload Logo */}
-        <UploadLogoComponent
-          InnerComponent={uploadLogoModal}
-          InnerComponentProps={{ 
-              setChannelLogo, 
-              channelLogo, 
-              croppedImage, 
-              setCroppedImage, 
-              setChannelFile, 
-              imageSrc, 
-              setImageSrc, 
-              errorInfo, 
-              setErrorInfo 
-            }}
-        />
+      <UploadLogoComponent
+        InnerComponent={uploadLogoModal}
+        InnerComponentProps={{
+          setChannelLogo,
+          channelLogo,
+          croppedImage,
+          setCroppedImage,
+          setChannelFile,
+          imageSrc,
+          setImageSrc,
+          errorInfo,
+          setErrorInfo
+        }}
+      />
 
       <EditableContainer>
 
@@ -395,7 +395,7 @@ export default function EditChannel({
           </EditFee>
         </ItemHV2>
       </Footer>
-      <FaucetInfo noOfPushTokensToCheck={feesRequiredForEdit} containerProps={{width: "100%"}} onMintPushToken={mintPushTokenHandler} />
+      <FaucetInfo noOfPushTokensToCheck={feesRequiredForEdit} containerProps={{ width: "100%" }} onMintPushToken={mintPushTokenHandler} />
 
       {isLoading ? (
         <>
@@ -421,10 +421,10 @@ export default function EditChannel({
             </CancelButtons>
 
             {(pushApprovalAmount >= feesRequiredForEdit) ? (
-              <FooterButtons 
-              disabled = {isDetailsAltered()}
-              style = {{background: isDetailsAltered() ? " #F4DCEA" : "#CF1C84"}}
-              onClick={editChannel}>
+              <FooterButtons
+                disabled={isDetailsAltered()}
+                style={{ background: isDetailsAltered() ? " #F4DCEA" : "#CF1C84" }}
+                onClick={editChannel}>
                 Save Changes
               </FooterButtons>)
               : (
@@ -529,10 +529,15 @@ const Footer = styled(ItemVV2)`
     align-content: space-between;
     justify-content: space-between;
     grid-gap: 40px;
-    transform: translateY(40px);
+    margin-top:35px;
 
-  @media (max-width:600px){
-    padding: 16px;
+    @media (max-width:600px){
+      padding: 16px;
+    }
+
+
+  @media (max-width:425px){
+    margin:0px;
   }
   
 `;
@@ -586,7 +591,7 @@ const TransactionText = styled.p`
 //Footer Button's CSS
 const ButtonContainer = styled(ItemHV2)`
     justify-content: end;
-    margin-top:80px;
+    margin-top:35px;
     @media (max-width:425px){
         flex-direction:column-reverse;
     }

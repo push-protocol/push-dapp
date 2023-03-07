@@ -14,6 +14,7 @@ import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creat
 import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 import { appConfig } from 'config';
+import { device } from 'config/Globals';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -222,7 +223,9 @@ export const GroupDetailsContent = ({
 };
 
 const Container = styled.div`
-  padding: 42px 26px 0px;
+  display:flex;
+  flex-direction: column;
+  padding: 42px 22px 0px 26px;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
@@ -233,8 +236,8 @@ const Container = styled.div`
     border-bottom:200px solid transparent;
     background-clip:padding-box;
   }
-  @media (max-width: 480px) {
-    padding: 42px 24px 0px;
+  @media ${device.mobileL} {
+    padding: 42px 18px 42px 26px;
     &&::-webkit-scrollbar-thumb {
       border-bottom:400px solid transparent;
     }
@@ -242,10 +245,11 @@ const Container = styled.div`
 `;
 
 const GroupIconContainer = styled.div`
-  width: 100%;
+  width: fit-content;
   display: flex;
   justify-content: center;
   cursor: pointer;
+  margin: auto;
   margin-bottom: 28px;
 `;
 
@@ -254,14 +258,13 @@ const FileInput = styled.input`
 `;
 
 const TextFieldContainer = styled(ItemVV2)`
-  min-width: 299px;
-  max-width: 333px;
+  width: 299px;
   margin-bottom: 28px;
 `;
 
 const GroupDescription = styled(TextField)`
   resize: none;
-  min-width: 299px;
+  width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   background: ${(props) => props.theme.modalInputBackgrundColor};
   border-radius: 12px;
@@ -274,9 +277,6 @@ const GroupDescription = styled(TextField)`
   line-height: 130%;
   &:focus {
     border: 1px solid #ffdbf0;
-  }
-  @media (max-width: 480px) {
-    min-width: 318px;
   }
 `;
 
@@ -301,7 +301,7 @@ const CharacterCount = styled(SpanV2)`
 `;
 
 const CustomInput = styled(Input)`
-  min-width: 299px;
+  width: 299px;
   box-sizing: border-box;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
@@ -315,9 +315,6 @@ const CustomInput = styled(Input)`
   letter-spacing: -0.019em;
   &:focus {
     border: 1px solid #ffdbf0;
-  }
-  @media (max-width: 480px) {
-    min-width: 318px;
   }
 `;
 

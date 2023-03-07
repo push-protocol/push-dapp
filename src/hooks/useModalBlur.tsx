@@ -70,7 +70,7 @@ const useModalBlur = ({padding}:ModalProps) => {
           zIndex="10"
         >
           <BlurBG
-            blur={10}
+            blur={8}
             zIndex={2}
           />
           <ItemHV2
@@ -84,7 +84,7 @@ const useModalBlur = ({padding}:ModalProps) => {
               flex = 'initial'
               padding = {padding? padding:'1.2% 2%'}
               borderRadius = '16px'
-              boxShadow = 'none'
+              boxShadow= '0px 4px 16px rgba(0, 0, 0, 0.02)'
           >
             <InnerComponent
               onConfirm={onConfirm}
