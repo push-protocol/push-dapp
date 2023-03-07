@@ -54,16 +54,6 @@ export const GroupDetailsContent = ({
 
   const themes = useTheme();
 
-  // const getFileString = (e) => {
-  //   const file = e.target.files[0];
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(file);
-
-  //   reader.onload = () => {
-  //     handleGroupImageData(reader.result);
-  //   };
-  // };
-
   const handleFile = async (e) => {
     setIsImageUploaded(true)
     handleGroupImageData(undefined);
@@ -168,7 +158,6 @@ export const GroupDetailsContent = ({
           <CustomInput
             type="text"
             value={groupNameData}
-            // ref={groupNameInputRef}
             onChange={(e) => handleGroupNameData(e.target.value.slice(0, 50))}
             borderColor={themes.modalInputBorderColor}
             color={themes.modalMessageColor}
