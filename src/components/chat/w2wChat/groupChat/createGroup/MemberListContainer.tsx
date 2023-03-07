@@ -15,67 +15,59 @@ import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
 import { device } from 'config/Globals';
 
 type MemberListContainerType = {
-  memberData:User,
-  handleMemberList: (member:User)=>void,
-  lightIcon:any,
-  darkIcon:any
-}
-const MemberListContainer = ({
-    memberData,
-    handleMemberList,
-    lightIcon,
-    darkIcon
-}:MemberListContainerType) => {
-  const [showDropDown,setShowDropDown]=React.useState<boolean>(false)
-  const removeAdminDropdown =
-  { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => console.log("making admin") }
-;
-
+  key: number;
+  memberData: User;
+  handleMemberList: (member: User) => void;
+  lightIcon: any;
+  darkIcon: any;
+};
+const MemberListContainer = ({ key, memberData, handleMemberList, lightIcon, darkIcon }: MemberListContainerType) => {
+  const [showDropDown, setShowDropDown] = React.useState<boolean>(false);
+  const removeAdminDropdown = {
+    id: 'dismiss_admin',
+    title: 'Dismiss as admin',
+    icon: DismissAdmin,
+    function: () => handleMemberList(memberData),
+  };
   const theme = useTheme();
 
-    return (
-        <WalletProfileContainer background={theme.groupSearchProfilBackground}>
-            <WalletProfile>
-              <ItemVV2
-                width="48px"
-                maxWidth="48px"
-                borderRadius="100%"
-                overflow="hidden"
-                margin="0px 12px 0px 0px"
-              >
-                <ImageV2 src={memberData?.profilePicture} />
-              </ItemVV2>
-              <SpanV2 color={theme.modalPrimaryTextColor}>
-                {shortenText(memberData.wallets.split(':')[1], 8,6)}
-              </SpanV2>
-            </WalletProfile>
-            <ItemVV2
-              alignItems="flex-end"
-              maxWidth="30px"
-              style={{ cursor: 'pointer' }}
-              onClick={()=>setShowDropDown(!showDropDown)}
-              // onClick={() => {
-              //   handleMemberList(memberData)
-              // }}
-            >
-              {
-                theme.scheme == 'light' ? lightIcon:darkIcon
-              }
-            </ItemVV2>
-            {
-              showDropDown && <DropdownContainer>
-              <Dropdown
-              dropdownValues={[removeAdminDropdown]}
-              hoverBGColor={theme.chat.snapFocusBg}
-            />
-              </DropdownContainer>
-            }
-          </WalletProfileContainer>
-    );
+  return (
+    <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+      <WalletProfile>
+        <ItemVV2
+          width="48px"
+          maxWidth="48px"
+          borderRadius="100%"
+          overflow="hidden"
+          margin="0px 12px 0px 0px"
+        >
+          <ImageV2 src={memberData?.profilePicture} />
+        </ItemVV2>
+        <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(memberData.wallets.split(':')[1], 8, 6)}</SpanV2>
+      </WalletProfile>
+      <ItemVV2
+        alignItems="flex-end"
+        maxWidth="30px"
+        style={{ cursor: 'pointer' }}
+        onClick={() => {
+          key ? setShowDropDown(!showDropDown) : handleMemberList(memberData);
+        }}
+      >
+        {theme.scheme == 'light' ? lightIcon : darkIcon}
+      </ItemVV2>
+      {showDropDown && (
+        <DropdownContainer>
+          <Dropdown
+            dropdownValues={[removeAdminDropdown]}
+            hoverBGColor={theme.chat.snapFocusBg}
+          />
+        </DropdownContainer>
+      )}
+    </WalletProfileContainer>
+  );
 };
 
 export default MemberListContainer;
-
 
 const WalletProfileContainer = styled(ItemHV2)`
   padding: 8px;
@@ -105,7 +97,7 @@ const DropdownContainer = styled(ItemVV2)`
   @media ${device.mobileL} {
     left: 27%;
   }
-  @media (min-width:426px) and (max-width:1150px) {
+  @media (min-width: 426px) and (max-width: 1150px) {
     left: 48%;
   }
 `;
