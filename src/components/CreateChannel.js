@@ -240,7 +240,7 @@ function CreateChannel() {
 
       return false;
     }
-    
+  
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
 

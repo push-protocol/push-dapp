@@ -21,6 +21,7 @@ export type ModalType = {
     InnerComponent:({} : ModalInnerComponentType ) => JSX.Element,
     onConfirm ?: (value?:any) => any,
     extraOuterPadding?: string,
+    placementMargin?: string,
     toastObject ?: {
         showLoaderToast: ShowLoaderToastType, showMessageToast: ShowMessageToastType
     },
@@ -49,7 +50,7 @@ const useModal = () => {
         setOpen(false);
     }
 
-    const ModalComponent = ({ InnerComponent, onConfirm, toastObject, InnerComponentProps, extraOuterPadding } : ModalType)=>{
+    const ModalComponent = ({ InnerComponent, onConfirm, toastObject, InnerComponentProps, extraOuterPadding, placementMargin } : ModalType)=>{
         const themes = useTheme();
 
         return(
@@ -67,6 +68,7 @@ const useModal = () => {
                         background:themes.modalContentBackground,
                         border: `1px solid ${themes.modalBorderColor}`,
                       }}
+                      margin={placementMargin}
                       padding={extraOuterPadding}
                     >
                         <InnerComponent onConfirm={onConfirm} onClose={handleClose} toastObject={toastObject} InnerComponentProps={InnerComponentProps}/>
@@ -84,6 +86,7 @@ const ModalBody = styled.div`
   // width: fit-content;
   // height: fit-content;
   border-radius: 1rem;
+  margin: ${(props) => props.margin || "0"};
   padding: ${(props) => props.padding || "1.2% 2%"};
   box-shadow: none;
   backdrop-filter: blur(10px);
