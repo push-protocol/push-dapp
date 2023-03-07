@@ -130,14 +130,9 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
       {isMobile && 
         <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
-          {!isChannelExpired 
-            && 
-            <>
-              <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
-              <ChannelSettings />
-            </>
-          }
-          {/* {isChannelExpired && onCoreNetwork &&
+          {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
+          {!isChannelExpired && <ChannelSettings />}
+          {isChannelExpired && onCoreNetwork &&
             <DestroyChannelBtn 
               onClick={destroyChannel}
               background="#E93636" 
@@ -149,23 +144,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
             >
               Delete Channel
             </DestroyChannelBtn>
-          } */}
-        </ItemHV2>
-      }
-
-      {isMobile && isChannelExpired && onCoreNetwork &&
-        <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
-          <DestroyChannelBtn 
-              onClick={destroyChannel}
-              background="#E93636" 
-              color="#fff" 
-              height="36px" 
-              width="123px" 
-              borderRadius="8px"
-              fontSize="14px"
-            >
-              Delete Channel
-          </DestroyChannelBtn>
+          }
         </ItemHV2>
       }
 
