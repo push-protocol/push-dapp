@@ -10,6 +10,7 @@ const themeLight = {
     color: '#000',
     secondaryColor: '#657795',
     hover: '#F3F3FF',
+    borderColor:'#dfdee9',
   },
 
   // Login Theme
@@ -119,6 +120,8 @@ const themeLight = {
 
   color: '#000',
 
+  dropdownTextColor:'#000',
+
   channelBg: '#fafafa',
 
   button: '#000',
@@ -128,7 +131,7 @@ const themeLight = {
   createColor: '#808080',
 
   // Modals
-  modalContentBackground: "white",
+  modalContentBackground: "#FFFFFF",
   modalBackdropBackground: `rgba(255,255,255,0.4)`,
   modalBorderColor: "#E5E8F6",
   modalMessageColor: "black",
@@ -136,6 +139,29 @@ const themeLight = {
   modalLoaderPrimary: "red",
   modalLoaderSecondary: "white",
   modalBackdropZIndex: 1000,
+  modalConfirmButtonBackground:'#F4DCEA',
+  modalConfirmButtonBorder:'#F4DCEA',
+  modalConfirmButtonTextColor:'#CF1C84',
+  modalOptionHoverBackgroundColor:'#F4F5FA',
+  modalInputBorderColor:'#C2CBDB',
+  modalHeadingColor:'#333333',
+  modalPrimaryTextColor:'#1E1E1E',
+  modalSecondaryTextColor:'#657795',
+  modalSearchBarBorderColor:'#BAC4D6',
+  modalSearchBarBackground:'#FFF',
+  blurModalContentBackground:'#FFF',
+  modalInputBackgrundColor:'#FFF',
+  modalDescriptionTextColor:'#575D73',
+  modalProfileTextColor:'#1E1E1E',
+
+  // Group Profiles
+  groupSearchProfilBackground: '#F4F5FA',
+  groupButtonBackgroundColor:'#ADB0BE',
+  groupButtonTextColor:'#FFF',
+
+  modalTextColor:"#657795",
+  modalbackgroundColor:"#F5F5FA",
+  modalImageBgColor:"rgba(0, 0, 0, 0.5)",
 
   // Toast Notifications
   toastTextColor: "#000",
@@ -164,7 +190,32 @@ const themeLight = {
 
   LinkMobileAppBorder:"#bac9e5",
   textcolor:"#657795",
-  chatQRbg:"#ffff"
+  chatQRbg:"#ffff",
+
+  //Edit Channel 
+  logoBtnBg:"#F4DCEA",
+  logoBtnColor:"#D53893",
+  editFooterBg:"#F4F5FA",
+  editChannelPrimaryText:"#1E1E1E", //it is black
+  editChannelSecondaryText:"#657795",
+  editChannelInputbg:"#fff",
+  textAreaBorderColor:"1px solid #ADB0BE",
+  textAreaFocusBorder:"1px solid #f90e96",
+  verticalLineColor:"#ADB0BE",
+
+  
+  // toggle switch
+  toggleContainerBG: "#F4F5FA",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1",
+  qrBg:"#fff",
+
+  // tooltip
+  tooltipTopHeading: "#333333",
+  tooltipTopSubHeading: "#333333",
+  tooltipContentHeading: "#CF1C84",
+  tooltipContentDesc:"#494D5F",
+  tooltipIconBorderClr: "#E6E7EC",
 };
 
 const themeDark = {
@@ -178,6 +229,7 @@ const themeDark = {
     color: '#FFF',
     secondaryColor: '#B6BCD6',
     hover: '#00000033',
+    borderColor:'#4A4F67',
   },
 
   // Login Theme
@@ -280,6 +332,8 @@ const themeDark = {
 
   color: '#fff',
 
+  dropdownTextColor:'#B6BCD6',
+
   yieldBg: '#ddd',
 
   questionBg: '#000',
@@ -299,7 +353,7 @@ const themeDark = {
   createColor: '#fff',
 
   // Modals
-  modalContentBackground: "#282a2e",
+  modalContentBackground: "#2F3137",
   modalBackdropBackground: `rgba(0,0,0,0.4)`,
   modalBorderColor: "#4A4F67",
   modalMessageColor: "#B6BCD6",
@@ -307,6 +361,29 @@ const themeDark = {
   modalLoaderPrimary: "red",
   modalLoaderSecondary: "white",
   modalBackdropZIndex: 1000,
+  modalConfirmButtonBackground:'#2F3137',
+  modalConfirmButtonBorder:'#787E99',
+  modalConfirmButtonTextColor:'#787E99',
+  modalOptionHoverBackgroundColor:'#404650;',
+  modalInputBorderColor:'#4A4F67',
+  modalHeadingColor:'#B6BCD6',
+  modalPrimaryTextColor:'#B6BCD6',
+  modalSecondaryTextColor:'#B6BCD6',
+  modalSearchBarBorderColor:'#4A4F67',
+  modalSearchBarBackground:'#282A2E',
+  blurModalContentBackground:'#2F3137',
+  modalInputBackgrundColor:'#282A2E',
+  modalDescriptionTextColor:'#787E99',
+  modalProfileTextColor:'#B6BCD6',
+
+  // Group Profiles
+  groupSearchProfilBackground: '#404650',
+  groupButtonBackgroundColor:'#2F3137',
+  groupButtonTextColor:'#787E99',
+
+  modalTextColor:"#B6BCD6",
+  modalbackgroundColor:"#282A2E",
+  modalImageBgColor:"rgba(255, 255, 255, 0.1);",
 
   // Toast Notifications
   toastTextColor: "#B6BCD6",
@@ -336,8 +413,31 @@ const themeDark = {
   //QR Code related
   LinkMobileAppBorder:"#717887",
   textcolor:"#B6BCD6",
-  chatQRbg:"#292a2c"
+  chatQRbg:"#292a2c",
+  qrBg:"#000",
 
+  //Edit Channel 
+  logoBtnBg:"#404650",
+  logoBtnColor:"#B6BCD6",
+  editFooterBg:"#404650",
+  editChannelPrimaryText:"#B6BCD6",
+  editChannelSecondaryText:"#787E99",
+  editChannelInputbg:"#282A2E",
+  textAreaBorderColor:"1px solid #4A4F67",
+  textAreaFocusBorder:"1px solid #D53893",
+  verticalLineColor:"#4A4F67",
+
+  // toggle switch
+  toggleContainerBG: "#282A2E",
+  toggleActiveBG: "#CF1C84",
+  toggleInactiveBG: "#A0A3B1",
+
+  // tooltip
+  tooltipTopHeading: "#D4DCEA",
+  tooltipTopSubHeading: "#B6BCD6",
+  tooltipContentHeading: "#CF1C84",
+  tooltipContentDesc: "#B6BCD6",
+  tooltipIconBorderClr: "#E6E7EC",
 };
 
 module.exports = {

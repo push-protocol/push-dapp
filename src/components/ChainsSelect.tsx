@@ -124,7 +124,7 @@ const Faucet = styled.span`
   .text{
     display: flex;
     color: ${props => props.theme.faucetText};
-    @media (max-width: 768px){
+    @media (max-width: 600px){
       display: none;
     }
   }
@@ -132,6 +132,11 @@ const Faucet = styled.span`
 const ToggleArrowImg = styled.div`
   margin-left: 1rem;
   filter: ${props => props.theme.faucetFilter};
+
+  @media (max-width: 600px){
+    margin-left:0rem;
+  }
+
   &:hover {
     cursor: pointer;
   }

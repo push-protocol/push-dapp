@@ -3,55 +3,58 @@
 import React, { useContext, useState } from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import ChatSnap from "components/chat/chatsnap/ChatSnap";
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds } from 'types/chat';
+import { checkIfGroup, getChatsnapMessage, getGroupImage,getName,  } from 'helpers/w2w/groupChat';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  width: 400,
-  bgcolor: 'background.paper',
-  borderRadius: '20px',
-  boxShadow: 24,
-  p: 4,
-};
 
 const IntentFeed = ({isLoading}): JSX.Element => {
+  const theme = useTheme();
   const {
     setChat,
     receivedIntents,
   }: AppContext = useContext<AppContext>(Context);
-  const [selectedIntentSnap, setSelectedIntentSnap] = useState<string>();
+  const [selectedIntentSnap, setSelectedIntentSnap] = useState<number>();
+
+  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
 
   return (
-    <ItemVV2
-      alignSelf="stretch"
-      justifyContent="flex-start"
-      alignItems="stretch"
-    >
-      {/* Load the Intents */}
-      <ItemVV2 justifyContent="flex-start">
-        {isLoading && (
-          <LoaderSpinner
-            type={LOADER_TYPE.SEAMLESS}
-            spinnerSize={40}
-          />
-        )}
+    <>
+      <SpanV2
+        fontWeight="700"
+        fontSize="12px"
+        textAlign="start"
+        margin="10px 0 0 0"
+        color={theme.default.secondaryColor}
+        // ref={containerRef}
+      >
+        REQUESTS
+      </SpanV2>
+      <ItemVV2
+        alignSelf="stretch"
+        justifyContent="flex-start"
+        alignItems="stretch"
+      >
+        {/* Load the Intents */}
+        <ItemVV2 justifyContent="flex-start">
+          {isLoading && (
+            <LoaderSpinner
+              type={LOADER_TYPE.SEAMLESS}
+              spinnerSize={40}
+            />
+          )}
 
-        {!isLoading && receivedIntents?.length == 0 && (
-          <NoIntentMessage>You don't have any request yet Start a conversation by using the + button</NoIntentMessage>
-        )}
+          {!isLoading && receivedIntents?.length == 0 && (
+            <NoIntentMessage>You don't have any request yet Start a conversation by using the + button</NoIntentMessage>
+          )}
 
         {!isLoading && receivedIntents?.length > 0 && (
           <UserIntents>
@@ -59,30 +62,27 @@ const IntentFeed = ({isLoading}): JSX.Element => {
               <ItemVV2
                 alignSelf="stretch"
                 flex="initial"
-                key={intent.threadhash || i}
+                key={`${intent.threadhash}${i}`}
               >
                 <ChatSnap
-                    pfp={intent.profilePicture}
-                    username={intent.msg.name}
-                    chatSnapMsg={
-                      {
-                        type: intent.msg.messageType,
-                        message: intent.msg.lastMessage,
-                      }
-                    }
+                    pfp ={getGroupImage(intent)}
+                    username={getName(intent)}
+                    isGroup={checkIfGroup(intent)}
+                    chatSnapMsg={getChatsnapMessage(intent,account,true)}
                     timestamp={intent.msg.timestamp}
-                    selected={intent.threadhash == selectedIntentSnap ? true : false}
+                    selected={i == selectedIntentSnap ? true : false}
                     onClick={(): void => {
                       setChat(intent);
-                      setSelectedIntentSnap(intent.threadhash);
+                      setSelectedIntentSnap(i);
                     }}
                   />
-              </ItemVV2>
-            ))}
-          </UserIntents>
-        )}
+                </ItemVV2>
+              ))}
+            </UserIntents>
+          )}
+        </ItemVV2>
       </ItemVV2>
-    </ItemVV2>
+    </>
   );
 };
 

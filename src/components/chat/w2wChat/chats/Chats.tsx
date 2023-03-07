@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -8,100 +8,134 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 // Internal Components
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFS,TwitterFeedReturnType } from 'types/chat';
+import { Feeds, MessageIPFS, TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
+import { useResolveEns } from 'hooks/useResolveEns';
+import { caip10ToWallet } from 'helpers/w2w';
+import { shortenText } from 'helpers/UtilityHelper';
+import { AppContext } from 'types/chat';
+import { Context } from 'modules/chat/ChatModule';
+import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
+import { getMemberDetails } from '../../../../helpers/w2w/groupChat';
+import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
 
 // Internal Configs
-import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
+
 
 interface ChatProps {
   msg: MessageIPFS;
   caip10: string;
   messageBeingSent: boolean;
   ApproveIntent?: Function;
+  isGroup?: boolean;
 }
 
-// Constants
-const infura_URL = appConfig.infuraApiUrl;
 
-export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: ChatProps) {
+export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, isGroup }: ChatProps) {
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
-  const time1:string = time.toLocaleTimeString('en-US');
-  const date :string= time1.slice(0, -6) + time1.slice(-2);
-  const {tweetId,messageType}:TwitterFeedReturnType=checkTwitterUrl({message:msg.messageContent});
+  const time1: string = time.toLocaleTimeString('en-US');
+  const date: string = time1.slice(0, -6) + time1.slice(-2);
+  const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
+  const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
+  const ensName = useResolveEns(msg.fromCAIP10);
+  const profilePicture = isGroup?(getMemberDetails(currentChat,msg))?.image:null;
+
+
   return (
     <>
-      {
-      messageType === 'TwitterFeedLink' ? (
+      {messageType === 'TwitterFeedLink' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
-              <SenderMessage 
+            <SentMessageWrapper align="row-reverse">
+              <SenderMessage
                 color="transparent"
                 padding="0px"
               >
-                <TwitterTweetEmbed 
-                placeholder={<LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={20}
-                />} 
-                tweetId={tweetId}
-                 />
+                <TwitterTweetEmbed
+                  placeholder={
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
+                    />
+                  }
+                  tweetId={tweetId}
+                />
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper align="row">
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+            >
               <ReceivedMessage
                 color="transparent"
                 padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
-              <TwitterTweetEmbed 
-                 placeholder={<LoaderSpinner
-                  type={LOADER_TYPE.SEAMLESS}
-                  spinnerSize={20}
-                />} 
-                tweetId={tweetId} />
+                <TwitterTweetEmbed
+                  placeholder={
+                    <LoaderSpinner
+                      type={LOADER_TYPE.SEAMLESS}
+                      spinnerSize={20}
+                    />
+                  }
+                  tweetId={tweetId}
+                />
               </ReceivedMessage>
-            </MessageWrapper>
+            </ReceivedMessageWrapper>
           )}
         </>
       ) : msg.messageType === 'Text' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
+            <SentMessageWrapper align="row-reverse">
               <SenderMessage>
-                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+                {msg.messageContent.split('\n').map((str) => (
+                  <TextMessage>{str}</TextMessage>
+                ))}
                 <TimeStamp>{date}</TimeStamp>
-                {/* {messageBeingSent ? (
-                  <p>✔️</p>
-                ) : (
-                  <p>✔️ ✔️</p>
-                )} */}
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper align="row">
-              <ReceivedMessage>
-                {msg.messageContent.split('\n').map(str => <TextMessage>{str}</TextMessage>)}
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+              msgType={msg.messageType}
+            >
+              <ReceivedMessage left={isGroup ? '8px' : '34px'}>
+                {msg.messageContent.split('\n').map((str) => (
+                  <TextMessage>{str}</TextMessage>
+                ))}
                 <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
-            </MessageWrapper>
+            </ReceivedMessageWrapper>
           )}
         </>
       ) : msg.messageType === 'Intent' ? (
         <>
-          <MessageWrapper align="row">
-            <ReceivedMessage>
-              <MessageText
-
-              >
-                {msg.messageContent.split('\n').map(str => <p>{str}</p>)}
+          <ReceivedMessageWrapper
+            align="row"
+            isGroup={isGroup}
+            sender={ensName ? ensName : walletAddress}
+            profilePicture={profilePicture}
+            msgType={msg.messageType}
+          >
+            <IntentMessage left={isGroup ? '8px' : '34px'}>
+              <MessageText>
+                {msg.messageContent.split('\n').map((str) => (
+                  <p>{str}</p>
+                ))}
               </MessageText>
               {messageBeingSent ? (
                 <SpanV2 margin="-5px 0 0 0">
@@ -121,13 +155,13 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                   margin="-5px 0 0 0"
                 />
               )}
-            </ReceivedMessage>
-          </MessageWrapper>
+            </IntentMessage>
+          </ReceivedMessageWrapper>
         </>
       ) : msg.messageType === 'Image' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper
+            <SentMessageWrapper
               height="138px"
               align="row-reverse"
             >
@@ -143,15 +177,19 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                   }}
                 />
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper
+            <ReceivedMessageWrapper
               height="138px"
               align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
             >
               <ReceivedMessage
                 color="transparent"
                 padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
                 <ImageMessage
                   src={(JSON.parse(msg.messageContent) as FileMessageContent).content}
@@ -161,7 +199,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                   }}
                 />
               </ReceivedMessage>
-            </MessageWrapper>
+            </ReceivedMessageWrapper>
           )}
 
           {showImageModal && (
@@ -176,7 +214,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
       ) : msg.messageType === 'GIF' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper
+            <SentMessageWrapper
               height="170px"
               align="row-reverse"
             >
@@ -193,15 +231,19 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                   }}
                 />
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper
+            <ReceivedMessageWrapper
               height="170px"
               align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
             >
               <ReceivedMessage
                 color="transparent"
                 padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
                 <ImageMessage
                   src={msg.messageContent}
@@ -212,7 +254,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                   }}
                 />
               </ReceivedMessage>
-            </MessageWrapper>
+            </ReceivedMessageWrapper>
           )}
           {showImageModal && (
             <Modal
@@ -226,7 +268,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
       ) : msg.messageType === 'File' ? (
         <>
           {msg.fromCAIP10 === caip10 ? (
-            <MessageWrapper align="row-reverse">
+            <SentMessageWrapper align="row-reverse">
               <SenderMessage
                 color="transparent"
                 padding="0px"
@@ -235,18 +277,24 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent }: 
                   <Files msg={msg} />
                 </FileMessage>
               </SenderMessage>
-            </MessageWrapper>
+            </SentMessageWrapper>
           ) : (
-            <MessageWrapper align="row">
+            <ReceivedMessageWrapper
+              align="row"
+              isGroup={isGroup}
+              sender={ensName ? ensName : walletAddress}
+              profilePicture={profilePicture}
+            >
               <ReceivedMessage
                 color="transparent"
                 padding="0px"
+                left={isGroup ? '8px' : '34px'}
               >
                 <FileMessage>
                   <Files msg={msg} />
                 </FileMessage>
               </ReceivedMessage>
-            </MessageWrapper>
+            </ReceivedMessageWrapper>
           )}
         </>
       ) : null}
@@ -292,14 +340,13 @@ const TimeStamp = styled(ItemHV2)`
 `;
 
 const MessageText = styled(SpanV2)`
-  font-size:14px;
-  max-width : 13rem;
-  font-weight:400;
-  padding: 0px 44px 0px 0px;
-  text-align:left;
-  color:#000;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 0px 20px 0px 0px;
+  text-align: left;
+  color: #000;
 
-  @media ${device.mobileM}{
+  @media ${device.mobileM} {
     padding: 0px 10px 0px 0px;
     max-width: 8rem;
   }
@@ -314,12 +361,11 @@ const MessageWrapper = styled.div`
   flex-direction: ${(props: any): string => props.align || 'row'};
 `;
 
-
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  left: 34px;
   max-width: 650px;
+  left: ${(props) => props.left || '34px'};
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
   text-align: left;
@@ -327,8 +373,13 @@ const ReceivedMessage = styled.div`
   display: flex;
   justify-content: flex-start;
   color: #000000;
-  flex-direction: column;
-  align-items: baseline;
+  flex-direction: row;
+  align-items: center;
+  padding: 9px 17px;
+`;
+
+const IntentMessage = styled(ReceivedMessage)`
+  width: 80%;
 `;
 
 const SenderMessage = styled.div`

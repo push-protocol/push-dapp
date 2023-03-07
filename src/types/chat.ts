@@ -36,11 +36,29 @@ export interface User {
 export interface ConnectedUser extends User {
     privateKey: string | null;
 }
-
+export interface Member {
+    wallet: string;
+    publicKey: string;
+    image: string;
+    isAdmin: boolean;
+  }
+export interface IGroup {
+  members: { wallet: string, publicKey: string, isAdmin: boolean, image: string }[],
+  pendingMembers: { wallet: string, publicKey: string, isAdmin: boolean, image: string }[],
+  contractAddressERC20: string | null,
+  numberOfERC20: number,
+  contractAddressNFT: string | null,
+  numberOfNFTTokens: number,
+  verificationProof: string,
+  groupImage: string | null,
+  groupName: string,
+  isPublic: boolean,
+  groupDescription: string | null,
+  groupCreator: string,
+  chatId: string
+  }
 export interface Feeds {
-    // This property contains all the info to be displayed on the sidebar for the other peer's information
-    // Such as the decrypted message content and peer's profilePicture
-    msg: InboxChat;
+    msg: MessageIPFS;
     did: string;
     wallets: string;
     profilePicture: string | null;
@@ -51,7 +69,8 @@ export interface Feeds {
     intentSentBy: string | null;
     intentTimestamp: Date;
     combinedDID: string;
-    cid: string;
+    cid?: string;
+    groupInformation?: IGroup
 }
 
 export interface TwitterFeedReturnType{
@@ -59,21 +78,6 @@ export interface TwitterFeedReturnType{
     messageType:string;
 }
 
-export interface InboxChat {
-    name: string;
-    profilePicture: string;
-    timestamp: number;
-    fromDID: string;
-    toDID: string;
-    fromCAIP10: string;
-    toCAIP10: string;
-    lastMessage: string;
-    messageType: string;
-    encType: string;
-    signature: string;
-    signatureType: string;
-    encryptedSecret: string;
-}
 
 export interface BlockedLoadingI {
     enabled: boolean;
@@ -92,8 +96,6 @@ export interface AppContext {
   viewChatBox: boolean;
   receivedIntents: Feeds[];
   setReceivedIntents: (rIntent: Feeds[]) => void;
-  setSearchedUser: (searched: string) => void;
-  searchedUser: string;
   setChat: (feed: Feeds) => void;
   intents: Feeds[];
   setIntents: (intents: Feeds[]) => void;
@@ -110,7 +112,19 @@ export interface AppContext {
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
+  groupName:string;
+  setGroupName:(value:string)=>void;
+  groupDescription:string;
+  setGroupDescription:(value:string)=>void;
+  groupImage:string;
+  setGroupImage:(value:string)=>void;
+  groupType:string;
+  setGroupType:(value:string)=>void;
+  createGroupState:number;
+  setCreateGroupState:(value:number)=>void;
+  filteredUserData:User[];
+  setFilteredUserData:(value:User[])=>void;
 }
 
-
+export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';
 

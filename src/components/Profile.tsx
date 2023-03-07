@@ -1,41 +1,23 @@
 // React + Web3 Essentials
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
+import { useWeb3React } from '@web3-react/core';
 import React from "react";
 
 // External Packages
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
 import Blockies from "components/BlockiesIdenticon";
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { useResolveEns } from 'hooks/useResolveEns';
+import { shortenText } from 'helpers/UtilityHelper';
 
 // Create Header
 function Profile() {
   const { active, error, account, library, chainId } = useWeb3React();
 
-  const [address, setAddress] = React.useState('');
-  const [ens, setENS] = React.useState('');
-  const [ensFetched, setENSFetched] = React.useState(false);
+  const ensName = useResolveEns(account);
 
   React.useEffect(() => {
     if (account && account != '') {
-      // Check if the address is the same
-      if (address !== account) {
-        setENS('');
-        setENSFetched(false);
-
-        // get ens
-        library
-          .lookupAddress(account).then(function(name) {
-            setENS(name);
-            setENSFetched(true);
-            setAddress(account);
-          })
-          .catch(() => {
-            setENSFetched(true);
-            setAddress(account);
-          })
-      }
 
     }
   }, [account]);
@@ -52,14 +34,11 @@ function Profile() {
           </BlockyInner>
         </Blocky>
         <Wallet>
-        {!ensFetched &&
-          <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={16} spinnerColor="#fff" />
+        {ensName &&
+          <>{ensName}</>
         }
-        {ensFetched && ens &&
-          <>{ens}</>
-        }
-        {ensFetched && !ens &&
-          <>{account.substring(0, 6)}.....{account.substring(account.length - 6)}</>
+        {!ensName &&
+          <>{shortenText(account,6)}</>
         }
         </Wallet>
       </Container>

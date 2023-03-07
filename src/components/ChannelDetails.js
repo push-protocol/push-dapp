@@ -1,32 +1,32 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // External Packages
 import moment from 'moment';
-import { AiOutlineUser } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
-import styled, { useTheme } from 'styled-components';
+import styled from 'styled-components';
 
 // Internal Compoonents
-import { getReq, postReq } from 'api';
-import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
-import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
 import { useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
-import { Item } from '../primaries/SharedStyling';
 import ChannelSettings from './ChannelSettings';
 import ShowDelegates from './ShowDelegates';
 
 // Internal Configs
 import { appConfig } from "config";
-import GLOBALS, { device } from "config/Globals";
-;
+import { device } from "config/Globals";
+import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
+import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
+import RedCircleSvg from "../assets/RedCircle.svg"
+import { Button } from "components/SharedStyling";
 
-const DATE_FORMAT = 'MMM DD YYYY';
+const DATE_FORMAT = 'DD MMM, YYYY';
 
-export default function ChannelDetails() {
+export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, showEditChannel, destroyChannel
+}) {
   const { chainId } = useWeb3React();
   const {
     channelDetails,
@@ -47,6 +47,18 @@ export default function ChannelDetails() {
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
   const isMobile = useDeviceWidthCheck(600);
 
+  // BEGIN CHANGE
+  // Added this inline if-else condition because of a bug that when connecting to Mumbai, the channelDetails.expiryType is undefined, so the toString() is throwing an exception
+  const channelExpiryDate = channelDetails.expiryTime ? getDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000) : ''
+  const isChannelNotExpired = channelDetails.expiryTime ? timeRemaining(channelDetails.expiryTime?.toString() * 1000) : true
+  const channelAutomaticExpiryDate = channelDetails.expiryTime ? nextDaysDateFromTimestamp(channelDetails.expiryTime?.toString() * 1000, 14) : ''
+  // END CHANGE
+
+  useEffect(() => {
+    if(channelDetails.channelType != CHANNEL_TYPE["TIMEBOUND"]) return;
+    if(!isChannelNotExpired) setIsChannelExpired(true);
+  }, [isChannelNotExpired]);
+
   React.useEffect(() => {
     if (!channelDetails || !canVerify) return;
     (async function() {
@@ -66,6 +78,7 @@ export default function ChannelDetails() {
       setCreationDate(date.format(DATE_FORMAT));
     })();
   }, [channelDetails]);
+
 
   return (
     <ItemVV2>
@@ -88,8 +101,23 @@ export default function ChannelDetails() {
                   <SubscribersCount>{channelDetails.subscriber_count}</SubscribersCount>
                 </Subscribers>
                 <ChanneStateText active={channelIsActive}>
+                 {channelIsDeactivated && <ImageV2 width="12px" src={RedCircleSvg} margin="0 5px 2px 0px" height="30px"/>}
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
                 </ChanneStateText>
+                {
+                  channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && !isChannelExpired &&
+                      <ItemHV2 background="#C5EFD1" flex='0' borderRadius="25px" margin="0 0 10px 10px" height="30px">
+                        <ImageV2 width="16px" src="svg/ExpiresTimer.svg" alt="expiryTimer" padding="0 6px 0 9px" />
+                        <SpanV2 color="#30CC8B" fontWeight="600" padding="0 9px 0 0">Expires on {channelExpiryDate}</SpanV2>
+                      </ItemHV2>
+                }
+                {
+                  channelDetails.channelType == CHANNEL_TYPE["TIMEBOUND"] && isChannelExpired &&
+                      <ItemHV2 background="#FFD8D8" flex='0' borderRadius="25px" margin="0 0 10px 10px" height="30px">
+                        <ImageV2 width="16px" src="svg/ExpiredTimer.svg" alt="expiryTimer" padding="0 6px 0 9px" />
+                        <SpanV2 color="#E93636" fontWeight="600" padding="0 9px 0 0">Expired on {channelExpiryDate}</SpanV2>
+                      </ItemHV2>
+                }
               </AdaptiveMobileItemHV2>
             )}
 
@@ -99,9 +127,38 @@ export default function ChannelDetails() {
       </AdaptiveMobileItemHV22>
 
       {isMobile && 
-        <ItemHV2 zIndex="1" padding="0 0 15px 0">
-          <ChannelSettings />
+        <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
+          {!isChannelExpired 
+            && 
+            <>
+              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
+              <ChannelSettings />
+            </>
+          }
+          {isChannelExpired && onCoreNetwork &&
+            <DestroyChannelBtn 
+              onClick={destroyChannel}
+              background="#E93636" 
+              color="#fff" 
+              height="36px" 
+              width="123px" 
+              borderRadius="8px"
+              fontSize="14px"
+            >
+              Delete Channel
+            </DestroyChannelBtn>
+          }
         </ItemHV2>
+      }
+
+      {isChannelExpired && 
+        <ItemVV2 alignItems="flex-start">
+        <SectionDes margin="25px 0 0 0">
+          <SpanV2 color="#D53A94">Note:</SpanV2>{" "}
+          Channel will auto delete on {" "}
+          <SpanV2 fontWeight="600">{channelAutomaticExpiryDate}</SpanV2>
+        </SectionDes>
+        </ItemVV2>
       }
 
       <ItemVV2 alignItems="flex-start"><SectionDes>{channelDetails.info}</SectionDes></ItemVV2>
@@ -133,6 +190,10 @@ const AdaptiveMobileItemVV2 = styled(ItemVV2)`
     align-items: center;
   }
 `
+
+const DestroyChannelBtn = styled(ButtonV2)`
+  height: ${props => (props.height || "100%")};
+  width: ${props => (props.width || "100%")}`;
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
   @media (max-width: 767px) {
@@ -181,6 +242,7 @@ const VerifyingName = styled.div``;
 const Subscribers = styled.div`
   width: 58px;
   height: 26px;
+  margin-bottom: 10px;
   background: #ffdbf0;
   color: #cf1c84;
   border-radius: 25px;
@@ -207,9 +269,10 @@ const StateText = styled.div`
 
 const ChanneStateText = styled(StateText)`
   color: #2dbd81;
-  color: ${(props) => (props.active ? '#2DBD81' : 'red')};
-  background-color: #c6efd1;
+  color: ${(props) => (props.active ? '#2DBD81' : '#E93636')};
+  background-color: ${(props) => (props.active ? '#c6efd1' : '#FFD8D8')};
   margin-left: 10px;
+  margin-bottom: 10px;
   ${(props) =>
     props.active &&
     `
@@ -260,7 +323,8 @@ const Date = styled.div`
   flex-direction: row;
   align-items: flex-start;
   width: 340px;
-  color: #657795;
+  // color: #657795;
+  color: ${(props)=>props.theme.default.secondaryColor};
   margin: 10px 0;
   text-transform: none;
   font-weight: 500;
@@ -316,11 +380,11 @@ const SectionDate = styled.div`
 `;
 
 const SectionDes = styled.div`
-  /* letter-spacing: 0.07em; */
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
-  color: #657795;
-  margin: 25px 0px 40px 0px;
+  // color: #657795;
+  color: ${(props)=>props.theme.default.secondaryColor};
+  margin: ${(props) => (props.margin ? props.margin : '25px 0px 40px 0px')};
   font-weight: 400;
   font-size: 15px;
   line-height: 140%;
@@ -334,4 +398,20 @@ const SectionDes = styled.div`
     margin: 10px 0px 10px 0px;
     padding: 0 0 0 0;
   }
+`;
+
+const SubmitButton = styled(Button)`
+  width: fit-content;
+  background: #D53A94;
+  color: #fff;
+  z-Index:0;
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  margin-right: 9px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  
 `;

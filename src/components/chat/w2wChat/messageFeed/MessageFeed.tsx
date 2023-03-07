@@ -2,9 +2,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import Typography from '@mui/material/Typography';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
+import { MdError } from 'react-icons/md';
+import { ethers } from 'ethers';
+
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
@@ -12,19 +14,17 @@ import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ethers } from 'ethers';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
-import { checkConnectedUser } from 'helpers/w2w/user';
+import { checkConnectedUser, fetchInbox } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
-import { MdError } from 'react-icons/md';
 import { intitializeDb } from '../w2wIndexeddb';
-import { fetchInbox } from 'helpers/w2w/ipfs';
-import './MessageFeed.css';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
+import { getDefaultFeed } from '../../../../helpers/w2w/user';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
+
 
 interface MessageFeedProps {
   filteredUserData: User[];
@@ -35,36 +35,40 @@ interface MessageFeedProps {
 const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, setSearchedUser }: AppContext = useContext<AppContext>(Context);
+  const { setChat, setInbox,currentChat,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
 
   const {connectedUser} = useContext(ChatUserContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
   const [stopApi, setStopApi] = useState<boolean>(true);
-  const [selectedChatSnap, setSelectedChatSnap] = useState<string>();
+  const [selectedChatSnap, setSelectedChatSnap] = useState<number>();
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [showError, setShowError] = useState<boolean>(false);
   const messageFeedToast = useToast();
 
-  const onFeedClick = (feed:Feeds):void => {
+  const onFeedClick = (feed:Feeds,i:number):void => {
     if((receivedIntents?.filter((userExist) => userExist.did === props?.filteredUserData[0]?.did)).length)
     {
       setActiveTab(1);
     }
     setChat(feed);
-    setSelectedChatSnap(feed.threadhash);
+    setSelectedChatSnap(i);
     setHasUserBeenSearched(false);
+    filteredUserData.length>0 ? setFilteredUserData([]):null;
   }
 
   const getInbox = async (): Promise<Feeds[]> => {
     if (checkConnectedUser(connectedUser)) {
-      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account, chainId }), '', 'did');
+      const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
-        setFeeds(inboxes);
-        setInbox(inboxes);
+        if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
+        {
+         setFeeds(inboxes)
+         setInbox(inboxes);
+        }
         return inboxes;
       } else {
         let inboxes: Feeds[] = await fetchInboxApi();
@@ -72,15 +76,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       }
     }
   };
-
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
-      let inboxes: Feeds[] = await fetchInbox(walletToCAIP10({ account, chainId }));
-      await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account, chainId }), inboxes, 'did');
-      inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
+      const inboxes:Feeds[] = await fetchInbox(connectedUser);
       if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
         setFeeds(inboxes);
         setInbox(inboxes);
+        if(checkIfGroup(currentChat)){
+          if(JSON.stringify(currentChat?.groupInformation?.members) !== JSON.stringify(inboxes[selectedChatSnap]?.groupInformation?.members))
+           setChat(inboxes[selectedChatSnap]);
+        }
       }
       setShowError(false);
       return inboxes;
@@ -101,7 +106,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-
   useQuery('inbox', getInbox, {
     enabled: !props.hasUserBeenSearched && stopApi,
     refetchOnMount: false,
@@ -138,14 +142,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
     setMessagesLoading(false);
   };
-
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account, chainId })) {
+          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account })) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -163,46 +166,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
-            const desiredUser = inbox.filter((inb) => inb.did === user.did);
-
-
-            //the following code checks that User already present in the Intent or not
-            const IntentUser = receivedIntents.filter((userExist) => userExist.did === user.did);
-
-            if (desiredUser.length) {
-              feed = desiredUser[0];
-            } else if(IntentUser.length){
-              feed = IntentUser[0];
-            }else {
-                feed = {
-                  msg: {
-                    name: user.wallets.split(',')[0].toString(),
-                    profilePicture: user.profilePicture,
-                    lastMessage: null,
-                    timestamp: null,
-                    messageType: null,
-                    signature: null,
-                    signatureType: null,
-                    encType: null,
-                    encryptedSecret: null,
-                    fromDID: null,
-                    fromCAIP10: null,
-                    toDID: null,
-                    toCAIP10: null,
-                  },
-                  wallets: user.wallets,
-                  did: user.did,
-                  threadhash: null,
-                  profilePicture: user.profilePicture,
-                  about: user.about,
-                  intent: null,
-                  intentSentBy: null,
-                  intentTimestamp: null,
-                  publicKey: user.publicKey,
-                  combinedDID: null,
-                  cid: null,
-                };
-              }
+                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
             setFeeds([feed]);
           }
         } else {
@@ -219,6 +183,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               ),
             });
           }
+
           setFeeds([]);
         }
         setMessagesLoading(false);
@@ -229,9 +194,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   return (
     <ItemVV2
+      flex={6}
       alignItems="flex-start"
       justifyContent="flex-start"
     >
+      {/* hey there */}
       {activeTab !== 3 && (
         <SpanV2
           fontWeight="700"
@@ -257,34 +224,20 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
               </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-                // To Test
-                // <ItemVV2
-                //   key={feed.threadhash || i}
-                //   onClick={(): void => {
-                //     setChat(feed);
-                //   }}
-                //   background="red"
-                //   margin="10px"
-                //   height="80px"
-                //   flex="initial"
-                // >
-                // </ItemVV2>
 
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"
-                  key={feed.threadhash || i}
+                  key={`${feed.threadhash}${i}`}
                 >
                   <ChatSnap
-                    pfp={feed.profilePicture}
-                    username={feed.msg.name}
-                    chatSnapMsg={{
-                      type: feed.msg.messageType,
-                      message: feed.msg.lastMessage,
-                    }}
-                    timestamp={feed.msg.timestamp}
-                    selected={feed.threadhash == selectedChatSnap ? true : false}
-                    onClick={(): void => onFeedClick(feed)}
+                    pfp={getGroupImage(feed)}
+                    username={getName(feed)}
+                    isGroup = {checkIfGroup(feed)}
+                    chatSnapMsg={getChatsnapMessage(feed,account!,false)}
+                    timestamp={feed.msg.timestamp??feed.intentTimestamp}
+                    selected={i == selectedChatSnap ? true : false}
+                    onClick={(): void => onFeedClick(feed,i)}
                   />
                 </ItemVV2>
               ))
@@ -295,10 +248,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     </ItemVV2>
   );
 };
-
-const SidebarWrapper = styled.section`
-  position: relative;
-`;
 
 const ArrowBend = styled.img`
   position: absolute;
@@ -315,26 +264,6 @@ const EmptyConnection = styled.div`
   margin-top: 25px;
 `;
 
-const InfoMessage = styled(ItemVV2)`
-  justify-content: flex-start;
-  position: relative;
-  text-align: center;
-  flex: initial;
-  color: ${(props) => props.theme.default.secondaryColor};
-  background: ${(props) => props.theme.default.secondaryBg};
-  border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.SMALL};
-  padding: 10px;
-  margin: 0;
-`;
-
-const DisplayText = styled(Typography)`
-  && {
-    color: ${(props): string => props.color || '#000000'};
-    font-size: ${(props): string => props.size || '14px'};
-    font-weight: ${(props): string => props.weight || '500'};
-  }
-`;
-
 const UserChats = styled(ItemVV2)`
   margin-top: 14px;
   display: flex;
@@ -343,7 +272,7 @@ const UserChats = styled(ItemVV2)`
   flex: 1 1 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  height: 0px;
+  height: 80px;
   flex-flow: column;
 
   &&::-webkit-scrollbar {

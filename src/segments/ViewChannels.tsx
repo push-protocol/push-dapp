@@ -1,6 +1,6 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { useDispatch, useSelector } from 'react-redux';
@@ -23,6 +23,12 @@ import { getChannels, getChannelsSearch, getUserSubscriptions } from 'services';
 
 // Internal Configs
 import { appConfig } from 'config';
+import InfoImage from "../assets/info.svg";
+import Tooltip from 'components/reusables/tooltip/Tooltip';
+import UpdateChannelTooltipContent from 'components/UpdateChannelTooltipContent';
+
+// import Tooltip from './reusables/tooltip/Tooltip';
+// import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 
 // Constants
 const CHANNELS_PER_PAGE = 10; //pagination parameter which indicates how many channels to return over one iteration
@@ -170,7 +176,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
       setChannelToShow(channels);
     }
   }
-console.log(channels)
+
   useEffect(() => {
     // this is done so that we only make a request after the user stops typing
     const timeout = setTimeout(searchForChannel, DEBOUNCE_TIMEOUT);
@@ -197,8 +203,11 @@ console.log(channels)
       setSearch(parsedChannel);
     }, SEARCH_DELAY);
   }, []);
+
   return (
     <Container>
+
+
       {!loading && (
         <ItemBar>
           <ItemHBar>
@@ -228,6 +237,12 @@ console.log(channels)
               </Item>
             </SearchContainer>
 
+
+          </ItemHBar>
+
+          <FaucetBar>
+
+
             {appConfig.allowedNetworks.length > 1 && (
               <Item flex="1">
                 <ChainsSelect
@@ -236,13 +251,18 @@ console.log(channels)
                 />
               </Item>
             )}
-          </ItemHBar>
 
-          {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+            {!UtilityHelper.isMainnet(chainId) && <Faucets />}
+
+
+          </FaucetBar>
+
+
         </ItemBar>
       )}
 
-      <ScrollItem>
+
+      <ScrollItem id="scroll">
         {/* render all channels depending on if we are searching or not */}
         <div>
           {(search ? channelToShow : channels).map(
@@ -251,22 +271,26 @@ console.log(channels)
               channel.channel !== ZERO_ADDRESS && (
                 <>
                   <ViewChannelItems
+                    // onMouseEnter={() => {
+                    //   handleHeight(channel.channel);
+                    // }}
                     key={channel.channel}
                     self="stretch"
+                  // id={channel.channel}
                   >
-                 
+
                     {!MaskedChannels[channel.channel] && channel &&
                       (channelsNetworkId == appConfig.coreContractChain ||
                         (channelsNetworkId == channel.alias_blockchain_id &&
                           !MaskedAliasChannels[channelsNetworkId][channel.channel])) && (
                         <ViewChannelItem
+
                           channelObjectProp={channel}
                           loadTeaser={loadTeaser}
                           playTeaser={playTeaser}
                         />
                       )}
                   </ViewChannelItems>
-
                   {showWayPoint(index) && <Waypoint onEnter={updateCurrentPage} />}
                 </>
               )
@@ -324,19 +348,38 @@ const SearchBar = styled.input`
 `;
 
 const ItemHBar = styled.div`
-  width: 100%;
+  // width: 100%;
+  width:-webkit-fill-available;
   padding: 10px 0px;
   display: flex;
   flex-direction: row important!;
   // justify-content: space-evenly;
   @media (max-width: 768px) {
-    padding: 10px 10px;
+    padding: 10px 4px 10px 10px;
   }
+`;
+
+const FaucetBar = styled.div`
+  display: flex;
+  
+  @media (max-width: 768px) {
+    flex-direction: row-reverse;
+    padding-right: 10px; 
+  }
+`;
+
+const ImageInfo = styled.img`
+  margin-right: 5px;
+  display: flex;
+  justify-content: center;
+    align-items: center;
+    align-self: center;
 `;
 
 const ItemBar = styled.div`
   padding: 5px 15px 10px 20px;
-  width: 100%;
+  // width: 100%;
+  width:-webkit-fill-available;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -363,6 +406,8 @@ const ContainerInfo = styled.div`
 
 const ViewChannelItems = styled.div`
   align-self: stretch;
+  // position: absolute;
+  // top: 70px;
 `;
 
 const CenteredContainerInfo = styled.div`
@@ -385,7 +430,7 @@ const ScrollItem = styled(Item)`
   flex-wrap: nowrap;
 
   flex: 1;
-  padding: 5px 20px 10px 20px;
+  padding: 0px 20px 10px 20px;
   overflow-y: auto;
 
   &::-webkit-scrollbar-track {

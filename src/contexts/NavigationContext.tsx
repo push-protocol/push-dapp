@@ -6,12 +6,12 @@ export const NavigationContext = createContext({
   setNavigationSetup: (value: any) => {}
 });
 
-const NavigationContextProvider = (props) => {
+const NavigationContextProvider = ({children}) => {
   const [navigationSetup, setNavigationSetup] = useState(null);
   
   return (
     <NavigationContext.Provider value={{ navigationSetup, setNavigationSetup }}>
-      {props.children}
+      {children}
     </NavigationContext.Provider>
   )
 }
