@@ -9,7 +9,10 @@ import styled, { useTheme } from 'styled-components';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { shortenText } from 'helpers/UtilityHelper';
 import { User } from '../../../../../types/chat';
-
+import Dropdown from 'components/Dropdown';
+import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
+import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
+import { device } from 'config/Globals';
 
 type MemberListContainerType = {
   memberData:User,
@@ -23,10 +26,12 @@ const MemberListContainer = ({
     lightIcon,
     darkIcon
 }:MemberListContainerType) => {
+  const [showDropDown,setShowDropDown]=React.useState<boolean>(false)
+  const removeAdminDropdown =
+  { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => console.log("making admin") }
+;
 
   const theme = useTheme();
-
-  
 
     return (
         <WalletProfileContainer background={theme.groupSearchProfilBackground}>
@@ -48,14 +53,23 @@ const MemberListContainer = ({
               alignItems="flex-end"
               maxWidth="30px"
               style={{ cursor: 'pointer' }}
-              onClick={() => {
-                handleMemberList(memberData)
-                }}>
-                {
-                   theme.scheme == 'light' ? lightIcon:darkIcon
-                }
-
+              onClick={()=>setShowDropDown(!showDropDown)}
+              // onClick={() => {
+              //   handleMemberList(memberData)
+              // }}
+            >
+              {
+                theme.scheme == 'light' ? lightIcon:darkIcon
+              }
             </ItemVV2>
+            {
+              showDropDown && <DropdownContainer>
+              <Dropdown
+              dropdownValues={[removeAdminDropdown]}
+              hoverBGColor={theme.chat.snapFocusBg}
+            />
+              </DropdownContainer>
+            }
           </WalletProfileContainer>
     );
 };
@@ -78,4 +92,20 @@ const WalletProfileContainer = styled(ItemHV2)`
 
 const WalletProfile = styled(ItemHV2)`
   justify-content: flex-start;
+`;
+
+const DropdownContainer = styled(ItemVV2)`
+  position: absolute;
+  left: 85.5%;
+  top: 69%;
+  border-radius: 16px;
+  padding: 14px 8px;
+  background: ${(props) => props.theme.modalContentBackground};
+  z-index: 11;
+  @media ${device.mobileL} {
+    left: 27%;
+  }
+  @media (min-width:426px) and (max-width:1150px) {
+    left: 48%;
+  }
 `;
