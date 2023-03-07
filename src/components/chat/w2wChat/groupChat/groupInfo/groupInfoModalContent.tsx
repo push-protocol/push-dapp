@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 
@@ -37,21 +37,21 @@ import { useDeviceWidthCheck } from 'hooks';
 import useToast from 'hooks/useToast';
 import { MdError } from 'react-icons/md';
 
-export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastObject }: ModalInnerComponentType) => {
+export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
   const { connectedUser } = useContext(ChatUserContext);
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const createGroupToast = useToast();
   const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
-    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
+    (member) => ((caip10ToWallet(member?.wallet) === account) && member?.isAdmin)
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   const handleClose = () => onClose();
-
+  
   const messageUser = async () => {
     let feed: Feeds = await getDefaultFeed({ walletAddress: selectedMemeberAddress!, inbox, intents: receivedIntents });
     setChat(feed);
@@ -179,21 +179,21 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
     }
     setSelectedMemeberAddress(null);
   };
-  const memberDropdown: DropdownValueType[] = [
-    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
-  ];
+  const messageUserDropdown: DropdownValueType = 
+    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }
+  ;
 
-  const ownerDropdown: DropdownValueType[] = [
-    // { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
-    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
-  ];
+  const removeAdminDropdown: DropdownValueType =
+    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() }
+  ;
 
-  const adminDropdown: DropdownValueType[] = [
-    // { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() },
-    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() },
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' },
-  ];
+  const addAdminDropdown: DropdownValueType = 
+    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() }
+  ;
+
+  const removeMemberDropdown: DropdownValueType = 
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' }
+  
 
   // to close the modal upon a click on backdrop
   const containerRef = React.useRef(null);
@@ -337,9 +337,9 @@ export const GroupInfoModalContent = ({ onClose, onConfirm: createGroup, toastOb
                   member={member}
                   dropdownValues={
                     member?.isAdmin && isAccountOwnerAdmin
-                      ? ownerDropdown
+                      ? [removeAdminDropdown,removeMemberDropdown]
                       : isAccountOwnerAdmin
-                      ? adminDropdown
+                      ? [addAdminDropdown,removeMemberDropdown]
                       : []
                   }
                   selectedMemeberAddress={selectedMemeberAddress}

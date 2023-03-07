@@ -18,7 +18,6 @@ import { caip10ToWallet } from '../../../../../helpers/w2w';
 export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddress, setSelectedMemeberAddress, dropdownRef }) => {
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-  
   return (
     <ProfileCardItem key={key}>
       <ItemHV2 justifyContent="flex-start">

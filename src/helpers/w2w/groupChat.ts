@@ -123,3 +123,23 @@ export const updateGroup = async(options:UpdateGroupType) => {
   }
   return {updateResponse,updatedCurrentChat};
 }
+
+
+export const rearrangeMembers = (currentChat,connectedUser) => {
+  currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
+  currentChat?.groupInformation?.members.some(
+    (member, idx) =>
+      member?.wallet == currentChat?.groupInformation?.groupCreator &&
+      currentChat?.groupInformation?.members.unshift(
+        currentChat?.groupInformation?.members.splice(idx, 1)[0]
+      )
+  );
+  currentChat?.groupInformation?.members.some(
+    (member, idx) =>
+      member?.wallet == connectedUser.wallets &&
+      currentChat?.groupInformation?.members.unshift(
+        currentChat?.groupInformation?.members.splice(idx, 1)[0]
+      )
+  );
+  return currentChat;
+}
