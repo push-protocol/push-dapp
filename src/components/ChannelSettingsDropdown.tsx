@@ -201,18 +201,28 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
             {appConfig.appEnv !== 'prod' && (
               <ChannelActionButton
                 disabled={channelInactive}
-                onClick={() => !channelInactive && showAddSubgraphModal()}>
+                onClick={() => !channelInactive && showAddSubgraphModal()}
+              >
                 <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                  <CustomIcon src={cubeIcon} alt="cube" />
+                  <CustomIcon
+                    src={cubeIcon}
+                    alt="cube"
+                  />
                   <div style={{ width: '10px' }} />
                   Add SubGraph Details
                 </div>
               </ChannelActionButton>
             )}
 
-            <ChannelActionButton disabled={channelInactive} onClick={() => !channelInactive && showAddDelegateModal()}>
+            <ChannelActionButton
+              disabled={channelInactive}
+              onClick={() => !channelInactive && showAddDelegateModal()}
+            >
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <CustomIcon src={userPlusIcon} alt="user-plus" />
+                <CustomIcon
+                  src={userPlusIcon}
+                  alt="user-plus"
+                />
                 <div style={{ width: '10px' }} />
                 Add Delegate
               </div>
@@ -220,39 +230,55 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
 
             <ChannelActionButton
               disabled={channelInactive}
-              onClick={() => !channelInactive && showRemoveDelegateModal()}>
+              onClick={() => !channelInactive && showRemoveDelegateModal()}
+            >
               <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                <CustomIcon src={userMinusIcon} alt="user-minus" />
+                <CustomIcon
+                  src={userMinusIcon}
+                  alt="user-minus"
+                />
                 <div style={{ width: '10px' }} />
                 Remove Delegate
               </div>
             </ChannelActionButton>
 
-            {onCoreNetwork &&
-              <ChannelActionButton isChannelDeactivated={isChannelDeactivated} onClick={toggleChannelActivationState}>
-                <div
-                  style={{ color: isChannelBlocked
-                      ? 'red'
-                      : isChannelDeactivated
-                      ? '#30CC8B'
-                      : 'red' }}
+            {onCoreNetwork && (
+              <ChannelActionButton
+                isChannelDeactivated={isChannelDeactivated}
+                onClick={toggleChannelActivationState}
+              >
+                <ActivateChannelContainer
+                  isChannelBlocked={isChannelBlocked}
+                  isChannelDeactivated={isChannelDeactivated}
                 >
                   <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-                  {isChannelBlocked
-                      ? <CustomIcon src={redBellIcon} alt="red-bell" />
-                      : isChannelDeactivated
-                      ? <CustomIcon src={greenBellIcon} alt="green-bell" />
-                      : <CustomIcon src={redBellIcon} alt="red-bell" />}
-                    <div style={{ width: '10px', color: 'red' }} />
+                    {isChannelBlocked ? (
+                      <CustomIcon
+                        src={redBellIcon}
+                        alt="red-bell"
+                      />
+                    ) : isChannelDeactivated ? (
+                      <CustomIcon
+                        src={greenBellIcon}
+                        alt="green-bell"
+                      />
+                    ) : (
+                      <CustomIcon
+                        src={redBellIcon}
+                        alt="red-bell"
+                      />
+                    )}
+
+                    <div style={{ width: '10px' }} />
                     {isChannelBlocked
                       ? 'Channel Blocked'
                       : isChannelDeactivated
                       ? 'Activate Channel'
                       : 'Deactivate Channel'}
                   </div>
-                </div>
+                </ActivateChannelContainer>
               </ChannelActionButton>
-            }
+            )}
           </ActiveChannelWrapper>
         </DropdownWrapper>
 
@@ -283,9 +309,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={ChannelReactivateModalContent}
         onConfirm={activateChannel}
         toastObject={reactivateChannelToast}
-        placementMargin={
-          isMobile ? "10rem 1rem 0 1rem": ""
-        }
+        placementMargin={isMobile ? '10rem 1rem 0 1rem' : ''}
       />
 
       {/* modal to add a delegate */}
@@ -325,8 +349,16 @@ const DropdownWrapper = styled.div`
   box-sizing: border-box;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e8f7;
+  border: 1px solid;
+  border-color: ${(props)=>props.theme.default.borderColor};
   border-radius: 16px;
   justify-content: space-between;
+
+  @media (max-width:600px){
+    left:-90px;
+    top:24px;
+  }
+
 `;
 
 const ActiveChannelWrapper = styled.div`
@@ -362,7 +394,7 @@ const ChannelActionButton = styled.button`
   border-radius: 5px;
   position: relative;
   background: ${(props) => props.theme.backgroundBG};
-  color: ${(props) => props.theme.color};
+  color: ${(props) => props.theme.dropdownTextColor};
   height: 23px;
   font-family: 'monospace, monospace';
   font-style: normal;
@@ -382,6 +414,11 @@ const ChannelActionButton = styled.button`
   }
   opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 `;
+
+const ActivateChannelContainer = styled.div`
+  color :  ${(props) => props.isChannelBlocked ? 'red' : props.isChannelDeactivated ? '#30CC8B' : 'red '}
+`;
+
 
 const CustomIcon = styled.img`
   width: 25px;
