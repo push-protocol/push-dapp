@@ -9,7 +9,9 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 // Internal Compoonents
+import { getReq, postReq } from 'api';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import ChannelSettings from './ChannelSettings';
@@ -131,7 +133,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
           {!isChannelExpired 
             && 
             <>
-              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
+              <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>
               <ChannelSettings />
             </>
           }
@@ -148,6 +150,22 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
               Delete Channel
             </DestroyChannelBtn>
           }
+        </ItemHV2>
+      }
+
+      {isMobile && isChannelExpired && onCoreNetwork &&
+        <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
+          <DestroyChannelBtn 
+              onClick={destroyChannel}
+              background="#E93636" 
+              color="#fff" 
+              height="36px" 
+              width="123px" 
+              borderRadius="8px"
+              fontSize="14px"
+            >
+              Delete Channel
+          </DestroyChannelBtn>
         </ItemHV2>
       }
 
@@ -193,7 +211,8 @@ const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 
 const DestroyChannelBtn = styled(ButtonV2)`
   height: ${props => (props.height || "100%")};
-  width: ${props => (props.width || "100%")}`;
+  width: ${props => (props.width || "100%")};
+`;
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
   @media (max-width: 767px) {
@@ -354,9 +373,11 @@ const ChannelName = styled.div`
   font-family: Strawford, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
+  margin-top: 40px;
   font-weight: 500;
   font-size: 30px;
   line-height: 141%;
+  text-align:center;
   color: ${(props) => props.theme.color};
   @media (max-width: 767px) {
     flex-direction: column;
