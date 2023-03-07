@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import { TwitterTweetEmbed } from 'react-twitter-embed';
 // Internal Components
 import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import tickIcon from '../../../../assets/chat/tick.svg';
-import { Feeds, MessageIPFS, TwitterFeedReturnType } from 'types/chat';
+import { MessageIPFSWithCID, TwitterFeedReturnType } from 'types/chat';
 import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import Modal from '../Modal/Modal';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
@@ -21,13 +21,15 @@ import { Context } from 'modules/chat/ChatModule';
 import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
 import { getMemberDetails } from '../../../../helpers/w2w/groupChat';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
+import * as PushAPI from '@pushprotocol/restapi';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
+import { appConfig } from 'config';
 
 
 interface ChatProps {
-  msg: MessageIPFS;
+  msg: MessageIPFSWithCID;
   caip10: string;
   messageBeingSent: boolean;
   ApproveIntent?: Function;
@@ -39,14 +41,29 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const { currentChat }: AppContext = useContext<AppContext>(Context);
   const [showImageModal, setShowImageModal] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [profilePicture, setProfilePicture] = useState<string>('');
   const time: Date = new Date(msg?.timestamp);
   const time1: string = time.toLocaleTimeString('en-US');
   const date: string = time1.slice(0, -6) + time1.slice(-2);
   const { tweetId, messageType }: TwitterFeedReturnType = checkTwitterUrl({ message: msg?.messageContent });
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveEns(msg.fromCAIP10);
-  const profilePicture = isGroup?(getMemberDetails(currentChat,msg))?.image:null;
+  
+ 
+  const getProfilePicture = async() =>{
+    let member = getMemberDetails(currentChat,msg?.fromCAIP10);
+    if(member){
+    setProfilePicture(member.image);
+    }
+    else {
+      let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
+      setProfilePicture(user.profilePicture); 
+    }
+  }
 
+  useEffect(() => {
+     getProfilePicture();
+  })
 
   return (
     <>

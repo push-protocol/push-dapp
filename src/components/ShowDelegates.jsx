@@ -86,14 +86,14 @@ const ShowDelegates = () => {
       </Content>
     </Section>
 
-    <Item
+    <DelegateContainer
       flex="5"
       minWidth="280px"
       self="stretch"
       align="stretch"
       margin="10px 0px 30px 0px"
       radius={"20px"}
-      border="1px solid #D4DCEA;"
+      border="1px solid #D4DCEA"
     >
       {isActiveDelegateDropdown && delegatees && 
         <Item
@@ -133,7 +133,7 @@ const ShowDelegates = () => {
           onConfirm={removeDelegate}
           toastObject={removeDelegateToast}
         />
-      </Item>
+      </DelegateContainer>
     </>
   )
 }
@@ -215,6 +215,17 @@ const ChannelActionButton = styled.button`
     `}
 `;
 
+const DelegateContainer = styled(Item)`
+  flex:5;
+  min-width:280px;
+  align-self:stretch;
+  align-items:stretch;
+  margin:10px 0px 30px 0px;
+  border-radius:20px;
+  border: 1px solid;
+  border-color: ${(props)=>props.theme.default.borderColor};
+`;
+
 const RemoveButtonUI = styled(ChannelActionButton)`
   background: transparent;
   color: ${props => props.theme.color};
@@ -267,7 +278,8 @@ const DelegatesInfoLabel = styled.div`
   font-weight: 400;
   font-size: 15px;
   line-height: 140%;
-  color: #657795;
+  // color: #657795;
+  color: ${(props)=>props.theme.default.secondaryColor};
 `;
 
 export default ShowDelegates;

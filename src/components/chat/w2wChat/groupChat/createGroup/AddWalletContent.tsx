@@ -26,6 +26,7 @@ import { appConfig } from 'config';
 import MemberListContainer from './MemberListContainer';
 import { User } from '../../../../../types/chat';
 import { findObject } from '../../../../../helpers/UtilityHelper';
+import { device } from 'config/Globals';
 
 export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberList,isLoading }) => {
   const [searchedUser, setSearchedUser] = React.useState<string>('');
@@ -258,7 +259,7 @@ const LabelContainer = styled(ItemHV2)`
   justify-content: space-between;
   margin: 0px;
   margin-bottom: 6px;
-  @media (max-width: 480px) {
+  @media ${device.mobileL} {
     min-width: 300px;
   }
 `;
@@ -296,8 +297,8 @@ const Input = styled.input`
   &::placeholder {
     color: #657795;
   }
-  @media (max-width: 480px) {
-    min-width: 337px;
+  @media ${device.mobileL} {
+    min-width: 300px;
   }
 `;
 

@@ -72,7 +72,7 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
-  const [updateProfileImage, setUserProfileImage] = useState(connectedUser.profilePicture);
+  const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);

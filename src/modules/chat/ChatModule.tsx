@@ -36,6 +36,7 @@ import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
 import { useClickAway } from 'react-use';
 import { useDeviceWidthCheck } from 'hooks';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
+import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -145,7 +146,7 @@ function Chat() {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:isMobile?"24px":"24px 36px"});
+  } = useModalBlur({padding:"0px"});
 
   const createGroupToast = useToast();
 
@@ -197,6 +198,10 @@ function Chat() {
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
+      if(checkIfGroup(feed))
+      {
+        rearrangeMembers(feed,connectedUser);
+      }
       setCurrentChat(feed);
     } else {
       setViewChatBox(false);
@@ -239,7 +244,7 @@ function Chat() {
                 maxWidth="310px"
                 minWidth="280px"
                 padding="10px 10px 10px 20px"
-                boxSizing="content-box"
+                boxSizing="border-box"
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
