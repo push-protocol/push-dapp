@@ -151,7 +151,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px', top: '7px' }}
+            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px' }}
           />
         </ItemHV2>
         {createGroupState == 1 && (

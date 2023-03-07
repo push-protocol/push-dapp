@@ -223,7 +223,9 @@ export const GroupDetailsContent = ({
 };
 
 const Container = styled.div`
-  padding: 42px 22px 42px 26px;
+  display:flex;
+  flex-direction: column;
+  padding: 42px 22px 0px 26px;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
@@ -243,10 +245,11 @@ const Container = styled.div`
 `;
 
 const GroupIconContainer = styled.div`
-  width: 100%;
+  width: fit-content;
   display: flex;
   justify-content: center;
   cursor: pointer;
+  margin: auto;
   margin-bottom: 28px;
 `;
 
