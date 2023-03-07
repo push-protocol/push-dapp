@@ -116,13 +116,14 @@ const TextSpace = styled.div`
   margin: 0 auto;
   background: #f4dcea;
   border-radius: 28px;
-  padding: 60px 32px 20px 32px;
+  padding: 32px 32px 20px 32px;
+  margin-top:28px;
   @media ${device.tablet} {
     width: 100%;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 55px 24px 16px 24px;
+    padding: 24px 24px 16px 24px;
   }
 `;
 
