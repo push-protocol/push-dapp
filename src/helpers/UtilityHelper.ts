@@ -43,7 +43,9 @@ export const MaskedAliasChannels:{
 
   },
   80001: {},
-  97: {}
+  97: {},
+  10: {},
+  420: {}
  }
  export const findObject = (data: any,parentArray: any[],property: string ): boolean => {
   let isPresent = false;
@@ -97,7 +99,9 @@ export const networkName = {
   137: 'Polygon Mainnet',
   80001: 'Polygon Mumbai',
   97: "BNB Testnet",
-  56: "BNB Mainnet"
+  56: "BNB Mainnet",
+  420: "Optimism Goerli",
+  10: "Optimism Mainnet"
 };
 
 export const chainNameBackendStandard = {
@@ -141,7 +145,21 @@ export const NETWORK_DETAILS = {
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/'],
-  }
+  },
+  OPTIMISM_TESTNET: {
+    chainId: utils.hexValue(420),
+    chainName: 'Optimism Testnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrls: ['https://endpoints.omniatech.io/v1/op/goerli/public'],
+    blockExplorerUrls: ['https://goerli-optimism.etherscan.io/']
+  },
+  OPTIMISM_MAINNET: {
+    chainId: utils.hexValue(10),
+    chainName: 'Optimism Mainnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrls: ['https://endpoints.omniatech.io/v1/op/mainnet/public'],
+    blockExplorerUrls: ['https://optimistic.etherscan.io/']
+  },
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;

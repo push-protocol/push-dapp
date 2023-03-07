@@ -244,6 +244,13 @@ function CreateChannel() {
     if (!channelFile) {
       setLogoInfo('Please upload logo of the channel');
 
+      channelToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: `Please upload logo of the channel`,
+        toastType: 'ERROR',
+        getToastIcon: (size) => <MdError size={size} color="red" />,
+      });
+
       return false;
     }
 

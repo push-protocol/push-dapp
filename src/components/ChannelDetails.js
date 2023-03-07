@@ -137,7 +137,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
               <ChannelSettings />
             </>
           }
-          {isChannelExpired && onCoreNetwork &&
+          {/* {isChannelExpired && onCoreNetwork &&
             <DestroyChannelBtn 
               onClick={destroyChannel}
               background="#E93636" 
@@ -149,7 +149,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
             >
               Delete Channel
             </DestroyChannelBtn>
-          }
+          } */}
         </ItemHV2>
       }
 

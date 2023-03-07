@@ -41,6 +41,10 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
     97: {
       label: "Testnet BNB",
       url: "https://testnet.bnbchain.org/faucet-smart"
+    },
+    420: {
+      label: "Goerli OpETH",
+      url: "https://faucet.quicknode.com/optimism/goerli"
     }
   }
 
