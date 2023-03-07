@@ -87,7 +87,7 @@ export const decryptFeeds = async ({
         signatureValidationPubliKey = connectedUser.publicKey;
       } else {
         if (checkIfGroup(feed) && !feed.publicKey) {
-          const member = getMemberDetails(feed, feed.msg);
+          const member = getMemberDetails(feed, feed?.msg?.fromCAIP10);
           feed.publicKey = member ? member.publicKey : '';
         }
         signatureValidationPubliKey = feed.publicKey!;
@@ -135,7 +135,7 @@ export const decryptMessages = async ({
     } else {
       if (!currentChat.publicKey) {
         if (checkIfGroup(currentChat)) {
-          const member = getMemberDetails(currentChat, currentChat.msg);
+          const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
         } else {
           const latestUserInfo = inbox.find((x) => x.wallets.split(':')[0] === currentChat?.wallets?.split(':')[0]);

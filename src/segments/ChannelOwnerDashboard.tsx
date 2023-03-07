@@ -186,10 +186,7 @@ const ChannelOwnerDashboard = () => {
                     {channelDetails && !isMobile &&
                       <ItemHV2 position="absolute" top="0" right="0" zIndex="1">
                         {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
-                        {!isChannelExpired && (
-                          <ChannelSettings showEditChannel={showEditChannel} />
-                        )
-                        }
+                        {!isChannelExpired && <ChannelSettings />}
                         {isChannelExpired && onCoreNetwork &&
                           <DestroyChannelBtn
                             onClick={destroyChannel}

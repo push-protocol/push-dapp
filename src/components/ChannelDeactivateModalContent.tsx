@@ -9,19 +9,29 @@ import { useDispatch, useSelector } from "react-redux";
 import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from "styled-components";
 
+
+
 // Internal Compoonents
 import { ModalInnerComponentType } from "hooks/useModal";
 import { setUserChannelDetails } from "redux/slices/adminSlice";
-import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import CloseButtonSvg from "../assets/XCircle.svg";
+import BellIconSvg from "../assets/BellIcon.svg";
+import { ItemVV2 } from './reusables/SharedStylingV2';
 
-const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : ModalInnerComponentType)=>{
+
+//Internal Configs
+import GLOBALS, { device } from "config/Globals";
+import Spinner from './reusables/spinners/SpinnerUnit';
+
+const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: ModalInnerComponentType) => {
     const themes = useTheme();
 
     const dispatch = useDispatch();
     const { channelDetails } = useSelector((state: any) => state.admin);
     const {
         CHANNNEL_DEACTIVATED_STATE,
-      } = useSelector((state: any) => state.channels);
+    } = useSelector((state: any) => state.channels);
 
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -31,109 +41,170 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject } : Mod
     const containerRef = React.useRef(null);
     useClickAway(containerRef, () => handleClose())
 
-    const handleConfirm = ()=>{
+    const handleConfirm = () => {
         setIsLoading(true);
 
         onConfirm()
-        .then(async (tx: any) => {
-            console.log(tx);
-            console.log("Transaction Sent!");
-            
-            toastObject.showMessageToast({
-                toastTitle:"Channel Deactivated", 
-                toastMessage:"Please Activate Channel to Send Notifications from it", 
-                toastType:  "ERROR", 
-                getToastIcon: (size) => <MdError size={size} color="red" />
-            });
+            .then(async (tx: any) => {
+                console.log(tx);
+                console.log("Transaction Sent!");
 
-            await tx.wait(1);
-            console.log("Transaction Mined!");
-            dispatch(
-                setUserChannelDetails({
-                    ...channelDetails,
-                    channelState: CHANNNEL_DEACTIVATED_STATE,
-                })
+                toastObject.showMessageToast({
+                    toastTitle: "Channel Deactivated",
+                    toastMessage: "Please Activate Channel to Send Notifications from it",
+                    toastType: "ERROR",
+                    getToastIcon: (size) => <MdError size={size} color="red" />
+                });
+
+                await tx.wait(1);
+                console.log("Transaction Mined!");
+                dispatch(
+                    setUserChannelDetails({
+                        ...channelDetails,
+                        channelState: CHANNNEL_DEACTIVATED_STATE,
+                    })
                 );
-                
-            setIsLoading(false);
-            onClose();
-          })
-          .catch((err: any) => {
-            console.log("!!!Error deactivateChannel() --> %o", err);
-            console.log({
-              err,
-            });
 
-            toastObject.showMessageToast({
-                toastTitle:"Transaction Failed", 
-                toastMessage: "Channel deactivation failed.", 
-                toastType:  "ERROR", 
-                getToastIcon: (size) => <MdError size={size} color="red" />
+                setIsLoading(false);
+                onClose();
             })
+            .catch((err: any) => {
+                console.log("!!!Error deactivateChannel() --> %o", err);
+                console.log({
+                    err,
+                });
 
-            setIsLoading(false);
-          })
+                toastObject.showMessageToast({
+                    toastTitle: "Transaction Failed",
+                    toastMessage: "Channel deactivation failed.",
+                    toastType: "ERROR",
+                    getToastIcon: (size) => <MdError size={size} color="red" />
+                })
+
+                setIsLoading(false);
+            })
     }
 
-    return(
+    return (
         <ThemeProvider theme={themes}>
             <ModalContainer ref={containerRef}>
-                <ModalMessage style={{
-                    color:themes.modalMessageColor,
-                }}>
-                    Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
-                </ModalMessage>
-                <ButtonContainer>
-                    <IconButton
-                        onClick={handleClose}
-                        style={{ padding: "0", marginRight: "0.5rem" }}
-                        sx={{ "&:hover": { backgroundColor: "transparent" } }}
-                        children={
-                            <MdHighlightOff size="2.6rem" style={{
-                                color:themes.modalIconColor,
-                            }} />}
-                    />
-                    <IconButton
-                        onClick={handleConfirm}
-                        style={{ padding: "0" }}
-                        sx={{ "&:hover": { backgroundColor: "transparent" } }}
-                        children={
-                            isLoading 
-                            ?
-                            <div style={{
-                                height:"34px", width:"34px", background: "red", borderRadius:"50%", padding:"3px"
-                                }}>
-                                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={34} />
-                            </div> 
-                            :
-                            <RiNotificationOffLine size="2.2rem" style={{
-                                color: "white", background: "red", borderRadius: "50%", padding: "8px"
-                            }}
-                            />
-                        }
-                    />
-                </ButtonContainer>
+                {isLoading ? (
+                    <VerifyingContainer>
+                        <Spinner
+                            size={42}
+                            color={GLOBALS.COLORS.PRIMARY_PINK}
+                            type={LOADER_SPINNER_TYPE.PROCESSING}
+                        />
+                        <TransactionText>
+                            Verifying
+                        </TransactionText>
+
+                    </VerifyingContainer>
+                ) : (
+                    <>
+                        <ModalMessage style={{
+                            color: themes.modalMessageColor,
+                        }}>
+                            Are you sure you want to deactivate the channel? You will no longer be able to send notifications from it.
+                        </ModalMessage>
+                        <ButtonContainer>
+
+                            <CloseButtonSVG src={CloseButtonSvg} onClick={handleClose} />
+
+                            <BellIconContainer onClick={handleConfirm}>
+                                <BellIconImage src={BellIconSvg} />
+                            </BellIconContainer>
+
+
+                        </ButtonContainer>
+                    </>
+                )}
             </ModalContainer>
+
+
+
+
         </ThemeProvider>
     )
 }
 
 const ModalContainer = styled.div`
-    width: 28vw;
+    // width: 28vw;
+    width:446px;
     display: flex;
     justify-content: space-between;
+    padding:5px 10px;
+
+    @media (max-width:500px){
+        width:350px;
+    }
+    @media (max-width:400px){
+        width:300px;
+        flex-direction:column;
+    }
+
+`
+
+const VerifyingContainer = styled(ItemVV2)`
+  flex-direction:row;
+//   margin-top:33px;
+`
+const TransactionText = styled.p`
+  font-family: 'Strawford';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  margin-left:12px;
+  color: ${(props) => props.theme.editChannelPrimaryText};
 `
 
 const ModalMessage = styled.div`
-    width: 70%;
-    font-size: 0.95rem;
-    font-weight: 500;
-    line-height: 20px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 21px;
     text-align: left;
+    margin-right:40px;
+    @media (max-width:500px){
+        margin-right:20px;
+    }
+    @media (max-width:400px){
+        margin: 14px 6px 24px 6px;
+    }
 `
+
+const CloseButtonSVG = styled.img`
+    cursor:pointer;
+    width:36px;
+    height:36px;
+    margin-right:5px;
+`;
 
 const ButtonContainer = styled.div`
     display: flex;
+    justify-content: center;
+    align-items: center;
+    @media (max-width:400px){
+        align-self:end;
+    }
 `
+
+const BellIconContainer = styled.div`
+    width: 36px;
+    height: 36px;
+    background: #E93636;
+    display: flex;
+    justify-content: center;
+    border-radius:50%;
+    cursor:pointer;
+`
+
+const BellIconImage = styled.img`
+    height: 36px;
+    width: 17px;
+   
+`;
 
 export default ChannelDeactivateModalContent

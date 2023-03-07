@@ -10,6 +10,7 @@ const themeLight = {
     color: '#000',
     secondaryColor: '#657795',
     hover: '#F3F3FF',
+    borderColor:'#dfdee9',
   },
 
   // Login Theme
@@ -119,6 +120,8 @@ const themeLight = {
 
   color: '#000',
 
+  dropdownTextColor:'#000',
+
   channelBg: '#fafafa',
 
   button: '#000',
@@ -155,6 +158,10 @@ const themeLight = {
   groupSearchProfilBackground: '#F4F5FA',
   groupButtonBackgroundColor:'#ADB0BE',
   groupButtonTextColor:'#FFF',
+
+  modalTextColor:"#657795",
+  modalbackgroundColor:"#F5F5FA",
+  modalImageBgColor:"rgba(0, 0, 0, 0.5)",
 
   modalTextColor:"#657795",
   modalbackgroundColor:"#F5F5FA",
@@ -226,6 +233,7 @@ const themeDark = {
     color: '#FFF',
     secondaryColor: '#B6BCD6',
     hover: '#00000033',
+    borderColor:'#4A4F67',
   },
 
   // Login Theme
@@ -328,6 +336,8 @@ const themeDark = {
 
   color: '#fff',
 
+  dropdownTextColor:'#B6BCD6',
+
   yieldBg: '#ddd',
 
   questionBg: '#000',
@@ -374,6 +384,10 @@ const themeDark = {
   groupSearchProfilBackground: '#404650',
   groupButtonBackgroundColor:'#2F3137',
   groupButtonTextColor:'#787E99',
+
+  modalTextColor:"#B6BCD6",
+  modalbackgroundColor:"#282A2E",
+  modalImageBgColor:"rgba(255, 255, 255, 0.1);",
 
   modalTextColor:"#B6BCD6",
   modalbackgroundColor:"#282A2E",

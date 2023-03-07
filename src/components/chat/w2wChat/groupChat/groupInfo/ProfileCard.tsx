@@ -13,13 +13,12 @@ import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedSt
 import { shortenText } from 'helpers/UtilityHelper';
 import Dropdown from 'components/Dropdown';
 import { caip10ToWallet } from '../../../../../helpers/w2w';
+import { device } from 'config/Globals';
 
 
-export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setShowMoreOption, dropdownRef }) => {
+export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddress, setSelectedMemeberAddress, dropdownRef }) => {
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
-
-
   return (
     <ProfileCardItem key={key}>
       <ItemHV2 justifyContent="flex-start">
@@ -53,25 +52,25 @@ export const ProfileCard = ({ key, member, dropdownValues, showMoreOption, setSh
             Admin
           </SpanV2>
         )}
-        {/* {caip10ToWallet(member?.wallet) !== account && (
+        {caip10ToWallet(member?.wallet) !== account && (dropdownValues.length>0) && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
-            onClick={() => setShowMoreOption(member?.wallet)}
+            onClick={() => setSelectedMemeberAddress(member?.wallet)}
             style={{ cursor: 'pointer' }}
           >
             {theme.scheme == 'light' ? <MoreLight /> : <MoreDark />}
           </ItemVV2>
-        )} */}
+        )}
       </ItemHV2>
-      {/* {showMoreOption == member?.wallet && (
+      {selectedMemeberAddress == member?.wallet && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
             dropdownValues={dropdownValues}
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
-      )} */}
+      )} 
     </ProfileCardItem>
   );
 };
@@ -89,14 +88,16 @@ const ProfileCardItem = styled(ItemHV2)`
 
 const DropdownContainer = styled(ItemVV2)`
   position: absolute;
-  left: 86%;
-  top: 72%;
+  left: 85.5%;
+  top: 69%;
   border-radius: 16px;
   padding: 14px 8px;
   background: ${(props) => props.theme.modalContentBackground};
   z-index: 11;
-  @media (max-width: 480px) {
-    top: 44px;
-    right: 7px;
+  @media ${device.mobileL} {
+    left: 27%;
+  }
+  @media (min-width:426px) and (max-width:1150px) {
+    left: 48%;
   }
 `;
