@@ -59,7 +59,7 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
         </ToggleArrowImg>
       </Faucet>
       {showDropdown && (
-        <Item
+        <DropdownContainer
           ref={dropdownRef}
           bg={theme.default.secondaryBg}
           border={`1px solid ${theme.snackbarBorderColor}`}
@@ -72,7 +72,7 @@ const ChainsSelect = ({channelsNetworkId, setChannelsNetworkId}) => {
           right="-0.5rem"
         >
           <Dropdown dropdownValues={dropdownValues} />
-        </Item>
+        </DropdownContainer>
       )}
     </Container>
   );
@@ -95,6 +95,26 @@ const Container = styled.button`
   align-items: center;
   display: flex;
 `
+
+const DropdownContainer = styled(Item)`
+background: ${(props)=>props.theme.default.secondaryBg};
+border:1px solid;
+border-color:${(props)=>props.theme.snackbarBorderColor};
+border-radius:24px;
+align-items:flex-start;
+padding:7px 20px 7px 14px;
+position:absoltue;
+top:0rem;
+z-index:10;
+right:-0.5rem;
+
+@media (max-width:768px){
+  right:0px;
+}
+
+
+`
+
 const Faucet = styled.span`
   padding: 5px 15px;
   display: flex;

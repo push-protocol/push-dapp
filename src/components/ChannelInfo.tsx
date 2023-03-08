@@ -118,7 +118,7 @@ const ChannelInfo = ({
                   />
                 {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
               </Item>
-            {/* <Tooltip 
+            <Tooltip 
               tooltipContent='Timebound channels will be deleted after expiry'
               // disable the tooltip when time bound toggle is NOT on
               placementProps={isMobile
@@ -138,9 +138,9 @@ const ChannelInfo = ({
                 <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
                   <Label style={{ color: theme.color }}>Time Bound</Label>
                   {isNewTagVisible && <NewTag />}
-                </ItemHV2> */}
+                </ItemHV2>
                 {/* Toggle should be off only when channelExpiryDate is undefined */}
-                {/* <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
+                <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
                   if(channelExpiryDate===undefined){
                     // turn on the toggle
                     return setChannelExpiryDate(null);
@@ -149,7 +149,7 @@ const ChannelInfo = ({
                   setChannelExpiryDate(undefined);
                 }} />
               </TimeBoundToggleContainer>
-            </Tooltip> */}
+            </Tooltip>
           </TopInnerContainer>
         </Item>
 
@@ -350,7 +350,13 @@ const ChannelInfo = ({
 
 const MainContainer = styled(Item)`
   align-items: "flex-start";
-  padding: 40px 140px 0 140px;
+  padding: 40px 13% 0 13%;
+  @media (max-width: 1350px) {
+    padding: 40px 9% 0 9%;
+  }
+  @media (max-width: 1250px) {
+    padding: 40px 4% 0 4%;
+  }
   @media ${device.laptop} {
     padding: 20px 0 0 0;
   }
