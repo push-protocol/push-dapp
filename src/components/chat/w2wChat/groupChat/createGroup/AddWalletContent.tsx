@@ -145,7 +145,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
         ),
       });
     } else {
-      handleMemberList((prev) => [...prev,member]);
+      handleMemberList((prev) => [...prev,{...member,isAdmin:false}]);
     }
 
     setFilteredUserData('');
@@ -156,8 +156,6 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
     handleMemberList(filteredMembers);
   };
-
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -220,7 +218,9 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
             {memberList.map((member, index) => (
               <MemberListContainer
                 key={index}
+                memberList={memberList}
                 memberData={member}
+                handleMembers={handleMemberList}
                 handleMemberList={removeMemberFromList}
                 lightIcon={<MoreLight />}
                 darkIcon={<MoreDark />}
