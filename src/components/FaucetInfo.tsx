@@ -61,7 +61,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
               ? 'You do not have sufficient PUSH Tokens. Swap to add more PUSH.'
               : 'Follow these steps to ensure you have enough Testnet Push to proceed.'}
           </InfoText>
-          {!isProd ? (
+          {isProd ? (
             <SwapTokensButton onClick={showUniswapWidgetModal}>
               <ImageV2
                 width="12px"

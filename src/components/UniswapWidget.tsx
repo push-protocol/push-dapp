@@ -50,7 +50,6 @@ const WidgetCustomTheme = {
 
 export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidgetModalProps) => {
   const { defaultPushTokenAmount } = InnerComponentProps;
-  const [renderUniswap, setRenderUniswap] = useState(false);
   const theme = useTheme();
   const { library } = useWeb3React();
 
@@ -59,26 +58,18 @@ export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidg
       onClose()
   });
 
-  useEffect(() => {
-    setTimeout(() => {
-      setRenderUniswap(true);
-    }, 1000);
-  }, []);
-
   return (
     <div className="Uniswap" ref={containerRef}>
       {/* HERE */}
-      {renderUniswap &&
-        <SwapWidget 
-          width={360}
-          // tokenList={ONE_INCH_TOKEN_LIST}
-          // defaultOutputTokenAddress={addresses.pushToken}
-          // defaultOutputAmount={defaultPushTokenAmount}
-          // theme={WidgetCustomTheme[theme.scheme]}
-          // jsonRpcUrlMap={jsonRpcUrlMap}
-          // provider={library}
-        /> 
-      }
+      <SwapWidget 
+        width={360}
+        tokenList={ONE_INCH_TOKEN_LIST}
+        defaultOutputTokenAddress={addresses.pushToken}
+        defaultOutputAmount={defaultPushTokenAmount}
+        theme={WidgetCustomTheme[theme.scheme]}
+        jsonRpcUrlMap={jsonRpcUrlMap}
+        provider={library}
+      /> 
     </div>
   )
 }
