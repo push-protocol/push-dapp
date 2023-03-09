@@ -367,11 +367,10 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             margin="0px 0px 15px 0px"
             maxWidth="445px"
             style={{boxSizing:'border-box'}}
-            // position="relative"
           >
             <ItemHV2
               justifyContent="space-between"
-              padding="8px 20px 8px 16px"
+              padding="13px 20px 13px 16px"
               onClick={() => setshowPendingRequests(!showPendingRequests)}
             >
               <ItemHV2 justifyContent="flex-start">
@@ -400,7 +399,6 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               <ItemVV2
                 borderRadius="0px 0px 16px 16px"
                 overflow="hidden"
-                // position="absolute"
               >
                 {currentChat?.groupInformation?.pendingMembers?.map((member) => {
                   return (
