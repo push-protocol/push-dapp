@@ -8,9 +8,13 @@ import styled from 'styled-components';
 import Lock from 'assets/Lock.png';
 import LockSlash from 'assets/LockSlash.png';
 import { Item } from 'primaries/SharedStyling';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
+import { ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { AppContext, MessageIPFSWithCID } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { shortenText } from 'helpers/UtilityHelper';
+import { caip10ToWallet } from 'helpers/w2w';
+import { checkIfIntentExist } from 'helpers/w2w/user';
 
 type HeaderMessageType = {
   time?: string;
@@ -20,9 +24,13 @@ type HeaderMessageType = {
 };
 
 export const HeaderMessage = ({ time, isGroup, index, messages }: HeaderMessageType) => {
-  const { currentChat }: AppContext = React.useContext<AppContext>(Context);
+  const { currentChat,receivedIntents }: AppContext = React.useContext<AppContext>(Context);
+  const { connectedUser } = React.useContext(ChatUserContext);
 
   let intents = currentChat?.intent?.split('+');
+
+  const groupCreator = currentChat?.groupInformation?.members.find((x) => x.isAdmin ==true);
+
   return (
     <>
       <Item>
@@ -53,19 +61,38 @@ export const HeaderMessage = ({ time, isGroup, index, messages }: HeaderMessageT
         )}
 
         {isGroup && (index === 0 || (messages && messages?.length === 0)) && (
-          <ItemText>
-            <Image src={currentChat?.groupInformation?.isPublic ? Lock : LockSlash} />
-            {currentChat?.groupInformation?.isPublic
-              ? 'Messages are not encrypted.'
-              : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'}
-            <ItemLink
-              href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
-              target={'_blank'}
-            >
-              {' '}
-              Click to learn more.
-            </ItemLink>
-          </ItemText>
+          <>
+            <ItemText>
+              <Image src={currentChat?.groupInformation?.isPublic ? Lock : LockSlash} />
+              {currentChat?.groupInformation?.isPublic
+                ? 'Messages are not encrypted bro.'
+                : 'Messages are end-to-end encrypted. Only users in this chat can view or listen to them.'}
+              <ItemLink
+                href="https://docs.push.org/developers/concepts/push-chat-for-web3#encryption"
+                target={'_blank'}
+              >
+                {' '}
+                Click to learn more.
+              </ItemLink>
+            </ItemText>
+
+
+           {/* Here two conditions are checked 1) If their is any Intent 2) If the connectedUser.wallets === groupCreator */}
+           {!checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && 
+            (currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1] !== groupCreator.wallet) && 
+           ( 
+            <WelcomeUserContainer>
+              <WelcomeUserText>
+                {currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1] !== connectedUser?.wallets ?
+                  `${shortenText(caip10ToWallet(currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1]), 5)} has ` :
+                  'You have' 
+                } joined the group
+
+              </WelcomeUserText>
+            </WelcomeUserContainer>
+            )}
+
+          </>
         )}
       </Item>
 
@@ -132,3 +159,26 @@ const Image = styled.img`
   position: relative;
   bottom: -2px;
 `;
+
+const WelcomeUserContainer = styled.div`
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 4px 12px;
+color: ${(props) => props.theme.default.secondaryColor};
+background-color: ${(props) => props.theme.default.bg};
+border-radius: 10px;
+width: fit-content;
+margin: auto;
+margin-bottom:10px;
+`
+
+const WelcomeUserText = styled(SpanV2)`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 130%;
+text-align: center;
+color: ${(props) => props.theme.default.secondaryColor};
+`

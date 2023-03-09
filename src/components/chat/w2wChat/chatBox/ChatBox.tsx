@@ -687,21 +687,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                               time={time}
                               isGroup={isGroup}
                             />
-                            {isGroup && (i === 0 || (messages && messages?.length === 0)) && !checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
-                              <WelcomeUserContainer>
-                                <WelcomeUserText>
-                                  {currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1] !== connectedUser?.wallets ?
-                                    `${shortenText(caip10ToWallet(currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1]), 5)} has ` :
-                                    'You have'
-                                  } joined the group
-                                </WelcomeUserText>
-                              </WelcomeUserContainer>
-
-                            )
-                            }
-
                           </>
                         )}
+
+                        
 
                         <Chats
                           msg={
@@ -720,6 +709,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                     messages={messages}
                     isGroup={isGroup}
                   />
+
+                  
 
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
