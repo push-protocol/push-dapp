@@ -36,8 +36,8 @@ const UpdateChannelTooltipContent = ({
 const Container = styled(ItemVV2)`
   box-sizing: border-box;
   width: 18.75rem;
-  height: 7.5rem;
-  max-height: 7.5rem;
+  // height: 7.5rem;
+  // max-height: 7.5rem;
   background: ${(props) => props.theme.default.bg};
   // border-radius: 0.125rem 1rem 1rem 1rem;
   justify-content: flex-start;
@@ -45,6 +45,12 @@ const Container = styled(ItemVV2)`
   align-items: flex-start;
   padding: 0.75rem 0.25rem 0.75rem 1rem;
   box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+
+  @media (max-width:400px){
+    width:16.75rem;
+  }
+
+
 `;
 
 const TopHeading = styled(H2V2)`
@@ -61,13 +67,14 @@ const TopSubHeading = styled(H2V2)`
 
 const Content = styled(ItemHV2)`
   align-items: center;
+  margin-top:8px;
 `;
 
 const ChannelIconContainer = styled(ItemHV2)`
   width: 3rem;
   max-width: 2.94rem;
   height: 3rem;
-  margin: auto 8px auto 0;
+  margin-right:8px;
 `;
 
 const ChannelIcon = styled(ImageV2)`
@@ -85,6 +92,7 @@ const ChannelName = styled(H2V2)`
   color: ${(props) => props.theme.tooltipContentHeading};
   font-weight: 500;
   font-size: 0.75rem;
+  text-align: left;
 `;
 
 const ChannelDesc = styled(H2V2)`

@@ -24,7 +24,8 @@ export const config = {
   allowedNetworks: [
     5, // for eth goerli
     80001, //for mumbai polygon
-    97 // bnb testnet
+    97, // bnb testnet
+    420 // optimism goerli testnet
   ],
 
   /** 
@@ -36,7 +37,8 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    97: "https://data-seed-prebsc-1-s1.binance.org:8545"
+    97: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -114,5 +116,12 @@ export const CHAIN_DETAILS = {
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     commAddress: "0x4132061E3349ff36cFfCadA460E10Bd4f31F7ea8"
+  },
+  420: {
+    label: "Optimism Goerli",
+    name: "OPTIMISM_TESTNET",
+    chainId: 420,
+    rpcUrl: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
+    commAddress: '0x4305D572F2bf38Fc2AE8D0172055b1EFd18F57a6'
   }
 }

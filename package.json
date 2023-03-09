@@ -1,6 +1,6 @@
 {
   "name": "@project/react-app",
-  "version": "0.3.34",
+  "version": "0.3.35",
   "homepage": "https://dev.epns.io",
   "browserslist": {
     "production": [
@@ -34,9 +34,9 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@pushprotocol/ledgerlive": "0.0.1",
-    "@pushprotocol/restapi": "0.7.1",
+    "@pushprotocol/restapi": "0.8.0",
     "@pushprotocol/socket": "0.3.0",
-    "@pushprotocol/uiweb": "0.4.3",
+    "@pushprotocol/uiweb": "0.5.0",
     "@reduxjs/toolkit": "^1.7.1",
     "@testing-library/dom": "^9.0.1",
     "@testing-library/jest-dom": "^4.2.4",
@@ -96,7 +96,7 @@
     "react-dropzone-uploader": "2.11.0",
     "react-easy-crop": "^4.1.4",
     "react-ga": "2.7.0",
-    "react-icons": "^4.3.1",
+    "react-icons": "^4.7.1",
     "react-image-file-resizer": "^0.4.7",
     "react-images-upload": "^1.2.8",
     "react-joyride": "^2.4.0",

@@ -216,7 +216,6 @@ const ChannelInfo = ({
               visibility={chainDetails === coreChainId ? 'hidden' : 'visible'}
               value={channelAlias}
               onChange={(e) => {
-                console.log(e);
                 setChannelAlias(e.target.value);
               }}
             />
@@ -351,7 +350,13 @@ const ChannelInfo = ({
 
 const MainContainer = styled(Item)`
   align-items: "flex-start";
-  padding: 40px 140px 0 140px;
+  padding: 40px 13% 0 13%;
+  @media (max-width: 1350px) {
+    padding: 40px 9% 0 9%;
+  }
+  @media (max-width: 1250px) {
+    padding: 40px 4% 0 4%;
+  }
   @media ${device.laptop} {
     padding: 20px 0 0 0;
   }

@@ -11,7 +11,7 @@ import FaucetInfo from "./FaucetInfo";
 import { Button, Item, Span } from "primaries/SharedStyling";
 
 // Internal Configs
-import { abis, addresses } from "config";
+import { abis, addresses, appConfig } from "config";
 import { useDeviceWidthCheck } from "hooks";
 import { device } from "config/Globals";
 import { mintPushToken } from "helpers";
@@ -41,6 +41,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
               {channelStakeFees} PUSH
               </b>
             </TabSpace>
+            
             <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />
           </Item>
 

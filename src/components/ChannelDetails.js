@@ -9,7 +9,9 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 // Internal Compoonents
+import { getReq, postReq } from 'api';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from "components/reusables/SharedStylingV2";
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useDeviceWidthCheck } from 'hooks';
 import ChannelsDataStore from 'singletons/ChannelsDataStore';
 import ChannelSettings from './ChannelSettings';
@@ -20,7 +22,7 @@ import { appConfig } from "config";
 import { device } from "config/Globals";
 import { CHANNEL_TYPE } from 'helpers/UtilityHelper';
 import { getDateFromTimestamp, nextDaysDateFromTimestamp, timeRemaining } from 'helpers/TimerHelper';
-;
+import RedCircleSvg from "../assets/RedCircle.svg"
 import { Button } from "components/SharedStyling";
 
 const DATE_FORMAT = 'DD MMM, YYYY';
@@ -101,6 +103,7 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
                   <SubscribersCount>{channelDetails.subscriber_count}</SubscribersCount>
                 </Subscribers>
                 <ChanneStateText active={channelIsActive}>
+                 {channelIsDeactivated && <ImageV2 width="12px" src={RedCircleSvg} margin="0 5px 2px 0px" height="30px"/>}
                   {channelIsActive ? 'Active' : channelIsDeactivated ? 'Deactivated' : 'Blocked'}
                 </ChanneStateText>
                 {
@@ -127,13 +130,8 @@ export default function ChannelDetails({ isChannelExpired, setIsChannelExpired, 
 
       {isMobile && 
         <ItemHV2 zIndex="1" padding="0 0 15px 0" alignSelf="center" display="flex">
-          {!isChannelExpired 
-            && 
-            <>
-              {/* <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton> */}
-              <ChannelSettings />
-            </>
-          }
+          {!isChannelExpired && onCoreNetwork && <SubmitButton onClick={showEditChannel}>Edit Channel</SubmitButton>}
+          {!isChannelExpired && <ChannelSettings />}
           {isChannelExpired && onCoreNetwork &&
             <DestroyChannelBtn 
               onClick={destroyChannel}
@@ -192,7 +190,8 @@ const AdaptiveMobileItemVV2 = styled(ItemVV2)`
 
 const DestroyChannelBtn = styled(ButtonV2)`
   height: ${props => (props.height || "100%")};
-  width: ${props => (props.width || "100%")}`;
+  width: ${props => (props.width || "100%")};
+`;
 
 const AdaptiveMobileItemHV2 = styled(ItemHV2)`
   @media (max-width: 767px) {
@@ -268,8 +267,8 @@ const StateText = styled.div`
 
 const ChanneStateText = styled(StateText)`
   color: #2dbd81;
-  color: ${(props) => (props.active ? '#2DBD81' : 'red')};
-  background-color: #c6efd1;
+  color: ${(props) => (props.active ? '#2DBD81' : '#E93636')};
+  background-color: ${(props) => (props.active ? '#c6efd1' : '#FFD8D8')};
   margin-left: 10px;
   margin-bottom: 10px;
   ${(props) =>
@@ -322,7 +321,8 @@ const Date = styled.div`
   flex-direction: row;
   align-items: flex-start;
   width: 340px;
-  color: #657795;
+  // color: #657795;
+  color: ${(props)=>props.theme.default.secondaryColor};
   margin: 10px 0;
   text-transform: none;
   font-weight: 500;
@@ -352,9 +352,11 @@ const ChannelName = styled.div`
   font-family: Strawford, Source Sans Pro;
   flex-direction: row;
   margin-right: 8px;
+  margin-top: 40px;
   font-weight: 500;
   font-size: 30px;
   line-height: 141%;
+  text-align:center;
   color: ${(props) => props.theme.color};
   @media (max-width: 767px) {
     flex-direction: column;
@@ -380,7 +382,8 @@ const SectionDate = styled.div`
 const SectionDes = styled.div`
   text-transform: none;
   font-family: Strawford, Source Sans Pro;
-  color: #657795;
+  // color: #657795;
+  color: ${(props)=>props.theme.default.secondaryColor};
   margin: ${(props) => (props.margin ? props.margin : '25px 0px 40px 0px')};
   font-weight: 400;
   font-size: 15px;
