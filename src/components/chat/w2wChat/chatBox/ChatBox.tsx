@@ -56,6 +56,7 @@ import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { Item } from 'primaries/SharedStyling';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { shortenText } from 'helpers/UtilityHelper';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -680,11 +681,26 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                     return (
                       <div key={i}>
                         {!showTime ? null : (
-                          <HeaderMessage
-                            index={i}
-                            time={time}
-                            isGroup={isGroup}
-                          />
+                          <>
+                            <HeaderMessage
+                              index={i}
+                              time={time}
+                              isGroup={isGroup}
+                            />
+                            {isGroup && (i === 0 || (messages && messages?.length === 0)) && !checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
+                              <WelcomeUserContainer>
+                                <WelcomeUserText>
+                                  {currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1] !== connectedUser?.wallets ?
+                                    `${shortenText(caip10ToWallet(currentChat?.intent?.split('+')[currentChat?.intent?.split('+')?.length - 1]), 5)} has ` :
+                                    'You have'
+                                  } joined the group
+                                </WelcomeUserText>
+                              </WelcomeUserContainer>
+
+                            )
+                            }
+
+                          </>
                         )}
 
                         <Chats
@@ -704,6 +720,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                     messages={messages}
                     isGroup={isGroup}
                   />
+
                   {checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }) && (
                     <Chats
                       msg={{
@@ -813,6 +830,8 @@ const WelcomeItem = styled(ItemVV2)`
   }
 `;
 
+
+
 const WelcomeContent = styled.div`
   width: 304px;
   display: flex;
@@ -920,6 +939,29 @@ const TabletBackButton = styled(ButtonV2)`
     display: initial;
   }
 `;
+
+const WelcomeUserContainer = styled.div`
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+padding: 4px 12px;
+color: ${(props) => props.theme.default.secondaryColor};
+background-color: ${(props) => props.theme.default.bg};
+border-radius: 10px;
+width: fit-content;
+margin: auto;
+margin-bottom:10px;
+`
+
+const WelcomeUserText = styled(SpanV2)`
+font-family: 'Strawford';
+font-style: normal;
+font-weight: 400;
+font-size: 15px;
+line-height: 130%;
+text-align: center;
+color: ${(props) => props.theme.default.secondaryColor};
+`
 
 const CustomScrollContent = styled(ScrollToBottom)`
   padding-right: 0px;
