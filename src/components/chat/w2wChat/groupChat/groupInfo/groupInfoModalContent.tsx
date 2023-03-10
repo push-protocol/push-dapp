@@ -250,7 +250,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile?'24px':'24px', top: '8px' }}
+            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? '24px' : '24px', top: '8px' }}
           />
         </ItemHV2>
         <Container>
@@ -358,7 +358,13 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               </SpanV2>
             </AddWalletContainer>
           )} */}
-          <ProfileContainer>
+          <ProfileContainer
+            minHeight={
+              currentChat?.groupInformation?.members?.length < 4
+                ? 72 * currentChat?.groupInformation?.members?.length
+                : 216
+            }
+          >
             {currentChat?.groupInformation?.members?.map((member, index) => {
               return (
                 member && (
@@ -410,8 +416,8 @@ const Container = styled.div`
   }
   &&::-webkit-scrollbar-thumb {
     background: #d53a94;
-    border-bottom:200px solid transparent;
-    background-clip:padding-box;
+    border-bottom: 200px solid transparent;
+    background-clip: padding-box;
   }
   @media (max-width: 600px) {
     max-height: 65vh;
@@ -455,13 +461,13 @@ const ProfileContainer = styled.div`
   align-items: center;
   min-width: 445px;
   max-height: 216px;
-  min-height: 216px;
+  min-height: ${(props) => `${props.minHeight}px`};
   overflow-y: auto;
   overflow-x: hidden;
-  & > div::-webkit-scrollbar {
+  &&::-webkit-scrollbar {
     width: 4px;
   }
-  & > div::-webkit-scrollbar-thumb {
+  &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
   }
