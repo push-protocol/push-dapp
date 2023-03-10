@@ -126,8 +126,8 @@ const AutoImageClipper = (props) => {
                     onZoomChange={onZoomChange}
                     style={{
                         containerStyle: {
-                            width: width ? width : "128px",
-                            height: height ? height : "128px",
+                            width: width ? width : "0.1px",
+                            height: height ? height : "0.1px",
                             position: "relative",
                             borderRadius: "16px"
                         }
