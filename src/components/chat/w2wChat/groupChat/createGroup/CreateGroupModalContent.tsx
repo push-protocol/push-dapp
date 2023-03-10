@@ -134,6 +134,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         <ItemHV2
           justifyContent={createGroupState == 2 ? 'space-between' : 'center'}
           align-items="center"
+          padding={createGroupState == 2 ? (isMobile ? '0px 24px' : '0px 32px') : '0px'}
         >
           {createGroupState == 2 && (
             <Back
@@ -151,7 +152,11 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px' }}
+            style={{
+              cursor: 'pointer',
+              position: 'absolute',
+              right: isMobile ? (createGroupState == 2 ? '24px' : '20px') : '4px',
+            }}
           />
         </ItemHV2>
         {createGroupState == 1 && (
@@ -187,7 +192,7 @@ const ModalContainer = styled.div`
   box-sizing: border-box;
   border-radius: 16px;
   background-color: ${(props) => props.background};
-  padding: ${(props) => (props.createGroupState == 2 ? '32px 36px' : '32px 17px')};
+  padding: ${(props) => (props.createGroupState == 2 ? '32px 0px' : '32px 17px')};
   margin: 0px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -202,6 +207,6 @@ const ModalContainer = styled.div`
     max-height: 80vh;
     min-width: 93vw;
     max-width: 95vw;
-    padding: ${(props) => (props.createGroupState == 2 ? '32px 24px' : '32px 0px')};
+    padding:32px 0px;
   }
 `;

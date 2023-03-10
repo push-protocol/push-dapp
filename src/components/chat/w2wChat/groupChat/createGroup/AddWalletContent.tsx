@@ -205,7 +205,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
             darkIcon={<Add />}
           />
         )}
-        <MultipleMemberList>
+        <MultipleMemberList minHeight={memberList?.length < 4 ? 72 * memberList.length : 216}>
           {memberList.map((member, index) => (
             <MemberListContainer
               key={index}
@@ -233,6 +233,25 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
 
 const Container = styled.div`
   margin-top: 62px;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 36px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #d53a94;
+    border-bottom: 150px solid transparent;
+    background-clip: padding-box;
+  }
+  @media ${device.mobileL} {
+    //padding: 42px 18px 42px 26px;
+    &&::-webkit-scrollbar-thumb {
+      border-bottom: 400px solid transparent;
+    }
+  }
 `;
 
 const SearchbarContainer = styled(ItemVV2)`
@@ -297,6 +316,7 @@ const MultipleMemberList = styled.div`
   overflow-y: auto;
   height: fit-content;
   max-height: 216px;
+  min-height: ${(props) => `${props.minHeight}px`};
   padding: 0px 2px;
   overflow-x: hidden;
 
