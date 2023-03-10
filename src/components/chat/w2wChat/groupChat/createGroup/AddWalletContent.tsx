@@ -202,7 +202,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
             </ItemVV2>
           </SearchBarContent>
         </SearchbarContainer>
-        {filteredUserData ? (
+        {filteredUserData &&
           <MemberList >
 
             <MemberListContainer
@@ -212,8 +212,8 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               darkIcon={<AddDark />}
             />
 
-          </MemberList>
-        ) : (
+          </MemberList>}
+     
           <MultipleMemberList >
             {memberList.map((member, index) => (
               <MemberListContainer
@@ -228,7 +228,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
 
             ))}
           </MultipleMemberList>
-        )}
+       
         <ModalConfirmButton
           text="Create Group"
           onClick={() => handleCreateGroup()}

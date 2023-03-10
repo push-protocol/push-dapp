@@ -20,7 +20,7 @@ type MemberListContainerType = {
   key?: number;
   memberData: User;
   handleMemberList: (member: User) => void;
-  handleMembers: (value: User[]) => void;
+  handleMembers?: (value: User[]) => void;
   lightIcon: any;
   darkIcon: any;
   memberList?: any;
@@ -102,7 +102,7 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
       {selectedWallet == memberData.wallets && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
-            dropdownValues={[memberData?.isAdmin ? removeAdminDropdown : addAdminDropdown, removeUserDropdown]}
+            dropdownValues={memberData?.isAdmin ?[removeAdminDropdown,removeUserDropdown] : [addAdminDropdown, removeUserDropdown]}
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
