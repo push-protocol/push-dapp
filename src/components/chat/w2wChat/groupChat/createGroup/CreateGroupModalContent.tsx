@@ -155,7 +155,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             style={{
               cursor: 'pointer',
               position: 'absolute',
-              right: isMobile ? (createGroupState == 2 ? '24px' : '20px') : '4px',
+              right: isMobile ? (createGroupState == 2 ? '24px' : '20px') : createGroupState == 2 ? '36px' : '4px',
             }}
           />
         </ItemHV2>
@@ -207,6 +207,6 @@ const ModalContainer = styled.div`
     max-height: 80vh;
     min-width: 93vw;
     max-width: 95vw;
-    padding:32px 0px;
+    padding: 32px 0px;
   }
 `;
