@@ -1,7 +1,7 @@
 import { Provider } from '@ethersproject/providers';
 import { abis, addresses } from 'config';
 import { BigNumber, ethers, Signer } from 'ethers';
-import {ConnectorUpdate} from "@web3-react/types";
+// import {ConnectorUpdate} from "@web3-react/types";
 
 type PushTokenApprovalAmountType = {
   address: string;

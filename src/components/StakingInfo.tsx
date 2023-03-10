@@ -19,8 +19,6 @@ import { mintPushToken } from "helpers";
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { library, account } = useWeb3React();
 
-  const isProd = appConfig?.appEnv === 'prod';
-
   const isMobile = useDeviceWidthCheck(600)
   
   // mint PUSH token
