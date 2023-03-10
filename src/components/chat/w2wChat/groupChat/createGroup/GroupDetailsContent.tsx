@@ -266,6 +266,8 @@ const Container = styled.div`
 `;
 
 const GroupIconContainer = styled.div`
+  min-width:128px;
+  min-height:128px;
   width: fit-content;
   display: flex;
   justify-content: center;
