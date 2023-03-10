@@ -155,7 +155,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             isLoading={isLoading}
             handlePrevious={handlePrevious}
             handleClose={handleClose}
-            title={"Add More Wallets"}
+            title={"Create group"}
           />
         )}
       </ModalContainer>
