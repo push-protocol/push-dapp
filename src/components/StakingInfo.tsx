@@ -19,8 +19,6 @@ import { mintPushToken } from "helpers";
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { library, account } = useWeb3React();
 
-  const isProd = appConfig?.appEnv === 'prod';
-
   const isMobile = useDeviceWidthCheck(600)
   
   // mint PUSH token
@@ -44,7 +42,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
               </b>
             </TabSpace>
             
-            {!isProd && <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />}
+            <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />
           </Item>
 
         <Item width="12.2em" self="stretch" align="stretch" margin={isMobile ? "70px auto 50px auto" : "100px auto 50px auto"}>
