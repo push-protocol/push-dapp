@@ -181,7 +181,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 80vh;
+  max-height: 78vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
