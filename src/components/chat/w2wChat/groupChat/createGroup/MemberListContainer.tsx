@@ -46,7 +46,7 @@ const MemberListContainer = ({
             </WalletProfile>
             <ItemVV2
               alignItems="flex-end"
-              maxWidth="30px"
+              maxWidth="50px"
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 handleMemberList(memberData)
@@ -64,7 +64,7 @@ export default MemberListContainer;
 
 
 const WalletProfileContainer = styled(ItemHV2)`
-  padding: 8px;
+  padding: 8px 16px;
   margin: 0px 0px 8px 0px;
   justify-content: space-between;
   min-width: 445px;
