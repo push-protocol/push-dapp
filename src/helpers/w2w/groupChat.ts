@@ -124,6 +124,33 @@ export const updateGroup = async(options:UpdateGroupType) => {
   return {updateResponse,updatedCurrentChat};
 }
 
+export const addMoreMembers = async(options:UpdateGroupType) => {
+  const { currentChat, connectedUser,adminList,memeberList } = options;
+
+  const updateResponse = await PushAPI.chat.updateGroup({
+    chatId: currentChat?.groupInformation?.chatId,
+    groupName: currentChat?.groupInformation?.groupName,
+    groupDescription: currentChat?.groupInformation?.groupDescription,
+    groupImage: currentChat?.groupInformation?.groupImage,
+    members: memeberList,
+    admins: adminList,
+    account: connectedUser?.wallets,
+    pgpPrivateKey: connectedUser?.privateKey,
+    env: appConfig.appEnv
+  })
+
+
+
+  let updatedCurrentChat = null;
+  if(typeof updateResponse !== 'string')
+  {
+    updatedCurrentChat = currentChat;
+    updatedCurrentChat.groupInformation = updateResponse;
+  }
+  return {updateResponse,updatedCurrentChat};
+}
+
+
 
 export const rearrangeMembers = (currentChat,connectedUser) => {
   currentChat?.groupInformation?.members.sort(x => (x?.isAdmin) ? -1 : 1);
