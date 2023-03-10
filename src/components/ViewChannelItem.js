@@ -584,7 +584,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
               <ChannelTitleLink>
                 <ChannelTitleSpan>
                   <Span>
-                    {showChannelChangedWarning && (
+                    {/* {showChannelChangedWarning && (
                       <Tooltip
                         wrapperProps={{
                           width: 'fit-content',
@@ -626,7 +626,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                           <ImageInfo src={InfoImage} />
                         </div>
                       </Tooltip>
-                    )}
+                    )} */}
 
                     <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
                   </Span>
@@ -745,7 +745,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
             ) : (
               <ChannelTitleLink>
                 <Span style={{ display: 'flex', alignItems: 'center' }}>
-                  {showChannelChangedWarning && (
+                  {/* {showChannelChangedWarning && (
                     <Tooltip
                       wrapperProps={{
                         width: 'fit-content',
@@ -788,7 +788,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         <ImageInfo src={InfoImage} />
                       </div>
                     </Tooltip>
-                  )}
+                  )} */}
 
                   <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
 
