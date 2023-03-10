@@ -25,6 +25,7 @@ import { ProfileCard } from './ProfileCard';
 import {
   addMoreMembers,
   convertToWalletAddressList,
+  getAdminList,
   getUpdatedAdminList,
   getUpdatedMemberList,
   updateGroup,
@@ -70,7 +71,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
   const makeGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members, ...currentChat?.groupInformation?.pendingMembers]);
-    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
+    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, false);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList: newAdminList, memeberList: groupMemberList });
       if (typeof updateResponse !== 'string') {
@@ -110,7 +111,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
   const dismissGroupAdmin = async () => {
     const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members, ...currentChat?.groupInformation?.pendingMembers]);
-    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
+    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, true);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList: newAdminList, memeberList: groupMemberList });
       if (typeof updateResponse !== 'string') {
@@ -150,7 +151,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
   const removeMember = async () => {
     const updatedMemberList = getUpdatedMemberList(currentChat, selectedMemeberAddress);
-    const adminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
+    const adminList = getAdminList(currentChat?.groupInformation);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList, memeberList: updatedMemberList });
 
@@ -188,45 +189,22 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     }
     setSelectedMemeberAddress(null);
   };
-  const messageUserDropdown: DropdownValueType =
-    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }
-    ;
 
-  const removeAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() }
-    ;
-
-  const addAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() }
-    ;
-
-  const removeMemberDropdown: DropdownValueType =
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' }
-
-
-  // to close the modal upon a click on backdrop
-  const containerRef = React.useRef(null);
-  useClickAway(containerRef, () => handleClose());
-
-  const handleAddMoreWalletAddress = async () => {
+  const addMembers = async () => {
     
     //Already Present Members and PendingMembers
-    const alreadyPresentMembers = groupMembers.map(member => member.wallet);
-    const groupCreatorAddress = currentChat?.groupInformation?.members.filter((x)=>x.wallet===groupCreator).map(member=>member.wallet);
-    const allMembers = [...groupCreatorAddress,...alreadyPresentMembers];
+    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members, ...currentChat?.groupInformation?.pendingMembers]);
 
     //Newly Added Members and alreadyPresent Members in the groupchat
     const newMembersToAdd = memberList.map(member => member.wallets);
-    const members = [...allMembers, ...newMembersToAdd];
+    const members = [...groupMemberList, ...newMembersToAdd];
 
     //Admins wallet address from both members and pendingMembers
-    const adminsFromMembers = convertToWalletAddressList(currentChat?.groupInformation?.members.filter((admin) => admin.isAdmin == true));
-    const adminsFromPendingMembers = convertToWalletAddressList(currentChat?.groupInformation?.pendingMembers.filter((admin) => admin.isAdmin == true));
-    const adminList = [...adminsFromMembers,...adminsFromPendingMembers];
-
+    const adminList = getAdminList(currentChat?.groupInformation);
+    
     try {
 
-      const { updateResponse, updatedCurrentChat } = await addMoreMembers({ currentChat, connectedUser, adminList, memeberList: members });
+      const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList, memeberList: members });
 
       if (typeof updateResponse !== 'string') {
         setSelectedMemeberAddress(null)
@@ -264,6 +242,28 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     }
 
   }
+
+  const messageUserDropdown: DropdownValueType =
+    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }
+    ;
+
+  const removeAdminDropdown: DropdownValueType =
+    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() }
+    ;
+
+  const addAdminDropdown: DropdownValueType =
+    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() }
+    ;
+
+  const removeMemberDropdown: DropdownValueType =
+    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' }
+
+
+  // to close the modal upon a click on backdrop
+  const containerRef = React.useRef(null);
+  useClickAway(containerRef, () => handleClose());
+
+  
 
   const handlePrevious = () => {
     setShowAddMoreWalletModal(false);
@@ -435,7 +435,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
         {showAddMoreWalletModal && (
           <AddWalletContent
-            handleCreateGroup={handleAddMoreWalletAddress}
+            handleCreateGroup={addMembers()}
             memberList={memberList}
             handleMemberList={setMemberList}
             handlePrevious={handlePrevious}

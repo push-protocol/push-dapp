@@ -2,6 +2,7 @@ import { appConfig } from 'config';
 import { walletToCAIP10 } from '.';
 import { ConnectedUser, Feeds, Member } from '../../types/chat';
 import * as PushAPI from "@pushprotocol/restapi";
+import { GroupDTO } from '@pushprotocol/restapi';
 
 
 type UpdateGroupType = {
@@ -84,15 +85,21 @@ export const convertToWalletAddressList = (memberList:Member[]) => {
   return memberList?.map((member) => member.wallet);
 };
 
-export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove: boolean): Array<string> => {
-  const existingAdmins = feed?.groupInformation?.members?.filter((admin) => admin.isAdmin == true);
-  const groupAdminList = convertToWalletAddressList(existingAdmins);
+export const getUpdatedAdminList = (groupInformation: GroupDTO, walletAddress: string, toRemove: boolean): Array<string> => {
+  const groupAdminList = getAdminList(groupInformation);
   if (!toRemove) {
     return [...groupAdminList, walletAddress];
   } else {
     const newAdminList = groupAdminList.filter((wallet) => wallet !== walletAddress);
     return newAdminList;
   }
+};
+
+export const getAdminList = (groupInformation: GroupDTO): Array<string> => {
+  const adminsFromMembers = convertToWalletAddressList(groupInformation?.members.filter((admin) => admin.isAdmin == true));
+    const adminsFromPendingMembers = convertToWalletAddressList(groupInformation?.pendingMembers.filter((admin) => admin.isAdmin == true));
+    const adminList = [...adminsFromMembers,...adminsFromPendingMembers];
+    return adminList
 };
 
 export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
@@ -123,33 +130,6 @@ export const updateGroup = async(options:UpdateGroupType) => {
   }
   return {updateResponse,updatedCurrentChat};
 }
-
-export const addMoreMembers = async(options:UpdateGroupType) => {
-  const { currentChat, connectedUser,adminList,memeberList } = options;
-
-  const updateResponse = await PushAPI.chat.updateGroup({
-    chatId: currentChat?.groupInformation?.chatId,
-    groupName: currentChat?.groupInformation?.groupName,
-    groupDescription: currentChat?.groupInformation?.groupDescription,
-    groupImage: currentChat?.groupInformation?.groupImage,
-    members: memeberList,
-    admins: adminList,
-    account: connectedUser?.wallets,
-    pgpPrivateKey: connectedUser?.privateKey,
-    env: appConfig.appEnv
-  })
-
-
-
-  let updatedCurrentChat = null;
-  if(typeof updateResponse !== 'string')
-  {
-    updatedCurrentChat = currentChat;
-    updatedCurrentChat.groupInformation = updateResponse;
-  }
-  return {updateResponse,updatedCurrentChat};
-}
-
 
 
 export const rearrangeMembers = (currentChat,connectedUser) => {
