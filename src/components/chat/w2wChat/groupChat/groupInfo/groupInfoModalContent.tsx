@@ -434,6 +434,7 @@ const DescriptionContainer = styled(ItemVV2)`
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width:300px;
   }
 `;
 
@@ -442,6 +443,7 @@ const InfoContainer = styled(ItemHV2)`
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width:300px;
   }
 `;
 
