@@ -48,7 +48,9 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
   // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const [groupMembers, setGroupMembers] = React.useState(currentChat?.groupInformation?.members);
+  const groupCreator = currentChat?.groupInformation?.groupCreator;
+  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x)=>x.wallet!==groupCreator);
+  const [groupMembers, setGroupMembers] = React.useState([...membersExceptGroupCreator,...currentChat?.groupInformation?.pendingMembers]);
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => ((caip10ToWallet(member?.wallet) === account) && member?.isAdmin)
@@ -83,7 +85,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -98,7 +100,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         getToastIcon: (size) => (
           <MdError
             size={size}
-            color="green"
+            color="red"
           />
         ),
       });
@@ -123,7 +125,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -138,7 +140,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         getToastIcon: (size) => (
           <MdError
             size={size}
-            color="green"
+            color="red"
           />
         ),
       });
@@ -164,7 +166,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -179,7 +181,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         getToastIcon: (size) => (
           <MdError
             size={size}
-            color="green"
+            color="red"
           />
         ),
       });
@@ -207,17 +209,24 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   useClickAway(containerRef, () => handleClose());
 
   const handleAddMoreWalletAddress = async () => {
+    
+    //Already Present Members and PendingMembers
+    const alreadyPresentMembers = groupMembers.map(member => member.wallet);
+    const groupCreatorAddress = currentChat?.groupInformation?.members.filter((x)=>x.wallet===groupCreator).map(member=>member.wallet);
+    const allMembers = [...groupCreatorAddress,...alreadyPresentMembers];
 
+    //Newly Added Members and alreadyPresent Members in the groupchat
     const newMembersToAdd = memberList.map(member => member.wallets);
-    const alreadyPresentMembers = groupMembers.map(member => member.wallet)
-    const members = [...alreadyPresentMembers, ...newMembersToAdd];
+    const members = [...allMembers, ...newMembersToAdd];
 
-    const adminList = convertToWalletAddressList(currentChat?.groupInformation?.members.filter((admin) => admin.isAdmin == true));
+    //Admins wallet address from both members and pendingMembers
+    const adminsFromMembers = convertToWalletAddressList(currentChat?.groupInformation?.members.filter((admin) => admin.isAdmin == true));
+    const adminsFromPendingMembers = convertToWalletAddressList(currentChat?.groupInformation?.pendingMembers.filter((admin) => admin.isAdmin == true));
+    const adminList = [...adminsFromMembers,...adminsFromPendingMembers];
 
     try {
 
       const { updateResponse, updatedCurrentChat } = await addMoreMembers({ currentChat, connectedUser, adminList, memeberList: members });
-      console.log("response", updateResponse);
 
       if (typeof updateResponse !== 'string') {
         setSelectedMemeberAddress(null)
@@ -231,7 +240,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -240,10 +249,20 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       handleClose();
 
     } catch (error) {
-      console.log("Error", error)
+      console.log("Error", error);
+      createGroupToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: error.message,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
     }
 
-    console.log("Handle More Wallet Address");
   }
 
   const handlePrevious = () => {

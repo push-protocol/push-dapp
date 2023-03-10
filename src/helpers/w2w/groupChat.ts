@@ -170,3 +170,13 @@ export const rearrangeMembers = (currentChat,connectedUser) => {
   );
   return currentChat;
 }
+
+export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{
+
+
+  const memberCheck = groupMembers?.find((x)=>x.wallet == member.wallets);
+  if(memberCheck){
+    return true;
+  }
+  return false;
+}

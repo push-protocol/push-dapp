@@ -15,6 +15,7 @@ import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 import { appConfig } from 'config';
 import { device } from 'config/Globals';
+import CreateGroupNavbar from './CreateGroupNavbar';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -26,6 +27,8 @@ export const GroupDetailsContent = ({
   handleGroupDescriptionData,
   handleGroupTypeObject,
   handleCreateGroupState,
+  handlePrevious,
+  handleClose
 }) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const fileUploadInputRef = React.useRef<HTMLInputElement>();
@@ -107,6 +110,15 @@ export const GroupDetailsContent = ({
 
   return (
     <ThemeProvider theme={themes}>
+
+
+      <CreateGroupNavbar
+        handleClose={handleClose}
+        title={"Create Group"}
+      />
+
+
+
       <Container>
         <GroupIconContainer onClick={handleUpload}>
           {groupImageData ? (
