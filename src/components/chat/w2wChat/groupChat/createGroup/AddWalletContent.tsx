@@ -13,8 +13,8 @@ import {  ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2'
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
-import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removelight.svg';
-import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
+import {ReactComponent as MoreLight} from 'assets/chat/group-chat/more.svg';
+import {ReactComponent as MoreDark} from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import * as w2wChatHelper from 'helpers/w2w';
@@ -145,7 +145,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
         ),
       });
     } else {
-      handleMemberList((prev) => [...prev,member]);
+      handleMemberList((prev) => [...prev,{...member,isAdmin:false}]);
     }
 
     setFilteredUserData('');
@@ -156,8 +156,6 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
     const filteredMembers = memberList.filter((user) => user.wallets !== member.wallets);
     handleMemberList(filteredMembers);
   };
-
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -204,7 +202,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
             </ItemVV2>
           </SearchBarContent>
         </SearchbarContainer>
-        {filteredUserData ? (
+        {filteredUserData &&
           <MemberList >
 
             <MemberListContainer
@@ -214,22 +212,23 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
               darkIcon={<AddDark />}
             />
 
-          </MemberList>
-        ) : (
+          </MemberList>}
+     
           <MultipleMemberList >
             {memberList.map((member, index) => (
-
               <MemberListContainer
                 key={index}
+                memberList={memberList}
                 memberData={member}
+                handleMembers={handleMemberList}
                 handleMemberList={removeMemberFromList}
-                lightIcon={<RemoveLight />}
-                darkIcon={<RemoveDark />}
+                lightIcon={<MoreLight />}
+                darkIcon={<MoreDark />}
               />
 
             ))}
           </MultipleMemberList>
-        )}
+       
         <ModalConfirmButton
           text="Create Group"
           onClick={() => handleCreateGroup()}
