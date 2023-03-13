@@ -381,7 +381,7 @@ const ReceivedMessage = styled.div`
   display: flex;
   justify-content: flex-start;
   color: #000000;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   padding: 9px 17px;
 `;
