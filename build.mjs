@@ -103,7 +103,8 @@ const changeENV = async (appEnv) => {
   const envsamplepath = `./.env.sample`;
 
   if (!fs.existsSync(envpath)) {
-    console.log(chalk.red('  -- Checking for ENV File... Not Found, aborted'));
+    console.log(chalk.red('  -- Checking for ENV File... Not Found, creating'));
+    fs.writeFileSync(envpath, fs.readFileSync(envsamplepath, 'utf8'));
   } else {
     console.log(chalk.green.dim('  -- Checking for ENV File... Found'));
   }
