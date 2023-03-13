@@ -9,14 +9,16 @@ import { useTheme } from 'styled-components';
 const GroupModalHeader = ({
     handlePrevious,
     handleClose,
-    title
+    title,
+    margin
 }) => {
     const isMobile = useDeviceWidthCheck(600);
     const themes = useTheme();
     return (
         <ItemHV2
             justifyContent='center'
-            align-items="center"
+            alignItems="center"
+            margin={margin}
         >
             {handlePrevious &&
                 (<Back

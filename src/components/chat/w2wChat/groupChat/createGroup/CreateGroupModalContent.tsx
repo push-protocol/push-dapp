@@ -56,13 +56,14 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
     if (memberList.length >= 2) {
       setIsLoading(true);
       try {
-        const memberWalletList = memberList.map((member) => member.wallets);
+        const memberWalletList = memberList.filter((member) => !member.isAdmin).map((member) => member.wallets);
+        const adminWalletList = memberList.filter(member => member.isAdmin).map((member) => member.wallets);
         const createGroupRes = await PushAPI.chat.createGroup({
           groupName: groupNameData,
           groupDescription: groupDescriptionData,
           members: memberWalletList,
           groupImage: groupImageData ?? profilePicture,
-          admins: [],
+          admins: adminWalletList,
           isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
           account: account!,
           pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
@@ -164,7 +165,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 80vh;
+  max-height: 78vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

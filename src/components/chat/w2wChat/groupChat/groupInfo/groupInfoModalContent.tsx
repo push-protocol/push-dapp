@@ -56,7 +56,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [groupMembers, setGroupMembers] = React.useState([...membersExceptGroupCreator,...currentChat?.groupInformation?.pendingMembers]);
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
-    (member) => ((caip10ToWallet(member?.wallet) === account) && member?.isAdmin)
+    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
@@ -72,14 +72,21 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   const makeGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members, ...currentChat?.groupInformation?.pendingMembers]);
-    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, false);
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
+    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
     try {
-      const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList: newAdminList, memeberList: groupMemberList });
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList: newAdminList,
+        memeberList: groupMemberList,
+      });
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-        if (updatedCurrentChat)
-          setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -92,7 +99,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
     } catch (e) {
       console.error('Error while adding admin', e);
@@ -112,14 +119,21 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   const dismissGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members, ...currentChat?.groupInformation?.pendingMembers]);
-    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, true);
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
+    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
     try {
-      const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList: newAdminList, memeberList: groupMemberList });
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList: newAdminList,
+        memeberList: groupMemberList,
+      });
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-        if (updatedCurrentChat)
-          setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -132,7 +146,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
     } catch (e) {
       console.error('Error while dismissing admin', e);
@@ -173,7 +187,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
     } catch (error) {
       console.error('Error in removing memeber', error);
@@ -298,10 +312,11 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
         {!showAddMoreWalletModal && (
           <>
-            {/* <GroupModalHeader
+            <GroupModalHeader
               handleClose={handleClose}
               title={"Group Info"}
-            /> */}
+              margin='0 0 34px 0'
+            />
 
 
             <InfoContainer
@@ -407,7 +422,11 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 </SpanV2>
               </AddWalletContainer>
             )}
-            <ProfileContainer>
+            <ProfileContainer minHeight={
+              currentChat?.groupInformation?.members?.length < 4
+                ? 72 * currentChat?.groupInformation?.members?.length
+                : 216
+            }>
               {currentChat?.groupInformation?.members?.map((member, index) => {
                 return (
                   member && (
@@ -462,42 +481,30 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  max-height: 710px;
   max-width: 517px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  & > div::-webkit-scrollbar {
-    width: 4px;
-  }
-  & > div::-webkit-scrollbar-thumb {
-    background: #cf1c84;
-    border-radius: 10px;
-  }
+  padding: 24px 36px 20px 36px;
   @media (max-width: 480px) {
-    max-height: 90vh;
-    &&::-webkit-scrollbar-thumb {
-      border-bottom: 400px solid transparent;
-    }
+    padding: 24px 24px 20px 24px;
+    max-width: 94vw;
   }
-  padding: ${(props) => (props.isMobile ? '24px 24px 20px 24px' : '24px 36px 20px 36px')};
 `;
 
 
 const DescriptionContainer = styled(ItemVV2)`
-  max-width: 445px;
+  min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width:300px;
   }
 `;
 
 const InfoContainer = styled(ItemHV2)`
-  max-width: 445px;
+  min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width:300px;
   }
 `;
 
@@ -517,12 +524,13 @@ const ProfileContainer = styled.div`
   align-items: center;
   min-width: 445px;
   max-height: 216px;
+  min-height: ${(props) => `${props.minHeight}px`};
   overflow-y: auto;
   overflow-x: hidden;
-  & > div::-webkit-scrollbar {
+  &&::-webkit-scrollbar {
     width: 4px;
   }
-  & > div::-webkit-scrollbar-thumb {
+  &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
   }

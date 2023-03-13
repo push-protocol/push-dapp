@@ -25,7 +25,7 @@ export const config = {
     1, //for ethereum mainnet
     137, //for polygon mainnet
     56, // for bnb mainnet
-    10 // for optimism mainnet
+    // 10 // for optimism mainnet
   ],
 
   /**

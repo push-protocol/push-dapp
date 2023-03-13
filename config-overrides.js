@@ -16,15 +16,15 @@ module.exports = function override(config, env) {
     url: require.resolve('url'),
     util: require.resolve('util/'),
     stream: require.resolve('stream-browserify')
-  }
-  config.resolve.extensions = [...config.resolve.extensions, '.ts', '.js']
+  };
+  config.resolve.extensions = [...config.resolve.extensions, '.ts', '.js'];
   config.plugins = [
     ...config.plugins,
     new webpack.ProvidePlugin({
       process: 'process/browser',
       Buffer: ['buffer', 'Buffer']
-    })
-  ]
+    }),
+  ];
   config.module.rules = [...config.module.rules,
     {
       test: /\.m?js/,
@@ -32,7 +32,7 @@ module.exports = function override(config, env) {
         fullySpecified: false
       }
     }
-  ]
+  ];
 
-  return config
-}
+  return config;
+};

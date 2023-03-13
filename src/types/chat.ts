@@ -31,6 +31,7 @@ export interface User {
     numMsg: number;
     allowedNumMsg: number;
     linkedListHash?: string | null;
+    isAdmin?:boolean;
 }
   
 export interface ConnectedUser extends User {
