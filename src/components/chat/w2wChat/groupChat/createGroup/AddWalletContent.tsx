@@ -305,6 +305,7 @@ const Input = styled.input`
 const MemberList = styled(ItemVV2)`
   justify-content: 'flex-start';
   padding: 0px 2px;
+  margin: 0 0 34px 0;
 `;
 
 

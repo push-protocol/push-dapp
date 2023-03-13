@@ -59,7 +59,7 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
   }
 
   return (
-    <WalletProfileContainer background={theme.groupSearchProfilBackground}>
+    <WalletProfileContainer background={memberList?'transparent':theme.groupSearchProfilBackground} border={memberList?`1px solid ${theme.modalInputBorderColor}`:'none'}>
       <WalletProfile>
         <ItemVV2
           width="48px"
@@ -72,22 +72,21 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
         </ItemVV2>
         <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(memberData.wallets.split(':')[1], 8, 6)}</SpanV2>
       </WalletProfile>
+      <ItemHV2 justifyContent="flex-end">
       {memberData?.isAdmin && (
         <SpanV2
-          background="#F4DCEA"
-          color="#D53A94"
-          borderRadius="8px"
-          padding="6px"
-          fontWeight="500"
-          fontSize="10px"
+         background="#F4DCEA"
+            color="#D53A94"
+            borderRadius="8px"
+            padding="6px"
+            fontWeight="500"
+            fontSize="10px"
         >
           Admin
         </SpanV2>
       )}
       <ItemVV2
-        alignItems="flex-end"
-        maxWidth="30px"
-        style={{ cursor: 'pointer' }}
+        maxWidth='fit-content'
         onClick={() => {
           setSelectedWallet(null)
           memberList
@@ -99,6 +98,7 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
       >
         {theme.scheme == 'light' ? lightIcon : darkIcon}
       </ItemVV2>
+      </ItemHV2>
       {selectedWallet == memberData.wallets && (
         <DropdownContainer ref={dropdownRef}>
           <Dropdown
@@ -115,7 +115,7 @@ export default MemberListContainer;
 
 const WalletProfileContainer = styled(ItemHV2)`
   position:unset;
-  padding: 8px;
+  padding: 8px 16px;
   margin: 0px 0px 8px 0px;
   justify-content: space-between;
   min-width: 445px;
