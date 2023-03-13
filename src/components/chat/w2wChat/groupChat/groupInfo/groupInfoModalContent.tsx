@@ -44,14 +44,14 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const createGroupToast = useToast();
   const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
-    (member) => ((caip10ToWallet(member?.wallet) === account) && member?.isAdmin)
+    (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
   const dropdownRef = React.useRef<any>(null);
   useClickAway(dropdownRef, () => setSelectedMemeberAddress(null));
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   const handleClose = () => onClose();
-  
+
   const messageUser = async () => {
     let feed: Feeds = await getDefaultFeed({ walletAddress: selectedMemeberAddress!, inbox, intents: receivedIntents });
     setChat(feed);
@@ -60,14 +60,21 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   const makeGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members,...currentChat?.groupInformation?.pendingMembers]);
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
     const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
     try {
-      const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList: newAdminList,
+        memeberList: groupMemberList,
+      });
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-       if(updatedCurrentChat)
-        setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -80,7 +87,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
     } catch (e) {
       console.error('Error while adding admin', e);
@@ -100,14 +107,21 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   const dismissGroupAdmin = async () => {
-    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members,...currentChat?.groupInformation?.pendingMembers]);
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
     const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
     try {
-      const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList:newAdminList,memeberList:groupMemberList});
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList: newAdminList,
+        memeberList: groupMemberList,
+      });
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-       if(updatedCurrentChat)
-        setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -120,7 +134,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
     } catch (e) {
       console.error('Error while dismissing admin', e);
@@ -143,12 +157,16 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     const updatedMemberList = getUpdatedMemberList(currentChat, selectedMemeberAddress);
     const adminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
     try {
-      const {updateResponse,updatedCurrentChat} = await updateGroup({currentChat,connectedUser,adminList,memeberList:updatedMemberList});
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList,
+        memeberList: updatedMemberList,
+      });
 
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-        if(updatedCurrentChat)
-        setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -161,7 +179,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
     } catch (error) {
       console.error('Error in removing memeber', error);
@@ -179,21 +197,31 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     }
     setSelectedMemeberAddress(null);
   };
-  const messageUserDropdown: DropdownValueType = 
-    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }
-  ;
-
-  const removeAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() }
-  ;
-
-  const addAdminDropdown: DropdownValueType = 
-    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() }
-  ;
-
-  const removeMemberDropdown: DropdownValueType = 
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' }
-  
+  const messageUserDropdown: DropdownValueType = {
+    id: 'message_user',
+    title: 'Message user',
+    icon: Message,
+    function: () => messageUser(),
+  };
+  const removeAdminDropdown: DropdownValueType = {
+    id: 'dismiss_admin',
+    title: 'Dismiss as admin',
+    icon: DismissAdmin,
+    function: () => dismissGroupAdmin(),
+  };
+  const addAdminDropdown: DropdownValueType = {
+    id: 'dismiss_admin',
+    title: 'Make group admin',
+    icon: AddAdmin,
+    function: () => makeGroupAdmin(),
+  };
+  const removeMemberDropdown: DropdownValueType = {
+    id: 'remove_member',
+    title: 'Remove',
+    icon: Remove,
+    function: () => removeMember(),
+    textColor: '#ED5858',
+  };
 
   // to close the modal upon a click on backdrop
   const containerRef = React.useRef(null);
@@ -209,6 +237,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         <ItemHV2
           justifyContent="center"
           alignItems="flex-start"
+          position="relative"
         >
           <SpanV2
             fontWeight="500"
@@ -221,9 +250,10 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           </SpanV2>
           <Close
             onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right:'0px', top: '5px' }}
+            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? '24px' : '24px', top: '8px' }}
           />
         </ItemHV2>
+        <Container>
           <InfoContainer
             justifyContent="flex-start"
             margin="0px 0px 29px 0px"
@@ -328,28 +358,35 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
               </SpanV2>
             </AddWalletContainer>
           )} */}
-          <ProfileContainer>
-          {currentChat?.groupInformation?.members?.map((member, index) => {
-            return (
-              member && (
-                <ProfileCard
-                  key={index}
-                  member={member}
-                  dropdownValues={
-                    member?.isAdmin && isAccountOwnerAdmin
-                      ? [removeAdminDropdown,removeMemberDropdown]
-                      : isAccountOwnerAdmin
-                      ? [addAdminDropdown,removeMemberDropdown]
-                      : []
-                  }
-                  selectedMemeberAddress={selectedMemeberAddress}
-                  setSelectedMemeberAddress={setSelectedMemeberAddress}
-                  dropdownRef={dropdownRef}
-                />
-              )
-            );
-          })}
-        </ProfileContainer>
+          <ProfileContainer
+            minHeight={
+              currentChat?.groupInformation?.members?.length < 4
+                ? 72 * currentChat?.groupInformation?.members?.length
+                : 216
+            }
+          >
+            {currentChat?.groupInformation?.members?.map((member, index) => {
+              return (
+                member && (
+                  <ProfileCard
+                    key={index}
+                    member={member}
+                    dropdownValues={
+                      member?.isAdmin && isAccountOwnerAdmin
+                        ? [removeAdminDropdown, removeMemberDropdown]
+                        : isAccountOwnerAdmin
+                        ? [addAdminDropdown, removeMemberDropdown]
+                        : []
+                    }
+                    selectedMemeberAddress={selectedMemeberAddress}
+                    setSelectedMemeberAddress={setSelectedMemeberAddress}
+                    dropdownRef={dropdownRef}
+                  />
+                )
+              );
+            })}
+          </ProfileContainer>
+        </Container>
       </ModalContainer>
     </ThemeProvider>
   );
@@ -360,42 +397,53 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  max-height: 710px;
   max-width: 517px;
+  padding: 24px 0px 20px 0px;
+  @media (max-width: 480px) {
+    max-width: 94vw;
+  }
+`;
+
+const Container = styled.div`
+  max-height: 60vh;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  & > div::-webkit-scrollbar {
+  padding: 0px 36px 0px 36px;
+  &&::-webkit-scrollbar {
     width: 4px;
   }
-  & > div::-webkit-scrollbar-thumb {
-    background: #cf1c84;
-    border-radius: 10px;
+  &&::-webkit-scrollbar-thumb {
+    background: #d53a94;
+    border-bottom: 200px solid transparent;
+    background-clip: padding-box;
   }
-  @media (max-width: 480px) {
-    max-height: 90vh;
+  @media (max-width: 600px) {
+    max-height: 65vh;
+    max-width: 94vw;
+    padding: 0px 24px 0px 24px;
     &&::-webkit-scrollbar-thumb {
-      border-bottom: 400px solid transparent;
+      border-bottom: 300px solid transparent;
     }
   }
-  padding: ${(props) => (props.isMobile ? '24px 24px 20px 24px' : '24px 36px 20px 36px')};
 `;
 
-
 const DescriptionContainer = styled(ItemVV2)`
-  max-width: 445px;
+  min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width:300px;
   }
 `;
 
 const InfoContainer = styled(ItemHV2)`
-  max-width: 445px;
+  min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width:300px;
   }
 `;
 
@@ -415,12 +463,13 @@ const ProfileContainer = styled.div`
   align-items: center;
   min-width: 445px;
   max-height: 216px;
+  min-height: ${(props) => `${props.minHeight}px`};
   overflow-y: auto;
   overflow-x: hidden;
-  & > div::-webkit-scrollbar {
+  &&::-webkit-scrollbar {
     width: 4px;
   }
-  & > div::-webkit-scrollbar-thumb {
+  &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
   }

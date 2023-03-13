@@ -84,6 +84,9 @@ const ProfileCardItem = styled(ItemHV2)`
   background-color: ${(props) => props.theme.chat.snapFocusBg};
   margin-bottom: 8px;
   max-height: 64px;
+  @media(max-width:600px){
+    max-width:300px;
+  }
 `;
 
 const DropdownContainer = styled(ItemVV2)`

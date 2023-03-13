@@ -13,8 +13,8 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
-import { ReactComponent as RemoveLight } from 'assets/chat/group-chat/removelight.svg';
-import { ReactComponent as RemoveDark } from 'assets/chat/group-chat/removedark.svg';
+import {ReactComponent as MoreLight} from 'assets/chat/group-chat/more.svg';
+import {ReactComponent as MoreDark} from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import { ReactComponent as Add } from 'assets/chat/group-chat/add.svg';
 import { displayDefaultUser } from 'helpers/w2w/user';
@@ -144,7 +144,7 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
         ),
       });
     } else {
-      handleMemberList((prev) => [...prev, member]);
+      handleMemberList((prev) => [...prev,{...member,isAdmin:false}]);
     }
 
     setFilteredUserData('');
@@ -197,25 +197,33 @@ export const AddWalletContent = ({ handleCreateGroup, memberList, handleMemberLi
             </ItemVV2>
           </SearchBarContent>
         </SearchbarContainer>
-        {filteredUserData && (
-          <MemberListContainer
-            memberData={filteredUserData}
-            handleMemberList={addMemberToList}
-            lightIcon={<Add />}
-            darkIcon={<Add />}
-          />
-        )}
-        <MultipleMemberList minHeight={memberList?.length < 4 ? 72 * memberList.length : 216}>
-          {memberList.map((member, index) => (
+        {filteredUserData &&
+          <MemberList >
+
             <MemberListContainer
-              key={index}
-              memberData={member}
-              handleMemberList={removeMemberFromList}
-              lightIcon={<RemoveLight />}
-              darkIcon={<RemoveDark />}
+              memberData={filteredUserData}
+              handleMemberList={addMemberToList}
+              lightIcon={<Add/>}
+              darkIcon={<Add />}
             />
-          ))}
-        </MultipleMemberList>
+
+          </MemberList>}
+     
+          <MultipleMemberList >
+            {memberList.map((member, index) => (
+              <MemberListContainer
+                key={index}
+                memberList={memberList}
+                memberData={member}
+                handleMembers={handleMemberList}
+                handleMemberList={removeMemberFromList}
+                lightIcon={<MoreLight />}
+                darkIcon={<MoreDark />}
+              />
+
+            ))}
+          </MultipleMemberList>
+       
         <ModalConfirmButton
           text="Create Group"
           onClick={() => handleCreateGroup()}
@@ -247,7 +255,6 @@ const Container = styled.div`
     background-clip: padding-box;
   }
   @media ${device.mobileL} {
-    //padding: 42px 18px 42px 26px;
     &&::-webkit-scrollbar-thumb {
       border-bottom: 400px solid transparent;
     }
