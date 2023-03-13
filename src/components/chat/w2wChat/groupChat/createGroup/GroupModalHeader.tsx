@@ -6,7 +6,7 @@ import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { useDeviceWidthCheck } from 'hooks';
 import { useTheme } from 'styled-components';
 
-const CreateGroupNavbar = ({
+const GroupModalHeader = ({
     handlePrevious,
     handleClose,
     title
@@ -41,4 +41,4 @@ const CreateGroupNavbar = ({
     );
 };
 
-export default CreateGroupNavbar;
+export default GroupModalHeader;

@@ -27,12 +27,12 @@ import MemberListContainer from './MemberListContainer';
 import { AppContext, User } from '../../../../../types/chat';
 import { findObject } from '../../../../../helpers/UtilityHelper';
 import { device } from 'config/Globals';
-import CreateGroupNavbar from './CreateGroupNavbar';
-import { MemberAlreadyPresent } from 'helpers/w2w/groupChat';
+import GroupModalHeader from './GroupModalHeader';
+import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 import { Context } from 'modules/chat/ChatModule';
 
 export const AddWalletContent = ({ 
-  handleCreateGroup, 
+  onSubmit, 
   memberList, 
   handleMemberList, 
   isLoading,
@@ -135,33 +135,7 @@ export const AddWalletContent = ({
   const addMemberToList = (member: User) => {
     let errorMessage = '';
 
-    //this checks if the member is already present in the currentChat or not
-    // const checkIfMemberisAlreadyPresent = findObject(member, groupMembers, 'wallets');
-    const checkIfMemberisAlreadyPresent = MemberAlreadyPresent(member, groupMembers);
-
-    if (checkIfMemberisAlreadyPresent) {
-      errorMessage = "This Member is Already present in the group"
-    }
-
-    // if (groupMembers && memberList?.length + groupMembers?.length >= 9) {
-    //   errorMessage = 'No More Addresses can be added'
-    // }
-
-    if (memberList?.length + groupMembers?.length >= 9) {
-      errorMessage = 'No More Addresses can be added'
-    }
-
-    if (memberList?.length >= 9) {
-      errorMessage = 'No More Addresses can be added'
-    }
-
-    if (findObject(member, memberList, 'wallets')) {
-      errorMessage = 'Address is already added'
-    }
-
-    if (member?.wallets === w2wChatHelper.walletToCAIP10({ account })) {
-      errorMessage = 'Group Creator cannot be added as Member'
-    }
+    errorMessage = addWalletValidation(member,memberList,groupMembers,account);
 
     if (errorMessage) {
       searchFeedToast.showMessageToast({
@@ -192,7 +166,7 @@ export const AddWalletContent = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <CreateGroupNavbar
+      <GroupModalHeader
         handlePrevious={handlePrevious}
         handleClose={handleClose}
         title={title}
@@ -276,9 +250,9 @@ export const AddWalletContent = ({
         )}
         <ModalConfirmButton
           text= {groupMembers ? "Add To Group" : "Create Group"}
-          onClick={() => handleCreateGroup()}
+          onClick={() => onSubmit()}
           isLoading={isLoading}
-          loaderTitle="Creating group"
+          loaderTitle={groupMembers ? "Adding Members" : "Creating group"}
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF' : theme.groupButtonTextColor}
           border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}

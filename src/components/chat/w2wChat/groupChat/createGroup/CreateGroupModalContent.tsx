@@ -149,13 +149,13 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
         )}
         {createGroupState == 2 && (
           <AddWalletContent
-            handleCreateGroup={handleCreateGroup}
+            onSubmit={handleCreateGroup}
             memberList={memberList}
             handleMemberList={setMemberList}
             isLoading={isLoading}
             handlePrevious={handlePrevious}
             handleClose={handleClose}
-            title={"Create group"}
+            title={"Create Group"}
           />
         )}
       </ModalContainer>

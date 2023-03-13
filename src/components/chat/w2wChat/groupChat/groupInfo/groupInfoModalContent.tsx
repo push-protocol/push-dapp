@@ -37,8 +37,9 @@ import { useDeviceWidthCheck } from 'hooks';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AddWalletContent } from '../createGroup/AddWalletContent';
+import GroupModalHeader from '../createGroup/GroupModalHeader';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
@@ -49,6 +50,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
   // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
   const [memberList, setMemberList] = React.useState<any>([]);
+  const [isLoading,setIsLoading] = React.useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
   const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x)=>x.wallet!==groupCreator);
   const [groupMembers, setGroupMembers] = React.useState([...membersExceptGroupCreator,...currentChat?.groupInformation?.pendingMembers]);
@@ -203,7 +205,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     const adminList = getAdminList(currentChat?.groupInformation);
     
     try {
-
+      setIsLoading(true);
       const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList, memeberList: members });
 
       if (typeof updateResponse !== 'string') {
@@ -224,9 +226,22 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         });
         setSelectedMemeberAddress(null)
       }
+      setIsLoading(false);
+      createGroupToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: 'Group Invitation sent',
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => (
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />
+        ),
+      });
       handleClose();
 
     } catch (error) {
+      setIsLoading(false);
       console.log("Error", error);
       createGroupToast.showMessageToast({
         toastTitle: 'Error',
@@ -283,24 +298,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
         {!showAddMoreWalletModal && (
           <>
-            <ItemHV2
-              justifyContent="center"
-              alignItems="flex-start"
-            >
-              <SpanV2
-                fontWeight="500"
-                fontSize="24px"
-                margin="0px 0px 42px 0px"
-                flex="1"
-                color={theme.default.color}
-              >
-                Group Info
-              </SpanV2>
-              <Close
-                onClick={() => handleClose()}
-                style={{ cursor: 'pointer', position: 'absolute', right: '0px', top: '5px' }}
-              />
-            </ItemHV2>
+            {/* <GroupModalHeader
+              handleClose={handleClose}
+              title={"Group Info"}
+            /> */}
+
+
             <InfoContainer
               justifyContent="flex-start"
               margin="0px 0px 29px 0px"
@@ -435,7 +438,8 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
         {showAddMoreWalletModal && (
           <AddWalletContent
-            handleCreateGroup={addMembers()}
+            onSubmit={addMembers}
+            isLoading={isLoading}
             memberList={memberList}
             handleMemberList={setMemberList}
             handlePrevious={handlePrevious}

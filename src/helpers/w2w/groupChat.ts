@@ -1,8 +1,10 @@
 import { appConfig } from 'config';
 import { walletToCAIP10 } from '.';
-import { ConnectedUser, Feeds, Member } from '../../types/chat';
+import { ConnectedUser, Feeds, Member, User } from '../../types/chat';
 import * as PushAPI from "@pushprotocol/restapi";
 import { GroupDTO } from '@pushprotocol/restapi';
+import { findObject } from 'helpers/UtilityHelper';
+import * as w2wChatHelper from 'helpers/w2w';
 
 
 type UpdateGroupType = {
@@ -152,11 +154,37 @@ export const rearrangeMembers = (currentChat,connectedUser) => {
 }
 
 export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{
-
-
   const memberCheck = groupMembers?.find((x)=>x.wallet == member.wallets);
   if(memberCheck){
     return true;
   }
   return false;
+}
+
+export const addWalletValidation = (member:User,memberList:any,groupMembers:any,account) : string  =>{
+  const checkIfMemberisAlreadyPresent = MemberAlreadyPresent(member, groupMembers);
+
+  let errorMessage = '';
+
+    if (checkIfMemberisAlreadyPresent) {
+      errorMessage = "This Member is Already present in the group"
+    }
+
+    if (memberList?.length + groupMembers?.length >= 9) {
+      errorMessage = 'No More Addresses can be added'
+    }
+
+    if (memberList?.length >= 9) {
+      errorMessage = 'No More Addresses can be added'
+    }
+
+    if (findObject(member, memberList, 'wallets')) {
+      errorMessage = 'Address is already added'
+    }
+
+    if (member?.wallets === w2wChatHelper.walletToCAIP10({ account })) {
+      errorMessage = 'Group Creator cannot be added as Member'
+    }
+
+    return errorMessage;
 }

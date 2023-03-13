@@ -15,7 +15,7 @@ import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 import { appConfig } from 'config';
 import { device } from 'config/Globals';
-import CreateGroupNavbar from './CreateGroupNavbar';
+import GroupModalHeader from './GroupModalHeader';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -112,7 +112,7 @@ export const GroupDetailsContent = ({
     <ThemeProvider theme={themes}>
 
 
-      <CreateGroupNavbar
+      <GroupModalHeader
         handleClose={handleClose}
         title={"Create Group"}
       />
