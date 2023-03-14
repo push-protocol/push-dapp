@@ -33,7 +33,7 @@ import { appConfig, CHAIN_DETAILS } from 'config';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import InfoImage from '../assets/info.svg';
-import VerifiedTooltipContent from './VerifiedTooltipContent';
+import VerifiedTooltipContent from "./VerifiedTooltipContent";
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { useDeviceWidthCheck } from 'hooks';
 

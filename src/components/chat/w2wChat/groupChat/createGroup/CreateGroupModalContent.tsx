@@ -56,13 +56,14 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
     if (memberList.length >= 2) {
       setIsLoading(true);
       try {
-        const memberWalletList = memberList.map((member) => member.wallets);
+        const memberWalletList = memberList.filter((member) => !member.isAdmin).map((member) => member.wallets);
+        const adminWalletList = memberList.filter(member => member.isAdmin).map((member) => member.wallets);
         const createGroupRes = await PushAPI.chat.createGroup({
           groupName: groupNameData,
           groupDescription: groupDescriptionData,
           members: memberWalletList,
           groupImage: groupImageData ?? profilePicture,
-          admins: [],
+          admins: adminWalletList,
           isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
           account: account!,
           pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
@@ -131,29 +132,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer createGroupState={createGroupState}>
-        <ItemHV2
-          justifyContent={createGroupState == 2 ? 'space-between' : 'center'}
-          align-items="center"
-        >
-          {createGroupState == 2 && (
-            <Back
-              onClick={handlePrevious}
-              style={{ cursor: 'pointer' }}
-            />
-          )}
-          <SpanV2
-            fontWeight="500"
-            fontSize="24px"
-            color={themes.fontColor}
-            flex="1"
-          >
-            Create Group
-          </SpanV2>
-          <Close
-            onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2?'0px':'20px' : '4px' }}
-          />
-        </ItemHV2>
+        
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
@@ -165,14 +144,19 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             handleGroupImageData={setGroupImageData}
             handleGroupTypeObject={setGroupTypeObject}
             handleCreateGroupState={setCreateGroupState}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
           />
         )}
         {createGroupState == 2 && (
           <AddWalletContent
-            handleCreateGroup={handleCreateGroup}
+            onSubmit={handleCreateGroup}
             memberList={memberList}
             handleMemberList={setMemberList}
             isLoading={isLoading}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
+            title={"Create Group"}
           />
         )}
       </ModalContainer>
@@ -181,7 +165,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
 };
 
 const ModalContainer = styled.div`
-  max-height: 80vh;
+  max-height: 78vh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;

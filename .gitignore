@@ -11,7 +11,6 @@ coverage
 # production
 build
 dump.rdb
-yarn.lock
 
 # misc
 .DS_Store
@@ -406,6 +405,10 @@ logs
 dump.rdb
 
 package-lock.json
-yarn.lock
-.yarn
-.yarnrc.yml
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

@@ -190,6 +190,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       };
       searchFn();
     }
+
+    return ()=>{
+      setFeeds([]);
+      setMessagesLoading(false);
+    }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 
   return (

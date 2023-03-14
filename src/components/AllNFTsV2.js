@@ -58,6 +58,12 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
       );
       setNFTRewardsV2Contract(NFTRewardsV2Instance);
     }
+
+    return ()=>{
+      setNftReadProvider(null);
+      setNftWriteProvider(null);
+      setNFTRewardsV2Contract(null);
+    }
   }, [account]);
 
   React.useEffect(() => {
@@ -100,9 +106,8 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
           {Object.keys(NFTObjects).map((index) => {
             if (NFTObjects) {
               return (
-                <>
                   <ViewNFTV2Item
-                    key={NFTObjects[index]}
+                  key={NFTObjects[index]?.id}
                     NFTObject={NFTObjects[index]}
                     nftReadProvider={nftReadProvider}
                     nftWriteProvider={nftWriteProvider}
@@ -110,7 +115,6 @@ function AllNFTsV2({ controlAt, setControlAt, setTokenId }) {
                     setControlAt={setControlAt}
                     setTokenId={setTokenId}
                   />
-                </>
               );
             }
           })}

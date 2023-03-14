@@ -32,8 +32,13 @@ const ModalConfirmButton = ({text, onClick, isLoading,color,backgroundColor,bord
                     isLoading 
                     ? 
                     <LoaderContainer>
-                      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={32} spinnerColor="#FFF" title={loaderTitle??''} titleColor='#fff'
- />
+                      <LoaderSpinner 
+                      type={LOADER_TYPE.SEAMLESS} 
+                      spinnerSize={26} 
+                      spinnerColor="#FFF" 
+                      title={loaderTitle??''} 
+                      titleColor='#fff'
+                    />
                     </LoaderContainer>
                     :
                     <CustomButton 
@@ -66,7 +71,8 @@ const LoaderContainer = styled.div`
     box-sizing: border-box;
     background-color:#CF1C84;
     border-radius:15px;
-    padding: 3% 8%;
+    // padding: 3% 8%;
+    padding: 8px 16px;
 `
 
 const CustomButton = styled.button`

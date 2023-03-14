@@ -1,7 +1,10 @@
 import { appConfig } from 'config';
 import { walletToCAIP10 } from '.';
-import { ConnectedUser, Feeds, Member } from '../../types/chat';
+import { ConnectedUser, Feeds, Member, User } from '../../types/chat';
 import * as PushAPI from "@pushprotocol/restapi";
+import { GroupDTO } from '@pushprotocol/restapi';
+import { findObject } from 'helpers/UtilityHelper';
+import * as w2wChatHelper from 'helpers/w2w';
 
 
 type UpdateGroupType = {
@@ -84,15 +87,21 @@ export const convertToWalletAddressList = (memberList:Member[]) => {
   return memberList?.map((member) => member.wallet);
 };
 
-export const getUpdatedAdminList = (feed: Feeds, walletAddress: string, toRemove: boolean): Array<string> => {
-  const existingAdmins = feed?.groupInformation?.members?.filter((admin) => admin.isAdmin == true);
-  const groupAdminList = convertToWalletAddressList(existingAdmins);
+export const getUpdatedAdminList = (groupInformation: GroupDTO, walletAddress: string, toRemove: boolean): Array<string> => {
+  const groupAdminList = getAdminList(groupInformation);
   if (!toRemove) {
     return [...groupAdminList, walletAddress];
   } else {
     const newAdminList = groupAdminList.filter((wallet) => wallet !== walletAddress);
     return newAdminList;
   }
+};
+
+export const getAdminList = (groupInformation: GroupDTO): Array<string> => {
+  const adminsFromMembers = convertToWalletAddressList(groupInformation?.members.filter((admin) => admin.isAdmin == true));
+    const adminsFromPendingMembers = convertToWalletAddressList(groupInformation?.pendingMembers.filter((admin) => admin.isAdmin == true));
+    const adminList = [...adminsFromMembers,...adminsFromPendingMembers];
+    return adminList
 };
 
 export const getUpdatedMemberList = (feed:Feeds,walletAddress:string): Array<string> =>{
@@ -142,4 +151,40 @@ export const rearrangeMembers = (currentChat,connectedUser) => {
       )
   );
   return currentChat;
+}
+
+export const MemberAlreadyPresent = (member:any,groupMembers:any)=>{
+  const memberCheck = groupMembers?.find((x)=>x.wallet == member.wallets);
+  if(memberCheck){
+    return true;
+  }
+  return false;
+}
+
+export const addWalletValidation = (member:User,memberList:any,groupMembers:any,account) : string  =>{
+  const checkIfMemberisAlreadyPresent = MemberAlreadyPresent(member, groupMembers);
+
+  let errorMessage = '';
+
+    if (checkIfMemberisAlreadyPresent) {
+      errorMessage = "This Member is Already present in the group"
+    }
+
+    if (memberList?.length + groupMembers?.length >= 9) {
+      errorMessage = 'No More Addresses can be added'
+    }
+
+    if (memberList?.length >= 9) {
+      errorMessage = 'No More Addresses can be added'
+    }
+
+    if (findObject(member, memberList, 'wallets')) {
+      errorMessage = 'Address is already added'
+    }
+
+    if (member?.wallets === w2wChatHelper.walletToCAIP10({ account })) {
+      errorMessage = 'Group Creator cannot be added as Member'
+    }
+
+    return errorMessage;
 }

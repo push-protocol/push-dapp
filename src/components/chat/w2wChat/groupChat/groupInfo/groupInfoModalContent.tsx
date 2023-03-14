@@ -25,11 +25,14 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import {
+  addMoreMembers,
   convertToWalletAddressList,
+  getAdminList,
   getUpdatedAdminList,
   getUpdatedMemberList,
   updateGroup,
 } from '../../../../../helpers/w2w/groupChat';
+import { shortenText } from 'helpers/UtilityHelper';
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
@@ -37,9 +40,9 @@ import { useDeviceWidthCheck } from 'hooks';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
-import { MdError } from 'react-icons/md';
-import { Item } from 'components/SharedStyling';
-import { shortenText } from 'helpers/UtilityHelper';
+import { MdCheckCircle, MdError } from 'react-icons/md';
+import { AddWalletContent } from '../createGroup/AddWalletContent';
+import GroupModalHeader from '../createGroup/GroupModalHeader';
 
 export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { currentChat, setChat, inbox, receivedIntents }: AppContext = useContext<AppContext>(Context);
@@ -47,7 +50,18 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   const createGroupToast = useToast();
   const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
+  const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
+  // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
   const [showPendingRequests, setshowPendingRequests] = React.useState<boolean>(false);
+  const [memberList, setMemberList] = React.useState<any>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const groupCreator = currentChat?.groupInformation?.groupCreator;
+  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet !== groupCreator);
+  const [groupMembers, setGroupMembers] = React.useState([
+    ...membersExceptGroupCreator,
+    ...currentChat?.groupInformation?.pendingMembers,
+  ]);
+
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
   );
@@ -56,7 +70,6 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   const handleClose = () => onClose();
-  console.log('currentchat', currentChat);
 
   const messageUser = async () => {
     let feed: Feeds = await getDefaultFeed({ walletAddress: selectedMemeberAddress!, inbox, intents: receivedIntents });
@@ -89,7 +102,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -104,7 +117,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         getToastIcon: (size) => (
           <MdError
             size={size}
-            color="green"
+            color="red"
           />
         ),
       });
@@ -136,7 +149,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -151,7 +164,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         getToastIcon: (size) => (
           <MdError
             size={size}
-            color="green"
+            color="red"
           />
         ),
       });
@@ -161,7 +174,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
 
   const removeMember = async () => {
     const updatedMemberList = getUpdatedMemberList(currentChat, selectedMemeberAddress);
-    const adminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
+    const adminList = getAdminList(currentChat?.groupInformation);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
@@ -181,7 +194,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
           getToastIcon: (size) => (
             <MdError
               size={size}
-              color="green"
+              color="red"
             />
           ),
         });
@@ -196,13 +209,84 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         getToastIcon: (size) => (
           <MdError
             size={size}
-            color="green"
+            color="red"
           />
         ),
       });
     }
     setSelectedMemeberAddress(null);
   };
+
+  const addMembers = async () => {
+    //Already Present Members and PendingMembers
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
+
+    //Newly Added Members and alreadyPresent Members in the groupchat
+    const newMembersToAdd = memberList.map((member) => member.wallets);
+    const members = [...groupMemberList, ...newMembersToAdd];
+
+    //Admins wallet address from both members and pendingMembers
+    const adminList = getAdminList(currentChat?.groupInformation);
+
+    try {
+      setIsLoading(true);
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList,
+        memeberList: members,
+      });
+
+      if (typeof updateResponse !== 'string') {
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
+      } else {
+        createGroupToast.showMessageToast({
+          toastTitle: 'Error',
+          toastMessage: updateResponse,
+          toastType: 'ERROR',
+          getToastIcon: (size) => (
+            <MdError
+              size={size}
+              color="red"
+            />
+          ),
+        });
+        setSelectedMemeberAddress(null);
+      }
+      setIsLoading(false);
+      createGroupToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: 'Group Invitation sent',
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => (
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />
+        ),
+      });
+      handleClose();
+    } catch (error) {
+      setIsLoading(false);
+      console.log('Error', error);
+      createGroupToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: error.message,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+  };
+
   const messageUserDropdown: DropdownValueType = {
     id: 'message_user',
     title: 'Message user',
@@ -233,231 +317,274 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
 
+  const handlePrevious = () => {
+    setShowAddMoreWalletModal(false);
+  };
+
+  const handleCloseAddWalletModal = () => {
+    setShowAddMoreWalletModal(false);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <ModalContainer
         background={theme.blurModalContentBackground}
         ref={containerRef}
-        isMobile={isMobile}
+        padding={
+          isMobile
+            ? showAddMoreWalletModal
+              ? '24px 24px 20px 24px'
+              : '24px 0px 20px 0px'
+            : showAddMoreWalletModal
+            ? '24px 36px 20px 36px'
+            : '24px 0px 20px 0px'
+        }
       >
-        <ItemHV2
-          justifyContent="center"
-          alignItems="flex-start"
-        >
-          <SpanV2
-            fontWeight="500"
-            fontSize="24px"
-            margin="0px 0px 42px 0px"
-            flex="1"
-            color={theme.default.color}
-          >
-            Group Info
-          </SpanV2>
-          <Close
-            onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: '0px', top: '5px' }}
-          />
-        </ItemHV2>
-        <InfoContainer
-          justifyContent="flex-start"
-          margin="0px 0px 29px 0px"
-        >
-          <ItemVV2
-            width="64px"
-            height="64px"
-            maxWidth="64px"
-            borderRadius="16px"
-            overflow="hidden"
-            margin="0px 16px 0px 0px"
-          >
-            <ImageV2
-              height="100%"
-              objectFit="cover"
-              src={currentChat?.groupInformation?.groupImage}
-              alt="Group Image"
+        {!showAddMoreWalletModal && (
+          <>
+            <GroupModalHeader
+              handleClose={handleClose}
+              title={'Group Info'}
+              margin={isMobile ? '0px 24px 34px 24px' : '0px 36px 34px 36px'}
             />
-          </ItemVV2>
-          <ItemVV2 alignItems="flex-start">
-            <SpanV2
-              fontSize="20px"
-              fontWeight={500}
-              color={theme.default.color}
-              textAlign="left"
+            <BodyContainer
+              padding={
+                isMobile
+                  ? showAddMoreWalletModal
+                    ? '0px'
+                    : '0px 24px 0px 24px'
+                  : showAddMoreWalletModal
+                  ? '0px'
+                  : '0px 36px 0px 36px'
+              }
             >
-              {currentChat?.groupInformation?.groupName}
-            </SpanV2>
-            <SpanV2
-              fontSize="16px"
-              fontWeight={500}
-              color={theme.modalDescriptionTextColor}
-            >
-              {`${currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0} members`}
-            </SpanV2>
-          </ItemVV2>
-        </InfoContainer>
-
-        <DescriptionContainer
-          alignItems="flex-start"
-          margin="0px 0px 18px 0px"
-        >
-          <SpanV2
-            fontSize="18px"
-            fontWeight={500}
-            margin="0px 0px 5px 0px"
-            color={theme.modalProfileTextColor}
-          >
-            Group Description
-          </SpanV2>
-          <ItemHV2
-            fontSize="18px"
-            fontWeight={400}
-            justifyContent="flex-start"
-            style={{ color: `${theme.modalDescriptionTextColor}` }}
-          >
-            {currentChat?.groupInformation?.groupDescription
-              ? currentChat?.groupInformation?.groupDescription
-              : 'No Description Added'}
-          </ItemHV2>
-        </DescriptionContainer>
-        <InfoContainer
-          justifyContent="flex-start"
-          padding="15px 24px 15px 18px"
-          borderRadius="16px"
-          border={`1px solid ${theme.default.border}`}
-          margin="0px 0px 21px 0px"
-        >
-          <Lock />
-          <ItemVV2
-            alignItems="flex-start"
-            margin="0px 0px 0px 12px"
-          >
-            <SpanV2
-              fontSize="18px"
-              fontWeight="500"
-              color={theme.default.color}
-            >
-              {currentChat?.groupInformation?.isPublic ? 'Public' : 'Private'}
-            </SpanV2>
-            <SpanV2
-              fontSize="12px"
-              fontWeight="400"
-              color={theme.modalIconColor}
-            >
-              {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
-            </SpanV2>
-          </ItemVV2>
-        </InfoContainer>
-        {/* {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
-            <AddWalletContainer>
-              <AddMember />
-              <SpanV2
-                color={theme.modalProfileTextColor}
-                margin="0px  14px"
-                fontSize="18px"
-                fontWeight="400"
+              <InfoContainer
+                justifyContent="flex-start"
+                margin="0px 0px 29px 0px"
               >
-                Add more wallets
-              </SpanV2>
-            </AddWalletContainer>
-          )} */}
-        {currentChat?.groupInformation?.pendingMembers?.length > 0 && (
-          <ItemVV2
-            border={`1px solid ${theme.default.border}`}
-            borderRadius="16px"
-            margin="0px 0px 15px 0px"
-            maxWidth="445px"
-            style={{boxSizing:'border-box'}}
-          >
-            <ItemHV2
-              justifyContent="space-between"
-              padding="13px 20px 13px 16px"
-              onClick={() => setshowPendingRequests(!showPendingRequests)}
-            >
-              <ItemHV2 justifyContent="flex-start">
+                <ItemVV2
+                  width="64px"
+                  height="64px"
+                  maxWidth="64px"
+                  borderRadius="16px"
+                  overflow="hidden"
+                  margin="0px 16px 0px 0px"
+                >
+                  <ImageV2
+                    height="100%"
+                    objectFit="cover"
+                    src={currentChat?.groupInformation?.groupImage}
+                    alt="Group Image"
+                  />
+                </ItemVV2>
+                <ItemVV2 alignItems="flex-start">
+                  <SpanV2
+                    fontSize="20px"
+                    fontWeight={500}
+                    color={theme.default.color}
+                    textAlign="left"
+                  >
+                    {currentChat?.groupInformation?.groupName}
+                  </SpanV2>
+                  <SpanV2
+                    fontSize="16px"
+                    fontWeight={500}
+                    color={theme.modalDescriptionTextColor}
+                  >
+                    {`${
+                      currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0
+                    } members`}
+                  </SpanV2>
+                </ItemVV2>
+              </InfoContainer>
+
+              <DescriptionContainer
+                alignItems="flex-start"
+                margin="0px 0px 18px 0px"
+              >
                 <SpanV2
                   fontSize="18px"
-                  fontWeight="400"
+                  fontWeight={500}
+                  margin="0px 0px 5px 0px"
                   color={theme.modalProfileTextColor}
                 >
-                  Pending Requests
+                  Group Description
                 </SpanV2>
-                <SpanV2
-                  background="#CF1C84"
-                  color="#FFFFFF"
-                  fontSize="13px"
-                  fontWeight="700"
-                  borderRadius="8px"
-                  padding="4px 12px"
-                  margin="0px 0px 0px 8px"
+                <ItemHV2
+                  fontSize="18px"
+                  fontWeight={400}
+                  justifyContent="flex-start"
+                  style={{ color: `${theme.modalDescriptionTextColor}` }}
                 >
-                  {currentChat?.groupInformation?.pendingMembers?.length}
-                </SpanV2>
-              </ItemHV2>
-              {showPendingRequests ? <DropdownUp /> : <Dropdown />}
-            </ItemHV2>
-            {showPendingRequests && (
-              <ItemVV2
-                borderRadius="0px 0px 16px 16px"
-                overflow="hidden"
+                  {currentChat?.groupInformation?.groupDescription
+                    ? currentChat?.groupInformation?.groupDescription
+                    : 'No Description Added'}
+                </ItemHV2>
+              </DescriptionContainer>
+              <InfoContainer
+                justifyContent="flex-start"
+                padding="15px 24px 15px 18px"
+                borderRadius="16px"
+                border={`1px solid ${theme.default.border}`}
+                margin="0px 0px 21px 0px"
               >
-                {currentChat?.groupInformation?.pendingMembers?.map((member) => {
-                  return (
-                    <ItemHV2
-                      key={member.wallets}
-                      justifyContent="flex-start"
-                      background={theme.scheme == 'dark' ? 'rgba(173, 176, 190, 0.08)' : 'rgba(173, 176, 190, 0.12)'}
-                      padding="8px 16px"
-                      margin="2px 0px 0px 0px"
-                    >
-                      <ItemVV2
-                        width="36px"
-                        maxWidth="36px"
-                        borderRadius="100%"
-                        overflow="hidden"
-                        margin="0px 12px 0px 0px"
-                      >
-                        <ImageV2
-                          objectFit="cover"
-                          src={member?.image}
-                          alt="profilePicture"
-                        />
-                      </ItemVV2>
+                <Lock />
+                <ItemVV2
+                  alignItems="flex-start"
+                  margin="0px 0px 0px 12px"
+                >
+                  <SpanV2
+                    fontSize="18px"
+                    fontWeight="500"
+                    color={theme.default.color}
+                  >
+                    {currentChat?.groupInformation?.isPublic ? 'Public' : 'Private'}
+                  </SpanV2>
+                  <SpanV2
+                    fontSize="12px"
+                    fontWeight="400"
+                    color={theme.modalIconColor}
+                  >
+                    {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
+                  </SpanV2>
+                </ItemVV2>
+              </InfoContainer>
+              {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
+                <AddWalletContainer onClick={() => setShowAddMoreWalletModal(true)}>
+                  <AddMember />
+                  <SpanV2
+                    color={theme.modalProfileTextColor}
+                    margin="0px  14px"
+                    fontSize="18px"
+                    fontWeight="400"
+                  >
+                    Add more wallets
+                  </SpanV2>
+                </AddWalletContainer>
+              )}
+              {currentChat?.groupInformation?.pendingMembers?.length > 0 && (
+                <ItemVV2
+                  border={`1px solid ${theme.default.border}`}
+                  borderRadius="16px"
+                  margin="0px 0px 15px 0px"
+                  maxWidth="445px"
+                  style={{ boxSizing: 'border-box' }}
+                >
+                  <ItemHV2
+                    justifyContent="space-between"
+                    padding="13px 20px 13px 16px"
+                    onClick={() => setshowPendingRequests(!showPendingRequests)}
+                  >
+                    <ItemHV2 justifyContent="flex-start">
                       <SpanV2
                         fontSize="18px"
                         fontWeight="400"
                         color={theme.modalProfileTextColor}
                       >
-                        {shortenText(member?.wallet?.split(':')[1], 6)}
+                        Pending Requests
+                      </SpanV2>
+                      <SpanV2
+                        background="#CF1C84"
+                        color="#FFFFFF"
+                        fontSize="13px"
+                        fontWeight="700"
+                        borderRadius="8px"
+                        padding="4px 12px"
+                        margin="0px 0px 0px 8px"
+                      >
+                        {currentChat?.groupInformation?.pendingMembers?.length}
                       </SpanV2>
                     </ItemHV2>
+                    {showPendingRequests ? <DropdownUp /> : <Dropdown />}
+                  </ItemHV2>
+                  {showPendingRequests && (
+                    <ItemVV2
+                      borderRadius="0px 0px 16px 16px"
+                      overflow="hidden"
+                    >
+                      {currentChat?.groupInformation?.pendingMembers?.map((member) => {
+                        console.log("pending",member)
+                        return (
+                          <ItemHV2
+                            key={member.wallets}
+                            justifyContent="flex-start"
+                            background={
+                              theme.scheme == 'dark' ? 'rgba(173, 176, 190, 0.08)' : 'rgba(173, 176, 190, 0.12)'
+                            }
+                            padding="8px 16px"
+                            margin="2px 0px 0px 0px"
+                          >
+                            <ItemVV2
+                              height="36px"
+                              maxWidth="36px"
+                              borderRadius="100%"
+                              overflow="hidden"
+                              margin="0px 12px 0px 0px"
+                            >
+                              <ImageV2
+                                objectFit="cover"
+                                src={member?.image}
+                                alt="profilePicture"
+                              />
+                            </ItemVV2>
+                            <SpanV2
+                              fontSize="18px"
+                              fontWeight="400"
+                              color={theme.modalProfileTextColor}
+                            >
+                              {shortenText(member?.wallet?.split(':')[1], 6)}
+                            </SpanV2>
+                          </ItemHV2>
+                        );
+                      })}
+                    </ItemVV2>
+                  )}
+                </ItemVV2>
+              )}
+              <ProfileContainer
+                minHeight={
+                  currentChat?.groupInformation?.members?.length < 4
+                    ? 72 * currentChat?.groupInformation?.members?.length
+                    : 216
+                }
+              >
+                {currentChat?.groupInformation?.members?.map((member, index) => {
+                  return (
+                    member && (
+                      <ProfileCard
+                        key={index}
+                        member={member}
+                        dropdownValues={
+                          member?.isAdmin && isAccountOwnerAdmin
+                            ? [removeAdminDropdown, removeMemberDropdown]
+                            : isAccountOwnerAdmin
+                            ? [addAdminDropdown, removeMemberDropdown]
+                            : []
+                        }
+                        selectedMemeberAddress={selectedMemeberAddress}
+                        setSelectedMemeberAddress={setSelectedMemeberAddress}
+                        dropdownRef={dropdownRef}
+                      />
+                    )
                   );
                 })}
-              </ItemVV2>
-            )}
-          </ItemVV2>
+              </ProfileContainer>
+            </BodyContainer>
+          </>
         )}
-        <ProfileContainer>
-          {currentChat?.groupInformation?.members?.map((member, index) => {
-            return (
-              member && (
-                <ProfileCard
-                  key={index}
-                  member={member}
-                  dropdownValues={
-                    member?.isAdmin && isAccountOwnerAdmin
-                      ? [removeAdminDropdown, removeMemberDropdown]
-                      : isAccountOwnerAdmin
-                      ? [addAdminDropdown, removeMemberDropdown]
-                      : []
-                  }
-                  selectedMemeberAddress={selectedMemeberAddress}
-                  setSelectedMemeberAddress={setSelectedMemeberAddress}
-                  dropdownRef={dropdownRef}
-                />
-              )
-            );
-          })}
-        </ProfileContainer>
+
+        {showAddMoreWalletModal && (
+          <AddWalletContent
+            onSubmit={addMembers}
+            isLoading={isLoading}
+            memberList={memberList}
+            handleMemberList={setMemberList}
+            handlePrevious={handlePrevious}
+            handleClose={handleCloseAddWalletModal}
+            title={'Add More Wallets'}
+            groupMembers={groupMembers}
+          />
+        )}
       </ModalContainer>
     </ThemeProvider>
   );
@@ -468,42 +595,51 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  max-height: 75vh;
-  //max-width: 517px;
+  padding: 0px;
+  padding: ${(props) => props.padding};
+`;
+
+const BodyContainer = styled.div`
   display: flex;
   flex-direction: column;
+  max-height: 60vh;
+  max-width: 517px;
   overflow-y: auto;
   overflow-x: hidden;
-  & > div::-webkit-scrollbar {
+  &&::-webkit-scrollbar {
     width: 4px;
   }
-  & > div::-webkit-scrollbar-thumb {
+  &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
+    border-bottom: 150px solid transparent;
+    background-clip: padding-box;
   }
   @media (max-width: 480px) {
     max-height: 90vh;
-    max-width: 95vw;
+    max-width: 94vw;
     &&::-webkit-scrollbar-thumb {
       border-bottom: 400px solid transparent;
     }
   }
-  padding: ${(props) => (props.isMobile ? '24px 24px 20px 24px' : '24px 36px 20px 36px')};
+  padding: ${(props) => props.padding};
 `;
 
 const DescriptionContainer = styled(ItemVV2)`
-  max-width: 445px;
+  min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width: 300px;
   }
 `;
 
 const InfoContainer = styled(ItemHV2)`
-  max-width: 445px;
+  min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
+    max-width: 300px;
   }
 `;
 
@@ -524,12 +660,13 @@ const ProfileContainer = styled.div`
   min-width: 445px;
   min-height: 72px;
   max-height: 216px;
+  min-height: ${(props) => `${props.minHeight}px`};
   overflow-y: auto;
   overflow-x: hidden;
-  & > div::-webkit-scrollbar {
+  &&::-webkit-scrollbar {
     width: 4px;
   }
-  & > div::-webkit-scrollbar-thumb {
+  &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
   }
