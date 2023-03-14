@@ -387,6 +387,7 @@ const ReceivedMessage = styled.div`
 `;
 
 const IntentMessage = styled(ReceivedMessage)`
+  flex-direction: row;
   width: 80%;
 `;
 
