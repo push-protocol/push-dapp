@@ -118,7 +118,7 @@ const LoaderSpinner = ({
           {spinnerEnabled && (
             <Spinner
               size={spinnerSize}
-              color={spinnerColor}
+              color={`${spinnerColor}`}
               type={spinnerType}
             />
           )}
