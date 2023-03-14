@@ -31,7 +31,7 @@ const ChatUserContextProvider = (props) => {
   const [displayQR,setDisplayQR] = useState(false);
 
   const getUser = async () => {
-    const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
+    const caip10: string = w2wHelper.walletToCAIP10({ account });
     const user: User = await PushNodeClient.getUser({ caip10 });
     let connectedUser: ConnectedUser;
 
@@ -104,7 +104,7 @@ const ChatUserContextProvider = (props) => {
         keyPairs.privateKeyArmored,
         walletPublicKey
       );
-      const caip10: string = w2wHelper.walletToCAIP10({ account, chainId });
+      const caip10: string = w2wHelper.walletToCAIP10({ account });
       setBlockedLoading({
         enabled: true,
         title: 'Step 3/4: Syncing account info',

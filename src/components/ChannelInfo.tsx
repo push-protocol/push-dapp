@@ -5,33 +5,26 @@ import React, { useEffect, useState } from 'react';
 
 // External Packages
 import Dropdown from 'react-dropdown';
-import { FiLink } from 'react-icons/fi';
 import styled, { useTheme } from 'styled-components';
-import { AiFillExclamationCircle } from 'react-icons/ai'
 import DateTimePicker from "react-datetime-picker";
 
 // Internal Compoonents
-import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
 import {
   Button,
-  Content,
-  FormSubmision,
-  H3,
   Input,
   Item,
-  ItemH,
-  P,
   Section,
   Span,
   TextField,
 } from 'primaries/SharedStyling';
 import './createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
-import { ItemHV2, ItemVV2, SpanV2 } from './reusables/SharedStylingV2';
+import { ItemHV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
 import Tooltip from "./reusables/tooltip/Tooltip"
 import { device } from 'config/Globals';
 import NewTag from './NewTag';
+import ErrorMessage from './reusables/errorMessageLabel/errorMessageLabel';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
 
 const coreChainId = appConfig.coreContractChain;
@@ -45,6 +38,7 @@ const ChannelInfo = ({
   channelInfo,
   channelURL,
   chainDetails,
+  errorInfo,
   setChannelAlias,
   setChainDetails,
   setChannelInfo,
@@ -54,13 +48,13 @@ const ChannelInfo = ({
   setStepFlow,
   setChannelInfoDone,
   setTxStatus,
+  isAllFilledAndValid
 }) => {
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(769)
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-01T00:00:00.000"), 90);
 
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [errorInfo, setErrorInfo] = useState<{name:string, channelExpiryDate:string, description:string, address:string, url:string}>({name: '', channelExpiryDate:'', description: '', address: '', url: ''});
 
 
   const isEmpty = (field) => {
@@ -75,85 +69,6 @@ const ChannelInfo = ({
     return channelExpiryDate!==undefined && channelExpiryDate===null;
   }
 
-  const isAllFilledAndValid = (): boolean => {
-    setErrorInfo('');
-
-    if (isEmpty(channelName) || isChannelExpiryDateEmpty(channelExpiryDate) || isEmpty(channelInfo) || isEmpty(channelURL) || (isEmpty(channelAlias) && chainDetails !== coreChainId)){
-      if (
-        isEmpty(channelName)
-      ) {
-        setErrorInfo(x => ({
-          ...x,
-          name: 'Please, enter the channel name.',
-        }));
-      }
-
-      if (
-        isChannelExpiryDateEmpty(channelExpiryDate)
-      ) {
-        setErrorInfo(x => ({
-          ...x,
-          channelExpiryDate: 'Please, select the channel expiry date.',
-        }));
-      }
-
-      if (isEmpty(channelInfo)) {
-        setErrorInfo(x => ({
-          ...x,
-          description: 'Please, enter the channel description',
-        }));
-      }
-
-      if (isEmpty(channelURL)) {
-        setErrorInfo(x => ({
-          ...x,
-          url: 'Please, enter the channel url',
-        }));
-      }
-
-      if (isEmpty(channelAlias) && chainDetails !== coreChainId) {
-        setErrorInfo(x => ({
-          ...x,
-          address:'Please, enter the channel address',
-        }));
-      }
-    return false
-  }
-
-    if (!isLengthValid(channelName, 125)) {
-      setErrorInfo(x => ({
-        ...x,
-        name: 'Channel Name should not exceed 125 characters! Please retry!',
-      }));
-      
-      return false;
-    }
-    if (!isLengthValid(channelURL, 125)) {
-      setErrorInfo(x => ({
-        ...x,
-        url: 'Channel Url should not exceed 125 characters! Please retry!',
-      }));
-      return false;
-    }
-    if(chainDetails !== coreChainId && !isValidAddress(channelAlias)) {
-      setErrorInfo(x => ({
-        ...x,
-        address: 'Channel Alias address is invalid! Please enter a valid address!',
-      }));
-      
-      return false;
-    }
-    if (!isValidUrl(channelURL)) {
-      setErrorInfo(x => ({
-        ...x,
-        url: 'Channel URL is invalid! Please enter a valid url!',
-      }));
-      return false;
-    }
-
-    return true;
-  };
-
   useEffect(() => {
     if (isEmpty(channelName) || isEmpty(channelInfo) || isEmpty(channelURL)) {
       setDisabled(true);
@@ -164,21 +79,6 @@ const ChannelInfo = ({
     return ()=>setDisabled(true);
   }, [channelName, channelInfo, channelURL]);
 
-
-  const ErrorMessage = ({ message }) => {
-    return (
-      <Item display='flex' align='center' self='flex-start' direction='row' margin = '7px 0px'>
-            <AiFillExclamationCircle color='red' size='20' />
-            <Span 
-                size="14px"
-                weight="400"
-                margin="0px 5px"
-                color={'red'}>
-            {message}
-            </Span>
-          </Item>
-    )
-  }
 
   return (
     <Section>
@@ -218,7 +118,7 @@ const ChannelInfo = ({
                   />
                 {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
               </Item>
-            <Tooltip 
+            {/* <Tooltip 
               tooltipContent='Timebound channels will be deleted after expiry'
               // disable the tooltip when time bound toggle is NOT on
               placementProps={isMobile
@@ -233,14 +133,14 @@ const ChannelInfo = ({
                   transform: "translateX(16%)"
                 }
               }
-            >
-              <TimeBoundToggleContainer>
+            > */}
+              {/* <TimeBoundToggleContainer>
                 <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
                   <Label style={{ color: theme.color }}>Time Bound</Label>
                   {isNewTagVisible && <NewTag />}
-                </ItemHV2>
+                </ItemHV2> */}
                 {/* Toggle should be off only when channelExpiryDate is undefined */}
-                <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
+                {/* <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
                   if(channelExpiryDate===undefined){
                     // turn on the toggle
                     return setChannelExpiryDate(null);
@@ -249,11 +149,11 @@ const ChannelInfo = ({
                   setChannelExpiryDate(undefined);
                 }} />
               </TimeBoundToggleContainer>
-            </Tooltip>
+            </Tooltip> */}
           </TopInnerContainer>
         </Item>
 
-        {
+        {/* {
           channelExpiryDate !== undefined && 
           <Item
             flex="1"
@@ -271,7 +171,7 @@ const ChannelInfo = ({
             </DatePickerContainer>
             {errorInfo?.channelExpiryDate && (<ErrorMessage message = {errorInfo?.channelExpiryDate} />)}
           </Item>
-        }
+        } */}
         
         <Item
           flex="1"
@@ -316,7 +216,6 @@ const ChannelInfo = ({
               visibility={chainDetails === coreChainId ? 'hidden' : 'visible'}
               value={channelAlias}
               onChange={(e) => {
-                console.log(e);
                 setChannelAlias(e.target.value);
               }}
             />
@@ -430,7 +329,7 @@ const ChannelInfo = ({
               if (!isAllFilledAndValid()) return;
               setTxStatus(2);
               setChannelInfoDone(true);
-              setStepFlow(2);
+              setStepFlow(1);
             }}
           >
             <Span
@@ -451,7 +350,13 @@ const ChannelInfo = ({
 
 const MainContainer = styled(Item)`
   align-items: "flex-start";
-  padding: 40px 140px 0 140px;
+  padding: 40px 13% 0 13%;
+  @media (max-width: 1350px) {
+    padding: 40px 9% 0 9%;
+  }
+  @media (max-width: 1250px) {
+    padding: 40px 4% 0 4%;
+  }
   @media ${device.laptop} {
     padding: 20px 0 0 0;
   }

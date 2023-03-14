@@ -25,7 +25,7 @@ export const config = {
     // 42, //for kovan
     5, // for goerli
     80001, //for mumbai polygon
-    97 // bsc testnet
+    97 // bnb testnet
   ],
 
   /** 
@@ -37,7 +37,8 @@ export const config = {
   mainnetCoreContractChain: 1,
   aliasRPC: {
     80001: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    97: "https://data-seed-prebsc-1-s1.binance.org:8545"
+    97: "https://data-seed-prebsc-1-s1.binance.org:8545",
+    420: "https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm"
   },
   infuraApiUrl: 'https:/infura-ipfs.io/ipfs/',
 
@@ -110,10 +111,17 @@ export const CHAIN_DETAILS = {
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
   },
   97: {
-    label: "BSC Testnet",
-    name: "BSC_TESTNET",
+    label: "BNB Testnet",
+    name: "BNB_TESTNET",
     chainId: 97,
     rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
     commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+  },
+  420: {
+    label: "Optimism Goerli",
+    name: "OPTIMISM_TESTNET",
+    chainId: 420,
+    rpcUrl: 'https://opt-goerli.g.alchemy.com/v2/98vFj7OCg4vbGKvCDpj6pOAMSBVC7rzm',
+    commAddress: '0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa'
   }
 }
