@@ -143,8 +143,10 @@
     "eslint": "7.32.0",
     "eslint-plugin-flowtype": "^4.6.0",
     "eslint-plugin-import": "2.26.0",
+    "gh-pages": "^5.0.0",
     "process": "0.11.10",
     "react-app-rewired": "2.2.1",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "typescript": "^4.7.4"
   },
   "eslintConfig": {
