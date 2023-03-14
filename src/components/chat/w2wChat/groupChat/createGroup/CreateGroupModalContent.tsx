@@ -132,29 +132,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer createGroupState={createGroupState}>
-        <ItemHV2
-          justifyContent={createGroupState == 2 ? 'space-between' : 'center'}
-          align-items="center"
-        >
-          {createGroupState == 2 && (
-            <Back
-              onClick={handlePrevious}
-              style={{ cursor: 'pointer' }}
-            />
-          )}
-          <SpanV2
-            fontWeight="500"
-            fontSize="24px"
-            color={themes.fontColor}
-            flex="1"
-          >
-            Create Group
-          </SpanV2>
-          <Close
-            onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2 ? '0px' : '20px' : '4px' }}
-          />
-        </ItemHV2>
+        
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
@@ -166,14 +144,19 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             handleGroupImageData={setGroupImageData}
             handleGroupTypeObject={setGroupTypeObject}
             handleCreateGroupState={setCreateGroupState}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
           />
         )}
         {createGroupState == 2 && (
           <AddWalletContent
-            handleCreateGroup={handleCreateGroup}
+            onSubmit={handleCreateGroup}
             memberList={memberList}
             handleMemberList={setMemberList}
             isLoading={isLoading}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
+            title={"Create Group"}
           />
         )}
       </ModalContainer>

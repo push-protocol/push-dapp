@@ -118,7 +118,7 @@ const WalletProfileContainer = styled(ItemHV2)`
   padding: 8px 16px;
   margin: 0px 0px 8px 0px;
   justify-content: space-between;
-  min-width: 445px;
+  min-width: 424px;
   box-sizing: border-box;
   align-items: center;
   border-radius: 16px;

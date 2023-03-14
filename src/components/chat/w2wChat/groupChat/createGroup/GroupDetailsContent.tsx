@@ -15,6 +15,7 @@ import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 import { appConfig } from 'config';
 import { device } from 'config/Globals';
+import GroupModalHeader from './GroupModalHeader';
 import AutoImageClipper from 'primaries/AutoImageClipper';
 
 export const GroupDetailsContent = ({
@@ -27,6 +28,8 @@ export const GroupDetailsContent = ({
   handleGroupDescriptionData,
   handleGroupTypeObject,
   handleCreateGroupState,
+  handlePrevious,
+  handleClose
 }) => {
   const [imageSrc, setImageSrc] = React.useState();
   const [isImageUploaded, setIsImageUploaded] = React.useState<boolean>(false)
@@ -117,6 +120,15 @@ export const GroupDetailsContent = ({
 
   return (
     <ThemeProvider theme={themes}>
+
+
+      <GroupModalHeader
+        handleClose={handleClose}
+        title={"Create Group"}
+      />
+
+
+
       <Container>
         <GroupIconContainer onClick={handleUpload}>
           {isImageUploaded
