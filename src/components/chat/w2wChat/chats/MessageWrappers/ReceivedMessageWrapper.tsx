@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 
 export const ReceivedMessageWrapper = (props): JSX.Element => {
-
   return (
     <MessageWrapper
       align={props?.align}

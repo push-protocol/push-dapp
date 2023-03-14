@@ -7,9 +7,8 @@ import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
 import { checkIfGroup, getMemberDetails } from './groupChat';
 import { getUser } from '../../api/w2w';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
-
-
 const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
+
 export const walletToCAIP10 = ({ account }: { account: string }): string => {
   if (account.includes('eip155:')) {
     return account;
@@ -87,7 +86,7 @@ export const decryptFeeds = async ({
         signatureValidationPubliKey = connectedUser.publicKey;
       } else {
         if (checkIfGroup(feed) && !feed.publicKey) {
-          const member = getMemberDetails(feed, feed.msg);
+          const member = getMemberDetails(feed, feed?.msg?.fromCAIP10);
           feed.publicKey = member ? member.publicKey : '';
         }
         signatureValidationPubliKey = feed.publicKey!;
@@ -101,9 +100,10 @@ export const decryptFeeds = async ({
           privateKeyArmored: connectedUser.privateKey!,
         });
       } catch (e) {
+        // console.log(e);
         if(e.message == decryptionErrorMsg){
-        feed.msg.messageType = 'Text';
-        feed.msg.messageContent = 'message encrypted before you joined';
+          feed.msg.messageType = 'Text';
+          feed.msg.messageContent = 'message encrypted before you joined';
         }
       }
     }
@@ -135,7 +135,7 @@ export const decryptMessages = async ({
     } else {
       if (!currentChat.publicKey) {
         if (checkIfGroup(currentChat)) {
-          const member = getMemberDetails(currentChat, currentChat.msg);
+          const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
         } else {
           const latestUserInfo = inbox.find((x) => x.wallets.split(':')[0] === currentChat?.wallets?.split(':')[0]);
@@ -157,9 +157,10 @@ export const decryptMessages = async ({
         signatureArmored: savedMsg.signature,
       });
     } catch (e) {
+      // console.log(e);
       if(e.message == decryptionErrorMsg){
-      savedMsg.messageType = 'Text';
-      savedMsg.messageContent = 'message encrypted before you joined';
+        savedMsg.messageType = 'Text';
+        savedMsg.messageContent = 'message encrypted before you joined';
       }
     }
   }

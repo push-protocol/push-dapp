@@ -73,7 +73,7 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
           padding="12px"
           margin={definedMargin}
           bg={bg}
-          active={active}
+          active={active?1:0}
           className={data?.name?.toLowerCase()}>
           {data.iconFactory ? (
             <ItemHV2 justifyContent="flex-start" padding="0 2rem">
@@ -86,14 +86,14 @@ function NavigationButton({ item, data, sectionID, active, bg = 'none' }) {
                   src={require(`../assets/${data.src}`)}
                   margin="0 5px"
                   alt={`${data.alt}`}
-                  active={active}
+                  active={active?1:0}
                 />
               ) : (
                 <SelectedIcon
                   src={require(`../assets/${data.activeSrc}`)}
                   margin="0 5px"
                   alt={`${data.alt}`}
-                  active={active}
+                  active={active?1:0}
                 />
               )}
 

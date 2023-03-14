@@ -33,7 +33,7 @@ import { appConfig, CHAIN_DETAILS } from 'config';
 import Tooltip from './reusables/tooltip/Tooltip';
 import UpdateChannelTooltipContent from './UpdateChannelTooltipContent';
 import InfoImage from '../assets/info.svg';
-import VerifiedTooltipContent from './VerifiedTooltipContent';
+import VerifiedTooltipContent from "./VerifiedTooltipContent";
 import { IPFSGateway } from 'helpers/IpfsHelper';
 import { useDeviceWidthCheck } from 'hooks';
 
@@ -637,6 +637,8 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                       style={{ display: 'flex' }}
                     >
                       <Tooltip
+                        // tooltip should be disabled if the verifier details are falsy
+                        isDisabled={!verifierDetails}
                         wrapperProps={{
                           width: 'fit-content',
                           maxWidth: 'fit-content',
@@ -646,18 +648,22 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                           tooltTipHeight < 160
                             ? {
                                 background: 'none',
-                                top: '20px', //for lower displaying
+                                top: '20px', // for lower displaying
                                 left: '7px',
-                                width: '125px',
                               }
                             : {
                                 background: 'none',
-                                bottom: '28px', //above display
+                                bottom: '28px', // above display
                                 left: '7px',
-                                width: '125px',
                               }
                         }
-                        tooltipContent={<VerifiedTooltipContent height={tooltTipHeight} />}
+                        tooltipContent={
+                          <VerifiedTooltipContent
+                            height={tooltTipHeight}
+                            verifierIcon={verifierDetails.icon}
+                            verifierName={verifierDetails.name}
+                          />
+                        }
                       >
                         {/* TODO: HAS TO BE CHANGED TO A i icon */}
                         <div
@@ -777,7 +783,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                         onMouseEnter={() => {
                           handleHeight(channelObject.channel);
                         }}
-                        style={{cursor:'pointer'}}
+                        style={{ cursor: 'pointer' }}
                       >
                         <ImageInfo src={InfoImage} />
                       </div>
@@ -801,18 +807,22 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                           tooltTipHeight < 160
                             ? {
                                 background: 'none',
-                                top: '20px', //for lower displaying
+                                top: '20px', // for lower displaying
                                 left: '7px',
-                                width: '125px',
                               }
                             : {
                                 background: 'none',
-                                bottom: '28px', //above display
+                                bottom: '28px', // above display
                                 left: '7px',
-                                width: '125px',
                               }
                         }
-                        tooltipContent={<VerifiedTooltipContent height={tooltTipHeight} />}
+                        tooltipContent={
+                          <VerifiedTooltipContent
+                            height={tooltTipHeight}
+                            verifierIcon={verifierDetails.icon}
+                            verifierName={verifierDetails.name}
+                          />
+                        }
                       >
                         {/* TODO: HAS TO BE CHANGED TO A i icon */}
                         <div
@@ -960,16 +970,6 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                   />
                 )}
               </ItemBody>
-
-              {verifierDetails && (
-                <Subscribers>
-                  <VerifiedBy>
-                    Verified by:
-                    <VerifierIcon src={verifierDetails.icon} />
-                  </VerifiedBy>
-                  <VerifierName>{verifierDetails.name}</VerifierName>
-                </Subscribers>
-              )}
             </ItemH>
           )}
         </ChannelMeta>

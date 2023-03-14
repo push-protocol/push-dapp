@@ -5,6 +5,7 @@ import React from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
+import { CiWarning } from "react-icons/ci";
 
 // Internal Compoonents
 import PoolCard from 'components/PoolCard';
@@ -15,6 +16,8 @@ import { Content, Item, ItemH, Section, Span } from '../../primaries/SharedStyli
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { H2V2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { AInlineV2 } from 'components/reusables/SharedStylingV2';
 
 // Create Header
 function YieldFarmingModule() {
@@ -182,10 +185,41 @@ function YieldFarmingModule() {
   return (
     <Container>
       <Section>
+        {/* Warning for incentive */}
+        <SpanV2
+          padding="1rem 1.5rem"
+          margin="0 1rem"
+          fontSize="1.2rem"
+          fontWeight={600}
+          borderRadius="20px"
+          background="#CF1C84"
+          color="#fff"
+          textAlign="left"
+        >
+          <ItemHV2 style={{marginBottom: "0.6rem"}} justifyContent="flex-start">
+            {/* <CiWarning size={23} /> */}
+            <H2V2
+              color="#fff"
+              fontSize="1.5rem"
+              fontWeight={700}
+              style={{marginLeft:"0.3rem"}}
+            >
+              REWARDS PROGRAM TO BE EXTENDED 84 WEEKS
+            </H2V2>
+          </ItemHV2>
+          A proposal is in final voting stage to extend the Program for 84 weeks more! Cast your vote
+          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://snapshot.org/#/pushdao.eth/proposal/0x54092053eff30c3c304e45b575881945192e710bc9b3914bfe1d1eadcda3f114" target='_blank'>
+            here
+          </AInlineV2>
+        </SpanV2>
+
         {poolStats ? (
           <>
             <Content themes={themes.yieldBg}>
-              <ItemH margin="0px 15px 0px 15px" align="stretch">
+              <ItemH
+                margin="0px 15px 0px 15px"
+                align="stretch"
+              >
                 <StatsCard bg={themes.mainBg}>
                   <StatsHeading bg="#e20880">Total Value Locked</StatsHeading>
                   <StatsContent>
@@ -221,7 +255,10 @@ function YieldFarmingModule() {
                   <StatsContent>
                     <StatsInnerTitle>{`$ ${poolStats.pushPrice.toFixed(2)}`}</StatsInnerTitle>
                     <StatsInnerSub>
-                      <a target="_blank" href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}>
+                      <a
+                        target="_blank"
+                        href={`https://app.uniswap.org/#/swap?inputCurrency=${addresses.epnsToken}`}
+                      >
                         Uniswap
                       </a>
                     </StatsInnerSub>
@@ -237,7 +274,10 @@ function YieldFarmingModule() {
               </Item>
             ) : (
               <Content padding="25px 0px">
-                <ItemH margin="0px 10px 0px 10px" align="stretch">
+                <ItemH
+                  margin="0px 10px 0px 10px"
+                  align="stretch"
+                >
                   {lpPoolStats && userDataLP ? (
                     <PoolCard
                       poolName={'Uniswap LP Pool (UNI-V2)'}

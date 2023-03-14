@@ -148,7 +148,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     } else {
       const searchFn = async (): Promise<void> => {
         if (props.filteredUserData.length) {
-          if (Object(props.filteredUserData[0]).wallets.split(',')[0] === walletToCAIP10({ account })) {
+          if (Object(props.filteredUserData[0]).wallets === walletToCAIP10({ account })) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
               toastMessage: "You can't send intent to yourself",
@@ -189,6 +189,11 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         setMessagesLoading(false);
       };
       searchFn();
+    }
+
+    return ()=>{
+      setFeeds([]);
+      setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
 

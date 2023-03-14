@@ -14,6 +14,8 @@ import { ReactComponent as AddGroupIconDark } from 'assets/chat/group-chat/creat
 import { isLengthValid } from 'helpers/ValidationHelper';
 import ErrorMessage from 'components/reusables/errorMessageLabel/errorMessageLabel';
 import { appConfig } from 'config';
+import { device } from 'config/Globals';
+import AutoImageClipper from 'primaries/AutoImageClipper';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -26,6 +28,8 @@ export const GroupDetailsContent = ({
   handleGroupTypeObject,
   handleCreateGroupState,
 }) => {
+  const [imageSrc, setImageSrc] = React.useState();
+  const [isImageUploaded, setIsImageUploaded] = React.useState<boolean>(false)
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const fileUploadInputRef = React.useRef<HTMLInputElement>();
   const [errorInfo, setErrorInfo] = React.useState<{ name: string; description: string }>({
@@ -50,14 +54,21 @@ export const GroupDetailsContent = ({
 
   const themes = useTheme();
 
-  const getFileString = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
+  const handleFile = async (e) => {
+    setIsImageUploaded(true)
+    handleGroupImageData(undefined);
 
-    reader.onload = () => {
-      handleGroupImageData(reader.result);
-    };
+    //you can carry out any file validations here...
+    if (e.target.files[0]) {
+      var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+
+      reader.onloadend = function (e) {
+        setImageSrc(reader.result);
+      };
+    } else {
+      return "Nothing....";
+    }
   };
 
   const handleValidation = async () => {
@@ -71,7 +82,7 @@ export const GroupDetailsContent = ({
 
         return false;
       }
-    } catch (e) {}
+    } catch (e) { }
 
     if (!isLengthValid(groupNameData, 50)) {
       setErrorInfo((x) => ({
@@ -108,22 +119,34 @@ export const GroupDetailsContent = ({
     <ThemeProvider theme={themes}>
       <Container>
         <GroupIconContainer onClick={handleUpload}>
-          {groupImageData ? (
-            <ImageV2
-              src={groupImageData}
-              width="128px"
-              height="128px"
-              style={{ objectFit: 'contain' }}
-            />
-          ) : themes.scheme == 'light' ? (
-            <AddGroupIcon />
-          ) : (
-            <AddGroupIconDark />
-          )}
+          {isImageUploaded
+            ? groupImageData
+              ?
+              <ItemVV2
+                maxWidth="128px"
+                height="128px"
+                borderRadius="32px"
+                overflow="hidden"
+              >
+                <ImageV2
+                  src={groupImageData}
+                  style={{ objectFit: 'contain' }}
+                />
+              </ItemVV2>
+              :
+              <AutoImageClipper
+                imageSrc={imageSrc}
+                onImageCropped={(croppedImage) => handleGroupImageData(croppedImage)}
+              />
+            : themes.scheme == 'light' ? (
+              <AddGroupIcon />
+            ) : (
+              <AddGroupIconDark />
+            )}
           <FileInput
             type="file"
             ref={fileUploadInputRef}
-            onChange={getFileString}
+            onChange={handleFile}
             accept="image/*"
           />
         </GroupIconContainer>
@@ -135,7 +158,6 @@ export const GroupDetailsContent = ({
           <CustomInput
             type="text"
             value={groupNameData}
-            // ref={groupNameInputRef}
             onChange={(e) => handleGroupNameData(e.target.value.slice(0, 50))}
             borderColor={themes.modalInputBorderColor}
             color={themes.modalMessageColor}
@@ -222,7 +244,9 @@ export const GroupDetailsContent = ({
 };
 
 const Container = styled.div`
-  padding: 42px 26px 0px;
+  display:flex;
+  flex-direction: column;
+  padding: 42px 22px 0px 26px;
   overflow-y: auto;
   overflow-x: hidden;
   &&::-webkit-scrollbar {
@@ -233,8 +257,8 @@ const Container = styled.div`
     border-bottom:200px solid transparent;
     background-clip:padding-box;
   }
-  @media (max-width: 480px) {
-    padding: 42px 24px 0px;
+  @media ${device.mobileL} {
+    padding: 42px 18px 42px 26px;
     &&::-webkit-scrollbar-thumb {
       border-bottom:400px solid transparent;
     }
@@ -242,10 +266,13 @@ const Container = styled.div`
 `;
 
 const GroupIconContainer = styled.div`
-  width: 100%;
+  min-width:128px;
+  min-height:128px;
+  width: fit-content;
   display: flex;
   justify-content: center;
   cursor: pointer;
+  margin: auto;
   margin-bottom: 28px;
 `;
 
@@ -254,14 +281,13 @@ const FileInput = styled.input`
 `;
 
 const TextFieldContainer = styled(ItemVV2)`
-  min-width: 299px;
-  max-width: 333px;
+  width: 299px;
   margin-bottom: 28px;
 `;
 
 const GroupDescription = styled(TextField)`
   resize: none;
-  min-width: 299px;
+  width: 299px;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   background: ${(props) => props.theme.modalInputBackgrundColor};
   border-radius: 12px;
@@ -274,9 +300,6 @@ const GroupDescription = styled(TextField)`
   line-height: 130%;
   &:focus {
     border: 1px solid #ffdbf0;
-  }
-  @media (max-width: 480px) {
-    min-width: 318px;
   }
 `;
 
@@ -301,7 +324,7 @@ const CharacterCount = styled(SpanV2)`
 `;
 
 const CustomInput = styled(Input)`
-  min-width: 299px;
+  width: 299px;
   box-sizing: border-box;
   border: 1px solid ${(props) => props.borderColor || '#BAC4D6'};
   border-radius: 12px;
@@ -315,9 +338,6 @@ const CustomInput = styled(Input)`
   letter-spacing: -0.019em;
   &:focus {
     border: 1px solid #ffdbf0;
-  }
-  @media (max-width: 480px) {
-    min-width: 318px;
   }
 `;
 

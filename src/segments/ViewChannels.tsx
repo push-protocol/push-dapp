@@ -236,14 +236,20 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                 />
               </Item>
             </SearchContainer>
-
+            
+            {UtilityHelper.isMainnet(chainId) && (
+              <Item flex="1">
+              <ChainsSelect
+                channelsNetworkId={channelsNetworkId}
+                setChannelsNetworkId={setChannelsNetworkId}
+              />
+            </Item>
+            )}
 
           </ItemHBar>
 
           <FaucetBar>
-
-
-            {appConfig.allowedNetworks.length > 1 && (
+            {appConfig.allowedNetworks.length > 1 && !UtilityHelper.isMainnet(chainId) && (
               <Item flex="1">
                 <ChainsSelect
                   channelsNetworkId={channelsNetworkId}
@@ -269,7 +275,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
             (channel: any, index: any) =>
               channel &&
               channel.channel !== ZERO_ADDRESS && (
-                <>
+                <div key={channel.channel}>
                   <ViewChannelItems
                     // onMouseEnter={() => {
                     //   handleHeight(channel.channel);
@@ -292,7 +298,7 @@ function ViewChannels({ loadTeaser, playTeaser }) {
                       )}
                   </ViewChannelItems>
                   {showWayPoint(index) && <Waypoint onEnter={updateCurrentPage} />}
-                </>
+                </div>
               )
           )}
         </div>
