@@ -8,8 +8,6 @@ import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import { ReactComponent as Dropdown } from 'assets/chat/group-chat/dropdown.svg';
@@ -25,7 +23,6 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import {
-  addMoreMembers,
   convertToWalletAddressList,
   getAdminList,
   getUpdatedAdminList,
@@ -57,10 +54,10 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
   const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet !== groupCreator);
-  const [groupMembers, setGroupMembers] = React.useState([
+  const groupMembers = [
     ...membersExceptGroupCreator,
     ...currentChat?.groupInformation?.pendingMembers,
-  ]);
+  ];
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
