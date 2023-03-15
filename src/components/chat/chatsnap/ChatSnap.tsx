@@ -36,31 +36,31 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   // get ens name
   const ensName = useResolveEns(!isGroup ? username : null);
   // get reverse name
-  
+
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;
   const shortUsername = !isGroup ? shortenText(walletAddress, 8, 7) : null;
 
   const getDisplayName = () => {
-    if (ensName)
-      return ensName;
-    if (isGroup){
-      if(username?.length>20)
-       return username.substring(0,20)+'...';
-      else
-        return username;
+    if (ensName) return ensName;
+    if (isGroup) {
+      if (username?.length > 20) return username.substring(0, 20) + '...';
+      else return username;
     }
     return shortUsername;
-  }
+  };
 
   // format message here instead
   const message =
     chatSnapMsg.type === 'Text' ? (
-      <SpanV2 color={theme.default.secondaryColor} fontSize="15px" fontWeight="400">
+      <SpanV2
+        color={theme.default.secondaryColor}
+        fontSize="15px"
+        fontWeight="400"
+      >
         {chatSnapMsg.message?.length > 25 ? chatSnapMsg.message?.slice(0, 25) + '...' : chatSnapMsg.message}
       </SpanV2>
-    ) : 
-    chatSnapMsg.type === 'Image' ? (
+    ) : chatSnapMsg.type === 'Image' ? (
       <SpanV2 color={theme.default.secondaryColor}>
         <i
           className="fa fa-picture-o"
@@ -87,10 +87,32 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
     ) : null;
 
   // get date
+
+  const getAppropriateTimestamp = (time: Date) => {
+    let day = new Date();
+    if (
+      day.getDate() == time.getDate() &&
+      day.getMonth() == time.getMonth() &&
+      day.getFullYear() == time.getFullYear()
+    ) {
+      return (
+        time.toLocaleTimeString('en-US').slice(0, -6) + ' ' + time.toLocaleTimeString('en-US').slice(-2).toLowerCase()
+      );
+    }
+    day.setDate(day.getDate() - 1);
+    if (
+      day.getDate() == time.getDate() &&
+      day.getMonth() == time.getMonth() &&
+      day.getFullYear() == time.getFullYear()
+    ) {
+      return 'Yesterday';
+    }
+    return `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear() % 100}`;
+  };
+
   let date = null;
   if (timestamp) {
-    const time = new Date(timestamp);
-    date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2);
+    date = getAppropriateTimestamp(new Date(timestamp));
   }
 
   // RENDER
@@ -156,7 +178,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
             textAlign="start"
             fontWeight="400"
           >
-           {message}
+            {message}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
