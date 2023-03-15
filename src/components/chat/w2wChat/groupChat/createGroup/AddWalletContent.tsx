@@ -209,26 +209,17 @@ export const AddWalletContent = ({
               top="22px"
               right="16px"
             >
-              {searchedUser.length > 0 ? (
-                isLoadingSearch ? (
-                  <LoaderSpinner
-                    type={LOADER_TYPE.SEAMLESS}
-                    width="auto"
-                    spinnerSize={24}
-                    spinnerColor={theme.default.secondaryColor}
-                  />
-                ) : (
-                  <Clear
-                    onClick={clearInput}
-                    style={{ cursor: 'pointer' }}
-                  />
-                )
-              ) : null}
+              {searchedUser.length > 0 && (
+                <Clear
+                  onClick={clearInput}
+                  style={{ cursor: 'pointer' }}
+                />
+              )}
               {searchedUser.length == 0 && !filteredUserData && <SearchIcon style={{ cursor: 'pointer' }} />}
             </ItemVV2>
           </SearchBarContent>
         </SearchbarContainer>
-        {filteredUserData && (
+        {filteredUserData ? (
           <MemberList>
             <MemberListContainer
               memberData={filteredUserData}
@@ -237,7 +228,15 @@ export const AddWalletContent = ({
               darkIcon={<AddDark />}
             />
           </MemberList>
-        )}
+        ) : isLoadingSearch ? (
+          <ItemHV2 margin="0px 0px 34px 0px">
+            <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            width="auto"
+            spinnerSize={40}
+          />
+          </ItemHV2>
+        ) : null}
 
         <MultipleMemberList>
           {memberList.map((member, index) => (
