@@ -240,7 +240,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     if (checkConnectedUser(connectedUser)) {
       const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
-      return inboxes.find((x) => x.wallets.split(':')[0] === currentChat.wallets.split(':')[0]);
+      return inboxes.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
     }
   };
 
@@ -391,13 +391,13 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       if (
         currentChat.intent === null ||
         currentChat.intent === '' ||
-        !currentChat.intent.includes(currentChat.wallets.split(':')[0])
+        !currentChat.intent.includes(currentChat.wallets.split(':')[1])
       ) {
         user = await getUserWithDecryptedPvtKey(connectedUser);
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
-          receiverAddress: currentChat?.wallets.split(':')[0],
+          receiverAddress: currentChat?.wallets.split(':')[1],
           account: account!,
           pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
           env: appConfig.appEnv,
