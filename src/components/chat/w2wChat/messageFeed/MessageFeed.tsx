@@ -192,7 +192,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
 
     return ()=>{
-      setFeeds([]);
+      //setFeeds([]);
       setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
