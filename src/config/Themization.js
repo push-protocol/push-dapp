@@ -153,6 +153,7 @@ const themeLight = {
   modalInputBackgrundColor:'#FFF',
   modalDescriptionTextColor:'#575D73',
   modalProfileTextColor:'#1E1E1E',
+  pendingCardBackground:'rgba(173, 176, 190, 0.12)',
 
   // Group Profiles
   groupSearchProfilBackground: '#F4F5FA',
@@ -379,6 +380,7 @@ const themeDark = {
   modalInputBackgrundColor:'#282A2E',
   modalDescriptionTextColor:'#787E99',
   modalProfileTextColor:'#B6BCD6',
+  pendingCardBackground:'rgba(173, 176, 190, 0.08)',
 
   // Group Profiles
   groupSearchProfilBackground: '#404650',

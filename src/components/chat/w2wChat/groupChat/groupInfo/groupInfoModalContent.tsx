@@ -10,8 +10,6 @@ import { useClickAway } from 'react-use';
 import { ModalInnerComponentType } from 'hooks/useModal';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
-import { ReactComponent as Dropdown } from 'assets/chat/group-chat/dropdown.svg';
-import { ReactComponent as DropdownUp } from 'assets/chat/group-chat/dropdown1.svg';
 import Message from 'assets/chat/group-chat/chat.svg';
 import AddAdmin from 'assets/chat/group-chat/addadmin.svg';
 import DismissAdmin from 'assets/chat/group-chat/dismissadmin.svg';
@@ -29,11 +27,11 @@ import {
   getUpdatedMemberList,
   updateGroup,
 } from '../../../../../helpers/w2w/groupChat';
-import { shortenText } from 'helpers/UtilityHelper';
 import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 import { useDeviceWidthCheck } from 'hooks';
+import { PendingMembers } from './PendingMembers';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
@@ -54,10 +52,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
   const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet !== groupCreator);
-  const groupMembers = [
-    ...membersExceptGroupCreator,
-    ...currentChat?.groupInformation?.pendingMembers,
-  ];
+  const groupMembers = [...membersExceptGroupCreator, ...currentChat?.groupInformation?.pendingMembers];
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
@@ -460,83 +455,10 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
                 </AddWalletContainer>
               )}
               {currentChat?.groupInformation?.pendingMembers?.length > 0 && (
-                <ItemVV2
-                  border={`1px solid ${theme.default.border}`}
-                  borderRadius="16px"
-                  margin="0px 0px 15px 0px"
-                  maxWidth="445px"
-                  style={{ boxSizing: 'border-box' }}
-                >
-                  <ItemHV2
-                    justifyContent="space-between"
-                    padding="13px 20px 13px 16px"
-                    onClick={() => setshowPendingRequests(!showPendingRequests)}
-                  >
-                    <ItemHV2 justifyContent="flex-start">
-                      <SpanV2
-                        fontSize="18px"
-                        fontWeight="400"
-                        color={theme.modalProfileTextColor}
-                      >
-                        Pending Requests
-                      </SpanV2>
-                      <SpanV2
-                        background="#CF1C84"
-                        color="#FFFFFF"
-                        fontSize="13px"
-                        fontWeight="700"
-                        borderRadius="8px"
-                        padding="4px 12px"
-                        margin="0px 0px 0px 8px"
-                      >
-                        {currentChat?.groupInformation?.pendingMembers?.length}
-                      </SpanV2>
-                    </ItemHV2>
-                    {showPendingRequests ? <DropdownUp /> : <Dropdown />}
-                  </ItemHV2>
-                  {showPendingRequests && (
-                    <ItemVV2
-                      borderRadius="0px 0px 16px 16px"
-                      overflow="hidden"
-                    >
-                      {currentChat?.groupInformation?.pendingMembers?.map((member) => {
-                        console.log("pending",member)
-                        return (
-                          <ItemHV2
-                            key={member.wallets}
-                            justifyContent="flex-start"
-                            background={
-                              theme.scheme == 'dark' ? 'rgba(173, 176, 190, 0.08)' : 'rgba(173, 176, 190, 0.12)'
-                            }
-                            padding="8px 16px"
-                            margin="2px 0px 0px 0px"
-                          >
-                            <ItemVV2
-                              height="36px"
-                              maxWidth="36px"
-                              borderRadius="100%"
-                              overflow="hidden"
-                              margin="0px 12px 0px 0px"
-                            >
-                              <ImageV2
-                                objectFit="cover"
-                                src={member?.image}
-                                alt="profilePicture"
-                              />
-                            </ItemVV2>
-                            <SpanV2
-                              fontSize="18px"
-                              fontWeight="400"
-                              color={theme.modalProfileTextColor}
-                            >
-                              {shortenText(member?.wallet?.split(':')[1], 6)}
-                            </SpanV2>
-                          </ItemHV2>
-                        );
-                      })}
-                    </ItemVV2>
-                  )}
-                </ItemVV2>
+                <PendingMembers
+                  setshowPendingRequests={setshowPendingRequests}
+                  showPendingRequests={showPendingRequests}
+                />
               )}
               <ProfileContainer
                 minHeight={
@@ -609,14 +531,14 @@ const BodyContainer = styled.div`
   &&::-webkit-scrollbar-thumb {
     background: #cf1c84;
     border-radius: 10px;
-    border-bottom: 150px solid transparent;
+    border-bottom: 130px solid transparent;
     background-clip: padding-box;
   }
-  @media (max-width: 480px) {
-    max-height: 90vh;
+  @media (max-width: 600px) {
+    max-height: 67vh;
     max-width: 94vw;
     &&::-webkit-scrollbar-thumb {
-      border-bottom: 400px solid transparent;
+      border-bottom: 300px solid transparent;
     }
   }
   padding: ${(props) => props.padding};
