@@ -1,5 +1,5 @@
 import React from "react";
 
-export const ChatIntentsNew = () => {
+export const ChatRequestsNew = () => {
   return (<></>);
 }

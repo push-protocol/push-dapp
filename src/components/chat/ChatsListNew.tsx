@@ -1,12 +1,12 @@
 import React from "react";
 import { ChatInboxNew } from "./ChatInboxNew";
-import { ChatIntentsNew } from "./ChatIntentsNew";
+import { ChatRequestsNew } from "./ChatRequestsNew";
 
 export const ChatsListNew = () => {
   return (
     <>
       <ChatInboxNew />
-      <ChatIntentsNew />
+      <ChatRequestsNew />
     </>
   );
 }
