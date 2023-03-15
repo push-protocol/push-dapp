@@ -82,6 +82,30 @@ const NavigationList = {
         },
       },
     },
+    chatNew: {
+      src: 'navigation/chatOffIcon.svg',
+      activeSrc: 'navigation/chatOnIcon.svg',
+      iconFactory: null,
+      name: 'ChatNew',
+      title: 'ChatNew',
+      alt: 'Open Chat',
+      href: '/chatnew',
+      newTab: false,
+      isRoute: true,
+      hasMenuLogic: true,
+      hidden: false,
+      headerTag: {
+        title: 'ChatNew',
+        light: {
+          bg: GLOBALS.COLORS.GRADIENT_SECONDARY,
+          fg: themeLight.headerTagFg,
+        },
+        dark: {
+          bg: themeDark.headerTagBg,
+          fg: themeDark.headerTagFg,
+        },
+      },
+    },
   },
   secondary: {
     createChannel: {

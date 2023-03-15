@@ -27,6 +27,7 @@ import SpamPage from 'pages/SpamPage';
 import SupportPage from 'pages/SupportPage';
 import TutorialPage from 'pages/TutorialPage';
 import YieldFarmingPage from 'pages/YieldFarmingPage';
+import { ChatPageNew } from 'pages/ChatPageNew';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -52,6 +53,7 @@ function MasterInterfacePage() {
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
           <Route path="chat" element={<ChatPage />} />
+          <Route path="chatnew" element={<ChatPageNew />} />
           {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
           <Route
