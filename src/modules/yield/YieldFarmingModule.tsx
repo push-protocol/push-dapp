@@ -201,12 +201,11 @@ function YieldFarmingModule() {
               fontSize="1.5rem"
               style={{marginLeft:"0.3rem"}}
             >
-              Note -
+              REWARDS PROGRAM WILL BE EXTENDED 84 WEEKS!!
             </H2V2>
           </ItemHV2>
-          A new proposal has been put forward in PUSH DAO, if approved staking will be extended till Dec 31st, 2023. For
-          more details please go to
-          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://gov.push.org/t/extend-the-push-eth-push-liquidity-rewards-program/1335" target='_blank'>
+          The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info
+          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
             here
           </AInlineV2>
         </SpanV2>
