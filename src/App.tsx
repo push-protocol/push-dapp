@@ -38,6 +38,7 @@ import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
 import ChatUserContextProvider from 'contexts/ChatUserContext';
+import ChatGlobalContextProviderNew from 'contexts/ChatGlobalContextNew';
 
 dotenv.config();
 
@@ -215,10 +216,12 @@ export default function App() {
               </LeftBarContainer>
 
               <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                <ChatUserContextProvider>
-                  {/* Shared among all pages, load universal things here */}
-                  <MasterInterfacePage />
-                </ChatUserContextProvider>
+                <ChatGlobalContextProviderNew>
+                  <ChatUserContextProvider>
+                    {/* Shared among all pages, load universal things here */}
+                    <MasterInterfacePage />
+                  </ChatUserContextProvider>
+                </ChatGlobalContextProviderNew>
               </ContentContainer>
             </ParentContainer>
           </NavigationContextProvider>
