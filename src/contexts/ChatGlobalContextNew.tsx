@@ -16,23 +16,23 @@ const ChatGlobalContextNew = (props) => {
   const { account, library } = useWeb3React<ethers.providers.Web3Provider>();
   
   const setInbox = (inbox:FeedsNew,id:string) => {
-    setUserFeeds(prevStyle => ({
-        ...prevStyle,
-        [id]: { ...prevStyle[id], inbox:inbox}
+    setUserFeeds(prevUserFeeds => ({
+        ...prevUserFeeds,
+        [id]: { ...prevUserFeeds[id], inbox:inbox}
     }));
   }
   
   const setRequests = (requests:Feeds,id:string) => {
-    setUserFeeds(prevStyle => ({
-        ...prevStyle,
-        [id]: { ...prevStyle[id], requests:requests}
+    setUserFeeds(prevUserFeeds => ({
+        ...prevUserFeeds,
+        [id]: { ...prevUserFeeds[id], requests:requests}
     }));
   }
 
   const setChats = (chats:ChatsNew,id:string) => {
-    setUserFeeds(prevStyle => ({
-        ...prevStyle,
-        [id]: { ...prevStyle[id], chats:chats}
+    setUserFeeds(prevUserFeeds => ({
+        ...prevUserFeeds,
+        [id]: { ...prevUserFeeds[id], chats:chats}
     }));
   }
   return (
