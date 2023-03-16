@@ -4,7 +4,7 @@ import { ConnectedUser, User } from 'types/chat';
 import { decryptPGPKey } from './decryptPGPKey';
 import { getUser } from './getUser';
 
-export const getConnectedUser = async (account, library) => {
+export const getConnectedUser = async (account, signer) => {
   try {
     const caip10: string = walletToCAIP10({ account });
     const user: User = await getUser(caip10);
@@ -20,7 +20,7 @@ export const getConnectedUser = async (account, library) => {
       }
 
       const privateKeyArmored: string = await decryptPGPKey({
-        signer: library.signer,
+        signer: signer,
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
       });
       connectedUser = { ...user, privateKey: privateKeyArmored };

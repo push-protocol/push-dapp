@@ -1,42 +1,43 @@
-import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
 import React, { createContext, useState } from 'react';
-import { ChatsNew, ConnectedUser, Feeds, FeedsNew, MessageIPFS, User, UserFeeds } from 'types/chat';
-import * as PushAPI from "@pushprotocol/restapi";
-import CryptoHelper from 'helpers/CryptoHelper';
-import { displayDefaultUser } from 'helpers/w2w/user';
-import { appConfig } from 'config';
-import { walletToCAIP10 } from 'helpers/w2w';
+import { ChatsNew, ConnectedUser, Feeds, FeedsNew, UserFeeds } from 'types/chat';
 
-export const ChatGlobalContext = createContext({});
+type ChatGlobalContextType = {
+  connectedUser: ConnectedUser,
+  setConnectedUser: (connectedUser: ConnectedUser) => void,
+  userFeeds: UserFeeds,
+  setChats: (chats:ChatsNew, id:string) => void,
+  setInbox: (inbox:FeedsNew,id:string) => void,
+  setRequests: (requests:Feeds,id:string) => void,
+}
 
-const ChatGlobalContextNew = (props) => {
+export const ChatGlobalContextNew = createContext<ChatGlobalContextType>({} as ChatGlobalContextType);
+
+const ChatGlobalContextProviderNew = (props) => {
   const [connectedUser, setConnectedUser] = useState<ConnectedUser>();
   const [userFeeds, setUserFeeds] = useState<UserFeeds>();
-  const { account, library } = useWeb3React<ethers.providers.Web3Provider>();
   
-  const setInbox = (inbox:FeedsNew,id:string) => {
+  const setInbox = (inbox:FeedsNew, id:string) => {
     setUserFeeds(prevUserFeeds => ({
         ...prevUserFeeds,
         [id]: { ...prevUserFeeds[id], inbox:inbox}
     }));
   }
   
-  const setRequests = (requests:Feeds,id:string) => {
+  const setRequests = (requests:Feeds, id:string) => {
     setUserFeeds(prevUserFeeds => ({
         ...prevUserFeeds,
         [id]: { ...prevUserFeeds[id], requests:requests}
     }));
   }
 
-  const setChats = (chats:ChatsNew,id:string) => {
+  const setChats = (chats:ChatsNew, id:string) => {
     setUserFeeds(prevUserFeeds => ({
         ...prevUserFeeds,
         [id]: { ...prevUserFeeds[id], chats:chats}
     }));
   }
   return (
-    <ChatGlobalContext.Provider value={{ 
+    <ChatGlobalContextNew.Provider value={{ 
       connectedUser, 
       setConnectedUser,
       userFeeds,
@@ -45,8 +46,8 @@ const ChatGlobalContextNew = (props) => {
       setRequests,
       }}>
       {props.children}
-    </ChatGlobalContext.Provider>
+    </ChatGlobalContextNew.Provider>
   );
 };
 
-export default ChatGlobalContextNew;
+export default ChatGlobalContextProviderNew;
