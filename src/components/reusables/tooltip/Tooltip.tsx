@@ -3,7 +3,7 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 type TooltipProps = {
-  tooltipContent: string;
+  tooltipContent: any;
   isDisabled?: boolean; // if isDisabled is undefined -> Tooltip doesnt have undefined behavior
   // for aligning the tooltip acc. to requirement
   placementProps?: {
@@ -56,6 +56,7 @@ return (
     </div>
     {!isDisabled && active && <Content id="channel" style={placementProps}>{tooltipContent}</Content>}
   </Wrapper>
+
 );
 };
 
@@ -74,11 +75,10 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
-  width: 200px;
   position: absolute;
   border-radius: 2px 12px 12px 12px;
   
-  padding: 0.5rem 1rem;
+  // padding: 0.5rem 1rem;
   color: #fff;
   background: #131313;
   font-family: 'Strawford';

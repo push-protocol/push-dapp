@@ -246,7 +246,11 @@ const InitState = () => {
             query: aliasEth,
             env: appConfig.appEnv
           });
-          if(channelDetail) dispatch(setUserChannelDetails(channelDetail[0]));
+          if(channelDetail) {
+            dispatch(setUserChannelDetails(channelDetail[0]));
+            const channelDetailsFromContract = await epnsReadProvider.channels(aliasEth);
+            dispatch(setUserChannelDetails({...channelDetail[0], ...channelDetailsFromContract}));
+          }
           if (!aliasVerified) {
             dispatch(setProcessingState(3));
           } else {

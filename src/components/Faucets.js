@@ -39,6 +39,12 @@ const Faucets = () => {
       value: "BNB",
       title: "BNB Faucet",
       link: "https://testnet.bnbchain.org/faucet-smart",
+    },
+    {
+      id: "420",
+      value: "Optimism",
+      title: "Optimism Goerli Faucet",
+      link: "https://faucet.quicknode.com/optimism/goerli",
     }
   ];
 

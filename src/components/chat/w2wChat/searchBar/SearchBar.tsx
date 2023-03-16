@@ -99,7 +99,7 @@ const SearchBar = () => {
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
 
-        console.log('searched address', address);
+        console.log("searched address", address)
         if (address) {
           handleUserSearch(address);
         } else {
