@@ -124,13 +124,21 @@ const ChannelInfo = ({
               placementProps={isMobile
                 ?
                 {
-                  bottom: "-63px",
+                  bottom: "-42px",
                   transform: "translateX(6%)",
+                  padding:'8px 16px',
+                  background: theme.default.bg,
+                  border: '1px solid rgba(173, 176, 190, 0.2)',
+                  color: theme.tooltipTopSubHeading,
                 }
                 :
                 {
                   bottom: "-63px",
-                  transform: "translateX(16%)"
+                  transform: "translateX(16%)",
+                  padding:'8px 16px',
+                  background: theme.default.bg,
+                  border: '1px solid rgba(173, 176, 190, 0.2)',
+                  color: theme.tooltipTopSubHeading,
                 }
               }
             >
@@ -384,7 +392,7 @@ const TimeBoundToggleContainer = styled(ItemHV2)`
   height: 25px;
   margin-left: 1.3rem;
   padding: 12px 18px;
-  
+  cursor:pointer;
   flex: 1;
   align-items: center;
   border-radius: 15px;
