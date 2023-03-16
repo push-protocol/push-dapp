@@ -127,5 +127,21 @@ export interface AppContext {
   setFilteredUserData:(value:User[])=>void;
 }
 
+export interface FeedsNew {
+   [key: string]: Feeds;
+}
+export interface ChatsNew {
+    [key: string]: { messages: MessageIPFS[]; isLoading: boolean };
+}
+export interface UserFeeds {
+  [key: string]: {
+   inbox:FeedsNew
+    ,
+    requests: Feeds,
+    chats: ChatsNew,
+  };
+}
+
 export type MessagetypeType = 'Text' | 'Image' | 'File' | 'GIF';
 
+ 
