@@ -14,7 +14,7 @@ import Resizer from "react-image-file-resizer";
 
 const ImageClipper = forwardRef((props, ref) => {
   //   const [imageSrc, setImageSrc] = useState(null);
-  const { imageSrc, onImageCropped, width,height } = props;
+  const { imageSrc,imageType, onImageCropped, width,height } = props;
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -83,22 +83,23 @@ const ImageClipper = forwardRef((props, ref) => {
         //   resolve(URL.createObjectURL(file));
         resolve(
           new File([file], fileName, {
-            type: "image/jpeg",
+            type: imageType,
             lastModified: Date.now(),
           })
         );
-      }, "image/jpeg");
+      },imageType, 1);
     });
   }
 
   const resizeFile = (file) =>
     new Promise((resolve) => {
+     const type = imageType === "image/png" ? "PNG" : "JPEG";
       Resizer.imageFileResizer(
         file,
         128,
         128,
-        "JPEG",
-        80,
+        type,
+        100,
         0,
         (uri) => {
           resolve(uri);
