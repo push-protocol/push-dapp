@@ -7,24 +7,27 @@ import { showNotifcationToast } from 'components/reusables/toasts/toastControlle
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
 
+
 // Types
 export type SDKSocketHookOptions = {
   account?: string | null;
   env?: string;
   chainId?: number;
+  socketType?: 'chat' | 'notification',
 };
 
-export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
+  const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
   const { incomingCall, acceptCall } = useContext(VideoCallContext);
-
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
 
     epnsSDKSocket?.on(EVENTS.DISCONNECT, () => {
+
       setIsSDKSocketConnected(false);
     });
 
@@ -54,6 +57,13 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
       } catch (e) {
         console.error('DAPP Error while diplaying received Notification: ', e);
       }
+    });
+
+    epnsSDKSocket?.on(EVENTS.CHAT_RECEIVED_MESSAGE, (chat: any) => {
+      /**
+       * We receive a 1 message.
+       */
+      setMessagesSinceLastConnection(chat);
     });
   };
 
@@ -88,7 +98,8 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
 
       // this is auto-connect on instantiation
       const connectionObject = createSocketConnection({
-        user: convertAddressToAddrCaip(account, chainId),
+        user: socketType == 'chat'?account:convertAddressToAddrCaip(account, chainId),
+        socketType,
         env,
       });
       setEpnsSDKSocket(connectionObject);
@@ -98,5 +109,6 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
   return {
     epnsSDKSocket,
     isSDKSocketConnected,
+    messagesSinceLastConnection,
   };
 };

@@ -110,6 +110,8 @@ export interface AppContext {
   setLoadingMessage: (loadingMessage: string) => void;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
+  messages:MessageIPFSWithCID[],
+  setMessages:(msg:MessageIPFSWithCID[])=>void;
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;

@@ -24,7 +24,7 @@ import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
 import useToast from 'hooks/useToast';
 import { useResolveEns } from 'hooks/useResolveEns';
-import { useDeviceWidthCheck } from 'hooks';
+import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
 import { Context } from 'modules/chat/ChatModule';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
@@ -77,7 +77,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     viewChatBox,
     receivedIntents,
     inbox,
+    messages,
     setActiveTab,
+    setMessages,
     setChat,
     setInbox,
     setHasUserBeenSearched,
@@ -89,17 +91,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
-  const [removedMembers, setRemovedMembers] = useState<any>();
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
   const chatBoxToast = useToast();
-  let removedMembersAddressArray;
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
@@ -115,50 +114,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     if (currentChat) {
       let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
     
-      //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
-      if (latestThreadhash === undefined) {
-        latestThreadhash = messages[messages?.length - 1]?.cid;
-      }
+      // //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
+      // if (latestThreadhash === undefined) {
+      //   latestThreadhash = messages[messages?.length - 1]?.cid;
+      // }
 
       let messageCID = latestThreadhash;
 
       if (latestThreadhash) {
-        // Check if cid is present in messages state. If yes, ignore, if not, append to array
-
-        // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
-        // We only enter on this if condition when we receive or send new messages
-
-        if (latestThreadhash !== currentChat?.threadhash) {
-          // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
-          const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-          let msgIPFS: MessageIPFSWithCID;
-          if (messageFromIndexDB !== undefined) {
-            msgIPFS = messageFromIndexDB.body;
-          } else {
-            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-            await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-            msgIPFS = messageFromIPFS;
-          }
-
-          // Decrypt message
-            msgIPFS = await w2wHelper.decryptMessages({
-              savedMsg: msgIPFS,
-              connectedUser,
-              account,
-              chainId,
-              currentChat,
-              inbox,
-            });
-            
-          //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
-          const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
-          if (messageInChat === undefined) {
-            setMessages((m) => [...m, msgIPFS]);
-          }
-        }
-        // This condition is triggered when the user loads the chat whenever the user is changed
-        else if (messages.length == 0) {
-           removedMembersAddressArray = new Set<string>();
+          let messageList:MessageIPFSWithCID[] = [];
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -184,9 +148,11 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 currentChat,
                 inbox,
               });
-            
+             
+
               if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                setMessages((m) => [msgIPFS, ...m]);
+                messageList.push(msgIPFS);
+                messageList.reverse();
                 setMessageBeingSent(false);
               }
 
@@ -197,8 +163,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 break;
               }
             }
-          }
         }
+        setMessages(messageList);
       } else {
         setMessages([]);
       }
@@ -206,7 +172,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setLoading(false);
   };
 
-  useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
 
   useEffect(() => {
     setLoading(true);
@@ -214,7 +179,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
-      setMessages([]);
+      getMessagesFromCID();
       const image = getGroupImage(currentChat);
       try {
         CID.parse(image); // Will throw exception if invalid CID

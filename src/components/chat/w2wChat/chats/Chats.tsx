@@ -56,12 +56,14 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
     setProfilePicture(member.image);
     }
     else {
+      console.log(msg)
       let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
       setProfilePicture(user.profilePicture); 
     }
   }
 
   useEffect(() => {
+    if(isGroup && msg.messageType !== 'Intent')
      getProfilePicture();
   })
 
