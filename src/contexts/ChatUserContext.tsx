@@ -113,14 +113,9 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'This might take a couple of seconds as push nodes sync your info for the first time!',
       });
 
+      const signer = await library.getSigner();
       const createdUser: User = await PushNodeClient.createUser({
-        caip10,
-        did: caip10,
-        publicKey: keyPairs.publicKeyArmored,
-        encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
-        encryptionType: 'x25519-xsalsa20-poly1305',
-        signature: 'xyz',
-        sigType: 'a',
+        signer: signer
       });
       const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
       setConnectedUser(createdConnectedUser);
