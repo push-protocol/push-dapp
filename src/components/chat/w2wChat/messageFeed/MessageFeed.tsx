@@ -2,26 +2,26 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
+import { ethers } from 'ethers';
+import { MdError } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
-import { MdError } from 'react-icons/md';
-import { ethers } from 'ethers';
 
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
-import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import useToast from 'hooks/useToast';
-import { checkConnectedUser, fetchInbox } from 'helpers/w2w/user';
-import { Context } from 'modules/chat/ChatModule';
-import { intitializeDb } from '../w2wIndexeddb';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
+import { checkConnectedUser, fetchInbox } from 'helpers/w2w/user';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, Feeds, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
+import { intitializeDb } from '../w2wIndexeddb';
 
 // Internal Configs
 

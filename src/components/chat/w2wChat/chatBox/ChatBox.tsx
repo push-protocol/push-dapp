@@ -6,56 +6,56 @@ import React, { useContext, useEffect, useState } from 'react';
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import * as PushAPI from '@pushprotocol/restapi';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
+import { BsDashLg } from 'react-icons/bs';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import styled, { useTheme } from 'styled-components';
-import { BsDashLg } from 'react-icons/bs';
 import { useClickAway } from 'react-use';
-import * as PushAPI from '@pushprotocol/restapi';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import * as PushNodeClient from 'api';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
+import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
+import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
+import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
-import useToast from 'hooks/useToast';
-import { useResolveEns } from 'hooks/useResolveEns';
-import { useDeviceWidthCheck } from 'hooks';
-import { Context } from 'modules/chat/ChatModule';
-import HandwaveIcon from '../../../../assets/chat/handwave.svg';
-import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
-import Chats from '../chats/Chats';
-import { intitializeDb } from '../w2wIndexeddb';
-import Lock from '../../../../assets/Lock.png';
-import LockSlash from '../../../../assets/LockSlash.png';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-import videoCallIcon from '../../../../assets/icons/videoCallIcon.svg';
-import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
-import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
-import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
-import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import {
   checkConnectedUser,
   checkIfIntentExist,
   fetchInbox,
   getLatestThreadHash,
-  getUserWithDecryptedPvtKey,
+  getUserWithDecryptedPvtKey
 } from 'helpers/w2w/user';
-import Typebar from '../TypeBar/Typebar';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import { MessagetypeType } from '../../../../types/chat';
+import { useDeviceWidthCheck } from 'hooks';
+import { useResolveEns } from 'hooks/useResolveEns';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+import HandwaveIcon from '../../../../assets/chat/handwave.svg';
+import videoCallIcon from '../../../../assets/icons/videoCallIcon.svg';
+import Lock from '../../../../assets/Lock.png';
+import LockSlash from '../../../../assets/LockSlash.png';
+import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage, getIntentMessage, getMemberDetails } from '../../../../helpers/w2w/groupChat';
+import { MessagetypeType } from '../../../../types/chat';
+import Chats from '../chats/Chats';
+import Typebar from '../TypeBar/Typebar';
+import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { Item } from 'primaries/SharedStyling';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -85,6 +85,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
+  const [chatMeta, setChatMeta] = useState(null);
+
   const [newMessage, setNewMessage] = useState<string>('');
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
@@ -210,6 +212,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   useEffect(() => {
     setLoading(true);
+
+    // check if current chat has meta or not
+    // if (currentChat === 'string') {
+      
+    // }
+
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages

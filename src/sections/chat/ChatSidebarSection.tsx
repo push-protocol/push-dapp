@@ -9,28 +9,28 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import * as PushAPI from "@pushprotocol/restapi";
-import ProfileHeader from 'components/chat/w2wChat/profile';
-import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
-import { checkConnectedUser } from 'helpers/w2w/user';
-import { Feeds } from 'types/chat';
-import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
-import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import * as w2wHelper from 'helpers/w2w/';
-import StyleHelper from 'helpers/StyleHelper'; 
-import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
-import { Context } from 'modules/chat/ChatModule';
-import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
+import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
+import ProfileHeader from 'components/chat/w2wChat/profile';
+import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
+import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
+import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import StyleHelper from 'helpers/StyleHelper';
+import * as w2wHelper from 'helpers/w2w/';
+import { checkConnectedUser } from 'helpers/w2w/user';
+import { Context } from 'modules/chat/ChatModule';
+import { Feeds } from 'types/chat';
 
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
-import { appConfig } from '../../config';
-import { getIsNewTagVisible } from 'helpers/TimerHelper';
 import NewTag from 'components/NewTag';
+import GLOBALS from 'config/Globals';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import { appConfig } from '../../config';
 
 
 
@@ -61,7 +61,7 @@ const createGroupOnMouseLeave = [{
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({showCreateGroupModal}) => {
+const ChatSidebarSection = ({ showCreateGroupModal, prefilledSearch }) => {
   // theme context
   const theme = useTheme();
 
@@ -263,7 +263,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 3 && <SearchBar/>}
+        {activeTab == 3 && <SearchBar prefilled={prefilledSearch} />}
       </ItemVV2>
 
       {/* Footer */}

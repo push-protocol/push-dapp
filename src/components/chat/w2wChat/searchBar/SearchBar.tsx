@@ -1,8 +1,8 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from '@ethersproject/providers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
@@ -13,19 +13,19 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import * as PushNodeClient from 'api';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
-import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import useToast from 'hooks/useToast';
-import * as w2wChatHelper from 'helpers/w2w';
-import { Context } from 'modules/chat/ChatModule';
-import MessageFeed from '../messageFeed/MessageFeed';
-import { AppContext, User } from 'types/chat';
 import { appConfig } from 'config';
 import { findObject } from 'helpers/UtilityHelper';
+import * as w2wChatHelper from 'helpers/w2w';
 import { displayDefaultUser } from 'helpers/w2w/user';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, User } from 'types/chat';
+import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
+import MessageFeed from '../messageFeed/MessageFeed';
 
-const SearchBar = () => {
+const SearchBar = ({ prefilled }) => {
   // get theme
   const theme = useTheme();
 
@@ -47,7 +47,8 @@ const SearchBar = () => {
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const searchFeedToast = useToast();
-
+  console.log("Search:", prefilled);
+  
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
@@ -55,6 +56,23 @@ const SearchBar = () => {
     }
     return () => setUserShouldBeSearched(false);
   }, []);
+
+  useEffect(() => {
+    if (prefilled && !userShouldBeSearched) {
+      // automate search
+      setSearchedUser(prefilled);
+    }
+
+  }, [userShouldBeSearched, prefilled]);
+
+  useEffect(() => {
+    if (searchedUser) {
+      const event = new KeyboardEvent('keypress', {
+        key: 'enter',
+      });
+      submitSearch(event);
+    }
+  }, [searchedUser]);
 
   useEffect(() => {
     if (isInValidAddress) {

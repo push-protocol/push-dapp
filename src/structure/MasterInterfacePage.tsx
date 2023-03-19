@@ -2,14 +2,13 @@
 import React, { useState } from 'react';
 
 // External Packages
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
+import { VscClose } from 'react-icons/vsc';
+import { Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { VscClose } from 'react-icons/vsc';
+import styled from 'styled-components';
 
 // Internal Components
-import { Anchor, Item } from '../primaries/SharedStyling';
 import AirdropPage from 'pages/AirdropPage';
 import ChannelDashboardPage from 'pages/ChannelDashboardPage';
 import ChannelsPage from 'pages/ChannelsPage';
@@ -27,16 +26,16 @@ import SpamPage from 'pages/SpamPage';
 import SupportPage from 'pages/SupportPage';
 import TutorialPage from 'pages/TutorialPage';
 import YieldFarmingPage from 'pages/YieldFarmingPage';
+import { Anchor, Item } from '../primaries/SharedStyling';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import { useWeb3React } from '@web3-react/core';
+import * as PushNodeClient from 'api';
+import GLOBALS from 'config/Globals';
 import { ethers } from 'ethers';
 import CryptoHelper from 'helpers/CryptoHelper';
-import * as PushNodeClient from 'api';
 import * as w2wHelper from 'helpers/w2w';
-import { User } from 'types/chat';
-import { ConnectedUser, Feeds } from 'types/chat';
+import { ConnectedUser, Feeds, User } from 'types/chat';
 
 // Create Header
 function MasterInterfacePage() {
@@ -51,6 +50,7 @@ function MasterInterfacePage() {
       <Interface location={location.pathname}>
         <Routes>
           <Route path="inbox" element={<InboxPage />} />
+          <Route path="chat/:chatid" element={<ChatPage />} />
           <Route path="chat" element={<ChatPage />} />
           {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
