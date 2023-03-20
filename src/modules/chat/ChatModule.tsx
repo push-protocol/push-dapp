@@ -85,6 +85,7 @@ function Chat() {
   useEffect(()=>{
     //check for perticular chat
     if(connectedUser && socketData.messagesSinceLastConnection){
+      console.log(socketData)
       getUpdatedChats([socketData.messagesSinceLastConnection]);
     }
   },[socketData.messagesSinceLastConnection])

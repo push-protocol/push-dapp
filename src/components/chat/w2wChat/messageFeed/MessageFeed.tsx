@@ -70,9 +70,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
          setInbox(inboxes);
         }
         return inboxes;
-      } else {
-        let inboxes: Feeds[] = await fetchInboxApi();
-        return inboxes;
       }
     }
   };
@@ -106,42 +103,50 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-  useQuery('inbox', getInbox, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
+  // useQuery('inbox', getInbox, {
+  //   enabled: !props.hasUserBeenSearched && stopApi,
+  //   refetchOnMount: false,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnReconnect: false,
+  //   refetchIntervalInBackground: false,
+  //   suspense: false,
+  //   onError: () => {
+  //     setStopApi(false);
+  //   },
+  //   retry: 3,
+  //   refetchInterval: 1000 * 5,
+  //   retryDelay: 1000 * 5,
+  // });
 
-  useQuery('fetchInboxApi', fetchInboxApi, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
+  // useQuery('fetchInboxApi', fetchInboxApi, {
+  //   enabled: !props.hasUserBeenSearched && stopApi,
+  //   refetchOnMount: false,
+  //   refetchOnWindowFocus: false,
+  //   refetchOnReconnect: false,
+  //   refetchIntervalInBackground: false,
+  //   suspense: false,
+  //   onError: () => {
+  //     setStopApi(false);
+  //   },
+  //   retry: 3,
+  //   refetchInterval: 1000 * 5,
+  //   retryDelay: 1000 * 5,
+  // });
 
   const updateInbox = async (): Promise<void> => {
     if (checkConnectedUser(connectedUser)) {
       await getInbox();
+      fetchInboxApi();
     }
     setMessagesLoading(false);
   };
+
+  useEffect(() => {
+    if (JSON.stringify(feeds) !== JSON.stringify(inbox))
+      setFeeds(inbox);  
+  },[inbox]);
+
+
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();
