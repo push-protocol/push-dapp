@@ -90,13 +90,16 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   const getAppropriateTimestamp = (time: Date) => {
     let day = new Date();
+    //console.log('time', time.getDate(), 'username', username, 'day', day.getDate());
     if (
       day.getDate() == time.getDate() &&
       day.getMonth() == time.getMonth() &&
       day.getFullYear() == time.getFullYear()
     ) {
+      const minutes = time.getTimezoneOffset();
+      const date = new Date(time.getTime() + minutes * 60000);
       return (
-        time.toLocaleTimeString('en-US').slice(0, -6) + ' ' + time.toLocaleTimeString('en-US').slice(-2).toLowerCase()
+        date.toLocaleTimeString('en-US').slice(0, -6) + ' ' + date.toLocaleTimeString('en-US').slice(-2).toLowerCase()
       );
     }
     day.setDate(day.getDate() - 1);
