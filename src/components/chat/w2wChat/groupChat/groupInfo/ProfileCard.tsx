@@ -42,7 +42,7 @@ export const ProfileCard = ({
           />
         </ItemVV2>
         <SpanV2
-          fontSize="15px"
+          fontSize="18px"
           fontWeight="400"
           color={theme.modalProfileTextColor}
         >
