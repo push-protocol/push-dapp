@@ -4607,7 +4607,6 @@ __metadata:
     buffer: 6.0.3
     chalk: 5.0.1
     constants-browserify: 1.0.0
-    crypto-browserify: ^3.12.0
     crypto-js: 4.0.0
     customize-cra: 1.0.0
     dotenv: 8.2.0
@@ -11407,7 +11406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-browserify@npm:3.12.0, crypto-browserify@npm:^3.12.0":
+"crypto-browserify@npm:3.12.0":
   version: 3.12.0
   resolution: "crypto-browserify@npm:3.12.0"
   dependencies:
