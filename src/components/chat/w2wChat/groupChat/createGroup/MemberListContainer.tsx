@@ -70,7 +70,8 @@ const MemberListContainer = ({ key, memberData, handleMembers, handleMemberList,
         >
           <ImageV2 src={memberData?.profilePicture} />
         </ItemVV2>
-        <SpanV2 color={theme.modalPrimaryTextColor}>{shortenText(memberData.wallets.split(':')[1], 8, 6)}</SpanV2>
+        <SpanV2
+            fontSize="18px" fontWeight="400" color={theme.modalPrimaryTextColor}>{shortenText(memberData.wallets.split(':')[1], 8, 6)}</SpanV2>
       </WalletProfile>
       <ItemHV2 justifyContent="flex-end">
       {memberData?.isAdmin && (
