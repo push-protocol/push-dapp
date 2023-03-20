@@ -17,7 +17,7 @@ import {
   Span,
   TextField,
 } from 'primaries/SharedStyling';
-import './createChannel.css';
+import '../modules/createChannel/createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
 import { ItemHV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
