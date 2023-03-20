@@ -22,7 +22,6 @@ const ImageClipper = forwardRef((props, ref) => {
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
-  //   console.log("here", { imageSrc });
 
   useImperativeHandle(ref, () => ({
     async showCroppedImage() {
@@ -32,7 +31,6 @@ const ImageClipper = forwardRef((props, ref) => {
           const clean = await convertBlobToBase64(croppedImage);
           const image = await resizeImage(clean);
           const finalImage = await convertBlobToBase64(image);
-          console.log(croppedImage, 'format')
           onImageCropped(finalImage);
         } else {
           return "Nothing";

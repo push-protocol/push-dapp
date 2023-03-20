@@ -52,7 +52,6 @@ const uploadLogoModal = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
-        console.log("Image src", reader.result);
         setImageSrc(reader.result);
         setImageType(file?.files[0]?.type)
       };

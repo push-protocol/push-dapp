@@ -60,7 +60,6 @@ const UploadLogo = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
-        console.log("image src",reader.result);
         setImageSrc(reader.result);
         setImageType(file?.files[0]?.type)
       };
