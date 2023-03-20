@@ -1,5 +1,5 @@
+// React + Web3 Essentials
 import React from 'react';
-
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -15,24 +15,34 @@ import Dropdown from 'components/Dropdown';
 import { caip10ToWallet } from '../../../../../helpers/w2w';
 import { device } from 'config/Globals';
 
-
-export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddress, setSelectedMemeberAddress, dropdownRef }) => {
+export const ProfileCard = ({
+  key,
+  member,
+  dropdownValues,
+  selectedMemeberAddress,
+  setSelectedMemeberAddress,
+  dropdownRef,
+}) => {
   const theme = useTheme();
   const { account } = useWeb3React<ethers.providers.Web3Provider>();
   return (
     <ProfileCardItem key={key}>
       <ItemHV2 justifyContent="flex-start">
         <ItemVV2
-          width="48px"
+          height="48px"
           maxWidth="48px"
           borderRadius="100%"
           overflow="hidden"
           margin="0px 12px 0px 0px"
         >
-          <ImageV2 height="100%" objectFit="cover" src={member?.image} />
+          <ImageV2
+            maxHeight="100%"
+            objectFit="cover"
+            src={member?.image}
+          />
         </ItemVV2>
         <SpanV2
-          fontSize="15px"
+          fontSize="18px"
           fontWeight="400"
           color={theme.modalProfileTextColor}
         >
@@ -52,7 +62,7 @@ export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddres
             Admin
           </SpanV2>
         )}
-        {caip10ToWallet(member?.wallet) !== account && (dropdownValues.length>0) && (
+        {caip10ToWallet(member?.wallet) !== account && dropdownValues.length > 0 && (
           <ItemVV2
             maxWidth="4px"
             padding="0 20px 0 0"
@@ -70,7 +80,7 @@ export const ProfileCard = ({ key, member, dropdownValues, selectedMemeberAddres
             hoverBGColor={theme.chat.snapFocusBg}
           />
         </DropdownContainer>
-      )} 
+      )}
     </ProfileCardItem>
   );
 };
@@ -84,8 +94,8 @@ const ProfileCardItem = styled(ItemHV2)`
   background-color: ${(props) => props.theme.chat.snapFocusBg};
   margin-bottom: 8px;
   max-height: 64px;
-  @media(max-width:600px){
-    max-width:300px;
+  @media (max-width: 600px) {
+    max-width: 300px;
   }
 `;
 
@@ -100,7 +110,7 @@ const DropdownContainer = styled(ItemVV2)`
   @media ${device.mobileL} {
     left: 27%;
   }
-  @media (min-width:426px) and (max-width:1150px) {
+  @media (min-width: 426px) and (max-width: 1150px) {
     left: 48%;
   }
 `;
