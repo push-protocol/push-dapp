@@ -170,7 +170,7 @@ export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Pro
     {
 
        user = await PushNodeClient.getUser({ caip10:connectedUser.wallets });
-       if(!user){
+       if(!user || !user.publicKey){
         return connectedUser
        }else{
         decryptedPrivateKey = await PushAPI.chat.decryptWithWalletRPCMethod(
