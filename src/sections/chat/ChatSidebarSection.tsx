@@ -129,7 +129,7 @@ useClickAway(containerRef, () => closeQRDropdown())
     if (!loadingRequests) {
       //setup timer
       const delay = 5;
-      let timer = setInterval(() => fetchIntentApi(), delay * 1000);
+      let timer = setInterval(() => fetchIntentApi(), delay * 5000);
 
       // this will clear Timeout
       // when component unmount like in willComponentUnmount
