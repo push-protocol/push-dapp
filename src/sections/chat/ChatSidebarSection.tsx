@@ -61,7 +61,7 @@ const createGroupOnMouseLeave = [{
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({showCreateGroupModal}) => {
+const ChatSidebarSection = ({showCreateGroupModal,showQRModal}) => {
   // theme context
   const theme = useTheme();
 
@@ -69,7 +69,7 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
-  const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
+  const {connectedUser} = useContext(ChatUserContext);
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
@@ -270,11 +270,13 @@ useClickAway(containerRef, () => closeQRDropdown())
 
       {showQR ? (
         <QRCodeContainer
-          onClick={() => setDisplayQR(!displayQR)}
+          onClick={()=>{
+            showQRModal();
+            setShowQR(!showQR);
+          }}
           style={{
             background: theme.default.bg,
             borderColor: theme.LinkMobileAppBorder,
-            // color:theme.chat.sendMessageFontColor
             color: theme.textcolor,
           }}
         >
@@ -312,7 +314,7 @@ const QRCodeContainer = styled.div`
 display: flex;
 flex-direction: row;
 align-items: center;
-padding: 8px;
+padding: 4px 8px;
 gap: 9px;
 width: 200px;
 height: 48px;
@@ -323,7 +325,7 @@ border-radius: 12px;
 cursor:pointer;
 position: absolute;
 z-index: 100;
-bottom: 45px;
+bottom: 50px;
 
 @media (max-width:768px){
 right:30px;

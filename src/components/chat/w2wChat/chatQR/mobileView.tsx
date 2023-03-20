@@ -1,80 +1,78 @@
-import BlurBG from 'components/reusables/blurs/BlurBG';
-import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS, { device } from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import React, { useContext } from 'react';
+// React + Web3 Essentials
+import React, { useContext} from "react";
+import { useWeb3React } from "@web3-react/core";
+import { useClickAway } from "react-use";
+
+// External Packages
+import usePeer from "hooks/usePeer";
+import { QRCodeCanvas } from "qrcode.react";
+import styled, { useTheme } from "styled-components";
 import { AiOutlineClose, AiOutlineMore } from 'react-icons/ai';
-import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
+import CryptoHelper from 'helpers/CryptoHelper';
+import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+
+
+// Internal Configs
+import GLOBALS, { device } from "config/Globals";
+import { ChatUserContext } from "contexts/ChatUserContext";
+import chatBoxImage from "../../../../assets/chat/chatBox.svg";
 import backgroundImage from "../../../../assets/chat/QRBackground.svg";
 
-const MobileView = ({
-    type = LOADER_TYPE.STANDALONE,
-    overlay = LOADER_OVERLAY.NORMAL,
-    blur = 0,
-    width = 'auto'
-}) => {
-
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+const MobileView = ({ onClose, onConfirm: createGroup, toastObject }) => {
     const theme = useTheme();
+    const handleClose = () => {
+        onClose();
+    }
+    const containerRef = React.useRef(null);
+    useClickAway(containerRef, () => handleClose());
+
 
     return (
-        <ItemVV2
-            position={overlay == LOADER_OVERLAY.ONTOP ? 'absolute' : 'relative'}
-            alignSelf={overlay == LOADER_OVERLAY.ONTOP ? 'stretch' : 'center'}
+
+        <Container
             flex="initial"
-            top="0"
-            right="0"
-            bottom="0"
-            left="0"
-            zIndex="1000"
-            padding="15px"
-            onClick={() => { setDisplayQR(!displayQR) }}
+            alignSelf={'center'}
+            padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+            border={`1px solid ${theme.default.border}`}
+            background={theme.chatQRbg}
+            ref={containerRef}
+
         >
-            {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
 
-            <Container
-                flex="initial"
-                alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
-                // width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
-                padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-                borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
-                background={theme.chatQRbg}
+            <CloseButtonContainer>
+                <CloseButton onClick={() => { onClose() }} style={{ color: theme.default.color }} />
+            </CloseButtonContainer>
 
-            >
+            <Image src={backgroundImage} />
 
-                <CloseButtonContainer>
-                    <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{ color: theme.default.color }} />
-                </CloseButtonContainer>
+            <TextContainer>
+                <TextHeading>Open Push Chat on your Computer</TextHeading>
+                <TextContents>
+                    <TextContent>Go to app.push.org on your computer</TextContent>
+                    <TextContent>Open Push Chat and click on
+                        <Settings style={{ color: theme.default.color }} />
+                        next to your user profile</TextContent>
+                    <TextContent style={{ marginTop: "5px" }}>Click on Link Mobile App and scan the code</TextContent>
+                </TextContents>
+            </TextContainer>
 
-                <Image src={backgroundImage} />
+        </Container>
 
-                <TextContainer>
-                    <TextHeading>Open Push Chat on your Computer</TextHeading>
-                    <TextContents>
-                            <TextContent>Go to app.push.org on your computer</TextContent>
-                            <TextContent>Open Push Chat and click on  
-                                <Settings style={{color:theme.default.color}}/>
-                                next to your user profile</TextContent>
-                            <TextContent style={{marginTop:"5px"}}>Click on Link Mobile App and scan the code</TextContent>
-                    </TextContents>
-                </TextContainer>
-
-            </Container>
-
-
-
-
-        </ItemVV2>
     );
 };
+
+
+
 
 export default MobileView;
 
 const Container = styled(ItemVV2)`
     width:75%;
-    padding: 10px 7px 20px 20px;
+    padding: 10px 20px 20px 20px;
     @media ${device.tablet} {
         width:95%;
     }
@@ -121,12 +119,12 @@ line-height: 141%;
 display: flex;
 align-items: center;
 text-align: center;
-color: ${(props)=>props.theme.default.color};
+color: ${(props) => props.theme.default.color};
 
 `;
 
 const TextContents = styled.ol`
-
+    padding-left:20px;
 `;
 
 const TextContent = styled.li`

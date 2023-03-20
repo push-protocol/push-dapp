@@ -12,7 +12,7 @@ import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Internal Compoonents
-import { AppContext,  Feeds, User } from 'types/chat';
+import { AppContext, Feeds, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -33,10 +33,12 @@ import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/creat
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
+
 import { useClickAway } from 'react-use';
 import { useDeviceWidthCheck } from 'hooks';
 import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
+import useModal from 'hooks/useModal';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -54,7 +56,7 @@ export const Context = React.createContext<AppContext | null>(null);
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
 
-  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
+  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading} =
     useContext(ChatUserContext);
 
   const theme = useTheme();
@@ -135,18 +137,13 @@ function Chat() {
     }
   }, [connectedUser]);
 
-  const closeQRModal = () => {
-    setDisplayQR(false);
-  };
-  useClickAway(containerRef, () => closeQRModal());
-
   const groupInfoToast = useToast();
 
   const {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:"0px"});
+  } = useModalBlur({ padding: "0px" });
 
   const createGroupToast = useToast();
 
@@ -154,7 +151,15 @@ function Chat() {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:'0px'});
+  } = useModalBlur({ padding: '0px' });
+
+  const {
+    isModalOpen: isQRModalOpen,
+    showModal: showQRModal,
+    ModalComponent: ChatQRModal,
+  } = useModalBlur({ padding: '0px' });
+
+  
 
 
   const connectUser = async (): Promise<void> => {
@@ -198,9 +203,8 @@ function Chat() {
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
-      if(checkIfGroup(feed))
-      {
-        rearrangeMembers(feed,connectedUser);
+      if (checkIfGroup(feed)) {
+        rearrangeMembers(feed, connectedUser);
       }
       setCurrentChat(feed);
     } else {
@@ -248,52 +252,29 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal} showQRModal={showQRModal} />
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
                 chatActive={viewChatBox}
               >
-                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal}/>
+                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal} />
               </ChatContainer>
               <GroupInfoModalComponent
                 InnerComponent={GroupInfoModalContent}
-                onConfirm={() => {}}
+                onConfirm={() => { }}
                 toastObject={groupInfoToast}
-                />
+              />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
               />
 
-              {displayQR && !isMobile && (
-                <>
-                  <ChatQR
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
+              <ChatQRModal
+                InnerComponent={isMobile ? MobileView : ChatQR}
+                toastObject={createGroupToast}
+              />
 
-                  {/* <MobileView
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  /> */}
-                </>
-              )}
-
-              {displayQR && isMobile && (
-                <>
-                  <MobileView
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
-                </>
-              )}
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
@@ -358,22 +339,19 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+  });
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
+  });
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+  });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

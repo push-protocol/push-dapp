@@ -1,31 +1,40 @@
+// React + Web3 Essentials
 import React, { useContext, useEffect, useState } from "react";
-import usePeer from "hooks/usePeer";
-import { useSelector } from "react-redux";
-import { QRCodeCanvas } from "qrcode.react";
-import CryptoHelper from 'helpers/CryptoHelper';
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useWeb3React } from "@web3-react/core";
+import { useClickAway } from "react-use";
+
+// External Packages
+import usePeer from "hooks/usePeer";
+import { QRCodeCanvas } from "qrcode.react";
 import styled, { useTheme } from "styled-components";
-import { AiOutlineClose, AiOutlineQrcode } from "react-icons/ai";
-import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+import { AiOutlineClose, } from "react-icons/ai";
+
+// Internal Compoonents
+import CryptoHelper from 'helpers/CryptoHelper';
+import LoaderSpinner, { LOADER_SPINNER_TYPE,LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+
+
+// Internal Configs
 import GLOBALS, { device } from "config/Globals";
-import BlurBG from "components/reusables/blurs/BlurBG";
 import { ChatUserContext } from "contexts/ChatUserContext";
 import chatBoxImage from "../../../../assets/chat/chatBox.svg";
 
-const ChatQR = ({
-    type = LOADER_TYPE.STANDALONE,
-    overlay = LOADER_OVERLAY.NORMAL,
-    blur = 0,
-    width = 'auto'
-}) => {
+const ChatQR = ({ onClose, onConfirm: createGroup, toastObject }) => {
     const theme = useTheme();
     const { account } = useWeb3React();
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { createUserIfNecessary, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
     const [myPeer, myPeerID] = usePeer();
     const [qrCodeText, setQrCodeText] = useState('');
     const [loading, setLoading] = useState(true);
     const [encryptedKey, setEncryptedKey] = useState('');
+
+    const handleClose = () => {
+        onClose();
+    }
+
+    const containerRef = React.useRef(null);
+    useClickAway(containerRef, () => handleClose());
 
     // console.log(myPeerID, myPeer, connectedPeerID.peerID);
     const generateQRCodeText = () => {
@@ -81,39 +90,26 @@ const ChatQR = ({
         }
     }, [connectedPeerID.peerID]);
 
-    return (
-        <ItemVV2
-            position={overlay == LOADER_OVERLAY.ONTOP ? 'absolute' : 'relative'}
-            alignSelf={overlay == LOADER_OVERLAY.ONTOP ? 'stretch' : 'center'}
-            flex="initial"
-            top="0"
-            right="0"
-            bottom="0"
-            left="0"
-            zIndex="1000"
-            padding="15px"
-            onClick={() => { setDisplayQR(!displayQR) }}
-        >
-            {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
 
+    return (
+        <>
             {loading ? (
-                <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={60} />
+                    <LoaderSpinner type={LOADER_TYPE.STANDALONE} spinnerSize={60} />
             ) : (
                 <>
                     {pgpPvtKey ? (
                         <Container
                             flex="initial"
-                            alignSelf={type == LOADER_TYPE.SEAMLESS ? 'auto' : 'center'}
-                            // width={type == LOADER_TYPE.STANDALONE_MINIMAL ? 'auto' : width}
-                            padding={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
-                            borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
-                            border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
+                            alignSelf={'center'}
+                            padding={GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+                            borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
+                            border={`1px solid ${theme.default.border}`}
                             background={theme.chatQRbg}
-
+                            ref={containerRef}
                         >
 
                             <CloseButtonContainer>
-                                <CloseButton onClick={() => { setDisplayQR(!displayQR) }} style={{ color: theme.default.secondaryColor }} />
+                                <CloseButton onClick={() => { onClose() }} style={{ color: theme.default.secondaryColor }} />
                             </CloseButtonContainer>
 
                             <QRContainer>
@@ -151,13 +147,15 @@ const ChatQR = ({
                     )}
                 </>
             )}
-
-
-
-
-        </ItemVV2>
+        </>
     );
 };
+
+
+
+
+
+
 
 export default ChatQR;
 
@@ -172,7 +170,7 @@ const Container = styled(ItemVV2)`
 
     //for critical sizes 
     @media (min-width:1200px) and (max-width:1353px) {
-        width:87%;
+        width:100%;
     }
 
     // this one is for when chat and inbox are displayed and screen size is less

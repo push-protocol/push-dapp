@@ -28,8 +28,7 @@ const ChatUserContextProvider = (props) => {
   const [connectedPeerID,setConnectedPeerID] = useState({
     peerID:''
   });
-  const [displayQR,setDisplayQR] = useState(false);
-
+  
   const getUser = async () => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });
     const user: User = await PushNodeClient.getUser({ caip10 });
@@ -148,8 +147,6 @@ const ChatUserContextProvider = (props) => {
       setLocalPeer,
       connectedPeerID,
       setConnectedPeerID,
-      displayQR,
-      setDisplayQR
       }}>
       {props.children}
     </ChatUserContext.Provider>
