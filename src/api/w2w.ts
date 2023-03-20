@@ -1,3 +1,5 @@
+// External Packages
+import * as PushAPI from "@pushprotocol/restapi";
 
 // @ts-ignore
 import { User } from 'types/chat';
@@ -19,27 +21,12 @@ export const getUser = async ({ did = '', caip10 = '' }: { did?: string; caip10?
 
   for (let i = 0; i < 3; i++) {
     try {
-      if (did && caip10) {
-        throw new Error("Both properties can't be at the same time");
-      }
-      let path = '/v1/w2w/users';
-      if (did) {
-        path += `?did=${did}`;
-      } else if (caip10) {
-        path += `?caip10=${caip10}`;
-      }
-      const response = await fetch(BASE_URL + path, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const data: User = await response.json();
-      return data;
+      const userResponse = await PushAPI.user.get({
+        account: did || caip10,
+        env: appConfig.appEnv,
+      })
+      return userResponse;
     } catch (err) {
-      // if (retry > 1) {
-      //   toast.error('An Error Occurred! Please Reload the Page', ToastPosition)
-      // }
       console.log('Error in the API call', err);
       retry++;
       continue;
@@ -47,43 +34,19 @@ export const getUser = async ({ did = '', caip10 = '' }: { did?: string; caip10?
   }
 };
 
-
 export const createUser = async ({
-  caip10,
-  did,
-  publicKey,
-  encryptedPrivateKey,
-  encryptionType,
-  signature,
-  sigType,
-}: {
-  caip10: string;
-  did: string;
-  publicKey: string;
-  encryptedPrivateKey: string;
-  encryptionType: string;
-  signature: string;
-  sigType: string;
+  signer
 }): Promise<User> => {
-  const response = await fetch(BASE_URL + '/v1/w2w/users', {
-    method: 'POST',
-    headers: {
-      'content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      caip10,
-      did,
-      publicKey,
-      encryptedPrivateKey,
-      encryptionType,
-      signature,
-      sigType,
-    }),
-  });
-  const data: User = await response.json();
-  return data;
+  try {
+    const userResponse = await PushAPI.user.create({
+      signer: signer,
+      env: appConfig.appEnv,
+    })
+    return userResponse;
+  } catch (err) {
+    console.log('Error in creating user', err.message);
+  }
 };
-
 
 export const updateUser = async ({
   did,

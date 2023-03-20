@@ -10,7 +10,7 @@ const GroupModalHeader = ({
     handlePrevious,
     handleClose,
     title,
-    margin
+    margin,
 }) => {
     const isMobile = useDeviceWidthCheck(600);
     const themes = useTheme();
@@ -37,7 +37,7 @@ const GroupModalHeader = ({
             </SpanV2>
             <Close
                 onClick={() => handleClose()}
-                style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? '20px' : '4px' }}
+                style={{ cursor: 'pointer'}}
             />
         </ItemHV2>
     );
