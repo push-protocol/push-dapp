@@ -90,17 +90,18 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   const getAppropriateTimestamp = (time: Date) => {
     let day = new Date();
-    //console.log('time', time.getDate(), 'username', username, 'day', day.getDate());
+
     if (
       day.getDate() == time.getDate() &&
       day.getMonth() == time.getMonth() &&
       day.getFullYear() == time.getFullYear()
     ) {
-      const minutes = time.getTimezoneOffset();
-      const date = new Date(time.getTime() + minutes * 60000);
-      return (
-        date.toLocaleTimeString('en-US').slice(0, -6) + ' ' + date.toLocaleTimeString('en-US').slice(-2).toLowerCase()
-      );
+      // const minutes = time.getTimezoneOffset();
+      // const date = new Date(time.getTime() + minutes * 60000);
+      const localTime: string = time.toLocaleTimeString('en-US');
+      const finalTime: string = localTime.slice(0, -6) + ' ' + localTime.slice(-2).toLowerCase();
+      return finalTime;
+      //date.toLocaleTimeString('en-US').slice(0, -6) + ' ' + date.toLocaleTimeString('en-US').slice(-2).toLowerCase()
     }
     day.setDate(day.getDate() - 1);
     if (
@@ -115,6 +116,9 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   let date = null;
   if (timestamp) {
+    if (typeof timestamp == 'string') {
+      timestamp = timestamp.slice(0, -1);
+    }
     date = getAppropriateTimestamp(new Date(timestamp));
   }
 
