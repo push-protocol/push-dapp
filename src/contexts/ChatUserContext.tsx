@@ -6,6 +6,7 @@ import * as w2wHelper from 'helpers/w2w';
 import * as PushNodeClient from 'api';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { generateKeyPair } from 'helpers/w2w/pgp';
+import * as PushAPI from "@pushprotocol/restapi";
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 export const ChatUserContext = createContext({})
@@ -77,7 +78,7 @@ const ChatUserContextProvider = (props) => {
     setConnectedUser(connectedUser);
   };
 
-  const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
+  const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
       // This is a new user
       setBlockedLoading({
@@ -89,8 +90,8 @@ const ChatUserContextProvider = (props) => {
           'This step is is only done for first time users and might take a few seconds. PGP keys are getting generated to provide you with secure yet seamless chat',
       });
       await new Promise((r) => setTimeout(r, 200));
-
-      const keyPairs = await generateKeyPair();
+     
+      // const keyPairs = await generateKeyPair();
       setBlockedLoading({
         enabled: true,
         title: 'Step 2/4: Encrypting your keys',
@@ -99,12 +100,20 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!',
       });
 
-      const walletPublicKey = await CryptoHelper.getPublicKey(account);
-      const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
-        keyPairs.privateKeyArmored,
-        walletPublicKey
-      );
-      const caip10: string = w2wHelper.walletToCAIP10({ account });
+      // const walletPublicKey = await CryptoHelper.getPublicKey(account);
+      // const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
+      //   keyPairs.privateKeyArmored,
+      //   walletPublicKey
+      // );
+      const signer = await library.getSigner();
+      await PushNodeClient.createUser({
+        signer: signer
+      });
+      const createdUser = await PushNodeClient.getUser({caip10:account});
+      const pvtkey = await PushAPI.chat.decryptPGPKey({
+        encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
+        signer: signer
+      });
       setBlockedLoading({
         enabled: true,
         title: 'Step 3/4: Syncing account info',
@@ -113,13 +122,10 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'This might take a couple of seconds as push nodes sync your info for the first time!',
       });
 
-      const signer = await library.getSigner();
-      const createdUser: User = await PushNodeClient.createUser({
-        signer: signer
-      });
-      const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
+     
+      const createdConnectedUser = { ...createdUser, privateKey: pvtkey };
       setConnectedUser(createdConnectedUser);
-      setPgpPvtKey(keyPairs.privateKeyArmored);
+      setPgpPvtKey(pvtkey);
 
       setBlockedLoading({
         enabled: false,
@@ -128,7 +134,7 @@ const ChatUserContextProvider = (props) => {
         progressEnabled: true,
         progress: 100,
       });
-      return { createdUser: createdConnectedUser };
+      return createdConnectedUser ;
     } catch (e) {
       console.log(e);
     }

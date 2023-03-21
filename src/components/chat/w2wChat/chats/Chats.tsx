@@ -50,18 +50,21 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const ensName = useResolveEns(msg.fromCAIP10);
   
  
+ 
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);
     if(member){
     setProfilePicture(member.image);
     }
     else {
+      console.log(msg)
       let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
       setProfilePicture(user.profilePicture); 
     }
   }
 
   useEffect(() => {
+    if(isGroup && msg && msg.messageType !== 'Intent')
      getProfilePicture();
   })
 

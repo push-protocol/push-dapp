@@ -39,11 +39,9 @@ import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import {
-  checkConnectedUser,
   checkIfIntentExist,
   fetchInbox,
   getLatestThreadHash,
-  getUserWithDecryptedPvtKey,
 } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -86,7 +84,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
   const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account ,library} = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
@@ -95,11 +93,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
-  const [removedMembers, setRemovedMembers] = useState<any>();
   const groupInfoRef = React.useRef<HTMLInputElement>(null);
-  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
+  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
   const chatBoxToast = useToast();
-  let removedMembersAddressArray;
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
@@ -158,7 +154,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         }
         // This condition is triggered when the user loads the chat whenever the user is changed
         else if (messages.length == 0) {
-           removedMembersAddressArray = new Set<string>();
           while (messageCID) {
             setLoading(true);
             if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
@@ -237,11 +232,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    if (checkConnectedUser(connectedUser)) {
       const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
       return inboxes.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
-    }
   };
 
   const sendMessage = async ({
@@ -252,19 +245,24 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     messageType: MessagetypeType;
   }): Promise<void> => {
     setMessageBeingSent(true);
-    const user = await getUserWithDecryptedPvtKey(connectedUser);
     try {
+      let createdUser;
+      if(!connectedUser.publicKey){
+        createdUser = await createUserIfNecessary();
+      }
+      const signer = await library.getSigner();
+
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
         receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets,
-        account: account!,
-        pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
+        signer: signer!,
+        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
       });
 
       if (typeof sendResponse !== 'string') {
-        await intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
+         intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
         const updatedCurrentChat = currentChat;
         updatedCurrentChat.msg = sendResponse;
@@ -299,16 +297,13 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
-      setConnectedUser(user);
     }, 3000);
   };
 
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
     let getIntent;
-    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
-    }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
@@ -323,10 +318,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setMessageBeingSent(true);
     let updatedIntent: any;
     try {
+      let createdUser;
+        if(!connectedUser.publicKey){
+          createdUser = await createUserIfNecessary();
+        }
+      const signer = await library.getSigner();
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
-        account: account!,
+        signer: signer!,
         senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
+        pgpPrivateKey:connectedUser?.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
       });
 
@@ -393,13 +394,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(':')[1])
       ) {
-        user = await getUserWithDecryptedPvtKey(connectedUser);
+        let createdUser;
+        if(!connectedUser.publicKey){
+          createdUser = await createUserIfNecessary();
+        }
+         const signer = await library.getSigner();
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
           receiverAddress: currentChat?.wallets.split(':')[1],
-          account: account!,
-          pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
+          signer: signer!,
+          pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
           env: appConfig.appEnv,
         });
 
@@ -433,7 +438,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
           // We store the message in state decrypted so we display to the user the intent message
           sendResponse.messageContent = message;
           setNewMessage('');
-          const result = await fetchInboxApi();
+          let result = await fetchInboxApi();
+          result.msg.messageContent = message;
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
@@ -466,10 +472,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       });
       setMessageBeingSent(false);
     }
-    setTimeout(() => {
+    finally{
       setMessageBeingSent(false);
-      setConnectedUser(user);
-    }, 2000);
+    }
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {

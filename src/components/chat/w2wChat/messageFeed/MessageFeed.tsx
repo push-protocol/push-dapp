@@ -16,7 +16,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import useToast from 'hooks/useToast';
-import { checkConnectedUser, fetchInbox } from 'helpers/w2w/user';
+import { fetchInbox } from 'helpers/w2w/user';
 import { Context } from 'modules/chat/ChatModule';
 import { intitializeDb } from '../w2wIndexeddb';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -59,7 +59,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   }
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (checkConnectedUser(connectedUser)) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
       if (getInbox !== undefined) {
         let inboxes: Feeds[] = getInbox.body;
@@ -74,7 +73,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         let inboxes: Feeds[] = await fetchInboxApi();
         return inboxes;
       }
-    }
   };
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
@@ -137,9 +135,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   });
 
   const updateInbox = async (): Promise<void> => {
-    if (checkConnectedUser(connectedUser)) {
       await getInbox();
-    }
     setMessagesLoading(false);
   };
   useEffect(() => {
