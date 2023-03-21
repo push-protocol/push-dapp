@@ -117,7 +117,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   let date = null;
   if (timestamp) {
     if (typeof timestamp == 'string') {
-      timestamp = timestamp.slice(0, -1);
+      timestamp = timestamp.replace('Z', '');
     }
     date = getAppropriateTimestamp(new Date(timestamp));
   }
