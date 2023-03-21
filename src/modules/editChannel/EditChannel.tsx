@@ -62,6 +62,7 @@ export default function EditChannel({
   const [channelFile, setChannelFile] = React.useState(channelDetails?.icon);
   const [croppedImage, setCroppedImage] = useState(channelDetails?.icon);
   const [imageSrc, setImageSrc] = useState(croppedImage);
+  const [imageType, setImageType] = useState(null);
   const [pushDeposited, setPushDeposited] = useState(false);
 
   const [errorInfo, setErrorInfo] = useState<{ name: string, description: string, address: string, url: string }>({ name: '', description: '', address: '', url: '' });
@@ -347,6 +348,8 @@ export default function EditChannel({
           setChannelFile,
           imageSrc,
           setImageSrc,
+          imageType,
+          setImageType,
           errorInfo,
           setErrorInfo
         }}
