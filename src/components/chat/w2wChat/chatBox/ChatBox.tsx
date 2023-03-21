@@ -9,7 +9,6 @@ import Snackbar from '@mui/material/Snackbar';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
-import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
@@ -80,7 +79,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setChat,
     setInbox,
     setHasUserBeenSearched,
-    setPendingRequests,
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
@@ -220,7 +218,7 @@ useEffect(() => {
     if (checkConnectedUser(connectedUser)) {
       const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
-      return inboxes.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+      return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
     }
   };
 
@@ -296,7 +294,6 @@ useEffect(() => {
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
     await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-    setPendingRequests(intents?.length);
     setReceivedIntents(intents);
     setLoading(false);
   }

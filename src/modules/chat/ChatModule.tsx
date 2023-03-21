@@ -11,7 +11,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useClickAway } from 'react-use';
-import * as PushAPI from "@pushprotocol/restapi";
 
 // Internal Compoonents
 import { AppContext,  Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
@@ -35,10 +34,13 @@ import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
+import * as w2wHelper from 'helpers/w2w/';
+
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { appConfig } from 'config';
+import { fetchIntent } from 'helpers/w2w/user';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -68,7 +70,6 @@ function Chat() {
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
@@ -83,22 +84,38 @@ function Chat() {
   const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
 
   useEffect(()=>{
-    //check for perticular chat
     if(connectedUser && socketData.messagesSinceLastConnection){
-      console.log(socketData)
-      getUpdatedChats([socketData.messagesSinceLastConnection]);
+      getUpdatedChats(socketData.messagesSinceLastConnection);
+      getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
   },[socketData.messagesSinceLastConnection])
 
-  const getUpdatedChats = async(chats) => {
-    const decryptedChat:MessageIPFS[] = await PushAPI.chat.decryptConversation({
-      messages: chats,
+  const getUpdatedChats = async(chat) => {
+    const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
+      savedMsg: chat,
       connectedUser,
-      pgpPrivateKey: connectedUser.privateKey!,
-      env:appConfig.appEnv,
+      account,
+      currentChat,
+      inbox
     });
-    console.log(decryptedChat[0])
-    setMessages([...messages,{...decryptedChat[0],cid:socketData.messagesSinceLastConnection.cid}]);
+    setMessages([...messages,{...decryptedChat,cid:socketData.messagesSinceLastConnection.cid}]);
+  }
+
+  const getUpdatedInbox = async(message) => {
+    let isInInbox = false;
+    const updatedInbox = inbox.map(feed => {
+      if((feed.did === message.toCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+        feed.msg = message;
+        isInInbox = true;
+      }
+      return feed;
+    });
+    if(isInInbox)
+    setInbox(updatedInbox);
+    else {
+      const intents = await fetchIntent(connectedUser);
+      setReceivedIntents(intents);
+    }
   }
 
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
@@ -249,8 +266,6 @@ function Chat() {
                 setIntents,
                 inbox,
                 setInbox,
-                pendingRequests,
-                setPendingRequests,
                 hasUserBeenSearched,
                 setHasUserBeenSearched,
                 loadingMessage,

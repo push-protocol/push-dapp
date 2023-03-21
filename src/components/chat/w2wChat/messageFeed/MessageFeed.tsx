@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
 import { ethers } from 'ethers';
@@ -76,7 +75,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       const inboxes:Feeds[] = await fetchInbox(connectedUser);
-      if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+      if (JSON.stringify(feeds) !== JSON.stringify(inbox)){
         setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
@@ -103,52 +102,27 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-  // useQuery('inbox', getInbox, {
-  //   enabled: !props.hasUserBeenSearched && stopApi,
-  //   refetchOnMount: false,
-  //   refetchOnWindowFocus: false,
-  //   refetchOnReconnect: false,
-  //   refetchIntervalInBackground: false,
-  //   suspense: false,
-  //   onError: () => {
-  //     setStopApi(false);
-  //   },
-  //   retry: 3,
-  //   refetchInterval: 1000 * 5,
-  //   retryDelay: 1000 * 5,
-  // });
-
-  // useQuery('fetchInboxApi', fetchInboxApi, {
-  //   enabled: !props.hasUserBeenSearched && stopApi,
-  //   refetchOnMount: false,
-  //   refetchOnWindowFocus: false,
-  //   refetchOnReconnect: false,
-  //   refetchIntervalInBackground: false,
-  //   suspense: false,
-  //   onError: () => {
-  //     setStopApi(false);
-  //   },
-  //   retry: 3,
-  //   refetchInterval: 1000 * 5,
-  //   retryDelay: 1000 * 5,
-  // });
 
   const updateInbox = async (): Promise<void> => {
-    if (checkConnectedUser(connectedUser)) {
       await getInbox();
       fetchInboxApi();
-    }
     setMessagesLoading(false);
   };
 
   useEffect(() => {
-    if (JSON.stringify(feeds) !== JSON.stringify(inbox))
-      setFeeds(inbox);  
+    setFeeds(inbox);  
   },[inbox]);
 
 
   useEffect(() => {
+    console.log("in update")
+    if(!props.hasUserBeenSearched)
+      updateInbox();
+  },[]);
+
+  useEffect(() => {
     if (!props.hasUserBeenSearched) {
+      console.log(inbox)
       updateInbox();
     } else {
       const searchFn = async (): Promise<void> => {
@@ -172,6 +146,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
                 feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
+                console.log(feed);
             setFeeds([feed]);
           }
         } else {

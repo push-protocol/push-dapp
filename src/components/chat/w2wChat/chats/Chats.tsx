@@ -63,7 +63,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   }
 
   useEffect(() => {
-    if(isGroup && msg.messageType !== 'Intent')
+    if(isGroup && msg && msg.messageType !== 'Intent')
      getProfilePicture();
   }, []);
 
