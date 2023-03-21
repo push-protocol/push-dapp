@@ -3,7 +3,11 @@ import { Peer } from "peerjs";
 import { ChatUserContext } from "contexts/ChatUserContext";
 
 const usePeer = () => {
-    const { setLocalPeer,localPeer,setConnectedPeerID } = useContext(ChatUserContext);
+    const { setConnectedPeerID } = useContext(ChatUserContext);
+    const [localPeer,setLocalPeer]= useState({
+      peer:null,
+      peerID:null
+    })
     const [myPeer, setPeer] = useState(localPeer.peer);
     const [myPeerID, setMyPeerID] = useState(localPeer.peerID);
 

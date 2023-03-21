@@ -23,11 +23,12 @@ import chatBoxImage from "../../../../assets/chat/chatBox.svg";
 const ChatQR = ({ onClose, onConfirm: createGroup, toastObject }) => {
     const theme = useTheme();
     const { account } = useWeb3React();
-    const { createUserIfNecessary, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { createUserIfNecessary, connectedPeerID,connectedUser } = useContext(ChatUserContext);
     const [myPeer, myPeerID] = usePeer();
     const [qrCodeText, setQrCodeText] = useState('');
     const [loading, setLoading] = useState(true);
     const [encryptedKey, setEncryptedKey] = useState('');
+    const [pgpPvtKey,setPgpPvtKey] = useState(connectedUser?.privateKey);
 
     const handleClose = () => {
         onClose();

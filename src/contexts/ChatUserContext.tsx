@@ -20,11 +20,11 @@ const ChatUserContextProvider = (props) => {
     enabled: false,
     title: null,
   });
-  const [pgpPvtKey,setPgpPvtKey] = useState(null);
-  const [localPeer,setLocalPeer]= useState({
-    peer:'',
-    peerID:''
-  })
+  // const [pgpPvtKey,setPgpPvtKey] = useState(null);
+  // const [localPeer,setLocalPeer]= useState({
+  //   peer:'',
+  //   peerID:''
+  // })
   const [connectedPeerID,setConnectedPeerID] = useState({
     peerID:''
   });
@@ -50,7 +50,7 @@ const ChatUserContextProvider = (props) => {
         user.encryptedPrivateKey,
         account
       );
-      setPgpPvtKey(privateKeyArmored);
+      // setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
       connectedUser = {
@@ -118,7 +118,7 @@ const ChatUserContextProvider = (props) => {
       });
       const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
       setConnectedUser(createdConnectedUser);
-      setPgpPvtKey(keyPairs.privateKeyArmored);
+      // setPgpPvtKey(keyPairs.privateKeyArmored);
 
       setBlockedLoading({
         enabled: false,
@@ -141,10 +141,10 @@ const ChatUserContextProvider = (props) => {
       blockedLoading,
       setBlockedLoading, 
       createUserIfNecessary,
-      pgpPvtKey,
-      setPgpPvtKey,
-      localPeer,
-      setLocalPeer,
+      // pgpPvtKey,
+      // setPgpPvtKey,
+      // localPeer,
+      // setLocalPeer,
       connectedPeerID,
       setConnectedPeerID,
       }}>
