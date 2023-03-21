@@ -57,6 +57,8 @@ import GLOBALS, { device } from 'config/Globals';
 import { Item } from 'primaries/SharedStyling';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { getChats } from 'services';
+import { message } from 'openpgp';
+import e from 'express';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -140,19 +142,17 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   }
 
 useEffect(() => {
-  console.log(messages.length,listInnerRef?.current)
-  // if(listInnerRef?.current && messages?.length > 15){
-  //   scrollToNext()
-  // }
-  // else{
-  scrollToBottom()
-  // }
-}, [messages, listInnerRef]);
+    if (messages.length <= 15) 
+    {
+      scrollToBottom();
+    } 
+}, [messages]);
 
   const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
     if (!connectedUser) return;
     if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
     setChatsLoading(true);
+    scrollToNext();
     const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
       account,
       pgpPrivateKey: connectedUser.privateKey,
@@ -231,6 +231,8 @@ useEffect(() => {
   }): Promise<void> => {
     setMessageBeingSent(true);
     const user = await getUserWithDecryptedPvtKey(connectedUser);
+    scrollToBottom();
+
     try {
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
@@ -652,7 +654,7 @@ useEffect(() => {
                     </SpinnerWrapper>
                   }
                   <>
-                  <div ref={topRef} style={{backgroundColor:'red'}}>p</div>
+                  <div ref={topRef}></div>
                   {messages?.map((msg, i) => {
                     //const isLast = i === messages.length - 1
                     //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -710,7 +712,7 @@ useEffect(() => {
                 </>
               )}
             {/* </CustomScrollContent> */}
-            <div ref={bottomRef} style={{backgroundColor:'blue'}}>p</div>
+            <div ref={bottomRef}></div>
           </MessageContainer>
 
           {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
