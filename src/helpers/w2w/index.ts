@@ -115,7 +115,6 @@ export interface IDecryptMessage {
   savedMsg: MessageIPFSWithCID;
   connectedUser: ConnectedUser;
   account: string;
-  chainId: number;
   currentChat: Feeds;
   inbox: Feeds[];
 }

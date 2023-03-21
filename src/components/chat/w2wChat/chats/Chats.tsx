@@ -53,7 +53,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);
     if(member){
-    setProfilePicture(member.image);
+      setProfilePicture(member.image);
     }
     else {
       console.log(msg)
@@ -65,7 +65,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   useEffect(() => {
     if(isGroup && msg.messageType !== 'Intent')
      getProfilePicture();
-  })
+  }, []);
 
   return (
     <>

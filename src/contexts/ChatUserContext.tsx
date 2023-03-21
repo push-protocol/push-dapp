@@ -7,6 +7,7 @@ import * as PushNodeClient from 'api';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import * as PushAPI from "@pushprotocol/restapi";
 
 export const ChatUserContext = createContext({})
 
@@ -45,12 +46,11 @@ const ChatUserContextProvider = (props) => {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
         throw Error('Invalid user');
       }
-
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
-        library.provider,
-        user.encryptedPrivateKey,
-        account
-      );
+      const _signer = await library.getSigner();
+      const privateKeyArmored: string = await PushAPI.chat.decryptPGPKey({
+        encryptedPGPPrivateKey: user.encryptedPrivateKey,
+        signer: _signer
+      });
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {

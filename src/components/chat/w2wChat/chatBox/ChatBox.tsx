@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -56,9 +56,11 @@ import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { Item } from 'primaries/SharedStyling';
 import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { getChats } from 'services';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
+const chatsFetchedLimit = 15;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return (
@@ -96,91 +98,80 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
-  const groupInfoRef = React.useRef<HTMLInputElement>(null);
+  const groupInfoRef = useRef<HTMLInputElement>(null);
   const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
+
+  const listInnerRef = useRef<HTMLDivElement>(null);
+  const [chatsLoading, setChatsLoading] = useState<boolean>(true);
+  const [lastThreadHashFetched, setLastThreadHashFetched] = useState<string | null>(null);
+  const [wasLastListPresent, setWasLastListPresent] = useState<boolean>(false);
+
   const chatBoxToast = useToast();
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
   let time = '';
-
  
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //get ens name
   const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
-  const getMessagesFromCID = async (): Promise<void> => {
-    if (currentChat) {
-      let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
-    
-      // //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
-      // if (latestThreadhash === undefined) {
-      //   latestThreadhash = messages[messages?.length - 1]?.cid;
-      // }
-
-      let messageCID = latestThreadhash;
-
-      if (latestThreadhash) {
-          let messageList:MessageIPFSWithCID[] = [];
-          while (messageCID) {
-            setLoading(true);
-            if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-              setLoading(false);
-              break;
-            } else {
-              const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-              let msgIPFS: MessageIPFSWithCID;
-              if (messageFromIndexDB !== undefined) {
-                msgIPFS = messageFromIndexDB.body;
-              } else {
-                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-                msgIPFS = messageFromIPFS;
-              }
-
-              //Decrypting Messages
-              msgIPFS = await w2wHelper.decryptMessages({
-                savedMsg: msgIPFS,
-                connectedUser,
-                account,
-                chainId,
-                currentChat,
-                inbox,
-              });
-             
-
-              if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                messageList.push(msgIPFS);
-                messageList.reverse();
-                setMessageBeingSent(false);
-              }
-
-              const link = msgIPFS.link;
-              if (link) {
-                messageCID = link;
-              } else {
-                break;
-              }
-            }
-        }
-        setMessages(messageList);
-      } else {
-        setMessages([]);
+  const onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop } = listInnerRef.current;
+      if (scrollTop === 0) {
+        // This will be triggered after hitting the first element.
+        // pagination
+        getChatCall();
       }
     }
-    setLoading(false);
   };
 
+  const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
+    if (!connectedUser) return;
+    if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
+    setChatsLoading(true);
+    const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
+      account,
+      pgpPrivateKey: connectedUser.privateKey,
+      chatId: currentChat?.did || currentChat?.groupInformation?.chatId,
+      threadHash: lastThreadHashFetchedProp!,
+      limit: chatsFetchedLimit,
+    });
+
+    // remove this custom decryption after SDK issue is resolved in future
+    const promiseArrToDecryptMsg = [];
+    chatsResponse.forEach((chat) => promiseArrToDecryptMsg.push(w2wHelper.decryptMessages({
+      savedMsg: chat,
+      connectedUser,
+      account,
+      currentChat,
+      inbox
+    })));
+    const decryptedMsgArr = await Promise.all(promiseArrToDecryptMsg);
+    decryptedMsgArr.sort((a, b) => {
+      return a.timestamp! > b.timestamp! ? 1 : -1;
+    });
+
+    setMessages([...decryptedMsgArr, ...messagesProp]);
+    setLastThreadHashFetched(lastThreadHash);
+    setWasLastListPresent(lastListPresent);
+    setChatsLoading(false);
+  };
 
   useEffect(() => {
-    setLoading(true);
+    setWasLastListPresent(false);
+    setLastThreadHashFetched(null);
+    setIsGroup(false);
+    setShowGroupInfo(false);
+    setMessages([]);
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
-      getMessagesFromCID();
       const image = getGroupImage(currentChat);
+      getChatCall(false, [], null);
       try {
         CID.parse(image); // Will throw exception if invalid CID
         setImageSource(INFURA_URL + `${image}`);
@@ -188,6 +179,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         setImageSource(image);
       }
     }
+    if(Loading) setLoading(false);
   }, [currentChat]);
 
   const getDisplayName = () => {
@@ -618,8 +610,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             )}
           </ItemHV2>
 
-          <MessageContainer>
-            <CustomScrollContent initialScrollBehavior="smooth">
+          <MessageContainer ref={listInnerRef} onScroll={onScroll} style={{overflow: "scroll"}}>
+            {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -629,6 +621,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 </SpinnerWrapper>
               ) : (
                 <>
+                  {chatsLoading &&
+                    <SpinnerWrapper height="35px">
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={40}
+                      />
+                    </SpinnerWrapper>
+                  }
                   {messages?.map((msg, i) => {
                     //const isLast = i === messages.length - 1
                     //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -651,7 +651,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         )}
-                       
                           <Chats
                             msg={
                               isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
@@ -686,7 +685,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   )}
                 </>
               )}
-            </CustomScrollContent>
+            {/* </CustomScrollContent> */}
           </MessageContainer>
 
           {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
@@ -713,11 +712,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 const SpinnerWrapper = styled.div`
   width: 100%;
   margin-top: 20px;
-  height: 90px;
+  height: ${(props) => props.height || "90px"};;
 `;
 
 const MessageContainer = styled(ItemVV2)`
   align-items: unset;
+  display: block;
   justify-content: flex-start;
   position: absolute;
   top: 65px;

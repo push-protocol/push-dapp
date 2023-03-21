@@ -80,7 +80,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
-          if(JSON.stringify(currentChat?.groupInformation?.members) !== JSON.stringify(inboxes[selectedChatSnap]?.groupInformation?.members))
+          if(currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
            setChat(inboxes[selectedChatSnap]);
         }
       }
