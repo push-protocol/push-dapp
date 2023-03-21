@@ -13,7 +13,7 @@ import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import * as PushAPI from "@pushprotocol/restapi";
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
-import { checkConnectedUser, fetchIntent } from 'helpers/w2w/user';
+import { fetchIntent } from 'helpers/w2w/user';
 import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';

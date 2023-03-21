@@ -35,7 +35,6 @@ import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import {
-  checkConnectedUser,
   checkIfIntentExist,
   fetchInbox,
   getLatestThreadHash,
@@ -215,11 +214,9 @@ useEffect(() => {
   };
 
   const fetchInboxApi = async (): Promise<Feeds> => {
-    if (checkConnectedUser(connectedUser)) {
       const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
       return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
-    }
   };
 
   const sendMessage = async ({
@@ -286,9 +283,7 @@ useEffect(() => {
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
     let getIntent;
-    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', walletToCAIP10({ account: account! }), '', 'did');
-    }
     // If the user is not registered in the protocol yet, his did will be his wallet address
     const didOrWallet: string = connectedUser.wallets.split(':')[1];
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
