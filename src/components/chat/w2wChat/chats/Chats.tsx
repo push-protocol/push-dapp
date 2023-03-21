@@ -49,15 +49,12 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   const walletAddress = shortenText(caip10ToWallet(msg.fromCAIP10)?.toLowerCase(), 6);
   const ensName = useResolveEns(msg.fromCAIP10);
   
- 
- 
   const getProfilePicture = async() =>{
     let member = getMemberDetails(currentChat,msg?.fromCAIP10);
     if(member){
     setProfilePicture(member.image);
     }
     else {
-      console.log(msg)
       let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
       setProfilePicture(user.profilePicture); 
     }
