@@ -117,7 +117,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       }
       setTimeout(() => {
         setIsLoading(false);
-        setConnectedUser(user);
       }, 2000);
     } else {
       createGroupToast.showMessageToast({
