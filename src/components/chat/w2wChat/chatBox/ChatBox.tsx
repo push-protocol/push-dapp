@@ -102,6 +102,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const [chatsLoading, setChatsLoading] = useState<boolean>(true);
   const [lastThreadHashFetched, setLastThreadHashFetched] = useState<string | null>(null);
   const [wasLastListPresent, setWasLastListPresent] = useState<boolean>(false);
@@ -127,6 +129,25 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
       }
     }
   };
+
+
+  const scrollToBottom = () => {
+    bottomRef?.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const scrollToNext = () => {
+    topRef?.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+useEffect(() => {
+  console.log(messages.length,listInnerRef?.current)
+  // if(listInnerRef?.current && messages?.length > 15){
+  //   scrollToNext()
+  // }
+  // else{
+  scrollToBottom()
+  // }
+}, [messages, listInnerRef]);
 
   const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
     if (!connectedUser) return;
@@ -610,7 +631,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             )}
           </ItemHV2>
 
-          <MessageContainer ref={listInnerRef} onScroll={onScroll} style={{overflow: "scroll"}}>
+          <MessageContainer ref={listInnerRef} onScroll={onScroll}>
+          {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
             {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
               {Loading ? (
                 <SpinnerWrapper>
@@ -629,6 +651,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                       />
                     </SpinnerWrapper>
                   }
+                  <>
+                  <div ref={topRef} style={{backgroundColor:'red'}}>p</div>
                   {messages?.map((msg, i) => {
                     //const isLast = i === messages.length - 1
                     //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -662,10 +686,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         
-
                       </div>
                     );
                   })}
+                  </>
                   <HeaderMessage
                     messages={messages}
                     isGroup={isGroup}
@@ -686,6 +710,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 </>
               )}
             {/* </CustomScrollContent> */}
+            <div ref={bottomRef} style={{backgroundColor:'blue'}}>p</div>
           </MessageContainer>
 
           {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
@@ -727,6 +752,48 @@ const MessageContainer = styled(ItemVV2)`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
+  overflow-x: none;
+  overflow-y: scroll;
+  // background: red;
+
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 5px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+  
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
+    );
+  }
 `;
 
 const GroupInfo = styled(ItemHV2)`
