@@ -121,13 +121,25 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   //get ens name
   const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
-  const onScroll = () => {
+  const onScroll = async () => {
     if (listInnerRef.current) {
       const { scrollTop } = listInnerRef.current;
       if (scrollTop === 0) {
         // This will be triggered after hitting the first element.
         // pagination
-        getChatCall();
+        // addDom();
+
+        //scroll item
+        // let content = document.getElementById('loop');
+        let content = listInnerRef.current;
+        let curScrollPos = content.scrollTop;
+        let oldScroll = content.scrollHeight - content.clientHeight;
+
+        await getChatCall();
+
+        let newScroll = content.scrollHeight - content.clientHeight;
+        content.scrollTop = curScrollPos + (newScroll - oldScroll);
+        
       }
     }
   };
@@ -137,9 +149,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     bottomRef?.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const scrollToNext = () => {
-    topRef?.current?.scrollIntoView({ behavior: "smooth" })
-  }
 
 useEffect(() => {
     if (messages.length <= 15) 
@@ -148,11 +157,13 @@ useEffect(() => {
     } 
 }, [messages]);
 
+
   const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
+    
     if (!connectedUser) return;
     if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
     setChatsLoading(true);
-    scrollToNext();
+    // scrollToNext();
     const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
       account,
       pgpPrivateKey: connectedUser.privateKey,
@@ -179,6 +190,7 @@ useEffect(() => {
     setLastThreadHashFetched(lastThreadHash);
     setWasLastListPresent(lastListPresent);
     setChatsLoading(false);
+
   };
 
   useEffect(() => {
