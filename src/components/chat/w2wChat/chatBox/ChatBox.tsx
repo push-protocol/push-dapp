@@ -665,8 +665,7 @@ useEffect(() => {
                       />
                     </SpinnerWrapper>
                   }
-                  <>
-                  <div ref={topRef}></div>
+                  <div ref={topRef}>
                   {messages?.map((msg, i) => {
                     //const isLast = i === messages.length - 1
                     //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -703,7 +702,7 @@ useEffect(() => {
                       </div>
                     );
                   })}
-                  </>
+                  </div>
                   <HeaderMessage
                     messages={messages}
                     isGroup={isGroup}
