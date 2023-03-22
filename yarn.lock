@@ -4613,7 +4613,7 @@ __metadata:
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": 0.0.1
     "@pushprotocol/restapi": 0.8.0
-    "@pushprotocol/socket": 0.3.0
+    "@pushprotocol/socket": 0.4.2
     "@pushprotocol/uiweb": 0.5.0
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
@@ -4825,15 +4825,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/socket@npm:0.3.0":
-  version: 0.3.0
-  resolution: "@pushprotocol/socket@npm:0.3.0"
+"@pushprotocol/socket@npm:0.4.2":
+  version: 0.4.2
+  resolution: "@pushprotocol/socket@npm:0.4.2"
   dependencies:
     socket.io-client: ^4.5.2
     tslib: ^2.3.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: cba06d322b90d39c9b69884c503985718e75e3defa430c4ed09ff5d2053136250a2b855de6dbaf91141ea2dedcd3195b3f08acacdea6460d06691b5535001832
+  checksum: 7a85cb389972e8e0cb1bba74cdd3ded993a9eb6aa333fdd93ff6c9d09052b35fd7ac2c25e7156d0bda45d4f170714c93fa1ae28d9b5447cdd56b2bc963435bed
   languageName: node
   linkType: hard
 

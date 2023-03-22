@@ -169,3 +169,10 @@ export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
   inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
   return inboxes
 };
+
+export const fetchIntent = async (connectedUser): Promise<Feeds[]> => {
+  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1],env:appConfig.appEnv, toDecrypt:false});
+  await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account: connectedUser.wallets }),intents, 'did');
+  intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+  return intents;
+};

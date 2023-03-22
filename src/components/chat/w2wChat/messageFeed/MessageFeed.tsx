@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { useQuery } from 'react-query';
 import styled, { useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
 import { ethers } from 'ethers';
@@ -60,7 +59,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
   const getInbox = async (): Promise<Feeds[]> => {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
-      if (getInbox !== undefined) {
+      if (getInbox !== undefined && !inbox.length) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
@@ -69,19 +68,16 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
          setInbox(inboxes);
         }
         return inboxes;
-      } else {
-        let inboxes: Feeds[] = await fetchInboxApi();
-        return inboxes;
-      }
+    }
   };
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       const inboxes:Feeds[] = await fetchInbox(connectedUser);
-      if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+      if (JSON.stringify(feeds) !== JSON.stringify(inbox)){
         setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
-          if(JSON.stringify(currentChat?.groupInformation?.members) !== JSON.stringify(inboxes[selectedChatSnap]?.groupInformation?.members))
+          if(currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
            setChat(inboxes[selectedChatSnap]);
         }
       }
@@ -104,40 +100,24 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-  useQuery('inbox', getInbox, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
-
-  useQuery('fetchInboxApi', fetchInboxApi, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
 
   const updateInbox = async (): Promise<void> => {
       await getInbox();
+      fetchInboxApi();
+
     setMessagesLoading(false);
   };
+
+  useEffect(() => {
+    setFeeds(inbox);  
+  },[inbox]);
+
+
+  useEffect(() => {
+    if(!props.hasUserBeenSearched)
+      updateInbox();
+  },[]);
+
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();

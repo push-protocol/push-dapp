@@ -46,12 +46,11 @@ const ChatUserContextProvider = (props) => {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
         throw Error('Invalid user');
       }
-
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
-        library.provider,
-        user.encryptedPrivateKey,
-        account
-      );
+      const _signer = await library.getSigner();
+      const privateKeyArmored: string = await PushAPI.chat.decryptPGPKey({
+        encryptedPGPPrivateKey: user.encryptedPrivateKey,
+        signer: _signer
+      });
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
@@ -91,7 +90,6 @@ const ChatUserContextProvider = (props) => {
       });
       await new Promise((r) => setTimeout(r, 200));
      
-      // const keyPairs = await generateKeyPair();
       setBlockedLoading({
         enabled: true,
         title: 'Step 2/4: Encrypting your keys',
@@ -100,11 +98,6 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!',
       });
 
-      // const walletPublicKey = await CryptoHelper.getPublicKey(account);
-      // const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
-      //   keyPairs.privateKeyArmored,
-      //   walletPublicKey
-      // );
       const signer = await library.getSigner();
       await PushNodeClient.createUser({
         signer: signer

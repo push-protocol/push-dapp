@@ -102,27 +102,17 @@ export interface AppContext {
   setIntents: (intents: Feeds[]) => void;
   inbox: Feeds[];
   setInbox: (inbox: Feeds[]) => void;
-  pendingRequests: number;
-  setPendingRequests: (pending: number) => void;
   hasUserBeenSearched: boolean;
   setHasUserBeenSearched: (searched: boolean) => void;
   loadingMessage: string;
   setLoadingMessage: (loadingMessage: string) => void;
   setBlockedLoading: (blockedLoading: BlockedLoadingI) => void;
   activeTab: number;
+  messages:MessageIPFSWithCID[],
+  setMessages:(msg:MessageIPFSWithCID[])=>void;
   setActiveTab: (active: number) => void;
   userShouldBeSearched: boolean;
   setUserShouldBeSearched: (value: boolean) => void;
-  groupName:string;
-  setGroupName:(value:string)=>void;
-  groupDescription:string;
-  setGroupDescription:(value:string)=>void;
-  groupImage:string;
-  setGroupImage:(value:string)=>void;
-  groupType:string;
-  setGroupType:(value:string)=>void;
-  createGroupState:number;
-  setCreateGroupState:(value:number)=>void;
   filteredUserData:User[];
   setFilteredUserData:(value:User[])=>void;
 }

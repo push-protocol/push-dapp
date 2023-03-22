@@ -1,7 +1,7 @@
 // React + Web3 Essentials
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
@@ -9,7 +9,6 @@ import Snackbar from '@mui/material/Snackbar';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
-import { useQuery } from 'react-query';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
@@ -30,10 +29,7 @@ import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
-import Lock from '../../../../assets/Lock.png';
-import LockSlash from '../../../../assets/LockSlash.png';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-import videoCallIcon from '../../../../assets/icons/videoCallIcon.svg';
+import { AppContext, Feeds, MessageIPFS } from 'types/chat';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
@@ -46,17 +42,17 @@ import {
 import Typebar from '../TypeBar/Typebar';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
-import { checkIfGroup, getGroupImage, getIntentMessage, getMemberDetails } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-import { Item } from 'primaries/SharedStyling';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
+import { getChats } from 'services';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
+const chatsFetchedLimit = 15;
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
   return (
@@ -75,11 +71,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     viewChatBox,
     receivedIntents,
     inbox,
+    messages,
     setActiveTab,
+    setMessages,
     setChat,
     setInbox,
     setHasUserBeenSearched,
-    setPendingRequests,
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
@@ -87,130 +84,113 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const { chainId, account ,library} = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
-  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
   const [imageSource, setImageSource] = useState<string>('');
   const [openReprovalSnackbar, setOpenSuccessSnackBar] = useState<boolean>(false);
   const [SnackbarText, setSnackbarText] = useState<string>('');
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
-  const groupInfoRef = React.useRef<HTMLInputElement>(null);
-  const { connectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+  const groupInfoRef = useRef<HTMLInputElement>(null);
+  const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
+
+  const listInnerRef = useRef<HTMLDivElement>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const [chatsLoading, setChatsLoading] = useState<boolean>(true);
+  const [lastThreadHashFetched, setLastThreadHashFetched] = useState<string | null>(null);
+  const [wasLastListPresent, setWasLastListPresent] = useState<boolean>(false);
   const chatBoxToast = useToast();
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
   let showTime = false;
   let time = '';
-
  
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //get ens name
   const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
 
-  const getMessagesFromCID = async (): Promise<void> => {
-    if (currentChat) {
-      let latestThreadhash: string = getLatestThreadHash({ inbox, receivedIntents, currentChat, isGroup });
-    
-      //for instance when the group chat first message is send their is not threadhash as it is null and it gets updated afterwards so fetching the threadhash from the message.
-      if (latestThreadhash === undefined) {
-        latestThreadhash = messages[messages?.length - 1]?.cid;
-      }
+  const onScroll = async () => {
+    if (listInnerRef.current) {
+      const { scrollTop } = listInnerRef.current;
+      if (scrollTop === 0) {
+        // This will be triggered after hitting the first element.
+        // pagination
+        // addDom();
 
-      let messageCID = latestThreadhash;
+        //scroll item
+        // let content = document.getElementById('loop');
+        let content = listInnerRef.current;
+        let curScrollPos = content.scrollTop;
+        let oldScroll = content.scrollHeight - content.clientHeight;
 
-      if (latestThreadhash) {
-        // Check if cid is present in messages state. If yes, ignore, if not, append to array
+        await getChatCall();
 
-        // Logic: This is done to check that while loop is to be executed only when the user changes person in inboxes.
-        // We only enter on this if condition when we receive or send new messages
-
-        if (latestThreadhash !== currentChat?.threadhash) {
-          // !Fix-ME : Here I think that this will never call IndexDB to get the message as this is called only when new messages are fetched.
-          const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-          let msgIPFS: MessageIPFSWithCID;
-          if (messageFromIndexDB !== undefined) {
-            msgIPFS = messageFromIndexDB.body;
-          } else {
-            const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-            await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-            msgIPFS = messageFromIPFS;
-          }
-
-          // Decrypt message
-            msgIPFS = await w2wHelper.decryptMessages({
-              savedMsg: msgIPFS,
-              connectedUser,
-              account,
-              chainId,
-              currentChat,
-              inbox,
-            });
-            
-          //checking if the message is already in the array or not (if that is not present so we are adding it in the array)
-          const messageInChat: MessageIPFS = messages.find((msg) => msg.link === msgIPFS?.link);
-          if (messageInChat === undefined) {
-            setMessages((m) => [...m, msgIPFS]);
-          }
-        }
-        // This condition is triggered when the user loads the chat whenever the user is changed
-        else if (messages.length == 0) {
-          while (messageCID) {
-            setLoading(true);
-            if (messages.filter((msg) => msg.cid === messageCID).length > 0) {
-              setLoading(false);
-              break;
-            } else {
-              const messageFromIndexDB: any = await intitializeDb<string>('Read', 'CID_store', messageCID, '', 'cid');
-              let msgIPFS: MessageIPFSWithCID;
-              if (messageFromIndexDB !== undefined) {
-                msgIPFS = messageFromIndexDB.body;
-              } else {
-                const messageFromIPFS: MessageIPFSWithCID = await PushNodeClient.getFromIPFS(messageCID);
-                await intitializeDb<MessageIPFS>('Insert', 'CID_store', messageCID, messageFromIPFS, 'cid');
-                msgIPFS = messageFromIPFS;
-              }
-
-              //Decrypting Messages
-              msgIPFS = await w2wHelper.decryptMessages({
-                savedMsg: msgIPFS,
-                connectedUser,
-                account,
-                chainId,
-                currentChat,
-                inbox,
-              });
-            
-              if (messages.length === 0 || msgIPFS.timestamp < messages[0].timestamp) {
-                setMessages((m) => [msgIPFS, ...m]);
-                setMessageBeingSent(false);
-              }
-
-              const link = msgIPFS.link;
-              if (link) {
-                messageCID = link;
-              } else {
-                break;
-              }
-            }
-          }
-        }
-      } else {
-        setMessages([]);
+        let newScroll = content.scrollHeight - content.clientHeight;
+        content.scrollTop = curScrollPos + (newScroll - oldScroll);
+        
       }
     }
-    setLoading(false);
   };
 
-  useQuery<any>('chatbox', getMessagesFromCID, { refetchInterval: 3000 });
+
+  const scrollToBottom = () => {
+    bottomRef?.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+
+useEffect(() => {
+    if (messages.length <= chatsFetchedLimit) 
+      scrollToBottom();
+}, [messages]);
+
+
+  const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
+    
+    if (!connectedUser) return;
+    if (wasLastListPresentProp && !lastThreadHashFetchedProp) return;
+    setChatsLoading(true);
+    // scrollToNext();
+    const { chatsResponse, lastThreadHash, lastListPresent } = await getChats({
+      account,
+      pgpPrivateKey: connectedUser.privateKey,
+      chatId: currentChat?.did || currentChat?.groupInformation?.chatId,
+      threadHash: lastThreadHashFetchedProp!,
+      limit: chatsFetchedLimit,
+    });
+
+    // remove this custom decryption after SDK issue is resolved in future
+    const promiseArrToDecryptMsg = [];
+    chatsResponse.forEach((chat) => promiseArrToDecryptMsg.push(w2wHelper.decryptMessages({
+      savedMsg: chat,
+      connectedUser,
+      account,
+      currentChat,
+      inbox
+    })));
+    const decryptedMsgArr = await Promise.all(promiseArrToDecryptMsg);
+    decryptedMsgArr.sort((a, b) => {
+      return a.timestamp! > b.timestamp! ? 1 : -1;
+    });
+
+    setMessages([...decryptedMsgArr, ...messagesProp]);
+    setLastThreadHashFetched(lastThreadHash);
+    setWasLastListPresent(lastListPresent);
+    setChatsLoading(false);
+
+  };
 
   useEffect(() => {
-    setLoading(true);
+    setWasLastListPresent(false);
+    setLastThreadHashFetched(null);
+    setIsGroup(false);
+    setShowGroupInfo(false);
+    setMessages([]);
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
       // even though the user was still on the same chat.
-      setMessages([]);
       const image = getGroupImage(currentChat);
+      getChatCall(false, [], null);
       try {
         CID.parse(image); // Will throw exception if invalid CID
         setImageSource(INFURA_URL + `${image}`);
@@ -218,6 +198,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
         setImageSource(image);
       }
     }
+    if(Loading) setLoading(false);
   }, [currentChat]);
 
   const getDisplayName = () => {
@@ -234,7 +215,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const fetchInboxApi = async (): Promise<Feeds> => {
       const inboxes: Feeds[] = await fetchInbox(connectedUser);
       setInbox(inboxes);
-      return inboxes.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
+      return inboxes?.find((x) => x.wallets.split(':')[1] === currentChat.wallets.split(':')[1]);
   };
 
   const sendMessage = async ({
@@ -245,6 +226,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     messageType: MessagetypeType;
   }): Promise<void> => {
     setMessageBeingSent(true);
+
+    scrollToBottom();
+
     try {
       let createdUser;
       if(!connectedUser.publicKey){
@@ -309,7 +293,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     let intents = await PushAPI.chat.requests({ account: didOrWallet!, env: appConfig.appEnv, toDecrypt: false });
     await intitializeDb<Feeds[]>('Insert', 'Intent', walletToCAIP10({ account: account! }), intents, 'did');
     intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-    setPendingRequests(intents?.length);
     setReceivedIntents(intents);
     setLoading(false);
   }
@@ -658,8 +641,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
             )}
           </ItemHV2>
 
-          <MessageContainer>
-            <CustomScrollContent initialScrollBehavior="smooth">
+          <MessageContainer ref={listInnerRef} onScroll={onScroll}>
+          {/* style={{overflow: "scroll",backgroundColor:'red'}} */}
+            {/* <CustomScrollContent initialScrollBehavior="smooth"> */}
               {Loading ? (
                 <SpinnerWrapper>
                   <LoaderSpinner
@@ -669,6 +653,15 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                 </SpinnerWrapper>
               ) : (
                 <>
+                  {chatsLoading &&
+                    <SpinnerWrapper height="35px">
+                      <LoaderSpinner
+                        type={LOADER_TYPE.SEAMLESS}
+                        spinnerSize={40}
+                      />
+                    </SpinnerWrapper>
+                  }
+                  <div ref={topRef}>
                   {messages?.map((msg, i) => {
                     //const isLast = i === messages.length - 1
                     //const noTail = !isLast && messages[i + 1]?.fromDID === msg.fromDID
@@ -691,7 +684,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         )}
-                       
                           <Chats
                             msg={
                               isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
@@ -703,10 +695,10 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                             isGroup={isGroup}
                           />
                         
-
                       </div>
                     );
                   })}
+                  </div>
                   <HeaderMessage
                     messages={messages}
                     isGroup={isGroup}
@@ -726,7 +718,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
                   )}
                 </>
               )}
-            </CustomScrollContent>
+            {/* </CustomScrollContent> */}
+            <div ref={bottomRef}></div>
           </MessageContainer>
 
           {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
@@ -753,11 +746,12 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 const SpinnerWrapper = styled.div`
   width: 100%;
   margin-top: 20px;
-  height: 90px;
+  height: ${(props) => props.height || "90px"};;
 `;
 
 const MessageContainer = styled(ItemVV2)`
   align-items: unset;
+  display: block;
   justify-content: flex-start;
   position: absolute;
   top: 65px;
@@ -767,6 +761,48 @@ const MessageContainer = styled(ItemVV2)`
   margin: 0;
   width: 100%;
   height: calc(100% - 140px);
+  overflow-x: none;
+  overflow-y: scroll;
+  // background: red;
+
+
+  &::-webkit-scrollbar-track {
+    background-color: ${(props) => props.theme.scrollBg};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: ${(props) => props.theme.scrollBg};
+    width: 5px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0px 0px 0px 0px;
+
+    &::-webkit-scrollbar-track {
+      background-color: none;
+      border-radius: 9px;
+    }
+  
+    &::-webkit-scrollbar {
+      background-color: none;
+      width: 4px;
+    }
+  }
+
+
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-image: -webkit-gradient(
+      linear,
+      left top,
+      left bottom,
+      color-stop(0.44,  #CF1C84),
+      color-stop(0.72, #CF1C84),
+      color-stop(0.86, #CF1C84)
+    );
+  }
 `;
 
 const GroupInfo = styled(ItemHV2)`
