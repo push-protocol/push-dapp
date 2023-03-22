@@ -104,6 +104,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   const updateInbox = async (): Promise<void> => {
       await getInbox();
       fetchInboxApi();
+
     setMessagesLoading(false);
   };
 

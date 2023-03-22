@@ -14,6 +14,7 @@ import * as PushAPI from "@pushprotocol/restapi";
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { fetchIntent } from 'helpers/w2w/user';
+
 import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -101,7 +102,9 @@ useClickAway(containerRef, () => closeQRDropdown())
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
+
     if (getIntent!== undefined && !receivedIntents.length) {
+
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setReceivedIntents(intents);
@@ -117,21 +120,7 @@ useClickAway(containerRef, () => closeQRDropdown())
     return intents;
   };
 
-  // Keep on updating after every few seconds
-  // useEffect(() => {
-  //   if (!loadingRequests) {
-  //     //setup timer
-  //     const delay = 5;
-  //     let timer = setInterval(() => fetchIntentApi(), delay * 1000);
 
-  //     // this will clear Timeout
-  //     // when component unmount like in willComponentUnmount
-  //     // and show will not change to true
-  //     return () => {
-  //       clearTimeout(timer);
-  //     };
-  //   }
-  // }, [loadingRequests]);
 
   // RENDER
   return (

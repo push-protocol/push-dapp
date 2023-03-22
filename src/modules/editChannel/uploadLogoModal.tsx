@@ -17,7 +17,9 @@ const uploadLogoModal = ({
     setCroppedImage,
     setChannelFile,
     imageSrc,
-    setImageSrc
+    setImageSrc,
+    imageType,
+    setImageType
   } = InnerComponentProps;
 
   const theme = useTheme();
@@ -50,8 +52,8 @@ const uploadLogoModal = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
-        console.log("Image src", reader.result);
         setImageSrc(reader.result);
+        setImageType(file?.files[0]?.type)
       };
     }
   };
@@ -88,6 +90,7 @@ const uploadLogoModal = ({
                     <ImageClipper
                       className="cropper"
                       imageSrc={imageSrc}
+                      imageType={imageType}
                       onImageCropped={(croppedImage) =>
                         setCroppedImage(croppedImage)
                       }

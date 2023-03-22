@@ -38,7 +38,6 @@ import {
   checkIfIntentExist,
   fetchInbox,
   getLatestThreadHash,
-  getUserWithDecryptedPvtKey,
 } from 'helpers/w2w/user';
 import Typebar from '../TypeBar/Typebar';
 import { ChatUserContext } from 'contexts/ChatUserContext';
@@ -82,7 +81,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
   const [newMessage, setNewMessage] = useState<string>('');
-  const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { chainId, account ,library} = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
   const [messageBeingSent, setMessageBeingSent] = useState<boolean>(false);
   const [imageSource, setImageSource] = useState<string>('');
@@ -91,7 +90,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [isGroup, setIsGroup] = useState<boolean>(false);
   const [showGroupInfo, setShowGroupInfo] = useState<boolean>(false);
   const groupInfoRef = useRef<HTMLInputElement>(null);
-  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
+  const { connectedUser, setConnectedUser, createUserIfNecessary } = useContext(ChatUserContext);
 
   const listInnerRef = useRef<HTMLDivElement>(null);
   const topRef = useRef<HTMLDivElement>(null);
@@ -99,7 +98,6 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   const [chatsLoading, setChatsLoading] = useState<boolean>(true);
   const [lastThreadHashFetched, setLastThreadHashFetched] = useState<string | null>(null);
   const [wasLastListPresent, setWasLastListPresent] = useState<boolean>(false);
-
   const chatBoxToast = useToast();
   const theme = useTheme();
   const isMobile = useDeviceWidthCheck(600);
@@ -144,6 +142,7 @@ useEffect(() => {
     if (messages.length <= chatsFetchedLimit) 
       scrollToBottom();
 }, [messages]);
+
 
   const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
     
@@ -227,16 +226,22 @@ useEffect(() => {
     messageType: MessagetypeType;
   }): Promise<void> => {
     setMessageBeingSent(true);
-    const user = await getUserWithDecryptedPvtKey(connectedUser);
+
     scrollToBottom();
 
     try {
+      let createdUser;
+      if(!connectedUser.publicKey){
+        createdUser = await createUserIfNecessary();
+      }
+      const signer = await library.getSigner();
+
       const sendResponse = await PushAPI.chat.send({
         messageContent: message,
         messageType: messageType,
         receiverAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat?.wallets,
-        account: account!,
-        pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
+        signer: signer!,
+        pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
       });
 
@@ -276,7 +281,6 @@ useEffect(() => {
     }
     setTimeout(() => {
       setMessageBeingSent(false);
-      setConnectedUser(user);
     }, 3000);
   };
 
@@ -297,10 +301,16 @@ useEffect(() => {
     setMessageBeingSent(true);
     let updatedIntent: any;
     try {
+      let createdUser;
+        if(!connectedUser.publicKey){
+          createdUser = await createUserIfNecessary();
+        }
+      const signer = await library.getSigner();
       updatedIntent = await PushAPI.chat.approve({
         status: 'Approved',
-        account: account!,
+        signer: signer!,
         senderAddress: isGroup ? currentChat.groupInformation?.chatId : currentChat.intentSentBy,
+        pgpPrivateKey:connectedUser?.privateKey || createdUser?.privateKey,
         env: appConfig.appEnv,
       });
 
@@ -367,13 +377,17 @@ useEffect(() => {
         currentChat.intent === '' ||
         !currentChat.intent.includes(currentChat.wallets.split(':')[1])
       ) {
-        user = await getUserWithDecryptedPvtKey(connectedUser);
+        let createdUser;
+        if(!connectedUser.publicKey){
+          createdUser = await createUserIfNecessary();
+        }
+         const signer = await library.getSigner();
         const sendResponse = await PushAPI.chat.send({
           messageContent: message,
           messageType: messageType,
           receiverAddress: currentChat?.wallets.split(':')[1],
-          account: account!,
-          pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
+          signer: signer!,
+          pgpPrivateKey: connectedUser.privateKey || createdUser?.privateKey,
           env: appConfig.appEnv,
         });
 
@@ -407,7 +421,8 @@ useEffect(() => {
           // We store the message in state decrypted so we display to the user the intent message
           sendResponse.messageContent = message;
           setNewMessage('');
-          const result = await fetchInboxApi();
+          let result = await fetchInboxApi();
+          result.msg.messageContent = message;
           setChat(result);
           chatBoxToast.showMessageToast({
             toastTitle: 'Success',
@@ -440,10 +455,9 @@ useEffect(() => {
       });
       setMessageBeingSent(false);
     }
-    setTimeout(() => {
+    finally{
       setMessageBeingSent(false);
-      setConnectedUser(user);
-    }, 2000);
+    }
   };
 
   const handleCloseSuccessSnackbar = (event?: React.SyntheticEvent | Event, reason?: string): void => {
