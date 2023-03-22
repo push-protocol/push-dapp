@@ -374,7 +374,7 @@ const MessageText = styled(SpanV2)`
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  left: ${(props) => props.left || '34px'};
+  margin-left: ${(props) => props.left || '34px'};
   max-width: 419px;
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
@@ -396,7 +396,7 @@ const IntentMessage = styled(ReceivedMessage)`
 const SenderMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  right: 34px;
+  margin-right: 34px;
   max-width: 419px;
   text-align: left;
   padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};

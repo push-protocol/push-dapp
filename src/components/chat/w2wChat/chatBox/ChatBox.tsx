@@ -24,16 +24,13 @@ import { Content } from 'components/SharedStyling';
 import * as w2wHelper from 'helpers/w2w/';
 import useToast from 'hooks/useToast';
 import { useResolveEns } from 'hooks/useResolveEns';
-import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { useDeviceWidthCheck } from 'hooks';
 import { Context } from 'modules/chat/ChatModule';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import Chats from '../chats/Chats';
 import { intitializeDb } from '../w2wIndexeddb';
-import Lock from '../../../../assets/Lock.png';
-import LockSlash from '../../../../assets/LockSlash.png';
-import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-import videoCallIcon from '../../../../assets/icons/videoCallIcon.svg';
+import { AppContext, Feeds, MessageIPFS } from 'types/chat';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
@@ -48,17 +45,13 @@ import {
 import Typebar from '../TypeBar/Typebar';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
-import { checkIfGroup, getGroupImage, getIntentMessage, getMemberDetails } from '../../../../helpers/w2w/groupChat';
+import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
-import { Item } from 'primaries/SharedStyling';
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { getChats } from 'services';
-import { message } from 'openpgp';
-import e from 'express';
 
 // Constants
 const INFURA_URL = appConfig.infuraApiUrl;
@@ -151,12 +144,9 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
 
 useEffect(() => {
-    if (messages.length <= 15) 
-    {
+    if (messages.length <= chatsFetchedLimit) 
       scrollToBottom();
-    } 
 }, [messages]);
-
 
   const getChatCall = async (wasLastListPresentProp = wasLastListPresent, messagesProp = messages, lastThreadHashFetchedProp = lastThreadHashFetched) => {
     
