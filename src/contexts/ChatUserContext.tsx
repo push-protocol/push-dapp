@@ -8,7 +8,6 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import * as PushAPI from "@pushprotocol/restapi";
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import * as PushAPI from "@pushprotocol/restapi";
 
 export const ChatUserContext = createContext({})
 
@@ -91,7 +90,6 @@ const ChatUserContextProvider = (props) => {
       });
       await new Promise((r) => setTimeout(r, 200));
      
-      // const keyPairs = await generateKeyPair();
       setBlockedLoading({
         enabled: true,
         title: 'Step 2/4: Encrypting your keys',
@@ -100,11 +98,6 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!',
       });
 
-      // const walletPublicKey = await CryptoHelper.getPublicKey(account);
-      // const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
-      //   keyPairs.privateKeyArmored,
-      //   walletPublicKey
-      // );
       const signer = await library.getSigner();
       await PushNodeClient.createUser({
         signer: signer
