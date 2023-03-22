@@ -113,14 +113,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
 
 
   useEffect(() => {
-    console.log("in update")
     if(!props.hasUserBeenSearched)
       updateInbox();
   },[]);
 
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
-      console.log(inbox)
       updateInbox();
     } else {
       const searchFn = async (): Promise<void> => {
@@ -144,7 +142,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             const user: User = props.filteredUserData[0];
             let feed: Feeds;
                 feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
-                console.log(feed);
             setFeeds([feed]);
           }
         } else {

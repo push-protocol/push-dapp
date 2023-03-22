@@ -85,10 +85,17 @@ function Chat() {
 
   useEffect(()=>{
     if(connectedUser && socketData.messagesSinceLastConnection){
+      console.log(socketData)
       getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
   },[socketData.messagesSinceLastConnection])
+
+  useEffect(()=>{
+    if(connectedUser && socketData.groupInformationSinceLastConnection) {
+      getUpdatedGroup(socketData.groupInformationSinceLastConnection);
+    }
+  },[socketData.groupInformationSinceLastConnection])
 
   const getUpdatedChats = async(chat) => {
     const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
@@ -103,6 +110,7 @@ function Chat() {
 
   const getUpdatedInbox = async(message) => {
     let isInInbox = false;
+    console.log(message)
     const updatedInbox = inbox.map(feed => {
       if((feed.did === message.toCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
         feed.msg = message;
@@ -117,7 +125,23 @@ function Chat() {
       setReceivedIntents(intents);
     }
   }
-
+  const getUpdatedGroup = async(groupInfo) => {
+    let isInInbox = false;
+    const updatedInbox = inbox.map(feed => {
+      if(feed?.groupInformation?.chatId === groupInfo.chatId){
+        feed.groupInformation = groupInfo;
+        isInInbox = true;
+      }
+      return feed;
+    });
+    if(isInInbox)
+    setInbox(updatedInbox);
+    else {
+      const intents = await fetchIntent(connectedUser);
+      setReceivedIntents(intents);
+    }
+  }
+console.log(receivedIntents);
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
     address: null,
     fromPublicKeyArmored: null,
