@@ -101,7 +101,7 @@ useClickAway(containerRef, () => closeQRDropdown())
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
-    if (getIntent!== undefined) {
+    if (getIntent!== undefined && !receivedIntents.length) {
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
       setReceivedIntents(intents);

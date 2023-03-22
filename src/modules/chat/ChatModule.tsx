@@ -85,8 +85,8 @@ function Chat() {
 
   useEffect(()=>{
     if(connectedUser && socketData.messagesSinceLastConnection){
-      console.log(socketData)
-      getUpdatedChats(socketData.messagesSinceLastConnection);
+      if(currentChat)
+        getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
   },[socketData.messagesSinceLastConnection])
@@ -98,6 +98,7 @@ function Chat() {
   },[socketData.groupInformationSinceLastConnection])
 
   const getUpdatedChats = async(chat) => {
+    if((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
     const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
       savedMsg: chat,
       connectedUser,
@@ -106,25 +107,43 @@ function Chat() {
       inbox
     });
     setMessages([...messages,{...decryptedChat,cid:socketData.messagesSinceLastConnection.cid}]);
+    }
   }
 
   const getUpdatedInbox = async(message) => {
     let isInInbox = false;
-    console.log(message)
+    let decryptedChat:MessageIPFS;
+
+    //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
+    const updatedFeed = inbox.filter(feed=>(feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
+   if(updatedFeed.length){
+     decryptedChat = await w2wHelper.decryptMessages({
+      savedMsg: message,
+      connectedUser,
+      account,
+      currentChat:updatedFeed[0],
+      inbox
+    });
+
+  }
     const updatedInbox = inbox.map(feed => {
-      if((feed.did === message.toCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
-        feed.msg = message;
+      if((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+        feed.msg = decryptedChat;
         isInInbox = true;
       }
       return feed;
     });
-    if(isInInbox)
+    if(isInInbox){
+
     setInbox(updatedInbox);
+    }
     else {
+      //update msg for already received intents
       const intents = await fetchIntent(connectedUser);
       setReceivedIntents(intents);
     }
   }
+
   const getUpdatedGroup = async(groupInfo) => {
     let isInInbox = false;
     const updatedInbox = inbox.map(feed => {
@@ -134,14 +153,15 @@ function Chat() {
       }
       return feed;
     });
-    if(isInInbox)
+    if(isInInbox){
     setInbox(updatedInbox);
+    }
     else {
       const intents = await fetchIntent(connectedUser);
       setReceivedIntents(intents);
     }
   }
-console.log(receivedIntents);
+
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
     address: null,
     fromPublicKeyArmored: null,
