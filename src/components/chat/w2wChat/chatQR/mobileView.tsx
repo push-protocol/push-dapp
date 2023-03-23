@@ -1,12 +1,20 @@
-import BlurBG from 'components/reusables/blurs/BlurBG';
-import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
-import GLOBALS, { device } from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import React, { useContext } from 'react';
+// React + Web3 Essentials
+import React, { useContext} from "react";
+
+// External Packages
+import styled, { useTheme } from "styled-components";
 import { AiOutlineClose, AiOutlineMore } from 'react-icons/ai';
-import styled, { useTheme } from 'styled-components';
+
+// Internal Compoonents
+import { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+
+
+// Internal Configs
+import GLOBALS, { device } from "config/Globals";
+import { ChatUserContext } from "contexts/ChatUserContext";
 import backgroundImage from "../../../../assets/chat/QRBackground.svg";
+import { Context } from "modules/chat/ChatModule";
 
 const MobileView = ({
     type = LOADER_TYPE.STANDALONE,
@@ -15,7 +23,9 @@ const MobileView = ({
     width = 'auto'
 }) => {
 
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { createUserIfNecessary, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { displayQR,setDisplayQR} = useContext(Context);
+
     const theme = useTheme();
 
     return (

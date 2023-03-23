@@ -1,17 +1,26 @@
+// React + Web3 Essentials
 import React, { useContext, useEffect, useState } from "react";
-import usePeer from "hooks/usePeer";
-import { useSelector } from "react-redux";
-import { QRCodeCanvas } from "qrcode.react";
-import CryptoHelper from 'helpers/CryptoHelper';
-import LoaderSpinner, { LOADER_OVERLAY, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { useWeb3React } from "@web3-react/core";
+import { useClickAway } from "react-use";
+
+// External Packages
+import usePeer from "hooks/usePeer";
+import { QRCodeCanvas } from "qrcode.react";
 import styled, { useTheme } from "styled-components";
-import { AiOutlineClose, AiOutlineQrcode } from "react-icons/ai";
-import { H2V2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+import { AiOutlineClose, } from "react-icons/ai";
+
+// Internal Compoonents
+import CryptoHelper from 'helpers/CryptoHelper';
+import LoaderSpinner, { LOADER_OVERLAY,LOADER_SPINNER_TYPE,LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
+
+
+// Internal Configs
 import GLOBALS, { device } from "config/Globals";
-import BlurBG from "components/reusables/blurs/BlurBG";
 import { ChatUserContext } from "contexts/ChatUserContext";
 import chatBoxImage from "../../../../assets/chat/chatBox.svg";
+import { Context } from "modules/chat/ChatModule";
+import BlurBG from "components/reusables/blurs/BlurBG";
 
 const ChatQR = ({
     type = LOADER_TYPE.STANDALONE,
@@ -21,11 +30,19 @@ const ChatQR = ({
 }) => {
     const theme = useTheme();
     const { account } = useWeb3React();
-    const { createUserIfNecessary, displayQR, setDisplayQR, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { createUserIfNecessary, pgpPvtKey, connectedPeerID } = useContext(ChatUserContext);
+    const { displayQR,setDisplayQR} = useContext(Context);
     const [myPeer, myPeerID] = usePeer();
     const [qrCodeText, setQrCodeText] = useState('');
     const [loading, setLoading] = useState(true);
     const [encryptedKey, setEncryptedKey] = useState('');
+
+    const handleClose = () =>{
+        setDisplayQR(false);
+    }
+
+    const containerRef = React.useRef(null);
+    useClickAway(containerRef, () => handleClose());
 
     // console.log(myPeerID, myPeer, connectedPeerID.peerID);
     const generateQRCodeText = () => {
@@ -92,7 +109,8 @@ const ChatQR = ({
             left="0"
             zIndex="1000"
             padding="15px"
-            onClick={() => { setDisplayQR(!displayQR) }}
+            // onClick={() => { setDisplayQR(!displayQR) }}
+            ref={containerRef}
         >
             {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}
 
@@ -109,7 +127,7 @@ const ChatQR = ({
                             borderRadius={type == LOADER_TYPE.SEAMLESS ? '0px' : GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                             border={type == LOADER_TYPE.SEAMLESS ? 'transparent' : `1px solid ${theme.default.border}`}
                             background={theme.chatQRbg}
-
+                            ref={containerRef}
                         >
 
                             <CloseButtonContainer>

@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useClickAway } from 'react-use';
 
 // Internal Compoonents
-import { AppContext,  Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import LoaderSpinner, {
   LOADER_OVERLAY,
@@ -57,8 +57,11 @@ export const Context = React.createContext<AppContext | null>(null);
 // Create Header
 function Chat() {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
-  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
+  // const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading,  setDisplayQR } =
+  //   useContext(ChatUserContext);
+  const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading } =
     useContext(ChatUserContext);
+
 
   const theme = useTheme();
 
@@ -74,6 +77,7 @@ function Chat() {
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
   const [filteredUserData, setFilteredUserData] = useState<User[]>([]);
+  const [displayQR,setDisplayQR] = useState(false);
 
   const isMobile = useDeviceWidthCheck(600);
   const queryClient = new QueryClient({});
@@ -81,61 +85,61 @@ function Chat() {
   const containerRef = React.useRef(null);
   // For video calling
 
-  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
+  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv, socketType: 'chat' });
 
-  useEffect(()=>{
-    if(connectedUser && socketData.messagesSinceLastConnection){
-      if(currentChat)
+  useEffect(() => {
+    if (connectedUser && socketData.messagesSinceLastConnection) {
+      if (currentChat)
         getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
-  },[socketData.messagesSinceLastConnection])
+  }, [socketData.messagesSinceLastConnection])
 
-  useEffect(()=>{
-    if(connectedUser && socketData.groupInformationSinceLastConnection) {
+  useEffect(() => {
+    if (connectedUser && socketData.groupInformationSinceLastConnection) {
       getUpdatedGroup(socketData.groupInformationSinceLastConnection);
     }
-  },[socketData.groupInformationSinceLastConnection])
+  }, [socketData.groupInformationSinceLastConnection])
 
-  const getUpdatedChats = async(chat) => {
-    if((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
-    const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
-      savedMsg: chat,
-      connectedUser,
-      account,
-      currentChat,
-      inbox
-    });
-    setMessages([...messages,{...decryptedChat,cid:socketData.messagesSinceLastConnection.cid}]);
+  const getUpdatedChats = async (chat) => {
+    if ((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10) {
+      const decryptedChat: MessageIPFS = await w2wHelper.decryptMessages({
+        savedMsg: chat,
+        connectedUser,
+        account,
+        currentChat,
+        inbox
+      });
+      setMessages([...messages, { ...decryptedChat, cid: socketData.messagesSinceLastConnection.cid }]);
     }
   }
 
-  const getUpdatedInbox = async(message) => {
+  const getUpdatedInbox = async (message) => {
     let isInInbox = false;
-    let decryptedChat:MessageIPFS;
+    let decryptedChat: MessageIPFS;
 
     //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
-    const updatedFeed = inbox.filter(feed=>(feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
-   if(updatedFeed.length){
-     decryptedChat = await w2wHelper.decryptMessages({
-      savedMsg: message,
-      connectedUser,
-      account,
-      currentChat:updatedFeed[0],
-      inbox
-    });
+    const updatedFeed = inbox.filter(feed => (feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
+    if (updatedFeed.length) {
+      decryptedChat = await w2wHelper.decryptMessages({
+        savedMsg: message,
+        connectedUser,
+        account,
+        currentChat: updatedFeed[0],
+        inbox
+      });
 
-  }
+    }
     const updatedInbox = inbox.map(feed => {
-      if((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+      if ((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10) {
         feed.msg = decryptedChat;
         isInInbox = true;
       }
       return feed;
     });
-    if(isInInbox){
+    if (isInInbox) {
 
-    setInbox(updatedInbox);
+      setInbox(updatedInbox);
     }
     else {
       //update msg for already received intents
@@ -144,17 +148,17 @@ function Chat() {
     }
   }
 
-  const getUpdatedGroup = async(groupInfo) => {
+  const getUpdatedGroup = async (groupInfo) => {
     let isInInbox = false;
     const updatedInbox = inbox.map(feed => {
-      if(feed?.groupInformation?.chatId === groupInfo.chatId){
+      if (feed?.groupInformation?.chatId === groupInfo.chatId) {
         feed.groupInformation = groupInfo;
         isInInbox = true;
       }
       return feed;
     });
-    if(isInInbox){
-    setInbox(updatedInbox);
+    if (isInInbox) {
+      setInbox(updatedInbox);
     }
     else {
       const intents = await fetchIntent(connectedUser);
@@ -219,10 +223,6 @@ function Chat() {
     }
   }, [connectedUser]);
 
-  const closeQRModal = () => {
-    setDisplayQR(false);
-  };
-  useClickAway(containerRef, () => closeQRModal());
 
   const groupInfoToast = useToast();
 
@@ -230,7 +230,7 @@ function Chat() {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:"0px"});
+  } = useModalBlur({ padding: "0px" });
 
   const createGroupToast = useToast();
 
@@ -238,7 +238,15 @@ function Chat() {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:'0px'});
+  } = useModalBlur({ padding: '0px' });
+
+  // const QRModalToast = useToast();
+
+  // const {
+  //   isModalOpen: isQRModalOpen,
+  //   showModal: showQRModal,
+  //   ModalComponent: ChatQRModal,
+  // } = useModalBlur({ padding: '0px' });
 
 
   const connectUser = async (): Promise<void> => {
@@ -282,9 +290,8 @@ function Chat() {
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
-      if(checkIfGroup(feed))
-      {
-        rearrangeMembers(feed,connectedUser);
+      if (checkIfGroup(feed)) {
+        rearrangeMembers(feed, connectedUser);
       }
       setCurrentChat(feed);
     } else {
@@ -320,7 +327,9 @@ function Chat() {
                 userShouldBeSearched,
                 setUserShouldBeSearched,
                 filteredUserData,
-                setFilteredUserData
+                setFilteredUserData,
+                displayQR,
+                setDisplayQR
               }}
             >
               <ChatSidebarContainer
@@ -332,52 +341,49 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal} />
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"
                 chatActive={viewChatBox}
               >
-                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal}/>
+                <ChatBoxSection setVideoCallInfo={setVideoCallInfo} showGroupInfoModal={showGroupInfoModal} />
               </ChatContainer>
               <GroupInfoModalComponent
                 InnerComponent={GroupInfoModalContent}
-                onConfirm={() => {}}
+                onConfirm={() => { }}
                 toastObject={groupInfoToast}
-                />
+              />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
               />
 
-              {displayQR && !isMobile && (
-                <>
-                  <ChatQR
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
+              {/* <ChatQRModal
+                InnerComponent={isMobile ? MobileView : ChatQR}
+                toastObject={QRModalToast}
+              /> */}
 
-                  {/* <MobileView
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  /> */}
+              {displayQR && (
+                <>
+                  {isMobile ? (
+                    <MobileView
+                      type={LOADER_TYPE.STANDALONE}
+                      overlay={LOADER_OVERLAY.ONTOP}
+                      blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                      width="75%"
+                    />
+                  ) : (
+                    <ChatQR
+                      type={LOADER_TYPE.STANDALONE}
+                      overlay={LOADER_OVERLAY.ONTOP}
+                      blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
+                      width="75%"
+                    />
+                  )}
                 </>
               )}
 
-              {displayQR && isMobile && (
-                <>
-                  <MobileView
-                    type={LOADER_TYPE.STANDALONE}
-                    overlay={LOADER_OVERLAY.ONTOP}
-                    blur={GLOBALS.ADJUSTMENTS.BLUR.DEFAULT}
-                    width="75%"
-                  />
-                </>
-              )}
             </Context.Provider>
             {/* The rest of your application */}
             <ReactQueryDevtools initialIsOpen={false} />
@@ -442,22 +448,19 @@ const Container = styled.div`
   box-sizing: border-box;
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-  globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-});
+  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
+  });
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-  globalsMargin.MINI_MODULES.TABLET.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${globalsMargin.MINI_MODULES.TABLET.BOTTOM
+  });
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-  globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-});
+    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${globalsMargin.MINI_MODULES.MOBILE.BOTTOM
+  });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
 

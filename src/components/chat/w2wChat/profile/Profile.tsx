@@ -13,7 +13,7 @@ import { AiOutlineMore } from 'react-icons/ai';
 import { useResolveEns } from 'hooks/useResolveEns';
 import { shortenText } from 'helpers/UtilityHelper';
 
-const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
+const Profile = ({ setActiveTab,QRDropdown,setQRDropdown }: any): JSX.Element => {
   // theme context
   const theme = useTheme();
 
@@ -53,7 +53,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
       </WalletDetailsContainer>
       {/* </Tooltip> */}
 
-      <SettingsWrapper onClick={()=>setShowQR(!showQR)}>
+      <SettingsWrapper onClick={()=>setQRDropdown(!QRDropdown)}>
         <Settings style={{color:theme.default.color}}/>
       </SettingsWrapper>
 

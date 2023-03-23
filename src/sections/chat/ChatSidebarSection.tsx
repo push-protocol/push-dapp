@@ -67,19 +67,21 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   // theme context
   const theme = useTheme();
 
-  const { receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
+  const { receivedIntents, setReceivedIntents, filteredUserData,displayQR,setDisplayQR } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
-  const {connectedUser, displayQR, setDisplayQR} = useContext(ChatUserContext);
+  // const {connectedUser} = useContext(ChatUserContext);
+  const {connectedUser} = useContext(ChatUserContext);
+
 
   const { activeTab, setActiveTab } = useContext(Context);
   const [updateProfileImage, setUserProfileImage] = useState(connectedUser?.profilePicture);
 
   const { chainId, account } = useWeb3React<Web3Provider>();
   const [loadingRequests, setLoadingRequests] = useState(true);
-  const [showQR, setShowQR] = useState<boolean>(false);
-  const containerRef = React.useRef(null);
+  const [QRDropdown, setQRDropdown] = useState<boolean>(false);
+  
 
   const updateProfile = (image: string) => {
     setUserProfileImage(image);
@@ -95,9 +97,10 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   }, []);
 
   const closeQRDropdown = ()=>{
-    setShowQR(false);
-}
-useClickAway(containerRef, () => closeQRDropdown())
+    setQRDropdown(false);
+  }
+  const containerRef = React.useRef(null);
+    useClickAway(containerRef, () => closeQRDropdown());
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
@@ -129,9 +132,9 @@ useClickAway(containerRef, () => closeQRDropdown())
       {activeTab == 0 || activeTab == 1 ? (
         <ItemVV2
           flex="initial"
-          ref={containerRef}
+         
         >
-          <ItemHV2 ref={containerRef}>
+          <ItemHV2 >
             {/* Set active and onCLick to customize tab */}
             <TabButton
               active={activeTab == 0 ? true : false}
@@ -166,7 +169,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             >
               <ItemHV2
                 alignItems="center"
-                ref={containerRef}
+                
               >
                 <SpanV2
                   flex="initial"
@@ -250,9 +253,11 @@ useClickAway(containerRef, () => closeQRDropdown())
 
       {/* Footer */}
 
-      {showQR ? (
+      {QRDropdown ? (
         <QRCodeContainer
-          onClick={() => setDisplayQR(!displayQR)}
+          onClick={() => {
+            setDisplayQR(!displayQR);
+          }}
           style={{
             background: theme.default.bg,
             borderColor: theme.LinkMobileAppBorder,
@@ -265,11 +270,11 @@ useClickAway(containerRef, () => closeQRDropdown())
         </QRCodeContainer>
       ) : null}
 
-      <ProfileContainer borderTop={`1px solid ${theme.default.secondaryBg}`}>
+      <ProfileContainer borderTop={`1px solid ${theme.default.secondaryBg}`} >
         <ProfileHeader
           setActiveTab={setActiveTab}
-          setShowQR={setShowQR}
-          showQR={showQR}
+          setQRDropdown={setQRDropdown}
+          QRDropdown={QRDropdown}
         />
       </ProfileContainer>
     </ItemVV2>
@@ -294,7 +299,7 @@ const QRCodeContainer = styled.div`
 display: flex;
 flex-direction: row;
 align-items: center;
-padding: 8px;
+padding: 4px 8px;
 gap: 9px;
 width: 200px;
 height: 48px;
@@ -305,7 +310,7 @@ border-radius: 12px;
 cursor:pointer;
 position: absolute;
 z-index: 100;
-bottom: 45px;
+bottom: 50px;
 
 @media (max-width:768px){
 right:30px;
