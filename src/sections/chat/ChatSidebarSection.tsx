@@ -110,6 +110,7 @@ useClickAway(containerRef, () => closeQRDropdown())
       setReceivedIntents(intents);
       setLoadingRequests(false);
     } 
+    setLoadingRequests(false);
   }
   const fetchIntentApi = async (): Promise<Feeds[]> => {
    const intents = await fetchIntent(connectedUser);
@@ -117,6 +118,7 @@ useClickAway(containerRef, () => closeQRDropdown())
     setReceivedIntents(intents);
     setLoadingRequests(false);
    }
+   setLoadingRequests(false);
     return intents;
   };
 
