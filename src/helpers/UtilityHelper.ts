@@ -10,7 +10,7 @@ import { appConfig } from '../config';
 // Utility Helper Functions
 const UtilityHelper = {
   isMainnet: (chainId: number):boolean => {
-    if (chainId === 1 || chainId === 137) {
+    if (chainId === 1 || chainId === 137 || chainId === 56) {
       return true;
     }
     return false;
@@ -45,7 +45,8 @@ export const MaskedAliasChannels:{
   80001: {},
   97: {},
   10: {},
-  420: {}
+  420: {},
+  1442: {}
  }
  export const findObject = (data: any,parentArray: any[],property: string ): boolean => {
   let isPresent = false;
@@ -101,7 +102,8 @@ export const networkName = {
   97: "BNB Testnet",
   56: "BNB Mainnet",
   420: "Optimism Goerli",
-  10: "Optimism Mainnet"
+  10: "Optimism Mainnet",
+  1442: "Polygon zkEVM Testnet"
 };
 
 export const chainNameBackendStandard = {
@@ -160,9 +162,30 @@ export const NETWORK_DETAILS = {
     rpcUrls: ['https://endpoints.omniatech.io/v1/op/mainnet/public'],
     blockExplorerUrls: ['https://optimistic.etherscan.io/']
   },
+  POLYGON_ZK_EVM_TESTNET: {
+    chainId: utils.hexValue(10),
+    chainName: 'Optimism Mainnet',
+    nativeCurrency: {name: 'ETH', symbol: 'ETH', decimals: 18},
+    rpcUrls: ['https://rpc.public.zkevm-test.net'],
+    blockExplorerUrls: ['https://testnet-zkevm.polygonscan.com']
+  }
 };
 
 export const CORE_CHAIN_ID: number = appConfig.coreContractChain;
+
+export const LOGO_FROM_CHAIN_ID: {
+  [x:number]: string
+} = {
+  1: "Ethereum.svg",
+  5: "Ethereum.svg",
+  80001: "Polygon.svg",
+  137: "Polygon.svg",
+  97: "BNB.svg",
+  56: "BNB.svg",
+  420: "Optimism.svg",
+  10: "Optimism.svg",
+  1442: "PolygonZkEVM.svg"
+}
 
 export type getAliasResponseType = {
   address: string | null, 

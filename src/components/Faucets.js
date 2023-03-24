@@ -45,6 +45,12 @@ const Faucets = () => {
       value: "Optimism",
       title: "Optimism Goerli Faucet",
       link: "https://faucet.quicknode.com/optimism/goerli",
+    },
+    {
+      id: "1442",
+      value: "Polygon zkEVM",
+      title: "Polygon zkEVM Bridge",
+      link: "https://public.zkevm-test.net/"
     }
   ];
 
@@ -71,7 +77,7 @@ const Faucets = () => {
           border={`1px solid ${theme.snackbarBorderColor}`}
           radius="24px"
           align="flex-start"
-          padding="7px 83px 7px 14px"
+          padding="7px 14px 7px 14px"
           position="absolute"
           top="0rem"
           zIndex="10"
