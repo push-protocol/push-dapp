@@ -22,7 +22,7 @@ module.exports = {
       util: require.resolve('util/'),
       stream: require.resolve('stream-browserify')
     };
-    // config.devtool = false;
+    config.devtool = false;
     config.resolve.extensions = [...config.resolve.extensions, '.ts', '.js'];
     config.plugins = [
       ...config.plugins,
