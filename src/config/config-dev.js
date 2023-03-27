@@ -131,6 +131,6 @@ export const CHAIN_DETAILS = {
     name: "POLYGON_ZK_EVM_TESTNET",
     chainId: 1442,
     rpcUrl: 'https://rpc.public.zkevm-test.net',
-    commAddress: ''
+    commAddress: '0x630b152e4185c63D7177c656b56b26f878C61572'
   }
 }
