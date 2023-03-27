@@ -8,8 +8,6 @@ import { useClickAway } from 'react-use';
 
 // Internal Components
 import { ModalInnerComponentType } from 'hooks/useModal';
-import { ReactComponent as Close } from 'assets/chat/group-chat/close.svg';
-import { ReactComponent as Back } from 'assets/chat/arrowleft.svg';
 import { ReactComponent as Lock } from 'assets/chat/group-chat/lockdark.svg';
 import { ReactComponent as AddMember } from 'assets/chat/group-chat/addicon.svg';
 import Message from 'assets/chat/group-chat/chat.svg';
@@ -23,7 +21,6 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ProfileCard } from './ProfileCard';
 import {
-  addMoreMembers,
   convertToWalletAddressList,
   getAdminList,
   getUpdatedAdminList,
@@ -34,6 +31,7 @@ import { getDefaultFeed } from '../../../../../helpers/w2w/user';
 import { Feeds } from '../../../../../types/chat';
 import { DropdownValueType } from '../../../../Dropdown';
 import { useDeviceWidthCheck } from 'hooks';
+import { PendingMembers } from './PendingMembers';
 
 //Internal Configs
 import useToast from 'hooks/useToast';
@@ -49,11 +47,12 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   const [selectedMemeberAddress, setSelectedMemeberAddress] = React.useState<string | null>(null);
   const [showAddMoreWalletModal, setShowAddMoreWalletModal] = React.useState<boolean>(false);
   // const [memberList, setMemberList] = React.useState<any>(currentChat?.groupInformation?.groupMembers);
+  const [showPendingRequests, setshowPendingRequests] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const [isLoading,setIsLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const groupCreator = currentChat?.groupInformation?.groupCreator;
-  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x)=>x.wallet!==groupCreator);
-  const [groupMembers, setGroupMembers] = React.useState([...membersExceptGroupCreator,...currentChat?.groupInformation?.pendingMembers]);
+  const membersExceptGroupCreator = currentChat?.groupInformation?.members.filter((x) => x.wallet !== groupCreator);
+  const groupMembers = [...membersExceptGroupCreator, ...currentChat?.groupInformation?.pendingMembers];
 
   const isAccountOwnerAdmin = currentChat?.groupInformation?.members?.some(
     (member) => caip10ToWallet(member?.wallet) === account && member?.isAdmin
@@ -76,7 +75,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       ...currentChat?.groupInformation?.members,
       ...currentChat?.groupInformation?.pendingMembers,
     ]);
-    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
+    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, false);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
@@ -123,7 +122,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       ...currentChat?.groupInformation?.members,
       ...currentChat?.groupInformation?.pendingMembers,
     ]);
-    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
+    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, true);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
@@ -169,12 +168,16 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
     const updatedMemberList = getUpdatedMemberList(currentChat, selectedMemeberAddress);
     const adminList = getAdminList(currentChat?.groupInformation);
     try {
-      const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList, memeberList: updatedMemberList });
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList,
+        memeberList: updatedMemberList,
+      });
 
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-        if (updatedCurrentChat)
-          setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -207,25 +210,31 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
   };
 
   const addMembers = async () => {
-    
     //Already Present Members and PendingMembers
-    const groupMemberList = convertToWalletAddressList([...currentChat?.groupInformation?.members, ...currentChat?.groupInformation?.pendingMembers]);
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
 
     //Newly Added Members and alreadyPresent Members in the groupchat
-    const newMembersToAdd = memberList.map(member => member.wallets);
+    const newMembersToAdd = memberList.map((member) => member.wallets);
     const members = [...groupMemberList, ...newMembersToAdd];
 
     //Admins wallet address from both members and pendingMembers
     const adminList = getAdminList(currentChat?.groupInformation);
-    
+
     try {
       setIsLoading(true);
-      const { updateResponse, updatedCurrentChat } = await updateGroup({ currentChat, connectedUser, adminList, memeberList: members });
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList,
+        memeberList: members,
+      });
 
       if (typeof updateResponse !== 'string') {
-        setSelectedMemeberAddress(null)
-        if (updatedCurrentChat)
-          setChat(updatedCurrentChat);
+        setSelectedMemeberAddress(null);
+        if (updatedCurrentChat) setChat(updatedCurrentChat);
       } else {
         createGroupToast.showMessageToast({
           toastTitle: 'Error',
@@ -238,7 +247,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             />
           ),
         });
-        setSelectedMemeberAddress(null)
+        setSelectedMemeberAddress(null);
       }
       setIsLoading(false);
       createGroupToast.showMessageToast({
@@ -253,10 +262,9 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         ),
       });
       handleClose();
-
     } catch (error) {
       setIsLoading(false);
-      console.log("Error", error);
+      console.log('Error', error);
       createGroupToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: error.message,
@@ -269,191 +277,220 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
         ),
       });
     }
+  };
 
-  }
-
-  const messageUserDropdown: DropdownValueType =
-    { id: 'message_user', title: 'Message user', icon: Message, function: () => messageUser() }
-    ;
-
-  const removeAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Dismiss as admin', icon: DismissAdmin, function: () => dismissGroupAdmin() }
-    ;
-
-  const addAdminDropdown: DropdownValueType =
-    { id: 'dismiss_admin', title: 'Make group admin', icon: AddAdmin, function: () => makeGroupAdmin() }
-    ;
-
-  const removeMemberDropdown: DropdownValueType =
-    { id: 'remove_member', title: 'Remove', icon: Remove, function: () => removeMember(), textColor: '#ED5858' }
-
+  const messageUserDropdown: DropdownValueType = {
+    id: 'message_user',
+    title: 'Message user',
+    icon: Message,
+    function: () => messageUser(),
+  };
+  const removeAdminDropdown: DropdownValueType = {
+    id: 'dismiss_admin',
+    title: 'Dismiss as admin',
+    icon: DismissAdmin,
+    function: () => dismissGroupAdmin(),
+  };
+  const addAdminDropdown: DropdownValueType = {
+    id: 'dismiss_admin',
+    title: 'Make group admin',
+    icon: AddAdmin,
+    function: () => makeGroupAdmin(),
+  };
+  const removeMemberDropdown: DropdownValueType = {
+    id: 'remove_member',
+    title: 'Remove',
+    icon: Remove,
+    function: () => removeMember(),
+    textColor: '#ED5858',
+  };
 
   // to close the modal upon a click on backdrop
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
 
-  
-
   const handlePrevious = () => {
     setShowAddMoreWalletModal(false);
-  }
+  };
 
   const handleCloseAddWalletModal = () => {
     setShowAddMoreWalletModal(false);
-  }
+  };
 
   return (
     <ThemeProvider theme={theme}>
       <ModalContainer
         background={theme.blurModalContentBackground}
         ref={containerRef}
-        isMobile={isMobile}
+        padding={
+          isMobile
+            ? showAddMoreWalletModal
+              ? '24px 24px 20px 24px'
+              : '24px 0px 20px 0px'
+            : showAddMoreWalletModal
+            ? '24px 36px 20px 36px'
+            : '24px 0px 20px 0px'
+        }
       >
-
         {!showAddMoreWalletModal && (
           <>
             <GroupModalHeader
               handleClose={handleClose}
-              title={"Group Info"}
-              margin='0 0 34px 0'
+              title={'Group Info'}
+              margin={isMobile ? '0px 24px 34px 24px' : '0px 36px 34px 36px'}
             />
-
-
-            <InfoContainer
-              justifyContent="flex-start"
-              margin="0px 0px 29px 0px"
+            <BodyContainer
+              padding={
+                isMobile
+                  ? showAddMoreWalletModal
+                    ? '0px'
+                    : '0px 24px 0px 24px'
+                  : showAddMoreWalletModal
+                  ? '0px'
+                  : '0px 36px 0px 36px'
+              }
             >
-              <ItemVV2
-                width="64px"
-                height="64px"
-                maxWidth="64px"
-                borderRadius="16px"
-                overflow="hidden"
-                margin="0px 16px 0px 0px"
-              >
-                <ImageV2
-                  height="100%"
-                  objectFit="cover"
-                  src={currentChat?.groupInformation?.groupImage}
-                  alt="Group Image"
-                />
-              </ItemVV2>
-              <ItemVV2 alignItems="flex-start">
-                <SpanV2
-                  fontSize="20px"
-                  fontWeight={500}
-                  color={theme.default.color}
-                  textAlign="left"
-                >
-                  {currentChat?.groupInformation?.groupName}
-                </SpanV2>
-                <SpanV2
-                  fontSize="16px"
-                  fontWeight={500}
-                  color={theme.modalDescriptionTextColor}
-                >
-                  {`${currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0
-                    } members`}
-                </SpanV2>
-              </ItemVV2>
-            </InfoContainer>
-
-            <DescriptionContainer
-              alignItems="flex-start"
-              margin="0px 0px 18px 0px"
-            >
-              <SpanV2
-                fontSize="18px"
-                fontWeight={500}
-                margin="0px 0px 5px 0px"
-                color={theme.modalProfileTextColor}
-              >
-                Group Description
-              </SpanV2>
-              <ItemHV2
-                fontSize="18px"
-                fontWeight={400}
+              <InfoContainer
                 justifyContent="flex-start"
-                style={{ color: `${theme.modalDescriptionTextColor}` }}
+                margin="0px 0px 29px 0px"
               >
-                {currentChat?.groupInformation?.groupDescription
-                  ? currentChat?.groupInformation?.groupDescription
-                  : 'No Description Added'}
-              </ItemHV2>
-            </DescriptionContainer>
-            <InfoContainer
-              justifyContent="flex-start"
-              padding="15px 24px 15px 18px"
-              borderRadius="16px"
-              border={`1px solid ${theme.default.border}`}
-              margin="0px 0px 21px 0px"
-            >
-              <Lock />
-              <ItemVV2
+                <ItemVV2
+                  width="64px"
+                  height="64px"
+                  maxWidth="64px"
+                  borderRadius="16px"
+                  overflow="hidden"
+                  margin="0px 16px 0px 0px"
+                >
+                  <ImageV2
+                    height="100%"
+                    objectFit="cover"
+                    src={currentChat?.groupInformation?.groupImage}
+                    alt="Group Image"
+                  />
+                </ItemVV2>
+                <ItemVV2 alignItems="flex-start">
+                  <SpanV2
+                    fontSize="20px"
+                    fontWeight={500}
+                    color={theme.default.color}
+                    textAlign="left"
+                  >
+                    {currentChat?.groupInformation?.groupName}
+                  </SpanV2>
+                  <SpanV2
+                    fontSize="16px"
+                    fontWeight={500}
+                    color={theme.modalDescriptionTextColor}
+                  >
+                    {`${
+                      currentChat?.groupInformation?.members ? currentChat?.groupInformation?.members?.length : 0
+                    } members`}
+                  </SpanV2>
+                </ItemVV2>
+              </InfoContainer>
+
+              <DescriptionContainer
                 alignItems="flex-start"
-                margin="0px 0px 0px 12px"
+                margin="0px 0px 18px 0px"
               >
                 <SpanV2
                   fontSize="18px"
-                  fontWeight="500"
-                  color={theme.default.color}
-                >
-                  {currentChat?.groupInformation?.isPublic ? 'Public' : 'Private'}
-                </SpanV2>
-                <SpanV2
-                  fontSize="12px"
-                  fontWeight="400"
-                  color={theme.modalIconColor}
-                >
-                  {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
-                </SpanV2>
-              </ItemVV2>
-            </InfoContainer>
-            {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
-              <AddWalletContainer onClick={()=>setShowAddMoreWalletModal(true)}>
-                <AddMember />
-                <SpanV2
+                  fontWeight={500}
+                  margin="0px 0px 5px 0px"
                   color={theme.modalProfileTextColor}
-                  margin="0px  14px"
-                  fontSize="18px"
-                  fontWeight="400"
                 >
-                  Add more wallets
+                  Group Description
                 </SpanV2>
-              </AddWalletContainer>
-            )}
-            <ProfileContainer minHeight={
-              currentChat?.groupInformation?.members?.length < 4
-                ? 72 * currentChat?.groupInformation?.members?.length
-                : 216
-            }>
-              {currentChat?.groupInformation?.members?.map((member, index) => {
-                return (
-                  member && (
-                    <ProfileCard
-                      key={index}
-                      member={member}
-                      dropdownValues={
-                        member?.isAdmin && isAccountOwnerAdmin
-                          ? [removeAdminDropdown, removeMemberDropdown]
-                          : isAccountOwnerAdmin
+                <ItemHV2
+                  fontSize="18px"
+                  fontWeight={400}
+                  justifyContent="flex-start"
+                  style={{ color: `${theme.modalDescriptionTextColor}` }}
+                >
+                  {currentChat?.groupInformation?.groupDescription
+                    ? currentChat?.groupInformation?.groupDescription
+                    : 'No Description Added'}
+                </ItemHV2>
+              </DescriptionContainer>
+              <InfoContainer
+                justifyContent="flex-start"
+                padding="15px 24px 15px 18px"
+                borderRadius="16px"
+                border={`1px solid ${theme.default.border}`}
+                margin="0px 0px 21px 0px"
+              >
+                <Lock />
+                <ItemVV2
+                  alignItems="flex-start"
+                  margin="0px 0px 0px 12px"
+                >
+                  <SpanV2
+                    fontSize="18px"
+                    fontWeight="500"
+                    color={theme.default.color}
+                  >
+                    {currentChat?.groupInformation?.isPublic ? 'Public' : 'Private'}
+                  </SpanV2>
+                  <SpanV2
+                    fontSize="12px"
+                    fontWeight="400"
+                    color={theme.modalIconColor}
+                  >
+                    {currentChat?.groupInformation?.isPublic ? 'Chats are not encrypted' : 'Chats are encrypted'}
+                  </SpanV2>
+                </ItemVV2>
+              </InfoContainer>
+              {isAccountOwnerAdmin && currentChat?.groupInformation?.members?.length < 10 && (
+                <AddWalletContainer onClick={() => setShowAddMoreWalletModal(true)}>
+                  <AddMember />
+                  <SpanV2
+                    color={theme.modalProfileTextColor}
+                    margin="0px  14px"
+                    fontSize="18px"
+                    fontWeight="400"
+                  >
+                    Add more wallets
+                  </SpanV2>
+                </AddWalletContainer>
+              )}
+              {currentChat?.groupInformation?.pendingMembers?.length > 0 && (
+                <PendingMembers
+                  setshowPendingRequests={setshowPendingRequests}
+                  showPendingRequests={showPendingRequests}
+                />
+              )}
+              <ProfileContainer
+                minHeight={
+                  currentChat?.groupInformation?.members?.length < 4
+                    ? 72 * currentChat?.groupInformation?.members?.length
+                    : 216
+                }
+              >
+                {currentChat?.groupInformation?.members?.map((member, index) => {
+                  return (
+                    member && (
+                      <ProfileCard
+                        key={index}
+                        member={member}
+                        dropdownValues={
+                          member?.isAdmin && isAccountOwnerAdmin
+                            ? [removeAdminDropdown, removeMemberDropdown]
+                            : isAccountOwnerAdmin
                             ? [addAdminDropdown, removeMemberDropdown]
                             : []
-                      }
-                      selectedMemeberAddress={selectedMemeberAddress}
-                      setSelectedMemeberAddress={setSelectedMemeberAddress}
-                      dropdownRef={dropdownRef}
-                    />
-                  )
-                );
-              })}
-            </ProfileContainer>
+                        }
+                        selectedMemeberAddress={selectedMemeberAddress}
+                        setSelectedMemeberAddress={setSelectedMemeberAddress}
+                        dropdownRef={dropdownRef}
+                      />
+                    )
+                  );
+                })}
+              </ProfileContainer>
+            </BodyContainer>
           </>
         )}
-
-
-
-
 
         {showAddMoreWalletModal && (
           <AddWalletContent
@@ -463,14 +500,10 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
             handleMemberList={setMemberList}
             handlePrevious={handlePrevious}
             handleClose={handleCloseAddWalletModal}
-            title={"Add More Wallets"}
+            title={'Add More Wallets'}
             groupMembers={groupMembers}
           />
         )}
-
-
-
-
       </ModalContainer>
     </ThemeProvider>
   );
@@ -481,21 +514,42 @@ const ModalContainer = styled.div`
   border-radius: 16px;
   background-color: ${(props) => props.background};
   margin: 0px;
-  max-width: 517px;
-  padding: 24px 36px 20px 36px;
-  @media (max-width: 480px) {
-    padding: 24px 24px 20px 24px;
-    max-width: 94vw;
-  }
+  padding: 0px;
+  padding: ${(props) => props.padding};
 `;
 
+const BodyContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 60vh;
+  max-width: 517px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  &&::-webkit-scrollbar {
+    width: 4px;
+  }
+  &&::-webkit-scrollbar-thumb {
+    background: #cf1c84;
+    border-radius: 10px;
+    border-bottom: 130px solid transparent;
+    background-clip: padding-box;
+  }
+  @media (max-width: 600px) {
+    max-height: 67vh;
+    max-width: 94vw;
+    &&::-webkit-scrollbar-thumb {
+      border-bottom: 300px solid transparent;
+    }
+  }
+  padding: ${(props) => props.padding};
+`;
 
 const DescriptionContainer = styled(ItemVV2)`
   min-width: 445px;
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
-    max-width:300px;
+    max-width: 300px;
   }
 `;
 
@@ -504,7 +558,7 @@ const InfoContainer = styled(ItemHV2)`
   box-sizing: border-box;
   @media (max-width: 480px) {
     min-width: 300px;
-    max-width:300px;
+    max-width: 300px;
   }
 `;
 
@@ -523,6 +577,7 @@ const ProfileContainer = styled.div`
   padding-right: 3px;
   align-items: center;
   min-width: 445px;
+  min-height: 72px;
   max-height: 216px;
   min-height: ${(props) => `${props.minHeight}px`};
   overflow-y: auto;

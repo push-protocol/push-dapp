@@ -10,11 +10,11 @@ import React, {
 // External Packages
 import Cropper from "react-easy-crop";
 import styledComponents from "styled-components";
-import Resizer from "react-image-file-resizer";
+import Pica from 'pica';
 
 const ImageClipper = forwardRef((props, ref) => {
   //   const [imageSrc, setImageSrc] = useState(null);
-  const { imageSrc, onImageCropped, width,height } = props;
+  const { imageSrc,imageType, onImageCropped, width,height } = props;
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
@@ -22,15 +22,16 @@ const ImageClipper = forwardRef((props, ref) => {
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
-  //   console.log("here", { imageSrc });
 
   useImperativeHandle(ref, () => ({
     async showCroppedImage() {
       try {
         if (imageSrc) {
           const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
-          const image = await resizeFile(croppedImage);
-          onImageCropped(image);
+          const clean = await convertBlobToBase64(croppedImage);
+          const image = await resizeImage(clean);
+          const finalImage = await convertBlobToBase64(image);
+          onImageCropped(finalImage);
         } else {
           return "Nothing";
         }
@@ -40,19 +41,56 @@ const ImageClipper = forwardRef((props, ref) => {
     },
   }));
 
-  function toDataURL(url, callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function() {
-      var reader = new FileReader();
-      reader.onloadend = function() {
-        callback(reader.result);
-      };
-      reader.readAsDataURL(xhr.response);
-    };
-    xhr.open("GET", url);
-    xhr.responseType = "blob";
-    xhr.send();
+  async function resizeImage(clean) {
+    const pica = Pica();
+
+    let file = await createImage(clean);
+
+    const canvas = document.createElement("canvas");
+
+    canvas.height = 128;
+    canvas.width = 128;
+  
+    return new Promise(resolve => {
+  
+        resolve(
+          pica
+            .resize(file, canvas, {
+              unsharpAmount: 100,
+              unsharpRadius: 0.7,
+              unsharpThreshold: 2,
+          })
+          .then(result => pica.toBlob(result, imageType, 1)),
+        );
+  
+    });
   }
+
+  const convertBlobToBase64 = async (blob) => { // blob data
+  return await blobToBase64(blob);
+}
+
+const blobToBase64 = blob => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(blob);
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = error => reject(error);
+});
+
+  // function toDataURL(url, callback) {
+  //   var xhr = new XMLHttpRequest();
+  //   xhr.onload = function() {
+  //     var reader = new FileReader();
+  //     reader.onloadend = function() {
+  //       callback(reader.result);
+  //     };
+  //     reader.readAsDataURL(xhr.response);
+  //   };
+  //   xhr.open("GET", url);
+  //   xhr.responseType = "blob";
+  //   xhr.send();
+  // }
+
 
   async function getCroppedImg(imageSrc, pixelCrop) {
     const image = await createImage(imageSrc);
@@ -83,30 +121,14 @@ const ImageClipper = forwardRef((props, ref) => {
         //   resolve(URL.createObjectURL(file));
         resolve(
           new File([file], fileName, {
-            type: "image/jpeg",
+            type: imageType,
             lastModified: Date.now(),
           })
         );
-      }, "image/jpeg");
+      },imageType, 1);
     });
   }
 
-  const resizeFile = (file) =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        128,
-        128,
-        "JPEG",
-        80,
-        0,
-        (uri) => {
-          resolve(uri);
-          setCroppedImage(uri);
-        },
-        "base64"
-      );
-    });
 
   const createImage = (url) =>
     new Promise((resolve, reject) => {

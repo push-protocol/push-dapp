@@ -115,7 +115,6 @@ export interface IDecryptMessage {
   savedMsg: MessageIPFSWithCID;
   connectedUser: ConnectedUser;
   account: string;
-  chainId: number;
   currentChat: Feeds;
   inbox: Feeds[];
 }
@@ -133,7 +132,7 @@ export const decryptMessages = async ({
     if (savedMsg.fromCAIP10 === walletToCAIP10({ account })) {
       signatureValidationPubliKey = connectedUser.publicKey;
     } else {
-      if (!currentChat.publicKey) {
+      if (!currentChat?.publicKey) {
         if (checkIfGroup(currentChat)) {
           const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
