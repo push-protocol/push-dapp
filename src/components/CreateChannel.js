@@ -69,6 +69,7 @@ function CreateChannel() {
   //image upload states
   const [view, setView] = useState(false);
   const [imageSrc, setImageSrc] = useState(undefined);
+  const [imageType, setImageType] = useState(null);
   const [croppedImage, setCroppedImage] = useState(undefined);
 
   const [stepFlow, setStepFlow] = React.useState(0);
@@ -551,10 +552,12 @@ function CreateChannel() {
                 croppedImage={croppedImage}
                 view={view}
                 imageSrc={imageSrc}
+                imageType={imageType}
                 processing={processing}
                 setCroppedImage={setCroppedImage}
                 setView={setView}
                 setImageSrc={setImageSrc}
+                setImageType={setImageType}
                 setProcessingInfo={setProcessingInfo}
                 logoInfo={logoInfo}
                 setStepFlow={setStepFlow}

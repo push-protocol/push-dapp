@@ -326,7 +326,13 @@ const Input = styled.input`
         ${(props) => props.theme.chat.snapFocusBg},
         ${(props) => props.theme.chat.snapFocusBg}
       ),
-      linear-gradient(to right, #cf1c84, #8ed6ff);
+      linear-gradient(
+        to right, 
+        rgba(182, 160, 245, 1),
+        rgba(244, 110, 246, 1),
+        rgba(255, 222, 211, 1),
+        rgba(255, 207, 197, 1)
+      );
     background-origin: border;
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;

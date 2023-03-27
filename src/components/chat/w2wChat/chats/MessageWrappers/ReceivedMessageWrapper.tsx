@@ -12,7 +12,7 @@ export const ReceivedMessageWrapper = (props): JSX.Element => {
     >
       <ItemHV2
         position="relative"
-        left={props?.isGroup ? '34px' : '0px'}
+        margin={props?.isGroup ? '0 0 0 34px' : '0px'}
       >
         {props?.isGroup && props?.profilePicture && props.msgType !== 'Intent' && (
           <ItemVV2

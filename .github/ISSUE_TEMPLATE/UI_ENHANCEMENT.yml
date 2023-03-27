@@ -2,7 +2,7 @@ name: "🎨 UI/UX Enhancement"
 description: Suggest a UI/UX enhancement to make us look better.
 title: "🎨 [UI/UX Enhancement] - <title>"
 labels: [
-  "enhancement"
+  "ui enhancement"
 ]
 body:
   - type: textarea

@@ -10,9 +10,12 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
+import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
+import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
 import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
 import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
 import LoaderSpinner, {
@@ -22,22 +25,23 @@ import LoaderSpinner, {
   PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import useModalBlur from 'hooks/useModalBlur';
-import useToast from 'hooks/useToast';
+import * as w2wHelper from 'helpers/w2w/';
+import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
+import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { default as useModalBlur } from 'hooks/useModalBlur';
+import { default as useToast } from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import { AppContext, Feeds, User } from 'types/chat';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
+
 
 // Internal Configs
-import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
-import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
+import { appConfig } from 'config';
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { useDeviceWidthCheck } from 'hooks';
-import { useClickAway } from 'react-use';
+import { fetchIntent } from 'helpers/w2w/user';
 
 export const ToastPosition: ToastOptions = {
   position: 'top-right',
@@ -54,7 +58,6 @@ export const Context = React.createContext<AppContext | null>(null);
 // Create Header
 function Chat({ chatid }) {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
-
   const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
 
@@ -62,12 +65,12 @@ function Chat({ chatid }) {
 
   const [viewChatBox, setViewChatBox] = useState<boolean>(false);
   const [currentChat, setCurrentChat] = useState<Feeds>();
+  const [messages, setMessages] = useState<MessageIPFSWithCID[]>([]);
   const [receivedIntents, setReceivedIntents] = useState<Feeds[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadingMessage, setLoadingMessage] = useState<string>('');
   const [intents, setIntents] = useState<Feeds[]>([]);
   const [inbox, setInbox] = useState<Feeds[]>([]);
-  const [pendingRequests, setPendingRequests] = useState<number>(0);
   const [hasUserBeenSearched, setHasUserBeenSearched] = useState<boolean>(false);
   const [activeTab, setCurrentTab] = useState<number>(0);
   const [userShouldBeSearched, setUserShouldBeSearched] = useState<boolean>(false);
@@ -77,8 +80,89 @@ function Chat({ chatid }) {
   const queryClient = new QueryClient({});
 
   const containerRef = React.useRef(null);
-
   // For video calling
+
+  const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
+
+  useEffect(()=>{
+    if(connectedUser && socketData.messagesSinceLastConnection){
+      if(currentChat)
+        getUpdatedChats(socketData.messagesSinceLastConnection);
+      getUpdatedInbox(socketData.messagesSinceLastConnection)
+    }
+  },[socketData.messagesSinceLastConnection])
+
+  useEffect(()=>{
+    if(connectedUser && socketData.groupInformationSinceLastConnection) {
+      getUpdatedGroup(socketData.groupInformationSinceLastConnection);
+    }
+  },[socketData.groupInformationSinceLastConnection])
+
+  const getUpdatedChats = async(chat) => {
+    if((currentChat.did === chat.fromCAIP10) || currentChat?.groupInformation?.chatId === chat.toCAIP10){
+    const decryptedChat:MessageIPFS = await w2wHelper.decryptMessages({
+      savedMsg: chat,
+      connectedUser,
+      account,
+      currentChat,
+      inbox
+    });
+    setMessages([...messages,{...decryptedChat,cid:socketData.messagesSinceLastConnection.cid}]);
+    }
+  }
+
+  const getUpdatedInbox = async(message) => {
+    let isInInbox = false;
+    let decryptedChat:MessageIPFS;
+
+    //change to common decryption for getUpdatedInbox and getUpdatedChats using filter
+    const updatedFeed = inbox.filter(feed=>(feed.did === message.fromCAIP10) || (feed?.groupInformation?.chatId === message.toCAIP10));
+   if(updatedFeed.length){
+     decryptedChat = await w2wHelper.decryptMessages({
+      savedMsg: message,
+      connectedUser,
+      account,
+      currentChat:updatedFeed[0],
+      inbox
+    });
+
+  }
+    const updatedInbox = inbox.map(feed => {
+      if((feed.did === message.fromCAIP10) || feed?.groupInformation?.chatId === message.toCAIP10){
+        feed.msg = decryptedChat;
+        isInInbox = true;
+      }
+      return feed;
+    });
+    if(isInInbox){
+
+    setInbox(updatedInbox);
+    }
+    else {
+      //update msg for already received intents
+      const intents = await fetchIntent(connectedUser);
+      setReceivedIntents(intents);
+    }
+  }
+
+  const getUpdatedGroup = async(groupInfo) => {
+    let isInInbox = false;
+    const updatedInbox = inbox.map(feed => {
+      if(feed?.groupInformation?.chatId === groupInfo.chatId){
+        feed.groupInformation = groupInfo;
+        isInInbox = true;
+      }
+      return feed;
+    });
+    if(isInInbox){
+    setInbox(updatedInbox);
+    }
+    else {
+      const intents = await fetchIntent(connectedUser);
+      setReceivedIntents(intents);
+    }
+  }
+
   const [videoCallInfo, setVideoCallInfo] = useState<VideoCallInfoI>({
     address: null,
     fromPublicKeyArmored: null,
@@ -242,11 +326,11 @@ function Chat({ chatid }) {
                 viewChatBox,
                 setChat,
                 intents,
+                messages,
+                setMessages,
                 setIntents,
                 inbox,
                 setInbox,
-                pendingRequests,
-                setPendingRequests,
                 hasUserBeenSearched,
                 setHasUserBeenSearched,
                 loadingMessage,
