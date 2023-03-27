@@ -3,7 +3,7 @@ import * as PGP from './pgp';
 import * as DIDHelper from './did';
 import * as Ceramic from './ceramic';
 import * as AES from './aes';
-import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
+import { ConnectedUser, Feeds, FeedsNew, MessageIPFSWithCID } from '../../types/chat';
 import { checkIfGroup, getMemberDetails } from './groupChat';
 import { getUser } from '../../api/w2w';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
@@ -111,10 +111,51 @@ export const decryptFeeds = async ({
   return feeds;
 };
 
+export const decryptFeedsNew = async ({
+  feeds,
+  connectedUser,
+}: {
+  feeds: FeedsNew;
+  connectedUser: ConnectedUser;
+}): Promise<FeedsNew> => {
+  for (const key in feeds) {
+    if (feeds[key].msg.encType !== 'PlainText' && feeds[key].msg.encType !== null && feeds[key].msg.messageContent) {
+      // To do signature verification it depends on who has sent the message
+      let signatureValidationPubliKey: string;
+      if (feeds[key].msg.fromCAIP10 === connectedUser.wallets) {
+        signatureValidationPubliKey = connectedUser.publicKey;
+      } else {
+        if (checkIfGroup(feeds[key]) && !feeds[key].publicKey) {
+          const member = getMemberDetails(feeds[key], feeds[key]?.msg?.fromCAIP10);
+          feeds[key].publicKey = member ? member.publicKey : '';
+        }
+        signatureValidationPubliKey = feeds[key].publicKey!;
+      }
+      try {
+        feeds[key].msg.messageContent = await decryptAndVerifySignature({
+          cipherText: feeds[key].msg.messageContent,
+          encryptedSecretKey: feeds[key].msg.encryptedSecret,
+          publicKeyArmored: signatureValidationPubliKey,
+          signatureArmored: feeds[key].msg.signature,
+          privateKeyArmored: connectedUser.privateKey!,
+        });
+      } catch (e) {
+        // console.log(e);
+        if(e.message == decryptionErrorMsg){
+          feeds[key].msg.messageType = 'Text';
+          feeds[key].msg.messageContent = 'message encrypted before you joined';
+        }
+      }
+    }
+  }
+  return feeds;
+};
+
 export interface IDecryptMessage {
   savedMsg: MessageIPFSWithCID;
   connectedUser: ConnectedUser;
   account: string;
+  chainId: number;
   currentChat: Feeds;
   inbox: Feeds[];
 }
@@ -132,7 +173,7 @@ export const decryptMessages = async ({
     if (savedMsg.fromCAIP10 === walletToCAIP10({ account })) {
       signatureValidationPubliKey = connectedUser.publicKey;
     } else {
-      if (!currentChat?.publicKey) {
+      if (!currentChat.publicKey) {
         if (checkIfGroup(currentChat)) {
           const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
@@ -172,8 +213,17 @@ export const formatFileSize = (size: number): string => {
   return `${(size / Math.pow(1024, i)).toFixed(1)} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}`;
 };
 
+
+export const getChatId = (feed:Feeds) => {
+   if(checkIfGroup(feed))
+   {
+    return feed?.groupInformation?.chatId;
+   }
+   return feed?.wallets.split(':')[1];
+}
 export default {
   PGP: PGP,
   DID: DIDHelper,
   Ceramic: Ceramic,
 };
+
