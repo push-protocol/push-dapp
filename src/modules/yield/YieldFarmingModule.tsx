@@ -204,11 +204,11 @@ function YieldFarmingModule() {
               fontWeight={700}
               style={{marginLeft:"0.3rem"}}
             >
-              REWARDS PROGRAM TO BE EXTENDED 84 WEEKS
+              REWARDS PROGRAM WILL BE EXTENDED BY 84 WEEKS!!
             </H2V2>
           </ItemHV2>
-          A proposal is in final voting stage to extend the Program for 84 weeks more! Cast your vote
-          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://snapshot.org/#/pushdao.eth/proposal/0x54092053eff30c3c304e45b575881945192e710bc9b3914bfe1d1eadcda3f114" target='_blank'>
+          The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info
+          <AInlineV2 style={{color: "white", marginLeft: "4px"}} href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
             here
           </AInlineV2>
         </SpanV2>
@@ -232,7 +232,13 @@ function YieldFarmingModule() {
                   <StatsHeading bg="#35c5f3">PUSH Rewards Given</StatsHeading>
                   <StatsContent>
                     <StatsInnerTitle>
-                      {numberWithCommas(formatTokens(poolStats.pushRewardsDistributed))}
+                      {
+                      // TODO fix the calculation
+                      numberWithCommas(
+                        Math.min(
+                          formatTokens(poolStats.pushRewardsDistributed),
+                          formatTokens(poolStats.totalDistributedAmount)
+                        ))}
                     </StatsInnerTitle>
                     <StatsInnerSub>
                       out of {numberWithCommas(formatTokens(poolStats.totalDistributedAmount))}
@@ -244,7 +250,9 @@ function YieldFarmingModule() {
                 <StatsCard bg={themes.mainBg}>
                   <StatsHeading bg="#674c9f">Time Left</StatsHeading>
                   <StatsContent>
-                    <StatsInnerTitle>{formattedDuration}</StatsInnerTitle>
+                    <StatsInnerTitle>00D 00H 00M 00S</StatsInnerTitle>
+                    {/* TODO: fix timer */}
+                    {/* <StatsInnerTitle>{formattedDuration}</StatsInnerTitle> */}
                     <StatsInnerSub>until next epoch</StatsInnerSub>
                   </StatsContent>
                   <StatsPreview color="#674c9f">time left</StatsPreview>

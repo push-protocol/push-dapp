@@ -13,7 +13,8 @@ import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import * as PushAPI from "@pushprotocol/restapi";
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
-import { checkConnectedUser } from 'helpers/w2w/user';
+import { fetchIntent } from 'helpers/w2w/user';
+
 import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -24,13 +25,14 @@ import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
 import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import { getIsNewTagVisible } from 'helpers/TimerHelper';
+import NewTag from 'components/NewTag';
 
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
-import { getIsNewTagVisible } from 'helpers/TimerHelper';
-import NewTag from 'components/NewTag';
+
 
 
 
@@ -65,7 +67,7 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
   // theme context
   const theme = useTheme();
 
-  const {  pendingRequests, setPendingRequests, receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
+  const { receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
@@ -83,10 +85,13 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
     setUserProfileImage(image);
   };
 
-  // See if there are pending requests and update requests tab and intent feed box
+  const getRequests = async (): Promise<void> => {
+    await resolveThreadhash();
+    fetchIntentApi();
+};
   useEffect(() => {
     // This will run when the page first loads
-    resolveThreadhash();
+    getRequests();
   }, []);
 
   const closeQRDropdown = ()=>{
@@ -96,49 +101,28 @@ useClickAway(containerRef, () => closeQRDropdown())
 
   async function resolveThreadhash(): Promise<void> {
     let getIntent;
-    if (checkConnectedUser(connectedUser)) {
       getIntent = await intitializeDb<string>('Read', 'Intent', w2wHelper.walletToCAIP10({ account }), '', 'did');
-    }
-    if (getIntent!== undefined) {
+
+    if (getIntent!== undefined && !receivedIntents.length) {
+
       let intents: Feeds[] = getIntent.body;
       intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-      setPendingRequests(intents?.length);
       setReceivedIntents(intents);
       setLoadingRequests(false);
-    } else {
-      await fetchIntentApi();
-    }
-  }
-
-  const fetchIntentApi = async (): Promise<Feeds[]> => {
-    // If the user is not registered in the protocol yet, his did will be his wallet address
-    const didOrWallet: string = connectedUser.wallets.split(':')[1];
-    let intents = await PushAPI.chat.requests({account:didOrWallet!,env:appConfig.appEnv, toDecrypt:false});
-    await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account }),intents, 'did');
-    intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
-    if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
-      setPendingRequests(intents?.length);
-      setReceivedIntents(intents);
-    }
+    } 
     setLoadingRequests(false);
+  }
+  const fetchIntentApi = async (): Promise<Feeds[]> => {
+   const intents = await fetchIntent(connectedUser);
+   if(JSON.stringify(intents) != JSON.stringify(receivedIntents)) {
+    setReceivedIntents(intents);
+    setLoadingRequests(false);
+   }
+   setLoadingRequests(false);
     return intents;
   };
 
-  // Keep on updating after every few seconds
-  useEffect(() => {
-    if (!loadingRequests) {
-      //setup timer
-      const delay = 5;
-      let timer = setInterval(() => fetchIntentApi(), delay * 1000);
 
-      // this will clear Timeout
-      // when component unmount like in willComponentUnmount
-      // and show will not change to true
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [loadingRequests]);
 
   // RENDER
   return (
@@ -195,7 +179,7 @@ useClickAway(containerRef, () => closeQRDropdown())
                 >
                   Requests
                 </SpanV2>
-                {!loadingRequests && pendingRequests > 0 && (
+                {!loadingRequests && receivedIntents.length > 0 && (
                   <SpanV2
                     background={GLOBALS.COLORS.PRIMARY_PINK}
                     color={GLOBALS.COLORS.WHITE}
@@ -204,7 +188,7 @@ useClickAway(containerRef, () => closeQRDropdown())
                     fontSize="12px"
                     borderRadius={GLOBALS.ADJUSTMENTS.RADIUS.SMALL}
                   >
-                    {pendingRequests}
+                    {receivedIntents.length}
                   </SpanV2>
                 )}
               </ItemHV2>
