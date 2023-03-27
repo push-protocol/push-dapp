@@ -109,7 +109,6 @@ const ChatQR = ({
             left="0"
             zIndex="1000"
             padding="15px"
-            // onClick={() => { setDisplayQR(!displayQR) }}
             ref={containerRef}
         >
             {overlay === LOADER_OVERLAY.ONTOP && <BlurBG blur={blur} />}

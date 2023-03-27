@@ -71,7 +71,6 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
-  // const {connectedUser} = useContext(ChatUserContext);
   const {connectedUser} = useContext(ChatUserContext);
 
 
@@ -261,7 +260,6 @@ const ChatSidebarSection = ({showCreateGroupModal}) => {
           style={{
             background: theme.default.bg,
             borderColor: theme.LinkMobileAppBorder,
-            // color:theme.chat.sendMessageFontColor
             color: theme.textcolor,
           }}
         >
