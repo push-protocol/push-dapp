@@ -74,7 +74,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           className="fa fa-file"
           aria-hidden="true"
         ></i>{' '}
-        Media
+        File
       </SpanV2>
     ) : chatSnapMsg.type === 'GIF' ? (
       <SpanV2 color={theme.default.secondaryColor}>
