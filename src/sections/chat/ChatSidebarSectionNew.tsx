@@ -14,7 +14,6 @@ export const ChatSidebarSectionNew = () => {
 
   return (
     <Container chatActive={selectedChat}>
-      hey chat sidebar section new
       <ChatSidebarContentNew />
       <ChatSidebarFooterNew />  
     </Container>
@@ -35,8 +34,8 @@ const Container = styled(ItemVV2)`
     bottom: 0;
     right: 0;
     width: 95%;
-    margin-right: ${(props) => (props.chatActive==null ? '20%' : '0%')};
-    opacity: ${(props) => (props.chatActive==null ? '0' : '1')};
+    margin-right: ${(props) => (props.chatActive!=null ? '20%' : '0%')};
+    opacity: ${(props) => (props.chatActive!=null ? '0' : '1')};
     transition: margin-right 0.25s;
     max-width: initial;
     min-width: auto;

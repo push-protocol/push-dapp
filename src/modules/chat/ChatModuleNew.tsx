@@ -2,7 +2,7 @@ import { useWeb3React } from "@web3-react/core";
 import { ChatGlobalContextNew } from "contexts/ChatGlobalContextNew";
 import { getInboxFromIndexedDB, getRequestsFromIndexedDB } from "helpers";
 import ChatLocalContextProviderNew from "contexts/ChatLocalContextNew";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ChatBoxSectionNew } from "sections/chat/ChatBoxSectionNew";
 import { ChatSidebarSectionNew } from "sections/chat/ChatSidebarSectionNew";
 import { getConnectedUser, getDecryptedInbox, getDecryptedRequests } from "services";
@@ -12,10 +12,12 @@ import styled from "styled-components";
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderSpinner";
 
 export const ChatModuleNew = () => {
   const { account, library } = useWeb3React();
   const { connectedUser, setConnectedUser,setInbox,setRequests,userFeeds } = useContext(ChatGlobalContextNew);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -53,10 +55,14 @@ export const ChatModuleNew = () => {
 
   return (
     <Container>
-      <ChatLocalContextProviderNew>
-        <ChatSidebarSectionNew />  
-        <ChatBoxSectionNew />
-      </ChatLocalContextProviderNew>
+      {isLoading ? 
+        <ChatLocalContextProviderNew>
+          <ChatSidebarSectionNew /> 
+          <ChatBoxSectionNew />
+        </ChatLocalContextProviderNew>
+        : 
+        <LoaderSpinner type={LOADER_TYPE.SEAMLESS} />  
+      } 
     </Container>
   );
 }
