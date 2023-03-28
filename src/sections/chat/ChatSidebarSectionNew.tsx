@@ -13,7 +13,7 @@ export const ChatSidebarSectionNew = () => {
   const theme = useTheme();
 
   return (
-    <Container chatActive={selectedChat}>
+    <Container chatActive={!!selectedChat}>
       <ChatSidebarContentNew />
       <ChatSidebarFooterNew />  
     </Container>
@@ -21,7 +21,6 @@ export const ChatSidebarSectionNew = () => {
 }
 
 const Container = styled(ItemVV2)`
-  background:red;
   max-width:310px;
   min-width:280px;
   padding:10px 10px 10px 20px;
@@ -34,8 +33,8 @@ const Container = styled(ItemVV2)`
     bottom: 0;
     right: 0;
     width: 95%;
-    margin-right: ${(props) => (props.chatActive!=null ? '20%' : '0%')};
-    opacity: ${(props) => (props.chatActive!=null ? '0' : '1')};
+    margin-right: ${(props) => (props.chatActive==null ? '20%' : '0%')};
+    opacity: ${(props) => (props.chatActive==null ? '0' : '1')};
     transition: margin-right 0.25s;
     max-width: initial;
     min-width: auto;

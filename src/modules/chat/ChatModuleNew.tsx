@@ -17,7 +17,7 @@ import LoaderSpinner, { LOADER_TYPE } from "components/reusables/loaders/LoaderS
 export const ChatModuleNew = () => {
   const { account, library } = useWeb3React();
   const { connectedUser, setConnectedUser,setInbox,setRequests,userFeeds } = useContext(ChatGlobalContextNew);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if(connectedUser || !account || !library) return;
@@ -55,7 +55,7 @@ export const ChatModuleNew = () => {
 
   return (
     <Container>
-      {isLoading ? 
+      {!isLoading ? 
         <ChatLocalContextProviderNew>
           <ChatSidebarSectionNew /> 
           <ChatBoxSectionNew />
