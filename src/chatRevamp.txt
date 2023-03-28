@@ -1,3 +1,0 @@
- change decryptFeeds to a common function and use sdk  in chatModule
-
-  
