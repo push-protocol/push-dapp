@@ -6,7 +6,11 @@ import styled, { ThemeProps, useTheme } from "styled-components";
 import { ChatConversationSectionNew } from "./ChatConversationSectionNew";
 import { ChatWelcomeSectionNew } from "./ChatWelcomeSectionNew";
 
-export const ChatBoxSectionNew = () => {
+interface ContainerProps extends ThemeProps<any> {
+  chatActive: string;
+}
+
+export const ChatBoxSectionNew:React.FC = () => {
 
   const { selectedChat } = useContext(ChatLocalContext);
   const theme = useTheme();
@@ -21,7 +25,7 @@ export const ChatBoxSectionNew = () => {
   );
 }
 
-const Container = styled(ItemVV2)`
+const Container = styled(ItemVV2)<ContainerProps>`
 @media ${device.tablet} {
   position: absolute;
   top: 0;

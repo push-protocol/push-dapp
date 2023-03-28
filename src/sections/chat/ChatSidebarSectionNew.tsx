@@ -4,9 +4,13 @@ import { ItemVV2 } from "components/reusables/SharedStylingV2";
 import { device } from "config/Globals";
 import { ChatLocalContext } from "contexts/ChatLocalContextNew";
 import React, { useContext } from "react";
-import styled, { useTheme } from "styled-components";
+import styled, { ThemeProps, useTheme } from "styled-components";
 
-export const ChatSidebarSectionNew = () => {
+interface ContainerProps extends ThemeProps<any> {
+  chatActive: string;
+}
+
+export const ChatSidebarSectionNew:React.FC = () => {
 
   const {selectedChat} = useContext(ChatLocalContext);
 
@@ -20,7 +24,7 @@ export const ChatSidebarSectionNew = () => {
   );
 }
 
-const Container = styled(ItemVV2)`
+const Container = styled(ItemVV2)<ContainerProps>`
   max-width:310px;
   min-width:280px;
   padding:10px 10px 10px 20px;
