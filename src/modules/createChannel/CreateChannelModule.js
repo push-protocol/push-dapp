@@ -17,16 +17,15 @@ import { IPFSupload } from 'helpers/IpfsHelper';
 import { CHANNEL_TYPE, networkName } from 'helpers/UtilityHelper';
 import useToast from 'hooks/useToast';
 import { Content, H2, Item, Section, Span } from 'primaries/SharedStyling';
-import ChannelInfo from './ChannelInfo';
+import ChannelInfo from 'components/ChannelInfo';
 import './createChannel.css';
-import ProcessingInfo from './ProcessingInfo';
-import StakingInfo from './StakingInfo';
-import UploadLogo from './UploadLogo';
+import ProcessingInfo from 'components/ProcessingInfo';
+import StakingInfo from 'components/StakingInfo';
+import UploadLogo from 'components/UploadLogo';
 import { isLengthValid, isValidAddress, isValidUrl } from 'helpers/ValidationHelper';
 
 // Internal Configs
 import { abis, addresses, appConfig } from 'config';
-import { Anchor } from './SharedStyling';
 import { handleLogoSizeLimitation, toDataURL } from 'helpers/LogoSizeHelper';
 
 // Constants
@@ -35,7 +34,7 @@ const coreChainId = appConfig.coreContractChain;
 const CORE_CHAIN_ID = appConfig.coreContractChain;
 
 // Create Header
-function CreateChannel() {
+function CreateChannelModule() {
   const { account, library, chainId } = useWeb3React();
   const theme = useTheme();
   const onCoreNetwork = CORE_CHAIN_ID === chainId;
@@ -874,4 +873,5 @@ const Body = styled.div`
     width: 75%;
   }
 `;
-export default CreateChannel;
+
+export default CreateChannelModule;

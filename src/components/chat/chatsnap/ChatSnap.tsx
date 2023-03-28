@@ -75,13 +75,13 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
         ></i>{' '}
         File
       </SpanV2>
-    ) : chatSnapMsg.type === 'GIF' ? (
+    ) : chatSnapMsg.type === 'GIF' || chatSnapMsg.type === 'MediaEmbed' ? (
       <SpanV2 color={theme.default.secondaryColor}>
         <i
           className="fa fa-picture-o"
           aria-hidden="true"
         ></i>{' '}
-        GIF
+        Media
       </SpanV2>
     ) : null;
 
