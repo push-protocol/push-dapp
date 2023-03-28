@@ -232,7 +232,13 @@ function YieldFarmingModule() {
                   <StatsHeading bg="#35c5f3">PUSH Rewards Given</StatsHeading>
                   <StatsContent>
                     <StatsInnerTitle>
-                      {numberWithCommas(formatTokens(poolStats.pushRewardsDistributed))}
+                      {
+                      // TODO fix the calculation
+                      numberWithCommas(
+                        Math.min(
+                          formatTokens(poolStats.pushRewardsDistributed),
+                          formatTokens(poolStats.totalDistributedAmount)
+                        ))}
                     </StatsInnerTitle>
                     <StatsInnerSub>
                       out of {numberWithCommas(formatTokens(poolStats.totalDistributedAmount))}
@@ -244,7 +250,9 @@ function YieldFarmingModule() {
                 <StatsCard bg={themes.mainBg}>
                   <StatsHeading bg="#674c9f">Time Left</StatsHeading>
                   <StatsContent>
-                    <StatsInnerTitle>{formattedDuration}</StatsInnerTitle>
+                    <StatsInnerTitle>00D 00H 00M 00S</StatsInnerTitle>
+                    {/* TODO: fix timer */}
+                    {/* <StatsInnerTitle>{formattedDuration}</StatsInnerTitle> */}
                     <StatsInnerSub>until next epoch</StatsInnerSub>
                   </StatsContent>
                   <StatsPreview color="#674c9f">time left</StatsPreview>

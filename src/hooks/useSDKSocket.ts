@@ -6,25 +6,30 @@ import { createSocketConnection, EVENTS } from '@pushprotocol/socket';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { convertAddressToAddrCaip } from '../helpers/CaipHelper';
+import { ENV } from '@pushprotocol/restapi/src/lib/constants';
+
 
 // Types
 export type SDKSocketHookOptions = {
   account?: string | null;
-  env?: string;
+  env?: ENV;
   chainId?: number;
+  socketType?: 'chat' | 'notification',
 };
 
-export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) => {
+export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHookOptions) => {
   const [epnsSDKSocket, setEpnsSDKSocket] = useState<any>(null);
   const [isSDKSocketConnected, setIsSDKSocketConnected] = useState(epnsSDKSocket?.connected);
+  const [messagesSinceLastConnection, setMessagesSinceLastConnection] = useState<any>('');
+  const [groupInformationSinceLastConnection, setGroupInformationSinceLastConnection] = useState<any>('');
   const { incomingCall, acceptCall } = useContext(VideoCallContext);
-
   const addSocketEvents = () => {
     epnsSDKSocket?.on(EVENTS.CONNECT, () => {
       setIsSDKSocketConnected(true);
     });
 
     epnsSDKSocket?.on(EVENTS.DISCONNECT, () => {
+
       setIsSDKSocketConnected(false);
     });
 
@@ -55,12 +60,30 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
         console.error('DAPP Error while diplaying received Notification: ', e);
       }
     });
+
+    epnsSDKSocket?.on(EVENTS.CHAT_RECEIVED_MESSAGE, (chat: any) => {
+      /**
+       * We receive a 1 message.
+       */
+      setMessagesSinceLastConnection(chat);
+    });
+
+    //change this event name once sdk is published
+    epnsSDKSocket?.on(EVENTS.CHAT_GROUPS, (groupInfo: any) => {
+      /**
+       * We receive a group creation or updated event.
+       */
+      console.log(groupInfo)
+      setGroupInformationSinceLastConnection(groupInfo);
+    });
   };
 
   const removeSocketEvents = () => {
     epnsSDKSocket?.off(EVENTS.CONNECT);
     epnsSDKSocket?.off(EVENTS.DISCONNECT);
     epnsSDKSocket?.off(EVENTS.USER_FEEDS);
+    epnsSDKSocket?.off(EVENTS.CHAT_GROUPS);
+    epnsSDKSocket?.off(EVENTS.CHAT_RECEIVED_MESSAGE);
   };
 
   useEffect(() => {
@@ -88,7 +111,8 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
 
       // this is auto-connect on instantiation
       const connectionObject = createSocketConnection({
-        user: convertAddressToAddrCaip(account, chainId),
+        user: socketType == 'chat'?account:convertAddressToAddrCaip(account, chainId),
+        socketType,
         env,
       });
       setEpnsSDKSocket(connectionObject);
@@ -98,5 +122,7 @@ export const useSDKSocket = ({ account, env, chainId }: SDKSocketHookOptions) =>
   return {
     epnsSDKSocket,
     isSDKSocketConnected,
+    messagesSinceLastConnection,
+    groupInformationSinceLastConnection,
   };
 };

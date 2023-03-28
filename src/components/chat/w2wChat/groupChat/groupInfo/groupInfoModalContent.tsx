@@ -75,7 +75,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       ...currentChat?.groupInformation?.members,
       ...currentChat?.groupInformation?.pendingMembers,
     ]);
-    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, false);
+    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, false);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
@@ -122,7 +122,7 @@ export const GroupInfoModalContent = ({ onClose }: ModalInnerComponentType) => {
       ...currentChat?.groupInformation?.members,
       ...currentChat?.groupInformation?.pendingMembers,
     ]);
-    const newAdminList = getUpdatedAdminList(currentChat, selectedMemeberAddress, true);
+    const newAdminList = getUpdatedAdminList(currentChat?.groupInformation, selectedMemeberAddress, true);
     try {
       const { updateResponse, updatedCurrentChat } = await updateGroup({
         currentChat,
