@@ -126,17 +126,26 @@ const InternalDevModule = () => {
     ModalComponent: ModalComponentContent,
   } = useModalBlur({ padding: '0px' });
 
+  // useEffect(() => {
+  //   showComponentModal();
+  // }, []);
+
   return (
     <Container>
       {/* Progess Bar Component */}
-      <button onClick={showComponentModal}>Show</button>
-      <ModalContainer>
+      <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
+        <ProgressBar
+          percent={progress}
+          color={GLOBALS.COLORS.PRIMARY_PINK}
+        />
+      </IndividualComps>
+      {/* <ModalContainer>
         <ModalComponentContent
           InnerComponent={InternalComponent}
           onConfirm={() => {}}
           toastObject={toast}
         />
-      </ModalContainer>
+      </ModalContainer> */}
 
       {/* <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
         <button onClick={showComponentModal}>Show</button>
@@ -586,7 +595,7 @@ const Container = styled(SectionV2)`
 `;
 
 const ModalContainer = styled.div`
-position:relative;
+  position: relative;
   border-radius: 32px;
   border: 1px solid ${(props) => props.theme.default.secondaryBg};
   background: ${(props) => props.theme.default.secondaryBg};
@@ -617,7 +626,7 @@ const IndividualComps = styled(ItemVV2)`
   min-height: 100px;
   min-width: 25%;
   overflow: hidden;
-  //padding: 20px;
+  padding: 20px;
 
   &:after {
     background: ${(props) => props.theme.nav.bg};
