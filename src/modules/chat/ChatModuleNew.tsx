@@ -1,6 +1,7 @@
 import { useWeb3React } from "@web3-react/core";
 import { ChatGlobalContextNew } from "contexts/ChatGlobalContextNew";
 import { getInboxFromIndexedDB, getRequestsFromIndexedDB } from "helpers";
+import ChatLocalContextProviderNew from "contexts/ChatLocalContextNew";
 import React, { useContext, useEffect } from "react";
 import { ChatBoxSectionNew } from "sections/chat/ChatBoxSectionNew";
 import { ChatSidebarSectionNew } from "sections/chat/ChatSidebarSectionNew";
@@ -46,8 +47,10 @@ export const ChatModuleNew = () => {
 
   return (
     <>
-      <ChatSidebarSectionNew />  
-      <ChatBoxSectionNew />
+      <ChatLocalContextProviderNew>
+        <ChatSidebarSectionNew />  
+        <ChatBoxSectionNew />
+      </ChatLocalContextProviderNew>
     </>
   );
 }
