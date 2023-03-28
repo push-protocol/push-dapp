@@ -12,7 +12,7 @@ import AliasProcessing from "components/AliasProcessing";
 import ChannelDetails from "components/ChannelDetails";
 import ChannelLoading from "components/ChannelLoading";
 import ChannelSettings from "components/ChannelSettings";
-import CreateChannel from "components/CreateChannel";
+import CreateChannelModule from "../createChannel/CreateChannelModule";
 import { ButtonV2, ItemHV2, ItemVV2 } from "components/reusables/SharedStylingV2";
 import { getAliasFromChannelDetails } from "helpers/UtilityHelper";
 import { useDeviceWidthCheck } from "hooks";
@@ -168,7 +168,7 @@ const ChannelOwnerDashboard = () => {
         <ItemVV2 justifyContent={processingState === 0 && "flex-start"} height="fit-content">
           {/* display the create channel page if there are no details */}
           {!channelDetails && processingState === 0 &&
-            <CreateChannel />
+            <CreateChannelModule />
           }
 
           {isChannelDetails && processingState !== null &&

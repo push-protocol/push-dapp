@@ -9,7 +9,7 @@ import styled from 'styled-components';
 import ChannelLoading from 'components/ChannelLoading';
 import NotificationToast from 'primaries/NotificationToast';
 import { Section } from 'primaries/SharedStyling';
-import ChannelOwnerDashboard from 'segments/ChannelOwnerDashboard';
+import ChannelOwnerDashboard from './ChannelOwnerDashboard';
 
 // Internal Configs
 import { appConfig } from 'config';
