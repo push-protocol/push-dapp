@@ -1,6 +1,6 @@
 {
   "name": "@project/react-app",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "homepage": "https://app.push.org",
   "browserslist": {
     "production": [
@@ -157,7 +157,7 @@
   "scripts": {
     "deploy:alpha": "node build.mjs alpha && npm run build && echo 'alpha.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-alpha-deployment",
     "deploy:w2w": "node build.mjs w2w && npm run build && echo 'w2w.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-w2w-deployment",
-    "deploy:dev": "node build.mjs dev && npm run build && echo 'dev.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-dev-deployment",
+    "deploy:dev": "gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-dev-deployment",
     "deploy:staging": "node build.mjs staging && npm run build && echo 'staging.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-staging-deployment",
     "deploy:prod": "node build.mjs prod && npm run build && echo 'app.push.org' > ./build/CNAME && gh-pages -d build -r https://github.com/ethereum-push-notification-service/push-dapp-prod-deployment",
     "change": "node build.mjs dev",
