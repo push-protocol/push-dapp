@@ -87,21 +87,30 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
   }
 };
 
-export const importPushToken = async ({account,library}) =>{
+type ImportPushTokenType = {
+  provider: any
+}
+export const importPushToken = async ({ provider }: ImportPushTokenType): Promise<boolean> =>{
   try {
-    var signer = library.getSigner(account);
-    let pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, signer);
+    const name = "Ethereum Push Notification Service";
+    const symbol = "PUSH";
+    const decimals = 18;
 
-    const name = await pushTokenContract.name();
-    const symbol = await pushTokenContract.symbol();
-    const decimals = await pushTokenContract.decimals();
-    return {
-      name:name,
-      symbol:symbol,
-      decimals:decimals
-    }
+    await provider.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: addresses.pushToken,
+          symbol: symbol,
+          decimals: decimals
+        },
+      },
+    })
+    return true;
   } catch (err) {
     console.log(err);
+    throw err;
   }
 }
 

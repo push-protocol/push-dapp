@@ -12,7 +12,7 @@ import { Button, Item, Span } from "primaries/SharedStyling";
 
 // Internal Configs
 import { abis, addresses, appConfig } from "config";
-import { useDeviceWidthCheck } from "hooks";
+import { useAsyncOperation, useDeviceWidthCheck } from "hooks";
 import { device } from "config/Globals";
 import { getPushTokenFromWallet, importPushToken, mintPushToken } from "helpers";
 import { SpanV2 } from "./reusables/SharedStylingV2";
@@ -20,8 +20,9 @@ import LoaderSpinner, { LOADER_TYPE } from "./reusables/loaders/LoaderSpinner";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
   const { library, account, } = useWeb3React();
+  const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
   const [balance,setBalance] = useState(0);
-  const [loading,setLoading] = useState(false);
+  // const [loading,setLoading] = useState(false);
   const [faucetLoading,setFaucetLoading] = useState(false);
 
   const isMobile = useDeviceWidthCheck(600)
@@ -44,37 +45,14 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
     setBalance(amount);
   }
 
+  const handlePushTokenImport = async () => {
+    await executeImportPushTokenFunc({ provider: library.provider });
+  }
+
   useEffect(()=>{
     pushTokenInWallet();
   },[balance])
 
-  //import token into metamask
-  const importToken = async ()=>{
-    setLoading(true);
-    try {
-      const {name,symbol,decimals} = await importPushToken({
-        account: account,
-        library: library,
-      });
-      const {provider} = library;
-      await provider.request({
-        method: 'wallet_watchAsset',
-        params: {
-          type: 'ERC20',
-          options: {
-            address: addresses.pushToken,
-            symbol: symbol,
-            decimals: decimals
-          },
-        },
-      })
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      console.log("Error",error)
-    }
-  }
- 
   return (
     <Fragment>
       {/* <Content padding="0px 0px 0px 0px"> */}
@@ -96,7 +74,7 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
           
           </Item>
 
-          {loading ? <LoaderSpinner type={LOADER_TYPE.SEAMLESS} /> : <ImportToken>Don't see Push token in your wallet? <SpanText onClick={importToken}>Import Token</SpanText></ImportToken>}
+          {loading ? <LoaderSpinner type={LOADER_TYPE.SEAMLESS} /> : <ImportToken>Don't see Push token in your wallet? <SpanText onClick={handlePushTokenImport}>Import Token</SpanText></ImportToken>}
 
         <Item width="12.2em" self="stretch" align="stretch" margin={isMobile ? "70px auto 50px auto" : "100px auto 50px auto"}>
           <Button
