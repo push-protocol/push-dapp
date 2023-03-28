@@ -20,18 +20,19 @@ export type ModalInnerComponentType = {
 
 export type ModalType = {
   InnerComponent: ({ onConfirm, onClose }: ModalInnerComponentType) => JSX.Element;
-  onConfirm: (value?: any) => any;
+  onConfirm: (value1?: any, value2?: any) => any;
+  placementMargin?: string;
   toastObject: {
     showLoaderToast: ShowLoaderToastType;
     showMessageToast: ShowMessageToastType;
   };
 };
 
-export type ModalProps={
-  padding?:string
-}
+export type ModalProps = {
+  padding?: string;
+};
 
-const useModalBlur = ({padding}:ModalProps) => {
+const useModalBlur = ({ padding }: ModalProps) => {
   const [open, setOpen] = React.useState(false);
 
   // hacky fix to prevent background scroll when modal is open
@@ -58,48 +59,48 @@ const useModalBlur = ({padding}:ModalProps) => {
 
     return (
       <ThemeProvider theme={themes}>
-        {open && <ItemHV2
-          position="absolute"
-          alignSelf="stretch"
-          alignItems="flex-start"
-          flex="initial"
-          top="0"
-          right="0"
-          bottom="0"
-          left="0"
-          zIndex="10"
-        >
-          <BlurBG
-            blur={8}
-            zIndex={2}
-          />
+        {open && (
           <ItemHV2
-              display = 'flex'
-              position = 'relative'
-              zIndex = {10}
-              width = 'fit-content'
-              height = 'fit-content'
-              background={themes.blurModalContentBackground}
-              alignSelf = "center"
-              flex = 'initial'
-              padding = {padding? padding:'1.2% 2%'}
-              borderRadius = '16px'
-              boxShadow= '0px 4px 16px rgba(0, 0, 0, 0.02)'
+            position="absolute"
+            alignSelf="stretch"
+            alignItems="flex-start"
+            flex="initial"
+            top="0"
+            right="0"
+            bottom="0"
+            left="0"
+            zIndex="10"
           >
-            <InnerComponent
-              onConfirm={onConfirm}
-              onClose={handleClose}
-              toastObject={toastObject}
+            <BlurBG
+              blur={8}
+              zIndex={2}
             />
+            <ItemHV2
+              display="flex"
+              position="relative"
+              zIndex={10}
+              width="fit-content"
+              height="fit-content"
+              background={themes.blurModalContentBackground}
+              alignSelf="center"
+              flex="initial"
+              padding={padding ? padding : '1.2% 2%'}
+              borderRadius="16px"
+              boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
+            >
+              <InnerComponent
+                onConfirm={onConfirm}
+                onClose={handleClose}
+                toastObject={toastObject}
+              />
+            </ItemHV2>
           </ItemHV2>
-        </ItemHV2>}
+        )}
       </ThemeProvider>
     );
   };
 
   return { isModalOpen: open, showModal: handleOpen, ModalComponent };
 };
-
-
 
 export default useModalBlur;
