@@ -19,8 +19,8 @@ import { SpanV2 } from "./reusables/SharedStylingV2";
 import LoaderSpinner, { LOADER_TYPE } from "./reusables/loaders/LoaderSpinner";
 
 const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, handleCreateChannel}) => {
-  const { library, account, } = useWeb3React();
   const { loading, error, executeAsyncFunction: executeImportPushTokenFunc } = useAsyncOperation(importPushToken);
+  const { library, account, } = useWeb3React();
   const [balance,setBalance] = useState(0);
   // const [loading,setLoading] = useState(false);
   const [faucetLoading,setFaucetLoading] = useState(false);
@@ -71,10 +71,14 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
             </TabSpace>
           
             {faucetLoading ? <LoaderSpinner type={LOADER_TYPE.SEAMLESS} /> : <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />}
+            
+            <ImportToken>Don't see Push token in your wallet? 
+              <SpanText onClick={handlePushTokenImport}>Import Token </SpanText>
+              {loading &&  <span><LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={20} /></span>}
+            </ImportToken>
           
           </Item>
 
-          {loading ? <LoaderSpinner type={LOADER_TYPE.SEAMLESS} /> : <ImportToken>Don't see Push token in your wallet? <SpanText onClick={handlePushTokenImport}>Import Token</SpanText></ImportToken>}
 
         <Item width="12.2em" self="stretch" align="stretch" margin={isMobile ? "70px auto 50px auto" : "100px auto 50px auto"}>
           <Button
@@ -174,6 +178,8 @@ const ImportToken = styled.div`
   line-height: 140%;
   color: #657795;
   margin: 10px 45px 10px 0px;
+  display: flex;
+  align-items: center;
 
 `;
 
@@ -181,6 +187,7 @@ const SpanText = styled(SpanV2)`
   color:#D53A94;
   font-weight:600;
   cursor:pointer;
+  margin: 0px 5px;
 
   &:hover{
     text-decoration:underline;
