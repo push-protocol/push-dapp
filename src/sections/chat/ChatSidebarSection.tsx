@@ -64,11 +64,11 @@ const createGroupOnMouseLeave = [{
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({ showCreateGroupModal, prefilledSearch }) => {
+const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
 
-  const { receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
+  const { receivedIntents, searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
@@ -241,6 +241,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             hasUserBeenSearched={false}
             filteredUserData={[]}
             isInvalidAddress={false}
+            automatedSearch={false}
           />
         )}
         {activeTab == 1 && (
@@ -248,7 +249,8 @@ useClickAway(containerRef, () => closeQRDropdown())
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 3 && <SearchBar prefilled={prefilledSearch} />}
+        {activeTab == 3 && <SearchBar autofilled={null} />}
+        {activeTab == 4 && <SearchBar autofilled={autofilledSearch} />}
       </ItemVV2>
 
       {/* Footer */}

@@ -35,8 +35,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   const theme = useTheme();
   // get ens name
   const ensName = useResolveEns(!isGroup ? username : null);
-  // get reverse name
-  
+
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;
   const shortUsername = !isGroup ? shortenText(walletAddress, 8, 7) : null;
