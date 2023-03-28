@@ -22,13 +22,16 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
   const { library, account, } = useWeb3React();
   const [balance,setBalance] = useState(0);
   const [loading,setLoading] = useState(false);
+  const [faucetLoading,setFaucetLoading] = useState(false);
 
   const isMobile = useDeviceWidthCheck(600)
   
   // mint PUSH token
   const mintPushTokenHandler = async (noOfTokens: number) => {
+    setFaucetLoading(true);
     const amount = await mintPushToken({noOfTokens, library, account})
     setProcessingInfo(amount+"PUSH Tokens minted successfully!");
+    setFaucetLoading(false);
     setBalance(amount);
   };
 
@@ -83,15 +86,14 @@ const StakingInfo = ({channelStakeFees, setStakeFeesChoosen, setProcessingInfo, 
               </p>
 
               <TokenStatus>
-              <b>{channelStakeFees} PUSH</b>
-               {!loading && <Tokenbalance>Balance: {balance}</Tokenbalance>}
+                <b>{channelStakeFees} PUSH</b>
+                <Tokenbalance>Balance: {balance}</Tokenbalance>
               </TokenStatus>
              
             </TabSpace>
-
-            
-            <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />
-
+          
+            {faucetLoading ? <LoaderSpinner type={LOADER_TYPE.SEAMLESS} /> : <FaucetInfo onMintPushToken={mintPushTokenHandler} noOfPushTokensToCheck={50}  />}
+          
           </Item>
 
           {loading ? <LoaderSpinner type={LOADER_TYPE.SEAMLESS} /> : <ImportToken>Don't see Push token in your wallet? <SpanText onClick={importToken}>Import Token</SpanText></ImportToken>}
