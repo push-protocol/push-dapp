@@ -3,11 +3,11 @@ import * as PGP from './pgp';
 import * as DIDHelper from './did';
 import * as Ceramic from './ceramic';
 import * as AES from './aes';
-import { ConnectedUser, Feeds, MessageIPFSWithCID } from '../../types/chat';
+import { ConnectedUser, Feeds, FeedsNew, MessageIPFSWithCID } from '../../types/chat';
 import { checkIfGroup, getMemberDetails } from './groupChat';
 import { getUser } from '../../api/w2w';
 // import { ConnectedUser, Feeds, MessageIPFSWithCID } from 'api'
-const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
+export const decryptionErrorMsg = 'Error decrypting message: Session key decryption failed.';
 
 export const walletToCAIP10 = ({ account }: { account: string }): string => {
   if (account.includes('eip155:')) {
@@ -132,7 +132,7 @@ export const decryptMessages = async ({
     if (savedMsg.fromCAIP10 === walletToCAIP10({ account })) {
       signatureValidationPubliKey = connectedUser.publicKey;
     } else {
-      if (!currentChat?.publicKey) {
+      if (!currentChat.publicKey) {
         if (checkIfGroup(currentChat)) {
           const member = getMemberDetails(currentChat, currentChat?.msg?.fromCAIP10);
           signatureValidationPubliKey = member ? member.publicKey : '';
@@ -172,8 +172,17 @@ export const formatFileSize = (size: number): string => {
   return `${(size / Math.pow(1024, i)).toFixed(1)} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}`;
 };
 
+
+export const getChatId = (feed:Feeds) => {
+   if(checkIfGroup(feed))
+   {
+    return feed?.groupInformation?.chatId;
+   }
+   return feed?.wallets.split(':')[1];
+}
 export default {
   PGP: PGP,
   DID: DIDHelper,
   Ceramic: Ceramic,
 };
+
