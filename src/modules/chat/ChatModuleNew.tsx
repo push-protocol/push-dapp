@@ -1,11 +1,10 @@
 import { useWeb3React } from "@web3-react/core";
 import { ChatGlobalContextNew } from "contexts/ChatGlobalContextNew";
+import { getInboxFromIndexedDB, getRequestsFromIndexedDB } from "helpers";
 import React, { useContext, useEffect } from "react";
 import { ChatBoxSectionNew } from "sections/chat/ChatBoxSectionNew";
 import { ChatSidebarSectionNew } from "sections/chat/ChatSidebarSectionNew";
-import { getConnectedUser } from "services/users/getConnectedUser";
-import { getInboxFromIndexDb, getRequestsFromIndexDb } from "helpers/w2w/indexedDbCalls";
-import { fetchInbox, fetchRequests } from "helpers/w2w/feeds";
+import { getConnectedUser, getDecryptedInbox, getDecryptedRequests } from "services";
 
 export const ChatModuleNew = () => {
   const { account, library } = useWeb3React();
@@ -24,19 +23,19 @@ export const ChatModuleNew = () => {
     })()
   }, [account, library]);
 
- useEffect(() => {
-  if(!connectedUser) return;
+  useEffect(() => {
+    if(!connectedUser) return;
     (async function () {
       try {
         if(!userFeeds[account]?.inbox){
-        const inboxes = await getInboxFromIndexDb(connectedUser);
+        const inboxes = await getInboxFromIndexedDB(connectedUser);
         console.log(inboxes)
-        fetchInbox({connectedUser,setResult:setInbox});
+        getDecryptedInbox({connectedUser,setResult:setInbox});
         setInbox(inboxes,account);
         }
         if(!userFeeds[account]?.requests){
-        const requests = await getRequestsFromIndexDb(connectedUser);
-        fetchRequests({connectedUser,setResult:setRequests});
+        const requests = await getRequestsFromIndexedDB(connectedUser);
+        getDecryptedRequests({connectedUser,setResult:setRequests});
         setRequests(requests,account);
         }
       } catch (err) {
@@ -45,8 +44,6 @@ export const ChatModuleNew = () => {
     })()
   },[connectedUser]);
 
-
- 
   return (
     <>
       <ChatSidebarSectionNew />  
@@ -54,4 +51,3 @@ export const ChatModuleNew = () => {
     </>
   );
 }
-
