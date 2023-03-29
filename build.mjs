@@ -90,6 +90,20 @@ const changeIndexHTML = async (appEnv) => {
 
   const indexhtmlcontent = fs.readFileSync(indexreplacepath, 'utf8');
   fs.writeFileSync(indexpath, indexhtmlcontent, { flag: 'w' });
+
+  // Load robot.txt files
+  const robotspath = `./public/robots.txt`;
+  const robotsreplacepath = `./public/robots-${appEnv}.txt`;
+
+  const robotstxtcontent = fs.readFileSync(robotsreplacepath, 'utf8');
+  fs.writeFileSync(robotspath, robotstxtcontent, { flag: 'w' });
+
+  // Load sitemap.txt files
+  const sitemappath = `./public/sitemap.txt`;
+  const sitemapreplacepath = `./public/sitemap-${appEnv}.txt`;
+
+  const sitemaptxtcontent = fs.readFileSync(sitemapreplacepath, 'utf8');
+  fs.writeFileSync(sitemappath, sitemaptxtcontent, { flag: 'w' });
 }
 
 const changeENV = async (appEnv) => {
