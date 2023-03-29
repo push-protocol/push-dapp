@@ -25,7 +25,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
-  
+
   /* 
     checks whether address has enough PUSH or not
     if yes then hide the faucet component
@@ -47,13 +47,13 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   } = useModal();
 
   useEffect(() => {
-    (async ()=>{
-        await checkSetFaucetVisibility();
+    (async () => {
+      await checkSetFaucetVisibility();
     })()
   }, [noOfPushTokensToCheck]);
 
   return (
-    <>
+    <Container>
       {isFaucetVisible ? (
         <TextSpace style={containerProps}>
           <InfoText>
@@ -96,15 +96,24 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
         ''
       )}
       {isUniswapWidgetModalOpen &&
-        <UniswapWidgetModalComponent 
-          InnerComponent={UniswapWidgetModal} 
-          InnerComponentProps={{defaultPushTokenAmount: noOfPushTokensToCheck}} 
+        <UniswapWidgetModalComponent
+          InnerComponent={UniswapWidgetModal}
+          InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
           extraOuterPadding="0px"
         />
       }
-    </>
+    </Container>
+
+
   );
 };
+
+const Container = styled.div`
+transform: translateY(-40px);
+z-index: 0;
+width:100%;
+
+`
 
 const TextSpace = styled.div`
   box-sizing: border-box;
