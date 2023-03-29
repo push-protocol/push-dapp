@@ -31,6 +31,7 @@ import { useClickAway } from 'react-use';
 import MobileNavigation from './MobileNavigation';
 import { useDeviceWidthCheck } from 'hooks';
 import ChainIndicator from 'components/ChainIndicator';
+import { handleChangeNetwork } from 'helpers/ChainHelper';
 
 // Create Header
 function Header({ isDarkMode, darkModeToggle }) {
@@ -43,7 +44,7 @@ function Header({ isDarkMode, darkModeToggle }) {
 
   const { navigationSetup } = useContext(NavigationContext);
 
-  const { active, error } = useWeb3React();
+  const { active, error,library, chainId } = useWeb3React();
 
   const [showLoginControls, setShowLoginControls] = React.useState(false);
 
@@ -84,26 +85,26 @@ function Header({ isDarkMode, darkModeToggle }) {
     setShowNavBar(!showNavBar);
   });
 
-  async function handleChangeNetwork() {
-    const chainIds = appConfig.allowedNetworks;
-    if (!chainIds.includes(window.ethereum.networkVersion)) {
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  }
+  // async function handleChangeNetwork() {
+  //   const chainIds = appConfig.allowedNetworks;
+  //   if (!chainIds.includes(window.ethereum.networkVersion)) {
+  //     try {
+  //       await window.ethereum.request({
+  //         method: 'wallet_switchEthereumChain',
+  //         params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
+  //       });
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   }
+  // }
 
   // handle error functions
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
       return 'Web3 not enabled, install MetaMask on desktop or visit from a dApp browser on mobile';
     } else if (error instanceof UnsupportedChainIdError) {
-      handleChangeNetwork();
+      handleChangeNetwork(chainId,library.provider);
       if (appConfig.coreContractChain === 42)
         return 'Unsupported Network, please connect to the Ethereum Kovan network or Polygon Mumbai network';
       else if (appConfig.coreContractChain === 5)
