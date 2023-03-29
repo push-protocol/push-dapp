@@ -203,5 +203,17 @@ export const shortenText = (str: string, substringLengthStart: number, substring
   return `${str?.substring(0, substringLengthStart)}...${str?.substring(str?.length-(substringLengthEnd??substringLengthStart))}`;
 };
 
+export const rearrangeObjProperty = (flag:boolean,objectData:Object,property:string) => {
+  if(flag)
+  {
+    const data = {
+      [property]: objectData[property],
+    }
+    return  Object.assign(data, objectData);
+  }
+  return objectData;
+
+}
+
 
 export default UtilityHelper;
