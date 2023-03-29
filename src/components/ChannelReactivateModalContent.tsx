@@ -12,7 +12,7 @@ import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ModalInnerComponentType } from 'hooks/useModal';
+import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { H2V2, ItemHV2, ItemVV2 } from './reusables/SharedStylingV2';

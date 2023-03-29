@@ -10,7 +10,7 @@ import { MdCheckCircle, MdError } from 'react-icons/md';
 import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
 import ModalInput from 'primaries/SharedModalComponents/ModalInput';
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { ModalInnerComponentType } from 'hooks/useModal';
+import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 
 // Internal Configs

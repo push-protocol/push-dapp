@@ -10,7 +10,7 @@ import { useClickAway } from 'react-use';
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { ModalInnerComponentType } from 'hooks/useModal';
+import { ModalInnerComponentType } from 'hooks/useModalBlur';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import CloseButtonSvg from '../assets/XCircle.svg';
