@@ -6,6 +6,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { device } from 'config/Globals';
 
 const uploadLogoModal = ({
   onClose, InnerComponentProps
@@ -159,7 +160,6 @@ const uploadLogoModal = ({
 export default uploadLogoModal;
 
 const Container = styled.div`
-
 `
 
 const ModalContainer = styled.div`

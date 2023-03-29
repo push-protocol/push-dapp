@@ -331,6 +331,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={RemoveDelegateModalContent}
         onConfirm={removeDelegate}
         toastObject={removeDelegateToast}
+        InnerComponentProps={{isNotDropdown:false}}
       />
 
       {/* modal to add a subgraph */}
