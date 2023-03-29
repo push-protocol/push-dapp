@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 // External Packages
 import { VscClose } from 'react-icons/vsc';
@@ -76,6 +76,7 @@ function MasterInterfacePage() {
         >
           <Routes>
             <Route path="inbox" element={<InboxPage />} />
+            <Route path="chat/:chatid" element={<ChatPage />} />
             <Route path="chat" element={<ChatPage />} />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
