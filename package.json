@@ -1,6 +1,6 @@
 {
   "name": "@project/react-app",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "homepage": "https://app.push.org",
   "browserslist": {
     "production": [
