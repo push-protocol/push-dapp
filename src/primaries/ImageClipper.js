@@ -58,7 +58,6 @@ const ImageClipper = forwardRef((props, ref) => {
   }));
 
   async function resizeImage(clean) {
-    console.log('chrome');
     const pica = Pica();
     let file = await createImage(clean);
     const canvas = document.createElement("canvas");
@@ -81,7 +80,6 @@ const ImageClipper = forwardRef((props, ref) => {
   }
 
   async function resizeImageOnBrave(clean){
-    console.log('brave')
     return new Promise((resolve, reject) => {
       new Compressor(clean, {
         quality: 1,
