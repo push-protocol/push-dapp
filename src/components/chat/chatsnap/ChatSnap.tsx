@@ -66,7 +66,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           className="fa fa-picture-o"
           aria-hidden="true"
         ></i>{' '}
-        Image
+        Media
       </SpanV2>
     ) : chatSnapMsg.type === 'File' ? (
       <SpanV2 color={theme.default.secondaryColor}>
@@ -82,7 +82,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           className="fa fa-picture-o"
           aria-hidden="true"
         ></i>{' '}
-        GIF
+        Media
       </SpanV2>
     ) : null;
 
