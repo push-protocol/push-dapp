@@ -2,7 +2,7 @@
 import React from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { useClickAway } from 'react-use';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 
@@ -13,11 +13,16 @@ import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButt
 import { ModalInnerComponentType } from 'hooks/useModal';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 
+// Internal Configs
+import { device } from 'config/Globals';
+
 const AddSubgraphModalContent = ({ onClose, onConfirm: addSubgraph, toastObject }: ModalInnerComponentType) => {
   const subgraphIdInputRef = React.useRef<HTMLInputElement>();
   const pollTimeInputRef = React.useRef<HTMLInputElement>();
 
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const theme = useTheme();
 
   const handleClose = () => !isLoading && onClose();
 
@@ -104,7 +109,7 @@ const AddSubgraphModalContent = ({ onClose, onConfirm: addSubgraph, toastObject 
   return (
     <OuterModalContainer>
       <BlurBG
-        blur={10}
+        blur={3}
         zIndex={-1}
       />
       <ModalContainer ref={containerRef}>
@@ -140,6 +145,10 @@ const OuterModalContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media(${device.mobileL}){
+    right: -84vw;
+    top:0px;
+  }
 `;
 
 const ModalContainer = styled.div`
@@ -148,6 +157,16 @@ const ModalContainer = styled.div`
   flex-direction: column;
   box-sizing: border-box;
   margin: 6% 1%;
+  background: ${(props) => props.theme.modalContentBackground};
+  border: 1px solid ${(props) => props.theme.modalBorderColor};
+  border-radius: 1rem;
+  padding: 1.2% 2%;
+  @media(${device.laptop}){
+    width:50vw;
+  }
+  @media(${device.mobileL}){
+    width:95vw;
+  }
 `;
 
 export default AddSubgraphModalContent;

@@ -95,7 +95,7 @@ const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
     <ThemeProvider theme={themes}>
       <OuterModalContainer>
         <BlurBG
-          blur={10}
+          blur={3}
           zIndex={-1}
         />
         <ModalContainer ref={containerRef}>
@@ -146,6 +146,10 @@ const OuterModalContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media(${device.mobileL}){
+    right: -84vw;
+    top:0px;
+  }
 `;
 
 const ModalContainer = styled.div`
@@ -153,6 +157,10 @@ const ModalContainer = styled.div`
   display: flex;
   justify-content: space-between;
   padding: 5px 10px;
+  background: ${(props) => props.theme.modalContentBackground};
+  border: 1px solid ${(props) => props.theme.modalBorderColor};
+  border-radius: 1rem;
+  padding: 1.2% 2%;
 
   @media (max-width: 500px) {
     width: 350px;
