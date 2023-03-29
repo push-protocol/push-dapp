@@ -1,5 +1,5 @@
 {
-  "name": "@project/react-app",
+  "name": "@pushprotocol/dapp",
   "version": "0.6.2",
   "homepage": "https://app.push.org",
   "browserslist": {
