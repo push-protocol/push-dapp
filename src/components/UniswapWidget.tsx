@@ -1,14 +1,12 @@
 // React + Web3 Essentials
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
 // External Packages
 import { darkTheme, lightTheme, SwapWidget } from '@uniswap/widgets';
 import '@uniswap/widgets/fonts.css';
 import { useClickAway } from 'react-use';
-import styled, { useTheme } from 'styled-components';
-import { device } from 'config/Globals';
-import BlurBG from './reusables/blurs/BlurBG';
+import { useTheme } from 'styled-components';
 
 // Internal Configs
 import { addresses, appConfig } from 'config';
