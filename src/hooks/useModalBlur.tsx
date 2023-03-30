@@ -64,7 +64,7 @@ const useModalBlur = () => {
     isWholeScreen,
   }: ModalType) => {
     const themes = useTheme();
-console.log("screen",isWholeScreen)
+    
     return (
       <ThemeProvider theme={themes}>
         {open && (
@@ -96,6 +96,7 @@ console.log("screen",isWholeScreen)
               borderRadius="16px"
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
               border={`1px solid ${themes.modalBorderColor}`}
+              margin={placementMargin ? placementMargin : '0px'}
             >
               <InnerComponent
                 onConfirm={onConfirm}
