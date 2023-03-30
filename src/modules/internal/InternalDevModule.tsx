@@ -19,7 +19,7 @@ import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
 import useModalBlur from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
-import { InternalModalContent } from './InternalModalComponent';
+import { InternalModalContent } from './InternalModalContent';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
@@ -124,6 +124,7 @@ const InternalDevModule = () => {
           InnerComponent={InternalModalContent}
           onConfirm={() => {}}
           toastObject={internalToast}
+          InnerComponentProps={{progress:progress}}
         />
       </ModalContainer>
       <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
@@ -573,9 +574,8 @@ const Container = styled(SectionV2)`
 
 const ModalContainer = styled.div`
   position: relative;
-  width: 800px;
-  height: 200px;
-  background:red;
+  min-width: 25vw;
+  min-height: 100px;
 `;
 
 const IndividualComps = styled(ItemVV2)`
