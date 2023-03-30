@@ -213,7 +213,7 @@ function Chat({ chatid }) {
     setActiveTab(0);
     setViewChatBox(false);
     setIsLoading(true);
-    connectUser();
+    setConnectedUser(null);
   },[account])
 
   // Rest of the loading logic
