@@ -17,6 +17,9 @@ import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/P
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
+import useModalBlur from 'hooks/useModalBlur';
+import useToast from 'hooks/useToast';
+import { InternalModalContent } from './InternalModalComponent';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
@@ -81,6 +84,7 @@ const createNotificaionToast = () => {
 // Create Module
 const InternalDevModule = () => {
   const theme = useTheme();
+  const internalToast = useToast();
 
   const [progress, setProgress] = useState(0);
   const [randomText, setRandomText] = useState(null);
@@ -102,9 +106,26 @@ const InternalDevModule = () => {
     }
   }, [randomText]);
 
+  const {
+    isModalOpen: isInternalModalOpen,
+    showModal: showInternalModal,
+    ModalComponent: InternalModalComponent,
+  } = useModalBlur({});
+
+  useEffect(() => {
+    showInternalModal();
+  }, []);
+
   return (
     <Container>
       {/* Progess Bar Component */}
+      <ModalContainer>
+        <InternalModalComponent
+          InnerComponent={InternalModalContent}
+          onConfirm={() => {}}
+          toastObject={internalToast}
+        />
+      </ModalContainer>
       <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
         <ProgressBar
           percent={progress}
@@ -548,6 +569,13 @@ const Container = styled(SectionV2)`
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
   }
+`;
+
+const ModalContainer = styled.div`
+  position: relative;
+  width: 800px;
+  height: 200px;
+  background:red;
 `;
 
 const IndividualComps = styled(ItemVV2)`
