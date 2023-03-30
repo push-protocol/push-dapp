@@ -110,8 +110,6 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
 };
 
 const Container = styled.div`
-transform: translateY(-40px);
-z-index: 0;
 width:100%;
 `
 

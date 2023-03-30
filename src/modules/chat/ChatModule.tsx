@@ -174,12 +174,6 @@ function Chat({ chatid }) {
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-  window.ethereum.on('accountsChanged', (account) => {
-    window.location.reload();
-  });
-  window.ethereum.on('networksChanged', () => {
-    window.location.reload();
-  });
 
   useEffect(() => {
     if (videoCallInfo) {
@@ -211,6 +205,16 @@ function Chat({ chatid }) {
       });
     }
   }, [callAccepted]);
+
+  useEffect(()=>{
+    setChat(null);
+    setInbox([]);
+    setReceivedIntents([]);
+    setActiveTab(0);
+    setViewChatBox(false);
+    setIsLoading(true);
+    connectUser();
+  },[account])
 
   // Rest of the loading logic
   useEffect(() => {
@@ -252,7 +256,10 @@ function Chat({ chatid }) {
       progressNotice: 'Important: Push Chat encryption standard is updated, you might need to sign 3-4 transactions to upgrade (required once).',
     });
 
-    if (!connectedUser) {
+    const caip10:string = w2wHelper.walletToCAIP10({account});
+
+    
+    if(connectedUser?.wallets !== caip10){
       await getUser();
     }
 
@@ -270,8 +277,14 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-      // dynamic url
+
+      if(connectedUser?.wallets === caip10){
+        // dynamic url
       setCurrentTab(4);
+      }
+
+      // dynamic url
+      // setCurrentTab(4);
     }
   };
 

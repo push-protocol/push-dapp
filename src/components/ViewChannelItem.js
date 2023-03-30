@@ -638,7 +638,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
                     >
                       <Tooltip
                         // tooltip should be disabled if the verifier details are falsy
-                        isDisabled={!verifierDetails}
+                        // isDisabled={!verifierDetails}
                         wrapperProps={{
                           width: 'fit-content',
                           maxWidth: 'fit-content',
@@ -792,11 +792,12 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
 
                   <Span onClick={() => correctChannelTitleLink()}>{channelObject.name}</Span>
 
+                  
                   {isVerified == 1 && (
                     <Span
-                      margin="3px 5px 0px"
-                      style={{ display: 'flex' }}
-                    >
+                    margin="3px 5px 0px"
+                    style={{ display: 'flex' }}
+                  >
                       <Tooltip
                         wrapperProps={{
                           width: 'fit-content',
