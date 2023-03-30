@@ -38,7 +38,7 @@ import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
-import { rearrangeObjProperty } from 'helpers/UtilityHelper';
+import { swapPropertyOrder } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -177,7 +177,7 @@ const AppLogin = ({ toggleDarkMode }) => {
           </H2V2>
 
           <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
-            {Object.keys(rearrangeObjProperty(isMobile,web3Connectors,'WalletConnect')).map((name) => {
+            {Object.keys(isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors).map((name) => {
               const currentConnector = web3Connectors[name].obj;
               const disabled = currentConnector === connector;
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
