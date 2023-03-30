@@ -71,11 +71,6 @@ const AddDelegateModalContent = ({ onConfirm: addDelegate, onClose, toastObject 
   };
 
   return (
-    <OuterModalContainer>
-      <BlurBG
-        blur={3}
-        zIndex={-1}
-      />
       <ModalContainer ref={containerRef}>
         <ModalHeader
           heading="Add Delegate"
@@ -91,25 +86,9 @@ const AddDelegateModalContent = ({ onConfirm: addDelegate, onClose, toastObject 
           isLoading={isLoading}
         />
       </ModalContainer>
-    </OuterModalContainer>
   );
 };
 
-const OuterModalContainer = styled.div`
-  position: absolute;
-  top: 25vh;
-  right: -59vw;
-  transform: translate(-50%, -50%);
-  min-width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  @media(${device.mobileL}){
-    right: -84vw;
-    top:0px;
-  }
-`;
 
 const ModalContainer = styled.div`
   width: 30vw;
@@ -117,7 +96,6 @@ const ModalContainer = styled.div`
   flex-direction: column;
   margin: 6% 1%;
   background: ${(props) => props.theme.modalContentBackground};
-  border: 1px solid ${(props) => props.theme.modalBorderColor};
   border-radius: 1rem;
   padding: 1.2% 2%;
   @media(${device.laptop}){

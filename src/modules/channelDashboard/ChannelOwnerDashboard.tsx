@@ -156,7 +156,7 @@ const ChannelOwnerDashboard = () => {
     isModalOpen: isUploadLogoModalOpen,
     showModal: displayUplaodLogoModal,
     ModalComponent: UploadLogoComponent,
-  } = useModalBlur({});
+  } = useModalBlur();
 
   return (
     <ItemHV2>

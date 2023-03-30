@@ -352,6 +352,7 @@ export default function EditChannel({
           errorInfo,
           setErrorInfo
         }}
+        isWholeScreen={true}
       />
 
       <EditableContainer>

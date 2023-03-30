@@ -61,54 +61,20 @@ export const UniswapWidgetModal = ({ InnerComponentProps, onClose }: UniswapWidg
   });
 
   return (
-    <Container>
-      <BlurBG
-          blur={3}
-          zIndex={-1}
-        />
-      <ModalContainer>
-        <div
-          className="Uniswap"
-          ref={containerRef}
-        >
-          {/* HERE */}
-          <SwapWidget
-            width={360}
-            tokenList={ONE_INCH_TOKEN_LIST}
-            defaultOutputTokenAddress={addresses.pushToken}
-            defaultOutputAmount={defaultPushTokenAmount}
-            theme={WidgetCustomTheme[theme.scheme]}
-            jsonRpcUrlMap={jsonRpcUrlMap}
-            provider={library}
-          />
-        </div>
-      </ModalContainer>
-    </Container>
+    <div
+      className="Uniswap"
+      ref={containerRef}
+    >
+      {/* HERE */}
+      <SwapWidget
+        width={360}
+        tokenList={ONE_INCH_TOKEN_LIST}
+        defaultOutputTokenAddress={addresses.pushToken}
+        defaultOutputAmount={defaultPushTokenAmount}
+        theme={WidgetCustomTheme[theme.scheme]}
+        jsonRpcUrlMap={jsonRpcUrlMap}
+        provider={library}
+      />
+    </div>
   );
 };
-
-const Container = styled.div`
-  position: absolute;
-  top: 25vh;
-  right: -90vw;
-  transform: translate(-50%, -50%);
-  min-width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  @media (${device.mobileL}) {
-    right: -98vw;
-    top: 0px;
-  }
-  @media(${device.tablet}){
-    right: -98vw;
-    top: 10vh;
-  }
-`;
-
-const ModalContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  border-radius: 1rem;
-`;

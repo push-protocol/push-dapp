@@ -129,7 +129,7 @@ const ShowDelegates = () => {
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
           toastObject={removeDelegateToast}
-          InnerComponentProps={{isNotDropdown:true}}
+          isWholeScreen={true}
         />
       </DelegateContainer>
     </>

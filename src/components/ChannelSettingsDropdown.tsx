@@ -309,6 +309,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={ChannelDeactivateModalContent}
         onConfirm={deactivateChannel}
         toastObject={deactivateChannelToast}
+        isWholeScreen={true}
       />
 
       {/* reactivate channel modal */}
@@ -317,6 +318,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         onConfirm={activateChannel}
         toastObject={reactivateChannelToast}
         placementMargin={isMobile ? '10rem 1rem 0 1rem' : ''}
+        isWholeScreen={true}
       />
 
       {/* modal to add a delegate */}
@@ -324,6 +326,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={AddDelegateModalContent}
         onConfirm={addDelegate}
         toastObject={addDelegateToast}
+        isWholeScreen={true}
       />
 
       {/* modal to remove a delegate */}
@@ -332,6 +335,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         onConfirm={removeDelegate}
         toastObject={removeDelegateToast}
         InnerComponentProps={{isNotDropdown:false}}
+        isWholeScreen={true}
       />
 
       {/* modal to add a subgraph */}
@@ -339,6 +343,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={AddSubgraphModalContent}
         onConfirm={addSubgraphDetails}
         toastObject={addSubgraphToast}
+        isWholeScreen={true}
       />
     </>
   );

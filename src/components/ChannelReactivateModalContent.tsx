@@ -220,11 +220,6 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
 
   return (
     <ThemeProvider theme={themes}>
-      <OuterModalContainer>
-        <BlurBG
-          blur={3}
-          zIndex={-1}
-        />
         <ModalContainer ref={containerRef}>
           <Header>
             <HeaderHeading>Reactivate Channel</HeaderHeading>
@@ -319,33 +314,15 @@ const ChannelReactivateModalContent = ({ onConfirm, onClose, toastObject }: Moda
             </ButtonContainer>
           )}
         </ModalContainer>
-      </OuterModalContainer>
     </ThemeProvider>
   );
 };
-
-const OuterModalContainer = styled.div`
-  position: absolute;
-  top: 25vh;
-  right: -59vw;
-  transform: translate(-50%, -50%);
-  min-width: 100vw;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  @media (${device.mobileL}) {
-    right: -84vw;
-    top: 0px;
-  }
-`;
 
 const ModalContainer = styled.div`
   width: 30vw;
   display: flex;
   flex-direction: column;
   background: ${(props) => props.theme.modalContentBackground};
-  border: 1px solid ${(props) => props.theme.modalBorderColor};
   border-radius: 1rem;
   padding: 1.2% 2%;
   @media ${device.mobileL} {

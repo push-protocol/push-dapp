@@ -29,13 +29,10 @@ export type ModalType = {
     showMessageToast: ShowMessageToastType;
   };
   InnerComponentProps?: any;
+  isWholeScreen?: boolean;
 };
 
-export type ModalProps = {
-  padding?: string;
-};
-
-const useModalBlur = ({ padding }: ModalProps) => {
+const useModalBlur = () => {
   const [open, setOpen] = React.useState(false);
 
   // hacky fix to prevent background scroll when modal is open
@@ -64,14 +61,15 @@ const useModalBlur = ({ padding }: ModalProps) => {
     InnerComponentProps,
     extraOuterPadding,
     placementMargin,
+    isWholeScreen,
   }: ModalType) => {
     const themes = useTheme();
-
+console.log("screen",isWholeScreen)
     return (
       <ThemeProvider theme={themes}>
         {open && (
           <ItemHV2
-            position="absolute"
+            position={isWholeScreen ? 'fixed' : 'absolute'}
             alignSelf="stretch"
             alignItems="flex-start"
             flex="initial"
@@ -94,9 +92,10 @@ const useModalBlur = ({ padding }: ModalProps) => {
               background={themes.blurModalContentBackground}
               alignSelf="center"
               flex="initial"
-              padding={padding ? padding : '1.2% 2%'}
+              padding={extraOuterPadding ? extraOuterPadding : '1.2% 2%'}
               borderRadius="16px"
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
+              border={`1px solid ${themes.modalBorderColor}`}
             >
               <InnerComponent
                 onConfirm={onConfirm}

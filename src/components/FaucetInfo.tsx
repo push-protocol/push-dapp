@@ -44,7 +44,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
     isModalOpen: isUniswapWidgetModalOpen,
     showModal: showUniswapWidgetModal,
     ModalComponent: UniswapWidgetModalComponent,
-  } = useModalBlur({});
+  } = useModalBlur();
 
   useEffect(() => {
     (async () => {
@@ -100,6 +100,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
           InnerComponent={UniswapWidgetModal}
           InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
           extraOuterPadding="0px"
+          isWholeScreen={true}
         />
       }
     </Container>
@@ -112,7 +113,6 @@ const Container = styled.div`
 transform: translateY(-40px);
 z-index: 0;
 width:100%;
-
 `
 
 const TextSpace = styled.div`
