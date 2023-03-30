@@ -106,6 +106,7 @@ const AppLogin = ({ toggleDarkMode }) => {
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
 
   const isMobile = useDeviceWidthCheck(600);
+  const web3ConnectorsObj:Object = isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors;
   
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
@@ -177,7 +178,7 @@ const AppLogin = ({ toggleDarkMode }) => {
           </H2V2>
 
           <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
-            {Object.keys(isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors).map((name) => {
+            {Object.keys(web3ConnectorsObj).map((name) => {
               const currentConnector = web3Connectors[name].obj;
               const disabled = currentConnector === connector;
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;
