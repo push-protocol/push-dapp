@@ -57,7 +57,23 @@ export interface IGroup {
   groupDescription: string | null,
   groupCreator: string,
   chatId: string
-  }
+}
+
+export interface ChatMetaI {
+  did: string;
+  wallets: string;
+  profilePicture: string | null;
+  publicKey: string | null;
+  about: string | null;
+  threadhash: string | null;
+  intent: string | null;
+  intentSentBy: string | null;
+  intentTimestamp: Date;
+  combinedDID: string;
+  cid?: string;
+  groupInformation?: IGroup
+}
+
 export interface Feeds {
     msg: MessageIPFS;
     did: string;
