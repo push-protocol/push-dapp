@@ -8,6 +8,7 @@ import CryptoHelper from 'helpers/CryptoHelper';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import * as PushAPI from "@pushprotocol/restapi";
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { appConfig } from 'config';
 
 export const ChatUserContext = createContext({})
 
@@ -49,7 +50,8 @@ const ChatUserContextProvider = (props) => {
       const _signer = await library.getSigner();
       const privateKeyArmored: string = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
-        signer: _signer
+        signer: _signer,
+        env:appConfig.appEnv
       });
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
@@ -105,7 +107,8 @@ const ChatUserContextProvider = (props) => {
       const createdUser = await PushNodeClient.getUser({caip10:account});
       const pvtkey = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
-        signer: signer
+        signer: signer,
+        env:appConfig.appEnv
       });
       setBlockedLoading({
         enabled: true,

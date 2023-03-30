@@ -11,6 +11,19 @@ import React, {
 import Cropper from "react-easy-crop";
 import styledComponents from "styled-components";
 import Pica from 'pica';
+import Compressor from "compressorjs";
+
+export function isBrave() {
+  if (window.navigator.brave != undefined) {
+    if (window.navigator.brave.isBrave.name == "isBrave") {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
 
 const ImageClipper = forwardRef((props, ref) => {
   //   const [imageSrc, setImageSrc] = useState(null);
@@ -29,7 +42,10 @@ const ImageClipper = forwardRef((props, ref) => {
         if (imageSrc) {
           const croppedImage = await getCroppedImg(imageSrc, croppedAreaPixels);
           const clean = await convertBlobToBase64(croppedImage);
-          const image = await resizeImage(clean);
+          //because pica has compatiblity issues on brave, we use pica on chrome and comprressorjs on brave after checking if window is opened on brave or chrome.
+          const image = isBrave() ? await resizeImageOnBrave(croppedImage) : await resizeImage(clean);
+
+          
           const finalImage = await convertBlobToBase64(image);
           onImageCropped(finalImage);
         } else {
@@ -43,14 +59,11 @@ const ImageClipper = forwardRef((props, ref) => {
 
   async function resizeImage(clean) {
     const pica = Pica();
-
     let file = await createImage(clean);
-
     const canvas = document.createElement("canvas");
 
     canvas.height = 128;
     canvas.width = 128;
-  
     return new Promise(resolve => {
   
         resolve(
@@ -64,6 +77,20 @@ const ImageClipper = forwardRef((props, ref) => {
         );
   
     });
+  }
+
+  async function resizeImageOnBrave(clean){
+    return new Promise((resolve, reject) => {
+      new Compressor(clean, {
+        quality: 1,
+        strict: true,
+        maxWidth: 128,
+        maxHeight: 128,
+        checkOrientation: false,
+        success: resolve,
+        error: reject
+      });
+    })
   }
 
   const convertBlobToBase64 = async (blob) => { // blob data

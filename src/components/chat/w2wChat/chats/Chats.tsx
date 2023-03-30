@@ -2,30 +2,29 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import styled from 'styled-components';
 import { TwitterTweetEmbed } from 'react-twitter-embed';
+import styled from 'styled-components';
 
 // Internal Components
-import { ImageV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import tickIcon from '../../../../assets/chat/tick.svg';
-import { MessageIPFSWithCID, TwitterFeedReturnType } from 'types/chat';
-import Files, { FileMessageContent } from '../TypeBar/Files/Files';
-import Modal from '../Modal/Modal';
+import * as PushAPI from '@pushprotocol/restapi';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import { shortenText } from 'helpers/UtilityHelper';
+import { caip10ToWallet } from 'helpers/w2w';
 import { checkTwitterUrl } from 'helpers/w2w/twitter';
 import { useResolveEns } from 'hooks/useResolveEns';
-import { caip10ToWallet } from 'helpers/w2w';
-import { shortenText } from 'helpers/UtilityHelper';
-import { AppContext } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
-import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
+import { AppContext, MessageIPFSWithCID, TwitterFeedReturnType } from 'types/chat';
+import tickIcon from '../../../../assets/chat/tick.svg';
 import { getMemberDetails } from '../../../../helpers/w2w/groupChat';
+import Modal from '../Modal/Modal';
+import Files, { FileMessageContent } from '../TypeBar/Files/Files';
 import { ReceivedMessageWrapper } from './MessageWrappers/ReceivedMessageWrapper';
-import * as PushAPI from '@pushprotocol/restapi';
+import { SentMessageWrapper } from './MessageWrappers/SentMessageWrapper';
 
 // Internal Configs
-import GLOBALS, { device } from 'config/Globals';
 import { appConfig } from 'config';
+import GLOBALS, { device } from 'config/Globals';
 
 
 interface ChatProps {
@@ -55,7 +54,7 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
       setProfilePicture(member.image);
     }
     else {
-      console.log(msg)
+      // console.log(msg)
       let user = await PushAPI.user.get({account:msg.fromCAIP10,env:appConfig.appEnv});
       setProfilePicture(user.profilePicture); 
     }
@@ -67,9 +66,10 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
   }, []);
 
   return (
-    <>
-      {messageType === 'TwitterFeedLink' ? (
-        <>
+    <ItemVV2>
+      {/* Support Msg Type = TwitterFeedLink */}
+      {msg.messageType === 'TwitterFeedLink' && 
+        <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
@@ -111,14 +111,17 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
-        </>
-      ) : msg.messageType === 'Text' ? (
-        <>
+        </ItemVV2>
+      } 
+        
+      {/* Support Msg Type = Text */}
+      {msg.messageType === 'Text' &&
+        <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage>
                 {msg.messageContent.split('\n').map((str) => (
-                  <TextMessage>{str}</TextMessage>
+                  <TextMessage key={Math.random().toString()}>{str}</TextMessage>
                 ))}
                 <TimeStamp>{date}</TimeStamp>
               </SenderMessage>
@@ -133,15 +136,18 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
             >
               <ReceivedMessage left={isGroup ? '8px' : '34px'}>
                 {msg.messageContent.split('\n').map((str) => (
-                  <TextMessage>{str}</TextMessage>
+                  <TextMessage key={Math.random().toString()}>{str}</TextMessage>
                 ))}
                 <TimeStamp>{date}</TimeStamp>
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
-        </>
-      ) : msg.messageType === 'Intent' ? (
-        <>
+        </ItemVV2>
+      } 
+      
+      {/* Support Msg Type = Intent */}
+      {msg.messageType === 'Intent' &&
+        <ItemVV2>
           <ReceivedMessageWrapper
             align="row"
             isGroup={isGroup}
@@ -175,9 +181,12 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               )}
             </IntentMessage>
           </ReceivedMessageWrapper>
-        </>
-      ) : msg.messageType === 'Image' ? (
-        <>
+        </ItemVV2>
+      }
+      
+      {/* Support Msg Type = Image */}
+      {msg.messageType === 'Image' &&
+        <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper
               height="138px"
@@ -228,9 +237,12 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               time={msg.timestamp}
             />
           )}
-        </>
-      ) : msg.messageType === 'GIF' ? (
-        <>
+        </ItemVV2>
+      } 
+      
+      {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
+      {(msg.messageType === 'GIF' || msg.messageType === 'MediaEmbed') &&
+        <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper
               height="170px"
@@ -282,9 +294,12 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               time={msg.timestamp}
             />
           )}
-        </>
-      ) : msg.messageType === 'File' ? (
-        <>
+        </ItemVV2>
+      }
+      
+      {/* Support Msg Type = GIF OR Support Msg Type = MediaEmbed */}
+      {msg.messageType === 'File' &&
+        <ItemVV2>
           {msg.fromCAIP10 === caip10 ? (
             <SentMessageWrapper align="row-reverse">
               <SenderMessage
@@ -314,9 +329,9 @@ export default function Chats({ msg, caip10, messageBeingSent, ApproveIntent, is
               </ReceivedMessage>
             </ReceivedMessageWrapper>
           )}
-        </>
-      ) : null}
-    </>
+        </ItemVV2>
+      }
+    </ItemVV2>
   );
 }
 

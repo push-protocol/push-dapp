@@ -45,6 +45,28 @@ export const getHasEnoughPushToken = async ({
   }
 };
 
+type PushTokenFromWallet = {
+  address: string;
+  provider: Provider;
+};
+
+export const getPushTokenFromWallet = async({
+  address,
+  provider,
+}: PushTokenFromWallet ): Promise<number> =>{
+  try {
+    const pushTokenContract = new ethers.Contract(addresses.pushToken, abis.pushToken, provider);
+    
+  const ownedPushToken: BigNumber = await pushTokenContract.balanceOf(address);
+  const ownedPushTokenNum = +ethers.utils.formatEther(ownedPushToken.toString());
+  return ownedPushTokenNum;
+  } catch (err) {
+    console.log(err.message);
+  }
+
+  
+}
+
 type PushTokenApproveType = {
   signer: Signer;
   contractAddress: string;
@@ -64,6 +86,33 @@ export const approvePushToken = async ({ signer, contractAddress, amount }: Push
     // return false;
   }
 };
+
+type ImportPushTokenType = {
+  provider: any
+}
+export const importPushToken = async ({ provider }: ImportPushTokenType): Promise<boolean> =>{
+  try {
+    const name = "Ethereum Push Notification Service";
+    const symbol = "PUSH";
+    const decimals = 18;
+
+    await provider.request({
+      method: 'wallet_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: addresses.pushToken,
+          symbol: symbol,
+          decimals: decimals
+        },
+      },
+    })
+    return true;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 type MintPushTokenType = {
   noOfTokens: number,
@@ -89,7 +138,7 @@ export const mintPushToken = async ({noOfTokens, library, account}:MintPushToken
     console.log(4);
 
     console.log("Transaction Completed");
-    return (noOfTokens+" PUSH Tokens minted successfully!");
+    return (noOfTokens);
   } catch (err) {
     console.log(err);
   }
