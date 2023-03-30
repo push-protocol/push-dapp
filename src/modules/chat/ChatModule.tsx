@@ -174,12 +174,6 @@ function Chat({ chatid }) {
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-  // window.ethereum.on('accountsChanged', (account) => {
-  //   window.location.reload();
-  // });
-  // window.ethereum.on('networksChanged', () => {
-  //   window.location.reload();
-  // });
 
   useEffect(() => {
     if (videoCallInfo) {
@@ -214,6 +208,8 @@ function Chat({ chatid }) {
 
   useEffect(()=>{
     setChat(null);
+    setInbox([]);
+    setReceivedIntents([]);
     setActiveTab(0);
     setViewChatBox(false);
     setIsLoading(true);
@@ -222,9 +218,7 @@ function Chat({ chatid }) {
 
   // Rest of the loading logic
   useEffect(() => {
-    console.log("Connected user is changed",connectedUser)
     if (isLoading) {
-      console.log("Connected user is  called")
       setConnectedUser(connectedUser);
       connectUser();
     }
@@ -264,10 +258,8 @@ function Chat({ chatid }) {
 
     const caip10:string = w2wHelper.walletToCAIP10({account});
 
-    console.log("Account",account,connectedUser,caip10);
     
     if(connectedUser?.wallets !== caip10){
-      console.log("Get User is called")
       await getUser();
     }
 
@@ -285,7 +277,6 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-      console.log("ChatId",chatid,account,connectedUser);
 
       if(connectedUser?.wallets === caip10){
         // dynamic url

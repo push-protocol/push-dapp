@@ -85,20 +85,6 @@ function Header({ isDarkMode, darkModeToggle }) {
     setShowNavBar(!showNavBar);
   });
 
-  // async function handleChangeNetwork() {
-  //   const chainIds = appConfig.allowedNetworks;
-  //   if (!chainIds.includes(window.ethereum.networkVersion)) {
-  //     try {
-  //       await window.ethereum.request({
-  //         method: 'wallet_switchEthereumChain',
-  //         params: [{ chainId: ethers.utils.hexValue(appConfig.coreContractChain) }],
-  //       });
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   }
-  // }
-
   // handle error functions
   function getErrorMessage(error: Error) {
     if (error instanceof NoEthereumProviderError) {
