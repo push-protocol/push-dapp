@@ -267,7 +267,9 @@ useEffect(() => {
         setNewMessage('');
         setMessages([...messages, sendResponse]);
         
-        setMessageBeingSent(false);
+        setTimeout(() => {
+          setMessageBeingSent(false);
+        }, 1)
       } else {
         chatBoxToast.showMessageToast({
           toastTitle: 'Error',
@@ -302,7 +304,9 @@ useEffect(() => {
 
   useEffect(() => {
     if (messageBeingSent == false) {
-      scrollToBottom(true);
+      setTimeout(() => {
+        scrollToBottom(null);
+      }, 10)
     }
   }, [messageBeingSent])
 
