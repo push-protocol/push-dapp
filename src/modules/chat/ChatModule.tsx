@@ -285,8 +285,15 @@ function Chat({ chatid }) {
       // reformat chatid first
       chatid = reformatChatId(chatid);
 
-      // dynamic url
+      console.log("ChatId",chatid,account,connectedUser);
+
+      if(connectedUser?.wallets === caip10){
+        // dynamic url
       setCurrentTab(4);
+      }
+
+      // dynamic url
+      // setCurrentTab(4);
     }
   };
 
