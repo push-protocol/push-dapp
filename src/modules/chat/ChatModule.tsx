@@ -173,12 +173,12 @@ function Chat() {
   // React GA Analytics
   ReactGA.pageview('/chat');
 
-  window.ethereum.on('accountsChanged', (account) => {
-    window.location.reload();
-  });
-  window.ethereum.on('networksChanged', () => {
-    window.location.reload();
-  });
+  // window.ethereum.on('accountsChanged', (account) => {
+  //   window.location.reload();
+  // });
+  // window.ethereum.on('networksChanged', () => {
+  //   window.location.reload();
+  // });
 
   useEffect(() => {
     if (videoCallInfo) {
@@ -211,9 +211,19 @@ function Chat() {
     }
   }, [callAccepted]);
 
+  useEffect(()=>{
+    setChat(null);
+    setActiveTab(0);
+    setViewChatBox(false);
+    setIsLoading(true);
+    connectUser();
+  },[account])
+
   // Rest of the loading logic
   useEffect(() => {
+    console.log("Connected user is changed",connectedUser)
     if (isLoading) {
+      console.log("Connected user is  called")
       setConnectedUser(connectedUser);
       connectUser();
     }
@@ -251,7 +261,12 @@ function Chat() {
       progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
     });
 
-    if (!connectedUser) {
+    const caip10:string = w2wHelper.walletToCAIP10({account});
+
+    console.log("Account",account,connectedUser,caip10);
+    
+    if(connectedUser?.wallets !== caip10){
+      console.log("Get User is called")
       await getUser();
     }
 
