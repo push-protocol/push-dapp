@@ -70,7 +70,7 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     const peer = new Peer({ initiator: true, trickle: false, stream: localStream });
 
     peer.on('signal', (data) => {
-      console.log("CALL USER ME SIGAL CALLBACK CHALA");
+      console.log("CALL USER -> SIGNAL CALLBACK");
       
 
       // send a notification to the user
@@ -168,13 +168,13 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     console.log("LOCAL STREAM ANSWER CALL", localStream);
     
     const peer2: any = new Peer({ initiator: false, trickle: false, stream: localStream });
-    console.log("answer call pe data", call);
+    console.log("answer call -> data", call);
     peer2.signal(call.signal);
 
     console.log('Sending Payload for answer call - Step 1');
 
     peer2.on('signal', (data) => {
-      console.log("ANSWER CALL ME SIGAL CALLBACK CHALA");
+      console.log("ANSWER CALL -> SIGNAL CALLBACK");
       console.log("RECIEVER PEER SIGNALED", receiverPeerSignalled)
 
       // send answer call notification

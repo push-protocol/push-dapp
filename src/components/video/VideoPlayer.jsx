@@ -2,13 +2,12 @@
 import React, { useContext } from 'react';
 
 // External Packages
-import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
-import styled, { useTheme } from 'styled-components';
+import { makeStyles } from '@material-ui/core';
+import styled from 'styled-components';
 
 // Internal Components
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { ItemVV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 const useStyles = makeStyles((theme) => ({
   video: {
@@ -35,40 +34,39 @@ const VideoPlayer = () => {
   const classes = useStyles();
 
   return (
-    <ItemVV2
-      overflow="hidden"
-    >
+    <Container>
       {localStream && (
-        <OwnVideo playsInline muted ref={myVideo} autoPlay className={callAccepted && !callEnded ? 'connectionAccepted' : null} />
+        <LocalVideoContainer className={callAccepted && !callEnded ? 'connectionAccepted' : null}>
+          <LocalVideo
+            ref={myVideo}
+            playsInline
+            muted
+            autoPlay
+          />
+        </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
-        <TheirVideo playsInline ref={userVideo} autoPlay />
+        <IncomingVideo
+          playsInline
+          ref={userVideo}
+          autoPlay
+        />
       )}
-    </ItemVV2>
-    // <Grid container className={classes.gridContainer}>
-    //   {stream && (
-    //     <Paper className={classes.paper}>
-    //       <Grid item xs={12} md={6}>
-    //         <Typography variant="h5" gutterBottom>{name || 'Name'}</Typography>
-    //         <video playsInline muted ref={myVideo} autoPlay className={classes.video} />
-    //       </Grid>
-    //     </Paper>
-    //   )}
-    //   {callAccepted && !callEnded && (
-    //     <Paper className={classes.paper}>
-    //       <Grid item xs={12} md={6}>
-    //         <Typography variant="h5" gutterBottom>{call.name || 'Name'}</Typography>
-    //         <video playsInline ref={userVideo} autoPlay className={classes.video} />
-    //       </Grid>
-    //     </Paper>
-    //   )}
-    // </Grid>
+    </Container>
   );
 };
 export default VideoPlayer;
 
-const OwnVideo = styled.video`
-  width: 100%;
+const Container = styled(ItemVV2)`
+  height: fit-content;
+  max-height: fit-content;
+  min-height: fit-content;
+`;
+
+const LocalVideoContainer = styled(ItemVV2)`
+  overflow: hidden;
+  height: 47vh;
+  max-height: 47vh;
   transition: all 0.25 linear;
 
   &.connectionAccepted {
@@ -77,11 +75,19 @@ const OwnVideo = styled.video`
     right: 20px;
     bottom: 20px;
     height: 25%;
+  }
+`;
+
+const LocalVideo = styled.video`
+  height: 100%;
+  border-radius: 34px;
+
+  &.connectionAccepted {
     border: 1px solid #ffffff8c;
     border-radius: 24px;
   }
 `;
 
-const TheirVideo = styled.video`
-  width: 100%;
-`
+const IncomingVideo = styled.video`
+  width: 60%;
+`;

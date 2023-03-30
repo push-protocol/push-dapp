@@ -221,6 +221,11 @@ const themeLight = {
   tooltipContentHeading: "#CF1C84",
   tooltipContentDesc:"#494D5F",
   tooltipIconBorderClr: "#E6E7EC",
+
+  // video call
+  vcBGColor: "linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)",
+  vcBorderColor: "#FFFFFF",
+  
 };
 
 const themeDark = {
@@ -448,6 +453,9 @@ const themeDark = {
   tooltipContentHeading: "#CF1C84",
   tooltipContentDesc: "#B6BCD6",
   tooltipIconBorderClr: "#E6E7EC",
+
+  // video call
+  vcBGColor: "#282A2E",
 };
 
 module.exports = {
