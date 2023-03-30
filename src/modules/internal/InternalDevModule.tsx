@@ -17,25 +17,9 @@ import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/P
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
-import useModalBlur from 'hooks/useModalBlur';
-import useToast from 'hooks/useToast';
-import { InternalComponent } from './InternalComponent';
-import { ModalInnerComponentType } from 'hooks/useModalBlur';
 
 // Internal Configs
 import GLOBALS, { device } from 'config/Globals';
-
-// const InternalComponent = ({ onClose, onConfirm }: ModalInnerComponentType) => {
-//   const [progress, setProgress] = useState(50);
-//   return (
-//     <div style={{ width: '100%', height: '100%' }}>
-//       <ProgressBar
-//         percent={progress}
-//         color={GLOBALS.COLORS.PRIMARY_PINK}
-//       />
-//     </div>
-//   );
-// };
 
 // Helper Modules
 const randomTextWithLines = (maxChar, maxLines) => {
@@ -118,18 +102,6 @@ const InternalDevModule = () => {
     }
   }, [randomText]);
 
-  const toast = useToast();
-
-  const {
-    isModalOpen: isComponentModalOpen,
-    showModal: showComponentModal,
-    ModalComponent: ModalComponentContent,
-  } = useModalBlur({ padding: '0px' });
-
-  // useEffect(() => {
-  //   showComponentModal();
-  // }, []);
-
   return (
     <Container>
       {/* Progess Bar Component */}
@@ -139,22 +111,6 @@ const InternalDevModule = () => {
           color={GLOBALS.COLORS.PRIMARY_PINK}
         />
       </IndividualComps>
-      {/* <ModalContainer>
-        <ModalComponentContent
-          InnerComponent={InternalComponent}
-          onConfirm={() => {}}
-          toastObject={toast}
-        />
-      </ModalContainer> */}
-
-      {/* <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
-        <button onClick={showComponentModal}>Show</button>
-        <ModalComponentContent
-          InnerComponent={InternalComponent}
-          onConfirm={() => {}}
-          toastObject={toast}
-        />
-      </IndividualComps> */}
 
       {/* Progess Bar Component */}
       <IndividualComps caption="components/reusables/progress/ProgressBarUnit">
@@ -591,30 +547,6 @@ const Container = styled(SectionV2)`
 
   @media ${device.mobileM} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-  }
-`;
-
-const ModalContainer = styled.div`
-  position: relative;
-  border-radius: 32px;
-  border: 1px solid ${(props) => props.theme.default.secondaryBg};
-  background: ${(props) => props.theme.default.secondaryBg};
-  margin: 20px;
-  min-height: 100px;
-  min-width: 25%;
-  overflow: hidden;
-  padding: 20px;
-
-  &:after {
-    background: ${(props) => props.theme.nav.bg};
-    bottom: 0;
-    font-size: 10px;
-    left: 0;
-    padding: 2px;
-    position: absolute;
-    right: 0;
-    text-align: center;
-    z-index: 100;
   }
 `;
 
