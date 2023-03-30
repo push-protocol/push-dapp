@@ -28,7 +28,7 @@ import {
   SpanV2
 } from 'components/reusables/SharedStylingV2';
 import { injected, ledger, walletconnect } from 'connectors';
-import { useEagerConnect, useInactiveListener } from 'hooks';
+import { useDeviceWidthCheck, useEagerConnect, useInactiveListener } from 'hooks';
 import styled, { useTheme } from 'styled-components';
 import LedgerLogoDark from './assets/login/ledgerDark.svg';
 import LedgerLogoLight from './assets/login/ledgerLight.svg';
@@ -38,6 +38,7 @@ import WCLogoDark from './assets/login/wcDark.svg';
 import WCLogoLight from './assets/login/wcLight.svg';
 import { ReactComponent as PushLogoDark } from './assets/pushDark.svg';
 import { ReactComponent as PushLogoLight } from './assets/pushLight.svg';
+import { swapPropertyOrder } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import { appConfig } from 'config';
@@ -60,6 +61,8 @@ const web3Connectors = {
   // Trezor: {obj: trezor, logo: './svg/login/trezor.svg', title: 'Trezor'},
   Ledger: { obj: ledger, logolight: LedgerLogoLight, logodark: LedgerLogoDark, title: 'Ledger' },
 };
+
+
 
 async function handleChangeNetwork() {
   const chainIds = appConfig.allowedNetworks;
@@ -102,6 +105,9 @@ const AppLogin = ({ toggleDarkMode }) => {
   const { connector, activate, active, error, account } = useWeb3React<Web3Provider>();
   const [activatingConnector, setActivatingConnector] = React.useState<AbstractConnector>();
 
+  const isMobile = useDeviceWidthCheck(600);
+  const web3ConnectorsObj:Object = isMobile?swapPropertyOrder(web3Connectors,'Injected','WalletConnect'):web3Connectors;
+  
   React.useEffect(() => {
     if (activatingConnector && activatingConnector === connector) {
       setActivatingConnector(undefined);
@@ -172,7 +178,7 @@ const AppLogin = ({ toggleDarkMode }) => {
           </H2V2>
 
           <ItemVV2 alignSelf="stretch" alignItems="flex-start" margin={`0 0 ${GLOBALS.ADJUSTMENTS.MARGIN.VERTICAL} 0`}>
-            {Object.keys(web3Connectors).map((name) => {
+            {Object.keys(web3ConnectorsObj).map((name) => {
               const currentConnector = web3Connectors[name].obj;
               const disabled = currentConnector === connector;
               const image = theme.scheme == 'light' ? web3Connectors[name].logolight : web3Connectors[name].logodark;

@@ -1,8 +1,8 @@
 // React + Web3 Essentials
+import { Web3Provider } from '@ethersproject/providers';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
-import { Web3Provider } from '@ethersproject/providers';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import CloseIcon from '@material-ui/icons/Close';
@@ -11,21 +11,22 @@ import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
+import * as PushAPI from '@pushprotocol/restapi';
 import * as PushNodeClient from 'api';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
-import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import useToast from 'hooks/useToast';
-import * as w2wChatHelper from 'helpers/w2w';
-import { Context } from 'modules/chat/ChatModule';
-import MessageFeed from '../messageFeed/MessageFeed';
-import { AppContext, User } from 'types/chat';
 import { appConfig } from 'config';
 import { findObject } from 'helpers/UtilityHelper';
+import * as w2wChatHelper from 'helpers/w2w';
 import { displayDefaultUser } from 'helpers/w2w/user';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, User } from 'types/chat';
+import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
+import MessageFeed from '../messageFeed/MessageFeed';
 
-const SearchBar = () => {
+const SearchBar = ({ autofilled }) => {
   // get theme
   const theme = useTheme();
 
@@ -48,6 +49,10 @@ const SearchBar = () => {
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const searchFeedToast = useToast();
 
+  if (autofilled) {
+    // console.log("Search is autofilled:", autofilled);
+  }
+
   useEffect(() => {
     if (searchedUser !== '' && userShouldBeSearched) {
       handleSearch();
@@ -55,6 +60,23 @@ const SearchBar = () => {
     }
     return () => setUserShouldBeSearched(false);
   }, []);
+
+  useEffect(() => {
+    if (autofilled && !userShouldBeSearched) {
+      // automate search
+      setSearchedUser(autofilled);
+    }
+
+  }, [userShouldBeSearched, autofilled]);
+
+  useEffect(() => {
+    if (searchedUser) {
+      const event = new KeyboardEvent('keypress', {
+        key: 'enter',
+      });
+      submitSearch(event);
+    }
+  }, [searchedUser]);
 
   useEffect(() => {
     if (isInValidAddress) {
@@ -69,6 +91,10 @@ const SearchBar = () => {
           />
         ),
       });
+
+      if (activeTab == 4) {
+        setActiveTab(0);
+      }
     }
   }, [isInValidAddress]);
 
@@ -99,7 +125,7 @@ const SearchBar = () => {
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
 
-        console.log("searched address", address)
+        // console.log("searched address", address)
         if (address) {
           handleUserSearch(address);
         } else {
@@ -113,7 +139,7 @@ const SearchBar = () => {
         setHasUserBeenSearched(true);
       }
     } else {
-      handleUserSearch(searchedUser);
+      await handleUserSearch(searchedUser);
     }
     setIsLoadingSearch(false);
   };
@@ -132,7 +158,12 @@ const SearchBar = () => {
       if (filteredData !== null && isUserConnected) {
         if (activeTab !== 0) {
           setUserShouldBeSearched(true);
-          setActiveTab(0);
+
+          if (autofilled) {
+            setActiveTab(4);
+          } else {
+            setActiveTab(0);
+          }
         }
         setFilteredUserData([filteredData]);
         setSearchedUser('')
@@ -141,7 +172,11 @@ const SearchBar = () => {
       else {
         if (ethers.utils.isAddress(userSearchData)) {
           setUserShouldBeSearched(true);
-          setActiveTab(3);
+          if (autofilled) {
+            setActiveTab(4);
+          } else {
+            setActiveTab(3);
+          }
           const displayUser = displayDefaultUser({ caip10 });
           setFilteredUserData([displayUser]);
           setSearchedUser('')
@@ -168,7 +203,7 @@ const SearchBar = () => {
       justifyContent="flex-start"
       flex="0"
     >
-      {activeTab === 3 && (
+      {(activeTab === 3 || activeTab === 4) && (
         <ItemHV2
           justifyContent="flex-start"
           width="100%"
@@ -191,7 +226,7 @@ const SearchBar = () => {
             color="#D53893"
             margin="0px 0px 0px 7px"
           >
-            New Chat
+            {activeTab == 3 ? "New Chat" : "All Chats"}
           </SpanV2>
         </ItemHV2>
       )}
@@ -200,50 +235,56 @@ const SearchBar = () => {
         width="100%"
         flex="initial"
       >
-        <SearchBarContent onSubmit={submitSearch}>
-          <Input
-            type="text"
-            value={searchedUser}
-            onChange={onChangeSearchBox}
-            placeholder="Search name.eth or 0x123..."
-          />
-          {searchedUser.length > 0 && (
+        <ItemVV2
+          alignItems="stretch"
+          display={activeTab == 4 ? "none" : "flex"}
+        >
+          <SearchBarContent onSubmit={submitSearch}>
+            <Input
+              type="text"
+              value={searchedUser}
+              onChange={onChangeSearchBox}
+              placeholder="Search name.eth or 0x123..."
+            />
+            {searchedUser.length > 0 && (
+              <ItemVV2
+                position="absolute"
+                alignItems="flex-end"
+                width="24px"
+                height="24px"
+                top="22px"
+                right="34px"
+              >
+                <CloseIcon onClick={clearInput} />
+              </ItemVV2>
+            )}
             <ItemVV2
               position="absolute"
               alignItems="flex-end"
               width="24px"
               height="24px"
               top="22px"
-              right="34px"
+              right="16px"
             >
-              <CloseIcon onClick={clearInput} />
+              {isLoadingSearch && (
+                <LoaderSpinner
+                  type={LOADER_TYPE.SEAMLESS}
+                  width="auto"
+                  spinnerSize={24}
+                  spinnerColor={theme.default.secondaryColor}
+                />
+              )}
+              {!isLoadingSearch && (
+                <SearchIcon
+                  style={{ cursor: 'pointer' }}
+                  onClick={submitSearch}
+                />
+              )}
             </ItemVV2>
-          )}
-          <ItemVV2
-            position="absolute"
-            alignItems="flex-end"
-            width="24px"
-            height="24px"
-            top="22px"
-            right="16px"
-          >
-            {isLoadingSearch && (
-              <LoaderSpinner
-                type={LOADER_TYPE.SEAMLESS}
-                width="auto"
-                spinnerSize={24}
-                spinnerColor={theme.default.secondaryColor}
-              />
-            )}
-            {!isLoadingSearch && (
-              <SearchIcon
-                style={{ cursor: 'pointer' }}
-                onClick={submitSearch}
-              />
-            )}
-          </ItemVV2>
-        </SearchBarContent>
-        {activeTab !== 3 && (
+          </SearchBarContent>
+        </ItemVV2>
+
+        {activeTab !== 3 && activeTab !== 4 && (
           <ItemVV2
             flex="initial"
             margin="0px 0px 0px 10px"
@@ -267,16 +308,23 @@ const SearchBar = () => {
       </ItemHV2>
 
       {isLoadingSearch ? (
-        <LoaderSpinner
-          type={LOADER_TYPE.SEAMLESS}
-          spinnerSize={40}
-        />
+        <ItemVV2
+          flex="initial"
+          margin={activeTab == 4 ? "10px" : "0px"}
+          alignItems="center"
+        >
+          <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            spinnerSize={40}
+          />
+        </ItemVV2>
       ) : (
         filteredUserData.length > 0 && (
           <MessageFeed
-            hasUserBeenSearched={activeTab !== 3 ? hasUserBeenSearched : true}
+            hasUserBeenSearched={activeTab !== 3 && activeTab !== 4 ? hasUserBeenSearched : true}
             filteredUserData={filteredUserData}
             isInvalidAddress={isInValidAddress}
+            automatedSearch={autofilled ? true : false}
           />
         )
       )}
@@ -308,7 +356,13 @@ const Input = styled.input`
         ${(props) => props.theme.chat.snapFocusBg},
         ${(props) => props.theme.chat.snapFocusBg}
       ),
-      linear-gradient(to right, #cf1c84, #8ed6ff);
+      linear-gradient(
+        to right, 
+        rgba(182, 160, 245, 1),
+        rgba(244, 110, 246, 1),
+        rgba(255, 222, 211, 1),
+        rgba(255, 207, 197, 1)
+      );
     background-origin: border;
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;
