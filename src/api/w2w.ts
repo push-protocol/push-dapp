@@ -41,6 +41,7 @@ export const createUser = async ({
     const userResponse = await PushAPI.user.create({
       signer: signer,
       env: appConfig.appEnv,
+      version: 'x25519-xsalsa20-poly1305'
     })
     return userResponse;
   } catch (err) {

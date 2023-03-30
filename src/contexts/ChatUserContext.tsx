@@ -51,7 +51,8 @@ const ChatUserContextProvider = (props) => {
       const privateKeyArmored: string = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
         signer: _signer,
-        env:appConfig.appEnv
+        env:appConfig.appEnv,
+        toUpgrade: false,
       });
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
@@ -108,7 +109,8 @@ const ChatUserContextProvider = (props) => {
       const pvtkey = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
         signer: signer,
-        env:appConfig.appEnv
+        env:appConfig.appEnv,
+        toUpgrade: false
       });
       setBlockedLoading({
         enabled: true,
