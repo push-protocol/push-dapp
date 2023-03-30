@@ -2,6 +2,7 @@
 import React from 'react';
 
 // External Packages
+import { Route, Routes, useParams } from 'react-router-dom';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
@@ -13,10 +14,12 @@ import GLOBALS from 'config/Globals';
 
 // Chat page
 const ChatPage = () => {
+  let { chatid } = useParams();
+  
   // RENDER
   return (
     <Container>
-      <ChatModule />
+      <ChatModule chatid={chatid}/>
     </Container>
   );
 }

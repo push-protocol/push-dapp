@@ -1,42 +1,61 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { lazy, Suspense } from 'react';
 
 // External Packages
+import { VscClose } from 'react-icons/vsc';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { VscClose } from 'react-icons/vsc';
+import styled from 'styled-components';
 
 // Internal Components
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { Anchor, Item } from '../primaries/SharedStyling';
-import AirdropPage from 'pages/AirdropPage';
-import ChannelDashboardPage from 'pages/ChannelDashboardPage';
-import ChannelsPage from 'pages/ChannelsPage';
-import ChatPage from 'pages/ChatPage';
-import ComingSoonPage from 'pages/ComingSoonPage';
-import FAQPage from 'pages/FAQPage';
-import GovPage from 'pages/GovPage';
-import InboxPage from 'pages/InboxPage';
-import InternalDevPage from 'pages/InternalDevPage';
-import NFTPage from 'pages/NFTPage';
-import NotAvailablePage from 'pages/NotAvailablePage';
-import ReceiveNotifsPage from 'pages/ReceiveNotifsPage';
-import SendNotifsPage from 'pages/SendNotifsPage';
-import SpamPage from 'pages/SpamPage';
-import SupportPage from 'pages/SupportPage';
-import TutorialPage from 'pages/TutorialPage';
-import YieldFarmingPage from 'pages/YieldFarmingPage';
+const AirdropPage = lazy(() => import('pages/AirdropPage'));
+const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
+const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
+const ChatPage = lazy(() => import('pages/ChatPage'));
+const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
+const FAQPage = lazy(() => import('pages/FAQPage'));
+const GovPage = lazy(() => import('pages/GovPage'));
+const InboxPage = lazy(() => import('pages/InboxPage'));
+const InternalDevPage = lazy(() => import('pages/InternalDevPage'));
+const NFTPage = lazy(() => import('pages/NFTPage'));
+const NotAvailablePage = lazy(() => import('pages/NotAvailablePage'));
+const ReceiveNotifsPage = lazy(() => import('pages/ReceiveNotifsPage'));
+const SendNotifsPage = lazy(() => import('pages/SendNotifsPage'));
+const SpamPage = lazy(() => import('pages/SpamPage'));
+const SupportPage = lazy(() => import('pages/SupportPage'));
+const TutorialPage = lazy(() => import('pages/TutorialPage'));
+const YieldFarmingPage = lazy(() => import('pages/YieldFarmingPage'));
+
+// import AirdropPage from 'pages/AirdropPage';
+// import ChannelDashboardPage from 'pages/ChannelDashboardPage';
+// import ChannelsPage from 'pages/ChannelsPage';
+// import ChatPage from 'pages/ChatPage';
+// import ComingSoonPage from 'pages/ComingSoonPage';
+// import FAQPage from 'pages/FAQPage';
+// import GovPage from 'pages/GovPage';
+// import InboxPage from 'pages/InboxPage';
+// import InternalDevPage from 'pages/InternalDevPage';
+// import NFTPage from 'pages/NFTPage';
+// import NotAvailablePage from 'pages/NotAvailablePage';
+// import ReceiveNotifsPage from 'pages/ReceiveNotifsPage';
+// import SendNotifsPage from 'pages/SendNotifsPage';
+// import SpamPage from 'pages/SpamPage';
+// import SupportPage from 'pages/SupportPage';
+// import TutorialPage from 'pages/TutorialPage';
+// import YieldFarmingPage from 'pages/YieldFarmingPage';
 
 // Internal Configs
-import GLOBALS from 'config/Globals';
 import { useWeb3React } from '@web3-react/core';
+import * as PushNodeClient from 'api';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import GLOBALS from 'config/Globals';
 import { ethers } from 'ethers';
 import CryptoHelper from 'helpers/CryptoHelper';
-import * as PushNodeClient from 'api';
 import * as w2wHelper from 'helpers/w2w';
-import { User } from 'types/chat';
-import { ConnectedUser, Feeds } from 'types/chat';
+import { ConnectedUser, Feeds, User } from 'types/chat';
 
 // Create Header
 function MasterInterfacePage() {
@@ -49,33 +68,41 @@ function MasterInterfacePage() {
   return (
     <Container>
       <Interface location={location.pathname}>
-        <Routes>
-          <Route path="inbox" element={<InboxPage />} />
-          <Route path="chat" element={<ChatPage />} />
-          {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+        <Suspense fallback={
+            <ItemVV2>
+              <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={24} />
+            </ItemVV2>
+          }
+        >
+          <Routes>
+            <Route path="inbox" element={<InboxPage />} />
+            <Route path="chat/:chatid" element={<ChatPage />} />
+            <Route path="chat" element={<ChatPage />} />
+            {/* <Route path="chat-new" element={<NewChatPage />} /> */}
 
-          <Route
-            path="channels"
-            element={<ChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
-          />
-          <Route path="dashboard" element={<ChannelDashboardPage />} />
-          <Route path="send" element={<SendNotifsPage />} />
-          <Route path="spam" element={<SpamPage />} />
-          <Route path="receive" element={<ReceiveNotifsPage />} />
+            <Route
+              path="channels"
+              element={<ChannelsPage loadTeaser={setLoadTeaserVideo} playTeaser={setPlayTeaserVideo} />}
+            />
+            <Route path="dashboard" element={<ChannelDashboardPage />} />
+            <Route path="send" element={<SendNotifsPage />} />
+            <Route path="spam" element={<SpamPage />} />
+            <Route path="receive" element={<ReceiveNotifsPage />} />
 
-          <Route path="govern" element={<GovPage />} />
+            <Route path="govern" element={<GovPage />} />
 
-          <Route path="yield" element={<YieldFarmingPage />} />
-          <Route path="rockstar" element={<NFTPage />} />
-          <Route path="gratitude" element={<AirdropPage />} />
-          <Route path="live_walkthrough" element={<TutorialPage />} />
-          <Route path="comingsoon" element={<ComingSoonPage />} />
-          <Route path="notavailable" element={<NotAvailablePage />} />
-          <Route path="faq" element={<FAQPage />} />
-          <Route path="internal" element={<InternalDevPage />} />
-          <Route path="/" element={<Navigate to="/channels" />} />
-          <Route path="support" element={<SupportPage />} />
-        </Routes>
+            <Route path="yield" element={<YieldFarmingPage />} />
+            <Route path="rockstar" element={<NFTPage />} />
+            <Route path="gratitude" element={<AirdropPage />} />
+            <Route path="live_walkthrough" element={<TutorialPage />} />
+            <Route path="comingsoon" element={<ComingSoonPage />} />
+            <Route path="notavailable" element={<NotAvailablePage />} />
+            <Route path="faq" element={<FAQPage />} />
+            <Route path="internal" element={<InternalDevPage />} />
+            <Route path="/" element={<Navigate to="/channels" />} />
+            <Route path="support" element={<SupportPage />} />
+          </Routes>
+        </Suspense>
       </Interface>
 
       {/* For Channels Opt-in / Opt-out */}

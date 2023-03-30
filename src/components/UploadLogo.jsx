@@ -50,7 +50,6 @@ const UploadLogo = ({
   };
 
   const handleFile = async (file, path) => {
-    console.log("This is called",file);
     setCroppedImage(undefined);
     setView(true);
 

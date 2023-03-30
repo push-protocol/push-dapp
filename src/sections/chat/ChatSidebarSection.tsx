@@ -9,27 +9,28 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
 import * as PushAPI from "@pushprotocol/restapi";
+import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
+import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import IntentFeed from 'components/chat/w2wChat/intentFeed/IntentFeed';
+import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
 import ProfileHeader from 'components/chat/w2wChat/profile';
 import SearchBar from 'components/chat/w2wChat/searchBar/SearchBar';
 import { fetchIntent } from 'helpers/w2w/user';
 
-import { Feeds } from 'types/chat';
 import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
 import { ButtonV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import * as w2wHelper from 'helpers/w2w/';
-import StyleHelper from 'helpers/StyleHelper'; 
-import MessageFeed from 'components/chat/w2wChat/messageFeed/MessageFeed';
-import { Context } from 'modules/chat/ChatModule';
 import { ChatUserContext } from 'contexts/ChatUserContext';
-import { ReactComponent as CreateGroupIcon } from 'assets/chat/group-chat/creategroup.svg';
-import { ReactComponent as CreateGroupFillIcon } from 'assets/chat/group-chat/creategroupfill.svg';
+import StyleHelper from 'helpers/StyleHelper';
 import { getIsNewTagVisible } from 'helpers/TimerHelper';
-import NewTag from 'components/NewTag';
+import * as w2wHelper from 'helpers/w2w/';
+import { checkConnectedUser } from 'helpers/w2w/user';
+import { Context } from 'modules/chat/ChatModule';
+import { Feeds } from 'types/chat';
 
 
 // Internal Configs
+import NewTag from 'components/NewTag';
 import GLOBALS from 'config/Globals';
 import { appConfig } from '../../config';
 
@@ -63,11 +64,11 @@ const createGroupOnMouseLeave = [{
 
 // Chat Sections
 // Divided into two, left and right
-const ChatSidebarSection = ({showCreateGroupModal}) => {
+const ChatSidebarSection = ({ showCreateGroupModal, autofilledSearch }) => {
   // theme context
   const theme = useTheme();
 
-  const { receivedIntents,searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
+  const { receivedIntents, searchedUser, setReceivedIntents, filteredUserData } = useContext(Context);
 
   const isNewTagVisible = getIsNewTagVisible(new Date("2023-02-22T00:00:00.000"), 90);
 
@@ -240,6 +241,7 @@ useClickAway(containerRef, () => closeQRDropdown())
             hasUserBeenSearched={false}
             filteredUserData={[]}
             isInvalidAddress={false}
+            automatedSearch={false}
           />
         )}
         {activeTab == 1 && (
@@ -247,7 +249,8 @@ useClickAway(containerRef, () => closeQRDropdown())
             <IntentFeed isLoading={loadingRequests} />
           </>
         )}
-        {activeTab == 3 && <SearchBar/>}
+        {activeTab == 3 && <SearchBar autofilled={null} />}
+        {activeTab == 4 && <SearchBar autofilled={autofilledSearch} />}
       </ItemVV2>
 
       {/* Footer */}
