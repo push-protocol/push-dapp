@@ -1,45 +1,46 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 // External Packages
 import ReactGA from 'react-ga';
-import styled, { useTheme } from 'styled-components';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastOptions } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useClickAway } from 'react-use';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { AppContext,  Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
+import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
+import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
+import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_SPINNER_TYPE,
   LOADER_TYPE,
-  PROGRESS_POSITIONING,
+  PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import { VideoCallContext } from 'contexts/VideoCallContext';
+import * as w2wHelper from 'helpers/w2w/';
+import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
+import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
+import { default as useModalBlur } from 'hooks/useModalBlur';
+import { default as useToast } from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
-import useToast from 'hooks/useToast';
-import { GroupInfoModalContent } from 'components/chat/w2wChat/groupChat/groupInfo/groupInfoModalContent';
-import useModalBlur from 'hooks/useModalBlur';
-import { CreateGroupModalContent } from 'components/chat/w2wChat/groupChat/createGroup/CreateGroupModalContent';
-import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
-import MobileView from 'components/chat/w2wChat/chatQR/mobileView';
-import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import ChatQR from 'components/chat/w2wChat/chatQR/chatQR';
-import * as w2wHelper from 'helpers/w2w/';
+import { AppContext, Feeds, MessageIPFS, MessageIPFSWithCID, User } from 'types/chat';
 
 
 // Internal Configs
-import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { appConfig } from 'config';
+import GLOBALS, { device, globalsMargin } from 'config/Globals';
 import { fetchIntent } from 'helpers/w2w/user';
 
 export const ToastPosition: ToastOptions = {
@@ -55,7 +56,7 @@ export const ToastPosition: ToastOptions = {
 export const Context = React.createContext<AppContext | null>(null);
 
 // Create Header
-function Chat() {
+function Chat({ chatid }) {
   const { account, chainId, library } = useWeb3React<ethers.providers.Web3Provider>();
   const { getUser, connectedUser, setConnectedUser, blockedLoading, setBlockedLoading, displayQR, setDisplayQR } =
     useContext(ChatUserContext);
@@ -258,7 +259,7 @@ function Chat() {
       title: 'Step 1/4: Getting Account Info',
       progressEnabled: true,
       progress: 25,
-      progressNotice: 'Reminder: Push Chat is in alpha, you might need to sign a decrypt transaction to continue',
+      progressNotice: 'Important: Push Chat encryption standard is updated, you might need to sign 3-4 transactions to upgrade (required once).',
     });
 
     const caip10:string = w2wHelper.walletToCAIP10({account});
@@ -279,6 +280,14 @@ function Chat() {
     });
 
     setIsLoading(false);
+
+    if (chatid) {
+      // reformat chatid first
+      chatid = reformatChatId(chatid);
+
+      // dynamic url
+      setCurrentTab(4);
+    }
   };
 
   const setActiveTab = (tab: number): void => {
@@ -291,9 +300,52 @@ function Chat() {
     } else if (tab === 3) {
       setChat(null);
       setCurrentTab(tab);
+    } else if (tab === 4) {
+      setCurrentTab(tab);
     }
   };
 
+  const reformatChatId = (chatid: string): string => {
+    let isWallet = false;
+
+    // check if chatid: is appened, then skip anything else
+    if (chatid.startsWith('chatid:')) {
+      return chatid;
+    }
+
+    // check if .eth is at the end, then skip anything else
+    if (chatid.endsWith('.eth')) {
+      return chatid;
+    }
+
+    // check if this is eip155: which is considered default and therefore remove it
+    if (chatid.startsWith('eip155:')) {
+      chatid = chatid.replace('eip155:', '');
+      isWallet = true;
+    }
+
+    // check if this is eip155: which is considered default and therefore remove it
+    if (chatid.startsWith('eip155:')) {
+      chatid = chatid.replace('eip155:', '');
+      isWallet = true;
+    }
+
+    // check if this is an account address or not and based on that take appropriate action
+    if (!isWallet && ethers.utils.isAddress(chatid)) {
+      isWallet = true;
+    }
+
+    // if all checks fail then this is probably a chat id
+    // WARNING: THIS WILL FAIL WITH NON-EVMS, NEED NODES TO INDICATE CHATID:
+    if (!isWallet) {
+      // append chatid:
+      chatid = `chatid:${chatid}`;
+    }
+
+    return chatid;
+  }
+
+  let navigate = useNavigate();
   const setChat = (feed: Feeds): void => {
     if (feed) {
       setViewChatBox(true);
@@ -301,9 +353,24 @@ function Chat() {
       {
         rearrangeMembers(feed,connectedUser);
       }
+
+      // check and set to wallet or chat id
+      let chatid = feed.did;
+      if (!chatid) {
+        // check group information
+        if (feed.groupInformation) {
+          chatid = feed.groupInformation.chatId;
+        }
+      }
+      chatid = reformatChatId(chatid);
+      // console.log(feed);
       setCurrentChat(feed);
+
+      // lastly, set navigation for dynamic linking
+      navigate(`/chat/${chatid}`);
     } else {
       setViewChatBox(false);
+      navigate(`/chat`);
     }
   };
 
@@ -347,7 +414,7 @@ function Chat() {
                 background={theme.default.bg}
                 chatActive={viewChatBox}
               >
-                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal}/>
+                <ChatSidebarSection showCreateGroupModal={showCreateGroupModal} autofilledSearch={chatid} />
               </ChatSidebarContainer>
               <ChatContainer
                 padding="10px 10px 10px 10px"

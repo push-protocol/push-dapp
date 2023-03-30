@@ -2,41 +2,41 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import styled, { useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
-import { ethers } from 'ethers';
+import styled, { useTheme } from 'styled-components';
 
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
-import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import useToast from 'hooks/useToast';
-import { fetchInbox } from 'helpers/w2w/user';
-import { Context } from 'modules/chat/ChatModule';
-import { intitializeDb } from '../w2wIndexeddb';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
+import { fetchInbox } from 'helpers/w2w/user';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, Feeds, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
+import { intitializeDb } from '../w2wIndexeddb';
 
 // Internal Configs
 
 
-interface MessageFeedProps {
+interface MessageFeedPropsI {
   filteredUserData: User[];
   hasUserBeenSearched: boolean;
   isInvalidAddress: boolean;
+  automatedSearch: boolean;
 }
 
-const MessageFeed = (props: MessageFeedProps): JSX.Element => {
+const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox,currentChat,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
+  const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
 
-  const {connectedUser} = useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -70,6 +70,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
         return inboxes;
     }
   };
+  
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       const inboxes:Feeds[] = await fetchInbox(connectedUser);
@@ -112,6 +113,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     setFeeds(inbox);  
   },[inbox]);
 
+  useEffect(() => {
+    if(feeds && feeds.length > 0 && props.automatedSearch) {
+      onFeedClick(feeds[0], 0);
+      setActiveTab(0);
+    }
+  }, [feeds]);
 
   useEffect(() => {
     if(!props.hasUserBeenSearched)
@@ -160,7 +167,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             });
           }
 
-          setFeeds([]);
+          // reset if active tab is 4
+          if (activeTab == 4) {
+            setActiveTab(0);
+          }
+          else {
+            setFeeds([]);
+          }
         }
         setMessagesLoading(false);
       };
@@ -179,7 +192,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       justifyContent="flex-start"
     >
       {/* hey there */}
-      {activeTab !== 3 && (
+      {activeTab !== 3 && activeTab !== 4 && (
         <SpanV2
           fontWeight="700"
           fontSize="12px"
@@ -198,13 +211,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && !messagesLoading && activeTab!==3 ? (
+            {!feeds?.length && !messagesLoading && activeTab!==3 && activeTab!==4 ? (
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"

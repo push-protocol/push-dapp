@@ -2,50 +2,52 @@
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 // External Packages
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import * as PushAPI from '@pushprotocol/restapi';
 import 'font-awesome/css/font-awesome.min.css';
 import { CID } from 'ipfs-http-client';
+import { BsDashLg } from 'react-icons/bs';
 import { MdCheckCircle, MdError, MdOutlineArrowBackIos } from 'react-icons/md';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import styled, { useTheme } from 'styled-components';
-import { BsDashLg } from 'react-icons/bs';
 import { useClickAway } from 'react-use';
-import * as PushAPI from '@pushprotocol/restapi';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import * as PushNodeClient from 'api';
+import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
+import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
+import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
+import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { Content } from 'components/SharedStyling';
+import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
-import useToast from 'hooks/useToast';
-import { useResolveEns } from 'hooks/useResolveEns';
-import { useDeviceWidthCheck } from 'hooks';
-import { Context } from 'modules/chat/ChatModule';
-import HandwaveIcon from '../../../../assets/chat/handwave.svg';
-import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
-import Chats from '../chats/Chats';
-import { intitializeDb } from '../w2wIndexeddb';
-import { AppContext, Feeds, MessageIPFS } from 'types/chat';
-import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
-import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
-import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
-import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import {
   checkIfIntentExist,
   fetchInbox,
-  getLatestThreadHash,
+  getLatestThreadHash
 } from 'helpers/w2w/user';
-import Typebar from '../TypeBar/Typebar';
-import { ChatUserContext } from 'contexts/ChatUserContext';
-import { MessagetypeType } from '../../../../types/chat';
+import { useDeviceWidthCheck } from 'hooks';
+import { useResolveEns } from 'hooks/useResolveEns';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, Feeds, MessageIPFS } from 'types/chat';
+import HandwaveIcon from '../../../../assets/chat/handwave.svg';
+import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
+import { MessagetypeType } from '../../../../types/chat';
+import Chats from '../chats/Chats';
+import Typebar from '../TypeBar/Typebar';
+import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
+import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { getChats } from 'services';
@@ -72,6 +74,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     receivedIntents,
     inbox,
     messages,
+    activeTab,
     setActiveTab,
     setMessages,
     setChat,
@@ -80,6 +83,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setReceivedIntents,
     setBlockedLoading,
   }: AppContext = useContext<AppContext>(Context);
+  const [chatMeta, setChatMeta] = useState(null);
+
   const [newMessage, setNewMessage] = useState<string>('');
   const { chainId, account ,library} = useWeb3React<ethers.providers.Web3Provider>();
   const [Loading, setLoading] = useState<boolean>(true);
@@ -108,6 +113,16 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
 
   //get ens name
   const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  useEffect(() => {
+    // if ens is resolved, update browse to match ens name is it doesn't match
+    if (ensName && location.pathname !== `/chat/${ensName}`) {
+      // lastly, set navigation for dynamic linking
+      navigate(`/chat/${ensName}`, {replace: true});
+    }
+  }, [ensName]);
 
   const onScroll = async () => {
     if (listInnerRef.current) {
@@ -133,14 +148,14 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   };
 
 
-  const scrollToBottom = () => {
-    bottomRef?.current?.scrollIntoView({ behavior: "smooth" })
+  const scrollToBottom = (behavior) => {
+    bottomRef?.current?.scrollIntoView(!behavior ? true : { behavior: 'smooth' })
   }
 
 
 useEffect(() => {
     if (messages.length <= chatsFetchedLimit) 
-      scrollToBottom();
+      scrollToBottom(null);
 }, [messages]);
 
 
@@ -227,8 +242,6 @@ useEffect(() => {
   }): Promise<void> => {
     setMessageBeingSent(true);
 
-    scrollToBottom();
-
     try {
       let createdUser;
       if(!connectedUser.publicKey){
@@ -246,13 +259,15 @@ useEffect(() => {
       });
 
       if (typeof sendResponse !== 'string') {
-         intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
+        intitializeDb<MessageIPFS>('Insert', 'CID_store', sendResponse.cid, sendResponse, 'cid');
         sendResponse.messageContent = message;
         const updatedCurrentChat = currentChat;
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
         setMessages([...messages, sendResponse]);
+        
+        setMessageBeingSent(false);
       } else {
         chatBoxToast.showMessageToast({
           toastTitle: 'Error',
@@ -265,6 +280,8 @@ useEffect(() => {
             />
           ),
         });
+
+        setMessageBeingSent(false);
       }
     } catch (error) {
       chatBoxToast.showMessageToast({
@@ -278,11 +295,16 @@ useEffect(() => {
           />
         ),
       });
-    }
-    setTimeout(() => {
+
       setMessageBeingSent(false);
-    }, 3000);
+    }
   };
+
+  useEffect(() => {
+    if (messageBeingSent == false) {
+      scrollToBottom(true);
+    }
+  }, [messageBeingSent])
 
   async function resolveThreadhash(): Promise<void> {
     setLoading(true);
@@ -401,7 +423,7 @@ useEffect(() => {
               progressEnabled: true,
               progress: 0,
               progressNotice:
-                'Reminder: Push Chat is in alpha, Things might break. It seems you are not whitelisted, join our discord channel where we will be frequently dropping new invites: https://discord.com/invite/cHRmsnmyKx',
+                'Reminder: Push Chat is in alpha, Things might break.',
             });
           }
           // Display toaster
@@ -478,19 +500,19 @@ useEffect(() => {
   };
 
   const InfoMessages = [
-    { id: 1, content: 'You can send up to 10 chat requests in alpha' },
+    { id: 1, content: 'You can send up to 10 group requests in alpha' },
     // { id: 2, content: 'You can send a chat request to anyone including non-whitelisted users' },
     // { id: 3, content: 'You can chat with non-whitelisted users but they cannot send a chat request to anyone.' },
     {
       id: 4,
-      content: 'You will have access to 100 latest messages. Encryption is enabled after a chat request is accepted',
+      content: 'You will have access to 1000 latest messages. Encryption is enabled after a chat request is accepted',
     },
     { id: 5, content: 'Messages will only be encrypted if the receiver has encryption keys' },
-    {
-      id: 6,
-      content:
-        'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.',
-    },
+    // {
+    //   id: 6,
+    //   content:
+    //     'Due to certain limitations Push Chat does not support Ledger Wallet yet. We are working on adding support.',
+    // },
     { id: 7, content: 'Access to more chat requests and messages will be added in the near future' },
   ];
 
@@ -498,44 +520,56 @@ useEffect(() => {
     <Container>
       {!viewChatBox ? (
         <WelcomeItem gap="25px">
-          <WelcomeMainText theme={theme}>
-            <WelcomeText>Say</WelcomeText>
-            <ImageV2
-              src={HandwaveIcon}
-              alt="wave"
-              display="inline"
-              width="auto"
-              verticalAlign="middle"
-              margin="0 13px"
+          {activeTab == 4 && 
+            <LoaderSpinner
+              type={LOADER_TYPE.STANDALONE_MINIMAL}
+              spinnerSize={40}
             />
-            <WelcomeText>to Push Chat</WelcomeText>
-          </WelcomeMainText>
+          }
 
-          <WelcomeInfo>
-            <SpanV2
-              fontWeight="500"
-              fontSize="15px"
-              lineHeight="130%"
-            >
-              Push Chat is in alpha and things might break.
-            </SpanV2>
 
-            <Atag
-              href={'https://discord.gg/pushprotocol'}
-              target="_blank"
-            >
-              We would love to hear your feedback
-            </Atag>
+          {activeTab != 4 && 
+            <>
+              <WelcomeMainText theme={theme}>
+                <WelcomeText>Say</WelcomeText>
+                <ImageV2
+                  src={HandwaveIcon}
+                  alt="wave"
+                  display="inline"
+                  width="auto"
+                  verticalAlign="middle"
+                  margin="0 13px"
+                />
+                <WelcomeText>to Push Chat</WelcomeText>
+              </WelcomeMainText>
 
-            <ItemBody>
-              {InfoMessages.map((item) => (
-                <WelcomeContent key={item.id}>
-                  <BsDashLg className="icon" />
-                  <TextInfo>{item.content}</TextInfo>
-                </WelcomeContent>
-              ))}
-            </ItemBody>
-          </WelcomeInfo>
+              <WelcomeInfo>
+                    <SpanV2
+                      fontWeight="500"
+                      fontSize="15px"
+                      lineHeight="130%"
+                    >
+                      Push Chat is in alpha and things might break.
+                    </SpanV2>
+                    
+                    <Atag
+                      href={'https://discord.gg/pushprotocol'}
+                      target="_blank"
+                    >
+                      We would love to hear your feedback
+                    </Atag>
+
+                    <ItemBody>
+                      {InfoMessages.map((item) => (
+                        <WelcomeContent key={item.id}>
+                          <BsDashLg className="icon" />
+                          <TextInfo>{item.content}</TextInfo>
+                        </WelcomeContent>
+                      ))}
+                    </ItemBody>
+              </WelcomeInfo>
+            </>
+          }
         </WelcomeItem>
       ) : (
         <>

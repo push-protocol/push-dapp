@@ -35,8 +35,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   const theme = useTheme();
   // get ens name
   const ensName = useResolveEns(!isGroup ? username : null);
-  // get reverse name
-  
+
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;
   const shortUsername = !isGroup ? shortenText(walletAddress, 8, 7) : null;
@@ -66,7 +65,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
           className="fa fa-picture-o"
           aria-hidden="true"
         ></i>{' '}
-        Media
+        Image
       </SpanV2>
     ) : chatSnapMsg.type === 'File' ? (
       <SpanV2 color={theme.default.secondaryColor}>
@@ -76,7 +75,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
         ></i>{' '}
         File
       </SpanV2>
-    ) : chatSnapMsg.type === 'GIF' ? (
+    ) : chatSnapMsg.type === 'GIF' || chatSnapMsg.type === 'MediaEmbed' ? (
       <SpanV2 color={theme.default.secondaryColor}>
         <i
           className="fa fa-picture-o"
