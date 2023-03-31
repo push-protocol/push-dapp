@@ -140,7 +140,7 @@ const InternalDevModule = () => {
 
      {/* Local Screen useModalBlur Component */}
      <IndividualComps caption="hooks/useModalBlur  isFullScreen={false}">
-      {isLocalScreenDemoModalOpen && <SpanV2 color={theme.default.color}>{randomText.slice(0,75)}</SpanV2>}
+      {isLocalScreenDemoModalOpen && <SpanV2 color={theme.default.color}>{randomText.slice(0,70)}</SpanV2>}
         <ButtonV2
           background="#e20880"
           color="#fff"
