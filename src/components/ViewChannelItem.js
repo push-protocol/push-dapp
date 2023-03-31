@@ -448,7 +448,7 @@ function ViewChannelItem({ channelObjectProp, loadTeaser, playTeaser }) {
     if (hostname === 'localhost') {
       hostname = hostname + ':3000';
     }
-    const url = `${hostname}/#/channels?channel=${address}`;
+    const url = `${hostname}/channels?channel=${address}`;
     // fallback for non navigator browser support
     if (navigator && navigator.clipboard) {
       navigator.clipboard.writeText(url);
