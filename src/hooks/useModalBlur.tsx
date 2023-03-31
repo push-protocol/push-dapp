@@ -20,22 +20,20 @@ export type ModalInnerComponentType = {
 };
 
 export type ModalType = {
-  InnerComponent: ({ onConfirm, onClose, toastObject, InnerComponentProps }: ModalInnerComponentType) => JSX.Element;
-  onConfirm: (value1?: any, value2?: any) => any;
+  InnerComponent?: ({ onConfirm, onClose, toastObject, InnerComponentProps }: ModalInnerComponentType) => JSX.Element;
+  onConfirm?: (value1?: any, value2?: any) => any;
   extraOuterPadding?: string;
   placementMargin?: string;
-  toastObject: {
+  toastObject?: {
     showLoaderToast: ShowLoaderToastType;
     showMessageToast: ShowMessageToastType;
   };
   InnerComponentProps?: any;
+  isFullScreen?:boolean;
 };
 
-export type ModalProps = {
-  padding?: string;
-};
 
-const useModalBlur = ({ padding }: ModalProps) => {
+const useModalBlur = () => {
   const [open, setOpen] = React.useState(false);
 
   // hacky fix to prevent background scroll when modal is open
@@ -64,6 +62,7 @@ const useModalBlur = ({ padding }: ModalProps) => {
     InnerComponentProps,
     extraOuterPadding,
     placementMargin,
+    isFullScreen
   }: ModalType) => {
     const themes = useTheme();
 
@@ -71,7 +70,7 @@ const useModalBlur = ({ padding }: ModalProps) => {
       <ThemeProvider theme={themes}>
         {open && (
           <ItemHV2
-            position="absolute"
+            position={isFullScreen?"fixed":"absolute"}
             alignSelf="stretch"
             alignItems="flex-start"
             flex="initial"
@@ -79,7 +78,7 @@ const useModalBlur = ({ padding }: ModalProps) => {
             right="0"
             bottom="0"
             left="0"
-            zIndex="10"
+            zIndex="1001"
           >
             <BlurBG
               blur={8}
@@ -94,9 +93,11 @@ const useModalBlur = ({ padding }: ModalProps) => {
               background={themes.blurModalContentBackground}
               alignSelf="center"
               flex="initial"
-              padding={padding ? padding : '1.2% 2%'}
+              padding={extraOuterPadding ? extraOuterPadding : '1.2% 2%'}
               borderRadius="16px"
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
+              margin={placementMargin?placementMargin:'0px'}
+              border={`1px solid ${themes.modalBorderColor}`}
             >
               <InnerComponent
                 onConfirm={onConfirm}

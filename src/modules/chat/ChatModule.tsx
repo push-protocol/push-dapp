@@ -231,7 +231,7 @@ function Chat({ chatid }) {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:"0px"});
+  } = useModalBlur();
 
   const createGroupToast = useToast();
 
@@ -239,7 +239,7 @@ function Chat({ chatid }) {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:'0px'});
+  } = useModalBlur();
 
 
   const connectUser = async (): Promise<void> => {
@@ -411,10 +411,14 @@ function Chat({ chatid }) {
                 InnerComponent={GroupInfoModalContent}
                 onConfirm={() => {}}
                 toastObject={groupInfoToast}
+                extraOuterPadding="0px"
+                isFullScreen={false}
                 />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
+                extraOuterPadding="0px"
+                isFullScreen={false}
               />
 
               {displayQR && !isMobile && (
