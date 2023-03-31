@@ -55,13 +55,13 @@ const SearchBar = ({ autofilled }) => {
     // console.log("Search is autofilled:", autofilled);
   }
 
-  useEffect(() => {
-    if (searchedUser !== '' && userShouldBeSearched) {
-      handleSearch();
-      setUserShouldBeSearched(false);
-    }
-    return () => setUserShouldBeSearched(false);
-  }, []);
+  // useEffect(() => {
+  //   if (searchedUser !== '' && userShouldBeSearched) {
+  //     handleSearch();
+  //     setUserShouldBeSearched(false);
+  //   }
+  //   return () => setUserShouldBeSearched(false);
+  // }, []);
 
   useEffect(() => {
     if (autofilled && !userShouldBeSearched) {
@@ -71,14 +71,15 @@ const SearchBar = ({ autofilled }) => {
 
   }, [userShouldBeSearched, autofilled]);
 
-  useEffect(() => {
-    if (searchedUser) {
-      const event = new KeyboardEvent('keypress', {
-        key: 'enter',
-      });
-      submitSearch(event);
-    }
-  }, [searchedUser]);
+  // useEffect(() => {
+  //   if (searchedUser) {
+  //     const event = new KeyboardEvent('keypress', {
+  //       key: 'enter',
+  //     });
+  //     console.log("in search")
+  //     submitSearch(event);
+  //   }
+  // }, [searchedUser]);
 
   useEffect(() => {
     if (isInValidAddress) {
@@ -120,22 +121,38 @@ const SearchBar = ({ autofilled }) => {
       setIsLoadingSearch(true);
       let address: string;
       let group: IGroup;
-      try {
-        address = await provider.resolveName(searchedUser);
-        if (!address) {
-          address = await library.resolveName(searchedUser);
-          if(!address){
-             group = await getGroupbyChatId(searchedUser);
+
+        if(searchedUser.includes('.eth')){
+          try{
+            address = await provider.resolveName(searchedUser);
+            if (!address) {
+              address = await library.resolveName(searchedUser);
+            }
+          } catch (err) {
+            setIsInvalidAddress(true);
+            setFilteredUserData([]);
+            setHasUserBeenSearched(true);
+          }
+         
+        }
+        else{
+          try{
+            group = await getGroupbyChatId(searchedUser);
             if(!group){
               group = await getGroupByName(searchedUser);
             }
-            console.log(group);
+          } catch (err) {
+            setIsInvalidAddress(true);
+            setFilteredUserData([]);
+            setHasUserBeenSearched(true);
           }
+         
         }
+       
         // this ensures address are checksummed
-        address = ethers.utils.getAddress(address.toLowerCase());
 
         if (address) {
+          address = ethers.utils.getAddress(address.toLowerCase());
           handleUserSearch({userSearchData:address});
         } else if(group){
           handleUserSearch({groupSearchData:group});
@@ -145,12 +162,6 @@ const SearchBar = ({ autofilled }) => {
           setFilteredUserData([]);
           setHasUserBeenSearched(true);
           }
-        
-      } catch (err) {
-        setIsInvalidAddress(true);
-        setFilteredUserData([]);
-        setHasUserBeenSearched(true);
-      }
     } else {
       await handleUserSearch({userSearchData:searchedUser});
     }
@@ -160,11 +171,11 @@ const SearchBar = ({ autofilled }) => {
 
   const handleUserSearch = async ({userSearchData,groupSearchData}:{userSearchData?:string,groupSearchData?:IGroup}): Promise<void> => {
     setIsLoadingSearch(true);
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
     setHasUserBeenSearched(true);
 
     if (userSearchData) {
+      const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
       filteredData = await PushNodeClient.getUser({ caip10 });
       // Checking whether user already present in contact list
       let isUserConnected = findObject(filteredData, inbox, 'did');
@@ -182,35 +193,40 @@ const SearchBar = ({ autofilled }) => {
         setFilteredUserData([filteredData]);
         setSearchedUser('')
       }
-      // User is not in the protocol. Create new user
-      else {
-        if(groupSearchData){
-          setUserShouldBeSearched(true);
-          if (autofilled) {
-            setActiveTab(4);
-          } else {
-            setActiveTab(3);
-          }
-          setFilteredUserData([groupSearchData]);
-          setSearchedUser('')
-        }
-        else if (ethers.utils.isAddress(userSearchData)) {
-          setUserShouldBeSearched(true);
-          if (autofilled) {
-            setActiveTab(4);
-          } else {
-            setActiveTab(3);
-          }
-          const displayUser = displayDefaultUser({ caip10 });
-          setFilteredUserData([displayUser]);
-          setSearchedUser('')
+      else if (ethers.utils.isAddress(userSearchData)) {
+        setUserShouldBeSearched(true);
+        if (autofilled) {
+          setActiveTab(4);
         } else {
-          setIsInvalidAddress(true);
-          setFilteredUserData([]);
+          setActiveTab(3);
         }
+        const displayUser = displayDefaultUser({ caip10 });
+        setFilteredUserData([displayUser]);
+        setSearchedUser('')
+      } else {
+        setIsInvalidAddress(true);
+        setFilteredUserData([]);
       }
+      // User is not in the protocol. Create new user
+       
+
     } else {
+      if(groupSearchData){
+        setUserShouldBeSearched(true);
+        //check if in inbox
+        if (autofilled) {
+          setActiveTab(4);
+        } else {
+          setActiveTab(3);
+        }
+        setFilteredUserData([groupSearchData]);
+        setSearchedUser('')
+      }
+     else{
+      setIsInvalidAddress(true);
       setFilteredUserData([]);
+     }
+     
     }
   };
 

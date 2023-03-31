@@ -8,6 +8,7 @@ export const getGroupbyChatId = async (chatId:string): Promise<IGroup> => {
   return getGroupResponse;
   }
   catch(e){
+    console.log(e)
     throw new Error(e.message);
   }
 

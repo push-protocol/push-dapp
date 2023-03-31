@@ -124,7 +124,7 @@ export const getDefaultFeed = async ({
       feed = intentUser[0];
     }
     else {
-   feed = getDefaultFeedObject(user);
+   feed = getDefaultFeedObject({user});
 }
   return feed;
 };
@@ -140,21 +140,21 @@ export const getDefaultGroupFeed = async ({
 }): Promise<Feeds> => {
   
     let feed:Feeds;
-    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+    const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
 
-    const intentUser = intents.filter((userExist) => userExist.did === user.did);
-    if (inboxUser.length) {
-      feed = inboxUser[0];
-    } else if(intentUser.length){
-      feed = intentUser[0];
+    const intentGroup = intents.filter((int) =>int?.groupInformation?.chatId === groupData.chatId);
+    if (inboxGroup.length) {
+      feed = inboxGroup[0];
+    } else if(intentGroup.length){
+      feed = intentGroup[0];
     }
     else {
-   feed = getDefaultFeedObject(user);
+   feed = getDefaultFeedObject({groupInformation:groupData});
 }
   return feed;
 };
 
-export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
+export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupInformation?:IGroup}) => {
   const feed = {
     msg: {
       messageContent: null,
@@ -170,15 +170,15 @@ export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
       toDID: null,
       toCAIP10: null,
     },
-    wallets: user.wallets,
-    did: user.did,
+    wallets: groupInformation?null: user.wallets,
+    did: groupInformation?null: user.did,
     threadhash: null,
-    profilePicture: user.profilePicture,
+    profilePicture: groupInformation?groupInformation.groupImage:user.profilePicture,
     about: user.about,
     intent: null,
     intentSentBy: null,
     intentTimestamp: null,
-    publicKey: user.publicKey,
+    publicKey: groupInformation?null: user.publicKey,
     combinedDID: null,
     cid: null,
     groupInformation: groupInformation??undefined,

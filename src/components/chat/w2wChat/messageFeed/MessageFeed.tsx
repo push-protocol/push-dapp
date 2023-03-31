@@ -13,7 +13,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import { fetchInbox } from 'helpers/w2w/user';
+import { fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds, IGroup, User } from 'types/chat';
@@ -150,12 +150,13 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
             const searchedData: User | IGroup = props.filteredUserData[0];
             let feed: Feeds;
             if((searchedData as IGroup)?.groupName) {
-              feed = await getDefaultFeed({userData:searchedData,inbox,intents:receivedIntents});
+              feed = await getDefaultGroupFeed({groupData:searchedData as IGroup,inbox,intents:receivedIntents});
             }
             else {
               feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
             }
-           
+            console.log(filteredUserData)
+           console.log(feed)
             setFeeds([feed]);
           }
         } else {
