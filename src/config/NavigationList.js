@@ -246,6 +246,30 @@ const NavigationList = {
             },
           },
         },
+        yieldv2: {
+          src: 'navigation/yieldIcon.svg',
+          activeSrc: 'navigation/yieldIcon.svg',
+          iconFactory: null,
+          name: 'Yield Farming V2',
+          title: 'Yield Farming V2',
+          alt: 'Open Yield Farming V2',
+          href: '/yieldv2',
+          newTab: false,
+          isRoute: true,
+          hasMenuLogic: true,
+          hidden: false,
+          headerTag: {
+            title: 'Yield Farming V2',
+            light: {
+              bg: GLOBALS.COLORS.GRADIENT_PRIMARY,
+              fg: themeLight.headerTagFg,
+            },
+            dark: {
+              bg: themeDark.headerTagBg,
+              fg: themeDark.headerTagFg,
+            },
+          },
+        },
         rockstars: {
           src: 'navigation/rockstarsIcon.svg',
           activeSrc: 'navigation/rockstarsIcon.svg',
