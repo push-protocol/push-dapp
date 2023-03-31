@@ -16,7 +16,7 @@ import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
 import { fetchInbox } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, User } from 'types/chat';
+import { AppContext, Feeds, IGroup, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
 import { intitializeDb } from '../w2wIndexeddb';
@@ -25,7 +25,7 @@ import { intitializeDb } from '../w2wIndexeddb';
 
 
 interface MessageFeedPropsI {
-  filteredUserData: User[];
+  filteredUserData: User[] | IGroup;
   hasUserBeenSearched: boolean;
   isInvalidAddress: boolean;
   automatedSearch: boolean;
@@ -147,16 +147,22 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
           } else {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
-            const user: User = props.filteredUserData[0];
+            const searchedData: User | IGroup = props.filteredUserData[0];
             let feed: Feeds;
-                feed = await getDefaultFeed({userData:user,inbox,intents:receivedIntents});
+            if((searchedData as IGroup)?.groupName) {
+              feed = await getDefaultFeed({userData:searchedData,inbox,intents:receivedIntents});
+            }
+            else {
+              feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
+            }
+           
             setFeeds([feed]);
           }
         } else {
           if (props.isInvalidAddress) {
             messageFeedToast.showMessageToast({
               toastTitle: 'Error',
-              toastMessage: 'Invalid Address',
+              toastMessage: 'Invalid Search',
               toastType: 'ERROR',
               getToastIcon: (size) => (
                 <MdError

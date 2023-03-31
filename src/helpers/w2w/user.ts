@@ -129,6 +129,31 @@ export const getDefaultFeed = async ({
   return feed;
 };
 
+export const getDefaultGroupFeed = async ({
+  groupData,
+  inbox,
+  intents,
+}: {
+  groupData: IGroup;
+  inbox: Feeds[];
+  intents: Feeds[];
+}): Promise<Feeds> => {
+  
+    let feed:Feeds;
+    const inboxUser = inbox.filter((inb) => inb.did === user.did);
+
+    const intentUser = intents.filter((userExist) => userExist.did === user.did);
+    if (inboxUser.length) {
+      feed = inboxUser[0];
+    } else if(intentUser.length){
+      feed = intentUser[0];
+    }
+    else {
+   feed = getDefaultFeedObject(user);
+}
+  return feed;
+};
+
 export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
   const feed = {
     msg: {

@@ -125,7 +125,6 @@ const SearchBar = ({ autofilled }) => {
         if (!address) {
           address = await library.resolveName(searchedUser);
           if(!address){
-            //change searchedUSer varibale name
              group = await getGroupbyChatId(searchedUser);
             if(!group){
               group = await getGroupByName(searchedUser);
@@ -137,32 +136,35 @@ const SearchBar = ({ autofilled }) => {
         address = ethers.utils.getAddress(address.toLowerCase());
 
         if (address) {
-          handleUserSearch(address);
-        } else {
-          if(!group && !address) {
+          handleUserSearch({userSearchData:address});
+        } else if(group){
+          handleUserSearch({groupSearchData:group});
+        }
+          else if(!group && !address) {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
           setHasUserBeenSearched(true);
           }
-        }
+        
       } catch (err) {
         setIsInvalidAddress(true);
         setFilteredUserData([]);
         setHasUserBeenSearched(true);
       }
     } else {
-      await handleUserSearch(searchedUser);
+      await handleUserSearch({userSearchData:searchedUser});
     }
     setIsLoadingSearch(false);
   };
 
-  const handleUserSearch = async (userSearchData: string): Promise<void> => {
+
+  const handleUserSearch = async ({userSearchData,groupSearchData}:{userSearchData?:string,groupSearchData?:IGroup}): Promise<void> => {
     setIsLoadingSearch(true);
     const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
     setHasUserBeenSearched(true);
 
-    if (userSearchData.length) {
+    if (userSearchData) {
       filteredData = await PushNodeClient.getUser({ caip10 });
       // Checking whether user already present in contact list
       let isUserConnected = findObject(filteredData, inbox, 'did');
@@ -182,7 +184,17 @@ const SearchBar = ({ autofilled }) => {
       }
       // User is not in the protocol. Create new user
       else {
-        if (ethers.utils.isAddress(userSearchData)) {
+        if(groupSearchData){
+          setUserShouldBeSearched(true);
+          if (autofilled) {
+            setActiveTab(4);
+          } else {
+            setActiveTab(3);
+          }
+          setFilteredUserData([groupSearchData]);
+          setSearchedUser('')
+        }
+        else if (ethers.utils.isAddress(userSearchData)) {
           setUserShouldBeSearched(true);
           if (autofilled) {
             setActiveTab(4);
