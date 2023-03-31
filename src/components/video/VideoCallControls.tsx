@@ -20,10 +20,23 @@ type VideoCallControlsProps = {
   videoCallInfo: VideoCallInfoI;
   endVideoCallHook: Function;
   setVideoCallInfo: Function;
+  answerCall: Function;
+  account: string;
 };
 
-const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo }: VideoCallControlsProps) => {
+const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, answerCall, account }: VideoCallControlsProps) => {
   const { leaveCall } = useContext(VideoCallContext);
+
+  const answerCallHandler = () => {
+    setVideoCallInfo({
+      address: videoCallInfo.address,
+      fromPublicKeyArmored: videoCallInfo.fromPublicKeyArmored,
+      toPublicKeyArmored: videoCallInfo.toPublicKeyArmored,
+      privateKeyArmored: videoCallInfo.privateKeyArmored,
+      establishConnection: 3,
+    });
+    answerCall(videoCallInfo.address, account);
+  };
 
   return (
     <Container>

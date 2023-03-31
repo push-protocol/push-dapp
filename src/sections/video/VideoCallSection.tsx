@@ -59,17 +59,6 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   // get stream
   const { initializeLocalStream, localStream, callUser, answerCall } = useContext(VideoCallContext);
 
-  const answerCallHandler = () => {
-    setVideoCallInfo({
-      address: videoCallInfo.address,
-      fromPublicKeyArmored: videoCallInfo.fromPublicKeyArmored,
-      toPublicKeyArmored: videoCallInfo.toPublicKeyArmored,
-      privateKeyArmored: videoCallInfo.privateKeyArmored,
-      establishConnection: 3,
-    });
-    answerCall(videoCallInfo.address, account);
-  };
-
   React.useEffect(() => {
     const setupStream = async () => {
       setBlockedLoading({
@@ -139,6 +128,8 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
         videoCallInfo={videoCallInfo}
         endVideoCallHook={endVideoCallHook}
         setVideoCallInfo={setVideoCallInfo}
+        answerCall={answerCall}
+        account={account}
       />
 
       {/* <IncomingCallModalComponent
