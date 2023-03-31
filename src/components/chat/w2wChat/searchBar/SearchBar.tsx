@@ -22,9 +22,11 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, User } from 'types/chat';
+import { AppContext, IGroup, User } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import MessageFeed from '../messageFeed/MessageFeed';
+import { getGroupbyChatId } from 'services/chats/getGroupByChatId';
+import { getGroupByName } from 'services/chats/getGroupByName';
 
 const SearchBar = ({ autofilled }) => {
   // get theme
@@ -117,21 +119,31 @@ const SearchBar = ({ autofilled }) => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
       let address: string;
+      let group: IGroup;
       try {
         address = await provider.resolveName(searchedUser);
         if (!address) {
           address = await library.resolveName(searchedUser);
+          if(!address){
+            //change searchedUSer varibale name
+             group = await getGroupbyChatId(searchedUser);
+            if(!group){
+              group = await getGroupByName(searchedUser);
+            }
+            console.log(group);
+          }
         }
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
 
-        // console.log("searched address", address)
         if (address) {
           handleUserSearch(address);
         } else {
+          if(!group && !address) {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
           setHasUserBeenSearched(true);
+          }
         }
       } catch (err) {
         setIsInvalidAddress(true);
