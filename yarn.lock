@@ -4663,7 +4663,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
     "@pushprotocol/ledgerlive": 0.0.1
-    "@pushprotocol/restapi": ^1.0.1
+    "@pushprotocol/restapi": 1.0.1
     "@pushprotocol/socket": 0.4.2
     "@pushprotocol/uiweb": 0.5.0
     "@reduxjs/toolkit": ^1.7.1
@@ -4860,7 +4860,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:^1.0.1":
+"@pushprotocol/restapi@npm:1.0.1":
   version: 1.0.1
   resolution: "@pushprotocol/restapi@npm:1.0.1"
   dependencies:

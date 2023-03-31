@@ -52,7 +52,7 @@ const ChatUserContextProvider = (props) => {
         encryptedPGPPrivateKey: user.encryptedPrivateKey,
         signer: _signer,
         env:appConfig.appEnv,
-        toUpgrade: false,
+        // toUpgrade: false,
       });
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
@@ -110,7 +110,7 @@ const ChatUserContextProvider = (props) => {
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
         signer: signer,
         env:appConfig.appEnv,
-        toUpgrade: false
+        // toUpgrade: false
       });
       setBlockedLoading({
         enabled: true,
