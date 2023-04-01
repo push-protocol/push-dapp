@@ -46,11 +46,13 @@ const VideoPlayer = () => {
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
+        <IncomingVideoContainer>
         <IncomingVideo
           playsInline
           ref={userVideo}
           autoPlay
         />
+        </IncomingVideoContainer>
       )}
     </Container>
   );
@@ -65,14 +67,15 @@ const Container = styled(ItemVV2)`
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 47vh;
-  max-height: 47vh;
+  height: 90vh;
+  max-height: 90vh;
   transition: all 0.25 linear;
+  z-index: 2;
 
   &.connectionAccepted {
     position: absolute;
     width: inherit;
-    right: 20px;
+    right: 4%;
     bottom: 20px;
     height: 25%;
   }
@@ -89,5 +92,17 @@ const LocalVideo = styled.video`
 `;
 
 const IncomingVideo = styled.video`
-  width: 60%;
+  border-radius: 34px;
+  width: 100%;
+`;
+
+const IncomingVideoContainer = styled(ItemVV2)`
+overflow: hidden;
+height: 500px;
+max-height: 500px;
+width: 95%;
+background-color: #000000;
+left: 2.5%;
+border-radius: 34px;
+z-index: 1;
 `;
