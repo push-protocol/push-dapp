@@ -13,7 +13,7 @@ import { getReq } from 'api';
 import { ButtonV2 } from 'components/reusables/SharedStylingV2';
 import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { useDeviceWidthCheck } from 'hooks';
-import useModalBlur from 'hooks/useModalBlur';
+import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { Button, Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
 import { getChannelDelegates } from 'services';
@@ -38,7 +38,7 @@ const ShowDelegates = () => {
     isModalOpen: isRemoveDelegateModalOpen,
     showModal: showRemoveDelegateModal,
     ModalComponent: RemoveDelegateModalComponent,
-  } = useModalBlur({});
+  } = useModalBlur();
 
   const removeDelegateToast = useToast();
   const removeDelegate = (walletAddress) => {
@@ -129,7 +129,7 @@ const ShowDelegates = () => {
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
           toastObject={removeDelegateToast}
-          isWholeScreen={true}
+          modalPosition={MODAL_POSITION.ON_ROOT}
         />
       </DelegateContainer>
     </>

@@ -16,10 +16,9 @@ import LoaderSpinner, { LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reus
 import CloseButtonSvg from '../assets/XCircle.svg';
 import BellIconSvg from '../assets/BellIcon.svg';
 import { ItemVV2 } from './reusables/SharedStylingV2';
-import BlurBG from './reusables/blurs/BlurBG';
 
 //Internal Configs
-import GLOBALS, { device } from 'config/Globals';
+import GLOBALS from 'config/Globals';
 import Spinner from './reusables/spinners/SpinnerUnit';
 
 const ChannelDeactivateModalContent = ({ onConfirm, onClose, toastObject }: ModalInnerComponentType) => {

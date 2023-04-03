@@ -11,7 +11,6 @@ import ModalHeader from 'primaries/SharedModalComponents/ModalHeader';
 import ModalInput from 'primaries/SharedModalComponents/ModalInput';
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 import { ModalInnerComponentType } from 'hooks/useModalBlur';
-import BlurBG from 'components/reusables/blurs/BlurBG';
 
 // Internal Configs
 import { device } from 'config/Globals';

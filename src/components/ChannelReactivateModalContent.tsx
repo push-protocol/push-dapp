@@ -24,7 +24,6 @@ import { approvePushToken, getPushTokenApprovalAmount, mintPushToken } from 'hel
 import { Button } from './SharedStyling';
 import Spinner from './reusables/spinners/SpinnerUnit';
 import VerifyLogo from '../assets/Vector.svg';
-import BlurBG from './reusables/blurs/BlurBG';
 
 const DATE_FORMAT = 'DD MMM, YYYY';
 
