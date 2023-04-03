@@ -101,14 +101,18 @@ export const CHAIN_DETAILS = {
     name: "ETH_TEST_GOERLI",
     chainId: 5,
     rpcUrl: "https://goerli.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xc064F30bac07e84500c97A04D21a9d1bfFC72Ec0"
+    commAddress: "0xc064F30bac07e84500c97A04D21a9d1bfFC72Ec0",
+    proxyReaderAddress: "0xFc5f608149f4D9e2Ed0733efFe9DD57ee24BCF68",
+    network: "goerli",
   }, 
   80001: {
     label: "Polygon Mumbai",
     name: "POLYGON_TEST_MUMBAI",
     chainId: 80001,
     rpcUrl: "https://polygon-mumbai.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    commAddress: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504"
+    commAddress: "0xAf55BE8e6b0d6107891bA76eADeEa032ef8A4504",
+    proxyReaderAddress: "0x332A8191905fA8E6eeA7350B5799F225B8ed30a9",
+    network: "polygon-mumbai",
   },
   97: {
     label: "BNB Testnet",

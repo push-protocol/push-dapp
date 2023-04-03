@@ -101,14 +101,18 @@ export const CHAIN_DETAILS = {
     name: "ETH_MAINNET",
     chainId: 1,
     rpcUrl: "https://mainnet.infura.io/v3/4ff53a5254144d988a8318210b56f47a",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
+    proxyReaderAddress: "0xc3C2BAB5e3e52DBF311b2aAcEf2e40344f19494E",
+    network: "mainnet",
   }, 
   137: {
     label: "Polygon Mainnet",
     name: "POLYGON_MAINNET",
     chainId: 137,
     rpcUrl: "https://polygon-mainnet.infura.io/v3/150f25623ae64d08ab7ec7dd0c6b6ee9",
-    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa"
+    commAddress: "0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa",
+    proxyReaderAddress: "0xA3f32c8cd786dc089Bd1fC175F2707223aeE5d00",
+    network: "polygon-mainnet",
   },
   56: {
     label: "BNB Mainnet",

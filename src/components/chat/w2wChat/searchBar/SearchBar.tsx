@@ -25,6 +25,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { AppContext, User } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import MessageFeed from '../messageFeed/MessageFeed';
+import { getUdResolver } from 'helpers/w2w/udResolver';
 
 const SearchBar = ({ autofilled }) => {
   // get theme
@@ -47,6 +48,7 @@ const SearchBar = ({ autofilled }) => {
   const [isInValidAddress, setIsInvalidAddress] = useState<boolean>(false);
   const [isLoadingSearch, setIsLoadingSearch] = useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
+  const udResolver = getUdResolver();
   const searchFeedToast = useToast();
 
   if (autofilled) {
@@ -66,7 +68,6 @@ const SearchBar = ({ autofilled }) => {
       // automate search
       setSearchedUser(autofilled);
     }
-
   }, [userShouldBeSearched, autofilled]);
 
   useEffect(() => {
@@ -118,10 +119,12 @@ const SearchBar = ({ autofilled }) => {
       setIsLoadingSearch(true);
       let address: string;
       try {
-        address = await provider.resolveName(searchedUser);
-        if (!address) {
-          address = await library.resolveName(searchedUser);
-        }
+        // query the requested name from supported providers
+        address =
+          (await provider.resolveName(searchedUser)) ||
+          (await library.resolveName(searchedUser)) ||
+          (await udResolver.owner(searchedUser));
+
         // this ensures address are checksummed
         address = ethers.utils.getAddress(address.toLowerCase());
 
@@ -166,7 +169,7 @@ const SearchBar = ({ autofilled }) => {
           }
         }
         setFilteredUserData([filteredData]);
-        setSearchedUser('')
+        setSearchedUser('');
       }
       // User is not in the protocol. Create new user
       else {
@@ -179,7 +182,7 @@ const SearchBar = ({ autofilled }) => {
           }
           const displayUser = displayDefaultUser({ caip10 });
           setFilteredUserData([displayUser]);
-          setSearchedUser('')
+          setSearchedUser('');
         } else {
           setIsInvalidAddress(true);
           setFilteredUserData([]);
@@ -226,7 +229,7 @@ const SearchBar = ({ autofilled }) => {
             color="#D53893"
             margin="0px 0px 0px 7px"
           >
-            {activeTab == 3 ? "New Chat" : "All Chats"}
+            {activeTab == 3 ? 'New Chat' : 'All Chats'}
           </SpanV2>
         </ItemHV2>
       )}
@@ -237,14 +240,14 @@ const SearchBar = ({ autofilled }) => {
       >
         <ItemVV2
           alignItems="stretch"
-          display={activeTab == 4 ? "none" : "flex"}
+          display={activeTab == 4 ? 'none' : 'flex'}
         >
           <SearchBarContent onSubmit={submitSearch}>
             <Input
               type="text"
               value={searchedUser}
               onChange={onChangeSearchBox}
-              placeholder="Search name.eth or 0x123..."
+              placeholder="Search Web3 domain or 0x123..."
             />
             {searchedUser.length > 0 && (
               <ItemVV2
@@ -310,7 +313,7 @@ const SearchBar = ({ autofilled }) => {
       {isLoadingSearch ? (
         <ItemVV2
           flex="initial"
-          margin={activeTab == 4 ? "10px" : "0px"}
+          margin={activeTab == 4 ? '10px' : '0px'}
           alignItems="center"
         >
           <LoaderSpinner
@@ -357,7 +360,7 @@ const Input = styled.input`
         ${(props) => props.theme.chat.snapFocusBg}
       ),
       linear-gradient(
-        to right, 
+        to right,
         rgba(182, 160, 245, 1),
         rgba(244, 110, 246, 1),
         rgba(255, 222, 211, 1),

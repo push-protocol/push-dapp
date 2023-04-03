@@ -2638,7 +2638,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethersproject/abi@npm:5, @ethersproject/abi@npm:5.7.0, @ethersproject/abi@npm:^5.0.12, @ethersproject/abi@npm:^5.5.0, @ethersproject/abi@npm:^5.6.3, @ethersproject/abi@npm:^5.7.0":
+"@ethersproject/abi@npm:5, @ethersproject/abi@npm:5.7.0, @ethersproject/abi@npm:^5.0.1, @ethersproject/abi@npm:^5.0.12, @ethersproject/abi@npm:^5.5.0, @ethersproject/abi@npm:^5.6.3, @ethersproject/abi@npm:^5.7.0":
   version: 5.7.0
   resolution: "@ethersproject/abi@npm:5.7.0"
   dependencies:
@@ -4678,6 +4678,7 @@ __metadata:
     "@types/react-scroll-to-bottom": ^4.2.0
     "@types/styled-components": 5.1.26
     "@uniswap/widgets": ^2.47.3
+    "@unstoppabledomains/resolution": ^8.5.0
     "@web3-react/core": 6.1.9
     "@web3-react/injected-connector": 6.0.7
     "@web3-react/ledger-connector": 6.1.9
@@ -7032,6 +7033,19 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: fa9ba41f2f1c6dd31b25ea91ad04591a7ed4014be06fe222a049aef95f2f0e4a7329b9d18ff11ed040bba3f2a93b6dbf5845fd53911be2d46df0eae09fed378d
+  languageName: node
+  linkType: hard
+
+"@unstoppabledomains/resolution@npm:^8.5.0":
+  version: 8.5.0
+  resolution: "@unstoppabledomains/resolution@npm:8.5.0"
+  dependencies:
+    "@ethersproject/abi": ^5.0.1
+    bn.js: ^4.4.0
+    cross-fetch: ^3.1.4
+    crypto-js: ^4.1.1
+    elliptic: ^6.5.4
+  checksum: 3deaae15c0ff9699a30306a5c2a4ff09a5fc9bd9f2c4e9ab22621e85bad7109cff5bfe8bebe2f334cf7b76e602e25b9af659a4d5f5dab44738b41a0b60d8d608
   languageName: node
   linkType: hard
 
