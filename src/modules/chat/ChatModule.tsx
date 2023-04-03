@@ -30,8 +30,8 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 import * as w2wHelper from 'helpers/w2w/';
 import { checkIfGroup, rearrangeMembers } from 'helpers/w2w/groupChat';
 import { useDeviceWidthCheck, useSDKSocket } from 'hooks';
-import { default as useModalBlur } from 'hooks/useModalBlur';
-import { default as useToast } from 'hooks/useToast';
+import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useToast from 'hooks/useToast';
 import ChatBoxSection from 'sections/chat/ChatBoxSection';
 import ChatSidebarSection from 'sections/chat/ChatSidebarSection';
 import VideoCallSection, { VideoCallInfoI } from 'sections/video/VideoCallSection';
@@ -235,7 +235,7 @@ function Chat({ chatid }) {
     isModalOpen: isGroupInfoModalOpen,
     showModal: showGroupInfoModal,
     ModalComponent: GroupInfoModalComponent,
-  } = useModalBlur({padding:"0px"});
+  } = useModalBlur();
 
   const createGroupToast = useToast();
 
@@ -243,7 +243,7 @@ function Chat({ chatid }) {
     isModalOpen: isCreateGroupModalOpen,
     showModal: showCreateGroupModal,
     ModalComponent: CreateGroupModalComponent,
-  } = useModalBlur({padding:'0px'});
+  } = useModalBlur();
 
 
   const connectUser = async (): Promise<void> => {
@@ -424,10 +424,14 @@ function Chat({ chatid }) {
                 InnerComponent={GroupInfoModalContent}
                 onConfirm={() => {}}
                 toastObject={groupInfoToast}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_PARENT}
                 />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
+                modalPadding="0px"
+                modalPosition={MODAL_POSITION.ON_PARENT}
               />
 
               {displayQR && !isMobile && (
