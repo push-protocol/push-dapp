@@ -471,6 +471,7 @@ function Chat({ chatid }) {
           />
         )}
 
+        {/* TEMP */}
         {/* But video chat trumps this now!!! */}
         {videoCallInfo.establishConnection > 0 && (
           <VideoCallSection

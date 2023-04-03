@@ -1,22 +1,44 @@
-import { ItemVV2 } from "components/reusables/SharedStylingV2";
-import { ModalInnerComponentType } from "hooks/useModal";
-import styled from "styled-components";
+// External Packages
+import styled from 'styled-components';
 
-const IncomingCallModalContent = ({ onConfirm, onClose }: ModalInnerComponentType) => {
-    return (
-        <Container>
-            
-        </Container>
-    )
-}
+// Internal Components
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import BlurBG from 'components/reusables/blurs/BlurBG';
 
-const Container = styled(ItemVV2)`
-    background: linear-gradient(179.97deg, rgba(255, 255, 255, 0.6) 0.02%, rgba(236, 233, 250, 0.6) 123.25%);
-    border: 2px solid #FFFFFF;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
-    border-radius: 1.5rem;
-    width: 10vw;
-    height: 50vh;
-`
+type IncomingCallModalContentProps = {
+  onAccept: Function;
+  onReject: Function;
+};
+
+const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({ onAccept, onReject, children }) => {
+  return (
+    <Container>
+      <BlurBG
+        blur={4}
+        zIndex={2}
+        additionalStyles={{ borderRadius: '1.5rem' }}
+      />
+      <ContentContainer>{children}</ContentContainer>
+    </Container>
+  );
+};
+
+const Container = styled(ItemHV2)`
+  position: absolute;
+  right: 18%;
+  border-radius: 1.5rem;
+`;
+
+const ContentContainer = styled(ItemVV2)`
+  background: ${(props) => props.theme.vcModalBGColor};
+  border: ${(props) => {
+    return `2px solid ${props.theme.vcBorderColor}`;
+  }};
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 1.5rem;
+  width: 25vw;
+  height: fit-content;
+  z-index: 10;
+`;
 
 export default IncomingCallModalContent;

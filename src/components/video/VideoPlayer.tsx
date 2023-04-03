@@ -9,34 +9,20 @@ import styled from 'styled-components';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
-const useStyles = makeStyles((theme) => ({
-  video: {
-    width: '550px',
-    [theme.breakpoints.down('xs')]: {
-      width: '300px',
-    },
-  },
-  gridContainer: {
-    justifyContent: 'center',
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-    },
-  },
-  paper: {
-    padding: '10px',
-    border: '2px solid black',
-    margin: '10px',
-  },
-}));
+type VideoPlayerType = {
+  localVideoStyles?: {};
+};
 
-const VideoPlayer = () => {
+const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
-  const classes = useStyles();
 
   return (
     <Container>
       {localStream && (
-        <LocalVideoContainer className={callAccepted && !callEnded ? 'connectionAccepted' : null}>
+        <LocalVideoContainer
+          className={callAccepted && !callEnded ? 'connectionAccepted' : null}
+          style={localVideoStyles}
+        >
           <LocalVideo
             ref={myVideo}
             playsInline
@@ -68,6 +54,8 @@ const LocalVideoContainer = styled(ItemVV2)`
   height: 47vh;
   max-height: 47vh;
   transition: all 0.25 linear;
+  border-radius: 34px;
+  margin: 0 auto;
 
   &.connectionAccepted {
     position: absolute;
@@ -80,11 +68,11 @@ const LocalVideoContainer = styled(ItemVV2)`
 
 const LocalVideo = styled.video`
   height: 100%;
-  border-radius: 34px;
+  width: 100%;
+  border-radius: inherit;
 
   &.connectionAccepted {
     border: 1px solid #ffffff8c;
-    border-radius: 24px;
   }
 `;
 

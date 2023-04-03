@@ -225,7 +225,8 @@ const themeLight = {
   // video call
   vcBGColor: "linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)",
   vcBorderColor: "#FFFFFF",
-  
+  vcModalBGColor: "linear-gradient(179.97deg, rgba(255, 255, 255, 0.6) 0.02%, rgba(236, 233, 250, 0.6) 123.25%)",
+  vcUserInfoText: "#1e1e1e",
 };
 
 const themeDark = {
@@ -456,6 +457,9 @@ const themeDark = {
 
   // video call
   vcBGColor: "#282A2E",
+  vcBorderColor: "#2F3137",
+  vcModalBGColor: "rgba(40, 42, 46, 0.6)",
+  vcUserInfoText: "#B6BCD6",
 };
 
 module.exports = {

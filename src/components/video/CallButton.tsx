@@ -6,14 +6,14 @@ import { ButtonV2, ImageV2 } from 'components/reusables/SharedStylingV2';
 
 
 type CallButtonProps = {
-  bgColor: string;
+  buttonStyles: {};
   iconSrc: any;
   onClick: () => void;
 };
 
-const CallButton = ({ bgColor, iconSrc, onClick }: CallButtonProps) => {
+const CallButton = ({ buttonStyles, iconSrc, onClick }: CallButtonProps) => {
   return (
-    <Button color={bgColor} onClick={onClick}>
+    <Button onClick={onClick} style={buttonStyles}>
       <Icon
         src={iconSrc}
       />
@@ -25,7 +25,6 @@ const Button = styled(ButtonV2)`
   width: 4.56rem;
   max-width: 4.56rem;
   height: 2.75rem;
-  background: ${(props) => props.color};
   hover-background: transparent;
   border-radius: 1rem;
   margin: 0 0.35rem;

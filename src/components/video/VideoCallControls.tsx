@@ -20,12 +20,12 @@ type VideoCallControlsProps = {
   videoCallInfo: VideoCallInfoI;
   endVideoCallHook: Function;
   setVideoCallInfo: Function;
-  answerCall: Function;
-  account: string;
+  containerStyles?: {};
 };
 
-const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, answerCall, account }: VideoCallControlsProps) => {
-  const { leaveCall } = useContext(VideoCallContext);
+const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, containerStyles }: VideoCallControlsProps) => {
+  const { account } = useWeb3React();
+  const { answerCall, leaveCall } = useContext(VideoCallContext);
 
   const answerCallHandler = () => {
     setVideoCallInfo({
@@ -39,7 +39,8 @@ const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, 
   };
 
   return (
-    <Container>
+    <Container style={containerStyles}>
+      {/* Outgoing and Ongoing Call */}
       {(videoCallInfo.establishConnection == 1 || videoCallInfo.establishConnection == 3) && (
         <>
           <MediaToggleButton
@@ -59,7 +60,7 @@ const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, 
             }}
           />
           <CallButton
-            bgColor="#e60808"
+            buttonStyles={{background: "#e60808"}}
             iconSrc={endCallIcon}
             onClick={() => {
               if (videoCallInfo.establishConnection == 3) {
@@ -71,14 +72,25 @@ const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, 
         </>
       )}
 
+      {/* Incoming Call */}
       {videoCallInfo.establishConnection == 2 && (
-        <CallButton
-          bgColor="#08e673"
-          iconSrc={pickCallIcon}
-          onClick={() => {
-            answerCallHandler();
-          }}
-        />
+        <>
+          <CallButton
+            buttonStyles={{background: "#08e673"}}
+            iconSrc={pickCallIcon}
+            onClick={() => {
+              answerCallHandler();
+            }}
+          />
+          <CallButton
+            buttonStyles={{background: "#e60808", width: "46px", maxWidth: "46px"}}
+            iconSrc={endCallIcon}
+            onClick={() => {
+              leaveCall();
+              endVideoCallHook();
+            }}
+          />
+        </>
       )}
     </Container>
   );
@@ -86,6 +98,6 @@ const VideoCallControls = ({ videoCallInfo, endVideoCallHook, setVideoCallInfo, 
 
 const Container = styled(ItemHV2)`
   margin: 2.5% 0;
-`
+`;
 
 export default VideoCallControls;

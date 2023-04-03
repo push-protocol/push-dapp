@@ -5,14 +5,15 @@ type UserInfoType = {
   pfp: any;
   address: string;
   username: string;
-  status: 'Calling' | 'Call Ended';
+  status: 'Calling' | 'Call Ended' | 'Incoming Video Call';
+  containerStyles?: {}
 };
 
-const UserInfo = ({ pfp, username, address, status }: UserInfoType) => {
+const UserInfo = ({ pfp, username, address, status, containerStyles }: UserInfoType) => {
   const shortnedAddress = address.substring(0, 8) + '...' + address.substring(address.length - 8);
 
   return (
-    <Container>
+    <Container style={containerStyles}>
       <PfpContainer>
         <ImageV2
           height="100%"
@@ -56,7 +57,7 @@ const InfoContainer = styled(ItemVV2)`
 `;
 
 const ShortedAddress = styled(SpanV2)`
-  color: #1e1e1e;
+  color: ${(props) => props.theme.vcUserInfoText};
   font-style: normal;
   font-weight: 500;
   font-size: 1.25rem;
@@ -64,7 +65,7 @@ const ShortedAddress = styled(SpanV2)`
 `;
 
 const Status = styled(SpanV2)`
-  color: #1e1e1e;
+  color: ${(props) => props.theme.vcUserInfoText};
   font-style: normal;
   font-weight: 400;
   font-size: 1.125rem;
