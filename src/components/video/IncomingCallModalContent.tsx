@@ -6,19 +6,23 @@ import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 
 type IncomingCallModalContentProps = {
-  onAccept: Function;
-  onReject: Function;
+  containerStyles?: {};
+  contentContainerStyles?: {};
 };
 
-const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({ onAccept, onReject, children }) => {
+const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({
+  containerStyles,
+  contentContainerStyles,
+  children,
+}) => {
   return (
-    <Container>
+    <Container style={containerStyles}>
       <BlurBG
         blur={4}
         zIndex={2}
         additionalStyles={{ borderRadius: '1.5rem' }}
       />
-      <ContentContainer>{children}</ContentContainer>
+      <ContentContainer style={contentContainerStyles}>{children}</ContentContainer>
     </Container>
   );
 };

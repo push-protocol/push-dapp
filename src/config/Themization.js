@@ -227,6 +227,7 @@ const themeLight = {
   vcBorderColor: "#FFFFFF",
   vcModalBGColor: "linear-gradient(179.97deg, rgba(255, 255, 255, 0.6) 0.02%, rgba(236, 233, 250, 0.6) 123.25%)",
   vcUserInfoText: "#1e1e1e",
+  vcCrossIconColor: "#657795",
 };
 
 const themeDark = {
@@ -460,6 +461,7 @@ const themeDark = {
   vcBorderColor: "#2F3137",
   vcModalBGColor: "rgba(40, 42, 46, 0.6)",
   vcUserInfoText: "#B6BCD6",
+  vcCrossIconColor: "#787E99"
 };
 
 module.exports = {
