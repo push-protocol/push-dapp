@@ -99,7 +99,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
         <UniswapWidgetModalComponent
           InnerComponent={UniswapWidgetModal}
           InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
-          modalOuterPadding="0px"
+          modalPadding="0px"
           modalPosition={MODAL_POSITION.ON_ROOT}
         />
       }

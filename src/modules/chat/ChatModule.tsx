@@ -424,13 +424,13 @@ function Chat({ chatid }) {
                 InnerComponent={GroupInfoModalContent}
                 onConfirm={() => {}}
                 toastObject={groupInfoToast}
-                modalOuterPadding="0px"
+                modalPadding="0px"
                 modalPosition={MODAL_POSITION.ON_PARENT}
                 />
               <CreateGroupModalComponent
                 InnerComponent={CreateGroupModalContent}
                 toastObject={createGroupToast}
-                modalOuterPadding="0px"
+                modalPadding="0px"
                 modalPosition={MODAL_POSITION.ON_PARENT}
               />
 

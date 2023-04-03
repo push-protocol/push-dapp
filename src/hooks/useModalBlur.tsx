@@ -22,7 +22,7 @@ export type ModalInnerComponentType = {
 export type ModalType = {
   InnerComponent?: ({ onConfirm, onClose }: ModalInnerComponentType) => JSX.Element;
   onConfirm?: (value1?: any, value2?: any) => any;
-  modalOuterPadding?: string;
+  modalPadding?: string;
   modalMargin?: string;
   toastObject?: {
     showLoaderToast: ShowLoaderToastType;
@@ -64,7 +64,7 @@ const useModalBlur = () => {
     onConfirm,
     toastObject,
     InnerComponentProps,
-    modalOuterPadding,
+    modalPadding,
     modalMargin,
     modalPosition,
   }: ModalType) => {
@@ -97,7 +97,7 @@ const useModalBlur = () => {
               background={themes.blurModalContentBackground}
               alignSelf="center"
               flex="initial"
-              padding={modalOuterPadding ? modalOuterPadding : '1.2% 2%'}
+              padding={modalPadding ? modalPadding : '1.2% 2%'}
               borderRadius="16px"
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
               border={`1px solid ${themes.modalBorderColor}`}
