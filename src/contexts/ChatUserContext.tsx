@@ -3,10 +3,10 @@ import { ethers } from 'ethers';
 import React, { createContext, useState } from 'react';
 import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
 import * as w2wHelper from 'helpers/w2w';
-import * as PushNodeClient from 'api';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { generateKeyPair } from 'helpers/w2w/pgp';
 import * as PushAPI from "@pushprotocol/restapi";
+import { getUser, createUser } from '../api/w2w'
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { appConfig } from 'config';
 
@@ -32,9 +32,9 @@ const ChatUserContextProvider = (props) => {
   });
   const [displayQR,setDisplayQR] = useState(false);
 
-  const getUser = async () => {
+  const getUserForProvider = async () => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user: User = await PushNodeClient.getUser({ caip10 });
+    const user: User = await getUser({ caip10 }) ;
     let connectedUser: ConnectedUser;
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -102,10 +102,10 @@ const ChatUserContextProvider = (props) => {
       });
 
       const signer = await library.getSigner();
-      await PushNodeClient.createUser({
+      await createUser({
         signer: signer
       });
-      const createdUser = await PushNodeClient.getUser({caip10:account});
+      const createdUser = await getUser({ caip10:account });
       const pvtkey = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
         signer: signer,
@@ -140,7 +140,7 @@ const ChatUserContextProvider = (props) => {
 
   return (
     <ChatUserContext.Provider value={{ 
-      getUser, 
+      getUserForProvider, 
       connectedUser, 
       setConnectedUser, 
       blockedLoading,

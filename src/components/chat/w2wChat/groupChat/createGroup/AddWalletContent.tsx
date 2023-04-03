@@ -18,7 +18,7 @@ import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg'
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import * as w2wChatHelper from 'helpers/w2w';
-import * as PushNodeClient from 'api';
+import { getUser } from '../../../../../api/w2w'
 import useToast from 'hooks/useToast';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
@@ -103,14 +103,16 @@ export const AddWalletContent = ({
     }
   };
 
+
+
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
     const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
     let filteredData: User;
 
     if (userSearchData.length) {
-      filteredData = await PushNodeClient.getUser({ caip10 });
+      filteredData = await getUser({ caip10 })
 
-      if (filteredData !== null) {
+      if (filteredData !== null) {  
         setFilteredUserData(filteredData);
       }
       // User is not in the protocol. Create new user
