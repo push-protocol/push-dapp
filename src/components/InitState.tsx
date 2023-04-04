@@ -167,7 +167,7 @@ const InitState = () => {
           });
         } else {
           channelInformationPromise = [...delegateeList].map(({ channel }) => {
-            return getAliasDetails({account,chainId:'POLYGON'}).then(
+            return getAliasDetails({account,chainId}).then(
               (data) => PushAPI.channels.getChannel({
               channel: convertAddressToAddrCaip(data.channel, appConfig.coreContractChain),
               env: appConfig.appEnv
@@ -193,7 +193,7 @@ const InitState = () => {
 
   // get core address of alias
   const checkUserForEthAlias = async () => {
-    const { aliasEth, aliasVerified } = await getAliasDetails({account,chainId:'POLYGON'}).then((data) => {
+    const { aliasEth, aliasVerified } = await getAliasDetails({account,chainId}).then((data) => {
       if (data) {
         dispatch(setAliasEthAddress(data.channel));
         dispatch(setCoreChannelAdmin(data.channel));

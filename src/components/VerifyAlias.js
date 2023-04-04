@@ -56,7 +56,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   };
 
   const checkAliasVerification = async () => {
-    const { aliasVerified } = await getAliasDetails({account,chainId:'POLYGON'}).then(( data ) => {
+    const { aliasVerified } = await getAliasDetails({account,chainId}).then(( data ) => {
       console.log("Alias Data",data)
       if (data) {
         dispatch(setAliasVerified(data.is_alias_verified));
