@@ -1,15 +1,15 @@
-import { ButtonV2, ImageV2, ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-import { H2V2 } from 'components/reusables/SharedStylingV2';
-import { SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+// React + Web3 Essentials
 import React from 'react';
+
+// External Packages
 import styled from 'styled-components';
+
+// Internal Compoonents
+import { ButtonV2, H2V2, ImageV2, ItemHV2, ItemVV2,SectionV2,SpanV2 } from 'components/reusables/SharedStylingV2';
 import InfoLogo from "../../assets/inforWithoutBG.svg";
 import { Button } from 'primaries/SharedStyling';
 
-const YieldStakingPoolComponent = ({
-    isV2
-}) => {
+const YieldUniswapV3 = () => {
     return (
         <Container>
             {/* Top Section */}
@@ -22,14 +22,14 @@ const YieldStakingPoolComponent = ({
 
             {/* Body Section */}
             <ItemVV2
-                
+
             >
                 {/* Reward Section */}
                 <ItemHV2
                     border="1px solid #BAC4D6"
                     borderRadius="16px"
                 >
-                    <ItemVV2 margin="0px 18px 0px 0px">
+                    <ItemVV2 margin="0px 18px 0px 0px" padding="10px">
                         <SecondaryText>Current Reward</SecondaryText>
                         <H2V2
                             fontSize="24px"
@@ -43,7 +43,7 @@ const YieldStakingPoolComponent = ({
 
                     <Line width="10px" height="100%"></Line>
 
-                    <ItemVV2 margin="0px 0px 0px 18px">
+                    <ItemVV2 margin="0px 0px 0px 18px" padding="10px">
                         <SecondaryText>Total Staked</SecondaryText>
                         <H2V2
                             fontSize="24px"
@@ -102,26 +102,19 @@ const YieldStakingPoolComponent = ({
 
             {/* Bottom Section */}
             <ItemVV2 padding=" 0px 14px" margin="24px 0px 0px 0px">
-                {isV2 ? (
-                    <ItemHV2>
-                        <FilledButton style={{margin:"0px 10px 0px 0px"}}>Stake Uni-V2</FilledButton>
-                        <EmptyButton>Unstake Uni-V2</EmptyButton>
-                    </ItemHV2>
-                ) : (
-                    <ItemHV2>
-                        <FilledButton>Stake PUSH/WETH LP NFTs</FilledButton>
-                    </ItemHV2>
-                )}
-                <div>
-                    <EmptyButton style={{margin:"0px 10px 0px 0px"}}>Unstake PUSH/WETH</EmptyButton>
+                <ItemHV2>
+                    <FilledButton>Stake PUSH/WETH LP NFTs</FilledButton>
+                </ItemHV2>
+                <ButtonsContainer>
+                    <EmptyButton style={{ margin: "0px 10px 0px 0px" }}>Unstake PUSH/WETH</EmptyButton>
                     <EmptyButton>Claim Rewards</EmptyButton>
-                </div>
+                </ButtonsContainer>
             </ItemVV2>
         </Container>
     );
 };
 
-export default YieldStakingPoolComponent;
+export default YieldUniswapV3;
 
 const Container = styled(SectionV2)`
     border: 1px solid #BAC4D6;
@@ -172,6 +165,12 @@ const DataValue = styled(H2V2)`
     line-height: 141%;
     letter-spacing: -0.03em;
     color: #333333;
+`
+
+const ButtonsContainer = styled.div`
+    display: flex;
+    width: 100%;
+    margin:15px 0px 0px 0px;
 `
 
 const FilledButton = styled(ButtonV2)`
