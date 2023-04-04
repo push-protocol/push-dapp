@@ -39,7 +39,7 @@ export default YieldFarmingModuleV2;
 // css styles
 const Container = styled(SectionV2)`
 	align-items: stretch;
-	align-self: stretch;
+	align-self: center;
   flex: 1;
 	background: ${(props) => props.theme.default.bg};
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
@@ -64,7 +64,17 @@ const Container = styled(SectionV2)`
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
   }
 
+  @media ${device.tablet} {
+    width: calc(
+      100% - ${globalsMargin.MINI_MODULES.TABLET.RIGHT} - ${globalsMargin.MINI_MODULES.TABLET.LEFT} -
+        ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT} - ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT}
+    );
+    margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
+  }
+
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+    width: 100%;
+    padding: ${GLOBALS.ADJUSTMENTS.PADDING.DEFAULT};
 `;
