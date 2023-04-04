@@ -9,30 +9,26 @@ import BlurBG from 'components/reusables/blurs/BlurBG';
 import { device } from 'config/Globals';
 
 type IncomingCallModalContentProps = {
-  containerStyles?: {};
-  contentContainerStyles?: {};
+  isIncomingCallMinimized: boolean;
 };
 
-const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({
-  containerStyles,
-  contentContainerStyles,
-  children,
-}) => {
+const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({ isIncomingCallMinimized, children }) => {
   return (
-    <Container style={containerStyles}>
+    <Container isIncomingCallMinimized={isIncomingCallMinimized}>
       <BlurBG
-        blur={4}
+        blur={5}
         zIndex={2}
         additionalStyles={{ borderRadius: '1.5rem' }}
       />
-      <ContentContainer style={contentContainerStyles}>{children}</ContentContainer>
+      <ContentContainer isIncomingCallMinimized={isIncomingCallMinimized}>{children}</ContentContainer>
     </Container>
   );
 };
 
-const Container = styled(ItemHV2)`
+const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   position: absolute;
-  right: 18%;
+  right: ${props => props.isIncomingCallMinimized ? "2%" : "18%"};
+  bottom: ${props => props.isIncomingCallMinimized ? "18%" : "unset"};
   border-radius: 1.5rem;
 
   @media ${device.laptop} {
@@ -40,7 +36,7 @@ const Container = styled(ItemHV2)`
   }
 
   @media ${device.tablet} {
-    right: 25%;
+    right: ${props => props.isIncomingCallMinimized ? "5%" : "25%"};
   }
 
   @media ${device.mobileL} {
@@ -48,14 +44,16 @@ const Container = styled(ItemHV2)`
   }
 `;
 
-const ContentContainer = styled(ItemVV2)`
+const ContentContainer = styled(ItemVV2)<IncomingCallModalContentProps>`
   background: ${(props) => props.theme.vcModalBGColor};
   border: ${(props) => {
     return `2px solid ${props.theme.vcBorderColor}`;
   }};
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
   border-radius: 1.5rem;
-  width: 25vw;
+  width: ${props => props.isIncomingCallMinimized ? "32vw" : "25vw"};
+  flex-direction: ${props => props.isIncomingCallMinimized ? "row" : "column"};
+  justify-content: ${props => props.isIncomingCallMinimized ? "space-between" : "center"};
   height: fit-content;
   z-index: 10;
 

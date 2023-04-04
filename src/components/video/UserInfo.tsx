@@ -13,7 +13,7 @@ type UserInfoType = {
   username: string;
   status: 'Calling' | 'Call Ended' | 'Incoming Video Call';
   containerStyles?: {};
-  fontColor: string;
+  fontColor?: string;
 };
 
 const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor }: UserInfoType) => {
@@ -70,6 +70,14 @@ const PfpContainer = styled(ItemVV2)`
     width: 2.875rem;
     height: 2.875rem;
     max-width: 2.875rem;
+    margin: auto 1rem auto 0.3rem;
+  }
+
+  @media ${device.mobileS} {
+    width: 2.5rem;
+    height: 2.5rem;
+    max-width: 2.5rem;
+    margin: auto 0.5rem auto 0rem;
   }
 `;
 
@@ -89,6 +97,10 @@ const ShortedAddress = styled(SpanV2)`
   @media ${device.mobileL} {
     font-size: 0.93rem;
   }
+
+  @media ${device.mobileS} {
+    font-size: 0.8rem;
+  }
 `;
 
 const Status = styled(SpanV2)`
@@ -100,6 +112,10 @@ const Status = styled(SpanV2)`
 
   @media ${device.mobileL} {
     font-size: 1rem;
+  }
+
+  @media ${device.mobileS} {
+    font-size: 0.8rem;
   }
 `;
 

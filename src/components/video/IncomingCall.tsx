@@ -23,21 +23,11 @@ type IncomingCallType = {
   onEndCall: () => void;
 };
 
-// container styles for minimized incoming call
-const minimizedContainerStyles = {
-  bottom: '16%',
-  right: '2%',
-};
-
-// content container styles for minimized incoming call
-const minimizedContentContainerStyles = {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  width: '32vw',
-};
-
 const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
+  // for conditional css
   const isMobile = useDeviceWidthCheck(425);
+  const isLaptopS = useDeviceWidthCheck(1025) && !isMobile;
+
   const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
   const minimizeCallHandler = () => {
@@ -46,10 +36,7 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
 
   return (
     <Container>
-      <IncomingCallModalContent
-        containerStyles={isIncomingCallMinimized ? minimizedContainerStyles : {}}
-        contentContainerStyles={isIncomingCallMinimized ? minimizedContentContainerStyles : {}}
-      >
+      <IncomingCallModalContent isIncomingCallMinimized={isIncomingCallMinimized}>
         {!isIncomingCallMinimized && (
           <CrossIconContainer>
             <CrossIcon onClick={minimizeCallHandler} />
@@ -63,7 +50,7 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
           username="temp"
           address={'0x1234123123123123'}
           status="Incoming Video Call"
-          containerStyles={{ margin: isMobile ? '2.5% 0 4% 3%' : '2.5% auto' }}
+          containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
         />
 
         {!isIncomingCallMinimized && (
@@ -79,7 +66,7 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
         )}
 
         {/* display video call controls */}
-        <VideoCallControlsContainer style={{ margin: `5% ${isIncomingCallMinimized ? '2%' : 'auto'}` }}>
+        <VideoCallControlsContainer style={{ margin: `5% ${isIncomingCallMinimized && !isLaptopS ? '2%' : 'auto'}` }}>
           <CallButton
             buttonStyles={{ background: '#08e673' }}
             iconSrc={pickCallIcon}
@@ -88,8 +75,8 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
           <CallButton
             buttonStyles={{
               background: '#e60808',
-              width: '46px',
-              maxWidth: '46px',
+              width: isMobile ? '34px' : '46px',
+              maxWidth: isMobile ? '34px' : '46px',
             }}
             iconSrc={endCallIcon}
             onClick={onEndCall}
