@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import BlurBG from 'components/reusables/blurs/BlurBG';
 
+// Internal Configs
+import { device } from 'config/Globals';
+
 type IncomingCallModalContentProps = {
   containerStyles?: {};
   contentContainerStyles?: {};
@@ -31,6 +34,18 @@ const Container = styled(ItemHV2)`
   position: absolute;
   right: 18%;
   border-radius: 1.5rem;
+
+  @media ${device.laptop} {
+    right: 3%;
+  }
+
+  @media ${device.tablet} {
+    right: 25%;
+  }
+
+  @media ${device.mobileL} {
+    right: 3.5%;
+  }
 `;
 
 const ContentContainer = styled(ItemVV2)`
@@ -43,6 +58,18 @@ const ContentContainer = styled(ItemVV2)`
   width: 25vw;
   height: fit-content;
   z-index: 10;
+
+  @media ${device.laptop} {
+    width: 31vw;
+  }
+
+  @media ${device.tablet} {
+    width: 45vw;
+  }
+
+  @media ${device.mobileL} {
+    width: 90vw;
+  }
 `;
 
 export default IncomingCallModalContent;
