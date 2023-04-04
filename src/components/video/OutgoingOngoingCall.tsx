@@ -53,7 +53,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
           iconWidth="23px"
           onClick={() => {
             // TODO
-            setToggleVideo(!togglevideo);
+            setToggleVideo(togglevideo => !togglevideo);
             console.log('video toggled');
           }}
         />
