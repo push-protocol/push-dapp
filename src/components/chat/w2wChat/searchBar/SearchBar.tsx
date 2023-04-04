@@ -11,8 +11,7 @@ import { MdError } from 'react-icons/md';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushAPI from '@pushprotocol/restapi';
-import * as PushNodeClient from 'api';
+import * as PushAPI from "@pushprotocol/restapi";
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
@@ -151,7 +150,10 @@ const SearchBar = ({ autofilled }) => {
     setHasUserBeenSearched(true);
 
     if (userSearchData.length) {
-      filteredData = await PushNodeClient.getUser({ caip10 });
+      filteredData = await PushAPI.user.get({ 
+        account: caip10,
+        env: appConfig.appEnv
+      });
       // Checking whether user already present in contact list
       let isUserConnected = findObject(filteredData, inbox, 'did');
 
