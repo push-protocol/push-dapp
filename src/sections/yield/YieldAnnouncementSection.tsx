@@ -20,7 +20,7 @@ const YieldAnnouncementSection = () => {
         src="svg/announcement.svg"
         alt="Sender Profile"
       />
-      <ItemVV2 margin="0 0 0 16px" justifyContent="center" alignItems="flex-start">
+      <ItemVV2 margin="0 0 0 16px" justifyContent="center" alignItems="flex-start" gap="4px">
         <H2V2
           color="#fff"
           fontSize="28px"
