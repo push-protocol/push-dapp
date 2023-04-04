@@ -160,7 +160,7 @@ const SearchBar = ({ autofilled }) => {
     setIsLoadingSearch(false);
   };
 
-
+//this function needs some optimisation
   const handleUserSearch = async ({userSearchData,groupSearchData}:{userSearchData?:string,groupSearchData?:IGroup}): Promise<void> => {
     setIsLoadingSearch(true);
     let filteredData: User;
