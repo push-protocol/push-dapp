@@ -1,36 +1,36 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
-import { ethers } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import React, { useContext } from 'react';
 
 // External Packages
-import styled, { ThemeProvider, useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
+import styled, { ThemeProvider, useTheme } from 'styled-components';
 
 // Internal Components
-import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
-import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
-import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
+import * as PushAPI from "@pushprotocol/restapi";
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
+import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
+import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
 import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
-import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
-import { displayDefaultUser } from 'helpers/w2w/user';
-import * as w2wChatHelper from 'helpers/w2w';
-import * as PushNodeClient from 'api';
-import useToast from 'hooks/useToast';
+import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import * as w2wChatHelper from 'helpers/w2w';
+import { displayDefaultUser } from 'helpers/w2w/user';
+import useToast from 'hooks/useToast';
+import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
 
 // Internal configs
 import { appConfig } from 'config';
-import MemberListContainer from './MemberListContainer';
-import { AppContext, User } from '../../../../../types/chat';
-import { findObject } from '../../../../../helpers/UtilityHelper';
 import { device } from 'config/Globals';
-import GroupModalHeader from './GroupModalHeader';
 import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 import { Context } from 'modules/chat/ChatModule';
+import { findObject } from '../../../../../helpers/UtilityHelper';
+import { AppContext, User } from '../../../../../types/chat';
+import GroupModalHeader from './GroupModalHeader';
+import MemberListContainer from './MemberListContainer';
 
 export const AddWalletContent = ({
   onSubmit,
@@ -108,7 +108,10 @@ export const AddWalletContent = ({
     let filteredData: User;
 
     if (userSearchData.length) {
-      filteredData = await PushNodeClient.getUser({ caip10 });
+      filteredData = await PushAPI.user.get({ 
+        account: caip10,
+        env: appConfig.appEnv
+      });
 
       if (filteredData !== null) {
         setFilteredUserData(filteredData);
