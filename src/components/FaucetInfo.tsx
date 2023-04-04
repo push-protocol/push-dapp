@@ -11,7 +11,7 @@ import { device } from 'config/Globals';
 import { useEffect, useState } from 'react';
 import { getHasEnoughPushToken } from 'helpers';
 import { useWeb3React } from '@web3-react/core';
-import useModal from 'hooks/useModal';
+import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
 import { UniswapWidgetModal } from './UniswapWidget';
 
 type FaucetInfoType = {
@@ -25,7 +25,7 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
   const isProd = appConfig.appEnv === 'prod';
 
   const [isFaucetVisible, setIsFaucetVisible] = useState<boolean>(false);
-  
+
   /* 
     checks whether address has enough PUSH or not
     if yes then hide the faucet component
@@ -44,16 +44,16 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
     isModalOpen: isUniswapWidgetModalOpen,
     showModal: showUniswapWidgetModal,
     ModalComponent: UniswapWidgetModalComponent,
-  } = useModal();
+  } = useModalBlur();
 
   useEffect(() => {
-    (async ()=>{
-        await checkSetFaucetVisibility();
+    (async () => {
+      await checkSetFaucetVisibility();
     })()
   }, [noOfPushTokensToCheck]);
 
   return (
-    <>
+    <Container>
       {isFaucetVisible ? (
         <TextSpace style={containerProps}>
           <InfoText>
@@ -96,15 +96,22 @@ const FaucetInfo = ({ onMintPushToken, noOfPushTokensToCheck, containerProps }: 
         ''
       )}
       {isUniswapWidgetModalOpen &&
-        <UniswapWidgetModalComponent 
-          InnerComponent={UniswapWidgetModal} 
-          InnerComponentProps={{defaultPushTokenAmount: noOfPushTokensToCheck}} 
-          extraOuterPadding="0px"
+        <UniswapWidgetModalComponent
+          InnerComponent={UniswapWidgetModal}
+          InnerComponentProps={{ defaultPushTokenAmount: noOfPushTokensToCheck }}
+          modalPadding="0px"
+          modalPosition={MODAL_POSITION.ON_ROOT}
         />
       }
-    </>
+    </Container>
+
+
   );
 };
+
+const Container = styled.div`
+width:100%;
+`
 
 const TextSpace = styled.div`
   box-sizing: border-box;

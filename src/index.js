@@ -4,10 +4,10 @@ import { ethers } from "ethers";
 import React from "react";
 
 // External Packages
-import ReactDOM from "react-dom";
-import { HashRouter } from "react-router-dom";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 
 // Internal Components
 import { VideoCallContextProvider } from 'contexts/VideoCallContext';
@@ -43,7 +43,7 @@ function getLibrary(provider) {
 }
 
 ReactDOM.render(
-  <HashRouter>
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Provider store={store}>
       <ApolloProvider client={client}>
         <Web3ReactProvider getLibrary={getLibrary}>
@@ -53,7 +53,7 @@ ReactDOM.render(
         </Web3ReactProvider>
       </ApolloProvider>
     </Provider>
-  </HashRouter>,
+  </BrowserRouter>,
   document.getElementById("root")
 );
 

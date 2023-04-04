@@ -13,13 +13,14 @@ import { ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ReactComponent as SearchIcon } from 'assets/chat/search.svg';
 import { ReactComponent as Clear } from 'assets/chat/group-chat/close.svg';
 import { ReactComponent as AddDark } from 'assets/chat/group-chat/adddark.svg';
-import {ReactComponent as MoreLight} from 'assets/chat/group-chat/more.svg';
-import {ReactComponent as MoreDark} from 'assets/chat/group-chat/moredark.svg';
+import { ReactComponent as MoreLight } from 'assets/chat/group-chat/more.svg';
+import { ReactComponent as MoreDark } from 'assets/chat/group-chat/moredark.svg';
 import { ReactComponent as AddLight } from 'assets/chat/group-chat/addlight.svg';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import * as w2wChatHelper from 'helpers/w2w';
 import * as PushNodeClient from 'api';
 import useToast from 'hooks/useToast';
+import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 
 // Internal configs
 import { appConfig } from 'config';
@@ -31,23 +32,22 @@ import GroupModalHeader from './GroupModalHeader';
 import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 import { Context } from 'modules/chat/ChatModule';
 
-export const AddWalletContent = ({ 
-  onSubmit, 
-  memberList, 
-  handleMemberList, 
+export const AddWalletContent = ({
+  onSubmit,
+  memberList,
+  handleMemberList,
   isLoading,
   handlePrevious,
   handleClose,
   title,
-  groupMembers
+  groupMembers,
 }) => {
-  const {
-    currentChat,
-  }: AppContext = useContext<AppContext>(Context);
+  const { currentChat }: AppContext = useContext<AppContext>(Context);
   const [searchedUser, setSearchedUser] = React.useState<string>('');
   const { chainId, account } = useWeb3React<ethers.providers.Web3Provider>();
   const [filteredUserData, setFilteredUserData] = React.useState<any>(null);
   const [isInValidAddress, setIsInvalidAddress] = React.useState<boolean>(false);
+  const [isLoadingSearch, setIsLoadingSearch] = React.useState<boolean>(false);
   const provider = new ethers.providers.InfuraProvider(appConfig.coreContractChain, appConfig.infuraAPIKey);
   const { library } = useWeb3React();
 
@@ -74,8 +74,8 @@ export const AddWalletContent = ({
     setSearchedUser(e.target.value);
   };
 
-
   const handleSearch = async (e): Promise<void> => {
+    setIsLoadingSearch(true);
     e.preventDefault();
     if (!ethers.utils.isAddress(searchedUser)) {
       let address: string;
@@ -95,6 +95,8 @@ export const AddWalletContent = ({
       } catch (err) {
         setIsInvalidAddress(true);
         setFilteredUserData(null);
+      } finally {
+        setIsLoadingSearch(false);
       }
     } else {
       handleUserSearch(searchedUser);
@@ -124,18 +126,19 @@ export const AddWalletContent = ({
     } else {
       setFilteredUserData(null);
     }
+    setIsLoadingSearch(false);
   };
-
 
   const clearInput = () => {
     setSearchedUser('');
     setFilteredUserData(null);
+    setIsLoadingSearch(false);
   };
 
   const addMemberToList = (member: User) => {
     let errorMessage = '';
 
-    errorMessage = addWalletValidation(member,memberList,groupMembers,account);
+    errorMessage = addWalletValidation(member, memberList, groupMembers, account);
 
     if (errorMessage) {
       searchFeedToast.showMessageToast({
@@ -150,7 +153,7 @@ export const AddWalletContent = ({
         ),
       });
     } else {
-      handleMemberList((prev) => [...prev,{...member,isAdmin:false}]);
+      handleMemberList((prev) => [...prev, { ...member, isAdmin: false }]);
     }
 
     setFilteredUserData('');
@@ -185,14 +188,9 @@ export const AddWalletContent = ({
               fontWeight={400}
               fontSize="14px"
             >
-              {groupMembers ? 
-                `0${memberList?.length+groupMembers?.length} / 09 Members`
-               : (
-                `0${memberList?.length} / 09 Members`
-              )}
-
-
-              
+              {groupMembers
+                ? `0${memberList?.length + groupMembers?.length} / 09 Members`
+                : `0${memberList?.length} / 09 Members`}
             </SpanV2>
           </LabelContainer>
           <SearchBarContent onSubmit={handleSearch}>
@@ -211,60 +209,66 @@ export const AddWalletContent = ({
               top="22px"
               right="16px"
             >
-              {searchedUser.length > 0 && <Clear onClick={clearInput} />}
-              {searchedUser.length == 0 && !filteredUserData && (
-                <SearchIcon
+              {searchedUser.length > 0 && (
+                <Clear
+                  onClick={clearInput}
                   style={{ cursor: 'pointer' }}
                 />
               )}
+              {searchedUser.length == 0 && !filteredUserData && <SearchIcon style={{ cursor: 'pointer' }} />}
             </ItemVV2>
           </SearchBarContent>
         </SearchbarContainer>
-        {filteredUserData &&
-          <MemberList >
-
+        {filteredUserData ? (
+          <MemberList>
             <MemberListContainer
               memberData={filteredUserData}
               handleMemberList={addMemberToList}
               lightIcon={<AddLight />}
               darkIcon={<AddDark />}
             />
+          </MemberList>
+        ) : isLoadingSearch ? (
+          <ItemHV2 margin="0px 0px 34px 0px">
+            <LoaderSpinner
+            type={LOADER_TYPE.SEAMLESS}
+            width="auto"
+            spinnerSize={40}
+          />
+          </ItemHV2>
+        ) : null}
 
-          </MemberList>}
-     
-          <MultipleMemberList >
-            {memberList.map((member, index) => (
-              <MemberListContainer
-                key={index}
-                memberList={memberList}
-                memberData={member}
-                handleMembers={handleMemberList}
-                handleMemberList={removeMemberFromList}
-                lightIcon={<MoreLight />}
-                darkIcon={<MoreDark />}
-              />
+        <MultipleMemberList>
+          {memberList.map((member, index) => (
+            <MemberListContainer
+              key={index}
+              memberList={memberList}
+              memberData={member}
+              handleMembers={handleMemberList}
+              handleMemberList={removeMemberFromList}
+              lightIcon={<MoreLight />}
+              darkIcon={<MoreDark />}
+            />
+          ))}
+        </MultipleMemberList>
 
-            ))}
-          </MultipleMemberList>
-       
         <ModalConfirmButton
-          text= {groupMembers ? "Add To Group" : "Create Group"}
+          text={groupMembers ? 'Add To Group' : 'Create Group'}
           onClick={() => onSubmit()}
           isLoading={isLoading}
-          loaderTitle={groupMembers ? "Adding Members" : "Creating group"}
+          loaderTitle={groupMembers ? 'Adding Members' : 'Creating group'}
           backgroundColor={memberList?.length > 0 ? '#CF1C84' : theme.groupButtonBackgroundColor}
           color={memberList?.length > 0 ? '#FFF' : theme.groupButtonTextColor}
-          border={memberList?.length > 0 ? "none" : `1px solid ${theme.modalConfirmButtonBorder}`}
+          border={memberList?.length > 0 ? 'none' : `1px solid ${theme.modalConfirmButtonBorder}`}
           topMargin="60px"
         />
-
       </Container>
     </ThemeProvider>
   );
 };
 
 const Container = styled.div`
-  margin-top:62px;
+  margin-top: 62px;
 `;
 
 const SearchbarContainer = styled(ItemVV2)`
@@ -296,8 +300,8 @@ const Input = styled.input`
   padding: 0px 50px 0px 16px;
   margin: 10px 0px 0px;
   border-radius: 99px;
-  border: 1px solid ;
-  border-color:${(props) => props.theme.modalSearchBarBorderColor};
+  border: 1px solid;
+  border-color: ${(props) => props.theme.modalSearchBarBorderColor};
   background: ${(props) => props.theme.modalSearchBarBackground};
   color: ${(props) => props.color || '#000'};
   &:focus {
@@ -306,7 +310,13 @@ const Input = styled.input`
         ${(props) => props.theme.chat.snapFocusBg},
         ${(props) => props.theme.chat.snapFocusBg}
       ),
-      linear-gradient(to right, #cf1c84, #8ed6ff);
+      linear-gradient(
+        to right,
+        rgba(182, 160, 245, 1),
+        rgba(244, 110, 246, 1),
+        rgba(255, 222, 211, 1),
+        rgba(255, 207, 197, 1)
+      );
     background-origin: border;
     border: 1px solid transparent !important;
     background-clip: padding-box, border-box;
@@ -319,20 +329,18 @@ const Input = styled.input`
   }
 `;
 
-
 const MemberList = styled(ItemVV2)`
   justify-content: 'flex-start';
   padding: 0px 2px;
   margin: 0 0 34px 0;
 `;
 
-
 const MultipleMemberList = styled.div`
-  overflow-y:auto;
-  height:fit-content;
-  max-height:216px;
+  overflow-y: auto;
+  height: fit-content;
+  max-height: 216px;
   padding: 0px 2px;
-  overflow-x:hidden;
+  overflow-x: hidden;
 
   &::-webkit-scrollbar-track {
     background-color: ${(props) => props.theme.scrollBg};
@@ -345,13 +353,13 @@ const MultipleMemberList = styled.div`
 
   @media (max-width: 768px) {
     padding: 0px 0px 0px 0px;
-    max-height:35vh;
+    max-height: 35vh;
 
     &::-webkit-scrollbar-track {
       background-color: none;
       border-radius: 9px;
     }
-  
+
     &::-webkit-scrollbar {
       background-color: none;
       width: 4px;
@@ -364,11 +372,9 @@ const MultipleMemberList = styled.div`
       linear,
       left top,
       left bottom,
-      color-stop(0.44,  #CF1C84),
-      color-stop(0.72, #CF1C84),
-      color-stop(0.86, #CF1C84)
+      color-stop(0.44, #cf1c84),
+      color-stop(0.72, #cf1c84),
+      color-stop(0.86, #cf1c84)
     );
   }
-
-
 `;

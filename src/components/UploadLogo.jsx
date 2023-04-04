@@ -24,10 +24,12 @@ const UploadLogo = ({
   croppedImage,
   view,
   imageSrc,
+  imageType,
   processing,
   setCroppedImage,
   setView,
   setImageSrc,
+  setImageType,
   setProcessingInfo,
   logoInfo,
   setStepFlow
@@ -48,7 +50,6 @@ const UploadLogo = ({
   };
 
   const handleFile = async (file, path) => {
-    console.log("This is called",file);
     setCroppedImage(undefined);
     setView(true);
 
@@ -58,8 +59,8 @@ const UploadLogo = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
-        console.log("image src",reader.result);
         setImageSrc(reader.result);
+        setImageType(file?.files[0]?.type)
       };
     } else {
       return "Nothing....";
@@ -96,6 +97,7 @@ const UploadLogo = ({
                         <ImageClipper
                           className="cropper"
                           imageSrc={imageSrc}
+                          imageType={imageType}
                           onImageCropped={(croppedImage) =>
                             setCroppedImage(croppedImage)
                           }
