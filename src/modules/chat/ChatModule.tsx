@@ -85,8 +85,8 @@ function Chat({ chatid }) {
   const socketData = useSDKSocket({ account, chainId, env: appConfig.appEnv,socketType: 'chat' });
 
   useEffect(()=>{
-    if(connectedUser && socketData.messagesSinceLastConnection){
-      if(currentChat && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account))
+    if(connectedUser && socketData.messagesSinceLastConnection && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account)){
+      if(currentChat )
         getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
