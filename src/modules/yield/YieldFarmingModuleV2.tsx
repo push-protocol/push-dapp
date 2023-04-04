@@ -55,24 +55,16 @@ const Container = styled(SectionV2)`
     100% - ${globalsMargin.MINI_MODULES.DESKTOP.RIGHT} - ${globalsMargin.MINI_MODULES.DESKTOP.LEFT} -
       ${GLOBALS.ADJUSTMENTS.PADDING.BIG} - ${GLOBALS.ADJUSTMENTS.PADDING.BIG}
   );
+  gap: 16px;
   padding: ${GLOBALS.ADJUSTMENTS.PADDING.BIG};
 
   margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.DESKTOP};
-  height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.DESKTOP.TOP} - ${
-    globalsMargin.MINI_MODULES.DESKTOP.BOTTOM
-  });
   
   @media ${device.laptop} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.TABLET};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.TABLET.TOP} - ${
-      globalsMargin.MINI_MODULES.TABLET.BOTTOM
-    });
   }
 
   @media ${device.mobileL} {
     margin: ${GLOBALS.ADJUSTMENTS.MARGIN.MINI_MODULES.MOBILE};
-    height: calc(100vh - ${GLOBALS.CONSTANTS.HEADER_HEIGHT}px - ${globalsMargin.MINI_MODULES.MOBILE.TOP} - ${
-      globalsMargin.MINI_MODULES.MOBILE.BOTTOM
-    });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 `;
