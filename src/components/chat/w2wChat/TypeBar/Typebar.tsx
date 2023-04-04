@@ -7,7 +7,7 @@ import Picker from 'emoji-picker-react';
 
 // Internal Components
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { ItemHV2 } from 'components/reusables/SharedStylingV2';
+import { ButtonV2, ItemHV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { VideoCallInfoI } from 'sections/video/VideoCallSection';
 import { Context } from 'modules/chat/ChatModule';
 import { FileMessageContent } from './Files/Files';
@@ -31,6 +31,7 @@ interface ITypeBar {
   setOpenSuccessSnackBar: (openReprovalSnackbar: boolean) => void;
   openReprovalSnackbar?: boolean;
   setSnackbarText: (SnackbarText: string) => void;
+  approveIntent: (status:string) => void;
 }
 
 const Typebar = ({
@@ -43,8 +44,9 @@ const Typebar = ({
   sendIntent,
   setOpenSuccessSnackBar,
   setSnackbarText,
+  approveIntent,
 }: ITypeBar) => {
-  const { currentChat }: AppContext = useContext<AppContext>(Context);
+  const { currentChat, activeTab }: AppContext = useContext<AppContext>(Context);
   const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
@@ -124,6 +126,7 @@ const Typebar = ({
     }
   };
 
+
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file: File = e.target.files?.[0];
     if (file) {
@@ -165,7 +168,7 @@ const Typebar = ({
   };
 
   return (
-    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg}>
+    <TypeBarContainer background={messageBeingSent ? 'transparent' : theme.chat.sendMesageBg} isJoinGroup={(isGroup && activeTab ===3)}>
       {messageBeingSent ? (
         <SpinnerContainer>
           <ItemHV2
@@ -185,7 +188,7 @@ const Typebar = ({
         </SpinnerContainer>
       ) : (
         <>
-          <Icon
+         {!(isGroup && activeTab===3) && <Icon
             onClick={(): void => setShowEmojis(!showEmojis)}
             filter={theme.snackbarBorderIcon}
           >
@@ -195,7 +198,7 @@ const Typebar = ({
               width="24px"
               alt=""
             />
-          </Icon>
+          </Icon>}
           {showEmojis && (
             <Picker
               onEmojiClick={addEmoji}
@@ -208,7 +211,10 @@ const Typebar = ({
               }}
             />
           )}
-          {
+          
+            {(isGroup && activeTab ===3) ? 
+            <SpanV2>You need to join the group in order to send a message</SpanV2>
+            :
             <TextInput
               placeholder="Type your message..."
               onKeyDown={handleKeyPress}
@@ -217,10 +223,11 @@ const Typebar = ({
               rows={1}
               ref={textAreaRef}
               autoFocus="autoFocus"
-            />
-          }
+            />}
+            
+          
 
-          <>
+         {!(isGroup && activeTab===3)? <>
             <GifDiv>
               <label>
                 {isGifPickerOpened && (
@@ -278,7 +285,22 @@ const Typebar = ({
                 </Icon>
               </>
             )}
-          </>
+          </>:
+          <>
+         <ButtonV2
+          background="#D53A94"
+          color="#fff"
+          flex="initial"
+          width="160px"
+          borderRadius="12px"
+          padding="15px 8px"
+          onClick={() => {
+            approveIntent()
+          }}
+        >
+          <SpanV2 fontWeight="500" fontSize = "17px">Join Group</SpanV2>
+        </ButtonV2>
+          </>}
         </>
       )}
     </TypeBarContainer>
@@ -298,7 +320,7 @@ const TypeBarContainer = styled.div`
   right: 9px;
 
   height: auto;
-  padding: 13px 16px 13px 16px;
+  padding: ${(props) => props.isJoinGroup?"6px 6px 6px 26px":"13px 16px"};
   border-radius: 13px;
   background: ${(props) => (props.background ? props.background : props.theme.chat.sendMesageBg)};
 `;

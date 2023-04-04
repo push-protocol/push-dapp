@@ -13,7 +13,7 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import { fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
+import { checkIfIntentExist, fetchInbox, getDefaultGroupFeed } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds, IGroup, User } from 'types/chat';
@@ -148,17 +148,35 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
             // When searching as of now the search will always result in only one user being displayed.
             // There is no multiple users appearing on the sidebar when a search is done. The wallets must match exactly.
             const searchedData: User | IGroup = props.filteredUserData[0];
-            let feed: Feeds;
+            let feed: Feeds,isNew:boolean;
             if((searchedData as IGroup)?.groupName) {
-              feed = await getDefaultGroupFeed({groupData:searchedData as IGroup,inbox,intents:receivedIntents});
+              ({feed,isNew} = await getDefaultGroupFeed({groupData:searchedData as IGroup,inbox,intents:receivedIntents}));
             }
             else {
               feed = await getDefaultFeed({userData:searchedData as User,inbox,intents:receivedIntents});
             }
-            console.log(filteredUserData)
-           console.log(feed)
-            setFeeds([feed]);
+            if(isNew && !feed?.groupInformation?.isPublic)
+            {
+              messageFeedToast.showMessageToast({
+                toastTitle: 'Error',
+                toastMessage: 'Cannot search for private groups now',
+                toastType: 'ERROR',
+                getToastIcon: (size) => (
+                  <MdError
+                    size={size}
+                    color="red"
+                  />
+                ),
+              });
+              setFilteredUserData([]);
+              setActiveTab(0);
+            }
+            else{
+              setFeeds([feed]);
+            }
+            
           }
+       
         } else {
           if (props.isInvalidAddress) {
             messageFeedToast.showMessageToast({
@@ -191,7 +209,6 @@ const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
       setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
-
   return (
     <ItemVV2
       flex={6}

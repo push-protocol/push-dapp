@@ -27,6 +27,7 @@ import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import MessageFeed from '../messageFeed/MessageFeed';
 import { getGroupbyChatId } from 'services/chats/getGroupByChatId';
 import { getGroupByName } from 'services/chats/getGroupByName';
+import { getGroup } from 'services/chats/getGroup';
 
 const SearchBar = ({ autofilled }) => {
   // get theme
@@ -85,7 +86,7 @@ const SearchBar = ({ autofilled }) => {
     if (isInValidAddress) {
       searchFeedToast.showMessageToast({
         toastTitle: 'Error',
-        toastMessage: 'Invalid Address',
+        toastMessage: 'Invalid Search',
         toastType: 'ERROR',
         getToastIcon: (size) => (
           <MdError
@@ -116,6 +117,12 @@ const SearchBar = ({ autofilled }) => {
     handleSearch();
   };
 
+  const setInvalidSearch = () =>{
+    setIsInvalidAddress(true);
+    setFilteredUserData([]);
+    setHasUserBeenSearched(true);
+  }
+
   const handleSearch = async (): Promise<void> => {
     if (!ethers.utils.isAddress(searchedUser)) {
       setIsLoadingSearch(true);
@@ -129,24 +136,11 @@ const SearchBar = ({ autofilled }) => {
               address = await library.resolveName(searchedUser);
             }
           } catch (err) {
-            setIsInvalidAddress(true);
-            setFilteredUserData([]);
-            setHasUserBeenSearched(true);
+            setInvalidSearch();
           }
-         
         }
         else{
-          try{
-            group = await getGroupbyChatId(searchedUser);
-            if(!group){
-              group = await getGroupByName(searchedUser);
-            }
-          } catch (err) {
-            setIsInvalidAddress(true);
-            setFilteredUserData([]);
-            setHasUserBeenSearched(true);
-          }
-         
+          group = await getGroup(searchedUser,setInvalidSearch);
         }
        
         // this ensures address are checksummed
@@ -158,9 +152,7 @@ const SearchBar = ({ autofilled }) => {
           handleUserSearch({groupSearchData:group});
         }
           else if(!group && !address) {
-          setIsInvalidAddress(true);
-          setFilteredUserData([]);
-          setHasUserBeenSearched(true);
+            setInvalidSearch();
           }
     } else {
       await handleUserSearch({userSearchData:searchedUser});
@@ -183,7 +175,6 @@ const SearchBar = ({ autofilled }) => {
       if (filteredData !== null && isUserConnected) {
         if (activeTab !== 0) {
           setUserShouldBeSearched(true);
-
           if (autofilled) {
             setActiveTab(4);
           } else {
@@ -191,9 +182,8 @@ const SearchBar = ({ autofilled }) => {
           }
         }
         setFilteredUserData([filteredData]);
-        setSearchedUser('')
-      }
-      else if (ethers.utils.isAddress(userSearchData)) {
+        setSearchedUser('');
+      } else if (ethers.utils.isAddress(userSearchData)) {
         setUserShouldBeSearched(true);
         if (autofilled) {
           setActiveTab(4);
@@ -202,31 +192,40 @@ const SearchBar = ({ autofilled }) => {
         }
         const displayUser = displayDefaultUser({ caip10 });
         setFilteredUserData([displayUser]);
-        setSearchedUser('')
+        setSearchedUser('');
       } else {
         setIsInvalidAddress(true);
         setFilteredUserData([]);
       }
       // User is not in the protocol. Create new user
-       
-
     } else {
-      if(groupSearchData){
-        setUserShouldBeSearched(true);
-        //check if in inbox
-        if (autofilled) {
-          setActiveTab(4);
+      if (groupSearchData) {
+        const isGroupInInbox = inbox.find((inb) => inb?.groupInformation?.chatId === groupSearchData.chatId);
+        if (isGroupInInbox) {
+          if (activeTab != 0) {
+            setUserShouldBeSearched(true);
+            //check if in inbox
+            if (autofilled) {
+              setActiveTab(4);
+            } else {
+              setActiveTab(3);
+            }
+          }
         } else {
-          setActiveTab(3);
+          setUserShouldBeSearched(true);
+          //check if in inbox
+          if (autofilled) {
+            setActiveTab(4);
+          } else {
+            setActiveTab(3);
+          }
         }
         setFilteredUserData([groupSearchData]);
-        setSearchedUser('')
+        setSearchedUser('');
+      } else {
+        setIsInvalidAddress(true);
+        setFilteredUserData([]);
       }
-     else{
-      setIsInvalidAddress(true);
-      setFilteredUserData([]);
-     }
-     
     }
   };
 

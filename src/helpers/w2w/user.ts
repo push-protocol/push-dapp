@@ -47,7 +47,6 @@ export const checkIfIntentExist = ({
       ? true
       : false;
   }
-
   return val;
 };
 
@@ -137,8 +136,8 @@ export const getDefaultGroupFeed = async ({
   groupData: IGroup;
   inbox: Feeds[];
   intents: Feeds[];
-}): Promise<Feeds> => {
-  
+}): Promise<{feed:Feeds,isNew:boolean}> => {
+    let isNew:boolean = false;
     let feed:Feeds;
     const inboxGroup = inbox.filter((inb) => inb?.groupInformation?.chatId === groupData.chatId);
 
@@ -150,8 +149,9 @@ export const getDefaultGroupFeed = async ({
     }
     else {
    feed = getDefaultFeedObject({groupInformation:groupData});
+   isNew = true;
 }
-  return feed;
+  return {feed,isNew};
 };
 
 export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupInformation?:IGroup}) => {
@@ -174,7 +174,7 @@ export const getDefaultFeedObject = ({user,groupInformation}:{user?:User,groupIn
     did: groupInformation?null: user.did,
     threadhash: null,
     profilePicture: groupInformation?groupInformation.groupImage:user.profilePicture,
-    about: user.about,
+    about: groupInformation?null:user.about,
     intent: null,
     intentSentBy: null,
     intentTimestamp: null,

@@ -17,7 +17,6 @@ import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
 
 // Internal Components
-import * as PushNodeClient from 'api';
 import { ReactComponent as Info } from 'assets/chat/group-chat/info.svg';
 import { ReactComponent as InfoDark } from 'assets/chat/group-chat/infodark.svg';
 import { ReactComponent as More } from 'assets/chat/group-chat/more.svg';
@@ -30,7 +29,6 @@ import * as w2wHelper from 'helpers/w2w/';
 import {
   checkIfIntentExist,
   fetchInbox,
-  getLatestThreadHash
 } from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
 import { useResolveEns } from 'hooks/useResolveEns';
@@ -47,7 +45,6 @@ import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
-import Tooltip from 'components/reusables/tooltip/Tooltip';
 import { appConfig } from 'config';
 import GLOBALS, { device } from 'config/Globals';
 import { getChats } from 'services';
@@ -200,6 +197,7 @@ useEffect(() => {
     setIsGroup(false);
     setShowGroupInfo(false);
     setMessages([]);
+
     if (currentChat) {
       setIsGroup(checkIfGroup(currentChat));
       // We only delete the messages once the user clicks on another chat. The user could click multiple times on the same chat and it would delete the previous messages
@@ -265,6 +263,8 @@ useEffect(() => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
+        console.log(messages)
+        console.log(sendResponse)
         setMessages([...messages, sendResponse]);
         
         setTimeout(() => {
@@ -301,7 +301,7 @@ useEffect(() => {
       setMessageBeingSent(false);
     }
   };
-
+console.log(messages)
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
@@ -724,7 +724,7 @@ useEffect(() => {
                         )}
                           <Chats
                             msg={
-                              isGroup && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup })
+                              (!currentChat?.groupInformation?.isPublic && checkIfIntentExist({ receivedIntents, currentChat, connectedUser, isGroup }))
                                 ? ''
                                 : msg
                             }
@@ -760,7 +760,7 @@ useEffect(() => {
             <div ref={bottomRef}></div>
           </MessageContainer>
 
-          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser }) ? null : (
+          {checkIfIntentExist({ receivedIntents, currentChat, connectedUser,isGroup }) ? null : (
             <>
               <Typebar
                 messageBeingSent={messageBeingSent}
@@ -772,6 +772,7 @@ useEffect(() => {
                 sendIntent={sendIntent}
                 setOpenSuccessSnackBar={setOpenSuccessSnackBar}
                 setSnackbarText={setSnackbarText}
+                approveIntent= {ApproveIntent}
               />
             </>
           )}
