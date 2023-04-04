@@ -13,9 +13,10 @@ type UserInfoType = {
   username: string;
   status: 'Calling' | 'Call Ended' | 'Incoming Video Call';
   containerStyles?: {};
+  fontColor: string;
 };
 
-const UserInfo = ({ pfp, username, address, status, containerStyles }: UserInfoType) => {
+const UserInfo = ({ pfp, username, address, status, containerStyles, fontColor }: UserInfoType) => {
   const shortnedAddress = address.substring(0, 8) + '...' + address.substring(address.length - 8);
 
   return (
@@ -30,8 +31,8 @@ const UserInfo = ({ pfp, username, address, status, containerStyles }: UserInfoT
       </PfpContainer>
 
       <InfoContainer>
-        <ShortedAddress>{shortnedAddress}</ShortedAddress>
-        <Status>{status}</Status>
+        <ShortedAddress color={fontColor}>{shortnedAddress}</ShortedAddress>
+        <Status color={fontColor}>{status}</Status>
       </InfoContainer>
     </Container>
   );
@@ -46,7 +47,7 @@ const Container = styled(ItemHV2)`
   min-height: 5.1rem;
   align-items: center;
   justify-content: center;
-  margin: 1% auto;
+  margin: 2% auto 1% auto;
 
   @media ${device.mobileL} {
     height: 2.95rem;
@@ -74,10 +75,12 @@ const PfpContainer = styled(ItemVV2)`
 
 const InfoContainer = styled(ItemVV2)`
   align-items: flex-start;
+  width: fit-content;
+  max-width: fit-content;
 `;
 
 const ShortedAddress = styled(SpanV2)`
-  color: ${(props) => props.theme.vcUserInfoText};
+  color: ${(props) => props.color || props.theme.vcUserInfoText};
   font-style: normal;
   font-weight: 500;
   font-size: 1.25rem;
@@ -89,7 +92,7 @@ const ShortedAddress = styled(SpanV2)`
 `;
 
 const Status = styled(SpanV2)`
-  color: ${(props) => props.theme.vcUserInfoText};
+  color: ${(props) => props.color || props.theme.vcUserInfoText};
   font-style: normal;
   font-weight: 400;
   font-size: 1.125rem;

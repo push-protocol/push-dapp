@@ -117,6 +117,7 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
     <OutgoingOngoingCall
       blockedLoading={blockedLoading}
       onEndCall={endCallHandler}
+      callStatus={videoCallInfo.establishConnection}
     />
   );
 };

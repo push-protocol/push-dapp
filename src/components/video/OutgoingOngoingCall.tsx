@@ -22,15 +22,41 @@ import { BlockedLoadingI } from 'types/chat';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
+import { useDeviceWidthCheck } from 'hooks';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;
   onEndCall: () => void;
+  callStatus: number; // 1 -> outgoing, 3 -> ongoing
 };
 
-const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallType) => {
+const userInfoImmersiveStyles = {
+  position: 'absolute',
+  top: "2%",
+  left: "0",
+  zIndex: "3",
+  width: "100vw",
+  maxWidth: "100vw",
+  justifyContent: "center"
+};
 
-  const[togglevideo, setToggleVideo] = React.useState(true);
+const playerImmersiveStyles = {
+  height: '100vh',
+  maxHeight: '100vh',
+};
+
+const callControlsImmersiveStyles = {
+  position: 'absolute',
+  bottom: "4%",
+  left: "0",
+  width: "100vw",
+  maxWidth: "100vw",
+  justifyContent: "center"
+};
+
+const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
+  const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
+  const [togglevideo, setToggleVideo] = React.useState(true);
 
   return (
     <Container>
@@ -41,19 +67,24 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
         username="temp"
         address={'0x1234123123123123'}
         status="Calling"
+        containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
+        fontColor={isImmersive ? "white" : null}
       />
 
       {/* display the local and incoming video */}
-      <VideoPlayer videostatus={togglevideo}/>
+      <VideoPlayer
+        videostatus={togglevideo}
+        localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
+      />
 
       {/* display video call controls */}
-      <VideoCallControlsContainer>
+      <VideoCallControlsContainer style={isImmersive ? callControlsImmersiveStyles : {}}>
         <MediaToggleButton
           iconSrc={videoIcon}
           iconWidth="23px"
           onClick={() => {
             // TODO
-            setToggleVideo(togglevideo => !togglevideo);
+            setToggleVideo((togglevideo) => !togglevideo);
             console.log('video toggled');
           }}
         />
