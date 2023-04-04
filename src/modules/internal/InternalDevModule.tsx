@@ -17,7 +17,7 @@ import ProgressBar, { NOTICE_POSITIONING } from 'components/reusables/progress/P
 import { ButtonV2, ItemVV2, SectionV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import Spinner from 'components/reusables/spinners/SpinnerUnit';
 import { showNotifcationToast } from 'components/reusables/toasts/toastController';
-import useModalBlur from 'hooks/useModalBlur';
+import useModalBlur, { MODAL_POSITION } from 'hooks/useModalBlur';
 import { DemoModalContent} from './DemoModalContent';
 
 // Internal Configs
@@ -132,9 +132,9 @@ const InternalDevModule = () => {
         </ButtonV2>
         <FullScreenDemoModalComponent
           InnerComponent={DemoModalContent}
-          isFullScreen={true}
-          extraOuterPadding="0px"
+          modalPadding='0px'
           InnerComponentProps={{heading:'Full Screen Modal'}}
+          modalPosition={MODAL_POSITION.ON_ROOT}
         />
      </IndividualComps>
 
@@ -153,9 +153,9 @@ const InternalDevModule = () => {
         </ButtonV2>
         <LocalScreenDemoModalComponent
           InnerComponent={DemoModalContent}
-          isFullScreen={false}
-          extraOuterPadding="0px"
+          modalPadding='0px'
           InnerComponentProps={{heading:'Local Modal'}}
+          modalPosition={MODAL_POSITION.ON_PARENT}
         />
      </IndividualComps>
 

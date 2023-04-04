@@ -14,12 +14,12 @@ import styled, { useTheme } from 'styled-components';
 import { postReq } from 'api';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import EPNSCoreHelper from 'helpers/EPNSCoreHelper';
-import useModal from 'hooks/useModal';
+import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
 import useToast from 'hooks/useToast';
 import { setUserChannelDetails } from 'redux/slices/adminSlice';
 import cubeIcon from '../assets/icons/cube.png';
 import redBellIcon from '../assets/icons/redBellSlash.png';
-import greenBellIcon from "../assets/icons/greenBell.svg"
+import greenBellIcon from '../assets/icons/greenBell.svg';
 import userMinusIcon from '../assets/icons/userCircleMinus.png';
 import userPlusIcon from '../assets/icons/userCirclePlus.png';
 import AddDelegateModalContent from './AddDelegateModalContent';
@@ -49,9 +49,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   const { account, library, chainId } = useWeb3React();
   const { epnsWriteProvider, epnsCommWriteProvider } = useSelector((state: any) => state.contracts);
   const { channelDetails } = useSelector((state: any) => state.admin);
-  const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector(
-    (state: any) => state.channels
-  );
+  const { CHANNNEL_DEACTIVATED_STATE, CHANNEL_BLOCKED_STATE } = useSelector((state: any) => state.channels);
 
   const theme = useTheme();
   const { channelState } = channelDetails;
@@ -63,27 +61,27 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
     isModalOpen: isDeactivateChannelModalOpen,
     showModal: showDeactivateChannelModal,
     ModalComponent: DeactivateChannelModalComponent,
-  } = useModal();
+  } = useModalBlur();
   const {
     isModalOpen: isReactivateChannelModalOpen,
     showModal: showReactivateChannelModal,
     ModalComponent: ReactivateChannelModalComponent,
-  } = useModal();
+  } = useModalBlur();
   const {
     isModalOpen: isAddDelegateModalOpen,
     showModal: showAddDelegateModal,
     ModalComponent: AddDelegateModalComponent,
-  } = useModal();
+  } = useModalBlur();
   const {
     isModalOpen: isRemoveDelegateModalOpen,
     showModal: showRemoveDelegateModal,
     ModalComponent: RemoveDelegateModalComponent,
-  } = useModal();
+  } = useModalBlur();
   const {
     isModalOpen: isAddSubgraphModalOpen,
     showModal: showAddSubgraphModal,
     ModalComponent: AddSubgraphModalComponent,
-  } = useModal();
+  } = useModalBlur();
 
   // for closing the ChannelSettings Dropdown upon outside click
   const closeDropdownCondition =
@@ -102,22 +100,31 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
   // toaster customize
   const LoaderToast = ({ msg, color }) => (
     <Toaster>
-      <LoaderSpinner type={LOADER_TYPE.SEAMLESS} spinnerSize={30} />
+      <LoaderSpinner
+        type={LOADER_TYPE.SEAMLESS}
+        spinnerSize={30}
+      />
       <ToasterMsg>{msg}</ToasterMsg>
     </Toaster>
   );
 
   // Toastify
   let notificationToast = () =>
-    toaster.dark(<LoaderToast msg="Preparing Notification" color="#fff" />, {
-      position: 'bottom-right',
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    toaster.dark(
+      <LoaderToast
+        msg="Preparing Notification"
+        color="#fff"
+      />,
+      {
+        position: 'bottom-right',
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      }
+    );
 
   const isChannelDeactivated = channelState === CHANNNEL_DEACTIVATED_STATE;
   const isChannelBlocked = channelState === CHANNEL_BLOCKED_STATE;
@@ -302,6 +309,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={ChannelDeactivateModalContent}
         onConfirm={deactivateChannel}
         toastObject={deactivateChannelToast}
+        modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
       {/* reactivate channel modal */}
@@ -309,7 +317,8 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={ChannelReactivateModalContent}
         onConfirm={activateChannel}
         toastObject={reactivateChannelToast}
-        placementMargin={isMobile ? '10rem 1rem 0 1rem' : ''}
+        modalMargin={isMobile ? '10rem 1rem 0 1rem' : ''}
+        modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
       {/* modal to add a delegate */}
@@ -317,6 +326,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={AddDelegateModalContent}
         onConfirm={addDelegate}
         toastObject={addDelegateToast}
+        modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
       {/* modal to remove a delegate */}
@@ -324,6 +334,8 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={RemoveDelegateModalContent}
         onConfirm={removeDelegate}
         toastObject={removeDelegateToast}
+        InnerComponentProps={{isNotDropdown:false}}
+        modalPosition={MODAL_POSITION.ON_ROOT}
       />
 
       {/* modal to add a subgraph */}
@@ -331,6 +343,7 @@ function ChannelSettings({ DropdownRef, isDropdownOpen, closeDropdown }: Channel
         InnerComponent={AddSubgraphModalContent}
         onConfirm={addSubgraphDetails}
         toastObject={addSubgraphToast}
+        modalPosition={MODAL_POSITION.ON_ROOT}
       />
     </>
   );
@@ -350,15 +363,14 @@ const DropdownWrapper = styled.div`
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e8f7;
   border: 1px solid;
-  border-color: ${(props)=>props.theme.default.borderColor};
+  border-color: ${(props) => props.theme.default.borderColor};
   border-radius: 16px;
   justify-content: space-between;
 
-  @media (max-width:600px){
-    left:-90px;
-    top:24px;
+  @media (max-width: 600px) {
+    left: -90px;
+    top: 24px;
   }
-
 `;
 
 const ActiveChannelWrapper = styled.div`
@@ -416,9 +428,8 @@ const ChannelActionButton = styled.button`
 `;
 
 const ActivateChannelContainer = styled.div`
-  color :  ${(props) => props.isChannelBlocked ? 'red' : props.isChannelDeactivated ? '#30CC8B' : 'red '}
+  color: ${(props) => (props.isChannelBlocked ? 'red' : props.isChannelDeactivated ? '#30CC8B' : 'red ')};
 `;
-
 
 const CustomIcon = styled.img`
   width: 25px;

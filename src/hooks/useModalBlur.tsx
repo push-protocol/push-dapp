@@ -20,18 +20,22 @@ export type ModalInnerComponentType = {
 };
 
 export type ModalType = {
-  InnerComponent?: ({ onConfirm, onClose, toastObject, InnerComponentProps }: ModalInnerComponentType) => JSX.Element;
+  InnerComponent?: ({ onConfirm, onClose }: ModalInnerComponentType) => JSX.Element;
   onConfirm?: (value1?: any, value2?: any) => any;
-  extraOuterPadding?: string;
-  placementMargin?: string;
+  modalPadding?: string;
+  modalMargin?: string;
   toastObject?: {
     showLoaderToast: ShowLoaderToastType;
     showMessageToast: ShowMessageToastType;
   };
   InnerComponentProps?: any;
-  isFullScreen?:boolean;
+  modalPosition?:number;
 };
 
+export const MODAL_POSITION={
+  ON_ROOT: 1,
+  ON_PARENT: 2
+}
 
 const useModalBlur = () => {
   const [open, setOpen] = React.useState(false);
@@ -60,17 +64,17 @@ const useModalBlur = () => {
     onConfirm,
     toastObject,
     InnerComponentProps,
-    extraOuterPadding,
-    placementMargin,
-    isFullScreen
+    modalPadding,
+    modalMargin,
+    modalPosition,
   }: ModalType) => {
     const themes = useTheme();
-
+    
     return (
       <ThemeProvider theme={themes}>
         {open && (
           <ItemHV2
-            position={isFullScreen?"fixed":"absolute"}
+            position={modalPosition==MODAL_POSITION.ON_ROOT ? 'fixed' : 'absolute'}
             alignSelf="stretch"
             alignItems="flex-start"
             flex="initial"
@@ -93,11 +97,11 @@ const useModalBlur = () => {
               background={themes.blurModalContentBackground}
               alignSelf="center"
               flex="initial"
-              padding={extraOuterPadding ? extraOuterPadding : '1.2% 2%'}
+              padding={modalPadding ? modalPadding : '1.2% 2%'}
               borderRadius="16px"
               boxShadow="0px 4px 16px rgba(0, 0, 0, 0.02)"
-              margin={placementMargin?placementMargin:'0px'}
               border={`1px solid ${themes.modalBorderColor}`}
+              margin={modalMargin ? modalMargin : '0px'}
             >
               <InnerComponent
                 onConfirm={onConfirm}
