@@ -200,7 +200,7 @@ export const ImageV2 = styled.img`
 
 export const AInlineV2 = styled.a`
   background: transparent;
-  color: #e1087f;
+  color: ${(props) => props.color || "#e1087f"};
   display: inline;
   letter-spacing: inherit;
   padding: 0px;

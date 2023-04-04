@@ -36,7 +36,7 @@ const YieldAnnouncementSection = () => {
           fontWeight={500}  
         >
           The Push DAO has approved the extension of the Rewards Program for 84 more weeks! More info {" "}
-          <AInlineV2 href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
+          <AInlineV2 color="#fff" href="https://medium.com/push-protocol/push-dao-extends-liquidity-rewards-program-26008926b05a" target='_blank'>
             here
           </AInlineV2>
         </H2V2>
@@ -44,4 +44,5 @@ const YieldAnnouncementSection = () => {
     </ItemHV2>
   );
 }
+
 export default YieldAnnouncementSection;
