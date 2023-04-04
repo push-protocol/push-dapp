@@ -32,11 +32,16 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
+        <IncomingVideoContainer>
         <IncomingVideo
           playsInline
           ref={userVideo}
           autoPlay
         />
+        <IncomingEnsContainer>
+          <p>ens.eth</p>
+        </IncomingEnsContainer>
+        </IncomingVideoContainer>
       )}
     </Container>
   );
@@ -56,11 +61,12 @@ const LocalVideoContainer = styled(ItemVV2)`
   transition: all 0.25 linear;
   border-radius: 34px;
   margin: 0 auto;
+  z-index: 2;
 
   &.connectionAccepted {
     position: absolute;
     width: inherit;
-    right: 20px;
+    right: 4%;
     bottom: 20px;
     height: 25%;
   }
@@ -73,9 +79,35 @@ const LocalVideo = styled.video`
 
   &.connectionAccepted {
     border: 1px solid #ffffff8c;
+    z-index: 2;
   }
 `;
 
 const IncomingVideo = styled.video`
-  width: 60%;
+  border-radius: 34px;
+  width: 100%;
+`;
+
+const IncomingVideoContainer = styled(ItemVV2)`
+overflow: hidden;
+height: 20vh;
+max-height: 65vh;
+width: 95%;
+background-color: #000000;
+left: 2.5%;
+border-radius: 34px;
+z-index: 1;
+`;
+
+const IncomingEnsContainer = styled(ItemVV2)`
+position: absolute;
+  height: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 24px;
+  background-color: #FFFFFF;
+  opacity: 0.8;
+  z-index: 3;
+  left 1.5%;
+  bottom: 3.5%;
 `;

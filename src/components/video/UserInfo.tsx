@@ -40,7 +40,7 @@ const Container = styled(ItemHV2)`
   min-height: 5.1rem;
   align-items: center;
   justify-content: center;
-  margin: 3% auto;
+  margin: 1% auto;
 `;
 
 const PfpContainer = styled(ItemVV2)`
