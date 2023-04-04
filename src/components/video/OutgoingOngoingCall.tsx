@@ -29,6 +29,9 @@ type OutgoingOngoingCallType = {
 };
 
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallType) => {
+
+  const[togglevideo, setToggleVideo] = React.useState(true);
+
   return (
     <Container>
       {/* remote user info */}
@@ -41,7 +44,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
       />
 
       {/* display the local and incoming video */}
-      <VideoPlayer />
+      <VideoPlayer videostatus={togglevideo}/>
 
       {/* display video call controls */}
       <VideoCallControlsContainer>
@@ -50,6 +53,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
           iconWidth="23px"
           onClick={() => {
             // TODO
+            setToggleVideo(togglevideo => !togglevideo);
             console.log('video toggled');
           }}
         />
@@ -106,7 +110,7 @@ const Container = styled(SectionV2)`
 const VideoCallControlsContainer = styled(ItemHV2)`
   width: fit-content;
   max-width: fit-content;
-  margin: 2.5% auto;
+  margin: 1% auto;
 `;
 
 export default OutgoingOngoingCall;
