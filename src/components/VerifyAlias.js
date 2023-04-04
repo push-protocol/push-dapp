@@ -16,6 +16,7 @@ import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
 import { setProcessingState } from 'redux/slices/channelCreationSlice';
 import { getReq, postReq } from '../api';
 import { A, Button, H3, Item, Section, Span } from '../primaries/SharedStyling';
+import { getAliasDetails } from 'services';
 
 // Internal Configs
 import { abis, appConfig, CHAIN_DETAILS } from 'config';
@@ -55,8 +56,7 @@ const VerifyAlias = ({ aliasEthAccount, setAliasVerified }) => {
   };
 
   const checkAliasVerification = async () => {
-    const userAddressInCaip = convertAddressToAddrCaip(account, chainId);
-    const { aliasVerified } = await getReq(`/v1/alias/${userAddressInCaip}/channel`).then(({ data }) => {
+    const { aliasVerified } = await getAliasDetails({account,chainId:'POLYGON'}).then(( data ) => {
       console.log("Alias Data",data)
       if (data) {
         dispatch(setAliasVerified(data.is_alias_verified));
