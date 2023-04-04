@@ -270,21 +270,8 @@ useEffect(() => {
         setTimeout(() => {
           setMessageBeingSent(false);
         }, 1)
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `${sendResponse}`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
-
-        setMessageBeingSent(false);
       }
+
     } catch (error) {
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
@@ -357,19 +344,8 @@ useEffect(() => {
             />
           ),
         });
-      } else {
-        chatBoxToast.showMessageToast({
-          toastTitle: 'Error',
-          toastMessage: `There was a problem in approving the chat request, please try again.`,
-          toastType: 'ERROR',
-          getToastIcon: (size) => (
-            <MdError
-              size={size}
-              color="red"
-            />
-          ),
-        });
       }
+
       setActiveTab(0);
       await resolveThreadhash();
       setMessageBeingSent(false);
@@ -417,57 +393,31 @@ useEffect(() => {
           env: appConfig.appEnv,
         });
 
-        if (typeof sendResponse === 'string') {
-          if (sendResponse.toLowerCase() === 'your wallet is not whitelisted') {
-            // Getting User Info
-            setBlockedLoading({
-              enabled: true,
-              title: 'Wallet is not whitelisted',
-              spinnerType: LOADER_SPINNER_TYPE.WHITELIST,
-              progressEnabled: true,
-              progress: 0,
-              progressNotice:
-                'Reminder: Push Chat is in alpha, Things might break.',
-            });
-          }
-          // Display toaster
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Error',
-            toastMessage: `${sendResponse}`,
-            toastType: 'ERROR',
-            getToastIcon: (size) => (
-              <MdError
-                size={size}
-                color="red"
-              />
-            ),
-          });
+        if (typeof sendResponse !== 'string') {
+           // We store the message in state decrypted so we display to the user the intent message
+           sendResponse.messageContent = message;
+           setNewMessage('');
+           let result = await fetchInboxApi();
+           result.msg.messageContent = message;
+           setChat(result);
+           chatBoxToast.showMessageToast({
+             toastTitle: 'Success',
+             toastMessage: 'Chat Request Sent',
+             toastType: 'SUCCESS',
+             getToastIcon: (size) => (
+               <MdCheckCircle
+                 size={size}
+                 color="green"
+               />
+             ),
+           });
           setMessageBeingSent(false);
-        } else {
-          // We store the message in state decrypted so we display to the user the intent message
-          sendResponse.messageContent = message;
-          setNewMessage('');
-          let result = await fetchInboxApi();
-          result.msg.messageContent = message;
-          setChat(result);
-          chatBoxToast.showMessageToast({
-            toastTitle: 'Success',
-            toastMessage: 'Chat Request Sent',
-            toastType: 'SUCCESS',
-            getToastIcon: (size) => (
-              <MdCheckCircle
-                size={size}
-                color="green"
-              />
-            ),
-          });
         }
       }
 
       setHasUserBeenSearched(false);
       setActiveTab(0);
     } catch (error) {
-      console.error(error.message);
       chatBoxToast.showMessageToast({
         toastTitle: 'Error',
         toastMessage: 'Cannot send request, Try again later',
