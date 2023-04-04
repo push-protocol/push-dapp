@@ -231,14 +231,20 @@ const AppLogin = ({ toggleDarkMode }) => {
         {/* Chainsafe Audit and Discord */}
         <ItemVV2 margin="30px 0 0 0" flex="initial" maxWidth="920px">
           <SpanV2 fontSize="14px" padding="25px 15px" lineHeight="140%" color={theme.default.color}>
-            Note: The Push (EPNS) protocol has been under development for 1+ year, and completed a{' '}
-            <AInlineV2 href="https://epns.io/EPNS-Protocol-Audit2021.pdf" target="_blank">
-              {' '}
-              ChainSafe audit
+            Note: The Push Protocol has been under development for 2+ years now. It has successfully completed its security audits of {' '}
+            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-10-2021.pdf" target="_blank">
+              version 1 
             </AInlineV2>{' '}
-            in October 2021. However, the mainnet is still a new product milestone. Always DYOR, and anticipate bugs and
-            UI improvements. Learn how to report any bugs in our{' '}
-            <AInlineV2 href="https://discord.com/invite/YVPB99F9W5" target="_blank">
+            and {' '}
+            <AInlineV2 href="https://github.com/ChainSafe/audits/blob/main/EPNS/epns-protocol-11-2022.pdf" target="_blank">
+              version 1.5
+            </AInlineV2>{' '}
+            smart contracts by Chainsafe. However, always DYOR and anticipate UI bugs or improvements. You can use our {' '}
+            <AInlineV2 href="https://zv9atndluia.typeform.com/to/KW3gwclM" target="_blank">
+              Bug Bounty Form 
+            </AInlineV2>{' '}
+            to report bugs or communicate with us on our {' '}
+            <AInlineV2 href="https://discord.com/invite/pushprotocol" target="_blank">
               Discord
             </AInlineV2>
             .

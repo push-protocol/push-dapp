@@ -115,10 +115,8 @@ const TabSpace = styled.div`
   height: 100px;
   border-radius: 20px;
   background-color: #f4f5fa;
-  margin-top: 20px;
   align-items: center;
-  // transform: translateY(40px);
-  z-index:1;
+  transform: translateY(40px);
 
   @media ${device.tablet} {
     width: 100%;

@@ -1098,7 +1098,27 @@ function SendNotifications() {
 
                 {nfType && nfSubEnabled && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Subject</Label>
+
+                    <Item
+                      display="flex"
+                      direction="row"
+                      align="center"
+                      flex="1"
+                      self="stretch"
+                      justify="space-between"
+                    >
+                      <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
+                        Subject
+                      </Label>
+                      <Span
+                        color={theme.default.secondaryColor}
+                        size="13px"
+                        margin="0px 10px 0px 0px"
+                        weight="700"
+                      >
+                        {80 - nfSub.length}
+                      </Span>
+                    </Item>
                     <Input
                       maxlength="40"
                       flex="1"
@@ -1113,7 +1133,7 @@ function SendNotifications() {
                       radius="12px"
                       value={nfSub}
                       onChange={(e) => {
-                        setNFSub(e.target.value);
+                        setNFSub(e.target.value.slice(0,80));
                       }}
                     />
                   </Item>
@@ -1121,7 +1141,27 @@ function SendNotifications() {
 
                 {nfType && (
                   <Item margin="15px 0px" flex="1" self="stretch" align="stretch" width="100%">
-                    <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>Notification Message</Label>
+
+                    <Item
+                      display="flex"
+                      direction="row"
+                      align="center"
+                      flex="1"
+                      self="stretch"
+                      justify="space-between"
+                    >
+                      <Label style={{ color: theme.color, fontWeight: isMobile ? "500" : "600", fontSize: isMobile ? "15px" : "14px" }}>
+                      Notification Message
+                      </Label>
+                      <Span
+                        color={theme.default.secondaryColor}
+                        size="13px"
+                        margin="0px 10px 0px 0px"
+                        weight="700"
+                      >
+                        {500 - nfMsg.length}
+                      </Span>
+                    </Item>
                     <TextField
                       // placeholder="Your Channel's Short Description (250 Characters)"
                       rows="4"
@@ -1136,7 +1176,7 @@ function SendNotifications() {
                       overflow="auto"
                       value={nfMsg}
                       onChange={(e) => {
-                        setNFMsg(e.target.value);
+                        setNFMsg(e.target.value.slice(0, 500));
                       }}
                       autocomplete="off"
                     />
