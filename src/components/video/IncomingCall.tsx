@@ -13,6 +13,10 @@ import VideoPlayer from './VideoPlayer';
 import CallButton from './CallButton';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
+import { useDeviceWidthCheck } from 'hooks';
+
+// Internal Configs
+import { device } from 'config/Globals';
 
 type IncomingCallType = {
   onAnswerCall: () => void;
@@ -33,6 +37,7 @@ const minimizedContentContainerStyles = {
 };
 
 const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
+  const isMobile = useDeviceWidthCheck(425);
   const [isIncomingCallMinimized, setIsIncomingCallMinimized] = useState(false);
 
   const minimizeCallHandler = () => {
@@ -58,7 +63,7 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
           username="temp"
           address={'0x1234123123123123'}
           status="Incoming Video Call"
-          containerStyles={{ margin: '2.5% auto' }}
+          containerStyles={{ margin: isMobile ? '2.5% 0 4% 3%' : '2.5% auto' }}
         />
 
         {!isIncomingCallMinimized && (
@@ -74,7 +79,7 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
         )}
 
         {/* display video call controls */}
-        <VideoCallControlsContainer style={{ margin: `2.5% ${isIncomingCallMinimized ? '2%' : 'auto'}` }}>
+        <VideoCallControlsContainer style={{ margin: `5% ${isIncomingCallMinimized ? '2%' : 'auto'}` }}>
           <CallButton
             buttonStyles={{ background: '#08e673' }}
             iconSrc={pickCallIcon}
@@ -119,6 +124,10 @@ const CrossIcon = styled(MdClear)`
   height: 25px;
   cursor: pointer;
   color: ${(props) => props.theme.vcCrossIconColor};
+  @media ${device.mobileL} {
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const VideoCallControlsContainer = styled(ItemHV2)`

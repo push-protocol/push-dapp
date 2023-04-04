@@ -6,10 +6,10 @@ import React, { useContext, useState } from 'react';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { BlockedLoadingI } from 'types/chat';
-
-// Internal Configs
 import IncomingCall from 'components/video/IncomingCall';
 import OutgoingOngoingCall from 'components/video/OutgoingOngoingCall';
+
+// Internal Configs
 
 // Interface
 export interface VideoCallInfoI {
