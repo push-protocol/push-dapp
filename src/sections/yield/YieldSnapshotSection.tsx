@@ -22,44 +22,27 @@ const YieldSnapshotSection = () => {
   // RENDER
   return (
     <>
-      <ItemHV2>
-        {/* UNI V3 Liquidity */}
-        
-        {/* <YieldStakingPoolComponent isV2={false}/> */}
-
+      <V3Container>
         <YieldUniswapV3/>
-        {/* <YieldStakingPoolComponent/> */}
-
-        {/* Push Fee Accrual Staking */}
-        {/* <ItemVV2 justifyContent="stretch">
-          Push Fee Accrual Staking
-          
-        </ItemVV2> */}
-
         <YieldPushFeeV3/>
-      </ItemHV2>
+      </V3Container>
 
-      <ItemHV2>
-        {/* UNI V2 Liquidity - Deprecated */}
-        {/* <ItemVV2 justifyContent="stretch">
-          Uni V2
-        </ItemVV2> */}
-
+      <V2Container>
         <YieldUniswapV2/>
-
-        {/* Push Staking - Deprecated */}
-        {/* <ItemVV2 justifyContent="stretch">
-          Push Staking
-        </ItemVV2> */}
-
         <YieldPushFeeV2/>
-      </ItemHV2>
+      </V2Container>
     </>
   );
 }
 export default YieldSnapshotSection;
 
-// const Container = styled.div`
-//   overflow: scroll;
-//   height: 1000px;
-// `
+const V3Container = styled(ItemHV2)`
+  @media (max-width:900px){
+    flex-direction:column;
+  }
+`
+const V2Container = styled(ItemHV2)`
+  @media (max-width:900px){
+    flex-direction:column;
+  }
+`

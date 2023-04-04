@@ -62,7 +62,6 @@ const ItemHV2Modified = styled(ItemHV2)`
 `;
 
 const StatsContainer = styled(ItemVV2)`
-  height: 140px;
   position: relative;
   border-radius: 16px;
   overflow:hidden;
@@ -86,6 +85,6 @@ const TextBox = styled(ItemVV2)`
 `
 
 const StatsText = styled(TextBox)`
-  padding: 25px 0 25px 15px;
+  padding: 25px 10px 15px 15px;
   gap: 8px;
 `;
