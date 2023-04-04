@@ -86,7 +86,7 @@ function Chat({ chatid }) {
 
   useEffect(()=>{
     if(connectedUser && socketData.messagesSinceLastConnection){
-      if(currentChat)
+      if(currentChat && (w2wHelper.caip10ToWallet(socketData.messagesSinceLastConnection.fromCAIP10) !== account))
         getUpdatedChats(socketData.messagesSinceLastConnection);
       getUpdatedInbox(socketData.messagesSinceLastConnection)
     }
