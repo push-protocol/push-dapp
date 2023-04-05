@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveEns } from 'hooks/useResolveEns';
+import { getAppropriateTimestamp } from 'helpers';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -87,32 +88,6 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
     ) : null;
 
   // get date
-
-  const getAppropriateTimestamp = (time: Date) => {
-    let day = new Date();
-
-    if (
-      day.getDate() == time.getDate() &&
-      day.getMonth() == time.getMonth() &&
-      day.getFullYear() == time.getFullYear()
-    ) {
-      // const minutes = time.getTimezoneOffset();
-      // const date = new Date(time.getTime() + minutes * 60000);
-      const localTime: string = time.toLocaleTimeString('en-US');
-      const finalTime: string = localTime.slice(0, -6) + ' ' + localTime.slice(-2).toLowerCase();
-      return finalTime;
-      //date.toLocaleTimeString('en-US').slice(0, -6) + ' ' + date.toLocaleTimeString('en-US').slice(-2).toLowerCase()
-    }
-    day.setDate(day.getDate() - 1);
-    if (
-      day.getDate() == time.getDate() &&
-      day.getMonth() == time.getMonth() &&
-      day.getFullYear() == time.getFullYear()
-    ) {
-      return 'Yesterday';
-    }
-    return `${time.getDate()}/${time.getMonth() + 1}/${time.getFullYear() % 100}`;
-  };
 
   let date = null;
   if (timestamp) {
