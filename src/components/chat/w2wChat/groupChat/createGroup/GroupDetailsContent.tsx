@@ -4,6 +4,7 @@ import React from 'react';
 // External Packages
 import styled, { ThemeProvider, useTheme } from 'styled-components';
 import * as PushAPI from '@pushprotocol/restapi';
+import { MdError } from 'react-icons/md';
 
 // Internal Components
 import ModalConfirmButton from 'primaries/SharedModalComponents/ModalConfirmButton';
@@ -17,6 +18,7 @@ import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import GroupModalHeader from './GroupModalHeader';
 import AutoImageClipper from 'primaries/AutoImageClipper';
+import useToast from 'hooks/useToast';
 
 export const GroupDetailsContent = ({
   groupNameData,
@@ -56,6 +58,7 @@ export const GroupDetailsContent = ({
   ];
 
   const themes = useTheme();
+  const groupDetailToast=useToast();
 
   const handleFile = async (e) => {
     setIsImageUploaded(true)
@@ -85,7 +88,20 @@ export const GroupDetailsContent = ({
 
         return false;
       }
-    } catch (e) { }
+    } catch (e) { 
+      groupDetailToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Error in finding group name',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+
+    }
 
     if (!isLengthValid(groupNameData, 50)) {
       setErrorInfo((x) => ({

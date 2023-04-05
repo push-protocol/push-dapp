@@ -104,7 +104,8 @@ export const AddWalletContent = ({
   };
 
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
+    try{
+      const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
     let filteredData: User;
 
     if (userSearchData.length) {
@@ -127,6 +128,21 @@ export const AddWalletContent = ({
       setFilteredUserData(null);
     }
     setIsLoadingSearch(false);
+    }
+    catch(error){
+      searchFeedToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: 'Unsuccesful search, Try again',
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+      setIsLoadingSearch(false);
+    }
   };
 
   const clearInput = () => {
