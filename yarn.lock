@@ -4662,10 +4662,10 @@ __metadata:
     "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.72
     "@mui/material": ^5.5.0
-    "@pushprotocol/ledgerlive": 0.0.1
-    "@pushprotocol/restapi": 1.0.1
-    "@pushprotocol/socket": 0.4.2
-    "@pushprotocol/uiweb": 0.5.0
+    "@pushprotocol/ledgerlive": latest
+    "@pushprotocol/restapi": latest
+    "@pushprotocol/socket": latest
+    "@pushprotocol/uiweb": latest
     "@reduxjs/toolkit": ^1.7.1
     "@testing-library/dom": ^6.12.2
     "@testing-library/jest-dom": ^4.2.4
@@ -4848,7 +4848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/ledgerlive@npm:0.0.1":
+"@pushprotocol/ledgerlive@npm:latest":
   version: 0.0.1
   resolution: "@pushprotocol/ledgerlive@npm:0.0.1"
   dependencies:
@@ -4860,9 +4860,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/restapi@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@pushprotocol/restapi@npm:1.0.1"
+"@pushprotocol/restapi@npm:latest":
+  version: 1.0.4
+  resolution: "@pushprotocol/restapi@npm:1.0.4"
   dependencies:
     "@metamask/eth-sig-util": ^5.0.2
     axios: ^0.27.2
@@ -4877,11 +4877,11 @@ __metadata:
     uuid: ^9.0.0
   peerDependencies:
     ethers: ^5.6.8
-  checksum: 0b9d130e7d490ee5e583e98850163019ee38844abe65afacff4aed7be29f6362e42b9bbe5f7d91f0703ef025fcb5782f99457e64caa2a8f9f64fc60e9006bb30
+  checksum: 9efa36993af0ffd466fe573961d35bc9324ff14894940e42e93f290eeaa2455451e7db24124db1540040013807bf38bb14327d389a182daf2773217743f954ca
   languageName: node
   linkType: hard
 
-"@pushprotocol/socket@npm:0.4.2":
+"@pushprotocol/socket@npm:latest":
   version: 0.4.2
   resolution: "@pushprotocol/socket@npm:0.4.2"
   dependencies:
@@ -4893,9 +4893,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pushprotocol/uiweb@npm:0.5.0":
-  version: 0.5.0
-  resolution: "@pushprotocol/uiweb@npm:0.5.0"
+"@pushprotocol/uiweb@npm:latest":
+  version: 1.0.0
+  resolution: "@pushprotocol/uiweb@npm:1.0.0"
   dependencies:
     date-fns: ^2.28.0
     emoji-picker-react: ^3.5.1
@@ -4906,7 +4906,7 @@ __metadata:
     ethers: ^5.7.1
     react: ">=16.8.0"
     styled-components: ^5.3.5
-  checksum: 771034ef774bccab1b13adc761ecf89e47706a216b21e3e41f4d805dfaa64f3bbc2b76a5a730a1248e8114e7f097dd4e6d0b95478fa510b79a29bcb359737d69
+  checksum: f32623ee03da775be21a3190364a6d61cad78e6cee06ce9a8c1605b8137a6ce5bfc4d7859bb5e433dc55771da1b47d6a39a65c6476a0c481b86c8e7441e1c654
   languageName: node
   linkType: hard
 

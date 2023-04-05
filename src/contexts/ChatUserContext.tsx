@@ -1,14 +1,11 @@
-import { useWeb3React } from '@web3-react/core';
-import { ethers } from 'ethers';
-import React, { createContext, useState } from 'react';
-import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
-import * as w2wHelper from 'helpers/w2w';
-import CryptoHelper from 'helpers/CryptoHelper';
-import { generateKeyPair } from 'helpers/w2w/pgp';
 import * as PushAPI from "@pushprotocol/restapi";
-import { getUser, createUser } from '../api/w2w'
+import { useWeb3React } from '@web3-react/core';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { appConfig } from 'config';
+import { ethers } from 'ethers';
+import * as w2wHelper from 'helpers/w2w';
+import React, { createContext, useState } from 'react';
+import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
 
 export const ChatUserContext = createContext({})
 
@@ -32,9 +29,12 @@ const ChatUserContextProvider = (props) => {
   });
   const [displayQR,setDisplayQR] = useState(false);
 
-  const getUserForProvider = async () => {
+  const getUser = async () => {
     const caip10: string = w2wHelper.walletToCAIP10({ account });
-    const user: User = await getUser({ caip10 }) ;
+    const user: User = await PushAPI.user.get({ 
+      account: caip10,
+      env: appConfig.appEnv
+    });
     let connectedUser: ConnectedUser;
 
     // TODO: Change this to do verification on ceramic to validate if did is valid
@@ -102,14 +102,19 @@ const ChatUserContextProvider = (props) => {
       });
 
       const signer = await library.getSigner();
-      await createUser({
+      await PushAPI.user.create({ 
+        account: account,
+        env: appConfig.appEnv,
         signer: signer
       });
-      const createdUser = await getUser({ caip10:account });
+      const createdUser = await PushAPI.user.get({
+        account: account,
+        env: appConfig.appEnv
+      });
       const pvtkey = await PushAPI.chat.decryptPGPKey({
         encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
         signer: signer,
-        env:appConfig.appEnv,
+        env: appConfig.appEnv,
         // toUpgrade: false
       });
       setBlockedLoading({
@@ -140,7 +145,7 @@ const ChatUserContextProvider = (props) => {
 
   return (
     <ChatUserContext.Provider value={{ 
-      getUserForProvider, 
+      getUser, 
       connectedUser, 
       setConnectedUser, 
       blockedLoading,
