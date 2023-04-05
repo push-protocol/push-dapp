@@ -352,13 +352,19 @@ const ImageMessage = styled.img`
 `;
 
 const TextMessage = styled.p`
-  max-width: 600px;
+  max-width: 475px;
   padding: 7px 44px 10px 0px;
   font-size: 14px;
   word-wrap: break-word;
   text-align: left;
   font-weight: 400;
   margin: 0px;
+  @media(${device.tablet}){
+    max-width:565px;
+  }
+  @media(${device.mobileL}){
+    max-width:245px;
+  }
 `;
 
 const TimeStamp = styled(ItemHV2)`
@@ -397,7 +403,7 @@ const MessageWrapper = styled.div`
 const ReceivedMessage = styled.div`
   box-sizing: border-box;
   position: relative;
-  max-width: 650px;
+  max-width: 525px;
   left: ${(props) => props.left || '34px'};
   padding: ${(props: any): string => props.padding || '5px 11px 10px 15px'};
   background: ${(props: any): string => props.color || '#ffffff'};
@@ -409,6 +415,9 @@ const ReceivedMessage = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 9px 17px;
+  @media(${device.tablet}){
+    max-width:600px;
+  }
 `;
 
 const IntentMessage = styled(ReceivedMessage)`
@@ -420,7 +429,7 @@ const SenderMessage = styled.div`
   box-sizing: border-box;
   position: relative;
   right: 34px;
-  max-width: 650px;
+  max-width: 525px;
   text-align: left;
   padding: ${(props: any): string => props.padding || '11px 11px 5px 15px'};
   background: ${(props: any): string => props.color || '#ca599b'};
@@ -430,4 +439,10 @@ const SenderMessage = styled.div`
   color: #ffffff;
   flex-direction: column;
   align-items: baseline;
+  @media(${device.tablet}){
+    max-width:605px;
+  }
+  @media(${device.mobileL}){
+    max-width:295px;
+  }
 `;
