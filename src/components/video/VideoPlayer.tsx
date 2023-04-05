@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 // External Packages
 import { makeStyles } from '@material-ui/core';
@@ -18,7 +18,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const[windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => setWindowHeight(window.innerHeight);
@@ -48,11 +48,14 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           style={localVideoStyles}
           windowWidth={windowWidth}
         >
-          <LocalVideo ref={localVideoRef} windowWidth={windowWidth} />
+          <LocalVideo
+            ref={localVideoRef}
+            windowWidth={windowWidth}
+          />
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
-        <IncomingVideoContainer windowHeight={windowHeight}  >
+        <IncomingVideoContainer windowHeight={windowHeight}>
           <IncomingVideo
             playsInline
             ref={userVideo}
@@ -88,8 +91,9 @@ const LocalVideoContainer = styled(ItemVV2)`
     position: absolute;
     width: inherit;
     right: 4%;
-    bottom:  ${({ windowWidth }) => (windowWidth < 425 ? '-30vh' : '20px')};
+    bottom: ${({ windowWidth }) => (windowWidth < 425 ? '-30vh' : '20px')};
     height: 25%;
+    border-radius: 24px;
   }
 `;
 
