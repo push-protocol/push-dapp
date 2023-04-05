@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext,useEffect,useState } from 'react';
+import React, { useContext, useEffect, useState, useRef } from 'react';
 
 // External Packages
 import { makeStyles } from '@material-ui/core';
@@ -14,6 +14,7 @@ type VideoPlayerType = {
 };
 
 const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
+  const localVideoRef = useRef(null);
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
@@ -31,6 +32,14 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    if (localVideoRef.current) {
+      let video = localVideoRef.current;
+      video.srcObject = localStream;
+      video.play();
+    }
+  }, [localVideoRef, localStream]);
+
   return (
     <Container>
       {localStream && (
@@ -39,13 +48,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           style={localVideoStyles}
           windowWidth={windowWidth}
         >
-          <LocalVideo
-            ref={myVideo}
-            playsInline
-            muted
-            autoPlay
-            windowWidth={windowWidth}
-          />
+          <LocalVideo ref={localVideoRef} windowWidth={windowWidth} />
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
