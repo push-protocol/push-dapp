@@ -32,7 +32,7 @@ import {
   getLatestThreadHash
 } from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
-import { useResolveEns } from 'hooks/useResolveEns';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds, MessageIPFS } from 'types/chat';
@@ -111,7 +111,7 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //get ens name
-  const ensName = useResolveEns(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  const ensName = useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
   const navigate = useNavigate();
   const location = useLocation();
   

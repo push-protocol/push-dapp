@@ -202,7 +202,7 @@ export const AddWalletContent = ({
               type="text"
               value={searchedUser}
               onChange={onChangeSearchBox}
-              placeholder="Search name.eth or 0x123..."
+              placeholder="Search Web3 domain or 0x123..."
               color={theme.modalPrimaryTextColor}
             />
             <ItemVV2

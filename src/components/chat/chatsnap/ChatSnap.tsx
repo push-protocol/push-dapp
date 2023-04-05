@@ -7,7 +7,7 @@ import styled, { useTheme } from 'styled-components';
 // Internal Components
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
-import { useResolveEns } from 'hooks/useResolveEns';
+import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { getAppropriateTimestamp } from 'helpers/TimerHelper';
 
 // Internal Configs
@@ -35,7 +35,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   // get theme
   const theme = useTheme();
   // get ens name
-  const ensName = useResolveEns(!isGroup ? username : null);
+  const ensName = useResolveWeb3Name(!isGroup ? username : null);
 
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;
