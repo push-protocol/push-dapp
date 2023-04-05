@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 // External Packages
 import { makeStyles } from '@material-ui/core';
@@ -14,7 +14,16 @@ type VideoPlayerType = {
 };
 
 const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
+  const localVideoRef = useRef(null);
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
+
+  useEffect(() => {
+    if (localVideoRef.current) {
+      let video = localVideoRef.current;
+      video.srcObject = localStream;
+      video.play();
+    }
+  }, [localVideoRef, localStream]);
 
   return (
     <Container>
@@ -23,12 +32,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           className={callAccepted && !callEnded ? 'connectionAccepted' : null}
           style={localVideoStyles}
         >
-          <LocalVideo
-            ref={myVideo}
-            playsInline
-            muted
-            autoPlay
-          />
+          <LocalVideo ref={localVideoRef} />
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
