@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveEns } from 'hooks/useResolveEns';
+import { getAppropriateTimestamp } from 'helpers/TimerHelper';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -41,25 +42,25 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
   const shortUsername = !isGroup ? shortenText(walletAddress, 8, 7) : null;
 
   const getDisplayName = () => {
-    if (ensName)
-      return ensName;
-    if (isGroup){
-      if(username?.length>20)
-       return username.substring(0,20)+'...';
-      else
-        return username;
+    if (ensName) return ensName;
+    if (isGroup) {
+      if (username?.length > 20) return username.substring(0, 20) + '...';
+      else return username;
     }
     return shortUsername;
-  }
+  };
 
   // format message here instead
   const message =
     chatSnapMsg.type === 'Text' ? (
-      <SpanV2 color={theme.default.secondaryColor} fontSize="15px" fontWeight="400">
+      <SpanV2
+        color={theme.default.secondaryColor}
+        fontSize="15px"
+        fontWeight="400"
+      >
         {chatSnapMsg.message?.length > 25 ? chatSnapMsg.message?.slice(0, 25) + '...' : chatSnapMsg.message}
       </SpanV2>
-    ) : 
-    chatSnapMsg.type === 'Image' ? (
+    ) : chatSnapMsg.type === 'Image' ? (
       <SpanV2 color={theme.default.secondaryColor}>
         <i
           className="fa fa-picture-o"
@@ -86,10 +87,15 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
     ) : null;
 
   // get date
+
   let date = null;
   if (timestamp) {
-    const time = new Date(timestamp);
-    date = time.toLocaleTimeString('en-US').slice(0, -6) + time.toLocaleTimeString('en-US').slice(-2);
+    
+    if (typeof timestamp === "string" && timestamp?.includes('Z')) {
+      timestamp = timestamp.replace('Z', '');
+    }
+  
+    date = getAppropriateTimestamp(new Date(timestamp));
   }
 
   // RENDER
@@ -155,7 +161,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
             textAlign="start"
             fontWeight="400"
           >
-           {message}
+            {message}
           </SpanV2>
         </ItemHV2>
       </ItemVV2>
