@@ -18,6 +18,11 @@ import { AppContext } from 'types/chat';
 import { caip10ToWallet } from 'helpers/w2w';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { MessagetypeType } from '../../../../types/chat';
+import { convertToWalletAddressList, getAdminList, updateGroup } from 'helpers/w2w/groupChat';
+import { useWeb3React } from '@web3-react/core';
+import { ethers } from 'ethers';
+import useToast from 'hooks/useToast';
+import { MdCheckCircle, MdError } from 'react-icons/md';
 
 interface ITypeBar {
   isGroup: boolean;
@@ -46,13 +51,15 @@ const Typebar = ({
   setSnackbarText,
   approveIntent,
 }: ITypeBar) => {
-  const { currentChat, activeTab }: AppContext = useContext<AppContext>(Context);
+  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { currentChat, activeTab, setChat }: AppContext = useContext<AppContext>(Context);
   const {connectedUser} = useContext(ChatUserContext);
   const [showEmojis, setShowEmojis] = useState<boolean>(false);
   const [isGifPickerOpened, setIsGifPickerOpened] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [filesUploading, setFileUploading] = useState<boolean>(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const groupInfoToast = useToast();
   const [value, setValue] = useState('');
 
   const theme = useTheme();
@@ -126,6 +133,54 @@ const Typebar = ({
     }
   };
 
+  const joinGroup = async () => {
+    //Already Present Members and PendingMembers
+    const groupMemberList = convertToWalletAddressList([
+      ...currentChat?.groupInformation?.members,
+      ...currentChat?.groupInformation?.pendingMembers,
+    ]);
+
+    //Newly Added Members and alreadyPresent Members in the groupchat
+    const members = [...groupMemberList,account];
+
+    //Admins wallet address from both members and pendingMembers
+    const adminList = getAdminList(currentChat?.groupInformation);
+
+    try {
+      const { updateResponse, updatedCurrentChat } = await updateGroup({
+        currentChat,
+        connectedUser,
+        adminList,
+        memeberList: members,
+      });
+
+     await approveIntent('Approved');
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Success',
+        toastMessage: 'Group Invitation sent',
+        toastType: 'SUCCESS',
+        getToastIcon: (size) => (
+          <MdCheckCircle
+            size={size}
+            color="green"
+          />
+        ),
+      });
+    } catch (error) {
+      console.log('Error', error);
+      groupInfoToast.showMessageToast({
+        toastTitle: 'Error',
+        toastMessage: error.message,
+        toastType: 'ERROR',
+        getToastIcon: (size) => (
+          <MdError
+            size={size}
+            color="red"
+          />
+        ),
+      });
+    }
+  };
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file: File = e.target.files?.[0];
@@ -295,7 +350,7 @@ const Typebar = ({
           borderRadius="12px"
           padding="15px 8px"
           onClick={() => {
-            approveIntent()
+            joinGroup()
           }}
         >
           <SpanV2 fontWeight="500" fontSize = "17px">Join Group</SpanV2>
