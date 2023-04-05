@@ -6,6 +6,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { useSelector } from 'react-redux';
 import { useClickAway } from 'react-use';
 import styled, { useTheme } from 'styled-components';
+import { device } from 'config/Globals';
 
 const uploadLogoModal = ({
   onClose, InnerComponentProps
@@ -17,7 +18,9 @@ const uploadLogoModal = ({
     setCroppedImage,
     setChannelFile,
     imageSrc,
-    setImageSrc
+    setImageSrc,
+    imageType,
+    setImageType
   } = InnerComponentProps;
 
   const theme = useTheme();
@@ -50,8 +53,8 @@ const uploadLogoModal = ({
       reader.readAsDataURL(file?.files[0]);
 
       reader.onloadend = function (e) {
-        console.log("Image src", reader.result);
         setImageSrc(reader.result);
+        setImageType(file?.files[0]?.type)
       };
     }
   };
@@ -88,6 +91,7 @@ const uploadLogoModal = ({
                     <ImageClipper
                       className="cropper"
                       imageSrc={imageSrc}
+                      imageType={imageType}
                       onImageCropped={(croppedImage) =>
                         setCroppedImage(croppedImage)
                       }
@@ -156,7 +160,6 @@ const uploadLogoModal = ({
 export default uploadLogoModal;
 
 const Container = styled.div`
-
 `
 
 const ModalContainer = styled.div`

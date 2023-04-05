@@ -17,8 +17,8 @@ import { addresses, appConfig } from "config";
 import GLOBALS, { device } from "config/Globals";
 import { Button } from '../../components/SharedStyling';
 import EditChannelForms from './EditChannelForms';
-import useModal from 'hooks/useModal';
 import useToast from 'hooks/useToast';
+import { MODAL_POSITION } from 'hooks/useModalBlur';
 import { useClickAway } from 'react-use';
 import { LOADER_OVERLAY, LOADER_SPINNER_TYPE, LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import GLOABALS from 'config/Globals';
@@ -62,6 +62,7 @@ export default function EditChannel({
   const [channelFile, setChannelFile] = React.useState(channelDetails?.icon);
   const [croppedImage, setCroppedImage] = useState(channelDetails?.icon);
   const [imageSrc, setImageSrc] = useState(croppedImage);
+  const [imageType, setImageType] = useState(null);
   const [pushDeposited, setPushDeposited] = useState(false);
 
   const [errorInfo, setErrorInfo] = useState<{ name: string, description: string, address: string, url: string }>({ name: '', description: '', address: '', url: '' });
@@ -347,9 +348,12 @@ export default function EditChannel({
           setChannelFile,
           imageSrc,
           setImageSrc,
+          imageType,
+          setImageType,
           errorInfo,
           setErrorInfo
         }}
+        modalPosition={MODAL_POSITION.ON_PARENT}
       />
 
       <EditableContainer>

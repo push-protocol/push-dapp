@@ -161,33 +161,6 @@ export const getDefaultFeedObject = (user?:User,groupInformation?:IGroup) => {
   return feed;
 }
 
-export const getUserWithDecryptedPvtKey = async(connectedUser:ConnectedUser):Promise<ConnectedUser> => {
-  let decryptedPrivateKey;
-    let user:User;
-
-
-    if(!connectedUser.publicKey)
-    {
-
-       user = await PushNodeClient.getUser({ caip10:connectedUser.wallets });
-       if(!user){
-        return connectedUser
-       }else{
-        decryptedPrivateKey = await PushAPI.chat.decryptWithWalletRPCMethod(
-          user.encryptedPrivateKey,
-          connectedUser.wallets.split(':')[1]
-        );
-        return {...user,privateKey:decryptedPrivateKey};
-       }
-       
-
-      
-
-      
-
-    }
-    return connectedUser;
-}
 
 
 export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
@@ -195,4 +168,11 @@ export const fetchInbox = async (connectedUser):Promise<Feeds[]>=> {
   await intitializeDb<Feeds[]>('Insert', 'Inbox', walletToCAIP10({ account: connectedUser.wallets! }), inboxes, 'did');
   inboxes = await w2wHelper.decryptFeeds({ feeds: inboxes, connectedUser: connectedUser });
   return inboxes
+};
+
+export const fetchIntent = async (connectedUser): Promise<Feeds[]> => {
+  let intents = await PushAPI.chat.requests({account:connectedUser.wallets.split(':')[1],env:appConfig.appEnv, toDecrypt:false});
+  await intitializeDb<Feeds[]>('Insert', 'Intent', w2wHelper.walletToCAIP10({ account: connectedUser.wallets }),intents, 'did');
+  intents = await w2wHelper.decryptFeeds({ feeds: intents, connectedUser });
+  return intents;
 };

@@ -11,9 +11,9 @@ import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderS
 import { Content, Item } from "./SharedStyling.js";
 import { envUtil, shortenText } from 'helpers/UtilityHelper';
 import ProfileModal from 'components/ProfileModal';
-import useModal from 'hooks/useModal';
 import Dropdown from '../components/Dropdown';
 import { useClickAway } from 'hooks/useClickAway';
+import { walletconnect } from "connectors";
 
 // Create Header
 const Profile = ({isDarkMode}) => {
@@ -30,7 +30,7 @@ const Profile = ({isDarkMode}) => {
   useClickAway(modalRef, () => showDropdown && setShowDropdown(false));
   // Get Web3 Context
   const context = useWeb3React<Web3Provider>()
-  const { deactivate } = context
+  const { deactivate, connector} = context
   const dropdownValues = [
     {
       id: "walletAddress",
@@ -48,7 +48,13 @@ const Profile = ({isDarkMode}) => {
     {
       id: "disconnect",
       value: "",
-      function: ()=>deactivate(),
+      function: ()=>{
+        if(connector === walletconnect) {
+          connector?.close();
+        } else {
+          deactivate()
+        }
+      },
       title: "Logout",
       invertedIcon: "./logout.svg",
     },
