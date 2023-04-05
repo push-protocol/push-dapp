@@ -27,6 +27,7 @@ const ProgressBar = ({ percent, color = GLOBALS.COLORS.PRIMARY_PINK, notice = nu
 
   return (
     <ItemVV2
+    zIndex="1000"
       flexDirection={noticePositioning == NOTICE_POSITIONING.BOTTOM ? "column" : "column-reverse"}
     >
       <Progress
