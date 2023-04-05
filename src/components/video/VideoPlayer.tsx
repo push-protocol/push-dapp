@@ -17,21 +17,6 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
 
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowHeight(window.innerHeight);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   useEffect(() => {
     if (localVideoRef.current) {
       let video = localVideoRef.current;
@@ -46,21 +31,18 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         <LocalVideoContainer
           className={callAccepted && !callEnded ? 'connectionAccepted' : null}
           style={localVideoStyles}
-          windowWidth={windowWidth}
         >
           <LocalVideo
             ref={localVideoRef}
-            windowWidth={windowWidth}
           />
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
-        <IncomingVideoContainer windowHeight={windowHeight}>
+        <IncomingVideoContainer >
           <IncomingVideo
             playsInline
             ref={userVideo}
             autoPlay
-            windowWidth={windowWidth}
           />
           <IncomingEnsContainer>
             <p>ens.eth</p>
@@ -80,9 +62,9 @@ const Container = styled(ItemVV2)`
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 47vh;
-  max-height: 47vh;
-  transition: all 0.25 linear;
+  height: 18vh;
+  max-height: 18vh;
+  transition: all 0.25s linear;
   border-radius: 34px;
   margin: 0 auto;
   z-index: 2;
@@ -91,17 +73,26 @@ const LocalVideoContainer = styled(ItemVV2)`
     position: absolute;
     width: inherit;
     right: 4%;
-    bottom: ${({ windowWidth }) => (windowWidth < 425 ? '-30vh' : '20px')};
-    height: 25%;
-    border-radius: 24px;
+    bottom: 20px;
+    @media (max-width: 768px) {
+      top:41vh;
+    }
+    @media (max-width: 425px) {
+      top:18vh;
+    }
   }
 `;
 
 const LocalVideo = styled.video`
-  height: ${({ windowWidth }) => (windowWidth < 425 ? '12vh' : '100%')};
-  width: ${({ windowWidth }) => (windowWidth < 425 ? '18vh' : '100%')};
+  height: 100%;
+  width: 100%;
   border-radius: inherit;
   object-fit: cover;
+
+  @media (max-width: 768px) {
+    height: 12vh;
+    width: 18vh;
+  }
 
   &.connectionAccepted {
     border: 1px solid #ffffff8c;
@@ -111,23 +102,32 @@ const LocalVideo = styled.video`
 
 const IncomingVideo = styled.video`
   border-radius: 34px;
-  width: ${({ windowWidth }) => (windowWidth < 425 ? 'auto' : '100%')};
-  height: ${({ windowWidth }) => (windowWidth < 425 ? '100%' : 'auto')};
+  width: 100%;
+  height: auto;
+
+  @media (max-width: 768px) {
+    width: auto;
+    height: 100%;
+  }
 `;
 
 const IncomingVideoContainer = styled(ItemVV2)`
   overflow: hidden;
   height: 20vh;
-  max-height: ${({ windowHeight }) => (windowHeight < 800 ? '50vh' : '62vh')};
+  max-height: 62vh;
   width: 95%;
   background-color: #000000;
   left: 2.5%;
   border-radius: 34px;
   z-index: 1;
+
+  @media (max-height: 800px) {
+    max-height: 50vh;
+  }
 `;
 
 const IncomingEnsContainer = styled(ItemVV2)`
-position: absolute;
+  position: absolute;
   height: 10px;
   width: fit-content;
   padding: 10px;
@@ -135,6 +135,6 @@ position: absolute;
   background-color: #FFFFFF;
   opacity: 0.8;
   z-index: 3;
-  left 1.5%;
+  left: 1.5%;
   bottom: 3.5%;
 `;
