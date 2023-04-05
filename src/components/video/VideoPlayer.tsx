@@ -17,9 +17,16 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
 
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  const[windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(() => {
     const handleResize = () => setWindowHeight(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -30,21 +37,24 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
         <LocalVideoContainer
           className={callAccepted && !callEnded ? 'connectionAccepted' : null}
           style={localVideoStyles}
+          windowWidth={windowWidth}
         >
           <LocalVideo
             ref={myVideo}
             playsInline
             muted
             autoPlay
+            windowWidth={windowWidth}
           />
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
-        <IncomingVideoContainer windowHeight={windowHeight} >
+        <IncomingVideoContainer windowHeight={windowHeight}  >
           <IncomingVideo
             playsInline
             ref={userVideo}
             autoPlay
+            windowWidth={windowWidth}
           />
           <IncomingEnsContainer>
             <p>ens.eth</p>
@@ -75,14 +85,14 @@ const LocalVideoContainer = styled(ItemVV2)`
     position: absolute;
     width: inherit;
     right: 4%;
-    bottom: 20px;
+    bottom:  ${({ windowWidth }) => (windowWidth < 425 ? '-30vh' : '20px')};
     height: 25%;
   }
 `;
 
 const LocalVideo = styled.video`
-  height: 100%;
-  width: 100%;
+  height: ${({ windowWidth }) => (windowWidth < 425 ? '12vh' : '100%')};
+  width: ${({ windowWidth }) => (windowWidth < 425 ? '18vh' : '100%')};
   border-radius: inherit;
   object-fit: cover;
 
@@ -94,7 +104,8 @@ const LocalVideo = styled.video`
 
 const IncomingVideo = styled.video`
   border-radius: 34px;
-  width: 100%;
+  width: ${({ windowWidth }) => (windowWidth < 425 ? 'auto' : '100%')};
+  height: ${({ windowWidth }) => (windowWidth < 425 ? '100%' : 'auto')};
 `;
 
 const IncomingVideoContainer = styled(ItemVV2)`

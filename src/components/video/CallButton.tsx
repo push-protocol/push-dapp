@@ -35,7 +35,7 @@ const Button = styled(ButtonV2)`
   @media ${device.mobileL} {
     width: 3.375rem;
     max-width: 3.375rem;
-    height: 2rem;
+    height: 2.75rem;
     border-radius: 0.75rem;
   }
 
@@ -48,7 +48,7 @@ const Icon = styled(ImageV2)`
   width: 22px;
   cursor: pointer;
   @media ${device.mobileL} {
-    width: 17px;
+    width: 22px;
   }
 `;
 
