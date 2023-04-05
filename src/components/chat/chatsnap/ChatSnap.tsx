@@ -8,7 +8,7 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveEns } from 'hooks/useResolveEns';
-import { getAppropriateTimestamp } from 'helpers';
+import { getAppropriateTimestamp } from 'helpers/TimerHelper';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -90,9 +90,11 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
 
   let date = null;
   if (timestamp) {
-    if (typeof timestamp == 'string') {
+    
+    if (typeof timestamp === "string" && timestamp?.includes('Z')) {
       timestamp = timestamp.replace('Z', '');
     }
+  
     date = getAppropriateTimestamp(new Date(timestamp));
   }
 
