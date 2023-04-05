@@ -33,7 +33,7 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [call, setCall] = useState<any>({});
   const [me, setMe] = useState<string>('');
   const[videoToggle, setVideoToggle] = useState<boolean>(true);
-  const[toggleFlag, setToggleFlag] = useState<boolean>(false);
+  const [audioToggle, setAudioToggle] = useState<boolean>(true);
 
   const [incomingStreams, setIncomingStreams] = useState<MediaStream[]>([]);
 
@@ -59,29 +59,53 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
-  async function restartLocalStream(){
+   function restartLocalStream(){
     console.log("RESTART LOCAL STREAM");
-    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    setLocalStream(localStream);
-    myVideo.current.srcObject = localStream;
+    var vidTrack = localStream.getVideoTracks();
+    vidTrack.forEach(track => track.enabled = true);
   }
 
-  const stopLocalStream = async (): Promise<void> => {
+  function stopLocalStream () {
     console.log("STOP LOCAL STREAM");
-    setToggleFlag(true);
-    localStream?.getTracks().forEach((track) => {
-      track.stop();
-    });
+    var vidTrack = localStream.getVideoTracks();
+    vidTrack.forEach(track => track.enabled = false);
   };
 
+  function restartAudio(){
+    console.log("RESTART AUDIO");
+    var audTrack = localStream.getAudioTracks();
+    audTrack.forEach(track => track.enabled = true);
+  }
+
+  function stopAudio(){
+    console.log("STOP AUDIO");
+    var audTrack = localStream.getAudioTracks();
+    audTrack.forEach(track => track.enabled = false);
+  }
+
+  
+
   function VideoToggler(){
-    setVideoToggle(videoToggle => !videoToggle);
-    if(videoToggle && toggleFlag){
+    if(videoToggle === false){
       console.log("INITIALIZE LOCAL STREAM");
+      setVideoToggle(true);
       restartLocalStream();
-    }if(!videoToggle && localStream){
+    }if(videoToggle === true && localStream){
       console.log("STOP LOCAL STREAM");
+      setVideoToggle(false);
       stopLocalStream();
+    }
+  }
+
+  function AudioToggler(){
+    if(audioToggle === false){
+      console.log("RESTART AUDIO");
+      setAudioToggle(true);
+      restartAudio();
+    }if(audioToggle === true && localStream){
+      console.log("STOP AUDIO");
+      setAudioToggle(false);
+      stopAudio();
     }
   }
 
@@ -325,6 +349,9 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         incomingCall,
         acceptCall,
         VideoToggler,
+        AudioToggler,
+        videoToggle,
+        audioToggle,
       }}
     >
       {children}

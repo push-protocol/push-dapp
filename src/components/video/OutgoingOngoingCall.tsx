@@ -17,6 +17,8 @@ import CallButton from './CallButton';
 import MediaToggleButton from './MediaToggleButton';
 import videoIcon from '../../assets/icons/video-icon.svg';
 import audioIcon from '../../assets/icons/audio-icon.svg';
+import videoOffIcon from '../../assets/icons/video-off-icon.svg';
+import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import { BlockedLoadingI } from 'types/chat';
 import { VideoCallContext } from 'contexts/VideoCallContext';
@@ -59,7 +61,7 @@ const callControlsImmersiveStyles = {
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
   const [togglevideo, setToggleVideo] = React.useState(true);
-  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call, VideoToggler } = useContext(VideoCallContext);
+  const {VideoToggler, AudioToggler, videoToggle, audioToggle } = useContext(VideoCallContext);
 
 
   return (
@@ -84,8 +86,9 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
       {/* display video call controls */}
       <VideoCallControlsContainer style={isImmersive ? callControlsImmersiveStyles : {}}>
         <MediaToggleButton
-          iconSrc={videoIcon}
+          iconSrc={videoToggle ? videoIcon : videoOffIcon}
           iconWidth="23px"
+          backgroundColor={videoToggle ? 'white' : '#e60808' }
           onClick={() => {
             // TODO
             VideoToggler();
@@ -93,10 +96,12 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
           }}
         />
         <MediaToggleButton
-          iconSrc={audioIcon}
+          iconSrc={audioToggle ? audioIcon : audioOffIcon}
           iconWidth="14.5px"
+          backgroundColor={audioToggle ? 'white' : '#e60808' }
           onClick={() => {
             // TODO
+            AudioToggler();
             console.log('audio toggled');
           }}
         />

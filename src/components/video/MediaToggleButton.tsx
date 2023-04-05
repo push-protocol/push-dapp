@@ -8,11 +8,12 @@ type MediaToggleButtonProps = {
   iconSrc: any;
   iconWidth: string;
   onClick: Function;
+  backgroundColor?: string;
 };
 
-const MediaToggleButton = ({ iconSrc, iconWidth, onClick }: MediaToggleButtonProps) => {
+const MediaToggleButton = ({ iconSrc, iconWidth, onClick, backgroundColor}: MediaToggleButtonProps) => {
   return (
-    <Button onClick={() => onClick()}>
+    <Button onClick={() => onClick()} bgColor={backgroundColor}>
       <Icon src={iconSrc} width={iconWidth} />
     </Button>
   );
@@ -22,7 +23,7 @@ const Button = styled(ButtonV2)`
   width: 2.875rem;
   max-width: 2.875rem;
   height: 2.75rem;
-  background: white;
+  background: ${(props) => props.bgColor || 'white'};
   hover-background: transparent;
   border-radius: 1rem;
   margin: 0 0.35rem;
