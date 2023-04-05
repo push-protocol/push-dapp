@@ -2,42 +2,41 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 // External Packages
-import { useQuery } from 'react-query';
-import styled, { useTheme } from 'styled-components';
 import { MdError } from 'react-icons/md';
-import { ethers } from 'ethers';
+import styled, { useTheme } from 'styled-components';
 
 
 // Internal Components
 import { useWeb3React } from '@web3-react/core';
-import { AppContext, Feeds, User } from 'types/chat';
 import ChatSnap from 'components/chat/chatsnap/ChatSnap';
 import LoaderSpinner, { LOADER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
-import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
-import useToast from 'hooks/useToast';
-import { checkConnectedUser, fetchInbox } from 'helpers/w2w/user';
-import { Context } from 'modules/chat/ChatModule';
-import { intitializeDb } from '../w2wIndexeddb';
 import { ChatUserContext } from 'contexts/ChatUserContext';
+import { decryptFeeds, walletToCAIP10 } from 'helpers/w2w';
+import { fetchInbox } from 'helpers/w2w/user';
+import useToast from 'hooks/useToast';
+import { Context } from 'modules/chat/ChatModule';
+import { AppContext, Feeds, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
+import { intitializeDb } from '../w2wIndexeddb';
 
 // Internal Configs
 
 
-interface MessageFeedProps {
+interface MessageFeedPropsI {
   filteredUserData: User[];
   hasUserBeenSearched: boolean;
   isInvalidAddress: boolean;
+  automatedSearch: boolean;
 }
 
-const MessageFeed = (props: MessageFeedProps): JSX.Element => {
+const MessageFeed = (props: MessageFeedPropsI): JSX.Element => {
   const theme = useTheme();
 
-  const { setChat, setInbox,currentChat,receivedIntents,setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
+  const { setChat, setInbox, currentChat, receivedIntents, setActiveTab, activeTab, inbox, setHasUserBeenSearched, filteredUserData, setFilteredUserData }: AppContext = useContext<AppContext>(Context);
 
-  const {connectedUser} = useContext(ChatUserContext);
+  const { connectedUser } = useContext(ChatUserContext);
 
   const [feeds, setFeeds] = useState<Feeds[]>([]);
   const [messagesLoading, setMessagesLoading] = useState<boolean>(true);
@@ -59,9 +58,8 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
   }
 
   const getInbox = async (): Promise<Feeds[]> => {
-    if (checkConnectedUser(connectedUser)) {
       const getInbox = await intitializeDb<string>('Read', 'Inbox', walletToCAIP10({ account }), '', 'did');
-      if (getInbox !== undefined) {
+      if (getInbox !== undefined && !inbox.length) {
         let inboxes: Feeds[] = getInbox.body;
         inboxes = await decryptFeeds({ feeds: inboxes, connectedUser });
         if (JSON.stringify(feeds) !== JSON.stringify(inboxes))
@@ -70,20 +68,17 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
          setInbox(inboxes);
         }
         return inboxes;
-      } else {
-        let inboxes: Feeds[] = await fetchInboxApi();
-        return inboxes;
-      }
     }
   };
+  
   const fetchInboxApi = async (): Promise<Feeds[]> => {
     try {
       const inboxes:Feeds[] = await fetchInbox(connectedUser);
-      if (JSON.stringify(feeds) !== JSON.stringify(inboxes)) {
+      if (JSON.stringify(feeds) !== JSON.stringify(inbox)){
         setFeeds(inboxes);
         setInbox(inboxes);
         if(checkIfGroup(currentChat)){
-          if(JSON.stringify(currentChat?.groupInformation?.members) !== JSON.stringify(inboxes[selectedChatSnap]?.groupInformation?.members))
+          if(currentChat?.groupInformation?.members?.length !== inboxes[selectedChatSnap]?.groupInformation?.members?.length)
            setChat(inboxes[selectedChatSnap]);
         }
       }
@@ -106,42 +101,30 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       setShowError(true);
     }
   };
-  useQuery('inbox', getInbox, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
-
-  useQuery('fetchInboxApi', fetchInboxApi, {
-    enabled: !props.hasUserBeenSearched && stopApi,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchIntervalInBackground: false,
-    suspense: false,
-    onError: () => {
-      setStopApi(false);
-    },
-    retry: 3,
-    refetchInterval: 1000 * 5,
-    retryDelay: 1000 * 5,
-  });
 
   const updateInbox = async (): Promise<void> => {
-    if (checkConnectedUser(connectedUser)) {
       await getInbox();
-    }
+      fetchInboxApi();
+
     setMessagesLoading(false);
   };
+
+  useEffect(() => {
+    setFeeds(inbox);  
+  },[inbox]);
+
+  useEffect(() => {
+    if(feeds && feeds.length > 0 && props.automatedSearch) {
+      onFeedClick(feeds[0], 0);
+      setActiveTab(0);
+    }
+  }, [feeds]);
+
+  useEffect(() => {
+    if(!props.hasUserBeenSearched)
+      updateInbox();
+  },[]);
+
   useEffect(() => {
     if (!props.hasUserBeenSearched) {
       updateInbox();
@@ -184,7 +167,13 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
             });
           }
 
-          setFeeds([]);
+          // reset if active tab is 4
+          if (activeTab == 4) {
+            setActiveTab(0);
+          }
+          else {
+            setFeeds([]);
+          }
         }
         setMessagesLoading(false);
       };
@@ -192,7 +181,6 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
     }
 
     return ()=>{
-      setFeeds([]);
       setMessagesLoading(false);
     }
   }, [props.hasUserBeenSearched, props.filteredUserData]);
@@ -204,7 +192,7 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
       justifyContent="flex-start"
     >
       {/* hey there */}
-      {activeTab !== 3 && (
+      {activeTab !== 3 && activeTab !== 4 && (
         <SpanV2
           fontWeight="700"
           fontSize="12px"
@@ -223,13 +211,12 @@ const MessageFeed = (props: MessageFeedProps): JSX.Element => {
           />
         ) : (
           <>
-            {!feeds?.length && !messagesLoading && activeTab!==3 ? (
+            {!feeds?.length && !messagesLoading && activeTab!==3 && activeTab!==4 ? (
               <EmptyConnection>
                 Start a new chat by using the + button <ArrowBend src="/svg/chats/arrowbendup.svg" />
               </EmptyConnection>
             ) : !messagesLoading ? (
               feeds.map((feed: Feeds, i) => (
-
                 <ItemVV2
                   alignSelf="stretch"
                   flex="initial"

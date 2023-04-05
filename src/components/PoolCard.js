@@ -494,8 +494,9 @@ export default function PoolCard({
                 fg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"}
                 size="16px"
                 margin="-15px 5px 10px 5px"
-              >
-                {numberWithCommas(formatTokens(pushPoolStats.rewardForCurrentEpoch))} PUSH
+              > 
+                {/* TODO: fix calculation */}
+                { poolName == "Uniswap LP Pool (UNI-V2)" ? numberWithCommas(formatTokens(pushPoolStats.rewardForCurrentEpoch)) : 0 } PUSH
               </PoolBoxMsg>
             </PoolContainer>
 
@@ -518,7 +519,12 @@ export default function PoolCard({
             margin="0px 0px 10px 0px"
           >
             <EpochDisplayer>
-              <Span padding="0px 5px 0px 0px">Current Epoch</Span><B>{pushPoolStats.currentEpochPUSH.toString()}/{pushPoolStats.totalEpochPUSH}</B>
+              <Span padding="0px 5px 0px 0px">Current Epoch</Span>
+                <B>
+                  {Math.min(pushPoolStats.currentEpochPUSH,pushPoolStats.totalEpochPUSH).toString()}
+                  /
+                  {pushPoolStats.totalEpochPUSH}
+                </B>
             </EpochDisplayer>
           </Item>
         </Item>
@@ -539,7 +545,8 @@ export default function PoolCard({
           <ItemH margin="0px" align="stretch" self="stretch" flex="1">
             <Item bg="#000" margin="5px 10px" radius="12px" flex="1">
               <PoolBoxTitle>Current Epoch Reward <InfoTooltip title={"This is only an estimation for the user's reward that they might get after the epoch. This might change depending upon deposits from other users."} /></PoolBoxTitle>
-              <PoolBoxMsg>{userData.potentialUserReward} PUSH</PoolBoxMsg>
+              {/* TODO fix calculation*/}
+              <PoolBoxMsg>{ poolName == "Uniswap LP Pool (UNI-V2)" ? userData.potentialUserReward : 0} PUSH</PoolBoxMsg>
             </Item>
 
             <Item bg="#000" margin="5px 10px" radius="12px" flex="1">

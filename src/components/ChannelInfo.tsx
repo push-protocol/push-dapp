@@ -17,7 +17,7 @@ import {
   Span,
   TextField,
 } from 'primaries/SharedStyling';
-import './createChannel.css';
+import '../modules/createChannel/createChannel.css';
 import { useDeviceWidthCheck } from 'hooks';
 import { ItemHV2 } from './reusables/SharedStylingV2';
 import Toggle from './reusables/toggle/Toggle';
@@ -118,29 +118,37 @@ const ChannelInfo = ({
                   />
                 {errorInfo?.name && (<ErrorMessage message = {errorInfo?.name} />)}
               </Item>
-            {/* <Tooltip 
+            <Tooltip 
               tooltipContent='Timebound channels will be deleted after expiry'
               // disable the tooltip when time bound toggle is NOT on
               placementProps={isMobile
                 ?
                 {
-                  bottom: "-63px",
+                  bottom: "-42px",
                   transform: "translateX(6%)",
+                  padding:'8px 16px',
+                  background: theme.default.bg,
+                  border: '1px solid rgba(173, 176, 190, 0.2)',
+                  color: theme.tooltipTopSubHeading,
                 }
                 :
                 {
                   bottom: "-63px",
-                  transform: "translateX(16%)"
+                  transform: "translateX(16%)",
+                  padding:'8px 16px',
+                  background: theme.default.bg,
+                  border: '1px solid rgba(173, 176, 190, 0.2)',
+                  color: theme.tooltipTopSubHeading,
                 }
               }
-            > */}
-              {/* <TimeBoundToggleContainer>
+            >
+              <TimeBoundToggleContainer>
                 <ItemHV2 style={{justifyContent: "flex-start", maxWidth: "100%"}}>
                   <Label style={{ color: theme.color }}>Time Bound</Label>
                   {isNewTagVisible && <NewTag />}
-                </ItemHV2> */}
+                </ItemHV2>
                 {/* Toggle should be off only when channelExpiryDate is undefined */}
-                {/* <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
+                <Toggle isToggleOn={channelExpiryDate!==undefined} onToggle={()=>{
                   if(channelExpiryDate===undefined){
                     // turn on the toggle
                     return setChannelExpiryDate(null);
@@ -149,11 +157,11 @@ const ChannelInfo = ({
                   setChannelExpiryDate(undefined);
                 }} />
               </TimeBoundToggleContainer>
-            </Tooltip> */}
+            </Tooltip>
           </TopInnerContainer>
         </Item>
 
-        {/* {
+        {
           channelExpiryDate !== undefined && 
           <Item
             flex="1"
@@ -171,7 +179,7 @@ const ChannelInfo = ({
             </DatePickerContainer>
             {errorInfo?.channelExpiryDate && (<ErrorMessage message = {errorInfo?.channelExpiryDate} />)}
           </Item>
-        } */}
+        }
         
         <Item
           flex="1"
@@ -384,7 +392,7 @@ const TimeBoundToggleContainer = styled(ItemHV2)`
   height: 25px;
   margin-left: 1.3rem;
   padding: 12px 18px;
-  
+  cursor:pointer;
   flex: 1;
   align-items: center;
   border-radius: 15px;

@@ -6,7 +6,9 @@ import * as w2wHelper from 'helpers/w2w';
 import * as PushNodeClient from 'api';
 import CryptoHelper from 'helpers/CryptoHelper';
 import { generateKeyPair } from 'helpers/w2w/pgp';
+import * as PushAPI from "@pushprotocol/restapi";
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
+import { appConfig } from 'config';
 
 export const ChatUserContext = createContext({})
 
@@ -45,12 +47,13 @@ const ChatUserContextProvider = (props) => {
       if (user.wallets.includes(',') || !user.wallets.includes(caip10)) {
         throw Error('Invalid user');
       }
-
-      const privateKeyArmored: string = await CryptoHelper.decryptWithWalletRPCMethod(
-        library.provider,
-        user.encryptedPrivateKey,
-        account
-      );
+      const _signer = await library.getSigner();
+      const privateKeyArmored: string = await PushAPI.chat.decryptPGPKey({
+        encryptedPGPPrivateKey: user.encryptedPrivateKey,
+        signer: _signer,
+        env:appConfig.appEnv,
+        // toUpgrade: false,
+      });
       setPgpPvtKey(privateKeyArmored);
       connectedUser = { ...user, privateKey: privateKeyArmored };
     } else {
@@ -77,7 +80,7 @@ const ChatUserContextProvider = (props) => {
     setConnectedUser(connectedUser);
   };
 
-  const createUserIfNecessary = async (): Promise<{ createdUser: ConnectedUser }> => {
+  const createUserIfNecessary = async (): Promise<ConnectedUser> => {
     try {
       // This is a new user
       setBlockedLoading({
@@ -89,8 +92,7 @@ const ChatUserContextProvider = (props) => {
           'This step is is only done for first time users and might take a few seconds. PGP keys are getting generated to provide you with secure yet seamless chat',
       });
       await new Promise((r) => setTimeout(r, 200));
-
-      const keyPairs = await generateKeyPair();
+     
       setBlockedLoading({
         enabled: true,
         title: 'Step 2/4: Encrypting your keys',
@@ -99,12 +101,17 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'Please sign the transaction to continue. Steady lads, chat is almost ready!',
       });
 
-      const walletPublicKey = await CryptoHelper.getPublicKey(account);
-      const encryptedPrivateKey = CryptoHelper.encryptWithRPCEncryptionPublicKeyReturnRawData(
-        keyPairs.privateKeyArmored,
-        walletPublicKey
-      );
-      const caip10: string = w2wHelper.walletToCAIP10({ account });
+      const signer = await library.getSigner();
+      await PushNodeClient.createUser({
+        signer: signer
+      });
+      const createdUser = await PushNodeClient.getUser({caip10:account});
+      const pvtkey = await PushAPI.chat.decryptPGPKey({
+        encryptedPGPPrivateKey: createdUser.encryptedPrivateKey,
+        signer: signer,
+        env:appConfig.appEnv,
+        // toUpgrade: false
+      });
       setBlockedLoading({
         enabled: true,
         title: 'Step 3/4: Syncing account info',
@@ -113,18 +120,10 @@ const ChatUserContextProvider = (props) => {
         progressNotice: 'This might take a couple of seconds as push nodes sync your info for the first time!',
       });
 
-      const createdUser: User = await PushNodeClient.createUser({
-        caip10,
-        did: caip10,
-        publicKey: keyPairs.publicKeyArmored,
-        encryptedPrivateKey: JSON.stringify(encryptedPrivateKey),
-        encryptionType: 'x25519-xsalsa20-poly1305',
-        signature: 'xyz',
-        sigType: 'a',
-      });
-      const createdConnectedUser = { ...createdUser, privateKey: keyPairs.privateKeyArmored };
+     
+      const createdConnectedUser = { ...createdUser, privateKey: pvtkey };
       setConnectedUser(createdConnectedUser);
-      setPgpPvtKey(keyPairs.privateKeyArmored);
+      setPgpPvtKey(pvtkey);
 
       setBlockedLoading({
         enabled: false,
@@ -133,7 +132,7 @@ const ChatUserContextProvider = (props) => {
         progressEnabled: true,
         progress: 100,
       });
-      return { createdUser: createdConnectedUser };
+      return createdConnectedUser ;
     } catch (e) {
       console.log(e);
     }

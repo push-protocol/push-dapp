@@ -1,30 +1,28 @@
 // React + Web3 Essentials
-import { useWeb3React } from "@web3-react/core";
-import React, { useEffect, useState } from "react";
+import { useWeb3React } from '@web3-react/core';
+import React, { useEffect, useState } from 'react';
 
 // External Packages
-import {
-  AiOutlineUserDelete
-} from 'react-icons/ai';
-import { GoTriangleDown, GoTriangleUp } from "react-icons/go";
-import { useSelector } from "react-redux";
-import styled, { css, useTheme } from "styled-components";
+import { AiOutlineUserDelete } from 'react-icons/ai';
+import { GoTriangleDown, GoTriangleUp } from 'react-icons/go';
+import { useSelector } from 'react-redux';
+import styled, { css, useTheme } from 'styled-components';
 
 // Internal Compoonents
-import { getReq } from "api";
-import { ButtonV2 } from "components/reusables/SharedStylingV2";
-import { convertAddressToAddrCaip } from "helpers/CaipHelper";
-import { useDeviceWidthCheck } from "hooks";
-import useModal from "hooks/useModal";
-import useToast from "hooks/useToast";
-import { Button, Content, H2, H3, Item, Section, Span } from "primaries/SharedStyling";
-import { getChannelDelegates } from "services";
-import DelegateInfo from "./DelegateInfo";
-import RemoveDelegateModalContent from "./RemoveDelegateModalContent";
+import { getReq } from 'api';
+import { ButtonV2 } from 'components/reusables/SharedStylingV2';
+import { convertAddressToAddrCaip } from 'helpers/CaipHelper';
+import { useDeviceWidthCheck } from 'hooks';
+import useModalBlur, {MODAL_POSITION} from 'hooks/useModalBlur';
+import useToast from 'hooks/useToast';
+import { Button, Content, H2, H3, Item, Section, Span } from 'primaries/SharedStyling';
+import { getChannelDelegates } from 'services';
+import DelegateInfo from './DelegateInfo';
+import RemoveDelegateModalContent from './RemoveDelegateModalContent';
 
-const isOwner=(account,delegate)=>{
-  return account.toLowerCase() !== delegate.toLowerCase() 
-}
+const isOwner = (account, delegate) => {
+  return account.toLowerCase() !== delegate.toLowerCase();
+};
 
 const ShowDelegates = () => {
   const { account, chainId } = useWeb3React();
@@ -33,29 +31,28 @@ const ShowDelegates = () => {
   const [isActiveDelegateDropdown, setIsActiveDelegateDropdown] = React.useState(true);
   const [removeModalOpen, setRemoveModalOpen] = React.useState(false);
   const [delegateToBeRemoved, setDelegateToBeRemoved] = React.useState('');
-  const { epnsCommWriteProvider } = useSelector(
-    (state) => state.contracts
-  );
+  const { epnsCommWriteProvider } = useSelector((state) => state.contracts);
   const isMobile = useDeviceWidthCheck(700);
 
   const {
-    isModalOpen: isRemoveDelegateModalOpen, 
-    showModal: showRemoveDelegateModal, 
-    ModalComponent: RemoveDelegateModalComponent} = useModal();
+    isModalOpen: isRemoveDelegateModalOpen,
+    showModal: showRemoveDelegateModal,
+    ModalComponent: RemoveDelegateModalComponent,
+  } = useModalBlur();
 
   const removeDelegateToast = useToast();
   const removeDelegate = (walletAddress) => {
     return epnsCommWriteProvider.removeDelegate(walletAddress);
   };
 
-  useEffect(()=>{
-    fetchDelegatees()
-  },[])
+  useEffect(() => {
+    fetchDelegatees();
+  }, []);
 
   const fetchDelegatees = async () => {
     try {
       const channelAddressinCAIP = convertAddressToAddrCaip(account, chainId);
-      const channelDelegates = await getChannelDelegates({channelCaipAddress: channelAddressinCAIP});
+      const channelDelegates = await getChannelDelegates({ channelCaipAddress: channelAddressinCAIP });
       if (channelDelegates) {
         const delegateeList = channelDelegates.map((delegate) => delegate);
         delegateeList.unshift(account);
@@ -64,84 +61,85 @@ const ShowDelegates = () => {
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const removeDelegateModalOpen = (delegateAddress) => {
     setDelegateToBeRemoved(delegateAddress);
     setRemoveModalOpen(true);
-  }
-  
-  
+  };
+
   return (
     <>
-    <Section>
-      <Content padding={isMobile ? "20px 10px" : "20px 0px"}>
-      <Item align="flex-start">
-          <DelegatesInfoHeader style={{color : theme.color}}>Channel Delegates </DelegatesInfoHeader>
-          <div style={{height:'4px'}}/>
-          <DelegatesInfoLabel>
-            Delegates that can send notifications on behalf of this channel.
-          </DelegatesInfoLabel>
-      </Item>
-      </Content>
-    </Section>
+      <Section>
+        <Content padding={isMobile ? '20px 10px' : '20px 0px'}>
+          <Item align="flex-start">
+            <DelegatesInfoHeader style={{ color: theme.color }}>Channel Delegates </DelegatesInfoHeader>
+            <div style={{ height: '4px' }} />
+            <DelegatesInfoLabel>Delegates that can send notifications on behalf of this channel.</DelegatesInfoLabel>
+          </Item>
+        </Content>
+      </Section>
 
-    <DelegateContainer
-      flex="5"
-      minWidth="280px"
-      self="stretch"
-      align="stretch"
-      margin="10px 0px 30px 0px"
-      radius={"20px"}
-      border="1px solid #D4DCEA"
-    >
-      {isActiveDelegateDropdown && delegatees && 
-        <Item
-          flex="5"
-          justify="flex-start"
-          align="stretch"
-        >
-          {delegatees.map((delegate,idx) => {
-            return (
-              <Item
-                padding={!isMobile ? "25px 25px":"18px 18px"}
-                direction="row"
-                justify="space-between"
-                key={delegate}
-                style={{
-                  borderTop: idx !== 0 ? "1px solid rgba(169, 169, 169, 0.5)" : ""
-                }}
-              >
-                <DelegateInfo delegateAddress={delegate} isDelegate={isOwner(account,delegate)} maxWidth={'200px'}/>
-                {isOwner(account,delegate) ?
-                  <RemoveButton
+      <DelegateContainer
+        flex="5"
+        minWidth="280px"
+        self="stretch"
+        align="stretch"
+        margin="10px 0px 30px 0px"
+        radius={'20px'}
+        border="1px solid #D4DCEA"
+      >
+        {isActiveDelegateDropdown && delegatees && (
+          <Item
+            flex="5"
+            justify="flex-start"
+            align="stretch"
+          >
+            {delegatees.map((delegate, idx) => {
+              return (
+                <Item
+                  padding={!isMobile ? '25px 25px' : '18px 18px'}
+                  direction="row"
+                  justify="space-between"
+                  key={delegate}
+                  style={{
+                    borderTop: idx !== 0 ? '1px solid rgba(169, 169, 169, 0.5)' : '',
+                  }}
+                >
+                  <DelegateInfo
                     delegateAddress={delegate}
-                    removeDelegateModalOpen={removeDelegateModalOpen}
-                    showRemoveDelegateModal={showRemoveDelegateModal}
-                  /> : 
-                  <OwnerButton disabled={true}>
-                    Channel Creator
-                  </OwnerButton>
-                }
-              </Item>
-            )
-          })}
-        </Item>
-        }
+                    isDelegate={isOwner(account, delegate)}
+                    maxWidth={'200px'}
+                  />
+                  {isOwner(account, delegate) ? (
+                    <RemoveButton
+                      delegateAddress={delegate}
+                      removeDelegateModalOpen={removeDelegateModalOpen}
+                      showRemoveDelegateModal={showRemoveDelegateModal}
+                    />
+                  ) : (
+                    <OwnerButton disabled={true}>Channel Creator</OwnerButton>
+                  )}
+                </Item>
+              );
+            })}
+          </Item>
+        )}
         <RemoveDelegateModalComponent
           InnerComponent={RemoveDelegateModalContent}
           onConfirm={removeDelegate}
           toastObject={removeDelegateToast}
+          modalPosition={MODAL_POSITION.ON_ROOT}
         />
       </DelegateContainer>
     </>
-  )
-}
+  );
+};
 
-const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDelegateModal }) => {
+const RemoveButton = ({ delegateAddress, removeDelegateModalOpen, showRemoveDelegateModal }) => {
   const theme = useTheme();
-  const [isHovered,setIsHovered] = useState(false)
-  
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleMouseOver = () => {
     setIsHovered(true);
   };
@@ -151,31 +149,29 @@ const RemoveButton = ({ delegateAddress, removeDelegateModalOpen,showRemoveDeleg
   };
 
   return (
-
-      <RemoveButtonUI onMouseEnter={handleMouseOver} onMouseLeave={handleMouseOut} onClick={() => showRemoveDelegateModal()}>
-        {
-        isHovered ?
-        <div style={{display:'flex',width:'100%',alignItems: 'center',justifyContent: 'center'}}>
-          <AiOutlineUserDelete fontSize={15}/>
-          <div style={{padding:'3px'}}/>
-          <div>
-            Remove Delegate 
-          </div>
+    <RemoveButtonUI
+      onMouseEnter={handleMouseOver}
+      onMouseLeave={handleMouseOut}
+      onClick={() => showRemoveDelegateModal()}
+    >
+      {isHovered ? (
+        <div style={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center' }}>
+          <AiOutlineUserDelete fontSize={15} />
+          <div style={{ padding: '3px' }} />
+          <div>Remove Delegate</div>
         </div>
-          :
-          <TextStyle>
-            Delegate
-          </TextStyle>
-        }
-      </RemoveButtonUI>
-  )
-}
+      ) : (
+        <TextStyle>Delegate</TextStyle>
+      )}
+    </RemoveButtonUI>
+  );
+};
 
 const TextStyle = styled.div`
-  color: ${props => props.theme.default.secondaryColor};
+  color: ${(props) => props.theme.default.secondaryColor};
   text-align: right;
   width: 100%;
-`
+`;
 
 const ChannelActionButton = styled.button`
   border: 0;
@@ -216,22 +212,22 @@ const ChannelActionButton = styled.button`
 `;
 
 const DelegateContainer = styled(Item)`
-  flex:5;
-  min-width:280px;
-  align-self:stretch;
-  align-items:stretch;
-  margin:10px 0px 30px 0px;
-  border-radius:20px;
+  flex: 5;
+  min-width: 280px;
+  align-self: stretch;
+  align-items: stretch;
+  margin: 10px 0px 30px 0px;
+  border-radius: 20px;
   border: 1px solid;
-  border-color: ${(props)=>props.theme.default.borderColor};
+  border-color: ${(props) => props.theme.default.borderColor};
 `;
 
 const RemoveButtonUI = styled(ChannelActionButton)`
   background: transparent;
-  color: ${props => props.theme.color};
+  color: ${(props) => props.theme.color};
   height: 36px;
   max-width: 164px;
-  flex:1; 
+  flex: 1;
   font-style: normal;
   font-weight: 600;
   font-size: 14px;
@@ -241,13 +237,13 @@ const RemoveButtonUI = styled(ChannelActionButton)`
   text-align: right;
   padding: 6px 10px 6px 9px;
   gap: 5px;
-  
+
   &:hover {
     opacity: 0.9;
-    background: #E93636;
+    background: #e93636;
     border-radius: 8px;
     color: #fff;
-  };
+  }
   cursor: pointer;
 `;
 
@@ -256,22 +252,22 @@ const OwnerButton = styled(Button)`
   background: transparent;
   font-weight: 500;
   font-size: 16px;
-  color: #CF1C84;
+  color: #cf1c84;
   cursor: auto;
 
-  @media (max-width: 425px){
+  @media (max-width: 425px) {
     font-weight: 400;
     font-size: 14px;
   }
 `;
 
 const DelegatesInfoHeader = styled.div`
-font-weight: 600;
-font-size: 18px;
-line-height: 150%;
-display: flex;
-align-items: center;
-color: ${(props) => props.theme.color};
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 150%;
+  display: flex;
+  align-items: center;
+  color: ${(props) => props.theme.color};
 `;
 
 const DelegatesInfoLabel = styled.div`
@@ -279,7 +275,7 @@ const DelegatesInfoLabel = styled.div`
   font-size: 15px;
   line-height: 140%;
   // color: #657795;
-  color: ${(props)=>props.theme.default.secondaryColor};
+  color: ${(props) => props.theme.default.secondaryColor};
 `;
 
 export default ShowDelegates;

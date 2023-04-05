@@ -21,7 +21,7 @@ import useToast from 'hooks/useToast';
 import { MdCheckCircle, MdError } from 'react-icons/md';
 import { AppContext, Feeds } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
-import { fetchInbox, getUserWithDecryptedPvtKey } from 'helpers/w2w/user';
+import { fetchInbox } from 'helpers/w2w/user';
 import { profilePicture } from 'config/W2WConfig';
 import { useDeviceWidthCheck } from 'hooks';
 import { device } from 'config/Globals';
@@ -35,8 +35,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const [groupTypeObject, setGroupTypeObject] = React.useState<any>();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [memberList, setMemberList] = React.useState<any>([]);
-  const { connectedUser, setConnectedUser } = useContext(ChatUserContext);
-  const { account } = useWeb3React<ethers.providers.Web3Provider>();
+  const { connectedUser, setConnectedUser ,  createUserIfNecessary} = useContext(ChatUserContext);
+  const {library } = useWeb3React<ethers.providers.Web3Provider>();
   const themes = useTheme();
   const createGroupToast = useToast();
   const isMobile = useDeviceWidthCheck(600);
@@ -51,13 +51,17 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   const containerRef = React.useRef(null);
   useClickAway(containerRef, () => handleClose());
   const handleCreateGroup = async (): Promise<any> => {
-    const user = await getUserWithDecryptedPvtKey(connectedUser);
 
     if (memberList.length >= 2) {
       setIsLoading(true);
       try {
         const memberWalletList = memberList.filter((member) => !member.isAdmin).map((member) => member.wallets);
         const adminWalletList = memberList.filter(member => member.isAdmin).map((member) => member.wallets);
+        let createdUser;
+        if(!connectedUser.publicKey){
+          createdUser = await createUserIfNecessary();
+        }
+        const signer = await library.getSigner();
         const createGroupRes = await PushAPI.chat.createGroup({
           groupName: groupNameData,
           groupDescription: groupDescriptionData,
@@ -65,8 +69,8 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
           groupImage: groupImageData ?? profilePicture,
           admins: adminWalletList,
           isPublic: groupTypeObject.groupTypeData == 'public' ? true : false,
-          account: account!,
-          pgpPrivateKey: connectedUser?.privateKey !== '' ? connectedUser?.privateKey : user.privateKey,
+          signer: signer!,
+          pgpPrivateKey: connectedUser?.privateKey || createdUser?.privateKey,
           env: appConfig.appEnv,
         });
         if (typeof createGroupRes !== 'string') {
@@ -113,7 +117,6 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
       }
       setTimeout(() => {
         setIsLoading(false);
-        setConnectedUser(user);
       }, 2000);
     } else {
       createGroupToast.showMessageToast({
@@ -132,29 +135,7 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
   return (
     <ThemeProvider theme={themes}>
       <ModalContainer createGroupState={createGroupState}>
-        <ItemHV2
-          justifyContent={createGroupState == 2 ? 'space-between' : 'center'}
-          align-items="center"
-        >
-          {createGroupState == 2 && (
-            <Back
-              onClick={handlePrevious}
-              style={{ cursor: 'pointer' }}
-            />
-          )}
-          <SpanV2
-            fontWeight="500"
-            fontSize="24px"
-            color={themes.fontColor}
-            flex="1"
-          >
-            Create Group
-          </SpanV2>
-          <Close
-            onClick={() => handleClose()}
-            style={{ cursor: 'pointer', position: 'absolute', right: isMobile ? createGroupState == 2 ? '0px' : '20px' : '4px' }}
-          />
-        </ItemHV2>
+        
         {createGroupState == 1 && (
           <GroupDetailsContent
             groupNameData={groupNameData}
@@ -166,14 +147,19 @@ export const CreateGroupModalContent = ({ onClose, onConfirm: createGroup, toast
             handleGroupImageData={setGroupImageData}
             handleGroupTypeObject={setGroupTypeObject}
             handleCreateGroupState={setCreateGroupState}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
           />
         )}
         {createGroupState == 2 && (
           <AddWalletContent
-            handleCreateGroup={handleCreateGroup}
+            onSubmit={handleCreateGroup}
             memberList={memberList}
             handleMemberList={setMemberList}
             isLoading={isLoading}
+            handlePrevious={handlePrevious}
+            handleClose={handleClose}
+            title={"Create Group"}
           />
         )}
       </ModalContainer>
