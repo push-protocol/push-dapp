@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React,{useContext} from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -19,6 +19,8 @@ import videoIcon from '../../assets/icons/video-icon.svg';
 import audioIcon from '../../assets/icons/audio-icon.svg';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import { BlockedLoadingI } from 'types/chat';
+import { VideoCallContext } from 'contexts/VideoCallContext';
+
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -57,6 +59,8 @@ const callControlsImmersiveStyles = {
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
   const [togglevideo, setToggleVideo] = React.useState(true);
+  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call, VideoToggler } = useContext(VideoCallContext);
+
 
   return (
     <Container>
@@ -84,7 +88,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
           iconWidth="23px"
           onClick={() => {
             // TODO
-            setToggleVideo((togglevideo) => !togglevideo);
+            VideoToggler();
             console.log('video toggled');
           }}
         />

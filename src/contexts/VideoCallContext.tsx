@@ -32,6 +32,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [name, setName] = useState<string>('Joe');
   const [call, setCall] = useState<any>({});
   const [me, setMe] = useState<string>('');
+  const[videoToggle, setVideoToggle] = useState<boolean>(true);
+  const[toggleFlag, setToggleFlag] = useState<boolean>(false);
 
   const [incomingStreams, setIncomingStreams] = useState<MediaStream[]>([]);
 
@@ -56,6 +58,32 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
       console.log('Error in getting self localStream', err);
     }
   };
+
+  async function restartLocalStream(){
+    console.log("RESTART LOCAL STREAM");
+    const localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    setLocalStream(localStream);
+    myVideo.current.srcObject = localStream;
+  }
+
+  const stopLocalStream = async (): Promise<void> => {
+    console.log("STOP LOCAL STREAM");
+    setToggleFlag(true);
+    localStream?.getTracks().forEach((track) => {
+      track.stop();
+    });
+  };
+
+  function VideoToggler(){
+    setVideoToggle(videoToggle => !videoToggle);
+    if(videoToggle && toggleFlag){
+      console.log("INITIALIZE LOCAL STREAM");
+      restartLocalStream();
+    }if(!videoToggle && localStream){
+      console.log("STOP LOCAL STREAM");
+      stopLocalStream();
+    }
+  }
 
   /**
    * Call the user with the given address.       
@@ -296,6 +324,7 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         answerCall,
         incomingCall,
         acceptCall,
+        VideoToggler,
       }}
     >
       {children}
