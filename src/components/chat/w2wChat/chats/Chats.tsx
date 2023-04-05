@@ -360,10 +360,10 @@ const TextMessage = styled.p`
   font-weight: 400;
   margin: 0px;
   @media(${device.tablet}){
-    max-width:565px;
+    max-width:70vw;
   }
   @media(${device.mobileL}){
-    max-width:245px;
+    max-width:65vw;
   }
 `;
 
@@ -440,9 +440,9 @@ const SenderMessage = styled.div`
   flex-direction: column;
   align-items: baseline;
   @media(${device.tablet}){
-    max-width:605px;
+    max-width:80vw;
   }
   @media(${device.mobileL}){
-    max-width:295px;
+    max-width: 75vw;
   }
 `;
