@@ -3,9 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
 import { appConfig } from 'config';
 import { ethers } from 'ethers';
-import CryptoHelper from 'helpers/CryptoHelper';
 import * as w2wHelper from 'helpers/w2w';
-import { generateKeyPair } from 'helpers/w2w/pgp';
 import React, { createContext, useState } from 'react';
 import { BlockedLoadingI, ConnectedUser, User } from 'types/chat';
 

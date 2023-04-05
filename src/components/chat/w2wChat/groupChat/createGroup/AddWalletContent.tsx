@@ -27,7 +27,6 @@ import { appConfig } from 'config';
 import { device } from 'config/Globals';
 import { addWalletValidation, MemberAlreadyPresent } from 'helpers/w2w/groupChat';
 import { Context } from 'modules/chat/ChatModule';
-import { findObject } from '../../../../../helpers/UtilityHelper';
 import { AppContext, User } from '../../../../../types/chat';
 import GroupModalHeader from './GroupModalHeader';
 import MemberListContainer from './MemberListContainer';
@@ -103,8 +102,10 @@ export const AddWalletContent = ({
     }
   };
 
+
+
   const handleUserSearch = async (userSearchData: string): Promise<void> => {
-    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData, chainId });
+    const caip10 = w2wChatHelper.walletToCAIP10({ account: userSearchData });
     let filteredData: User;
 
     if (userSearchData.length) {
@@ -113,7 +114,7 @@ export const AddWalletContent = ({
         env: appConfig.appEnv
       });
 
-      if (filteredData !== null) {
+      if (filteredData !== null) {  
         setFilteredUserData(filteredData);
       }
       // User is not in the protocol. Create new user
