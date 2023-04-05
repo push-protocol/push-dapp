@@ -270,8 +270,12 @@ export default class YieldFarmingDataStore {
   calcTotalAmountPerEpoch = (
     genesisEpochAmount,
     epochId,
-    deprecationPerEpoch
+    deprecationPerEpoch,
+    maxEpochs=100,
   ) => {
+    if (epochId > maxEpochs){
+      return genesisEpochAmount.mul(0)
+    }
     return genesisEpochAmount.sub(epochId.mul(deprecationPerEpoch));
   };
 
