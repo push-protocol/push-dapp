@@ -416,7 +416,10 @@ const ReceivedMessage = styled.div`
   align-items: center;
   padding: 9px 17px;
   @media(${device.tablet}){
-    max-width:600px;
+    max-width:80vw;
+  }
+  @media(${device.mobileL}){
+    max-width: 75vw;
   }
 `;
 
