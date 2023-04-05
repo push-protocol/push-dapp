@@ -7317,7 +7317,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/safe-json@npm:^1.0.1, @walletconnect/safe-json@npm:^1.0.2":
+"@walletconnect/safe-json@npm:^1.0.1":
   version: 1.0.2
   resolution: "@walletconnect/safe-json@npm:1.0.2"
   dependencies:
@@ -13117,9 +13117,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.47, electron-to-chromium@npm:^1.3.585, electron-to-chromium@npm:^1.4.284":
-  version: 1.4.352
-  resolution: "electron-to-chromium@npm:1.4.352"
-  checksum: 225a7494040015372a27f83e2e06e8d13895a8bb7901c44cce029162fb678b51c0864268228ef5d4705d17b78940a1329798295e2070c569fdf97fe1ad85f457
+  version: 1.4.350
+  resolution: "electron-to-chromium@npm:1.4.350"
+  checksum: ed39f6e351aa1d9fd09b059a4294f87b93c0c88903656ad84d2ee93520c0f4eeddfc89a86e66326b6bdf0535432f06ed153758167f9b04a92628b7171412b317
   languageName: node
   linkType: hard
 
