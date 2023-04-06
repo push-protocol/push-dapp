@@ -7,8 +7,9 @@ import styled from 'styled-components';
 
 // Internal Components
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import {ImageV2, ItemVV2  } from 'components/reusables/SharedStylingV2';
 import UserInfo from 'components/video/UserInfo';
+import { device } from 'config/Globals';
 
 
 type VideoPlayerType = {
@@ -28,6 +29,8 @@ const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
     }
   }, [localVideoRef, localStream]);
 
+  console.log('Local Video : ',localStream)
+
   return (
     <Container>
       {localStream && (
@@ -36,6 +39,21 @@ const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
           style={localVideoStyles}
         >
           <LocalVideo ref={localVideoRef} />
+          {
+            !localStream.getVideoTracks()[0].enabled ? (
+              <VideoDisabledContainer>
+                <PfpContainer>
+        <ImageV2
+          height="100%"
+          width='100%'
+          alt={`Profile pic`}
+          src={''}
+          objectFit="cover"
+        />
+      </PfpContainer>
+              </VideoDisabledContainer>
+            ) : null
+          }
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
@@ -139,4 +157,31 @@ const VideoDisabledContainer = styled(ItemVV2)`
   width: fit-content;
   text-align: center;
   color: white;
-  z-index: 10;`;
+  z-index: 10;
+  left: 45%;
+  justify-content: center;
+  align-items: center;
+  `;
+
+  const PfpContainer = styled(ItemVV2)`
+  width: 5rem;
+  height: 5rem;
+  max-width: 5rem;
+  margin: 0 1rem 0 0;
+  border-radius: 100%;
+  overflow: hidden;
+
+  @media ${device.mobileL} {
+    width: 2.875rem;
+    height: 2.875rem;
+    max-width: 2.875rem;
+    margin: auto 1rem auto 0.3rem;
+  }
+
+  @media ${device.mobileS} {
+    width: 2.5rem;
+    height: 2.5rem;
+    max-width: 2.5rem;
+    margin: auto 0.5rem auto 0rem;
+  }
+`;
