@@ -33,6 +33,7 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           style={localVideoStyles}
         >
           <LocalVideo
+          className={callAccepted && !callEnded ? 'connectionAccepted' : null}
             ref={localVideoRef}
           />
         </LocalVideoContainer>
@@ -62,20 +63,22 @@ const Container = styled(ItemVV2)`
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 18vh;
-  max-height: 18vh;
+  height: 47vh;
+  max-height: 47vh;
   transition: all 0.25s linear;
   border-radius: 34px;
   margin: 0 auto;
   z-index: 2;
 
   &.connectionAccepted {
+    height: 18vh;
+  max-height: 18vh;
     position: absolute;
     width: inherit;
     right: 4%;
     bottom: 20px;
     @media (max-width: 768px) {
-      top:41vh;
+      top:32vh;
     }
     @media (max-width: 425px) {
       top:18vh;
@@ -89,14 +92,15 @@ const LocalVideo = styled.video`
   border-radius: inherit;
   object-fit: cover;
 
-  @media (max-width: 768px) {
-    height: 12vh;
-    width: 18vh;
-  }
+  
 
   &.connectionAccepted {
     border: 1px solid #ffffff8c;
     z-index: 2;
+    @media (max-width: 768px) {
+      height: 12vh;
+      width: 18vh;
+    }
   }
 `;
 
