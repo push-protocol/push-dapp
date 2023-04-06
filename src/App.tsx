@@ -215,6 +215,7 @@ export default function App() {
               </LeftBarContainer>
 
               <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
+                {/* Wrap SpaceGlobalContext here */}
                 <ChatUserContextProvider>
                   {/* Shared among all pages, load universal things here */}
                   <MasterInterfacePage />

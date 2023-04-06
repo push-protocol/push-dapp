@@ -15,6 +15,7 @@ const AirdropPage = lazy(() => import('pages/AirdropPage'));
 const ChannelDashboardPage = lazy(() => import('pages/ChannelDashboardPage'));
 const ChannelsPage = lazy(() => import('pages/ChannelsPage'));
 const ChatPage = lazy(() => import('pages/ChatPage'));
+const SpacePage = lazy(() => import('pages/SpacePage'));
 const ComingSoonPage = lazy(() => import('pages/ComingSoonPage'));
 const FAQPage = lazy(() => import('pages/FAQPage'));
 const GovPage = lazy(() => import('pages/GovPage'));
@@ -78,6 +79,9 @@ function MasterInterfacePage() {
             <Route path="chat/:chatid" element={<ChatPage />} />
             <Route path="chat" element={<ChatPage />} />
             {/* <Route path="chat-new" element={<NewChatPage />} /> */}
+
+            <Route path="space/:spaceid" element={<SpacePage />} />
+            <Route path="space" element={<SpacePage />} />
 
             <Route
               path="channels"
