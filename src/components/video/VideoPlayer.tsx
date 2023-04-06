@@ -8,6 +8,7 @@ import styled from 'styled-components';
 // Internal Components
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { device } from 'config/Globals';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
@@ -78,10 +79,16 @@ const LocalVideoContainer = styled(ItemVV2)`
     right: 4%;
     bottom: 20px;
     @media (max-width: 768px) {
-      top:32vh;
+      top:20vh;
     }
     @media (max-width: 425px) {
-      top:18vh;
+      top:19vh;
+    }
+    @media (max-width: 375px) {
+      top:19vh;
+    }
+    @media (max-width: 320px) {
+      top:19vh;
     }
   }
 `;
