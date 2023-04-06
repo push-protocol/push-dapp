@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 // External Packages
 import styled from 'styled-components';
 
@@ -6,6 +7,7 @@ import { ButtonV2, ImageV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { device } from 'config/Globals';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 
 type CallButtonProps = {
   buttonStyles: {};
@@ -14,10 +16,13 @@ type CallButtonProps = {
 };
 
 const CallButton = ({ buttonStyles, iconSrc, onClick }: CallButtonProps) => {
+  const {endLocalStream} = useContext(VideoCallContext);
+
   return (
     <Button
       onClick={onClick}
       style={buttonStyles}
+      onClickCapture={()=>endLocalStream()}
     >
       <Icon src={iconSrc} />
     </Button>

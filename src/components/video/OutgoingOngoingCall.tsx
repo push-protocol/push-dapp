@@ -60,7 +60,6 @@ const callControlsImmersiveStyles = {
 
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
-  const [togglevideo, setToggleVideo] = React.useState(true);
   const {VideoToggler, AudioToggler, videoToggle, audioToggle } = useContext(VideoCallContext);
 
 
@@ -79,7 +78,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
 
       {/* display the local and incoming video */}
       <VideoPlayer
-        videostatus={togglevideo}
+      videoStatus={videoToggle}
         localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
       />
 

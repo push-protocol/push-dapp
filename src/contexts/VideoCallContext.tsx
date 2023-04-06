@@ -59,6 +59,14 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     }
   };
 
+  function endLocalStream(){
+    if(localStream){
+      console.log("END LOCAL STREAM")
+      window.location.reload();
+      localStream.getTracks().forEach(track => track.stop());
+    }
+  }
+
    function restartLocalStream(){
     console.log("RESTART LOCAL STREAM");
     var vidTrack = localStream.getVideoTracks();
@@ -352,6 +360,7 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         AudioToggler,
         videoToggle,
         audioToggle,
+        endLocalStream,
       }}
     >
       {children}
