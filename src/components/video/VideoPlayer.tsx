@@ -8,12 +8,15 @@ import styled from 'styled-components';
 // Internal Components
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { ItemVV2 } from 'components/reusables/SharedStylingV2';
+import UserInfo from 'components/video/UserInfo';
+
 
 type VideoPlayerType = {
   localVideoStyles?: {};
+  videoStatus?: boolean;
 };
 
-const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
+const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
 
@@ -41,7 +44,21 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
             playsInline
             ref={userVideo}
             autoPlay
-          />
+          />{
+            userVideo.enabled ? (
+              <VideoDisabledContainer>
+                <UserInfo
+        
+        pfp={'pfp'}
+        username="temp"
+        address={'0x1234123123123123'}
+        status="Calling"
+        containerStyles={{}}
+        fontColor={'white'}
+      />
+              </VideoDisabledContainer>
+            ) : null
+          }
           <IncomingEnsContainer>
             <p>ens.eth</p>
           </IncomingEnsContainer>
@@ -116,3 +133,10 @@ position: absolute;
   left 1.5%;
   bottom: 3.5%;
 `;
+
+const VideoDisabledContainer = styled(ItemVV2)`
+  position: absolute;
+  width: fit-content;
+  text-align: center;
+  color: white;
+  z-index: 10;`;

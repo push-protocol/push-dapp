@@ -60,7 +60,12 @@ const callControlsImmersiveStyles = {
 
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
-  const {VideoToggler, AudioToggler, videoToggle, audioToggle } = useContext(VideoCallContext);
+  const {VideoToggler, AudioToggler, videoToggle, audioToggle, endLocalStream } = useContext(VideoCallContext);
+
+  function handleClick(){
+    endLocalStream();
+    onEndCall();
+  }
 
 
   return (
@@ -107,7 +112,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
         <CallButton
           buttonStyles={{ background: '#e60808' }}
           iconSrc={endCallIcon}
-          onClick={onEndCall}
+          onClick={handleClick}
         />
       </VideoCallControlsContainer>
 
