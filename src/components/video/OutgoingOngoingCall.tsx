@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -27,21 +27,21 @@ import { VideoCallContext } from 'contexts/VideoCallContext';
 // Internal Configs
 import GLOBALS from 'config/Globals';
 import { useDeviceWidthCheck } from 'hooks';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;
   onEndCall: () => void;
-  callStatus: number; // 1 -> outgoing, 3 -> ongoing
 };
 
 const userInfoImmersiveStyles = {
   position: 'absolute',
-  top: "2%",
-  left: "0",
-  zIndex: "3",
-  width: "100vw",
-  maxWidth: "100vw",
-  justifyContent: "center"
+  top: '2%',
+  left: '0',
+  zIndex: '3',
+  width: '100vw',
+  maxWidth: '100vw',
+  justifyContent: 'center',
 };
 
 const playerImmersiveStyles = {
@@ -51,11 +51,11 @@ const playerImmersiveStyles = {
 
 const callControlsImmersiveStyles = {
   position: 'absolute',
-  bottom: "4%",
-  left: "0",
-  width: "100vw",
-  maxWidth: "100vw",
-  justifyContent: "center"
+  bottom: '4%',
+  left: '0',
+  width: '100vw',
+  maxWidth: '100vw',
+  justifyContent: 'center',
 };
 
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
@@ -67,7 +67,6 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
     onEndCall();
   }
 
-
   return (
     <Container>
       {/* remote user info */}
@@ -78,7 +77,7 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
         address={'0x1234123123123123'}
         status="Calling"
         containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
-        fontColor={isImmersive ? "white" : null}
+        fontColor={isImmersive ? 'white' : null}
       />
 
       {/* display the local and incoming video */}
