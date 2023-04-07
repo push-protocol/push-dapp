@@ -83,46 +83,6 @@ const WelcomeItem = styled(ItemVV2)`
   }
 `;
 
-const WelcomeContent = styled.div`
-  width: 304px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 10px auto;
-  .icon {
-    transform: rotate(-60deg);
-    color: #d53893;
-    min-width: 17px;
-  }
-`;
-
-const ItemBody = styled.div`
-  @media (min-width: 768px) and (max-height: 1080px) {
-    overflow-y: scroll;
-    height: 300px;
-  }
-
-  @media (min-width: 768px) and (max-height: 768px) {
-    overflow-y: scroll;
-    height: 150px;
-  }
-
-  @media (min-width: 768px) and (max-height: 500px) {
-    overflow-y: scroll;
-    height: 100px;
-  }
-`;
-
-const TextInfo = styled.div`
-  align-items: center;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 130%;
-  color: ${(props) => props.theme.default.secondaryColor};
-  width: 274px;
-`;
-
 const WelcomeMainText = styled(SpanV2)`
   background: ${(props) => props.theme.default.bg};
   box-sizing:border-box;
@@ -182,4 +142,44 @@ const Atag = styled.a`
   color: #d53893;
   cursor: pointer;
   margin-bottom: 20px;
+`;
+
+const ItemBody = styled.div`
+  @media (min-width: 768px) and (max-height: 1080px) {
+    overflow-y: scroll;
+    height: 300px;
+  }
+
+  @media (min-width: 768px) and (max-height: 768px) {
+    overflow-y: scroll;
+    height: 150px;
+  }
+
+  @media (min-width: 768px) and (max-height: 500px) {
+    overflow-y: scroll;
+    height: 100px;
+  }
+`;
+
+const WelcomeContent = styled.div`
+  width: 304px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px auto;
+  .icon {
+    transform: rotate(-60deg);
+    color: #d53893;
+    min-width: 17px;
+  }
+`;
+
+const TextInfo = styled.div`
+  align-items: center;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 130%;
+  color: ${(props) => props.theme.default.secondaryColor};
+  width: 274px;
 `;
