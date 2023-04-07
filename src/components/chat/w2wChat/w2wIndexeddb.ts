@@ -14,7 +14,7 @@ let db: IDBDatabase;
 
 export const intitializeDb = async <T extends string | MessageIPFS | Feeds[]>(
   state: 'Read' | 'Insert',
-  dbName: 'Inbox' | 'Intent' | 'CID_store' | 'Wallets',
+  dbName: 'Inbox' | 'Intent' | 'CID_store',
   key: string,
   message: T | string,
   index: 'did' | 'cid'
