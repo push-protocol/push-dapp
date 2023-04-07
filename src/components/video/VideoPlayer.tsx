@@ -1,8 +1,7 @@
 // React + Web3 Essentials
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 
 // External Packages
-import { makeStyles } from '@material-ui/core';
 import styled from 'styled-components';
 
 // Internal Components
@@ -34,13 +33,13 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
           style={localVideoStyles}
         >
           <LocalVideo
-          className={callAccepted && !callEnded ? 'connectionAccepted' : null}
+            className={callAccepted && !callEnded ? 'connectionAccepted' : null}
             ref={localVideoRef}
           />
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
-        <IncomingVideoContainer >
+        <IncomingVideoContainer>
           <IncomingVideo
             playsInline
             ref={userVideo}
@@ -72,23 +71,24 @@ const LocalVideoContainer = styled(ItemVV2)`
   z-index: 2;
 
   &.connectionAccepted {
+    border-radius: 24px;
     height: 18vh;
-  max-height: 18vh;
+    max-height: 18vh;
     position: absolute;
     width: inherit;
-    right: 4%;
-    bottom: 20px;
-    @media (max-width: 768px) {
-      top:20vh;
+    right: 35px;
+    bottom: 8px;
+    @media ${device.laptop} {
+      right: 26px;
     }
-    @media (max-width: 425px) {
-      top:19vh;
+    @media ${device.tablet} {
+      bottom: -10px;
+      right: 25px;
     }
-    @media (max-width: 375px) {
-      top:19vh;
-    }
-    @media (max-width: 320px) {
-      top:19vh;
+    @media ${device.mobileL} {
+      border-radius: 16px;
+      bottom: -18px;
+      right: 2.4%;
     }
   }
 `;
@@ -98,8 +98,6 @@ const LocalVideo = styled.video`
   width: 100%;
   border-radius: inherit;
   object-fit: cover;
-
-  
 
   &.connectionAccepted {
     border: 1px solid #ffffff8c;
@@ -120,6 +118,9 @@ const IncomingVideo = styled.video`
     width: auto;
     height: 100%;
   }
+  @media (max-width: 425px) {
+    border-radius: 20px;
+  }
 `;
 
 const IncomingVideoContainer = styled(ItemVV2)`
@@ -135,6 +136,9 @@ const IncomingVideoContainer = styled(ItemVV2)`
   @media (max-height: 800px) {
     max-height: 50vh;
   }
+  @media (max-width: 425px) {
+    border-radius: 20px;
+  }
 `;
 
 const IncomingEnsContainer = styled(ItemVV2)`
@@ -143,7 +147,7 @@ const IncomingEnsContainer = styled(ItemVV2)`
   width: fit-content;
   padding: 10px;
   border-radius: 24px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   opacity: 0.8;
   z-index: 3;
   left: 1.5%;
