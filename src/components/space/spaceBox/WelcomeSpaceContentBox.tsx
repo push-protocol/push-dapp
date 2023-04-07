@@ -1,14 +1,18 @@
+// React + Web3 Essentials
 import React from 'react';
 
+// External Packages
 import styled, { useTheme } from 'styled-components';
 import { BsDashLg } from 'react-icons/bs';
 
+// Internal Components
 import { ImageV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import PushSpaceIcon from 'assets/space/push-space.svg';
 
 export const WelcomeSpaceContentBox = () => {
   const theme = useTheme();
 
+  // Information about push space
   const InfoMessages = [
     { id: 1, content: 'Spaces are public and visible to everyone' },
     {
