@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components';
 import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
 import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
-import { getAppropriateTimestamp } from 'helpers/TimerHelper';
+import { convertTimestampToDateDayTime } from 'helpers/TimerHelper';
 import { AppContext } from 'contexts/AppContext';
 import { AppContextType } from 'types/context';
 import { getWeb3Name } from 'helpers/UtilityHelper';
@@ -105,7 +105,7 @@ const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, is
       timestamp = timestamp.replace('Z', '');
     }
   
-    date = getAppropriateTimestamp(new Date(timestamp));
+    date = convertTimestampToDateDayTime(new Date(timestamp));
   }
 
   // RENDER
