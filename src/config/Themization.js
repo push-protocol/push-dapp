@@ -42,6 +42,11 @@ const themeLight = {
     gifContainerBg: "#F7F8FF"
   },
 
+  // Space Theme
+  space: {
+    spaceBoxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
+  },
+
   // Default Background Theme
   defaultBG: '#FFFFFF',
 
@@ -264,6 +269,11 @@ const themeDark = {
     sendMesageBg: "#404650",
     sendMessageFontColor: "#B6BCD6",
     gifContainerBg:  "#282A2E"
+  },
+
+  // Space Theme
+  space: {
+    spaceBoxBg: '#282A2E',
   },
 
   // Header Theme
