@@ -12,15 +12,20 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 import { AiOutlineMore } from 'react-icons/ai';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
+import { getWeb3Name } from 'helpers/UtilityHelper';
 
 const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
+  const { web3NameList }:AppContextType=useContext(AppContext);
+
   // theme context
   const theme = useTheme();
 
   const {connectedUser} = useContext(ChatUserContext);
 
-  const ensName=useResolveWeb3Name(connectedUser.wallets)
-
+  useResolveWeb3Name(connectedUser.wallets);
+  const ensName = getWeb3Name({isGroup:false, address:connectedUser.wallets, web3NameList})
 
   const account = caip10ToWallet(connectedUser?.wallets);
   return (
@@ -48,7 +53,7 @@ const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
           size="16px"
           weight="400"
         >
-          {shortenText(account,8,7)}
+          {ensName ? ensName : shortenText(account,8,7)}
         </SpanV2>
       </WalletDetailsContainer>
       {/* </Tooltip> */}

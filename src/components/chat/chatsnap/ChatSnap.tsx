@@ -1,5 +1,6 @@
 // React + Web3 Essentials
-import React from 'react';
+import React,{useContext} from 'react';
+import { ethers } from 'ethers';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -9,6 +10,9 @@ import { ButtonV2, ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusable
 import { caip10ToWallet } from 'helpers/w2w';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { getAppropriateTimestamp } from 'helpers/TimerHelper';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
+import { getWeb3Name } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
@@ -32,10 +36,16 @@ interface ChatSnapPropsI {
 
 // Other Information section
 const ChatSnap = ({ pfp, username, chatSnapMsg, timestamp, selected, onClick, isGroup }: ChatSnapPropsI) => {
+  const { web3NameList }:AppContextType=useContext(AppContext);
+
   // get theme
   const theme = useTheme();
+
   // get ens name
-  const ensName = useResolveWeb3Name(!isGroup ? username : null);
+  useResolveWeb3Name(!isGroup ? username : null);
+
+  // get ens name from context
+  const ensName = getWeb3Name({isGroup, address:username, web3NameList})
 
   // get short username
   const walletAddress = !isGroup ? caip10ToWallet(username) : null;

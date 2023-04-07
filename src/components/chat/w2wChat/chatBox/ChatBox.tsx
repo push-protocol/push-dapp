@@ -35,7 +35,7 @@ import { useDeviceWidthCheck } from 'hooks';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
-import { AppContext, Feeds, MessageIPFS } from 'types/chat';
+import { AppContext as ContextType, Feeds, MessageIPFS } from 'types/chat';
 import HandwaveIcon from '../../../../assets/chat/handwave.svg';
 import { caip10ToWallet, walletToCAIP10 } from '../../../../helpers/w2w';
 import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpers/w2w/groupChat';
@@ -44,6 +44,9 @@ import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
 import { intitializeDb } from '../w2wIndexeddb';
 import { HeaderMessage } from './HeaderMessage';
+import { AppContext } from 'contexts/AppContext';
+import { AppContextType } from 'types/context';
+import { getWeb3Name } from 'helpers/UtilityHelper';
 
 // Internal Configs
 import Tooltip from 'components/reusables/tooltip/Tooltip';
@@ -81,7 +84,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setHasUserBeenSearched,
     setReceivedIntents,
     setBlockedLoading,
-  }: AppContext = useContext<AppContext>(Context);
+  }: ContextType = useContext<ContextType>(Context);
+  const { web3NameList }:AppContextType=useContext(AppContext);
   const [chatMeta, setChatMeta] = useState(null);
 
   const [newMessage, setNewMessage] = useState<string>('');
@@ -111,7 +115,8 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
   useClickAway(groupInfoRef, () => setShowGroupInfo(false));
 
   //get ens name
-  const ensName = useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  useResolveWeb3Name(!isGroup ? currentChat?.wallets?.split(',')[0].toString() : null);
+  const ensName= getWeb3Name({isGroup, address:currentChat?.wallets?.split(',')[0].toString(), web3NameList})
   const navigate = useNavigate();
   const location = useLocation();
   

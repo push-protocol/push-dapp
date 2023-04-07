@@ -400,7 +400,7 @@ function Chat({ chatid }) {
                 userShouldBeSearched,
                 setUserShouldBeSearched,
                 filteredUserData,
-                setFilteredUserData
+                setFilteredUserData,
               }}
             >
               <ChatSidebarContainer

@@ -158,7 +158,7 @@ const ChatUserContextProvider = (props) => {
       connectedPeerID,
       setConnectedPeerID,
       displayQR,
-      setDisplayQR
+      setDisplayQR,
       }}>
       {props.children}
     </ChatUserContext.Provider>
