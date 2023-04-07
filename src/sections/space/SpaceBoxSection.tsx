@@ -12,7 +12,7 @@ import { SpaceBox, WelcomeSpaceContentBox } from 'components/space';
 export const SpaceBoxSection = () => {
   // RENDER
   return (
-    <ItemVV2 justifyContent="stretch">
+    <ItemVV2 justifyContent="stretch" background="#282A2E" borderRadius="24px">
       SpaceBox Section
 
       {/* conditionally Render */}

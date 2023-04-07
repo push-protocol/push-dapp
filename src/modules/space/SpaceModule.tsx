@@ -2,15 +2,17 @@
 import React from 'react';
 
 // External Packages
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 
 // Internal Components
 import { SpaceBoxSection, SpaceSidebarSection } from 'sections/space';
+import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
 
 export const SpaceModule = () => {
+  const theme = useTheme();
 
   // add activeTab state in useState and pass it with SpaceLocalContext
   
@@ -18,8 +20,21 @@ export const SpaceModule = () => {
   // wrap with SpaceLocalContext
   return (
     <Container>
-      <SpaceSidebarSection />
-      <SpaceBoxSection />
+      <SpaceSidebarContainer
+        flex="1"
+        maxWidth="310px"
+        minWidth="280px"
+        padding="10px 10px 10px 20px"
+        boxSizing="border-box"
+        background={theme.default.bg}
+      >
+        <SpaceSidebarSection />
+      </SpaceSidebarContainer>
+      <SpaceBoxContainer
+        padding="10px"
+      >
+        <SpaceBoxSection />
+      </SpaceBoxContainer>
     </Container>
   );
 }
@@ -35,7 +50,7 @@ const Container = styled.div`
 	border-radius: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
 	box-shadow: ${GLOBALS.ADJUSTMENTS.MODULE_BOX_SHADOW};
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	flex: initial;
 	justify-content: center;
 	position: relative;
@@ -60,4 +75,35 @@ const Container = styled.div`
   globalsMargin.MINI_MODULES.MOBILE.BOTTOM
 });
     border: ${GLOBALS.ADJUSTMENTS.RADIUS.LARGE};
+`;
+
+const SpaceSidebarContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 95%;
+    margin-right: 0%;
+    opacity: 1;
+    transition: margin-right 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 1;
+  }
+`;
+
+const SpaceBoxContainer = styled(ItemVV2)`
+  @media ${device.tablet} {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 95%;
+    margin-left: 100%;
+    transition: margin-left 0.25s;
+    max-width: initial;
+    min-width: auto;
+    z-index: 2;
+  }
 `;
