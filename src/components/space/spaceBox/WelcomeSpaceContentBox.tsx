@@ -36,6 +36,7 @@ export const WelcomeSpaceContentBox = () => {
         color={theme.default.secondaryColor}
         fontSize="15px"
         fontWeight="400"
+        padding="0px 20px"
       >
         Spaces enable you to have live conversations with listeners
       </SpanV2>
