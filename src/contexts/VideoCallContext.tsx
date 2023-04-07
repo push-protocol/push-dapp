@@ -32,8 +32,10 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [name, setName] = useState<string>('Joe');
   const [call, setCall] = useState<any>({});
   const [me, setMe] = useState<string>('');
-
-  const [incomingStreams, setIncomingStreams] = useState<MediaStream[]>([]);
+  const[isVideoOn, setVideoOn] = useState<boolean>(true);
+  const [isAudioOn, setAudioOn] = useState<boolean>(true);
+  const [incomingVideoOn, setIncomingVideoOn] = useState<boolean>(true);
+  const [incomingAudioOn, setIncomingAudioOn] = useState<boolean>(true);
 
   const myVideo = useRef<any>();
   const userVideo = useRef<any>();
@@ -56,6 +58,83 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
       console.log('Error in getting self localStream', err);
     }
   };
+
+  function endLocalStream(){
+    if(localStream){
+      console.log("END LOCAL STREAM")
+      window.location.reload();
+      localStream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+   function restartLocalStream(){
+    console.log("RESTART LOCAL STREAM");
+    var vidTrack = localStream.getVideoTracks();
+    vidTrack.forEach(track => track.enabled = true);
+  }
+
+  function stopLocalStream () {
+    console.log("STOP LOCAL STREAM");
+    var vidTrack = localStream.getVideoTracks();
+    vidTrack.forEach(track => track.enabled = false);
+  };
+
+  function restartAudio(){
+    console.log("RESTART AUDIO");
+    var audTrack = localStream.getAudioTracks();
+    audTrack.forEach(track => track.enabled = true);
+  }
+
+  function stopAudio(){
+    console.log("STOP AUDIO");
+    var audTrack = localStream.getAudioTracks();
+    audTrack.forEach(track => track.enabled = false);
+  }
+
+
+  function isJSON(str:string) {
+    try {
+        return (JSON.parse(str) && !!str);
+    } catch (e) {
+        return false;
+    }
+}
+  
+
+  function VideoToggler(){
+    if(isVideoOn === false){
+      const peer = connectionRef.current;
+      peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      console.log("INITIALIZE LOCAL STREAM");
+      setVideoOn(true);
+      restartLocalStream();
+    }if(isVideoOn === true && localStream){
+      console.log("STOP LOCAL STREAM");
+      const peer = connectionRef.current;
+      peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      setVideoOn(false);
+      stopLocalStream();
+    }
+  }
+
+  function AudioToggler(){
+    if(isAudioOn === false){
+      const peer = connectionRef.current;
+      peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      console.log("RESTART AUDIO");
+      setAudioOn(true);
+      restartAudio();
+    }if(isAudioOn === true && localStream){
+      const peer = connectionRef.current;
+      peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      console.log("STOP AUDIO");
+      setAudioOn(false);
+      stopAudio();
+    }
+  }
+
+  
+
 
   /**
    * Call the user with the given address.       
@@ -124,6 +203,16 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     peer.on('data', data => {
       // got a data channel message
       console.log('got a message from reciever: ' + data)
+      if(isJSON(data)){
+        const dataObj = JSON.parse(data);
+        if(dataObj.type === 'isVideoOn'){
+          console.log("IS VIDEO ON", dataObj.isVideoOn);
+          setIncomingVideoOn(dataObj.isVideoOn);
+        }if(dataObj.type === 'isAudioOn'){
+          console.log("IS AUDIO ON", dataObj.isAudioOn);
+          setIncomingAudioOn(dataObj.isAudioOn);
+        }
+      }
     })
 
     peer.on('stream', (currentStream: MediaStream) => {
@@ -235,6 +324,16 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     peer2.on('data', data => {
       // got a data channel message
       console.log('got a message from caller: ' + data)
+      if(isJSON(data)){
+        const dataObj = JSON.parse(data);
+        if(dataObj.type === 'isVideoOn'){
+          console.log("IS VIDEO ON", dataObj.isVideoOn);
+          setIncomingVideoOn(dataObj.isVideoOn);
+        }if(dataObj.type === 'isAudioOn'){
+          console.log("IS AUDIO ON", dataObj.isAudioOn);
+          setIncomingAudioOn(dataObj.isAudioOn);
+        }
+      }
     })
 
     peer2.on('stream', (currentStream: MediaStream) => {
@@ -243,6 +342,7 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
       userVideo.current.srcObject = currentStream;
       userVideo.current.play();
     });
+
 
     connectionRef.current = peer2;
   };
@@ -296,6 +396,13 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         answerCall,
         incomingCall,
         acceptCall,
+        VideoToggler,
+        AudioToggler,
+        isVideoOn,
+        isAudioOn,
+        endLocalStream,
+        incomingVideoOn,
+        incomingAudioOn
       }}
     >
       {children}

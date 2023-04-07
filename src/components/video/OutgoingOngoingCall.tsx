@@ -17,13 +17,15 @@ import CallButton from './CallButton';
 import MediaToggleButton from './MediaToggleButton';
 import videoIcon from '../../assets/icons/video-icon.svg';
 import audioIcon from '../../assets/icons/audio-icon.svg';
+import videoOffIcon from '../../assets/icons/video-off-icon.svg';
+import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import { BlockedLoadingI } from 'types/chat';
+import { VideoCallContext } from 'contexts/VideoCallContext';
+import { useDeviceWidthCheck } from 'hooks';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { useDeviceWidthCheck } from 'hooks';
-import { VideoCallContext } from 'contexts/VideoCallContext';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;
@@ -54,11 +56,14 @@ const callControlsImmersiveStyles = {
   justifyContent: 'center',
 };
 
-const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallType) => {
-  const { callAccepted } = useContext(VideoCallContext);
-  const isImmersive = useDeviceWidthCheck(425) && !callAccepted;
-  
-  const [togglevideo, setToggleVideo] = React.useState(true);
+const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
+  const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
+  const { VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
+
+  function handleClick() {
+    endLocalStream();
+    onEndCall();
+  }
 
   return (
     <Container>
@@ -75,33 +80,33 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall }: OutgoingOngoingCallT
 
       {/* display the local and incoming video */}
       <VideoPlayer
-        videostatus={togglevideo}
         localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
       />
 
       {/* display video call controls */}
       <VideoCallControlsContainer style={isImmersive ? callControlsImmersiveStyles : {}}>
         <MediaToggleButton
-          iconSrc={videoIcon}
+          iconSrc={isVideoOn ? videoIcon : videoOffIcon}
           iconWidth="23px"
+          backgroundColor={isVideoOn ? 'white' : '#e60808'}
           onClick={() => {
-            // TODO
-            setToggleVideo((togglevideo) => !togglevideo);
+            VideoToggler();
             console.log('video toggled');
           }}
         />
         <MediaToggleButton
-          iconSrc={audioIcon}
+          iconSrc={isAudioOn ? audioIcon : audioOffIcon}
           iconWidth="14.5px"
+          backgroundColor={isAudioOn ? 'white' : '#e60808'}
           onClick={() => {
-            // TODO
+            AudioToggler();
             console.log('audio toggled');
           }}
         />
         <CallButton
           buttonStyles={{ background: '#e60808' }}
           iconSrc={endCallIcon}
-          onClick={onEndCall}
+          onClick={handleClick}
         />
       </VideoCallControlsContainer>
 

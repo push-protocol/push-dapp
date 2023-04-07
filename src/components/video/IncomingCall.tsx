@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 // External Packages
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ import CallButton from './CallButton';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
 import { useDeviceWidthCheck } from 'hooks';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -33,6 +34,13 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
   const minimizeCallHandler = () => {
     setIsIncomingCallMinimized(true);
   };
+
+  const { endLocalStream } = useContext(VideoCallContext);
+
+  function handleClick() {
+    endLocalStream();
+    onEndCall();
+  }
 
   return (
     <Container>
@@ -79,7 +87,7 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
               maxWidth: isMobile ? '34px' : '46px',
             }}
             iconSrc={endCallIcon}
-            onClick={onEndCall}
+            onClick={handleClick}
           />
         </VideoCallControlsContainer>
       </IncomingCallModalContent>

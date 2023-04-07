@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 // External Packages
 import styled from 'styled-components';
 
@@ -14,6 +15,7 @@ type CallButtonProps = {
 };
 
 const CallButton = ({ buttonStyles, iconSrc, onClick }: CallButtonProps) => {
+
   return (
     <Button
       onClick={onClick}
