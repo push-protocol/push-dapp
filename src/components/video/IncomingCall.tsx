@@ -14,10 +14,10 @@ import CallButton from './CallButton';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
 import { useDeviceWidthCheck } from 'hooks';
+import { VideoCallContext } from 'contexts/VideoCallContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
-import { VideoCallContext } from 'contexts/VideoCallContext';
 
 type IncomingCallType = {
   onAnswerCall: () => void;
@@ -35,9 +35,9 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
     setIsIncomingCallMinimized(true);
   };
 
-  const {endLocalStream } = useContext(VideoCallContext);
+  const { endLocalStream } = useContext(VideoCallContext);
 
-  function handleClick(){
+  function handleClick() {
     endLocalStream();
     onEndCall();
   }

@@ -6,18 +6,17 @@ import styled from 'styled-components';
 
 // Internal Components
 import { VideoCallContext } from 'contexts/VideoCallContext';
-import {ImageV2, ItemVV2  } from 'components/reusables/SharedStylingV2';
-import UserInfo from 'components/video/UserInfo';
+import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import { device } from 'config/Globals';
 
 type VideoPlayerType = {
   localVideoStyles?: {};
-  videoStatus?: boolean;
 };
 
-const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
+const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
-  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call,incomingVideoOn,incomingAudioOn } = useContext(VideoCallContext);
+  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call, incomingVideoOn, incomingAudioOn } =
+    useContext(VideoCallContext);
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -27,7 +26,7 @@ const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
     }
   }, [localVideoRef, localStream]);
 
-  console.log('Local Video : ',localStream)
+  console.log('Local Video : ', localStream);
 
   return (
     <Container>
@@ -37,21 +36,19 @@ const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
           style={localVideoStyles}
         >
           <LocalVideo ref={localVideoRef} />
-          {
-            !localStream.getVideoTracks()[0].enabled ? (
-              <VideoDisabledContainer>
-                <PfpContainer>
-        <ImageV2
-          height="100%"
-          width='100%'
-          alt={`Profile pic`}
-          src={''}
-          objectFit="cover"
-        />
-      </PfpContainer>
-              </VideoDisabledContainer>
-            ) : null
-          }
+          {!localStream.getVideoTracks()[0].enabled ? (
+            <VideoDisabledContainer>
+              <PfpContainer>
+                <ImageV2
+                  height="100%"
+                  width="100%"
+                  alt={`Profile pic`}
+                  src={''}
+                  objectFit="cover"
+                />
+              </PfpContainer>
+            </VideoDisabledContainer>
+          ) : null}
         </LocalVideoContainer>
       )}
       {callAccepted && !callEnded && (
@@ -60,21 +57,20 @@ const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
             playsInline
             ref={userVideo}
             autoPlay
-          />{
-            !incomingVideoOn ? (
-              <VideoDisabledContainer>
-                <PfpContainer>
-                  <ImageV2
-                    height="100%"
-                    width='100%'
-                    alt={`Profile pic`}
-                    src={''}
-                    objectFit="cover"
-                  />
-                </PfpContainer>
-              </VideoDisabledContainer>
-            ) : null
-          }
+          />
+          {!incomingVideoOn ? (
+            <VideoDisabledContainer>
+              <PfpContainer>
+                <ImageV2
+                  height="100%"
+                  width="100%"
+                  alt={`Profile pic`}
+                  src={''}
+                  objectFit="cover"
+                />
+              </PfpContainer>
+            </VideoDisabledContainer>
+          ) : null}
           <IncomingEnsContainer>
             <p>ens.eth</p>
           </IncomingEnsContainer>
@@ -193,9 +189,9 @@ const VideoDisabledContainer = styled(ItemVV2)`
   left: 45%;
   justify-content: center;
   align-items: center;
-  `;
+`;
 
-  const PfpContainer = styled(ItemVV2)`
+const PfpContainer = styled(ItemVV2)`
   width: 5rem;
   height: 5rem;
   max-width: 5rem;

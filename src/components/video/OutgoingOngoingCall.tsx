@@ -22,12 +22,10 @@ import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
 import endCallIcon from '../../assets/icons/end-call-icon.svg';
 import { BlockedLoadingI } from 'types/chat';
 import { VideoCallContext } from 'contexts/VideoCallContext';
-
+import { useDeviceWidthCheck } from 'hooks';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
-import { useDeviceWidthCheck } from 'hooks';
-import { VideoCallContext } from 'contexts/VideoCallContext';
 
 type OutgoingOngoingCallType = {
   blockedLoading: BlockedLoadingI;
@@ -60,9 +58,9 @@ const callControlsImmersiveStyles = {
 
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
-  const {VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
+  const { VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
 
-  function handleClick(){
+  function handleClick() {
     endLocalStream();
     onEndCall();
   }
@@ -82,7 +80,6 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
 
       {/* display the local and incoming video */}
       <VideoPlayer
-      videoStatus={isVideoOn}
         localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
       />
 
@@ -91,9 +88,8 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
         <MediaToggleButton
           iconSrc={isVideoOn ? videoIcon : videoOffIcon}
           iconWidth="23px"
-          backgroundColor={isVideoOn ? 'white' : '#e60808' }
+          backgroundColor={isVideoOn ? 'white' : '#e60808'}
           onClick={() => {
-            // TODO
             VideoToggler();
             console.log('video toggled');
           }}
@@ -101,9 +97,8 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
         <MediaToggleButton
           iconSrc={isAudioOn ? audioIcon : audioOffIcon}
           iconWidth="14.5px"
-          backgroundColor={isAudioOn ? 'white' : '#e60808' }
+          backgroundColor={isAudioOn ? 'white' : '#e60808'}
           onClick={() => {
-            // TODO
             AudioToggler();
             console.log('audio toggled');
           }}
