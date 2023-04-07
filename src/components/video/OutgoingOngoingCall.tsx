@@ -60,7 +60,7 @@ const callControlsImmersiveStyles = {
 
 const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
-  const {VideoToggler, AudioToggler, videoToggle, audioToggle, endLocalStream } = useContext(VideoCallContext);
+  const {VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
 
   function handleClick(){
     endLocalStream();
@@ -83,16 +83,16 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
 
       {/* display the local and incoming video */}
       <VideoPlayer
-      videoStatus={videoToggle}
+      videoStatus={isVideoOn}
         localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
       />
 
       {/* display video call controls */}
       <VideoCallControlsContainer style={isImmersive ? callControlsImmersiveStyles : {}}>
         <MediaToggleButton
-          iconSrc={videoToggle ? videoIcon : videoOffIcon}
+          iconSrc={isVideoOn ? videoIcon : videoOffIcon}
           iconWidth="23px"
-          backgroundColor={videoToggle ? 'white' : '#e60808' }
+          backgroundColor={isVideoOn ? 'white' : '#e60808' }
           onClick={() => {
             // TODO
             VideoToggler();
@@ -100,9 +100,9 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
           }}
         />
         <MediaToggleButton
-          iconSrc={audioToggle ? audioIcon : audioOffIcon}
+          iconSrc={isAudioOn ? audioIcon : audioOffIcon}
           iconWidth="14.5px"
-          backgroundColor={audioToggle ? 'white' : '#e60808' }
+          backgroundColor={isAudioOn ? 'white' : '#e60808' }
           onClick={() => {
             // TODO
             AudioToggler();

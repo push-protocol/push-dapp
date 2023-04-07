@@ -19,7 +19,7 @@ type VideoPlayerType = {
 
 const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
-  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call } = useContext(VideoCallContext);
+  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call,incomingVideoOn,incomingAudioOn } = useContext(VideoCallContext);
 
   useEffect(() => {
     if (localVideoRef.current) {
@@ -63,17 +63,17 @@ const VideoPlayer = ({ localVideoStyles,videoStatus }: VideoPlayerType) => {
             ref={userVideo}
             autoPlay
           />{
-            userVideo.enabled ? (
+            !incomingVideoOn ? (
               <VideoDisabledContainer>
-                <UserInfo
-        
-        pfp={'pfp'}
-        username="temp"
-        address={'0x1234123123123123'}
-        status="Calling"
-        containerStyles={{}}
-        fontColor={'white'}
-      />
+                <PfpContainer>
+                  <ImageV2
+                    height="100%"
+                    width='100%'
+                    alt={`Profile pic`}
+                    src={''}
+                    objectFit="cover"
+                  />
+                </PfpContainer>
               </VideoDisabledContainer>
             ) : null
           }
