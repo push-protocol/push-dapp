@@ -5,15 +5,18 @@ import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 // Internal Components
-import { VideoCallContext } from 'contexts/VideoCallContext';
-import { ImageV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
+import { ImageV2, ItemHV2, ItemVV2, SpanV2 } from 'components/reusables/SharedStylingV2';
+import UserInfo from 'components/video/UserInfo';
 import { device } from 'config/Globals';
+import { VideoCallContext } from 'contexts/VideoCallContext';
+import { VideoCallInfoI } from 'types/chat';
 
 type VideoPlayerType = {
+  videoCallInfo?: VideoCallInfoI;
   localVideoStyles?: {};
 };
 
-const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
+const VideoPlayer = ({ videoCallInfo, localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
   const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call, incomingVideoOn, incomingAudioOn } =
     useContext(VideoCallContext);
@@ -32,21 +35,21 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
     <Container>
       {localStream && (
         <LocalVideoContainer
-          className={callAccepted && !callEnded ? 'connectionAccepted' : null}
+          className={callAccepted && !callEnded ? !localStream.getVideoTracks()[0].enabled ? 'connectionAccepted videoOff' : 'connectionAccepted videoOn' : null}
           style={localVideoStyles}
         >
           <LocalVideo ref={localVideoRef} />
           {!localStream.getVideoTracks()[0].enabled ? (
             <VideoDisabledContainer>
-              <PfpContainer>
+              <PfpContainerMini>
                 <ImageV2
                   height="100%"
                   width="100%"
                   alt={`Profile pic`}
-                  src={''}
+                  src={videoCallInfo.fromProfilePic}
                   objectFit="cover"
                 />
-              </PfpContainer>
+              </PfpContainerMini>
             </VideoDisabledContainer>
           ) : null}
         </LocalVideoContainer>
@@ -58,22 +61,42 @@ const VideoPlayer = ({ localVideoStyles }: VideoPlayerType) => {
             ref={userVideo}
             autoPlay
           />
-          {!incomingVideoOn ? (
+          
+          {!incomingVideoOn &&
             <VideoDisabledContainer>
               <PfpContainer>
                 <ImageV2
                   height="100%"
                   width="100%"
                   alt={`Profile pic`}
-                  src={''}
+                  src={videoCallInfo.toProfilePic}
                   objectFit="cover"
                 />
               </PfpContainer>
             </VideoDisabledContainer>
-          ) : null}
-          <IncomingEnsContainer>
-            <p>ens.eth</p>
-          </IncomingEnsContainer>
+          }
+          
+          <ProfileInfoMini
+            position="absolute"
+          >
+            <PfpContainerMini>
+              <ImageV2
+                height="100%"
+                width="100%"
+                alt={`Profile pic`}
+                src={videoCallInfo.toProfilePic}
+                objectFit="cover"
+              />
+            </PfpContainerMini>
+            <SpanV2
+              padding="10px"
+              borderRadius="24px"
+              background="#ffffffbb"
+              zIndex="3"
+            >
+              {videoCallInfo.address}
+            </SpanV2>
+          </ProfileInfoMini>
         </IncomingVideoContainer>
       )}
     </Container>
@@ -85,13 +108,13 @@ const Container = styled(ItemVV2)`
   height: fit-content;
   max-height: fit-content;
   min-height: fit-content;
+  overflow: hidden;
 `;
 
 const LocalVideoContainer = styled(ItemVV2)`
   overflow: hidden;
   height: 47vh;
   max-height: 47vh;
-  transition: all 0.25s linear;
   border-radius: 34px;
   margin: 0 auto;
   z-index: 2;
@@ -115,6 +138,14 @@ const LocalVideoContainer = styled(ItemVV2)`
       border-radius: 16px;
       bottom: -18px;
       right: 2.4%;
+    }
+
+    &.videoOff {
+      background: #eeeeeeee;
+    }
+
+    &.videoOff > video {
+      visibility: hidden;
     }
   }
 `;
@@ -151,20 +182,20 @@ const IncomingVideo = styled.video`
 
 const IncomingVideoContainer = styled(ItemVV2)`
   overflow: hidden;
-  height: 20vh;
+  /* height: 20vh;
   max-height: 62vh;
-  width: 95%;
+  width: 95%; */
   background-color: #000000;
-  left: 2.5%;
+  /* left: 2.5%; */
   border-radius: 34px;
   z-index: 1;
 
-  @media (max-height: 800px) {
+  /* @media (max-height: 800px) {
     max-height: 50vh;
   }
   @media (max-width: 425px) {
     border-radius: 20px;
-  }
+  } */
 `;
 
 const IncomingEnsContainer = styled(ItemVV2)`
@@ -189,6 +220,10 @@ const VideoDisabledContainer = styled(ItemVV2)`
   left: 45%;
   justify-content: center;
   align-items: center;
+
+  &.connectionAccepted {
+    visibility: hidden;
+  }
 `;
 
 const PfpContainer = styled(ItemVV2)`
@@ -211,5 +246,34 @@ const PfpContainer = styled(ItemVV2)`
     height: 2.5rem;
     max-width: 2.5rem;
     margin: auto 0.5rem auto 0rem;
+  }
+`;
+
+const ProfileInfoMini = styled(ItemHV2)`
+  left: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  bottom: 10px;
+`;
+
+const PfpContainerMini = styled(ItemVV2)`
+  margin: 10px;
+  width: 3rem;
+  height: 3rem;
+  max-width: 3rem;
+  border-radius: 100%;
+  overflow: hidden;
+
+  @media ${device.mobileL} {
+    width: 2.875rem;
+    height: 2.875rem;
+    max-width: 2.875rem;
+  }
+
+  @media ${device.mobileS} {
+    width: 2.5rem;
+    height: 2.5rem;
+    max-width: 2.5rem;
   }
 `;

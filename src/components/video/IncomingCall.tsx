@@ -2,29 +2,31 @@
 import React, { useContext, useState } from 'react';
 
 // External Packages
-import styled from 'styled-components';
 import { MdClear } from 'react-icons/md';
+import styled from 'styled-components';
 
 // Internal Components
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
+import { VideoCallContext } from 'contexts/VideoCallContext';
+import { useDeviceWidthCheck } from 'hooks';
+import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
+import endCallIcon from '../../assets/icons/end-call-icon.svg';
+import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
+import CallButton from './CallButton';
 import IncomingCallModalContent from './IncomingCallModalContent';
 import UserInfo from './UserInfo';
 import VideoPlayer from './VideoPlayer';
-import CallButton from './CallButton';
-import endCallIcon from '../../assets/icons/end-call-icon.svg';
-import pickCallIcon from '../../assets/icons/pick-call-icon.svg';
-import { useDeviceWidthCheck } from 'hooks';
-import { VideoCallContext } from 'contexts/VideoCallContext';
 
 // Internal Configs
 import { device } from 'config/Globals';
 
 type IncomingCallType = {
+  videoCallInfo: VideoCallInfoI;
   onAnswerCall: () => void;
   onEndCall: () => void;
 };
 
-const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
+const IncomingCall = ({ videoCallInfo, onAnswerCall, onEndCall }: IncomingCallType) => {
   // for conditional css
   const isMobile = useDeviceWidthCheck(425);
   const isLaptopS = useDeviceWidthCheck(1025) && !isMobile;
@@ -45,24 +47,27 @@ const IncomingCall = ({ onAnswerCall, onEndCall }: IncomingCallType) => {
   return (
     <Container>
       <IncomingCallModalContent isIncomingCallMinimized={isIncomingCallMinimized}>
-        {!isIncomingCallMinimized && (
+        {!isIncomingCallMinimized &&
           <CrossIconContainer>
             <CrossIcon onClick={minimizeCallHandler} />
           </CrossIconContainer>
-        )}
+        }
 
         {/* remote user info */}
-        <UserInfo
-          // TODO: make this dynamic with remote user's info
-          pfp={'pfp'}
-          username="temp"
-          address={'0x1234123123123123'}
-          status="Incoming Video Call"
-          containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
-        />
+        {videoCallInfo.establishConnection != 3 && 
+          <UserInfo
+            // TODO: make this dynamic with remote user's info
+            pfp={videoCallInfo.fromProfilePic}
+            username={videoCallInfo.fromProfileUsername}
+            address={`${videoCallInfo.address}`}
+            status="Incoming Video Call"
+            containerStyles={{ margin: isMobile ? '2.5% 0 4% 2%' : '2.5% auto' }}
+          />
+        }
 
         {!isIncomingCallMinimized && (
           <VideoPlayer
+            videoCallInfo={videoCallInfo}
             localVideoStyles={{
               height: '35vh',
               maxHeight: '35vh',

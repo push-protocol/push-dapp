@@ -2,8 +2,8 @@
 import styled from 'styled-components';
 
 // Internal Components
-import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 import BlurBG from 'components/reusables/blurs/BlurBG';
+import { ItemHV2, ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import { device } from 'config/Globals';
@@ -27,10 +27,16 @@ const IncomingCallModalContent: React.FC<IncomingCallModalContentProps> = ({ isI
 
 const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
   position: absolute;
-  right: ${props => props.isIncomingCallMinimized ? "2%" : "18%"};
+  /* right: ${props => props.isIncomingCallMinimized ? "2%" : "18%"}; */
+  right: 0;
+  left: 0;
   bottom: ${props => props.isIncomingCallMinimized ? "18%" : "unset"};
   border-radius: 1.5rem;
 
+  max-width: 25%;
+  min-width: 320px;
+  margin: auto;
+  /* 
   @media ${device.laptop} {
     right: 3%;
   }
@@ -41,7 +47,8 @@ const Container = styled(ItemHV2)<IncomingCallModalContentProps>`
 
   @media ${device.mobileL} {
     right: 3.5%;
-  }
+  } 
+  */
 `;
 
 const ContentContainer = styled(ItemVV2)<IncomingCallModalContentProps>`
