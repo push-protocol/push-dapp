@@ -59,12 +59,13 @@ const Container = styled(ItemHV2)`
 `;
 
 const PfpContainer = styled(ItemVV2)`
-  width: 5rem;
-  height: 5rem;
-  max-width: 5rem;
+  width: 3rem;
+  height: 3rem;
+  max-width: 3rem;
   margin: 0 1rem 0 0;
   border-radius: 100%;
   overflow: hidden;
+  align-self: center;
 
   @media ${device.mobileL} {
     width: 2.875rem;

@@ -8,26 +8,27 @@ import styled from 'styled-components';
 import LoaderSpinner, {
   LOADER_OVERLAY,
   LOADER_TYPE,
-  PROGRESS_POSITIONING,
+  PROGRESS_POSITIONING
 } from 'components/reusables/loaders/LoaderSpinner';
 import { ItemHV2, SectionV2 } from 'components/reusables/SharedStylingV2';
-import VideoPlayer from 'components/video/VideoPlayer';
 import UserInfo from 'components/video/UserInfo';
-import CallButton from './CallButton';
-import MediaToggleButton from './MediaToggleButton';
-import videoIcon from '../../assets/icons/video-icon.svg';
-import audioIcon from '../../assets/icons/audio-icon.svg';
-import videoOffIcon from '../../assets/icons/video-off-icon.svg';
-import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
-import endCallIcon from '../../assets/icons/end-call-icon.svg';
-import { BlockedLoadingI } from 'types/chat';
+import VideoPlayer from 'components/video/VideoPlayer';
 import { VideoCallContext } from 'contexts/VideoCallContext';
 import { useDeviceWidthCheck } from 'hooks';
+import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
+import audioIcon from '../../assets/icons/audio-icon.svg';
+import audioOffIcon from '../../assets/icons/audio-off-icon.svg';
+import endCallIcon from '../../assets/icons/end-call-icon.svg';
+import videoIcon from '../../assets/icons/video-icon.svg';
+import videoOffIcon from '../../assets/icons/video-off-icon.svg';
+import CallButton from './CallButton';
+import MediaToggleButton from './MediaToggleButton';
 
 // Internal Configs
 import GLOBALS from 'config/Globals';
 
 type OutgoingOngoingCallType = {
+  videoCallInfo: VideoCallInfoI;
   blockedLoading: BlockedLoadingI;
   onEndCall: () => void;
 };
@@ -56,7 +57,7 @@ const callControlsImmersiveStyles = {
   justifyContent: 'center',
 };
 
-const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
+const OutgoingOngoingCall = ({ videoCallInfo, blockedLoading, onEndCall, callStatus }: OutgoingOngoingCallType) => {
   const isImmersive = useDeviceWidthCheck(425) && callStatus === 1;
   const { VideoToggler, AudioToggler, isVideoOn, isAudioOn, endLocalStream } = useContext(VideoCallContext);
 
@@ -64,22 +65,25 @@ const OutgoingOngoingCall = ({ blockedLoading, onEndCall, callStatus }: Outgoing
     endLocalStream();
     onEndCall();
   }
-
+  console.log("Outer", videoCallInfo)
   return (
     <Container>
       {/* remote user info */}
-      <UserInfo
-        // TODO: make this dynamic with remote user's info
-        pfp={'pfp'}
-        username="temp"
-        address={'0x1234123123123123'}
-        status="Calling"
-        containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
-        fontColor={isImmersive ? 'white' : null}
-      />
+      {videoCallInfo.establishConnection != 3 && 
+        <UserInfo
+          // TODO: make this dynamic with remote user's info
+          pfp={videoCallInfo.toProfilePic}
+          username={videoCallInfo.toProfileUsername}
+          address={`${videoCallInfo.address}`}
+          status={'Calling'}
+          containerStyles={isImmersive ? userInfoImmersiveStyles : {}}
+          fontColor={isImmersive ? 'white' : null}
+        />
+      }
 
       {/* display the local and incoming video */}
       <VideoPlayer
+        videoCallInfo={videoCallInfo}
         localVideoStyles={isImmersive ? playerImmersiveStyles : {}}
       />
 
@@ -143,12 +147,14 @@ const Container = styled(SectionV2)`
     return `5px solid ${props.theme.vcBorderColor}`;
   }};
   border-radius: 24px;
+  padding: 10px;
 `;
 
 const VideoCallControlsContainer = styled(ItemHV2)`
   width: fit-content;
   max-width: fit-content;
   margin: 1% auto;
+  flex: 0;
 `;
 
 export default OutgoingOngoingCall;

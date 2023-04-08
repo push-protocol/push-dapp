@@ -4,22 +4,14 @@ import React, { useContext, useState } from 'react';
 
 // Internal Components
 import { LOADER_SPINNER_TYPE } from 'components/reusables/loaders/LoaderSpinner';
-import { VideoCallContext } from 'contexts/VideoCallContext';
-import { BlockedLoadingI } from 'types/chat';
 import IncomingCall from 'components/video/IncomingCall';
 import OutgoingOngoingCall from 'components/video/OutgoingOngoingCall';
+import { VideoCallContext } from 'contexts/VideoCallContext';
+import { BlockedLoadingI, VideoCallInfoI } from 'types/chat';
 
 // Internal Configs
 
 // Interface
-export interface VideoCallInfoI {
-  address: string;
-  fromPublicKeyArmored: string;
-  toPublicKeyArmored: string;
-  privateKeyArmored: string;
-  establishConnection: number;
-}
-
 interface VideoCallSectionPropsI {
   videoCallInfo: VideoCallInfoI;
   setVideoCallInfo: Function;
@@ -43,8 +35,12 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   const answerCallHandler = () => {
     setVideoCallInfo({
       address: videoCallInfo.address,
+      fromProfileUsername: videoCallInfo.toProfileUsername,
+      fromProfilePic: videoCallInfo.toProfilePic,
       fromPublicKeyArmored: videoCallInfo.fromPublicKeyArmored,
       toPublicKeyArmored: videoCallInfo.toPublicKeyArmored,
+      toProfileUsername: videoCallInfo.fromProfileUsername,
+      toProfilePic: videoCallInfo.fromProfilePic,
       privateKeyArmored: videoCallInfo.privateKeyArmored,
       establishConnection: 3,
     });
@@ -106,6 +102,7 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   if (videoCallInfo.establishConnection === 2) {
     return (
       <IncomingCall
+        videoCallInfo={videoCallInfo}
         onAnswerCall={answerCallHandler}
         onEndCall={endCallHandler}
       />
@@ -115,6 +112,7 @@ const VideoCallSection = ({ videoCallInfo, setVideoCallInfo, endVideoCallHook }:
   // Outgoing & Ongoing call UI
   return (
     <OutgoingOngoingCall
+      videoCallInfo={videoCallInfo}
       blockedLoading={blockedLoading}
       onEndCall={endCallHandler}
     />
