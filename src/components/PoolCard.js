@@ -481,7 +481,7 @@ export default function PoolCard({
               self="stretch"
             >
               <H3>
-                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{pushPoolStats.stakingAPR}%</b></Span>
+                <Span>Current APR </Span><Span bg={poolName == "Uniswap LP Pool (UNI-V2)" ? "#35c5f3" : "#e20880"} padding="2px 8px" weight="600" color="#fff"><b>{Math.max(pushPoolStats.stakingAPR,0)}%</b></Span>
               </H3>
             </Item>
           </Item>
