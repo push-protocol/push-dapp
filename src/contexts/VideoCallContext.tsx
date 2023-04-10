@@ -36,6 +36,7 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   const [isAudioOn, setAudioOn] = useState<boolean>(true);
   const [incomingVideoOn, setIncomingVideoOn] = useState<boolean>(true);
   const [incomingAudioOn, setIncomingAudioOn] = useState<boolean>(true);
+  const[isPeerConnected, setPeerConnected] = useState<boolean>(false);
 
   const myVideo = useRef<any>();
   const userVideo = useRef<any>();
@@ -103,15 +104,20 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
 
   function VideoToggler(){
     if(isVideoOn === false){
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      if(isPeerConnected)
+      {
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      }
       console.log("INITIALIZE LOCAL STREAM");
       setVideoOn(true);
       restartLocalStream();
     }if(isVideoOn === true && localStream){
       console.log("STOP LOCAL STREAM");
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      }
       setVideoOn(false);
       stopLocalStream();
     }
@@ -119,14 +125,18 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
 
   function AudioToggler(){
     if(isAudioOn === false){
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      }
       console.log("RESTART AUDIO");
       setAudioOn(true);
       restartAudio();
     }if(isAudioOn === true && localStream){
-      const peer = connectionRef.current;
-      peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      if(isPeerConnected){
+        const peer = connectionRef.current;
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      }
       console.log("STOP AUDIO");
       setAudioOn(false);
       stopAudio();
@@ -198,6 +208,19 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     peer.on('connect', () => {
       // wait for 'connect' event before using the data channel
       peer.send('hey reciever, how is it going?')
+      setPeerConnected(true);
+      if(isVideoOn === false){
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      }
+      if(isAudioOn === false){
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      }
+      if(isVideoOn === true){
+        peer.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      }
+      if(isAudioOn === true){
+        peer.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      }
     })
     
     peer.on('data', data => {
@@ -319,6 +342,19 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
     peer2.on('connect', () => {
       // wait for 'connect' event before using the data channel
       peer2.send('hey caller, how is it going?')
+      setPeerConnected(true);
+      if(isVideoOn === false){
+        peer2.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: false }));
+      }
+      if(isAudioOn === false){
+        peer2.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: false }));
+      }
+      if(isVideoOn === true){
+        peer2.send(JSON.stringify({ type: 'isVideoOn', isVideoOn: true }));
+      }
+      if(isAudioOn === true){
+        peer2.send(JSON.stringify({ type: 'isAudioOn', isAudioOn: true }));
+      }
     })
     
     peer2.on('data', data => {
