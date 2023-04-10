@@ -151,6 +151,8 @@ const Atag = styled.a`
 `;
 
 const ItemBody = styled.div`
+  padding: 32px;
+  padding-bottom: 0;
   @media (min-width: 768px) and (max-height: 1080px) {
     overflow-y: scroll;
     max-height: 300px;
@@ -168,10 +170,9 @@ const ItemBody = styled.div`
 `;
 
 const WelcomeContent = styled.div`
-  width: 304px;
+  max-width: 369px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   margin: 10px auto;
   .icon {
@@ -185,7 +186,8 @@ const TextInfo = styled.div`
   align-items: center;
   font-weight: 400;
   font-size: 15px;
+  margin-left:12px;
   line-height: 130%;
   color: ${(props) => props.theme.space.secondaryColor};
-  width: 274px;
+  width: 304px;
 `;
