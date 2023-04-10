@@ -1,5 +1,5 @@
 // React + Web3 Essentials
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 
 // External Packages
 import styled, { useTheme } from 'styled-components';
@@ -10,15 +10,53 @@ import { ItemVV2 } from 'components/reusables/SharedStylingV2';
 
 // Internal Configs
 import GLOBALS, { device, globalsMargin } from 'config/Globals';
+import { SpaceGlobalContext, SpaceLocalContextProvider } from 'contexts';
+import { useWeb3React } from '@web3-react/core';
+import { ChatUserContext } from 'contexts/ChatUserContext';
+import { getSpaceRequests, getSpaces } from 'services/space';
 
 export const SpaceModule = () => {
   const theme = useTheme();
+  const { account, library } = useWeb3React();
+  //shift getUser to app context and add type 
+  const { connectedUser,setConnectedUser,getUser } = useContext(ChatUserContext);
+  const { userSpaces,setSpaceRequests,setSpaces } = useContext(SpaceGlobalContext);
 
-  // add activeTab state in useState and pass it with SpaceLocalContext
-  
+  useEffect(() => {
+    if(connectedUser || !account || !library) return;
+    (async function () {
+      try {
+        const signer = await library.getSigner();
+        const connectedUserResponse = await getUser(account, signer);
+        setConnectedUser(connectedUserResponse);
+      } catch (err) {
+        console.log(err);
+      }
+    })()
+  }, [account, library]);
+console.log(connectedUser)
+  // useEffect(() => {
+  //   if(!connectedUser) return;
+  //   (async function () {
+  //     try {
+  //       if(!userSpaces[account]?.spaces){
+  //       const spaces = await getSpacesFromIndexedDB(connectedUser);
+  //       getSpaces(account);
+  //       setSpaces(spaces,account);
+  //       }
+  //       if(!userSpaces[account]?.spaceRequests){
+  //       const spaceRequests = await getSpacesFromIndexedDB(connectedUser);
+  //       getSpaceRequests(account);
+  //       setSpaceRequests(spaceRequests,account);
+  //       }
+  //     } catch (err) {
+  //       console.log(err);
+  //     }
+  //   })()
+  // },[connectedUser]);
   // RENDER
-  // wrap with SpaceLocalContext
   return (
+    <SpaceLocalContextProvider>
     <Container>
       <SpaceSidebarContainer
         flex="1"
@@ -36,6 +74,7 @@ export const SpaceModule = () => {
         <SpaceBoxSection />
       </SpaceBoxContainer>
     </Container>
+  </SpaceLocalContextProvider>
   );
 }
 

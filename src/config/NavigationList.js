@@ -83,8 +83,8 @@ const NavigationList = {
       },
     },
     spaces: {
-      src: 'navigation/chatOffIcon.svg',
-      activeSrc: 'navigation/chatOnIcon.svg',
+      src: 'navigation/spaceOffIcon.svg',
+      activeSrc: 'navigation/spaceOnIcon.svg',
       iconFactory: null,
       name: 'Spaces',
       title: 'Spaces',
