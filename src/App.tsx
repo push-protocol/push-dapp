@@ -32,12 +32,14 @@ import { resetCanSendSlice } from 'redux/slices/sendNotificationSlice';
 import { resetChannelCreationSlice } from 'redux/slices/channelCreationSlice';
 import { resetAdminSlice } from 'redux/slices/adminSlice';
 import Navigation from 'structure/Navigation';
+import ChatUserContextProvider from 'contexts/ChatUserContext';
+import { SpaceGlobalContextProvider } from 'contexts';
 
 // Internal Configs
 import { appConfig } from 'config';
 import { themeDark, themeLight } from 'config/Themization';
 import GLOBALS from 'config/Globals';
-import ChatUserContextProvider from 'contexts/ChatUserContext';
+
 
 dotenv.config();
 
@@ -215,11 +217,12 @@ export default function App() {
               </LeftBarContainer>
 
               <ContentContainer leftBarWidth={GLOBALS.CONSTANTS.LEFT_BAR_WIDTH}>
-                {/* Wrap SpaceGlobalContext here */}
+                <SpaceGlobalContextProvider>
                 <ChatUserContextProvider>
                   {/* Shared among all pages, load universal things here */}
                   <MasterInterfacePage />
                 </ChatUserContextProvider>
+                </SpaceGlobalContextProvider>
               </ContentContainer>
             </ParentContainer>
           </NavigationContextProvider>
