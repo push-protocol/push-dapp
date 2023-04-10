@@ -19,7 +19,7 @@ import { Context } from 'modules/chat/ChatModule';
 import { AppContext, Feeds, User } from 'types/chat';
 import { checkIfGroup, getChatsnapMessage, getGroupImage, getName } from '../../../../helpers/w2w/groupChat';
 import { getDefaultFeed } from '../../../../helpers/w2w/user';
-import { intitializeDb } from '../w2wIndexeddb';
+import { intitializeDb } from '../../../../helpers/IndexedDbHelper';
 
 // Internal Configs
 

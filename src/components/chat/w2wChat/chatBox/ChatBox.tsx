@@ -42,7 +42,7 @@ import { checkIfGroup, getGroupImage, getIntentMessage } from '../../../../helpe
 import { MessagetypeType } from '../../../../types/chat';
 import Chats from '../chats/Chats';
 import Typebar from '../TypeBar/Typebar';
-import { intitializeDb } from '../w2wIndexeddb';
+import { intitializeDb } from '../../../../helpers/IndexedDbHelper';
 import { HeaderMessage } from './HeaderMessage';
 
 // Internal Configs
