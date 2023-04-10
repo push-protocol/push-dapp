@@ -1,6 +1,7 @@
 // React + Web3 Essentials
 import React, { useContext } from 'react';
 
+// External Packages
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import styled, { useTheme } from 'styled-components';
@@ -13,7 +14,13 @@ import { AiOutlineMore } from 'react-icons/ai';
 import { useResolveWeb3Name } from 'hooks/useResolveWeb3Name';
 import { shortenText } from 'helpers/UtilityHelper';
 
-const Profile = ({ setActiveTab,showQR,setShowQR }: any): JSX.Element => {
+interface ProfileType{
+  setActiveTab?:()=>void;
+  showQR?:boolean;
+  setShowQR?:()=>void;
+}
+
+const Profile = ({ setActiveTab,showQR,setShowQR }: ProfileType): JSX.Element => {
   // theme context
   const theme = useTheme();
 
