@@ -62,6 +62,8 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
   function endLocalStream(){
     if(localStream){
       console.log("END LOCAL STREAM")
+      const peer = connectionRef.current;
+      peer.send(JSON.stringify({ type: 'endLocalStream', endLocalStream: true }));
       window.location.reload();
       localStream.getTracks().forEach(track => track.stop());
     }
@@ -212,6 +214,10 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
           console.log("IS AUDIO ON", dataObj.isAudioOn);
           setIncomingAudioOn(dataObj.isAudioOn);
         }
+        if(dataObj.type === 'endLocalStream'){
+          console.log("END LOCAL STREAM", dataObj.endLocalStream);
+          window.location.reload();
+        }
       }
     })
 
@@ -332,6 +338,10 @@ const VideoCallContextProvider:React.FC<React.ReactNode> = ({ children }) => {
         }if(dataObj.type === 'isAudioOn'){
           console.log("IS AUDIO ON", dataObj.isAudioOn);
           setIncomingAudioOn(dataObj.isAudioOn);
+        }
+        if(dataObj.type === 'endLocalStream'){
+          console.log("END LOCAL STREAM", dataObj.endLocalStream);
+          window.location.reload();
         }
       }
     })
