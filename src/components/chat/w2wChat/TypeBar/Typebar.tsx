@@ -105,6 +105,7 @@ const Typebar = ({
         toProfilePic: toUser.profilePicture,
         privateKeyArmored: connectedUser.privateKey,
         establishConnection: 1,
+        chatId: currentChat.chatId
       });
       setNewMessage('');
       return;

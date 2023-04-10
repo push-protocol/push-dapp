@@ -18,7 +18,7 @@ type VideoPlayerType = {
 
 const VideoPlayer = ({ videoCallInfo, localVideoStyles }: VideoPlayerType) => {
   const localVideoRef = useRef(null);
-  const { name, callAccepted, myVideo, userVideo, callEnded, me, localStream, call, incomingVideoOn, incomingAudioOn } =
+  const { callAccepted, userVideo, callEnded, localStream, incomingVideoOn, incomingAudioOn } =
     useContext(VideoCallContext);
 
   useEffect(() => {

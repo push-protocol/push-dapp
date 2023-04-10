@@ -39,18 +39,19 @@ export const useSDKSocket = ({ account, env, chainId,socketType }: SDKSocketHook
       try {
         const { payload } = feedItem || {};
 
-        // if video meta, skip notification
-        if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('videoMeta')) {
-          const videoMeta = JSON.parse(payload['data']['videoMeta']);
+        // if additional meta, skip notification
+        // currently for video calls only
+        if (payload.hasOwnProperty('data') && payload['data'].hasOwnProperty('additionalMeta')) {
+          const additionalMeta = JSON.parse(payload['data']['additionalMeta']);
 
-          console.log("RECIEVED CALL FEED", videoMeta);
+          console.log("RECIEVED CALL FEED", additionalMeta);
 
-          if (videoMeta.status == 1) {
+          if (additionalMeta.status == 1) {
             // incoming call
-            incomingCall(videoMeta);
-          } else if (videoMeta.status == 2) {
+            incomingCall(additionalMeta);
+          } else if (additionalMeta.status == 2) {
             // call answered
-            acceptCall(videoMeta);
+            acceptCall(additionalMeta);
           }
         }
 

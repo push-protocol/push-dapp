@@ -488,13 +488,23 @@ const ChatBox = ({ setVideoCallInfo, showGroupInfoModal }): JSX.Element => {
     setOpenSuccessSnackBar(false);
   };
 
-  const startVideoCallHandler = () => {
+  const startVideoCallHandler = async () => {
+    const toUser = await PushAPI.user.get({
+      account: caip10ToWallet(currentChat.wallets.toString()),
+      env: appConfig.appEnv
+    });
+
     setVideoCallInfo({
       address: caip10ToWallet(currentChat.wallets.toString()),
       fromPublicKeyArmored: connectedUser.publicKey,
+      fromProfileUsername: connectedUser.name,
+      fromProfilePic: connectedUser.profilePicture,
       toPublicKeyArmored: currentChat.publicKey,
+      toProfileUsername: toUser.name,
+      toProfilePic: toUser.profilePicture,
       privateKeyArmored: connectedUser.privateKey,
       establishConnection: 1,
+      chatId: currentChat.chatId
     });
   };
 

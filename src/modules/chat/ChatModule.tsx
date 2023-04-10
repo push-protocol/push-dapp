@@ -170,6 +170,7 @@ function Chat({ chatid }) {
     toPublicKeyArmored: null,
     privateKeyArmored: null,
     establishConnection: 0,
+    chatId: null
   });
 
   // React GA Analytics
@@ -544,6 +545,7 @@ function Chat({ chatid }) {
                 toProfilePic: null,
                 privateKeyArmored: null,
                 establishConnection: 0,
+                chatId: null
               });
             }}
           />
