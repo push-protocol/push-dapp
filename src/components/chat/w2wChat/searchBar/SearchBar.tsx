@@ -22,12 +22,12 @@ import * as w2wChatHelper from 'helpers/w2w';
 import { displayDefaultUser } from 'helpers/w2w/user';
 import useToast from 'hooks/useToast';
 import { Context } from 'modules/chat/ChatModule';
+import { getGroup } from 'services/chats/getGroup';
+import { getGroupbyChatId } from 'services/chats/getGroupByChatId';
+import { getGroupByName } from 'services/chats/getGroupByName';
 import { AppContext, IGroup, User } from 'types/chat';
 import ArrowLeft from '../../../../assets/chat/arrowleft.svg';
 import MessageFeed from '../messageFeed/MessageFeed';
-import { getGroupbyChatId } from 'services/chats/getGroupByChatId';
-import { getGroupByName } from 'services/chats/getGroupByName';
-import { getGroup } from 'services/chats/getGroup';
 
 const SearchBar = ({ autofilled }) => {
   // get theme
@@ -56,31 +56,27 @@ const SearchBar = ({ autofilled }) => {
     // console.log("Search is autofilled:", autofilled);
   }
 
-  // useEffect(() => {
-  //   if (searchedUser !== '' && userShouldBeSearched) {
-  //     handleSearch();
-  //     setUserShouldBeSearched(false);
-  //   }
-  //   return () => setUserShouldBeSearched(false);
-  // }, []);
+  useEffect(() => {
+    if (searchedUser !== '' && userShouldBeSearched) {
+      handleSearch();
+      setUserShouldBeSearched(false);
+    }
+    return () => setUserShouldBeSearched(false);
+  }, []);
 
   useEffect(() => {
     if (autofilled && !userShouldBeSearched) {
       // automate search
-      setSearchedUser(autofilled);
+      // setSearchedUser(autofilled);
+
+      // const event = new KeyboardEvent('keypress', {
+      //   key: 'enter',
+      // });
+      // console.log("in search")
+      submitSearch(null, autofilled);
     }
 
   }, [userShouldBeSearched, autofilled]);
-
-  // useEffect(() => {
-  //   if (searchedUser) {
-  //     const event = new KeyboardEvent('keypress', {
-  //       key: 'enter',
-  //     });
-  //     console.log("in search")
-  //     submitSearch(event);
-  //   }
-  // }, [searchedUser]);
 
   useEffect(() => {
     if (isInValidAddress) {
@@ -111,10 +107,16 @@ const SearchBar = ({ autofilled }) => {
     }
   };
 
-  const submitSearch = (event: React.FormEvent): void => {
-    //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
-    event.preventDefault();
-    handleSearch();
+  const submitSearch = (event: React.FormEvent | null, autoSearch: string = null): void => {
+    if (autoSearch) {
+      //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
+      handleSearch(autoSearch);
+    } else {
+      //!There is a case when the user enter a wallet Address less than the fixed length of the wallet address
+      event.preventDefault();
+      handleSearch();
+    }
+
   };
 
   const setInvalidSearch = () =>{
@@ -123,24 +125,26 @@ const SearchBar = ({ autofilled }) => {
     setHasUserBeenSearched(true);
   }
 
-  const handleSearch = async (): Promise<void> => {
-    if (!ethers.utils.isAddress(searchedUser)) {
+  const handleSearch = async (autoSearch: string = null): Promise<void> => {
+    let searchText = autoSearch ? autoSearch : searchedUser;
+
+    if (!ethers.utils.isAddress(searchText)) {
       setIsLoadingSearch(true);
       let address: string;
       let group: IGroup;
 
-        if(searchedUser.includes('.eth')){
+        if(searchText.includes('.eth')){
           try{
-            address = await provider.resolveName(searchedUser);
+            address = await provider.resolveName(searchText);
             if (!address) {
-              address = await library.resolveName(searchedUser);
+              address = await library.resolveName(searchText);
             }
           } catch (err) {
             setInvalidSearch();
           }
         }
         else{
-          group = await getGroup(searchedUser,setInvalidSearch);
+          group = await getGroup(searchText,setInvalidSearch);
         }
        
         // this ensures address are checksummed
@@ -155,7 +159,7 @@ const SearchBar = ({ autofilled }) => {
             setInvalidSearch();
           }
     } else {
-      await handleUserSearch({userSearchData:searchedUser});
+      await handleUserSearch({userSearchData:searchText});
     }
     setIsLoadingSearch(false);
   };

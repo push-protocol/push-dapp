@@ -28,7 +28,7 @@ import { ChatUserContext } from 'contexts/ChatUserContext';
 import * as w2wHelper from 'helpers/w2w/';
 import {
   checkIfIntentExist,
-  fetchInbox,
+  fetchInbox
 } from 'helpers/w2w/user';
 import { useDeviceWidthCheck } from 'hooks';
 import { useResolveEns } from 'hooks/useResolveEns';
@@ -263,8 +263,8 @@ useEffect(() => {
         updatedCurrentChat.msg = sendResponse;
         setChat(updatedCurrentChat);
         setNewMessage('');
-        console.log(messages)
-        console.log(sendResponse)
+        // console.log(messages)
+        // console.log(sendResponse)
         setMessages([...messages, sendResponse]);
         
         setTimeout(() => {
@@ -301,7 +301,7 @@ useEffect(() => {
       setMessageBeingSent(false);
     }
   };
-console.log(messages)
+// console.log(messages)
   useEffect(() => {
     if (messageBeingSent == false) {
       setTimeout(() => {
