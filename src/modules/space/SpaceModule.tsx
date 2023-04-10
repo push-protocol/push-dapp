@@ -42,11 +42,13 @@ console.log(connectedUser)
       try {
         if(!userSpaces[account]?.spaces){
         const spaces = await getSpacesFromIndexedDB(connectedUser);
+        //add decryption method call
         getSpaces(account);
         setSpaces(spaces,account);
         }
         if(!userSpaces[account]?.spaceRequests){
         const spaceRequests = await getSpaceRequestsFromIndexedDB(connectedUser);
+        //add decryption method call
         getSpaceRequests(account);
         setSpaceRequests(spaceRequests,account);
         }
