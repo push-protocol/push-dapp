@@ -5,6 +5,7 @@ import React from 'react';
 
 // Internal Compoonents
 import { SpaceSidebar, SpaceSidebarTabs } from 'components/space';
+// import Profile from "components/chat/w2wChat/profile";
 
 // Internal Configs
 
@@ -13,11 +14,8 @@ export const SpaceSidebarSection = () => {
   // RENDER
   return (
     <>
-    <div>
-      Space Sidebar Section
-    </div>
     <SpaceSidebarTabs />
     <SpaceSidebar />
-    {/* Profile */}
+    {/* <Profile/> */}
     </>);
 };
