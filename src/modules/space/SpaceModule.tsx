@@ -28,13 +28,14 @@ export const SpaceModule = () => {
       try {
         const signer = await library.getSigner();
         const connectedUserResponse = await getUser(account, signer);
+        console.log("connected",connectedUserResponse);
         setConnectedUser(connectedUserResponse);
       } catch (err) {
         console.log(err);
       }
     })()
   }, [account, library]);
-console.log(connectedUser)
+
   // useEffect(() => {
   //   if(!connectedUser) return;
   //   (async function () {
