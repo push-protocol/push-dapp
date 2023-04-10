@@ -6,7 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { caip10ToWallet } from 'helpers/w2w';
 import { AppContext, MessageIPFS } from 'types/chat';
 import { Context } from 'modules/chat/ChatModule';
-import { intitializeDb } from 'components/chat/w2wChat/w2wIndexeddb';
+import { intitializeDb } from 'helpers/IndexedDbHelper';
 
 // Internal Configs
 import { appConfig } from '../config';

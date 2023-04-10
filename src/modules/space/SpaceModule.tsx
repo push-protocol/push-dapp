@@ -14,6 +14,7 @@ import { SpaceGlobalContext, SpaceLocalContextProvider } from 'contexts';
 import { useWeb3React } from '@web3-react/core';
 import { ChatUserContext } from 'contexts/ChatUserContext';
 import { getSpaceRequests, getSpaces } from 'services/space';
+import { getSpaceRequestsFromIndexedDB, getSpacesFromIndexedDB } from 'helpers/space';
 
 export const SpaceModule = () => {
   const theme = useTheme();
@@ -35,26 +36,26 @@ export const SpaceModule = () => {
       }
     })()
   }, [account, library]);
-
-  // useEffect(() => {
-  //   if(!connectedUser) return;
-  //   (async function () {
-  //     try {
-  //       if(!userSpaces[account]?.spaces){
-  //       const spaces = await getSpacesFromIndexedDB(connectedUser);
-  //       getSpaces(account);
-  //       setSpaces(spaces,account);
-  //       }
-  //       if(!userSpaces[account]?.spaceRequests){
-  //       const spaceRequests = await getSpacesFromIndexedDB(connectedUser);
-  //       getSpaceRequests(account);
-  //       setSpaceRequests(spaceRequests,account);
-  //       }
-  //     } catch (err) {
-  //       console.log(err);
-  //     }
-  //   })()
-  // },[connectedUser]);
+console.log(connectedUser)
+  useEffect(() => {
+    if(!connectedUser) return;
+    (async function () {
+      try {
+        if(!userSpaces[account]?.spaces){
+        const spaces = await getSpacesFromIndexedDB(connectedUser);
+        getSpaces(account);
+        setSpaces(spaces,account);
+        }
+        if(!userSpaces[account]?.spaceRequests){
+        const spaceRequests = await getSpaceRequestsFromIndexedDB(connectedUser);
+        getSpaceRequests(account);
+        setSpaceRequests(spaceRequests,account);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })()
+  },[connectedUser]);
   // RENDER
   return (
     <SpaceLocalContextProvider>
