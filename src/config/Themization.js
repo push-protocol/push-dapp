@@ -44,7 +44,10 @@ const themeLight = {
 
   // Space Theme
   space: {
+    color:'#000000',
+    secondaryColor:'#657795',
     spaceBoxBg: 'linear-gradient(179.97deg, #EEF5FF 0.02%, #ECE9FA 123.25%)',
+    spaceWelcomeBackground:'#FFFFFF'
   },
 
   // Default Background Theme
@@ -273,7 +276,10 @@ const themeDark = {
 
   // Space Theme
   space: {
+    color:'#B6BCD6',
+    secondaryColor:'#787E99',
     spaceBoxBg: '#282A2E',
+    spaceWelcomeBackground:'#404650'
   },
 
   // Header Theme

@@ -50,6 +50,7 @@ export const WelcomeSpaceContentBox = () => {
           fontWeight="500"
           fontSize="15px"
           lineHeight="130%"
+          color={theme.space.color}
         >
           Push Space is in alpha and things might break.
         </SpanV2>
@@ -89,7 +90,7 @@ const WelcomeItem = styled(ItemVV2)`
 `;
 
 const WelcomeMainText = styled(SpanV2)`
-  background: ${(props) => props.theme.default.bg};
+  background: ${(props) => props.theme.space.spaceWelcomeBackground};
   box-sizing:border-box;
   padding: 20px;
   border-radius: 2px 28px 28px 28px;
@@ -120,7 +121,7 @@ const WelcomeText = styled(SpanV2)`
   font-weight: 500;
   text-align: center;
   width: 100%;
-  color: ${(props) => props.theme.default.color};
+  color: ${(props) => props.theme.space.color};
   letter-spacing: -0.03em;
   @media (max-width: 768px) {
     display: none;
@@ -128,7 +129,7 @@ const WelcomeText = styled(SpanV2)`
 `;
 
 const WelcomeInfo = styled.div`
-  background: ${(props) => props.theme.default.bg};
+  background: ${(props) => props.theme.space.spaceWelcomeBackground};
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -152,17 +153,17 @@ const Atag = styled.a`
 const ItemBody = styled.div`
   @media (min-width: 768px) and (max-height: 1080px) {
     overflow-y: scroll;
-    height: 300px;
+    max-height: 300px;
   }
 
   @media (min-width: 768px) and (max-height: 768px) {
     overflow-y: scroll;
-    height: 150px;
+    max-height: 150px;
   }
 
   @media (min-width: 768px) and (max-height: 500px) {
     overflow-y: scroll;
-    height: 100px;
+    max-height: 100px;
   }
 `;
 
@@ -185,6 +186,6 @@ const TextInfo = styled.div`
   font-weight: 400;
   font-size: 15px;
   line-height: 130%;
-  color: ${(props) => props.theme.default.secondaryColor};
+  color: ${(props) => props.theme.space.secondaryColor};
   width: 274px;
 `;
